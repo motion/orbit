@@ -194,12 +194,12 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         padding={padding || defaultPadding}
         width="100%"
+        before={before}
         icon={iconBefore && showIcon && iconElement}
         after={<BorderBottom right={5} left={5} opacity={0.2} />}
         paddingLeft={indent ? indent * 22 : undefined}
         {...surfaceProps}
       >
-        {before}
         <ListItemMainContent oneLine={oneLine}>
           {showTitle && (
             <ListItemTitleBar alignItems={alignItems}>
@@ -280,7 +280,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
               </Preview>
             </>
           )}
-          {!showPreviewInSubtitle && !!(locationElement || childrenElement) && (
+          {!showPreviewInSubtitle && !!(!showSubtitle && !!locationElement && childrenElement) && (
             <Row>
               {locationElement}
               {childrenElement}

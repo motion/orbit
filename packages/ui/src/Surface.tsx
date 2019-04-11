@@ -20,6 +20,7 @@ import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { Icon, IconProps, IconPropsContext } from './Icon'
+import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { getSize, SizedSurfaceProps } from './SizedSurface'
@@ -33,9 +34,11 @@ import { getPadding, ViewProps } from './View/View'
 
 export type SurfaceProps = ViewProps & {
   borderPosition?: 'inside' | 'outside'
+  focus?: boolean
   hover?: boolean
   active?: boolean
   ellipse?: boolean
+  before?: React.ReactNode
   after?: React.ReactNode
   badge?: React.ReactNode
   badgeProps?: Object
@@ -83,9 +86,9 @@ export type SurfaceProps = ViewProps & {
 export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
-const { useProps, Reset, PassProps } = createContextualProps<SizedSurfaceProps>()
-export const SurfacePassProps = PassProps
-export const useSurfaceProps = useProps
+const Context = createContextualProps<SizedSurfaceProps>()
+export const SurfacePassProps = Context.PassProps
+export const useSurfaceProps = Context.useProps
 
 type ThroughProps = Pick<
   SurfaceProps,
@@ -108,8 +111,10 @@ const iconTransform = {
   y: 0.5,
 }
 
+const acceptsIcon = child => child.type.acceptsIconProps === true
+
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
-  const props = useProps(direct)
+  const props = Context.useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const theme = useTheme(props)
@@ -155,6 +160,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     borderPosition = 'outside',
     borderWidth,
     alt,
+    before,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -210,12 +216,14 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   } else {
     childrenProps.children = (
       <>
+        {before}
         {!!badge && (
           <Badge
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
             top="-20%"
             left="-20%"
+            size={size}
             {...badgeProps}
           >
             {badge}
@@ -255,17 +263,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             order: icon && iconAfter ? 3 : 'inherit',
           }}
         >
-          {icon && !stringIcon && icon}
-          {icon && stringIcon && (
-            <Icon
-              alt={alt}
-              name={`${icon}`}
-              size={getIconSize(props)}
-              transform={iconTransform}
-              opacity={selectDefined(props.alpha, props.opacity)}
-              {...iconProps}
-            />
-          )}
+          <PassProps
+            passCondition={acceptsIcon}
+            alt={alt}
+            size={getIconSize(props)}
+            transform={iconTransform}
+            opacity={selectDefined(props.alpha, props.opacity)}
+            {...iconProps}
+          >
+            {icon && !stringIcon && icon}
+            {icon && stringIcon && <Icon name={`${icon}`} />}
+          </PassProps>
         </div>
         {glow && !disabled && (
           <HoverGlow
@@ -324,13 +332,14 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           {...viewProps}
           {...segmentedStyle}
           {...childrenProps}
+          {...!children && { tagName }}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>
     </IconPropsContext.Provider>
   )
 
-  return <Reset>{forwardTheme({ children: element, theme: props.theme })}</Reset>
+  return <Context.Reset>{forwardTheme({ children: element, theme: props.theme })}</Context.Reset>
 })
 
 const chromelessStyle = {
@@ -370,6 +379,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     if (props.borderPosition === 'inside') {
       // inside
       boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor]]
+      styles.borderWidth = 0
     } else {
       // outside
       styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]

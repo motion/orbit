@@ -19,6 +19,8 @@ export {
   Theme,
   ThemeContext,
   ThemeProvide,
+  useTheme,
+  useThemeContext,
 } from '@o/gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
 export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'
@@ -64,6 +66,7 @@ export * from './effects/TiltHoverGlow'
 export * from './FloatingCard'
 export * from './FloatingView'
 export * from './Flow'
+export * from './Focus'
 export * from './forms/CheckBox'
 export * from './forms/CheckboxField'
 export * from './forms/Fieldset'

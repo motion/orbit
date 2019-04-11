@@ -1,4 +1,4 @@
-import { Center, FullScreen, Image, Row, Theme, Title, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { Fragment, useState } from 'react'
 import download from '../../../public/images/download.svg'
@@ -56,15 +56,14 @@ export function HeadSection() {
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   return (
-    <Theme name="dark">
+    <>
       <Page offset={0}>
-        <Page.Content background={theme => theme.background}>
-          <TopBlur />
+        <Page.Content>
           <FullScreen>
             <Header />
 
             <Row height="80%" flex={1} alignItems="center" justifyContent="center">
-              <View width="90%">
+              <View width="90%" maxWidth={900}>
                 <FadeDown disable={!measured}>
                   <TitleText fontWeight={100} selectable>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
@@ -94,17 +93,19 @@ export function HeadSection() {
               </View>
             </Row>
 
-            <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
-              <img src={glow} />
-            </View>
-
-            <Row width="100%" height="40%" position="relative">
+            <Row width="100%" height="40%" marginTop={'-20%'} position="relative">
               <View
                 background={`url(${screen}) no-repeat top left`}
                 backgroundSize="contain"
                 flex={1}
-                margin={[0, -120]}
-              />
+                width="120%"
+                maxWidth={1000}
+                margin={['auto', 'auto', 0]}
+                height={320}
+                position="relative"
+              >
+                {DownloadButton}
+              </View>
 
               <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
                 <img src={lineSep} />
@@ -113,38 +114,39 @@ export function HeadSection() {
               <View position="absolute" bottom="10%" left={0} right={0}>
                 <img style={{ margin: 'auto' }} src={macbook} />
               </View>
-
-              <Center bottom="auto" top="4%">
-                <Row
-                  width={159}
-                  height={45}
-                  position="relative"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Image position="absolute" src={download} />
-                  <Text
-                    transform={{ y: 2 }}
-                    zIndex={1}
-                    size={1.1}
-                    fontWeight={500}
-                    letterSpacing={1}
-                    pointerEvents="none"
-                  >
-                    Download
-                  </Text>
-                  <div style={{ width: 25 }} />
-                </Row>
-              </Center>
             </Row>
           </FullScreen>
         </Page.Content>
 
-        <Page.Parallax speed={-1}>
-          <div style={{ width: 100, height: 100, background: 'red' }} />
-          <Title>Test me out</Title>
+        <Page.Background background={theme => theme.background} />
+
+        <Page.Parallax speed={1} zIndex={-2}>
+          {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
+          <TopBlur />
+          <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
+            <img src={glow} />
+          </View>
         </Page.Parallax>
       </Page>
-    </Theme>
+    </>
   )
 }
+
+const DownloadButton = (
+  <Center bottom="auto" top="4%">
+    <Row width={159} height={45} position="relative" alignItems="center" justifyContent="center">
+      <Image position="absolute" src={download} />
+      <Text
+        transform={{ y: 2 }}
+        zIndex={1}
+        size={1.1}
+        fontWeight={500}
+        letterSpacing={1}
+        pointerEvents="none"
+      >
+        Download
+      </Text>
+      <div style={{ width: 25 }} />
+    </Row>
+  </Center>
+)

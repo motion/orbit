@@ -11,6 +11,7 @@ import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
+import { weakMapId } from '../helpers/weakMapId'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
@@ -137,22 +138,33 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { prevProps } = state
     let nextState: Partial<ManagedTableState> = {}
 
+    // force refresh the virtual list on columns change
+    // maybe not the best pattern...
+    const forceRefresh = () => {
+      if (state.sortedRows) {
+        nextState.sortedRows = [...state.sortedRows]
+      }
+    }
+
     // if columnSizes has changed
     if (props.columnSizes !== prevProps.columnSizes) {
       nextState.columnSizes = props.columnSizes
+      forceRefresh()
+    }
+
+    if (!isEqual(props.columns, state.prevProps.columns)) {
+      forceRefresh()
     }
 
     // if columnOrder has changed
     if (props.columnOrder !== prevProps.columnOrder) {
       nextState.columnOrder = props.columnOrder
+      forceRefresh()
     } else if (!props.columnOrder) {
       const columnOrder = Object.keys(props.columns).map(key => ({ key, visible: true }))
       if (!isEqual(columnOrder, state.columnOrder)) {
         nextState.columnOrder = columnOrder
-        // force refresh the virtual list on columns change
-        if (state.sortedRows) {
-          nextState.sortedRows = [...state.sortedRows]
-        }
+        forceRefresh()
       }
     }
 
@@ -416,9 +428,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
           <SelectableVariableList
+            key={weakMapId(this.state.sortedRows)}
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            // itemKey={this.getItemKey}
             itemData={this.state.sortedRows}
             listRef={this.listRef}
             outerRef={this.scrollRef}

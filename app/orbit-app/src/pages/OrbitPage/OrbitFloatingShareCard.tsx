@@ -49,12 +49,7 @@ export function OrbitFloatingShareCard({
           defaultLeft={nodePosition.rect.left - width + 20}
           padding={0}
           zIndex={10000000}
-          pointerEvents={showMenu ? 'auto' : 'none'}
-          opacity={showMenu ? 1 : 0}
-          transform={{
-            y: showMenu ? 0 : 10,
-          }}
-          transition="all ease 200ms"
+          visible={showMenu}
           onMouseEnter={() => setHoveredMenu(true)}
           onMouseLeave={() => setHoveredMenu(false)}
         >

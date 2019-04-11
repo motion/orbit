@@ -20,6 +20,15 @@ body {
   pointer-events: auto;
 }
 
+small {
+  opacity: 0.8;
+  display: inline;
+}
+
+.react-hot-loader-error-overlay {
+  pointer-events: auto;
+}
+
 img {
   border: none;
 }
@@ -306,12 +315,12 @@ pre {
 pre,
 code {
   margin: 0;
-  display: block;
 }
 
 code {
   margin: 0;
   padding: 0;
+  display: inline-block;
 }
 
 img {

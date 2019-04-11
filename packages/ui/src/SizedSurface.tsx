@@ -16,6 +16,8 @@ export type SizedSurfaceProps = SurfaceProps & {
   sizeIcon?: boolean | number
 }
 
+export const sizeProps = ['sizeHeight', 'sizeFont', 'sizePadding', 'sizeRadius', 'sizeIcon']
+
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 
 export const getSizedRadius = (size: number, sizeRadius: number | true) =>

@@ -46,7 +46,14 @@ export const Collapsable = (props: CollapsableProps & { children: React.ReactNod
 }
 
 export const CollapseArrow = (props: CollapsableProps) => {
-  const val = selectDefined(props.collapsed, props.useToggle ? props.useToggle.val : false)
+  const isCollapsable = selectDefined(
+    props.collapsable,
+    props.useToggle ? props.useToggle.collapseProps.collapsable : undefined,
+  )
+  if (!isCollapsable) {
+    return null
+  }
+  const val = selectDefined(props.collapsed, props.useToggle && props.useToggle.val)
   const onClick = selectDefined(props.onCollapse, props.useToggle && props.useToggle.toggle)
   return (
     <Chevron

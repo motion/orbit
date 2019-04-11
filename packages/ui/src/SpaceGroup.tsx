@@ -31,8 +31,11 @@ export function SpaceGroup({
   if (total === 1) {
     const child = childs[0]
     const type = child.type
-    // unwrap fragments!
-    if (type === React.Fragment) {
+    // unwrap fragments and children with `canUnwrap`!
+    if (type === React.Fragment || (type && type.canUnwrap)) {
+      if (!child.props.children) {
+        return null
+      }
       childs = childrenToArr(child.props.children)
       total = childs.length
     }

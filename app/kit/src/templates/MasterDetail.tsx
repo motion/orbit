@@ -1,14 +1,25 @@
-import { Layout, Pane } from '@o/ui'
-import React, { useCallback, useMemo, useState } from 'react'
+import { Layout, Pane, PaneProps, Sidebar, useMedia, View } from '@o/ui'
+import React, { Fragment, useCallback, useMemo, useState } from 'react'
 import { ListProps, SearchableList } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
 export type MasterDetailProps = ListProps & {
   children: React.ReactNode | ((selected: OrbitListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
+  masterProps?: PaneProps
+  detailProps?: PaneProps
+  showSidebar?: boolean
 }
 
-export function MasterDetail({ children, placeholder, ...listProps }: MasterDetailProps) {
+export function MasterDetail({
+  children,
+  placeholder,
+  masterProps,
+  detailProps,
+  showSidebar,
+  ...listProps
+}: MasterDetailProps) {
+  const isSmall = useMedia({ maxWidth: 700 })
   const [selected, setSelected] = useState(null)
   const contents =
     typeof children === 'function'
@@ -34,12 +45,39 @@ export function MasterDetail({ children, placeholder, ...listProps }: MasterDeta
     listProps.itemProps,
   ])
 
+  const master = (
+    <SearchableList
+      key="master"
+      selectable
+      {...listProps}
+      onSelect={onSelect}
+      itemProps={itemProps}
+    />
+  )
+
+  const detail = <Fragment key="detail">{contents}</Fragment>
+
+  if (isSmall) {
+    return (
+      <>
+        <Sidebar hidden={showSidebar === false} floating zIndex={1} elevation={5}>
+          {master}
+        </Sidebar>
+        <View flex={1} zIndex={0}>
+          {detail}
+        </View>
+      </>
+    )
+  }
+
   return (
     <Layout type="row">
-      <Pane resizable>
-        <SearchableList selectable {...listProps} onSelect={onSelect} itemProps={itemProps} />
+      <Pane resizable {...showSidebar === false && { width: 0 }} {...masterProps}>
+        {master}
       </Pane>
-      <Pane flex={2}>{contents}</Pane>
+      <Pane flex={2} {...detailProps}>
+        {detail}
+      </Pane>
     </Layout>
   )
 }

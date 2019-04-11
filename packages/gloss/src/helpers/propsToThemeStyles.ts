@@ -70,7 +70,7 @@ const SubThemeKeys: { [key: string]: KeyMap } = {}
 export const propsToThemeStyles = (
   props: any,
   theme: ThemeObject,
-  stylePseudos?: boolean,
+  stylePseudos: boolean = true,
 ): ThemeObjectWithPseudo => {
   if (!theme) {
     throw new Error('No theme passed to propsToThemeStyles')

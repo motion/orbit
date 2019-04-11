@@ -17,10 +17,12 @@ export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
   CSSPropertySetStrict &
   GlossBaseProps
 
-export const Base = gloss<BaseProps>().theme((props, theme) => ({
-  ...propsToStyles(props, theme),
-  ...propsToTextSize(props),
-}))
+export const Base = gloss<BaseProps>().theme(
+  // hoverStyle, focusStyle, activeStyle
+  propsToStyles,
+  // text size helper
+  propsToTextSize,
+)
 
 // ignore all valid css props, except src for images
 Base.ignoreAttrs = {

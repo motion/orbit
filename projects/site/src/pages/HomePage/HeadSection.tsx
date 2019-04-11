@@ -1,7 +1,7 @@
-import { Absolute, Center, FullScreen, gloss, Image, Row, useDebounce, View } from '@o/ui'
+import { Absolute, Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useState } from 'react'
-import download from '../../../public/images/download.svg'
+import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
@@ -55,7 +55,7 @@ export function HeadSection() {
   let texts = allTexts[size]
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
-  const space = <div style={{ height: 5 }} />
+  const br = <br style={{ height: 0 }} />
 
   return (
     <>
@@ -86,15 +86,15 @@ export function HeadSection() {
 
                   <Paragraph
                     fontSize={parSize * 0.96}
-                    sizeLineHeight={1.5}
+                    sizeLineHeight={1.55}
                     textAlign="center"
                     fontWeight={100}
                     alpha={0.56}
                   >
                     <span style={{ fontWeight: 200 }}>{texts[0]}</span>
-                    {space}
+                    {br}
                     <span style={{ fontSize: '95%' }}>{texts[1]}</span>
-                    {space}
+                    {br}
                     <span style={{ fontSize: '95%' }}>{texts[2]}</span>
                   </Paragraph>
                 </FadeDown>
@@ -106,7 +106,7 @@ export function HeadSection() {
                 background={`url(${screen}) no-repeat top left`}
                 backgroundSize="contain"
                 flex={1}
-                width="120%"
+                width="100%"
                 maxWidth={1000}
                 margin={['auto', 'auto', 0]}
                 height={320}
@@ -173,8 +173,27 @@ const PreviewButton = gloss({
 
 const DownloadButton = (
   <Center bottom="auto" top="4%">
-    <Row width={159} height={45} position="relative" alignItems="center" justifyContent="center">
-      <Image position="absolute" src={download} />
+    <View
+      tagName="a"
+      {...{ href: 'ok' }}
+      flexFlow="row"
+      width={159}
+      height={45}
+      position="relative"
+      alignItems="center"
+      justifyContent="center"
+      border={[3, '#21AA0F']}
+      borderRadius={100}
+      hoverStyle={{
+        border: [3, toColor('#21AA0F').lighten(0.3)],
+      }}
+      textDecoration="none"
+      onClick={e => {
+        e.preventDefault()
+        console.log('need to link downlaod')
+      }}
+    >
+      <Image position="absolute" right={22} src={downmark} />
       <Text
         transform={{ y: 2 }}
         zIndex={1}
@@ -186,6 +205,6 @@ const DownloadButton = (
         Download
       </Text>
       <div style={{ width: 25 }} />
-    </Row>
+    </View>
   </Center>
 )

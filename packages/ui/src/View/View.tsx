@@ -1,4 +1,4 @@
-import { Col, gloss, GlossBaseProps } from '@o/gloss'
+import { Base, gloss, GlossBaseProps } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
@@ -114,4 +114,6 @@ export function getBetweenPad(pad: PadProps['pad']): Sizes {
   return pad
 }
 
-export const View = gloss<ViewProps>(Col).theme(getPadding, getElevation)
+export const View = gloss<ViewProps>(Base, {
+  display: 'flex',
+}).theme(getPadding, getElevation)

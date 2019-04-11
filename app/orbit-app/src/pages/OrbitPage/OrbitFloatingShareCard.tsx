@@ -50,7 +50,6 @@ export function OrbitFloatingShareCard({
           padding={0}
           zIndex={10000000}
           visible={showMenu}
-          transition="all ease 200ms"
           onMouseEnter={() => setHoveredMenu(true)}
           onMouseLeave={() => setHoveredMenu(false)}
         >

@@ -74,6 +74,7 @@ export function FloatingCard({
           margin={5}
           collapsed={collapsed}
           onCollapse={setCollapsed}
+          transition="all ease 200ms"
           {...visibilityProps}
           {...cardProps}
         />

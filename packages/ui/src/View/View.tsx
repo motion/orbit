@@ -96,6 +96,7 @@ export const getPadding = (props: PadProps & { padding?: any }) => {
 
 // plain padded view
 export const PaddedView = gloss({
+  width: '100%',
   flexDirection: 'inherit',
   flexWrap: 'inherit',
 }).theme(getPadding, props => props)

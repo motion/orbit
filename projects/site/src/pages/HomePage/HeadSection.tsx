@@ -1,6 +1,6 @@
 import { Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import download from '../../../public/images/download.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
@@ -24,8 +24,8 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Make powerful apps in minutes with no configuration and deploy without a server.`,
-    `Custom internal tools made easy. Workflows, spreadsheets, dashboards, and more.`,
+    `Make powerful apps in minutes with no configuration, deploy them without a server.`,
+    `It's internal tools made easy. Workflows, spreadsheets, dashboards and more.`,
     `Runs behind the firewall, without a cloud.`,
   ],
   medium: [
@@ -76,18 +76,17 @@ export function HeadSection() {
                   </ViewPortText>
 
                   <Paragraph
-                    fontSize={parSize * 0.94}
+                    fontSize={parSize * 0.85}
                     sizeLineHeight={1.5}
                     textAlign="center"
-                    fontWeight={300}
-                    alpha={0.5}
+                    fontWeight={100}
+                    alpha={0.56}
                   >
-                    {texts.map((t, i) => (
-                      <Fragment key={t}>
-                        {i > 0 && <br />}
-                        {t}
-                      </Fragment>
-                    ))}
+                    <span style={{ fontWeight: 200 }}>{texts[0]}</span>
+                    <br />
+                    {texts[1]}
+                    <br />
+                    {texts[2]}
                   </Paragraph>
                 </FadeDown>
               </View>

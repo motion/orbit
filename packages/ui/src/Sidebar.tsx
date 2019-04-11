@@ -131,11 +131,11 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
       if (horizontal) {
         width = width == null ? 200 : width
-        minWidth = minWidth == null ? 100 : minWidth
+        minWidth = minWidth == null ? 200 : minWidth
         maxWidth = maxWidth == null ? 600 : maxWidth
       } else {
         height = height == null ? 200 : height
-        minHeight = minHeight == null ? 100 : minHeight
+        minHeight = minHeight == null ? 200 : minHeight
         maxHeight = maxHeight == null ? 600 : maxHeight
       }
 

@@ -1,5 +1,5 @@
 import { AppBit } from '@o/models'
-import { Card, CardProps, Loading } from '@o/ui'
+import { Button, Card, CardProps, Loading, SpaceGroup } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { AppDefinition } from '../types/AppDefinition'
@@ -19,7 +19,12 @@ export function AppCard<A extends AppDefinition>({
   return (
     <Card
       key="slack"
-      afterTitle={<SelectApp appType={appType} onSelect={setApp} />}
+      afterTitle={
+        <SpaceGroup space="sm">
+          <SelectApp appType={appType} onSelect={setApp} />
+          <Button chromeless icon="cross" />
+        </SpaceGroup>
+      }
       title="Slack Messages"
       flex={1}
       elevation={2}

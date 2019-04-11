@@ -219,6 +219,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             position="absolute"
             top="-20%"
             left="-20%"
+            size={size}
             {...badgeProps}
           >
             {badge}

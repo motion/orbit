@@ -52,7 +52,7 @@ export function ManageSyncStatus(props: { app: AppBit }) {
           onClick={() => handleRefresh(appId)}
         />
         <Button
-          icon="criss"
+          icon="cross"
           tooltip={`Remove ${props.app.name}`}
           onClick={() => removeApp(props.app)}
         />

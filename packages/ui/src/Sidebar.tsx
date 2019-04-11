@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { ThemeContext, ThemeObject } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
@@ -89,6 +89,8 @@ type SidebarState = {
 }
 
 export class Sidebar extends React.Component<SidebarProps, SidebarState> {
+  static contextType = ThemeContext
+
   static defaultProps = {
     position: 'left',
   }
@@ -153,12 +155,12 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
   render() {
     const {
-      background,
       onResize,
       position,
       children,
       noBorder,
       hidden,
+      background,
       floating,
       width: ignoreWidth,
       ...interactiveProps
@@ -173,6 +175,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       resizable,
       horizontal,
     } = this.state
+
+    const theme: ThemeObject = this.context.activeTheme
 
     // ignore
     ignoreWidth
@@ -199,6 +203,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         onResize={this.onResize}
         transition="all ease 120ms"
         opacity={hidden ? 0 : 1}
+        position={position}
+        background={background || theme.sidebarBackground}
         {...getTransform(
           hidden,
           horizontal,
@@ -208,10 +214,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         {...interactiveProps}
         {...positionProps}
       >
-        <SidebarContainer position={position} background={background}>
-          {!noBorder && borderByPosition[position]}
-          {children}
-        </SidebarContainer>
+        {!noBorder && borderByPosition[position]}
+        {children}
       </Interactive>
     )
   }
@@ -234,17 +238,3 @@ const borderByPosition = {
   top: <BorderBottom />,
   bottom: <BorderTop />,
 }
-
-// const SidebarChildrenDebounce = debounceRender(Contents)
-
-const SidebarContainer = gloss({
-  height: '100%',
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  position: 'relative',
-}).theme((props, theme) => {
-  return {
-    background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
-    whiteSpace: props.overflow ? 'nowrap' : 'normal',
-  }
-})

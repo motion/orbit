@@ -7,7 +7,7 @@
 
 import { isEqual } from '@o/fast-compare'
 import * as React from 'react'
-import textContent from '../helpers/textContent'
+import { FilterableProps, filterRowsFactory } from '../Filterable'
 import { GenericDataRow } from '../types'
 import { View } from '../View/View'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
@@ -15,11 +15,9 @@ import { Searchable, SearchableProps } from './Searchable'
 import { TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
+  FilterableProps &
   Partial<SearchableProps> & {
     searchable?: boolean
-    defaultFilters?: TableFilter[]
-    filter?: any
-    filterValue?: any
   }
 
 type State = {
@@ -27,32 +25,6 @@ type State = {
   filters: TableFilter[]
   searchTerm?: string
 }
-
-const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
-  row: GenericDataRow,
-): boolean =>
-  filters
-    .map((filter: TableFilter) => {
-      if (filter.type === 'enum' && row.category != null) {
-        return filter.value.length === 0 || filter.value.indexOf(row.category) > -1
-      } else if (filter.type === 'include') {
-        return textContent(row.values[filter.key]).toLowerCase() === filter.value.toLowerCase()
-      } else if (filter.type === 'exclude') {
-        return (
-          textContent(row.values[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
-        )
-      } else {
-        return true
-      }
-    })
-    .reduce((acc, cv) => acc && cv, true) &&
-  (searchTerm != null && searchTerm.length > 0
-    ? Object.keys(row.values)
-        .map(key => textContent(row.values[key]))
-        .join('~~') // prevent from matching text spanning multiple columns
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    : true)
 
 class SearchableManagedTable extends React.PureComponent<SearchableTableProps, State> {
   state = {
@@ -79,7 +51,10 @@ class SearchableManagedTable extends React.PureComponent<SearchableTableProps, S
   }
 
   render() {
-    const { addFilter, searchTerm: _searchTerm, filters: _filters, ...props } = this.props
+    const { addFilter, searchTerm, filters, ...props } = this.props
+    // unused
+    searchTerm
+    filters
     return <ManagedTable {...props} filter={this.state.filterRows} onAddFilter={addFilter} />
   }
 }

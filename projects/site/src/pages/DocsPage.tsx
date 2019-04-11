@@ -2,12 +2,15 @@ import { Templates } from '@o/kit'
 import '@o/nucleo'
 import {
   Button,
+  Divider,
   gloss,
   Section,
+  SegmentedRow,
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
   Theme,
+  Toolbar,
   useMedia,
   View,
 } from '@o/ui'
@@ -25,11 +28,26 @@ const views = {
   // tables: () => Tables,
 }
 
+const itemsByIndex = {
+  all: () => [
+    ...docsItems,
+    {
+      selectable: false,
+      children: <Divider />,
+    },
+    ...uiItems,
+  ],
+  ui: () => uiItems,
+  docs: () => docsItems,
+  kit: () => uiItems,
+}
+
 export function DocsPage() {
   const [selected, setSelected] = useState(null)
   const [viewElement, setView] = useState(null)
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
+  const [section, setSection] = useState('all')
 
   useEffect(() => {
     if (!selected) return
@@ -58,11 +76,12 @@ export function DocsPage() {
 
           <View flex={1} position="relative">
             <Templates.MasterDetail
+              items={itemsByIndex[section]()}
               showSidebar={showSidebar}
               detailProps={{ flex: 3 }}
               searchable
               onSelect={setSelected}
-              items={items}
+              belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
             >
               {viewElement && (
                 <SelectedSection
@@ -86,6 +105,27 @@ DocsPage.navigationOptions = {
   title: 'Orbit Docs',
   linkName: 'Orbit Docs',
 }
+
+const DocsToolbar = memo(({ section, setSection }: any) => {
+  return (
+    <Toolbar pad="xs" justifyContent="center" border={false}>
+      <SegmentedRow sizePadding={2} sizeRadius={2}>
+        <Button active={section === 'all'} onClick={() => setSection('all')}>
+          All
+        </Button>
+        <Button active={section === 'docs'} onClick={() => setSection('docs')}>
+          Docs
+        </Button>
+        <Button active={section === 'ui'} onClick={() => setSection('ui')}>
+          UI
+        </Button>
+        <Button active={section === 'kit'} onClick={() => setSection('kit')}>
+          Kit
+        </Button>
+      </SegmentedRow>
+    </Toolbar>
+  )
+})
 
 const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSidebar }: any) => {
   const isSmall = useMedia({ maxWidth: 700 })
@@ -123,8 +163,22 @@ const Background = gloss({
   background: theme.sidebarBackground || theme.background,
 }))
 
-const items = [
+const docsItems = [
   {
+    selectable: false,
+    children: <SubTitle>Docs</SubTitle>,
+  },
+  {
+    id: 'surfaces',
+    icon: 'layer',
+    title: 'Getting started',
+    subTitle: 'Lorem ipsum dolor sit amet.',
+  },
+]
+
+const uiItems = [
+  {
+    selectable: false,
     children: (
       <SubTitle>
         User Interface &nbsp;&nbsp;<small>@o/ui</small>

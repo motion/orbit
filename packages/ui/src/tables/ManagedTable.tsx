@@ -10,6 +10,7 @@ import { debounce, isEqual } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
 import { ContextMenu } from '../ContextMenu'
+import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
 import { weakMapId } from '../helpers/weakMapId'
 import { DynamicListControlled } from '../lists/DynamicList'
@@ -27,76 +28,69 @@ import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnAddFilter, TableR
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 const clipboard = Electron.clipboard
 
-export type ManagedTableProps = SelectableProps & {
-  containerRef?: any
-  overflow?: CSSPropertySet['overflow']
-  flex?: CSSPropertySet['flex']
-  margin?: CSSPropertySet['margin']
-  padding?: CSSPropertySet['padding']
-  width?: number
-  height?: number
+export type ManagedTableProps = SelectableProps &
+  Pick<FilterableProps, 'filter' | 'filterValue'> & {
+    containerRef?: any
+    overflow?: CSSPropertySet['overflow']
+    flex?: CSSPropertySet['flex']
+    margin?: CSSPropertySet['margin']
+    padding?: CSSPropertySet['padding']
+    width?: number
+    height?: number
 
-  minWidth?: number
-  minHeight?: number
+    minWidth?: number
+    minHeight?: number
 
-  maxHeight?: number
+    maxHeight?: number
 
-  /**
-   * Column definitions.
-   */
-  columns: DataColumns
-  /**
-   * Row data
-   */
-  rows?: GenericDataRow[]
-  /**
-   * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
-   * are truncated.
-   */
-  multiline?: boolean
-  /**
-   * Order of columns.
-   */
-  columnOrder?: TableColumnOrder
-  /**
-   * Size of the columns.
-   */
-  columnSizes?: TableColumnSizes
-  /**
-   * Value to filter rows on. Alternative to the `filter` prop.
-   */
-  filterValue?: string
-  /**
-   * Callback to filter rows.
-   */
-  filter?: (row: GenericDataRow) => boolean
-  /**
-   * Height of each row.
-   */
-  rowLineHeight?: number
-  /**
-   * This makes it so the scroll position sticks to the bottom of the window.
-   * Useful for streaming data like requests, logs etc.
-   */
-  stickyBottom?: boolean
-  /**
-   * Used by SearchableTable to add filters for rows
-   */
-  onAddFilter?: TableOnAddFilter
-  /**
-   * Enable or disable zebra striping
-   */
-  zebra?: boolean
-  /**
-   * Whether to hide the column names at the top of the table.
-   */
-  hideHeader?: boolean
-  defaultSortOrder?: SortOrder
-  sortOrder?: SortOrder
-  onSortOrder?: (next: SortOrder) => any
-  onCreatePaste?: Function
-  placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
-}
+    /**
+     * Column definitions.
+     */
+    columns: DataColumns
+    /**
+     * Row data
+     */
+    rows?: GenericDataRow[]
+    /**
+     * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
+     * are truncated.
+     */
+    multiline?: boolean
+    /**
+     * Order of columns.
+     */
+    columnOrder?: TableColumnOrder
+    /**
+     * Size of the columns.
+     */
+    columnSizes?: TableColumnSizes
+    /**
+     * Height of each row.
+     */
+    rowLineHeight?: number
+    /**
+     * This makes it so the scroll position sticks to the bottom of the window.
+     * Useful for streaming data like requests, logs etc.
+     */
+    stickyBottom?: boolean
+    /**
+     * Used by SearchableTable to add filters for rows
+     */
+    onAddFilter?: TableOnAddFilter
+    /**
+     * Enable or disable zebra striping
+     */
+    zebra?: boolean
+    /**
+     * Whether to hide the column names at the top of the table.
+     */
+    hideHeader?: boolean
+    defaultSortOrder?: SortOrder
+    sortOrder?: SortOrder
+    onSortOrder?: (next: SortOrder) => any
+    onCreatePaste?: Function
+    placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
+  }
 
 type ManagedTableState = {
   sortOrder?: SortOrder
@@ -456,39 +450,3 @@ function ManagedTableNormalized(props: ManagedTableProps) {
 export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {
   maxWait: 100,
 })
-
-const filterRows = (
-  rows: TableRows,
-  filterValue?: string,
-  filter?: (row: GenericDataRow) => boolean,
-): TableRows => {
-  // check that we don't have a filter
-  const hasFilterValue = filterValue !== '' && filterValue != null
-  const hasFilter = hasFilterValue || typeof filter === 'function'
-  if (!hasFilter) {
-    return rows
-  }
-  let filteredRows = []
-  if (hasFilter) {
-    for (const row of rows) {
-      let keep = false
-
-      // check if this row's filterValue contains the current filter
-      if (filterValue != null && !!row.filterValue) {
-        keep = row.filterValue.includes(filterValue)
-      }
-
-      // call filter() prop
-      if (keep === false && typeof filter === 'function') {
-        keep = filter(row)
-      }
-
-      if (keep) {
-        filteredRows.push(row)
-      }
-    }
-  } else {
-    filteredRows = rows
-  }
-  return filteredRows
-}

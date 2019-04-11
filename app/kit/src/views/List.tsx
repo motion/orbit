@@ -63,13 +63,16 @@ export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
 
-export const SearchableList = (props: ListProps) => {
+export type SearchableListProps = ListProps & { belowSearchBar?: React.ReactNode }
+
+export const SearchableList = ({ belowSearchBar, ...listProps }: SearchableListProps) => {
   return (
     <Searchable>
       {({ searchBar, searchTerm }) => (
         <>
-          <View pad={props.padInner || 'sm'}>{searchBar}</View>
-          <List {...props} search={searchTerm} />
+          <View pad={listProps.padInner || 'sm'}>{searchBar}</View>
+          {belowSearchBar}
+          <List {...listProps} search={searchTerm} />
         </>
       )}
     </Searchable>

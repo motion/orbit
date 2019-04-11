@@ -4,10 +4,10 @@ import React from 'react'
 export function Example({ children, ...props }: SectionProps) {
   return (
     <>
-      <Section space size="md" {...props}>
+      <Section space {...props}>
         {children}
       </Section>
-      <Space size="xl" />
+      <Space size="xxl" />
     </>
   )
 }

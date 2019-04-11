@@ -10,7 +10,7 @@ export const Source = (
 )
 
 export const One = (
-  <Row>
+  <Row flexWrap="wrap">
     <Button>Hello World</Button>
     <Button icon="cog">Hello World</Button>
     <Button icon="cog" iconAfter>
@@ -20,7 +20,7 @@ export const One = (
 )
 
 export const Two = (
-  <Row>
+  <Row flexWrap="wrap">
     {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
       <Button key={alt} alt={alt} icon="cog" iconAfter>
         Alt {alt}
@@ -50,7 +50,7 @@ export const Four = (
 )
 
 export const Five = (
-  <Row scrollable pad>
+  <>
     {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
       <SubSection title={`Elevation ${elevation}`} key={elevation}>
         <Button key={elevation} elevation={elevation} icon="cog" iconAfter>
@@ -58,5 +58,5 @@ export const Five = (
         </Button>
       </SubSection>
     ))}
-  </Row>
+  </>
 )

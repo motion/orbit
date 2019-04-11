@@ -65,7 +65,9 @@ export function Card(props: CardProps) {
           <ListItem
             className="grid-draggable"
             onClickLocation={onClickLocation}
-            onDoubleClick={!collapseOnClick && collapseProps.collapsable && toggle.toggle}
+            onDoubleClick={
+              (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
+            }
             onClick={collapseOnClick && toggle.toggle}
             alignItems="center"
             titleFlex={titleFlex}

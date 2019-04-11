@@ -53,9 +53,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     width,
     margin,
     height,
-    // to prevent accidental massive sizing, maybe weird
-    maxHeight = window.innerHeight * 2,
-    maxInnerHeight = window.innerHeight * 2,
+    maxHeight,
+    maxInnerHeight,
     maxWidth,
     minHeight,
     beforeTitle,

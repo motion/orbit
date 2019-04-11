@@ -457,7 +457,7 @@ const Element = gloss({
 
 const getIconSize = (props: SurfaceProps) => {
   const size =
-    getSize(props.size) * (props.height ? +props.height * 0.05 + 10 : 12) * (props.sizeIcon || 1)
+    getSize(props.size) * (props.height ? +props.height * 0.15 + 5 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
 }
 

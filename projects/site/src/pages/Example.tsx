@@ -7,7 +7,7 @@ export function Example({ children, ...props }: SectionProps) {
       <Section space {...props}>
         {children}
       </Section>
-      <Space size="xxl" />
+      <Space size="xl" />
     </>
   )
 }

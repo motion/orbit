@@ -16,7 +16,7 @@ import {
   VirtualList,
   VirtualListProps,
 } from '@o/ui'
-import { isAnyDefined, mergeDefined } from '@o/utils'
+import { isDefined, mergeDefined } from '@o/utils'
 import React, { createContext, memo, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
@@ -185,7 +185,7 @@ export const List = memo(
     const noQuery = typeof search === 'undefined' || search.length === 0
     const hasResults = !!filtered.results.length
     const showPlaceholder = noQuery && !hasResults
-    const hasSectionProps = isAnyDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
+    const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
     const children = (
       <HighlightActiveQuery query={search}>

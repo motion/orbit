@@ -11,7 +11,7 @@ import {
   ThemeSelect,
   useTheme,
 } from '@o/gloss'
-import { isAnyDefined, selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -193,15 +193,15 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   }
 
   const borderLeftRadius = Math.min(
-    (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) + 1,
-    +height / 2 + 1,
+    segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
+    +height / 2,
   )
   const borderRightRadius = Math.min(
-    (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) + 1,
-    +height / 2 + 1,
+    segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
+    +height / 2,
   )
 
-  const hasAnyGlint = !props.chromeless && isAnyDefined(glint, glintBottom)
+  const hasAnyGlint = !props.chromeless && isDefined(glint, glintBottom)
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
@@ -227,7 +227,10 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           </Tooltip>
         )}
         {hasAnyGlint && (
-          <GlintContain>
+          <GlintContain
+            borderLeftRadius={borderLeftRadius + 1}
+            borderRightRadius={borderRightRadius + 1}
+          >
             {glint && !props.chromeless && (
               <Glint
                 size={size}
@@ -454,11 +457,11 @@ const Element = gloss({
 
 const getIconSize = (props: SurfaceProps) => {
   const size =
-    getSize(props.size) * (props.height ? +props.height * 0.05 + 10 : 12) * (props.sizeIcon || 1)
+    getSize(props.size) * (props.height ? +props.height * 0.15 + 5 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-const GlintContain = gloss({
+const GlintContain = gloss(Col, {
   position: 'absolute',
   height: 'calc(100% - 1px)',
   top: 0,

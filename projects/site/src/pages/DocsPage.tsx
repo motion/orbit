@@ -68,6 +68,9 @@ DocsPage.navigationOptions = {
 const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
   return (
     <Section
+      pad
+      titleBorder
+      space
       flex={1}
       scrollable="y"
       title={title}
@@ -80,9 +83,6 @@ const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
           />
         </>
       }
-      pad={[0, true]}
-      titleBorder
-      space
     >
       {viewElement}
     </Section>

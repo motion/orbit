@@ -3,12 +3,13 @@ import stringHash from 'string-hash'
 export * from './highlightText'
 export * from './on'
 
-export function isDefined(x: any) {
-  return typeof x !== 'undefined'
-}
-
-export function isAnyDefined(...args: any[]) {
-  return args.some(x => isDefined(x))
+export function isDefined(...args: any) {
+  for (const arg of args) {
+    if (typeof arg !== 'undefined') {
+      return true
+    }
+  }
+  return false
 }
 
 /**

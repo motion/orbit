@@ -44,9 +44,9 @@ const textSizes = {
   xs: 0.8,
   sm: 0.9,
   md: 1,
-  lg: 1.4,
-  xl: 2.0,
-  xxl: 2.4,
+  lg: 1.3,
+  xl: 1.8,
+  xxl: 2.2,
 }
 
 // text should vary more

@@ -38,7 +38,7 @@ export function SpaceGroup({
     }
     // not sure if this is a great feature, could be really confusing...
     // basically makes it really easy to change the Row/Col direction without losing spacing
-    if (type.acceptsSpacing && selectDefined(child.props.space) === undefined) {
+    if (type && type.acceptsSpacing && selectDefined(child.props.space) === undefined) {
       return cloneElement(child, { space, spaceAround, separator, beforeSpace, afterSpace })
     }
   }

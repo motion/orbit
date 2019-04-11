@@ -1,4 +1,5 @@
 import { Theme } from '@o/gloss'
+import { isDefined } from '@o/utils'
 import React from 'react'
 import {
   Collapsable,
@@ -11,12 +12,13 @@ import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
-import { Col } from './View/Col'
+import { Col, ColProps } from './View/Col'
 import { getBetweenPad } from './View/View'
 
 export type CardProps = SizedSurfaceProps &
   ListItemProps &
-  Partial<CollapsableProps> & {
+  Partial<CollapsableProps> &
+  ColProps & {
     space?: Sizes
     collapseOnClick?: boolean
   }
@@ -44,6 +46,8 @@ export function Card(props: CardProps) {
     space,
     flexDirection,
     collapseOnClick,
+    scrollable,
+    maxHeight,
     ...sizedSurfaceProps
   } = rest
   // end
@@ -60,12 +64,15 @@ export function Card(props: CardProps) {
         noInnerElement
         pad={pad}
         padding={padding}
+        overflow={isDefined(scrollable, maxHeight) ? 'hidden' : undefined}
       >
         <Scale size={1.1}>
           <ListItem
             className="grid-draggable"
             onClickLocation={onClickLocation}
-            onDoubleClick={!collapseOnClick && collapseProps.collapsable && toggle.toggle}
+            onDoubleClick={
+              (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
+            }
             onClick={collapseOnClick && toggle.toggle}
             alignItems="center"
             titleFlex={titleFlex}
@@ -90,7 +97,15 @@ export function Card(props: CardProps) {
         </Scale>
         <Collapsable useToggle={toggle}>
           <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
-          <Col flexDirection={flexDirection} space={space} pad={pad} padding={padding} flex={1}>
+          <Col
+            scrollable={scrollable}
+            flexDirection={flexDirection}
+            space={space}
+            pad={pad}
+            padding={padding}
+            flex={1}
+            maxHeight={maxHeight}
+          >
             {showChildren && children}
           </Col>
         </Collapsable>

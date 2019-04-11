@@ -1,50 +1,71 @@
 import { gloss } from '@o/gloss'
+import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
-import { PaddedView, View, ViewProps } from './View'
+import { getSpaceSize, Sizes } from '../Space'
+import { getPadding, PaddedView, View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
 export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
   scrollable?: boolean | 'x' | 'y'
+  parentSpacing?: Sizes
 }
 
-export const ScrollableView = forwardRef(function ScrollableView(
-  { children, pad, padding, scrollable, ...props }: ScrollableViewProps,
-  ref,
-) {
+const isOnlyChildrenDefined = props => {
+  for (const key in props) {
+    if (isDefined(props[key]) && key !== 'children') {
+      return false
+    }
+  }
+  return true
+}
+
+export const ScrollableView = forwardRef(function ScrollableView(props: ScrollableViewProps, ref) {
+  // likely not great pattern, was testing spacing elements using descendent selectors
+  if (isOnlyChildrenDefined(props)) {
+    return <>{props.children}</>
+  }
+
+  const { children, pad, padding, scrollable, parentSpacing, ...viewPropsRaw } = props
   let content = children
   const controlPad = typeof pad !== 'undefined'
 
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
-  if (controlPad) {
+  const innerPad = getPadding(props)
+  if (innerPad && innerPad.padding) {
     content = (
       <PaddedView
         ref={!scrollable ? ref : null}
         pad={pad}
         padding={padding}
-        {...!scrollable && props}
+        {...!scrollable && viewPropsRaw}
       >
         {children}
       </PaddedView>
     )
   }
 
-  const viewProps = !controlPad && {
-    padding,
+  const viewProps = {
+    ...viewPropsRaw,
+    isWrapped: viewPropsRaw.flexWrap === 'wrap',
+    parentSpacing,
+    ...(!controlPad && {
+      padding,
+    }),
   }
 
   if (!scrollable) {
     return (
-      <View ref={ref} {...viewProps} {...props}>
+      <ScrollableInner ref={ref} {...viewProps} {...props} padding={0}>
         {content}
-      </View>
+      </ScrollableInner>
     )
   }
 
   return (
-    <ScrollableChrome ref={ref} scrollable={scrollable} {...viewProps} {...props}>
+    <ScrollableChrome ref={ref} scrollable={scrollable} {...viewProps} {...props} padding={0}>
       {content}
     </ScrollableChrome>
   )
@@ -58,9 +79,25 @@ const hideScrollbarsStyle = {
   },
 }
 
-export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
+const ScrollableInner = gloss(View, {
+  flexDirection: 'inherit',
+  flexWrap: 'inherit',
+}).theme(props => {
+  if (props.isWrapped) {
+    const space = getSpaceSize(props.parentSpacing)
+    return {
+      marginBottom: -space,
+      '& > *': {
+        marginBottom: space,
+      },
+    }
+  }
+})
+
+export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
+  flexWrap: 'inherit',
   width: '100%',
   height: '100%',
   margin: 1,

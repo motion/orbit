@@ -1,4 +1,4 @@
-import { isAnyDefined, selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
@@ -53,9 +53,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     width,
     margin,
     height,
-    // to prevent accidental massive sizing, maybe weird
-    maxHeight = window.innerHeight * 2,
-    maxInnerHeight = window.innerHeight * 2,
+    maxHeight,
+    maxInnerHeight,
     maxWidth,
     minHeight,
     beforeTitle,
@@ -70,10 +69,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     fixedTitle,
     ...viewProps
   } = props
-  const hasTitle = isAnyDefined(title, afterTitle)
+  const hasTitle = isDefined(title, afterTitle)
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   const spaceSize = space === true ? selectDefined(size, space) : space
-  const showTitleAbove = selectDefined(fixedTitle, !!pad, !!scrollable)
+  const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const titleElement = hasTitle && (
     <>
       <TitleRow
@@ -89,7 +88,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         pad={titleBorder || bordered ? true : innerPad}
         size={selectDefined(titleSize, size)}
       />
-      {!!spaceSize && <Space size={spaceSize} />}
+      {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
     </>
   )
 
@@ -111,7 +110,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxHeight={maxHeight}
       maxWidth={maxWidth}
       minHeight={minHeight}
-      overflow={scrollable ? 'hidden' : 'visible'}
+      overflow={isDefined(scrollable, maxHeight) ? 'hidden' : undefined}
       pad={!showTitleAbove ? pad : false}
       size={size}
     >

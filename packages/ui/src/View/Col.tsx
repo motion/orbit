@@ -11,7 +11,7 @@ export const Col = forwardRef(function Col(
 ) {
   if (!children) return null
   return (
-    <ScrollableView ref={ref} flexDirection="column" {...props}>
+    <ScrollableView ref={ref} flexDirection="column" parentSpacing={space} {...props}>
       <SpaceGroup
         spaceAround={spaceAround}
         space={space}

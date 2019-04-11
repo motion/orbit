@@ -39,7 +39,7 @@ const sizes = {
 export const getSize = (size: Sizes) => {
   if (!size || size === false || size === true) return 1
   if (typeof size === 'string') return sizes[size]
-  return size
+  return 1 + (size > 1 ? (size - 1) * 0.5 : 0)
 }
 
 export function SizedSurface(direct: SizedSurfaceProps) {

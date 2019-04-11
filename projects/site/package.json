@@ -3,7 +3,8 @@
   "version": "2.4.0",
   "private": true,
   "scripts": {
-    "start": "mcro-build --entry ./src/index --port 5000 --target web"
+    "start": "mcro-build --entry ./src/index --port 5000 --target web",
+    "build:docs:ui": "node ./scripts/build-docs-ui.js"
   },
   "dependencies": {
     "@o/babel-preset-motion": "2.4.0",

@@ -1,15 +1,10 @@
-import { ColorLike } from '@o/css'
-import { Col, Contents, CSSPropertySet, gloss, ThemeContext } from '@o/gloss'
+import { Contents, gloss, ThemeContext } from '@o/gloss'
 import React, { useContext } from 'react'
+import { View, ViewProps } from './View/View'
 
-type Props = CSSPropertySet & {
+export type ArrowProps = ViewProps & {
   size: number
-  color?: ColorLike
   towards?: 'top' | 'right' | 'bottom' | 'left'
-  boxShadow?: any
-  background?: ColorLike
-  opacity?: number
-  border?: any[] | string
 }
 
 export function Arrow({
@@ -20,7 +15,7 @@ export function Arrow({
   border,
   background,
   ...props
-}: Props) {
+}: ArrowProps) {
   const theme = useContext(ThemeContext).activeTheme
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)
@@ -69,16 +64,16 @@ export function Arrow({
 }
 
 // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
-const ArrowOuter = gloss(Col, {
+const ArrowOuter = gloss(View, {
   position: 'relative',
   overflow: 'hidden',
   alignItems: 'center',
 })
 
-const ArrowInner = gloss(Col, {
+const ArrowInner = gloss(View, {
   position: 'absolute',
   borderRadius: 1,
   transform: { rotate: '45deg' },
 })
 
-const ArrowMiddle = gloss(Col)
+const ArrowMiddle = gloss(View)

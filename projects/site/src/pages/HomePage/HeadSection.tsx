@@ -1,4 +1,4 @@
-import { Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
+import { Absolute, Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useState } from 'react'
 import download from '../../../public/images/download.svg'
@@ -24,9 +24,9 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Make powerful apps in minutes with no configuration, deploy them without a server.`,
-    `It's internal tools made easy. Workflows, spreadsheets, dashboards and more.`,
-    `Runs behind the firewall, without a cloud.`,
+    `Make powerful apps in minutes. No configuration and deployed without a server.`,
+    `Everything you need to build workflows, spreadsheets, dashboards and more.`,
+    `Internal tools, made easy.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
@@ -60,9 +60,16 @@ export function HeadSection() {
       <Page offset={0}>
         <Page.Content>
           <FullScreen>
-            <Header />
+            <Absolute left={0} right={0}>
+              <Header />
+            </Absolute>
 
-            <Row height="80%" flex={1} alignItems="center" justifyContent="center">
+            <Row
+              transform={{ y: '-25%' }}
+              margin={['auto', 0]}
+              alignItems="center"
+              justifyContent="center"
+            >
               <View width="90%" maxWidth={900}>
                 <FadeDown disable={!measured}>
                   <TitleText fontWeight={100} selectable>
@@ -92,7 +99,7 @@ export function HeadSection() {
               </View>
             </Row>
 
-            <Row width="100%" height="40%" marginTop={'-20%'} position="relative">
+            <FullScreen top="auto">
               <View
                 background={`url(${screen}) no-repeat top left`}
                 backgroundSize="contain"
@@ -113,18 +120,30 @@ export function HeadSection() {
               <View position="absolute" bottom="10%" left={0} right={0}>
                 <img style={{ margin: 'auto' }} src={macbook} />
               </View>
-            </Row>
+            </FullScreen>
           </FullScreen>
         </Page.Content>
 
         <Page.Background background={theme => theme.background} />
 
-        <Page.Parallax speed={1} zIndex={-2}>
+        <Page.Parallax speed={-0.4} zIndex={-2}>
           {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
-          <TopBlur />
-          <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
+          <View
+            pointerEvents="none"
+            position="absolute"
+            top="30%"
+            left={0}
+            right={0}
+            zIndex={1}
+            opacity={0.25}
+          >
             <img src={glow} />
           </View>
+        </Page.Parallax>
+
+        <Page.Parallax speed={0} zIndex={-2}>
+          {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
+          <TopBlur opacity={0.6} />
         </Page.Parallax>
       </Page>
     </>

@@ -287,14 +287,14 @@ export class Text extends React.PureComponent<TextProps> {
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
 const TextBlock = gloss({
-  flexFlow: 'row',
+  display: 'block',
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
   minHeight: 'min-content',
   // this lets it shrink down to content without breaking everything
   // width: 'max-content',
-  maxWidth: '100%',
+  // maxWidth: '100%',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',
@@ -316,7 +316,7 @@ const TextBlock = gloss({
 })
 
 const TextEllipse = gloss({
-  display: 'inline-block',
+  display: 'inline',
   maxWidth: '100%',
 }).theme(({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {

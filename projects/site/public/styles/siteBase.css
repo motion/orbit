@@ -22,6 +22,7 @@ body {
 
 small {
   opacity: 0.8;
+  display: inline;
 }
 
 .react-hot-loader-error-overlay {

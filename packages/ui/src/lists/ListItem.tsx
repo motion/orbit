@@ -280,7 +280,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
               </Preview>
             </>
           )}
-          {!showPreviewInSubtitle && !!(locationElement || childrenElement) && (
+          {!showPreviewInSubtitle && !!(!showSubtitle && !!locationElement && childrenElement) && (
             <Row>
               {locationElement}
               {childrenElement}

@@ -1,4 +1,4 @@
-import { Theme } from '@o/gloss'
+import { Theme, useTheme } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React from 'react'
 import {
@@ -52,6 +52,7 @@ export function Card(props: CardProps) {
     ...sizedSurfaceProps
   } = rest
   // end
+  const theme = useTheme()
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const toggle = useCollapseToggle(collapseProps)
@@ -114,6 +115,7 @@ export function Card(props: CardProps) {
               padding={padding}
               flex={1}
               maxHeight={maxHeight}
+              background={theme.background}
               {...padProps}
             >
               {showChildren && children}

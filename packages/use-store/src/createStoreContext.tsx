@@ -5,7 +5,7 @@ import { useStore, UseStoreOptions } from './useStore'
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context
 
-type InferProps<A> = A extends { props: infer B } ? B : undefined
+type InferProps<A> = A extends { props: infer B } ? B : {}
 
 export function createStoreContext<Instance, Props extends InferProps<Instance>>(constructor: {
   new (): Instance

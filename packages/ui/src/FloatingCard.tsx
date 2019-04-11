@@ -16,7 +16,9 @@ type FloatingCardProps = CardProps &
     | 'left'
     | 'width'
     | 'height'
-  >
+  > & {
+    visible?: boolean
+  }
 
 export function FloatingCard({
   defaultTop = 0,
@@ -28,14 +30,18 @@ export function FloatingCard({
   left,
   width,
   height,
-  zIndex,
+  zIndex = 10000000,
   pointerEvents,
+  visible,
   ...cardProps
 }: FloatingCardProps) {
   const theme = useTheme()
   const [collapsed, setCollapsed] = useState(false)
   const isInvisible =
-    cardProps.opacity === 0 || cardProps.visibility === 'hidden' || cardProps.display === 'none'
+    visible === false ||
+    cardProps.opacity === 0 ||
+    cardProps.visibility === 'hidden' ||
+    cardProps.display === 'none'
   return (
     <Visibility visible={!isInvisible}>
       <FloatingView
@@ -60,6 +66,14 @@ export function FloatingCard({
           margin={5}
           collapsed={collapsed}
           onCollapse={setCollapsed}
+          // visibility props
+          {...{
+            pointerEvents: visible ? 'auto' : 'none',
+            opacity: visible ? 1 : 0,
+            transform: {
+              y: visible ? 0 : 10,
+            },
+          }}
           {...cardProps}
         />
       </FloatingView>

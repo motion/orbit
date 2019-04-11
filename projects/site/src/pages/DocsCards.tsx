@@ -1,6 +1,6 @@
 import CardSrc from '!raw-loader!@o/ui/src/Card.tsx'
-import { Card, Row, SubSection } from '@o/ui'
-import React from 'react'
+import { Button, Card, FloatingCard, Row } from '@o/ui'
+import React, { useState } from 'react'
 import { DocsMeta } from './DocsMeta'
 
 export let Source = <DocsMeta source={CardSrc} displayName="Card" />
@@ -24,42 +24,34 @@ export let One = (
   <Row flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
-    <ExampleCard alt="warn" title="Alt = warn" elevation={4} />
-    <ExampleCard alt="confirm" title="Alt = confirm" elevation={4} />
-    <ExampleCard size="xl" title="Size XL">
+    <ExampleCard alt="warn" location="warn" title="Alt = warn" elevation={4} />
+    <ExampleCard badge="1" alt="confirm" title="Alt = confirm" elevation={4} />
+    <ExampleCard width={300} height={300} location="hi" badge="1" size="lg" title="Size LG">
+      hello worl2
+    </ExampleCard>
+    <ExampleCard width={300} height={300} location="hi" badge="1" size="xl" title="Size XL">
       hello worl2
     </ExampleCard>
   </Row>
 )
 
-export let Two = (
-  <Row flexWrap="wrap">
-    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
-      <Card key={alt} alt={alt} icon="cog" iconAfter>
-        Alt {alt}
-      </Card>
-    ))}
-  </Row>
-)
-
-export let Three = (
-  <Row>
-    {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
-      <Card key={size} size={size} icon="cog" iconAfter>
-        Size {size}
-      </Card>
-    ))}
-  </Row>
-)
-
-export let Four = (
-  <>
-    {[0, 1, 2, 3, 4, 5, 6].map(i => (
-      <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
-        <Card key={i} size={i} elevation={i} icon="cog" iconAfter>
-          Hello World
-        </Card>
-      </SubSection>
-    ))}
-  </>
-)
+export let Two = () => {
+  const [show, setShow] = useState(false)
+  return (
+    <>
+      <Button alt="action" size="lg" onClick={() => setShow(!show)}>
+        Toggle Floating Card
+      </Button>
+      <FloatingCard
+        visible={show}
+        title="Floating Card"
+        subTitle="Sub Title"
+        width={300}
+        height={200}
+        alt="warn"
+        location="warn"
+        elevation={4}
+      />
+    </>
+  )
+}

@@ -99,7 +99,7 @@ class GridStore {
 }
 
 // this is the problem function, type is off
-const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
+const { useStore: useGridStore, SimpleProvider } = createStoreContext(GridStore)
 
 export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
@@ -156,7 +156,7 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
       </ResponsiveReactGridLayout>
     )
   }
-  return <Provider value={gridStore}>{children}</Provider>
+  return <SimpleProvider value={gridStore}>{children}</SimpleProvider>
 }
 
 const getSizes = items => {

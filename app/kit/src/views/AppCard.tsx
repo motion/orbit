@@ -1,6 +1,6 @@
 import { AppBit } from '@o/models'
-import { Button, Card, CardProps, Loading, SpaceGroup } from '@o/ui'
-import React, { Suspense, useState } from 'react'
+import { Button, Card, CardProps, Loading, SpaceGroup, useFocusableItem } from '@o/ui'
+import React, { Suspense, useRef, useState } from 'react'
 import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { AppDefinition } from '../types/AppDefinition'
 import { SelectApp } from './SelectApp'
@@ -16,6 +16,7 @@ export function AppCard<A extends AppDefinition>({
   ...cardProps
 }: AppCardProps<A>) {
   const [app, setApp] = useState<AppBit>(null)
+  const isFocused = useFocusableItem(useRef(`appcard-${Math.random()}`).current)
   return (
     <Card
       key="slack"
@@ -28,6 +29,7 @@ export function AppCard<A extends AppDefinition>({
       title="Slack Messages"
       flex={1}
       elevation={2}
+      focus={isFocused}
       {...cardProps}
     >
       <Suspense fallback={<Loading />}>

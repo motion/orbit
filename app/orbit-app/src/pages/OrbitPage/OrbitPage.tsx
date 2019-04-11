@@ -14,7 +14,7 @@ import {
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import * as UI from '@o/ui'
-import { Loading, Theme } from '@o/ui'
+import { Loading, ProvideFocus, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
@@ -43,6 +43,7 @@ import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
 
+// temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
 window['ReactDOM'] = (window as any).ReactDOM = ReactDOM
 window['OrbitKit'] = (window as any).OrbitUI = KIT
@@ -223,7 +224,11 @@ function OrbitPageProvideStores(props: any) {
     newAppStore,
   }
 
-  return <ProvideStores stores={stores}>{props.children}</ProvideStores>
+  return (
+    <ProvideFocus>
+      <ProvideStores stores={stores}>{props.children}</ProvideStores>
+    </ProvideFocus>
+  )
 }
 
 const InnerChrome = gloss<{ torn?: boolean } & UI.ViewProps>(UI.View, {

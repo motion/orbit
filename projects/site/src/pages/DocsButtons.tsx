@@ -3,9 +3,9 @@ import { Button, Row, SubSection } from '@o/ui'
 import React from 'react'
 import { DocsMeta } from './DocsMeta'
 
-export const Source = <DocsMeta source={ButtonSrc} displayName="Button" />
+export let Source = <DocsMeta source={ButtonSrc} displayName="Button" />
 
-export const One = (
+export let One = (
   <Row flexWrap="wrap">
     <Button>Hello World</Button>
     <Button icon="cog">Hello World</Button>
@@ -15,7 +15,7 @@ export const One = (
   </Row>
 )
 
-export const Two = (
+export let Two = (
   <Row flexWrap="wrap">
     {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
       <Button key={alt} alt={alt} icon="cog" iconAfter>
@@ -25,7 +25,7 @@ export const Two = (
   </Row>
 )
 
-export const Three = (
+export let Three = (
   <Row>
     {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
       <Button key={size} size={size} icon="cog" iconAfter>
@@ -35,7 +35,7 @@ export const Three = (
   </Row>
 )
 
-export const Four = (
+export let Four = (
   <>
     {[0, 1, 2, 3, 4, 5, 6].map(i => (
       <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>

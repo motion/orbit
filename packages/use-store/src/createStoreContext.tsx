@@ -5,15 +5,23 @@ import { useStore, UseStoreOptions } from './useStore'
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context
 
-export function createStoreContext<Instance, Props>(instance: { new (): Instance; props?: Props }) {
+type InferProps<A> = A extends { props: infer B } ? B : undefined
+
+export function createStoreContext<Instance, Props extends InferProps<Instance>>(constructor: {
+  new (): Instance
+}) {
   const Context = createContext<Instance | null>(null)
   return {
     Context,
-    Provider: ({ value, children }: { value: Instance; children: any }) => {
+    SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={value[GET_STORE]}>{children}</Context.Provider>
     },
+    Provider: ({ children, ...props }: Props & { children: any }) => {
+      const store = useStore(constructor, props as any, { react: false })
+      return <Context.Provider value={store[GET_STORE]}>{children}</Context.Provider>
+    },
     useCreateStore(props: Props) {
-      return useStore(instance, props as any)
+      return useStore(constructor, props as any)
     },
     useStore(props?: Props, options?: UseStoreOptions): Instance {
       const value = useContext(Context)
@@ -25,3 +33,12 @@ export function createStoreContext<Instance, Props>(instance: { new (): Instance
     },
   }
 }
+
+// type test
+// class Store {
+//   props: { test: boolean } = { test: true }
+// }
+// const ctx = createStoreContext(Store)
+// const x = ctx.useStore()
+// x.props.test
+// const y = <ctx.Provider test={true}>12</ctx.Provider>

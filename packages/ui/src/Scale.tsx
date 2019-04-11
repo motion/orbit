@@ -1,14 +1,23 @@
+import React from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 
-const scaleContext = createContextualProps({
+const scaleContext = {
   size: 1,
-})
+}
 
-export const Scale = scaleContext.PassProps
-export const ScaleReset = scaleContext.Reset
+const { Reset, PassProps, Context, useProps } = createContextualProps(scaleContext)
+
+// will nest scaling so you can propogate it
+export const Scale = (props: typeof scaleContext & { children: any }) => {
+  const scale = useScale()
+  return <PassProps size={scale * props.size}>{props.children}</PassProps>
+}
+
+export const ScaleReset = Reset
+
 export const useScale = () => {
-  const context = scaleContext.useProps()
+  const context = useProps()
   return context ? context.size : 1
 }
 
-export const ScaleContext = scaleContext.Context
+export const ScaleContext = Context

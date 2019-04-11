@@ -34,6 +34,7 @@ import { getPadding, ViewProps } from './View/View'
 
 export type SurfaceProps = ViewProps & {
   borderPosition?: 'inside' | 'outside'
+  focus?: boolean
   hover?: boolean
   active?: boolean
   ellipse?: boolean

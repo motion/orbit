@@ -32,7 +32,7 @@ export function SpaceGroup({
     const child = childs[0]
     const type = child.type
     // unwrap fragments and children with `canUnwrap`!
-    if (type === React.Fragment || type.canUnwrap) {
+    if (type === React.Fragment || (type && type.canUnwrap)) {
       if (!child.props.children) {
         return null
       }

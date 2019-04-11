@@ -1,34 +1,39 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
 import { Icon, Table } from '@o/kit'
-import { Button, Card, SpaceGroup } from '@o/ui'
+import { Button, Card, Divider, Space, SpaceGroup } from '@o/ui'
 import React from 'react'
 import components from '../../tmp/components.json'
 import { CodeBlock } from '../views/CodeBlock'
 
 export const DocsMeta = (props: { source: string; displayName: string }) => {
   return (
-    <SpaceGroup>
-      <Card
-        collapsable
-        defaultCollapsed
-        collapseOnClick
-        title={`View ${props.displayName} Source`}
-        afterTitle={
-          <Button
-            tagName="a"
-            {...{ href: 'http://github.com' }}
-            icon={<Icon name="github" size={18} svg={GithubIcon} />}
-          />
-        }
-        maxHeight={450}
-        scrollable="y"
-      >
-        <CodeBlock className="language-typescript">{props.source}</CodeBlock>
-      </Card>
-      <Card collapsable collapseOnClick title="Props" scrollable="y">
-        <PropsTable props={components.find(x => x.displayName === props.displayName).props} />
-      </Card>
-    </SpaceGroup>
+    <>
+      <SpaceGroup>
+        <Card
+          collapsable
+          defaultCollapsed
+          collapseOnClick
+          title={`View ${props.displayName} Source`}
+          afterTitle={
+            <Button
+              tagName="a"
+              {...{ href: 'http://github.com' }}
+              icon={<Icon name="github" size={18} svg={GithubIcon} />}
+            />
+          }
+          maxHeight={450}
+          scrollable="y"
+        >
+          <CodeBlock className="language-typescript">{props.source}</CodeBlock>
+        </Card>
+        <Card collapsable collapseOnClick title="Props" scrollable="y">
+          <PropsTable props={components.find(x => x.displayName === props.displayName).props} />
+        </Card>
+      </SpaceGroup>
+
+      <Space size="xl" />
+      <Divider />
+    </>
   )
 }
 

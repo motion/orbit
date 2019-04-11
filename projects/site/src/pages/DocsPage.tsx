@@ -16,10 +16,11 @@ import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
 import Buttons from './DocsButtons.mdx'
+import Cards from './DocsCards.mdx'
 
 const views = {
   buttons: () => Buttons,
-  // sections: () => Sections,
+  cards: () => Cards,
   // forms: () => Forms,
   // tables: () => Tables,
 }
@@ -138,7 +139,7 @@ const items = [
   },
   { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
   { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
-  { title: 'Cards', icon: 'credit-card', indent: 1 },
+  { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
   { title: 'Sections', icon: 'application' },
   { title: 'Popovers', icon: 'direction-right' },
   { title: 'Decorations', icon: 'clean' },

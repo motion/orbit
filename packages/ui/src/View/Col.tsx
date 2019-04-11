@@ -9,6 +9,7 @@ export const Col = forwardRef(function Col(
   { space = false, spaceAround, children, beforeSpace, afterSpace, ...props }: ColProps,
   ref,
 ) {
+  if (!children) return null
   return (
     <ScrollableView ref={ref} flexDirection="column" {...props}>
       <SpaceGroup
@@ -26,3 +27,6 @@ export const Col = forwardRef(function Col(
 // for gloss parents
 // @ts-ignore
 Col.ignoreAttrs = Base.ignoreAttrs
+
+// @ts-ignore
+Col.acceptsSpacing = true

@@ -18,6 +18,7 @@ export type CardProps = SizedSurfaceProps &
   ListItemProps &
   Partial<CollapsableProps> & {
     space?: Sizes
+    collapseOnClick?: boolean
   }
 
 export function Card(props: CardProps) {
@@ -42,6 +43,7 @@ export function Card(props: CardProps) {
     hideSubtitle,
     space,
     flexDirection,
+    collapseOnClick,
     ...sizedSurfaceProps
   } = rest
   // end
@@ -63,7 +65,8 @@ export function Card(props: CardProps) {
           <ListItem
             className="grid-draggable"
             onClickLocation={onClickLocation}
-            onDoubleClick={collapseProps.collapsable && toggle.toggle}
+            onDoubleClick={!collapseOnClick && collapseProps.collapsable && toggle.toggle}
+            onClick={collapseOnClick && toggle.toggle}
             alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}

@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+import { selectDefined } from '@o/utils'
+import React, { cloneElement, Fragment } from 'react'
 import { Sizes, Space } from './Space'
 
 export type SpaceGroupProps = {
@@ -10,6 +11,8 @@ export type SpaceGroupProps = {
   afterSpace?: React.ReactNode
 }
 
+const childrenToArr = (x: React.ReactNode): JSX.Element[] => React.Children.map(x, _ => _) as any
+
 export function SpaceGroup({
   children,
   space = true,
@@ -18,7 +21,28 @@ export function SpaceGroup({
   beforeSpace,
   afterSpace,
 }: SpaceGroupProps) {
-  const total = React.Children.count(children)
+  if (!children) {
+    return null
+  }
+  let childs = childrenToArr(children)
+  let total = childs.length
+
+  // Allows special cases for unwrapping/forwarding spacing
+  if (total === 1) {
+    const child = childs[0]
+    const type = child.type
+    // unwrap fragments!
+    if (type === React.Fragment) {
+      childs = childrenToArr(child.props.children)
+      total = childs.length
+    }
+    // not sure if this is a great feature, could be really confusing...
+    // basically makes it really easy to change the Row/Col direction without losing spacing
+    if (type.acceptsSpacing && selectDefined(child.props.space) === undefined) {
+      return cloneElement(child, { space, spaceAround, separator, beforeSpace, afterSpace })
+    }
+  }
+
   if (!space || total <= 1) {
     return (
       <>
@@ -33,7 +57,7 @@ export function SpaceGroup({
     <>
       {beforeSpace}
       {spaceAround && spaceElement}
-      {React.Children.map(children, (child, index) => (
+      {childs.map((child, index) => (
         <Fragment key={index}>
           {child}
           {index !== total - 1 && spaceElement}

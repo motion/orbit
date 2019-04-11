@@ -39,6 +39,7 @@
     "zenscroll": "^4.0.2",
     "@mdx-js/react": "1.0.0-alpha.12",
     "@mdx-js/tag": "0.20.3",
-    "prism-react-renderer": "0.1.6"
+    "prism-react-renderer": "0.1.6",
+    "react-docgen-typescript": "1.12.3"
   }
 }

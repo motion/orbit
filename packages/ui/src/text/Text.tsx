@@ -40,6 +40,21 @@ export type TextProps = CSSPropertySetStrict &
     renderAsHtml?: boolean
   }
 
+const textSizes = {
+  xs: 0.8,
+  sm: 0.9,
+  md: 1,
+  lg: 1.4,
+  xl: 2.0,
+  xxl: 2.4,
+}
+
+// text should vary more
+const getTextSize = (size: Sizes) => {
+  if (typeof size === 'string') return textSizes[size]
+  return getSize(size)
+}
+
 export type Highlights = {
   highlights: string[]
 }
@@ -169,7 +184,7 @@ export class Text extends React.PureComponent<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
-    const size = scale * getSize(this.props.size)
+    const size = scale * getTextSize(this.props.size)
     const textProps = propsToTextSize({
       sizeLineHeight: this.props.sizeLineHeight,
       lineHeight: this.props.lineHeight,

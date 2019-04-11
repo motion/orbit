@@ -1,4 +1,5 @@
 import { useTheme } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import React, { useState } from 'react'
 import { Card, CardProps } from './Card'
 import { FloatingView, FloatingViewProps } from './FloatingView'
@@ -42,6 +43,13 @@ export function FloatingCard({
     cardProps.opacity === 0 ||
     cardProps.visibility === 'hidden' ||
     cardProps.display === 'none'
+  const visibilityProps: any = {
+    pointerEvents: selectDefined(pointerEvents, visible ? 'auto' : 'none'),
+    opacity: visible ? 1 : 0,
+    transform: {
+      y: visible ? 0 : 10,
+    },
+  }
   return (
     <Visibility visible={!isInvisible}>
       <FloatingView
@@ -57,7 +65,7 @@ export function FloatingCard({
         defaultWidth={defaultWidth}
         defaultHeight={defaultHeight}
         zIndex={+zIndex}
-        pointerEvents={pointerEvents}
+        pointerEvents={visibilityProps.pointerEvents}
       >
         <Card
           background={theme.floatingBackground || theme.cardBackground || theme.background}
@@ -66,14 +74,7 @@ export function FloatingCard({
           margin={5}
           collapsed={collapsed}
           onCollapse={setCollapsed}
-          // visibility props
-          {...{
-            pointerEvents: visible ? 'auto' : 'none',
-            opacity: visible ? 1 : 0,
-            transform: {
-              y: visible ? 0 : 10,
-            },
-          }}
+          {...visibilityProps}
           {...cardProps}
         />
       </FloatingView>

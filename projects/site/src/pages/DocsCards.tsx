@@ -1,5 +1,5 @@
 import CardSrc from '!raw-loader!@o/ui/src/Card.tsx'
-import { Button, Card, FloatingCard, Row } from '@o/ui'
+import { Button, Card, Col, FloatingCard, Row } from '@o/ui'
 import React, { useState } from 'react'
 import { DocsMeta } from './DocsMeta'
 
@@ -39,9 +39,11 @@ export let Two = () => {
   const [show, setShow] = useState(false)
   return (
     <>
-      <Button alt="action" size="lg" onClick={() => setShow(!show)}>
-        Toggle Floating Card
-      </Button>
+      <Col pad>
+        <Button alt="action" size="lg" onClick={() => setShow(!show)}>
+          Toggle Floating Card
+        </Button>
+      </Col>
       <FloatingCard
         visible={show}
         title="Floating Card"

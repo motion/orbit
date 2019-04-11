@@ -287,11 +287,14 @@ export class Text extends React.PureComponent<TextProps> {
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
 const TextBlock = gloss({
+  flexFlow: 'row',
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
-  maxWidth: '100%',
   minHeight: 'min-content',
+  // this lets it shrink down to content without breaking everything
+  width: 'max-content',
+  maxWidth: '100%',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',

@@ -20,6 +20,10 @@ body {
   pointer-events: auto;
 }
 
+small {
+  opacity: 0.8;
+}
+
 .react-hot-loader-error-overlay {
   pointer-events: auto;
 }

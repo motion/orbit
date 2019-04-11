@@ -5,14 +5,16 @@ export type Toggler = {
   val: boolean
   toggle: () => void
   setState: any
-  getProps: () => Pick<CollapsableProps, 'onCollapse' | 'collapsed'>
+  collapseProps: CollapsableProps
 }
 
-export function useToggle(cur: boolean, onChange?: (next: boolean) => any): Toggler {
+export function useToggle(
+  cur: boolean,
+  onChange?: (next: boolean) => any,
+  props?: CollapsableProps,
+): Toggler {
   const prev = useRef(cur)
   const [val, setState] = useState(cur)
-
-  console.log('toggle state is', val)
 
   useEffect(() => {
     if (prev.current !== cur) {
@@ -33,11 +35,6 @@ export function useToggle(cur: boolean, onChange?: (next: boolean) => any): Togg
     val,
     toggle,
     setState,
-    getProps() {
-      return {
-        onCollapse: toggle,
-        collapsed: val,
-      }
-    },
+    collapseProps: props,
   }
 }

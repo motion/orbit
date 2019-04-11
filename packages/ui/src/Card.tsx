@@ -1,6 +1,12 @@
 import { Theme } from '@o/gloss'
 import React from 'react'
-import { Collapsable, CollapsableProps, useCollapseToggle } from './Collapsable'
+import {
+  Collapsable,
+  CollapsableProps,
+  CollapseArrow,
+  splitCollapseProps,
+  useCollapseToggle,
+} from './Collapsable'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -15,6 +21,7 @@ export type CardProps = SizedSurfaceProps &
   }
 
 export function Card(props: CardProps) {
+  const [collapseProps, rest] = splitCollapseProps(props)
   const {
     padding,
     sizeRadius = true,
@@ -32,27 +39,20 @@ export function Card(props: CardProps) {
     subTitle,
     pad,
     date,
-    collapsable,
-    collapsed,
-    onCollapse,
     hideSubtitle,
     space,
     flexDirection,
-    defaultCollapsed,
-    ...restProps
-  } = props
-  // unused props
-  defaultCollapsed
-  onCollapse
+    ...sizedSurfaceProps
+  } = rest
   // end
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
-  const toggle = useCollapseToggle(props)
+  const toggle = useCollapseToggle(collapseProps)
   return (
     <Theme alternate={isSelected ? 'selected' : null}>
       <SizedSurface
         borderWidth={1}
-        {...restProps}
+        {...sizedSurfaceProps}
         themeSelect="card"
         sizeRadius={sizeRadius}
         noInnerElement
@@ -63,11 +63,7 @@ export function Card(props: CardProps) {
           <ListItem
             className="grid-draggable"
             onClickLocation={onClickLocation}
-            onDoubleClick={() => {
-              if (collapsable) {
-                toggle.toggle()
-              }
-            }}
+            onDoubleClick={collapseProps.collapsable && toggle.toggle}
             alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
@@ -82,6 +78,7 @@ export function Card(props: CardProps) {
             subTitle={subTitle}
             date={date}
             icon={icon}
+            before={<CollapseArrow useToggle={toggle} />}
             location={location}
             hideSubtitle={hideSubtitle}
             iconProps={iconProps}
@@ -90,14 +87,7 @@ export function Card(props: CardProps) {
         </Scale>
         <Collapsable useToggle={toggle}>
           <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
-          <Col
-            flexDirection={flexDirection}
-            space={space}
-            pad={pad}
-            padding={padding}
-            flex={1}
-            height={collapsed ? 0 : '100%'}
-          >
+          <Col flexDirection={flexDirection} space={space} pad={pad} padding={padding} flex={1}>
             {showChildren && children}
           </Col>
         </Collapsable>

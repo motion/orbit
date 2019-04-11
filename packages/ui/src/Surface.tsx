@@ -295,7 +295,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     return {
       alt,
       opacity: iconOpacity,
-      pointerEvents: 'none',
       color: iconColor,
       justifyContent: 'center',
       hoverStyle: {

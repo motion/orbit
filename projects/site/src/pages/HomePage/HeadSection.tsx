@@ -24,9 +24,9 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Make powerful apps in minutes. No configuration and deployed without a server.`,
-    `Everything you need to build workflows, spreadsheets, dashboards and more.`,
-    `Internal tools, made easy.`,
+    `Build powerful apps in minutes: no config, powerful tools, deployed without a server.`,
+    `Everything you need to build incredible internal tools and more.`,
+    `Open source, runs privately on your computer.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
@@ -55,6 +55,8 @@ export function HeadSection() {
   let texts = allTexts[size]
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
+  const space = <div style={{ height: 5 }} />
+
   return (
     <>
       <Page offset={0}>
@@ -70,7 +72,7 @@ export function HeadSection() {
               alignItems="center"
               justifyContent="center"
             >
-              <View width="90%" maxWidth={900}>
+              <View width="90%" maxWidth={980}>
                 <FadeDown disable={!measured}>
                   <TitleText fontWeight={100} selectable>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
@@ -83,17 +85,17 @@ export function HeadSection() {
                   </ViewPortText>
 
                   <Paragraph
-                    fontSize={parSize * 0.85}
+                    fontSize={parSize * 0.96}
                     sizeLineHeight={1.5}
                     textAlign="center"
                     fontWeight={100}
                     alpha={0.56}
                   >
                     <span style={{ fontWeight: 200 }}>{texts[0]}</span>
-                    <br />
-                    {texts[1]}
-                    <br />
-                    {texts[2]}
+                    {space}
+                    <span style={{ fontSize: '95%' }}>{texts[1]}</span>
+                    {space}
+                    <span style={{ fontSize: '95%' }}>{texts[2]}</span>
                   </Paragraph>
                 </FadeDown>
               </View>

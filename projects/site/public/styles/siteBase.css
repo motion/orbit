@@ -306,12 +306,12 @@ pre {
 pre,
 code {
   margin: 0;
-  display: block;
 }
 
 code {
   margin: 0;
   padding: 0;
+  display: inline-block;
 }
 
 img {

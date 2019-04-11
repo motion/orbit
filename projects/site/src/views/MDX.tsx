@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/tag'
-import { Space, Text, Title } from '@o/ui'
+import { gloss, Paragraph, Space, Title } from '@o/ui'
 import React from 'react'
 import { CodeBlock } from './CodeBlock'
 
@@ -37,12 +37,21 @@ export const components = {
   ),
   p: props => (
     <>
-      <Text {...props} />
+      <Paragraph margin={0} {...props} />
       <Space />
     </>
   ),
+  inlineCode: props => <InlineCode {...props} />,
 }
 
 export function MDX({ children }: any) {
   return <MDXProvider components={components}>{children}</MDXProvider>
 }
+
+const InlineCode = gloss({
+  display: 'inline-block',
+  fontFamily: 'source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace',
+  background: '#FDFFD0',
+  borderRadius: 4,
+  lineHeight: '1.3rem',
+})

@@ -1,4 +1,4 @@
-import { Absolute, Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
+import { Absolute, Center, FullScreen, gloss, Image, Row, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useState } from 'react'
 import download from '../../../public/images/download.svg'
@@ -117,8 +117,17 @@ export function HeadSection() {
                 <img src={lineSep} />
               </FullScreen>
 
-              <View position="absolute" bottom="10%" left={0} right={0}>
-                <img style={{ margin: 'auto' }} src={macbook} />
+              <View
+                position="absolute"
+                bottom="12%"
+                left={0}
+                right={0}
+                alignItems="center"
+                justifyContent="center"
+                height={160}
+              >
+                <img style={{ position: 'absolute', top: 0 }} src={macbook} />
+                <PreviewButton>See the Orbit Demo</PreviewButton>
               </View>
             </FullScreen>
           </FullScreen>
@@ -149,6 +158,16 @@ export function HeadSection() {
     </>
   )
 }
+
+const PreviewButton = gloss({
+  padding: [10, 30],
+  background: '#290C3C',
+  border: [1, '#fff'],
+  borderRadius: 10,
+  color: '#fff',
+  zIndex: 10,
+  boxShadow: [[0, 20, 20, [0, 0, 0, 0.5]]],
+})
 
 const DownloadButton = (
   <Center bottom="auto" top="4%">

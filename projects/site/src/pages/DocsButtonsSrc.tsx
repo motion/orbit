@@ -10,13 +10,13 @@ export const Source = () => (
 )
 
 export const One = () => (
-  <Section space size="md" title="Buttons">
+  <>
     <Button>Hello World</Button>
     <Button icon="cog">Hello World</Button>
     <Button icon="cog" iconAfter>
       Hello World
     </Button>
-  </Section>
+  </>
 )
 
 export const Two = () => (

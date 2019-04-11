@@ -293,7 +293,7 @@ const TextBlock = gloss({
   position: 'relative',
   minHeight: 'min-content',
   // this lets it shrink down to content without breaking everything
-  width: 'max-content',
+  // width: 'max-content',
   maxWidth: '100%',
   selectable: {
     userSelect: 'text',
@@ -316,7 +316,7 @@ const TextBlock = gloss({
 })
 
 const TextEllipse = gloss({
-  display: 'inline',
+  display: 'inline-block',
   maxWidth: '100%',
 }).theme(({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {

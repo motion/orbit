@@ -38,6 +38,7 @@ export type SurfaceProps = ViewProps & {
   hover?: boolean
   active?: boolean
   ellipse?: boolean
+  before?: React.ReactNode
   after?: React.ReactNode
   badge?: React.ReactNode
   badgeProps?: Object
@@ -159,6 +160,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     borderPosition = 'outside',
     borderWidth,
     alt,
+    before,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -214,6 +216,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   } else {
     childrenProps.children = (
       <>
+        {before}
         {!!badge && (
           <Badge
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}

@@ -54,4 +54,6 @@ const InlineCode = gloss({
   background: '#FDFFD0',
   borderRadius: 4,
   lineHeight: '1.3rem',
+  padding: 2,
+  margin: [-2, 0],
 })

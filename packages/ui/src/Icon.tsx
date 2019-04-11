@@ -39,6 +39,8 @@ export function Icon(rawProps: IconProps) {
   return <ResolvedIcon themeSelect="icon" {...props} />
 }
 
+Icon.acceptsIconProps = true
+
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
@@ -76,6 +78,8 @@ export function PlainIcon(props: IconProps) {
     </View>
   )
 }
+
+PlainIcon.acceptsIconProps = true
 
 function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | null {
   const svgPathsRecord = pathsSize === SIZE_STANDARD ? IconSvgPaths16 : IconSvgPaths20

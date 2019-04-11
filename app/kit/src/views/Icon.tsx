@@ -7,8 +7,8 @@ import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
 
-export const Icon = memo((props: IconProps) => {
-  const { name, color, size = 32, style, opacity, ...restProps } = props
+export const Icon = memo((props: IconProps & { svg?: string }) => {
+  const { name, color, size = 32, style, opacity, svg, ...restProps } = props
   const theme = useTheme()
   const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
@@ -42,7 +42,7 @@ export const Icon = memo((props: IconProps) => {
 
   // find our custom streamline icons...
   const isSVG = name.trim().indexOf('<svg') === 0
-  const svgIcon = icons[name] || (isSVG ? name : null)
+  const svgIcon = svg || icons[name] || (isSVG ? name : null)
 
   if (!svgIcon) {
     return (
@@ -90,7 +90,8 @@ export const Icon = memo((props: IconProps) => {
   )
 })
 
-Icon['acceptsIconProps'] = true
+// @ts-ignore
+Icon.acceptsIconProps = true
 
 const adjust = {
   icon: {

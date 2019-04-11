@@ -1,9 +1,13 @@
-import { themes } from '@o/kit'
-import { Theme, ThemeProvide } from '@o/ui'
+import { Icon, themes } from '@o/kit'
+import { configureUI, Theme, ThemeProvide } from '@o/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-hot-loader' // must be imported before react
 import './../public/styles/siteBase.css'
+
+configureUI({
+  useIcon: Icon,
+})
 
 export function render() {
   const RootNode = document.querySelector('#app')

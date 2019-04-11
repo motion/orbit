@@ -1,9 +1,11 @@
+import { Theme, ThemeProvide } from '@o/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
+import { themes } from './themes'
 import { MDX } from './views/MDX'
 
 function getSiteBrowser() {
@@ -35,10 +37,14 @@ function getSiteBrowser() {
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
-    <MDX>
-      <div style={{ pointerEvents: 'auto', height: '100vh' }}>
-        <SiteBrowser />
-      </div>
-    </MDX>
+    <ThemeProvide themes={themes}>
+      <Theme name="light">
+        <MDX>
+          <div style={{ pointerEvents: 'auto', height: '100vh' }}>
+            <SiteBrowser />
+          </div>
+        </MDX>
+      </Theme>
+    </ThemeProvide>
   )
 })

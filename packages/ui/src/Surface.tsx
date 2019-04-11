@@ -374,6 +374,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     if (props.borderPosition === 'inside') {
       // inside
       boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor]]
+      styles.borderWidth = 0
     } else {
       // outside
       styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]

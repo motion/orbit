@@ -20,6 +20,10 @@ body {
   pointer-events: auto;
 }
 
+.react-hot-loader-error-overlay {
+  pointer-events: auto;
+}
+
 img {
   border: none;
 }

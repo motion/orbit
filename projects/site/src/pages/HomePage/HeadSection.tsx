@@ -1,4 +1,4 @@
-import { Center, FullScreen, Image, Row, Theme, Title, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, Image, Row, Title, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { Fragment, useState } from 'react'
 import download from '../../../public/images/download.svg'
@@ -56,7 +56,7 @@ export function HeadSection() {
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   return (
-    <Theme name="dark">
+    <>
       <Page offset={0}>
         <Page.Content background={theme => theme.background}>
           <TopBlur />
@@ -64,7 +64,7 @@ export function HeadSection() {
             <Header />
 
             <Row height="80%" flex={1} alignItems="center" justifyContent="center">
-              <View width="90%">
+              <View width="90%" maxWidth={900}>
                 <FadeDown disable={!measured}>
                   <TitleText fontWeight={100} selectable>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
@@ -94,7 +94,15 @@ export function HeadSection() {
               </View>
             </Row>
 
-            <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
+            <View
+              pointerEvents="none"
+              position="absolute"
+              top="30%"
+              left={0}
+              right={0}
+              zIndex={1}
+              opacity={0}
+            >
               <img src={glow} />
             </View>
 
@@ -145,6 +153,6 @@ export function HeadSection() {
           <Title>Test me out</Title>
         </Page.Parallax>
       </Page>
-    </Theme>
+    </>
   )
 }

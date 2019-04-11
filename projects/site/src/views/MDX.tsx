@@ -51,9 +51,17 @@ export function MDX({ children }: any) {
 const InlineCode = gloss({
   display: 'inline-block',
   fontFamily: 'source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace',
-  background: '#FDFFD0',
-  borderRadius: 4,
-  lineHeight: '1.3rem',
-  padding: 2,
-  margin: [-2, 0],
-})
+  borderRadius: 3,
+  padding: [0, 2],
+  margin: [0, 0],
+}).theme((_, theme) =>
+  theme.background.isDark()
+    ? {
+        background: '#1A71E399',
+        color: '#fff',
+      }
+    : {
+        background: '#FDFFD0',
+        color: '#444',
+      },
+)

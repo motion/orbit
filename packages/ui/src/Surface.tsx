@@ -109,6 +109,8 @@ const iconTransform = {
   y: 0.5,
 }
 
+const acceptsIcon = child => child.type.acceptsIconProps === true
+
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = Context.useProps(direct)
   const crumb = useBreadcrumb()
@@ -257,7 +259,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           }}
         >
           <PassProps
-            passCondition={child => child.type.acceptsIconProps === true}
+            passCondition={acceptsIcon}
             alt={alt}
             size={getIconSize(props)}
             transform={iconTransform}

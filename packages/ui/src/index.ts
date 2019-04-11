@@ -19,6 +19,8 @@ export {
   Theme,
   ThemeContext,
   ThemeProvide,
+  useTheme,
+  useThemeContext,
 } from '@o/gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
 export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'

@@ -6,16 +6,7 @@ import { DocsMeta } from './DocsMeta'
 export let Source = <DocsMeta source={CardSrc} displayName="Card" />
 
 const ExampleCard = ({ children = 'Hello world content', ...props }) => (
-  <Card
-    title="Title"
-    subTitle="SubTitle"
-    pad
-    width={180}
-    height={250}
-    icon="cog"
-    iconBefore
-    {...props}
-  >
+  <Card title="Title" subTitle="SubTitle" pad width={180} icon="cog" iconBefore {...props}>
     {children}
   </Card>
 )

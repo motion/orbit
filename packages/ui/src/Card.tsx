@@ -1,4 +1,4 @@
-import { Theme, useTheme } from '@o/gloss'
+import { Theme, useThemeContext } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React from 'react'
 import {
@@ -49,10 +49,11 @@ export function Card(props: CardProps) {
     maxHeight,
     size,
     iconBefore,
+    alt,
     ...sizedSurfaceProps
   } = rest
   // end
-  const theme = useTheme()
+  const { activeThemeName } = useThemeContext()
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const toggle = useCollapseToggle(collapseProps)
@@ -61,7 +62,7 @@ export function Card(props: CardProps) {
     padding,
   }
   return (
-    <Theme alternate={isSelected ? 'selected' : props.alt || null}>
+    <Theme alternate={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
         <SizedSurface
           borderWidth={1}
@@ -107,19 +108,22 @@ export function Card(props: CardProps) {
             />
           </Scale>
           <Collapsable useToggle={toggle}>
-            <Col
-              scrollable={scrollable}
-              flexDirection={flexDirection}
-              space={getSpaceSize(space) * getSize(size)}
-              pad={pad}
-              padding={padding}
-              flex={1}
-              maxHeight={maxHeight}
-              background={theme.background}
-              {...padProps}
-            >
-              {showChildren && children}
-            </Col>
+            {/* reset inner contents to be original theme */}
+            <Theme name={activeThemeName}>
+              <Col
+                scrollable={scrollable}
+                flexDirection={flexDirection}
+                space={getSpaceSize(space) * getSize(size)}
+                pad={pad}
+                padding={padding}
+                flex={1}
+                maxHeight={maxHeight}
+                {...resetColors}
+                {...padProps}
+              >
+                {showChildren && children}
+              </Col>
+            </Theme>
           </Collapsable>
         </SizedSurface>
       </Scale>
@@ -129,4 +133,9 @@ export function Card(props: CardProps) {
 
 Card.accepts = {
   surfaceProps: true,
+}
+
+const resetColors = {
+  background: theme => theme.background,
+  color: theme => theme.color,
 }

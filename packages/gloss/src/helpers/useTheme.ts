@@ -12,3 +12,5 @@ export function useTheme(props?: { themeSelect?: ThemeSelect; alt?: string }) {
   }
   return theme
 }
+
+export const useThemeContext = () => useContext(ThemeContext)

@@ -37,19 +37,9 @@ export const Three = (
 
 export const Four = (
   <>
-    {[1, 2, 3, 4, 5].map(size => (
-      <Button key={size} size={size} icon="cog" iconAfter>
-        Size {size}
-      </Button>
-    ))}
-  </>
-)
-
-export const Five = (
-  <>
-    {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
-      <SubSection title={`Elevation ${elevation}`} key={elevation}>
-        <Button key={elevation} elevation={elevation} icon="cog" iconAfter>
+    {[0, 1, 2, 3, 4, 5, 6].map(i => (
+      <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
+        <Button key={i} size={i} elevation={i} icon="cog" iconAfter>
           Hello World
         </Button>
       </SubSection>

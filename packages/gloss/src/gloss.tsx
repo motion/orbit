@@ -15,6 +15,7 @@ export type BaseRules = {
 }
 
 export type GlossProps<Props> = Props & {
+  className?: string
   tagName?: string
   children?: React.ReactNode
   ref?: any

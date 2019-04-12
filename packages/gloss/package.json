@@ -6,7 +6,7 @@
   "ts:main": "src/index.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -b || true",
+    "build": "tsc -b",
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "repository": {

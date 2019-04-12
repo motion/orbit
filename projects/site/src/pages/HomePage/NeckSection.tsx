@@ -107,7 +107,7 @@ export function NeckSection() {
           backgroundImage={`url(${northernlights})`}
           backgroundSize="cover"
           backgroundPosition="center center"
-          backgroundRepeat="none"
+          backgroundRepeat="no-repeat"
         />
         <Spotlight />
       </Page.Parallax>

@@ -155,13 +155,11 @@ export class Parallax extends React.PureComponent {
   scrollerRaf = () => Globals.requestFrame(this.moveItems)
 
   onScroll = event => {
-    console.log('on scroll')
     const { horizontal } = this.props
     if (!this.busy) {
       this.busy = true
       this.scrollerRaf()
       this.current = this.props.container[getScrollType(horizontal)]
-      console.log('set to', this.current)
     }
   }
 

@@ -43,7 +43,6 @@ export function HomePage() {
           container={document.documentElement}
           pageHeight={homeStore.sectionHeight}
         >
-          >
           <HeadSection />
           <NeckSection />
         </Parallax>

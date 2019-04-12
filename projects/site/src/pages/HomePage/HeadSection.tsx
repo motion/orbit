@@ -136,7 +136,6 @@ export function HeadSection() {
       <Page.Background background={theme => theme.background} />
 
       <Page.Parallax speed={-0.4} zIndex={-2}>
-        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
         <View
           pointerEvents="none"
           position="absolute"
@@ -151,7 +150,6 @@ export function HeadSection() {
       </Page.Parallax>
 
       <Page.Parallax speed={0} zIndex={-2}>
-        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
         <TopBlur opacity={0.6} />
       </Page.Parallax>
     </Page>

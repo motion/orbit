@@ -45,7 +45,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
 
   if (renderText) {
     content = renderText(message.text)
-  } else if (itemProps.condensed) {
+  } else if (itemProps.oneLine) {
     content = (
       <HighlightText ellipse {...itemProps.textProps}>
         {message.text}
@@ -53,23 +53,19 @@ export function ChatMessage(rawProps: ChatMessageProps) {
     )
   } else {
     content = (
-      <Text
-        selectable={!itemProps.preventSelect}
-        ellipse={itemProps.condensed ? true : null}
-        {...itemProps.textProps}
-      >
+      <Text selectable={!itemProps.preventSelect} {...itemProps.textProps}>
         <Markdown className="chat-markdown" source={message.text} />
       </Text>
     )
   }
 
   return (
-    <ChatMessageFrame condensed={itemProps.condensed} {...itemProps.itemProps}>
+    <ChatMessageFrame oneLine={itemProps.oneLine} {...itemProps.itemProps}>
       {!hideHeader && (
-        <Row alignItems="center" cursor="default" padding={[itemProps.condensed ? 0 : 3, 0]}>
+        <Row alignItems="center" cursor="default" padding={[itemProps.oneLine ? 0 : 3, 0]}>
           {itemProps.beforeTitle || null}
           {!!person && <ButtonPerson background="transparent" photo={person.photo} />}
-          {!itemProps.condensed && (
+          {!itemProps.oneLine && (
             <>
               <div style={{ width: 6 }} />
               {(!previousMessage || !previousWithinOneMinute) && (
@@ -93,7 +89,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
 const ChatMessageFrame = gloss(View, {
   overflow: 'hidden',
   alignItems: 'flex-start',
-  condensed: {
+  oneLine: {
     flexFlow: 'row',
     alignItems: 'center',
   },

@@ -29,59 +29,55 @@ export type ListItemHide = {
   hideMeta?: boolean
 }
 
-export type ListItemDisplayProps = {
+export type ListItemSpecificProps = ListItemHide & {
   oneLine?: boolean
-  condensed?: boolean
+  selectable?: boolean
+  padding?: number | number[]
+  // TODO make it a Sizes
+  indent?: number
+  subId?: string | number
+  location?: React.ReactNode
+  preview?: React.ReactNode
+  title?: React.ReactNode
+  subTextOpacity?: number
+  small?: boolean
+  above?: React.ReactNode
+  before?: React.ReactNode
+  listItem?: boolean
+  subTitle?: React.ReactNode
+  date?: Date
+  icon?: any
+  index?: number
+  afterTitle?: React.ReactNode
+  after?: React.ReactNode
+  titleProps?: Record<string, any>
+  iconBefore?: boolean
+  iconProps?: Partial<IconProps>
+  separatorProps?: Record<string, any>
+  className?: string
+  pane?: string
+  subPane?: string
+  renderText?: ItemRenderText
+  children?: React.ReactNode
+  // its helpful to have a separate disableSelect for various JS-object/intuitiveness reasons
+  disableSelect?: boolean
+  // single click / keyboard select
+  onSelect?: HandleSelection
+  // double click / keyboard enter
+  onOpen?: HandleSelection
+  borderRadius?: number
+  nextUpStyle?: Record<string, any>
+  isSelected?: boolean | ((index: number) => boolean)
+  titleFlex?: number
+  subTitleProps?: Record<string, any>
+  getIndex?: (id: number) => number
+  searchTerm?: string
+  onClickLocation?: (index: number, e?: Event) => any
+  separator?: React.ReactNode
+  group?: string
 }
 
-export type ListItemProps = SizedSurfaceProps &
-  ListItemHide &
-  ListItemDisplayProps & {
-    selectable?: boolean
-    padding?: number | number[]
-    // TODO make it a Sizes
-    indent?: number
-    subId?: string | number
-    location?: React.ReactNode
-    preview?: React.ReactNode
-    title?: React.ReactNode
-    subTextOpacity?: number
-    small?: boolean
-    above?: React.ReactNode
-    before?: React.ReactNode
-    listItem?: boolean
-    subTitle?: React.ReactNode
-    date?: Date
-    icon?: any
-    index?: number
-    afterTitle?: React.ReactNode
-    after?: React.ReactNode
-    titleProps?: Record<string, any>
-    iconBefore?: boolean
-    iconProps?: Partial<IconProps>
-    separatorProps?: Record<string, any>
-    className?: string
-    pane?: string
-    subPane?: string
-    renderText?: ItemRenderText
-    children?: React.ReactNode
-    // its helpful to have a separate disableSelect for various JS-object/intuitiveness reasons
-    disableSelect?: boolean
-    // single click / keyboard select
-    onSelect?: HandleSelection
-    // double click / keyboard enter
-    onOpen?: HandleSelection
-    borderRadius?: number
-    nextUpStyle?: Record<string, any>
-    isSelected?: boolean | ((index: number) => boolean)
-    titleFlex?: number
-    subTitleProps?: Record<string, any>
-    getIndex?: (id: number) => number
-    searchTerm?: string
-    onClickLocation?: (index: number, e?: Event) => any
-    separator?: React.ReactNode
-    group?: string
-  }
+export type ListItemProps = SizedSurfaceProps & ListItemSpecificProps
 
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop

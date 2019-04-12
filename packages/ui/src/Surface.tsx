@@ -32,7 +32,7 @@ import { getPadding, ViewProps } from './View/View'
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceProps = ViewProps & {
+export type SurfaceSpecificProps = {
   borderPosition?: 'inside' | 'outside'
   focus?: boolean
   hover?: boolean
@@ -82,6 +82,8 @@ export type SurfaceProps = ViewProps & {
   iconPad?: number
   getTheme?: GetSurfaceTheme
 }
+
+export type SurfaceProps = ViewProps & SurfaceSpecificProps
 
 export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
 

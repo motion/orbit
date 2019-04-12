@@ -11,6 +11,5 @@ export type OrbitItemViewProps = {
   hide?: ListItemHide
   beforeTitle?: React.ReactNode
   oneLine?: boolean
-  condensed?: boolean
   preventSelect?: boolean
 }

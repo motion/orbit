@@ -1,4 +1,4 @@
-import { Theme, ThemeProvide } from '@o/ui'
+import { ProvideUI } from '@o/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
@@ -37,14 +37,12 @@ function getSiteBrowser() {
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
-    <ThemeProvide themes={themes}>
-      <Theme name="light">
-        <MDX>
-          <div style={{ pointerEvents: 'auto', height: '100vh' }}>
-            <SiteBrowser />
-          </div>
-        </MDX>
-      </Theme>
-    </ThemeProvide>
+    <ProvideUI themes={themes} activeTheme="light">
+      <MDX>
+        <div style={{ pointerEvents: 'auto', height: '100vh' }}>
+          <SiteBrowser />
+        </div>
+      </MDX>
+    </ProvideUI>
   )
 })

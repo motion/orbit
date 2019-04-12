@@ -8,14 +8,14 @@ import {
   splitCollapseProps,
   useCollapseToggle,
 } from './Collapsable'
-import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
+import { ListItem, ListItemSpecificProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
-import { getSize, SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { getSize, SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSpaceSize, Sizes } from './Space'
 import { Col, ColProps } from './View/Col'
 
-export type CardProps = SizedSurfaceProps &
-  ListItemProps &
+export type CardProps = SizedSurfaceSpecificProps &
+  ListItemSpecificProps &
   Partial<CollapsableProps> &
   ColProps & {
     space?: Sizes
@@ -135,7 +135,7 @@ Card.accepts = {
   surfaceProps: true,
 }
 
-const resetColors = {
+const resetColors: any = {
   background: theme => theme.background,
   color: theme => theme.color,
 }

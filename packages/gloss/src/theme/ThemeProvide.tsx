@@ -8,7 +8,7 @@ type ThemeProvideProps = {
   children: React.ReactNode
 }
 
-export const ThemeProvide = ({ activeTheme, children, themes }: ThemeProvideProps) => {
+export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProps) {
   const themeContext = useContext(ThemeContext)
   const val = useMemo(() => {
     const next = {

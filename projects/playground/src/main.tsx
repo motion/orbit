@@ -1,6 +1,6 @@
 import { configureUseStore, debugUseStore, IS_STORE, themes } from '@o/kit'
 import '@o/nucleo'
-import { Theme, ThemeProvide } from '@o/ui'
+import { ProvideUI } from '@o/ui'
 import ReactDOM from 'react-dom'
 import '../public/testBase.css'
 
@@ -10,11 +10,9 @@ export function render() {
   const RootView = require('./RootView').default
   const RootNode = document.querySelector('#app')
   ReactDOM.render(
-    <ThemeProvide themes={themes}>
-      <Theme name="light">
-        <RootView />
-      </Theme>
-    </ThemeProvide>,
+    <ProvideUI activeTheme="light" themes={themes}>
+      <RootView />
+    </ProvideUI>,
     RootNode,
   )
 }

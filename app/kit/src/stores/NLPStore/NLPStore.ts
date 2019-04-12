@@ -4,7 +4,7 @@ import { decorate, ensure, react } from '@o/use-store'
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
 // to run in web worker
-import initNlp from './nlpQueryWorker'
+import initNlp from './nlpQuery.worker'
 
 const { parseSearchQuery, setUserNames } = initNlp()
 

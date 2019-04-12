@@ -3,6 +3,7 @@ import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
 import { Page } from '../../views/Page'
 import { PillButtonDark } from '../../views/PillButtonDark'
+import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 
 export function NeckSection() {
@@ -19,6 +20,9 @@ export function NeckSection() {
               Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
             </TitleText>
           </Col>
+
+          {/* Squircle! */}
+          <Squircle width={100} height={100} background="red" />
 
           <Row space>
             <Flex>

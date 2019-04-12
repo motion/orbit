@@ -1,17 +1,6 @@
 import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import {
-  createElement,
-  forwardRef,
-  HTMLAttributes,
-  memo,
-  ReactElement,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  ValidationMap,
-} from 'react'
+import { createElement, forwardRef, memo, useContext, useEffect, useRef } from 'react'
 import { Config } from './config'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
@@ -25,14 +14,13 @@ export type BaseRules = {
   [key: string]: string | number
 }
 
-export type GlossProps<Props> = Props &
-  HTMLAttributes<HTMLElement> & {
-    tagName?: string
-    children?: ReactNode
-    ref?: any
-    style?: any
-    alt?: string
-  }
+export type GlossProps<Props> = Props & {
+  tagName?: string
+  children?: React.ReactNode
+  ref?: any
+  style?: any
+  alt?: string
+}
 
 export type GlossThemeFn<Props> = (
   props: GlossProps<Props>,
@@ -41,9 +29,9 @@ export type GlossThemeFn<Props> = (
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
-  (props: GlossProps<Props>, context?: any): ReactElement<any> | null
-  propTypes?: ValidationMap<Props>
-  contextTypes?: ValidationMap<any>
+  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
+  propTypes?: React.ValidationMap<Props>
+  contextTypes?: React.ValidationMap<any>
   defaultProps?: Partial<Props>
   displayName?: string
   // extra:

@@ -2,6 +2,7 @@ import { Theme } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import React, { useEffect } from 'react'
 import { Parallax } from '../views/Parallax'
+import { ChestSection } from './HomePage/ChestSection'
 // import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
 import { NeckSection } from './HomePage/NeckSection'
@@ -38,7 +39,7 @@ export function HomePage() {
     <Theme name="home">
       <SimpleProvider value={homeStore}>
         <Parallax
-          pages={3}
+          pages={4}
           // ref={ref => (this.parallax = ref)}
           scrollingElement={window}
           container={document.documentElement}
@@ -47,6 +48,7 @@ export function HomePage() {
           <HeadSection />
           <NeckSection />
           <ShoulderSection />
+          <ChestSection />
         </Parallax>
       </SimpleProvider>
     </Theme>

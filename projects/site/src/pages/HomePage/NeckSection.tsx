@@ -9,7 +9,7 @@ import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export const SubTitleText = (props: TextProps) => (
+export const TitleTextSub = (props: TextProps) => (
   <TitleText fontSize={20} fontWeight={200} alpha={0.5} {...props} />
 )
 
@@ -24,9 +24,9 @@ export function NeckSection() {
               <TitleText size="lg" fontWeight={200}>
                 No config, no servers + a desktop-class UI kit.
               </TitleText>
-              <SubTitleText>
+              <TitleTextSub>
                 Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
-              </SubTitleText>
+              </TitleTextSub>
             </>
           }
         >

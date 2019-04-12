@@ -15,7 +15,7 @@ class HomeStore {
       // min-height
       Math.max(800, this.windowHeight),
       // max-height
-      1200,
+      1100,
     )
   }
 }

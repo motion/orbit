@@ -16,6 +16,7 @@ export const ViewportParagraph = ({
   onReady,
   autoResize,
   resizable,
+  children,
   ...props
 }: Partial<TextFitProps> & Partial<TextProps>) => (
   <ViewPortText
@@ -28,6 +29,6 @@ export const ViewportParagraph = ({
     autoResize={autoResize}
     resizable={resizable}
   >
-    <Paragraph {...props} />
+    <Paragraph {...props}>{children}</Paragraph>
   </ViewPortText>
 )

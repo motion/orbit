@@ -1,19 +1,10 @@
-import { ButtonProps, SizedSurface } from '@o/ui'
+import { ButtonProps } from '@o/ui'
 import React from 'react'
+import { PillButton } from './PillButton'
 
 export function PillButtonDark({ children, ...props }: ButtonProps) {
   return (
-    <SizedSurface
-      sizeRadius={100}
-      background="#111"
-      fontWeight={800}
-      letterSpacing={2}
-      textTransform="uppercase"
-      width="min-content"
-      padding={[3, 12]}
-      margin={[0, 'auto']}
-      {...props}
-    >
+    <PillButton background="#111" {...props}>
       <span
         className="clip-text"
         style={{
@@ -24,6 +15,6 @@ export function PillButtonDark({ children, ...props }: ButtonProps) {
       >
         {children}
       </span>
-    </SizedSurface>
+    </PillButton>
   )
 }

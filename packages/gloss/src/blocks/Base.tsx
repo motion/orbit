@@ -13,7 +13,10 @@ export type GlossBaseProps = {
   focusStyle?: CSSPropertySetStrict | false | null
 }
 
-export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+// TODO this should be a "disjoint" type, avoid overlapping!
+export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
   CSSPropertySetStrict &
   GlossBaseProps
 

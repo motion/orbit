@@ -63,7 +63,22 @@ export class SelectableStore {
       this.keyToIndex[rowKey] =
         this.keyToIndex[rowKey] || this.rows.findIndex(r => key(r) === rowKey)
     }
-    this.active = new Set(next)
+
+    // check for disabled rows
+    const nextFiltered = next.filter(k => {
+      const row = this.rows[this.keyToIndex[k]]
+      if (row && row.selectable === false) {
+        return false
+      }
+      return true
+    })
+
+    // if we filtered out everything, avoid doing anything
+    if (next.length > 0 && nextFiltered.length === 0) {
+      return
+    }
+
+    this.active = new Set(nextFiltered)
   }
 
   callbackRefProp = react(

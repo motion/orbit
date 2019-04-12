@@ -1,4 +1,3 @@
-import { configureGloss } from '@o/gloss'
 import { configureKit, Icon, useAppState, useUserState } from '@o/kit'
 import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
@@ -25,14 +24,6 @@ function configure() {
     disableErrorBoundaries: false,
     // for safer mutation points
     enforceActions: 'never',
-  })
-
-  configureGloss({
-    pseudoAbbreviations: {
-      hoverStyle: '&:hover',
-      activeStyle: '&:active',
-      focusStyle: '&:focus',
-    },
   })
 
   configureUI({

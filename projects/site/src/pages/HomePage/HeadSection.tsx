@@ -1,7 +1,7 @@
-import { Center, FullScreen, Image, Row, useDebounce, View } from '@o/ui'
+import { Absolute, Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { Fragment, useState } from 'react'
-import download from '../../../public/images/download.svg'
+import React, { useState } from 'react'
+import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
@@ -24,9 +24,9 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Make powerful apps in minutes with no configuration and deploy without a server.`,
-    `Custom internal tools made easy. Workflows, spreadsheets, dashboards, and more.`,
-    `Runs behind the firewall, without a cloud.`,
+    `Build powerful apps in minutes: no config, powerful tools, deployed without a server.`,
+    `It's everything you need to build internal tools with your team.`,
+    `Open source and runs privately on your computer.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
@@ -55,17 +55,26 @@ export function HeadSection() {
   let texts = allTexts[size]
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
+  const br = <br style={{ height: 0 }} />
+
   return (
     <>
       <Page offset={0}>
         <Page.Content>
           <FullScreen>
-            <Header />
+            <Absolute left={0} right={0}>
+              <Header />
+            </Absolute>
 
-            <Row height="80%" flex={1} alignItems="center" justifyContent="center">
-              <View width="90%" maxWidth={900}>
+            <Row
+              transform={{ y: '-25%' }}
+              margin={['auto', 0]}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <View width="90%" maxWidth={980}>
                 <FadeDown disable={!measured}>
-                  <TitleText fontWeight={100} selectable>
+                  <TitleText margin={[0, '2vw']} fontWeight={100} selectable>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
                       {allTitles[size]}
                     </ViewPortText>
@@ -76,29 +85,27 @@ export function HeadSection() {
                   </ViewPortText>
 
                   <Paragraph
-                    fontSize={parSize * 0.94}
-                    sizeLineHeight={1.5}
+                    fontSize={parSize * 0.9}
+                    sizeLineHeight={1.38}
                     textAlign="center"
-                    fontWeight={300}
-                    alpha={0.5}
+                    alpha={0.56}
                   >
-                    {texts.map((t, i) => (
-                      <Fragment key={t}>
-                        {i > 0 && <br />}
-                        {t}
-                      </Fragment>
-                    ))}
+                    <span style={{}}>{texts[0]}</span>
+                    {br}
+                    <span style={{}}>{texts[1]}</span>
+                    {br}
+                    <span style={{}}>{texts[2]}</span>
                   </Paragraph>
                 </FadeDown>
               </View>
             </Row>
 
-            <Row width="100%" height="40%" marginTop={'-20%'} position="relative">
+            <FullScreen top="auto">
               <View
                 background={`url(${screen}) no-repeat top left`}
                 backgroundSize="contain"
                 flex={1}
-                width="120%"
+                width="100%"
                 maxWidth={1000}
                 margin={['auto', 'auto', 0]}
                 height={320}
@@ -111,31 +118,81 @@ export function HeadSection() {
                 <img src={lineSep} />
               </FullScreen>
 
-              <View position="absolute" bottom="10%" left={0} right={0}>
-                <img style={{ margin: 'auto' }} src={macbook} />
+              <View
+                position="absolute"
+                bottom="12%"
+                left={0}
+                right={0}
+                alignItems="center"
+                justifyContent="center"
+                height={160}
+              >
+                <img style={{ position: 'absolute', top: 0 }} src={macbook} />
+                <PreviewButton>See the Orbit Demo</PreviewButton>
               </View>
-            </Row>
+            </FullScreen>
           </FullScreen>
         </Page.Content>
 
         <Page.Background background={theme => theme.background} />
 
-        <Page.Parallax speed={1} zIndex={-2}>
+        <Page.Parallax speed={-0.4} zIndex={-2}>
           {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
-          <TopBlur />
-          <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
+          <View
+            pointerEvents="none"
+            position="absolute"
+            top="30%"
+            left={0}
+            right={0}
+            zIndex={1}
+            opacity={0.25}
+          >
             <img src={glow} />
           </View>
+        </Page.Parallax>
+
+        <Page.Parallax speed={0} zIndex={-2}>
+          {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
+          <TopBlur opacity={0.6} />
         </Page.Parallax>
       </Page>
     </>
   )
 }
 
+const PreviewButton = gloss({
+  padding: [10, 30],
+  background: '#290C3C',
+  border: [1, '#fff'],
+  borderRadius: 10,
+  color: '#fff',
+  zIndex: 10,
+  boxShadow: [[0, 20, 20, [0, 0, 0, 0.5]]],
+})
+
 const DownloadButton = (
   <Center bottom="auto" top="4%">
-    <Row width={159} height={45} position="relative" alignItems="center" justifyContent="center">
-      <Image position="absolute" src={download} />
+    <View
+      tagName="a"
+      {...{ href: 'ok' }}
+      flexFlow="row"
+      width={159}
+      height={45}
+      position="relative"
+      alignItems="center"
+      justifyContent="center"
+      border={[3, '#21AA0F']}
+      borderRadius={100}
+      hoverStyle={{
+        border: [3, toColor('#21AA0F').lighten(0.3)],
+      }}
+      textDecoration="none"
+      onClick={e => {
+        e.preventDefault()
+        console.log('need to link downlaod')
+      }}
+    >
+      <Image position="absolute" right={22} src={downmark} />
       <Text
         transform={{ y: 2 }}
         zIndex={1}
@@ -147,6 +204,6 @@ const DownloadButton = (
         Download
       </Text>
       <div style={{ width: 25 }} />
-    </Row>
+    </View>
   </Center>
 )

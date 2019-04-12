@@ -1,9 +1,9 @@
 import { Layout, Pane, PaneProps, Sidebar, useMedia, View } from '@o/ui'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
-import { ListProps, SearchableList } from '../views/List'
+import { SearchableList, SearchableListProps } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
-export type MasterDetailProps = ListProps & {
+export type MasterDetailProps = SearchableListProps & {
   children: React.ReactNode | ((selected: OrbitListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
   masterProps?: PaneProps

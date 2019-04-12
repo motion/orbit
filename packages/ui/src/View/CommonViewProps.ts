@@ -136,6 +136,7 @@ export type CommonViewProps = Pick<
   | 'textIndent'
   | 'textOverflow'
   | 'textShadow'
+  | 'textTransform'
   | 'top'
   | 'transform'
   | 'transformOrigin'

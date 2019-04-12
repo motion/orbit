@@ -37,6 +37,7 @@ export type ListItemDisplayProps = {
 export type ListItemProps = SizedSurfaceProps &
   ListItemHide &
   ListItemDisplayProps & {
+    selectable?: boolean
     padding?: number | number[]
     // TODO make it a Sizes
     indent?: number
@@ -120,6 +121,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
     after,
     indent = 0,
     alignItems,
+    selectable,
     ...surfaceProps
   } = props
   const isSelected = useIsSelected(props)
@@ -134,13 +136,15 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
   const defaultPadding = small ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
+  const disablePsuedoProps = selectable === false && {
+    hoverStyle: null,
+    activeStyle: null,
+  }
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
     defaultPadding[0] += 2
   }
-
-  const iconElement = showIcon && getIcon(props)
 
   const childrenElement = showChildren && !!children && (
     <SimpleText margin={['auto', 0]} flex={1} size={0.9} alpha={subTextOpacity}>
@@ -149,14 +153,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
   )
   const { activeThemeName } = React.useContext(ThemeContext)
 
-  const afterHeaderElement = (
+  // TODO could let a prop control content
+  const afterHeaderElement = showDate && (
     <AfterHeader>
       <Row>
-        {showDate && (
-          <Text alpha={0.6} size={0.9} fontWeight={400}>
-            <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
-          </Text>
-        )}
+        <Text alpha={0.6} size={0.9} fontWeight={400}>
+          <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
+        </Text>
       </Row>
     </AfterHeader>
   )
@@ -175,6 +178,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
       <Space size="sm" />
     </>
   )
+
+  const iconElement = iconBefore && showIcon && showIcon && getIcon(props)
 
   return (
     <Theme alternate={isSelected ? 'selected' : null}>
@@ -195,20 +200,16 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
         padding={padding || defaultPadding}
         width="100%"
         before={before}
-        icon={iconBefore && showIcon && iconElement}
+        icon={iconElement}
+        noInnerElement={!iconElement}
         after={<BorderBottom right={5} left={5} opacity={0.2} />}
         paddingLeft={indent ? indent * 22 : undefined}
+        {...disablePsuedoProps}
         {...surfaceProps}
       >
         <ListItemMainContent oneLine={oneLine}>
           {showTitle && (
             <ListItemTitleBar alignItems={alignItems}>
-              {showIcon && !iconBefore && (
-                <>
-                  {iconElement}
-                  <Space size="sm" />
-                </>
-              )}
               <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
                 {title}
               </HighlightText>
@@ -219,16 +220,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
           )}
           {showSubtitle && (
             <ListItemSubtitle>
-              {showIcon && !showTitle && (
-                <>
-                  {iconElement}
-                  <Space />
-                </>
-              )}
               {!!location && locationElement}
-              {showPreviewInSubtitle ? (
-                <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
-              ) : null}
               {!!subTitle &&
                 (typeof subTitle === 'string' ? (
                   <HighlightText
@@ -280,12 +272,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
               </Preview>
             </>
           )}
-          {!showPreviewInSubtitle && !!(!showSubtitle && !!locationElement && childrenElement) && (
-            <Row>
-              {locationElement}
-              {childrenElement}
-            </Row>
-          )}
+          {childrenElement}
         </ListItemMainContent>
         {after}
       </SizedSurface>

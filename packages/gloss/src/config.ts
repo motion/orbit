@@ -5,7 +5,11 @@ import { GlossOptions } from './types'
 export const Config: GlossOptions = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
-  pseudoAbbreviations: {},
+  pseudoAbbreviations: {
+    hoverStyle: '&:hover',
+    activeStyle: '&:active',
+    focusStyle: '&:focus',
+  },
   preProcessTheme: preProcessTheme,
 }
 

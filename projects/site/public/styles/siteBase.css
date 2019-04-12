@@ -13,6 +13,15 @@ body {
   text-rendering: optimizeLegibility;
   font-kerning: auto;
   pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.clip-text {
+  mix-blend-mode: screen;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 #app {

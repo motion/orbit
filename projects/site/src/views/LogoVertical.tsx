@@ -4,7 +4,7 @@ import { SVG } from '@o/kit'
 import { Space, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navigation-hooks'
-import mark from '../../public/images/orbitmark.svg'
+import mark from '../../public/images/orbit-mark.svg'
 import { useScreenSize } from '../hooks/useScreenSize'
 
 let scale = {
@@ -32,7 +32,7 @@ export function LogoVertical(props: { size?: 'small' | 'medium' | 'large' }) {
     >
       <Image src={mark} />
       <Space />
-      <SVG cleanup fill={theme.color} width={103} height={23} svg={orbit} />
+      <SVG cleanup fill={theme.color} width={102} height={23} svg={orbit} />
     </View>
   )
 }

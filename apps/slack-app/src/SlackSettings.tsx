@@ -1,5 +1,5 @@
-import { SettingManageRow, Table, useApp, useAppState, useWhiteList } from '@o/kit'
-import { DataType, View } from '@o/ui'
+import { SettingManageRow, useApp, useAppState, useWhiteList } from '@o/kit'
+import { DataType, Table, View } from '@o/ui'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'

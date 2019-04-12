@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
+import { GET_STORE } from './mobxProxyWorm'
 import { useTrackableStore } from './setupTrackableStore'
 import { ReactiveStore } from './Store'
 
@@ -23,8 +24,12 @@ export { configureUseStore } from './configure'
 export { createStoreContext } from './createStoreContext'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
-export { GET_STORE, resetTracking } from './mobxProxyWorm'
+export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'
+
+export const unwrapProxy = (store: any) => {
+  return store ? store[GET_STORE] || store : store
+}
 
 // helpers for deep/shallow objects, which dont mess up types
 

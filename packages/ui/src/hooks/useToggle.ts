@@ -6,6 +6,7 @@ export type Toggler = {
   toggle: () => void
   setState: any
   collapseProps: CollapsableProps
+  isCollapsable?: boolean
 }
 
 export function useToggle(
@@ -32,6 +33,7 @@ export function useToggle(
   const toggle = () => setState(!val)
 
   return {
+    isCollapsable: (props && props.collapsable) || false,
     val,
     toggle,
     setState,

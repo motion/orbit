@@ -159,11 +159,18 @@ export function HeadSection() {
 const PreviewButton = gloss({
   padding: [10, 30],
   background: '#290C3C',
-  border: [1, '#fff'],
+  border: [1, [255, 255, 255, 0.3]],
   borderRadius: 10,
-  color: '#fff',
+  color: [255, 255, 255, 0.8],
   zIndex: 10,
   boxShadow: [[0, 20, 20, [0, 0, 0, 0.5]]],
+  transition: 'all ease 300ms',
+  cursor: 'pointer',
+  fontWeight: 500,
+  '&:hover': {
+    color: [255, 255, 255, 1],
+    background: toColor('#290C3C').lighten(0.2),
+  },
 })
 
 const DownloadButton = (

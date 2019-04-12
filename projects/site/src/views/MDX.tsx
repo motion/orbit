@@ -1,4 +1,4 @@
-import { MDXProvider } from '@mdx-js/tag'
+import { MDXProvider } from '@mdx-js/react'
 import { gloss, Paragraph, Space, Title } from '@o/ui'
 import React from 'react'
 import orbitComponents from '../../tmp/components.json'
@@ -38,7 +38,7 @@ export const components = {
   ),
   p: props => (
     <>
-      <Paragraph margin={0} {...props} />
+      <Paragraph size={1.05} sizeLineHeight={1.25} margin={0} {...props} />
       <Space />
     </>
   ),
@@ -63,11 +63,13 @@ export function MDX({ children }: any) {
 }
 
 const InlineCode = gloss({
+  fontSize: '90%',
   display: 'inline-block',
   fontFamily: 'source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace',
   borderRadius: 3,
   padding: [0, 2],
   margin: [0, 0],
+  lineHeight: '1.4rem',
 }).theme((_, theme) =>
   theme.background.isDark()
     ? {

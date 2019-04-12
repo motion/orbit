@@ -1,13 +1,9 @@
-import { Icon } from '@o/kit'
-import { configureUI } from '@o/ui'
-import * as React from 'react'
-import ReactDOM from 'react-dom'
 import 'react-hot-loader' // must be imported before react
 import './../public/styles/siteBase.css'
+import './configurations'
 
-configureUI({
-  useIcon: Icon,
-})
+const React = require('react')
+const ReactDOM = require('react-dom')
 
 export function render() {
   const RootNode = document.querySelector('#app')
@@ -16,7 +12,3 @@ export function render() {
 }
 
 render()
-
-if (module['hot']) {
-  module['hot'].accept(render)
-}

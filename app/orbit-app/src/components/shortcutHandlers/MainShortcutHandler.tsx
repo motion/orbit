@@ -1,7 +1,5 @@
-import { ProvideStores, ShortcutStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Direction, GlobalHotKeys, PopoverState } from '@o/ui'
-import { useStore } from '@o/use-store'
+import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { useActions } from '../../hooks/useActions'
@@ -38,7 +36,7 @@ export default memo(function MainShortcutHandler(props: {
   handlers?: any
 }) {
   const { queryStore, paneManagerStore } = useStores()
-  const shortcutStore = useStore(ShortcutStore)
+  const shortcutStore = useShortcutStore()
   const Actions = useActions()
 
   const handlers = useMemo(() => {
@@ -118,11 +116,9 @@ export default memo(function MainShortcutHandler(props: {
   }, [Actions, paneManagerStore, queryStore])
 
   return (
-    <ProvideStores stores={{ shortcutStore }}>
-      <GlobalHotKeys keyMap={rootShortcuts} style={hotKeyStyle} handlers={handlers}>
-        {props.children}
-      </GlobalHotKeys>
-    </ProvideStores>
+    <GlobalHotKeys keyMap={rootShortcuts} style={hotKeyStyle} handlers={handlers}>
+      {props.children}
+    </GlobalHotKeys>
   )
 })
 

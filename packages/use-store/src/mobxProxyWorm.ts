@@ -1,6 +1,6 @@
 import { IS_STORE } from '@o/automagical'
 import { EQUALITY_KEY } from '@o/fast-compare'
-import { isAction, isObservableObject } from 'mobx'
+import { isAction, isObservableObject, isObservableProp } from 'mobx'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -94,6 +94,10 @@ export function mobxProxyWorm<A extends Function>(
       if (key[0] === '_') return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`
       if (isFunction) {
+        // dont wrap if its an observable value of a function
+        if (isObservableProp(store, key)) {
+          return val
+        }
         // this will ensure prototypical fns will still move through proxyWorm
         // by binding store to val, so they use the proxy worm as `this`
         return (...args: any[]) => val.call(store, ...args)

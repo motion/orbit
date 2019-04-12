@@ -11,6 +11,8 @@ import {
   SubTitle,
   Text,
   useGet,
+  useShareStore,
+  useShortcutStore,
   useVisibility,
   View,
   VirtualList,
@@ -22,7 +24,6 @@ import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
-import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
@@ -98,7 +99,8 @@ export const List = memo(
     const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
     const internalRef = useRef<SelectableStore>(null)
     const selectableStoreRef = listProps.selectableStoreRef || internalRef
-    const { shortcutStore, spaceStore } = useStoresSimple()
+    const shareStore = useShareStore()
+    const shortcutStore = useShortcutStore()
     const { onOpenItem, onSelectItem } = useProps({})
     const getItemPropsGet = useGet(getItemProps || nullFn)
     const visibility = useVisibility()
@@ -149,7 +151,7 @@ export const List = memo(
     const onSelectInner = useCallback(
       (selectedRows, selectedIndices) => {
         if (shareable) {
-          spaceStore.currentSelection = selectedRows
+          shareStore.setSelected(selectedRows)
         }
         if (onSelectItem) {
           const appProps = getAppProps(toListItemProps(selectedRows[0]))

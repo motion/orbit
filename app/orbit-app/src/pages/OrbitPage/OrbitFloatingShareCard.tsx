@@ -1,5 +1,5 @@
 import { List } from '@o/kit'
-import { FloatingCard, useScreenPosition } from '@o/ui'
+import { FloatingCard, useScreenPosition, useShareStore } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
 import { orbitStaticApps } from '../../apps/orbitApps'
@@ -16,8 +16,8 @@ export function OrbitFloatingShareCard({
   pad?: number
   index: number
 }) {
-  const { spaceStore, paneManagerStore } = useStores()
-  const { currentSelection } = spaceStore
+  const { paneManagerStore } = useStores()
+  const currentSelection = useShareStore().selected
   const numItems = (currentSelection && currentSelection.length) || 0
   const buttonRef = useRef(null)
   const nodePosition = useScreenPosition({ ref: buttonRef, debounce: 500 })

@@ -1,14 +1,11 @@
 import { ColorLike, CSSPropertySet } from '@o/css'
-import {
+import Gloss, {
   alphaColor,
   Col,
   forwardTheme,
   gloss,
-  GlossThemeFn,
   propsToStyles,
   propsToThemeStyles,
-  ThemeObject,
-  ThemeSelect,
   useTheme,
 } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
@@ -65,7 +62,7 @@ export type SurfaceSpecificProps = {
   sizeIcon?: number
   spaced?: boolean
   stretch?: boolean
-  theme?: ThemeObject | string
+  theme?: Gloss.ThemeObject | string
   tooltip?: React.ReactNode
   tooltipProps?: PopoverProps
   width?: number | string
@@ -78,14 +75,14 @@ export type SurfaceSpecificProps = {
   ignoreSegment?: boolean
   sizeLineHeight?: boolean | number
   type?: string
-  themeSelect?: ThemeSelect
+  themeSelect?: Gloss.ThemeSelect
   iconPad?: number
   getTheme?: GetSurfaceTheme
 }
 
 export type SurfaceProps = ViewProps & SurfaceSpecificProps
 
-export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
+export type GetSurfaceTheme = Gloss.GlossThemeFn<SurfaceProps>
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()
@@ -214,7 +211,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
   if (noInnerElement) {
-    childrenProps.children = children || null
+    if (isDefined(before, after)) {
+      childrenProps.children = (
+        <>
+          {before}
+          {children || null}
+          {after}
+        </>
+      )
+    } else {
+      childrenProps.children = children || null
+    }
   } else {
     childrenProps.children = (
       <>

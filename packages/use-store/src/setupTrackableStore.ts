@@ -4,8 +4,9 @@ import { get } from 'lodash'
 import { Lambda, observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
-import { GET_STORE, mobxProxyWorm, ProxyWorm } from './mobxProxyWorm'
+import { mobxProxyWorm, ProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
+import { unwrapProxy } from './useStore'
 
 type TrackableStoreOptions = {
   component: any
@@ -98,7 +99,7 @@ export function setupTrackableStore(
 
   // this ensures we don't look for a proxied store
   // we want to dedupe on the original store object
-  const unwrapped = store[GET_STORE] || store
+  const unwrapped = unwrapProxy(store)
 
   function getOrCreateProxyWorm(): ProxyWorm<StoreLike> {
     // dedupe stores so we properly track/untrack as we go down to children

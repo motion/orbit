@@ -15,9 +15,7 @@ function configure() {
 
   const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
-  if (hasConfigured) {
-    return
-  }
+  if (hasConfigured) return
 
   configureMobx({
     // for easier debugging mobx stack traces

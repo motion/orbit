@@ -1,45 +1,34 @@
 import { ProvideUI } from '@o/ui'
-import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
-import { createBrowserApp } from '@react-navigation/web'
+import { mount, route } from 'navi'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Router } from 'react-navi'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
+import { ProvideSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { MDX } from './views/MDX'
 
-function getSiteBrowser() {
-  if (window['SiteBrowser']) {
-    return window['SiteBrowser']
-  }
-
-  const Site = ({ descriptors, navigation }) => {
-    const activeKey = navigation.state.routes[navigation.state.index].key
-    const descriptor = descriptors[activeKey]
-    return <SceneView component={descriptor.getComponent()} navigation={descriptor.navigation} />
-  }
-
-  const navigator = createNavigator(
-    Site,
-    SwitchRouter({
-      Home: HomePage,
-      Docs: DocsPage,
-    }),
-    {},
-  )
-
-  const browser = createBrowserApp(navigator)
-
-  window['SiteBrowser'] = browser
-  return browser
-}
+// Define your routes
+const routes = mount({
+  '/': route({
+    title: 'My Shop',
+    view: <HomePage />,
+  }),
+  // '/products': lazy(() => import('./productsRoutes')),
+  '/docs': route({
+    title: 'Docs',
+    view: DocsPage,
+  }),
+})
 
 export const SiteRoot = hot(() => {
-  const SiteBrowser = getSiteBrowser()
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <MDX>
-        <SiteBrowser />
+        <ProvideSiteStore>
+          <Router routes={routes} />
+        </ProvideSiteStore>
       </MDX>
     </ProvideUI>
   )

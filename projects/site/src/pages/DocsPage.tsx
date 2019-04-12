@@ -1,4 +1,4 @@
-import { Templates } from '@o/kit'
+import { ensure, react, Templates, useStore } from '@o/kit'
 import '@o/nucleo'
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   useMedia,
   View,
 } from '@o/ui'
-import React, { createElement, memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -22,8 +22,8 @@ import Buttons from './DocsButtons.mdx'
 import Cards from './DocsCards.mdx'
 
 const views = {
-  buttons: () => Buttons,
-  cards: () => Cards,
+  buttons: () => <Buttons />,
+  cards: () => <Cards />,
   // forms: () => Forms,
   // tables: () => Tables,
 }
@@ -42,38 +42,40 @@ const itemsByIndex = {
   kit: () => uiItems,
 }
 
+class DocsPageStore {
+  SubView = null
+  selected = null
+
+  setSelected = x => (this.selected = x)
+
+  setSubView = async view => {
+    ensure('view', !!view)
+    if (view instanceof Promise) {
+      view = await view
+    }
+    this.SubView = view
+  }
+
+  getView = react(() => this.selected && views[this.selected.id], this.setSubView)
+}
+
 export function DocsPage() {
-  const [selected, setSelected] = useState(null)
-  const [viewElement, setView] = useState(null)
+  const store = useStore(DocsPageStore)
+  const { selected, setSelected, SubView, setSubView } = store
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
 
-  useEffect(() => {
-    if (!selected) return
-    if (!views[selected.id]) return
-    let cancelled = false
-    const resolved = views[selected.id]()
-    if (resolved instanceof Promise) {
-      views[selected.id]().then(view => {
-        if (!cancelled) {
-          setView(createElement(view.default))
-        }
-      })
-    } else {
-      setView(createElement(resolved))
-    }
-    return () => {
-      cancelled = true
-    }
-  }, [selected])
+  // const next = selected && SubView[selected.id]
+  // useEffect(() => {
+  //   setSubView(next)
+  // }, [next])
 
   return (
     <Theme name={theme}>
-      <View flex={1} background={x => x.background}>
+      <View height="100vh" background={x => x.background}>
         <Background>
           <HeaderSlim />
-
           <View flex={1} position="relative">
             <Templates.MasterDetail
               items={itemsByIndex[section]()}
@@ -83,13 +85,13 @@ export function DocsPage() {
               onSelect={setSelected}
               belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
             >
-              {viewElement && (
+              {SubView && (
                 <SelectedSection
                   onToggleSidebar={() => setShowSidebar(!showSidebar)}
                   setTheme={setTheme}
                   theme={theme}
                   title={selected.title}
-                  viewElement={viewElement}
+                  SubView={SubView}
                 />
               )}
             </Templates.MasterDetail>
@@ -127,7 +129,7 @@ const DocsToolbar = memo(({ section, setSection }: any) => {
   )
 })
 
-const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSidebar }: any) => {
+const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar }: any) => {
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
@@ -152,7 +154,7 @@ const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSid
         </SurfacePassProps>
       }
     >
-      {viewElement}
+      <SubView />
     </Section>
   )
 })

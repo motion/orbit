@@ -2,7 +2,7 @@ import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
-import { useHomestore } from '../pages/HomePage'
+import { useSiteStore } from '../SiteStore'
 import { ParallaxLayer } from './Parallax'
 import { SectionContent } from './SectionContent'
 
@@ -41,11 +41,11 @@ Page.Parallax = ({
 Page.Content = (props: ViewProps) => {
   const parallax = useProps()
   const zIndex = selectDefined(props.zIndex, parallax.zIndex)
-  const homeStore = useHomestore()
+  const siteStore = useSiteStore()
   return (
     <SectionContent
       className="page-content"
-      height={homeStore.sectionHeight}
+      height={siteStore.sectionHeight}
       {...props}
       zIndex={zIndex}
     />

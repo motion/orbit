@@ -1,4 +1,4 @@
-import { Col, FullScreen, gloss, Row, View } from '@o/ui'
+import { Col, FullScreen, gloss, Image, Row, Space, SpaceGroup, Text, View } from '@o/ui'
 import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
 import { Page } from '../../views/Page'
@@ -9,17 +9,51 @@ export function NeckSection() {
   return (
     <Page offset={1}>
       <Page.Content>
-        <Col space="md" alignItems="center" pad="xl">
-          <TitleText size="xxl">Everything included.</TitleText>
-          <TitleText size="lg" fontWeight={200}>
-            No config, no servers + a desktop-class UI kit.
-          </TitleText>
-          <TitleText size="md" fontWeight={200} alpha={0.5}>
-            Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
-          </TitleText>
-        </Col>
+        <SpaceGroup>
+          <Col space="md" alignItems="center" pad="xl">
+            <TitleText size="xxl">Everything included.</TitleText>
+            <TitleText size="lg" fontWeight={200}>
+              No config, no servers + a desktop-class UI kit.
+            </TitleText>
+            <TitleText size="md" fontWeight={200} alpha={0.5}>
+              Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
+            </TitleText>
+          </Col>
 
-        <PillButtonDark>Import</PillButtonDark>
+          <Row space>
+            <Flex>
+              <PillButtonDark>Import</PillButtonDark>
+              <Space />
+              <CenterText>Add Slack with a click. Data apps integrate seamlessly.</CenterText>
+            </Flex>
+            <Flex flex={2}>
+              <PillButtonDark>Import</PillButtonDark>
+              <Space />
+              <CenterText>Add Slack with a click. Data apps integrate seamlessly.</CenterText>
+            </Flex>
+            <Flex>
+              <PillButtonDark>Import</PillButtonDark>
+              <Space />
+              <CenterText>Add Slack with a click. Data apps integrate seamlessly.</CenterText>
+            </Flex>
+          </Row>
+
+          <Space />
+
+          <Row space>
+            <Flex alignItems="center">
+              <img width={124} height={124} src={require('../../../public/logos/slack.svg')} />
+              <Space size="xxl" />
+              <Image
+                opacity={0.5}
+                alignSelf="flex-end"
+                src={require('../../../public/images/curve-arrow.svg')}
+              />
+            </Flex>
+            <Flex flex={2} />
+            <Flex />
+          </Row>
+        </SpaceGroup>
       </Page.Content>
 
       <Page.Background background={theme => theme.background} />
@@ -36,6 +70,18 @@ export function NeckSection() {
     </Page>
   )
 }
+
+const CenterText = gloss(Text, {
+  textAlign: 'center',
+})
+CenterText.defaultProps = {
+  selectable: true,
+}
+
+const Flex = gloss(View, {
+  position: 'relative',
+  flex: 1,
+})
 
 const Spotlight = () => {
   return (

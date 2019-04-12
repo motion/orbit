@@ -3,7 +3,7 @@ import { gloss, useTheme } from '@o/gloss'
 import { SVG } from '@o/kit'
 import { View } from '@o/ui'
 import React from 'react'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from 'react-navi'
 
 export function LogoHorizontal() {
   const theme = useTheme()

@@ -1,6 +1,6 @@
-import { App, AppCard, createApp, Table } from '@o/kit'
+import { App, AppCard, createApp } from '@o/kit'
 import Slack from '@o/slack-app'
-import { GridLayout } from '@o/ui'
+import { GridLayout, Table } from '@o/ui'
 import React from 'react'
 
 function CustomApp() {

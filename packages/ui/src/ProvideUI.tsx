@@ -2,6 +2,8 @@ import { ThemeSet } from '@o/css'
 import { ThemeProvide } from '@o/gloss'
 import React from 'react'
 import { ProvideFocus } from './Focus'
+import { ProvideShare } from './Share'
+import { ProvideShortcut } from './Shortcut'
 
 export type ProvideUIProps = {
   activeTheme?: string
@@ -12,9 +14,13 @@ export type ProvideUIProps = {
 export function ProvideUI(props: ProvideUIProps) {
   return (
     <ProvideFocus>
-      <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
-        {props.children}
-      </ThemeProvide>
+      <ProvideShare>
+        <ProvideShortcut>
+          <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+            {props.children}
+          </ThemeProvide>
+        </ProvideShortcut>
+      </ProvideShare>
     </ProvideFocus>
   )
 }

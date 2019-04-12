@@ -11,8 +11,9 @@ import { ShoulderSection } from './HomePage/ShoulderSection'
 export function HomePage() {
   const siteStore = useSiteStore()
   console.log('siteStore.sectionHeight', siteStore.sectionHeight)
-  return (
-    <Theme name="home">
+
+  const home = (
+    <Theme name="home" key="home">
       <Parallax
         pages={4}
         // ref={ref => (this.parallax = ref)}
@@ -27,10 +28,6 @@ export function HomePage() {
       </Parallax>
     </Theme>
   )
-}
 
-HomePage.path = ''
-HomePage.navigationOptions = {
-  title: 'Home',
-  linkName: 'Home Page',
+  return home
 }

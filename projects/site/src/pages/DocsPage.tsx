@@ -1,4 +1,4 @@
-import { Templates } from '@o/kit'
+import { ensure, react, Templates, useStore } from '@o/kit'
 import '@o/nucleo'
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   useMedia,
   View,
 } from '@o/ui'
-import React, { createElement, memo, useEffect, useState } from 'react'
+import React, { createElement, memo, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -42,39 +42,36 @@ const itemsByIndex = {
   kit: () => uiItems,
 }
 
+class DocsPageStore {
+  view = null
+  selected = null
+
+  setSelected = x => (this.selected = x)
+
+  getView = react(
+    () => this.selected,
+    async () => {
+      ensure('selected', !!this.selected)
+      let next = views[this.selected.id]()
+      if (next instanceof Promise) {
+        next = await next
+      }
+      this.view = createElement(next)
+    },
+  )
+}
+
 export function DocsPage() {
-  const [selected, setSelected] = useState(null)
-  const [view, setView] = useState(null)
+  const { selected, setSelected, view } = useStore(DocsPageStore)
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
-  const getView = views[selected && selected.id]
-
-  useEffect(() => {
-    if (!selected) return
-    if (!getView) return
-    let cancelled = false
-    const resolved = getView()
-    if (resolved instanceof Promise) {
-      getView().then(next => {
-        if (!cancelled) {
-          setView(createElement(next.default))
-        }
-      })
-    } else {
-      setView(createElement(resolved))
-    }
-    return () => {
-      cancelled = true
-    }
-  }, [getView])
 
   return (
     <Theme name={theme}>
       <View height="100vh" background={x => x.background}>
         <Background>
           <HeaderSlim />
-
           <View flex={1} position="relative">
             <Templates.MasterDetail
               items={itemsByIndex[section]()}

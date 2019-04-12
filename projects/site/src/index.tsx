@@ -12,7 +12,3 @@ export function render() {
 }
 
 render()
-
-if (module['hot']) {
-  module['hot'].accept(render)
-}

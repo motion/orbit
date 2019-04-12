@@ -1,5 +1,5 @@
 import { createStoreContext } from '@o/kit'
-import React from 'react'
+import React, { memo, useEffect } from 'react'
 
 class SiteStore {
   windowHeight = window.innerHeight
@@ -17,10 +17,10 @@ const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStor
 
 export const useSiteStore = useStore
 
-export const ProvideSiteStore = React.memo((props: { children: any }) => {
+export const ProvideSiteStore = memo((props: { children: any }) => {
   const siteStore = useCreateStore()
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('resize', () => {
       siteStore.windowHeight = window.innerHeight
     })

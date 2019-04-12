@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import { Button, Popover, Row, View } from '@o/ui'
-import * as ReactNavigation from '@react-navigation/web'
 import React from 'react'
+import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
@@ -24,6 +24,7 @@ LinkText.defaultProps = {
 }
 
 type LinkProps = {
+  href: string
   navigation?: any
   routeKey?: string
   routeName?: string
@@ -32,23 +33,25 @@ type LinkProps = {
   fontSize?: any
 }
 
-export function Link({ children, fontSize, ...props }: LinkProps) {
+export function Link({ children, fontSize, href, ...props }: LinkProps) {
   return (
     <LinkText fontSize={fontSize} onClick={e => e.preventDefault()}>
-      <ReactNavigation.Link {...props}>{children}</ReactNavigation.Link>
+      <RouterLink href={href} {...props}>
+        {children}
+      </RouterLink>
     </LinkText>
   )
 }
 
 export const LinksLeft = props => (
   <>
-    <Link {...props} routeName="Home">
+    <Link {...props} href="/">
       Examples
     </Link>
-    <Link {...props} routeName="Docs">
+    <Link {...props} href="/docs">
       Docs
     </Link>
-    <Link {...props} routeName="Home">
+    <Link {...props} href="/">
       Security
     </Link>
   </>
@@ -56,13 +59,13 @@ export const LinksLeft = props => (
 
 export const LinksRight = props => (
   <>
-    <Link {...props} routeName="Home">
+    <Link {...props} href="/">
       Pricing
     </Link>
-    <Link {...props} routeName="Home">
+    <Link {...props} href="/">
       Team
     </Link>
-    <Link {...props} routeName="Home">
+    <Link {...props} href="/">
       Blog
     </Link>
   </>

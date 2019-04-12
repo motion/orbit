@@ -78,12 +78,7 @@ export function Card(props: CardProps) {
           {/* Cards are ListItems scaled up 1.1 */}
           <Scale size={1.1}>
             <ListItem
-              before={
-                <>
-                  hello world
-                  <CollapseArrow useToggle={toggle} />
-                </>
-              }
+              before={<CollapseArrow useToggle={toggle} />}
               className="grid-draggable"
               onClickLocation={onClickLocation}
               onDoubleClick={

@@ -1,3 +1,5 @@
+import { createStoreContext } from '@o/use-store'
+
 export class ShortcutStore {
   shortcutListeners = new Set()
 
@@ -14,3 +16,9 @@ export class ShortcutStore {
     }
   }
 }
+
+const context = createStoreContext(ShortcutStore)
+
+export const useShortcutStore = context.useStore
+export const useCreateShortcutStore = context.useCreateStore
+export const ProvideShortcut = context.Provider

@@ -3,7 +3,7 @@ import { gloss, useTheme } from '@o/gloss'
 import { SVG } from '@o/kit'
 import { Space, View } from '@o/ui'
 import React from 'react'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from 'react-navi'
 import mark from '../../public/images/orbit-mark.svg'
 import { useScreenSize } from '../hooks/useScreenSize'
 
@@ -17,7 +17,7 @@ export function LogoVertical(props: { size?: 'small' | 'medium' | 'large' }) {
   const theme = useTheme()
   const screenSize = useScreenSize()
   const size = props.size || screenSize
-  const { navigate } = useNavigation()
+  const nav = useNavigation()
 
   return (
     <View
@@ -27,7 +27,7 @@ export function LogoVertical(props: { size?: 'small' | 'medium' | 'large' }) {
       transform={{ scale: scale[size] }}
       padding={[0, 20]}
       onClick={() => {
-        navigate('Home')
+        nav.navigate('Home')
       }}
     >
       <Image src={mark} />

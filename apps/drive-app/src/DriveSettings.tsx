@@ -1,4 +1,5 @@
-import { AppBit, AppModel, AppProps, SettingManageRow, Table, useModel, useStore } from '@o/kit'
+import { AppBit, AppModel, AppProps, SettingManageRow, useModel, useStore } from '@o/kit'
+import { Table } from '@o/ui'
 import * as React from 'react'
 
 class DriveSettingsStore {

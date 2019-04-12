@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from 'react'
-import { GET_STORE } from './mobxProxyWorm'
-import { useStore, UseStoreOptions } from './useStore'
+import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
 
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context
@@ -14,11 +13,11 @@ export function createStoreContext<Instance, Props extends InferProps<Instance>>
   return {
     Context,
     SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
-      return <Context.Provider value={value[GET_STORE]}>{children}</Context.Provider>
+      return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
     },
     Provider: ({ children, ...props }: Props & { children: any }) => {
       const store = useStore(constructor, props as any, { react: false })
-      return <Context.Provider value={store[GET_STORE]}>{children}</Context.Provider>
+      return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>
     },
     useCreateStore(props?: Props) {
       return useStore(constructor, props as any)

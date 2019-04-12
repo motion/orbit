@@ -1,5 +1,5 @@
 import { MergeContext } from '@o/ui'
-import { GET_STORE } from '@o/use-store'
+import { unwrapProxy } from '@o/use-store'
 import { mapValues } from 'lodash'
 import React from 'react'
 import { config } from '../configureKit'
@@ -11,7 +11,7 @@ type ProvideStoresProps = {
 }
 
 export function ProvideStores(props: ProvideStoresProps) {
-  const next = mapValues(props.stores, val => val[GET_STORE] || val) as KitStores
+  const next = mapValues(props.stores, unwrapProxy) as KitStores
   return (
     <MergeContext Context={config.StoreContext} value={next}>
       {props.children}

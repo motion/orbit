@@ -46,7 +46,7 @@ export function SpaceGroup({
     }
   }
 
-  if (!space || total <= 1) {
+  if ((!space && !spaceAround) || (!spaceAround && total <= 1)) {
     return (
       <>
         {beforeSpace}

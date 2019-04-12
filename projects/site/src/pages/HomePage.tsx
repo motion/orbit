@@ -1,6 +1,6 @@
 import { Theme } from '@o/ui'
 import React from 'react'
-import { useSiteStore } from '../SiteRoot'
+import { useSiteStore } from '../SiteStore'
 import { Parallax } from '../views/Parallax'
 import { ChestSection } from './HomePage/ChestSection'
 // import { Parallax } from 'react-spring/renderprops-addons'

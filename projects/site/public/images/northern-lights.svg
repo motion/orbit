@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1480px" height="829px" viewBox="0 0 1480 829" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>northern-lights</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="38.2324644%" y1="78.8544603%" x2="98.262964%" y2="48.6323714%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#00FFC8" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="72.4748797%" y1="51.5964843%" x2="19.7269901%" y2="42.727527%" id="linearGradient-2">
+            <stop stop-color="#30007D" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#6322D7" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="126.705713%" y1="44.8304495%" x2="86.2815976%" y2="50.3584465%" id="linearGradient-3">
+            <stop stop-color="#FF0000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="77.5352781%" y1="43.7205526%" x2="14.5312363%" y2="36.9329601%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.00682383522" offset="13.207339%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="93.452552%" y1="61.0959318%" x2="61.7970169%" y2="55.4974339%" id="linearGradient-5">
+            <stop stop-color="#A6C1FF" offset="0%"></stop>
+            <stop stop-color="#0B8292" stop-opacity="0" offset="24.2586097%"></stop>
+            <stop stop-color="#07C5C0" stop-opacity="0" offset="83.5797622%"></stop>
+            <stop stop-color="#E8FFFF" stop-opacity="0.081861413" offset="100%"></stop>
+            <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-6" points="0 2.27373675e-13 1558 2.27373675e-13 1558 829 0 829"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.452776228">
+        <g id="home" transform="translate(0.000000, -902.000000)">
+            <g id="second" transform="translate(-675.000000, 902.000000)">
+                <g id="northern-lights" transform="translate(636.000000, 0.000000)">
+                    <g id="Rectangle">
+                        <use fill-opacity="0.3" fill="url(#linearGradient-1)" xlink:href="#path-6"></use>
+                        <use fill-opacity="0.3" fill="url(#linearGradient-2)" xlink:href="#path-6"></use>
+                        <use fill="url(#linearGradient-3)" xlink:href="#path-6"></use>
+                        <use fill="url(#linearGradient-4)" style="mix-blend-mode: color-burn;" xlink:href="#path-6"></use>
+                        <use fill-opacity="0.800000012" fill="url(#linearGradient-5)" xlink:href="#path-6"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

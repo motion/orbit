@@ -58,105 +58,103 @@ export function HeadSection() {
   const br = <br style={{ height: 0 }} />
 
   return (
-    <>
-      <Page offset={0}>
-        <Page.Content>
-          <FullScreen>
-            <Absolute left={0} right={0}>
-              <Header />
-            </Absolute>
+    <Page offset={0}>
+      <Page.Content>
+        <FullScreen>
+          <Absolute left={0} right={0}>
+            <Header />
+          </Absolute>
 
-            <Row
-              transform={{ y: '-25%' }}
-              margin={['auto', 0]}
+          <Row
+            transform={{ y: '-25%' }}
+            margin={['auto', 0]}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <View width="90%" maxWidth={980}>
+              <FadeDown disable={!measured}>
+                <TitleText margin={[0, '2vw']} fontWeight={100} selectable>
+                  <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
+                    {allTitles[size]}
+                  </ViewPortText>
+                </TitleText>
+
+                <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
+                  {longest}
+                </ViewPortText>
+
+                <Paragraph
+                  fontSize={parSize * 0.9}
+                  sizeLineHeight={1.38}
+                  textAlign="center"
+                  alpha={0.56}
+                >
+                  <span style={{}}>{texts[0]}</span>
+                  {br}
+                  <span style={{}}>{texts[1]}</span>
+                  {br}
+                  <span style={{}}>{texts[2]}</span>
+                </Paragraph>
+              </FadeDown>
+            </View>
+          </Row>
+
+          <FullScreen top="auto">
+            <View
+              background={`url(${screen}) no-repeat top left`}
+              backgroundSize="contain"
+              flex={1}
+              width="100%"
+              maxWidth={1000}
+              margin={['auto', 'auto', 0]}
+              height={320}
+              position="relative"
+            >
+              {DownloadButton}
+            </View>
+
+            <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
+              <img src={lineSep} />
+            </FullScreen>
+
+            <View
+              position="absolute"
+              bottom="12%"
+              left={0}
+              right={0}
               alignItems="center"
               justifyContent="center"
+              height={160}
             >
-              <View width="90%" maxWidth={980}>
-                <FadeDown disable={!measured}>
-                  <TitleText margin={[0, '2vw']} fontWeight={100} selectable>
-                    <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                      {allTitles[size]}
-                    </ViewPortText>
-                  </TitleText>
-
-                  <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
-                    {longest}
-                  </ViewPortText>
-
-                  <Paragraph
-                    fontSize={parSize * 0.9}
-                    sizeLineHeight={1.38}
-                    textAlign="center"
-                    alpha={0.56}
-                  >
-                    <span style={{}}>{texts[0]}</span>
-                    {br}
-                    <span style={{}}>{texts[1]}</span>
-                    {br}
-                    <span style={{}}>{texts[2]}</span>
-                  </Paragraph>
-                </FadeDown>
-              </View>
-            </Row>
-
-            <FullScreen top="auto">
-              <View
-                background={`url(${screen}) no-repeat top left`}
-                backgroundSize="contain"
-                flex={1}
-                width="100%"
-                maxWidth={1000}
-                margin={['auto', 'auto', 0]}
-                height={320}
-                position="relative"
-              >
-                {DownloadButton}
-              </View>
-
-              <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-                <img src={lineSep} />
-              </FullScreen>
-
-              <View
-                position="absolute"
-                bottom="12%"
-                left={0}
-                right={0}
-                alignItems="center"
-                justifyContent="center"
-                height={160}
-              >
-                <img style={{ position: 'absolute', top: 0 }} src={macbook} />
-                <PreviewButton>See the Orbit Demo</PreviewButton>
-              </View>
-            </FullScreen>
+              <img style={{ position: 'absolute', top: 0 }} src={macbook} />
+              <PreviewButton>See the Orbit Demo</PreviewButton>
+            </View>
           </FullScreen>
-        </Page.Content>
+        </FullScreen>
+      </Page.Content>
 
-        <Page.Background background={theme => theme.background} />
+      <Page.Background background={theme => theme.background} />
 
-        <Page.Parallax speed={-0.4} zIndex={-2}>
-          {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
-          <View
-            pointerEvents="none"
-            position="absolute"
-            top="30%"
-            left={0}
-            right={0}
-            zIndex={1}
-            opacity={0.25}
-          >
-            <img src={glow} />
-          </View>
-        </Page.Parallax>
+      <Page.Parallax speed={-0.4} zIndex={-2}>
+        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
+        <View
+          pointerEvents="none"
+          position="absolute"
+          top="30%"
+          left={0}
+          right={0}
+          zIndex={1}
+          opacity={0.25}
+        >
+          <img src={glow} />
+        </View>
+      </Page.Parallax>
 
-        <Page.Parallax speed={0} zIndex={-2}>
-          {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
-          <TopBlur opacity={0.6} />
-        </Page.Parallax>
-      </Page>
-    </>
+      <Page.Parallax speed={0} zIndex={-2}>
+        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
+        <TopBlur opacity={0.6} />
+      </Page.Parallax>
+    </Page>
   )
 }
 

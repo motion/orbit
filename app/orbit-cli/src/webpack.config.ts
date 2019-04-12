@@ -118,7 +118,7 @@ async function makeConfig(params: Params) {
     module: {
       rules: [
         {
-          test: /[wW]orker\.[jt]sx?$/,
+          test: /.worker\.[jt]sx?$/,
           use: ['workerize-loader'],
           // exclude: /node_modules/,
         },

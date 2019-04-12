@@ -1,16 +1,51 @@
 import { Theme } from '@o/ui'
-import React from 'react'
-import { Parallax } from 'react-spring/renderprops-addons'
+import { createStoreContext } from '@o/use-store'
+import React, { useEffect } from 'react'
+import { Parallax } from '../views/Parallax'
+// import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
 import { NeckSection } from './HomePage/NeckSection'
 
+class HomeStore {
+  windowHeight = window.innerHeight
+
+  get sectionHeight() {
+    return Math.min(
+      // min-height
+      Math.max(800, this.windowHeight),
+      // max-height
+      1200,
+    )
+  }
+}
+
+const { SimpleProvider, useStore, useCreateStore } = createStoreContext(HomeStore)
+export const useHomestore = useStore
+
 export function HomePage() {
+  const homeStore = useCreateStore()
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      homeStore.windowHeight = window.innerHeight
+    })
+  })
+
   return (
     <Theme name="home">
-      <Parallax pages={3}>
-        <HeadSection />
-        <NeckSection />
-      </Parallax>
+      <SimpleProvider value={homeStore}>
+        <Parallax
+          pages={3}
+          // ref={ref => (this.parallax = ref)}
+          scrollingElement={window}
+          container={document.documentElement}
+          pageHeight={homeStore.sectionHeight}
+        >
+          >
+          <HeadSection />
+          <NeckSection />
+        </Parallax>
+      </SimpleProvider>
     </Theme>
   )
 }

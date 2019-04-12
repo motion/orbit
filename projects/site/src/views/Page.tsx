@@ -1,7 +1,9 @@
-import { createContextualProps, View, ViewProps } from '@o/ui'
+import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
-import { ParallaxLayer, ParallaxLayerProps } from 'react-spring/renderprops-addons'
+import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
+import { useHomestore } from '../pages/HomePage'
+import { ParallaxLayer } from './Parallax'
 import { SectionContent } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps({
@@ -20,31 +22,31 @@ export function Page(props: PageProps) {
 }
 
 Page.Parallax = (props: ParallaxLayerProps & { children: any; zIndex?: number }) => {
-  const context = useProps()
-  const zIndex = context.zIndex + (props.zIndex || 0)
+  const parallax = useProps()
+  const zIndex = parallax.zIndex + (props.zIndex || 0)
   return (
     // @ts-ignore
-    <ParallaxLayer speed={0.2} style={{ pointerEvents: 'none', zIndex: zIndex + 1 }} {...props} />
+    <ParallaxLayer
+      speed={0.2}
+      offset={parallax.offset}
+      style={{ pointerEvents: 'none', zIndex: zIndex + 1 }}
+      {...props}
+    />
   )
 }
 
-Page.Content = ({ margin, position, ...sectionProps }: ViewProps) => {
+Page.Content = (props: ViewProps) => {
   const parallax = useProps()
-  const zIndex = selectDefined(sectionProps.zIndex, parallax.zIndex)
-  return (
-    <View
-      zIndex={zIndex}
-      background={sectionProps.background}
-      height={window.innerHeight}
-      margin={margin}
-      position={position}
-    >
-      <SectionContent height="100%" position="relative" {...sectionProps} zIndex={zIndex} />
-    </View>
-  )
+  const zIndex = selectDefined(props.zIndex, parallax.zIndex)
+  const homeStore = useHomestore()
+  return <SectionContent height={homeStore.sectionHeight} {...props} zIndex={zIndex} />
 }
 
 Page.Background = (props: ViewProps) => {
-  const { zIndex } = useProps()
-  return <Page.Content margin={['-100vh', 0, 0]} zIndex={zIndex - 1} {...props} />
+  const { zIndex, offset } = useProps()
+  return (
+    <Page.Parallax offset={offset} speed={0} zIndex={zIndex - 2}>
+      <FullScreen {...props} />
+    </Page.Parallax>
+  )
 }

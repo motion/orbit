@@ -13,14 +13,14 @@ export type ProvideUIProps = {
 
 export function ProvideUI(props: ProvideUIProps) {
   return (
-    <ProvideFocus>
-      <ProvideShare>
-        <ProvideShortcut>
+    <ProvideShortcut>
+      <ProvideFocus>
+        <ProvideShare>
           <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
             {props.children}
           </ThemeProvide>
-        </ProvideShortcut>
-      </ProvideShare>
-    </ProvideFocus>
+        </ProvideShare>
+      </ProvideFocus>
+    </ProvideShortcut>
   )
 }

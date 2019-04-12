@@ -17,16 +17,16 @@ import { TopBlur } from '../../views/TopBlur'
 import { ViewPortText } from '../../views/ViewPortText'
 
 let allTitles = {
-  large: 'A new way to build apps together.',
+  large: 'A better way to build apps together.',
   medium: 'A new way to build apps together.',
   small: 'Build apps together.',
 }
 
 let allTexts = {
   large: [
-    `Build powerful apps in minutes: no config, powerful tools, deployed without a server.`,
-    `It's everything you need to build internal tools with your team.`,
-    `Open source and runs privately on your computer.`,
+    `Create powerful apps with code in minutes with no config, deployed without a server.`,
+    `It's the incredible app platform for building internal tools with teams.`,
+    `Open source, decentralized, and runs offline on your computer.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,

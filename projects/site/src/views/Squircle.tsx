@@ -32,7 +32,11 @@ export const Squircle = ({ boxShadow, width, height, position, margin, ...props 
       <View
         position="absolute"
         zIndex={0}
-        borderRadius={+width / 3.5}
+        borderRadius={+width / 3}
+        transformOrigin="center center"
+        transform={{
+          scale: 0.98,
+        }}
         {...{
           width,
           height,

@@ -1,28 +1,12 @@
 import { Base } from '@o/gloss'
 import React, { forwardRef } from 'react'
-import { SpaceGroup, SpaceGroupProps } from '../SpaceGroup'
-import { ScrollableView, ScrollableViewProps } from './ScrollableView'
+import { Col, ColProps } from './Col'
 
-export type RowProps = ScrollableViewProps & SpaceGroupProps
+export type RowProps = ColProps
 
-export const Row = forwardRef(function Row(
-  { space = false, spaceAround, children, beforeSpace, afterSpace, ...props }: RowProps,
-  ref,
-) {
-  if (!children) return null
-  return (
-    <ScrollableView ref={ref} flexDirection="row" parentSpacing={space} {...props}>
-      <SpaceGroup
-        spaceAround={spaceAround}
-        space={space}
-        beforeSpace={beforeSpace}
-        afterSpace={afterSpace}
-      >
-        {children}
-      </SpaceGroup>
-    </ScrollableView>
-  )
-})
+export const Row = forwardRef((props: RowProps, ref) => (
+  <Col ref={ref} flexDirection="row" {...props} />
+))
 
 // for gloss parents
 // @ts-ignore

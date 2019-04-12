@@ -170,6 +170,7 @@ export class Parallax extends React.PureComponent {
     if (scrolling) {
       this.current = this.container[scrollType]
     } else {
+      console.log('setting container scrolltop')
       this.container[scrollType] = this.current = this.offset * this.space
     }
     if (this.content) {

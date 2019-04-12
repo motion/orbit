@@ -1,4 +1,4 @@
-import { gloss, Space, View } from '@o/ui'
+import { Grid, Icon, Paragraph, Space, View } from '@o/ui'
 import React from 'react'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -24,11 +24,20 @@ export function ChestSection() {
             </>
           }
         >
-          <View display="grid">
+          <Grid space itemMinWidth={200}>
             <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
               lorem ipsum
             </SimpleSection>
-          </View>
+            <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
+              lorem ipsum
+            </SimpleSection>
+            <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
+              lorem ipsum
+            </SimpleSection>
+            <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
+              lorem ipsum
+            </SimpleSection>
+          </Grid>
         </SpacedPageContent>
       </Page.Content>
 
@@ -37,4 +46,10 @@ export function ChestSection() {
   )
 }
 
-const SimpleSection = gloss({})
+const SimpleSection = props => (
+  <View background="#eee">
+    <TitleText>{props.title}</TitleText>
+    <Icon name={props.icon} />
+    <Paragraph>{props.children}</Paragraph>
+  </View>
+)

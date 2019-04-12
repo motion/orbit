@@ -13,7 +13,7 @@ function getScrollType(horizontal) {
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
-export class ParallaxLayer extends React.PureComponent {
+export class ParallaxLayer extends React.PureComponent<any> {
   static propTypes = {
     /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
     factor: PropTypes.number,
@@ -141,7 +141,6 @@ export class Parallax extends React.PureComponent {
     super()
     this.state = { ready: false }
     this.layers = []
-    this.space = 0
     this.current = 0
     this.offset = 0
     this.busy = false
@@ -156,11 +155,13 @@ export class Parallax extends React.PureComponent {
   scrollerRaf = () => Globals.requestFrame(this.moveItems)
 
   onScroll = event => {
+    console.log('on scroll')
     const { horizontal } = this.props
     if (!this.busy) {
       this.busy = true
       this.scrollerRaf()
       this.current = this.props.container[getScrollType(horizontal)]
+      console.log('set to', this.current)
     }
   }
 
@@ -168,11 +169,14 @@ export class Parallax extends React.PureComponent {
     const { scrolling, horizontal } = this.props
     const scrollType = getScrollType(horizontal)
     if (!this.container) return
-    this.space = this.container[horizontal ? 'clientWidth' : 'clientHeight']
-    if (scrolling) this.current = this.container[scrollType]
-    else this.container[scrollType] = this.current = this.offset * this.space
-    if (this.content)
+    if (scrolling) {
+      this.current = this.container[scrollType]
+    } else {
+      this.container[scrollType] = this.current = this.offset * this.space
+    }
+    if (this.content) {
       this.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
+    }
     this.layers.forEach(layer => {
       layer.setHeight(this.space, true)
       layer.setPosition(this.space, this.current, true)
@@ -202,6 +206,7 @@ export class Parallax extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.space = this.props.pageHeight
     window.addEventListener('resize', this.updateRaf, false)
     this.props.scrollingElement.addEventListener('scroll', this.onScroll, false)
     this.update()
@@ -214,52 +219,58 @@ export class Parallax extends React.PureComponent {
   }
 
   componentDidUpdate() {
+    this.space = this.props.pageHeight
     this.update()
   }
 
   render() {
-    const { style, innerStyle, pages, id, className, scrolling, children, horizontal } = this.props
+    const {
+      style,
+      innerStyle,
+      pages,
+      id,
+      className,
+      scrolling,
+      children,
+      horizontal,
+      showAbsolute,
+    } = this.props
     const overflow = scrolling ? 'scroll' : 'hidden'
     return (
-      <El
-        ref={node => (this.container = node)}
-        onScroll={this.onScroll}
-        onWheel={scrolling ? this.scrollStop : null}
-        onTouchStart={scrolling ? this.scrollStop : null}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          overflow,
-          overflowY: horizontal ? 'hidden' : overflow,
-          overflowX: horizontal ? overflow : 'hidden',
-          WebkitOverflowScrolling: 'touch',
-          WebkitTransform: START_TRANSLATE,
-          MsTransform: START_TRANSLATE,
-          transform: START_TRANSLATE_3D,
-          ...style,
-        }}
-        id={id}
-        className={className}
-      >
-        {this.state.ready && (
-          <El
-            ref={node => (this.content = node)}
-            style={{
-              position: 'absolute',
-              [horizontal ? 'height' : 'width']: '100%',
-              WebkitTransform: START_TRANSLATE,
-              MsTransform: START_TRANSLATE,
-              transform: START_TRANSLATE_3D,
-              overflow: 'hidden',
-              [horizontal ? 'width' : 'height']: this.space * pages,
-              ...innerStyle,
-            }}
-          >
-            <Provider value={this}>{children}</Provider>
-          </El>
-        )}
-      </El>
+      <>
+        <El
+          // ref={node => (this.container = node)}
+          onWheel={scrolling ? this.scrollStop : null}
+          onTouchStart={scrolling ? this.scrollStop : null}
+          style={{
+            WebkitTransform: START_TRANSLATE,
+            MsTransform: START_TRANSLATE,
+            transform: START_TRANSLATE_3D,
+            ...style,
+          }}
+          id={id}
+          className={className}
+        >
+          {this.state.ready && (
+            <El
+              ref={node => (this.content = node)}
+              style={{
+                position: 'absolute',
+                [horizontal ? 'height' : 'width']: '100%',
+                WebkitTransform: START_TRANSLATE,
+                MsTransform: START_TRANSLATE,
+                transform: START_TRANSLATE_3D,
+                overflow: 'hidden',
+                [horizontal ? 'width' : 'height']: this.props.pageHeight * pages,
+                ...innerStyle,
+              }}
+            >
+              <Provider value={this}>{children}</Provider>
+            </El>
+          )}
+        </El>
+        {!showAbsolute && <div style={{ height: this.props.pageHeight * pages }} />}
+      </>
     )
   }
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useMemo } from 'react'
 import { Omit } from '../types'
 
 export function createContextualProps<A extends any>(defaults?: A) {
@@ -6,7 +6,10 @@ export function createContextualProps<A extends any>(defaults?: A) {
   return {
     Context,
     PassProps({ children, ...rest }: Omit<A, 'children'> & { children?: any }) {
-      return <Context.Provider value={{ ...defaults, ...rest }}>{children}</Context.Provider>
+      const memoVal = useMemo(() => {
+        return { ...defaults, ...rest }
+      }, [rest])
+      return <Context.Provider value={memoVal}>{children}</Context.Provider>
     },
     useProps(componentProps?: Partial<A>): Partial<A> {
       const extra = useContext(Context)

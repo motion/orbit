@@ -31,6 +31,8 @@ export function HomePage() {
     })
   })
 
+  console.log('homeStore.sectionHeight', homeStore.sectionHeight)
+
   return (
     <Theme name="home">
       <SimpleProvider value={homeStore}>

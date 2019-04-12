@@ -39,9 +39,7 @@ export const SiteRoot = hot(() => {
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <MDX>
-        <div style={{ pointerEvents: 'auto', height: '100vh' }}>
-          <SiteBrowser />
-        </div>
+        <SiteBrowser />
       </MDX>
     </ProvideUI>
   )

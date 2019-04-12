@@ -39,14 +39,21 @@ Page.Content = (props: ViewProps) => {
   const parallax = useProps()
   const zIndex = selectDefined(props.zIndex, parallax.zIndex)
   const homeStore = useHomestore()
-  return <SectionContent height={homeStore.sectionHeight} {...props} zIndex={zIndex} />
+  return (
+    <SectionContent
+      className="page-content"
+      height={homeStore.sectionHeight}
+      {...props}
+      zIndex={zIndex}
+    />
+  )
 }
 
 Page.Background = (props: ViewProps) => {
   const { zIndex, offset } = useProps()
   return (
     <Page.Parallax offset={offset} speed={0} zIndex={zIndex - 2}>
-      <FullScreen {...props} />
+      <FullScreen className="page-background" {...props} />
     </Page.Parallax>
   )
 }

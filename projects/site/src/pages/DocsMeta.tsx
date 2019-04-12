@@ -1,6 +1,6 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
 import { Icon, Table } from '@o/kit'
-import { Button, Card, Divider, Space, SpaceGroup } from '@o/ui'
+import { Button, Card, Col, Divider, Space } from '@o/ui'
 import React from 'react'
 import components from '../../tmp/components.json'
 import { CodeBlock } from '../views/CodeBlock'
@@ -8,7 +8,7 @@ import { CodeBlock } from '../views/CodeBlock'
 export const DocsMeta = (props: { source: string; displayName: string }) => {
   return (
     <>
-      <SpaceGroup>
+      <Col space>
         <Card
           collapsable
           defaultCollapsed
@@ -29,7 +29,7 @@ export const DocsMeta = (props: { source: string; displayName: string }) => {
         <Card collapsable collapseOnClick title="Props" scrollable="y">
           <PropsTable props={components.find(x => x.displayName === props.displayName).props} />
         </Card>
-      </SpaceGroup>
+      </Col>
 
       <Space size="xl" />
       <Divider />

@@ -121,7 +121,7 @@ setConfig({
   logLevel: 'no-errors-please',
   pureSFC: true,
   pureRender: true,
-  disableHotRenderer: true,
+  // disableHotRenderer: true,
 })
 
 Error.stackTraceLimit = Infinity

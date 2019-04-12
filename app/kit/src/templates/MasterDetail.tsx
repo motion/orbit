@@ -21,6 +21,7 @@ export function MasterDetail({
 }: MasterDetailProps) {
   const isSmall = useMedia({ maxWidth: 700 })
   const [selected, setSelected] = useState(null)
+
   const contents =
     typeof children === 'function'
       ? selected === null

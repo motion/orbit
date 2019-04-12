@@ -28,7 +28,7 @@
     "query-string": "6.2.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
-    "react-hot-loader": "4.8.2",
+    "react-hot-loader": "4.8.3",
     "react-media": "1.9.2",
     "react-spring": "8.0.18",
     "three": "0.103.0",
@@ -38,7 +38,7 @@
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
     "zenscroll": "^4.0.2",
-    "@mdx-js/react": "1.0.0-alpha.12",
+    "@mdx-js/react": "1.0.2",
     "@mdx-js/tag": "0.20.3",
     "prism-react-renderer": "0.1.6",
     "react-docgen-typescript": "1.12.3"

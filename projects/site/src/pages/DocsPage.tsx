@@ -44,20 +44,21 @@ const itemsByIndex = {
 
 export function DocsPage() {
   const [selected, setSelected] = useState(null)
-  const [viewElement, setView] = useState(null)
+  const [view, setView] = useState(null)
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
+  const getView = views[selected && selected.id]
 
   useEffect(() => {
     if (!selected) return
-    if (!views[selected.id]) return
+    if (!getView) return
     let cancelled = false
-    const resolved = views[selected.id]()
+    const resolved = getView()
     if (resolved instanceof Promise) {
-      views[selected.id]().then(view => {
+      getView().then(next => {
         if (!cancelled) {
-          setView(createElement(view.default))
+          setView(createElement(next.default))
         }
       })
     } else {
@@ -66,11 +67,11 @@ export function DocsPage() {
     return () => {
       cancelled = true
     }
-  }, [selected])
+  }, [getView])
 
   return (
     <Theme name={theme}>
-      <View flex={1} background={x => x.background}>
+      <View height="100vh" background={x => x.background}>
         <Background>
           <HeaderSlim />
 
@@ -83,13 +84,13 @@ export function DocsPage() {
               onSelect={setSelected}
               belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
             >
-              {viewElement && (
+              {view && (
                 <SelectedSection
                   onToggleSidebar={() => setShowSidebar(!showSidebar)}
                   setTheme={setTheme}
                   theme={theme}
                   title={selected.title}
-                  viewElement={viewElement}
+                  viewElement={view}
                 />
               )}
             </Templates.MasterDetail>

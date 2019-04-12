@@ -1,4 +1,4 @@
-import { MDXProvider } from '@mdx-js/tag'
+import { MDXProvider } from '@mdx-js/react'
 import { gloss, Paragraph, Space, Title } from '@o/ui'
 import React from 'react'
 import orbitComponents from '../../tmp/components.json'

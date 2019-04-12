@@ -74,7 +74,7 @@ export function HeadSection() {
             >
               <View width="90%" maxWidth={980}>
                 <FadeDown disable={!measured}>
-                  <TitleText fontWeight={100} selectable>
+                  <TitleText margin={[0, '2vw']} fontWeight={100} selectable>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
                       {allTitles[size]}
                     </ViewPortText>

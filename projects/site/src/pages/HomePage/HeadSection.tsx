@@ -85,17 +85,16 @@ export function HeadSection() {
                   </ViewPortText>
 
                   <Paragraph
-                    fontSize={parSize * 0.96}
-                    sizeLineHeight={1.55}
+                    fontSize={parSize * 0.9}
+                    sizeLineHeight={1.38}
                     textAlign="center"
-                    fontWeight={100}
                     alpha={0.56}
                   >
-                    <span style={{ fontWeight: 200 }}>{texts[0]}</span>
+                    <span style={{}}>{texts[0]}</span>
                     {br}
-                    <span style={{ fontSize: '95%' }}>{texts[1]}</span>
+                    <span style={{}}>{texts[1]}</span>
                     {br}
-                    <span style={{ fontSize: '95%' }}>{texts[2]}</span>
+                    <span style={{}}>{texts[2]}</span>
                   </Paragraph>
                 </FadeDown>
               </View>

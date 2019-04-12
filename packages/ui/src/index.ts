@@ -18,7 +18,6 @@ export {
   GridProps,
   Theme,
   ThemeContext,
-  ThemeProvide,
   useTheme,
   useThemeContext,
 } from '@o/gloss'
@@ -130,6 +129,7 @@ export * from './PersonRow'
 export * from './Popover'
 export * from './progress/Loading'
 export * from './progress/Progress'
+export * from './ProvideUI'
 export * from './Scale'
 export * from './Section'
 export * from './SegmentedRow'

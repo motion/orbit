@@ -5,8 +5,8 @@
   "ts:main": "src/index.tsx",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/kit": "^2.4.0",

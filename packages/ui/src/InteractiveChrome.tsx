@@ -44,6 +44,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
         measureKey={measureKey}
         target={parentRef}
         {...rest}
+        color={rest.color ? `${rest.color}` : null}
         onClick={useCallback(e => e.stopPropagation(), [])}
         onMouseDown={useCallback(
           e => {

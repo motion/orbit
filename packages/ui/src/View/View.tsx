@@ -6,6 +6,8 @@ import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps, getElevation } from './elevate'
 
 // TODO this gets messy, and is incomplete
+// basic desire is to not overlap with CSS props
+// and avoid clutter overall
 export type CommonHTMLProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
   | 'title'
@@ -26,7 +28,6 @@ export type CommonHTMLProps = Omit<
   | 'prefix'
   | 'property'
   | 'radioGroup'
-  | 'dangerouslySetInnerHTML'
   | 'contextMenu'
   | 'dir'
   | 'datatype'
@@ -36,6 +37,7 @@ export type CommonHTMLProps = Omit<
   | 'is'
   | 'itemScope'
   | 'inputMode'
+  | 'color'
 >
 
 export type ViewProps = CommonHTMLProps &

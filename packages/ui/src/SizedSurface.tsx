@@ -2,11 +2,11 @@ import { mergeDefined } from '@o/utils'
 import React from 'react'
 import { useScale } from './Scale'
 import { Sizes } from './Space'
-import { Surface, SurfaceProps, useSurfaceProps } from './Surface'
+import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 29
 
-export type SizedSurfaceProps = SurfaceProps & {
+export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
   flex?: any
   sizeHeight?: boolean | number
   sizeFont?: boolean | number
@@ -15,6 +15,8 @@ export type SizedSurfaceProps = SurfaceProps & {
   sizeRadius?: boolean | number
   sizeIcon?: boolean | number
 }
+
+export type SizedSurfaceProps = SurfaceProps & SizedSurfaceSpecificProps
 
 export const sizeProps = ['sizeHeight', 'sizeFont', 'sizePadding', 'sizeRadius', 'sizeIcon']
 

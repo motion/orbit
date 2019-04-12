@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
-import { ContextMenuProvider, ThemeProvide } from '@o/ui'
+import { ContextMenuProvider } from '@o/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
@@ -85,9 +85,9 @@ function OrbitRootInner() {
         }
       }}
     >
-      <ThemeProvide themes={themes}>
+      <ProvideUI themes={themes}>
         <OrbitBrowser />
-      </ThemeProvide>
+      </ProvideUI>
     </ContextMenuProvider>
   )
 }

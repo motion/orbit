@@ -17,16 +17,16 @@ import { TopBlur } from '../../views/TopBlur'
 import { ViewPortText } from '../../views/ViewPortText'
 
 let allTitles = {
-  large: 'A new way to build apps together.',
+  large: 'A better way to build apps together.',
   medium: 'A new way to build apps together.',
   small: 'Build apps together.',
 }
 
 let allTexts = {
   large: [
-    `Build powerful apps in minutes: no config, powerful tools, deployed without a server.`,
-    `It's everything you need to build internal tools with your team.`,
-    `Open source and runs privately on your computer.`,
+    `Code internal tools with less code, no infrastructure, and a rich app ecosystem.`,
+    `It's the vertically integrated app platform for developers.`,
+    `Open source, decentralized and offline-first.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
@@ -136,7 +136,6 @@ export function HeadSection() {
       <Page.Background background={theme => theme.background} />
 
       <Page.Parallax speed={-0.4} zIndex={-2}>
-        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
         <View
           pointerEvents="none"
           position="absolute"
@@ -151,7 +150,6 @@ export function HeadSection() {
       </Page.Parallax>
 
       <Page.Parallax speed={0} zIndex={-2}>
-        {/* <div style={{ width: 100, height: 100, background: 'red' }} /> */}
         <TopBlur opacity={0.6} />
       </Page.Parallax>
     </Page>

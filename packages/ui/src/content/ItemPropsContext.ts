@@ -5,7 +5,6 @@ import { ViewProps } from '../View/View'
 
 export const ItemPropsContext = createContext({
   oneLine: false,
-  condensed: false,
   preventSelect: false,
   beforeTitle: null,
   itemProps: null as ViewProps,

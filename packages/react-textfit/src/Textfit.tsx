@@ -79,7 +79,6 @@ export default class TextFit extends React.Component<TextFitProps> {
     waitForFonts(
       fonts,
       debounce(() => {
-        console.log('all fonts loaded')
         this.process()
       }, this.props.throttle),
     )

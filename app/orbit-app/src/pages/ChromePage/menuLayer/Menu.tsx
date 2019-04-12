@@ -533,7 +533,6 @@ export function Menu() {
 // TODO theres a context for this right?
 // const itemProps = {
 //   oneLine: false,
-//   condensed: true,
 //   onSelectItem: false,
 //   hideSubtitle: true,
 // }

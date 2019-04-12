@@ -52,7 +52,7 @@ Page.Content = ({ margin, position, ...sectionProps }: ViewProps) => {
 Page.Background = (props: ViewProps) => {
   const { zIndex, offset } = useProps()
   return (
-    <Page.Parallax offset={offset} speed={0} style={{ zIndex: zIndex - 1 }}>
+    <Page.Parallax offset={offset} speed={0} zIndex={zIndex - 2}>
       <FullScreen {...props} />
     </Page.Parallax>
   )

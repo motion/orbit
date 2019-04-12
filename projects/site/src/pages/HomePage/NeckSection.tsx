@@ -1,4 +1,4 @@
-import { Col, FullScreen } from '@o/ui'
+import { Col, FullScreen, gloss, Row, View } from '@o/ui'
 import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
 import { Page } from '../../views/Page'
@@ -31,12 +31,53 @@ export function NeckSection() {
           backgroundSize="contain"
           backgroundPosition="top left"
         />
-        <FullScreen
-          className="spotlight"
-          zIndex={1}
-          background="radial-gradient(transparent, black)"
-        />
+        <Spotlight />
       </Page.Parallax>
     </Page>
   )
 }
+
+const Spotlight = () => {
+  return (
+    <>
+      <Above />
+      <Row>
+        <Left />
+        <Square
+          className="spotlight"
+          zIndex={10}
+          background="radial-gradient(circle farthest-side, transparent, black)"
+        />
+        <Right />
+      </Row>
+      <Below />
+    </>
+  )
+}
+
+const Square = gloss(View, {
+  width: '80vw',
+  height: '80vw',
+})
+
+const bg = (_, theme) => ({ background: theme.background })
+
+const Above = gloss({
+  flex: 1,
+  zIndex: 10,
+}).theme(bg)
+
+const Below = gloss({
+  flex: 1,
+  zIndex: 10,
+}).theme(bg)
+
+const Left = gloss({
+  flex: 1,
+  zIndex: 10,
+}).theme(bg)
+
+const Right = gloss({
+  flex: 1,
+  zIndex: 10,
+}).theme(bg)

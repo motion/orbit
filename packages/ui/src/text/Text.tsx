@@ -42,11 +42,11 @@ export type TextProps = CSSPropertySetStrict &
 
 const textSizes = {
   xs: 0.8,
-  sm: 0.9,
-  md: 1,
-  lg: 1.3,
-  xl: 1.8,
-  xxl: 2.2,
+  sm: 1.0,
+  md: 1.2,
+  lg: 1.8,
+  xl: 2.0,
+  xxl: 2.4,
 }
 
 // text should vary more

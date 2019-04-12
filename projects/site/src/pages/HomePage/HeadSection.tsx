@@ -25,8 +25,8 @@ let allTitles = {
 let allTexts = {
   large: [
     `Build powerful apps in minutes: no config, powerful tools, deployed without a server.`,
-    `Everything you need to build incredible internal tools and more.`,
-    `Open source, runs privately on your computer.`,
+    `It's everything you need to build internal tools with your team.`,
+    `Open source and runs privately on your computer.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,

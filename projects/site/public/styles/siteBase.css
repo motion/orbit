@@ -15,6 +15,13 @@ body {
   pointer-events: none;
 }
 
+.clip-text {
+  mix-blend-mode: screen;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 #app {
   overflow: hidden;
   pointer-events: auto;

@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Space, Text, Title, View } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Space, Text, TextProps, Title, View } from '@o/ui'
 import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
 import { Page } from '../../views/Page'
@@ -8,6 +8,10 @@ import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
+
+export const SubTitleText = (props: TextProps) => (
+  <TitleText fontSize={20} fontWeight={200} alpha={0.5} {...props} />
+)
 
 export function NeckSection() {
   return (
@@ -20,9 +24,9 @@ export function NeckSection() {
               <TitleText size="lg" fontWeight={200}>
                 No config, no servers + a desktop-class UI kit.
               </TitleText>
-              <TitleText size="md" fontWeight={200} alpha={0.5}>
+              <SubTitleText>
                 Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
-              </TitleText>
+              </SubTitleText>
             </>
           }
         >

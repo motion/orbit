@@ -46,6 +46,10 @@ export function ShoulderSection() {
             </Col>
             <Col flex={2}>image</Col>
           </Row>
+
+          <Space size="xxl" />
+          <Space size="xxl" />
+          <Space size="xxl" />
         </SpacedPageContent>
       </Page.Content>
 

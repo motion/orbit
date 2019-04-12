@@ -4,6 +4,7 @@ import northernlights from '../../../public/images/northern-lights.svg'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButtonDark } from '../../views/PillButtonDark'
+import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 
@@ -104,8 +105,9 @@ export function NeckSection() {
         <FullScreen
           className="northern-lights"
           backgroundImage={`url(${northernlights})`}
-          backgroundSize="contain"
-          backgroundPosition="top left"
+          backgroundSize="cover"
+          backgroundPosition="center center"
+          backgroundRepeat="none"
         />
         <Spotlight />
       </Page.Parallax>
@@ -124,48 +126,3 @@ const Flex = gloss(View, {
   position: 'relative',
   flex: 1,
 })
-
-const Spotlight = () => {
-  return (
-    <>
-      <Above />
-      <Row>
-        <Left />
-        <Square
-          className="spotlight"
-          zIndex={10}
-          background="radial-gradient(circle farthest-side, transparent, black)"
-        />
-        <Right />
-      </Row>
-      <Below />
-    </>
-  )
-}
-
-const Square = gloss(View, {
-  width: '80vw',
-  height: '80vw',
-})
-
-const bg = (_, theme) => ({ background: theme.background })
-
-const Above = gloss({
-  flex: 1,
-  zIndex: 10,
-}).theme(bg)
-
-const Below = gloss({
-  flex: 1,
-  zIndex: 10,
-}).theme(bg)
-
-const Left = gloss({
-  flex: 1,
-  zIndex: 10,
-}).theme(bg)
-
-const Right = gloss({
-  flex: 1,
-  zIndex: 10,
-}).theme(bg)

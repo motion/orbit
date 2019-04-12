@@ -5,6 +5,7 @@ import { Parallax } from '../views/Parallax'
 // import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
 import { NeckSection } from './HomePage/NeckSection'
+import { ShoulderSection } from './HomePage/ShoulderSection'
 
 class HomeStore {
   windowHeight = window.innerHeight
@@ -45,6 +46,7 @@ export function HomePage() {
         >
           <HeadSection />
           <NeckSection />
+          <ShoulderSection />
         </Parallax>
       </SimpleProvider>
     </Theme>

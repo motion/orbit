@@ -21,9 +21,6 @@ export function NeckSection() {
             </TitleText>
           </Col>
 
-          {/* Squircle! */}
-          <Squircle width={100} height={100} background="red" />
-
           <Row space>
             <Flex>
               <PillButtonDark>Import</PillButtonDark>
@@ -54,7 +51,16 @@ export function NeckSection() {
                 src={require('../../../public/images/curve-arrow.svg')}
               />
             </Flex>
-            <Flex flex={2} />
+            <Flex flex={2}>
+              {/* Squircle! */}
+              <Squircle
+                width={280}
+                height={280}
+                background="linear-gradient(45deg, #78009F, #4C1966)"
+                boxShadow="0 10px 50px rgba(0,0,0,0.5)"
+                margin="auto"
+              />
+            </Flex>
             <Flex />
           </Row>
         </SpaceGroup>

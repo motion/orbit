@@ -19,8 +19,8 @@ export const Squircle = ({ boxShadow, width, height, position, margin, ...props 
     <View
       zIndex={2}
       style={{
-        'mask-image': 'paint(smooth-corners)',
-        '-webkit-mask-image': 'paint(smooth-corners)',
+        maskImage: 'paint(smooth-corners)',
+        WebkitMaskImage: 'paint(smooth-corners)',
       }}
       {...{
         width,
@@ -32,7 +32,7 @@ export const Squircle = ({ boxShadow, width, height, position, margin, ...props 
       <View
         position="absolute"
         zIndex={0}
-        borderRadius={width / 3.5}
+        borderRadius={+width / 3.5}
         {...{
           width,
           height,

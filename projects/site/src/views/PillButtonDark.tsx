@@ -18,8 +18,8 @@ export function PillButtonDark({ children, ...props }: ButtonProps) {
         className="clip-text"
         style={{
           background: 'linear-gradient(to left, #B74E42, #BE0FAD)',
-          '-webkit-background-clip': 'text',
-          '-webkit-text-fill-color': 'transparent',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
         }}
       >
         {children}

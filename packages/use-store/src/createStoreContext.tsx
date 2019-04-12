@@ -20,7 +20,7 @@ export function createStoreContext<Instance, Props extends InferProps<Instance>>
       const store = useStore(constructor, props as any, { react: false })
       return <Context.Provider value={store[GET_STORE]}>{children}</Context.Provider>
     },
-    useCreateStore(props: Props) {
+    useCreateStore(props?: Props) {
       return useStore(constructor, props as any)
     },
     useStore(props?: Props, options?: UseStoreOptions): Instance {

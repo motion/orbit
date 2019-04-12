@@ -1,7 +1,9 @@
-import { createContextualProps, FullScreen, View, ViewProps } from '@o/ui'
+import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
-import { ParallaxLayer, ParallaxLayerProps } from 'react-spring/renderprops-addons'
+import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
+import { useHomestore } from '../pages/HomePage'
+import { ParallaxLayer } from './Parallax'
 import { SectionContent } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps({
@@ -33,20 +35,11 @@ Page.Parallax = (props: ParallaxLayerProps & { children: any; zIndex?: number })
   )
 }
 
-Page.Content = ({ margin, position, ...sectionProps }: ViewProps) => {
+Page.Content = (props: ViewProps) => {
   const parallax = useProps()
-  const zIndex = selectDefined(sectionProps.zIndex, parallax.zIndex)
-  return (
-    <View
-      zIndex={zIndex}
-      background={sectionProps.background}
-      height={window.innerHeight}
-      margin={margin}
-      position={position}
-    >
-      <SectionContent height="100%" position="relative" {...sectionProps} zIndex={zIndex} />
-    </View>
-  )
+  const zIndex = selectDefined(props.zIndex, parallax.zIndex)
+  const homeStore = useHomestore()
+  return <SectionContent height={homeStore.sectionHeight} {...props} zIndex={zIndex} />
 }
 
 Page.Background = (props: ViewProps) => {

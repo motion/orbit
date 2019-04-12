@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Text } from './Text'
 import { ViewPortText } from './ViewPortText'
 
-export const Paragraph = gloss(Text)
+export const Paragraph = gloss<TextProps>(Text)
 
 export const ViewportParagraph = ({
   min = 16,

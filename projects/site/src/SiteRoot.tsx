@@ -1,3 +1,4 @@
+import { createStoreContext } from '@o/kit'
 import { ProvideUI } from '@o/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
@@ -7,6 +8,22 @@ import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
 import { MDX } from './views/MDX'
+
+class SiteStore {
+  windowHeight = window.innerHeight
+
+  get sectionHeight() {
+    return Math.min(
+      // min-height
+      Math.max(800, this.windowHeight),
+      // max-height
+      1000,
+    )
+  }
+}
+
+const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStore)
+export const useSiteStore = useStore
 
 function getSiteBrowser() {
   if (window['SiteBrowser']) {
@@ -36,10 +53,20 @@ function getSiteBrowser() {
 
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
+  const siteStore = useCreateStore()
+
+  React.useEffect(() => {
+    window.addEventListener('resize', () => {
+      siteStore.windowHeight = window.innerHeight
+    })
+  })
+
   return (
     <ProvideUI themes={themes} activeTheme="light">
       <MDX>
-        <SiteBrowser />
+        <SimpleProvider value={siteStore}>
+          <SiteBrowser />
+        </SimpleProvider>
       </MDX>
     </ProvideUI>
   )

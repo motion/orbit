@@ -1,9 +1,9 @@
 import { gloss, Row, useTheme, View } from '@o/ui'
 import React from 'react'
-import { useHomestore } from '../pages/HomePage'
+import { useSiteStore } from '../SiteRoot'
 
 export const Spotlight = () => {
-  const store = useHomestore()
+  const siteStore = useSiteStore()
   const theme = useTheme()
   return (
     <>
@@ -11,8 +11,8 @@ export const Spotlight = () => {
       <Row>
         <Left />
         <Square
-          width={store.sectionHeight * 0.8}
-          height={store.sectionHeight * 0.8}
+          width={siteStore.sectionHeight * 0.8}
+          height={siteStore.sectionHeight * 0.8}
           className="spotlight"
           zIndex={10}
           background={`radial-gradient(circle farthest-side, transparent 40%, ${theme.background})`}

@@ -1,4 +1,4 @@
-import { View } from '@o/ui'
+import { View, ViewProps } from '@o/ui'
 import React from 'react'
 
 // @ts-ignore
@@ -7,7 +7,7 @@ if (CSS.paintWorklet) {
   CSS.paintWorklet.addModule('/public/smooth-corners.js')
 }
 
-export const Squircle = ({ boxShadow, width, height, position, margin, ...props }) => (
+export const Squircle = ({ boxShadow, width, height, position, margin, ...props }: ViewProps) => (
   <View
     {...{
       width,

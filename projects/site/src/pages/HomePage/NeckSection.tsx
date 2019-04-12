@@ -61,7 +61,18 @@ export function NeckSection() {
                 margin="auto"
               />
             </Flex>
-            <Flex />
+            <Flex>
+              <img width={124} height={124} src={require('../../../public/logos/gmail.svg')} />
+              <Space size="xxl" />
+              <Image
+                opacity={0.5}
+                alignSelf="flex-start"
+                transform={{
+                  scaleX: -1,
+                }}
+                src={require('../../../public/images/curve-arrow.svg')}
+              />
+            </Flex>
           </Row>
         </SpaceGroup>
       </Page.Content>

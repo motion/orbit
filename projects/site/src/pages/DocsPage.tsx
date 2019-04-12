@@ -14,7 +14,7 @@ import {
   useMedia,
   View,
 } from '@o/ui'
-import React, { createElement, memo, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -22,8 +22,8 @@ import Buttons from './DocsButtons.mdx'
 import Cards from './DocsCards.mdx'
 
 const views = {
-  buttons: () => Buttons,
-  cards: () => Cards,
+  buttons: () => <Buttons />,
+  cards: () => <Cards />,
   // forms: () => Forms,
   // tables: () => Tables,
 }
@@ -43,29 +43,33 @@ const itemsByIndex = {
 }
 
 class DocsPageStore {
-  view = null
+  SubView = null
   selected = null
 
   setSelected = x => (this.selected = x)
 
-  getView = react(
-    () => this.selected,
-    async () => {
-      ensure('selected', !!this.selected)
-      let next = views[this.selected.id]()
-      if (next instanceof Promise) {
-        next = await next
-      }
-      this.view = createElement(next)
-    },
-  )
+  setSubView = async view => {
+    ensure('view', !!view)
+    if (view instanceof Promise) {
+      view = await view
+    }
+    this.SubView = view
+  }
+
+  getView = react(() => this.selected && views[this.selected.id], this.setSubView)
 }
 
 export function DocsPage() {
-  const { selected, setSelected, view } = useStore(DocsPageStore)
+  const store = useStore(DocsPageStore)
+  const { selected, setSelected, SubView, setSubView } = store
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
+
+  // const next = selected && SubView[selected.id]
+  // useEffect(() => {
+  //   setSubView(next)
+  // }, [next])
 
   return (
     <Theme name={theme}>
@@ -81,13 +85,13 @@ export function DocsPage() {
               onSelect={setSelected}
               belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
             >
-              {view && (
+              {SubView && (
                 <SelectedSection
                   onToggleSidebar={() => setShowSidebar(!showSidebar)}
                   setTheme={setTheme}
                   theme={theme}
                   title={selected.title}
-                  viewElement={view}
+                  SubView={SubView}
                 />
               )}
             </Templates.MasterDetail>
@@ -125,7 +129,7 @@ const DocsToolbar = memo(({ section, setSection }: any) => {
   )
 })
 
-const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSidebar }: any) => {
+const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar }: any) => {
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
@@ -150,7 +154,7 @@ const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSid
         </SurfacePassProps>
       }
     >
-      {viewElement}
+      <SubView />
     </Section>
   )
 })

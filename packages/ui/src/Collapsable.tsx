@@ -21,9 +21,9 @@ export const splitCollapseProps = <A extends CollapsableProps>(
     collapsable,
     onCollapse,
     useToggle: useToggleOg,
-    ...props
+    ...rest
   } = all
-  return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useToggle: useToggleOg }, props]
+  return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useToggle: useToggleOg }, rest]
 }
 
 export const useCollapseToggle = (props: CollapsableProps) => {

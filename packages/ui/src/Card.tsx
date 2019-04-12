@@ -68,6 +68,11 @@ export function Card(props: CardProps) {
           borderWidth={1}
           overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
           {...sizedSurfaceProps}
+          flex={
+            toggle.isCollapsable === true && toggle.val === true
+              ? 'inherit'
+              : sizedSurfaceProps.flex
+          }
           themeSelect="card"
           sizeRadius={sizeRadius}
           noInnerElement

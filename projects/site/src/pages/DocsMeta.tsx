@@ -1,6 +1,6 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Icon, Table } from '@o/kit'
-import { Button, Card, Col, Divider, Space } from '@o/ui'
+import { Icon } from '@o/kit'
+import { Button, Card, Col, Divider, Space, Table } from '@o/ui'
 import React from 'react'
 import components from '../../tmp/components.json'
 import { CodeBlock } from '../views/CodeBlock'

@@ -24,9 +24,9 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Create powerful internal tools in minutes. Plug in apps and develop with no config.`,
-    `It's the developer-first app platform that gives you control.`,
-    `Open source, completely decentralized, and runs offline.`,
+    `Code internal tools with less code, no infrastructure, and a rich app ecosystem.`,
+    `It's the vertically integrated app platform for developers.`,
+    `Open source, decentralized and offline-first.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,

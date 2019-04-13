@@ -1,6 +1,8 @@
-import { createStoreContext } from '@o/kit'
-import { Theme, View } from '@o/ui'
-import React, { useEffect } from 'react'
+import { createStoreContext } from '@o/kit';
+import { Theme, Title, View } from '@o/ui';
+import React, { useEffect } from 'react';
+import BusyIndicator from 'react-busy-indicator';
+import { NotFoundBoundary, useLoadingRoute } from 'react-navi';
 
 class SiteStore {
   theme = 'light'
@@ -25,7 +27,8 @@ const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStor
 
 export const useSiteStore = useStore
 
-export function Body(props: any) {
+export function Layout(props: any) {
+  const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
 
   console.log('siteStore', siteStore)
@@ -38,8 +41,11 @@ export function Body(props: any) {
   return (
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
-        <View background={bg} transition="all ease 500ms">
-          {props.children}
+        <View flex={1} background={bg} transition="all ease 500ms">
+          <NotFoundBoundary render={NotFound}>
+            <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />
+            {props.children}
+          </NotFoundBoundary>
         </View>
       </SimpleProvider>
     </Theme>
@@ -47,3 +53,11 @@ export function Body(props: any) {
 }
 
 const bg = theme => theme.background
+
+function NotFound() {
+  return (
+    <View>
+      <Title>Not found</Title>
+    </View>
+  )
+}

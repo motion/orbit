@@ -3,7 +3,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router } from 'react-navi'
-import { Body } from './Body'
+import { Layout } from './Layout'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
@@ -26,9 +26,9 @@ export const SiteRoot = hot(() => {
   return (
     <ProvideUI themes={themes}>
       <MDX>
-        <Body>
+        <Layout>
           <Router routes={routes} />
-        </Body>
+        </Layout>
       </MDX>
     </ProvideUI>
   )

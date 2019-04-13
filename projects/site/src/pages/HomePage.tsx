@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useSiteStore } from '../Body'
+import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'

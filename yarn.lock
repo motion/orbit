@@ -17058,6 +17058,11 @@ re-resizable@4.9.3:
   resolved "https://registry.yarnpkg.com/re-resizable/-/re-resizable-4.9.3.tgz#833df4a4a9b62cfc1de11bc1456285374826e1f0"
   integrity sha512-JKzmZdUAYWs85YErkmZNB7hjGR9qUOHFUZUtEplZlEZBFHRguiWck5J+HFTy/NjlMJtqQsYPQq57nQAO2BuRRg==
 
+react-busy-indicator@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-busy-indicator/-/react-busy-indicator-1.0.0.tgz#3369617f50fba61f4fc776355682c878e7c9eb66"
+  integrity sha512-/3OdsHYAqZ9LsrTyjeVu/70yjCfJXmr2qdHuO4hdJ3I92saspXxAGvZzm+Go9luHGlAiKVVh7LykK6tjaXfRQA==
+
 react-cache@2.0.0-alpha.1:
   version "2.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-cache/-/react-cache-2.0.0-alpha.1.tgz#4c119188248bc988a61268458bc18bd845f2ec19"

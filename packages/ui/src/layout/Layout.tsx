@@ -76,24 +76,14 @@ function FlexLayout(props: LayoutProps) {
 
   if (props.type === 'row') {
     return (
-      <LayoutRow
-        minHeight={size.height || 'auto'}
-        maxHeight={window.innerHeight}
-        overflow="hidden"
-        ref={ref}
-      >
+      <LayoutRow minHeight={size.height || 'auto'} maxHeight="100vh" overflow="hidden" ref={ref}>
         {childElements}
       </LayoutRow>
     )
   }
 
   return (
-    <LayoutCol
-      minHeight={size.height || 'auto'}
-      maxHeight={window.innerHeight}
-      overflow="hidden"
-      ref={ref}
-    >
+    <LayoutCol minHeight={size.height || 'auto'} maxHeight="100vh" overflow="hidden" ref={ref}>
       {childElements}
     </LayoutCol>
   )

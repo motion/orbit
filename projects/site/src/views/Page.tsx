@@ -2,7 +2,7 @@ import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
-import { useSiteStore } from '../Body'
+import { useSiteStore } from '../Layout'
 import { ParallaxLayer } from './Parallax'
 import { SectionContent } from './SectionContent'
 

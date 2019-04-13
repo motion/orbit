@@ -15,9 +15,9 @@ export function useTextFit({ ref, min = 6, throttle = 16, max = 100 }: UseTextFi
   const measure = useThrottleFn(
     () => {
       if (!ref.current) return
-      const node = ref.current.parentElement
-      const parentScale = ref.current.parentElement.clientWidth / ref.current.clientWidth
-      const fontSize = Math.min(max, Math.max(min, node.offsetWidth * 0.05))
+      const parent = ref.current.parentElement
+      const parentScale = parent.clientWidth / ref.current.clientWidth
+      const fontSize = Math.min(max, Math.max(min, parent.offsetWidth * 0.05))
       setScale(Math.max(1, (fontSize / 50) * parentScale))
     },
     { amount: throttle },
@@ -39,7 +39,9 @@ export function useTextFit({ ref, min = 6, throttle = 16, max = 100 }: UseTextFi
   })
 
   useLayoutEffect(() => {
-    parentRef.current = ref.current.parentElement
+    if (ref.current) {
+      parentRef.current = ref.current.parentElement
+    }
   }, [ref.current])
 
   useLayoutEffect(() => {

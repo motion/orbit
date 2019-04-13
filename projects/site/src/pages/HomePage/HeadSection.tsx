@@ -12,7 +12,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
-import { useTextFit } from '../../views/ViewPortText'
+import { useTextFit } from '../../views/useTextFit'
 
 let allTitles = {
   large: 'A better way to build apps together.',

@@ -2,9 +2,10 @@ import { gloss } from '@o/gloss'
 import { Button, Popover, Row, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
+import Overdrive from 'react-overdrive'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { LogoHorizontal } from './LogoHorizontal'
-import { LogoVertical } from './LogoVertical'
+import { Logos } from './Logos'
+import { SectionContent } from './SectionContent'
 import { Text } from './Text'
 
 const LinkText = gloss(Text, {
@@ -44,31 +45,35 @@ export function Link({ children, fontSize, href, ...props }: LinkProps) {
 }
 
 export const LinksLeft = props => (
-  <>
-    <Link {...props} href="/">
-      Examples
-    </Link>
-    <Link {...props} href="/docs">
-      Docs
-    </Link>
-    <Link {...props} href="/">
-      Security
-    </Link>
-  </>
+  <Overdrive id="links-left">
+    <Row>
+      <Link {...props} href="/">
+        Examples
+      </Link>
+      <Link {...props} href="/docs">
+        Docs
+      </Link>
+      <Link {...props} href="/">
+        Security
+      </Link>
+    </Row>
+  </Overdrive>
 )
 
 export const LinksRight = props => (
-  <>
-    <Link {...props} href="/">
-      Pricing
-    </Link>
-    <Link {...props} href="/">
-      Team
-    </Link>
-    <Link {...props} href="/">
-      Blog
-    </Link>
-  </>
+  <Overdrive id="links-right">
+    <Row>
+      <Link {...props} href="/">
+        Pricing
+      </Link>
+      <Link {...props} href="/">
+        Team
+      </Link>
+      <Link {...props} href="/">
+        Blog
+      </Link>
+    </Row>
+  </Overdrive>
 )
 
 export function Header(props: { slim?: boolean }) {
@@ -103,10 +108,21 @@ export function Header(props: { slim?: boolean }) {
   const padding = props.slim ? ['2vh', 0] : ['3.5vh', 0]
 
   return (
-    <Row alignItems="center" justifyContent="space-around" padding={padding}>
-      <LinkSection alignRight>{before}</LinkSection>
-      {props.slim ? <LogoHorizontal /> : <LogoVertical />}
-      <LinkSection>{after}</LinkSection>
+    <Row
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      zIndex={100000}
+      alignItems="center"
+      justifyContent="space-around"
+      padding={padding}
+    >
+      <SectionContent flexFlow="row">
+        <LinkSection alignRight>{before}</LinkSection>
+        <Logos show="vertical" />
+        <LinkSection>{after}</LinkSection>
+      </SectionContent>
     </Row>
   )
 }

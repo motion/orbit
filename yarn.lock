@@ -17313,6 +17313,11 @@ react-navigation-hooks@1.0.0-alpha.2:
   resolved "https://registry.yarnpkg.com/react-navigation-hooks/-/react-navigation-hooks-1.0.0-alpha.2.tgz#e44de3790d1f0ba6ff33dc11caa0e55d2a4fc8f7"
   integrity sha512-G/JlquD3Xs8fYSLywKz6TV+APev8IwHDThU7X9gK2fZnLyk5tX9OeuO4pTpv4jv/tTRcjk7wkKQ+pHI+rFXa/g==
 
+react-overdrive@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/react-overdrive/-/react-overdrive-0.0.10.tgz#7cbe060906a2a98977a86a763bd417b736dfd17d"
+  integrity sha512-89CUOaGi0bzh7xzBDWdhT60Lt7oOIdJVKRrL92dAnlDyp8d2t2r2Xmd3mEz1Io6qOG98shc7X/PSK17Zpz/UXQ==
+
 react-reconciler@0.19.1:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.19.1.tgz#0735fc290617780a2c9735218a4762e7d77797e6"

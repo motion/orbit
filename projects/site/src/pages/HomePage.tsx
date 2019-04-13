@@ -1,6 +1,7 @@
 import { Theme } from '@o/ui'
 import React from 'react'
 import { useSiteStore } from '../SiteStore'
+import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'
 import { ChestSection } from './HomePage/ChestSection'
@@ -13,8 +14,9 @@ export function HomePage() {
   const siteStore = useSiteStore()
   console.log('siteStore.sectionHeight', siteStore.sectionHeight)
 
-  const home = (
+  return (
     <Theme name="home" key="home">
+      <Header key="header" />
       <Parallax
         pages={5}
         // ref={ref => (this.parallax = ref)}
@@ -30,6 +32,4 @@ export function HomePage() {
       </Parallax>
     </Theme>
   )
-
-  return home
 }

@@ -43,6 +43,7 @@
     "@mdx-js/react": "1.0.2",
     "@mdx-js/tag": "0.20.3",
     "prism-react-renderer": "0.1.6",
-    "react-docgen-typescript": "1.12.3"
+    "react-docgen-typescript": "1.12.3",
+    "react-overdrive": "0.0.10"
   }
 }

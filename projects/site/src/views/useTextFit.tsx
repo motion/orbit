@@ -54,7 +54,6 @@ const updateScale = (last: number, node: HTMLElement, update: Function) => {
   const parent = node.parentElement
   const pWidth = parent.clientWidth
   const width = node.clientWidth
-  console.log('measuring', node, pWidth, width)
   const parentScale = pWidth / width
   if (parentScale !== last) {
     update(parentScale)

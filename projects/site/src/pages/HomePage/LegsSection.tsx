@@ -1,5 +1,6 @@
-import { Col, Grid, Image, Space, Theme } from '@o/ui'
+import { Col, FullScreen, Grid, Image, Space, Theme } from '@o/ui'
 import React from 'react'
+import earth from '../../../public/images/earth.jpg'
 import people from '../../../public/images/people.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -40,6 +41,19 @@ export function LegsSection() {
         </Page.Content>
 
         <Page.Background background={theme => theme.background} />
+
+        <Page.Parallax speed={0.1} zIndex={-2}>
+          <FullScreen
+            className="earth"
+            backgroundImage={`url(${earth})`}
+            backgroundSize="cover"
+            backgroundPosition="center center"
+            backgroundRepeat="no-repeat"
+            transform={{
+              scale: 0.5,
+            }}
+          />
+        </Page.Parallax>
       </Page>
     </Theme>
   )

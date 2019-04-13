@@ -28,30 +28,6 @@ export type GlossThemeFn<Props> = (
   theme: ThemeObject,
 ) => CSSPropertySetResolved | null | undefined
 
-export interface GlossView<Props> {
-  // copied from FunctionComponent
-  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
-  propTypes?: React.ValidationMap<Props>
-  contextTypes?: React.ValidationMap<any>
-  defaultProps?: Partial<Props>
-  displayName?: string
-  // extra:
-  ignoreAttrs?: Object
-  theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: { displayName?: string }) => any
-  glossConfig: {
-    getConfig: () => {
-      id: string
-      displayName: string
-      targetElement: any
-      styles: any
-      propStyles: Object
-      child: any
-    }
-    themeFns: GlossThemeFn<Props>[] | null
-  }
-}
-
 const tracker: StyleTracker = new Map()
 const rulesToClass = new WeakMap()
 const sheet = new StyleSheet(true)
@@ -207,11 +183,54 @@ function glossify(
   return { classNames, styles }
 }
 
-export function gloss<Props = any>(
-  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | any,
+export interface GlossView<Props> {
+  // copied from FunctionComponent
+  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
+  propTypes?: React.ValidationMap<Props>
+  contextTypes?: React.ValidationMap<any>
+  defaultProps?: Partial<Props>
+  displayName?: string
+  // extra:
+  ignoreAttrs?: Object
+  theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
+  withConfig: (config: { displayName?: string }) => any
+  glossConfig: {
+    getConfig: () => {
+      id: string
+      displayName: string
+      targetElement: any
+      styles: any
+      propStyles: Object
+      child: any
+    }
+    themeFns: GlossThemeFn<Props>[] | null
+  }
+}
+
+// const x = gloss<{ isActive?: boolean }>()
+// const y = gloss<{ otherProp?: boolean }>(x)
+
+// type InferProps<A> = A extends GlossView<infer B> ? B : never
+
+// type test = InferProps<typeof x>
+
+// type JoinViews<Props extends any = any, Child extends any = any> = Props & InferProps<Child>
+
+// function join<Props = any, A = any>(a?: A): A extends GlossView<infer B> ? B : Props { return a as any }
+
+// const yz = join<{ ok?: number }>(y)
+
+// type Z = JoinViews<{ otherProp?: boolean }, typeof x>
+
+// export function gloss<Props = any>(a?: undefined): GlossView<Props>
+// export function gloss<Props = any, Child extends any = any>(
+//   a: Child,
+// ): Child extends GlossView<infer P> ? GlossView<Props & P> : GlossView<Props>
+export function gloss<ExtraProps = any, Props = any>(
+  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
-): GlossView<Props> {
-  let target = a || 'div'
+): GlossView<ExtraProps & Props> {
+  let target: any = a || 'div'
   let rawStyles = b
   let targetConfig
   let ignoreAttrs: Object
@@ -230,7 +249,7 @@ export function gloss<Props = any>(
   }
 
   // shorthand: view({ ... })
-  if (typeof target === 'object' && !b && !isGlossParent) {
+  if (typeof a !== 'string' && typeof target === 'object' && !b && !isGlossParent) {
     target = 'div'
     rawStyles = a
   }
@@ -240,7 +259,10 @@ export function gloss<Props = any>(
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: GlossThemeFn<any> | null = null
 
-  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
+  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<ExtraProps & Props>>(function Gloss(
+    props,
+    ref,
+  ) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
@@ -307,9 +329,9 @@ export function gloss<Props = any>(
     }
 
     return createElement(element, finalProps, props.children)
-  }) as unknown) as GlossView<Props>
+  }) as unknown) as GlossView<ExtraProps & Props>
 
-  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
+  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<ExtraProps & Props>
 
   ThemedView.glossConfig = {
     themeFns: null,

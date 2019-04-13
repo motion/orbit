@@ -13,7 +13,7 @@ import {
   useTheme,
   View,
 } from '@o/ui'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { useSiteStore } from '../Layout'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
@@ -66,10 +66,6 @@ export function DocsPage() {
   const [section, setSection] = useState('all')
   const theme = useTheme()
 
-  useEffect(() => {
-    siteStore.setTheme('light')
-  }, [])
-
   return (
     <>
       <HeaderSlim />
@@ -101,6 +97,8 @@ export function DocsPage() {
     </>
   )
 }
+
+DocsPage.theme = 'light'
 
 const DocsToolbar = memo(({ section, setSection }: any) => {
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
@@ -14,11 +14,6 @@ import { WaistSection } from './HomePage/WaistSection'
 
 export function HomePage() {
   const siteStore = useSiteStore()
-
-  useEffect(() => {
-    siteStore.setTheme('home')
-  }, [])
-
   return (
     <>
       <Header key="header" />
@@ -41,3 +36,5 @@ export function HomePage() {
     </>
   )
 }
+
+HomePage.theme = 'home'

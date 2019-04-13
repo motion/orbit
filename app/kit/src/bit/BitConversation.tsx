@@ -6,19 +6,6 @@ import * as React from 'react'
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
 
-const Pane = gloss(View, {
-  height: 0,
-  opacity: 0,
-  pointerEvents: 'none',
-  overflow: 'hidden',
-  isShown: {
-    flex: 1,
-    height: 'auto',
-    opacity: 1,
-    pointerEvents: 'inherit',
-  },
-})
-
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   if (!bits) {
     return null
@@ -107,3 +94,16 @@ export function BitConversation(props: AppBitMainProps) {
     </>
   )
 }
+
+const Pane = gloss<{ isShown?: boolean }>(View, {
+  height: 0,
+  opacity: 0,
+  pointerEvents: 'none',
+  overflow: 'hidden',
+  isShown: {
+    flex: 1,
+    height: 'auto',
+    opacity: 1,
+    pointerEvents: 'inherit',
+  },
+})

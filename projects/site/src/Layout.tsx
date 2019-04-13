@@ -1,11 +1,13 @@
-import { createStoreContext } from '@o/kit';
-import { Theme, Title, View } from '@o/ui';
-import React, { useEffect } from 'react';
-import BusyIndicator from 'react-busy-indicator';
-import { NotFoundBoundary, useLoadingRoute } from 'react-navi';
+import { createStoreContext } from '@o/kit'
+import { Theme, Title, View } from '@o/ui'
+import { throttle } from 'lodash'
+import React, { useEffect } from 'react'
+import BusyIndicator from 'react-busy-indicator'
+import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
+import { getPageForPath, Navigation } from './SiteRoot'
 
 class SiteStore {
-  theme = 'light'
+  theme = null
 
   windowHeight = window.innerHeight
 
@@ -31,12 +33,30 @@ export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
 
-  console.log('siteStore', siteStore)
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      siteStore.windowHeight = window.innerHeight
-    })
+    async function updatePath() {
+      const page = await getPageForPath()
+      if (page && page.theme) {
+        siteStore.setTheme(page.theme)
+      }
+    }
+
+    Navigation.subscribe(updatePath)
+    updatePath()
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener(
+      'resize',
+      throttle(() => {
+        siteStore.windowHeight = window.innerHeight
+      }, 64),
+    )
   })
+
+  if (!siteStore.theme) {
+    return null
+  }
 
   return (
     <Theme name={siteStore.theme}>

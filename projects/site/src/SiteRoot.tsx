@@ -1,5 +1,5 @@
 import { ProvideUI } from '@o/ui'
-import { mount, route } from 'navi'
+import { createBrowserNavigation, mount, route } from 'navi'
 import React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router } from 'react-navi'
@@ -22,12 +22,21 @@ const routes = mount({
   }),
 })
 
+export const Navigation = createBrowserNavigation({
+  routes,
+})
+
+export async function getPageForPath() {
+  const res = await Navigation.getRoute()
+  return res.views[0].type || res.views[0]
+}
+
 export const SiteRoot = hot(() => {
   return (
     <ProvideUI themes={themes}>
       <MDX>
         <Layout>
-          <Router routes={routes} />
+          <Router navigation={Navigation} />
         </Layout>
       </MDX>
     </ProvideUI>

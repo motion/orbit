@@ -158,7 +158,8 @@ const getColor = (props: TableRowProps, theme: ThemeObject) => {
   return color || 'inherit'
 }
 
-const TableBodyRowContainer = gloss(Row, {
+const TableBodyRowContainer = gloss<TableRowProps>(Row, {
+  fontWeight: 'inherit',
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
@@ -174,7 +175,6 @@ const TableBodyRowContainer = gloss(Row, {
   },
   height: props.multiline ? 'auto' : props.rowLineHeight,
   lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
-  fontWeight: props.fontWeight || 'inherit',
   flexShrink: 0,
   // '&:hover': {
   //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundZebra : 'none',

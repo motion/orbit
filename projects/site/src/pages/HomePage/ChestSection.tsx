@@ -1,4 +1,4 @@
-import { Grid, Icon, Paragraph, Space, View } from '@o/ui'
+import { gloss, Grid, Icon, Paragraph, Space, View } from '@o/ui'
 import React from 'react'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -48,8 +48,18 @@ export function ChestSection() {
 
 const SimpleSection = props => (
   <View background="#eee">
+    <Badge>{props.index}</Badge>
     <TitleText>{props.title}</TitleText>
     <Icon name={props.icon} />
     <Paragraph>{props.children}</Paragraph>
   </View>
 )
+
+const Badge = gloss({
+  width: 40,
+  height: 40,
+  borderRadius: 100,
+  alignItems: 'center',
+}).theme((_, theme) => ({
+  border: [1, theme.color],
+}))

@@ -45,7 +45,7 @@ export function AbdomenSection() {
           </SpacedPageContent>
         </Page.Content>
 
-        {/* <Page.Background background={theme => theme.background} /> */}
+        <Page.Background background={theme => theme.background} />
       </Page>
     </Theme>
   )

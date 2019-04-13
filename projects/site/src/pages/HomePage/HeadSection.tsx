@@ -1,11 +1,10 @@
 import { Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
-import screen from '../../../public/images/screen.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeDown } from '../../views/FadeDown'
 import { Page } from '../../views/Page'
@@ -13,7 +12,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
-import { ViewPortText } from '../../views/ViewPortText'
+import { useTextFit } from '../../views/ViewPortText'
 
 let allTitles = {
   large: 'A better way to build apps together.',
@@ -40,63 +39,84 @@ let allTexts = {
 }
 
 export function HeadSection() {
-  let [measured, setMeasured] = useState(false)
-  let setMeasuredDelayed = useDebounce(setMeasured, 1)
-  let fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  let pSize = 16
-  let [parSize, setParSize] = useState(pSize)
+  const [measured, setMeasured] = useState(false)
+  const setMeasuredDelayed = useDebounce(setMeasured, 1)
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const size = useScreenSize()
+  const titleRef = useRef(null)
+  const pRef = useRef(null)
+  const fitTitle = useTextFit({ ref: titleRef })
+  const fitP = useTextFit({ ref: pRef, min: 16 })
 
-  if (!fontsLoaded) {
-    return null
-  }
+  useEffect(() => {
+    setMeasuredDelayed(true)
+  }, [])
 
-  let texts = allTexts[size]
-  let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
+  const texts = allTexts[size]
+  const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   const br = <br style={{ height: 0 }} />
 
   return (
     <Page offset={0}>
       <Page.Content>
-        <FullScreen>
+        <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
             transform={{ y: '-25%' }}
             margin={['auto', 0]}
             alignItems="center"
             justifyContent="center"
           >
-            <View width="90%" maxWidth={980}>
+            <View
+              height="15.5vw"
+              maxHeight={160}
+              justifyContent="space-between"
+              width="90%"
+              maxWidth={980}
+              textAlign="center"
+            >
               <FadeDown disable={!measured}>
-                <TitleText margin={[0, '2vw']} fontWeight={100} selectable>
-                  <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                    {allTitles[size]}
-                  </ViewPortText>
-                </TitleText>
-
-                <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
-                  {longest}
-                </ViewPortText>
-
-                <Paragraph
-                  fontSize={parSize * 0.9}
-                  sizeLineHeight={1.38}
+                <TitleText
+                  {...fitTitle}
+                  forwardRef={titleRef}
+                  fontWeight={100}
+                  margin={[0, 'auto']}
+                  transition="all ease 60ms"
+                  transformOrigin="bottom center"
+                  selectable
                   textAlign="center"
-                  alpha={0.56}
                 >
-                  <span style={{}}>{texts[0]}</span>
-                  {br}
-                  <span style={{}}>{texts[1]}</span>
-                  {br}
-                  <span style={{}}>{texts[2]}</span>
-                </Paragraph>
+                  {allTitles[size]}
+                </TitleText>
               </FadeDown>
+
+              <Paragraph {...fitP} ref={pRef} opacity={0} position="absolute">
+                {longest}
+              </Paragraph>
+
+              <Paragraph
+                {...fitP}
+                sizeLineHeight={1.38}
+                margin={[0, 'auto']}
+                textAlign="center"
+                alpha={0.56}
+                whiteSpace="nowrap"
+              >
+                {texts[0]}
+                {br}
+                {texts[1]}
+                {br}
+                {texts[2]}
+              </Paragraph>
             </View>
           </Row>
 
           <FullScreen top="auto">
             <View
-              background={`url(${screen}) no-repeat top left`}
+              opacity={0.5}
+              // background={`url(${screen}) no-repeat top left`}
+              background="#222"
+              borderRadius={10}
               backgroundSize="contain"
               flex={1}
               width="100%"
@@ -127,8 +147,6 @@ export function HeadSection() {
           </FullScreen>
         </FullScreen>
       </Page.Content>
-
-      {/* <Page.Background background={theme => theme.background} /> */}
 
       <Page.Parallax speed={-0.4} zIndex={-2}>
         <View
@@ -169,7 +187,7 @@ const PreviewButton = gloss({
 })
 
 const DownloadButton = (
-  <Center bottom="auto" top="4%">
+  <Center bottom="auto" top={-20}>
     <View
       tagName="a"
       {...{ href: 'ok' }}

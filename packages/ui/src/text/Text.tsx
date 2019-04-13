@@ -17,7 +17,7 @@ export type TextProps = CSSPropertySetStrict &
     selectable?: boolean
     onFinishEdit?: Function
     onCancelEdit?: Function
-    getRef?: Function
+    forwardRef?: React.RefObject<HTMLElement>
     ellipse?: boolean | number
     tagName?: string
     lines?: number
@@ -80,6 +80,12 @@ export class Text extends React.PureComponent<TextProps> {
     this.handleProps(this.props)
     // this fixes bug because clamp is hacky af and needs to re-measure to trigger
     this.measure()
+  }
+
+  ref = React.createRef()
+
+  get nodeRef() {
+    return this.props.forwardRef || this.ref
   }
 
   componentDidUpdate() {
@@ -157,15 +163,6 @@ export class Text extends React.PureComponent<TextProps> {
     }
     if (onKeyDown) {
       onKeyDown(event)
-    }
-  }
-
-  getRef = node => {
-    if (node) {
-      this.node = node
-      if (this.props.getRef) {
-        this.props.getRef(node)
-      }
     }
   }
 
@@ -269,7 +266,7 @@ export class Text extends React.PureComponent<TextProps> {
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
-        ref={this.getRef}
+        ref={this.nodeRef}
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}

@@ -7,7 +7,7 @@ import {
   propsToTextSize,
   TextSizeProps,
 } from '@o/gloss'
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
 const ellipseStyle = {
@@ -26,10 +26,10 @@ export type SimpleTextProps = GlossProps<
     }
 >
 
-export function SimpleText({ size = 1, ...props }: SimpleTextProps) {
+export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, ref) => {
   const scale = useScale()
-  return <SimpleTextElement size={size * scale} {...props} />
-}
+  return <SimpleTextElement ref={ref} size={size * scale} {...props} />
+})
 
 export const SimpleTextElement = gloss({
   display: 'inline-block',

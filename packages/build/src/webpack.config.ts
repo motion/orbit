@@ -136,7 +136,7 @@ async function makeConfig() {
         ? {
             electron: '{}',
           }
-        : null,
+        : {},
     optimization: process.env.NO_OPTIMIZE
       ? {
           ...optimizeSplit,

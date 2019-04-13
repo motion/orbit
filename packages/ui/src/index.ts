@@ -14,8 +14,6 @@ export {
   FullScreenProps,
   gloss,
   GlossProps,
-  Grid,
-  GridProps,
   Theme,
   ThemeContext,
   useTheme,
@@ -177,6 +175,7 @@ export * from './Tooltip'
 export * from './Tree'
 export * from './types'
 export * from './View/Col'
+export * from './View/Grid'
 export * from './View/Row'
 export { getBetweenPad, View, ViewProps } from './View/View'
 export * from './Visibility'

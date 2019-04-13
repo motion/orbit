@@ -4,11 +4,13 @@ import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { LogoHorizontal } from './LogoHorizontal'
-import { LogoVertical } from './LogoVertical'
+import { Overdrive } from './Overdrive'
+import { SectionContent } from './SectionContent'
 import { Text } from './Text'
 
 const LinkText = gloss(Text, {
-  width: 100,
+  userSelect: 'none',
+  width: '33%',
   textAlign: 'center',
   transform: {
     y: 2,
@@ -44,40 +46,54 @@ export function Link({ children, fontSize, href, ...props }: LinkProps) {
 }
 
 export const LinksLeft = props => (
-  <>
-    <Link {...props} href="/">
-      Examples
-    </Link>
-    <Link {...props} href="/docs">
-      Docs
-    </Link>
-    <Link {...props} href="/">
-      Security
-    </Link>
-  </>
+  <Overdrive id="links-left">
+    <LinkRow>
+      <Link {...props} href="/">
+        Examples
+      </Link>
+      <Link {...props} href="/docs">
+        Docs
+      </Link>
+      <Link {...props} href="/">
+        Security
+      </Link>
+    </LinkRow>
+  </Overdrive>
 )
 
 export const LinksRight = props => (
-  <>
-    <Link {...props} href="/">
-      Pricing
-    </Link>
-    <Link {...props} href="/">
-      Team
-    </Link>
-    <Link {...props} href="/">
-      Blog
-    </Link>
-  </>
+  <Overdrive id="links-right">
+    <LinkRow>
+      <Link {...props} href="/">
+        Pricing
+      </Link>
+      <Link {...props} href="/">
+        Team
+      </Link>
+      <Link {...props} href="/">
+        Blog
+      </Link>
+    </LinkRow>
+  </Overdrive>
 )
 
-export function Header(props: { slim?: boolean }) {
+const LinkRow = gloss({
+  flexFlow: 'row',
+  flex: 1,
+  height: 40,
+  alignItems: 'center',
+})
+
+export function Header() {
   const size = useScreenSize()
 
   let before = null
   let after = null
 
-  if (size !== 'large') {
+  if (size !== 'small') {
+    before = <LinksLeft />
+    after = <LinksRight />
+  } else {
     after = (
       <>
         <View flex={1} />
@@ -95,25 +111,42 @@ export function Header(props: { slim?: boolean }) {
         </Popover>
       </>
     )
-  } else {
-    before = <LinksLeft />
-    after = <LinksRight />
   }
 
-  const padding = props.slim ? ['2vh', 0] : ['3.5vh', 0]
-
   return (
-    <Row alignItems="center" justifyContent="space-around" padding={padding}>
-      <LinkSection alignRight>{before}</LinkSection>
-      {props.slim ? <LogoHorizontal /> : <LogoVertical />}
-      <LinkSection>{after}</LinkSection>
+    <Row
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      zIndex={100000}
+      alignItems="center"
+      justifyContent="space-around"
+      padding={['3.5vh', 0]}
+    >
+      <HeaderContain>
+        <LinkSection alignRight>{before}</LinkSection>
+        <LogoHorizontal />
+        <LinkSection>{after}</LinkSection>
+      </HeaderContain>
     </Row>
   )
 }
+
+export const HeaderContain = props => (
+  <SectionContent
+    padding={[0, '5%']}
+    flexFlow="row"
+    alignItems="center"
+    justifyContent="space-around"
+    {...props}
+  />
+)
 
 export const LinkSection = gloss({
   flex: 1,
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, '5%'],
+  padding: [0, '2.5%'],
+  maxWidth: 380,
 })

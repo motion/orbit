@@ -69,7 +69,6 @@ export function NeckSection() {
                 />
               </Flex>
               <Flex flex={2}>
-                {/* Squircle! */}
                 <Squircle
                   width={280}
                   height={280}
@@ -93,6 +92,8 @@ export function NeckSection() {
                     multiselectable, and more. One more line to attach it to a form.
                   </Paragraph>
                 </Squircle>
+
+                <View marginTop={-200} background="grey" width="100%" height={300} />
               </Flex>
               <Flex alignItems="center">
                 <Image

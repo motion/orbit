@@ -60,22 +60,16 @@ class DocsPageStore {
 }
 
 export function DocsPage() {
-  const store = useStore(DocsPageStore)
-  const { selected, setSelected, SubView, setSubView } = store
+  const { selected, setSelected, SubView } = useStore(DocsPageStore)
   const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
 
-  // const next = selected && SubView[selected.id]
-  // useEffect(() => {
-  //   setSubView(next)
-  // }, [next])
-
   return (
     <Theme name={theme}>
+      <HeaderSlim />
       <View height="100vh" background={x => x.background}>
         <Background>
-          <HeaderSlim />
           <View flex={1} position="relative">
             <Templates.MasterDetail
               items={itemsByIndex[section]()}
@@ -100,12 +94,6 @@ export function DocsPage() {
       </View>
     </Theme>
   )
-}
-
-DocsPage.path = 'docs'
-DocsPage.navigationOptions = {
-  title: 'Orbit Docs',
-  linkName: 'Orbit Docs',
 }
 
 const DocsToolbar = memo(({ section, setSection }: any) => {

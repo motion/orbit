@@ -1,4 +1,4 @@
-import { Absolute, Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
@@ -8,7 +8,6 @@ import macbook from '../../../public/images/macbook.png'
 import screen from '../../../public/images/screen.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeDown } from '../../views/FadeDown'
-import { Header } from '../../views/Header'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
@@ -61,10 +60,6 @@ export function HeadSection() {
     <Page offset={0}>
       <Page.Content>
         <FullScreen>
-          <Absolute left={0} right={0}>
-            <Header />
-          </Absolute>
-
           <Row
             transform={{ y: '-25%' }}
             margin={['auto', 0]}

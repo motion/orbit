@@ -13,9 +13,9 @@ function configure() {
 
   // just for now since its spitting out so many
   setConfig({
-    // logLevel: 'no-errors-please',
-    // pureSFC: true,
-    // pureRender: true,
+    logLevel: 'no-errors-please',
+    pureSFC: true,
+    pureRender: true,
     // disableHotRenderer: true,
   })
 }

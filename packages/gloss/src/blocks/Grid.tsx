@@ -1,7 +1,12 @@
 import { gloss } from '../gloss'
 import { Base, BaseProps } from './Base'
 
-const cssVal = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
+// TODO
+// we need to have gloss resolve themes *before* passing to `.theme`
+// so we can use the `px()` function from @o/css.
+// also will make types and generally using gloss nicer
+
+const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
 export type GridProps = BaseProps & {
   colSpan?: number
@@ -15,8 +20,8 @@ export const Grid = gloss<GridProps>(Base, {
   ...(p.colSpan ? { gridColumn: `span ${p.colSpan}` } : null),
   gridTemplateColumns:
     p.autoFitColumns &&
-    `repeat(auto-fit, minmax(${cssVal(p.minWidth || 100)}, ${cssVal(p.maxWidth || '1fr')}))`,
-  gridTemplateRows: p.autoFitRows && `repeat(100000, ${cssVal(p.minHeight || 100)}, [col-start])`,
+    `repeat(auto-fit, minmax(${px(p.minWidth || 100)}, ${px(p.maxWidth || '1fr')}))`,
+  gridTemplateRows: p.autoFitRows && `repeat(100000, ${px(p.minHeight || 100)}, [col-start])`,
   width: 'auto',
   ...p,
 }))

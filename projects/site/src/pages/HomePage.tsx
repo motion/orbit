@@ -8,6 +8,7 @@ import { ChestSection } from './HomePage/ChestSection'
 import { HeadSection } from './HomePage/HeadSection'
 import { NeckSection } from './HomePage/NeckSection'
 import { ShoulderSection } from './HomePage/ShoulderSection'
+import { WaistSection } from './HomePage/WaistSection'
 
 export function HomePage() {
   const siteStore = useSiteStore()
@@ -20,7 +21,7 @@ export function HomePage() {
     <>
       <Header key="header" />
       <Parallax
-        pages={5}
+        pages={6}
         // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
         container={document.documentElement}
@@ -31,6 +32,7 @@ export function HomePage() {
         <ShoulderSection />
         <ChestSection />
         <AbdomenSection />
+        <WaistSection />
       </Parallax>
     </>
   )

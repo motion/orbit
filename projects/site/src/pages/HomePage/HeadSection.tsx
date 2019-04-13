@@ -1,6 +1,6 @@
 import { Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
@@ -43,10 +43,8 @@ export function HeadSection() {
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const size = useScreenSize()
-  const titleRef = useRef(null)
-  const pRef = useRef(null)
-  const titleScale = useTextFit({ ref: titleRef })
-  const pScale = useTextFit({ ref: pRef, min: 16 })
+  const { ref: titleRef, ...titleStyle } = useTextFit({ updateKey: fontsLoaded })
+  const { ref, ...style } = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   useEffect(() => {
     setMeasuredDelayed(true)
@@ -75,14 +73,13 @@ export function HeadSection() {
               maxWidth={980}
               textAlign="center"
             >
-              <FadeDown disable={!measured}>
+              <FadeDown style={{ height: '8vh', maxHeight: 50 }} disable={!measured}>
                 <TitleText
-                  transform={{ scale: titleScale }}
                   forwardRef={titleRef}
+                  {...titleStyle}
                   fontWeight={100}
-                  width="max-content"
                   margin={[0, 'auto']}
-                  // transition="all ease 160ms"
+                  // transition="transform ease 160ms"
                   transformOrigin="bottom center"
                   selectable
                   textAlign="center"
@@ -91,13 +88,12 @@ export function HeadSection() {
                 </TitleText>
               </FadeDown>
 
-              <Paragraph width="max-content" ref={pRef} opacity={0} position="absolute">
+              <Paragraph ref={ref} {...style} opacity={0} position="absolute">
                 {longest}
               </Paragraph>
 
               <Paragraph
-                width="max-content"
-                transform={{ scale: pScale }}
+                {...style}
                 sizeLineHeight={1.38}
                 margin={[0, 'auto']}
                 textAlign="center"

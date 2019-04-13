@@ -1,36 +1,33 @@
 import { useMutationObserver, useResizeObserver, useThrottleFn } from '@o/ui'
-import { RefObject, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
 export type UseTextFitProps = {
-  ref?: RefObject<HTMLElement>
   min?: number
   max?: number
   throttle?: number
+  updateKey?: any
 }
 
-export function useTextFit({ ref, min = 6, throttle = 16, max = 100 }: UseTextFitProps) {
+export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: UseTextFitProps = {}) {
+  const ref = useRef<HTMLElement>(null)
   const parentRef = useRef(null)
   const [scale, setScale] = useState(1)
-
-  const measure = useThrottleFn(
-    () => {
-      if (!ref.current) return
-      const parent = ref.current.parentElement
-      const parentScale = parent.clientWidth / ref.current.clientWidth
-      const fontSize = Math.min(max, Math.max(min, parent.offsetWidth * 0.05))
-      setScale(Math.max(1, (fontSize / 50) * parentScale))
-    },
-    { amount: throttle },
-    [ref],
-  )
+  const setScaleBounded = useCallback(x => setScale(Math.max(x, Math.min(max, x))), [min, max])
+  const throttleSetScale = useThrottleFn(setScaleBounded, { amount: throttle })
+  const measure = () => updateScale(scale, ref.current, throttleSetScale)
 
   useResizeObserver({
     ref: parentRef,
     onChange: measure,
   })
 
+  useResizeObserver({
+    ref,
+    onChange: measure,
+  })
+
   useMutationObserver({
-    ref: parentRef,
+    ref: ref,
     onChange: measure,
     options: {
       subtree: true,
@@ -41,12 +38,25 @@ export function useTextFit({ ref, min = 6, throttle = 16, max = 100 }: UseTextFi
   useLayoutEffect(() => {
     if (ref.current) {
       parentRef.current = ref.current.parentElement
+      measure()
     }
-  }, [ref.current])
+  }, [ref, updateKey])
 
-  useLayoutEffect(() => {
-    measure()
-  }, [ref])
+  return {
+    ref,
+    transform: { scale },
+    width: 'max-content',
+  }
+}
 
-  return scale
+const updateScale = (last: number, node: HTMLElement, update: Function) => {
+  if (!node) return
+  const parent = node.parentElement
+  const pWidth = parent.clientWidth
+  const width = node.clientWidth
+  console.log('measuring', node, pWidth, width)
+  const parentScale = pWidth / width
+  if (parentScale !== last) {
+    update(parentScale)
+  }
 }

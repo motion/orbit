@@ -1,6 +1,5 @@
-import { Theme } from '@o/ui'
-import React from 'react'
-import { useSiteStore } from '../SiteStore'
+import React, { useEffect } from 'react'
+import { useSiteStore } from '../Body'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'
@@ -12,10 +11,13 @@ import { ShoulderSection } from './HomePage/ShoulderSection'
 
 export function HomePage() {
   const siteStore = useSiteStore()
-  console.log('siteStore.sectionHeight', siteStore.sectionHeight)
+
+  useEffect(() => {
+    siteStore.setTheme('home')
+  }, [])
 
   return (
-    <Theme name="home" key="home">
+    <>
       <Header key="header" />
       <Parallax
         pages={5}
@@ -30,6 +32,6 @@ export function HomePage() {
         <ChestSection />
         <AbdomenSection />
       </Parallax>
-    </Theme>
+    </>
   )
 }

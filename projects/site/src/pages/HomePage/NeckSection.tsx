@@ -117,7 +117,7 @@ export function NeckSection() {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Background background={theme => theme.background} />
+      {/* <Page.Background background={theme => theme.background} /> */}
 
       <Page.Parallax speed={0.1} zIndex={-2}>
         <FullScreen

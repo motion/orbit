@@ -128,7 +128,7 @@ export function HeadSection() {
         </FullScreen>
       </Page.Content>
 
-      <Page.Background background={theme => theme.background} />
+      {/* <Page.Background background={theme => theme.background} /> */}
 
       <Page.Parallax speed={-0.4} zIndex={-2}>
         <View

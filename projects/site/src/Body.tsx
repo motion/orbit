@@ -1,8 +1,16 @@
 import { createStoreContext } from '@o/kit'
-import React, { memo, useEffect } from 'react'
+import { Theme, View } from '@o/ui'
+import React, { useEffect } from 'react'
 
 class SiteStore {
+  theme = 'light'
+
   windowHeight = window.innerHeight
+
+  setTheme = (name: string) => {
+    this.theme = name
+  }
+
   get sectionHeight() {
     return Math.min(
       // min-height
@@ -17,14 +25,25 @@ const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStor
 
 export const useSiteStore = useStore
 
-export const ProvideSiteStore = memo((props: { children: any }) => {
+export function Body(props: any) {
   const siteStore = useCreateStore()
 
+  console.log('siteStore', siteStore)
   useEffect(() => {
     window.addEventListener('resize', () => {
       siteStore.windowHeight = window.innerHeight
     })
   })
 
-  return <SimpleProvider value={siteStore}>{props.children}</SimpleProvider>
-})
+  return (
+    <Theme name={siteStore.theme}>
+      <SimpleProvider value={siteStore}>
+        <View background={bg} transition="all ease 500ms">
+          {props.children}
+        </View>
+      </SimpleProvider>
+    </Theme>
+  )
+}
+
+const bg = theme => theme.background

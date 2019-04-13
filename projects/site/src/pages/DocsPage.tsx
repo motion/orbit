@@ -3,18 +3,17 @@ import '@o/nucleo'
 import {
   Button,
   Divider,
-  gloss,
   Section,
   SegmentedRow,
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
-  Theme,
   Toolbar,
   useMedia,
   View,
 } from '@o/ui'
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import { useSiteStore } from '../Body'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -60,39 +59,41 @@ class DocsPageStore {
 }
 
 export function DocsPage() {
+  const siteStore = useSiteStore()
   const { selected, setSelected, SubView } = useStore(DocsPageStore)
-  const [theme, setTheme] = useState('light')
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
 
+  useEffect(() => {
+    siteStore.setTheme('light')
+  }, [])
+
   return (
-    <Theme name={theme}>
+    <>
       <HeaderSlim />
-      <View height="100vh" background={x => x.background}>
-        <Background>
-          <View flex={1} position="relative">
-            <Templates.MasterDetail
-              items={itemsByIndex[section]()}
-              showSidebar={showSidebar}
-              detailProps={{ flex: 3 }}
-              searchable
-              onSelect={setSelected}
-              belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
-            >
-              {SubView && (
-                <SelectedSection
-                  onToggleSidebar={() => setShowSidebar(!showSidebar)}
-                  setTheme={setTheme}
-                  theme={theme}
-                  title={selected.title}
-                  SubView={SubView}
-                />
-              )}
-            </Templates.MasterDetail>
-          </View>
-        </Background>
+      <View height="100vh">
+        <View flex={1} position="relative">
+          <Templates.MasterDetail
+            items={itemsByIndex[section]()}
+            showSidebar={showSidebar}
+            detailProps={{ flex: 3 }}
+            searchable
+            onSelect={setSelected}
+            belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
+          >
+            {SubView && (
+              <SelectedSection
+                onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                setTheme={siteStore.setTheme}
+                theme={siteStore.theme}
+                title={selected.title}
+                SubView={SubView}
+              />
+            )}
+          </Templates.MasterDetail>
+        </View>
       </View>
-    </Theme>
+    </>
   )
 }
 
@@ -146,12 +147,6 @@ const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar
     </Section>
   )
 })
-
-const Background = gloss({
-  flex: 1,
-}).theme((_, theme) => ({
-  background: theme.sidebarBackground || theme.background,
-}))
 
 const docsItems = [
   {

@@ -2,7 +2,7 @@ import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
-import { useSiteStore } from '../SiteStore'
+import { useSiteStore } from '../Body'
 import { ParallaxLayer } from './Parallax'
 import { SectionContent } from './SectionContent'
 
@@ -56,7 +56,7 @@ Page.Background = (props: ViewProps) => {
   const { zIndex, offset } = useProps()
   return (
     <Page.Parallax offset={offset} speed={0} zIndex={zIndex - 2}>
-      <FullScreen className="page-background" {...props} />
+      <FullScreen transition="all ease 1000ms" className="page-background" {...props} />
     </Page.Parallax>
   )
 }

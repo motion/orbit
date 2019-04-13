@@ -1,7 +1,14 @@
 import * as React from 'react'
 import { animated, Spring } from 'react-spring/renderprops'
 
-export const FadeDown = ({ disable = false, from = null, to = null, children, ...rest }) => {
+export const FadeDown = ({
+  disable = false,
+  from = null,
+  to = null,
+  children,
+  style = null,
+  ...rest
+}) => {
   const fromConf = {
     ...from,
     opacity: 0,
@@ -15,7 +22,7 @@ export const FadeDown = ({ disable = false, from = null, to = null, children, ..
 
   return (
     <Spring from={fromConf} to={disable ? fromConf : toConf} {...rest}>
-      {props => <animated.div style={props}>{children}</animated.div>}
+      {props => <animated.div style={{ ...style, ...props }}>{children}</animated.div>}
     </Spring>
   )
 }

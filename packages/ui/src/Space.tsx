@@ -36,4 +36,7 @@ export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
   }
 })
 
-Space.ignoreAttrs = Base.ignoreAttrs
+Space.ignoreAttrs = {
+  ...Base.ignoreAttrs,
+  size: true,
+}

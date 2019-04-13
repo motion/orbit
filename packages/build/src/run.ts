@@ -1,5 +1,5 @@
-import * as Path from 'path'
 import execa from 'execa'
+import * as Path from 'path'
 
 console.log('node env', process.env.NODE_ENV)
 

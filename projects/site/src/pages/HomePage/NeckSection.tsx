@@ -10,7 +10,7 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = (props: TextProps) => (
-  <TitleText fontSize={20} fontWeight={200} alpha={0.5} {...props} />
+  <TitleText size={1.8} sizeLineHeight={1.4} fontWeight={200} alpha={0.5} {...props} />
 )
 
 export function NeckSection() {
@@ -117,7 +117,7 @@ export function NeckSection() {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Background background={theme => theme.background} />
+      {/* <Page.Background background={theme => theme.background} /> */}
 
       <Page.Parallax speed={0.1} zIndex={-2}>
         <FullScreen

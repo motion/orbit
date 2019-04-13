@@ -1,24 +1,28 @@
-import { Theme } from '@o/ui'
-import React from 'react'
-import { useSiteStore } from '../SiteStore'
+import React, { useEffect } from 'react'
+import { useSiteStore } from '../Body'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'
 import { ChestSection } from './HomePage/ChestSection'
 // import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
+import { LegsSection } from './HomePage/LegsSection'
 import { NeckSection } from './HomePage/NeckSection'
 import { ShoulderSection } from './HomePage/ShoulderSection'
+import { WaistSection } from './HomePage/WaistSection'
 
 export function HomePage() {
   const siteStore = useSiteStore()
-  console.log('siteStore.sectionHeight', siteStore.sectionHeight)
+
+  useEffect(() => {
+    siteStore.setTheme('home')
+  }, [])
 
   return (
-    <Theme name="home" key="home">
+    <>
       <Header key="header" />
       <Parallax
-        pages={5}
+        pages={7}
         // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
         container={document.documentElement}
@@ -29,7 +33,9 @@ export function HomePage() {
         <ShoulderSection />
         <ChestSection />
         <AbdomenSection />
+        <WaistSection />
+        <LegsSection />
       </Parallax>
-    </Theme>
+    </>
   )
 }

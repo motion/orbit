@@ -1,3 +1,4 @@
+import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { animated, config, Controller, Globals } from 'react-spring/renderprops'
@@ -182,11 +183,11 @@ export class Parallax extends React.PureComponent {
     })
   }
 
-  updateRaf = () => {
+  updateRaf = throttle(() => {
     Globals.requestFrame(this.update)
     // Some browsers don't fire on maximize
-    setTimeout(this.update, 150)
-  }
+    // setTimeout(this.update, 150)
+  }, 100)
 
   scrollStop = event => this.controller.stop()
 

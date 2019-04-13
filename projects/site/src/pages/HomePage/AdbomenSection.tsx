@@ -1,4 +1,4 @@
-import { Grid, Icon, Image, Paragraph, Space, Theme, View } from '@o/ui'
+import { Col, Grid, Image, Paragraph, Space, Theme } from '@o/ui'
 import React from 'react'
 import lightSeparator from '../../../public/images/light-separator.svg'
 import { Page } from '../../views/Page'
@@ -17,30 +17,19 @@ export function AbdomenSection() {
           <SpacedPageContent
             header={
               <>
-                <PillButton>App Kit</PillButton>
+                <PillButton>Pricing</PillButton>
                 <Space size="sm" />
-                <TitleText size="xxl">Batteries Included.</TitleText>
-                <Space size="sm" />
+                <TitleText size="xxl">Early Access.</TitleText>
                 <TitleTextSub>
-                  Creating, maintaining, and collaborating apps shouldn't be so hard. Orbit tackles
-                  the hard problems of development, deployment and toolkit.
+                  Orbit is in early beta. We're doing something a little different. To join the
+                  early access group, signup for our Pro plan.
                 </TitleTextSub>
               </>
             }
           >
             <Grid space itemMinWidth={200}>
-              <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
-                lorem ipsum
-              </SimpleSection>
-              <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
-                lorem ipsum
-              </SimpleSection>
-              <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
-                lorem ipsum
-              </SimpleSection>
-              <SimpleSection title="Spaces to collaborate." index={1} icon="grid">
-                lorem ipsum
-              </SimpleSection>
+              <PriceSection title="Spaces to collaborate.">lorem ipsum</PriceSection>
+              <PriceSection title="Spaces to collaborate.">lorem ipsum</PriceSection>
             </Grid>
           </SpacedPageContent>
         </Page.Content>
@@ -51,10 +40,9 @@ export function AbdomenSection() {
   )
 }
 
-const SimpleSection = props => (
-  <View background="#eee">
+const PriceSection = props => (
+  <Col background="#eee" space pad>
     <TitleText>{props.title}</TitleText>
-    <Icon name={props.icon} />
     <Paragraph>{props.children}</Paragraph>
-  </View>
+  </Col>
 )

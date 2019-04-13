@@ -1,18 +1,18 @@
 import { ProvideUI } from '@o/ui'
 import { mount, route } from 'navi'
-import * as React from 'react'
+import React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router } from 'react-navi'
+import { Body } from './Body'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
-import { ProvideSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { MDX } from './views/MDX'
 
 // Define your routes
 const routes = mount({
   '/': route({
-    title: 'My Shop',
+    title: 'Orbit',
     view: <HomePage />,
   }),
   // '/products': lazy(() => import('./productsRoutes')),
@@ -24,11 +24,11 @@ const routes = mount({
 
 export const SiteRoot = hot(() => {
   return (
-    <ProvideUI themes={themes} activeTheme="light">
+    <ProvideUI themes={themes}>
       <MDX>
-        <ProvideSiteStore>
+        <Body>
           <Router routes={routes} />
-        </ProvideSiteStore>
+        </Body>
       </MDX>
     </ProvideUI>
   )

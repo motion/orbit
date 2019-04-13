@@ -8,12 +8,9 @@ export type UseTextFitProps = {
   throttle?: number
 }
 
-export function useTextFit({ ref, min = 6, throttle = 100, max = 100 }: UseTextFitProps) {
+export function useTextFit({ ref, min = 6, throttle = 16, max = 100 }: UseTextFitProps) {
   const parentRef = useRef(null)
-  const [state, setState] = useState({
-    fontSize: 16,
-    transform: `scale(1)`,
-  })
+  const [scale, setScale] = useState(1)
 
   const measure = useThrottleFn(
     () => {
@@ -21,8 +18,7 @@ export function useTextFit({ ref, min = 6, throttle = 100, max = 100 }: UseTextF
       const node = ref.current.parentElement
       const parentScale = ref.current.parentElement.clientWidth / ref.current.clientWidth
       const fontSize = Math.min(max, Math.max(min, node.offsetWidth * 0.05))
-      const scale = (fontSize / 50) * parentScale
-      setState({ fontSize: 16, transform: `scale(${scale})` })
+      setScale(Math.max(1, (fontSize / 50) * parentScale))
     },
     { amount: throttle },
     [ref],
@@ -50,8 +46,5 @@ export function useTextFit({ ref, min = 6, throttle = 100, max = 100 }: UseTextF
     measure()
   }, [ref])
 
-  return {
-    ...state,
-    width: 'max-content',
-  }
+  return scale
 }

@@ -45,8 +45,8 @@ export function HeadSection() {
   const size = useScreenSize()
   const titleRef = useRef(null)
   const pRef = useRef(null)
-  const fitTitle = useTextFit({ ref: titleRef })
-  const fitP = useTextFit({ ref: pRef, min: 16 })
+  const titleScale = useTextFit({ ref: titleRef })
+  const pScale = useTextFit({ ref: pRef, min: 16 })
 
   useEffect(() => {
     setMeasuredDelayed(true)
@@ -77,11 +77,12 @@ export function HeadSection() {
             >
               <FadeDown disable={!measured}>
                 <TitleText
-                  {...fitTitle}
+                  transform={{ scale: titleScale }}
                   forwardRef={titleRef}
                   fontWeight={100}
+                  width="max-content"
                   margin={[0, 'auto']}
-                  transition="all ease 60ms"
+                  // transition="all ease 160ms"
                   transformOrigin="bottom center"
                   selectable
                   textAlign="center"
@@ -90,12 +91,13 @@ export function HeadSection() {
                 </TitleText>
               </FadeDown>
 
-              <Paragraph {...fitP} ref={pRef} opacity={0} position="absolute">
+              <Paragraph width="max-content" ref={pRef} opacity={0} position="absolute">
                 {longest}
               </Paragraph>
 
               <Paragraph
-                {...fitP}
+                width="max-content"
+                transform={{ scale: pScale }}
                 sizeLineHeight={1.38}
                 margin={[0, 'auto']}
                 textAlign="center"

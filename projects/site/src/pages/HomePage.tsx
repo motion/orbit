@@ -4,6 +4,7 @@ import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'
 import { ChestSection } from './HomePage/ChestSection'
+import { FeetSection } from './HomePage/FeetSection'
 // import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
 import { LegsSection } from './HomePage/LegsSection'
@@ -22,7 +23,7 @@ export function HomePage() {
     <>
       <Header key="header" />
       <Parallax
-        pages={7}
+        pages={8}
         // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
         container={document.documentElement}
@@ -35,6 +36,7 @@ export function HomePage() {
         <AbdomenSection />
         <WaistSection />
         <LegsSection />
+        <FeetSection />
       </Parallax>
     </>
   )

@@ -10,7 +10,7 @@ import {
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
-const ellipseStyle = {
+const ellipseStyle: CSSPropertySetStrict = {
   display: 'block',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -31,10 +31,10 @@ export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, r
   return <SimpleTextElement ref={ref} size={size * scale} {...props} />
 })
 
-export const SimpleTextElement = gloss({
+export const SimpleTextElement = gloss<SimpleTextProps>({
   display: 'inline-block',
   whiteSpace: 'normal',
-}).theme((props: any, theme) => {
+}).theme((props, theme) => {
   const textProps = propsToTextSize(props)
   const color = props.color || theme.color
   return {

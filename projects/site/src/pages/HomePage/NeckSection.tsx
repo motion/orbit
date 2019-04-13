@@ -9,9 +9,9 @@ import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export const TitleTextSub = (props: TextProps) => (
+export const TitleTextSub = gloss((props: TextProps) => (
   <TitleText size={1.8} sizeLineHeight={1.4} fontWeight={200} alpha={0.5} {...props} />
-)
+))
 
 export function NeckSection() {
   return (

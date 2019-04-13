@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1480px" height="321px" viewBox="0 0 1480 321" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>bottom-sep</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-11.4193931%" y1="51.7547541%" x2="99.7702573%" y2="49.7081355%" id="linearGradient-1">
+            <stop stop-color="#61554C" offset="0%"></stop>
+            <stop stop-color="#0092FF" offset="37.2289541%"></stop>
+            <stop stop-color="#0792FB" offset="37.7271549%"></stop>
+            <stop stop-color="#408CDC" offset="41.6792006%"></stop>
+            <stop stop-color="#C68092" offset="51.3249177%"></stop>
+            <stop stop-color="#E07E84" offset="52.817128%"></stop>
+            <stop stop-color="#E66789" offset="65.3796516%"></stop>
+            <stop stop-color="#0013FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="36.4298552%" y1="50.9221414%" x2="38.0372277%" y2="48.9398047%" id="linearGradient-2">
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FFFFD4" stop-opacity="0.5" offset="16.7300693%"></stop>
+            <stop stop-color="#FFFFCC" stop-opacity="0.5" offset="20.1533478%"></stop>
+            <stop stop-color="#FFFFC5" stop-opacity="0.5" offset="22.9260094%"></stop>
+            <stop stop-color="#FFFF00" stop-opacity="0.418534873" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="126.705713%" y1="49.2904631%" x2="86.2815976%" y2="50.0491979%" id="linearGradient-3">
+            <stop stop-color="#FF0000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="67.5196312%" y1="50.1503721%" x2="31.3337421%" y2="49.1825019%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.00682383522" offset="9.57096609%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="69.6783923%" y1="51.857454%" x2="39.6689951%" y2="50.9251483%" id="linearGradient-5">
+            <stop stop-color="#0C677F" stop-opacity="0.0766813859" offset="0%"></stop>
+            <stop stop-color="#0B8292" stop-opacity="0.175965288" offset="24.5007895%"></stop>
+            <stop stop-color="#07C5C0" stop-opacity="0.415369448" offset="83.5797622%"></stop>
+            <stop stop-color="#00FDFF" stop-opacity="0.47729846" offset="100%"></stop>
+            <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="78.3065272%" y1="47.8581507%" x2="41.5627152%" y2="50.266953%" id="linearGradient-6">
+            <stop stop-color="#FF738D" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="100%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="51.56164%" x2="66.3187385%" y2="50.1772902%" id="linearGradient-7">
+            <stop stop-color="#FBC3FF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="100%"></stop>
+            <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="11.063544%" x2="50%" y2="100%" id="linearGradient-8">
+            <stop stop-color="#FFFFFF" offset="0.0659839527%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <path d="M42,248.588026 C400.732286,313.627496 658.947486,334.853777 816.645598,312.26687 C1053.19277,278.386509 1333.65355,243.757277 1574,282.554239 C1574,298.148357 1574,210.296944 1574,19 L42,19 L42,248.588026 Z" id="path-9"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="home" transform="translate(0.000000, -6462.000000)">
+            <g id="bottom" transform="translate(-266.000000, 5143.000000)">
+                <g id="white-section">
+                    <g id="bottom-sep" transform="translate(218.000000, 1319.000000)">
+                        <g id="Rectangle-6" transform="translate(808.000000, 170.000000) scale(-1, 1) translate(-808.000000, -170.000000) ">
+                            <use fill="url(#linearGradient-1)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-2)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-3)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-4)" xlink:href="#path-9"></use>
+                            <use fill-opacity="0.299999982" fill="url(#linearGradient-5)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-6)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-7)" xlink:href="#path-9"></use>
+                            <use fill="url(#linearGradient-8)" style="mix-blend-mode: lighten;" xlink:href="#path-9"></use>
+                        </g>
+                        <rect id="Rectangle" fill="#FFFFFF" x="0" y="0" width="1561" height="40"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

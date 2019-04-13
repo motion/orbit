@@ -1,4 +1,4 @@
-import { Col, Grid, Image, Paragraph, Space, Theme } from '@o/ui'
+import { Col, Grid, Image, Space, Theme } from '@o/ui'
 import React from 'react'
 import lightSeparator from '../../../public/images/light-separator.svg'
 import people from '../../../public/images/people.svg'
@@ -56,10 +56,3 @@ export function WaistSection() {
     </Theme>
   )
 }
-
-const PriceSection = props => (
-  <Col background="#eee" space pad>
-    <TitleText>{props.title}</TitleText>
-    <Paragraph>{props.children}</Paragraph>
-  </Col>
-)

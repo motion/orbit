@@ -1,4 +1,4 @@
-import { Center, FullScreen, gloss, Image, Row, toColor, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, gloss, Image, Row, Space, toColor, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
@@ -87,6 +87,8 @@ export function HeadSection() {
                   {allTitles[size]}
                 </TitleText>
               </FadeDown>
+
+              <Space size="xl" />
 
               <Paragraph ref={ref} {...style} opacity={0} position="absolute">
                 {longest}

@@ -2,11 +2,11 @@ import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
 import { gloss, useTheme } from '@o/gloss'
 import { SVG } from '@o/kit'
 import { View, ViewProps } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 import { Overdrive } from './Overdrive'
 
-export function LogoHorizontal(props: ViewProps) {
+export const LogoHorizontal = memo((props: ViewProps) => {
   const theme = useTheme()
   const { navigate } = useNavigation()
   const scaleDown = 0.3333
@@ -27,13 +27,14 @@ export function LogoHorizontal(props: ViewProps) {
         onClick={() => {
           navigate('Home')
         }}
+        zIndex={100000}
         {...props}
       >
         <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
       </View>
     </Overdrive>
   )
-}
+})
 
 const Image = gloss(View)
 

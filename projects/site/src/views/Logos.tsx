@@ -1,9 +1,9 @@
 import { gloss } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 
-export function Logos(props: { show: 'horizontal' | 'vertical' }) {
+export const Logos = memo((props: { show: 'horizontal' | 'vertical' }) => {
   const showHorizontal = props.show === 'horizontal'
   return (
     <LogosChrome>
@@ -15,7 +15,7 @@ export function Logos(props: { show: 'horizontal' | 'vertical' }) {
       </LogoItem>
     </LogosChrome>
   )
-}
+})
 
 const LogosChrome = gloss({
   width: 200,

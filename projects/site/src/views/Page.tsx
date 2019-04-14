@@ -2,9 +2,9 @@ import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
-import { useSiteStore } from '../Body'
+import { useSiteStore } from '../Layout'
 import { ParallaxLayer } from './Parallax'
-import { SectionContent } from './SectionContent'
+import { SectionContent, SectionContentProps } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps({
   offset: 0,
@@ -23,22 +23,22 @@ export function Page(props: PageProps) {
 
 Page.Parallax = ({
   overflow,
+  zIndex,
   ...props
 }: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any }) => {
   const parallax = useProps()
-  const zIndex = parallax.zIndex + (props.zIndex || 0)
   return (
     // @ts-ignore
     <ParallaxLayer
       speed={0.2}
       offset={parallax.offset}
-      style={{ pointerEvents: 'none', zIndex: zIndex + 1, overflow }}
+      style={{ pointerEvents: 'none', zIndex: parallax.zIndex + (zIndex || 0) + 1, overflow }}
       {...props}
     />
   )
 }
 
-Page.Content = (props: ViewProps) => {
+Page.Content = (props: SectionContentProps) => {
   const parallax = useProps()
   const zIndex = selectDefined(props.zIndex, parallax.zIndex)
   const siteStore = useSiteStore()

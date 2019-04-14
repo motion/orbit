@@ -12,13 +12,12 @@ export const LogoHorizontal = memo((props: ViewProps) => {
   const scaleDown = 0.3333
 
   return (
-    <Overdrive id="logo-horizontal">
+    <Overdrive id="logo-horizontal" style={{ flex: 0 }}>
       <View
         color={theme.color.toString()}
         cursor="pointer"
         alignItems="center"
         justifyContent="center"
-        flex={1}
         padding={[2, 20]}
         transform={{
           y: -2,

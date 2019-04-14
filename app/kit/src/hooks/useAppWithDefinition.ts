@@ -1,5 +1,6 @@
 import { AppBit } from '@o/models'
 import { getAppDefinition } from '../helpers/getAppDefinition'
+import { Omit } from '../types'
 import { AppDefinition } from '../types/AppDefinition'
 import { useAppBit } from './useAppBit'
 

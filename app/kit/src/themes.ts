@@ -316,3 +316,5 @@ export const themes: ThemeSet = {
   dark,
   light,
 }
+
+console.log(themes)

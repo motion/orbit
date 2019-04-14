@@ -70,6 +70,14 @@ export function mergeDefined<A extends Object>(...args: A[]): A {
   return res as A
 }
 
+// only return if object
+export const selectObject = (x: any) => {
+  if (!x || typeof x !== 'object' || Array.isArray(x)) {
+    return null
+  }
+  return x
+}
+
 // splits an object into two based on the filterFn return value
 // returns two-arity array of objects
 export function partitionObject<A extends Object>(

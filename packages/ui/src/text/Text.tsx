@@ -1,5 +1,12 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColor, CSSPropertySet, gloss, propsToTextSize } from '@o/gloss'
+import {
+  alphaColorTheme,
+  CSSPropertySet,
+  gloss,
+  propStyleTheme,
+  textSizeTheme,
+  ThemeFn,
+} from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
@@ -25,7 +32,6 @@ export type TextProps = CSSPropertySetStrict &
     onKeyDown?: Function
     opacity?: number
     size?: Sizes
-    style?: Object
     placeholder?: string
     lineHeight?: number
     sizeLineHeight?: number
@@ -34,7 +40,6 @@ export type TextProps = CSSPropertySetStrict &
     sizeMethod?: string
     highlight?: HighlightOptions
     wordBreak?: string
-    theme?: Object
     children: React.ReactNode | ChildrenHlFn
     ignoreColor?: boolean
     renderAsHtml?: boolean
@@ -182,17 +187,17 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
     const size = scale * getTextSize(this.props.size)
-    const textProps = propsToTextSize({
+    const textStyle = textSizeTheme({
       sizeLineHeight: this.props.sizeLineHeight,
       lineHeight: this.props.lineHeight,
       fontSize: this.props.fontSize,
       size,
       sizeMethod: this.props.sizeMethod,
     })
-    const numLinesToShow = doClamp && Math.floor(textHeight / textProps.lineHeightNum)
+    const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
     const maxHeight =
-      typeof ellipse === 'number' && textProps.lineHeightNum
-        ? `${ellipse * textProps.lineHeightNum}px`
+      typeof ellipse === 'number' && textStyle.lineHeightNum
+        ? `${ellipse * textStyle.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
 
@@ -270,8 +275,8 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
-        fontSize={textProps.fontSize}
-        lineHeight={textProps.lineHeight}
+        fontSize={textStyle.fontSize}
+        lineHeight={textStyle.lineHeight}
         {...props}
         {...finalProps}
         // override props
@@ -289,9 +294,7 @@ const TextBlock = gloss({
   wordBreak: 'break-word',
   position: 'relative',
   minHeight: 'min-content',
-  // this lets it shrink down to content without breaking everything
-  // width: 'max-content',
-  // maxWidth: '100%',
+  maxWidth: '100%',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',
@@ -299,37 +302,30 @@ const TextBlock = gloss({
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ignoreColor, alpha, alphaHover, color, ...props }, theme) => {
-  if (ignoreColor) {
+}).theme(propStyleTheme, alphaColorTheme)
+
+const ellipseTheme: ThemeFn = ({ ellipse, doClamp, maxHeight }) => {
+  if (ellipse === 1 || ellipse === true)
     return {
-      ...props,
-      color: 'inherit',
+      display: 'block',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
     }
-  }
-  return {
-    ...props,
-    ...alphaColor({ color: color || theme.color }, { alpha, alphaHover }),
-  }
-})
+  if (ellipse > 1)
+    return {
+      WebkitLineClamp: ellipse,
+      maxHeight,
+      width: doClamp ? '100%' : '100.001%',
+      opacity: doClamp ? 1 : 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+    }
+}
 
 const TextEllipse = gloss({
   display: 'inline',
   maxWidth: '100%',
-}).theme(({ ellipse, doClamp, maxHeight }) => ({
-  ...(ellipse > 1 && {
-    WebkitLineClamp: ellipse,
-    maxHeight,
-    width: doClamp ? '100%' : '100.001%',
-    opacity: doClamp ? 1 : 0,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-  }),
-  ...((ellipse === 1 || ellipse === true) && {
-    display: 'block',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-  }),
-}))
+}).theme(propStyleTheme, ellipseTheme)

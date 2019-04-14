@@ -1,5 +1,5 @@
 import { useMutationObserver, useResizeObserver, useThrottleFn } from '@o/ui'
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 export type UseTextFitProps = {
   min?: number
@@ -10,11 +10,15 @@ export type UseTextFitProps = {
 
 export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: UseTextFitProps = {}) {
   const ref = useRef<HTMLElement>(null)
+  const node = ref.current
   const parentRef = useRef(null)
   const [scale, setScale] = useState(1)
   const setScaleBounded = useCallback(x => setScale(Math.max(x, Math.min(max, x))), [min, max])
-  const throttleSetScale = useThrottleFn(setScaleBounded, { amount: throttle })
-  const measure = () => updateScale(scale, ref.current, throttleSetScale)
+  const setScaleSlow = useThrottleFn(setScaleBounded, { amount: throttle })
+  const measure = () => updateScale(scale, ref.current, setScaleSlow)
+  const fontSizeOG = useMemo(() => node && +getComputedStyle(node).fontSize.replace('px', ''), [
+    node,
+  ])
 
   useResizeObserver({
     ref: parentRef,
@@ -27,7 +31,7 @@ export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: Use
   })
 
   useMutationObserver({
-    ref: ref,
+    ref,
     onChange: measure,
     options: {
       subtree: true,
@@ -44,8 +48,11 @@ export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: Use
 
   return {
     ref,
-    transform: { scale },
-    width: 'max-content',
+    style: {
+      transform: `scale(${scale})`,
+      height: ref.current ? `${fontSizeOG * scale}px` : 'auto',
+      width: 'max-content',
+    },
   }
 }
 

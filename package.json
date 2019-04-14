@@ -21,7 +21,7 @@
     "@types/ws": "5.1.2"
   },
   "devDependencies": {
-    "typescript": "3.5.0-dev.20190407",
+    "typescript": "https://github.com/Microsoft/typescript#4fee62844777c23cf37b6d4594f65b393b27b4dd",
     "@o/babel-preset-motion": "2.3.11",
     "@babel/runtime": "7.2.0",
     "@babel/cli": "7.2.0",

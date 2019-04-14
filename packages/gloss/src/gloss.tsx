@@ -1,5 +1,6 @@
 import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
+import { flatten } from 'lodash'
 import { createElement, forwardRef, memo, useContext, useEffect, useRef } from 'react'
 import { Config } from './config'
 import { validProp } from './helpers/validProp'
@@ -23,34 +24,11 @@ export type GlossProps<Props> = Props & {
   alt?: string
 }
 
-export type GlossThemeFn<Props> = (
+export type ThemeFn<Props = any> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
+  previous?: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
-
-export interface GlossView<Props> {
-  // copied from FunctionComponent
-  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
-  propTypes?: React.ValidationMap<Props>
-  contextTypes?: React.ValidationMap<any>
-  defaultProps?: Partial<Props>
-  displayName?: string
-  // extra:
-  ignoreAttrs?: Object
-  theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: { displayName?: string }) => any
-  glossConfig: {
-    getConfig: () => {
-      id: string
-      displayName: string
-      targetElement: any
-      styles: any
-      propStyles: Object
-      child: any
-    }
-    themeFns: GlossThemeFn<Props>[] | null
-  }
-}
 
 const tracker: StyleTracker = new Map()
 const rulesToClass = new WeakMap()
@@ -104,7 +82,7 @@ const whiteSpaceRegex = /[\s]+/g
 function glossify(
   id: string,
   displayName: string = 'g',
-  themeFn: GlossThemeFn<any> | null,
+  themeFn: ThemeFn | null,
   staticStyles: any,
   conditionalStyles: any,
   prevClassNames: string[] | null,
@@ -207,11 +185,54 @@ function glossify(
   return { classNames, styles }
 }
 
-export function gloss<Props = any>(
-  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | any,
+export interface GlossView<Props> {
+  // copied from FunctionComponent
+  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
+  propTypes?: React.ValidationMap<Props>
+  contextTypes?: React.ValidationMap<any>
+  defaultProps?: Partial<Props>
+  displayName?: string
+  // extra:
+  ignoreAttrs?: Object
+  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
+  withConfig: (config: { displayName?: string }) => any
+  config: {
+    getConfig: () => {
+      id: string
+      displayName: string
+      targetElement: any
+      styles: any
+      propStyles: Object
+      parent: any
+    }
+    themeFns: ThemeFn<Props>[] | null
+  }
+}
+
+// const x = gloss<{ isActive?: boolean }>()
+// const y = gloss<{ otherProp?: boolean }>(x)
+
+// type InferProps<A> = A extends GlossView<infer B> ? B : never
+
+// type test = InferProps<typeof x>
+
+// type JoinViews<Props extends any = any, Parent extends any = any> = Props & InferProps<Parent>
+
+// function join<Props = any, A = any>(a?: A): A extends GlossView<infer B> ? B : Props { return a as any }
+
+// const yz = join<{ ok?: number }>(y)
+
+// type Z = JoinViews<{ otherProp?: boolean }, typeof x>
+
+// export function gloss<Props = any>(a?: undefined): GlossView<Props>
+// export function gloss<Props = any, Parent extends any = any>(
+//   a: Parent,
+// ): Parent extends GlossView<infer P> ? GlossView<Props & P> : GlossView<Props>
+export function gloss<ExtraProps = any, Props = any>(
+  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
-): GlossView<Props> {
-  let target = a || 'div'
+): GlossView<ExtraProps & Props> {
+  let target: any = a || 'div'
   let rawStyles = b
   let targetConfig
   let ignoreAttrs: Object
@@ -226,11 +247,11 @@ export function gloss<Props = any>(
 
   const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isGlossParent) {
-    targetConfig = target.glossConfig.getConfig()
+    targetConfig = target.config.getConfig()
   }
 
   // shorthand: view({ ... })
-  if (typeof target === 'object' && !b && !isGlossParent) {
+  if (typeof a !== 'string' && typeof target === 'object' && !b && !isGlossParent) {
     target = 'div'
     rawStyles = a
   }
@@ -238,9 +259,12 @@ export function gloss<Props = any>(
   const targetElement = isGlossParent ? targetConfig.targetElement : target
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
-  let themeFn: GlossThemeFn<any> | null = null
+  let themeFn: ThemeFn | null = null
 
-  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
+  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<ExtraProps & Props>>(function Gloss(
+    props,
+    ref,
+  ) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
@@ -307,11 +331,11 @@ export function gloss<Props = any>(
     }
 
     return createElement(element, finalProps, props.children)
-  }) as unknown) as GlossView<Props>
+  }) as unknown) as GlossView<ExtraProps & Props>
 
-  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
+  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<ExtraProps & Props>
 
-  ThemedView.glossConfig = {
+  ThemedView.config = {
     themeFns: null,
     getConfig: () => ({
       id,
@@ -320,7 +344,7 @@ export function gloss<Props = any>(
       ignoreAttrs,
       styles: { ...Styles.styles },
       propStyles: { ...Styles.propStyles },
-      child: isGlossParent ? target : null,
+      parent: isGlossParent ? target : null,
     }),
   }
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
@@ -331,7 +355,7 @@ export function gloss<Props = any>(
     return ThemedView
   }
   ThemedView.theme = (...themeFns) => {
-    ThemedView.glossConfig.themeFns = themeFns
+    ThemedView.config.themeFns = themeFns
     return ThemedView
   }
 
@@ -396,33 +420,33 @@ const addStyles = (id: string, baseStyles: Object, nextStyles?: CSSPropertySet |
   return propStyles
 }
 
-// gets childrens styles and merges them into a big object
+// gets parentrens styles and merges them into a big object
 const getAllStyles = (baseId: string, target: any, rawStyles: CSSPropertySet | null) => {
   const styles = {
     [baseId]: {},
   }
   const propStyles = addStyles(baseId, styles, rawStyles)
-  // merge child styles
+  // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const childConfig = target.glossConfig.getConfig()
-    const childPropStyles = childConfig.propStyles
-    if (childPropStyles) {
-      for (const key in childPropStyles) {
+    const parentConfig = target.config.getConfig()
+    const parentPropStyles = parentConfig.propStyles
+    if (parentPropStyles) {
+      for (const key in parentPropStyles) {
         propStyles[key] = propStyles[key] || {}
         propStyles[key] = {
-          ...childPropStyles[key],
+          ...parentPropStyles[key],
           ...propStyles[key],
         }
       }
     }
-    const childStyles = childConfig.styles
-    const childId = childConfig.id
-    const moveToMyId = childStyles[childId]
-    delete childStyles[childId]
-    childStyles[baseId] = moveToMyId
-    for (const key in childStyles) {
+    const parentStyles = parentConfig.styles
+    const parentId = parentConfig.id
+    const moveToMyId = parentStyles[parentId]
+    delete parentStyles[parentId]
+    parentStyles[baseId] = moveToMyId
+    for (const key in parentStyles) {
       styles[key] = {
-        ...childStyles[key],
+        ...parentStyles[key],
         ...styles[key],
       }
     }
@@ -444,32 +468,37 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   return classSelect
 }
 
-// compiled theme from ancestors
-function compileTheme(ogView: GlossView<any>) {
-  let view = ogView
-  let themes: GlossThemeFn<any>[] = []
-  // collect the themes going up the tree
-  while (view) {
-    if (view.glossConfig.themeFns) {
-      themes = [...themes, ...view.glossConfig.themeFns]
+// compile theme from parents
+function compileTheme(viewOG: GlossView<any>) {
+  let cur = viewOG
+  let all: ThemeFn[][] = []
+
+  // get themes in order from most important (current) to least important (grandparent)
+  while (cur) {
+    const conf = cur.config
+    if (conf.themeFns) {
+      all.push(conf.themeFns)
     }
-    view = view.glossConfig.getConfig().child
+    cur = conf.getConfig().parent
   }
-  let result
+
+  // then flatten and reverse, so its a flat list of themes from least to most important
+  // makes it easier to apply them in order
+  const themes = flatten(all.reverse()).filter(Boolean)
+
   if (!themes.length) {
-    result = null
-  } else {
-    result = (props: Object, theme: ThemeObject) => {
-      let styles = {}
-      // from most important to least
-      for (const themeFn of themes) {
-        styles = {
-          ...themeFn(props, theme),
-          ...styles,
-        }
-      }
-      return styles
-    }
+    return null
   }
-  return result
+
+  return (props: Object, theme: ThemeObject) => {
+    let styles: CSSPropertySetResolved | null = null
+    for (const themeFn of themes) {
+      const next = themeFn(props, theme, styles)
+      if (next) {
+        styles = styles || {}
+        Object.assign(styles, next)
+      }
+    }
+    return styles
+  }
 }

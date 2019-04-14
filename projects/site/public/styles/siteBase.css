@@ -15,6 +15,7 @@ body {
   pointer-events: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 body,
@@ -41,6 +42,7 @@ html {
 #app {
   overflow: hidden;
   pointer-events: auto;
+  flex: 1;
 }
 
 small {
@@ -274,10 +276,6 @@ a {
   text-decoration: underline;
   color: inherit;
   cursor: pointer;
-}
-
-a:hover {
-  color: #b7f3f3;
 }
 
 /* reset elements from flex */

@@ -1,30 +1,34 @@
 import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
-import { gloss } from '../gloss'
-import { propsToStyles } from '../helpers/propsToStyles'
-import { propsToTextSize } from '../helpers/propsToTextSize'
-
-export type GlossBaseProps = {
-  tagName?: string
-  // our default styling supports is through preProcessTheme
-  alt?: string
-  // our default styling supports pseudos through propsToStyles
-  hoverStyle?: CSSPropertySetStrict | false | null
-  activeStyle?: CSSPropertySetStrict | false | null
-  focusStyle?: CSSPropertySetStrict | false | null
-}
+import { gloss, GlossProps } from '../gloss'
+import {
+  AlphaColorProps,
+  alphaColorTheme,
+  propStyleTheme,
+  PseudoStyleProps,
+  psuedoStylePropsTheme,
+} from '../themes'
+import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 // TODO this should be a "disjoint" type, avoid overlapping!
-export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
-  CSSPropertySetStrict &
-  GlossBaseProps
+export type BaseProps = GlossProps<
+  Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
+    CSSPropertySetStrict &
+    PseudoStyleProps &
+    TextSizeProps &
+    AlphaColorProps
+>
 
 export const Base = gloss<BaseProps>().theme(
-  // hoverStyle, focusStyle, activeStyle
-  propsToStyles,
-  // text size helper
-  propsToTextSize,
+  // <Base color="red" /> style props
+  propStyleTheme,
+  // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle
+  psuedoStylePropsTheme,
+  // <Base size={1} /> for text sizing
+  textSizeTheme,
+  // <Base alpha={0.5} /> for text opacity
+  alphaColorTheme,
 )
 
 // ignore all valid css props, except src for images

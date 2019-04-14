@@ -1,7 +1,10 @@
 import { gloss } from '@o/gloss'
-import { View } from './View/View'
+import { HTMLProps } from 'react'
+import { View, ViewProps } from './View/View'
 
-export const Image = gloss(View, {
+export type ImageProps = ViewProps & HTMLProps<HTMLImageElement>
+
+export const Image = gloss<ImageProps>(View, {
   display: 'block',
 })
 

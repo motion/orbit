@@ -2,7 +2,9 @@ import { gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { getSpaceSize, Sizes } from '../Space'
-import { getPadding, PaddedView, View, ViewProps } from './View'
+import { Omit } from '../types'
+import { getPadding, PaddedView } from './PaddedView'
+import { View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 

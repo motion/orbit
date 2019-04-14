@@ -5,6 +5,7 @@ import { Props } from 'react-select/lib/Select'
 import { ActionMeta } from 'react-select/lib/types'
 import { ListItem } from '../lists/ListItem'
 import { SimpleText } from '../text/SimpleText'
+import { Omit } from '../types'
 import { View } from '../View/View'
 import { FormContext } from './Form'
 

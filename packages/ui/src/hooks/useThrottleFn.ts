@@ -7,7 +7,7 @@ export function useThrottleFn<Args extends any[], Returns extends any>(
 ) {
   const last = useRef(null)
   const tm = useRef(null)
-  return useCallback((...args: Args): Returns => {
+  const throttledFn = (...args: Args): Returns => {
     clearTimeout(tm.current)
     const now = Date.now()
     const since = now - last.current
@@ -18,5 +18,6 @@ export function useThrottleFn<Args extends any[], Returns extends any>(
     } else {
       tm.current = setTimeout(() => fn(...args), since)
     }
-  }, mountArgs || [fn])
+  }
+  return useCallback(throttledFn as any, mountArgs || [fn])
 }

@@ -2,6 +2,9 @@ import { ColProps } from '@o/gloss'
 
 export type CommonViewProps = Pick<
   ColProps,
+  | 'hoverStyle'
+  | 'activeStyle'
+  | 'focusStyle'
   | 'alignContent'
   | 'alignItems'
   | 'alignSelf'

@@ -15,7 +15,7 @@ export type SearchInputProps = InputProps & {
   after?: React.ReactNode
   actions?: React.ReactNode
   filters?: TableFilter[]
-  onClickClear?: Function
+  onClickClear?: InputProps['onClick']
   focusedToken?: number
   filterProps?: Object
   clearable?: boolean
@@ -45,7 +45,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   return (
     <SearchBar
       position="relative"
-      zIndex="1"
+      zIndex={1}
       key="searchbar"
       flex={flex}
       padding={padding}
@@ -88,7 +88,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   )
 })
 
-const SearchClearButton = gloss(ClearButton, {
+const SearchClearButton = gloss<{ visible?: boolean }>(ClearButton, {
   opacity: 0,
   pointerEvents: 'none',
   visible: {

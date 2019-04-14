@@ -10,10 +10,11 @@ import {
   SurfacePassProps,
   Toolbar,
   useMedia,
+  useTheme,
   View,
 } from '@o/ui'
-import React, { memo, useEffect, useState } from 'react'
-import { useSiteStore } from '../Body'
+import React, { memo, useState } from 'react'
+import { useSiteStore } from '../Layout'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -63,20 +64,20 @@ export function DocsPage() {
   const { selected, setSelected, SubView } = useStore(DocsPageStore)
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
-
-  useEffect(() => {
-    siteStore.setTheme('light')
-  }, [])
+  const theme = useTheme()
 
   return (
     <>
       <HeaderSlim />
-      <View height="100vh">
+      <View flex={1}>
         <View flex={1} position="relative">
           <Templates.MasterDetail
             items={itemsByIndex[section]()}
             showSidebar={showSidebar}
             detailProps={{ flex: 3 }}
+            masterProps={{
+              background: theme.sidebarBackground,
+            }}
             searchable
             onSelect={setSelected}
             belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
@@ -96,6 +97,8 @@ export function DocsPage() {
     </>
   )
 }
+
+DocsPage.theme = 'light'
 
 const DocsToolbar = memo(({ section, setSection }: any) => {
   return (

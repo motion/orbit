@@ -80,7 +80,7 @@ export const SubPane = memo(function SubPane(props: Props) {
 // we cant animate out as of yet because we are changing the height
 // so it would show overflowing content as the main pane got smaller
 // changing opacity here will be instant so avoid that bug
-const SubPaneFrame = gloss(UI.FullScreen, {
+const SubPaneFrame = gloss<{ isActive?: boolean } & UI.FullScreenProps>(UI.FullScreen, {
   pointerEvents: 'none',
   opacity: 0,
   isActive: {
@@ -88,7 +88,7 @@ const SubPaneFrame = gloss(UI.FullScreen, {
   },
 })
 
-const Pane = gloss(UI.View, {
+const Pane = gloss<{ isActive?: boolean; isLeft?: boolean } & UI.ViewProps>(UI.View, {
   position: 'absolute',
   top: 0,
   right: 0,
@@ -102,7 +102,7 @@ const Pane = gloss(UI.View, {
   },
 }))
 
-const SubPaneInner = gloss(UI.View, {
+const SubPaneInner = gloss<UI.ViewProps>(UI.View, {
   pointerEvents: 'inherit',
   position: 'relative',
   flex: 1,

@@ -6,7 +6,7 @@ import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeDown } from '../../views/FadeDown'
+import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
@@ -22,7 +22,7 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Code internal tools with less code, no infrastructure, and a rich app ecosystem.`,
+    `Create any app you can dream, with barely any code and deploy without infrastructure.`,
     `It's the vertically integrated app platform for developers.`,
     `Open source, decentralized and offline-first.`,
   ],
@@ -38,13 +38,15 @@ let allTexts = {
   ],
 }
 
-export function HeadSection() {
+const br = <br style={{ height: 0 }} />
+
+function HeadText() {
+  const size = useScreenSize()
   const [measured, setMeasured] = useState(false)
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const size = useScreenSize()
-  const { ref: titleRef, ...titleStyle } = useTextFit({ updateKey: fontsLoaded })
-  const { ref, ...style } = useTextFit({ min: 16, updateKey: fontsLoaded })
+  const titleFit = useTextFit({ updateKey: fontsLoaded })
+  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   useEffect(() => {
     setMeasuredDelayed(true)
@@ -53,83 +55,102 @@ export function HeadSection() {
   const texts = allTexts[size]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
-  const br = <br style={{ height: 0 }} />
-
   return (
-    <Page offset={0}>
+    <View justifyContent="space-between" width="90%" maxWidth={980} textAlign="center">
+      <FadeIn disable={!measured}>
+        <TitleText
+          forwardRef={titleFit.ref}
+          style={titleFit.style}
+          fontWeight={100}
+          margin={[0, 'auto']}
+          // transition="transform ease 160ms"
+          transformOrigin="top center"
+          selectable
+          textAlign="center"
+        >
+          {allTitles[size]}
+        </TitleText>
+      </FadeIn>
+
+      <Space size="lg" />
+
+      <Paragraph
+        style={pFit.style}
+        height="auto"
+        transformOrigin="top center"
+        sizeLineHeight={1.3}
+        margin={[0, 'auto']}
+        textAlign="center"
+        alpha={0.56}
+        whiteSpace="nowrap"
+      >
+        {texts[0]}
+        {br}
+        {texts[1]}
+        {br}
+        {texts[2]}
+      </Paragraph>
+
+      {/* this is just to measure */}
+      <Paragraph
+        ref={pFit.ref}
+        style={pFit.style}
+        opacity={0}
+        position="absolute"
+        pointerEvents="none"
+      >
+        {longest}
+      </Paragraph>
+    </View>
+  )
+}
+
+export function HeadSection() {
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  return (
+    <Page offset={0} zIndex={-1}>
       <Page.Content>
         <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
-            transform={{ y: '-25%' }}
+            transform={{ y: '-60%' }}
             margin={['auto', 0]}
             alignItems="center"
             justifyContent="center"
           >
-            <View
-              height="15.5vw"
-              maxHeight={160}
-              justifyContent="space-between"
-              width="90%"
-              maxWidth={980}
-              textAlign="center"
-            >
-              <FadeDown style={{ height: '8vh', maxHeight: 50 }} disable={!measured}>
-                <TitleText
-                  forwardRef={titleRef}
-                  {...titleStyle}
-                  fontWeight={100}
-                  margin={[0, 'auto']}
-                  // transition="transform ease 160ms"
-                  transformOrigin="bottom center"
-                  selectable
-                  textAlign="center"
-                >
-                  {allTitles[size]}
-                </TitleText>
-              </FadeDown>
-
-              <Space size="xl" />
-
-              <Paragraph ref={ref} {...style} opacity={0} position="absolute">
-                {longest}
-              </Paragraph>
-
-              <Paragraph
-                {...style}
-                sizeLineHeight={1.38}
-                margin={[0, 'auto']}
-                textAlign="center"
-                alpha={0.56}
-                whiteSpace="nowrap"
-              >
-                {texts[0]}
-                {br}
-                {texts[1]}
-                {br}
-                {texts[2]}
-              </Paragraph>
-            </View>
+            <HeadText />
           </Row>
 
+          <Space size="xl" />
+
           <FullScreen top="auto">
-            <View
-              opacity={0.5}
-              // background={`url(${screen}) no-repeat top left`}
-              background="#222"
-              borderRadius={10}
-              backgroundSize="contain"
-              flex={1}
-              width="100%"
-              maxWidth={1000}
-              margin={['auto', 'auto', 0]}
-              height={320}
-              position="relative"
-            >
-              {DownloadButton}
-            </View>
+            <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+              <View
+                // background={`url(${screen}) no-repeat top left`}
+                background="#222"
+                borderRadius={10}
+                backgroundSize="contain"
+                flex={1}
+                width="100%"
+                maxWidth={1000}
+                margin={['auto', 'auto', 0]}
+                height={320}
+                position="relative"
+              >
+                {DownloadButton}
+              </View>
+            </FadeIn>
 
             <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
               <img src={lineSep} />
+              <View
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                height={400}
+                transform={{ y: 400 }}
+                background={theme => theme.background}
+              />
             </FullScreen>
 
             <View
@@ -148,7 +169,7 @@ export function HeadSection() {
         </FullScreen>
       </Page.Content>
 
-      <Page.Parallax speed={-0.4} zIndex={-2}>
+      <Page.Parallax speed={-0.2} zIndex={-2}>
         <View
           pointerEvents="none"
           position="absolute"
@@ -156,7 +177,10 @@ export function HeadSection() {
           left={0}
           right={0}
           zIndex={1}
-          opacity={0.25}
+          opacity={0.3}
+          transform={{
+            scale: 1.3,
+          }}
         >
           <img src={glow} />
         </View>
@@ -187,39 +211,42 @@ const PreviewButton = gloss({
 })
 
 const DownloadButton = (
-  <Center bottom="auto" top={-20}>
-    <View
-      tagName="a"
-      {...{ href: 'ok' }}
-      flexFlow="row"
-      width={159}
-      height={45}
-      position="relative"
-      alignItems="center"
-      justifyContent="center"
-      border={[3, '#21AA0F']}
-      borderRadius={100}
-      hoverStyle={{
-        border: [3, toColor('#21AA0F').lighten(0.3)],
-      }}
-      textDecoration="none"
-      onClick={e => {
-        e.preventDefault()
-        console.log('need to link downlaod')
-      }}
-    >
-      <Image position="absolute" right={22} src={downmark} />
-      <Text
-        transform={{ y: 2 }}
-        zIndex={1}
-        size={1.1}
-        fontWeight={500}
-        letterSpacing={1}
-        pointerEvents="none"
+  <FadeIn>
+    <Center bottom="auto" top={-20}>
+      <View
+        tagName="a"
+        {...{ href: 'ok' }}
+        flexFlow="row"
+        width={159}
+        height={45}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        border={[3, '#21AA0F']}
+        borderRadius={100}
+        background={theme => theme.background}
+        hoverStyle={{
+          border: [3, toColor('#21AA0F').lighten(0.3)],
+        }}
+        textDecoration="none"
+        onClick={e => {
+          e.preventDefault()
+          console.log('need to link downlaod')
+        }}
       >
-        Download
-      </Text>
-      <div style={{ width: 25 }} />
-    </View>
-  </Center>
+        <Image position="absolute" right={22} src={downmark} />
+        <Text
+          transform={{ y: 2 }}
+          zIndex={1}
+          size={1.1}
+          fontWeight={500}
+          letterSpacing={1}
+          pointerEvents="none"
+        >
+          Download
+        </Text>
+        <div style={{ width: 25 }} />
+      </View>
+    </Center>
+  </FadeIn>
 )

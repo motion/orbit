@@ -4,6 +4,7 @@ import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
 import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
 
 export type ModalProps = SimpleModalProps & {
@@ -73,7 +74,7 @@ function SimpleModal({
   )
 }
 
-const PopoverChrome = gloss(SizedSurface, {
+const PopoverChrome = gloss<SurfaceProps & { shown?: boolean }>(SizedSurface, {
   opacity: 0,
   pointerEvents: 'none',
   shown: {

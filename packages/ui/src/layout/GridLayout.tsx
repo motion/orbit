@@ -129,7 +129,7 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
       // you can pass in a <GridItem />...
       const isGridItem = child.type instanceof GridItem
       if (isGridItem) {
-        return <div key={child.key}>{cloneElement(child, { id: `${child.key}` })}</div>
+        return <div key={child.key}>{cloneElement(child, { id: `${child.key}` } as any)}</div>
       }
       // ... or a regular item like <Card />
       return (

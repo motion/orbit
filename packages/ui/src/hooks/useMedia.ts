@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { DependencyList, EffectCallback } from 'react'
+import React, { DependencyList, EffectCallback } from 'react'
 
 const { useState, useEffect, useLayoutEffect } = React
 
@@ -25,31 +24,27 @@ const objectToString = (query: string | MediaQueryObject) => {
 }
 
 type Effect = (effect: EffectCallback, deps?: DependencyList) => void
-const createUseMedia = (effect: Effect) => (
-  rawQuery: string | MediaQueryObject,
-  defaultState: boolean = false,
-) => {
-  const [state, setState] = useState(defaultState)
+const createUseMedia = (effect: Effect) => (rawQuery: string | MediaQueryObject) => {
   const query = objectToString(rawQuery)
-  effect(
-    () => {
-      let mounted = true
-      const mql = window.matchMedia(query)
-      const onChange = () => {
-        if (!mounted) return
-        setState(!!mql.matches)
-      }
+  const initialState = !!window.matchMedia(query).matches
+  const [state, setState] = useState(initialState)
 
-      mql.addListener(onChange)
-      setState(mql.matches)
+  effect(() => {
+    let mounted = true
+    const mql = window.matchMedia(query)
+    const onChange = () => {
+      if (!mounted) return
+      setState(!!mql.matches)
+    }
 
-      return () => {
-        mounted = false
-        mql.removeListener(onChange)
-      }
-    },
-    [query],
-  )
+    mql.addListener(onChange)
+    setState(mql.matches)
+
+    return () => {
+      mounted = false
+      mql.removeListener(onChange)
+    }
+  }, [query])
 
   return state
 }

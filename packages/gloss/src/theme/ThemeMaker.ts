@@ -1,10 +1,13 @@
-import { ColorLike, toColor } from '@o/color'
+import { Color, ColorLike, toColor } from '@o/color'
 import { LinearGradient, ThemeObject } from '@o/css'
 
 type ColorObject = { [a: string]: ColorLike }
 
 export type SimpleStyleObject = {
-  [a: string]: ColorLike | ColorObject
+  color?: ColorLike
+  background?: ColorLike
+  borderColor?: ColorLike
+  [a: string]: ColorLike | ColorObject | any
 }
 
 const darken = (color, amt) => {
@@ -51,8 +54,8 @@ const isPlainObj = o => typeof o == 'object' && o.constructor == Object
 export class ThemeMaker {
   cache = {}
 
-  colorize = (obj): SimpleStyleObject => {
-    const res = {}
+  colorize = (obj: SimpleStyleObject | ThemeObject): ThemeObject => {
+    const res: Partial<ThemeObject> = {}
     for (const key in obj) {
       const val = obj[key]
       if (val instanceof LinearGradient) {
@@ -70,7 +73,7 @@ export class ThemeMaker {
         }
       }
     }
-    return res
+    return res as ThemeObject
   }
 
   fromColor = (bgName: string): ThemeObject | null => {
@@ -80,7 +83,7 @@ export class ThemeMaker {
     if (this.cache[bgName]) {
       return this.cache[bgName]
     }
-    let background
+    let background: Color
     try {
       background = toColor(bgName)
     } catch (e) {
@@ -94,7 +97,7 @@ export class ThemeMaker {
 
   // generate some properly contrasted colors based on base colors
   // insert theme into psuedo styles for Blur Active and ActiveHighlight
-  fromStyles = (s: SimpleStyleObject): ThemeObject => {
+  fromStyles = (s: Partial<SimpleStyleObject>): ThemeObject => {
     if (!s.background && !s.color) {
       throw new Error('Themes require at least background or color')
     }
@@ -110,21 +113,20 @@ export class ThemeMaker {
       borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmt),
     })
     // flattened
-    const res = {
+    const res: ThemeObject = {
       ...this.colorize({
-        // @ts-ignore
-        colorHover: base.color.lighten(0.1),
-        // @ts-ignore
-        backgroundHover: base.background.lighten(0.1),
-        borderColorHover: increaseContrast(base.borderColor, smallAmt),
-        backgroundActiveHover: increaseContrast(base.background, largeAmt),
-        backgroundActive: decreaseContrast(base.background, largeAmt),
-        borderColorActive: decreaseContrast(base.borderColor, smallAmt),
-        backgroundBlur: darken(base.background, largeAmt),
-        colorBlur: darken(base.color, largeAmt),
-        borderColorBlur: darken(base.borderColor, largeAmt),
-        backgroundFocus: decreaseContrast(base.background, largeAmt),
-        borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
+        // for buttons/surfaces, we generate a nice set of themes
+        surfaceColorHover: base.color.lighten(0.1),
+        surfaceBackgroundHover: base.background.lighten(0.1),
+        surfaceBorderColorHover: increaseContrast(base.borderColor, smallAmt),
+        surfaceBackgroundActiveHover: increaseContrast(base.background, largeAmt),
+        surfaceBackgroundActive: decreaseContrast(base.background, largeAmt),
+        surfaceBorderColorActive: decreaseContrast(base.borderColor, smallAmt),
+        surfaceBackgroundBlur: darken(base.background, largeAmt),
+        surfaceColorBlur: darken(base.color, largeAmt),
+        surfaceBorderColorBlur: darken(base.borderColor, largeAmt),
+        surfaceBackgroundFocus: decreaseContrast(base.background, largeAmt),
+        surfaceBorderColorFocus: decreaseContrast(base.borderColor, largeAmt),
         // ensure rest is last so they can override anything
         ...s,
         // except for base which is already using the right order
@@ -132,6 +134,6 @@ export class ThemeMaker {
       }),
     }
     this.cache[key] = res
-    return res as ThemeObject
+    return res
   }
 }

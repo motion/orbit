@@ -1,14 +1,14 @@
 import { gloss } from '@o/gloss'
-import { Button, Popover, Row, View } from '@o/ui'
+import { Button, Popover, Row, SimpleText, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
+import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
 import { Overdrive } from './Overdrive'
 import { SectionContent } from './SectionContent'
-import { Text } from './Text'
 
-const LinkText = gloss(Text, {
+const LinkText = gloss(View, {
   userSelect: 'none',
   width: '33%',
   textAlign: 'center',
@@ -19,11 +19,6 @@ const LinkText = gloss(Text, {
     textDecoration: 'none',
   },
 })
-
-LinkText.defaultProps = {
-  alpha: 0.65,
-  fontSize: 16,
-}
 
 type LinkProps = {
   href: string
@@ -37,10 +32,12 @@ type LinkProps = {
 
 export function Link({ children, fontSize, href, ...props }: LinkProps) {
   return (
-    <LinkText fontSize={fontSize} onClick={e => e.preventDefault()}>
-      <RouterLink href={href} {...props}>
-        {children}
-      </RouterLink>
+    <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
+      <SimpleText alpha={0.5} hoverStyle={{ alpha: 1 }}>
+        <RouterLink href={href} {...props}>
+          {children}
+        </RouterLink>
+      </SimpleText>
     </LinkText>
   )
 }
@@ -62,13 +59,13 @@ export const LinksLeft = props => (
 )
 
 export const LinksRight = props => (
-  <Overdrive id="links-right">
+  <Overdrive id="links-right" duration={100000}>
     <LinkRow>
       <Link {...props} href="/">
         Pricing
       </Link>
       <Link {...props} href="/">
-        Team
+        !!!
       </Link>
       <Link {...props} href="/">
         Blog
@@ -82,6 +79,8 @@ const LinkRow = gloss({
   flex: 1,
   height: 40,
   alignItems: 'center',
+  zIndex: 1000000000,
+  position: 'relative',
 })
 
 export function Header() {

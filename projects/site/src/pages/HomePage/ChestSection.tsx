@@ -6,9 +6,9 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export function ChestSection() {
+export function ChestSection(props) {
   return (
-    <Page offset={3}>
+    <Page {...props}>
       <Page.Content>
         <SpacedPageContent
           header={
@@ -23,7 +23,7 @@ export function ChestSection() {
             </>
           }
         >
-          <Grid space="xxl" itemMinWidth={240}>
+          <Grid space="15%" itemMinWidth={240} maxWidth={800} margin={[0, 'auto']}>
             <SimpleSection title="Spaces to collaborate." index={1}>
               <SectionP>
                 Orbit gives your company a home that you control completely. Everything is synced

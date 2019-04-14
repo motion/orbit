@@ -105,10 +105,10 @@ function HeadText() {
   )
 }
 
-export function HeadSection() {
+export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   return (
-    <Page offset={0} zIndex={-1}>
+    <Page zIndex={-1} {...props}>
       <Page.Content>
         {/* <OuterSpace /> */}
 

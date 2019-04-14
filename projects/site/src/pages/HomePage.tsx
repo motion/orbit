@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
+import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
 import { AbdomenSection } from './HomePage/AdbomenSection'
 import { ChestSection } from './HomePage/ChestSection'
@@ -18,20 +19,23 @@ export function HomePage() {
     <>
       <Header key="header" />
       <Parallax
-        pages={8}
+        pages={9}
         // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
         container={document.documentElement}
         pageHeight={siteStore.sectionHeight}
       >
-        <HeadSection />
-        <NeckSection />
-        <ShoulderSection />
-        <ChestSection />
-        <AbdomenSection />
-        <WaistSection />
-        <LegsSection />
-        <FeetSection />
+        <HeadSection offset={0} />
+        <NeckSection offset={1} />
+        <ShoulderSection offset={2} />
+        <ChestSection offset={3} />
+        <Page offset={4}>
+          <Page.Content />
+        </Page>
+        <AbdomenSection offset={5} />
+        <WaistSection offset={6} />
+        <LegsSection offset={7} />
+        <FeetSection offset={8} />
       </Parallax>
     </>
   )

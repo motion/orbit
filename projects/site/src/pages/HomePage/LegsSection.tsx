@@ -11,10 +11,10 @@ export const SubParagraph = (props: TextProps) => (
   <TitleText size={1.4} sizeLineHeight={1.1} fontWeight={200} alpha={0.5} {...props} />
 )
 
-export function LegsSection() {
+export function LegsSection(props) {
   return (
     <Theme name="home">
-      <Page offset={6}>
+      <Page {...props}>
         <Page.Content>
           <SpacedPageContent
             header={

@@ -9,10 +9,10 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export function WaistSection() {
+export function WaistSection(props) {
   return (
     <Theme name="light">
-      <Page offset={5}>
+      <Page {...props}>
         <Page.Content
           outside={
             <>

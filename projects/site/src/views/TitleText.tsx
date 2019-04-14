@@ -1,6 +1,6 @@
-import { gloss } from '@o/gloss'
-import { Text } from '@o/ui'
-import React from 'react'
+import { gloss } from '@o/gloss';
+import { Text } from '@o/ui';
+import React from 'react';
 
 export const TitleText = gloss(
   props => (
@@ -9,6 +9,7 @@ export const TitleText = gloss(
         size: 'xl',
         fontWeight: 800,
         selectable: true,
+        textAlign: 'center'
       }}
       {...props}
     />

@@ -9,9 +9,8 @@ export function SpacedPageContent({ header, children }: { header: any; children:
         <Col space="md" alignItems="center" pad="xl">
           {header}
         </Col>
-        <div style={{ flex: 0.2, minHeight: 20 }} />
         {children}
-        <div style={{ flex: 1.5 }} />
+        <div style={{ flex: 1 }} />
       </SpaceGroup>
     </View>
   )

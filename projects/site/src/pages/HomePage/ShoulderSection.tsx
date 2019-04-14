@@ -10,9 +10,9 @@ import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export function ShoulderSection() {
+export function ShoulderSection(props) {
   return (
-    <Page offset={2}>
+    <Page {...props}>
       <Page.Content>
         <SpacedPageContent
           header={
@@ -23,7 +23,7 @@ export function ShoulderSection() {
             </>
           }
         >
-          <Row space={60} margin={[0, '-25%']}>
+          <Row space={60} margin={[0, '-120%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
               <View
                 borderRadius={10}
@@ -43,7 +43,8 @@ export function ShoulderSection() {
                 />
               </View>
             </Col>
-            <Col flex={2} maxWidth={340}>
+
+            <Col flex={2} minWidth={300} maxWidth={340}>
               <ParagraphIntro>
                 Orbit vertically integrates from the UI kit to deploy. It lets us handle everything
                 you don't want to.
@@ -65,6 +66,7 @@ export function ShoulderSection() {
                 <Paragraph>It's the level of control we need. Learn more.</Paragraph>
               </PassProps>
             </Col>
+
             <Col flex={2} alignItems="flex-start" justifyContent="center">
               <View borderRadius={10} elevation={3} width={400} height={350} background="grey" />
             </Col>
@@ -85,7 +87,7 @@ export function ShoulderSection() {
       </Page.Parallax>
 
       <Page.Parallax speed={0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '36%', scale: 0.9 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '26%', scale: 0.9 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

@@ -6,10 +6,10 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
-export function FeetSection() {
+export function FeetSection(props) {
   return (
     <Theme name="home">
-      <Page offset={7}>
+      <Page {...props}>
         <Page.Content>
           <SpacedPageContent
             header={

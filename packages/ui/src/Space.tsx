@@ -25,7 +25,7 @@ export function getSpaceSize(space: Sizes) {
   if (!space || space === true) {
     space = 'md'
   }
-  return spaceSizes[space] || 0
+  return spaceSizes[space] || space || 0
 }
 
 export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {

@@ -1,6 +1,7 @@
 import { Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui'
 import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
+import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButtonDark } from '../../views/PillButtonDark'
@@ -15,9 +16,10 @@ export const TitleTextSub = gloss((props: TextProps) => (
   </View>
 ))
 
-export function NeckSection() {
+export function NeckSection(props) {
+  const screen = useScreenSize()
   return (
-    <Page offset={1}>
+    <Page {...props}>
       <Page.Content>
         <SpacedPageContent
           header={
@@ -32,8 +34,8 @@ export function NeckSection() {
             </>
           }
         >
-          <Col spaceAround maxWidth={1000} margin={[0, 'auto']}>
-            <Row space>
+          <Col spaceAround maxWidth="100%" margin={[0, 'auto']}>
+            <Row space flexWrap="wrap">
               <SubSection>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
@@ -56,7 +58,7 @@ export function NeckSection() {
             <Space />
 
             <Row space>
-              <Flex alignItems="center">
+              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
                 <Image
                   alignSelf="center"
                   width={124}
@@ -97,7 +99,7 @@ export function NeckSection() {
 
                 <View marginTop={-200} background="grey" width="100%" height={300} />
               </Flex>
-              <Flex alignItems="center">
+              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
                 <Image
                   alignSelf="center"
                   width={124}
@@ -156,4 +158,4 @@ export const Flex = gloss(View, {
   flex: 1,
 })
 
-const SubSection = gloss(props => <Flex pad {...props} />)
+const SubSection = gloss(props => <Flex minWidth={280} pad {...props} />)

@@ -24,16 +24,15 @@ export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous) => {
 
   let next: CSSPropertySet | null = null
 
-  if (color !== 'inherit') {
-    if (typeof alpha === 'number') {
-      next = next || {}
-      next.color = `${toColor(color).alpha(alpha)}`
-    }
-    if (typeof hoverAlpha === 'number') {
-      next = next || {}
-      next['&:hover'] = {
-        color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
-      }
+  if (color !== 'inherit' && color && typeof alpha === 'number') {
+    next = next || {}
+    next.color = `${toColor(color).alpha(alpha)}`
+  }
+
+  if (hoverColor && typeof hoverAlpha === 'number') {
+    next = next || {}
+    next['&:hover'] = {
+      color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
     }
   }
 

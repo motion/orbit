@@ -101,7 +101,7 @@ export function HeadSection() {
               </Paragraph>
 
               {/* this is just to measure */}
-              <Paragraph ref={ref} {...style} opacity={0} position="absolute">
+              <Paragraph ref={ref} {...style} opacity={0} position="absolute" pointerEvents="none">
                 {longest}
               </Paragraph>
             </View>

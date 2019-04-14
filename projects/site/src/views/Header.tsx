@@ -62,13 +62,13 @@ export const LinksLeft = props => (
 )
 
 export const LinksRight = props => (
-  <Overdrive id="links-right">
+  <Overdrive id="links-right" duration={100000}>
     <LinkRow>
       <Link {...props} href="/">
         Pricing
       </Link>
       <Link {...props} href="/">
-        Team
+        !!!
       </Link>
       <Link {...props} href="/">
         Blog
@@ -82,6 +82,8 @@ const LinkRow = gloss({
   flex: 1,
   height: 40,
   alignItems: 'center',
+  zIndex: 1000000000,
+  position: 'relative',
 })
 
 export function Header() {

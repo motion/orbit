@@ -5,7 +5,7 @@ import { useNodeSize } from '../hooks/useNodeSize'
 import { Section, SectionParentProps, SectionSpecificProps, useSectionProps } from '../Section'
 import { useShareStore } from '../Share'
 import { TitleRowSpecificProps } from '../TitleRow'
-import { DataColumnsShort } from '../types'
+import { DataColumnsShort, Omit } from '../types'
 import { useVisibility } from '../Visibility'
 import { SearchableTable, SearchableTableProps } from './SearchableTable'
 

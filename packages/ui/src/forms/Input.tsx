@@ -1,7 +1,7 @@
+import { gloss, ThemeFn } from '@o/gloss'
 import React, { forwardRef, useCallback, useContext } from 'react'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { GetSurfaceTheme } from '../Surface'
 import { DataType, Omit } from '../types'
 import { FormContext } from './Form'
 
@@ -92,32 +92,7 @@ export const Input = forwardRef(function Input(
   )
 })
 
-function SimpleInput(props: SizedSurfaceProps) {
-  return (
-    <SizedSurface
-      tagName="input"
-      type="input"
-      maxWidth="100%"
-      alignItems="center"
-      flexFlow="row"
-      themeSelect="input"
-      sizeFont
-      sizePadding
-      sizeHeight
-      sizeLineHeight
-      sizeRadius={0.75}
-      noInnerElement
-      glint={false}
-      borderWidth={1}
-      flex={1}
-      {...props}
-      className={`ui-input ${props.className || ''}`}
-      getTheme={inputSurfaceTheme}
-    />
-  )
-}
-
-const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
+const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
@@ -129,3 +104,25 @@ const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
     background: theme.backgroundSelection || theme.background.darken(0.2),
   },
 })
+
+const SimpleInput = gloss((props: SizedSurfaceProps) => (
+  <SizedSurface
+    tagName="input"
+    type="input"
+    maxWidth="100%"
+    alignItems="center"
+    flexFlow="row"
+    themeSelect="input"
+    sizeFont
+    sizePadding
+    sizeHeight
+    sizeLineHeight
+    sizeRadius={0.75}
+    noInnerElement
+    glint={false}
+    borderWidth={1}
+    flex={1}
+    {...props}
+    className={`ui-input ${props.className || ''}`}
+  />
+)).theme(inputSurfaceTheme)

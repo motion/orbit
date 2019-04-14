@@ -142,7 +142,7 @@ export class Color {
   }
 
   toString() {
-    return this.string()
+    return this.toCSS()
   }
 
   string(places?) {

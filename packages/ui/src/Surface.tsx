@@ -77,12 +77,9 @@ export type SurfaceSpecificProps = {
   type?: string
   themeSelect?: Gloss.ThemeSelect
   iconPad?: number
-  getTheme?: GetSurfaceTheme
 }
 
 export type SurfaceProps = ViewProps & SurfaceSpecificProps
-
-export type GetSurfaceTheme = Gloss.GlossThemeFn<SurfaceProps>
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()
@@ -324,7 +321,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
       color: iconColor,
       justifyContent: 'center',
       hoverStyle: {
-        ...props.hoverStyle,
+        ...selectObject(props.hoverStyle),
         color: iconColorHover,
       },
     }
@@ -382,10 +379,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || []
 
-  const borderColor =
-    themeStyle.borderColor && themeStyle.borderColor.toCSS
-      ? themeStyle.borderColor.toCSS()
-      : themeStyle.borderColor
+  const borderColor = `${themeStyle.borderColor || ''}`
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
   // borderPosition controls putting borders inside vs outside
@@ -424,7 +418,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
           ...(!props.chromeless && themeStyle['&:hover']),
           ...propStyles['&:hover'],
         },
-    ...(props.getTheme && props.getTheme(props, theme)),
     ...styles,
     ...padStyle,
   }
@@ -497,3 +490,8 @@ const GlintContain = gloss(Col, {
 
 const getPadX = (padding: any) =>
   Array.isArray(padding) ? (+padding[1] || 0) + (+padding[3] || 0) : padding
+
+const selectObject = (x: any) => {
+  if (!x || typeof x !== 'object' || Array.isArray(x)) return {}
+  return x
+}

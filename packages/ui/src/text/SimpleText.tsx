@@ -23,5 +23,6 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   },
   selectable: {
     userSelect: 'text',
+    cursor: 'text',
   },
 })

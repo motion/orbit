@@ -298,7 +298,7 @@ const TextBlock = gloss({
   maxWidth: '100%',
   selectable: {
     userSelect: 'text',
-    cursor: 'inherit',
+    cursor: 'text',
   },
   oneLineEllipse: {
     overflow: 'hidden',

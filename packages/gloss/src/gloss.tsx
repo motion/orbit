@@ -27,7 +27,7 @@ export type GlossProps<Props> = Props & {
 export type GlossThemeFn<Props> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
-  previous: CSSPropertySetResolved | null,
+  previous?: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
 
 const tracker: StyleTracker = new Map()

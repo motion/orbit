@@ -18,9 +18,9 @@ class SiteStore {
   get sectionHeight() {
     return Math.min(
       // min-height
-      Math.max(800, this.windowHeight),
+      Math.max(850, this.windowHeight),
       // max-height
-      1000,
+      1100,
     )
   }
 }

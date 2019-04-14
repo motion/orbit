@@ -1,5 +1,5 @@
 import { CSSPropertySetStrict, ThemeObject } from '@o/css'
-import { GlossThemeFn } from '../gloss'
+import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { styleVal } from './propStyleTheme'
 
@@ -14,11 +14,11 @@ export type PseudoStyleProps = {
   focusStyle?: CSSPropertySetStrict | false | null
 }
 
-export const psuedoStyleTheme: GlossThemeFn<any> = (a, b, c) => {
+export const psuedoStyleTheme: ThemeFn = (a, b, c) => {
   return applyPsuedoTheme(a, b, c, true)
 }
 
-export const psuedoStylePropsTheme: GlossThemeFn<any> = (a, b, c) => {
+export const psuedoStylePropsTheme: ThemeFn = (a, b, c) => {
   return applyPsuedoTheme(a, b, c, false)
 }
 

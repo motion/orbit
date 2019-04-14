@@ -24,7 +24,7 @@ export type GlossProps<Props> = Props & {
   alt?: string
 }
 
-export type GlossThemeFn<Props> = (
+export type ThemeFn<Props = any> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
   previous?: CSSPropertySetResolved | null,
@@ -82,7 +82,7 @@ const whiteSpaceRegex = /[\s]+/g
 function glossify(
   id: string,
   displayName: string = 'g',
-  themeFn: GlossThemeFn<any> | null,
+  themeFn: ThemeFn | null,
   staticStyles: any,
   conditionalStyles: any,
   prevClassNames: string[] | null,
@@ -194,7 +194,7 @@ export interface GlossView<Props> {
   displayName?: string
   // extra:
   ignoreAttrs?: Object
-  theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
+  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
   withConfig: (config: { displayName?: string }) => any
   config: {
     getConfig: () => {
@@ -205,7 +205,7 @@ export interface GlossView<Props> {
       propStyles: Object
       parent: any
     }
-    themeFns: GlossThemeFn<Props>[] | null
+    themeFns: ThemeFn<Props>[] | null
   }
 }
 
@@ -259,7 +259,7 @@ export function gloss<ExtraProps = any, Props = any>(
   const targetElement = isGlossParent ? targetConfig.targetElement : target
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
-  let themeFn: GlossThemeFn<any> | null = null
+  let themeFn: ThemeFn | null = null
 
   let ThemedView = (forwardRef<HTMLDivElement, GlossProps<ExtraProps & Props>>(function Gloss(
     props,
@@ -471,7 +471,7 @@ function getSelector(className: string, namespace: string, tagName: string = '')
 // compile theme from parents
 function compileTheme(viewOG: GlossView<any>) {
   let cur = viewOG
-  let all: GlossThemeFn<any>[][] = []
+  let all: ThemeFn[][] = []
 
   // get themes in order from most important (current) to least important (grandparent)
   while (cur) {

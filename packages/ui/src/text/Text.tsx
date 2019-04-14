@@ -1,5 +1,12 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme } from '@o/gloss'
+import {
+  alphaColorTheme,
+  CSSPropertySet,
+  gloss,
+  propStyleTheme,
+  textSizeTheme,
+  ThemeFn,
+} from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
@@ -297,14 +304,16 @@ const TextBlock = gloss({
   },
 }).theme(propStyleTheme, alphaColorTheme)
 
-const TextEllipse = gloss({
-  display: 'inline',
-  maxWidth: '100%',
-}).theme(propStyleTheme, ellipseTheme)
-
-function ellipseTheme({ ellipse, doClamp, maxHeight }) {
-  return {
-    ...(ellipse > 1 && {
+const ellipseTheme: ThemeFn = ({ ellipse, doClamp, maxHeight }) => {
+  if (ellipse === 1 || ellipse === true)
+    return {
+      display: 'block',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+    }
+  if (ellipse > 1)
+    return {
       WebkitLineClamp: ellipse,
       maxHeight,
       width: doClamp ? '100%' : '100.001%',
@@ -313,12 +322,10 @@ function ellipseTheme({ ellipse, doClamp, maxHeight }) {
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-    }),
-    ...((ellipse === 1 || ellipse === true) && {
-      display: 'block',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-    }),
-  }
+    }
 }
+
+const TextEllipse = gloss({
+  display: 'inline',
+  maxWidth: '100%',
+}).theme(propStyleTheme, ellipseTheme)

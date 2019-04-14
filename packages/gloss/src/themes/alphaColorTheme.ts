@@ -1,6 +1,6 @@
 import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
-import { GlossThemeFn } from '../gloss'
+import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 
 // mutate styles to have alpha if defined in props
@@ -14,7 +14,7 @@ export type AlphaColorProps = {
   }
 }
 
-export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous) => {
+export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const color = props.color || theme.color
   const alpha = props.alpha || theme.alpha
   const hoverColor =

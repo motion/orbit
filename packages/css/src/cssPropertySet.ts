@@ -238,6 +238,7 @@ export type display =
   | 'ruby-base-container'
   | 'ruby-text-container'
   | 'contents'
+  | '-webkit-box'
 export type displayInside = 'auto' | 'block' | 'table' | 'flex' | 'grid' | 'ruby'
 export type displayList = 'none' | 'list-item'
 export type displayOutside =

@@ -1,6 +1,7 @@
-import { Col, gloss, Grid, Icon, PassProps, Row, Space, Text } from '@o/ui'
+import { Col, gloss, Grid, Icon, PassProps, Row, Space } from '@o/ui'
 import React from 'react'
 import { Page } from '../../views/Page'
+import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
@@ -17,8 +18,8 @@ export function ChestSection(props) {
               <Space size="sm" />
               <TitleText size="xxl">Batteries Included.</TitleText>
               <TitleTextSub>
-                Creating, maintaining, and collaborating apps shouldn't be so hard. Orbit tackles
-                the hard problems of development, deployment and toolkit.
+                Orbit gives you a rich set of tools that are common to many apps. They're completely
+                integrated, which saves tons of code, time, and enables new features.
               </TitleTextSub>
             </>
           }
@@ -28,12 +29,11 @@ export function ChestSection(props) {
             <PassProps getChildProps={(_, index) => ({ index: index + 1 })}>
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="cog" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -42,12 +42,11 @@ export function ChestSection(props) {
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="grid" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -56,12 +55,11 @@ export function ChestSection(props) {
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="ok" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -70,12 +68,11 @@ export function ChestSection(props) {
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="home" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -84,12 +81,11 @@ export function ChestSection(props) {
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="app" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -98,12 +94,11 @@ export function ChestSection(props) {
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
+                  <SectionIcon name="can" />
                   Orbit gives your company a home that you control completely. Everything is synced
                   peer to peer, and apps can even sync data to a common format to collaborate with
                   each other.
-                </SectionP>
-                <SectionIcon name="grid" />
-                <SectionP>
+                  <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
                   yourself.
@@ -120,7 +115,7 @@ export function ChestSection(props) {
 }
 
 const SimpleSection = props => (
-  <SectionChrome space="sm">
+  <SectionChrome space>
     <SectionTitle>
       <Badge>
         <BadgeText>{props.index}.</BadgeText>
@@ -137,17 +132,21 @@ const SectionChrome = gloss(Col, {
   position: 'relative',
 })
 
-const SectionP = gloss(props => <Text size={1.1} alpha={0.65} sizeLineHeight={1.1} {...props} />, {
-  display: 'block',
-  float: 'left',
-})
+const SectionP = gloss(
+  props => <Paragraph size={1.1} alpha={0.65} sizeLineHeight={1.15} {...props} />,
+  {
+    display: 'block',
+    float: 'left',
+  },
+)
 
 const SectionBody = gloss({
   display: 'block',
 })
 
-const SectionIcon = gloss(Icon, {
+const SectionIcon = gloss(props => <Icon size={52} {...props} />, {
   float: 'right',
+  margin: [8, 0, 16, 16],
 })
 
 const SectionTitle = gloss(Row, {
@@ -169,7 +168,7 @@ const Badge = gloss({
   fontSize: 18,
 }).theme((_, theme) => ({
   color: theme.color,
-  border: [1, theme.color],
+  border: [1, theme.color.alpha(0.25)],
 }))
 
 const BadgeText = gloss({

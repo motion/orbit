@@ -1,8 +1,28 @@
 import { gloss } from '@o/gloss'
-import { View } from '@o/ui'
+import { View, ViewProps } from '@o/ui'
+import React from 'react'
 import * as Constants from '../constants'
 
-export const SectionContent = gloss(View, {
+export const SectionContent = (props: ViewProps) => {
+  return (
+    <SectionContentChrome {...props}>
+      <div
+        style={{
+          position: 'relative',
+          flex: 1,
+          flexDirection: 'inherit',
+          flexWrap: 'inherit',
+          alignItems: 'inherit',
+          justifyContent: 'inherit',
+        }}
+      >
+        {props.children}
+      </div>
+    </SectionContentChrome>
+  )
+}
+
+export const SectionContentChrome = gloss(View, {
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,

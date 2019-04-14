@@ -45,6 +45,9 @@ export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: Use
   return {
     ref,
     transform: { scale },
+    height: ref.current
+      ? +getComputedStyle(ref.current).fontSize.replace('px', '') * scale
+      : 'auto',
     width: 'max-content',
   }
 }

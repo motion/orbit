@@ -60,27 +60,20 @@ export function HeadSection() {
       <Page.Content>
         <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
-            transform={{ y: '-25%' }}
+            transform={{ y: '-60%' }}
             margin={['auto', 0]}
             alignItems="center"
             justifyContent="center"
           >
-            <View
-              height="15.5vw"
-              maxHeight={160}
-              justifyContent="space-between"
-              width="90%"
-              maxWidth={980}
-              textAlign="center"
-            >
-              <FadeDown style={{ height: '8vh', maxHeight: 50 }} disable={!measured}>
+            <View justifyContent="space-between" width="90%" maxWidth={980} textAlign="center">
+              <FadeDown disable={!measured}>
                 <TitleText
                   forwardRef={titleRef}
                   {...titleStyle}
                   fontWeight={100}
                   margin={[0, 'auto']}
                   // transition="transform ease 160ms"
-                  transformOrigin="bottom center"
+                  transformOrigin="top center"
                   selectable
                   textAlign="center"
                 >
@@ -88,14 +81,12 @@ export function HeadSection() {
                 </TitleText>
               </FadeDown>
 
-              <Space size="xl" />
-
-              <Paragraph ref={ref} {...style} opacity={0} position="absolute">
-                {longest}
-              </Paragraph>
+              <Space size="md" />
 
               <Paragraph
                 {...style}
+                height="auto"
+                transformOrigin="top center"
                 sizeLineHeight={1.38}
                 margin={[0, 'auto']}
                 textAlign="center"
@@ -108,12 +99,18 @@ export function HeadSection() {
                 {br}
                 {texts[2]}
               </Paragraph>
+
+              {/* this is just to measure */}
+              <Paragraph ref={ref} {...style} opacity={0} position="absolute">
+                {longest}
+              </Paragraph>
             </View>
           </Row>
 
+          <Space size="xl" />
+
           <FullScreen top="auto">
             <View
-              opacity={0.5}
               // background={`url(${screen}) no-repeat top left`}
               background="#222"
               borderRadius={10}

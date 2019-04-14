@@ -1,4 +1,4 @@
-import { Col, gloss, Grid, Icon, Row, Space, Text } from '@o/ui'
+import { Col, gloss, Grid, Icon, PassProps, Row, Space, Text } from '@o/ui'
 import React from 'react'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -23,90 +23,93 @@ export function ChestSection(props) {
             </>
           }
         >
+          <Space size="lg" />
           <Grid space="15%" itemMinWidth={240} maxWidth={800} margin={[0, 'auto']}>
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+            <PassProps getChildProps={(_, index) => ({ index: index + 1 })}>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
 
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
 
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
 
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
 
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
 
-            <SimpleSection title="Spaces to collaborate." index={1}>
-              <SectionP>
-                Orbit gives your company a home that you control completely. Everything is synced
-                peer to peer, and apps can even sync data to a common format to collaborate with
-                each other.
-              </SectionP>
-              <SectionIcon name="grid" />
-              <SectionP>
-                Collaborate on new data sources components. It's everything you'd want in a mature
-                app platform, and none of the downsides of having to glue together an intranet
-                yourself.
-              </SectionP>
-            </SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">
+                <SectionP>
+                  Orbit gives your company a home that you control completely. Everything is synced
+                  peer to peer, and apps can even sync data to a common format to collaborate with
+                  each other.
+                </SectionP>
+                <SectionIcon name="grid" />
+                <SectionP>
+                  Collaborate on new data sources components. It's everything you'd want in a mature
+                  app platform, and none of the downsides of having to glue together an intranet
+                  yourself.
+                </SectionP>
+              </SimpleSection>
+            </PassProps>
           </Grid>
         </SpacedPageContent>
       </Page.Content>
@@ -117,16 +120,22 @@ export function ChestSection(props) {
 }
 
 const SimpleSection = props => (
-  <SectionChrome space>
-    <SectionTitle space>
-      <Badge>{props.index}</Badge>
-      <TitleText flex={1}>{props.title}</TitleText>
+  <SectionChrome space="sm">
+    <SectionTitle>
+      <Badge>
+        <BadgeText>{props.index}.</BadgeText>
+      </Badge>
+      <TitleText textAlign="left" flex={1}>
+        {props.title}
+      </TitleText>
     </SectionTitle>
     <SectionBody>{props.children}</SectionBody>
   </SectionChrome>
 )
 
-const SectionChrome = gloss(Col, {})
+const SectionChrome = gloss(Col, {
+  position: 'relative',
+})
 
 const SectionP = gloss(props => <Text size={1.1} alpha={0.65} sizeLineHeight={1.1} {...props} />, {
   display: 'block',
@@ -147,8 +156,13 @@ const SectionTitle = gloss(Row, {
 })
 
 const Badge = gloss({
-  width: 40,
-  height: 40,
+  position: 'absolute',
+  // top: -50,
+  transform: {
+    x: 'calc(-100% - 15px)',
+  },
+  width: 50,
+  height: 50,
   borderRadius: 100,
   alignItems: 'center',
   justifyContent: 'center',
@@ -157,3 +171,10 @@ const Badge = gloss({
   color: theme.color,
   border: [1, theme.color],
 }))
+
+const BadgeText = gloss({
+  transform: {
+    y: '15%',
+    x: '55%',
+  },
+})

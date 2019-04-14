@@ -2,6 +2,7 @@ import React, { Children, cloneElement, isValidElement } from 'react'
 
 export type PassPropsProps = {
   passCondition?: (child: any) => boolean
+  getChildProps?: (child: any, index: number) => any
   [key: string]: any
 }
 
@@ -25,6 +26,12 @@ const getChild = (child: any, props: PassPropsProps) => {
   return <Child {...props} />
 }
 
-export function PassProps({ children, ...props }: PassPropsProps) {
-  return <>{Children.map(children, child => getChild(child, props))}</>
+export function PassProps({ children, getChildProps, ...props }: PassPropsProps) {
+  return (
+    <>
+      {Children.map(children, (child, index) =>
+        getChild(child, { ...props, ...(getChildProps && getChildProps(child, index)) }),
+      )}
+    </>
+  )
 }

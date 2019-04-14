@@ -10,9 +10,13 @@ import { validCSSAttr } from '@o/css'
 // is mutative because we are running these all once through per-render
 // each time you'll start with a fresh style object
 
-export function mergeStyles(previous: Object | undefined, next: Object) {
+export function mergeStyles(previous?: Object | null, next?: Object | null) {
   if (!previous) {
     return next
+  }
+  // we only need return "new" styles
+  if (!next) {
+    return
   }
   for (const key in next) {
     if (validCSSAttr[key]) {

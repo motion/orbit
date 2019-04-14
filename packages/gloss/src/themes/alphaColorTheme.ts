@@ -14,7 +14,7 @@ export type AlphaColorProps = {
   }
 }
 
-export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous): CSSPropertySet => {
+export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous) => {
   const color = props.color || theme.color
   const alpha = props.alpha || theme.alpha
   const hoverColor =
@@ -22,13 +22,15 @@ export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous): CSSP
   const hoverAlpha =
     (props.hoverStyle && props.hoverStyle.alpha) || props.alphaHover || theme.alphaHover
 
-  const next: CSSPropertySet = {}
+  let next: CSSPropertySet | null = null
 
   if (color !== 'inherit') {
     if (typeof alpha === 'number') {
+      next = next || {}
       next.color = `${toColor(color).alpha(alpha)}`
     }
     if (typeof hoverAlpha === 'number') {
+      next = next || {}
       next['&:hover'] = {
         color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
       }

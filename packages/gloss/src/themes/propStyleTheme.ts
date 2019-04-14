@@ -7,7 +7,7 @@ export function styleVal(val: any, theme: ThemeObject, props?: Object) {
 
 // resolves props into styles for valid css
 
-export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
+export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet {
   let styles: CSSPropertySet = {
     ...props.style,
   }

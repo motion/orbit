@@ -3,6 +3,7 @@ import { gloss } from '../gloss'
 import {
   AlphaColorProps,
   alphaColorTheme,
+  propStyleTheme,
   PseudoStyleProps,
   psuedoStylePropsTheme,
 } from '../themes'
@@ -18,11 +19,13 @@ export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'co
   AlphaColorProps
 
 export const Base = gloss<BaseProps>().theme(
-  // hoverStyle, focusStyle, activeStyle
+  // <Base color="red" /> style props
+  propStyleTheme,
+  // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle
   psuedoStylePropsTheme,
-  // text size helper
+  // <Base size={1} /> for text sizing
   textSizeTheme,
-  // alpha colors
+  // <Base alpha={0.5} /> for text opacity
   alphaColorTheme,
 )
 

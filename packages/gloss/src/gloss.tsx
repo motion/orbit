@@ -27,7 +27,7 @@ export type GlossProps<Props> = Props & {
 export type GlossThemeFn<Props> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
-  previous: CSSPropertySetResolved,
+  previous: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
 
 const tracker: StyleTracker = new Map()
@@ -196,7 +196,7 @@ export interface GlossView<Props> {
   ignoreAttrs?: Object
   theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
   withConfig: (config: { displayName?: string }) => any
-  glossConfig: {
+  config: {
     getConfig: () => {
       id: string
       displayName: string
@@ -247,7 +247,7 @@ export function gloss<ExtraProps = any, Props = any>(
 
   const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isGlossParent) {
-    targetConfig = target.glossConfig.getConfig()
+    targetConfig = target.config.getConfig()
   }
 
   // shorthand: view({ ... })
@@ -335,7 +335,7 @@ export function gloss<ExtraProps = any, Props = any>(
 
   ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<ExtraProps & Props>
 
-  ThemedView.glossConfig = {
+  ThemedView.config = {
     themeFns: null,
     getConfig: () => ({
       id,
@@ -355,7 +355,7 @@ export function gloss<ExtraProps = any, Props = any>(
     return ThemedView
   }
   ThemedView.theme = (...themeFns) => {
-    ThemedView.glossConfig.themeFns = themeFns
+    ThemedView.config.themeFns = themeFns
     return ThemedView
   }
 
@@ -428,7 +428,7 @@ const getAllStyles = (baseId: string, target: any, rawStyles: CSSPropertySet | n
   const propStyles = addStyles(baseId, styles, rawStyles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const parentConfig = target.glossConfig.getConfig()
+    const parentConfig = target.config.getConfig()
     const parentPropStyles = parentConfig.propStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
@@ -469,32 +469,35 @@ function getSelector(className: string, namespace: string, tagName: string = '')
 }
 
 // compile theme from parents
-function compileTheme(ogView: GlossView<any>) {
-  let cur = ogView
+function compileTheme(viewOG: GlossView<any>) {
+  let cur = viewOG
   let all: GlossThemeFn<any>[][] = []
 
   // get themes in order from most important (current) to least important (grandparent)
   while (cur) {
-    const conf = cur.glossConfig
+    const conf = cur.config
     if (conf.themeFns) {
       all.push(conf.themeFns)
     }
     cur = conf.getConfig().parent
   }
 
-  if (!all.length) {
-    return null
-  }
+  console.log('all', all, viewOG)
 
   // then flatten and reverse, so its a flat list of themes from least to most important
   // makes it easier to apply them in order
   const themes = flatten(all.reverse()).filter(Boolean)
 
+  if (!themes.length) {
+    return null
+  }
+
   return (props: Object, theme: ThemeObject) => {
-    let styles = {}
+    let styles: CSSPropertySetResolved | null = null
     for (const themeFn of themes) {
       const next = themeFn(props, theme, styles)
       if (next) {
+        styles = styles || {}
         Object.assign(styles, next)
       }
     }

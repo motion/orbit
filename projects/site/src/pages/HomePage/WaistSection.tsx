@@ -13,18 +13,28 @@ export function WaistSection() {
   return (
     <Theme name="light">
       <Page offset={5}>
-        <Page.Content>
-          <Image
-            transform={{ scaleX: -1 }}
-            position="absolute"
-            top={-90}
-            left={0}
-            right={0}
-            src={lightSeparator}
-          />
+        <Page.Content
+          outside={
+            <>
+              <Image
+                transform={{ scaleX: -1 }}
+                position="absolute"
+                top={-90}
+                left={0}
+                right={0}
+                src={lightSeparator}
+              />
 
-          <Image position="absolute" bottom={-90} left={0} right={0} src={bottomLightSeparator} />
-
+              <Image
+                position="absolute"
+                bottom={-90}
+                left={0}
+                right={0}
+                src={bottomLightSeparator}
+              />
+            </>
+          }
+        >
           <SpacedPageContent
             header={
               <>

@@ -81,13 +81,13 @@ export function HeadSection() {
                 </TitleText>
               </FadeDown>
 
-              <Space size="md" />
+              <Space size="lg" />
 
               <Paragraph
                 {...style}
                 height="auto"
                 transformOrigin="top center"
-                sizeLineHeight={1.38}
+                sizeLineHeight={1.3}
                 margin={[0, 'auto']}
                 textAlign="center"
                 alpha={0.56}

@@ -11,9 +11,9 @@ export function AbdomenSection() {
   return (
     <Theme name="light">
       <Page offset={4}>
-        <Page.Content>
-          <Image position="absolute" top={-90} left={0} right={0} src={lightSeparator} />
-
+        <Page.Content
+          outside={<Image position="absolute" top={-90} left={0} right={0} src={lightSeparator} />}
+        >
           <SpacedPageContent
             header={
               <>

@@ -3,9 +3,12 @@ import { View, ViewProps } from '@o/ui'
 import React from 'react'
 import * as Constants from '../constants'
 
-export const SectionContent = (props: ViewProps) => {
+export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
+
+export const SectionContent = ({ outside, children, ...props }: SectionContentProps) => {
   return (
     <SectionContentChrome {...props}>
+      {outside}
       <div
         style={{
           position: 'relative',
@@ -16,7 +19,7 @@ export const SectionContent = (props: ViewProps) => {
           justifyContent: 'inherit',
         }}
       >
-        {props.children}
+        {children}
       </div>
     </SectionContentChrome>
   )

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 import { useSiteStore } from '../Layout'
 import { ParallaxLayer } from './Parallax'
-import { SectionContent } from './SectionContent'
+import { SectionContent, SectionContentProps } from './SectionContent'
 
 const { PassProps, useProps } = createContextualProps({
   offset: 0,
@@ -38,7 +38,7 @@ Page.Parallax = ({
   )
 }
 
-Page.Content = (props: ViewProps) => {
+Page.Content = (props: SectionContentProps) => {
   const parallax = useProps()
   const zIndex = selectDefined(props.zIndex, parallax.zIndex)
   const siteStore = useSiteStore()

@@ -482,8 +482,6 @@ function compileTheme(viewOG: GlossView<any>) {
     cur = conf.getConfig().parent
   }
 
-  console.log('all', all, viewOG)
-
   // then flatten and reverse, so its a flat list of themes from least to most important
   // makes it easier to apply them in order
   const themes = flatten(all.reverse()).filter(Boolean)

@@ -1,16 +1,10 @@
-import { CSSPropertySetStrict } from '@o/css'
-import { AlphaColorProps, Base, gloss, GlossProps, TextSizeProps } from '@o/gloss'
+import { Base, BaseProps, gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
-export type SimpleTextProps = GlossProps<
-  AlphaColorProps &
-    TextSizeProps &
-    CSSPropertySetStrict & {
-      ellipse?: boolean
-      children?: any
-    }
->
+export type SimpleTextProps = BaseProps & {
+  ellipse?: boolean
+}
 
 export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, ref) => {
   const scale = useScale()

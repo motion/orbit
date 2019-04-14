@@ -1,5 +1,5 @@
 import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
-import { gloss } from '../gloss'
+import { gloss, GlossProps } from '../gloss'
 import {
   AlphaColorProps,
   alphaColorTheme,
@@ -12,11 +12,13 @@ import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 // TODO this should be a "disjoint" type, avoid overlapping!
-export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
-  CSSPropertySetStrict &
-  PseudoStyleProps &
-  TextSizeProps &
-  AlphaColorProps
+export type BaseProps = GlossProps<
+  Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
+    CSSPropertySetStrict &
+    PseudoStyleProps &
+    TextSizeProps &
+    AlphaColorProps
+>
 
 export const Base = gloss<BaseProps>().theme(
   // <Base color="red" /> style props

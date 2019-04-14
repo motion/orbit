@@ -38,6 +38,7 @@ const sizes = {
   lg: 1.2,
   xl: 1.4,
   xxl: 1.6,
+  xxxl: 1.8,
 }
 
 export const getSize = (size: Sizes) => {

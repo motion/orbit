@@ -15,6 +15,9 @@ export function ShoulderSection(props) {
     <Page {...props}>
       <Page.Content>
         <SpacedPageContent
+          transform={{
+            y: '-10%',
+          }}
           header={
             <>
               <PillButton>Deploy</PillButton>
@@ -87,7 +90,7 @@ export function ShoulderSection(props) {
       </Page.Parallax>
 
       <Page.Parallax speed={0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '26%', scale: 0.9 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '18%', scale: 0.9 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

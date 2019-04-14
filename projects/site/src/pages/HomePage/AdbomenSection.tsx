@@ -1,10 +1,11 @@
-import { Col, Grid, Image, Paragraph, Space, Theme } from '@o/ui'
+import { Grid, Image, Space, Theme } from '@o/ui'
 import React from 'react'
 import lightSeparator from '../../../public/images/light-separator.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
+import { SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export function AbdomenSection(props) {
@@ -27,9 +28,15 @@ export function AbdomenSection(props) {
               </>
             }
           >
-            <Grid space itemMinWidth={200}>
-              <PriceSection title="Spaces to collaborate.">lorem ipsum</PriceSection>
-              <PriceSection title="Spaces to collaborate.">lorem ipsum</PriceSection>
+            <Grid
+              alignItems="start"
+              space="15%"
+              itemMinWidth={240}
+              maxWidth={800}
+              margin={[0, 'auto']}
+            >
+              <SimpleSection title="Spaces to collaborate.">lorem ipsum</SimpleSection>
+              <SimpleSection title="Spaces to collaborate.">lorem ipsum</SimpleSection>
             </Grid>
           </SpacedPageContent>
         </Page.Content>
@@ -39,10 +46,3 @@ export function AbdomenSection(props) {
     </Theme>
   )
 }
-
-const PriceSection = props => (
-  <Col background="#eee" space pad>
-    <TitleText>{props.title}</TitleText>
-    <Paragraph>{props.children}</Paragraph>
-  </Col>
-)

@@ -12,7 +12,7 @@ import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="70%" minWidth={400} textAlign="center">
-    <TitleText size={1.9} sizeLineHeight={1.35} fontWeight={200} alpha={0.5} {...props} />
+    <TitleText size={1} sizeLineHeight={1.2} fontWeight={200} alpha={0.5} {...props} />
   </View>
 ))
 
@@ -24,14 +24,13 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
-              <TitleText size="xxl">All in one.</TitleText>
-              <TitleText size="lg" fontWeight={200}>
+              <TitleText size="xl">All in one.</TitleText>
+              <TitleText size="md" fontWeight={200}>
                 The vertically integrated app platform.
               </TitleText>
               <TitleTextSub>
-                Orbit handles everything from data to interface to deploy letting you create
-                beautiful apps with just a few lines of code, without ever touching config or
-                servers.
+                Orbit handles everything from data to interface to deploy with just a few lines of
+                code. Create beautiful apps without ever touching config or servers.
               </TitleTextSub>
             </>
           }

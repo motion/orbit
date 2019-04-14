@@ -52,10 +52,11 @@ const textSizes = {
   lg: 1.8,
   xl: 2.0,
   xxl: 2.4,
+  xxxl: 3.0,
 }
 
 // text should vary more
-const getTextSize = (size: Sizes) => {
+export const getTextSize = (size: Sizes) => {
   if (typeof size === 'string') return textSizes[size]
   return getSize(size)
 }

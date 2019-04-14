@@ -1,4 +1,4 @@
-import { ColorLike, CSSPropertySet } from '@o/css'
+import { ColorLike, CSSPropertySet, px } from '@o/css'
 import Gloss, {
   Col,
   forwardTheme,
@@ -23,7 +23,8 @@ import { getSize, SizedSurfaceProps } from './SizedSurface'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
-import { getPadding, ViewProps } from './View/View'
+import { getPadding } from './View/PaddedView'
+import { ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -293,7 +294,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           />
         )}
         {!!children && (
-          <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+          <Element
+            {...throughProps}
+            {...elementProps}
+            surfacePadX={getPadX(getPadding(props).padding)}
+            disabled={disabled}
+            tagName={tagName}
+          >
             {children}
           </Element>
         )}
@@ -425,14 +432,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   return styles
 })
 
-const ellipseStyle = {
-  display: 'block',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-}
-
-const Element = gloss({
+const Element = gloss<ThroughProps & { disabled?: boolean; surfacePadX: number | string }>({
   flex: 1,
   overflow: 'hidden',
   // needed to reset for <button /> at least
@@ -448,28 +448,30 @@ const Element = gloss({
   transform: {
     y: 0.5,
   },
+  ellipse: {
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 }).theme(props => {
+  const padX = px(selectDefined(props.surfacePadX, 0))
   const iconSize = getIconSize(props)
-  const iconNegativePad = props.hasIcon ? `- ${iconSize + props.iconPad}px` : ''
-  // element styles
-  const elementStyle = {
-    marginLeft: 0,
-    marginRight: 0,
-  }
+  const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
+  const style: CSSPropertySet = {}
   // spacing between icon
   const hasIconBefore = props.hasIcon && !props.iconAfter
   const hasIconAfter = props.hasIcon && props.iconAfter
   if (hasIconBefore) {
-    elementStyle.marginLeft = props.iconPad
+    style.marginLeft = props.iconPad
   }
   if (hasIconAfter) {
-    elementStyle.marginRight = props.iconPad
+    style.marginRight = props.iconPad
   }
   return {
     ...props,
-    ...(props.ellipse && ellipseStyle),
     maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
-    ...elementStyle,
+    ...style,
   }
 })
 
@@ -492,3 +494,6 @@ const GlintContain = gloss(Col, {
     y: 0.5,
   },
 })
+
+const getPadX = (padding: any) =>
+  Array.isArray(padding) ? (+padding[1] || 0) + (+padding[3] || 0) : padding

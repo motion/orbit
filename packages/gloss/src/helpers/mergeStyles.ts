@@ -19,6 +19,7 @@ export function mergeStyles(previous?: Object | null, next?: Object | null) {
     return
   }
   for (const key in next) {
+    if (next[key] === undefined) continue
     if (validCSSAttr[key]) {
       previous[key] = next[key]
       continue

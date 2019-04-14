@@ -287,6 +287,7 @@ const TextBlock = gloss({
   wordBreak: 'break-word',
   position: 'relative',
   minHeight: 'min-content',
+  maxWidth: '100%',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',

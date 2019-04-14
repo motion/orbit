@@ -1,8 +1,26 @@
-import { ThemeObject } from '@o/css'
-import { styleVal } from './propsToStyles'
+import { CSSPropertySetStrict, ThemeObject } from '@o/css'
+import { GlossThemeFn } from '../gloss'
+import { mergeStyles } from '../helpers/mergeStyles'
+import { styleVal } from '../helpers/propsToStyles'
 
 // resolves props into styles for valid css
 // backs up to theme colors if not found
+
+// TODO make this better (configurable + granular)...
+export type PseudoStyleProps = {
+  disablePseudoStyles?: boolean
+  hoverStyle?: CSSPropertySetStrict | false | null
+  activeStyle?: CSSPropertySetStrict | false | null
+  focusStyle?: CSSPropertySetStrict | false | null
+}
+
+export const psuedoStyleTheme: GlossThemeFn<any> = (a, b, c) => {
+  return applyPsuedoTheme(a, b, c, true)
+}
+
+export const psuedoStylePropsTheme: GlossThemeFn<any> = (a, b, c) => {
+  return applyPsuedoTheme(a, b, c, false)
+}
 
 const isDefined = (x: any) => typeof x !== 'undefined'
 
@@ -48,38 +66,17 @@ const themeKeys: KeyMap = [
   ['borderColorRight', 'borderRightColor'],
 ]
 
-function assignThemeStyles(styles: Object, props: Object, theme: ThemeObject, keyMap: KeyMap) {
-  let overrides: Object | null = null
-  for (const [name, mapName] of keyMap) {
-    if (isDefined(props[name])) {
-      const val = styleVal(props[name], theme, props)
-      styles[mapName] = val
-      overrides = overrides || {}
-      overrides[mapName] = val
-      continue
-    }
-    if (isDefined(theme[name])) {
-      styles[mapName] = theme[name]
-    }
-  }
-  return overrides
-}
-
 const SubThemeKeys: { [key: string]: KeyMap } = {}
 
-export const propsToThemeStyles = (
-  props: any,
-  theme: ThemeObject,
-  stylePseudos: boolean = true,
-): ThemeObjectWithPseudo => {
+const applyPsuedoTheme = (props, theme, previous, useTheme = false) => {
   if (!theme) {
-    throw new Error('No theme passed to propsToThemeStyles')
+    throw new Error('No theme passed to psuedoStyleTheme')
   }
   let styles: ThemeObjectWithPseudo = {}
 
   // assigns base theme styles
   // warning! mutative function
-  const overrides = assignThemeStyles(styles, props, theme, themeKeys)
+  const overrides = assignThemeStyles(styles, props, theme, themeKeys, useTheme)
 
   for (const key in pseudos) {
     const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
@@ -94,7 +91,7 @@ export const propsToThemeStyles = (
 
     // now process and get styles, but dont assign them yet
     let stateStyle = {}
-    assignThemeStyles(stateStyle, props, theme, subThemeKeys)
+    assignThemeStyles(stateStyle, props, theme, subThemeKeys, useTheme)
 
     // for any prop overrides from base, override them on psuedo too
     // (this could be an optional parameter)
@@ -108,7 +105,7 @@ export const propsToThemeStyles = (
     }
 
     // we conditionally apply it here...
-    if (stylePseudos) {
+    if (!props.disablePseudoStyles) {
       styles[pseudoKey] = stateStyle
     }
 
@@ -120,5 +117,27 @@ export const propsToThemeStyles = (
     }
   }
 
-  return styles
+  return mergeStyles(previous, styles)
+}
+function assignThemeStyles(
+  styles: Object,
+  props: Object,
+  theme: ThemeObject,
+  keyMap: KeyMap,
+  useTheme = false,
+) {
+  let overrides: Object | null = null
+  for (const [name, mapName] of keyMap) {
+    if (isDefined(props[name])) {
+      const val = styleVal(props[name], theme, props)
+      styles[mapName] = val
+      overrides = overrides || {}
+      overrides[mapName] = val
+      continue
+    }
+    if (useTheme && isDefined(theme[name])) {
+      styles[mapName] = theme[name]
+    }
+  }
+  return overrides
 }

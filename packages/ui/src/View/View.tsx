@@ -1,4 +1,4 @@
-import { Base, gloss, GlossBaseProps } from '@o/gloss'
+import { Base, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
@@ -40,11 +40,7 @@ export type CommonHTMLProps = Omit<
   | 'color'
 >
 
-export type ViewProps = CommonHTMLProps &
-  GlossBaseProps &
-  CommonViewProps &
-  ElevatableProps &
-  PadProps
+export type ViewProps = CommonHTMLProps & CommonViewProps & ElevatableProps & PadProps
 
 // Padded
 

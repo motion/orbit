@@ -1,5 +1,5 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColor, CSSPropertySet, gloss, propsToTextSize } from '@o/gloss'
+import { alphaColorTheme, CSSPropertySet, gloss, textSizeTheme } from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
@@ -180,17 +180,17 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
     const size = scale * getTextSize(this.props.size)
-    const textProps = propsToTextSize({
+    const textStyle = textSizeTheme({
       sizeLineHeight: this.props.sizeLineHeight,
       lineHeight: this.props.lineHeight,
       fontSize: this.props.fontSize,
       size,
       sizeMethod: this.props.sizeMethod,
     })
-    const numLinesToShow = doClamp && Math.floor(textHeight / textProps.lineHeightNum)
+    const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
     const maxHeight =
-      typeof ellipse === 'number' && textProps.lineHeightNum
-        ? `${ellipse * textProps.lineHeightNum}px`
+      typeof ellipse === 'number' && textStyle.lineHeightNum
+        ? `${ellipse * textStyle.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
 
@@ -268,8 +268,8 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
-        fontSize={textProps.fontSize}
-        lineHeight={textProps.lineHeight}
+        fontSize={textStyle.fontSize}
+        lineHeight={textStyle.lineHeight}
         {...props}
         {...finalProps}
         // override props
@@ -294,18 +294,7 @@ const TextBlock = gloss({
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ignoreColor, alpha, alphaHover, color, ...props }, theme) => {
-  if (ignoreColor) {
-    return {
-      ...props,
-      color: 'inherit',
-    }
-  }
-  return {
-    ...props,
-    ...alphaColor({ color: color || theme.color }, { alpha, alphaHover }),
-  }
-})
+}).theme(alphaColorTheme)
 
 const TextEllipse = gloss({
   display: 'inline',

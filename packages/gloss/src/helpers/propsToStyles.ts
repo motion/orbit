@@ -1,6 +1,5 @@
 import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
 import { Config } from '../config'
-import { alphaColor } from './alphaColor'
 
 export function styleVal(val: any, theme: ThemeObject, props?: Object) {
   return typeof val === 'function' ? val(theme, props) : val
@@ -31,8 +30,6 @@ export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
       styles[psuedoKey] = val
     }
   }
-
-  styles = alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
 
   return styles
 }

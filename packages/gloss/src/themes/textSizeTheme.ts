@@ -15,7 +15,7 @@ export type TextSizeProps = {
 
 // dont return undefined
 
-export function propsToTextSize(props: TextSizeProps) {
+export function textSizeTheme(props: TextSizeProps) {
   let fontSize = props.fontSize
   if (typeof fontSize === 'undefined' && props.size) {
     fontSize = props.size * 14

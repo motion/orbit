@@ -1,30 +1,29 @@
 import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
 import { gloss } from '../gloss'
-import { propsToStyles } from '../helpers/propsToStyles'
-import { propsToTextSize } from '../helpers/propsToTextSize'
-
-export type GlossBaseProps = {
-  tagName?: string
-  // our default styling supports is through preProcessTheme
-  alt?: string
-  // our default styling supports pseudos through propsToStyles
-  hoverStyle?: CSSPropertySetStrict | false | null
-  activeStyle?: CSSPropertySetStrict | false | null
-  focusStyle?: CSSPropertySetStrict | false | null
-}
+import {
+  AlphaColorProps,
+  alphaColorTheme,
+  PseudoStyleProps,
+  psuedoStylePropsTheme,
+} from '../themes'
+import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 // TODO this should be a "disjoint" type, avoid overlapping!
 export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'color'> &
   CSSPropertySetStrict &
-  GlossBaseProps
+  PseudoStyleProps &
+  TextSizeProps &
+  AlphaColorProps
 
 export const Base = gloss<BaseProps>().theme(
   // hoverStyle, focusStyle, activeStyle
-  propsToStyles,
+  psuedoStylePropsTheme,
   // text size helper
-  propsToTextSize,
+  textSizeTheme,
+  // alpha colors
+  alphaColorTheme,
 )
 
 // ignore all valid css props, except src for images

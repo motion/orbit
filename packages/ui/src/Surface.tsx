@@ -1,11 +1,10 @@
 import { ColorLike, CSSPropertySet } from '@o/css'
 import Gloss, {
-  alphaColor,
   Col,
   forwardTheme,
   gloss,
   propsToStyles,
-  propsToThemeStyles,
+  psuedoStyleTheme,
   useTheme,
 } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
@@ -369,7 +368,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 }).theme((props, theme) => {
   // :hover, :focus, :active
 
-  const themeStyle = propsToThemeStyles(props, theme, true)
+  const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const padStyle = getPadding(props)
 
@@ -423,7 +422,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     ...padStyle,
   }
 
-  return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
+  return styles
 })
 
 const ellipseStyle = {

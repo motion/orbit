@@ -14,6 +14,7 @@ import {
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
+import { Omit } from '../types'
 
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore'> &

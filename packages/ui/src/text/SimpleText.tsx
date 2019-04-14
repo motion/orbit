@@ -1,21 +1,7 @@
 import { CSSPropertySetStrict } from '@o/css'
-import {
-  alphaColor,
-  AlphaColorProps,
-  gloss,
-  GlossProps,
-  propsToTextSize,
-  TextSizeProps,
-} from '@o/gloss'
+import { AlphaColorProps, Base, gloss, GlossProps, TextSizeProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
-
-const ellipseStyle: CSSPropertySetStrict = {
-  display: 'block',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-}
 
 export type SimpleTextProps = GlossProps<
   AlphaColorProps &
@@ -31,16 +17,13 @@ export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, r
   return <SimpleTextElement ref={ref} size={size * scale} {...props} />
 })
 
-export const SimpleTextElement = gloss<SimpleTextProps>({
+export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   display: 'inline-block',
   whiteSpace: 'normal',
-}).theme((props, theme) => {
-  const textProps = propsToTextSize(props)
-  const color = props.color || theme.color
-  return {
-    ...(props.ellipse && ellipseStyle),
-    ...props,
-    ...textProps,
-    ...alphaColor({ color }, props),
-  }
+  ellipse: {
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 })

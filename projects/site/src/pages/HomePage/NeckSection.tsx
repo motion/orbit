@@ -24,12 +24,14 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
-              <TitleText size="xxl">Everything included.</TitleText>
+              <TitleText size="xxl">All in one.</TitleText>
               <TitleText size="lg" fontWeight={200}>
-                No config, no servers + a desktop-class UI kit.
+                The vertically integrated app platform.
               </TitleText>
               <TitleTextSub>
-                Orbit comes with an incredibly large, flexible, and powerful toolkit out of the box.
+                Orbit handles everything from data to interface to deploy letting you create
+                beautiful apps with just a few lines of code, without ever touching config or
+                servers.
               </TitleTextSub>
             </>
           }
@@ -39,19 +41,26 @@ export function NeckSection(props) {
               <SubSection>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
-                <CenterText>Add Slack with a click. Data apps integrate seamlessly.</CenterText>
+                <CenterText>
+                  Add a data app from the app store with a click, and integrate it with just a line
+                  of code.
+                </CenterText>
               </SubSection>
               <SubSection flex={1.5} pad={[true, 'xxl']}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Views and layouts that work together. It's everything you need for internal tools.
+                  Orbit includes incredibly powerful building blocks for common apps, that all work
+                  together. Link a table to a form to any data with ease.
                 </CenterText>
               </SubSection>
               <SubSection>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
-                <CenterText>Add button to send to Gmail, with just a line of code.</CenterText>
+                <CenterText>
+                  Data apps are flexible and work together. Select a few items from a table and send
+                  to Gmail with ease.
+                </CenterText>
               </SubSection>
             </Row>
 
@@ -97,8 +106,16 @@ export function NeckSection(props) {
                   </Paragraph>
                 </Squircle>
 
-                <View marginTop={-200} background="grey" width="100%" height={300} />
+                <View
+                  marginTop={-200}
+                  background="grey"
+                  width="100%"
+                  height={300}
+                  borderRadius={10}
+                  elevation={10}
+                />
               </Flex>
+
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
                 <Image
                   alignSelf="center"
@@ -121,9 +138,7 @@ export function NeckSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      {/* <Page.Background background={theme => theme.background} /> */}
-
-      <Page.Parallax speed={0.1} zIndex={-2}>
+      <Page.Parallax speed={0.4} zIndex={-2}>
         <FullScreen
           className="northern-lights"
           backgroundImage={`url(${northernlights})`}

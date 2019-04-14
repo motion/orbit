@@ -110,6 +110,8 @@ export function HeadSection() {
   return (
     <Page offset={0} zIndex={-1}>
       <Page.Content>
+        {/* <OuterSpace /> */}
+
         <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
             transform={{ y: '-60%' }}

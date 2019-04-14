@@ -187,7 +187,6 @@ export class Text extends React.PureComponent<TextProps> {
       size,
       sizeMethod: this.props.sizeMethod,
     })
-    console.log('textStyle', size, textStyle)
     const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
     const maxHeight =
       typeof ellipse === 'number' && textStyle.lineHeightNum

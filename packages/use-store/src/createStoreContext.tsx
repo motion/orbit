@@ -13,7 +13,6 @@ export function createStoreContext<Instance, Props extends InferProps<Instance>>
   return {
     Context,
     SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
-      console.log('ok', value, unwrapProxy(value))
       return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
     },
     Provider: ({ children, ...props }: Props & { children: any }) => {

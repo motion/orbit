@@ -73,7 +73,7 @@ export class ThemeMaker {
         }
       }
     }
-    return res
+    return res as SimpleStyleObject
   }
 
   fromColor = (bgName: string): ThemeObject | null => {
@@ -83,7 +83,7 @@ export class ThemeMaker {
     if (this.cache[bgName]) {
       return this.cache[bgName]
     }
-    let background
+    let background: Color
     try {
       background = toColor(bgName)
     } catch (e) {
@@ -97,7 +97,7 @@ export class ThemeMaker {
 
   // generate some properly contrasted colors based on base colors
   // insert theme into psuedo styles for Blur Active and ActiveHighlight
-  fromStyles = (s: SimpleStyleObject): ThemeObject => {
+  fromStyles = (s: Partial<SimpleStyleObject>): ThemeObject => {
     if (!s.background && !s.color) {
       throw new Error('Themes require at least background or color')
     }
@@ -111,7 +111,7 @@ export class ThemeMaker {
       background: backgroundColored,
       color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
       borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmt),
-    })
+    }) as SimpleStyleObject
     // flattened
     const res = {
       ...this.colorize({

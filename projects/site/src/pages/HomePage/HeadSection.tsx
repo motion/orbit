@@ -13,6 +13,7 @@ import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
+import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
   large: 'A better way to build apps together.',
@@ -107,10 +108,11 @@ function HeadText() {
 
 export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const [hoverDownload, setHoverDownload] = useState(false)
   return (
     <Page zIndex={-1} {...props}>
       <Page.Content>
-        {/* <OuterSpace /> */}
+        {hoverDownload && <OuterSpace />}
 
         <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
@@ -138,7 +140,10 @@ export function HeadSection(props) {
                 height={320}
                 position="relative"
               >
-                {DownloadButton}
+                <DownloadButton
+                  onMouseEnter={() => setHoverDownload(true)}
+                  onMouseLeave={() => setHoverDownload(false)}
+                />
               </View>
             </FadeIn>
 
@@ -212,7 +217,7 @@ const PreviewButton = gloss({
   },
 })
 
-const DownloadButton = (
+const DownloadButton = props => (
   <FadeIn>
     <Center bottom="auto" top={-20}>
       <View
@@ -235,6 +240,7 @@ const DownloadButton = (
           e.preventDefault()
           console.log('need to link downlaod')
         }}
+        {...props}
       >
         <Image position="absolute" right={22} src={downmark} />
         <Text

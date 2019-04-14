@@ -6,7 +6,7 @@ import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeDown } from '../../views/FadeDown'
+import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
@@ -57,7 +57,7 @@ function HeadText() {
 
   return (
     <View justifyContent="space-between" width="90%" maxWidth={980} textAlign="center">
-      <FadeDown disable={!measured}>
+      <FadeIn disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
           style={titleFit.style}
@@ -70,7 +70,7 @@ function HeadText() {
         >
           {allTitles[size]}
         </TitleText>
-      </FadeDown>
+      </FadeIn>
 
       <Space size="lg" />
 
@@ -209,40 +209,42 @@ const PreviewButton = gloss({
 })
 
 const DownloadButton = (
-  <Center bottom="auto" top={-20}>
-    <View
-      tagName="a"
-      {...{ href: 'ok' }}
-      flexFlow="row"
-      width={159}
-      height={45}
-      position="relative"
-      alignItems="center"
-      justifyContent="center"
-      border={[3, '#21AA0F']}
-      borderRadius={100}
-      background={theme => theme.background}
-      hoverStyle={{
-        border: [3, toColor('#21AA0F').lighten(0.3)],
-      }}
-      textDecoration="none"
-      onClick={e => {
-        e.preventDefault()
-        console.log('need to link downlaod')
-      }}
-    >
-      <Image position="absolute" right={22} src={downmark} />
-      <Text
-        transform={{ y: 2 }}
-        zIndex={1}
-        size={1.1}
-        fontWeight={500}
-        letterSpacing={1}
-        pointerEvents="none"
+  <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+    <Center bottom="auto" top={-20}>
+      <View
+        tagName="a"
+        {...{ href: 'ok' }}
+        flexFlow="row"
+        width={159}
+        height={45}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        border={[3, '#21AA0F']}
+        borderRadius={100}
+        background={theme => theme.background}
+        hoverStyle={{
+          border: [3, toColor('#21AA0F').lighten(0.3)],
+        }}
+        textDecoration="none"
+        onClick={e => {
+          e.preventDefault()
+          console.log('need to link downlaod')
+        }}
       >
-        Download
-      </Text>
-      <div style={{ width: 25 }} />
-    </View>
-  </Center>
+        <Image position="absolute" right={22} src={downmark} />
+        <Text
+          transform={{ y: 2 }}
+          zIndex={1}
+          size={1.1}
+          fontWeight={500}
+          letterSpacing={1}
+          pointerEvents="none"
+        >
+          Download
+        </Text>
+        <div style={{ width: 25 }} />
+      </View>
+    </Center>
+  </FadeIn>
 )

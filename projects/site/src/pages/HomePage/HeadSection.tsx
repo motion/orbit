@@ -38,13 +38,15 @@ let allTexts = {
   ],
 }
 
-export function HeadSection() {
+const br = <br style={{ height: 0 }} />
+
+function HeadText() {
+  const size = useScreenSize()
   const [measured, setMeasured] = useState(false)
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const size = useScreenSize()
-  const { ref: titleRef, ...titleStyle } = useTextFit({ updateKey: fontsLoaded })
-  const { ref, ...style } = useTextFit({ min: 16, updateKey: fontsLoaded })
+  const titleFit = useTextFit({ updateKey: fontsLoaded })
+  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   useEffect(() => {
     setMeasuredDelayed(true)
@@ -53,8 +55,58 @@ export function HeadSection() {
   const texts = allTexts[size]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
-  const br = <br style={{ height: 0 }} />
+  return (
+    <View justifyContent="space-between" width="90%" maxWidth={980} textAlign="center">
+      <FadeDown disable={!measured}>
+        <TitleText
+          forwardRef={titleFit.ref}
+          style={titleFit.style}
+          fontWeight={100}
+          margin={[0, 'auto']}
+          // transition="transform ease 160ms"
+          transformOrigin="top center"
+          selectable
+          textAlign="center"
+        >
+          {allTitles[size]}
+        </TitleText>
+      </FadeDown>
 
+      <Space size="lg" />
+
+      <Paragraph
+        style={pFit.style}
+        height="auto"
+        transformOrigin="top center"
+        sizeLineHeight={1.3}
+        margin={[0, 'auto']}
+        textAlign="center"
+        alpha={0.56}
+        whiteSpace="nowrap"
+      >
+        {texts[0]}
+        {br}
+        {texts[1]}
+        {br}
+        {texts[2]}
+      </Paragraph>
+
+      {/* this is just to measure */}
+      <Paragraph
+        ref={pFit.ref}
+        style={pFit.style}
+        opacity={0}
+        position="absolute"
+        pointerEvents="none"
+      >
+        {longest}
+      </Paragraph>
+    </View>
+  )
+}
+
+export function HeadSection() {
+  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   return (
     <Page offset={0} zIndex={-1}>
       <Page.Content>
@@ -65,46 +117,7 @@ export function HeadSection() {
             alignItems="center"
             justifyContent="center"
           >
-            <View justifyContent="space-between" width="90%" maxWidth={980} textAlign="center">
-              <FadeDown disable={!measured}>
-                <TitleText
-                  forwardRef={titleRef}
-                  {...titleStyle}
-                  fontWeight={100}
-                  margin={[0, 'auto']}
-                  // transition="transform ease 160ms"
-                  transformOrigin="top center"
-                  selectable
-                  textAlign="center"
-                >
-                  {allTitles[size]}
-                </TitleText>
-              </FadeDown>
-
-              <Space size="lg" />
-
-              <Paragraph
-                {...style}
-                height="auto"
-                transformOrigin="top center"
-                sizeLineHeight={1.3}
-                margin={[0, 'auto']}
-                textAlign="center"
-                alpha={0.56}
-                whiteSpace="nowrap"
-              >
-                {texts[0]}
-                {br}
-                {texts[1]}
-                {br}
-                {texts[2]}
-              </Paragraph>
-
-              {/* this is just to measure */}
-              <Paragraph ref={ref} {...style} opacity={0} position="absolute" pointerEvents="none">
-                {longest}
-              </Paragraph>
-            </View>
+            <HeadText />
           </Row>
 
           <Space size="xl" />

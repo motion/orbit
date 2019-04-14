@@ -25,7 +25,6 @@ export type TextProps = CSSPropertySetStrict &
     onKeyDown?: Function
     opacity?: number
     size?: Sizes
-    style?: Object
     placeholder?: string
     lineHeight?: number
     sizeLineHeight?: number
@@ -34,7 +33,6 @@ export type TextProps = CSSPropertySetStrict &
     sizeMethod?: string
     highlight?: HighlightOptions
     wordBreak?: string
-    theme?: Object
     children: React.ReactNode | ChildrenHlFn
     ignoreColor?: boolean
     renderAsHtml?: boolean
@@ -289,9 +287,6 @@ const TextBlock = gloss({
   wordBreak: 'break-word',
   position: 'relative',
   minHeight: 'min-content',
-  // this lets it shrink down to content without breaking everything
-  // width: 'max-content',
-  // maxWidth: '100%',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',

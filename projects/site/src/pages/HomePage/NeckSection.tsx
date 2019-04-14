@@ -10,7 +10,9 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
-  <TitleText size={1.8} sizeLineHeight={1.4} fontWeight={200} alpha={0.5} {...props} />
+  <View width="70%" minWidth={400} textAlign="center">
+    <TitleText size={1.8} sizeLineHeight={1.4} fontWeight={200} alpha={0.5} {...props} />
+  </View>
 ))
 
 export function NeckSection() {

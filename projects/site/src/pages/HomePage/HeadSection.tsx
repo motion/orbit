@@ -22,7 +22,7 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Code internal tools with less code, no infrastructure, and a rich app ecosystem.`,
+    `Create any app you can dream, with barely any code and deploy without infrastructure.`,
     `It's the vertically integrated app platform for developers.`,
     `Open source, decentralized and offline-first.`,
   ],
@@ -56,7 +56,7 @@ export function HeadSection() {
   const br = <br style={{ height: 0 }} />
 
   return (
-    <Page offset={0}>
+    <Page offset={0} zIndex={-1}>
       <Page.Content>
         <FullScreen opacity={fontsLoaded ? 1 : 0}>
           <Row
@@ -127,6 +127,15 @@ export function HeadSection() {
 
             <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
               <img src={lineSep} />
+              <View
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                height={400}
+                transform={{ y: 400 }}
+                background={theme => theme.background}
+              />
             </FullScreen>
 
             <View
@@ -145,7 +154,7 @@ export function HeadSection() {
         </FullScreen>
       </Page.Content>
 
-      <Page.Parallax speed={-0.4} zIndex={-2}>
+      <Page.Parallax speed={-0.2} zIndex={-2}>
         <View
           pointerEvents="none"
           position="absolute"
@@ -153,7 +162,10 @@ export function HeadSection() {
           left={0}
           right={0}
           zIndex={1}
-          opacity={0.25}
+          opacity={0.3}
+          transform={{
+            scale: 1.3,
+          }}
         >
           <img src={glow} />
         </View>
@@ -196,6 +208,7 @@ const DownloadButton = (
       justifyContent="center"
       border={[3, '#21AA0F']}
       borderRadius={100}
+      background={theme => theme.background}
       hoverStyle={{
         border: [3, toColor('#21AA0F').lighten(0.3)],
       }}

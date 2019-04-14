@@ -5,7 +5,7 @@ import React from 'react'
 export const ParagraphIntro = gloss<TextProps>(props => (
   <Paragraph
     {...{
-      size: 1.4,
+      size: 1.5,
       sizeLineHeight: 1.4,
     }}
     {...props}

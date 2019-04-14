@@ -148,7 +148,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    themeSelect,
+    themeSelect = 'surface',
     tooltip,
     tooltipProps,
     pad,

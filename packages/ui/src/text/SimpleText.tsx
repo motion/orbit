@@ -1,4 +1,4 @@
-import { Base, BaseProps, gloss } from '@o/gloss'
+import { alphaColorTheme, Base, BaseProps, gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
@@ -20,4 +20,4 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-})
+}).theme(alphaColorTheme)

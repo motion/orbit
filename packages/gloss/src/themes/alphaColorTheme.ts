@@ -18,21 +18,31 @@ export const alphaColorTheme: GlossThemeFn<any> = (props, theme, previous) => {
   const color = props.color || theme.color
   const alpha = props.alpha || theme.alpha
   const hoverColor =
-    (props.hoverStyle && props.hoverStyle.color) || props.hoverColor || theme.colorHover
+    (props.hoverStyle && props.hoverStyle.color) || props.hoverColor || theme.colorHover || color
   const hoverAlpha =
     (props.hoverStyle && props.hoverStyle.alpha) || props.alphaHover || theme.alphaHover
 
   let next: CSSPropertySet | null = null
 
-  if (color !== 'inherit' && color && typeof alpha === 'number') {
+  if (color) {
     next = next || {}
-    next.color = `${toColor(color).alpha(alpha)}`
+    if (color !== 'inherit' && typeof alpha === 'number') {
+      next.color = `${toColor(color).alpha(alpha)}`
+    } else {
+      next.color = color
+    }
   }
 
-  if (hoverColor && typeof hoverAlpha === 'number') {
+  if (hoverColor) {
     next = next || {}
-    next['&:hover'] = {
-      color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
+    if (hoverColor !== 'inherit' && typeof hoverAlpha === 'number') {
+      next['&:hover'] = {
+        color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
+      }
+    } else if (color !== hoverColor) {
+      next['&:hover'] = {
+        color: hoverColor,
+      }
     }
   }
 

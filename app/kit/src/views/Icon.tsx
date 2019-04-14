@@ -1,6 +1,7 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
+import { selectObject } from '@o/utils'
 import React, { memo } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
@@ -64,7 +65,7 @@ export const Icon = memo((props: IconProps & { svg?: string }) => {
       fill={`${finalColor}`}
       opacity={opacity}
       hoverStyle={{
-        ...props.hoverStyle,
+        ...selectObject(props.hoverStyle),
         fill: props.hoverStyle ? props.hoverStyle.color : null,
       }}
     >

@@ -1,13 +1,13 @@
-import { Color, toColor } from '@o/color'
+import { Color, ColorLike, toColor } from '@o/color'
 import { LinearGradient, ThemeObject } from '@o/css'
 
-type ColorObject = { [a: string]: Color }
+type ColorObject = { [a: string]: ColorLike }
 
 export type SimpleStyleObject = {
-  color: Color
-  background: Color
-  borderColor: Color
-  [a: string]: Color | ColorObject
+  color?: ColorLike
+  background?: ColorLike
+  borderColor?: ColorLike
+  [a: string]: ColorLike | ColorObject | any
 }
 
 const darken = (color, amt) => {
@@ -54,8 +54,8 @@ const isPlainObj = o => typeof o == 'object' && o.constructor == Object
 export class ThemeMaker {
   cache = {}
 
-  colorize = (obj): SimpleStyleObject => {
-    const res = {}
+  colorize = (obj: SimpleStyleObject | ThemeObject): ThemeObject => {
+    const res: Partial<ThemeObject> = {}
     for (const key in obj) {
       const val = obj[key]
       if (val instanceof LinearGradient) {
@@ -73,7 +73,7 @@ export class ThemeMaker {
         }
       }
     }
-    return res as SimpleStyleObject
+    return res as ThemeObject
   }
 
   fromColor = (bgName: string): ThemeObject | null => {
@@ -111,9 +111,9 @@ export class ThemeMaker {
       background: backgroundColored,
       color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
       borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmt),
-    }) as SimpleStyleObject
+    })
     // flattened
-    const res = {
+    const res: ThemeObject = {
       ...this.colorize({
         // for buttons/surfaces, we generate a nice set of themes
         surfaceColorHover: base.color.lighten(0.1),
@@ -134,6 +134,6 @@ export class ThemeMaker {
       }),
     }
     this.cache[key] = res
-    return res as ThemeObject
+    return res
   }
 }

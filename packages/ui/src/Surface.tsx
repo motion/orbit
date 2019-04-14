@@ -7,7 +7,7 @@ import Gloss, {
   psuedoStyleTheme,
   useTheme,
 } from '@o/gloss'
-import { isDefined, selectDefined } from '@o/utils'
+import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -490,8 +490,3 @@ const GlintContain = gloss(Col, {
 
 const getPadX = (padding: any) =>
   Array.isArray(padding) ? (+padding[1] || 0) + (+padding[3] || 0) : padding
-
-const selectObject = (x: any) => {
-  if (!x || typeof x !== 'object' || Array.isArray(x)) return {}
-  return x
-}

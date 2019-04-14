@@ -123,20 +123,22 @@ export function HeadSection() {
           <Space size="xl" />
 
           <FullScreen top="auto">
-            <View
-              // background={`url(${screen}) no-repeat top left`}
-              background="#222"
-              borderRadius={10}
-              backgroundSize="contain"
-              flex={1}
-              width="100%"
-              maxWidth={1000}
-              margin={['auto', 'auto', 0]}
-              height={320}
-              position="relative"
-            >
-              {DownloadButton}
-            </View>
+            <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+              <View
+                // background={`url(${screen}) no-repeat top left`}
+                background="#222"
+                borderRadius={10}
+                backgroundSize="contain"
+                flex={1}
+                width="100%"
+                maxWidth={1000}
+                margin={['auto', 'auto', 0]}
+                height={320}
+                position="relative"
+              >
+                {DownloadButton}
+              </View>
+            </FadeIn>
 
             <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
               <img src={lineSep} />
@@ -209,7 +211,7 @@ const PreviewButton = gloss({
 })
 
 const DownloadButton = (
-  <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+  <FadeIn>
     <Center bottom="auto" top={-20}>
       <View
         tagName="a"

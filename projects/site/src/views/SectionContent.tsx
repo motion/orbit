@@ -7,7 +7,7 @@ export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
 
 export const SectionContent = ({ outside, children, zIndex, ...props }: SectionContentProps) => {
   return (
-    <Section zIndex={zIndex}>
+    <Section width="100%" zIndex={zIndex}>
       {outside}
       <SectionContentChrome {...props}>
         <div

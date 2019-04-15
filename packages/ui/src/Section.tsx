@@ -85,7 +85,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         before={beforeTitle}
         below={belowTitle}
         icon={icon}
-        pad={titleBorder || bordered ? true : innerPad}
+        pad={innerPad || (titleBorder || bordered ? true : null)}
         size={selectDefined(titleSize, size)}
       />
       {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}

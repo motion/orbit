@@ -61,7 +61,13 @@ export function Layout(props: any) {
   return (
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
-        <View flex={1} background={bg} transition="all ease 500ms">
+        <View
+          height="100vh"
+          width="100vw"
+          overflow="hidden"
+          background={bg}
+          transition="all ease 500ms"
+        >
           <NotFoundBoundary render={NotFound}>
             <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />
             {props.children}

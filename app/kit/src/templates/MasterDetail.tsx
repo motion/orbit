@@ -73,7 +73,13 @@ export function MasterDetail({
 
   return (
     <Layout type="row">
-      <Pane resizable {...showSidebar === false && { width: 0 }} {...masterProps}>
+      <Pane
+        resizable
+        minWidth={300}
+        maxWidth={450}
+        {...showSidebar === false && { width: 0 }}
+        {...masterProps}
+      >
         {master}
       </Pane>
       <Pane flex={2} {...detailProps}>

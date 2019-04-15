@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { Button, Popover, Row, SimpleText, View } from '@o/ui'
+import { BorderBottom, Button, Popover, Row, SimpleText, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -13,7 +13,7 @@ const LinkText = gloss(View, {
   width: '33%',
   textAlign: 'center',
   transform: {
-    y: 2,
+    y: 0.5,
   },
   '& a': {
     textDecoration: 'none',
@@ -82,7 +82,7 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
-export function Header() {
+export function Header({ slim }: { slim?: boolean }) {
   const size = useScreenSize()
 
   let before = null
@@ -95,19 +95,24 @@ export function Header() {
     after = (
       <>
         <View flex={1} />
-        <Popover
-          openOnClick
-          closeOnClickAway
-          target={
-            <Button size={1.2} chromeless>
-              =
-            </Button>
-          }
-        >
+        <Popover openOnClick closeOnClickAway target={<Button icon="menu" size={1.2} chromeless />}>
           <LinksLeft />
           <LinksRight />
         </Popover>
       </>
+    )
+  }
+
+  if (slim) {
+    return (
+      <Row background={theme => theme.background} position="relative">
+        <HeaderContain height={32}>
+          <LinkSection alignRight>{before}</LinkSection>
+          <LogoHorizontal />
+          <LinkSection>{after}</LinkSection>
+        </HeaderContain>
+        <BorderBottom />
+      </Row>
     )
   }
 
@@ -133,7 +138,7 @@ export function Header() {
 
 export const HeaderContain = props => (
   <SectionContent
-    padding={[0, '5%']}
+    padding={[0, '10%']}
     flexFlow="row"
     alignItems="center"
     justifyContent="space-around"

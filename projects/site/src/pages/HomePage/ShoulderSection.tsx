@@ -22,7 +22,7 @@ export function ShoulderSection(props) {
             <>
               <PillButton>Deploy</PillButton>
               <Space size="sm" />
-              <TitleText size="xl">The worlds fastest idea-to-deploy.</TitleText>
+              <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
             </>
           }
         >

@@ -3,10 +3,9 @@ import React from 'react'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
 export const Message = gloss<SizedSurfaceProps>(
-  props => <SizedSurface {...defaultProps} {...props} />,
+  props => <SizedSurface sizeLineHeight={1.2} {...defaultProps} {...props} />,
   {
     userSelect: 'text',
-    lineHeight: '1.4rem',
     cursor: 'text',
     whiteSpace: 'normal',
     width: '100%',

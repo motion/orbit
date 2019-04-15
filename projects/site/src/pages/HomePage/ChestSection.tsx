@@ -21,8 +21,8 @@ export function ChestSection(props) {
               <Space size="sm" />
               <TitleText size="xxl">Batteries Included.</TitleText>
               <TitleTextSub>
-                Orbit gives you a rich set of tools that are common to many apps. They're completely
-                integrated, which saves code, time, bugs.
+                Most internal tools have the same patterns. Orbit makes building many types of
+                simple applications easy.
               </TitleTextSub>
             </>
           }
@@ -30,7 +30,7 @@ export function ChestSection(props) {
           <Space size="lg" />
           <Grid
             alignItems="start"
-            space="20%"
+            space="15%"
             itemMinWidth={240}
             maxWidth={800}
             margin={[0, 'auto']}
@@ -38,26 +38,27 @@ export function ChestSection(props) {
             <PassProps
               getChildProps={(_, index) => ({
                 index: index + 1,
-                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '60%' } }),
+                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '100%' } }),
               })}
             >
               <SimpleSection title="Apps that work together.">
                 <SectionP>
                   <SectionIcon name="apps" />
-                  It's time we could build apps that talk to each other. Orbit comes with many data
-                  apps already, and has an open ecosystem for unlimited collaboration.
+                  Apps that talk to each other, by exposing simple typed APIs. Orbit comes with many
+                  data apps out of the box.
                   <Space />
-                  Every app exposes a typed API, and can share data with any other app.
+                  Apps can sync data in a common format that then lets you display, select, and
+                  share between other apps.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A space to collaborate.">
+              <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
                   <SectionIcon name="satellite" />
-                  Orbit wants to make it so easy to build apps together that once-boring portals
-                  turn into an rich interfaces for everyone at your company.
+                  Your apps live together in a unified workspace. With little code you can create
+                  rich collaborative apps that everyone can use.
                   <Space />
-                  It starts with the Workspace, where all your apps are available to use and edit.
+                  Then, anyone in the workspace can easily edit an app with the press of a button.
                 </SectionP>
               </SimpleSection>
 
@@ -71,7 +72,7 @@ export function ChestSection(props) {
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A UI kit to rival native.">
+              <SimpleSection title="The UI kit that rivals native.">
                 <SectionP>
                   <SectionIcon name="widget" />
                   Building a proper list is no joke. Either is a table, form, or popover. But that's
@@ -82,7 +83,7 @@ export function ChestSection(props) {
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="An incredible development experience for everyone.">
+              <SimpleSection title="An incredible development experience.">
                 <SectionP>
                   <SectionIcon name="app" />
                   It's not just no-config and easy to use. We've spent time getting patterns for

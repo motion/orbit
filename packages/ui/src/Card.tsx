@@ -10,7 +10,8 @@ import {
 } from './Collapsable'
 import { ListItem, ListItemSpecificProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
-import { getSize, SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
+import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
+import { getSize } from './Sizes'
 import { getSpaceSize, Sizes } from './Space'
 import { Col, ColProps } from './View/Col'
 

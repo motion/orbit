@@ -5,6 +5,7 @@ import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
+import screen from '../../../public/images/screen.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -131,10 +132,11 @@ export function HeadSection(props) {
             <FullScreen top="auto">
               <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
                 <View
-                  // background={`url(${screen}) no-repeat top left`}
-                  background="#222"
-                  borderRadius={10}
+                  backgroundImage={`url(${screen})`}
                   backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  borderRadius={10}
                   flex={1}
                   width="100%"
                   maxWidth={1000}

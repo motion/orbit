@@ -15,8 +15,8 @@ import { OrbitNav } from './OrbitNav'
 export const headerButtonProps = {
   chromeless: true,
   margin: [-1, 1],
-  opacity: 0.5,
-  hoverStyle: { opacity: 0.75 },
+  opacity: 0.75,
+  hoverStyle: { opacity: 1 },
   iconSize: 14,
 }
 
@@ -192,9 +192,10 @@ const ExtraButtonsChrome = gloss({
   paddingLeft: 2,
   marginRight: -10,
   borderLeftRadius: 12,
-  borderRight: 'none',
 }).theme((_, theme) => ({
-  border: [1, theme.borderColor.alpha(0.5)],
+  borderLeft: [1, theme.background.alpha(0.5)],
+  borderBottom: [1, theme.background.alpha(0.5)],
+  borderTop: [1, theme.background.alpha(0.5)],
 }))
 
 const OpenButton = memo(() => {

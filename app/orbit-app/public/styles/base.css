@@ -490,6 +490,10 @@ body * {
   min-width: 0;
 }
 
+style {
+  display: none;
+}
+
 /* prevent overscroll bounce */
 html,
 body {

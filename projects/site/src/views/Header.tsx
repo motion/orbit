@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { Button, Popover, Row, SimpleText, View } from '@o/ui'
+import { BorderBottom, Button, Popover, Row, SimpleText, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -13,7 +13,7 @@ const LinkText = gloss(View, {
   width: '33%',
   textAlign: 'center',
   transform: {
-    y: 2,
+    y: 0.5,
   },
   '& a': {
     textDecoration: 'none',
@@ -59,13 +59,13 @@ export const LinksLeft = props => (
 )
 
 export const LinksRight = props => (
-  <Overdrive id="links-right" duration={100000}>
+  <Overdrive id="links-right">
     <LinkRow>
       <Link {...props} href="/">
         Pricing
       </Link>
       <Link {...props} href="/">
-        !!!
+        About
       </Link>
       <Link {...props} href="/">
         Blog
@@ -77,13 +77,12 @@ export const LinksRight = props => (
 const LinkRow = gloss({
   flexFlow: 'row',
   flex: 1,
-  height: 40,
   alignItems: 'center',
   zIndex: 1000000000,
   position: 'relative',
 })
 
-export function Header() {
+export function Header({ slim }: { slim?: boolean }) {
   const size = useScreenSize()
 
   let before = null
@@ -96,19 +95,24 @@ export function Header() {
     after = (
       <>
         <View flex={1} />
-        <Popover
-          openOnClick
-          closeOnClickAway
-          target={
-            <Button size={1.2} chromeless>
-              =
-            </Button>
-          }
-        >
+        <Popover openOnClick closeOnClickAway target={<Button icon="menu" size={1.2} chromeless />}>
           <LinksLeft />
           <LinksRight />
         </Popover>
       </>
+    )
+  }
+
+  if (slim) {
+    return (
+      <Row background={theme => theme.background} position="relative">
+        <HeaderContain height={32}>
+          <LinkSection alignRight>{before}</LinkSection>
+          <LogoHorizontal />
+          <LinkSection>{after}</LinkSection>
+        </HeaderContain>
+        <BorderBottom />
+      </Row>
     )
   }
 
@@ -134,7 +138,7 @@ export function Header() {
 
 export const HeaderContain = props => (
   <SectionContent
-    padding={[0, '5%']}
+    padding={[0, '10%']}
     flexFlow="row"
     alignItems="center"
     justifyContent="space-around"
@@ -143,9 +147,10 @@ export const HeaderContain = props => (
 )
 
 export const LinkSection = gloss({
-  flex: 1,
+  flex: 4,
   flexFlow: 'row',
   justifyContent: 'space-between',
   padding: [0, '2.5%'],
   maxWidth: 380,
+  alignItems: 'center',
 })

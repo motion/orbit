@@ -1,6 +1,17 @@
 import { Base, gloss } from '@o/gloss'
 
-export type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | number | boolean | undefined
+export type Sizes =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | 'xxl'
+  | 'xxxl'
+  | number
+  | boolean
+  | undefined
+  | string
 
 export type SpaceProps = {
   size?: Sizes
@@ -13,6 +24,7 @@ export const spaceSizes = {
   lg: 24,
   xl: 32,
   xxl: 40,
+  xxxl: 48,
 }
 
 export function getSpaceSize(space: Sizes) {
@@ -25,7 +37,7 @@ export function getSpaceSize(space: Sizes) {
   if (!space || space === true) {
     space = 'md'
   }
-  return spaceSizes[space] || 0
+  return spaceSizes[space] || space || 0
 }
 
 export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {

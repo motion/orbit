@@ -1,5 +1,5 @@
-import { ColorLike } from '@o/color'
-import { ThemeObject } from './ThemeObject'
+import { ColorLike } from '@o/color';
+import { ThemeObject } from './ThemeObject';
 
 /**
  * Copyright 2018-present Facebook.
@@ -15,7 +15,7 @@ export type alignContent =
   | 'space-between'
   | 'space-around'
   | 'stretch'
-export type alignItems = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+export type alignItems = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch' | 'start'
 export type alignSelf = 'auto' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 export type all = 'initial' | 'inherit' | 'unset'
 export type animation = singleAnimation

@@ -33,7 +33,7 @@ export const TitleRow = forwardRef(function TitleRow(
     before,
     bordered,
     after,
-    size,
+    size = 'md',
     sizePadding = 1,
     subTitle,
     backgrounded,

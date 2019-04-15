@@ -3,6 +3,7 @@ import '@o/nucleo'
 import {
   Button,
   Divider,
+  gloss,
   Section,
   SegmentedRow,
   SpaceGroup,
@@ -15,7 +16,7 @@ import {
 } from '@o/ui'
 import React, { memo, useState } from 'react'
 import { useSiteStore } from '../Layout'
-import { HeaderSlim } from '../views/HeaderSlim'
+import { Header } from '../views/Header'
 //
 // can remove this and just use import(), but hmr fails
 import Buttons from './DocsButtons.mdx'
@@ -68,13 +69,15 @@ export function DocsPage() {
 
   return (
     <>
-      <HeaderSlim />
+      <Header slim />
       <View flex={1}>
         <View flex={1} position="relative">
           <Templates.MasterDetail
             items={itemsByIndex[section]()}
             showSidebar={showSidebar}
-            detailProps={{ flex: 3 }}
+            detailProps={{
+              flex: 3,
+            }}
             masterProps={{
               background: theme.sidebarBackground,
             }}
@@ -82,15 +85,19 @@ export function DocsPage() {
             onSelect={setSelected}
             belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
           >
-            {SubView && (
-              <SelectedSection
-                onToggleSidebar={() => setShowSidebar(!showSidebar)}
-                setTheme={siteStore.setTheme}
-                theme={siteStore.theme}
-                title={selected.title}
-                SubView={SubView}
-              />
-            )}
+            <WidthLimit>
+              <Content>
+                {SubView && (
+                  <SelectedSection
+                    onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                    setTheme={siteStore.setTheme}
+                    theme={siteStore.theme}
+                    title={selected.title}
+                    SubView={SubView}
+                  />
+                )}
+              </Content>
+            </WidthLimit>
           </Templates.MasterDetail>
         </View>
       </View>
@@ -99,6 +106,17 @@ export function DocsPage() {
 }
 
 DocsPage.theme = 'light'
+
+const WidthLimit = gloss({
+  flex: 1,
+  overflowY: 'auto',
+})
+
+const Content = gloss(View, {
+  margin: [0, 'auto'],
+  width: '100%',
+  maxWidth: 1000,
+})
 
 const DocsToolbar = memo(({ section, setSection }: any) => {
   return (
@@ -125,11 +143,9 @@ const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
-      pad
+      pad={['xl', true, true, true]}
       titleBorder
       space
-      flex={1}
-      scrollable="y"
       title={title}
       afterTitle={
         <SurfacePassProps iconSize={12}>

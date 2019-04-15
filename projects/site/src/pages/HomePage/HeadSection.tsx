@@ -5,6 +5,7 @@ import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
+import screen from '../../../public/images/screen.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -13,6 +14,7 @@ import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
+import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
   large: 'A better way to build apps together.',
@@ -72,24 +74,26 @@ function HeadText() {
         </TitleText>
       </FadeIn>
 
-      <Space size="lg" />
+      <Space size="xl" />
 
-      <Paragraph
-        style={pFit.style}
-        height="auto"
-        transformOrigin="top center"
-        sizeLineHeight={1.3}
-        margin={[0, 'auto']}
-        textAlign="center"
-        alpha={0.56}
-        whiteSpace="nowrap"
-      >
-        {texts[0]}
-        {br}
-        {texts[1]}
-        {br}
-        {texts[2]}
-      </Paragraph>
+      <FadeIn disable={!measured}>
+        <Paragraph
+          style={pFit.style}
+          height="auto"
+          transformOrigin="top center"
+          sizeLineHeight={1.3}
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.56}
+          whiteSpace="nowrap"
+        >
+          {texts[0]}
+          {br}
+          {texts[1]}
+          {br}
+          {texts[2]}
+        </Paragraph>
+      </FadeIn>
 
       {/* this is just to measure */}
       <Paragraph
@@ -105,91 +109,107 @@ function HeadText() {
   )
 }
 
-export function HeadSection() {
+export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const [hoverDownload, setHoverDownload] = useState(false)
   return (
-    <Page offset={0} zIndex={-1}>
-      <Page.Content>
-        <FullScreen opacity={fontsLoaded ? 1 : 0}>
-          <Row
-            transform={{ y: '-60%' }}
-            margin={['auto', 0]}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <HeadText />
-          </Row>
-
-          <Space size="xl" />
-
-          <FullScreen top="auto">
-            <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
-              <View
-                // background={`url(${screen}) no-repeat top left`}
-                background="#222"
-                borderRadius={10}
-                backgroundSize="contain"
-                flex={1}
-                width="100%"
-                maxWidth={1000}
-                margin={['auto', 'auto', 0]}
-                height={320}
-                position="relative"
-              >
-                {DownloadButton}
-              </View>
-            </FadeIn>
-
-            <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-              <img src={lineSep} />
-              <View
-                position="absolute"
-                bottom={0}
-                left={0}
-                right={0}
-                height={400}
-                transform={{ y: 400 }}
-                background={theme => theme.background}
-              />
-            </FullScreen>
-
-            <View
-              position="absolute"
-              bottom="12%"
-              left={0}
-              right={0}
+    <>
+      <OuterSpace show={hoverDownload} />
+      <Page zIndex={0} {...props}>
+        <Page.Content>
+          <FullScreen opacity={fontsLoaded ? 1 : 0}>
+            <Row
+              transform={{ y: '-60%' }}
+              margin={['auto', 0]}
               alignItems="center"
               justifyContent="center"
-              height={160}
             >
-              <img style={{ position: 'absolute', top: 0 }} src={macbook} />
-              <PreviewButton>See the Orbit Demo</PreviewButton>
-            </View>
+              <HeadText />
+            </Row>
+
+            <Space size="xxxl" />
+            <Space size="xxxl" />
+
+            <FullScreen top="auto">
+              <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+                <View
+                  backgroundImage={`url(${screen})`}
+                  backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  borderRadius={10}
+                  flex={1}
+                  width="100%"
+                  maxWidth={1000}
+                  margin={['auto', 'auto', 0]}
+                  height={250}
+                  position="relative"
+                  bottom={65}
+                >
+                  <DownloadButton
+                    onMouseEnter={() => setHoverDownload(true)}
+                    onMouseLeave={() => setHoverDownload(false)}
+                  />
+                </View>
+              </FadeIn>
+
+              <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
+                <img src={lineSep} />
+                <View
+                  position="absolute"
+                  bottom={0}
+                  left={0}
+                  right={0}
+                  height={400}
+                  transform={{ y: 400 }}
+                  background={theme => theme.background}
+                />
+              </FullScreen>
+
+              <View
+                position="absolute"
+                bottom="12%"
+                left={0}
+                right={0}
+                alignItems="center"
+                justifyContent="center"
+                height={160}
+              >
+                <Image
+                  position="absolute"
+                  top={0}
+                  transform={{ scale: 0.5 }}
+                  transformOrigin="top center"
+                  src={macbook}
+                />
+                <PreviewButton>See the Orbit Demo</PreviewButton>
+              </View>
+            </FullScreen>
           </FullScreen>
-        </FullScreen>
-      </Page.Content>
+        </Page.Content>
 
-      <Page.Parallax speed={-0.2} zIndex={-2}>
-        <View
-          pointerEvents="none"
-          position="absolute"
-          top="30%"
-          left={0}
-          right={0}
-          zIndex={1}
-          opacity={0.3}
-          transform={{
-            scale: 1.3,
-          }}
-        >
-          <img src={glow} />
-        </View>
-      </Page.Parallax>
+        <Page.Parallax speed={-0.2} zIndex={-2}>
+          <View
+            pointerEvents="none"
+            position="absolute"
+            top="30%"
+            left={0}
+            right={0}
+            zIndex={1}
+            opacity={0.4}
+            transform={{
+              scale: 1.3,
+            }}
+          >
+            <img src={glow} />
+          </View>
+        </Page.Parallax>
 
-      <Page.Parallax speed={0} zIndex={-2}>
-        <TopBlur opacity={0.6} />
-      </Page.Parallax>
-    </Page>
+        <Page.Parallax speed={0} zIndex={-2}>
+          <TopBlur opacity={0.6} />
+        </Page.Parallax>
+      </Page>
+    </>
   )
 }
 
@@ -210,7 +230,7 @@ const PreviewButton = gloss({
   },
 })
 
-const DownloadButton = (
+const DownloadButton = props => (
   <FadeIn>
     <Center bottom="auto" top={-20}>
       <View
@@ -222,7 +242,7 @@ const DownloadButton = (
         position="relative"
         alignItems="center"
         justifyContent="center"
-        border={[3, '#21AA0F']}
+        border={[1, '#21AA0F']}
         borderRadius={100}
         background={theme => theme.background}
         hoverStyle={{
@@ -233,8 +253,9 @@ const DownloadButton = (
           e.preventDefault()
           console.log('need to link downlaod')
         }}
+        {...props}
       >
-        <Image position="absolute" right={22} src={downmark} />
+        <Image userSelect="none" position="absolute" right={22} src={downmark} />
         <Text
           transform={{ y: 2 }}
           zIndex={1}

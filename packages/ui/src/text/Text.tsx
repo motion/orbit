@@ -11,7 +11,7 @@ import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
 import { ScaleContext } from '../Scale'
-import { getSize } from '../SizedSurface'
+import { getTextSize } from '../Sizes'
 import { Sizes } from '../Space'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
@@ -44,21 +44,6 @@ export type TextProps = CSSPropertySetStrict &
     ignoreColor?: boolean
     renderAsHtml?: boolean
   }
-
-const textSizes = {
-  xs: 0.8,
-  sm: 1.0,
-  md: 1.2,
-  lg: 1.8,
-  xl: 2.0,
-  xxl: 2.4,
-}
-
-// text should vary more
-const getTextSize = (size: Sizes) => {
-  if (typeof size === 'string') return textSizes[size]
-  return getSize(size)
-}
 
 export type Highlights = {
   highlights: string[]
@@ -297,7 +282,7 @@ const TextBlock = gloss({
   maxWidth: '100%',
   selectable: {
     userSelect: 'text',
-    cursor: 'inherit',
+    cursor: 'text',
   },
   oneLineEllipse: {
     overflow: 'hidden',

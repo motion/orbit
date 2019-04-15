@@ -1,5 +1,4 @@
-import { Table } from '@o/kit'
-import { DataInspector, Layout, Pane, Paragraph, SubTitle, Title, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, SubTitle, Table, Title, Tree } from '@o/ui'
 import faker from 'faker'
 import produce from 'immer'
 import React, { useState } from 'react'

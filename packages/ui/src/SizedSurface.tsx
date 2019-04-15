@@ -1,7 +1,7 @@
 import { mergeDefined } from '@o/utils'
 import React from 'react'
 import { useScale } from './Scale'
-import { Sizes } from './Space'
+import { getSize } from './Sizes'
 import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 29
@@ -29,21 +29,6 @@ export const getSizedRadius = (size: number, sizeRadius: number | true) =>
 const getHeight = (size: number, sizeHeight: number | boolean) => {
   const height = Math.round(LINE_HEIGHT * num(sizeHeight) * size)
   return height % 2 === 1 ? height : height + 1
-}
-
-const sizes = {
-  xs: 0.8,
-  sm: 0.9,
-  md: 1,
-  lg: 1.2,
-  xl: 1.4,
-  xxl: 1.6,
-}
-
-export const getSize = (size: Sizes) => {
-  if (!size || size === false || size === true) return 1
-  if (typeof size === 'string') return sizes[size]
-  return 1 + (size > 1 ? (size - 1) * 0.5 : 0)
 }
 
 export function SizedSurface(direct: SizedSurfaceProps) {

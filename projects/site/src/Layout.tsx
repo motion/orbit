@@ -4,10 +4,12 @@ import { throttle } from 'lodash'
 import React, { useEffect } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
+import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
 
 class SiteStore {
   theme = null
+  screenSize = 'large'
 
   windowHeight = window.innerHeight
 
@@ -16,11 +18,18 @@ class SiteStore {
   }
 
   get sectionHeight() {
+    let maxHeight = 1100
+    let desiredHeight = this.windowHeight
+    // taller on mobile
+    if (this.screenSize === 'small') {
+      desiredHeight = this.windowHeight * 1.2
+      maxHeight = this.windowHeight * 1.2
+    }
     return Math.min(
       // min-height
-      Math.max(850, this.windowHeight),
+      Math.max(850, desiredHeight),
       // max-height
-      1100,
+      maxHeight,
     )
   }
 }
@@ -32,6 +41,11 @@ export const useSiteStore = useStore
 export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
+  const screen = useScreenSize()
+
+  useEffect(() => {
+    siteStore.screenSize = screen
+  }, [screen])
 
   useEffect(() => {
     async function updatePath() {
@@ -52,7 +66,7 @@ export function Layout(props: any) {
         siteStore.windowHeight = window.innerHeight
       }, 64),
     )
-  })
+  }, [])
 
   if (!siteStore.theme) {
     return null
@@ -61,7 +75,13 @@ export function Layout(props: any) {
   return (
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
-        <View flex={1} background={bg} transition="all ease 500ms">
+        <View
+          minHeight="100vh"
+          minWidth="100vw"
+          overflow="hidden"
+          background={bg}
+          transition="all ease 500ms"
+        >
           <NotFoundBoundary render={NotFound}>
             <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />
             {props.children}

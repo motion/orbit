@@ -1,5 +1,4 @@
 import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
-import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 import { useSiteStore } from '../Layout'
@@ -24,15 +23,21 @@ export function Page(props: PageProps) {
 Page.Parallax = ({
   overflow,
   zIndex,
+  style,
   ...props
-}: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any }) => {
+}: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any; style?: Object }) => {
   const parallax = useProps()
   return (
     // @ts-ignore
     <ParallaxLayer
       speed={0.2}
       offset={parallax.offset}
-      style={{ pointerEvents: 'none', zIndex: parallax.zIndex + (zIndex || 0) + 1, overflow }}
+      style={{
+        pointerEvents: 'none',
+        zIndex: parallax.zIndex + (zIndex || 0) + 1,
+        overflow,
+        ...style,
+      }}
       {...props}
     />
   )
@@ -40,7 +45,7 @@ Page.Parallax = ({
 
 Page.Content = (props: SectionContentProps) => {
   const parallax = useProps()
-  const zIndex = selectDefined(props.zIndex, parallax.zIndex)
+  const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
   const siteStore = useSiteStore()
   return (
     <SectionContent

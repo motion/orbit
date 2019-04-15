@@ -1,9 +1,10 @@
-import { alphaColorTheme, Base, BaseProps, gloss } from '@o/gloss'
+import { Base, BaseProps, gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
 export type SimpleTextProps = BaseProps & {
   ellipse?: boolean
+  selectable?: boolean
 }
 
 export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, ref) => {
@@ -20,4 +21,8 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(alphaColorTheme)
+  selectable: {
+    userSelect: 'text',
+    cursor: 'text',
+  },
+})

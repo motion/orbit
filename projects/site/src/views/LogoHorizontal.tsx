@@ -12,26 +12,27 @@ export const LogoHorizontal = memo((props: ViewProps) => {
   const scaleDown = 0.3333
 
   return (
-    <Overdrive id="logo-horizontal" style={{ flex: 0 }}>
-      <View
-        color={theme.color.toString()}
-        cursor="pointer"
-        alignItems="center"
-        justifyContent="center"
-        padding={[2, 20]}
-        transform={{
-          y: -2,
-          x: -4,
-        }}
-        onClick={() => {
-          navigate('Home')
-        }}
-        zIndex={100000}
-        {...props}
-      >
+    <View
+      color={theme.color.toString()}
+      cursor="pointer"
+      alignItems="center"
+      justifyContent="center"
+      padding={[0, 20]}
+      margin={[-4, 0]}
+      transform={{
+        x: -2,
+        y: -2,
+      }}
+      onClick={() => {
+        navigate('Home')
+      }}
+      zIndex={100000}
+      {...props}
+    >
+      <Overdrive id="logo-horizontal">
         <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
-      </View>
-    </Overdrive>
+      </Overdrive>
+    </View>
   )
 })
 

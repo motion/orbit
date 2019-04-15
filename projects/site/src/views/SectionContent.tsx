@@ -5,31 +5,37 @@ import * as Constants from '../constants'
 
 export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
 
-export const SectionContent = ({ outside, children, ...props }: SectionContentProps) => {
+export const SectionContent = ({ outside, children, zIndex, ...props }: SectionContentProps) => {
   return (
-    <SectionContentChrome {...props}>
+    <Section width="100%" zIndex={zIndex}>
       {outside}
-      <div
-        style={{
-          position: 'relative',
-          flex: 1,
-          flexDirection: 'inherit',
-          flexWrap: 'inherit',
-          alignItems: 'inherit',
-          justifyContent: 'inherit',
-        }}
-      >
-        {children}
-      </div>
-    </SectionContentChrome>
+      <SectionContentChrome {...props}>
+        <div
+          style={{
+            position: 'relative',
+            flex: 1,
+            flexDirection: 'inherit',
+            flexWrap: 'inherit',
+            alignItems: 'inherit',
+            justifyContent: 'inherit',
+          }}
+        >
+          {children}
+        </div>
+      </SectionContentChrome>
+    </Section>
   )
 }
+
+const Section = gloss(View, {
+  position: 'relative',
+  alignItems: 'center',
+})
 
 export const SectionContentChrome = gloss(View, {
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,
-  margin: [0, 'auto'],
   padding: [0, Constants.sidePad],
   position: 'relative',
   pointerEvents: 'none',

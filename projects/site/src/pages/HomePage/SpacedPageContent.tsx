@@ -1,17 +1,24 @@
-import { Col, SpaceGroup, View } from '@o/ui'
+import { Col, SpaceGroup, View, ViewProps } from '@o/ui'
 import React from 'react'
+import { useScreenSize } from '../../hooks/useScreenSize'
 
-export function SpacedPageContent({ header, children }: { header: any; children: any }) {
+export function SpacedPageContent({ header, children, ...props }: ViewProps & { header: any }) {
+  const screen = useScreenSize()
   return (
-    <View margin={['auto', 0]} height="80vh" maxHeight={900}>
+    <View
+      width="100%"
+      margin={screen === 'small' ? 0 : ['auto', 0]}
+      height="80vh"
+      maxHeight={900}
+      {...props}
+    >
       <SpaceGroup>
         <div style={{ flex: 1 }} />
-        <Col space="md" alignItems="center" pad="xl">
+        <Col space="md" alignItems="center" pad>
           {header}
         </Col>
-        <div style={{ flex: 0.2, minHeight: 20 }} />
         {children}
-        <div style={{ flex: 1.5 }} />
+        <div style={{ flex: 1 }} />
       </SpaceGroup>
     </View>
   )

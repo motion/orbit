@@ -19,7 +19,7 @@ export function WaistSection(props) {
               <Image
                 transform={{ scaleX: -1 }}
                 position="absolute"
-                top={-90}
+                top={-120}
                 left={0}
                 right={0}
                 width="100%"
@@ -28,7 +28,7 @@ export function WaistSection(props) {
 
               <Image
                 position="absolute"
-                bottom={-90}
+                bottom={0}
                 left={0}
                 right={0}
                 width="100%"
@@ -38,7 +38,7 @@ export function WaistSection(props) {
           }
         >
           <SpacedPageContent
-            margin={['auto', '10%']}
+            margin={[0, '10%']}
             header={
               <>
                 <PillButton>Security</PillButton>
@@ -68,7 +68,7 @@ export function WaistSection(props) {
           </SpacedPageContent>
         </Page.Content>
 
-        <Page.Background background={theme => theme.background} />
+        <Page.Background background={theme => theme.background} bottom={50} />
       </Page>
     </Theme>
   )

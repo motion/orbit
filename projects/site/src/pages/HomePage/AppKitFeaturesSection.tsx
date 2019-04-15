@@ -25,8 +25,8 @@ export function ChestSection(props) {
             <>
               <PillButton>Integrations</PillButton>
               <Space size="xs" />
-              <TitleText size="lg">Data, meet apps.</TitleText>
-              <TitleTextSub>Easy to plug in integrations. Write your own if you need.</TitleTextSub>
+              <TitleText size="lg">Data, meet app.</TitleText>
+              <TitleTextSub>Add integrations with a click. Create your own with ease.</TitleTextSub>
             </>
           }
         >

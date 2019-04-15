@@ -83,7 +83,7 @@ export function Layout(props: any) {
           minWidth="100vw"
           overflow="hidden"
           background={bg}
-          transition="all ease 500ms"
+          transition="background ease 500ms"
         >
           <NotFoundBoundary render={NotFound}>
             <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />

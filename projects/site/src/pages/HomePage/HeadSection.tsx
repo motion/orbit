@@ -25,8 +25,8 @@ let allTitles = {
 let allTexts = {
   large: [
     `Build powerful apps and internal tools without configuration or servers.`,
-    `It's a new type of browser, vertically integrated and designed for building common apps.`,
-    `Just a few lines of code and you're done.`,
+    `It's a new type of browser, vertically integrated from dev to toolkit to deploy.`,
+    `Create useful apps with just a few lines of code.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,

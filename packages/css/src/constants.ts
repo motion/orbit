@@ -48,6 +48,7 @@ export const COLOR_KEYS = new Set([
   'border-top-color',
   'border-left-color',
   'border-right-color',
+  'text-decoration-color',
 ])
 
 export const TRANSFORM_KEYS_MAP = {

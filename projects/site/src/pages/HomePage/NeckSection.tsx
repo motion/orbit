@@ -1,3 +1,4 @@
+import { Inline } from '@o/gloss'
 import { Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui'
 import React from 'react'
 import northernlights from '../../../public/images/northern-lights.svg'
@@ -35,30 +36,28 @@ export function NeckSection(props) {
             </>
           }
         >
-          <Col spaceAround maxWidth="100%" margin={[0, 'auto']}>
+          <Col maxWidth="100%" margin={[0, 'auto']}>
             <Row space flexWrap="wrap">
               <SubSection>
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Add a data app from the app store with a click, and integrate it with just a line
-                  of code.
+                  Use data from many integrations, integrated with just a line of code.
                 </CenterText>
               </SubSection>
               <SubSection flex={1.5} pad={[true, 'xxl']}>
                 <PillButtonDark>Display</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Orbit includes incredibly powerful building blocks for common apps, that all work
-                  together. Link a table to a form to any data with ease.
+                  Orbits powerful building blocks let you link data to powerful views easily.
                 </CenterText>
               </SubSection>
               <SubSection>
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>
-                  Data apps are flexible and work together. Select a few items from a table and send
-                  to Gmail with ease.
+                  Take a selection from your table and export to{' '}
+                  <Inline color="#F14336">Gmail</Inline> easily.
                 </CenterText>
               </SubSection>
             </Row>
@@ -87,7 +86,7 @@ export function NeckSection(props) {
                   background="linear-gradient(125deg, #78009F, #4C1966)"
                   boxShadow="0 10px 50px rgba(0,0,0,0.5)"
                   margin="auto"
-                  padding={40}
+                  padding={30}
                 >
                   <Title
                     fontSize={18}
@@ -99,9 +98,10 @@ export function NeckSection(props) {
                     {'<Table />'}
                   </Title>
                   <Space />
-                  <Paragraph sizeLineHeight={1.3} size={1.1}>
-                    A table that has it all. Virtualized, resizable, sortable, filterable,
-                    multiselectable, and more. One more line to attach it to a form.
+                  <Paragraph sizeLineHeight={1.2} size={1.2}>
+                    The table that has it all. Virtualized, resizable, sortable, filterable,
+                    multi-selectable, and more. With easy sharing to forms, lists, or other apps in
+                    your Orbit.
                   </Paragraph>
                 </Squircle>
 

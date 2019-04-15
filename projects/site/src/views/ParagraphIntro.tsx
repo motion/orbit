@@ -6,7 +6,7 @@ export const ParagraphIntro = gloss<TextProps>(props => (
   <Paragraph
     {...{
       size: 1.5,
-      sizeLineHeight: 1.4,
+      sizeLineHeight: 1.35,
     }}
     {...props}
   />

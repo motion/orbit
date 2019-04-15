@@ -6,20 +6,24 @@ export const FadeIn = ({
   to = null,
   children,
   style = null,
+  disabled,
   ...rest
 }: UseSpringProps<any>) => {
+  const fromConf = {
+    opacity: 0,
+    transform: `translate3d(0,-40px,0)`,
+    ...from,
+  }
   const props = useSpring({
     ...rest,
-    from: {
-      opacity: 0,
-      transform: `translate3d(0,-40px,0)`,
-      ...from,
-    },
-    to: {
-      opacity: 1,
-      transform: `translate3d(0,0,0)`,
-      ...to,
-    },
+    from: fromConf,
+    to: disabled
+      ? fromConf
+      : {
+          opacity: 1,
+          transform: `translate3d(0,0,0)`,
+          ...to,
+        },
     config: {
       mass: 1,
       tension: 32,

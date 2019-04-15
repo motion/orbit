@@ -29,8 +29,8 @@ export function HomePage() {
         <NeckSection offset={1} />
         <ShoulderSection offset={2} />
         <ChestSection offset={3} />
-        <Page offset={4}>
-          <Page.Content />
+        <Page offset={4} zIndex={-2}>
+          <Page.Content pointerEvents="none" />
         </Page>
         <AbdomenSection offset={5} />
         <WaistSection offset={6} />

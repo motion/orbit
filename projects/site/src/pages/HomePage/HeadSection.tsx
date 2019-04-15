@@ -75,22 +75,24 @@ function HeadText() {
 
       <Space size="lg" />
 
-      <Paragraph
-        style={pFit.style}
-        height="auto"
-        transformOrigin="top center"
-        sizeLineHeight={1.3}
-        margin={[0, 'auto']}
-        textAlign="center"
-        alpha={0.56}
-        whiteSpace="nowrap"
-      >
-        {texts[0]}
-        {br}
-        {texts[1]}
-        {br}
-        {texts[2]}
-      </Paragraph>
+      <FadeIn disable={!measured}>
+        <Paragraph
+          style={pFit.style}
+          height="auto"
+          transformOrigin="top center"
+          sizeLineHeight={1.3}
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.56}
+          whiteSpace="nowrap"
+        >
+          {texts[0]}
+          {br}
+          {texts[1]}
+          {br}
+          {texts[2]}
+        </Paragraph>
+      </FadeIn>
 
       {/* this is just to measure */}
       <Paragraph
@@ -124,7 +126,7 @@ export function HeadSection(props) {
               <HeadText />
             </Row>
 
-            <Space size="xl" />
+            <Space size="xxxl" />
 
             <FullScreen top="auto">
               <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>

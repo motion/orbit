@@ -1,5 +1,6 @@
-import { Grid, PassProps, Space } from '@o/ui'
+import { FullScreen, Grid, PassProps, Space } from '@o/ui'
 import React from 'react'
+import redshift from '../../../public/images/redshift.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
@@ -33,74 +34,65 @@ export function ChestSection(props) {
             margin={[0, 'auto']}
           >
             <PassProps getChildProps={(_, index) => ({ index: index + 1 })}>
-              <SimpleSection title="Spaces to collaborate.">
+              <SimpleSection title="Apps that work together.">
                 <SectionP>
-                  <SectionIcon name="cog" />
-                  Orbit gives your company a home that you control completely. Everything is synced
-                  peer to peer, and apps can even sync data to a common format to collaborate with
-                  each other.
+                  <SectionIcon name="apps" />
+                  It's time we could build apps that talk to each other. Orbit comes with many data
+                  apps already, and has an open ecosystem for unlimited collaboration.
                   <Space />
-                  Collaborate on new data sources components. It's everything you'd want in a mature
-                  app platform, and none of the downsides of having to glue together an intranet
-                  yourself.
+                  Because every app exposes an API, your team can start leveraging a whole world of
+                  new possibilities.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="Apps that share data.">
+              <SimpleSection title="A space to collaborate.">
                 <SectionP>
-                  <SectionIcon name="grid" />
-                  The big goal we're aiming for is giving power back to the end users. It's more
-                  than just control, it's allowing for collaboration and a new ecosystem of rich
-                  data providers and components that can handle them.
+                  <SectionIcon name="satellite" />
+                  Today, intranets are places where things go to die. Orbit wants to make it so easy
+                  to build apps together, that your team turns a stale and boring portal into an
+                  iron-man interface for everyone at your company.
                   <Space />
-                  Orbit enforces a decentralized and private-first design that means every app must
-                  sync it's data into common structural formats that will realize a huge boom in
-                  sharing between data sources and apps.
-                </SectionP>
-              </SimpleSection>
-
-              <SimpleSection title="An full featured UI kit.">
-                <SectionP>
-                  <SectionIcon name="ok" />
-                  A big part of the pain of app development today is putting together powerful
-                  interfaces. Typically with web apps you're forced to glue together many different
-                  pieces, each with varying levels of performance, and none with consistency.
-                  <Space />
-                  Orbit built a state of the art style system and a huge, rich UI kit that handles
-                  complex use cases like having easy to use groupable, searchable, filterable, and
-                  selectable virtualized lists and tables.
+                  It starts with the Workspace, where all your apps are available to use and edit.
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="A privacy-first, decentralized app store.">
                 <SectionP>
-                  <SectionIcon name="home" />
-                  Collaborate with teammates in a shared workspace on apps you build together,
-                  syncing all their relevant data and configuration behind the firewall.
+                  <SectionIcon name="shop" />
+                  Publish new apps for your team or for the world. Every app can run on it's own
+                  using well-developed standards, and follows a TypeScript API.
                   <Space />
-                  Then, install apps and data sources from the ap store to expand your teams
-                  abilities, and contribute your own back!
+                  Install apps and data sources from the app store to expand your teams abilities.
+                </SectionP>
+              </SimpleSection>
+
+              <SimpleSection title="A UI kit to rival Native (really).">
+                <SectionP>
+                  <SectionIcon name="widget" />
+                  Building a proper list is no joke. Either is a table, form, or popover. But that's
+                  just the start.
+                  <Space />
+                  Making them all work together well, within flows, with disparate data structures,
+                  and in beautiful interfaces is where Orbit shines.
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="An incredible development experience for everyone.">
                 <SectionP>
                   <SectionIcon name="app" />
-                  Hot reloading, when done well, realizes a huge leap forward in developer
-                  productivity. Orbit gives you state of the art hot reloading out of the box.
+                  It's not just no-config. It's taking time to get everything from team-data and
+                  user-data management, to complex multi-app flows, and making them all work
+                  together with simple, easy pieces.
                   <Space />
-                  When combined with a large toolkit of primitives that virtualize and parallelize
-                  hard work automatically, you get something truly hard to achieve: incredible
-                  developer experience, without throwing out performance.
+                  Read our docs to get started.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="Spaces to collaborate.">
+              <SimpleSection title="Open source and decentralized.">
                 <SectionP>
-                  <SectionIcon name="can" />
-                  Orbit gives your company a home that you control completely. Everything is synced
-                  peer to peer, and apps can even sync data to a common format to collaborate with
-                  each other.
+                  <SectionIcon name="globe" />
+                  We're tired of platforms coming and going. We want something better for ourselves,
+                  that we can trust to build on.
                   <Space />
                   Collaborate on new data sources components. It's everything you'd want in a mature
                   app platform, and none of the downsides of having to glue together an intranet
@@ -112,7 +104,16 @@ export function ChestSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      {/* <Page.Background background={theme => theme.background} /> */}
+      <Page.Parallax speed={0.5} zIndex={-2}>
+        <FullScreen
+          className="northern-lights"
+          backgroundImage={`url(${redshift})`}
+          backgroundSize="cover"
+          backgroundPosition="center center"
+          backgroundRepeat="no-repeat"
+          bottom="-100%"
+        />
+      </Page.Parallax>
     </Page>
   )
 }

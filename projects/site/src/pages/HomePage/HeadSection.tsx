@@ -110,93 +110,94 @@ export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const [hoverDownload, setHoverDownload] = useState(false)
   return (
-    <Page zIndex={-1} {...props}>
-      <Page.Content>
-        {hoverDownload && <OuterSpace />}
-
-        <FullScreen opacity={fontsLoaded ? 1 : 0}>
-          <Row
-            transform={{ y: '-60%' }}
-            margin={['auto', 0]}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <HeadText />
-          </Row>
-
-          <Space size="xl" />
-
-          <FullScreen top="auto">
-            <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
-              <View
-                // background={`url(${screen}) no-repeat top left`}
-                background="#222"
-                borderRadius={10}
-                backgroundSize="contain"
-                flex={1}
-                width="100%"
-                maxWidth={1000}
-                margin={['auto', 'auto', 0]}
-                height={320}
-                position="relative"
-              >
-                <DownloadButton
-                  onMouseEnter={() => setHoverDownload(true)}
-                  onMouseLeave={() => setHoverDownload(false)}
-                />
-              </View>
-            </FadeIn>
-
-            <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-              <img src={lineSep} />
-              <View
-                position="absolute"
-                bottom={0}
-                left={0}
-                right={0}
-                height={400}
-                transform={{ y: 400 }}
-                background={theme => theme.background}
-              />
-            </FullScreen>
-
-            <View
-              position="absolute"
-              bottom="12%"
-              left={0}
-              right={0}
+    <>
+      <OuterSpace show={hoverDownload} />
+      <Page zIndex={-1} {...props}>
+        <Page.Content>
+          <FullScreen opacity={fontsLoaded ? 1 : 0}>
+            <Row
+              transform={{ y: '-60%' }}
+              margin={['auto', 0]}
               alignItems="center"
               justifyContent="center"
-              height={160}
             >
-              <img style={{ position: 'absolute', top: 0 }} src={macbook} />
-              <PreviewButton>See the Orbit Demo</PreviewButton>
-            </View>
+              <HeadText />
+            </Row>
+
+            <Space size="xl" />
+
+            <FullScreen top="auto">
+              <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+                <View
+                  // background={`url(${screen}) no-repeat top left`}
+                  background="#222"
+                  borderRadius={10}
+                  backgroundSize="contain"
+                  flex={1}
+                  width="100%"
+                  maxWidth={1000}
+                  margin={['auto', 'auto', 0]}
+                  height={320}
+                  position="relative"
+                >
+                  <DownloadButton
+                    onMouseEnter={() => setHoverDownload(true)}
+                    onMouseLeave={() => setHoverDownload(false)}
+                  />
+                </View>
+              </FadeIn>
+
+              <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
+                <img src={lineSep} />
+                <View
+                  position="absolute"
+                  bottom={0}
+                  left={0}
+                  right={0}
+                  height={400}
+                  transform={{ y: 400 }}
+                  background={theme => theme.background}
+                />
+              </FullScreen>
+
+              <View
+                position="absolute"
+                bottom="12%"
+                left={0}
+                right={0}
+                alignItems="center"
+                justifyContent="center"
+                height={160}
+              >
+                <img style={{ position: 'absolute', top: 0 }} src={macbook} />
+                <PreviewButton>See the Orbit Demo</PreviewButton>
+              </View>
+            </FullScreen>
           </FullScreen>
-        </FullScreen>
-      </Page.Content>
+        </Page.Content>
 
-      <Page.Parallax speed={-0.2} zIndex={-2}>
-        <View
-          pointerEvents="none"
-          position="absolute"
-          top="30%"
-          left={0}
-          right={0}
-          zIndex={1}
-          opacity={0.3}
-          transform={{
-            scale: 1.3,
-          }}
-        >
-          <img src={glow} />
-        </View>
-      </Page.Parallax>
+        <Page.Parallax speed={-0.2} zIndex={-2}>
+          <View
+            pointerEvents="none"
+            position="absolute"
+            top="30%"
+            left={0}
+            right={0}
+            zIndex={1}
+            opacity={0.3}
+            transform={{
+              scale: 1.3,
+            }}
+          >
+            <img src={glow} />
+          </View>
+        </Page.Parallax>
 
-      <Page.Parallax speed={0} zIndex={-2}>
-        <TopBlur opacity={0.6} />
-      </Page.Parallax>
-    </Page>
+        <Page.Parallax speed={0} zIndex={-2}>
+          <TopBlur opacity={0.6} />
+        </Page.Parallax>
+      </Page>
+    </>
   )
 }
 

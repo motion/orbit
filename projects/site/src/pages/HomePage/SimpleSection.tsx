@@ -4,19 +4,19 @@ import React from 'react'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
-export const SimpleSection = props => (
-  <SectionChrome space>
+export const SimpleSection = ({ index = null, title, children, ...rest }) => (
+  <SectionChrome space {...rest}>
     <SectionTitle>
-      {isDefined(props.index) && (
+      {isDefined(index) && (
         <Badge>
-          <BadgeText>{props.index}.</BadgeText>
+          <BadgeText>{index}.</BadgeText>
         </Badge>
       )}
       <TitleText size="md" textAlign="left" flex={1}>
-        {props.title}
+        {title}
       </TitleText>
     </SectionTitle>
-    <SectionBody>{props.children}</SectionBody>
+    <SectionBody>{children}</SectionBody>
   </SectionChrome>
 )
 const SectionChrome = gloss(Col, {
@@ -37,12 +37,12 @@ const SectionBody = gloss({
 
 export const SectionIcon = gloss(props => <Icon size={72} {...props} />, {
   float: 'right',
-  margin: [8, 0, 32, 32],
+  margin: [18, 0, 40, 40],
+  opacity: 0.2,
 })
 
 const SectionTitle = gloss(Row, {
   flex: 1,
-  alignItems: 'flex-end',
 })
 
 const Badge = gloss({
@@ -50,13 +50,14 @@ const Badge = gloss({
   // top: -50,
   transform: {
     x: 'calc(-100% - 15px)',
+    y: -20,
   },
-  width: 50,
-  height: 50,
+  width: 55,
+  height: 55,
   borderRadius: 100,
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 18,
+  fontSize: 24,
 }).theme((_, theme) => ({
   color: theme.color,
   border: [1, theme.color.alpha(0.25)],

@@ -1,6 +1,7 @@
 import { FullScreen, Grid, PassProps, Space } from '@o/ui'
 import React from 'react'
 import redshift from '../../../public/images/redshift.svg'
+import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
@@ -9,6 +10,7 @@ import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export function ChestSection(props) {
+  const screen = useScreenSize()
   return (
     <Page {...props}>
       <Page.Content>
@@ -28,35 +30,38 @@ export function ChestSection(props) {
           <Space size="lg" />
           <Grid
             alignItems="start"
-            space="15%"
+            space="20%"
             itemMinWidth={240}
             maxWidth={800}
             margin={[0, 'auto']}
           >
-            <PassProps getChildProps={(_, index) => ({ index: index + 1 })}>
+            <PassProps
+              getChildProps={(_, index) => ({
+                index: index + 1,
+                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '60%' } }),
+              })}
+            >
               <SimpleSection title="Apps that work together.">
                 <SectionP>
                   <SectionIcon name="apps" />
                   It's time we could build apps that talk to each other. Orbit comes with many data
                   apps already, and has an open ecosystem for unlimited collaboration.
                   <Space />
-                  Because every app exposes an API, your team can start leveraging a whole world of
-                  new possibilities.
+                  Every app exposes a typed API, and can share data with any other app.
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="A space to collaborate.">
                 <SectionP>
                   <SectionIcon name="satellite" />
-                  Today, intranets are places where things go to die. Orbit wants to make it so easy
-                  to build apps together, that your team turns a stale and boring portal into an
-                  iron-man interface for everyone at your company.
+                  Orbit wants to make it so easy to build apps together that once-boring portals
+                  turn into an rich interfaces for everyone at your company.
                   <Space />
                   It starts with the Workspace, where all your apps are available to use and edit.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A privacy-first, decentralized app store.">
+              <SimpleSection title="A decentralized app store.">
                 <SectionP>
                   <SectionIcon name="shop" />
                   Publish new apps for your team or for the world. Every app can run on it's own
@@ -66,7 +71,7 @@ export function ChestSection(props) {
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A UI kit to rival Native (really).">
+              <SimpleSection title="A UI kit to rival native.">
                 <SectionP>
                   <SectionIcon name="widget" />
                   Building a proper list is no joke. Either is a table, form, or popover. But that's
@@ -80,9 +85,8 @@ export function ChestSection(props) {
               <SimpleSection title="An incredible development experience for everyone.">
                 <SectionP>
                   <SectionIcon name="app" />
-                  It's not just no-config. It's taking time to get everything from team-data and
-                  user-data management, to complex multi-app flows, and making them all work
-                  together with simple, easy pieces.
+                  It's not just no-config and easy to use. We've spent time getting patterns for
+                  many common app use cases easy: from reactive data to easily syncing.
                   <Space />
                   Read our docs to get started.
                 </SectionP>
@@ -94,9 +98,7 @@ export function ChestSection(props) {
                   We're tired of platforms coming and going. We want something better for ourselves,
                   that we can trust to build on.
                   <Space />
-                  Collaborate on new data sources components. It's everything you'd want in a mature
-                  app platform, and none of the downsides of having to glue together an intranet
-                  yourself.
+                  It's everything you'd want in a mature app platform.
                 </SectionP>
               </SimpleSection>
             </PassProps>

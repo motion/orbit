@@ -111,7 +111,7 @@ export function ShoulderSection(props) {
         <Spotlight />
       </Page.Parallax>
 
-      <Page.Parallax speed={0.1} zIndex={-2}>
+      <Page.Parallax speed={-0.1} zIndex={-2}>
         <FullScreen transform={{ y: '16%', scale: 0.9 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"

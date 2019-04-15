@@ -140,7 +140,7 @@ export function NeckSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Parallax speed={0.4} zIndex={-2}>
+      <Page.Parallax speed={0.3} zIndex={-2}>
         <FullScreen
           className="northern-lights"
           backgroundImage={`url(${northernlights})`}

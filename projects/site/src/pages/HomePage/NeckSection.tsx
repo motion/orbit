@@ -20,7 +20,7 @@ export const TitleTextSub = gloss((props: TextProps) => (
 export function NeckSection(props) {
   const screen = useScreenSize()
   return (
-    <Page {...props}>
+    <Page zIndex={3} {...props}>
       <Page.Content>
         <SpacedPageContent
           header={

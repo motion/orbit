@@ -114,7 +114,7 @@ export function HeadSection(props) {
   return (
     <>
       <OuterSpace show={hoverDownload} />
-      <Page zIndex={-1} {...props}>
+      <Page zIndex={0} {...props}>
         <Page.Content>
           <FullScreen opacity={fontsLoaded ? 1 : 0}>
             <Row

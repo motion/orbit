@@ -27,7 +27,7 @@ export const SectionContent = ({ outside, children, zIndex, ...props }: SectionC
   )
 }
 
-const Section = gloss({
+const Section = gloss(View, {
   position: 'relative',
 })
 

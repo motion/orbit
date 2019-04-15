@@ -5,9 +5,9 @@ import * as Constants from '../constants'
 
 export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
 
-export const SectionContent = ({ outside, children, ...props }: SectionContentProps) => {
+export const SectionContent = ({ outside, children, zIndex, ...props }: SectionContentProps) => {
   return (
-    <Section>
+    <Section zIndex={zIndex}>
       {outside}
       <SectionContentChrome {...props}>
         <div

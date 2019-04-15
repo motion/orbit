@@ -1,16 +1,17 @@
-import { Col, FullScreen, gloss, Grid, Paragraph, SimpleText, Space, TextProps, Theme } from '@o/ui'
+import { Col, FullScreen, gloss, Grid, Space, TextProps, Theme } from '@o/ui'
 import React from 'react'
 import earth from '../../../public/images/earth.jpg'
 import { Page } from '../../views/Page'
+import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './NeckSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const SubParagraph = (props: TextProps) => (
-  <TitleText
+  <Paragraph
     textAlign="left"
-    size={1}
+    size={1.2}
     sizeLineHeight={1.25}
     fontWeight={200}
     alpha={0.6}
@@ -24,26 +25,25 @@ export function LegsSection(props) {
       <Page {...props}>
         <Page.Content>
           <SpacedPageContent
+            margin={['auto', '10%']}
             header={
               <>
                 <PillButton>About</PillButton>
                 <Space size="sm" />
                 <TitleText size="xl">A better deal for apps.</TitleText>
+                <Space />
               </>
             }
           >
-            <Grid space itemMinWidth={400}>
+            <Grid space="10%" itemMinWidth={380}>
               <Col space="lg">
-                <TitleTextSub textAlign="left" alpha={1} size={1.2}>
-                  The web and app platforms are broken. Lets make apps easy to build, user friendly,
-                  portable and collaborative.
+                <TitleTextSub textAlign="left" alpha={1} size={1}>
+                  Our app platforms are broken. We want apps that are easy to build, powerful, user
+                  friendly, portable and collaborative.
                 </TitleTextSub>
 
                 <SubParagraph>
-                  Lorem ipsum dolor firsthand, we've felt the pains sit amet. Our theory is simple:
-                  apps like VSCode prove that with a carefully designed view library and APIs, it's
-                  more than possible to run nicely. WebAssembly is exciting, leaving room to do
-                  mixed rendering for an incredible future.
+                  Lorem ipsum dolor sit amet. An intro into how were thinking about the mission.
                 </SubParagraph>
                 <SubParagraph>
                   We've spent many years putting together a large collection of performant views.
@@ -56,22 +56,19 @@ export function LegsSection(props) {
                 <SubParagraph>We'd like to build it with you.</SubParagraph>
               </Col>
 
-              <Col space="lg">
-                <Paragraph>Our goals</Paragraph>
+              <Col space="sm" justifyContent="flex-end">
+                <SubParagraph>Our goals</SubParagraph>
 
-                <Item>Let you build apps with other people without infrastructure.</Item>
+                <Item>Build apps without infrastructure.</Item>
 
-                <Item>
-                  Standardize apps that provide access to their data, for rich collaboration.
-                </Item>
+                <Item>Enable an ecosystem of views and data providers.</Item>
 
-                <Item>Let your apps to go cross platform easily.</Item>
+                <Item>Go cross platform easily.</Item>
 
-                <Item>Have better accessiblity, keyboard navigation, and native feel.</Item>
+                <Item>Better accessiblity through native-like views.</Item>
 
                 <Item>
-                  Avoid performance cliffs of the DOM, by providing powerful views, primitives, and
-                  dev tools.
+                  Make DX a first-class citizen.
                 </Item>
               </Col>
             </Grid>
@@ -95,4 +92,4 @@ export function LegsSection(props) {
   )
 }
 
-const Item = gloss(SimpleText)
+const Item = gloss(SubParagraph)

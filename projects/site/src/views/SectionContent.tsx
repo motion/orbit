@@ -29,7 +29,7 @@ export const SectionContent = ({ outside, children, zIndex, ...props }: SectionC
 
 const Section = gloss(View, {
   position: 'relative',
-  margin: [0, 'auto'],
+  alignItems: 'center',
 })
 
 export const SectionContentChrome = gloss(View, {

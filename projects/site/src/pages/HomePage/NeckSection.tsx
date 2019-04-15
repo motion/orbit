@@ -25,7 +25,7 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
-              <TitleText size="xxl">All in one.</TitleText>
+              <TitleText size="xl">All in one.</TitleText>
               <TitleText size="md" fontWeight={200}>
                 The vertically integrated app platform.
               </TitleText>

@@ -16,7 +16,7 @@ export function AbdomenSection(props) {
           outside={
             <Image
               position="absolute"
-              top={-90}
+              top={-80}
               left={0}
               right={0}
               width="100%"

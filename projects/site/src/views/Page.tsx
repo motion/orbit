@@ -46,7 +46,6 @@ Page.Parallax = ({
 Page.Content = (props: SectionContentProps) => {
   const parallax = useProps()
   const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
-  console.log('zIndex', zIndex)
   const siteStore = useSiteStore()
   return (
     <SectionContent

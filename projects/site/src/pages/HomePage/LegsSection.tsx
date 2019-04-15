@@ -8,7 +8,14 @@ import { TitleTextSub } from './NeckSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const SubParagraph = (props: TextProps) => (
-  <TitleText size={1.4} sizeLineHeight={1.1} fontWeight={200} alpha={0.5} {...props} />
+  <TitleText
+    textAlign="left"
+    size={1}
+    sizeLineHeight={1.25}
+    fontWeight={200}
+    alpha={0.6}
+    {...props}
+  />
 )
 
 export function LegsSection(props) {
@@ -27,7 +34,7 @@ export function LegsSection(props) {
           >
             <Grid space itemMinWidth={400}>
               <Col space="lg">
-                <TitleTextSub alpha={1} size={2.6}>
+                <TitleTextSub textAlign="left" alpha={1} size={1.2}>
                   The web and app platforms are broken. Lets make apps easy to build, user friendly,
                   portable and collaborative.
                 </TitleTextSub>

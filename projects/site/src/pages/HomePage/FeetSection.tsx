@@ -31,7 +31,7 @@ export function FeetSection(props) {
           </SpacedPageContent>
         </Page.Content>
 
-        <Page.Background background="darkblue" />
+        <Page.Background background="#000" />
       </Page>
     </Theme>
   )

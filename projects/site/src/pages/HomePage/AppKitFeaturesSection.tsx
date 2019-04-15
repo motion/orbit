@@ -33,7 +33,14 @@ export function ChestSection(props) {
             </>
           }
         >
-          <Row space="lg" spaceAround flexWrap="wrap" justifyContent="center">
+          <Row
+            height="auto"
+            space="lg"
+            spaceAround
+            flexWrap={screen === 'small' ? 'nowrap' : 'wrap'}
+            scrollable={screen === 'small' ? 'x' : false}
+            justifyContent={screen === 'small' ? 'flex-start' : 'center'}
+          >
             <Integration icon={require('../../../public/logos/slack.svg')} title="Slack" />
             <Integration
               icon={require('../../../public/logos/github-octocat.svg')}
@@ -51,7 +58,7 @@ export function ChestSection(props) {
           </Row>
         </SpacedPageContent>
 
-        <Space size="xxxl" />
+        <Space size="lg" />
 
         <SpacedPageContent
           maxHeight={100000}
@@ -63,8 +70,7 @@ export function ChestSection(props) {
               <Space size="xs" />
               <TitleText size="xxl">Batteries Included.</TitleText>
               <TitleTextSub>
-                Most internal tools have the same patterns. Orbit makes building many types of
-                simple applications easy.
+                Internal tools share patterns. Orbit makes building those types of apps easy.
               </TitleTextSub>
             </>
           }
@@ -157,7 +163,7 @@ export function ChestSection(props) {
 
 const Integration = props => (
   <View alignItems="center" justifyContent="center">
-    <Image src={props.icon} width="50%" height="auto" />
+    <Image src={props.icon} maxWidth={100} width="50%" height="auto" />
     <Space />
     <Paragraph size="xl">{props.title}</Paragraph>
   </View>

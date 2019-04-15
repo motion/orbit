@@ -74,7 +74,7 @@ function HeadText() {
         </TitleText>
       </FadeIn>
 
-      <Space size="lg" />
+      <Space size="xl" />
 
       <FadeIn disable={!measured}>
         <Paragraph
@@ -128,6 +128,7 @@ export function HeadSection(props) {
             </Row>
 
             <Space size="xxxl" />
+            <Space size="xxxl" />
 
             <FullScreen top="auto">
               <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
@@ -141,9 +142,9 @@ export function HeadSection(props) {
                   width="100%"
                   maxWidth={1000}
                   margin={['auto', 'auto', 0]}
-                  height={180}
+                  height={250}
                   position="relative"
-                  bottom={90}
+                  bottom={65}
                 >
                   <DownloadButton
                     onMouseEnter={() => setHoverDownload(true)}
@@ -241,7 +242,7 @@ const DownloadButton = props => (
         position="relative"
         alignItems="center"
         justifyContent="center"
-        border={[3, '#21AA0F']}
+        border={[1, '#21AA0F']}
         borderRadius={100}
         background={theme => theme.background}
         hoverStyle={{
@@ -254,7 +255,7 @@ const DownloadButton = props => (
         }}
         {...props}
       >
-        <Image position="absolute" right={22} src={downmark} />
+        <Image userSelect="none" position="absolute" right={22} src={downmark} />
         <Text
           transform={{ y: 2 }}
           zIndex={1}

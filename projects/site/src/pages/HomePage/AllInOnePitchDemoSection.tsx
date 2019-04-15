@@ -12,7 +12,7 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
-  <View width="90%" maxWidth={800} minWidth={450} textAlign="center">
+  <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
     <TitleText size="sm" sizeLineHeight={1.2} fontWeight={200} alpha={0.5} {...props} />
   </View>
 ))
@@ -26,9 +26,11 @@ export function NeckSection(props) {
           header={
             <>
               <TitleText size="xl">All in one.</TitleText>
-              <TitleText size="md" fontWeight={200}>
-                The vertically integrated app platform.
-              </TitleText>
+              {screen !== 'small' && (
+                <TitleText size="md" fontWeight={200}>
+                  The vertically integrated app platform.
+                </TitleText>
+              )}
               <TitleTextSub>
                 Create beautiful apps with a few lines of code. No config, no servers.
               </TitleTextSub>
@@ -36,30 +38,30 @@ export function NeckSection(props) {
           }
         >
           <Col maxWidth="100%" margin={[0, 'auto']}>
-            <Row space flexWrap={screen === 'small' ? 'wrap' : 'nowrap'}>
-              <SubSection maxWidth="33%">
-                <PillButtonDark>Import</PillButtonDark>
-                <Space />
-                <CenterText>
-                  Use data from many integrations, integrated with just a line of code.
-                </CenterText>
-              </SubSection>
-              <SubSection flex={1.5} pad={[true, 'xxl']}>
-                <PillButtonDark>Display</PillButtonDark>
-                <Space />
-                <CenterText>
-                  Orbits powerful building blocks let you link data to powerful views easily.
-                </CenterText>
-              </SubSection>
-              <SubSection maxWidth="33%">
-                <PillButtonDark>Export</PillButtonDark>
-                <Space />
-                <CenterText>
-                  Take a selection from your table and export to{' '}
-                  <Inline color="#F14336">Gmail</Inline> easily.
-                </CenterText>
-              </SubSection>
-            </Row>
+            {screen !== 'small' && (
+              <Row space flexWrap={screen === 'small' ? 'wrap' : 'nowrap'}>
+                <SubSection maxWidth="33%">
+                  <PillButtonDark>Import</PillButtonDark>
+                  <Space />
+                  <CenterText>
+                    Tons of data integrations, integrated with a line of code.
+                  </CenterText>
+                </SubSection>
+                <SubSection flex={1.5} pad={[true, 'xxl']}>
+                  <PillButtonDark>Display</PillButtonDark>
+                  <Space />
+                  <CenterText>Extremely powerful and flexible views that work together.</CenterText>
+                </SubSection>
+                <SubSection maxWidth="33%">
+                  <PillButtonDark>Export</PillButtonDark>
+                  <Space />
+                  <CenterText>
+                    Use any selection as ana ction, export it to{' '}
+                    <Inline color="#F14336">Gmail</Inline> easily.
+                  </CenterText>
+                </SubSection>
+              </Row>
+            )}
 
             <Space />
 

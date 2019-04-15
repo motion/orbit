@@ -1,6 +1,7 @@
-import { Col, FullScreen, gloss, Grid, Space, TextProps, Theme } from '@o/ui'
+import { Col, FullScreen, gloss, Grid, Space, TextProps, Theme, View } from '@o/ui'
 import React from 'react'
 import earth from '../../../public/images/earth.jpg'
+import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -20,12 +21,14 @@ export const SubParagraph = (props: TextProps) => (
 )
 
 export function LegsSection(props) {
+  const screen = useScreenSize()
   return (
     <Theme name="home">
       <Page {...props}>
         <Page.Content>
+          <View height={70} />
           <SpacedPageContent
-            margin={['auto', '10%']}
+            padding={[0, '10%']}
             header={
               <>
                 <PillButton>About</PillButton>
@@ -56,20 +59,24 @@ export function LegsSection(props) {
                 <SubParagraph>We'd like to build it with you.</SubParagraph>
               </Col>
 
-              <Col space="sm" justifyContent="flex-end">
-                <SubParagraph>Our goals</SubParagraph>
+              {screen === 'large' && (
+                <Col space="sm" justifyContent="flex-end">
+                  <SubParagraph>Our goals</SubParagraph>
 
-                <Item>Build apps without infrastructure.</Item>
+                  <Item>Build apps without infrastructure.</Item>
 
-                <Item>Enable an ecosystem of views and data providers.</Item>
+                  <Item>Enable an ecosystem of views and data providers.</Item>
 
-                <Item>Go cross platform easily.</Item>
+                  <Item>Go cross platform easily.</Item>
 
-                <Item>Better accessiblity through native-like views.</Item>
+                  <Item>Better accessiblity through native-like views.</Item>
 
-                <Item>Make DX a first-class citizen.</Item>
-              </Col>
+                  <Item>Make DX a first-class citizen.</Item>
+                </Col>
+              )}
             </Grid>
+
+            <View minHeight={80} />
           </SpacedPageContent>
         </Page.Content>
 

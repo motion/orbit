@@ -19,11 +19,8 @@ export function ChestSection(props) {
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={0}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-10%', 0, '5%']}
           height="auto"
-          transform={{
-            y: '-10%',
-          }}
           header={
             <>
               <PillButton>Integrations</PillButton>
@@ -33,16 +30,7 @@ export function ChestSection(props) {
             </>
           }
         >
-          <Row
-            width="60%"
-            margin={[0, 'auto']}
-            height="auto"
-            space="lg"
-            spaceAround
-            flexWrap={screen === 'small' ? 'nowrap' : 'wrap'}
-            scrollable={screen === 'small' ? 'x' : false}
-            justifyContent={screen === 'small' ? 'flex-start' : 'center'}
-          >
+          <Row height="auto" space="md" spaceAround scrollable="x" justifyContent="center">
             <Integration icon={require('../../../public/logos/slack.svg')} title="Slack" />
             <Integration
               icon={require('../../../public/logos/github-octocat.svg')}
@@ -167,7 +155,7 @@ export function ChestSection(props) {
 
 const Integration = props => (
   <View alignItems="center" justifyContent="center">
-    <Image src={props.icon} maxWidth={100} width="50%" height="auto" />
+    <Image src={props.icon} maxWidth={115} width="50%" height="auto" />
     <Space />
     <Paragraph size="xl">{props.title}</Paragraph>
   </View>

@@ -22,14 +22,17 @@ class SiteStore {
     let desiredHeight = this.windowHeight
     // taller on mobile
     if (this.screenSize === 'small') {
-      desiredHeight = this.windowHeight * 1.2
-      maxHeight = this.windowHeight * 1.2
+      desiredHeight = this.windowHeight
+      maxHeight = this.windowHeight
     }
-    return Math.min(
+    return Math.max(
       // min-height
-      Math.max(850, desiredHeight),
-      // max-height
-      maxHeight,
+      850,
+      Math.min(
+        desiredHeight,
+        // max-height
+        maxHeight,
+      ),
     )
   }
 }

@@ -38,7 +38,7 @@ export function WaistSection(props) {
           }
         >
           <SpacedPageContent
-            margin={[0, '10%']}
+            padding={[0, '5%']}
             header={
               <>
                 <PillButton>Security</PillButton>

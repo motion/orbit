@@ -17,16 +17,16 @@ import { useTextFit } from '../../views/useTextFit'
 import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
-  large: 'A better way to build apps together.',
-  medium: 'A new way to build apps together.',
+  large: 'A better way to build apps.',
+  medium: 'A new way to build apps.',
   small: 'Build apps together.',
 }
 
 let allTexts = {
   large: [
-    `Create any app you can dream, with barely any code and deploy without infrastructure.`,
-    `It's the vertically integrated app platform for developers.`,
-    `Open source, decentralized and offline-first.`,
+    `Build powerful apps and internal tools without configuration or servers.`,
+    `It's a new type of browser, vertically integrated and designed for building common apps.`,
+    `Just a few lines of code and you're done.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
@@ -123,12 +123,10 @@ export function HeadSection(props) {
               margin={['auto', 0]}
               alignItems="center"
               justifyContent="center"
+              minHeight="20%"
             >
               <HeadText />
             </Row>
-
-            <Space size="xxxl" />
-            <Space size="xxxl" />
 
             <FullScreen top="auto">
               <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
@@ -250,11 +248,11 @@ const DownloadButton = props => (
         position="relative"
         alignItems="center"
         justifyContent="center"
-        border={[1, '#21AA0F']}
+        border={[2, '#21AA0F']}
         borderRadius={100}
         background={theme => theme.background}
         hoverStyle={{
-          border: [3, toColor('#21AA0F').lighten(0.3)],
+          border: [2, toColor('#21AA0F').lighten(0.3)],
         }}
         textDecoration="none"
         onClick={e => {

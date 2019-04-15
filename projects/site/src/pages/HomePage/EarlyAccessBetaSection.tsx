@@ -24,6 +24,7 @@ export function AbdomenSection(props) {
             />
           }
         >
+          <View height={100} />
           <SpacedPageContent
             header={
               <>
@@ -32,9 +33,8 @@ export function AbdomenSection(props) {
                 <TitleText size="xxl">Early Access.</TitleText>
                 <TitleTextSub>
                   Orbit is now in beta. We're rolling out to small groups.
-                  <br />
-                  Sign up here to get in queue.
                 </TitleTextSub>
+                <TitleTextSub>Sign up here to get in queue.</TitleTextSub>
               </>
             }
           >

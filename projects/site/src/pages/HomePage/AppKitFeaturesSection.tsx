@@ -148,8 +148,11 @@ export function ChestSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Parallax speed={0.5} zIndex={-2}>
+      <Page.Parallax speed={0.15} zIndex={-2}>
         <FullScreen
+          transform={{
+            y: '30%',
+          }}
           className="northern-lights"
           backgroundImage={`url(${redshift})`}
           backgroundSize="contain"

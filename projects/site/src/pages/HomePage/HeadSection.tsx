@@ -74,7 +74,7 @@ function HeadText() {
         </TitleText>
       </FadeIn>
 
-      <Space size="xl" />
+      <Space size="lg" />
 
       <FadeIn disable={!measured}>
         <Paragraph
@@ -133,19 +133,27 @@ export function HeadSection(props) {
             <FullScreen top="auto">
               <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
                 <View
-                  backgroundImage={`url(${screen})`}
-                  backgroundSize="contain"
-                  backgroundPosition="center center"
-                  backgroundRepeat="no-repeat"
-                  borderRadius={10}
                   flex={1}
                   width="100%"
                   maxWidth={1000}
                   margin={['auto', 'auto', 0]}
-                  height={250}
+                  height={220}
                   position="relative"
                   bottom={65}
                 >
+                  <View
+                    position="absolute"
+                    overflow="hidden"
+                    backgroundColor="#000"
+                    backgroundImage={`url(${screen})`}
+                    backgroundSize="contain"
+                    backgroundPosition="center center"
+                    backgroundRepeat="no-repeat"
+                    borderRadius={10}
+                    width="100%"
+                    height="100%"
+                    zIndex={-1}
+                  />
                   <DownloadButton
                     onMouseEnter={() => setHoverDownload(true)}
                     onMouseLeave={() => setHoverDownload(false)}

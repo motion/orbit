@@ -141,8 +141,9 @@ export function HeadSection(props) {
                   width="100%"
                   maxWidth={1000}
                   margin={['auto', 'auto', 0]}
-                  height={320}
+                  height={180}
                   position="relative"
+                  bottom={90}
                 >
                   <DownloadButton
                     onMouseEnter={() => setHoverDownload(true)}
@@ -173,7 +174,13 @@ export function HeadSection(props) {
                 justifyContent="center"
                 height={160}
               >
-                <img style={{ position: 'absolute', top: 0 }} src={macbook} />
+                <Image
+                  position="absolute"
+                  top={0}
+                  transform={{ scale: 0.5 }}
+                  transformOrigin="top center"
+                  src={macbook}
+                />
                 <PreviewButton>See the Orbit Demo</PreviewButton>
               </View>
             </FullScreen>

@@ -36,7 +36,7 @@ export function ShoulderSection(props) {
                 width={400}
                 height={350}
                 backgroundImage={`url(${appScreenshot})`}
-                backgroundSize="cover"
+                backgroundSize="contain"
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
                 position="relative"
@@ -89,9 +89,10 @@ export function ShoulderSection(props) {
                 width={400}
                 height={350}
                 backgroundImage={`url(${codeScreenshot})`}
-                backgroundSize="cover"
+                backgroundSize="contain"
                 backgroundPosition="center center"
                 backgroundRepeat="no-repeat"
+                overflow="hidden"
               />
             </Col>
           </Row>

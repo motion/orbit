@@ -127,7 +127,9 @@ export function NeckSection(props) {
                   opacity={0.5}
                   alignSelf="flex-start"
                   transform={{
-                    scaleX: -1,
+                    // scaleX: 1,
+                    // scaleY: -1,
+                    rotate: '275deg',
                   }}
                   src={require('../../../public/images/curve-arrow.svg')}
                 />

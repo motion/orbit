@@ -59,13 +59,13 @@ export const LinksLeft = props => (
 )
 
 export const LinksRight = props => (
-  <Overdrive id="links-right" duration={100000}>
+  <Overdrive id="links-right">
     <LinkRow>
       <Link {...props} href="/">
         Pricing
       </Link>
       <Link {...props} href="/">
-        !!!
+        About
       </Link>
       <Link {...props} href="/">
         Blog

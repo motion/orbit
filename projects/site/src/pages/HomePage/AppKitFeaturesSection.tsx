@@ -22,7 +22,7 @@ export function ChestSection(props) {
           margin={0}
           height="auto"
           transform={{
-            y: '-18%',
+            y: '-10%',
           }}
           header={
             <>
@@ -34,6 +34,8 @@ export function ChestSection(props) {
           }
         >
           <Row
+            width="60%"
+            margin={[0, 'auto']}
             height="auto"
             space="lg"
             spaceAround
@@ -63,6 +65,7 @@ export function ChestSection(props) {
         <SpacedPageContent
           maxHeight={100000}
           height="auto"
+          flex={1}
           margin={[0, 'auto']}
           header={
             <>
@@ -78,10 +81,10 @@ export function ChestSection(props) {
           <Space size="lg" />
           <Grid
             alignItems="start"
-            space={screen === 'small' ? '40px 15%' : '12% 15%'}
+            space={screen === 'small' ? '40px 15%' : '20% 15%'}
             itemMinWidth={240}
             maxWidth={800}
-            margin={[0, 'auto']}
+            margin="auto"
           >
             <PassProps
               getChildProps={(_, index) => ({
@@ -92,42 +95,40 @@ export function ChestSection(props) {
               <SimpleSection title="Apps that work together.">
                 <SectionP>
                   <SectionIcon name="apps" />
-                  Apps that talk to each other, by exposing simple typed APIs. Orbit comes with many
-                  data apps out of the box.
+                  Apps talk to each other with simple typed APIs. Orbit comes with many data apps.
                   <Space />
-                  Apps can sync data in a common format that then lets you display, select, and
-                  share between other apps.
+                  They can also sync data into a common format to display, share and export.
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
                   <SectionIcon name="satellite" />
-                  Your apps live together in a unified workspace. With little code you can create
-                  rich collaborative apps that everyone can use.
+                  A unified workspace keeps your team in sync. Press edit and in seconds deploy a
+                  rich collaborative app to everyone.
                   <Space />
-                  Then, anyone in the workspace can easily edit an app with the press of a button.
+                  Learn more about spaces.
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="A decentralized app store.">
                 <SectionP>
                   <SectionIcon name="shop" />
-                  Publish new apps for your team or for the world. Every app can run on it's own
-                  using well-developed standards, and follows a TypeScript API.
+                  Publish new apps for your team, or for the world. Apps are just node modules, with
+                  a typed API and a clean view system built on React.
                   <Space />
-                  Install apps and data sources from the app store to expand your teams abilities.
+                  Apps also expose data, so you can build your own.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="The UI kit that rivals native.">
+              <SimpleSection title="A UI kit to rival native.">
                 <SectionP>
                   <SectionIcon name="widget" />
-                  Building a proper list is no joke. Either is a table, form, or popover. But that's
-                  just the start.
+                  A proper, powerful and flexible list view is no joke. Neither is a table or form.
+                  But that's just the start.
                   <Space />
-                  Making them all work together well, within flows, with disparate data structures,
-                  and in beautiful interfaces is where Orbit shines.
+                  Orbit makes them all work together, within flows and with disparate data
+                  structures.
                 </SectionP>
               </SimpleSection>
 
@@ -135,15 +136,15 @@ export function ChestSection(props) {
                 <SectionP>
                   <SectionIcon name="app" />
                   It's not just no-config and easy to use. We've spent time getting patterns for
-                  many common app use cases easy: from reactive data to easily syncing.
+                  many common app use cases right: from data to display.
                   <Space />
                   Read our docs to get started.
                 </SectionP>
               </SimpleSection>
             </PassProps>
-
-            <Space size="xxl" />
           </Grid>
+
+          <View flex={4} />
         </SpacedPageContent>
       </Page.Content>
 

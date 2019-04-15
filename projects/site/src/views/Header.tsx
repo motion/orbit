@@ -33,7 +33,7 @@ type LinkProps = {
 export function Link({ children, fontSize, href, ...props }: LinkProps) {
   return (
     <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
-      <SimpleText alpha={0.5} hoverStyle={{ alpha: 1 }}>
+      <SimpleText fontSize={16} alpha={0.65} fontWeight={200} hoverStyle={{ alpha: 1 }}>
         <RouterLink href={href} {...props}>
           {children}
         </RouterLink>
@@ -46,13 +46,13 @@ export const LinksLeft = props => (
   <Overdrive id="links-left">
     <LinkRow>
       <Link {...props} href="/">
-        Examples
+        Start
       </Link>
       <Link {...props} href="/docs">
         Docs
       </Link>
       <Link {...props} href="/">
-        Security
+        Apps
       </Link>
     </LinkRow>
   </Overdrive>
@@ -62,13 +62,13 @@ export const LinksRight = props => (
   <Overdrive id="links-right">
     <LinkRow>
       <Link {...props} href="/">
-        Pricing
-      </Link>
-      <Link {...props} href="/">
-        About
+        Beta
       </Link>
       <Link {...props} href="/">
         Blog
+      </Link>
+      <Link {...props} href="/">
+        About
       </Link>
     </LinkRow>
   </Overdrive>

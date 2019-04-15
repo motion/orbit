@@ -5,7 +5,7 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './DemoSection'
+import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const SubParagraph = (props: TextProps) => (

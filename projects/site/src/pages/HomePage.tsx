@@ -1,12 +1,11 @@
 import React from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
-import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
+import { NeckSection } from './HomePage/AllInOnePitchDemoSection'
 import { ChestSection } from './HomePage/AppKitFeaturesSection'
-import { NeckSection } from './HomePage/DemoSection'
 import { ShoulderSection } from './HomePage/DeploySection'
-import { AbdomenSection } from './HomePage/EarlyAccessSection'
+import { AbdomenSection } from './HomePage/EarlyAccessBetaSection'
 import { FeetSection } from './HomePage/FooterSection'
 // import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
@@ -29,9 +28,9 @@ export function HomePage() {
         <NeckSection offset={1} />
         <ShoulderSection offset={2} />
         <ChestSection offset={3} />
-        <Page offset={4} zIndex={-2}>
+        {/* <Page offset={4} zIndex={-2}>
           <Page.Content pointerEvents="none" />
-        </Page>
+        </Page> */}
         <AbdomenSection offset={5} />
         <WaistSection offset={6} />
         <LegsSection offset={7} />

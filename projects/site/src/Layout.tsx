@@ -62,8 +62,8 @@ export function Layout(props: any) {
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
         <View
-          height="100vh"
-          width="100vw"
+          minHeight="100vh"
+          minWidth="100vw"
           overflow="hidden"
           background={bg}
           transition="all ease 500ms"

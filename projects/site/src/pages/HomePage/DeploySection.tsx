@@ -18,7 +18,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-10%',
+            y: '-18%',
           }}
           header={
             <>
@@ -102,7 +102,7 @@ export function ShoulderSection(props) {
       <Page.Parallax overflow="hidden" speed={0.1} zIndex={-2}>
         <FullScreen
           className="orbits-bg"
-          opacity={0.16}
+          opacity={0.14}
           backgroundImage={`url(${orbitsbg})`}
           backgroundSize="cover"
           backgroundPosition="center center"
@@ -112,7 +112,7 @@ export function ShoulderSection(props) {
       </Page.Parallax>
 
       <Page.Parallax speed={0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '22%', scale: 0.9 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '16%', scale: 0.9 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

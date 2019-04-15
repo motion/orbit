@@ -12,7 +12,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
           <BadgeText>{index}.</BadgeText>
         </Badge>
       )}
-      <TitleText size="md" textAlign="left" flex={1}>
+      <TitleText size="sm" textAlign="left" flex={1}>
         {title}
       </TitleText>
     </SectionTitle>
@@ -24,7 +24,7 @@ const SectionChrome = gloss(Col, {
 })
 
 export const SectionP = gloss(
-  props => <Paragraph size={1.25} alpha={0.75} sizeLineHeight={1.15} {...props} />,
+  props => <Paragraph size={1.25} alpha={0.65} sizeLineHeight={1.15} {...props} />,
   {
     display: 'block',
     float: 'left',
@@ -35,7 +35,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={72} {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={72} color="#000" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   opacity: 0.2,

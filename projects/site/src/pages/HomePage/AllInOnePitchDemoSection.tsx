@@ -12,7 +12,7 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
-  <View width="65%" minWidth={400} textAlign="center">
+  <View width="90%" maxWidth={800} minWidth={450} textAlign="center">
     <TitleText size="sm" sizeLineHeight={1.2} fontWeight={200} alpha={0.5} {...props} />
   </View>
 ))
@@ -30,15 +30,14 @@ export function NeckSection(props) {
                 The vertically integrated app platform.
               </TitleText>
               <TitleTextSub>
-                Orbit handles everything from data to interface to deploy. Create beautiful apps
-                with a few lines of code, never touching config or servers.
+                Create beautiful apps with a few lines of code. No config, no servers.
               </TitleTextSub>
             </>
           }
         >
           <Col maxWidth="100%" margin={[0, 'auto']}>
-            <Row space flexWrap="wrap">
-              <SubSection>
+            <Row space flexWrap={screen === 'small' ? 'wrap' : 'nowrap'}>
+              <SubSection maxWidth="33%">
                 <PillButtonDark>Import</PillButtonDark>
                 <Space />
                 <CenterText>
@@ -52,7 +51,7 @@ export function NeckSection(props) {
                   Orbits powerful building blocks let you link data to powerful views easily.
                 </CenterText>
               </SubSection>
-              <SubSection>
+              <SubSection maxWidth="33%">
                 <PillButtonDark>Export</PillButtonDark>
                 <Space />
                 <CenterText>

@@ -1,24 +1,66 @@
-import { FullScreen, Grid, PassProps, Space } from '@o/ui'
+import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React from 'react'
 import redshift from '../../../public/images/redshift.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
+import { useSiteStore } from '../../Layout'
 import { Page } from '../../views/Page'
+import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './DemoSection'
+import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export function ChestSection(props) {
   const screen = useScreenSize()
+  const { sectionHeight } = useSiteStore()
   return (
     <Page {...props}>
-      <Page.Content>
+      <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
+          maxHeight={100000}
+          margin={0}
+          height="auto"
+          transform={{
+            y: '-18%',
+          }}
+          header={
+            <>
+              <PillButton>Integrations</PillButton>
+              <Space size="xs" />
+              <TitleText size="lg">Data, meet apps.</TitleText>
+              <TitleTextSub>Easy to plug in integrations. Write your own if you need.</TitleTextSub>
+            </>
+          }
+        >
+          <Row space="lg" spaceAround flexWrap="wrap" justifyContent="center">
+            <Integration icon={require('../../../public/logos/slack.svg')} title="Slack" />
+            <Integration
+              icon={require('../../../public/logos/github-octocat.svg')}
+              title="Github"
+            />
+            <Integration icon={require('../../../public/logos/gmail.svg')} title="Gmail" />
+            <Integration icon={require('../../../public/logos/drive.svg')} title="Drive" />
+            <Integration
+              icon={require('../../../public/logos/confluence.svg')}
+              title="Confluence"
+            />
+            <Integration icon={require('../../../public/logos/jira.svg')} title="Jira" />
+            <Integration icon={require('../../../public/logos/sheets.svg')} title="Sheets" />
+            <Integration icon={require('../../../public/logos/postgres.svg')} title="Postgres" />
+          </Row>
+        </SpacedPageContent>
+
+        <Space size="xxxl" />
+
+        <SpacedPageContent
+          maxHeight={100000}
+          height="auto"
+          margin={[0, 'auto']}
           header={
             <>
               <PillButton>App Kit</PillButton>
-              <Space size="sm" />
+              <Space size="xs" />
               <TitleText size="xxl">Batteries Included.</TitleText>
               <TitleTextSub>
                 Most internal tools have the same patterns. Orbit makes building many types of
@@ -30,15 +72,15 @@ export function ChestSection(props) {
           <Space size="lg" />
           <Grid
             alignItems="start"
-            space="15%"
+            space={screen === 'small' ? '40px 15%' : '12% 15%'}
             itemMinWidth={240}
             maxWidth={800}
             margin={[0, 'auto']}
           >
             <PassProps
               getChildProps={(_, index) => ({
-                index: index + 1,
-                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '100%' } }),
+                index: screen === 'small' ? undefined : index + 1,
+                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '70%' } }),
               })}
             >
               <SimpleSection title="Apps that work together.">
@@ -92,17 +134,9 @@ export function ChestSection(props) {
                   Read our docs to get started.
                 </SectionP>
               </SimpleSection>
-
-              <SimpleSection title="Open source and decentralized.">
-                <SectionP>
-                  <SectionIcon name="globe" />
-                  We're tired of platforms coming and going. We want something better for ourselves,
-                  that we can trust to build on.
-                  <Space />
-                  It's everything you'd want in a mature app platform.
-                </SectionP>
-              </SimpleSection>
             </PassProps>
+
+            <Space size="xxl" />
           </Grid>
         </SpacedPageContent>
       </Page.Content>
@@ -120,3 +154,11 @@ export function ChestSection(props) {
     </Page>
   )
 }
+
+const Integration = props => (
+  <View alignItems="center" justifyContent="center">
+    <Image src={props.icon} width="50%" height="auto" />
+    <Space />
+    <Paragraph size="xl">{props.title}</Paragraph>
+  </View>
+)

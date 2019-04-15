@@ -4,7 +4,7 @@ import lightSeparator from '../../../public/images/light-separator.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './DemoSection'
+import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export function AbdomenSection(props) {
@@ -19,6 +19,7 @@ export function AbdomenSection(props) {
               left={0}
               right={0}
               width="100%"
+              height={100}
               src={lightSeparator}
             />
           }

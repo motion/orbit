@@ -6,7 +6,7 @@ import people from '../../../public/images/people.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './DemoSection'
+import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
 export function WaistSection(props) {

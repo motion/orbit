@@ -4,7 +4,7 @@ import React from 'react'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
-export const SimpleSection = ({ index = null, title, children, ...rest }) => (
+export const SimpleSection = ({ index = undefined, title, children, ...rest }) => (
   <SectionChrome space {...rest}>
     <SectionTitle>
       {isDefined(index) && (

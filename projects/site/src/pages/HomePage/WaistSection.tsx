@@ -38,27 +38,29 @@ export function WaistSection(props) {
           }
         >
           <SpacedPageContent
+            margin={['auto', '10%']}
             header={
               <>
                 <PillButton>Security</PillButton>
                 <Space size="sm" />
-                <TitleText size="xxl" fontWeight={300}>
+                <TitleText size="lg" fontWeight={300} maxWidth={400}>
                   Tell Security they can firewall Orbit completely.
                 </TitleText>
+                <Space />
               </>
             }
           >
-            <Grid space itemMinWidth={400}>
-              <Col>
-                <TitleTextSub size={2.6}>
+            <Grid space="15%" itemMinWidth={350}>
+              <Col space="xl">
+                <Pitch size={1.2}>
                   Orbit never sends a single bit of data outside your firewall.
-                </TitleTextSub>
+                </Pitch>
 
-                <TitleTextSub>
+                <Pitch>
                   For the first time you can trust a startup to power all of your internal tools --
                   from interfacing with sensitive internal databases to visualizing imporant
                   metrics.
-                </TitleTextSub>
+                </Pitch>
               </Col>
 
               <Image src={people} />
@@ -71,3 +73,5 @@ export function WaistSection(props) {
     </Theme>
   )
 }
+
+const Pitch = props => <TitleTextSub textAlign="left" size={1} {...props} />

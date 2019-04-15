@@ -29,13 +29,13 @@ export const SectionContent = ({ outside, children, zIndex, ...props }: SectionC
 
 const Section = gloss(View, {
   position: 'relative',
+  margin: [0, 'auto'],
 })
 
 export const SectionContentChrome = gloss(View, {
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,
-  margin: [0, 'auto'],
   padding: [0, Constants.sidePad],
   position: 'relative',
   pointerEvents: 'none',

@@ -77,7 +77,6 @@ export const LinksRight = props => (
 const LinkRow = gloss({
   flexFlow: 'row',
   flex: 1,
-  height: 40,
   alignItems: 'center',
   zIndex: 1000000000,
   position: 'relative',
@@ -143,9 +142,10 @@ export const HeaderContain = props => (
 )
 
 export const LinkSection = gloss({
-  flex: 1,
+  flex: 4,
   flexFlow: 'row',
   justifyContent: 'space-between',
   padding: [0, '2.5%'],
   maxWidth: 380,
+  alignItems: 'center',
 })

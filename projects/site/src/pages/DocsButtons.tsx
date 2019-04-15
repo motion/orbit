@@ -37,9 +37,9 @@ export let Three = (
 
 export let Four = (
   <>
-    {[0, 1, 2, 3, 4, 5, 6].map(i => (
-      <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
-        <Button key={i} size={i} elevation={i} icon="cog" iconAfter>
+    {[0, 1, 2, 3, 4, 5].map(i => (
+      <SubSection title={`Elevation ${i}, Size ${i + 1}`} key={i}>
+        <Button key={i} size={i + 1} elevation={i} icon="cog" iconAfter>
           Hello World
         </Button>
       </SubSection>

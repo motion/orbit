@@ -7,8 +7,8 @@ import { LogoHorizontal } from './LogoHorizontal'
 export const HeaderSlim = memo(() => {
   const theme = useTheme()
   return (
-    <Row height={36} background={theme.background} position="relative">
-      <HeaderContain>
+    <Row background={theme.background} position="relative">
+      <HeaderContain height={32}>
         <LinkSection alignRight>
           <LinksLeft fontSize={14} />
         </LinkSection>

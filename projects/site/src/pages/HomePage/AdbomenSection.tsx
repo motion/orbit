@@ -13,7 +13,16 @@ export function AbdomenSection(props) {
     <Theme name="light">
       <Page {...props}>
         <Page.Content
-          outside={<Image position="absolute" top={-90} left={0} right={0} src={lightSeparator} />}
+          outside={
+            <Image
+              position="absolute"
+              top={-90}
+              left={0}
+              right={0}
+              width="100%"
+              src={lightSeparator}
+            />
+          }
         >
           <SpacedPageContent
             header={

@@ -24,15 +24,21 @@ export function Page(props: PageProps) {
 Page.Parallax = ({
   overflow,
   zIndex,
+  style,
   ...props
-}: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any }) => {
+}: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any; style?: Object }) => {
   const parallax = useProps()
   return (
     // @ts-ignore
     <ParallaxLayer
       speed={0.2}
       offset={parallax.offset}
-      style={{ pointerEvents: 'none', zIndex: parallax.zIndex + (zIndex || 0) + 1, overflow }}
+      style={{
+        pointerEvents: 'none',
+        zIndex: parallax.zIndex + (zIndex || 0) + 1,
+        overflow,
+        ...style,
+      }}
       {...props}
     />
   )

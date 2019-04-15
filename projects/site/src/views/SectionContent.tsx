@@ -7,23 +7,29 @@ export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
 
 export const SectionContent = ({ outside, children, ...props }: SectionContentProps) => {
   return (
-    <SectionContentChrome {...props}>
+    <Section>
       {outside}
-      <div
-        style={{
-          position: 'relative',
-          flex: 1,
-          flexDirection: 'inherit',
-          flexWrap: 'inherit',
-          alignItems: 'inherit',
-          justifyContent: 'inherit',
-        }}
-      >
-        {children}
-      </div>
-    </SectionContentChrome>
+      <SectionContentChrome {...props}>
+        <div
+          style={{
+            position: 'relative',
+            flex: 1,
+            flexDirection: 'inherit',
+            flexWrap: 'inherit',
+            alignItems: 'inherit',
+            justifyContent: 'inherit',
+          }}
+        >
+          {children}
+        </div>
+      </SectionContentChrome>
+    </Section>
   )
 }
+
+const Section = gloss({
+  position: 'relative',
+})
 
 export const SectionContentChrome = gloss(View, {
   width: '100%',

@@ -110,7 +110,7 @@ export function ChestSection(props) {
         <FullScreen
           className="northern-lights"
           backgroundImage={`url(${redshift})`}
-          backgroundSize="cover"
+          backgroundSize="contain"
           backgroundPosition="center center"
           backgroundRepeat="no-repeat"
           bottom="-100%"

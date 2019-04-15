@@ -11,7 +11,7 @@ export const Spotlight = () => {
       <Row>
         <Left />
         <Square
-          width={siteStore.sectionHeight}
+          width={siteStore.sectionHeight + 100}
           height={siteStore.sectionHeight}
           className="spotlight"
           zIndex={10}

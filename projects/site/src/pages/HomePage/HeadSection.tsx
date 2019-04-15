@@ -186,7 +186,7 @@ export function HeadSection(props) {
             left={0}
             right={0}
             zIndex={1}
-            opacity={0.3}
+            opacity={0.4}
             transform={{
               scale: 1.3,
             }}

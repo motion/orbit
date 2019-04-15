@@ -22,6 +22,7 @@ export function WaistSection(props) {
                 top={-90}
                 left={0}
                 right={0}
+                width="100%"
                 src={lightSeparator}
               />
 
@@ -30,6 +31,7 @@ export function WaistSection(props) {
                 bottom={-90}
                 left={0}
                 right={0}
+                width="100%"
                 src={bottomLightSeparator}
               />
             </>

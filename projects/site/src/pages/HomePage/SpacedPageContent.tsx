@@ -14,7 +14,7 @@ export function SpacedPageContent({ header, children, ...props }: ViewProps & { 
     >
       <SpaceGroup>
         <div style={{ flex: 1 }} />
-        <Col space="md" alignItems="center" pad>
+        <Col space="sm" alignItems="center" pad>
           {header}
         </Col>
         {children}

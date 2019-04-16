@@ -21,7 +21,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-25%',
+            y: '-28%',
           }}
           header={
             <>
@@ -107,7 +107,7 @@ export function ShoulderSection(props) {
       <Page.Parallax speed={0.4} zIndex={-2}>
         <FullScreen
           transform={{
-            y: '-20%',
+            y: '-34%',
           }}
         >
           <FullScreen
@@ -122,8 +122,8 @@ export function ShoulderSection(props) {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={-0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '-2%', scale: 0.7 }} transformOrigin="bottom center">
+      <Page.Parallax speed={-0.05} zIndex={-2}>
+        <FullScreen transform={{ y: '2%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"
@@ -140,5 +140,5 @@ export function ShoulderSection(props) {
 }
 
 const FadeDown = gloss(FullScreen).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.background} 80%)`,
+  background: `linear-gradient(transparent, ${theme.background} 65%)`,
 }))

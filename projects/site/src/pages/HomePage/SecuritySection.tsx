@@ -44,7 +44,7 @@ export function WaistSection(props) {
           <SpacedPageContent
             padding={[0, '5%']}
             margin={[0, 'auto']}
-            maxWidth={900}
+            maxWidth={860}
             header={
               <>
                 <PillButton>Security</PillButton>
@@ -56,13 +56,13 @@ export function WaistSection(props) {
               </>
             }
           >
-            <Grid space={screen === 'small' ? 20 : '15%'} itemMinWidth={320}>
+            <Grid space={screen === 'small' ? 20 : '10% 5%'} itemMinWidth={300}>
               <Col space="xl">
                 <Pitch size="md">
                   Orbit never sends a single bit of data outside your firewall.
                 </Pitch>
 
-                <Pitch size="xs">
+                <Pitch alpha={0.7} size="xs">
                   Get incredibly powerful internal tools, without having to trust a startup with any
                   of your internal data -- from interfacing with sensitive internal databases to
                   visualizing imporant metrics, Orbit runs locally so you have control.

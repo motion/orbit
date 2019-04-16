@@ -1,4 +1,4 @@
-import { Button, FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { Button, ButtonProps, FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React from 'react'
 import redshift from '../../../public/images/redshift.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -19,14 +19,14 @@ export function ChestSection(props) {
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-10%', 0, '0%']}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-12%', 0, '0%']}
           height="auto"
           header={
             <>
-              <PillButton>Integrations</PillButton>
+              <PillButton>Data</PillButton>
               <Space size="xs" />
-              <TitleText size="lg">Data, meet app.</TitleText>
-              <TitleTextSub size="md">
+              {/* <TitleText size="lg">Data, meet app.</TitleText> */}
+              <TitleTextSub alpha={0.9} size="md">
                 The first platform where apps know how to talk to each other.
               </TitleTextSub>
               <TitleTextSub size="xs">
@@ -55,31 +55,13 @@ export function ChestSection(props) {
           <Space />
 
           <Row space margin={[0, 'auto']}>
-            <Button
-              sizePadding={1.6}
-              sizeRadius={2}
-              cursor="pointer"
-              tagName="a"
-              textDecoration="none"
-              borderWidth={0}
-            >
-              Installing an integration
-            </Button>
+            <BodyButton>Installing an integration</BodyButton>
 
-            <Button
-              sizePadding={1.6}
-              sizeRadius={2}
-              cursor="pointer"
-              tagName="a"
-              textDecoration="none"
-              borderWidth={0}
-            >
-              Writing an integration
-            </Button>
+            <BodyButton>Writing an integration</BodyButton>
           </Row>
         </SpacedPageContent>
 
-        <Space size="lg" />
+        <Space size="xxl" />
 
         <SpacedPageContent
           maxHeight={100000}
@@ -165,21 +147,9 @@ export function ChestSection(props) {
 
           <View flex={3} />
 
-          <Button
-            width="50%"
-            minWidth={280}
-            maxWidth={400}
-            margin={[0, 'auto']}
-            size="xl"
-            sizePadding={1.6}
-            sizeRadius={2}
-            cursor="pointer"
-            tagName="a"
-            textDecoration="none"
-            borderWidth={0}
-          >
+          <BodyButton margin={[0, 'auto']} size="xl">
             Read the feature overview
-          </Button>
+          </BodyButton>
         </SpacedPageContent>
       </Page.Content>
 
@@ -200,9 +170,21 @@ export function ChestSection(props) {
   )
 }
 
+export const BodyButton = (props: ButtonProps) => (
+  <Button
+    sizePadding={1.6}
+    sizeRadius={2}
+    cursor="pointer"
+    tagName="a"
+    textDecoration="none"
+    borderWidth={0}
+    {...props}
+  />
+)
+
 const Integration = props => (
   <View alignItems="center" justifyContent="center">
-    <Image src={props.icon} maxWidth={115} width="50%" height="auto" />
+    <Image src={props.icon} maxWidth={130} width="50%" height="auto" />
     <Space />
     <Paragraph size="xl">{props.title}</Paragraph>
   </View>

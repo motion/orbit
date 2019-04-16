@@ -21,12 +21,15 @@ export function NeckSection(props) {
   const screen = useScreenSize()
   return (
     <Page zIndex={3} {...props}>
-      <Page.Content>
+      <Page.Content
+        transform={{
+          y: '-3%',
+        }}
+      >
         <SpacedPageContent
           header={
             <>
               <TitleText size="xxxl">All in one.</TitleText>
-
               <TitleTextSub>
                 Create beautiful apps with a few lines of code. No config, no servers.
               </TitleTextSub>
@@ -43,7 +46,7 @@ export function NeckSection(props) {
                     Tons of data integrations, integrated with a line of code.
                   </CenterText>
                 </SubSection>
-                <SubSection flex={1.5} pad={[true, 'xxl']}>
+                <SubSection flex={2} pad={[true, 'xxl']}>
                   <PillButtonDark>Display</PillButtonDark>
                   <Space />
                   <CenterText>Extremely powerful and flexible views that work together.</CenterText>
@@ -74,6 +77,9 @@ export function NeckSection(props) {
                   opacity={0.5}
                   alignSelf="flex-end"
                   src={require('../../../public/images/curve-arrow.svg')}
+                  transform={{
+                    scale: 0.8,
+                  }}
                 />
               </Flex>
               <Flex flex={2}>
@@ -103,7 +109,7 @@ export function NeckSection(props) {
                 </Squircle>
 
                 <View
-                  marginTop={-200}
+                  marginTop={-215}
                   background="grey"
                   width="100%"
                   height={300}
@@ -124,9 +130,8 @@ export function NeckSection(props) {
                   opacity={0.5}
                   alignSelf="flex-start"
                   transform={{
-                    // scaleX: 1,
-                    // scaleY: -1,
                     rotate: '275deg',
+                    scale: 0.8,
                   }}
                   src={require('../../../public/images/curve-arrow.svg')}
                 />

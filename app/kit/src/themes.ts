@@ -138,6 +138,11 @@ const alternates: ThemeSet = {
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
+  clear: Theme.fromStyles({
+    background: 'rgba(0,0,0,0.2)',
+    borderColor: 'rgba(0,0,0,0)',
+    borderWidth: 0,
+  }),
 }
 
 const base = Theme.colorize({
@@ -152,7 +157,7 @@ const lightColor = '#444'
 const lightBackground = toColor('#fff')
 const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 const light = {
-  alternates: alternates,
+  alternates,
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],

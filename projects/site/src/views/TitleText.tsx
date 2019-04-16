@@ -15,6 +15,6 @@ export const TitleText = gloss(
     />
   ),
   {
-    fontFamily: 'gt eesti pro display trial',
+    fontFamily: 'GT Eesti',
   },
 )

@@ -52,7 +52,7 @@ export function WaistSection(props) {
               <>
                 <PillButton>Security</PillButton>
                 <Space size="sm" />
-                <TitleText size="lg" fontWeight={300} maxWidth={400}>
+                <TitleText size="lg" maxWidth={400}>
                   Tell Security they can firewall Orbit completely.
                 </TitleText>
                 <Space />

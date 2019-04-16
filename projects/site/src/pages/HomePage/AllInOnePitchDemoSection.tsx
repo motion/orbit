@@ -1,6 +1,6 @@
 import { Inline } from '@o/gloss'
 import { useForceUpdate } from '@o/kit'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, View } from '@o/ui'
 import React, { useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 import northernlights from '../../../public/images/northern-lights.svg'
@@ -245,7 +245,7 @@ export function NeckSection(props) {
                     boxShadow="0 10px 50px rgba(0,0,0,0.5)"
                     padding={30}
                   >
-                    <Title
+                    <TitleText
                       fontSize={18}
                       margin={[0, 'auto']}
                       letterSpacing={2}
@@ -253,7 +253,7 @@ export function NeckSection(props) {
                       textTransform="uppercase"
                     >
                       {elements[cur].title}
-                    </Title>
+                    </TitleText>
                     <Space />
                     <Paragraph sizeLineHeight={1.2} size={1.2}>
                       {elements[cur].body}

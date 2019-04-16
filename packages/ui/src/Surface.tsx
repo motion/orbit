@@ -8,7 +8,7 @@ import Gloss, {
   useTheme,
 } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -159,6 +159,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     borderWidth,
     alt,
     before,
+    dangerouslySetInnerHTML,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -193,9 +194,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
   }
 
-  const childrenProps = {
-    children: null,
-  }
+  const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const borderLeftRadius = Math.min(
     segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
@@ -210,7 +209,9 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
-  if (noInnerElement) {
+  if (dangerouslySetInnerHTML) {
+    childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
+  } else if (noInnerElement) {
     if (isDefined(before, after)) {
       childrenProps.children = (
         <>

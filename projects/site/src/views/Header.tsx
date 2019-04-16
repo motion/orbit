@@ -2,6 +2,7 @@ import { gloss } from '@o/gloss'
 import { BorderBottom, Button, Popover, Row, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
+import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
@@ -20,17 +21,7 @@ const LinkText = gloss(View, {
   },
 })
 
-type LinkProps = {
-  href: string
-  navigation?: any
-  routeKey?: string
-  routeName?: string
-  params?: Object
-  children?: any
-  fontSize?: any
-}
-
-export type LinkProps = Pick<LinkProps, 'href'> & SimpleTextProps
+export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps
 export function Link({ children, fontSize = 16, href, ...props }: LinkProps) {
   return (
     <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
@@ -47,21 +38,23 @@ export function Link({ children, fontSize = 16, href, ...props }: LinkProps) {
   )
 }
 
-export const LinksLeft = props => (
-  <Overdrive id="links-left">
-    <LinkRow>
-      <Link {...props} href="/">
-        Start
-      </Link>
-      <Link {...props} href="/docs">
-        Docs
-      </Link>
-      <Link {...props} href="/">
-        Apps
-      </Link>
-    </LinkRow>
-  </Overdrive>
-)
+export const LinksLeft = props => {
+  return (
+    <Overdrive id="links-left">
+      <LinkRow>
+        <Link {...props} href="/">
+          Start
+        </Link>
+        <Link {...props} href="/docs">
+          Docs
+        </Link>
+        <Link {...props} href="/">
+          Apps
+        </Link>
+      </LinkRow>
+    </Overdrive>
+  )
+}
 
 export const LinksRight = props => (
   <Overdrive id="links-right">

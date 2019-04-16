@@ -152,8 +152,11 @@ export class Parallax extends React.PureComponent<any> {
   busy = false
   controller = new Controller({ scroll: 0 })
   space: any
-  container: any
   content: any
+
+  get container() {
+    return this.props.container
+  }
 
   moveItems = () => {
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
@@ -198,7 +201,7 @@ export class Parallax extends React.PureComponent<any> {
 
   scrollStop = () => this.controller.stop()
 
-  scrollTo(offset) {
+  scrollTo = (offset: number) => {
     const { horizontal } = this.props
     const scrollType = getScrollType(horizontal)
     this.scrollStop()

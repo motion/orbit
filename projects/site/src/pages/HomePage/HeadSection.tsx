@@ -1,4 +1,15 @@
-import { Center, FullScreen, gloss, Image, Row, Space, toColor, useDebounce, View } from '@o/ui'
+import {
+  Center,
+  FullScreen,
+  gloss,
+  Image,
+  Row,
+  Space,
+  toColor,
+  useDebounce,
+  View,
+  ViewProps,
+} from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
@@ -14,6 +25,7 @@ import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
+import { useParallax } from '../HomePage'
 import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
@@ -78,7 +90,7 @@ function HeadText() {
 
       <FadeIn disable={!measured}>
         <Paragraph
-          style={pFit.style}
+          style={{ ...pFit.style, height: 'auto' }}
           height="auto"
           transformOrigin="top center"
           sizeLineHeight={1.3}
@@ -196,7 +208,9 @@ export function HeadSection(props) {
                   transformOrigin="top center"
                   src={macbook}
                 />
-                <PreviewButton>See how Orbit works</PreviewButton>
+                <RoundButton primary="#290C3C" padding={[10, 20]}>
+                  See how Orbit works
+                </RoundButton>
               </View>
             </FullScreen>
           </FullScreen>
@@ -253,45 +267,54 @@ const PreviewButton = gloss({
   },
 })
 
-const DownloadButton = props => (
-  <FadeIn>
-    <Center bottom="auto" top={-20}>
-      <View
-        tagName="a"
-        {...{ href: 'ok' }}
-        flexFlow="row"
-        width={159}
-        height={45}
-        position="relative"
-        alignItems="center"
-        justifyContent="center"
-        border={[2, '#21AA0F']}
-        borderRadius={100}
-        background="#080412"
-        backgroundSize="105% 200%"
-        hoverStyle={{
-          border: [2, toColor('#21AA0F').lighten(0.3)],
-        }}
-        textDecoration="none"
-        onClick={e => {
-          e.preventDefault()
-          console.log('need to link downlaod')
-        }}
-        {...props}
-      >
-        <Image userSelect="none" position="absolute" right={22} src={downmark} />
-        <Text
-          transform={{ y: 2 }}
-          zIndex={1}
-          size={1.1}
-          fontWeight={700}
-          letterSpacing={1}
-          pointerEvents="none"
-        >
-          Download
-        </Text>
-        <div style={{ width: 25 }} />
-      </View>
-    </Center>
-  </FadeIn>
+const RoundButton = ({ primary = '#21AA0F', ...props }: ViewProps & { primary?: string }) => (
+  <View
+    tagName="a"
+    href="ok"
+    flexFlow="row"
+    position="relative"
+    alignItems="center"
+    justifyContent="center"
+    border={[2, primary]}
+    borderRadius={100}
+    background="#080412"
+    backgroundSize="105% 200%"
+    hoverStyle={{
+      border: [2, toColor(primary).lighten(0.3)],
+    }}
+    textDecoration="none"
+    {...props}
+  />
 )
+
+const DownloadButton = props => {
+  const parallax = useParallax()
+  return (
+    <FadeIn>
+      <Center bottom="auto" top={-20}>
+        <RoundButton
+          width={159}
+          height={45}
+          onClick={e => {
+            e.preventDefault()
+            parallax.scrollTo(5)
+          }}
+          {...props}
+        >
+          <Image userSelect="none" position="absolute" right={22} src={downmark} />
+          <Text
+            transform={{ y: 2 }}
+            zIndex={1}
+            size={1.1}
+            fontWeight={700}
+            letterSpacing={1}
+            pointerEvents="none"
+          >
+            Download
+          </Text>
+          <div style={{ width: 25 }} />
+        </RoundButton>
+      </Center>
+    </FadeIn>
+  )
+}

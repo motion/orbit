@@ -1,4 +1,4 @@
-import { FullScreen } from '@o/ui'
+import { createContextualProps, FullScreen } from '@o/ui'
 import { throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSiteStore } from '../Layout'
@@ -14,13 +14,21 @@ import { HeadSection } from './HomePage/HeadSection'
 import { LegsSection } from './HomePage/MissionMottoSection'
 import { WaistSection } from './HomePage/SecuritySection'
 
+const ParallaxContext = createContextualProps<{ value: Parallax }>({ value: null })
+export const useParallax = () => {
+  return ParallaxContext.useProps().value
+}
+
 export function HomePage() {
   const siteStore = useSiteStore()
+  const [parallax, setParallax] = useState<Parallax>(null)
+
   return (
-    <>
+    <ParallaxContext.PassProps value={parallax}>
       <Header />
       <PeekHeader />
       <Parallax
+        ref={setParallax}
         pages={9}
         // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
@@ -39,7 +47,7 @@ export function HomePage() {
         <LegsSection offset={7} />
         <FeetSection offset={8} />
       </Parallax>
-    </>
+    </ParallaxContext.PassProps>
   )
 }
 

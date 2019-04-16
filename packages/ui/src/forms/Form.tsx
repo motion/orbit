@@ -1,8 +1,18 @@
 import produce from 'immer'
 import { flatten } from 'lodash'
-import React, { createContext, Dispatch, useContext, useEffect, useReducer } from 'react'
+import React, {
+  createContext,
+  Dispatch,
+  forwardRef,
+  HTMLProps,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react'
 import { Button } from '../buttons/Button'
 import { MergeContext } from '../helpers/MergeContext'
+import { useGet } from '../hooks/useGet'
 import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
@@ -10,19 +20,23 @@ import { Message } from '../text/Message'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
-export type FormProps<A extends FormFieldsObj> = SectionProps & {
-  submitButton?: string | boolean
-  fields?: A
-  errors?: FormErrors<any>
-  onSubmit?: (values: FormValues) => FormErrors<A> | Promise<FormErrors<A>>
-  children?: React.ReactNode
-  use?: UseForm
-  size?: number
-}
+export type FormProps<A extends FormFieldsObj> = SectionProps &
+  Pick<HTMLProps<HTMLFormElement>, 'action' | 'method' | 'target' | 'name'> & {
+    submitButton?: string | boolean
+    fields?: A
+    errors?: FormErrors<any>
+    onSubmit?: (
+      e: React.FormEvent<HTMLFormElement>,
+      values: FormValues,
+    ) => FormErrors<A> | Promise<FormErrors<A>>
+    children?: React.ReactNode
+    use?: UseForm
+    size?: number
+  }
 
 type FormValues = { [key in keyof FormFieldsObj]: any }
 export type FormFieldsObj = { [key: string]: FormField }
-export type FormErrors<A> = { [key in keyof A]: string } | string | null | true
+export type FormErrors<A> = { [key in keyof A]: string } | string | null | true | undefined | void
 
 type FormField =
   | {
@@ -76,9 +90,13 @@ function fieldsReducer(state: FormState, action: FormActions) {
         next.values = action.value
       })
     case 'changeField':
-      return produce(state, next => {
-        next.values[action.value.name] = action.value
-      })
+      if (state.values) {
+        // dont trigger update on every keystroke
+        // return produce(state, next => {
+        // })
+        state.values[action.value.name] = action.value
+      }
+      return state
     case 'removeField':
       return produce(state, next => {
         delete next.values[action.value]
@@ -86,16 +104,24 @@ function fieldsReducer(state: FormState, action: FormActions) {
   }
 }
 
-export function Form({
-  children,
-  use,
-  onSubmit,
-  errors,
-  fields,
-  submitButton,
-  ...sectionProps
-}: FormProps<FormFieldsObj>) {
+export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(function Form(
+  {
+    children,
+    use,
+    onSubmit,
+    errors,
+    fields,
+    submitButton,
+    action,
+    method,
+    target,
+    name,
+    ...sectionProps
+  },
+  ref,
+) {
   const [state, dispatch] = useReducer(fieldsReducer, { values: fields, errors: errors || null })
+  const getState = useGet(state)
 
   if (fields && children) {
     throw new Error(
@@ -104,7 +130,7 @@ export function Form({
   }
 
   useEffect(() => {
-    if (typeof errors !== 'undefined') {
+    if (!!errors) {
       dispatch({ type: 'setErrors', value: errors })
     }
   }, [errors])
@@ -121,43 +147,53 @@ export function Form({
     elements = generateFields(fields)
   }
 
+  const onSubmitInner = useCallback(
+    async e => {
+      const curState = getState()
+      e.preventDefault()
+      if (onSubmit) {
+        // first do any field validation
+        let fieldErrors = {}
+        for (const key in curState.values) {
+          const field = curState.values[key]
+          if (field.required && !field.value) {
+            fieldErrors[name] = 'is required.'
+            continue
+          }
+          if (typeof field.validate === 'function') {
+            const err = field.validate(field.value)
+            if (err) {
+              fieldErrors[name] = err
+            }
+            continue
+          }
+        }
+        if (Object.keys(fieldErrors).length) {
+          dispatch({ type: 'setErrors', value: fieldErrors })
+          return
+        }
+
+        // then submit and check validation
+        let nextErrors = onSubmit(e, curState.values)
+        if (nextErrors instanceof Promise) {
+          nextErrors = await nextErrors
+        }
+        dispatch({ type: 'setErrors', value: nextErrors })
+      }
+    },
+    [getState, onSubmit],
+  )
+
+  const contextValue = use ? use.context : { dispatch, ...state }
+
   return (
     <form
+      ref={ref}
       style={{ display: 'contents' }}
-      onSubmit={async e => {
-        e.preventDefault()
-        if (onSubmit) {
-          // first do any field validation
-          let fieldErrors = {}
-          for (const key in state.values) {
-            const { name, required, validate, value } = state.values[key]
-            if (required && !value) {
-              fieldErrors[name] = 'is required.'
-              continue
-            }
-            if (typeof validate === 'function') {
-              const err = validate(value)
-              if (err) {
-                fieldErrors[name] = err
-              }
-              continue
-            }
-          }
-          if (Object.keys(fieldErrors).length) {
-            dispatch({ type: 'setErrors', value: fieldErrors })
-            return
-          }
-
-          // then submit and check validation
-          let nextErrors = onSubmit(state.values)
-          if (nextErrors instanceof Promise) {
-            nextErrors = await nextErrors
-          }
-          dispatch({ type: 'setErrors', value: nextErrors })
-        }
-      }}
+      onSubmit={onSubmitInner}
+      {...{ action, method, target, name }}
     >
-      <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
+      <MergeContext Context={FormContext} value={contextValue}>
         <Section background="transparent" flex={1} {...sectionProps}>
           {state.globalError && (
             <>
@@ -188,7 +224,7 @@ export function Form({
       </MergeContext>
     </form>
   )
-}
+})
 
 function generateFields(fields: FormFieldsObj): React.ReactNode {
   return Object.keys(fields).map(key => {

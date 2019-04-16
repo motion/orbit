@@ -1,11 +1,13 @@
-import { Button, Form, gloss, Image, Input, Space, Theme, View, ViewProps } from '@o/ui'
-import React from 'react'
-import lightSeparator from '../../../public/images/light-separator.svg'
-import { Page } from '../../views/Page'
-import { PillButton } from '../../views/PillButton'
-import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
-import { SpacedPageContent } from './SpacedPageContent'
+import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui';
+import jsonp from 'jsonp';
+import React from 'react';
+import sanitize from 'sanitize-html';
+import lightSeparator from '../../../public/images/light-separator.svg';
+import { Page } from '../../views/Page';
+import { PillButton } from '../../views/PillButton';
+import { TitleText } from '../../views/TitleText';
+import { TitleTextSub } from './AllInOnePitchDemoSection';
+import { SpacedPageContent } from './SpacedPageContent';
 
 export function AbdomenSection(props) {
   return (
@@ -64,24 +66,7 @@ export const SignupForm = (props: ViewProps) => (
   >
     <Wavy width="100%" height={16} />
     <View pad="lg">
-      <Form space="lg">
-        <>
-          <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
-          <TitleTextSub size="xs">Sign up here to get in queue.</TitleTextSub>
-        </>
-        <Input
-          type="email"
-          placeholder="Email address..."
-          flex={0}
-          size={2}
-          sizeRadius={2}
-          sizePadding={2}
-        />
-
-        <Button size={2} sizeRadius={2} margin={[0, '20%']}>
-          Signup
-        </Button>
-      </Form>
+      <Join />
     </View>
 
     <Wavy width="100%" height={16} />
@@ -107,3 +92,110 @@ export const Wavy = gloss(View, {
   backgroundAttachment: 'fixed',
   backgroundSize: 'contain',
 }).theme((_, theme) => (theme.background.isDark() ? purpleWave : orangeWave))
+
+const queryString = query => {
+  const esc = encodeURIComponent
+  return Object.keys(query)
+    .map(k => `${esc(k)}=${k === 'c' ? query[k] : esc(query[k])}`)
+    .join('&')
+}
+
+export class Join extends React.Component {
+  state = {
+    error: null,
+    success: null,
+    submitting: false,
+  }
+
+  form = React.createRef<HTMLFormElement>()
+  email = React.createRef<HTMLInputElement>()
+
+  clearState() {
+    this.setState({ error: null, success: null, submitting: false })
+  }
+
+  submit = async (e) => {
+    e.preventDefault()
+    this.clearState()
+    this.setState({ submitting: true })
+    try {
+      const finish = state => {
+        this.clearState()
+        this.setState(state)
+      }
+      console.log('this.form', this.form)
+      const form = this.form.current
+      const query = {
+        id: '015e5a3442',
+        EMAIL: this.email.current.value,
+        b_019909d3efb283014d35674e5_015e5a3442: '',
+      }
+      let url = form.getAttribute('action').replace('/post', '/post-json')
+      url = `${url}&${queryString(query)}`
+      jsonp(url, { param: 'c' }, (error, data) => {
+        if (error) {
+          return finish({ error })
+        }
+        if (data && data.result === 'error') {
+          return finish({ error: data.msg })
+        }
+        return finish({ success: data.msg })
+      })
+    } catch (err) {
+      console.log('errrr', err)
+      this.clearState()
+      this.setState({ error: err.message })
+    }
+  }
+
+  render() {
+    const { success, error, submitting } = this.state
+    return (
+      <Form
+        action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
+        method="post"
+        id="mc-embedded-subscribe-form"
+        name="mc-embedded-subscribe-form"
+        target="_blank"
+        ref={this.form}
+        onSubmit={this.submit}
+        space="lg"
+      >
+        <>
+          <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
+          <TitleTextSub size="xs">Sign up here to get in queue.</TitleTextSub>
+        </>
+        <Input
+          type="email"
+          ref={this.email}
+          name="EMAIL"
+          id="mce-EMAIL"
+          placeholder="Email address..."
+          flex={0}
+          size={2}
+          sizeRadius={2}
+          sizePadding={2}
+        />
+
+        <Button
+          size={2}
+          sizeRadius={2}
+          margin={[0, '20%']}
+          type="submit"
+          disabled={submitting}
+          opacity={submitting ? 0.5 : 1}
+          pointerEvents={submitting ? 'none' : 'auto'}
+        >
+          Signup
+        </Button>
+
+        <Message
+          alt={success ? 'success' : error ? 'error' : undefined}
+          dangerouslySetInnerHTML={{
+            __html: sanitize(success || error || ''),
+          }}
+        />
+      </Form>
+    )
+  }
+}

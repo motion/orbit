@@ -158,7 +158,7 @@ export function Form({
       }}
     >
       <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
-        <Section flex={1} {...sectionProps}>
+        <Section background="transparent" flex={1} {...sectionProps}>
           {state.globalError && (
             <>
               <Message alt="error">{state.globalError}</Message>

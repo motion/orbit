@@ -41,6 +41,7 @@ let animate = 'in'
 
 export function NeckSection(props) {
   const screen = useScreenSize()
+
   const springStyle = useSpring({
     from: nextStyle,
     to: async next => {
@@ -161,7 +162,7 @@ export function NeckSection(props) {
                   circular
                   position="absolute"
                   top={-4}
-                  left="10%"
+                  left={10}
                   icon="chevron-left"
                   onClick={prev}
                 />
@@ -172,7 +173,7 @@ export function NeckSection(props) {
                   circular
                   position="absolute"
                   top={-4}
-                  right="10%"
+                  right={10}
                   icon="chevron-right"
                   onClick={next}
                 />
@@ -203,16 +204,17 @@ export function NeckSection(props) {
                   </Squircle>
                 </animated.div>
 
-                <View
-                  marginTop={-215}
-                  backgroundImage={`url(${tableScreen})`}
-                  backgroundSize="101%"
-                  backgroundPosition="-1px -2px -2px -2px"
-                  width="100%"
-                  height={300}
-                  borderRadius={10}
-                  elevation={30}
-                />
+                <animated.div style={{ ...springStyle, marginTop: -215, height: 300, zIndex: -1 }}>
+                  <View
+                    backgroundImage={`url(${tableScreen})`}
+                    backgroundSize="101%"
+                    backgroundPosition="-1px -2px -2px -2px"
+                    width="100%"
+                    height={300}
+                    borderRadius={10}
+                    elevation={30}
+                  />
+                </animated.div>
               </Flex>
 
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>

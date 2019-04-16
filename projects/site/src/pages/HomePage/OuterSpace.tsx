@@ -42,7 +42,10 @@ export function OuterSpace(props) {
         ...props,
       }}
     >
-      <iframe style={{ border: 0, height: '100%' }} src="/public/stars.html" />
+      <iframe
+        style={{ border: 0, height: '100%' }}
+        src={process.env.NODE_ENV === 'development' ? '/public/stars.html' : '/stars.html'}
+      />
     </div>
   )
 }

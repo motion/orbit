@@ -507,3 +507,9 @@ fieldset {
   z-index: 4;
   will-change: width, height;
 }
+
+.hide-scrollbars::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+  background: transparent;
+}

@@ -34,7 +34,14 @@ export function ChestSection(props) {
             </>
           }
         >
-          <Row height="auto" space="md" spaceAround scrollable="x" justifyContent="center">
+          <Row
+            className="hide-scrollbars"
+            height="auto"
+            space="md"
+            spaceAround
+            scrollable="x"
+            justifyContent="center"
+          >
             <Integration icon={require('../../../public/logos/slack.svg')} title="Slack" />
             <Integration
               icon={require('../../../public/logos/github-octocat.svg')}

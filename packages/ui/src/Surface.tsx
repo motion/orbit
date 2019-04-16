@@ -99,6 +99,7 @@ type ThroughProps = Pick<
   | 'fontWeight'
   | 'ellipse'
   | 'overflow'
+  | 'textDecoration'
 > & {
   hasIcon: boolean
   tagName?: string

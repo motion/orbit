@@ -148,6 +148,7 @@ export function NeckSection(props) {
           backgroundSize="cover"
           backgroundPosition="center center"
           backgroundRepeat="no-repeat"
+          opacity={0.8}
         />
         <Spotlight />
       </Page.Parallax>

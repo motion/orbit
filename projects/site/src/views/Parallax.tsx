@@ -1,6 +1,7 @@
 import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
+// @ts-ignore
 import { animated, config, Controller, Globals } from 'react-spring/renderprops'
 
 const El = Globals.defaultElement
@@ -30,6 +31,9 @@ export class ParallaxLayer extends React.PureComponent<any> {
     speed: 0,
   }
 
+  parent: any
+  controller: any
+
   componentDidMount() {
     const parent = this.parent
     if (parent) {
@@ -47,17 +51,19 @@ export class ParallaxLayer extends React.PureComponent<any> {
   }
 
   setPosition(height, scrollTop, immediate = false) {
-    const { config } = this.parent.props
+    const { config: conf } = this.parent.props
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
+    // @ts-ignore
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
-    this.controller.update({ translate: to, config, immediate })
+    this.controller.update({ translate: to, config: conf, immediate })
   }
 
   setHeight(height, immediate = false) {
-    const { config } = this.parent.props
+    const { config: conf } = this.parent.props
+    // @ts-ignore
     const to = parseFloat(height * this.props.factor)
-    this.controller.update({ space: to, config, immediate })
+    this.controller.update({ space: to, config: conf, immediate })
   }
 
   initialize() {
@@ -65,6 +71,7 @@ export class ParallaxLayer extends React.PureComponent<any> {
     const parent = this.parent
     const targetScroll = Math.floor(props.offset) * parent.space
     const offset = parent.space * props.offset + targetScroll * props.speed
+    // @ts-ignore
     const to = parseFloat(-(parent.current * props.speed) + offset)
     this.controller = new Controller({
       space: parent.space * props.factor,
@@ -117,7 +124,7 @@ export class ParallaxLayer extends React.PureComponent<any> {
   }
 }
 
-export class Parallax extends React.PureComponent {
+export class Parallax extends React.PureComponent<any> {
   // TODO keep until major release
   static Layer = ParallaxLayer
 
@@ -138,15 +145,15 @@ export class Parallax extends React.PureComponent {
     horizontal: false,
   }
 
-  constructor(props) {
-    super()
-    this.state = { ready: false }
-    this.layers = []
-    this.current = 0
-    this.offset = 0
-    this.busy = false
-    this.controller = new Controller({ scroll: 0 })
-  }
+  state = { ready: false }
+  layers = []
+  current = 0
+  offset = 0
+  busy = false
+  controller = new Controller({ scroll: 0 })
+  space: any
+  container: any
+  content: any
 
   moveItems = () => {
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
@@ -155,7 +162,7 @@ export class Parallax extends React.PureComponent {
 
   scrollerRaf = () => Globals.requestFrame(this.moveItems)
 
-  onScroll = event => {
+  onScroll = () => {
     const { horizontal } = this.props
     if (!this.busy) {
       this.busy = true
@@ -189,10 +196,10 @@ export class Parallax extends React.PureComponent {
     // setTimeout(this.update, 150)
   }, 100)
 
-  scrollStop = event => this.controller.stop()
+  scrollStop = () => this.controller.stop()
 
   scrollTo(offset) {
-    const { horizontal, config } = this.props
+    const { horizontal } = this.props
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
@@ -200,7 +207,7 @@ export class Parallax extends React.PureComponent {
 
     this.controller.update({
       scroll: offset * this.space,
-      config,
+      config: this.props.config,
       onFrame: ({ scroll }) => (target[scrollType] = scroll),
     })
   }
@@ -235,7 +242,6 @@ export class Parallax extends React.PureComponent {
       horizontal,
       showAbsolute,
     } = this.props
-    const overflow = scrolling ? 'scroll' : 'hidden'
     return (
       <>
         <El

@@ -3,7 +3,7 @@ import React from 'react'
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
-import orbitsbg from '../../../public/images/orbits-bg.jpg'
+import background from '../../../public/images/orbits-bg.jpg'
 import orbits from '../../../public/images/orbits.svg'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -21,7 +21,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-25%',
+            y: '-32%',
           }}
           header={
             <>
@@ -107,13 +107,13 @@ export function ShoulderSection(props) {
       <Page.Parallax speed={0.2} zIndex={-2}>
         <FullScreen
           transform={{
-            y: '-34%',
+            y: '-18%',
           }}
         >
           <FullScreen
             className="orbits-bg"
             opacity={0.14}
-            backgroundImage={`url(${orbitsbg})`}
+            backgroundImage={`url(${background})`}
             backgroundSize="cover"
             backgroundPosition="center center"
             backgroundRepeat="no-repeat"
@@ -123,7 +123,7 @@ export function ShoulderSection(props) {
       </Page.Parallax>
 
       <Page.Parallax speed={-0.05} zIndex={-2}>
-        <FullScreen transform={{ y: '2%', scale: 0.7 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '-7%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

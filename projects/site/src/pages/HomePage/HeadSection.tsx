@@ -25,7 +25,7 @@ let allTitles = {
 let allTexts = {
   large: [
     `Build powerful apps and internal tools without configuration or servers.`,
-    `The vertically integrated platform from dev to toolkit to deploy.`,
+    `Vertically integrated from dev to toolkit to deploy.`,
     `Useful apps in lines of code.`,
   ],
   medium: [

@@ -18,13 +18,13 @@ export function ChestSection(props) {
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-12%', 0, '0%']}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-19%', 0, '6%']}
           height="auto"
           header={
             <>
               <PillButton>Data</PillButton>
               <Space size="xs" />
-              {/* <TitleText size="lg">Data, meet app.</TitleText> */}
+              <TitleText size="lg">Data, meet app.</TitleText>
               <TitleTextSub alpha={0.9} size="md">
                 The first platform where apps know how to talk to each other.
               </TitleTextSub>
@@ -99,7 +99,7 @@ export function ChestSection(props) {
                 ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '70%' } }),
               })}
             >
-              <SimpleSection title="Apps that work together.">
+              <SimpleSection title="Apps work together.">
                 <SectionP>
                   <SectionIcon name="apps" />
                   Apps talk to each other with simple typed APIs. Orbit comes with many data apps.
@@ -111,14 +111,14 @@ export function ChestSection(props) {
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
                   <SectionIcon name="satellite" />
-                  A unified workspace keeps your team in sync. Press edit and in seconds deploy a
-                  rich collaborative app to everyone.
+                  Anyone on your team can use, edit, and add new apps. All done decentralized, so
+                  you can do it behind the firewall.
                   <Space />
-                  Learn more about spaces.
+                  Press edit and in seconds deploy a rich collaborative app to everyone.
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A decentralized app store.">
+              <SimpleSection title="Decentralized app store.">
                 <SectionP>
                   <SectionIcon name="shop" />
                   Publish new apps for your team, or for the world. Apps are just node modules, with
@@ -128,14 +128,15 @@ export function ChestSection(props) {
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="A UI kit to rival native.">
+              <SimpleSection title="Native-level UI Kit.">
                 <SectionP>
                   <SectionIcon name="widget" />
                   A proper, powerful and flexible list view is no joke. Neither is a table or form.
                   But that's just the start.
                   <Space />
-                  Orbit makes them all work together, within flows and with disparate data
-                  structures.
+                  Orbit makes them work together, accepting similar data formats and normalizing
+                  them easily. Plus, Orbit understands how to lay them out when they are used
+                  together.
                 </SectionP>
               </SimpleSection>
 
@@ -160,6 +161,7 @@ export function ChestSection(props) {
       </Page.Content>
 
       <Page.Background
+        speed={-0.2}
         zIndex={100}
         bottom="-110%"
         backgroundSize="cover"

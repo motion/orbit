@@ -23,7 +23,7 @@ export function NeckSection(props) {
     <Page zIndex={3} {...props}>
       <Page.Content
         transform={{
-          y: '-3%',
+          y: '-4%',
         }}
       >
         <SpacedPageContent

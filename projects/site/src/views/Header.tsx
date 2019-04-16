@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { BorderBottom, Button, Popover, Row, SimpleText, View } from '@o/ui'
+import { BorderBottom, Button, Popover, Row, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -30,13 +30,18 @@ type LinkProps = {
   fontSize?: any
 }
 
-export function Link({ children, fontSize, href, ...props }: LinkProps) {
+export type LinkProps = Pick<LinkProps, 'href'> & SimpleTextProps
+export function Link({ children, fontSize = 16, href, ...props }: LinkProps) {
   return (
     <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
-      <SimpleText fontSize={16} alpha={0.65} fontWeight={200} hoverStyle={{ alpha: 1 }}>
-        <RouterLink href={href} {...props}>
-          {children}
-        </RouterLink>
+      <SimpleText
+        fontSize={fontSize}
+        alpha={0.65}
+        fontWeight={200}
+        hoverStyle={{ alpha: 1 }}
+        {...props}
+      >
+        <RouterLink href={href}>{children}</RouterLink>
       </SimpleText>
     </LinkText>
   )

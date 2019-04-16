@@ -38,7 +38,7 @@ export function LegsSection(props) {
               </>
             }
           >
-            <Grid space="10%" itemMinWidth={380}>
+            <Grid space="10%" itemMinWidth={380} height="70%">
               <Col space="lg">
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
                   Our app platforms are broken. We want apps that are easy to build, powerful, user
@@ -60,8 +60,10 @@ export function LegsSection(props) {
               </Col>
 
               {screen === 'large' && (
-                <Col space="sm" justifyContent="flex-end">
-                  <SubParagraph>Our goals</SubParagraph>
+                <Col space="md" justifyContent="flex-end">
+                  <TitleTextSub textAlign="left" alpha={1} size={1}>
+                    Our goals
+                  </TitleTextSub>
 
                   <Item>Build apps without infrastructure.</Item>
 
@@ -80,15 +82,17 @@ export function LegsSection(props) {
           </SpacedPageContent>
         </Page.Content>
 
-        <Page.Parallax speed={0.1} zIndex={-2}>
+        <Page.Parallax speed={0.1} zIndex={-1}>
           <FullScreen
             className="earth"
             backgroundImage={`url(${earth})`}
-            backgroundSize="cover"
+            backgroundSize="contain"
             backgroundPosition="center center"
             backgroundRepeat="no-repeat"
             transform={{
-              scale: 0.5,
+              scale: 1,
+              x: '6%',
+              y: '-5%',
             }}
           />
         </Page.Parallax>

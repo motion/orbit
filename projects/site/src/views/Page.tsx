@@ -57,10 +57,10 @@ Page.Content = (props: SectionContentProps) => {
   )
 }
 
-Page.Background = (props: ViewProps) => {
+Page.Background = ({ speed = 0, ...props }: ViewProps & { speed?: number }) => {
   const { zIndex, offset } = useProps()
   return (
-    <Page.Parallax offset={offset} speed={0} zIndex={zIndex - 2}>
+    <Page.Parallax offset={offset} speed={speed} zIndex={zIndex - 2}>
       <FullScreen transition="all ease 1000ms" className="page-background" {...props} />
     </Page.Parallax>
   )

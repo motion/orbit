@@ -4,7 +4,6 @@ import {
   gloss,
   Image,
   Row,
-  SimpleText,
   Space,
   toColor,
   useDebounce,
@@ -17,7 +16,7 @@ import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
-import screen from '../../../public/images/screen.jpg'
+import appScreen from '../../../public/images/screen.jpg'
 import { IS_CHROME } from '../../constants'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
@@ -32,8 +31,8 @@ import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
   large: 'Amazingly easy internal apps.',
-  medium: 'A new way to build apps.',
-  small: 'Build apps together.',
+  medium: 'Amazingly easy internal apps.',
+  small: 'Amazing internal apps.',
 }
 
 let allTexts = {
@@ -42,25 +41,22 @@ let allTexts = {
     `Vertically integrated from UI kit to dev environment to deploy.`,
   ],
   medium: [
-    `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
-    `Make internal workflows, spreadsheets, dashboards, and more.`,
+    `Build powerful internal tools without configuration or servers.`,
+    `Vertically integrated UI kit, dev environment & deploy.`,
   ],
-  small: [
-    `Powerful apps in minutes, no configuration, no servers.`,
-    `Workflows, spreadsheets, dashboards, and more.`,
-  ],
+  small: [`Code internal tools, no config or servers.`, `UI kit, dev environment & deploy.`],
 }
 
 const subTexts = {
   large: `How Orbit makes creating common apps easy, with just lines of code.`,
-  medium: `Orbit enables creating common apps with just lines of code.`,
-  small: `Create common apps with just lines of code.`,
+  medium: `Learn how Orbit makes common apps easy.`,
+  small: `Learn how.`,
 }
 
 const br = <br style={{ height: 0 }} />
 
 function HeadText() {
-  const size = useScreenSize()
+  const screen = useScreenSize()
   const [measured, setMeasured] = useState(false)
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
@@ -71,9 +67,9 @@ function HeadText() {
     setMeasuredDelayed(true)
   }, [])
 
-  const texts = allTexts[size]
+  const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const subText = subTexts[size]
+  const subText = subTexts[screen]
 
   return (
     <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
@@ -87,8 +83,9 @@ function HeadText() {
           transformOrigin="top center"
           selectable
           textAlign="center"
+          whiteSpace="pre"
         >
-          {allTitles[size]}
+          {allTitles[screen]}
         </TitleText>
       </FadeIn>
 
@@ -109,19 +106,7 @@ function HeadText() {
           {br}
           {texts[1]}
           {br}
-          <Smaller
-            tagName="a"
-            cursor="pointer"
-            textDecoration="underline"
-            textDecorationColor="#222"
-            alpha={0.5}
-            transition="all ease 350ms"
-            hoverStyle={{
-              alpha: 0.87,
-            }}
-          >
-            {subText}
-          </Smaller>
+          <Smaller fontSize={screen === 'large' ? '60%' : '80%'}>{subText}</Smaller>
         </Paragraph>
       </FadeIn>
 
@@ -139,9 +124,18 @@ function HeadText() {
   )
 }
 
-const Smaller = gloss(SimpleText, {
-  fontSize: '60%',
-})
+const Smaller = gloss({
+  cursor: 'pointer',
+  textDecoration: 'underline',
+  textDecorationColor: '#222',
+  transition: 'all ease 350ms',
+}).theme((props, theme) => ({
+  ...props,
+  color: theme.color.alpha(0.5),
+  hoverStyle: {
+    color: theme.color.alpha(0.8),
+  },
+}))
 
 export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
@@ -185,7 +179,7 @@ export function HeadSection(props) {
                     position="absolute"
                     overflow="hidden"
                     backgroundColor="#00000033"
-                    backgroundImage={`url(${screen})`}
+                    backgroundImage={`url(${appScreen})`}
                     backgroundSize="contain"
                     backgroundPosition="center center"
                     backgroundRepeat="no-repeat"

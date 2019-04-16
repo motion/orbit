@@ -1,18 +1,18 @@
-import { Inline } from '@o/gloss';
-import { useForceUpdate } from '@o/kit';
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui';
-import React, { useState } from 'react';
-import { animated, useSpring } from 'react-spring';
-import northernlights from '../../../public/images/northern-lights.svg';
-import tableScreen from '../../../public/images/screen-table.jpg';
-import { useScreenSize } from '../../hooks/useScreenSize';
-import { Page } from '../../views/Page';
-import { Paragraph } from '../../views/Paragraph';
-import { PillButtonDark } from '../../views/PillButtonDark';
-import { Spotlight } from '../../views/Spotlight';
-import { Squircle } from '../../views/Squircle';
-import { TitleText } from '../../views/TitleText';
-import { SpacedPageContent } from './SpacedPageContent';
+import { Inline } from '@o/gloss'
+import { useForceUpdate } from '@o/kit'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui'
+import React, { useState } from 'react'
+import { animated, useSpring } from 'react-spring'
+import northernlights from '../../../public/images/northern-lights.svg'
+import tableScreen from '../../../public/images/screen-table.jpg'
+import { useScreenSize } from '../../hooks/useScreenSize'
+import { Page } from '../../views/Page'
+import { Paragraph } from '../../views/Paragraph'
+import { PillButtonDark } from '../../views/PillButtonDark'
+import { Spotlight } from '../../views/Spotlight'
+import { Squircle } from '../../views/Squircle'
+import { TitleText } from '../../views/TitleText'
+import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
@@ -336,4 +336,4 @@ export const Flex = gloss(View, {
   flex: 1,
 })
 
-const SubSection = gloss(props => <Flex minWidth={280} pad {...props} />)
+const SubSection = gloss(props => <Flex minWidth={200} pad {...props} />)

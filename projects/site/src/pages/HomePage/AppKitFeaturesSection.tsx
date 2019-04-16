@@ -32,7 +32,7 @@ export function ChestSection(props) {
   return (
     <Page {...props}>
       <Page.Parallax speed={-0.05} zIndex={-2}>
-        <FullScreen transform={{ y: '-92%', scale: 0.7 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '-96%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

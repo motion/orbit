@@ -77,8 +77,8 @@ export function FeetSection(props) {
 
 const SmallTitle = (props: TextProps) => <Text fontSize={14} textTransform="uppercase" {...props} />
 
-const SmallLink = (props: Partial<LinkProps>) => (
-  <Link textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
+export const SmallLink = (props: Partial<LinkProps>) => (
+  <Link width="auto" textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
 )
 
 const SmallParagraph = props => <Paragraph alpha={0.7} {...props} />

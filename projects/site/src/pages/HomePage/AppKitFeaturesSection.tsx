@@ -1,5 +1,17 @@
-import { Button, ButtonProps, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import {
+  Button,
+  ButtonProps,
+  FullScreen,
+  gloss,
+  Grid,
+  Image,
+  PassProps,
+  Row,
+  Space,
+  View,
+} from '@o/ui'
 import React from 'react'
+import orbits from '../../../public/images/orbits.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../Layout'
 import { Page } from '../../views/Page'
@@ -10,15 +22,33 @@ import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
+const FadeDown = gloss(FullScreen).theme((_, theme) => ({
+  background: `linear-gradient(transparent, ${theme.background} 65%)`,
+}))
+
 export function ChestSection(props) {
   const screen = useScreenSize()
   const { sectionHeight } = useSiteStore()
   return (
     <Page {...props}>
+      <Page.Parallax speed={-0.05} zIndex={-2}>
+        <FullScreen transform={{ y: '-92%', scale: 0.7 }} transformOrigin="bottom center">
+          <FullScreen
+            top="auto"
+            height="50%"
+            className="orbits"
+            backgroundImage={`url(${orbits})`}
+            backgroundPosition="top center"
+            backgroundRepeat="no-repeat"
+          />
+          <FadeDown top="auto" height="50%" />
+        </FullScreen>
+      </Page.Parallax>
+
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-19%', 0, '6%']}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-15%', 0, '6%']}
           height="auto"
           header={
             <>

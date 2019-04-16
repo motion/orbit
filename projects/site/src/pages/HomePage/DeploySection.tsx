@@ -1,10 +1,9 @@
-import { Col, FullScreen, gloss, Image, Row, Space, toColor, View } from '@o/ui'
+import { Col, FullScreen, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
 import background from '../../../public/images/orbits-bg.jpg'
-import orbits from '../../../public/images/orbits.svg'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -121,24 +120,6 @@ export function ShoulderSection(props) {
           <Spotlight />
         </FullScreen>
       </Page.Parallax>
-
-      <Page.Parallax speed={-0.05} zIndex={-2}>
-        <FullScreen transform={{ y: '-7%', scale: 0.7 }} transformOrigin="bottom center">
-          <FullScreen
-            top="auto"
-            height="50%"
-            className="orbits"
-            backgroundImage={`url(${orbits})`}
-            backgroundPosition="top center"
-            backgroundRepeat="no-repeat"
-          />
-          <FadeDown top="auto" height="50%" />
-        </FullScreen>
-      </Page.Parallax>
     </Page>
   )
 }
-
-const FadeDown = gloss(FullScreen).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.background} 65%)`,
-}))

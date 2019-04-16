@@ -29,9 +29,10 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
-              <TitleText size="xxxl">All in one.</TitleText>
+              <TitleText size="xxxl">All together.</TitleText>
               <TitleTextSub>
-                Create beautiful apps with a few lines of code. No config, no servers.
+                Many internal tools share common patterns. Orbit gives you everything you need to
+                build them easily, in one easy environment.
               </TitleTextSub>
             </>
           }
@@ -43,20 +44,23 @@ export function NeckSection(props) {
                   <PillButtonDark>Import</PillButtonDark>
                   <Space />
                   <CenterText>
-                    Tons of data integrations, integrated with a line of code.
+                    Many data integrations built in, integrate with a line of code.
                   </CenterText>
                 </SubSection>
                 <SubSection flex={2} pad={[true, 'xxl']}>
                   <PillButtonDark>Display</PillButtonDark>
                   <Space />
-                  <CenterText>Extremely powerful and flexible views that work together.</CenterText>
+                  <CenterText>
+                    A cohesive, large and custom UI kit that focuses on making it easy to move data
+                    between it's views.
+                  </CenterText>
                 </SubSection>
                 <SubSection maxWidth="33%">
                   <PillButtonDark>Export</PillButtonDark>
                   <Space />
                   <CenterText>
-                    Use any selection as ana ction, export it to{' '}
-                    <Inline color="#F14336">Gmail</Inline> easily.
+                    With easy selection + actions, exporting data to{' '}
+                    <Inline color="#F14336">Gmail</Inline> is easy.
                   </CenterText>
                 </SubSection>
               </Row>
@@ -163,6 +167,7 @@ const CenterText = gloss(
         selectable: true,
         sizeLineHeight: 1.2,
         size: 1.2,
+        alpha: 0.85,
       }}
       {...props}
     />

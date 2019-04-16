@@ -4,6 +4,7 @@ import {
   gloss,
   Image,
   Row,
+  SimpleText,
   Space,
   toColor,
   useDebounce,
@@ -29,7 +30,7 @@ import { useParallax } from '../HomePage'
 import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
-  large: 'A better way to build apps.',
+  large: 'Amazingly easy internal apps.',
   medium: 'A new way to build apps.',
   small: 'Build apps together.',
 }
@@ -37,19 +38,22 @@ let allTitles = {
 let allTexts = {
   large: [
     `Build powerful apps and internal tools without configuration or servers.`,
-    `Vertically integrated from dev to toolkit to deploy.`,
-    `Useful apps in lines of code.`,
+    `Vertically integrated from UI kit to dev environment to deploy.`,
   ],
   medium: [
     `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
     `Make internal workflows, spreadsheets, dashboards, and more.`,
-    `Runs behind the firewall, without a cloud.`,
   ],
   small: [
     `Powerful apps in minutes, no configuration, no servers.`,
     `Workflows, spreadsheets, dashboards, and more.`,
-    `Runs behind the firewall, without a cloud.`,
   ],
+}
+
+const subTexts = {
+  large: `How Orbit makes creating common apps easy, with just lines of code.`,
+  medium: `Orbit enables creating common apps with just lines of code.`,
+  small: `Create common apps with just lines of code.`,
 }
 
 const br = <br style={{ height: 0 }} />
@@ -68,6 +72,7 @@ function HeadText() {
 
   const texts = allTexts[size]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
+  const subText = subTexts[size]
 
   return (
     <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
@@ -103,7 +108,19 @@ function HeadText() {
           {br}
           {texts[1]}
           {br}
-          {texts[2]}
+          <Smaller
+            tagName="a"
+            cursor="pointer"
+            textDecoration="underline"
+            textDecorationColor="#222"
+            alpha={0.5}
+            transition="all ease 350ms"
+            hoverStyle={{
+              alpha: 0.87,
+            }}
+          >
+            {subText}
+          </Smaller>
         </Paragraph>
       </FadeIn>
 
@@ -120,6 +137,10 @@ function HeadText() {
     </View>
   )
 }
+
+const Smaller = gloss(SimpleText, {
+  fontSize: '60%',
+})
 
 export function HeadSection(props) {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
@@ -249,23 +270,6 @@ export function HeadSection(props) {
     </>
   )
 }
-
-const PreviewButton = gloss({
-  padding: [10, 30],
-  background: '#290C3C',
-  border: [1, [255, 255, 255, 0.3]],
-  borderRadius: 10,
-  color: [255, 255, 255, 0.8],
-  zIndex: 10,
-  boxShadow: [[0, 20, 20, [0, 0, 0, 0.5]]],
-  transition: 'all ease 300ms',
-  cursor: 'pointer',
-  fontWeight: 500,
-  '&:hover': {
-    color: [255, 255, 255, 1],
-    background: toColor('#290C3C').lighten(0.2),
-  },
-})
 
 const RoundButton = ({ primary = '#21AA0F', ...props }: ViewProps & { primary?: string }) => (
   <View

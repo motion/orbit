@@ -31,18 +31,12 @@ const prevStyle = {
   opacity: 0,
   transform: `translate3d(-40px,0,0)`,
 }
-const animateConf = {
-  mass: 1,
-  tension: 100,
-  friction: 8,
-}
-
 let animate = 'in'
 
-export function NeckSection(props) {
-  const screen = useScreenSize()
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-  const springStyle = useSpring({
+function useSlideSpring(config, delay = 0) {
+  return useSpring({
     from: nextStyle,
     to: async next => {
       switch (animate) {
@@ -50,12 +44,15 @@ export function NeckSection(props) {
           next(curStyle)
           return
         case 'next':
+          await sleep(delay)
+          // out
           await next({
             to: prevStyle,
             config: {
               duration: 250,
             },
           })
+          // move to other side
           await next({
             to: {
               opacity: 0,
@@ -65,15 +62,59 @@ export function NeckSection(props) {
               duration: 200,
             },
           })
+          await sleep(delay)
+          // in
           await next({
             to: curStyle,
-            config: animateConf,
+            config,
           })
           return
       }
     },
-    config: animateConf,
+    config,
   })
+}
+
+export function NeckSection(props) {
+  const screen = useScreenSize()
+
+  const springFastest = useSlideSpring({
+    mass: 1,
+    tension: 100,
+    friction: 10,
+  })
+  const springFast = useSlideSpring(
+    {
+      mass: 1,
+      tension: 100,
+      friction: 10,
+    },
+    40,
+  )
+  const springMedium = useSlideSpring(
+    {
+      mass: 1,
+      tension: 80,
+      friction: 8,
+    },
+    80,
+  )
+  const springSlow = useSlideSpring(
+    {
+      mass: 1,
+      tension: 65,
+      friction: 8,
+    },
+    250,
+  )
+  const springSlowest = useSlideSpring(
+    {
+      mass: 1,
+      tension: 65,
+      friction: 8,
+    },
+    300,
+  )
 
   const [cur, setCur] = useState(0)
 
@@ -136,7 +177,7 @@ export function NeckSection(props) {
 
             <Row space>
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <animated.div style={springStyle}>
+                <animated.div style={springFastest}>
                   <Image
                     alignSelf="center"
                     width={124}
@@ -178,7 +219,7 @@ export function NeckSection(props) {
                   onClick={next}
                 />
 
-                <animated.div style={{ ...springStyle, margin: 'auto' }}>
+                <animated.div style={{ ...springMedium, margin: 'auto' }}>
                   <Squircle
                     width={280}
                     height={280}
@@ -204,7 +245,7 @@ export function NeckSection(props) {
                   </Squircle>
                 </animated.div>
 
-                <animated.div style={{ ...springStyle, marginTop: -215, height: 300, zIndex: -1 }}>
+                <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
                   <View
                     backgroundImage={`url(${tableScreen})`}
                     backgroundSize="101%"
@@ -218,7 +259,7 @@ export function NeckSection(props) {
               </Flex>
 
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <animated.div style={springStyle}>
+                <animated.div style={springSlowest}>
                   <Image
                     alignSelf="center"
                     width={124}

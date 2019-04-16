@@ -32,7 +32,7 @@ export function NeckSection(props) {
               <TitleText size="xxxl">All together.</TitleText>
               <TitleTextSub>
                 Many internal tools share common patterns. Orbit gives you everything you need to
-                build them easily, in one easy environment.
+                build them easily - even the development environment.
               </TitleTextSub>
             </>
           }

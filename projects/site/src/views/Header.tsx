@@ -22,9 +22,15 @@ const LinkText = gloss(View, {
 })
 
 export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps
-export function Link({ children, fontSize = 16, href, ...props }: LinkProps) {
+export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
   return (
-    <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
+    <LinkText
+      cursor="pointer"
+      onClick={() => Navigation.navigate(href)}
+      fontSize={fontSize}
+      width={width}
+      margin={margin}
+    >
       <SimpleText
         fontSize={fontSize}
         alpha={0.65}

@@ -16,7 +16,7 @@ import { SpacedPageContent } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
-    <TitleText size="sm" sizeLineHeight={1.2} fontWeight={300} alpha={0.5} {...props} />
+    <TitleText size="sm" fontWeight={300} alpha={0.5} {...props} />
   </View>
 ))
 

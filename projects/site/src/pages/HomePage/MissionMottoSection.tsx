@@ -28,7 +28,7 @@ export function LegsSection(props) {
         <Page.Content>
           <View height={70} />
           <SpacedPageContent
-            padding={[0, '10%']}
+            padding={screen === 'small' ? 0 : [0, '10%']}
             header={
               <>
                 <PillButton>About</PillButton>
@@ -38,7 +38,7 @@ export function LegsSection(props) {
               </>
             }
           >
-            <Grid space="10%" itemMinWidth={380} height="70%">
+            <Grid space="10%" itemMinWidth={340} height="70%">
               <Col space="lg">
                 <TitleTextSub textAlign="left" alpha={1} size={1}>
                   Our app platforms are broken. We want apps that are easy to build, powerful, user

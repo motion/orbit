@@ -31,6 +31,8 @@ export function ChestSection(props) {
   const { sectionHeight } = useSiteStore()
   return (
     <Page {...props}>
+      {/* Data, meet app */}
+
       <Page.Parallax speed={-0.05} zIndex={-2}>
         <FullScreen transform={{ y: '-93%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
@@ -97,6 +99,8 @@ export function ChestSection(props) {
           </Row>
         </SpacedPageContent>
 
+        {/* Batteries Included. */}
+
         <Space size="xxl" />
 
         <SpacedPageContent
@@ -133,8 +137,12 @@ export function ChestSection(props) {
                 <SectionP>
                   <SectionIcon name="apps" />
                   Apps talk to each other with simple typed APIs. Orbit comes with many data apps.
-                  <Space />
-                  They can also sync data into a common format to display, share and export.
+                  {screen !== 'small' && (
+                    <>
+                      <Space />
+                      They can also sync data into a common format to display, share and export.
+                    </>
+                  )}
                 </SectionP>
               </SimpleSection>
 
@@ -143,8 +151,12 @@ export function ChestSection(props) {
                   <SectionIcon name="satellite" />
                   Anyone on your team can use, edit, and add new apps. All done decentralized, so
                   you can do it behind the firewall.
-                  <Space />
-                  Press edit and in seconds deploy a rich collaborative app to everyone.
+                  {screen !== 'small' && (
+                    <>
+                      <Space />
+                      Press edit and in seconds deploy a rich collaborative app to everyone.
+                    </>
+                  )}
                 </SectionP>
               </SimpleSection>
 
@@ -153,18 +165,25 @@ export function ChestSection(props) {
                   <SectionIcon name="shop" />
                   Publish new apps for your team, or for the world. Apps are just node modules, with
                   a typed API and a clean view system built on React.
-                  <Space />
-                  Apps also expose data, so you can build your own.
+                  {screen !== 'small' && (
+                    <>
+                      <Space />
+                      Apps also expose data, so you can build your own.
+                    </>
+                  )}
                 </SectionP>
               </SimpleSection>
 
               <SimpleSection title="Native-level UI Kit.">
                 <SectionP>
-                  <SectionIcon name="widget" />
-                  A proper, powerful and flexible list view is no joke. Neither is a table or form.
-                  But that's just the start.
-                  <Space />
-                  Orbit makes them work together, accepting similar data formats and normalizing
+                  <SectionIcon name="widget" />A proper, powerful and flexible list view is no joke.
+                  Neither is a table or form. But that's just the start.
+                  {screen !== 'small' && (
+                    <>
+                      <Space />
+                      Orbit makes them work together, accepting similar data formats and normalizing
+                    </>
+                  )}
                   them easily. Plus, Orbit understands how to lay them out when they are used
                   together.
                 </SectionP>
@@ -175,8 +194,12 @@ export function ChestSection(props) {
                   <SectionIcon name="app" />
                   It's not just no-config and easy to use. We've spent time getting patterns for
                   many common app use cases right: from data to display.
-                  <Space />
-                  Read our docs to get started.
+                  {screen !== 'small' && (
+                    <>
+                      <Space />
+                      Read our docs to get started.
+                    </>
+                  )}
                 </SectionP>
               </SimpleSection>
             </PassProps>
@@ -184,9 +207,11 @@ export function ChestSection(props) {
 
           <View flex={3} />
 
-          <BodyButton margin={[0, 'auto']} size="xl">
-            Read the feature overview
-          </BodyButton>
+          {screen !== 'small' && (
+            <BodyButton margin={[0, 'auto']} size="xl">
+              Read the feature overview
+            </BodyButton>
+          )}
         </SpacedPageContent>
       </Page.Content>
 

@@ -1,4 +1,4 @@
-import { Col, Row, Space, TextProps, Theme, useTheme } from '@o/ui'
+import { Col, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
 import React from 'react'
 import { Link, LinkProps } from '../../views/Header'
 import { Page } from '../../views/Page'
@@ -12,14 +12,14 @@ export function FeetSection(props) {
     <Theme name="home">
       <Page {...props}>
         <Page.Content pad="xxl" justifyContent="space-between">
-          <Space size="xxxl" />
+          <Space size="xl" />
 
           <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
 
-          <Space size="xxxl" flex={1} />
+          <View flex={1} />
 
-          <Row flex={1} space="lg" pad>
-            <Col flex={1} space="sm">
+          <Row flexWrap="wrap" flex={8} space="lg" pad alignItems="flex-end">
+            <Col minWidth={150} flex={1} space="sm">
               <SmallTitle alt="lightRed">Orbit</SmallTitle>
               <SmallLink href="/">Home</SmallLink>
               <SmallLink href="/">Download</SmallLink>
@@ -31,7 +31,7 @@ export function FeetSection(props) {
               <SmallLink href="/">Beta</SmallLink>
             </Col>
 
-            <Col flex={1} space="sm">
+            <Col minWidth={150} flex={1} space="sm">
               <SmallTitle>Support & Terms</SmallTitle>
               <SmallLink href="/">Contact us</SmallLink>
               <SmallLink href="/">Orbit Chat</SmallLink>
@@ -40,7 +40,7 @@ export function FeetSection(props) {
               <SmallLink href="/">FAQ</SmallLink>
             </Col>
 
-            <Col flex={1} space="sm">
+            <Col minWidth={150} flex={1} space="sm">
               <SmallTitle>Community</SmallTitle>
               <SmallLink href="/">About</SmallLink>
               <SmallLink href="/">Blog</SmallLink>
@@ -49,7 +49,7 @@ export function FeetSection(props) {
               <SmallLink href="/">Github</SmallLink>
             </Col>
 
-            <Col flex={2} space="sm">
+            <Col minWidth={200} flex={2} space="sm">
               <SmallTitle>Follow Orbit for more updates</SmallTitle>
 
               <SmallParagraph>lorem</SmallParagraph>
@@ -78,7 +78,7 @@ export function FeetSection(props) {
 const SmallTitle = (props: TextProps) => <Text fontSize={14} textTransform="uppercase" {...props} />
 
 export const SmallLink = (props: Partial<LinkProps>) => (
-  <Link width="auto" textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
+  <Link width="100%" textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
 )
 
 const SmallParagraph = props => <Paragraph alpha={0.7} {...props} />

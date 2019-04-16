@@ -23,7 +23,7 @@ class SiteStore {
     // taller on mobile
     if (this.screenSize === 'small') {
       desiredHeight = this.windowHeight
-      maxHeight = this.windowHeight
+      maxHeight = 950
     }
     return Math.max(
       // min-height

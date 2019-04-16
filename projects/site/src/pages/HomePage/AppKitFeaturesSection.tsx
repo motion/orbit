@@ -19,7 +19,7 @@ export function ChestSection(props) {
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-10%', 0, '5%']}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-5%', 0, '0%']}
           height="auto"
           header={
             <>

@@ -14,6 +14,7 @@ import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
+import { wavyUrl } from './EarlyAccessBetaSection'
 import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
@@ -250,9 +251,10 @@ const DownloadButton = props => (
         justifyContent="center"
         border={[2, '#ff8400']}
         borderRadius={100}
-        background={theme => theme.background}
+        background={wavyUrl}
+        backgroundSize="105% 200%"
         hoverStyle={{
-          border: [2, toColor('#21AA0F').lighten(0.3)],
+          border: [2, toColor('#ff8400').lighten(0.3)],
         }}
         textDecoration="none"
         onClick={e => {
@@ -269,6 +271,7 @@ const DownloadButton = props => (
           fontWeight={500}
           letterSpacing={1}
           pointerEvents="none"
+          color="#222"
         >
           Download
         </Text>

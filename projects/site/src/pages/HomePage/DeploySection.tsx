@@ -114,7 +114,7 @@ export function ShoulderSection(props) {
       </Page.Parallax>
 
       <Page.Parallax speed={-0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '12%', scale: 0.9 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '6%', scale: 0.8 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

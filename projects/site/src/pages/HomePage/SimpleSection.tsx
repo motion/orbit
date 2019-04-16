@@ -3,6 +3,7 @@ import { Col, gloss, Icon, Row } from '@o/ui'
 import React from 'react'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
+import { wavyUrl } from './EarlyAccessBetaSection'
 
 export const SimpleSection = ({ index = undefined, title, children, ...rest }) => (
   <SectionChrome space {...rest}>
@@ -12,7 +13,22 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
           <BadgeText>{index}.</BadgeText>
         </Badge>
       )}
-      <TitleText size="sm" textAlign="left" flex={1}>
+      <TitleText
+        style={{
+          WebkitBackgroundClip: 'text',
+        }}
+        {...{
+          WebkitTextFillColor: 'transparent',
+          background: wavyUrl,
+          backgroundSize: 500,
+          // background: 'linear-gradient(to left, #B74E42, #BE0FAD)',
+          // WebkitBackgroundClip: 'text',
+          // backgroundClip: 'text',
+        }}
+        size="sm"
+        textAlign="left"
+        flex={1}
+      >
         {title}
       </TitleText>
     </SectionTitle>

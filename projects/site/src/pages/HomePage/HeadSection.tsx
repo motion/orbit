@@ -248,7 +248,7 @@ const DownloadButton = props => (
         position="relative"
         alignItems="center"
         justifyContent="center"
-        border={[2, '#21AA0F']}
+        border={[2, '#ff8400']}
         borderRadius={100}
         background={theme => theme.background}
         hoverStyle={{

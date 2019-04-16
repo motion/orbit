@@ -132,7 +132,7 @@ export function ChestSection(props) {
             </PassProps>
           </Grid>
 
-          <View flex={4} />
+          <View flex={3} />
         </SpacedPageContent>
       </Page.Content>
 

@@ -43,6 +43,8 @@ export function WaistSection(props) {
         >
           <SpacedPageContent
             padding={[0, '5%']}
+            margin={[0, 'auto']}
+            maxWidth={900}
             header={
               <>
                 <PillButton>Security</PillButton>
@@ -50,10 +52,11 @@ export function WaistSection(props) {
                 <TitleText size="lg" fontWeight={300} maxWidth={400}>
                   Tell Security they can firewall Orbit completely.
                 </TitleText>
+                <Space />
               </>
             }
           >
-            <Grid space={screen === 'small' ? 20 : '15%'} itemMinWidth={350}>
+            <Grid space={screen === 'small' ? 20 : '15%'} itemMinWidth={320}>
               <Col space="xl">
                 <Pitch size="md">
                   Orbit never sends a single bit of data outside your firewall.

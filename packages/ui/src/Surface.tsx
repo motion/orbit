@@ -180,6 +180,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
     overflow: props.overflow,
+    textDecoration: props.textDecoration,
   }
 
   let lineHeight = props.lineHeight
@@ -362,6 +363,7 @@ const chromelessStyle = {
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
+  display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
@@ -427,6 +429,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 })
 
 const Element = gloss<ThroughProps & { disabled?: boolean; surfacePadX: number | string }>({
+  display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
   // needed to reset for <button /> at least

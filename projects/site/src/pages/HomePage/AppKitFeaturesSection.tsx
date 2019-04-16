@@ -19,14 +19,19 @@ export function ChestSection(props) {
       <Page.Content height={sectionHeight * 2} flex={1}>
         <SpacedPageContent
           maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-5%', 0, '0%']}
+          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-10%', 0, '0%']}
           height="auto"
           header={
             <>
               <PillButton>Integrations</PillButton>
               <Space size="xs" />
               <TitleText size="lg">Data, meet app.</TitleText>
-              <TitleTextSub>Add integrations with a click. Create your own with ease.</TitleTextSub>
+              <TitleTextSub size="md">
+                The first platform where apps know how to talk to each other.
+              </TitleTextSub>
+              <TitleTextSub size="xs">
+                Add any integration with a click. Create your own with ease.
+              </TitleTextSub>
             </>
           }
         >
@@ -45,6 +50,32 @@ export function ChestSection(props) {
             <Integration icon={require('../../../public/logos/jira.svg')} title="Jira" />
             <Integration icon={require('../../../public/logos/sheets.svg')} title="Sheets" />
             <Integration icon={require('../../../public/logos/postgres.svg')} title="Postgres" />
+          </Row>
+
+          <Space />
+
+          <Row space margin={[0, 'auto']}>
+            <Button
+              sizePadding={1.6}
+              sizeRadius={2}
+              cursor="pointer"
+              tagName="a"
+              textDecoration="none"
+              borderWidth={0}
+            >
+              Installing an integration
+            </Button>
+
+            <Button
+              sizePadding={1.6}
+              sizeRadius={2}
+              cursor="pointer"
+              tagName="a"
+              textDecoration="none"
+              borderWidth={0}
+            >
+              Writing an integration
+            </Button>
           </Row>
         </SpacedPageContent>
 
@@ -139,9 +170,13 @@ export function ChestSection(props) {
             minWidth={280}
             maxWidth={400}
             margin={[0, 'auto']}
-            size="xxl"
+            size="xl"
+            sizePadding={1.6}
             sizeRadius={2}
-            alt="action"
+            cursor="pointer"
+            tagName="a"
+            textDecoration="none"
+            borderWidth={0}
           >
             Read the feature overview
           </Button>

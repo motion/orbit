@@ -1,4 +1,4 @@
-import { Col, FullScreen, gloss, Image, Row, Space, View } from '@o/ui'
+import { Col, FullScreen, gloss, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
@@ -21,7 +21,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-22%',
+            y: '-25%',
           }}
           header={
             <>
@@ -56,7 +56,7 @@ export function ShoulderSection(props) {
             </Col>
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
-              <ParagraphIntro fontWeight={400}>
+              <ParagraphIntro>
                 Orbit runs locally on your computer, but can sync data from any cloud integration.
               </ParagraphIntro>
 
@@ -74,13 +74,16 @@ export function ShoulderSection(props) {
 
               <Para
                 tagName="a"
+                href="ok"
+                cursor="pointer"
                 color="#E368E7"
-                fontWeight={600}
+                hoverColor={toColor('#E368E7').lighten(0.1)}
+                fontWeight={500}
                 textDecorationColor="#444"
                 textDecoration="underline"
                 display="inline-block"
               >
-                It's a new take on apps that gives us more control.
+                How Orbit gives users control.
               </Para>
             </Col>
 
@@ -101,20 +104,26 @@ export function ShoulderSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Parallax overflow="hidden" speed={0.1} zIndex={-2}>
+      <Page.Parallax speed={0.4} zIndex={-2}>
         <FullScreen
-          className="orbits-bg"
-          opacity={0.14}
-          backgroundImage={`url(${orbitsbg})`}
-          backgroundSize="cover"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-        />
-        <Spotlight />
+          transform={{
+            y: '-20%',
+          }}
+        >
+          <FullScreen
+            className="orbits-bg"
+            opacity={0.14}
+            backgroundImage={`url(${orbitsbg})`}
+            backgroundSize="cover"
+            backgroundPosition="center center"
+            backgroundRepeat="no-repeat"
+          />
+          <Spotlight />
+        </FullScreen>
       </Page.Parallax>
 
       <Page.Parallax speed={-0.1} zIndex={-2}>
-        <FullScreen transform={{ y: '6%', scale: 0.8 }} transformOrigin="bottom center">
+        <FullScreen transform={{ y: '-2%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
             top="auto"
             height="50%"

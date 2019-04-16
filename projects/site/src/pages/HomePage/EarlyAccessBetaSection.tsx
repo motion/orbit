@@ -26,7 +26,7 @@ export function AbdomenSection(props) {
           {/* offset header stripe */}
           <View height={20} />
 
-          <View margin={['auto', 0]}>
+          <View margin={['auto', 0]} transform={{ y: '-3%' }}>
             <SpacedPageContent
               header={
                 <>
@@ -35,7 +35,7 @@ export function AbdomenSection(props) {
                   <TitleText size="xxl">Early Access.</TitleText>
                   <TitleTextSub size="lg">Orbit is now in beta.</TitleTextSub>
                   <TitleTextSub>
-                    We're working with teams to solve their internal tools problems.
+                    We're working with teams that want to build internal tools.
                   </TitleTextSub>
                 </>
               }
@@ -49,14 +49,15 @@ export function AbdomenSection(props) {
                 overflow="hidden"
                 elevation={3}
               >
-                <Wavy width="100%" height={18} />
+                <Wavy width="100%" height={16} />
                 <View pad="lg">
-                  <Form space>
+                  <Form space="lg">
                     <>
                       <TitleTextSmallCaps>Beta Signup</TitleTextSmallCaps>
                       <TitleTextSub size="xs">Sign up here to get in queue.</TitleTextSub>
                     </>
                     <Input
+                      type="email"
                       placeholder="Email address..."
                       flex={0}
                       size={2}
@@ -70,7 +71,7 @@ export function AbdomenSection(props) {
                   </Form>
                 </View>
 
-                <Wavy width="100%" height={18} />
+                <Wavy width="100%" height={16} />
               </View>
             </SpacedPageContent>
           </View>

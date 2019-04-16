@@ -1,17 +1,18 @@
-import { Inline } from '@o/gloss'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui'
-import React, { useState } from 'react'
-import { animated, useSpring } from 'react-spring'
-import northernlights from '../../../public/images/northern-lights.svg'
-import tableScreen from '../../../public/images/screen-table.jpg'
-import { useScreenSize } from '../../hooks/useScreenSize'
-import { Page } from '../../views/Page'
-import { Paragraph } from '../../views/Paragraph'
-import { PillButtonDark } from '../../views/PillButtonDark'
-import { Spotlight } from '../../views/Spotlight'
-import { Squircle } from '../../views/Squircle'
-import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent } from './SpacedPageContent'
+import { Inline } from '@o/gloss';
+import { useForceUpdate } from '@o/kit';
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, Title, View } from '@o/ui';
+import React, { useState } from 'react';
+import { animated, useSpring } from 'react-spring';
+import northernlights from '../../../public/images/northern-lights.svg';
+import tableScreen from '../../../public/images/screen-table.jpg';
+import { useScreenSize } from '../../hooks/useScreenSize';
+import { Page } from '../../views/Page';
+import { Paragraph } from '../../views/Paragraph';
+import { PillButtonDark } from '../../views/PillButtonDark';
+import { Spotlight } from '../../views/Spotlight';
+import { Squircle } from '../../views/Squircle';
+import { TitleText } from '../../views/TitleText';
+import { SpacedPageContent } from './SpacedPageContent';
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
@@ -32,6 +33,7 @@ const prevStyle = {
   transform: `translate3d(-40px,0,0)`,
 }
 let animate = 'in'
+const fadeOutTm = 250
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -49,7 +51,7 @@ function useSlideSpring(config, delay = 0) {
           await next({
             to: prevStyle,
             config: {
-              duration: 250,
+              duration: fadeOutTm,
             },
           })
           // move to other side
@@ -68,6 +70,8 @@ function useSlideSpring(config, delay = 0) {
             to: curStyle,
             config,
           })
+          // maybe put this earlier
+          animate = 'in'
           return
       }
     },
@@ -75,22 +79,32 @@ function useSlideSpring(config, delay = 0) {
   })
 }
 
+const elements = [
+  {
+    iconBefore: require('../../../public/logos/slack.svg'),
+    title: '<Table />',
+    body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
+    image: tableScreen,
+    iconAfter: require('../../../public/logos/gmail.svg'),
+  },
+  {
+    iconBefore: require('../../../public/logos/postgres.svg'),
+    title: '<Table />',
+    body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
+    image: tableScreen,
+    iconAfter: require('../../../public/logos/jira.svg'),
+  },
+]
+
 export function NeckSection(props) {
   const screen = useScreenSize()
+  const forceUpdate = useForceUpdate()
 
-  const springFastest = useSlideSpring({
+  const springFast = useSlideSpring({
     mass: 1,
     tension: 100,
     friction: 10,
   })
-  const springFast = useSlideSpring(
-    {
-      mass: 1,
-      tension: 100,
-      friction: 10,
-    },
-    40,
-  )
   const springMedium = useSlideSpring(
     {
       mass: 1,
@@ -105,22 +119,26 @@ export function NeckSection(props) {
       tension: 65,
       friction: 8,
     },
-    250,
+    150,
   )
+  const longestDelay = 200
   const springSlowest = useSlideSpring(
     {
       mass: 1,
       tension: 65,
       friction: 8,
     },
-    300,
+    longestDelay,
   )
 
   const [cur, setCur] = useState(0)
 
   const next = async () => {
     animate = 'next'
-    setCur(cur + 1)
+    forceUpdate()
+    await sleep(fadeOutTm + longestDelay)
+    let n = (cur + 1) % elements.length
+    setCur(n)
   }
   const prev = () => {
     setCur(cur + 1)
@@ -177,12 +195,12 @@ export function NeckSection(props) {
 
             <Row space>
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <animated.div style={springFastest}>
+                <animated.div style={springFast}>
                   <Image
                     alignSelf="center"
                     width={124}
                     height={124}
-                    src={require('../../../public/logos/slack.svg')}
+                    src={elements[cur].iconBefore}
                   />
                 </animated.div>
                 <Space size="xxl" />
@@ -234,20 +252,18 @@ export function NeckSection(props) {
                       alpha={0.65}
                       textTransform="uppercase"
                     >
-                      {'<Table />'}
+                      {elements[cur].title}
                     </Title>
                     <Space />
                     <Paragraph sizeLineHeight={1.2} size={1.2}>
-                      The table that has it all. Virtualized, resizable, sortable, filterable,
-                      multi-selectable, and more. With easy sharing to forms, lists, or other apps
-                      in your Orbit.
+                      {elements[cur].body}
                     </Paragraph>
                   </Squircle>
                 </animated.div>
 
                 <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
                   <View
-                    backgroundImage={`url(${tableScreen})`}
+                    backgroundImage={`url(${elements[cur].image})`}
                     backgroundSize="101%"
                     backgroundPosition="-1px -2px -2px -2px"
                     width="100%"
@@ -264,7 +280,7 @@ export function NeckSection(props) {
                     alignSelf="center"
                     width={124}
                     height={124}
-                    src={require('../../../public/logos/gmail.svg')}
+                    src={elements[cur].iconAfter}
                   />
                 </animated.div>
                 <Space size="xxl" />

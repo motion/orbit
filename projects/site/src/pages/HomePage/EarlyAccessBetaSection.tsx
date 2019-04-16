@@ -1,13 +1,13 @@
-import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui';
-import jsonp from 'jsonp';
-import React from 'react';
-import sanitize from 'sanitize-html';
-import lightSeparator from '../../../public/images/light-separator.svg';
-import { Page } from '../../views/Page';
-import { PillButton } from '../../views/PillButton';
-import { TitleText } from '../../views/TitleText';
-import { TitleTextSub } from './AllInOnePitchDemoSection';
-import { SpacedPageContent } from './SpacedPageContent';
+import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui'
+import jsonp from 'jsonp'
+import React from 'react'
+import sanitize from 'sanitize-html'
+import lightSeparator from '../../../public/images/light-separator.svg'
+import { Page } from '../../views/Page'
+import { PillButton } from '../../views/PillButton'
+import { TitleText } from '../../views/TitleText'
+import { TitleTextSub } from './AllInOnePitchDemoSection'
+import { SpacedPageContent } from './SpacedPageContent'
 
 export function AbdomenSection(props) {
   return (
@@ -114,7 +114,7 @@ export class Join extends React.Component {
     this.setState({ error: null, success: null, submitting: false })
   }
 
-  submit = async (e) => {
+  submit = async e => {
     e.preventDefault()
     this.clearState()
     this.setState({ submitting: true })
@@ -150,6 +150,7 @@ export class Join extends React.Component {
 
   render() {
     const { success, error, submitting } = this.state
+    const message = success || error || ''
     return (
       <Form
         action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
@@ -189,12 +190,14 @@ export class Join extends React.Component {
           Signup
         </Button>
 
-        <Message
-          alt={success ? 'success' : error ? 'error' : undefined}
-          dangerouslySetInnerHTML={{
-            __html: sanitize(success || error || ''),
-          }}
-        />
+        {!!message && (
+          <Message
+            alt={success ? 'success' : error ? 'error' : undefined}
+            dangerouslySetInnerHTML={{
+              __html: sanitize(message),
+            }}
+          />
+        )}
       </Form>
     )
   }

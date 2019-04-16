@@ -310,6 +310,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     )
   }
 
+  const showInnerElement = !!children && !noInnerElement
+
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
   const iconColor = `${(props.iconProps && props.iconProps.color) ||
     props.color ||
@@ -344,6 +346,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderWidth={borderWidth}
           borderPosition={borderPosition}
           alt={alt}
+          {...!showInnerElement && elementProps}
           {...throughProps}
           {...viewProps}
           {...segmentedStyle}

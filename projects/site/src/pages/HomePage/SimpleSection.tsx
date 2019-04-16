@@ -20,10 +20,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
         {...{
           WebkitTextFillColor: 'transparent',
           background: wavyUrl,
-          backgroundSize: 500,
-          // background: 'linear-gradient(to left, #B74E42, #BE0FAD)',
-          // WebkitBackgroundClip: 'text',
-          // backgroundClip: 'text',
+          backgroundSize: 200,
         }}
         size="sm"
         textAlign="left"
@@ -51,10 +48,10 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={72} color="#000" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={62} color="#000" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
-  opacity: 0.2,
+  // opacity: 0.2,
 })
 
 const SectionTitle = gloss(Row, {

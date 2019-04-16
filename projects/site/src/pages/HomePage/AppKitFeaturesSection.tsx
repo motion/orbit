@@ -1,4 +1,4 @@
-import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { Button, FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React from 'react'
 import redshift from '../../../public/images/redshift.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -133,6 +133,18 @@ export function ChestSection(props) {
           </Grid>
 
           <View flex={3} />
+
+          <Button
+            width="50%"
+            minWidth={280}
+            maxWidth={400}
+            margin={[0, 'auto']}
+            size="xxl"
+            sizeRadius={2}
+            alt="action"
+          >
+            Read the feature overview
+          </Button>
         </SpacedPageContent>
       </Page.Content>
 

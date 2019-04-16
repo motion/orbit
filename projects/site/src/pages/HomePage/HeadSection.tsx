@@ -14,7 +14,6 @@ import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
-import { wavyUrl } from './EarlyAccessBetaSection'
 import { OuterSpace } from './OuterSpace'
 
 let allTitles = {
@@ -189,7 +188,7 @@ export function HeadSection(props) {
                   transformOrigin="top center"
                   src={macbook}
                 />
-                <PreviewButton>See the Orbit Demo</PreviewButton>
+                <PreviewButton>See how Orbit works</PreviewButton>
               </View>
             </FullScreen>
           </FullScreen>
@@ -249,12 +248,12 @@ const DownloadButton = props => (
         position="relative"
         alignItems="center"
         justifyContent="center"
-        border={[2, '#ff8400']}
+        border={[2, '#21AA0F']}
         borderRadius={100}
-        background={wavyUrl}
+        background="#080412"
         backgroundSize="105% 200%"
         hoverStyle={{
-          border: [2, toColor('#ff8400').lighten(0.3)],
+          border: [2, toColor('#21AA0F').lighten(0.3)],
         }}
         textDecoration="none"
         onClick={e => {
@@ -268,10 +267,9 @@ const DownloadButton = props => (
           transform={{ y: 2 }}
           zIndex={1}
           size={1.1}
-          fontWeight={500}
+          fontWeight={700}
           letterSpacing={1}
           pointerEvents="none"
-          color="#222"
         >
           Download
         </Text>

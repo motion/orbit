@@ -11,7 +11,6 @@ import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
   userSelect: 'none',
-  width: '33%',
   textAlign: 'center',
   transform: {
     y: 0.5,
@@ -44,19 +43,21 @@ export function Link({ children, fontSize = 16, href, width, margin, ...props }:
   )
 }
 
+const HeaderLink = props => <Link width="33%" {...props} />
+
 export const LinksLeft = props => {
   return (
     <Overdrive id="links-left">
       <LinkRow>
-        <Link {...props} href="/">
+        <HeaderLink {...props} href="/">
           Start
-        </Link>
-        <Link {...props} href="/docs">
+        </HeaderLink>
+        <HeaderLink {...props} href="/docs">
           Docs
-        </Link>
-        <Link {...props} href="/">
+        </HeaderLink>
+        <HeaderLink {...props} href="/">
           Apps
-        </Link>
+        </HeaderLink>
       </LinkRow>
     </Overdrive>
   )
@@ -65,15 +66,15 @@ export const LinksLeft = props => {
 export const LinksRight = props => (
   <Overdrive id="links-right">
     <LinkRow>
-      <Link {...props} href="/">
+      <HeaderLink {...props} href="/">
         Beta
-      </Link>
-      <Link {...props} href="/">
+      </HeaderLink>
+      <HeaderLink {...props} href="/">
         Blog
-      </Link>
-      <Link {...props} href="/">
+      </HeaderLink>
+      <HeaderLink {...props} href="/">
         About
-      </Link>
+      </HeaderLink>
     </LinkRow>
   </Overdrive>
 )

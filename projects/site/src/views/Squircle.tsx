@@ -21,6 +21,7 @@ export const Squircle = ({ boxShadow, width, height, position, margin, ...props 
       style={{
         maskImage: 'paint(smooth-corners)',
         WebkitMaskImage: 'paint(smooth-corners)',
+        borderRadius: 60,
       }}
       {...{
         width,

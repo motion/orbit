@@ -20,7 +20,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-32%',
+            y: '-28%',
           }}
           header={
             <>

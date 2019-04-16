@@ -33,7 +33,7 @@ const prevStyle = {
   transform: `translate3d(-40px,0,0)`,
 }
 let animate = 'in'
-const fadeOutTm = 250
+const fadeOutTm = 300
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
@@ -61,7 +61,7 @@ function useSlideSpring(config, delay = 0) {
               transform: `translate3d(40px,0,0)`,
             },
             config: {
-              duration: 200,
+              duration: 180,
             },
           })
           await sleep(delay)

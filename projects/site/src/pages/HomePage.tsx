@@ -1,6 +1,7 @@
 import { createContextualProps, FullScreen } from '@o/ui'
 import { throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
+import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
@@ -30,18 +31,14 @@ export function HomePage() {
       <Parallax
         ref={setParallax}
         pages={9}
-        // ref={ref => (this.parallax = ref)}
         scrollingElement={window}
-        container={document.documentElement}
+        container={IS_CHROME ? document.documentElement : document.body}
         pageHeight={siteStore.sectionHeight}
       >
         <HeadSection offset={0} />
         <NeckSection offset={1} />
         <ShoulderSection offset={2} />
         <ChestSection offset={3} />
-        {/* <Page offset={4} zIndex={-2}>
-          <Page.Content pointerEvents="none" />
-        </Page> */}
         <AbdomenSection offset={5} />
         <WaistSection offset={6} />
         <LegsSection offset={7} />

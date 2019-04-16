@@ -19,3 +19,5 @@ export const screen = {
   medium: { maxWidth: smallSize * 1.1 },
   tall: { minHeight: sectionMaxHeight },
 }
+
+export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1

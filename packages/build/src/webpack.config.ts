@@ -14,7 +14,7 @@ const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+// const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const Critters = require('critters-webpack-plugin')
 const PreloadPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
@@ -48,7 +48,7 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 console.log('etnry', getFlag('--entry'))
 const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
-const appSrc = Path.join(entry, '..')
+// const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const outputPath = Path.join(cwd, 'dist')
 

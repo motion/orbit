@@ -1,5 +1,5 @@
-import { isDefined } from '@o/kit'
 import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
+import { isDefined } from '@o/utils'
 import React from 'react'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'

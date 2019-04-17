@@ -1,4 +1,4 @@
-import { react, useStore } from '@o/kit'
+import { react, useStore } from '@o/use-store'
 import React from 'react'
 import { useSiteStore } from '../../Layout'
 

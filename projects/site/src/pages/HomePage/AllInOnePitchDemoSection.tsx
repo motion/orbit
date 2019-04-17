@@ -1,6 +1,6 @@
 import { Inline } from '@o/gloss'
-import { useForceUpdate } from '@o/kit'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, View } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 import northernlights from '../../../public/images/northern-lights.svg'

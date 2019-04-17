@@ -2,6 +2,7 @@
   "name": "@o/site",
   "version": "2.4.1",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5000 --target web",
     "build": "rm -r dist || true && NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
@@ -11,7 +12,7 @@
     "publish:site": "yarn build && yarn deploy"
   },
   "dependencies": {
-    "@babel/runtime": "7.2.0",
+    "@babel/runtime": "7.4.3",
     "@kennethormandy/react-fittext": "0.5.1",
     "@mdx-js/react": "1.0.2",
     "@mdx-js/tag": "0.20.3",

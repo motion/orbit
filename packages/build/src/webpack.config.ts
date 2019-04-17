@@ -77,6 +77,8 @@ console.log(
 
 const optimization = {
   prod: {
+    usedExports: true,
+    sideEffects: true,
     runtimeChunk: true,
     splitChunks: {
       chunks: 'all',

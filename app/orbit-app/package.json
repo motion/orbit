@@ -2,6 +2,7 @@
   "name": "@o/orbit-app",
   "version": "2.4.1",
   "private": true,
+  "sideEffects": false,
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
@@ -13,7 +14,7 @@
     "test-electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
-    "@babel/runtime": "7.2.0",
+    "@babel/runtime": "7.4.3",
     "@o/bridge": "^2.4.1",
     "@o/color": "^2.4.1",
     "@o/config": "^2.4.1",

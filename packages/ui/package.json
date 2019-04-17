@@ -10,7 +10,7 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@babel/runtime": "7.2.0",
+    "@babel/runtime": "7.4.3",
     "@blueprintjs/icons": "3.7.0",
     "@o/color": "^2.4.1",
     "@o/css": "^2.4.1",

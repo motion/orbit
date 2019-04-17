@@ -1,4 +1,4 @@
-import { MergeHighlightsContext, MergeHighlightsContextProps } from '@o/ui'
+import { HighlightProvide, MergeHighlightsContextProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 
@@ -6,7 +6,7 @@ export const HighlightActiveQuery = memo(
   ({ query, value, children }: Partial<MergeHighlightsContextProps> & { query?: string }) => {
     const activeQuery = useActiveQuery()
     return (
-      <MergeHighlightsContext
+      <HighlightProvide
         value={{
           words: [query] || activeQuery.split(' '),
           maxChars: 500,
@@ -15,7 +15,7 @@ export const HighlightActiveQuery = memo(
         }}
       >
         {children}
-      </MergeHighlightsContext>
+      </HighlightProvide>
     )
   },
 )

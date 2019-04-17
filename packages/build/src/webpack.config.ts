@@ -1,14 +1,14 @@
-import * as LernaProject from '@lerna/project'
-import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import * as Fs from 'fs'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { DuplicatesPlugin } from 'inspectpack/plugin'
-import * as Path from 'path'
+import * as LernaProject from '@lerna/project';
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import * as Fs from 'fs';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { DuplicatesPlugin } from 'inspectpack/plugin';
+import * as Path from 'path';
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
-import PrepackPlugin from 'prepack-webpack-plugin'
-import webpack from 'webpack'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import PrepackPlugin from 'prepack-webpack-plugin';
+import webpack from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
@@ -21,6 +21,7 @@ const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
+const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -47,7 +48,6 @@ const getFlag = flag => {
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-console.log('etnry', getFlag('--entry'))
 const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
@@ -309,6 +309,8 @@ async function makeConfig() {
         new ForkTsCheckerWebpackPlugin({
           useTypescriptIncrementalApi: true,
         }),
+
+      isProd && new WebpackDeepScopeAnalysisPlugin(),
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',

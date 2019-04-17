@@ -1,4 +1,3 @@
-import { ensure, react, Templates, useReaction, useStore } from '@o/kit'
 import {
   Button,
   Divider,
@@ -14,6 +13,7 @@ import {
   useTheme,
   View,
 } from '@o/ui'
+import { ensure, react, useReaction, useStore } from '@o/use-store'
 import React, { memo, useState } from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'

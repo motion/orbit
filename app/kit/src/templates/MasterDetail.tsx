@@ -1,6 +1,14 @@
-import { Layout, Pane, PaneProps, Sidebar, useMedia, View } from '@o/ui'
+import {
+  Layout,
+  Pane,
+  PaneProps,
+  SearchableList,
+  SearchableListProps,
+  Sidebar,
+  useMedia,
+  View,
+} from '@o/ui'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
-import { SearchableList, SearchableListProps } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
 export type MasterDetailProps = SearchableListProps & {

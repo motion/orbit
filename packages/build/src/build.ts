@@ -21,6 +21,7 @@ async function main() {
     console.log(
       stats.toString({
         colors: true,
+        verbose: true,
       }),
     )
   })

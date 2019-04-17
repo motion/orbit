@@ -1,6 +1,6 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import { Button, TreeItem, useGet, VirtualListProps } from '@o/ui'
+import { Button, HandleOrbitSelect, List, TreeItem, useGet, VirtualListProps } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
 import { useStoresSimple } from '../hooks/useStores'
@@ -8,7 +8,6 @@ import { ScopedUserState, useUserState } from '../hooks/useUserState'
 import { KitStores } from '../stores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
-import { HandleOrbitSelect, List } from './List'
 import { OrbitListItemProps } from './ListItem'
 
 type TreeItems = { [key: number]: TreeItem }

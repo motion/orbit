@@ -10,6 +10,10 @@ type ConfigureOpts = {
   getItemKey?: (item: any) => string
   useAppState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
   useUserState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+
+  // can be used for generically mapping an item in a table/list, back into something you prefer onSelect
+  // TODO do the reverse (itemToProps)
+  propsToItem: (props: any) => any
 }
 
 // safe for react components
@@ -19,6 +23,8 @@ const hash = x =>
 const KeyCache = new WeakMap<Object, string>()
 
 export let Config: ConfigureOpts = {
+  propsToItem: x => x,
+
   // used to configure how the UI persists non-temporal state
   useUserState: useState,
   useAppState: useState,

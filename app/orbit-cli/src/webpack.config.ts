@@ -49,22 +49,6 @@ async function makeConfig(params: Params) {
     },
   }
 
-  const babelrcOptions = {
-    presets: [
-      [
-        '@o/babel-preset-motion',
-        {
-          env: {
-            modules: false,
-          },
-          disableTypescript: true,
-        },
-      ],
-    ],
-    babelrc: false,
-    cacheDirectory: true,
-  }
-
   let externals = {
     react: 'React',
     'react-dom': 'ReactDOM',
@@ -145,7 +129,6 @@ async function makeConfig(params: Params) {
             },
             {
               loader: 'babel-loader',
-              options: babelrcOptions,
             },
             'react-hot-loader/webpack',
           ],

@@ -1,9 +1,9 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitContentType, BitModel } from '@o/models'
+import { ListPropsContext } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { useContext } from 'react'
 import { FindOptions } from 'typeorm'
-import { ListPropsContext } from '../views/List'
 import { useSearchState } from './useSearchState'
 import { useStoresSimple } from './useStores'
 

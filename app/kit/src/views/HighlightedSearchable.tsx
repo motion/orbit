@@ -1,4 +1,4 @@
-import { MergeHighlightsContext, Searchable, SearchBarType } from '@o/ui'
+import { HighlightProvide, Searchable, SearchBarType } from '@o/ui'
 import * as React from 'react'
 
 type SearchChildProps = {
@@ -26,9 +26,9 @@ export const HighlightedSearchable = (props: Props) => {
       {({ searchBar, searchTerm }) => {
         return (
           // dont searchTerm by spaces, its used for searching the whole term here
-          <MergeHighlightsContext value={{ words: [searchTerm] }}>
+          <HighlightProvide value={{ words: [searchTerm] }}>
             {props.children({ searchBar, searchTerm })}
-          </MergeHighlightsContext>
+          </HighlightProvide>
         )
       }}
     </Searchable>

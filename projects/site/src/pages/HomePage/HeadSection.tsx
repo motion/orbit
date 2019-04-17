@@ -37,8 +37,8 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Build powerful apps and internal tools without configuration or servers.`,
-    `Vertically integrated from UI kit to dev environment to deploy.`,
+    `Build powerful apps and internal tools without configuration or servers`,
+    `with a vertically integrated platform, from UI kit to dev environment to deploy.`,
   ],
   medium: [
     `Build powerful internal tools without configuration or servers.`,
@@ -67,7 +67,6 @@ function HeadText() {
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const subText = subTexts[screen]
 
   return (
     <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
@@ -107,7 +106,7 @@ function HeadText() {
         </FadeIn>
         <Smaller fontSize={screen === 'large' ? '60%' : '80%'}>
           <FadeIn {...fadeUpProps} delay={500}>
-            {subText}
+            {subTexts[screen]}
           </FadeIn>
         </Smaller>
       </Paragraph>
@@ -134,8 +133,8 @@ const Smaller = gloss({
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),
-  hoverStyle: {
-    color: theme.color.alpha(0.8),
+  '&:hover': {
+    color: theme.color.alpha(1),
   },
 }))
 
@@ -301,6 +300,7 @@ const RoundButton = ({ primary = '#21AA0F', ...props }: ViewProps & { primary?: 
     borderRadius={100}
     background="#080412"
     backgroundSize="105% 200%"
+    transition="all ease 300ms"
     hoverStyle={{
       border: [2, toColor(primary).lighten(0.3)],
     }}

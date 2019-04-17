@@ -245,7 +245,11 @@ export function HeadSection(props) {
                     right={0}
                     bottom={10}
                   />
-                  <RoundButton primary="#290C3C" padding={[10, 20]}>
+                  <RoundButton
+                    aria-label="See how Orbit Works"
+                    primary="#290C3C"
+                    padding={[10, 20]}
+                  >
                     See how Orbit works
                   </RoundButton>
                 </View>
@@ -317,6 +321,7 @@ const DownloadButton = props => {
     <FadeIn>
       <Center bottom="auto" top={-20}>
         <RoundButton
+          aria-label="Download Button"
           width={159}
           height={45}
           onClick={e => {

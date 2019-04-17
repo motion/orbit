@@ -1,13 +1,13 @@
-import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui'
-import jsonp from 'jsonp'
-import React from 'react'
-import sanitize from 'sanitize-html'
-import lightSeparator from '../../../public/images/light-separator.svg'
-import { Page } from '../../views/Page'
-import { PillButton } from '../../views/PillButton'
-import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
-import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui';
+import jsonp from 'jsonp';
+import React from 'react';
+import sanitize from 'sanitize-html';
+import lightSeparator from '../../../public/images/light-separator.svg';
+import { Page } from '../../views/Page';
+import { PillButton } from '../../views/PillButton';
+import { TitleText } from '../../views/TitleText';
+import { TitleTextSub } from './AllInOnePitchDemoSection';
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent';
 
 export function EarlyAccessSection({ outside = null, ...props }) {
   return (
@@ -162,7 +162,7 @@ export class Join extends React.Component {
       <Form
         action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
         method="post"
-        id="mc-embedded-subscribe-form"
+        id="mc-embedded-subscribe-form-1"
         name="mc-embedded-subscribe-form"
         target="_blank"
         ref={this.form}

@@ -10,13 +10,14 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const Critters = require('critters-webpack-plugin')
-const PreloadPlugin = require('preload-webpack-plugin')
+// const Critters = require('critters-webpack-plugin')
+const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
@@ -328,6 +329,11 @@ async function makeConfig() {
         }),
       }),
 
+      false &&
+        new PreloadWebpackPlugin({
+          rel: 'preload',
+        }),
+
       isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
       isProd &&
@@ -338,10 +344,21 @@ async function makeConfig() {
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      new PreloadPlugin(),
-
-      // see https://github.com/GoogleChromeLabs/critters/issues/5
-      false && new Critters(),
+      isProd &&
+        target === 'web' &&
+        new HtmlCriticalWebpackPlugin({
+          base: outputPath,
+          src: 'index.html',
+          dest: 'index.html',
+          inline: true,
+          minify: true,
+          extract: true,
+          width: 375,
+          height: 565,
+          penthouse: {
+            blockJSRequests: false,
+          },
+        }),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({

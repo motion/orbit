@@ -124,7 +124,7 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   if (slim) {
     return (
       <Row background={theme.background.lighten(0.3)} position="relative" {...rest}>
-        <HeaderContain height={32}>
+        <HeaderContain height={34}>
           <LinkSection alignRight>{before}</LinkSection>
           <LogoHorizontal />
           <LinkSection>{after}</LinkSection>

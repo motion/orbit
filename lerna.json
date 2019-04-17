@@ -1,13 +1,8 @@
 {
-  "lerna": "3.13.0",
+  "lerna": "3.13.3",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "packages": [
-    "app/*",
-    "packages/*",
-    "apps/*",
-    "projects/*"
-  ],
+  "packages": ["app/*", "packages/*", "apps/*", "projects/*"],
   "version": "2.4.0",
   "command": {
     "publish": {

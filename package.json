@@ -50,7 +50,7 @@
     "eslint-plugin-jest": "22.4.1",
     "@typescript-eslint/parser": "1.5.0",
     "@typescript-eslint/eslint-plugin": "1.5.0",
-    "lerna": "3.13.1",
+    "lerna": "3.13.3",
     "mobx": "5.9.4",
     "prettier": "1.16.4",
     "sb-promisify": "^2.0.2",

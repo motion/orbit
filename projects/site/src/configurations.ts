@@ -1,3 +1,4 @@
+import 'intersection-observer'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 

@@ -58,7 +58,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={62} color="#000" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={56} color="#000" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,

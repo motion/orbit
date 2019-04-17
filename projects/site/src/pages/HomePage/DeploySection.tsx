@@ -37,72 +37,84 @@ export function ShoulderSection(props) {
         >
           <Row space={60} margin={[0, '-120%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
-              <View
-                borderRadius={10}
-                elevation={3}
-                width={400}
-                height={350}
-                backgroundImage={`url(${appScreenshot})`}
-                backgroundSize="contain"
-                backgroundPosition="center center"
-                backgroundRepeat="no-repeat"
-                position="relative"
-              >
-                <Image
-                  position="absolute"
-                  top={0}
-                  right={-70}
-                  zIndex={100}
-                  src={arrow}
-                  transform={{ scale: 0.6 }}
-                />
-              </View>
+              <FadeIn delay={200}>
+                <View
+                  borderRadius={10}
+                  elevation={3}
+                  width={400}
+                  height={350}
+                  backgroundImage={`url(${appScreenshot})`}
+                  backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  position="relative"
+                >
+                  <Image
+                    position="absolute"
+                    top={0}
+                    right={-70}
+                    zIndex={100}
+                    src={arrow}
+                    transform={{ scale: 0.6 }}
+                  />
+                </View>
+              </FadeIn>
             </Col>
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
-              <ParagraphIntro>
-                Orbit runs locally on your computer, but can sync data from any cloud integration.
-              </ParagraphIntro>
+              <FadeIn delay={300}>
+                <ParagraphIntro>
+                  Orbit runs locally on your computer, but can sync data from any cloud integration.
+                </ParagraphIntro>
+              </FadeIn>
 
-              <Para>
-                It's a lot like a web browser, but designed to make building rich collaborative apps
-                easy. It does that through an app kit that handles many hard things for you from
-                syncing data into a database, to building complex views, to syncing data
-                peer-to-peer within your team.
-              </Para>
+              <FadeIn delay={400}>
+                <Para>
+                  It's a lot like a web browser, but designed to make building rich collaborative
+                  apps easy. It does that through an app kit that handles many hard things for you
+                  from syncing data into a database, to building complex views, to syncing data
+                  peer-to-peer within your team.
+                </Para>
+              </FadeIn>
 
-              <Para>
-                Built on open standards like Typescript and React, it's the ultimate intranet system
-                in a box.
-              </Para>
+              <FadeIn delay={500}>
+                <Para>
+                  Built on open standards like Typescript and React, it's the ultimate intranet
+                  system in a box.
+                </Para>
+              </FadeIn>
 
-              <Para
-                tagName="a"
-                href="ok"
-                cursor="pointer"
-                color="#E368E7"
-                hoverColor={toColor('#E368E7').lighten(0.1)}
-                fontWeight={500}
-                textDecorationColor="#444"
-                textDecoration="underline"
-                display="inline-block"
-              >
-                How Orbit gives users control.
-              </Para>
+              <FadeIn delay={600}>
+                <Para
+                  tagName="a"
+                  href="ok"
+                  cursor="pointer"
+                  color="#E368E7"
+                  hoverColor={toColor('#E368E7').lighten(0.1)}
+                  fontWeight={500}
+                  textDecorationColor="#444"
+                  textDecoration="underline"
+                  display="inline-block"
+                >
+                  How Orbit gives users control.
+                </Para>
+              </FadeIn>
             </Col>
 
             <Col flex={2} alignItems="flex-start" justifyContent="center">
-              <View
-                borderRadius={10}
-                elevation={3}
-                width={400}
-                height={350}
-                backgroundImage={`url(${codeScreenshot})`}
-                backgroundSize="contain"
-                backgroundPosition="center center"
-                backgroundRepeat="no-repeat"
-                overflow="hidden"
-              />
+              <FadeIn delay={200}>
+                <View
+                  borderRadius={10}
+                  elevation={3}
+                  width={400}
+                  height={350}
+                  backgroundImage={`url(${codeScreenshot})`}
+                  backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  overflow="hidden"
+                />
+              </FadeIn>
             </Col>
           </Row>
         </SpacedPageContent>

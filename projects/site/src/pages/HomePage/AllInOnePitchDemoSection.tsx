@@ -4,6 +4,7 @@ import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, View } fr
 import React, { useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 import northernlights from '../../../public/images/northern-lights.svg'
+import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
@@ -23,7 +24,7 @@ export const TitleTextSub = gloss((props: TextProps) => (
 
 const nextStyle = {
   opacity: 0,
-  transform: `translate3d(40px,0,0)`,
+  transform: `translate3d(20px,0,0)`,
 }
 const curStyle = {
   opacity: 1,
@@ -31,17 +32,18 @@ const curStyle = {
 }
 const prevStyle = {
   opacity: 0,
-  transform: `translate3d(-40px,0,0)`,
+  transform: `translate3d(-20px,0,0)`,
 }
 let animate = 'in'
-const fadeOutTm = 300
+const fadeOutTm = 250
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 function useSlideSpring(config, delay = 0) {
   return useSpring({
     from: nextStyle,
-    to: async next => {
+    to: async (next, cancel) => {
+      cancel()
       switch (animate) {
         case 'in':
           next(curStyle)
@@ -92,8 +94,8 @@ const elements = [
   {
     iconBefore: require('../../../public/logos/postgres.svg'),
     title: '<List />',
-    body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, search, and share with a prop.`,
-    image: tableScreen,
+    body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, filter, search, and share with a prop.`,
+    image: listScreen,
     iconAfter: require('../../../public/logos/jira.svg'),
     afterName: 'Jira',
   },
@@ -103,35 +105,27 @@ export function NeckSection(props) {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
 
+  const longDelay = 150
   const springFast = useSlideSpring({
     mass: 1,
-    tension: 100,
+    tension: 150,
     friction: 10,
   })
-  // const springMedium = useSlideSpring(
-  //   {
-  //     mass: 1,
-  //     tension: 80,
-  //     friction: 8,
-  //   },
-  //   80,
-  // )
   const springSlow = useSlideSpring(
     {
       mass: 1,
-      tension: 65,
+      tension: 120,
       friction: 8,
     },
-    150,
+    longDelay / 2,
   )
-  const longestDelay = 200
   const springSlowest = useSlideSpring(
     {
       mass: 1,
-      tension: 65,
+      tension: 120,
       friction: 8,
     },
-    longestDelay,
+    longDelay,
   )
 
   const [cur, setCur] = useState(0)
@@ -139,7 +133,7 @@ export function NeckSection(props) {
   const next = async () => {
     animate = 'next'
     forceUpdate()
-    await sleep(fadeOutTm + longestDelay)
+    await sleep(fadeOutTm + longDelay)
     let n = (cur + 1) % elements.length
     setCur(n)
   }
@@ -160,10 +154,10 @@ export function NeckSection(props) {
               <FadeIn delay={100} intersection="20px">
                 <TitleText size="xxl">All together.</TitleText>
               </FadeIn>
-              <TitleTextSub>
+              <TitleTextSub width="80%" margin="auto" minWidth={360}>
                 <FadeIn delay={200} intersection="20px">
-                  Internal tools share common patterns. Orbit has everything you need to build them
-                  easily - even the development environment.
+                  Orbit has everything you need to build powerful apps easily. Including the
+                  development environment.
                 </FadeIn>
               </TitleTextSub>
             </>

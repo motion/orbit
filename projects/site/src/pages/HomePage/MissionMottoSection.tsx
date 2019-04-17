@@ -12,9 +12,9 @@ import { SpacedPageContent } from './SpacedPageContent'
 export const SubParagraph = (props: TextProps) => (
   <Paragraph
     textAlign="left"
-    size={1.2}
+    size={1.35}
     sizeLineHeight={1.25}
-    fontWeight={200}
+    fontWeight={300}
     alpha={0.6}
     {...props}
   />
@@ -29,7 +29,7 @@ export function LegsSection(props) {
           <AboutSection />
         </Page.Content>
 
-        <Page.Parallax speed={0.1} zIndex={-1}>
+        <Page.Parallax speed={0.075} zIndex={-1}>
           <FullScreen
             className="earth"
             backgroundImage={`url(${earth})`}
@@ -67,22 +67,21 @@ export function AboutSection() {
       <Grid space="10%" itemMinWidth={340} height="70%">
         <Col space="lg">
           <TitleTextSub textAlign="left" alpha={1} size={1}>
-            Our app platforms are broken. We want apps that are easy to build, powerful, user
-            friendly, portable and collaborative.
+            Our app platforms are broken. They give us no control, and design apps to be silos that
+            don't work together.
           </TitleTextSub>
 
           <SubParagraph>
-            Lorem ipsum dolor sit amet. An intro into how were thinking about the mission.
+            We think we can do better. It starts by enforcing a common way for apps to share data
+            with each other, and building an open platform.
           </SubParagraph>
           <SubParagraph>
-            We've spent many years putting together a large collection of performant views. They are
-            fine tuned to feel great. We've built large apps with it.
+            Then, it requires a commitment to making apps easier to build, with less code and sharp
+            edges. And performance must come by default.
           </SubParagraph>
           <SubParagraph>
-            Now, we're releasing it as a platform for the world to leverage. Our goal is to lower
-            the bar dramatically to building incredibly powerful apps of all types.
+            We've been working on delivering this for years, and are excited to share it with you.
           </SubParagraph>
-          <SubParagraph>We'd like to build it with you.</SubParagraph>
         </Col>
 
         {screen === 'large' && (
@@ -93,13 +92,13 @@ export function AboutSection() {
 
             <Item>Build apps without infrastructure.</Item>
 
-            <Item>Enable an ecosystem of views and data providers.</Item>
+            <Item>Enable an ecosystem of apps, views and data.</Item>
 
-            <Item>Go cross platform easily.</Item>
-
-            <Item>Better accessiblity through native-like views.</Item>
+            <Item>A truly native-feeling multi-platform app experience.</Item>
 
             <Item>Make DX a first-class citizen.</Item>
+
+            <Item>Give users control over their data.</Item>
           </Col>
         )}
       </Grid>

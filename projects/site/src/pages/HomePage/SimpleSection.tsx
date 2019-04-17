@@ -25,7 +25,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
             {...{
               WebkitTextFillColor: 'transparent',
               background: purpleWaveUrl,
-              backgroundSize: 200,
+              backgroundSize: 300,
             }}
             size="sm"
             sizeLineHeight={1}

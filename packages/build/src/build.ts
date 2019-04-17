@@ -24,6 +24,7 @@ async function main() {
         verbose: true,
       }),
     )
+    process.exit(0)
   })
 }
 

@@ -1,7 +1,8 @@
 import 'react-hot-loader' // must be imported before react
-import './assets/font-gteesti/stylesheet.css'
-import './assets/siteBase.css'
 import './configurations'
+
+require('./assets/font-gteesti/stylesheet.css')
+require('./assets/siteBase.css')
 
 const React = require('react')
 const ReactDOM = require('react-dom')

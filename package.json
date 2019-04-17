@@ -19,7 +19,8 @@
     "@types/react-dom": "16.8.3",
     "@types/node": "11.13.2",
     "@types/ws": "5.1.2",
-    "unist-util-visit-parents": "2.0.1"
+    "unist-util-visit-parents": "2.0.1",
+    "date-fns": "2.0.0-alpha.7"
   },
   "devDependencies": {
     "typescript": "https://github.com/Microsoft/typescript#4fee62844777c23cf37b6d4594f65b393b27b4dd",

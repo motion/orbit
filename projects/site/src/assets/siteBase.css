@@ -18,6 +18,10 @@ body {
   min-height: 100vh;
 }
 
+script {
+  display: none;
+}
+
 body,
 html {
   background: #000;

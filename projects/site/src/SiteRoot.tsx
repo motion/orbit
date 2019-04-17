@@ -17,7 +17,7 @@ const routes = mount({
     title: 'Orbit',
     view: <HomePage />,
   }),
-  '/docs': lazy(() => import(/* webpackChunkName: "DocsPage" */ './pages/DocsPage')),
+  '/docs': lazy(() => import('./pages/DocsPage')),
   '/about': route({
     title: 'About',
     view: AboutPage,

@@ -17,7 +17,7 @@ const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 // const Critters = require('critters-webpack-plugin')
-const PreloadWebpackPlugin = require('preload-webpack-plugin')
+// const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
@@ -118,7 +118,7 @@ const optimization = {
           },
         },
       }),
-    ],
+    ].filter(Boolean),
   },
   dev: {
     noEmitOnErrors: true,
@@ -236,8 +236,8 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
-            'react-hot-loader/webpack',
-          ],
+            !isProd && 'react-hot-loader/webpack',
+          ].filter(Boolean),
         },
         {
           test: /\.css$/,
@@ -333,17 +333,16 @@ async function makeConfig() {
         }),
       }),
 
-      false &&
-        new PreloadWebpackPlugin({
-          rel: 'preload',
-        }),
+      // WARNING: this may or may not work wiht code splitting
+      // i was seeing all the chunks loaded inline in HTML, when it shouldn't have
+      // new PreloadWebpackPlugin({
+      //   rel: 'preload',
+      // }),
 
       isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
       isProd &&
         new MiniCssExtractPlugin({
-          // Options similar to the same options in webpackOptions.output
-          // both options are optional
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),

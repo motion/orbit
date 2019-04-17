@@ -1,12 +1,13 @@
-import { gloss, useTheme } from '@o/gloss';
-import { BorderBottom, Button, Popover, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui';
-import React from 'react';
-import { Link as RouterLink } from 'react-navi';
-import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link';
-import { useScreenSize } from '../hooks/useScreenSize';
-import { Navigation } from '../SiteRoot';
-import { LogoHorizontal } from './LogoHorizontal';
-import { SectionContent } from './SectionContent';
+import { gloss, useTheme } from '@o/gloss'
+import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
+import React from 'react'
+import { Link as RouterLink } from 'react-navi'
+import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
+import { useScreenSize } from '../hooks/useScreenSize'
+import { useSiteStore } from '../Layout'
+import { Navigation } from '../SiteRoot'
+import { LogoHorizontal } from './LogoHorizontal'
+import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
   userSelect: 'none',
@@ -46,8 +47,7 @@ const HeaderLink = props => <Link width="33%" {...props} />
 
 export const LinksLeft = props => {
   return (
-    // <Overdrive id="links-left">
-    <LinkRow>
+    <>
       <HeaderLink {...props} href="/">
         Start
       </HeaderLink>
@@ -57,14 +57,12 @@ export const LinksLeft = props => {
       <HeaderLink {...props} href="/">
         Apps
       </HeaderLink>
-    </LinkRow>
-    // </Overdrive>
+    </>
   )
 }
 
 export const LinksRight = props => (
-  // <Overdrive id="links-right">
-  <LinkRow>
+  <>
     <HeaderLink {...props} href="/">
       Beta
     </HeaderLink>
@@ -74,8 +72,7 @@ export const LinksRight = props => (
     <HeaderLink {...props} href="/">
       About
     </HeaderLink>
-  </LinkRow>
-  // </Overdrive>
+  </>
 )
 
 const LinkRow = gloss({
@@ -89,21 +86,37 @@ const LinkRow = gloss({
 export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   const size = useScreenSize()
   const theme = useTheme()
+  const siteStore = useSiteStore()
 
   let before = null
   let after = null
 
   if (size !== 'small') {
-    before = <LinksLeft />
-    after = <LinksRight />
+    before = (
+      <LinkRow>
+        <LinksLeft />
+      </LinkRow>
+    )
+    after = (
+      <LinkRow>
+        <LinksRight />
+      </LinkRow>
+    )
   } else {
     after = (
       <>
         <View flex={1} />
-        <Popover openOnClick closeOnClickAway target={<Button icon="menu" size={1.2} chromeless />}>
-          <LinksLeft />
-          <LinksRight />
-        </Popover>
+        <Button
+          color="#fff"
+          hoverStyle={{
+            color: '#fff',
+          }}
+          icon="menu"
+          iconSize={28}
+          size={2}
+          chromeless
+          onClick={siteStore.toggleSidebar}
+        />
       </>
     )
   }

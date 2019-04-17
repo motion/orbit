@@ -6,13 +6,19 @@ import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
 import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
+import { LinksLeft, LinksRight } from './views/Header'
 
 class SiteStore {
   theme = null
   screenSize = 'large'
   maxHeight = null
+  showSidebar = false
 
   windowHeight = window.innerHeight
+
+  toggleSidebar = () => {
+    this.showSidebar = !this.showSidebar
+  }
 
   setTheme = (name: string) => {
     this.theme = name
@@ -46,10 +52,13 @@ const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStor
 
 export const useSiteStore = useStore
 
+const transition = 'transform ease 300ms'
+
 export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
   const screen = useScreenSize()
+  const sidebarWidth = 400
 
   window['SiteStore'] = siteStore
 
@@ -88,19 +97,43 @@ export function Layout(props: any) {
         <View
           minHeight="100vh"
           minWidth="100vw"
-          maxHeight={siteStore.maxHeight}
+          maxHeight={siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight}
           overflow="hidden"
+          transition={transition}
+          transform={{
+            x: siteStore.showSidebar ? -sidebarWidth : 0,
+          }}
           background={bg}
-          // transition="background ease 100ms"
         >
           <NotFoundBoundary render={NotFound}>
             <BusyIndicator isBusy={!!loadingRoute} delayMs={100} />
             {props.children}
           </NotFoundBoundary>
         </View>
+        <View
+          position="fixed"
+          top={0}
+          right={0}
+          width={sidebarWidth}
+          height="100vh"
+          transition={transition}
+          transform={{
+            x: siteStore.showSidebar ? 0 : sidebarWidth,
+          }}
+        >
+          <LinksLeft {...linkProps} />
+          <LinksRight {...linkProps} />
+        </View>
       </SimpleProvider>
     </Theme>
   )
+}
+
+const linkProps = {
+  width: '100%',
+  padding: 20,
+  fontSize: 22,
+  textAlign: 'left',
 }
 
 const bg = theme => theme.background

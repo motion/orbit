@@ -1,8 +1,18 @@
-import { Button, Col, Image, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
+import {
+  Button,
+  ButtonProps,
+  Col,
+  Image,
+  Row,
+  Space,
+  TextProps,
+  Theme,
+  useTheme,
+  View,
+} from '@o/ui'
 import React from 'react'
 import { Link, LinkProps } from '../../views/Header'
 import { Page } from '../../views/Page'
-import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
 import { SignupForm } from './EarlyAccessBetaSection'
 
@@ -53,17 +63,15 @@ export function FeetSection(props) {
               <SmallTitle>Follow Orbit for more updates</SmallTitle>
               <Space />
               <Row space>
-                <Button alt="clear" circular size={2}>
-                  <Image width={25} height={25} src={require('../../../public/logos/github.svg')} />
-                </Button>
-                <Button alt="clear" circular size={2}>
-                  <Image
-                    width={25}
-                    height={25}
-                    src={require('../../../public/logos/twitter.svg')}
-                  />
-                </Button>
-                <Button alt="clear" circular size={2} icon="feed" />
+                <BottomButton
+                  src={require('../../../public/logos/github.svg')}
+                  href="https://github.com/tryorbit"
+                />
+                <BottomButton
+                  src={require('../../../public/logos/twitter.svg')}
+                  href="https://twitter.com/tryorbit"
+                />
+                <BottomButton icon="feed" />
               </Row>
             </Col>
           </Row>
@@ -87,10 +95,28 @@ export function FeetSection(props) {
   )
 }
 
+const BottomButton = ({ src, href, ...props }: ButtonProps & { src?: string; href?: any }) => {
+  return (
+    <Button
+      alt="clear"
+      elementProps={{
+        href,
+        target: '_blank',
+      }}
+      userSelect="none"
+      circular
+      size={2}
+      cursor="pointer"
+      tagName="a"
+      {...props}
+    >
+      {!!src && <Image width={25} height={25} src={src} />}
+    </Button>
+  )
+}
+
 const SmallTitle = (props: TextProps) => <Text fontSize={14} textTransform="uppercase" {...props} />
 
 export const SmallLink = (props: Partial<LinkProps>) => (
   <Link width="100%" textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
 )
-
-const SmallParagraph = props => <Paragraph alpha={0.7} {...props} />

@@ -3,11 +3,10 @@ import React, { Children, cloneElement, createContext, isValidElement, useMemo }
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { MasonryLayout } from './MasonryLayout'
 import { Pane } from './Pane'
 
 export type LayoutProps = {
-  type?: 'column' | 'row' | 'grid'
+  type?: 'column' | 'row'
   children?: React.ReactNode
 }
 
@@ -23,9 +22,6 @@ export const LayoutContext = createContext<{
 
 function getLayout(props: LayoutProps) {
   switch (props.type) {
-    case 'grid':
-      // TODO make this legit
-      return <MasonryLayout {...props} />
     case 'row':
     case 'column':
     default:

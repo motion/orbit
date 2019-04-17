@@ -35,10 +35,11 @@ module.exports = function(_, givenOpts) {
       plug('@babel/preset-env', {
         loose: true,
         modules: false,
-        // targets: {
-        //   chrome: '73',
-        //   esmodules: true,
-        // },
+        targets: {
+          chrome: '73',
+          esmodules: true,
+        },
+        exclude: ['transform-regenerator'],
         ...opts.env,
       }),
       !opts.disableTypeScript && plug('@babel/preset-typescript'),

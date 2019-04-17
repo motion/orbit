@@ -196,15 +196,14 @@ export function ChestSection(props) {
               <SimpleSection title="Native-level UI Kit.">
                 <SectionP>
                   <SectionIcon name="widget" />A proper, powerful and flexible list view is no joke.
-                  Neither is a table or form. But that's just the start.
+                  Neither is a table or form. But that's just the start. Orbit makes them work
+                  together, accepting similar data formats and automatically normalizing.
                   {screen !== 'small' && (
                     <>
                       <Space />
-                      Orbit makes them work together, accepting similar data formats and normalizing
+                      Plus, Orbit understands how to lay them out when they are used together.
                     </>
                   )}
-                  them easily. Plus, Orbit understands how to lay them out when they are used
-                  together.
                 </SectionP>
               </SimpleSection>
 

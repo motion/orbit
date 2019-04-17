@@ -76,6 +76,34 @@ function useSlideSpring(config, delay = 0) {
           // maybe put this earlier
           animate = 'in'
           return
+        case 'prev':
+          await sleep(delay)
+          // out
+          await next({
+            to: nextStyle,
+            config: {
+              duration: fadeOutTm,
+            },
+          })
+          // move to other side
+          await next({
+            to: {
+              opacity: 0,
+              transform: `translate3d(-40px,0,0)`,
+            },
+            config: {
+              duration: 180,
+            },
+          })
+          await sleep(delay)
+          // in
+          await next({
+            to: curStyle,
+            config,
+          })
+          // maybe put this earlier
+          animate = 'in'
+          return
       }
     },
     config,
@@ -150,9 +178,13 @@ export function NeckSection(props) {
     let n = (cur + 1) % elements.length
     setCur(n)
   }
-  const prev = (e?) => {
+  const prev = async (e?) => {
     if (e) clearInterval(nextInt.current)
-    setCur(cur + 1)
+    animate = 'prev'
+    forceUpdate()
+    await sleep(fadeOutTm + longDelay)
+    let n = cur - 1
+    setCur(n < 0 ? elements.length - 1 : n)
   }
 
   const curNext = useGetFn(next)

@@ -15,6 +15,7 @@ import {
   View,
 } from '@o/ui'
 import { ensure, react, useReaction, useStore } from '@o/use-store'
+import { mount, route } from 'navi'
 import React, { memo, useState } from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
@@ -61,7 +62,14 @@ class DocsPageStore {
   getView = react(() => this.selected && views[this.selected.id], this.setSubView)
 }
 
-export function DocsPage() {
+export default mount({
+  '/': route({
+    title: 'Docs',
+    view: DocsPage,
+  }),
+})
+
+function DocsPage() {
   const siteStore = useSiteStore()
   const { selected, setSelected, SubView } = useStore(DocsPageStore)
   const [showSidebar, setShowSidebar] = useState(true)

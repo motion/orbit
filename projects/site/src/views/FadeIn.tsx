@@ -5,6 +5,11 @@ import { animated, useSpring, UseSpringProps } from 'react-spring'
 export type FadeInProps = UseSpringProps<any> & {
   delay?: number
   intersection?: IntersectionObserverInit['rootMargin']
+  threshold?: number
+}
+
+export const fadeUpProps = {
+  from: { transform: `translate3d(0,10px,0)` },
 }
 
 export const FadeIn = ({
@@ -14,6 +19,7 @@ export const FadeIn = ({
   style = null,
   disabled,
   intersection,
+  threshold = 0.25,
   delay,
   ...rest
 }: FadeInProps) => {
@@ -24,7 +30,7 @@ export const FadeIn = ({
 
   useIntersectionObserver({
     ref,
-    options: { threshold: 0.25, rootMargin: intersection },
+    options: { threshold, rootMargin: intersection },
     onChange(entries) {
       // only run once
       if (hasShown.current) return
@@ -45,7 +51,7 @@ export const FadeIn = ({
 
   const fromConf = {
     opacity: 0,
-    transform: `translate3d(0,-30px,0)`,
+    transform: `translate3d(0,-20px,0)`,
     ...from,
   }
   const props = useSpring({

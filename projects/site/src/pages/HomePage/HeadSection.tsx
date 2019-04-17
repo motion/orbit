@@ -19,7 +19,7 @@ import macbook from '../../../public/images/macbook.png'
 import appScreen from '../../../public/images/screen.jpg'
 import { IS_CHROME } from '../../constants'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeIn } from '../../views/FadeIn'
+import { FadeIn, fadeUpProps } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { Text } from '../../views/Text'
@@ -52,8 +52,6 @@ const subTexts = {
   medium: `Learn how Orbit makes common apps easy.`,
   small: `Learn how.`,
 }
-
-const br = <br style={{ height: 0 }} />
 
 function HeadText() {
   const screen = useScreenSize()
@@ -107,7 +105,11 @@ function HeadText() {
         <FadeIn disable={!measured} delay={300}>
           {texts[1]}
         </FadeIn>
-        <Smaller fontSize={screen === 'large' ? '60%' : '80%'}>{subText}</Smaller>
+        <Smaller fontSize={screen === 'large' ? '60%' : '80%'}>
+          <FadeIn {...fadeUpProps} delay={500}>
+            {subText}
+          </FadeIn>
+        </Smaller>
       </Paragraph>
 
       {/* this is just to measure */}
@@ -165,7 +167,7 @@ export function HeadSection(props) {
             </Row>
 
             <FullScreen top="auto">
-              <FadeIn from={{ transform: `translate3d(0,20px,0)` }}>
+              <FadeIn {...fadeUpProps}>
                 <View
                   flex={1}
                   width="100%"

@@ -4,6 +4,7 @@ import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
 import background from '../../../public/images/orbits-bg.jpg'
+import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
@@ -24,9 +25,13 @@ export function ShoulderSection(props) {
           }}
           header={
             <>
-              <PillButton>Deploy</PillButton>
+              <FadeIn delay={0}>
+                <PillButton>Deploy</PillButton>
+              </FadeIn>
               <Space size="sm" />
-              <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
+              <FadeIn delay={100}>
+                <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
+              </FadeIn>
             </>
           }
         >

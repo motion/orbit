@@ -14,6 +14,7 @@ import React from 'react'
 import orbits from '../../../public/images/orbits.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../Layout'
+import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -54,14 +55,20 @@ export function ChestSection(props) {
           height="auto"
           header={
             <>
-              <PillButton>Data</PillButton>
+              <FadeIn delay={0}>
+                <PillButton>Data</PillButton>
+              </FadeIn>
               <Space size="xs" />
-              <TitleText size="lg">Data, meet app.</TitleText>
+              <FadeIn delay={100}>
+                <TitleText size="lg">Data, meet app.</TitleText>
+              </FadeIn>
               <TitleTextSub alpha={0.9} size="md">
-                The platform where apps know how to talk to each other.
+                <FadeIn delay={200}>The platform where apps know how to talk to each other.</FadeIn>
               </TitleTextSub>
               <TitleTextSub size="xs">
-                Add any integration with a click. Create a custom display in minutes.
+                <FadeIn delay={300}>
+                  Add any integration with a click. Create a custom display in minutes.
+                </FadeIn>
               </TitleTextSub>
             </>
           }
@@ -110,11 +117,17 @@ export function ChestSection(props) {
           margin={[0, 'auto']}
           header={
             <>
-              <PillButton>App Kit</PillButton>
+              <FadeIn delay={0}>
+                <PillButton>App Kit</PillButton>
+              </FadeIn>
               <Space size="xs" />
-              <TitleText size="xxl">Batteries Included.</TitleText>
+              <FadeIn delay={100}>
+                <TitleText size="xxl">Batteries Included.</TitleText>
+              </FadeIn>
               <TitleTextSub>
-                Internal tools share patterns. Orbit makes building those types of apps easy.
+                <FadeIn delay={200}>
+                  Internal tools share patterns. Orbit makes building those types of apps easy.
+                </FadeIn>
               </TitleTextSub>
             </>
           }

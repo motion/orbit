@@ -1,35 +1,38 @@
 import { isDefined } from '@o/kit'
 import { Col, gloss, Icon, Row } from '@o/ui'
 import React from 'react'
+import { FadeIn } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { wavyUrl } from './EarlyAccessBetaSection'
 
 export const SimpleSection = ({ index = undefined, title, children, ...rest }) => (
   <SectionChrome space {...rest}>
-    <SectionTitle>
-      {isDefined(index) && (
-        <Badge>
-          <BadgeText>{index}.</BadgeText>
-        </Badge>
-      )}
-      <TitleText
-        style={{
-          WebkitBackgroundClip: 'text',
-        }}
-        {...{
-          WebkitTextFillColor: 'transparent',
-          background: wavyUrl,
-          backgroundSize: 200,
-        }}
-        size="sm"
-        textAlign="left"
-        flex={1}
-      >
-        {title}
-      </TitleText>
-    </SectionTitle>
-    <SectionBody>{children}</SectionBody>
+    <FadeIn delay={100} intersection="100px" threshold={1}>
+      <SectionTitle>
+        {isDefined(index) && (
+          <Badge>
+            <BadgeText>{index}.</BadgeText>
+          </Badge>
+        )}
+        <TitleText
+          style={{
+            WebkitBackgroundClip: 'text',
+          }}
+          {...{
+            WebkitTextFillColor: 'transparent',
+            background: wavyUrl,
+            backgroundSize: 200,
+          }}
+          size="sm"
+          textAlign="left"
+          flex={1}
+        >
+          {title}
+        </TitleText>
+      </SectionTitle>
+      <SectionBody>{children}</SectionBody>
+    </FadeIn>
   </SectionChrome>
 )
 const SectionChrome = gloss(Col, {

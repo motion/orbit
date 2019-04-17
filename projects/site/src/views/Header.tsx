@@ -67,7 +67,7 @@ const HeaderLink = props => <Link width="33%" {...props} />
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink {...props} href="/docs/start">
+      <HeaderLink {...props} href="/docs">
         Start
       </HeaderLink>
       <HeaderLink {...props} href="/docs">

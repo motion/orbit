@@ -7,7 +7,7 @@
     "build": "NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
     "start:prod": "NODE_ENV=production mcro-build --prod --report --target web",
     "build:docs:ui": "node ./scripts/build-docs-ui.js",
-    "deploy": "./surge-fix.sh && surge dist",
+    "deploy": "./surge-fix.sh && surge tryorbit.com",
     "publish:site": "yarn build && yarn deploy"
   },
   "dependencies": {

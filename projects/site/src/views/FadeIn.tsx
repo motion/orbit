@@ -12,6 +12,12 @@ export const fadeUpProps = {
   from: { transform: `translate3d(0,10px,0)` },
 }
 
+const config = {
+  mass: 1,
+  tension: 40,
+  friction: 8,
+}
+
 export const FadeIn = ({
   from = null,
   to = null,
@@ -58,11 +64,7 @@ export const FadeIn = ({
     ...rest,
     from: fromConf,
     to: cur,
-    config: {
-      mass: 1,
-      tension: 32,
-      friction: 8,
-    },
+    config,
   })
 
   return (

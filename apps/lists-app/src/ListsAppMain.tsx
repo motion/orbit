@@ -1,5 +1,5 @@
-import { AppMainView, AppProps, List, OrbitListItemProps, useTreeList } from '@o/kit'
-import { TitleRow, TitleRowProps } from '@o/ui'
+import { AppMainView, AppProps, OrbitListItemProps, useTreeList } from '@o/kit'
+import { List, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {

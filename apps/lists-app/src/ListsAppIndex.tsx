@@ -1,13 +1,5 @@
-import {
-  ensure,
-  getTargetValue,
-  List,
-  searchBits,
-  TreeList,
-  useReaction,
-  useTreeList,
-} from '@o/kit'
-import { Button, Pane, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
+import { ensure, getTargetValue, searchBits, TreeList, useReaction, useTreeList } from '@o/kit'
+import { Button, List, Pane, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
 

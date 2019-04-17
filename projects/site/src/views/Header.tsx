@@ -20,8 +20,16 @@ const LinkText = gloss(View, {
   },
 })
 
-export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps
-export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
+export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
+export function Link({
+  children,
+  fontSize = 16,
+  href,
+  width,
+  margin,
+  external,
+  ...props
+}: LinkProps) {
   return (
     <LinkText
       cursor="pointer"
@@ -37,7 +45,18 @@ export function Link({ children, fontSize = 16, href, width, margin, ...props }:
         hoverStyle={{ alpha: 1 }}
         {...props}
       >
-        <RouterLink href={href}>{children}</RouterLink>
+        {external ? (
+          <a
+            href={`${href}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.preventDefault()}
+          >
+            {children}
+          </a>
+        ) : (
+          <RouterLink href={href}>{children}</RouterLink>
+        )}
       </SimpleText>
     </LinkText>
   )
@@ -66,7 +85,7 @@ export const LinksRight = props => (
     <HeaderLink {...props} href="/beta">
       Beta
     </HeaderLink>
-    <HeaderLink {...props} href="/blog">
+    <HeaderLink {...props} href="http://blog.orbitauth.com" external>
       Blog
     </HeaderLink>
     <HeaderLink {...props} href="/about">

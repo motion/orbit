@@ -1,5 +1,5 @@
-import { createStoreContext } from '@o/kit'
 import { Theme, Title, View } from '@o/ui'
+import { createStoreContext } from '@o/use-store'
 import { throttle } from 'lodash'
 import React, { useEffect } from 'react'
 import BusyIndicator from 'react-busy-indicator'

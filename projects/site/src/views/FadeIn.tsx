@@ -57,7 +57,7 @@ export const FadeIn = ({
 
   const fromConf = {
     opacity: 0,
-    transform: `translate3d(0,-20px,0)`,
+    transform: `translate3d(0,-15px,0)`,
     ...from,
   }
   const props = useSpring({

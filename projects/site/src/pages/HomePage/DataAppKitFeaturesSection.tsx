@@ -220,7 +220,7 @@ export function ChestSection(props) {
 
           <View flex={3} />
 
-          {screen !== 'small' && (
+          {screen === 'large' && (
             <>
               <Space size="xxl" />
               <BodyButton margin={[0, 'auto']} size="xl">

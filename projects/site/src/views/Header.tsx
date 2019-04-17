@@ -1,21 +1,12 @@
-import { gloss, useTheme } from '@o/gloss'
-import {
-  BorderBottom,
-  Button,
-  Popover,
-  Row,
-  RowProps,
-  SimpleText,
-  SimpleTextProps,
-  View,
-} from '@o/ui'
-import React from 'react'
-import { Link as RouterLink } from 'react-navi'
-import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
-import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation } from '../SiteRoot'
-import { LogoHorizontal } from './LogoHorizontal'
-import { SectionContent } from './SectionContent'
+import { gloss, useTheme } from '@o/gloss';
+import { BorderBottom, Button, Popover, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui';
+import React from 'react';
+import { Link as RouterLink } from 'react-navi';
+import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link';
+import { useScreenSize } from '../hooks/useScreenSize';
+import { Navigation } from '../SiteRoot';
+import { LogoHorizontal } from './LogoHorizontal';
+import { SectionContent } from './SectionContent';
 
 const LinkText = gloss(View, {
   userSelect: 'none',
@@ -41,7 +32,7 @@ export function Link({ children, fontSize = 16, href, width, margin, ...props }:
       <SimpleText
         fontSize={fontSize}
         alpha={0.65}
-        fontWeight={200}
+        fontWeight={400}
         hoverStyle={{ alpha: 1 }}
         {...props}
       >

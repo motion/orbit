@@ -1,14 +1,14 @@
-import * as LernaProject from '@lerna/project';
-import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import * as Fs from 'fs';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { DuplicatesPlugin } from 'inspectpack/plugin';
-import * as Path from 'path';
+import * as LernaProject from '@lerna/project'
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import * as Fs from 'fs'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { DuplicatesPlugin } from 'inspectpack/plugin'
+import * as Path from 'path'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
-import PrepackPlugin from 'prepack-webpack-plugin';
-import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import PrepackPlugin from 'prepack-webpack-plugin'
+import webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')

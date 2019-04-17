@@ -7,7 +7,6 @@ import { Layout } from './Layout'
 import { AboutPage } from './pages/AboutPage'
 import { AppsPage } from './pages/AppsPage'
 import { BetaPage } from './pages/BetaPage'
-// import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
 import { MDX } from './views/MDX'
@@ -18,7 +17,7 @@ const routes = mount({
     title: 'Orbit',
     view: <HomePage />,
   }),
-  '/docs': lazy(() => import('./pages/DocsPage')),
+  '/docs': lazy(() => import(/* webpackChunkName: "DocsPage" */ './pages/DocsPage')),
   '/about': route({
     title: 'About',
     view: AboutPage,

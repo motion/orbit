@@ -94,7 +94,7 @@ function PeekHeader() {
       opacity={show ? 1 : 0}
       transform={{ y: show ? 0 : -40 }}
     >
-      <Header slim />
+      <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
     </FullScreen>
   )
 }

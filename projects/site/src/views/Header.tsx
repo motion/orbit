@@ -48,13 +48,13 @@ const HeaderLink = props => <Link width="33%" {...props} />
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink {...props} href="/">
+      <HeaderLink {...props} href="/docs/start">
         Start
       </HeaderLink>
       <HeaderLink {...props} href="/docs">
         Docs
       </HeaderLink>
-      <HeaderLink {...props} href="/">
+      <HeaderLink {...props} href="/apps">
         Apps
       </HeaderLink>
     </>
@@ -63,13 +63,13 @@ export const LinksLeft = props => {
 
 export const LinksRight = props => (
   <>
-    <HeaderLink {...props} href="/">
+    <HeaderLink {...props} href="/beta">
       Beta
     </HeaderLink>
-    <HeaderLink {...props} href="/">
+    <HeaderLink {...props} href="/blog">
       Blog
     </HeaderLink>
-    <HeaderLink {...props} href="/">
+    <HeaderLink {...props} href="/about">
       About
     </HeaderLink>
   </>

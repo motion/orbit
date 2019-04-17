@@ -16,70 +16,21 @@ import { Page } from '../../views/Page'
 import { Text } from '../../views/Text'
 import { SignupForm } from './EarlyAccessBetaSection'
 
-export function FeetSection(props) {
+export function FeetSection({ ...props }) {
   const theme = useTheme()
   return (
     <Theme name="home">
       <Page {...props}>
         <Page.Content pad="xxl" justifyContent="space-between">
           <Space size="xl" />
-
           <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
-
           <View flex={1} />
-
-          <Row flexWrap="wrap" flex={8} space="lg" pad alignItems="flex-end">
-            <Col minWidth={150} flex={1} space="sm">
-              <SmallTitle alt="lightRed">Orbit</SmallTitle>
-              <SmallLink href="/">Home</SmallLink>
-              <SmallLink href="/">Download</SmallLink>
-              <SmallLink href="/">Getting Started</SmallLink>
-              <SmallLink href="/">Apps</SmallLink>
-              <SmallLink href="/">Documentation</SmallLink>
-              <SmallLink href="/">Pricing</SmallLink>
-              <SmallLink href="/">Team</SmallLink>
-              <SmallLink href="/">Beta</SmallLink>
-            </Col>
-
-            <Col minWidth={150} flex={1} space="sm">
-              <SmallTitle>Support & Terms</SmallTitle>
-              <SmallLink href="/">Contact us</SmallLink>
-              <SmallLink href="/">Orbit Chat</SmallLink>
-              <SmallLink href="/">Privacy Policy</SmallLink>
-              <SmallLink href="/">Terms & Conditions</SmallLink>
-              <SmallLink href="/">FAQ</SmallLink>
-            </Col>
-
-            <Col minWidth={150} flex={1} space="sm">
-              <SmallTitle>Community</SmallTitle>
-              <SmallLink href="/">About</SmallLink>
-              <SmallLink href="/blog">Blog</SmallLink>
-              <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
-              <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
-              <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
-            </Col>
-
-            <Col minWidth={200} flex={2} space="sm">
-              <SmallTitle>Follow Orbit for more updates</SmallTitle>
-              <Space />
-              <Row space>
-                <BottomButton
-                  src={require('../../../public/logos/github.svg')}
-                  href="https://github.com/tryorbit"
-                />
-                <BottomButton
-                  src={require('../../../public/logos/twitter.svg')}
-                  href="https://twitter.com/tryorbit"
-                />
-                <BottomButton icon="feed" />
-              </Row>
-            </Col>
-          </Row>
+          <Footer />
         </Page.Content>
 
         <Page.Background
           speed={0.1}
-          zIndex={100}
+          zIndex={-10}
           bottom="-110%"
           backgroundSize="cover"
           left="-40%"
@@ -92,6 +43,58 @@ export function FeetSection(props) {
         />
       </Page>
     </Theme>
+  )
+}
+
+export const Footer = () => {
+  return (
+    <Row flexWrap="wrap" flex={8} space="lg" pad alignItems="flex-end">
+      <Col minWidth={150} flex={1} space="sm">
+        <SmallTitle alt="lightRed">Orbit</SmallTitle>
+        <SmallLink href="/">Home</SmallLink>
+        <SmallLink href="/">Download</SmallLink>
+        <SmallLink href="/">Getting Started</SmallLink>
+        <SmallLink href="/">Apps</SmallLink>
+        <SmallLink href="/">Documentation</SmallLink>
+        <SmallLink href="/">Pricing</SmallLink>
+        <SmallLink href="/">Team</SmallLink>
+        <SmallLink href="/">Beta</SmallLink>
+      </Col>
+
+      <Col minWidth={150} flex={1} space="sm">
+        <SmallTitle>Support & Terms</SmallTitle>
+        <SmallLink href="/">Contact us</SmallLink>
+        <SmallLink href="/">Orbit Chat</SmallLink>
+        <SmallLink href="/">Privacy Policy</SmallLink>
+        <SmallLink href="/">Terms & Conditions</SmallLink>
+        <SmallLink href="/">FAQ</SmallLink>
+      </Col>
+
+      <Col minWidth={150} flex={1} space="sm">
+        <SmallTitle>Community</SmallTitle>
+        <SmallLink href="/">About</SmallLink>
+        <SmallLink href="/blog">Blog</SmallLink>
+        <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
+        <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
+        <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
+      </Col>
+
+      <Col minWidth={200} flex={2} space="sm">
+        <SmallTitle>Follow Orbit for more updates</SmallTitle>
+        <Space />
+        <Row space>
+          <BottomButton
+            src={require('../../../public/logos/github.svg')}
+            href="https://github.com/tryorbit"
+          />
+          <BottomButton
+            src={require('../../../public/logos/twitter.svg')}
+            href="https://twitter.com/tryorbit"
+          />
+          <BottomButton icon="feed" />
+        </Row>
+      </Col>
+    </Row>
   )
 }
 

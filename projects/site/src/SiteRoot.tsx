@@ -4,6 +4,8 @@ import React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router } from 'react-navi'
 import { Layout } from './Layout'
+import { AboutPage } from './pages/AboutPage'
+import { BetaPage } from './pages/BetaPage'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
@@ -19,6 +21,14 @@ const routes = mount({
   '/docs': route({
     title: 'Docs',
     view: DocsPage,
+  }),
+  '/about': route({
+    title: 'About',
+    view: AboutPage,
+  }),
+  '/beta': route({
+    title: 'Beta',
+    view: BetaPage,
   }),
 })
 

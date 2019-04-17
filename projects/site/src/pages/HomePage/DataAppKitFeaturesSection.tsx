@@ -75,6 +75,8 @@ export function ChestSection(props) {
         >
           <Row
             className="hide-scrollbars"
+            margin="0 -40px"
+            width="calc(100% + 80px)"
             height="auto"
             space="md"
             spaceAround

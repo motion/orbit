@@ -1,4 +1,4 @@
-import { ensure, react, Templates, useStore } from '@o/kit'
+import { ensure, react, Templates, useReaction, useStore } from '@o/kit'
 import '@o/nucleo'
 import {
   Button,
@@ -11,6 +11,7 @@ import {
   SurfacePassProps,
   Toolbar,
   useMedia,
+  useOnUnmount,
   useTheme,
   View,
 } from '@o/ui'
@@ -67,6 +68,14 @@ export function DocsPage() {
   const [section, setSection] = useState('all')
   const theme = useTheme()
 
+  useReaction(() => {
+    siteStore.setMaxHeight(siteStore.sectionHeight)
+  })
+
+  useOnUnmount(() => {
+    siteStore.setMaxHeight(null)
+  })
+
   return (
     <>
       <Header slim />
@@ -114,8 +123,9 @@ const WidthLimit = gloss({
 
 const Content = gloss(View, {
   margin: [0, 'auto'],
+  padding: [0, 8],
   width: '100%',
-  maxWidth: 880,
+  maxWidth: 860,
 })
 
 const DocsToolbar = memo(({ section, setSection }: any) => {

@@ -10,11 +10,16 @@ import { getPageForPath, Navigation } from './SiteRoot'
 class SiteStore {
   theme = null
   screenSize = 'large'
+  maxHeight = null
 
   windowHeight = window.innerHeight
 
   setTheme = (name: string) => {
     this.theme = name
+  }
+
+  setMaxHeight = (val: any) => {
+    this.maxHeight = val
   }
 
   get sectionHeight() {
@@ -45,6 +50,8 @@ export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
   const screen = useScreenSize()
+
+  window['SiteStore'] = siteStore
 
   useEffect(() => {
     siteStore.screenSize = screen
@@ -81,6 +88,7 @@ export function Layout(props: any) {
         <View
           minHeight="100vh"
           minWidth="100vw"
+          maxHeight={siteStore.maxHeight}
           overflow="hidden"
           background={bg}
           // transition="background ease 100ms"

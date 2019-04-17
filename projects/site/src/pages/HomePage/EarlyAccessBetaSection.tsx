@@ -7,7 +7,7 @@ import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
-import { SpacedPageContent } from './SpacedPageContent'
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export function EarlyAccessSection({ outside = null, ...props }) {
   return (
@@ -39,9 +39,11 @@ export function EarlyAccessSection({ outside = null, ...props }) {
                   <PillButton>Beta</PillButton>
                   <Space size="sm" />
                   <TitleText size="xxl">Early Access.</TitleText>
-                  <TitleTextSub size="lg">Orbit is now in beta.</TitleTextSub>
+                  <TitleTextSub size={useScreenVal('md', 'lg', 'lg')}>
+                    Orbit is now in beta.
+                  </TitleTextSub>
                   <TitleTextSub>
-                    We're working with teams that want to build internal tools.
+                    We're seeking teams who have unique use cases for internal tooling.
                   </TitleTextSub>
                 </>
               }
@@ -61,7 +63,7 @@ export const SignupForm = (props: ViewProps) => (
   <View
     width="50%"
     maxWidth={600}
-    minWidth={360}
+    minWidth={340}
     margin="auto"
     borderRadius={12}
     overflow="hidden"
@@ -169,7 +171,8 @@ export class Join extends React.Component {
       >
         <>
           <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
-          <TitleTextSub size="xs">Sign up here to get in queue.</TitleTextSub>
+          <Space size="sm" />
+          <TitleTextSub size="xs">We're rolling out to teams now.</TitleTextSub>
         </>
         <Input
           type="email"

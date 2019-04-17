@@ -25,4 +25,7 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
     userSelect: 'text',
     cursor: 'text',
   },
+  pointable: {
+    cursor: 'pointer',
+  },
 })

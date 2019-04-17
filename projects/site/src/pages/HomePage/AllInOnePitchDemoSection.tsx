@@ -14,7 +14,7 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent } from './SpacedPageContent'
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
@@ -152,12 +152,12 @@ export function NeckSection(props) {
           header={
             <>
               <FadeIn delay={100} intersection="20px">
-                <TitleText size="xxl">All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together.</TitleText>
               </FadeIn>
-              <TitleTextSub width="80%" margin="auto" minWidth={360}>
+              <TitleTextSub width="87%" margin="auto" minWidth={320}>
                 <FadeIn delay={200} intersection="20px">
-                  Orbit has everything you need to build powerful apps easily. Including the
-                  development environment.
+                  Orbit has everything you need to build powerful apps with code, easily. Including
+                  the development environment.
                 </FadeIn>
               </TitleTextSub>
             </>
@@ -228,6 +228,7 @@ export function NeckSection(props) {
                   size={2}
                   iconSize={22}
                   circular
+                  zIndex={100}
                   position="absolute"
                   top={-4}
                   left={10}
@@ -240,6 +241,7 @@ export function NeckSection(props) {
                   size={2}
                   iconSize={22}
                   circular
+                  zIndex={100}
                   position="absolute"
                   top={-4}
                   right={10}

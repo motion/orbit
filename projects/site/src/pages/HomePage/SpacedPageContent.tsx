@@ -18,7 +18,7 @@ export function SpacedPageContent({
     >
       <SpaceGroup>
         <div style={{ flex: 1 }} />
-        <Col space="sm" alignItems="center" pad>
+        <Col space="sm" alignItems="center" pad={useScreenVal(false, true, true)}>
           {header}
         </Col>
         {children}
@@ -26,4 +26,9 @@ export function SpacedPageContent({
       </SpaceGroup>
     </View>
   )
+}
+
+export const useScreenVal = (small: any, medium: any, large: any) => {
+  const screen = useScreenSize()
+  return screen === 'small' ? small : screen === 'medium' ? medium : large
 }

@@ -1,5 +1,5 @@
 import { useDebounce, useIntersectionObserver } from '@o/ui'
-import React, { useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
 export type FadeInProps = UseSpringProps<any> & {
@@ -18,7 +18,7 @@ const config = {
   friction: 8,
 }
 
-export const FadeIn = ({
+export const FadeIn = memo(({
   from = null,
   to = null,
   children,
@@ -72,4 +72,4 @@ export const FadeIn = ({
       {children}
     </animated.div>
   )
-}
+})

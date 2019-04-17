@@ -11,7 +11,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
   const screen = useScreenSize()
   return (
     <SectionChrome space {...rest}>
-      <FadeIn delay={100} intersection="100px" threshold={1}>
+      <FadeIn delay={100} intersection="60px" threshold={1}>
         <SectionTitle>
           {isDefined(index) && (
             <Badge opacity={screen === 'large' ? 1 : 0}>

@@ -37,14 +37,16 @@ export function ChestSection(props) {
       <Page.Parallax speed={-0.05} zIndex={-2}>
         <FullScreen transform={{ y: '-93%', scale: 0.7 }} transformOrigin="bottom center">
           <FullScreen
+            left={-100}
+            right={-100}
             top="auto"
             height="50%"
-            className="orbits"
+            className="orbitals"
             backgroundImage={`url(${orbits})`}
             backgroundPosition="top center"
             backgroundRepeat="no-repeat"
           />
-          <FadeDown top="auto" height="50%" />
+          <FadeDown left={-100} right={-100} top="auto" height="50%" />
         </FullScreen>
       </Page.Parallax>
 
@@ -67,7 +69,9 @@ export function ChestSection(props) {
               </TitleTextSub>
               <TitleTextSub size="xs">
                 <FadeIn delay={300}>
-                  Add any integration with a click. Create a custom display in minutes.
+                  Every Orbit app exposes a single typed API and syncs data into a standard format.
+                  They&nbsp;understand handling credentials, and install with a click to your
+                  workspace.
                 </FadeIn>
               </TitleTextSub>
             </>
@@ -164,26 +168,26 @@ export function ChestSection(props) {
               <SimpleSection title="Spaces to collaborate.">
                 <SectionP>
                   <SectionIcon name="satellite" />
-                  Anyone on your team can use, edit, and add new apps. All done decentralized, so
-                  you can do it behind the firewall.
+                  Anyone on your team can use, edit, and add new apps. This happens decentralized,
+                  so your team can collaborate behind the firewall.
                   {screen !== 'small' && (
                     <>
                       <Space />
-                      Press edit and in seconds deploy a rich collaborative app to everyone.
+                      Press edit and in seconds deploy a rich app to everyone.
                     </>
                   )}
                 </SectionP>
               </SimpleSection>
 
-              <SimpleSection title="Decentralized app store.">
+              <SimpleSection title="Multi-process apps.">
                 <SectionP>
                   <SectionIcon name="shop" />
-                  Publish new apps for your team, or for the world. Apps are just node modules, with
-                  a typed API and a clean view system built on React.
+                  Apps are written using React and Typescript, and publish like node modules.
+                  Running multiple processes is done through simple naming conventions.
                   {screen !== 'small' && (
                     <>
                       <Space />
-                      Apps also expose data, so you can build your own.
+                      When you're ready, publish it in seconds on the app store.
                     </>
                   )}
                 </SectionP>

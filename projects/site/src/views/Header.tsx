@@ -66,7 +66,7 @@ export function Link({
   )
 }
 
-const HeaderLink = props => <Link width="33%" {...props} />
+export const HeaderLink = props => <Link width="33%" {...props} />
 
 export const LinksLeft = props => {
   return (
@@ -138,6 +138,10 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
           iconSize={28}
           size={2}
           chromeless
+          transform={{
+            y: 0,
+            x: 18,
+          }}
           onClick={siteStore.toggleSidebar}
         />
       </>

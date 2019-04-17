@@ -1,6 +1,6 @@
 import 'react-hot-loader' // must be imported before react
-import './../public/font/stylesheet.css'
-import './../public/styles/siteBase.css'
+import './assets/font-gteesti/stylesheet.css'
+import './assets/siteBase.css'
 import './configurations'
 
 const React = require('react')

@@ -11,7 +11,7 @@ async function main() {
     ...(await makeConfig()),
   }
 
-  console.log(JSON.stringify(finalConfig, null, 2))
+  // console.log(JSON.stringify(finalConfig, null, 2))
 
   webpack(finalConfig, (err, stats) => {
     if (err) {

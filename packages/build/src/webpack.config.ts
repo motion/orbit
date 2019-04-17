@@ -10,6 +10,11 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const safePostCssParser = require('postcss-safe-parser')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const Critters = require('critters-webpack-plugin')
 const PreloadPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
@@ -21,9 +26,11 @@ const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
 const repoRoot = Path.join(cwd, '..', '..')
 
+const appPackageJson = Path.join(cwd, 'package.json')
+
 const readPackage = (key: string) => {
   try {
-    const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
+    const packageJson = Fs.readFileSync(appPackageJson)
     const pkg = JSON.parse(packageJson.toString())
     return pkg[key]
   } catch {
@@ -31,9 +38,17 @@ const readPackage = (key: string) => {
   }
 }
 
+const getFlag = flag => {
+  const matcher = new RegExp(`${flag} ([^ ]+)`, 'i')
+  const found = process.argv.join(' ').match(matcher)
+  return (found && found.length >= 2 && found[1]) || null
+}
+
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || readPackage('main') || './src'
+console.log('etnry', getFlag('--entry'))
+const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
+const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const outputPath = Path.join(cwd, 'dist')
 
@@ -43,12 +58,6 @@ const buildNodeModules = [
   // <repo>/node_modules
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
-
-const getFlag = flag => {
-  const matcher = new RegExp(`${flag} ([a-z0-9]+)`, 'i')
-  const found = process.argv.join(' ').match(matcher)
-  return (found && found.length >= 2 && found[1]) || null
-}
 
 const target = getFlag('--target') || 'electron-renderer'
 const defines = {
@@ -62,37 +71,47 @@ const defines = {
 
 console.log(
   'webpack info',
-  JSON.stringify({ outputPath, target, isProd, tsConfig, defines }, null, 2),
+  JSON.stringify({ entry, outputPath, target, isProd, tsConfig, defines }, null, 2),
 )
-
-// this really helps hmr speed
-const optimizeSplit = {
-  splitChunks: {
-    cacheGroups: {
-      vendor: {
-        test: /node_modules/,
-        chunks: 'initial',
-        name: 'vendor',
-        priority: 10,
-        enforce: true,
-      },
-    },
-  },
-}
 
 const optimization = {
   prod: {
-    ...optimizeSplit,
+    runtimeChunk: true,
+    splitChunks: {
+      chunks: 'all',
+      name: false,
+    },
     minimizer: [
       new TerserPlugin({
+        sourceMap: true,
+        cache: true,
         parallel: true,
         terserOptions: {
-          ecma: 8,
-          compress: true,
+          parse: {
+            ecma: 8,
+          },
+          compress: {
+            ecma: 6,
+            warnings: false,
+          },
+          mangle: {
+            safari10: true,
+          },
           keep_classnames: true,
           output: {
+            ecma: 6,
             comments: false,
             beautify: false,
+            ascii_only: true,
+          },
+        },
+      }),
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          parser: safePostCssParser,
+          map: {
+            inline: false,
+            annotation: true,
           },
         },
       }),
@@ -102,7 +121,6 @@ const optimization = {
     noEmitOnErrors: true,
     removeAvailableModules: false,
     namedModules: true,
-    // ...optimizeSplit,
   },
 }
 
@@ -141,17 +159,17 @@ async function makeConfig() {
         : {},
     optimization: process.env.NO_OPTIMIZE
       ? {
-          ...optimizeSplit,
           minimize: false,
         }
       : optimization[isProd ? 'prod' : 'dev'],
     output: {
       path: outputPath,
-      pathinfo: isProd,
-      filename: 'bundle.js',
       publicPath: '/',
       // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+      chunkFilename: isProd
+        ? 'static/js/[name].[contenthash:8].chunk.js'
+        : 'static/js/[name].chunk.js',
     },
     devServer: {
       stats: {
@@ -176,6 +194,7 @@ async function makeConfig() {
         ? ['ts:main', 'module', 'browser', 'main']
         : ['ts:main', 'browser', 'main'],
       alias,
+      // plugins: [new ModuleScopePlugin(appSrc, [appPackageJson])],
     },
     resolveLoader: {
       modules: buildNodeModules,
@@ -220,15 +239,14 @@ async function makeConfig() {
         {
           test: /\.css$/,
           use: [
-            {
+            isProd && {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            !isProd && {
               loader: 'style-loader',
-              options: {
-                insertAt: 'top',
-                singleton: true,
-              },
             },
             'css-loader',
-          ],
+          ].filter(Boolean),
         },
         {
           test: /\.(ttf|eot|woff|woff2)$/,
@@ -284,14 +302,16 @@ async function makeConfig() {
 
       new webpack.IgnorePlugin(/electron-log/),
 
-      new ForkTsCheckerWebpackPlugin({
-        useTypescriptIncrementalApi: true,
-      }),
+      !isProd &&
+        new ForkTsCheckerWebpackPlugin({
+          useTypescriptIncrementalApi: true,
+        }),
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',
         template: 'public/index.html',
         inject: true,
+        chunksSortMode: 'none',
         ...(isProd && {
           minify: {
             removeComments: true,
@@ -308,9 +328,20 @@ async function makeConfig() {
         }),
       }),
 
+      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+
+      isProd &&
+        new MiniCssExtractPlugin({
+          // Options similar to the same options in webpackOptions.output
+          // both options are optional
+          filename: 'static/css/[name].[contenthash:8].css',
+          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+        }),
+
       new PreloadPlugin(),
 
-      new Critters(),
+      // see https://github.com/GoogleChromeLabs/critters/issues/5
+      false && new Critters(),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({

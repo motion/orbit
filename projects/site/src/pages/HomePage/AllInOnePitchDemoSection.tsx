@@ -87,13 +87,15 @@ const elements = [
     body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
     image: tableScreen,
     iconAfter: require('../../../public/logos/gmail.svg'),
+    afterName: 'Gmail',
   },
   {
     iconBefore: require('../../../public/logos/postgres.svg'),
-    title: '<Table />',
-    body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
+    title: '<List />',
+    body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, search, and share with a prop.`,
     image: tableScreen,
     iconAfter: require('../../../public/logos/jira.svg'),
+    afterName: 'Jira',
   },
 ]
 
@@ -106,14 +108,14 @@ export function NeckSection(props) {
     tension: 100,
     friction: 10,
   })
-  const springMedium = useSlideSpring(
-    {
-      mass: 1,
-      tension: 80,
-      friction: 8,
-    },
-    80,
-  )
+  // const springMedium = useSlideSpring(
+  //   {
+  //     mass: 1,
+  //     tension: 80,
+  //     friction: 8,
+  //   },
+  //   80,
+  // )
   const springSlow = useSlideSpring(
     {
       mass: 1,
@@ -156,14 +158,14 @@ export function NeckSection(props) {
           header={
             <>
               <FadeIn delay={100} intersection="20px">
-                <TitleText size="xxxl">All together.</TitleText>
+                <TitleText size="xxl">All together.</TitleText>
               </FadeIn>
-              <FadeIn delay={200} intersection="20px">
-                <TitleTextSub>
-                  Many internal tools share common patterns. Orbit gives you everything you need to
-                  build them easily - even the development environment.
-                </TitleTextSub>
-              </FadeIn>
+              <TitleTextSub>
+                <FadeIn delay={200} intersection="20px">
+                  Internal tools share common patterns. Orbit has everything you need to build them
+                  easily - even the development environment.
+                </FadeIn>
+              </TitleTextSub>
             </>
           }
         >
@@ -195,7 +197,7 @@ export function NeckSection(props) {
                     <Space />
                     <CenterText>
                       With easy selection + actions, exporting data to{' '}
-                      <Inline color="#F14336">Gmail</Inline> is easy.
+                      <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
                     </CenterText>
                   </FadeIn>
                 </SubSection>
@@ -215,18 +217,20 @@ export function NeckSection(props) {
                   />
                 </animated.div>
                 <Space size="xxl" />
-                <Image
-                  opacity={0.5}
-                  alignSelf="flex-end"
-                  src={require('../../../public/images/curve-arrow.svg')}
-                  transform={{
-                    scale: 0.8,
-                  }}
-                />
+                <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
+                  <Image
+                    opacity={0.5}
+                    src={require('../../../public/images/curve-arrow.svg')}
+                    transform={{
+                      scale: 0.8,
+                    }}
+                  />
+                </animated.div>
               </Flex>
               <Flex flex={2} position="relative">
                 <Button
                   alt="clear"
+                  cursor="pointer"
                   size={2}
                   iconSize={22}
                   circular
@@ -238,6 +242,7 @@ export function NeckSection(props) {
                 />
                 <Button
                   alt="clear"
+                  cursor="pointer"
                   size={2}
                   iconSize={22}
                   circular
@@ -248,7 +253,7 @@ export function NeckSection(props) {
                   onClick={next}
                 />
 
-                <animated.div style={{ ...springMedium, margin: 'auto' }}>
+                <animated.div style={{ ...springSlowest, margin: 'auto' }}>
                   <Squircle
                     width={280}
                     height={280}
@@ -266,7 +271,7 @@ export function NeckSection(props) {
                       {elements[cur].title}
                     </TitleText>
                     <Space />
-                    <Paragraph sizeLineHeight={1.2} size={1.2}>
+                    <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>
                       {elements[cur].body}
                     </Paragraph>
                   </Squircle>
@@ -280,7 +285,7 @@ export function NeckSection(props) {
                     width="100%"
                     height={300}
                     borderRadius={10}
-                    elevation={30}
+                    boxShadow={[[0, 10, 30, [0, 0, 0]]]}
                   />
                 </animated.div>
               </Flex>
@@ -295,15 +300,16 @@ export function NeckSection(props) {
                   />
                 </animated.div>
                 <Space size="xxl" />
-                <Image
-                  opacity={0.5}
-                  alignSelf="flex-start"
-                  transform={{
-                    rotate: '275deg',
-                    scale: 0.8,
-                  }}
-                  src={require('../../../public/images/curve-arrow.svg')}
-                />
+                <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
+                  <Image
+                    opacity={0.5}
+                    transform={{
+                      rotate: '275deg',
+                      scale: 0.8,
+                    }}
+                    src={require('../../../public/images/curve-arrow.svg')}
+                  />
+                </animated.div>
               </Flex>
             </Row>
           </Col>
@@ -331,8 +337,8 @@ const CenterText = gloss(
       {...{
         selectable: true,
         sizeLineHeight: 1.2,
-        size: 1.2,
-        alpha: 0.85,
+        size: 1.25,
+        alpha: 0.8,
       }}
       {...props}
     />

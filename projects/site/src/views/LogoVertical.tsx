@@ -6,7 +6,6 @@ import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 import mark from '../../public/images/orbit-mark.svg'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Overdrive } from './Overdrive'
 
 let logoScales = {
   small: 0.5,
@@ -22,25 +21,23 @@ export const LogoVertical = memo(
     const scale = logoScales[size || screenSize]
 
     return (
-      <Overdrive id="logo-vertical">
-        <View
-          position="relative"
-          zIndex={100000}
-          cursor="pointer"
-          alignItems="center"
-          justifyContent="center"
-          transform={{ scale }}
-          padding={[0, 20]}
-          onClick={() => {
-            nav.navigate('/')
-          }}
-          {...rest}
-        >
-          <Image src={mark} />
-          <Space />
-          <SVG cleanup fill={theme.color} width={102} height={23} svg={orbit} />
-        </View>
-      </Overdrive>
+      <View
+        position="relative"
+        zIndex={100000}
+        cursor="pointer"
+        alignItems="center"
+        justifyContent="center"
+        transform={{ scale }}
+        padding={[0, 20]}
+        onClick={() => {
+          nav.navigate('/')
+        }}
+        {...rest}
+      >
+        <Image src={mark} />
+        <Space />
+        <SVG cleanup fill={theme.color} width={102} height={23} svg={orbit} />
+      </View>
     )
   },
 )

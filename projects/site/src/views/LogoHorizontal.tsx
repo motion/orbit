@@ -3,12 +3,10 @@ import { gloss, useTheme } from '@o/gloss'
 import { SVG } from '@o/kit'
 import { View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
-import { useNavigation } from 'react-navi'
-import { Overdrive } from './Overdrive'
+import { Link } from 'react-navi'
 
 export const LogoHorizontal = memo((props: ViewProps) => {
   const theme = useTheme()
-  const { navigate } = useNavigation()
   const scaleDown = 0.3333
 
   return (
@@ -23,15 +21,12 @@ export const LogoHorizontal = memo((props: ViewProps) => {
         x: -2,
         y: -2,
       }}
-      onClick={() => {
-        navigate('Home')
-      }}
       zIndex={100000}
       {...props}
     >
-      <Overdrive id="logo-horizontal">
+      <Link href="/">
         <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
-      </Overdrive>
+      </Link>
     </View>
   )
 })

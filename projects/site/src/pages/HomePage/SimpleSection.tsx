@@ -1,40 +1,47 @@
 import { isDefined } from '@o/kit'
-import { Col, gloss, Icon, Row } from '@o/ui'
+import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
 import React from 'react'
+import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
-import { wavyUrl } from './EarlyAccessBetaSection'
+import { purpleWaveUrl } from './EarlyAccessBetaSection'
 
-export const SimpleSection = ({ index = undefined, title, children, ...rest }) => (
-  <SectionChrome space {...rest}>
-    <FadeIn delay={100} intersection="100px" threshold={1}>
-      <SectionTitle>
-        {isDefined(index) && (
-          <Badge>
-            <BadgeText>{index}.</BadgeText>
-          </Badge>
-        )}
-        <TitleText
-          style={{
-            WebkitBackgroundClip: 'text',
-          }}
-          {...{
-            WebkitTextFillColor: 'transparent',
-            background: wavyUrl,
-            backgroundSize: 200,
-          }}
-          size="sm"
-          textAlign="left"
-          flex={1}
-        >
-          {title}
-        </TitleText>
-      </SectionTitle>
-      <SectionBody>{children}</SectionBody>
-    </FadeIn>
-  </SectionChrome>
-)
+export const SimpleSection = ({ index = undefined, title, children, ...rest }) => {
+  const screen = useScreenSize()
+  return (
+    <SectionChrome space {...rest}>
+      <FadeIn delay={100} intersection="100px" threshold={1}>
+        <SectionTitle>
+          {isDefined(index) && (
+            <Badge opacity={screen === 'large' ? 1 : 0}>
+              <BadgeText>{index}.</BadgeText>
+            </Badge>
+          )}
+          <TitleText
+            style={{
+              WebkitBackgroundClip: 'text',
+            }}
+            {...{
+              WebkitTextFillColor: 'transparent',
+              background: purpleWaveUrl,
+              backgroundSize: 200,
+            }}
+            size="sm"
+            sizeLineHeight={1}
+            textAlign="left"
+            flex={1}
+          >
+            {title}
+          </TitleText>
+        </SectionTitle>
+        <Space />
+        <SectionBody>{children}</SectionBody>
+      </FadeIn>
+    </SectionChrome>
+  )
+}
+
 const SectionChrome = gloss(Col, {
   position: 'relative',
 })
@@ -61,7 +68,7 @@ const SectionTitle = gloss(Row, {
   flex: 1,
 })
 
-const Badge = gloss({
+const Badge = gloss(View, {
   position: 'absolute',
   // top: -50,
   transform: {

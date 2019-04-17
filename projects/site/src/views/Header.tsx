@@ -1,21 +1,12 @@
 import { gloss, useTheme } from '@o/gloss'
-import {
-  BorderBottom,
-  Button,
-  Popover,
-  Row,
-  RowProps,
-  SimpleText,
-  SimpleTextProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 import { useScreenSize } from '../hooks/useScreenSize'
+import { useSiteStore } from '../Layout'
 import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
-import { Overdrive } from './Overdrive'
 import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
@@ -29,8 +20,16 @@ const LinkText = gloss(View, {
   },
 })
 
-export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps
-export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
+export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
+export function Link({
+  children,
+  fontSize = 16,
+  href,
+  width,
+  margin,
+  external,
+  ...props
+}: LinkProps) {
   return (
     <LinkText
       cursor="pointer"
@@ -42,11 +41,22 @@ export function Link({ children, fontSize = 16, href, width, margin, ...props }:
       <SimpleText
         fontSize={fontSize}
         alpha={0.65}
-        fontWeight={200}
+        fontWeight={400}
         hoverStyle={{ alpha: 1 }}
         {...props}
       >
-        <RouterLink href={href}>{children}</RouterLink>
+        {external ? (
+          <a
+            href={`${href}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.preventDefault()}
+          >
+            {children}
+          </a>
+        ) : (
+          <RouterLink href={href}>{children}</RouterLink>
+        )}
       </SimpleText>
     </LinkText>
   )
@@ -56,36 +66,32 @@ const HeaderLink = props => <Link width="33%" {...props} />
 
 export const LinksLeft = props => {
   return (
-    <Overdrive id="links-left">
-      <LinkRow>
-        <HeaderLink {...props} href="/">
-          Start
-        </HeaderLink>
-        <HeaderLink {...props} href="/docs">
-          Docs
-        </HeaderLink>
-        <HeaderLink {...props} href="/">
-          Apps
-        </HeaderLink>
-      </LinkRow>
-    </Overdrive>
+    <>
+      <HeaderLink {...props} href="/docs">
+        Start
+      </HeaderLink>
+      <HeaderLink {...props} href="/docs">
+        Docs
+      </HeaderLink>
+      <HeaderLink {...props} href="/apps">
+        Apps
+      </HeaderLink>
+    </>
   )
 }
 
 export const LinksRight = props => (
-  <Overdrive id="links-right">
-    <LinkRow>
-      <HeaderLink {...props} href="/">
-        Beta
-      </HeaderLink>
-      <HeaderLink {...props} href="/">
-        Blog
-      </HeaderLink>
-      <HeaderLink {...props} href="/">
-        About
-      </HeaderLink>
-    </LinkRow>
-  </Overdrive>
+  <>
+    <HeaderLink {...props} href="/beta">
+      Beta
+    </HeaderLink>
+    <HeaderLink {...props} href="http://blog.orbitauth.com" external>
+      Blog
+    </HeaderLink>
+    <HeaderLink {...props} href="/about">
+      About
+    </HeaderLink>
+  </>
 )
 
 const LinkRow = gloss({
@@ -99,21 +105,37 @@ const LinkRow = gloss({
 export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   const size = useScreenSize()
   const theme = useTheme()
+  const siteStore = useSiteStore()
 
   let before = null
   let after = null
 
   if (size !== 'small') {
-    before = <LinksLeft />
-    after = <LinksRight />
+    before = (
+      <LinkRow>
+        <LinksLeft />
+      </LinkRow>
+    )
+    after = (
+      <LinkRow>
+        <LinksRight />
+      </LinkRow>
+    )
   } else {
     after = (
       <>
         <View flex={1} />
-        <Popover openOnClick closeOnClickAway target={<Button icon="menu" size={1.2} chromeless />}>
-          <LinksLeft />
-          <LinksRight />
-        </Popover>
+        <Button
+          color="#fff"
+          hoverStyle={{
+            color: '#fff',
+          }}
+          icon="menu"
+          iconSize={28}
+          size={2}
+          chromeless
+          onClick={siteStore.toggleSidebar}
+        />
       </>
     )
   }
@@ -121,7 +143,7 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   if (slim) {
     return (
       <Row background={theme.background.lighten(0.3)} position="relative" {...rest}>
-        <HeaderContain height={32}>
+        <HeaderContain height={34}>
           <LinkSection alignRight>{before}</LinkSection>
           <LogoHorizontal />
           <LinkSection>{after}</LinkSection>

@@ -10,6 +10,8 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
+export const bottomSeparator = bottomLightSeparator
+
 export function WaistSection(props) {
   const screen = useScreenSize()
   return (
@@ -36,7 +38,7 @@ export function WaistSection(props) {
                 left={0}
                 right={0}
                 width="100%"
-                src={bottomLightSeparator}
+                src={bottomSeparator}
               />
             </>
           }

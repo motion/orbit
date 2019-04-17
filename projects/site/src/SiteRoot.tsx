@@ -5,6 +5,7 @@ import { hot } from 'react-hot-loader/root'
 import { Router } from 'react-navi'
 import { Layout } from './Layout'
 import { AboutPage } from './pages/AboutPage'
+import { AppsPage } from './pages/AppsPage'
 import { BetaPage } from './pages/BetaPage'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
@@ -29,6 +30,10 @@ const routes = mount({
   '/beta': route({
     title: 'Beta',
     view: BetaPage,
+  }),
+  '/apps': route({
+    title: 'Apps',
+    view: AppsPage,
   }),
 })
 

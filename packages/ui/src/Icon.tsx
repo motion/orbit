@@ -48,7 +48,8 @@ export function PlainIcon(props: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
   const size = snapToSizes(props.size)
-  let color = props.color || theme.color
+  let color = props.color || theme.color ? theme.color.toCSS() : '#fff'
+
   if (isDefined(props.opacity)) {
     try {
       color = toColor(color)
@@ -58,6 +59,7 @@ export function PlainIcon(props: IconProps) {
       console.debug('bad color')
     }
   }
+
   // choose which pixel grid is most appropriate for given icon size
   const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.

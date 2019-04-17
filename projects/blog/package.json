@@ -1,6 +1,6 @@
 {
   "name": "@o/blog",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": true,
   "dependencies": {
     "gatsby": "^2.0.0",

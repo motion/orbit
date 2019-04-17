@@ -1,6 +1,6 @@
 {
   "name": "@o/slack-app",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,10 +9,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.4.0",
-    "@o/ui": "^2.4.0",
-    "@o/sync-kit": "^2.4.0",
-    "@o/postgres-app": "^2.4.0",
+    "@o/kit": "^2.4.1",
+    "@o/postgres-app": "^2.4.1",
+    "@o/sync-kit": "^2.4.1",
+    "@o/ui": "^2.4.1",
     "autolinker": "^1.7.1",
     "lodash": "^4.17.10",
     "slack": "^11.0.1"

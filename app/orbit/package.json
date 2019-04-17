@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "0.2.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "private": true,
@@ -9,8 +9,8 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/kit": "^2.4.0",
-    "@o/sync-kit": "^2.4.0",
-    "@o/fast-compare": "^2.4.0"
+    "@o/fast-compare": "^2.4.1",
+    "@o/kit": "^2.4.1",
+    "@o/sync-kit": "^2.4.1"
   }
 }

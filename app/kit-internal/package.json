@@ -1,6 +1,6 @@
 {
   "name": "@o/kit-internal",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "private": true,
@@ -9,16 +9,16 @@
     "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
+    "@o/bridge": "^2.4.1",
+    "@o/fast-compare": "^2.4.1",
+    "@o/gloss": "^2.4.1",
+    "@o/kit": "^2.4.1",
+    "@o/models": "^2.4.1",
     "@o/react-sortable-hoc": "1.6.5",
-    "@o/bridge": "^2.4.0",
-    "@o/fast-compare": "^2.4.0",
-    "@o/gloss": "^2.4.0",
-    "@o/kit": "^2.4.0",
-    "@o/models": "^2.4.0",
-    "@o/stores": "^2.4.0",
-    "@o/ui": "^2.4.0",
-    "@o/use-store": "^2.4.0",
-    "@o/utils": "^2.4.0",
+    "@o/stores": "^2.4.1",
+    "@o/ui": "^2.4.1",
+    "@o/use-store": "^2.4.1",
+    "@o/utils": "^2.4.1",
     "immer": "1.7.2"
   },
   "peerDependencies": {

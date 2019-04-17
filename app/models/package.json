@@ -1,6 +1,6 @@
 {
   "name": "@o/models",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "private": true,
   "scripts": {
@@ -8,9 +8,9 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.4.0",
-    "@o/mediator": "^2.4.0",
-    "@o/utils": "^2.4.0",
+    "@o/config": "^2.4.1",
+    "@o/mediator": "^2.4.1",
+    "@o/utils": "^2.4.1",
     "global": "^4.3.2",
     "lodash": "^4.17.10",
     "reconnecting-websocket": "4.1.10",

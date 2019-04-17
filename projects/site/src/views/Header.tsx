@@ -15,7 +15,6 @@ import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
-import { Overdrive } from './Overdrive'
 import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
@@ -56,36 +55,36 @@ const HeaderLink = props => <Link width="33%" {...props} />
 
 export const LinksLeft = props => {
   return (
-    <Overdrive id="links-left">
-      <LinkRow>
-        <HeaderLink {...props} href="/">
-          Start
-        </HeaderLink>
-        <HeaderLink {...props} href="/docs">
-          Docs
-        </HeaderLink>
-        <HeaderLink {...props} href="/">
-          Apps
-        </HeaderLink>
-      </LinkRow>
-    </Overdrive>
+    // <Overdrive id="links-left">
+    <LinkRow>
+      <HeaderLink {...props} href="/">
+        Start
+      </HeaderLink>
+      <HeaderLink {...props} href="/docs">
+        Docs
+      </HeaderLink>
+      <HeaderLink {...props} href="/">
+        Apps
+      </HeaderLink>
+    </LinkRow>
+    // </Overdrive>
   )
 }
 
 export const LinksRight = props => (
-  <Overdrive id="links-right">
-    <LinkRow>
-      <HeaderLink {...props} href="/">
-        Beta
-      </HeaderLink>
-      <HeaderLink {...props} href="/">
-        Blog
-      </HeaderLink>
-      <HeaderLink {...props} href="/">
-        About
-      </HeaderLink>
-    </LinkRow>
-  </Overdrive>
+  // <Overdrive id="links-right">
+  <LinkRow>
+    <HeaderLink {...props} href="/">
+      Beta
+    </HeaderLink>
+    <HeaderLink {...props} href="/">
+      Blog
+    </HeaderLink>
+    <HeaderLink {...props} href="/">
+      About
+    </HeaderLink>
+  </LinkRow>
+  // </Overdrive>
 )
 
 const LinkRow = gloss({

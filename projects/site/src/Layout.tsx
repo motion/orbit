@@ -83,10 +83,10 @@ export function Layout(props: any) {
           minWidth="100vw"
           overflow="hidden"
           background={bg}
-          transition="background ease 500ms"
+          // transition="background ease 100ms"
         >
           <NotFoundBoundary render={NotFound}>
-            <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />
+            <BusyIndicator isBusy={!!loadingRoute} delayMs={100} />
             {props.children}
           </NotFoundBoundary>
         </View>

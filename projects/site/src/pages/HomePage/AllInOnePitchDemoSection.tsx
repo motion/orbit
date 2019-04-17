@@ -158,12 +158,12 @@ export function NeckSection(props) {
               <FadeIn delay={100} intersection="20px">
                 <TitleText size="xxxl">All together.</TitleText>
               </FadeIn>
-              <FadeIn delay={200} intersection="20px">
-                <TitleTextSub>
+              <TitleTextSub>
+                <FadeIn delay={200} intersection="20px">
                   Many internal tools share common patterns. Orbit gives you everything you need to
                   build them easily - even the development environment.
-                </TitleTextSub>
-              </FadeIn>
+                </FadeIn>
+              </TitleTextSub>
             </>
           }
         >

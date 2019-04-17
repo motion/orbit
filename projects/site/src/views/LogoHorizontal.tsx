@@ -4,7 +4,6 @@ import { SVG } from '@o/kit'
 import { View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
-import { Overdrive } from './Overdrive'
 
 export const LogoHorizontal = memo((props: ViewProps) => {
   const theme = useTheme()
@@ -29,9 +28,7 @@ export const LogoHorizontal = memo((props: ViewProps) => {
       zIndex={100000}
       {...props}
     >
-      <Overdrive id="logo-horizontal">
-        <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
-      </Overdrive>
+      <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
     </View>
   )
 })

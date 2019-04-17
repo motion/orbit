@@ -115,7 +115,7 @@ const WidthLimit = gloss({
 const Content = gloss(View, {
   margin: [0, 'auto'],
   width: '100%',
-  maxWidth: 1000,
+  maxWidth: 880,
 })
 
 const DocsToolbar = memo(({ section, setSection }: any) => {

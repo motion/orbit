@@ -1,4 +1,4 @@
-import { Col, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
+import { Button, Col, Image, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
 import React from 'react'
 import { Link, LinkProps } from '../../views/Header'
 import { Page } from '../../views/Page'
@@ -43,16 +43,28 @@ export function FeetSection(props) {
             <Col minWidth={150} flex={1} space="sm">
               <SmallTitle>Community</SmallTitle>
               <SmallLink href="/">About</SmallLink>
-              <SmallLink href="/">Blog</SmallLink>
-              <SmallLink href="/">Contact</SmallLink>
-              <SmallLink href="/">Twitter</SmallLink>
-              <SmallLink href="/">Github</SmallLink>
+              <SmallLink href="/blog">Blog</SmallLink>
+              <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
+              <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
+              <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
             </Col>
 
             <Col minWidth={200} flex={2} space="sm">
               <SmallTitle>Follow Orbit for more updates</SmallTitle>
-
-              <SmallParagraph>lorem</SmallParagraph>
+              <Space />
+              <Row space>
+                <Button alt="clear" circular size={2}>
+                  <Image width={25} height={25} src={require('../../../public/logos/github.svg')} />
+                </Button>
+                <Button alt="clear" circular size={2}>
+                  <Image
+                    width={25}
+                    height={25}
+                    src={require('../../../public/logos/twitter.svg')}
+                  />
+                </Button>
+                <Button alt="clear" circular size={2} icon="feed" />
+              </Row>
             </Col>
           </Row>
         </Page.Content>

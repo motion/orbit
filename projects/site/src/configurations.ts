@@ -8,6 +8,7 @@ function configure() {
 
   window['ResizeObserver'] = ResizeObserver
 
+  console.log('using icon', require('@o/kit').Icon)
   require('@o/ui').configureUI({
     useIcon: require('@o/kit').Icon,
   })

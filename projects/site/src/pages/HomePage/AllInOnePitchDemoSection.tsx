@@ -6,6 +6,7 @@ import { animated, useSpring } from 'react-spring'
 import northernlights from '../../../public/images/northern-lights.svg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
+import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButtonDark } from '../../views/PillButtonDark'
@@ -154,11 +155,15 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
-              <TitleText size="xxxl">All together.</TitleText>
-              <TitleTextSub>
-                Many internal tools share common patterns. Orbit gives you everything you need to
-                build them easily - even the development environment.
-              </TitleTextSub>
+              <FadeIn delay={100} intersection="20px">
+                <TitleText size="xxxl">All together.</TitleText>
+              </FadeIn>
+              <FadeIn delay={200} intersection="20px">
+                <TitleTextSub>
+                  Many internal tools share common patterns. Orbit gives you everything you need to
+                  build them easily - even the development environment.
+                </TitleTextSub>
+              </FadeIn>
             </>
           }
         >
@@ -166,27 +171,33 @@ export function NeckSection(props) {
             {screen !== 'small' && (
               <Row space flexWrap={screen === 'small' ? 'wrap' : 'nowrap'}>
                 <SubSection maxWidth="33%">
-                  <PillButtonDark>Import</PillButtonDark>
-                  <Space />
-                  <CenterText>
-                    Many data integrations built in, integrate with a line of code.
-                  </CenterText>
+                  <FadeIn delay={300} intersection="20px">
+                    <PillButtonDark>Import</PillButtonDark>
+                    <Space />
+                    <CenterText>
+                      Many data integrations built in, integrate with a line of code.
+                    </CenterText>
+                  </FadeIn>
                 </SubSection>
                 <SubSection flex={2} pad={[true, 'xxl']}>
-                  <PillButtonDark>Display</PillButtonDark>
-                  <Space />
-                  <CenterText>
-                    A cohesive, large and custom UI kit that focuses on making it easy to move data
-                    between it's views.
-                  </CenterText>
+                  <FadeIn delay={400} intersection="20px">
+                    <PillButtonDark>Display</PillButtonDark>
+                    <Space />
+                    <CenterText>
+                      A cohesive, large and custom UI kit that focuses on making it easy to move
+                      data between it's views.
+                    </CenterText>
+                  </FadeIn>
                 </SubSection>
                 <SubSection maxWidth="33%">
-                  <PillButtonDark>Export</PillButtonDark>
-                  <Space />
-                  <CenterText>
-                    With easy selection + actions, exporting data to{' '}
-                    <Inline color="#F14336">Gmail</Inline> is easy.
-                  </CenterText>
+                  <FadeIn delay={500} intersection="20px">
+                    <PillButtonDark>Export</PillButtonDark>
+                    <Space />
+                    <CenterText>
+                      With easy selection + actions, exporting data to{' '}
+                      <Inline color="#F14336">Gmail</Inline> is easy.
+                    </CenterText>
+                  </FadeIn>
                 </SubSection>
               </Row>
             )}

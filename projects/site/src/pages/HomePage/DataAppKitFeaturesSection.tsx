@@ -101,7 +101,7 @@ export function ChestSection(props) {
 
         {/* Batteries Included. */}
 
-        <Space size="xxl" />
+        <Space size="sm" />
 
         <SpacedPageContent
           maxHeight={100000}
@@ -208,9 +208,12 @@ export function ChestSection(props) {
           <View flex={3} />
 
           {screen !== 'small' && (
-            <BodyButton margin={[0, 'auto']} size="xl">
-              Read the feature overview
-            </BodyButton>
+            <>
+              <Space size="xxl" />
+              <BodyButton margin={[0, 'auto']} size="xl">
+                Read the feature overview
+              </BodyButton>
+            </>
           )}
         </SpacedPageContent>
       </Page.Content>

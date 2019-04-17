@@ -1,6 +1,5 @@
 # Website
 
-- Mobile fixes
 - Table carousel (Table / List / Form)
 - Import sub-pages
 - Deploy to prod + add in blog

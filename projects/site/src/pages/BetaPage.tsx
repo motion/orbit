@@ -1,5 +1,5 @@
 import '@o/nucleo'
-import { Image } from '@o/ui'
+import { Image, Space } from '@o/ui'
 import React from 'react'
 import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'
@@ -39,8 +39,9 @@ export function BetaPage() {
           offset={0}
         />
       </Parallax>
-      <SectionContent position="relative" zIndex={-1} pad={[150, true, 100]}>
+      <SectionContent minHeight={450} position="relative" zIndex={-1} padding={[100, 32]}>
         <Footer />
+        <Space size="xl" />
       </SectionContent>
     </>
   )

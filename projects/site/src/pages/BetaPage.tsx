@@ -21,6 +21,9 @@ export function BetaPage() {
         scrollingElement={window}
         container={IS_CHROME ? document.documentElement : document.body}
         pageHeight={siteStore.sectionHeight}
+        innerStyle={{
+          overflow: 'visible',
+        }}
       >
         <EarlyAccessSection
           outside={
@@ -36,7 +39,7 @@ export function BetaPage() {
           offset={0}
         />
       </Parallax>
-      <SectionContent position="relative" zIndex={-1} pad="xxl">
+      <SectionContent position="relative" zIndex={-1} pad={[150, true, 100]}>
         <Footer />
       </SectionContent>
     </>

@@ -1,4 +1,3 @@
-import '@o/nucleo'
 import { Image, Space } from '@o/ui'
 import React from 'react'
 import { IS_CHROME } from '../constants'

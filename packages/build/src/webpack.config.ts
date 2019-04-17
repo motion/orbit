@@ -10,6 +10,8 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const Critters = require('critters-webpack-plugin')
+const PreloadPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
@@ -217,7 +219,16 @@ async function makeConfig() {
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            {
+              loader: 'style-loader',
+              options: {
+                insertAt: 'top',
+                singleton: true,
+              },
+            },
+            'css-loader',
+          ],
         },
         {
           test: /\.(ttf|eot|woff|woff2)$/,
@@ -279,8 +290,27 @@ async function makeConfig() {
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',
-        template: 'index.html',
+        template: 'public/index.html',
+        inject: true,
+        ...(isProd && {
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          },
+        }),
       }),
+
+      new PreloadPlugin(),
+
+      new Critters(),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({

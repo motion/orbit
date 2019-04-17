@@ -1,4 +1,3 @@
-import '@o/nucleo'
 import { Col, FullScreen, Grid, Space, Theme, View } from '@o/ui'
 import React from 'react'
 import earth from '../../public/images/earth.jpg'

@@ -3022,7 +3022,7 @@ acorn@^5.0.0, acorn@^5.5.3, acorn@^5.6.2:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
   integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
 
-acorn@^6.0.1, acorn@^6.0.4, acorn@^6.0.5, acorn@^6.0.7, acorn@^6.1.1:
+acorn@^6.0.1, acorn@^6.0.2, acorn@^6.0.4, acorn@^6.0.5, acorn@^6.0.7, acorn@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.1.1.tgz#7d25ae05bb8ad1f9b699108e1094ecd7884adc1f"
   integrity sha512-jPTiwtOxaHNaAPg/dmrJ/beuzLRnXtB0kQPQ8JpotKJgTB6rX6c8mlf315941pyjBSaPg8NHXS9fhP4u17DpGA==
@@ -3749,6 +3749,11 @@ babel-plugin-macros@^2.0.0, babel-plugin-macros@^2.1.0, babel-plugin-macros@^2.4
     "@babel/runtime" "^7.4.2"
     cosmiconfig "^5.2.0"
     resolve "^1.10.0"
+
+babel-plugin-optimize-react@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-optimize-react/-/babel-plugin-optimize-react-0.0.4.tgz#6326ac8f0f77e3fa3e8195b4d998287d47877c65"
+  integrity sha512-I3o7GW66dIpXraND0ZAYXEDQ/wOiuefUQqn1PZZcub2flREANb2NXejL52iTMUWtKM++lu5OasVtZewn+WvkNg==
 
 babel-plugin-remove-graphql-queries@^2.6.3:
   version "2.6.3"
@@ -5973,6 +5978,20 @@ create-react-context@^0.2.1:
     fbjs "^0.8.0"
     gud "^1.0.0"
 
+critters-webpack-plugin@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/critters-webpack-plugin/-/critters-webpack-plugin-2.3.0.tgz#1ad8a4f9f0a78deaed3f7856cbac78753b44c50d"
+  integrity sha512-vjbI42kb+m48+0ZMFUmjS7V3nb+HY9FgrovE823uLYFgBbm6LAwJPcprapQtCkD+y7w6wUwgDw3d42Wb91sRpA==
+  dependencies:
+    css "^2.2.1"
+    cssnano "^4.1.7"
+    jsdom "^12.0.0"
+    parse5 "^4.0.0"
+    postcss "^7.0.5"
+    pretty-bytes "^4.0.2"
+    webpack-log "^2.0.0"
+    webpack-sources "^1.3.0"
+
 cross-fetch@2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-2.2.2.tgz#a47ff4f7fc712daba8f6a695a11c948440d45723"
@@ -6178,7 +6197,7 @@ css-what@2.1, css-what@^2.1.2:
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-2.1.3.tgz#a6d7604573365fe74686c3f311c56513d88285f2"
   integrity sha512-a+EPoD+uZiNfh+5fxw2nO9QwFa6nJe2Or35fGY6Ipw1R3R4AGz1d1TEZrCegvw2YTmZ0jXirGYlzxxpYSHwpEg==
 
-css@2.2.4:
+css@2.2.4, css@^2.2.1:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/css/-/css-2.2.4.tgz#c646755c73971f2bba6a601e2cf2fd71b1298929"
   integrity sha512-oUnjmWpy0niI3x/mPL8dVEI1l7MnG3+HHyRPHf+YFSbK+svOhXpmSOcDURUh2aOCgl2grzrOPt1nHLuCVFULLw==
@@ -6393,7 +6412,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-data-urls@^1.0.0, data-urls@^1.1.0:
+data-urls@^1.0.0, data-urls@^1.0.1, data-urls@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/data-urls/-/data-urls-1.1.0.tgz#15ee0582baa5e22bb59c77140da8f9c76963bbfe"
   integrity sha512-YTWYI9se1P55u58gL5GkQHW4P6VJBJ5iBT+B5a7i2Tjadhv52paJG0qHX4A0OR6/t52odI64KP2YvFpkDOi3eQ==
@@ -12301,6 +12320,37 @@ jsdom@^11.12.0, jsdom@^11.5.1, jsdom@^11.9.0:
     ws "^5.2.0"
     xml-name-validator "^3.0.0"
 
+jsdom@^12.0.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-12.2.0.tgz#7cf3f5b5eafd47f8f09ca52315d367ff6e95de23"
+  integrity sha512-QPOggIJ8fquWPLaYYMoh+zqUmdphDtu1ju0QGTitZT1Yd8I5qenPpXM1etzUegu3MjVp8XPzgZxdn8Yj7e40ig==
+  dependencies:
+    abab "^2.0.0"
+    acorn "^6.0.2"
+    acorn-globals "^4.3.0"
+    array-equal "^1.0.0"
+    cssom "^0.3.4"
+    cssstyle "^1.1.1"
+    data-urls "^1.0.1"
+    domexception "^1.0.1"
+    escodegen "^1.11.0"
+    html-encoding-sniffer "^1.0.2"
+    nwsapi "^2.0.9"
+    parse5 "5.1.0"
+    pn "^1.1.0"
+    request "^2.88.0"
+    request-promise-native "^1.0.5"
+    saxes "^3.1.3"
+    symbol-tree "^3.2.2"
+    tough-cookie "^2.4.3"
+    w3c-hr-time "^1.0.1"
+    webidl-conversions "^4.0.2"
+    whatwg-encoding "^1.0.5"
+    whatwg-mimetype "^2.2.0"
+    whatwg-url "^7.0.0"
+    ws "^6.1.0"
+    xml-name-validator "^3.0.0"
+
 jsdom@^9.12.0:
   version "9.12.0"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-9.12.0.tgz#e8c546fffcb06c00d4833ca84410fed7f8a097d4"
@@ -16431,6 +16481,14 @@ prebuild-install@^5.2.2, prebuild-install@^5.2.4:
     tunnel-agent "^0.6.0"
     which-pm-runs "^1.0.0"
 
+preload-webpack-plugin@3.0.0-beta.3:
+  version "3.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/preload-webpack-plugin/-/preload-webpack-plugin-3.0.0-beta.3.tgz#945990d0cd90d3ecb15a2f6fc59f742e39930db6"
+  integrity sha512-pIRna/JagOd+ci64d84SfDH4bjKsM632OQ/4JIBk7Q8Kr6VH2X+7q5q3HrTilKpMzzO3ib9kC7rs1B0KXJTa6Q==
+  dependencies:
+    core-js "^2.5.7"
+    url-parse "^1.4.3"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -18589,7 +18647,7 @@ sax@>=0.6.0, sax@^1.2.1, sax@^1.2.4, sax@~1.2.1, sax@~1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-saxes@^3.1.5:
+saxes@^3.1.3, saxes@^3.1.5:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/saxes/-/saxes-3.1.9.tgz#c1c197cd54956d88c09f960254b999e192d7058b"
   integrity sha512-FZeKhJglhJHk7eWG5YM0z46VHmI3KJpMBAQm3xa9meDvd+wevB5GuBB0wc0exPInZiBBHqi00DbS8AcvCGCFMw==
@@ -20330,7 +20388,7 @@ tough-cookie@>=0.12.0:
     psl "^1.1.28"
     punycode "^2.1.1"
 
-tough-cookie@^2.3.2, tough-cookie@^2.3.3, tough-cookie@^2.3.4, tough-cookie@^2.5.0:
+tough-cookie@^2.3.2, tough-cookie@^2.3.3, tough-cookie@^2.3.4, tough-cookie@^2.4.3, tough-cookie@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"
   integrity sha512-nlLsUzgm1kfLXSXfRZMc1KLAugd4hqJHDTvc2hDIwS3mZAfMEuMbc03SujMF+GEcpaX/qboeycw6iO8JwVv2+g==

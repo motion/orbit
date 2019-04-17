@@ -1,5 +1,4 @@
 import { ensure, react, Templates, useReaction, useStore } from '@o/kit'
-import '@o/nucleo'
 import {
   Button,
   Divider,

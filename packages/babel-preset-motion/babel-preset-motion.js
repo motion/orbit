@@ -23,6 +23,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),
+      plug('babel-plugin-optimize-react'),
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),

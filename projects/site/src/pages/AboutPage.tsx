@@ -1,4 +1,3 @@
-import '@o/nucleo'
 import React from 'react'
 import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'

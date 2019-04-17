@@ -16,6 +16,7 @@
     "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
+    "babel-plugin-optimize-react": "0.0.4",
     "@o/gloss": "^2.4.0",
     "@o/gloss-displaynames": "^2.4.0",
     "react-hot-loader": "4.8.4"

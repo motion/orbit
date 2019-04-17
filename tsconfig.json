@@ -10,6 +10,7 @@
     { "path": "./app/orbit-repl" },
 
     // dev time needs
-    { "path": "./packages/build" }
+    { "path": "./packages/build" },
+    { "path": "./packages/wait-for-fonts" }
   ]
 }

@@ -1,7 +1,17 @@
-import { gloss } from '@o/gloss'
-import { BorderBottom, Button, Popover, Row, SimpleText, View } from '@o/ui'
+import { gloss, useTheme } from '@o/gloss'
+import {
+  BorderBottom,
+  Button,
+  Popover,
+  Row,
+  RowProps,
+  SimpleText,
+  SimpleTextProps,
+  View,
+} from '@o/ui'
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
+import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
@@ -10,7 +20,6 @@ import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
   userSelect: 'none',
-  width: '33%',
   textAlign: 'center',
   transform: {
     y: 0.5,
@@ -20,56 +29,61 @@ const LinkText = gloss(View, {
   },
 })
 
-type LinkProps = {
-  href: string
-  navigation?: any
-  routeKey?: string
-  routeName?: string
-  params?: Object
-  children?: any
-  fontSize?: any
-}
-
-export function Link({ children, fontSize, href, ...props }: LinkProps) {
+export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps
+export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
   return (
-    <LinkText cursor="pointer" onClick={() => Navigation.navigate(href)} fontSize={fontSize}>
-      <SimpleText alpha={0.5} hoverStyle={{ alpha: 1 }}>
-        <RouterLink href={href} {...props}>
-          {children}
-        </RouterLink>
+    <LinkText
+      cursor="pointer"
+      onClick={() => Navigation.navigate(href)}
+      fontSize={fontSize}
+      width={width}
+      margin={margin}
+    >
+      <SimpleText
+        fontSize={fontSize}
+        alpha={0.65}
+        fontWeight={200}
+        hoverStyle={{ alpha: 1 }}
+        {...props}
+      >
+        <RouterLink href={href}>{children}</RouterLink>
       </SimpleText>
     </LinkText>
   )
 }
 
-export const LinksLeft = props => (
-  <Overdrive id="links-left">
-    <LinkRow>
-      <Link {...props} href="/">
-        Examples
-      </Link>
-      <Link {...props} href="/docs">
-        Docs
-      </Link>
-      <Link {...props} href="/">
-        Security
-      </Link>
-    </LinkRow>
-  </Overdrive>
-)
+const HeaderLink = props => <Link width="33%" {...props} />
+
+export const LinksLeft = props => {
+  return (
+    <Overdrive id="links-left">
+      <LinkRow>
+        <HeaderLink {...props} href="/">
+          Start
+        </HeaderLink>
+        <HeaderLink {...props} href="/docs">
+          Docs
+        </HeaderLink>
+        <HeaderLink {...props} href="/">
+          Apps
+        </HeaderLink>
+      </LinkRow>
+    </Overdrive>
+  )
+}
 
 export const LinksRight = props => (
   <Overdrive id="links-right">
     <LinkRow>
-      <Link {...props} href="/">
-        Pricing
-      </Link>
-      <Link {...props} href="/">
-        About
-      </Link>
-      <Link {...props} href="/">
+      <HeaderLink {...props} href="/">
+        Beta
+      </HeaderLink>
+      <HeaderLink {...props} href="/">
         Blog
-      </Link>
+      </HeaderLink>
+      <HeaderLink {...props} href="/">
+        About
+      </HeaderLink>
     </LinkRow>
   </Overdrive>
 )
@@ -82,8 +96,9 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
-export function Header({ slim }: { slim?: boolean }) {
+export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   const size = useScreenSize()
+  const theme = useTheme()
 
   let before = null
   let after = null
@@ -105,13 +120,13 @@ export function Header({ slim }: { slim?: boolean }) {
 
   if (slim) {
     return (
-      <Row background={theme => theme.background} position="relative">
+      <Row background={theme.background.lighten(0.3)} position="relative" {...rest}>
         <HeaderContain height={32}>
           <LinkSection alignRight>{before}</LinkSection>
           <LogoHorizontal />
           <LinkSection>{after}</LinkSection>
         </HeaderContain>
-        <BorderBottom />
+        {theme.background.isLight() ? <BorderBottom /> : null}
       </Row>
     )
   }
@@ -126,6 +141,7 @@ export function Header({ slim }: { slim?: boolean }) {
       alignItems="center"
       justifyContent="space-around"
       padding={['3.5vh', 0]}
+      {...rest}
     >
       <HeaderContain>
         <LinkSection alignRight>{before}</LinkSection>

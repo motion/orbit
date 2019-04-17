@@ -22,6 +22,7 @@ export function getAlternateTheme(
   let theme = inTheme
 
   // prevent nesting alternates, could work but not sure if wanted...
+  // could be done using a weakmap likely
   if (theme._isAlternate) {
     theme = theme._originalTheme
   }

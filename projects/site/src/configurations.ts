@@ -1,14 +1,16 @@
-import { Icon } from '@o/kit'
-import { configureUI } from '@o/ui'
 import { setConfig } from 'react-hot-loader'
+import ResizeObserver from 'resize-observer-polyfill'
 
 function configure() {
   const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
   if (hasConfigured) return
 
-  configureUI({
-    useIcon: Icon,
+  window['ResizeObserver'] = ResizeObserver
+
+  console.log('using icon', require('@o/kit').Icon)
+  require('@o/ui').configureUI({
+    useIcon: require('@o/kit').Icon,
   })
 
   // just for now since its spitting out so many

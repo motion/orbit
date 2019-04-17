@@ -8,7 +8,7 @@ import Gloss, {
   useTheme,
 } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -99,6 +99,7 @@ type ThroughProps = Pick<
   | 'fontWeight'
   | 'ellipse'
   | 'overflow'
+  | 'textDecoration'
 > & {
   hasIcon: boolean
   tagName?: string
@@ -158,6 +159,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     borderWidth,
     alt,
     before,
+    dangerouslySetInnerHTML,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -180,6 +182,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
     overflow: props.overflow,
+    textDecoration: props.textDecoration,
   }
 
   let lineHeight = props.lineHeight
@@ -191,9 +194,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
   }
 
-  const childrenProps = {
-    children: null,
-  }
+  const childrenProps: HTMLProps<HTMLDivElement> = {}
 
   const borderLeftRadius = Math.min(
     segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
@@ -208,7 +209,9 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
-  if (noInnerElement) {
+  if (dangerouslySetInnerHTML) {
+    childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
+  } else if (noInnerElement) {
     if (isDefined(before, after)) {
       childrenProps.children = (
         <>
@@ -307,6 +310,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     )
   }
 
+  const showInnerElement = !!children && !noInnerElement
+
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
   const iconColor = `${(props.iconProps && props.iconProps.color) ||
     props.color ||
@@ -341,6 +346,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderWidth={borderWidth}
           borderPosition={borderPosition}
           alt={alt}
+          {...!showInnerElement && elementProps}
           {...throughProps}
           {...viewProps}
           {...segmentedStyle}
@@ -362,6 +368,7 @@ const chromelessStyle = {
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
+  display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
@@ -427,6 +434,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 })
 
 const Element = gloss<ThroughProps & { disabled?: boolean; surfacePadX: number | string }>({
+  display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
   // needed to reset for <button /> at least

@@ -18,18 +18,21 @@ class SiteStore {
   }
 
   get sectionHeight() {
-    let maxHeight = 1100
+    let maxHeight = 1050
     let desiredHeight = this.windowHeight
     // taller on mobile
     if (this.screenSize === 'small') {
-      desiredHeight = this.windowHeight * 1.2
-      maxHeight = this.windowHeight * 1.2
+      desiredHeight = this.windowHeight
+      maxHeight = 950
     }
-    return Math.min(
+    return Math.max(
       // min-height
-      Math.max(850, desiredHeight),
-      // max-height
-      maxHeight,
+      850,
+      Math.min(
+        desiredHeight,
+        // max-height
+        maxHeight,
+      ),
     )
   }
 }
@@ -80,7 +83,7 @@ export function Layout(props: any) {
           minWidth="100vw"
           overflow="hidden"
           background={bg}
-          transition="all ease 500ms"
+          transition="background ease 500ms"
         >
           <NotFoundBoundary render={NotFound}>
             <BusyIndicator isBusy={!!loadingRoute} delayMs={150} />

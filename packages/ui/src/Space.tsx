@@ -45,6 +45,7 @@ export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
   return {
     width: spacing,
     height: spacing,
+    ...props,
   }
 })
 

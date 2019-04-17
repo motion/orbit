@@ -1,5 +1,16 @@
-import * as React from 'react'
+import { useDebounce, useIntersectionObserver } from '@o/ui'
+import React, { useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
+
+export type FadeInProps = UseSpringProps<any> & {
+  delay?: number
+  intersection?: IntersectionObserverInit['rootMargin']
+  threshold?: number
+}
+
+export const fadeUpProps = {
+  from: { transform: `translate3d(0,10px,0)` },
+}
 
 export const FadeIn = ({
   from = null,
@@ -7,23 +18,46 @@ export const FadeIn = ({
   children,
   style = null,
   disabled,
+  intersection,
+  threshold = 0.25,
+  delay,
   ...rest
-}: UseSpringProps<any>) => {
+}: FadeInProps) => {
+  const ref = useRef(null)
+  const [cur, setCur] = useState(null)
+  const setCurSlow = useDebounce(setCur, delay)
+  const hasShown = useRef(false)
+
+  useIntersectionObserver({
+    ref,
+    options: { threshold, rootMargin: intersection },
+    onChange(entries) {
+      // only run once
+      if (hasShown.current) return
+
+      const isOffscreen = !entries || entries[0].isIntersecting === false
+      if (disabled || isOffscreen) {
+        setCurSlow(fromConf)
+      } else {
+        hasShown.current = true
+        setCurSlow({
+          opacity: 1,
+          transform: `translate3d(0,0,0)`,
+          ...to,
+        })
+      }
+    },
+  })
+
   const fromConf = {
     opacity: 0,
-    transform: `translate3d(0,-40px,0)`,
+    transform: `translate3d(0,-20px,0)`,
     ...from,
   }
   const props = useSpring({
     ...rest,
     from: fromConf,
-    to: disabled
-      ? fromConf
-      : {
-          opacity: 1,
-          transform: `translate3d(0,0,0)`,
-          ...to,
-        },
+    to: cur,
     config: {
       mass: 1,
       tension: 32,
@@ -31,5 +65,9 @@ export const FadeIn = ({
     },
   })
 
-  return <animated.div style={{ ...style, ...props }}>{children}</animated.div>
+  return (
+    <animated.div ref={ref} style={{ ...style, ...props }}>
+      {children}
+    </animated.div>
+  )
 }

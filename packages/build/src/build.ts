@@ -1,14 +1,29 @@
 import webpack from 'webpack'
-import config from './webpack.config'
+import makeConfig from './webpack.config'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
-console.log('build for prod... process.env.NODE_ENV', process.env.NODE_ENV)
+console.log('building for prod... process.env.NODE_ENV', process.env.NODE_ENV)
 
-webpack(
-  // @ts-ignore
-  {
+async function main() {
+  const finalConfig = {
     mode: 'production',
-    ...config,
-  },
-)
+    ...(await makeConfig()),
+  }
+
+  console.log(JSON.stringify(finalConfig, null, 2))
+
+  webpack(finalConfig, (err, stats) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+    console.log(
+      stats.toString({
+        colors: true,
+      }),
+    )
+  })
+}
+
+main()

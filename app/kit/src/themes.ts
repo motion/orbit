@@ -98,6 +98,12 @@ const colorThemes: ThemeSet = {
 
 const alternates: ThemeSet = {
   ...colorThemes,
+  error: colorThemes.lightRed,
+  fail: colorThemes.lightRed,
+  failure: colorThemes.lightRed,
+  warn: colorThemes.lightYellow,
+  approve: colorThemes.lightGreen,
+  success: colorThemes.lightGreen,
   confirm: {
     buttonFontWeight: 600,
     ...colorThemes.green,
@@ -132,6 +138,11 @@ const alternates: ThemeSet = {
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
+  clear: Theme.fromStyles({
+    background: 'rgba(0,0,0,0.2)',
+    borderColor: 'rgba(0,0,0,0)',
+    borderWidth: 0,
+  }),
 }
 
 const base = Theme.colorize({
@@ -146,12 +157,7 @@ const lightColor = '#444'
 const lightBackground = toColor('#fff')
 const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 const light = {
-  alternates: {
-    ...alternates,
-    error: colorThemes.lightRed,
-    warn: colorThemes.lightYellow,
-    approve: colorThemes.lightGreen,
-  },
+  alternates,
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
@@ -225,6 +231,7 @@ const darkAlternates: ThemeSet = {
   error: darkAltLight.lightRed,
   warn: darkAltLight.lightYellow,
   approve: darkAltLight.lightGreen,
+  success: darkAltLight.lightGreen,
   bordered: {
     ...alternates.bordered,
     ...Theme.colorize({

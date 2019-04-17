@@ -1,22 +1,38 @@
 import { isDefined } from '@o/kit'
 import { Col, gloss, Icon, Row } from '@o/ui'
 import React from 'react'
+import { FadeIn } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
+import { wavyUrl } from './EarlyAccessBetaSection'
 
 export const SimpleSection = ({ index = undefined, title, children, ...rest }) => (
   <SectionChrome space {...rest}>
-    <SectionTitle>
-      {isDefined(index) && (
-        <Badge>
-          <BadgeText>{index}.</BadgeText>
-        </Badge>
-      )}
-      <TitleText size="sm" textAlign="left" flex={1}>
-        {title}
-      </TitleText>
-    </SectionTitle>
-    <SectionBody>{children}</SectionBody>
+    <FadeIn delay={100} intersection="100px" threshold={1}>
+      <SectionTitle>
+        {isDefined(index) && (
+          <Badge>
+            <BadgeText>{index}.</BadgeText>
+          </Badge>
+        )}
+        <TitleText
+          style={{
+            WebkitBackgroundClip: 'text',
+          }}
+          {...{
+            WebkitTextFillColor: 'transparent',
+            background: wavyUrl,
+            backgroundSize: 200,
+          }}
+          size="sm"
+          textAlign="left"
+          flex={1}
+        >
+          {title}
+        </TitleText>
+      </SectionTitle>
+      <SectionBody>{children}</SectionBody>
+    </FadeIn>
   </SectionChrome>
 )
 const SectionChrome = gloss(Col, {
@@ -24,7 +40,7 @@ const SectionChrome = gloss(Col, {
 })
 
 export const SectionP = gloss(
-  props => <Paragraph size={1.25} alpha={0.65} sizeLineHeight={1.15} {...props} />,
+  props => <Paragraph tagName="div" size={1.25} alpha={0.65} sizeLineHeight={1.15} {...props} />,
   {
     display: 'block',
     float: 'left',
@@ -35,10 +51,10 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={72} color="#000" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={62} color="#000" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
-  opacity: 0.2,
+  // opacity: 0.2,
 })
 
 const SectionTitle = gloss(Row, {

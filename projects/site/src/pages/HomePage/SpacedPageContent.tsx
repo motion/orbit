@@ -2,7 +2,11 @@ import { Col, SpaceGroup, View, ViewProps } from '@o/ui'
 import React from 'react'
 import { useScreenSize } from '../../hooks/useScreenSize'
 
-export function SpacedPageContent({ header, children, ...props }: ViewProps & { header: any }) {
+export function SpacedPageContent({
+  header = null,
+  children,
+  ...props
+}: ViewProps & { header?: any }) {
   const screen = useScreenSize()
   return (
     <View
@@ -14,7 +18,7 @@ export function SpacedPageContent({ header, children, ...props }: ViewProps & { 
     >
       <SpaceGroup>
         <div style={{ flex: 1 }} />
-        <Col space="md" alignItems="center" pad>
+        <Col space="sm" alignItems="center" pad>
           {header}
         </Col>
         {children}

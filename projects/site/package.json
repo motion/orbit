@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5000 --target web",
+    "build": "NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
     "start:prod": "NODE_ENV=production mcro-build --prod --report --target web",
-    "build:docs:ui": "node ./scripts/build-docs-ui.js"
+    "build:docs:ui": "node ./scripts/build-docs-ui.js",
+    "deploy": "./surge-fix.sh && surge dist",
+    "publish:site": "yarn build && yarn deploy"
   },
   "dependencies": {
+    "resize-observer-polyfill": "1.5.1",
     "@o/babel-preset-motion": "2.4.0",
     "@babel/runtime": "7.2.0",
     "@kennethormandy/react-fittext": "0.5.1",

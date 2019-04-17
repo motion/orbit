@@ -2,7 +2,7 @@ import { react, useStore } from '@o/kit'
 import React from 'react'
 import { useSiteStore } from '../../Layout'
 
-const duration = 2000
+const duration = 1500
 
 type ShownState = boolean | 'animating'
 
@@ -13,7 +13,7 @@ class SpaceStore {
     () => this.props.show,
     async (next, { sleep, setValue }) => {
       setValue('animating')
-      await sleep(next ? 100 : duration)
+      await sleep(next ? 0 : duration)
       return next
     },
   )
@@ -42,7 +42,10 @@ export function OuterSpace(props) {
         ...props,
       }}
     >
-      <iframe style={{ border: 0, height: '100%' }} src="/public/stars.html" />
+      <iframe
+        style={{ border: 0, height: '100%' }}
+        src={process.env.NODE_ENV === 'development' ? '/public/stars.html' : '/stars.html'}
+      />
     </div>
   )
 }

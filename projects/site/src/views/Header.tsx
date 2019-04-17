@@ -50,7 +50,11 @@ export function Link({
             href={`${href}`}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={e => e.preventDefault()}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              window.open(`${href}`, '_blank')
+            }}
           >
             {children}
           </a>

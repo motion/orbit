@@ -9,4 +9,5 @@ cp dist/index.html dist/apps.html
 cp dist/index.html dist/privacy.html
 cp dist/index.html dist/terms.html
 
+echo 'tryorbit.com' > dist/CNAME
 echo '*' > dist/CORS

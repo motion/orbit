@@ -29,7 +29,7 @@ export function ShoulderSection(props) {
                 <PillButton>Deploy</PillButton>
               </FadeIn>
               <Space size="sm" />
-              <FadeIn delay={100}>
+              <FadeIn delay={50}>
                 <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
               </FadeIn>
             </>
@@ -37,7 +37,7 @@ export function ShoulderSection(props) {
         >
           <Row space={60} margin={[0, '-180%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
-              <FadeIn delay={200}>
+              <FadeIn delay={100}>
                 <View
                   borderRadius={10}
                   elevation={3}
@@ -62,13 +62,13 @@ export function ShoulderSection(props) {
             </Col>
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
-              <FadeIn delay={300}>
+              <FadeIn delay={200}>
                 <ParagraphIntro>
                   Orbit runs locally on your computer, but can sync data from any cloud integration.
                 </ParagraphIntro>
               </FadeIn>
 
-              <FadeIn delay={400}>
+              <FadeIn delay={250}>
                 <Para>
                   It's a lot like a web browser, but designed from the ground up to make building
                   rich collaborative apps as easy as possible. It does so with an app kit that
@@ -77,14 +77,14 @@ export function ShoulderSection(props) {
                 </Para>
               </FadeIn>
 
-              <FadeIn delay={500}>
+              <FadeIn delay={300}>
                 <Para>
                   Built on open standards like Typescript and React, it's your ultimate
                   intranet-in-a-box.
                 </Para>
               </FadeIn>
 
-              <FadeIn delay={600}>
+              <FadeIn delay={350}>
                 <Para
                   tagName="a"
                   href="ok"
@@ -103,7 +103,7 @@ export function ShoulderSection(props) {
             </Col>
 
             <Col flex={2} alignItems="flex-start" justifyContent="center">
-              <FadeIn delay={200}>
+              <FadeIn delay={300}>
                 <View
                   borderRadius={10}
                   elevation={3}

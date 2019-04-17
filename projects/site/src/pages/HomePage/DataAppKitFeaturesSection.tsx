@@ -277,7 +277,15 @@ export const BodyButton = (props: ButtonProps) => (
 
 const Integration = props => (
   <View alignItems="center" justifyContent="center">
-    <Image src={props.icon} maxWidth={130} width="50%" height="auto" />
+    <Image
+      src={props.icon}
+      transition="all ease 200ms"
+      maxWidth={130}
+      width="50%"
+      height="auto"
+      opacity={0.5}
+      hoverStyle={{ opacity: 1 }}
+    />
     <Space />
     <Paragraph size="xl">{props.title}</Paragraph>
   </View>

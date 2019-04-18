@@ -168,6 +168,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
   }
 
+  console.warn('debugging')
+  contentArea = contentArea.filter(x => x.props.id === '6')
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>

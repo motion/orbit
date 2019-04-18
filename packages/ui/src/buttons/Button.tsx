@@ -10,6 +10,7 @@ export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
     ignoreHover?: boolean
     iconProps?: Partial<IconProps>
+    someNewProp?: string
   }
 
 const glowProps = {

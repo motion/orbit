@@ -1,10 +1,12 @@
-import { HighlightText, ItemPropsContext } from '@o/ui'
 import React from 'react'
-import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
+import { ItemPropsContext } from '../content/ItemPropsContext'
+import { HighlightText } from '../text/HighlightText'
 
-export function BitGenericItem(rawProps: OrbitItemViewProps) {
+// TODO type this...
+
+export function ListItemBit(rawProps: any) {
   const itemProps = React.useContext(ItemPropsContext)
-  const { item, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
+  const { item, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps } as any
   const body = `${item.body || ''}`
   if (renderText) {
     return renderText(body)

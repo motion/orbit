@@ -24,12 +24,12 @@ import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { ListItem, ListItemProps } from './ListItem'
+import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
 import { Direction, SelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type ListProps = SectionSpecificProps &
-  VirtualListProps<Bit | ListItemProps> &
+  VirtualListProps<Bit | ListItemSimpleProps> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     search?: string
@@ -43,7 +43,7 @@ export type ListProps = SectionSpecificProps &
 // TODO use creaetPropsContext
 export const ListPropsContext = createContext(null as Partial<ListProps>)
 
-export function toListItemProps(props?: any): ListItemProps & { item?: any } {
+export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
   if (!props) {
     return null
   }
@@ -206,7 +206,8 @@ export const List = memo((allProps: ListProps) => {
         <VirtualList
           disableMeasure={visibility === false}
           items={filtered.results}
-          ItemView={ListItem as any}
+          // TODO fix type
+          ItemView={ListItemSimple as any}
           {...restProps}
           getItemProps={getItemPropsInner}
           onOpen={onOpenInner}

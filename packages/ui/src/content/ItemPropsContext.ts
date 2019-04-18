@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { ItemRenderText } from '../lists/ListItem'
+import { ItemRenderText } from '../lists/ListItemSimple'
 import { TextProps } from '../text/Text'
 import { ViewProps } from '../View/View'
 

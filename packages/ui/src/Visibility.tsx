@@ -13,7 +13,7 @@ class VisibilityStore {
 const Vis = createStoreContext(VisibilityStore)
 
 export const ProvideVisibility = Vis.Provider
-export const useVisibilityContext = () => useContext(Vis.Context) || { visible: true }
+export const useVisibilityStore = () => useContext(Vis.Context) || { visible: true }
 
 export function useVisibility() {
   // support may not be provided

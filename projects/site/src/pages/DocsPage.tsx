@@ -30,8 +30,12 @@ const views = {
 
 export default compose(
   withView(req => {
-    const id = req.params.id
-    return <DocsPage title={uiItems.find(x => x.id === id).title} />
+    const id = req.path.slice(1)
+    return (
+      <DocsPage title={uiItems.find(x => x.id === id).title}>
+        <View />
+      </DocsPage>
+    )
   }),
 
   mount({
@@ -63,7 +67,7 @@ const categories = {
   kit: () => uiItems,
 }
 
-function DocsPage(props: { title?: string }) {
+function DocsPage(props: { title?: string; children?: any }) {
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
@@ -105,7 +109,9 @@ function DocsPage(props: { title?: string }) {
                   setTheme={siteStore.setTheme}
                   theme={siteStore.theme}
                   title={props.title}
-                />
+                >
+                  {props.children}
+                </SelectedSection>
               </Content>
             </WidthLimit>
           </Templates.MasterDetail>
@@ -150,14 +156,14 @@ const DocsToolbar = memo(({ section, setSection }: any) => {
   )
 })
 
-const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar }: any) => {
+const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, children }: any) => {
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
       pad={['xl', true, true, true]}
       titleBorder
       space
-      title={title}
+      title={title || 'No title'}
       afterTitle={
         <SurfacePassProps iconSize={12}>
           <SpaceGroup space="xs">
@@ -173,7 +179,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar }: any) 
         </SurfacePassProps>
       }
     >
-      <View />
+      {children}
     </Section>
   )
 })

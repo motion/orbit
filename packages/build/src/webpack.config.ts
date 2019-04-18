@@ -21,6 +21,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
+const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -298,6 +299,8 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
+      // see https://github.com/markogresak/ignore-not-found-export-webpack-plugin
+      new IgnoreNotFoundExportPlugin(),
       // new ErrorOverlayPlugin(),
 
       new WebpackNotifierPlugin(),

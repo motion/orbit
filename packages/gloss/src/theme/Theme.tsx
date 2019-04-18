@@ -1,5 +1,5 @@
 import { ThemeObject } from '@o/css'
-import React, { memo, useContext, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Config } from '../config'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 import { SimpleStyleObject } from './ThemeMaker'
@@ -16,7 +16,7 @@ type ThemeProps = {
 
 const themeContexts = new WeakMap()
 
-export const Theme = memo((props: ThemeProps) => {
+export const Theme = (props: ThemeProps) => {
   const { theme, name, children } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
@@ -38,7 +38,7 @@ export const Theme = memo((props: ThemeProps) => {
   }
 
   return <ThemeContext.Provider value={nextThemeObj}>{children}</ThemeContext.Provider>
-})
+}
 
 function createThemeFromObject(props: ThemeProps, prev: ThemeContextType, next: ThemeObject) {
   const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}`

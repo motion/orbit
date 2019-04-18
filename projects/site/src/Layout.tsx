@@ -1,11 +1,12 @@
-import { Button, FullScreen, Theme, Title, View } from '@o/ui'
-import { createStoreContext } from '@o/use-store'
-import { throttle } from 'lodash'
+import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
+import { createStoreContext, useForceUpdate } from '@o/use-store'
+import { debounce, throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
 import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
+import { themes } from './themes'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 class SiteStore {
@@ -55,6 +56,8 @@ export const useSiteStore = useStore
 const transition = 'transform ease 300ms'
 
 export function Layout(props: any) {
+  const forceUpdate = useForceUpdate()
+  window['forceUpdate'] = debounce(forceUpdate, 20)
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
   const screen = useScreenSize()
@@ -101,58 +104,62 @@ export function Layout(props: any) {
     },
   }
 
+  console.log('render with', themes.light.alternates.selected.color.toCSS())
+
   return (
-    <Theme name={siteStore.theme}>
-      <SimpleProvider value={siteStore}>
-        <PeekHeader />
-        <View
-          minHeight="100vh"
-          minWidth="100vw"
-          maxHeight={siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight}
-          overflow="hidden"
-          transition={transition}
-          transform={{
-            x: siteStore.showSidebar ? -sidebarWidth : 0,
-          }}
-          background={bg}
-        >
-          <NotFoundBoundary render={NotFound}>
-            <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-            {props.children}
-          </NotFoundBoundary>
-        </View>
-        <Theme name="home">
+    <ProvideUI themes={themes}>
+      <Theme name={siteStore.theme}>
+        <SimpleProvider value={siteStore}>
+          <PeekHeader />
           <View
-            position="fixed"
-            top={0}
-            right={0}
-            width={sidebarWidth}
-            height="100vh"
+            minHeight="100vh"
+            minWidth="100vw"
+            maxHeight={siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight}
+            overflow="hidden"
             transition={transition}
             transform={{
-              x: siteStore.showSidebar ? 0 : sidebarWidth,
+              x: siteStore.showSidebar ? -sidebarWidth : 0,
             }}
+            background={bg}
           >
-            <Button
-              position="absolute"
-              top={20}
-              right={20}
-              chromeless
-              icon="cross"
-              iconSize={16}
-              zIndex={1000}
-              cursor="pointer"
-              onClick={siteStore.toggleSidebar}
-            />
-            <HeaderLink href="/" {...linkProps}>
-              Home
-            </HeaderLink>
-            <LinksLeft {...linkProps} />
-            <LinksRight {...linkProps} />
+            <NotFoundBoundary render={NotFound}>
+              <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
+              {props.children}
+            </NotFoundBoundary>
           </View>
-        </Theme>
-      </SimpleProvider>
-    </Theme>
+          <Theme name="home">
+            <View
+              position="fixed"
+              top={0}
+              right={0}
+              width={sidebarWidth}
+              height="100vh"
+              transition={transition}
+              transform={{
+                x: siteStore.showSidebar ? 0 : sidebarWidth,
+              }}
+            >
+              <Button
+                position="absolute"
+                top={20}
+                right={20}
+                chromeless
+                icon="cross"
+                iconSize={16}
+                zIndex={1000}
+                cursor="pointer"
+                onClick={siteStore.toggleSidebar}
+              />
+              <HeaderLink href="/" {...linkProps}>
+                Home
+              </HeaderLink>
+              <LinksLeft {...linkProps} />
+              <LinksRight {...linkProps} />
+            </View>
+          </Theme>
+        </SimpleProvider>
+      </Theme>
+    </ProvideUI>
   )
 }
 

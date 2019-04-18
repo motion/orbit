@@ -10,6 +10,7 @@ type ThemeProvideProps = {
 
 export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProps) {
   const themeContext = useContext(ThemeContext)
+
   const val = useMemo(() => {
     const next = {
       ...themeContext,
@@ -19,12 +20,24 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
       next.activeThemeName = activeTheme
     }
     return next
-  }, [themeContext, activeTheme])
+  }, [themeContext, activeTheme, themes])
 
   if (!Object.keys(themes).length) {
     console.error('No themes provided! Please provide a theme to ThemeProvide.')
     return null
   }
 
-  return <ThemeContext.Provider value={val as any}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider key={weakKey(themes)} value={val as any}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+const cache = new WeakMap()
+const weakKey = val => {
+  if (cache.has(val)) return cache.get(val)
+  let next = Math.random()
+  cache.set(val, next)
+  return next
 }

@@ -1,6 +1,7 @@
-import 'intersection-observer'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
+
+console.log('io', require('intersection-observer'))
 
 function configure() {
   const hasConfigured = window['hasConfigured']

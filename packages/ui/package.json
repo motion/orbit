@@ -18,6 +18,8 @@
     "@o/gloss": "^2.4.1",
     "@o/react-sortable-hoc": "*",
     "@o/use-store": "^2.4.1",
+    "intersection-observer": "0.5.1",
+    "resize-observer-polyfill": "1.5.1",
     "@o/utils": "^2.4.1",
     "autoresponsive-react": "1.1.31",
     "batch-processor": "^1.0.0",

@@ -1,5 +1,9 @@
+import ixo from 'intersection-observer'
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { useGet } from './useGet'
+
+// dont side effect it away
+ixo
 
 export function useIntersectionObserver(
   props: {

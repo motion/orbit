@@ -131,7 +131,7 @@ const Content = gloss(Col, {
 
 const DocsToolbar = memo(({ section, setSection }: any) => {
   return (
-    <Toolbar pad="xs" justifyContent="center" border={false}>
+    <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
       <SegmentedRow sizePadding={2} sizeRadius={2}>
         <Button active={section === 'all'} onClick={() => setSection('all')}>
           All

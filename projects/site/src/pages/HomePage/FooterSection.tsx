@@ -18,7 +18,7 @@ import { Text } from '../../views/Text'
 import { SignupForm } from './EarlyAccessBetaSection'
 import { useScreenVal } from './SpacedPageContent'
 
-export function FeetSection({ ...props }) {
+export function FeetSection(props) {
   const theme = useTheme()
   return (
     <Theme name="home">

@@ -1,7 +1,7 @@
 import { Inline } from '@o/gloss'
-import { useForceUpdate } from '@o/kit'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, View } from '@o/ui'
-import React, { useState } from 'react'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, View } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
+import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
@@ -14,7 +14,7 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent } from './SpacedPageContent'
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
@@ -76,6 +76,34 @@ function useSlideSpring(config, delay = 0) {
           // maybe put this earlier
           animate = 'in'
           return
+        case 'prev':
+          await sleep(delay)
+          // out
+          await next({
+            to: nextStyle,
+            config: {
+              duration: fadeOutTm,
+            },
+          })
+          // move to other side
+          await next({
+            to: {
+              opacity: 0,
+              transform: `translate3d(-40px,0,0)`,
+            },
+            config: {
+              duration: 180,
+            },
+          })
+          await sleep(delay)
+          // in
+          await next({
+            to: curStyle,
+            config,
+          })
+          // maybe put this earlier
+          animate = 'in'
+          return
       }
     },
     config,
@@ -85,25 +113,37 @@ function useSlideSpring(config, delay = 0) {
 const elements = [
   {
     iconBefore: require('../../../public/logos/slack.svg'),
-    title: '<Table />',
+    title: 'Table',
     body: `The table that has it all. Virtualized, resizable, sortable, filterable, multi-selectable, and more. With easy sharing to forms, lists, or other apps in your Orbit.`,
     image: tableScreen,
     iconAfter: require('../../../public/logos/gmail.svg'),
     afterName: 'Gmail',
+    beforeName: 'Slack',
   },
   {
     iconBefore: require('../../../public/logos/postgres.svg'),
-    title: '<List />',
+    title: 'List',
     body: `Every list in Orbit accepts the same props as tables. They are incredibly powerful, virtualized by default, and can group, filter, search, and share with a prop.`,
     image: listScreen,
     iconAfter: require('../../../public/logos/jira.svg'),
     afterName: 'Jira',
+    beforeName: 'Postgres',
+  },
+  {
+    iconBefore: require('../../../public/logos/medium.svg'),
+    title: 'Grid',
+    body: `Orbit Grids automatically persist their state. They can be easily arranged and resized, and plugging in app data inside them is as easy as nesting an <AppCard />.`,
+    image: listScreen,
+    iconAfter: require('../../../public/logos/sheets.svg'),
+    afterName: 'GSheets',
+    beforeName: 'Web Crawl',
   },
 ]
 
 export function NeckSection(props) {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
+  const nextInt = useRef(null)
 
   const longDelay = 150
   const springFast = useSlideSpring({
@@ -130,16 +170,31 @@ export function NeckSection(props) {
 
   const [cur, setCur] = useState(0)
 
-  const next = async () => {
+  const next = async (e?) => {
+    if (e) clearInterval(nextInt.current)
     animate = 'next'
     forceUpdate()
     await sleep(fadeOutTm + longDelay)
     let n = (cur + 1) % elements.length
     setCur(n)
   }
-  const prev = () => {
-    setCur(cur + 1)
+  const prev = async (e?) => {
+    if (e) clearInterval(nextInt.current)
+    animate = 'prev'
+    forceUpdate()
+    await sleep(fadeOutTm + longDelay)
+    let n = cur - 1
+    setCur(n < 0 ? elements.length - 1 : n)
   }
+
+  const curNext = useGetFn(next)
+  useEffect(() => {
+    nextInt.current = setInterval(() => {
+      curNext()
+    }, 8000)
+
+    return () => clearInterval(nextInt.current)
+  }, [])
 
   return (
     <Page zIndex={3} {...props}>
@@ -152,12 +207,12 @@ export function NeckSection(props) {
           header={
             <>
               <FadeIn delay={100} intersection="20px">
-                <TitleText size="xxl">All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together.</TitleText>
               </FadeIn>
-              <TitleTextSub width="80%" margin="auto" minWidth={360}>
+              <TitleTextSub width="87%" margin="auto" minWidth={320}>
                 <FadeIn delay={200} intersection="20px">
-                  Orbit has everything you need to build powerful apps easily. Including the
-                  development environment.
+                  Orbit has everything you need to build powerful apps with code, easily. Including
+                  the development environment.
                 </FadeIn>
               </TitleTextSub>
             </>
@@ -171,7 +226,8 @@ export function NeckSection(props) {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Many data integrations built in, integrate with a line of code.
+                      Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
+                      data with just a line of code.
                     </CenterText>
                   </FadeIn>
                 </SubSection>
@@ -179,9 +235,9 @@ export function NeckSection(props) {
                   <FadeIn delay={400} intersection="20px">
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
-                    <CenterText>
-                      A cohesive, large and custom UI kit that focuses on making it easy to move
-                      data between it's views.
+                    <CenterText maxWidth={400} margin={[0, 'auto']}>
+                      Orbit provides a large, cohesive set of views and APIs that are useful for
+                      internal tools, like a {elements[cur].title}.
                     </CenterText>
                   </FadeIn>
                 </SubSection>
@@ -190,7 +246,7 @@ export function NeckSection(props) {
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
-                      With easy selection + actions, exporting data to{' '}
+                      With selections + actions, exporting to{' '}
                       <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
                     </CenterText>
                   </FadeIn>
@@ -228,6 +284,7 @@ export function NeckSection(props) {
                   size={2}
                   iconSize={22}
                   circular
+                  zIndex={100}
                   position="absolute"
                   top={-4}
                   left={10}
@@ -240,6 +297,7 @@ export function NeckSection(props) {
                   size={2}
                   iconSize={22}
                   circular
+                  zIndex={100}
                   position="absolute"
                   top={-4}
                   right={10}
@@ -262,7 +320,7 @@ export function NeckSection(props) {
                       alpha={0.65}
                       textTransform="uppercase"
                     >
-                      {elements[cur].title}
+                      {`<${elements[cur].title} />`}
                     </TitleText>
                     <Space />
                     <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>

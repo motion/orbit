@@ -2,7 +2,7 @@
   "name": "@o/r2",
   "main": "_/r2.js",
   "sideEffects": false,
-  "version": "2.4.0",
+  "version": "2.4.1",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

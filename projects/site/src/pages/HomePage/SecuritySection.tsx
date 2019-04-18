@@ -23,7 +23,7 @@ export function WaistSection(props) {
               <Image
                 transform={{ scaleX: -1 }}
                 position="absolute"
-                top={-120}
+                top="-17%"
                 height={120}
                 left={0}
                 right={0}
@@ -34,7 +34,8 @@ export function WaistSection(props) {
 
               <Image
                 position="absolute"
-                bottom={100}
+                bottom={90}
+                height={90}
                 left={0}
                 right={0}
                 width="100%"
@@ -64,17 +65,26 @@ export function WaistSection(props) {
             <Grid space={screen === 'small' ? 20 : '10% 5%'} itemMinWidth={300}>
               <Col space="xl">
                 <Pitch size="md">
-                  Orbit never sends a single bit of data outside your firewall.
+                  No servers, no problem. Orbit syncs without ever sending single bit of data
+                  outside your firewall.
+                </Pitch>
+
+                <Pitch size="sm">
+                  <ol>
+                    <li>Install Orbit.app.</li>
+                    <li>Create apps with your team.</li>
+                    <li>That's it.</li>
+                  </ol>
                 </Pitch>
 
                 <Pitch alpha={0.7} size="xs">
-                  Get incredibly powerful internal tools, without having to trust a startup with any
-                  of your internal data -- from interfacing with sensitive internal databases to
-                  visualizing imporant metrics, Orbit runs locally so you have control.
+                  Get incredibly powerful internal tools without setting up infrastructure or having
+                  to trust a startup with any of your data -- interface with sensitive internal
+                  databases with ease, Orbit gives you complete control.
                 </Pitch>
               </Col>
 
-              <Image margin="auto" padding={20} src={people} />
+              {screen !== 'small' && <Image margin="auto" padding={20} src={people} />}
             </Grid>
           </SpacedPageContent>
         </Page.Content>

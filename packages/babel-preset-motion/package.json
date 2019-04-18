@@ -2,7 +2,7 @@
   "name": "@o/babel-preset-motion",
   "main": "babel-preset-motion.js",
   "sideEffects": false,
-  "version": "2.4.0",
+  "version": "2.4.1",
   "dependencies": {
     "@babel/core": "7.2.0",
     "@babel/plugin-proposal-class-properties": "7.2.1",
@@ -16,8 +16,9 @@
     "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
-    "@o/gloss": "^2.4.0",
-    "@o/gloss-displaynames": "^2.4.0",
+    "@o/gloss": "^2.4.1",
+    "@o/gloss-displaynames": "^2.4.1",
+    "babel-plugin-optimize-react": "0.0.4",
     "react-hot-loader": "4.8.4"
   },
   "license": "MIT",

@@ -5,25 +5,15 @@ import URI from 'urijs'
  * Crawl a website.
  */
 export class WebsiteCrawlerUtils {
-
   /**
    * List of extensions found in a link that are disallowed for querying.
    */
-  private static disallowedExtensions = [
-    '.png',
-    '.jpg',
-    '.gif',
-    '.css',
-    '.js',
-    '.svg',
-    '.xml',
-  ]
+  private static disallowedExtensions = ['.png', '.jpg', '.gif', '.css', '.js', '.svg', '.xml']
 
   /**
    * Normalizes links in crawler, removes all '/', '#', duplicates, etc.
    */
   static normalizeLinks(links: string[], baseUrl: string): string[] {
-
     // make sure we don't have empty links
     links = links.filter(link => !!link)
 
@@ -41,8 +31,10 @@ export class WebsiteCrawlerUtils {
 
     // make sure all links are http and https
     links = links.filter(link => {
-      return link.substr(0, 'http://'.length) === 'http://' ||
+      return (
+        link.substr(0, 'http://'.length) === 'http://' ||
         link.substr(0, 'https://'.length) === 'https://'
+      )
     })
 
     // replace www. prefix
@@ -57,28 +49,25 @@ export class WebsiteCrawlerUtils {
     })
 
     // make sure its original link start with a given base url
-    const replaceBaseMismatch = link => link
-      .replace('http://www.', '')
-      .replace('https://www.', '')
-      .replace('http://', '')
-      .replace('https://', '')
+    const replaceBaseMismatch = link =>
+      link
+        .replace('http://www.', '')
+        .replace('https://www.', '')
+        .replace('http://', '')
+        .replace('https://', '')
     const normalizedBaseUrl = replaceBaseMismatch(baseUrl)
     links = links.filter(link => {
       // make sure link is sub-page of the original url
       const linkBase = replaceBaseMismatch(link).substr(0, normalizedBaseUrl.length)
-      if (linkBase !== normalizedBaseUrl)
-        return false
+      if (linkBase !== normalizedBaseUrl) return false
 
       return true
     })
 
     // filtering out
     links = links.filter(link => {
-
       // try to get an extension of the file in the link
-      let extension = link
-        .replace(/[?](.*)$/g, '')
-        .replace(/[#](.*)$/g, '')
+      let extension = link.replace(/[?](.*)$/g, '').replace(/[#](.*)$/g, '')
       extension = extension.substr(extension.lastIndexOf('/') + 1)
       if (extension.lastIndexOf('.') !== -1) {
         extension = extension.substr(extension.lastIndexOf('.') + 1)

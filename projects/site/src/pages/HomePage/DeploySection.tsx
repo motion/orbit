@@ -13,7 +13,7 @@ import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-const Para = props => <Paragraph sizeLineHeight={1.15} size={1.1} alpha={0.65} {...props} />
+const Para = props => <Paragraph sizeLineHeight={1.15} size={1.2} alpha={0.65} {...props} />
 
 export function ShoulderSection(props) {
   return (
@@ -29,15 +29,15 @@ export function ShoulderSection(props) {
                 <PillButton>Deploy</PillButton>
               </FadeIn>
               <Space size="sm" />
-              <FadeIn delay={100}>
+              <FadeIn delay={50}>
                 <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
               </FadeIn>
             </>
           }
         >
-          <Row space={60} margin={[0, '-120%']}>
+          <Row space={60} margin={[0, '-180%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
-              <FadeIn delay={200}>
+              <FadeIn delay={100}>
                 <View
                   borderRadius={10}
                   elevation={3}
@@ -62,39 +62,40 @@ export function ShoulderSection(props) {
             </Col>
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
-              <FadeIn delay={300}>
+              <FadeIn delay={200}>
                 <ParagraphIntro>
                   Orbit runs locally on your computer, but can sync data from any cloud integration.
                 </ParagraphIntro>
               </FadeIn>
 
-              <FadeIn delay={400}>
+              <FadeIn delay={250}>
                 <Para>
-                  It's a lot like a web browser, but designed to make building rich collaborative
-                  apps easy. It does that through an app kit that handles many hard things for you
-                  from syncing data into a database, to building complex views, to syncing data
-                  peer-to-peer within your team.
+                  It's a lot like a web browser, but designed from the ground up to make building
+                  rich collaborative apps as easy as possible. It does so with an app kit that
+                  handles many hard things for you - from syncing data, to complex views, to
+                  providing APIs to do realtime peer-to-peer with your team.
                 </Para>
               </FadeIn>
 
-              <FadeIn delay={500}>
+              <FadeIn delay={300}>
                 <Para>
-                  Built on open standards like Typescript and React, it's the ultimate intranet
-                  system in a box.
+                  Built on open standards like Typescript and React, it's your ultimate
+                  intranet-in-a-box.
                 </Para>
               </FadeIn>
 
-              <FadeIn delay={600}>
+              <FadeIn delay={350}>
                 <Para
                   tagName="a"
                   href="ok"
-                  cursor="pointer"
                   color="#E368E7"
+                  transition="all ease 250ms"
                   hoverColor={toColor('#E368E7').lighten(0.1)}
                   fontWeight={500}
                   textDecorationColor="#444"
                   textDecoration="underline"
                   display="inline-block"
+                  pointable
                 >
                   How Orbit gives users control.
                 </Para>
@@ -102,7 +103,7 @@ export function ShoulderSection(props) {
             </Col>
 
             <Col flex={2} alignItems="flex-start" justifyContent="center">
-              <FadeIn delay={200}>
+              <FadeIn delay={300}>
                 <View
                   borderRadius={10}
                   elevation={3}

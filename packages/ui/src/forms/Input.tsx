@@ -119,6 +119,7 @@ const SimpleInput = gloss((props: SizedSurfaceProps) => (
     sizeLineHeight
     sizeRadius={0.75}
     noInnerElement
+    label={props.name}
     glint={false}
     borderWidth={1}
     {...props}

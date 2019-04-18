@@ -12,11 +12,13 @@ import {
 } from '@o/ui'
 import React from 'react'
 import { Link, LinkProps } from '../../views/Header'
+import { LogoVertical } from '../../views/LogoVertical'
 import { Page } from '../../views/Page'
 import { Text } from '../../views/Text'
 import { SignupForm } from './EarlyAccessBetaSection'
+import { useScreenVal } from './SpacedPageContent'
 
-export function FeetSection({ ...props }) {
+export function FeetSection(props) {
   const theme = useTheme()
   return (
     <Theme name="home">
@@ -24,6 +26,8 @@ export function FeetSection({ ...props }) {
         <Page.Content pad="xxl" justifyContent="space-between">
           <Space size="xl" />
           <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
+          <View flex={useScreenVal(1, 3, 4)} />
+          <LogoVertical />
           <View flex={1} />
           <Footer />
         </Page.Content>
@@ -47,9 +51,18 @@ export function FeetSection({ ...props }) {
 }
 
 export const Footer = () => {
+  const sectionMinWidth = useScreenVal(250, 150, 150)
   return (
-    <Row flexWrap="wrap" flex={8} space="lg" pad alignItems="flex-end">
-      <Col minWidth={150} flex={1} space="sm">
+    <Row
+      flexDirection={useScreenVal('column', 'row', 'row')}
+      flexWrap="wrap"
+      flex={8}
+      space="lg"
+      pad
+      alignItems="flex-end"
+      scrollable="y"
+    >
+      <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle alt="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
         <SmallLink href="/">Download</SmallLink>
@@ -61,7 +74,7 @@ export const Footer = () => {
         <SmallLink href="/">Beta</SmallLink>
       </Col>
 
-      <Col minWidth={150} flex={1} space="sm">
+      <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Support & Terms</SmallTitle>
         <SmallLink href="/">Contact us</SmallLink>
         <SmallLink href="/">Orbit Chat</SmallLink>
@@ -70,7 +83,7 @@ export const Footer = () => {
         <SmallLink href="/">FAQ</SmallLink>
       </Col>
 
-      <Col minWidth={150} flex={1} space="sm">
+      <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Community</SmallTitle>
         <SmallLink href="/">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
@@ -79,9 +92,9 @@ export const Footer = () => {
         <SmallLink href="https://github.com/tryorbit">Github</SmallLink>
       </Col>
 
-      <Col minWidth={200} flex={2} space="sm">
+      <Col order={useScreenVal(-1, 5, 5)} minWidth={200} flex={2} space="sm">
         <SmallTitle>Follow Orbit for more updates</SmallTitle>
-        <Space />
+        <Space size="xs" />
         <Row space>
           <BottomButton
             src={require('../../../public/logos/github.svg')}
@@ -93,6 +106,7 @@ export const Footer = () => {
           />
           <BottomButton icon="feed" />
         </Row>
+        <Space size="lg" />
       </Col>
     </Row>
   )

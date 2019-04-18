@@ -1,7 +1,7 @@
 import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor, useTheme } from '@o/gloss'
 import { isDefined, mergeDefined } from '@o/utils'
-import fuzzy from 'fuzzy'
+import fuzzySort from 'fuzzysort'
 import React, { createContext, useContext } from 'react'
 import { Config } from './helpers/configure'
 import { View, ViewProps } from './View/View'
@@ -25,8 +25,8 @@ const cache = {}
 const findName = (name: string) => {
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
-  const matches = fuzzy.filter(name, names)
-  const match = matches.length ? matches[0].original : 'none'
+  const matches = fuzzySort.go(name, names).map(x => x.target)
+  const match = matches.length ? matches : 'none'
   cache[name] = match
   return match
 }
@@ -48,7 +48,8 @@ export function PlainIcon(props: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
   const size = snapToSizes(props.size)
-  let color = props.color || theme.color
+  let color = props.color || theme.color ? theme.color.toCSS() : '#fff'
+
   if (isDefined(props.opacity)) {
     try {
       color = toColor(color)
@@ -58,6 +59,7 @@ export function PlainIcon(props: IconProps) {
       console.debug('bad color')
     }
   }
+
   // choose which pixel grid is most appropriate for given icon size
   const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.

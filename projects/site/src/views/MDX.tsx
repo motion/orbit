@@ -1,7 +1,7 @@
 import { MDXProvider } from '@mdx-js/react'
 import { gloss, Paragraph, Space, Title } from '@o/ui'
 import React from 'react'
-import orbitComponents from '../../tmp/components.json'
+import componentNames from '../../tmp/componentNames.json'
 import { CodeBlock } from './CodeBlock'
 
 export const components = {
@@ -48,8 +48,7 @@ export const components = {
       const end = children.slice(len - 2, len)
       if (children[0] === '<' && end === '/>' && children.length < 100) {
         const displayName = children.slice(1, len - 2).trim()
-        const info = orbitComponents.find(x => x.displayName === displayName)
-        if (info) {
+        if (!!componentNames.find(x => x === displayName)) {
           return <LinkedInlineCode onClick={() => alert('hi')}>{children}</LinkedInlineCode>
         }
       }

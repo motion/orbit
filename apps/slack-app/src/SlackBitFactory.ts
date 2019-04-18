@@ -1,3 +1,6 @@
+import { AppBit, Bit } from '@o/kit'
+import { SyncerUtils } from '@o/sync-kit'
+import { uniqBy } from 'lodash'
 import {
   SlackAppData,
   SlackAttachment,
@@ -7,19 +10,13 @@ import {
   SlackTeam,
   SlackUser,
 } from './SlackModels'
-import { AppBit, Bit } from '@o/kit'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
-import { uniqBy } from 'lodash'
-import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of slack models.
  */
 export class SlackBitFactory {
-
-  constructor(private app: AppBit,
-              private utils: SyncerUtils) {
-  }
+  constructor(private app: AppBit, private utils: SyncerUtils) {}
 
   /**
    * Creates a single app person from given Slack user.
@@ -43,11 +40,7 @@ export class SlackBitFactory {
   /**
    * Creates a new slack conversation bit.
    */
-  createConversationBit(
-    channel: SlackChannel,
-    messages: SlackMessage[],
-    allPeople: Bit[]
-  ): Bit {
+  createConversationBit(channel: SlackChannel, messages: SlackMessage[], allPeople: Bit[]): Bit {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -59,10 +52,10 @@ export class SlackBitFactory {
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const webLink = `https://${appData.values.team.domain}.slack.com/archives/${
       channel.id
-      }/p${firstMessage.ts.replace('.', '')}`
+    }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
       appData.values.team.id
-      }`
+    }`
     const mentionedPeople = findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
@@ -139,5 +132,4 @@ export class SlackBitFactory {
       desktopLink: undefined,
     })
   }
-
 }

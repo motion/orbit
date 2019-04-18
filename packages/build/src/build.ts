@@ -1,3 +1,4 @@
+import { writeJSON } from 'fs-extra'
 import webpack from 'webpack'
 import makeConfig from './webpack.config'
 
@@ -11,9 +12,9 @@ async function main() {
     ...(await makeConfig()),
   }
 
-  console.log(JSON.stringify(finalConfig, null, 2))
+  // console.log(JSON.stringify(finalConfig, null, 2))
 
-  webpack(finalConfig, (err, stats) => {
+  webpack(finalConfig, async (err, stats) => {
     if (err) {
       console.log(err)
       return
@@ -21,8 +22,13 @@ async function main() {
     console.log(
       stats.toString({
         colors: true,
+        verbose: true,
       }),
     )
+
+    await writeJSON('/tmp/stats.json', stats.toJson())
+
+    process.exit(0)
   })
 }
 

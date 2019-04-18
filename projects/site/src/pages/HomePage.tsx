@@ -10,7 +10,6 @@ import { ChestSection } from './HomePage/DataAppKitFeaturesSection'
 import { ShoulderSection } from './HomePage/DeploySection'
 import { EarlyAccessSection } from './HomePage/EarlyAccessBetaSection'
 import { FeetSection } from './HomePage/FooterSection'
-// import { Parallax } from 'react-spring/renderprops-addons'
 import { HeadSection } from './HomePage/HeadSection'
 import { LegsSection } from './HomePage/MissionMottoSection'
 import { WaistSection } from './HomePage/SecuritySection'
@@ -28,22 +27,24 @@ export function HomePage() {
     <ParallaxContext.PassProps value={parallax}>
       <Header />
       <PeekHeader />
-      <Parallax
-        ref={setParallax}
-        pages={9}
-        scrollingElement={window}
-        container={IS_CHROME ? document.documentElement : document.body}
-        pageHeight={siteStore.sectionHeight}
-      >
-        <HeadSection offset={0} />
-        <NeckSection offset={1} />
-        <ShoulderSection offset={2} />
-        <ChestSection offset={3} />
-        <EarlyAccessSection offset={5} />
-        <WaistSection offset={6} />
-        <LegsSection offset={7} />
-        <FeetSection offset={8} />
-      </Parallax>
+      <main>
+        <Parallax
+          ref={setParallax}
+          pages={9}
+          scrollingElement={window}
+          container={IS_CHROME ? document.documentElement : document.body}
+          pageHeight={siteStore.sectionHeight}
+        >
+          <HeadSection offset={0} />
+          <NeckSection offset={1} />
+          <ShoulderSection offset={2} />
+          <ChestSection offset={3} />
+          <EarlyAccessSection offset={5} />
+          <WaistSection offset={6} />
+          <LegsSection offset={7} />
+          <FeetSection offset={8} />
+        </Parallax>
+      </main>
     </ParallaxContext.PassProps>
   )
 }

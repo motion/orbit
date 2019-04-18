@@ -200,6 +200,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
         noInnerElement={!iconElement}
         after={<BorderBottom right={5} left={5} opacity={0.2} />}
         paddingLeft={indent ? indent * 22 : undefined}
+        background="transparent"
         {...disablePsuedoProps}
         {...surfaceProps}
       >

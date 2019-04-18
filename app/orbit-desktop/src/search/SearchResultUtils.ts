@@ -1,5 +1,5 @@
 import { highlightText } from '@o/utils'
-import * as _ from 'lodash'
+import { uniq } from 'lodash'
 
 /**
  * SearchResult utility functions.
@@ -10,7 +10,7 @@ export class SearchResultUtils {
    */
   static buildSearchResultTitle(titles: string[]): string {
     titles = titles.map(title => title.replace(/\n/g, ' ').trim())
-    let title = _.uniq(titles).join(', ')
+    let title = uniq(titles).join(', ')
     if (title.length > 20) {
       title = title.substr(0, 17) + '...'
     }
@@ -21,7 +21,7 @@ export class SearchResultUtils {
    * Builds a search result text from a given bits bodies.
    */
   static buildSearchResultText(keyword: string, texts: string[]): string {
-    return _.uniq(
+    return uniq(
       texts.map(text => {
         text = text.replace(/\n/g, ' ').trim()
         return highlightText({

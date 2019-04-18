@@ -7,7 +7,9 @@
     "typeRoots": ["./src/globalTypes.d.ts"],
     "types": ["jest"],
     "noEmit": true,
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo",
+    "target": "es2018",
+    "module": "esnext"
   },
   "include": ["src/**/*"],
   "references": [

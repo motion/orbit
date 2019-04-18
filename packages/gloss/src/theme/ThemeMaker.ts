@@ -45,8 +45,8 @@ const smallAmt = color => {
 const largeAmt = color => smallAmt(color) * 1.25
 const opposite = color => {
   return color.isDark()
-    ? color.mix(color.lightness(0)).lightness(75)
-    : color.mix(color.lightness(1)).lightness(25)
+    ? color.mix(color.lightness(0.1)).lightness(75)
+    : color.mix(color.lightness(0.9)).lightness(25)
 }
 
 const isPlainObj = o => typeof o == 'object' && o.constructor == Object

@@ -1,5 +1,5 @@
-import { once } from 'lodash'
 import { isEditing } from '@o/stores'
+import { once } from 'lodash'
 import { AllStores } from '../contexts/StoreContext'
 import { defaultPanes } from '../effects/paneManagerStoreUpdatePanes'
 

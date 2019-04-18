@@ -1,4 +1,4 @@
-import { Button, Icon, Input, InputProps, MergeHighlightsContext, Row } from '@o/ui'
+import { Button, HighlightProvide, Icon, Input, InputProps, Row } from '@o/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -16,7 +16,7 @@ export const AppSearchable = React.memo(function AppSearchable(props: Searchable
         <Input flex={1} placeholder="Search..." {...props.inputProps} />
         <ContextButton marginLeft={6} />
       </Row>
-      <MergeHighlightsContext
+      <HighlightProvide
         value={{
           words: queryStore.query.split(' '),
           maxChars: 500,
@@ -24,7 +24,7 @@ export const AppSearchable = React.memo(function AppSearchable(props: Searchable
         }}
       >
         {props.children}
-      </MergeHighlightsContext>
+      </HighlightProvide>
     </>
   )
 })

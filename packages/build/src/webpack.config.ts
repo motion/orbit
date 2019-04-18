@@ -10,6 +10,14 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
+const safePostCssParser = require('postcss-safe-parser')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+// const Critters = require('critters-webpack-plugin')
+// const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
@@ -19,9 +27,11 @@ const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
 const repoRoot = Path.join(cwd, '..', '..')
 
+const appPackageJson = Path.join(cwd, 'package.json')
+
 const readPackage = (key: string) => {
   try {
-    const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
+    const packageJson = Fs.readFileSync(appPackageJson)
     const pkg = JSON.parse(packageJson.toString())
     return pkg[key]
   } catch {
@@ -29,9 +39,16 @@ const readPackage = (key: string) => {
   }
 }
 
+const getFlag = flag => {
+  const matcher = new RegExp(`${flag} ([^ ]+)`, 'i')
+  const found = process.argv.join(' ').match(matcher)
+  return (found && found.length >= 2 && found[1]) || null
+}
+
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || readPackage('main') || './src'
+const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
+// const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const outputPath = Path.join(cwd, 'dist')
 
@@ -41,12 +58,6 @@ const buildNodeModules = [
   // <repo>/node_modules
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
-
-const getFlag = flag => {
-  const matcher = new RegExp(`${flag} ([a-z0-9]+)`, 'i')
-  const found = process.argv.join(' ').match(matcher)
-  return (found && found.length >= 2 && found[1]) || null
-}
 
 const target = getFlag('--target') || 'electron-renderer'
 const defines = {
@@ -60,47 +71,58 @@ const defines = {
 
 console.log(
   'webpack info',
-  JSON.stringify({ outputPath, target, isProd, tsConfig, defines }, null, 2),
+  JSON.stringify({ entry, outputPath, target, isProd, tsConfig, defines }, null, 2),
 )
-
-// this really helps hmr speed
-const optimizeSplit = {
-  splitChunks: {
-    cacheGroups: {
-      vendor: {
-        test: /node_modules/,
-        chunks: 'initial',
-        name: 'vendor',
-        priority: 10,
-        enforce: true,
-      },
-    },
-  },
-}
 
 const optimization = {
   prod: {
-    ...optimizeSplit,
+    usedExports: true,
+    sideEffects: true,
+    runtimeChunk: true,
+    splitChunks: {
+      chunks: 'async',
+      name: false,
+    },
     minimizer: [
       new TerserPlugin({
+        sourceMap: true,
+        cache: true,
         parallel: true,
         terserOptions: {
-          ecma: 8,
-          compress: true,
+          parse: {
+            ecma: 8,
+          },
+          compress: {
+            ecma: 6,
+            warnings: false,
+          },
+          mangle: {
+            safari10: true,
+          },
           keep_classnames: true,
           output: {
+            ecma: 6,
             comments: false,
             beautify: false,
+            ascii_only: true,
           },
         },
       }),
-    ],
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          parser: safePostCssParser,
+          map: {
+            inline: false,
+            annotation: true,
+          },
+        },
+      }),
+    ].filter(Boolean),
   },
   dev: {
     noEmitOnErrors: true,
     removeAvailableModules: false,
     namedModules: true,
-    // ...optimizeSplit,
   },
 }
 
@@ -109,6 +131,7 @@ const alias = {
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
   'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+  lodash: 'lodash',
 }
 
 const babelrcOptions = {
@@ -139,17 +162,17 @@ async function makeConfig() {
         : {},
     optimization: process.env.NO_OPTIMIZE
       ? {
-          ...optimizeSplit,
           minimize: false,
         }
       : optimization[isProd ? 'prod' : 'dev'],
     output: {
       path: outputPath,
-      pathinfo: isProd,
-      filename: 'bundle.js',
       publicPath: '/',
       // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+      chunkFilename: isProd
+        ? 'static/js/[name].[contenthash:8].chunk.js'
+        : 'static/js/[name].chunk.js',
     },
     devServer: {
       stats: {
@@ -174,6 +197,7 @@ async function makeConfig() {
         ? ['ts:main', 'module', 'browser', 'main']
         : ['ts:main', 'browser', 'main'],
       alias,
+      // plugins: [new ModuleScopePlugin(appSrc, [appPackageJson])],
     },
     resolveLoader: {
       modules: buildNodeModules,
@@ -203,6 +227,7 @@ async function makeConfig() {
             {
               loader: 'ts-loader',
               options: {
+                configFile: tsConfig,
                 happyPackMode: true,
                 transpileOnly: true, // disable - we use it in fork plugin
                 experimentalWatchApi: true,
@@ -212,12 +237,20 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
-            'react-hot-loader/webpack',
-          ],
+            !isProd && 'react-hot-loader/webpack',
+          ].filter(Boolean),
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            isProd && {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            !isProd && {
+              loader: 'style-loader',
+            },
+            'css-loader',
+          ].filter(Boolean),
         },
         {
           test: /\.(ttf|eot|woff|woff2)$/,
@@ -273,14 +306,60 @@ async function makeConfig() {
 
       new webpack.IgnorePlugin(/electron-log/),
 
-      new ForkTsCheckerWebpackPlugin({
-        useTypescriptIncrementalApi: true,
-      }),
+      !isProd &&
+        new ForkTsCheckerWebpackPlugin({
+          useTypescriptIncrementalApi: true,
+        }),
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',
-        template: 'index.html',
+        template: 'public/index.html',
+        chunksSortMode: 'none',
+        ...(isProd && {
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          },
+        }),
       }),
+
+      // WARNING: this may or may not work wiht code splitting
+      // i was seeing all the chunks loaded inline in HTML, when it shouldn't have
+      // new PreloadWebpackPlugin({
+      //   rel: 'preload',
+      // }),
+
+      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+
+      isProd &&
+        new MiniCssExtractPlugin({
+          filename: 'static/css/[name].[contenthash:8].css',
+          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+        }),
+
+      isProd &&
+        target === 'web' &&
+        new HtmlCriticalWebpackPlugin({
+          base: outputPath,
+          src: 'index.html',
+          dest: 'index.html',
+          inline: true,
+          minify: true,
+          extract: true,
+          width: 375,
+          height: 565,
+          penthouse: {
+            blockJSRequests: false,
+          },
+        }),
 
       !!process.env['ANALYZE_BUNDLE'] &&
         new BundleAnalyzerPlugin({

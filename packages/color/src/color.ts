@@ -13,8 +13,6 @@ export function toColor(obj) {
   return new Color(obj)
 }
 
-const round = x => Math.round(x * 2) / 2
-
 const slice = [].slice
 const skippedModels = [
   // to be honest, I don't really feel like keyword belongs in color convert, but eh.
@@ -36,6 +34,8 @@ Object.keys(colorConvert).forEach(function(model) {
 })
 
 const StringCache = new WeakMap()
+
+const cached = new WeakMap()
 
 var limiters = {}
 
@@ -107,6 +107,10 @@ export class Color {
       this.color = zeroArray(color, color.length)
     }
 
+    if (this.color && this.color.some(x => isNaN(x))) {
+      debugger
+    }
+
     // perform limitations (clamping, etc.)
     if (limiters[this.model]) {
       channels = colorConvert[this.model].channels
@@ -125,9 +129,15 @@ export class Color {
     }
   }
 
-  toCSS() {
-    const { r, g, b, a } = this.rgbaObject()
-    return `rgba(${round(r * 255)},${round(g * 255)},${round(b * 255)},${a})`
+  toCSS = () => {
+    if (cached.has(this)) {
+      return cached.get(this)
+    }
+    const { color, valpha } = this.rgb()
+    const [r, g, b] = color
+    const next = this.valpha ? `rgba(${r}, ${g}, ${b}, ${valpha})` : `rgb(${r}, ${g}, ${b})`
+    cached.set(this, next)
+    return next
   }
 
   get _equalityKey() {
@@ -349,14 +359,14 @@ export class Color {
     var color2 = this.rgb()
     var p = weight
     var w = 2 * p - 1
-    var a = color1.alpha() - color2.alpha()
+    var a = color1.valpha - color2.valpha
     var w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
     var w2 = 1 - w1
     return Color.rgb(
       w1 * color1.red() + w2 * color2.red(),
       w1 * color1.green() + w2 * color2.green(),
       w1 * color1.blue() + w2 * color2.blue(),
-      color1.alpha() * p + color2.alpha() * (1 - p),
+      color1.valpha * p + color2.valpha * (1 - p),
     )
   }
 

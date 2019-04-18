@@ -1,5 +1,5 @@
-import { isDefined } from '@o/kit'
 import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
+import { isDefined } from '@o/utils'
 import React from 'react'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
@@ -11,7 +11,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
   const screen = useScreenSize()
   return (
     <SectionChrome space {...rest}>
-      <FadeIn delay={100} intersection="100px" threshold={1}>
+      <FadeIn delay={100} intersection="60px" threshold={1}>
         <SectionTitle>
           {isDefined(index) && (
             <Badge opacity={screen === 'large' ? 1 : 0}>
@@ -25,7 +25,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
             {...{
               WebkitTextFillColor: 'transparent',
               background: purpleWaveUrl,
-              backgroundSize: 200,
+              backgroundSize: 300,
             }}
             size="sm"
             sizeLineHeight={1}
@@ -58,7 +58,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={56} color="#000" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={52} color="#000" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,

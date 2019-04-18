@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "outDir": "_",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "target": "es2018",
+    "module": "esnext"
   },
   "exclude": ["_", "node_modules", "tmp", "dist"],
   "references": [

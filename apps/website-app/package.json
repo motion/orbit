@@ -1,6 +1,6 @@
 {
   "name": "@o/website-app",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,14 +9,14 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.4.0",
-    "@o/ui": "^2.4.0",
-    "@o/sync-kit": "^2.4.0",
+    "@o/kit": "^2.4.1",
+    "@o/sync-kit": "^2.4.1",
+    "@o/ui": "^2.4.1",
     "get-urls": "^8.0.0",
-    "puppeteer": "1.13.0",
-    "node-readability": "3.0.0",
     "immer": "1.7.2",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
+    "node-readability": "3.0.0",
+    "puppeteer": "1.13.0",
     "urijs": "^1.19.0"
   }
 }

@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { debounce } from 'lodash'
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useVisibility } from '../Visibility'
 import { useGet } from './useGet'
@@ -25,14 +25,14 @@ type UseScreenPositionProps = {
 
 export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
   const [pos, setPos] = useState(null)
-  const { ref, preventMeasure, debounce = 100 } = props
+  const { ref, preventMeasure, debounce: dbc = 100 } = props
   const onChange = useGet(props.onChange || setPos)
   const disable = useVisibility() === false
   const intersected = useRef(false)
   const getState = useGet({ disable, preventMeasure })
 
   const measure = useCallback(
-    _.debounce((nodeRect?) => {
+    debounce((nodeRect?) => {
       const state = getState()
       if (state.preventMeasure) return
       const callback = onChange()
@@ -50,7 +50,7 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
       }
       const rect = getRect(nodeRect || node.getBoundingClientRect())
       callback({ visible, rect })
-    }, debounce),
+    }, dbc),
     [ref],
   )
 

@@ -1,14 +1,14 @@
 import { random } from 'lodash'
 
 export const defaultSlang = {
-  dont: 'don\'t',
+  dont: "don't",
   yea: 'yes',
   ya: 'yes',
   nope: 'no',
-  wont: 'won\'t',
-  wouldnt: 'wouldn\'t',
-  hes: 'he\'s',
-  shes: 'she\'s',
+  wont: "won't",
+  wouldnt: "wouldn't",
+  hes: "he's",
+  shes: "she's",
 }
 
 export const getWordVector = (word: string, vectors, fallbackVector): number[] => {

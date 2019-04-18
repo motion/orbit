@@ -1,12 +1,12 @@
-import { createStoreContext } from '@o/kit'
 import { Theme, Title, View } from '@o/ui'
+import { createStoreContext } from '@o/use-store'
 import { throttle } from 'lodash'
 import React, { useEffect } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
 import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
-import { LinksLeft, LinksRight } from './views/Header'
+import { HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 class SiteStore {
   theme = null
@@ -58,7 +58,7 @@ export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useCreateStore()
   const screen = useScreenSize()
-  const sidebarWidth = 400
+  const sidebarWidth = 300
 
   window['SiteStore'] = siteStore
 
@@ -91,6 +91,16 @@ export function Layout(props: any) {
     return null
   }
 
+  const linkProps = {
+    width: '100%',
+    padding: 20,
+    fontSize: 22,
+    textAlign: 'left',
+    onMouseUp: () => {
+      siteStore.toggleSidebar()
+    },
+  }
+
   return (
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
@@ -106,7 +116,7 @@ export function Layout(props: any) {
           background={bg}
         >
           <NotFoundBoundary render={NotFound}>
-            <BusyIndicator isBusy={!!loadingRoute} delayMs={100} />
+            <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
             {props.children}
           </NotFoundBoundary>
         </View>
@@ -121,19 +131,15 @@ export function Layout(props: any) {
             x: siteStore.showSidebar ? 0 : sidebarWidth,
           }}
         >
+          <HeaderLink href="/" {...linkProps}>
+            Home
+          </HeaderLink>
           <LinksLeft {...linkProps} />
           <LinksRight {...linkProps} />
         </View>
       </SimpleProvider>
     </Theme>
   )
-}
-
-const linkProps = {
-  width: '100%',
-  padding: 20,
-  fontSize: 22,
-  textAlign: 'left',
 }
 
 const bg = theme => theme.background

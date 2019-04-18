@@ -1,5 +1,5 @@
 {
-  "lerna": "3.13.0",
+  "lerna": "3.13.3",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "packages": [
@@ -8,7 +8,7 @@
     "apps/*",
     "projects/*"
   ],
-  "version": "2.4.0",
+  "version": "2.4.1",
   "command": {
     "publish": {
       "registry": "https://registry.npmjs.org"

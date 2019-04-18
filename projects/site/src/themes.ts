@@ -17,3 +17,5 @@ export const themes = {
 if (module['hot']) {
   module['hot'].accept()
 }
+
+console.log(themes)

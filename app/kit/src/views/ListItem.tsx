@@ -45,9 +45,9 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
   let itemProps: Partial<ListItemProps> = null
   let normalized: NormalItem = null
   let getItemProps = null
-  const hasItem = !!(item && item.target)
+  const isBit = !!(item && item.target)
 
-  if (hasItem) {
+  if (isBit) {
     normalized = normalizeItem(item)
     itemProps = getNormalPropsForListItem(normalized)
 
@@ -79,13 +79,13 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
   }, [])
 
   const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
-  const showChildren = hasItem || showPeople
+  const showChildren = isBit || showPeople
   const childrenProps = showChildren && {
     children: (
       <>
         {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
         {/* if syncer doesn't sync any content type, we can still show a generic preview */}
-        {hasItem && !ItemView && (
+        {isBit && !ItemView && (
           <BitGenericItem item={item} normalizedItem={normalized} {...itemViewProps} />
         )}
         {showPeople && (

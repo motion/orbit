@@ -1,6 +1,6 @@
 {
   "name": "@o/custom-app",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,12 +9,12 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.4.0",
-    "@o/ui": "^2.4.0",
-    "@o/slack-app": "*",
-    "@o/gmail-app": "*",
-    "@o/postgres-app": "*",
+    "@o/gmail-app": "^2.4.1",
+    "@o/kit": "^2.4.1",
+    "@o/postgres-app": "^2.4.1",
+    "@o/slack-app": "^2.4.1",
+    "@o/ui": "^2.4.1",
     "faker": "4.1.0",
-    "lodash": "^4.17.10"
+    "lodash": "4.17.11"
   }
 }

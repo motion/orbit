@@ -39,7 +39,15 @@ export type CommonHTMLProps = Omit<
   | 'color'
 >
 
-export type ViewProps = GlossProps<CommonHTMLProps & CommonViewProps & ElevatableProps & PadProps>
+export type ViewProps = GlossProps<
+  CommonHTMLProps &
+    CommonViewProps &
+    ElevatableProps &
+    PadProps & {
+      // could make this better done in terms of type flow, its for <Input labels...
+      label?: React.ReactNode
+    }
+>
 
 export const View = gloss<ViewProps>(Base, {
   display: 'flex',

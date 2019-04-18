@@ -1,4 +1,4 @@
-import { react, useStore } from '@o/kit'
+import { react, useStore } from '@o/use-store'
 import React from 'react'
 import { useSiteStore } from '../../Layout'
 
@@ -43,6 +43,7 @@ export function OuterSpace(props) {
       }}
     >
       <iframe
+        title="Animated stars bg"
         style={{ border: 0, height: '100%' }}
         src={process.env.NODE_ENV === 'development' ? '/public/stars.html' : '/stars.html'}
       />

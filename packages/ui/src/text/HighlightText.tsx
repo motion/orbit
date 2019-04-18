@@ -20,7 +20,7 @@ export type MergeHighlightsContextProps = {
 }
 export const HighlightsContext = createContext(defaultValue)
 
-export const MergeHighlightsContext = ({ value, children }: MergeHighlightsContextProps) => (
+export const HighlightProvide = ({ value, children }: MergeHighlightsContextProps) => (
   <MergeContext
     Context={HighlightsContext}
     value={{

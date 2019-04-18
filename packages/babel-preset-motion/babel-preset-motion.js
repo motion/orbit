@@ -23,6 +23,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),
+      plug('babel-plugin-optimize-react'),
       plug('@babel/plugin-proposal-class-properties', {
         loose: true,
       }),
@@ -33,11 +34,12 @@ module.exports = function(_, givenOpts) {
       }),
       plug('@babel/preset-env', {
         loose: true,
-        // modules: false,
+        modules: false,
         targets: {
           chrome: '73',
           esmodules: true,
         },
+        exclude: ['transform-regenerator'],
         ...opts.env,
       }),
       !opts.disableTypeScript && plug('@babel/preset-typescript'),

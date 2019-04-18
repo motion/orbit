@@ -4,12 +4,11 @@ import {
   AppMainView,
   AppProps,
   createApp,
-  List,
   useSearchState,
   useStore,
   useStores,
 } from '@o/kit'
-import { Button, Calendar, Popover, View } from '@o/ui'
+import { Button, Calendar, List, Popover, View } from '@o/ui'
 import React from 'react'
 import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'

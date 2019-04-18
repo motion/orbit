@@ -139,6 +139,7 @@ const alternates: ThemeSet = {
     buttonBackgroundActiveHighlight: '#ededed',
   }),
   clear: Theme.fromStyles({
+    color: '#fff',
     background: 'rgba(0,0,0,0.2)',
     borderColor: 'rgba(0,0,0,0)',
     borderWidth: 0,
@@ -323,5 +324,3 @@ export const themes: ThemeSet = {
   dark,
   light,
 }
-
-console.log(themes)

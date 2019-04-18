@@ -2,7 +2,6 @@ import {
   AppBit,
   AppIcon,
   ensure,
-  fuzzyFilter,
   getUser,
   MarkType,
   OrbitListItemProps,
@@ -15,6 +14,7 @@ import {
   useHook,
   useStoresSimple,
 } from '@o/kit'
+import { fuzzyFilter } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'

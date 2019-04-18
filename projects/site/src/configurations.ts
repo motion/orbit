@@ -1,6 +1,7 @@
-import 'intersection-observer'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
+
+console.log('io', require('intersection-observer'))
 
 function configure() {
   const hasConfigured = window['hasConfigured']
@@ -9,10 +10,10 @@ function configure() {
 
   window['ResizeObserver'] = ResizeObserver
 
-  console.log('using icon', require('@o/kit').Icon)
-  require('@o/ui').configureUI({
-    useIcon: require('@o/kit').Icon,
-  })
+  // console.log('using icon', require('@o/kit').Icon)
+  // require('@o/ui').configureUI({
+  //   useIcon: require('@o/kit').Icon,
+  // })
 
   // just for now since its spitting out so many
   setConfig({

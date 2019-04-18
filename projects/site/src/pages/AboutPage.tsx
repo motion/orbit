@@ -1,4 +1,4 @@
-import '@o/nucleo'
+import { mount, route } from 'navi'
 import React from 'react'
 import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'
@@ -6,6 +6,13 @@ import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { FeetSection } from './HomePage/FooterSection'
 import { LegsSection } from './HomePage/MissionMottoSection'
+
+export default mount({
+  '/': route({
+    title: 'About',
+    view: AboutPage,
+  }),
+})
 
 export function AboutPage() {
   const siteStore = useSiteStore()

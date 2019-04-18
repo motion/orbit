@@ -28,6 +28,7 @@ import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
 import { useParallax } from '../HomePage'
 import { OuterSpace } from './OuterSpace'
+import { useScreenVal } from './SpacedPageContent'
 
 let allTitles = {
   large: 'Amazingly easy internal apps.',
@@ -37,11 +38,11 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Build powerful apps and internal tools without configuration or servers`,
+    `Code powerful apps and internal tools without configuration or servers`,
     `with a vertically integrated platform, from UI kit to dev environment to deploy.`,
   ],
   medium: [
-    `Build powerful internal tools without configuration or servers.`,
+    `Code powerful internal tools without configuration or servers.`,
     `Vertically integrated UI kit, dev environment & deploy.`,
   ],
   small: [`Code internal tools, no config or servers.`, `UI kit, dev environment & deploy.`],
@@ -58,7 +59,7 @@ function HeadText() {
   const [measured, setMeasured] = useState(false)
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const titleFit = useTextFit({ updateKey: fontsLoaded })
+  const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   useEffect(() => {
@@ -75,18 +76,19 @@ function HeadText() {
           forwardRef={titleFit.ref}
           style={titleFit.style}
           fontWeight={100}
-          margin={[0, 'auto']}
+          margin={[0, '-5%']}
+          alignSelf="center"
           // transition="transform ease 160ms"
           transformOrigin="top center"
           selectable
           textAlign="center"
-          whiteSpace="pre"
+          whiteSpace="nowrap"
         >
           {allTitles[screen]}
         </TitleText>
       </FadeIn>
 
-      <Space size="xxl" />
+      <Space size={useScreenVal('sm', 'lg', 'xxl')} />
 
       <Paragraph
         style={{ ...pFit.style, height: 'auto' }}
@@ -104,7 +106,7 @@ function HeadText() {
         <FadeIn disable={!measured} delay={300}>
           {texts[1]}
         </FadeIn>
-        <Smaller fontSize={screen === 'large' ? '60%' : '80%'}>
+        <Smaller fontSize={screen === 'large' ? '70%' : '80%'}>
           <FadeIn {...fadeUpProps} delay={500}>
             {subTexts[screen]}
           </FadeIn>
@@ -243,7 +245,11 @@ export function HeadSection(props) {
                     right={0}
                     bottom={10}
                   />
-                  <RoundButton primary="#290C3C" padding={[10, 20]}>
+                  <RoundButton
+                    aria-label="See how Orbit Works"
+                    primary="#290C3C"
+                    padding={[10, 20]}
+                  >
                     See how Orbit works
                   </RoundButton>
                 </View>
@@ -315,6 +321,7 @@ const DownloadButton = props => {
     <FadeIn>
       <Center bottom="auto" top={-20}>
         <RoundButton
+          aria-label="Download Button"
           width={159}
           height={45}
           onClick={e => {

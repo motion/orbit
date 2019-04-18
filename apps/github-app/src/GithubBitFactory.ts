@@ -1,4 +1,6 @@
 import { Bit } from '@o/kit'
+import { SyncerUtils } from '@o/sync-kit'
+import { uniqBy } from 'lodash'
 import {
   GithubBitData,
   GithubComment,
@@ -7,16 +9,12 @@ import {
   GithubPerson,
   GithubPullRequest,
 } from './GithubModels'
-import { uniqBy } from 'lodash'
-import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of github models.
  */
 export class GithubBitFactory {
-
-  constructor(private utils: SyncerUtils) {
-  }
+  constructor(private utils: SyncerUtils) {}
 
   /**
    * Creates a new bit from a given Github issue.
@@ -33,10 +31,10 @@ export class GithubBitFactory {
         return {
           author: comment.author
             ? {
-              avatarUrl: comment.author.avatarUrl,
-              login: comment.author.login,
-              email: comment.author.email,
-            }
+                avatarUrl: comment.author.avatarUrl,
+                login: comment.author.login,
+                email: comment.author.email,
+              }
             : undefined,
           createdAt: comment.createdAt,
           body: comment.body,
@@ -44,10 +42,10 @@ export class GithubBitFactory {
       }),
       author: issue.author
         ? {
-          avatarUrl: issue.author.avatarUrl,
-          login: issue.author.login,
-          email: issue.author.email,
-        }
+            avatarUrl: issue.author.avatarUrl,
+            login: issue.author.login,
+            email: issue.author.email,
+          }
         : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,
@@ -140,5 +138,4 @@ export class GithubBitFactory {
       photo: commit.avatarUrl,
     })
   }
-
 }

@@ -25,6 +25,13 @@ import { MDX } from '../views/MDX'
 import Buttons from './DocsButtons.mdx'
 import Cards from './DocsCards.mdx'
 
+export default mount({
+  '/': route({
+    title: 'Docs',
+    view: DocsPage,
+  }),
+})
+
 const views = {
   buttons: () => <Buttons />,
   cards: () => <Cards />,
@@ -62,13 +69,6 @@ class DocsPageStore {
 
   getView = react(() => this.selected && views[this.selected.id], this.setSubView)
 }
-
-export default mount({
-  '/': route({
-    title: 'Docs',
-    view: DocsPage,
-  }),
-})
 
 function DocsPage() {
   const siteStore = useSiteStore()

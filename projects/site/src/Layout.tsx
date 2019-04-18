@@ -116,7 +116,7 @@ export function Layout(props: any) {
           background={bg}
         >
           <NotFoundBoundary render={NotFound}>
-            <BusyIndicator isBusy={!!loadingRoute} delayMs={100} />
+            <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
             {props.children}
           </NotFoundBoundary>
         </View>

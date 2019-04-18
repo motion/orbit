@@ -2,11 +2,8 @@ import { ProvideUI } from '@o/ui'
 import { createBrowserNavigation, lazy, mount, route } from 'navi'
 import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
-import { Router } from 'react-navi'
+import { Router, View } from 'react-navi'
 import { Layout } from './Layout'
-import { AboutPage } from './pages/AboutPage'
-import { AppsPage } from './pages/AppsPage'
-import { BetaPage } from './pages/BetaPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
 
@@ -19,15 +16,15 @@ const routes = mount({
   '/docs': lazy(() => import('./pages/DocsPage')),
   '/about': route({
     title: 'About',
-    view: AboutPage,
+    view: lazy(() => import('./pages/AboutPage')),
   }),
   '/beta': route({
     title: 'Beta',
-    view: BetaPage,
+    view: lazy(() => import('./pages/BetaPage')),
   }),
   '/apps': route({
     title: 'Apps',
-    view: AppsPage,
+    view: lazy(() => import('./pages/AppsPage')),
   }),
 })
 
@@ -42,12 +39,14 @@ export async function getPageForPath() {
 
 export const SiteRoot = hot(() => {
   return (
-    <ProvideUI themes={themes}>
-      <Suspense fallback={null}>
+    <Router navigation={Navigation}>
+      <ProvideUI themes={themes}>
         <Layout>
-          <Router navigation={Navigation} />
+          <Suspense fallback={null}>
+            <View />
+          </Suspense>
         </Layout>
-      </Suspense>
-    </ProvideUI>
+      </ProvideUI>
+    </Router>
   )
 })

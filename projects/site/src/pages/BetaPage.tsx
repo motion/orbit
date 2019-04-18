@@ -1,4 +1,5 @@
 import { Image, Space } from '@o/ui'
+import { mount, route } from 'navi'
 import React from 'react'
 import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'
@@ -8,6 +9,13 @@ import { SectionContent } from '../views/SectionContent'
 import { EarlyAccessSection } from './HomePage/EarlyAccessBetaSection'
 import { Footer } from './HomePage/FooterSection'
 import { bottomSeparator } from './HomePage/SecuritySection'
+
+export default mount({
+  '/': route({
+    title: 'Beta',
+    view: BetaPage,
+  }),
+})
 
 export function BetaPage() {
   const siteStore = useSiteStore()

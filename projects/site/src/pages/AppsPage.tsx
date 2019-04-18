@@ -1,4 +1,5 @@
 import { Col, FullScreen, Grid, Space, Theme, View } from '@o/ui'
+import { mount, route } from 'navi'
 import React from 'react'
 import earth from '../../public/images/earth.jpg'
 import { IS_CHROME } from '../constants'
@@ -12,6 +13,13 @@ import { TitleTextSub } from './HomePage/AllInOnePitchDemoSection'
 import { FeetSection } from './HomePage/FooterSection'
 import { SubParagraph } from './HomePage/MissionMottoSection'
 import { SpacedPageContent } from './HomePage/SpacedPageContent'
+
+export default mount({
+  '/': route({
+    title: 'Apps',
+    view: AppsPage,
+  }),
+})
 
 export function AppsPage() {
   const siteStore = useSiteStore()

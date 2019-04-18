@@ -137,7 +137,7 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
             color: '#fff',
           }}
           icon="menu"
-          iconSize={28}
+          iconSize={16}
           size={2}
           chromeless
           transform={{

@@ -23,6 +23,7 @@ import { MDX } from '../views/MDX'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
 
 const views = {
+  install: () => import('./DocsPage/DocsInstall.mdx'),
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
   cards: () => import('./DocsPage/DocsCards.mdx'),
 }
@@ -30,8 +31,9 @@ const views = {
 export default compose(
   withView(req => {
     const id = req.path.slice(1)
+    const item = uiItems.find(x => x.id === id)
     return (
-      <DocsPage title={id ? uiItems.find(x => x.id === id).title : 'Welcome'}>
+      <DocsPage title={id && item ? item.title : 'Welcome'}>
         <View />
       </DocsPage>
     )
@@ -44,6 +46,11 @@ export default compose(
     }),
     '/:id': route(async req => {
       let id = req.params.id
+      if (!views[id]) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
       let ChildView = (await views[id]()).default || (() => <div>nada {id}</div>)
       return {
         view: <ChildView />,
@@ -179,15 +186,17 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   )
 })
 
+const titleItem = { titleProps: { fontWeight: 600, size: 1.2 } }
+
 const docsItems = [
   {
     selectable: false,
-    children: <SubTitle>Docs</SubTitle>,
+    children: <SubTitle>Start</SubTitle>,
   },
   {
-    id: 'surfaces',
+    id: 'install',
     title: 'Getting started',
-    titleProps: { fontWeight: 600, size: 1.2 },
+    ...titleItem,
   },
 ]
 

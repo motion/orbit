@@ -63,7 +63,7 @@ export function Card(props: CardProps) {
     padding,
   }
   return (
-    <Theme alternate={isSelected ? 'selected' : alt || null}>
+    <Theme alt={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
         <SizedSurface
           borderWidth={1}

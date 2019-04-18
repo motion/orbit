@@ -3,7 +3,6 @@ import { ThemeObject } from '@o/css'
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
 export type GlossOptions = {
-  tagName?: string
   toColor?: Function
   isColor?: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }

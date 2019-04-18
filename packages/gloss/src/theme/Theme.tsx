@@ -1,113 +1,56 @@
 import { ThemeObject } from '@o/css'
-import React, { useContext, useMemo } from 'react'
-import { getAlternateTheme } from '../helpers/preProcessTheme'
-import { selectThemeSubset } from '../helpers/selectThemeSubset'
-import { ThemeContext } from './ThemeContext'
-import { SimpleStyleObject, ThemeMaker } from './ThemeMaker'
-
-const MakeTheme = new ThemeMaker()
-const makeName = () => `theme-${Math.random}`.slice(0, 15)
-const baseThemeName = makeName()
-const themeCache = {}
+import React, { memo, useContext, useMemo } from 'react'
+import { Config } from '../config'
+import { ThemeContext, ThemeContextType } from './ThemeContext'
+import { SimpleStyleObject } from './ThemeMaker'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 
 type ThemeProps = {
   theme?: string | SimpleStyleObject
   name?: string
-  select?: ThemeSelect
+  themeSelect?: ThemeSelect
   children: any
-  alternate?: string
+  alt?: string
 }
 
-export function Theme(props: ThemeProps) {
-  const { alternate, theme, name, select, children } = props
-  const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
-  const contextTheme = useContext(ThemeContext)
+const themeContexts = new WeakMap()
 
-  if (contextTheme.allThemes[nextName]) {
+export const Theme = memo((props: ThemeProps) => {
+  const { theme, name, children } = props
+  const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
+  const prev = useContext(ThemeContext)
+
+  if (prev.allThemes[nextName]) {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
-  if (typeof alternate === 'string') {
-    return <ThemeByAlternate {...props} />
+  const nextTheme = Config.preProcessTheme(props, prev.activeTheme)
+  let nextThemeObj = themeContexts.get(nextTheme)
+
+  if (!nextThemeObj) {
+    nextThemeObj = createThemeFromObject(props, prev, nextTheme)
+    themeContexts.set(nextTheme, nextThemeObj)
   }
 
-  // pass through if no theme
-  if (!select && !(theme || name)) {
+  if (nextTheme === prev.activeTheme) {
     return children
   }
 
-  return <ThemeByObject {...props} />
-}
+  return <ThemeContext.Provider value={nextThemeObj}>{children}</ThemeContext.Provider>
+})
 
-function ThemeByAlternate(props: ThemeProps) {
-  const contextTheme = useContext(ThemeContext)
-  const { alternate, children } = props
-  const memoValue = useMemo(() => {
-    const next = getAlternateTheme(alternate, contextTheme.activeTheme)
-    const nextName = `${contextTheme.activeThemeName}.${alternate}`
-    return {
-      ...contextTheme,
-      activeThemeName: nextName,
-      activeTheme: next,
-    }
-  }, [alternate])
-
-  return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
-}
-
-function ThemeByObject(props: ThemeProps) {
-  const { theme, select, children } = props
-  const contextTheme = useContext(ThemeContext)
-  const memoValue = useMemo(() => {
-    // get next theme
-    let nextTheme
-    let uniqThemeName = baseThemeName
-
-    // make theme right here from a color string...
-    if (typeof theme === 'string') {
-      // theme from color string
-      if (!themeCache[theme]) {
-        // cache themes, we can't have that many right...
-        themeCache[theme] = MakeTheme.fromColor(theme)
-        uniqThemeName = theme
-      }
-      nextTheme = themeCache[theme]
-    } else if (!!theme) {
-      // theme from object
-      nextTheme = MakeTheme.fromStyles(theme)
-      uniqThemeName = makeName()
-    }
-
-    // function to select a sub-theme object
-    if (select) {
-      if (typeof select === 'string') {
-        nextTheme = selectThemeSubset(select, contextTheme.activeTheme)
-      } else {
-        nextTheme = select(contextTheme.activeTheme) || contextTheme.activeTheme
-      }
-      uniqThemeName = makeName()
-    }
-
-    // inherit from previous theme
-    // this could be easily configurable
-    nextTheme = proxyParentTheme(contextTheme.activeTheme, nextTheme)
-
-    return {
-      allThemes: {
-        ...contextTheme.allThemes,
-        [uniqThemeName]: nextTheme,
-      },
-      activeThemeName: uniqThemeName,
-      activeTheme: nextTheme,
-    }
-  }, [theme, select])
-  return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
+function createThemeFromObject(props: ThemeProps, prev: ThemeContextType, next: ThemeObject) {
+  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}`
+  return {
+    ...prev,
+    activeThemeName,
+    activeTheme: next,
+  }
 }
 
 function ThemeByName({ name, children }: ThemeProps) {
-  const { activeTheme, allThemes } = React.useContext(ThemeContext)
+  const { allThemes } = React.useContext(ThemeContext)
   const memoValue = useMemo(() => {
     if (!name) {
       return children
@@ -115,7 +58,7 @@ function ThemeByName({ name, children }: ThemeProps) {
     if (!allThemes || !allThemes[name]) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
-    const nextTheme = proxyParentTheme(activeTheme, allThemes[name])
+    const nextTheme = allThemes[name]
     return {
       allThemes,
       activeTheme: nextTheme,
@@ -123,17 +66,4 @@ function ThemeByName({ name, children }: ThemeProps) {
     }
   }, [name])
   return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
-}
-
-function proxyParentTheme(parent: ThemeObject | null | undefined, next: ThemeObject) {
-  if (!parent) {
-    return next
-  }
-  return next
-  // could be an option...
-  // return new Proxy(next, {
-  //   get(target, key) {
-  //     return Reflect.get(target, key) || Reflect.get(parent, key)
-  //   },
-  // })
 }

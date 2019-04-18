@@ -1,5 +1,12 @@
 import { ColorLike, CSSPropertySet, px } from '@o/css'
-import Gloss, { Col, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
+import Gloss, {
+  Col,
+  forwardTheme,
+  gloss,
+  propsToStyles,
+  psuedoStyleTheme,
+  useTheme,
+} from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'

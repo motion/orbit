@@ -178,7 +178,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const iconElement = iconBefore && showIcon && showIcon && getIcon(props)
 
   return (
-    <Theme alternate={isSelected ? 'selected' : null}>
+    <Theme alt={isSelected ? 'selected' : null}>
       {above}
       {!!separator && (
         <Theme name={activeThemeName}>
@@ -200,7 +200,6 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         noInnerElement={!iconElement}
         after={<BorderBottom right={5} left={5} opacity={0.2} />}
         paddingLeft={indent ? indent * 22 : undefined}
-        background={isSelected ? undefined : 'transparent'}
         {...disablePsuedoProps}
         {...surfaceProps}
       >

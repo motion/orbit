@@ -1,4 +1,4 @@
-import { forwardTheme, useTheme } from '@o/gloss'
+import { Theme, useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef, useContext } from 'react'
 import { UIContext } from '../helpers/contexts'
@@ -27,8 +27,8 @@ function ButtonInner(buttonProps: ButtonProps) {
   const props = useSurfaceProps(buttonProps)
   return (
     <SizedSurface
-      themeSelect="button"
       borderPosition="inside"
+      userSelect="none"
       tagName="button"
       alignItems="center"
       flexDirection="row"
@@ -42,6 +42,7 @@ function ButtonInner(buttonProps: ButtonProps) {
       sizeHeight
       sizeLineHeight
       justifyContent="center"
+      transition="background ease 100ms"
       borderWidth={selectDefined(theme.borderWidth, 1)}
       glint
       glintBottom
@@ -53,7 +54,10 @@ function ButtonInner(buttonProps: ButtonProps) {
   )
 }
 
-export const Button = forwardRef(function Button(props: ButtonProps, ref) {
+export const Button = forwardRef(function Button(
+  { alt, theme, themeSelect = 'button', ...props }: ButtonProps,
+  ref,
+) {
   const uiContext = useContext(UIContext)
 
   let element = null
@@ -63,5 +67,9 @@ export const Button = forwardRef(function Button(props: ButtonProps, ref) {
     element = <ButtonInner forwardRef={ref} {...props} />
   }
 
-  return forwardTheme({ children: element, theme: props.theme })
+  return (
+    <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
+      {element}
+    </Theme>
+  )
 })

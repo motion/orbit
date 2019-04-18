@@ -12,20 +12,18 @@ export type AlphaColorProps = {
     color?: any
     alpha?: any
   }
+  activeStyle?: {
+    color?: any
+    alpha?: any
+  }
 }
 
 export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const color = props.color || theme.color
   const alpha = props.alpha || theme.alpha
-  const hoverColor =
-    (props.hoverStyle && props.hoverStyle.color) || props.hoverColor || theme.colorHover || color
-  const hoverAlpha =
-    (props.hoverStyle && props.hoverStyle.alpha) || props.alphaHover || theme.alphaHover
-
-  let next: CSSPropertySet | null = null
+  const next: CSSPropertySet | null = {}
 
   if (color) {
-    next = next || {}
     if (color !== 'inherit' && typeof alpha === 'number') {
       next.color = `${toColor(color).alpha(alpha)}`
     } else {
@@ -33,18 +31,43 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
     }
   }
 
-  if (hoverColor) {
-    next = next || {}
-    if (hoverColor !== 'inherit' && typeof hoverAlpha === 'number') {
-      next['&:hover'] = {
-        color: `${toColor(hoverColor).alpha(hoverAlpha)}`,
+  mergePsuedoColors('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
+  mergePsuedoColors(
+    '&:active',
+    'activeStyle',
+    'colorActive',
+    'alphaActive',
+    next,
+    color,
+    props,
+    theme,
+  )
+
+  return mergeStyles(previous, next)
+}
+
+function mergePsuedoColors(
+  key: string,
+  styleKey: string,
+  colorKey: string,
+  alphaKey,
+  next,
+  parentColor,
+  props,
+  theme,
+) {
+  const color = (props[styleKey] && props[styleKey].color) || theme[colorKey] || parentColor
+  const alpha = (props[styleKey] && props[styleKey].alpha) || theme[alphaKey]
+
+  if (color) {
+    if (color !== 'inherit' && typeof alpha === 'number') {
+      next[key] = {
+        color: `${toColor(color).alpha(alpha)}`,
       }
-    } else if (color !== hoverColor) {
-      next['&:hover'] = {
-        color: hoverColor,
+    } else if (parentColor !== color) {
+      next[key] = {
+        color: color,
       }
     }
   }
-
-  return mergeStyles(previous, next)
 }

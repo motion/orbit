@@ -23,7 +23,7 @@ const LinkText = gloss(View, {
 export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
 export function Link({
   children,
-  fontSize = 16,
+  fontSize = 14,
   href,
   width,
   margin,
@@ -41,8 +41,10 @@ export function Link({
       <SimpleText
         fontSize={fontSize}
         alpha={0.65}
-        fontWeight={400}
+        fontWeight={500}
         hoverStyle={{ alpha: 1 }}
+        activeStyle={{ alpha: 0.7 }}
+        transition="all ease 300ms"
         {...props}
       >
         {external ? (
@@ -196,7 +198,7 @@ export const LinkSection = gloss({
   flex: 4,
   flexFlow: 'row',
   justifyContent: 'space-between',
-  padding: [0, '2.5%'],
+  padding: [0, '4%'],
   maxWidth: 380,
   alignItems: 'center',
 })

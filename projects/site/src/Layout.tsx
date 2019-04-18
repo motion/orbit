@@ -1,12 +1,12 @@
-import { Theme, Title, View } from '@o/ui'
+import { Button, FullScreen, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { throttle } from 'lodash'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
 import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
-import { HeaderLink, LinksLeft, LinksRight } from './views/Header'
+import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 class SiteStore {
   theme = null
@@ -104,6 +104,7 @@ export function Layout(props: any) {
   return (
     <Theme name={siteStore.theme}>
       <SimpleProvider value={siteStore}>
+        <PeekHeader />
         <View
           minHeight="100vh"
           minWidth="100vw"
@@ -120,23 +121,36 @@ export function Layout(props: any) {
             {props.children}
           </NotFoundBoundary>
         </View>
-        <View
-          position="fixed"
-          top={0}
-          right={0}
-          width={sidebarWidth}
-          height="100vh"
-          transition={transition}
-          transform={{
-            x: siteStore.showSidebar ? 0 : sidebarWidth,
-          }}
-        >
-          <HeaderLink href="/" {...linkProps}>
-            Home
-          </HeaderLink>
-          <LinksLeft {...linkProps} />
-          <LinksRight {...linkProps} />
-        </View>
+        <Theme name="home">
+          <View
+            position="fixed"
+            top={0}
+            right={0}
+            width={sidebarWidth}
+            height="100vh"
+            transition={transition}
+            transform={{
+              x: siteStore.showSidebar ? 0 : sidebarWidth,
+            }}
+          >
+            <Button
+              position="absolute"
+              top={20}
+              right={20}
+              chromeless
+              icon="cross"
+              iconSize={16}
+              zIndex={1000}
+              cursor="pointer"
+              onClick={siteStore.toggleSidebar}
+            />
+            <HeaderLink href="/" {...linkProps}>
+              Home
+            </HeaderLink>
+            <LinksLeft {...linkProps} />
+            <LinksRight {...linkProps} />
+          </View>
+        </Theme>
       </SimpleProvider>
     </Theme>
   )
@@ -149,5 +163,57 @@ function NotFound() {
     <View>
       <Title>Not found</Title>
     </View>
+  )
+}
+
+function PeekHeader() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const el = document.documentElement
+
+    let top = el.scrollTop
+    let direction: 'down' | 'up' = 'down'
+
+    const onScroll = throttle(() => {
+      const next = el.scrollTop
+      direction = next >= top ? 'down' : 'up'
+
+      // avoid small moves
+      const diff = direction === 'down' ? next - top : top - next
+      if (diff < 150) {
+        return
+      }
+
+      top = next
+
+      if (direction === 'up' && top > 300) {
+        setShow(true)
+      } else {
+        setShow(false)
+      }
+    }, 100)
+
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
+  return (
+    <Theme name="home">
+      <FullScreen
+        zIndex={100000000}
+        position="fixed"
+        bottom="auto"
+        transition="all ease 200ms"
+        opacity={show ? 1 : 0}
+        transform={{ y: show ? 0 : -40 }}
+        className="peek-header"
+      >
+        <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
+      </FullScreen>
+    </Theme>
   )
 }

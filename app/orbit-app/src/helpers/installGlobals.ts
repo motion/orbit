@@ -17,6 +17,7 @@
 import { Mediator } from '@o/bridge'
 import { getGlobalConfig } from '@o/config'
 import { css, toColor } from '@o/gloss'
+import { themes } from '@o/kit'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import r2 from '@o/r2'
@@ -70,6 +71,7 @@ window['toJS'] = toJS
 window['stringify'] = JSON.stringify.bind(JSON)
 window['AppActions'] = AppActions
 window['Models'] = Models
+window['Themes'] = themes
 
 const { isEqual } = require('@o/fast-compare')
 window['isEqualDebug'] = (a, b) => {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { HighlightText } from '../text/HighlightText'
-import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
+import { ItemPropsContext } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'
 
@@ -9,7 +9,7 @@ export type TaskLike = {
   comments: TaskCommentLike[]
 }
 
-export function Task(rawProps: TaskLike & Partial<ItemsPropsContextType>) {
+export function Task(rawProps: TaskLike) {
   const itemProps = useContext(ItemPropsContext)
   const { body, oneLine, renderText, comments } = { ...itemProps, ...rawProps }
   if (renderText) {

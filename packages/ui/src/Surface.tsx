@@ -1,12 +1,5 @@
 import { ColorLike, CSSPropertySet, px } from '@o/css'
-import Gloss, {
-  Col,
-  forwardTheme,
-  gloss,
-  propsToStyles,
-  psuedoStyleTheme,
-  useTheme,
-} from '@o/gloss'
+import Gloss, { Col, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
@@ -109,7 +102,7 @@ const iconTransform = {
   y: 0.5,
 }
 
-const acceptsIcon = child => child.type.acceptsIconProps === true
+const acceptsIcon = child => child && child.type.acceptsIconProps === true
 
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = Context.useProps(direct)
@@ -229,10 +222,11 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         {before}
         {!!badge && (
           <Badge
+            alt={alt}
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
-            top="-20%"
-            left="-20%"
+            top="-18%"
+            left="-18%"
             size={size}
             {...badgeProps}
           >
@@ -251,6 +245,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           >
             {glint && !props.chromeless && (
               <Glint
+                alt={alt}
                 size={size}
                 borderLeftRadius={borderLeftRadius}
                 borderRightRadius={borderRightRadius}
@@ -259,6 +254,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             )}
             {glintBottom && !props.chromeless && (
               <Glint
+                alt={alt}
                 size={size}
                 bottom={0}
                 borderLeftRadius={borderLeftRadius}
@@ -300,7 +296,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {...elementProps}
             surfacePadX={getPadX(getPadding(props).padding)}
             disabled={disabled}
-            tagName={tagName}
           >
             {children}
           </Element>

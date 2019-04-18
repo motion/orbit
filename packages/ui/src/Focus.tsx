@@ -1,7 +1,7 @@
 import { createStoreContext, react, useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { useOnUnmount } from './hooks/useOnUnmount'
-import { useVisibilityContext } from './Visibility'
+import { useVisibilityStore } from './Visibility'
 
 export class FocusStore {
   active = -1
@@ -73,10 +73,10 @@ export const ProvideFocus = context.Provider
 // attaches them as focsed when visibile
 export function useFocusableItem(id: string, forceVisible?: boolean) {
   const focusStore = useFocusStore()
-  const getVisible = useVisibilityContext().getVisible
+  const visStore = useVisibilityStore()
 
   useReaction(
-    () => selectDefined(forceVisible, getVisible()),
+    () => selectDefined(forceVisible, visStore.visible),
     isVisible => {
       if (isVisible) {
         focusStore.mountItem(id)

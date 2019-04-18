@@ -1,7 +1,6 @@
-import { Icon, Popover, preventDefault, View } from '@o/ui'
+import { Icon, ListItemProps, Popover, preventDefault, View } from '@o/ui'
 import { flow, memoize } from 'lodash'
 import React, { useCallback } from 'react'
-import { OrbitListItemProps } from '../views/ListItem'
 import { SearchItemShareProvide } from '../views/SearchItemProvide'
 import { ShareMenu } from '../views/ShareMenu'
 import { useStores } from './useStores'
@@ -57,7 +56,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
 export function useShareMenu() {
   const { themeStore } = useStores({ optional: ['themeStore'] })
   const getShareMenuItemProps = useCallback(
-    (item: OrbitListItemProps, _index?, _items?) => {
+    (item: ListItemProps) => {
       if (themeStore) {
         return getItemShareMenu(item, themeStore)
       }

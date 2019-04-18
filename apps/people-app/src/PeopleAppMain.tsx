@@ -3,7 +3,6 @@ import {
   Bit,
   BitModel,
   ensure,
-  ListItem,
   loadOne,
   NLP,
   observeMany,
@@ -11,7 +10,7 @@ import {
   useStore,
   useStores,
 } from '@o/kit'
-import { gloss, RoundButton, Row, Space, SubTitle } from '@o/ui'
+import { gloss, ListItem, RoundButton, Row, Space, SubTitle } from '@o/ui'
 import * as React from 'react'
 
 const getBitTexts = (bits: Bit[]) => {

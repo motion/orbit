@@ -15,7 +15,7 @@ export type SelectableListProps = SelectableProps &
   }
 
 export function useSelectableProps(props: SelectableListProps, ref) {
-  const selectableStore = props.selectableStore || useSelectableStore(props)
+  const selectableStore = useSelectableStore(props)
   const internalRef = useRef<DynamicListControlled>(null)
   const listRef = props.listRef || ref || internalRef
 

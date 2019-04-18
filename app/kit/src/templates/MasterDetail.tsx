@@ -1,20 +1,21 @@
 import {
   Layout,
+  ListItemProps,
   Pane,
   PaneProps,
   SearchableList,
   SearchableListProps,
   Sidebar,
+  SidebarProps,
   useMedia,
   View,
 } from '@o/ui'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
-import { OrbitListItemProps } from '../views/ListItem'
 
 export type MasterDetailProps = SearchableListProps & {
-  children: React.ReactNode | ((selected: OrbitListItemProps) => React.ReactNode)
+  children: React.ReactNode | ((selected: ListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
-  masterProps?: PaneProps
+  masterProps?: PaneProps | SidebarProps
   detailProps?: PaneProps
   showSidebar?: boolean
 }
@@ -69,10 +70,16 @@ export function MasterDetail({
   if (isSmall) {
     return (
       <>
-        <Sidebar hidden={showSidebar === false} floating zIndex={1} elevation={5}>
+        <Sidebar
+          hidden={showSidebar === false}
+          floating
+          zIndex={10000000}
+          elevation={5}
+          {...masterProps as SidebarProps}
+        >
           {master}
         </Sidebar>
-        <View flex={1} zIndex={0}>
+        <View flex={1} zIndex={0} {...detailProps}>
           {detail}
         </View>
       </>
@@ -86,7 +93,7 @@ export function MasterDetail({
         minWidth={300}
         maxWidth={450}
         {...showSidebar === false && { width: 0 }}
-        {...masterProps}
+        {...masterProps as PaneProps}
       >
         {master}
       </Pane>

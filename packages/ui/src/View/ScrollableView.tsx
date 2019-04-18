@@ -1,10 +1,10 @@
-import { gloss } from '@o/gloss'
+import { Col, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
 import { getPadding, PaddedView } from './PaddedView'
-import { View, ViewProps } from './View'
+import { ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
@@ -81,7 +81,7 @@ const hideScrollbarsStyle = {
   },
 }
 
-const ScrollableInner = gloss(View, {
+const ScrollableInner = gloss(Col, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
 }).theme(props => {

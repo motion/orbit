@@ -1,4 +1,3 @@
-import { Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -12,6 +11,7 @@ import {
   Section,
   Select,
   Tab,
+  Table,
   Tabs,
   useFetch,
   useForm,

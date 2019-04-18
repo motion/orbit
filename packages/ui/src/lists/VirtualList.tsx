@@ -1,13 +1,14 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, { forwardRef, RefObject, useCallback, useRef } from 'react'
+import React, { forwardRef, RefObject, useCallback } from 'react'
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
-import { HandleSelection } from './ListItem'
+import { ListItemProps } from './ListItem'
+import { HandleSelection } from './ListItemSimple'
 import { SelectableDynamicList } from './SelectableList'
-import { SelectableProps, SelectableStore } from './SelectableStore'
+import { SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualListItem, VirtualListItemProps } from './VirtualListItem'
 
 export type VirtualListProps<A> = SelectableProps &
@@ -29,8 +30,7 @@ const { useProps } = createContextualProps<Partial<VirtualListProps<any>>>()
 
 export function VirtualList(virtualProps: VirtualListProps<any>) {
   const { pressDelay = 150, ...props } = useProps(virtualProps)
-  const fallback = useRef<SelectableStore>(null)
-  const selectableStoreRef = props.selectableStoreRef || fallback
+  const selectableStore = useSelectableStore(props)
   const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
   const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = props
 
@@ -38,7 +38,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
       const item = items[index]
       let mouseDownTm = null
-      const itemProps = {
+      const itemProps: ListItemProps = {
         ...props.itemProps,
         ...(getItemProps && getItemProps(item, index, items)),
       }
@@ -57,7 +57,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             clearTimeout(mouseDownTm)
             if (finishSelect) {
               finishSelect = false
-              selectableStoreRef.current.setRowActive(index, e)
+              selectableStore.setRowActive(index, e)
             }
             if (itemProps.onMouseUp) {
               itemProps.onMouseUp(e)
@@ -67,7 +67,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             clearTimeout(mouseDownTm)
             // add delay when sortable
             const setRowActive = () => {
-              selectableStoreRef.current.setRowMouseDown(index, e)
+              selectableStore.setRowMouseDown(index, e)
               finishSelect = false
             }
             if (props.sortable) {
@@ -77,8 +77,8 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
               setRowActive()
             }
           }, [])}
-          onMouseEnter={useCallback(() => selectableStoreRef.current.onHoverRow(index), [])}
-          selectableStore={selectableStoreRef.current}
+          onMouseEnter={useCallback(() => selectableStore.onHoverRow(index), [])}
+          selectableStore={selectableStore}
           {...item}
           index={index}
           realIndex={index}
@@ -86,12 +86,12 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
         />
       )
     }),
-    [props.sortable, pressDelay, onSelect, onOpen, getItemProps, items, selectableStoreRef.current],
+    [props.sortable, pressDelay, onSelect, onOpen, getItemProps, items, selectableStore],
   )
 
   return (
     <SortableList
-      selectableStoreRef={selectableStoreRef}
+      selectableStore={selectableStore}
       itemCount={props.items.length}
       itemData={props.items}
       shouldCancelStart={isRightClick}

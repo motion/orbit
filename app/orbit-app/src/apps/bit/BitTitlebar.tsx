@@ -1,7 +1,6 @@
 import { gloss, Row } from '@o/gloss'
-import { normalizeItem } from '@o/kit'
 import { Bit } from '@o/models'
-import { Button, Space, SpaceGroup, View } from '@o/ui'
+import { Button, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
 import * as React from 'react'
 
 // import { AppActions } from '../../../actions/appActions/AppActions'

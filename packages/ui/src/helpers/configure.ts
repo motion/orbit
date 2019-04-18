@@ -1,19 +1,42 @@
 import { fromEntries } from '@o/utils'
 import sum from 'hash-sum'
-import { Context, createContext, isValidElement, useState } from 'react'
+import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
+import { ListItemProps } from '../lists/ListItem'
+import { ListItemViewProps } from '../lists/ListItemViewProps'
+import { Bit } from './BitLike'
 
-let hasSet = false
-
-type ConfigureOpts = {
+export type ConfigureUIProps = {
+  // configure a custom icon for all surfaces
   useIcon?: any
-  StoreContext?: Context<any>
+
+  // set a custom item key getter for lists/tables
   getItemKey?: (item: any) => string
+
+  // set a custom persistence function for appState
   useAppState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+
+  // set a custom persistence function for userState
   useUserState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+
+  // you can control how list items and bits render
+  customItems?: {
+    // maps Bit.contentType to a custom view
+    [key: string]: CustomItemDescription
+  }
 
   // can be used for generically mapping an item in a table/list, back into something you prefer onSelect
   // TODO do the reverse (itemToProps)
   propsToItem: (props: any) => any
+
+  // (INTERNAL) use your own store context
+  StoreContext?: Context<any>
+}
+
+export type CustomItemView = FunctionComponent<ListItemViewProps & { item: Bit }>
+export type CustomItemDescription = {
+  listItem?: CustomItemView
+  item?: CustomItemView
+  getItemProps?: (item: Bit) => ListItemProps
 }
 
 // safe for react components
@@ -22,7 +45,11 @@ const hash = x =>
 
 const KeyCache = new WeakMap<Object, string>()
 
-export let Config: ConfigureOpts = {
+let hasSet = false
+
+export let Config: ConfigureUIProps = {
+  customItems: {},
+
   propsToItem: x => x,
 
   // used to configure how the UI persists non-temporal state
@@ -50,7 +77,7 @@ export let Config: ConfigureOpts = {
   },
 }
 
-export function configureUI(opts: ConfigureOpts) {
+export function configureUI(opts: ConfigureUIProps) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
   Object.assign(Config, opts)

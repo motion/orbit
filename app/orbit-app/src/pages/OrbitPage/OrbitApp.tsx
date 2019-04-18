@@ -7,7 +7,7 @@ import {
   ProvideStores,
   useIsAppActive,
 } from '@o/kit'
-import { Button, Loading, Section, Visibility } from '@o/ui'
+import { Button, Loading, ProvideVisibility, Section } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { Component, memo, Suspense, useCallback, useEffect } from 'react'
 import '../../apps/orbitApps'
@@ -30,9 +30,9 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 
   return (
     <ProvideStores stores={{ appStore }}>
-      <Visibility visible={isActive}>
+      <ProvideVisibility visible={isActive}>
         <OrbitAppRender id={id} identifier={identifier} />
-      </Visibility>
+      </ProvideVisibility>
     </ProvideStores>
   )
 }
@@ -87,7 +87,7 @@ export const OrbitAppRenderOfDefinition = ({
     <Suspense fallback={<Loading />}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
-          <ErrorBoundary>
+          <ErrorBoundary name={identifier}>
             <App {...appProps} />
           </ErrorBoundary>
         </AppViewsContext.Provider>
@@ -96,13 +96,13 @@ export const OrbitAppRenderOfDefinition = ({
   )
 }
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends Component<{ name: string }> {
   state = {
     error: null,
   }
 
   componentDidCatch(error) {
-    console.warn('ErrorBoundary caught error')
+    console.warn('ErrorBoundary caught error', this.props.name)
     this.setState({
       error: {
         message: error.message,
@@ -119,6 +119,7 @@ class ErrorBoundary extends Component {
           background="darkorange"
           color="white"
           title={error.message || 'Error'}
+          subTitle={this.props.name}
           flex={1}
           minWidth={200}
           minHeight={200}

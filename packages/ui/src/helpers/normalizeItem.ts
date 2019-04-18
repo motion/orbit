@@ -1,11 +1,40 @@
-import { AppBit, Bit } from '@o/models'
 import * as React from 'react'
-import { NormalItem } from '../types/NormalItem'
+import { Bit } from './BitLike'
+
+// we have a concept of a "bit", which we can use in various UI items automatically
+// this helper just noramlizes the bit into something standard, and could be extended.
+
+// TODO cleanup
+export type AppBitLike = { target: 'app-bit' } & any
 
 export type ItemResolverExtraProps = {
   beforeTitle?: React.ReactNode
   minimal?: boolean
   preventSelect?: boolean
+}
+
+export type NormalItem = {
+  id?: string
+  icon?: string
+  title?: string
+  type?: string
+  subType?: string
+  identifier?: string
+  preview?: React.ReactNode
+  content?: any
+  location?: string
+  locationLink?: string
+  webLink?: string
+  desktopLink?: string
+  createdAt?: Date
+  updatedAt?: Date
+  comments?: React.ReactNode[]
+  people?: Bit[]
+  searchTerm?: string
+  subTitle?: React.ReactNode
+  image?: string
+  afterTitle?: React.ReactNode
+  after?: React.ReactNode
 }
 
 const normalizers = {
@@ -26,7 +55,7 @@ const normalizers = {
       updatedAt: new Date(bit.bitUpdatedAt || bit.updatedAt),
     }
   },
-  app: (app: AppBit): NormalItem => ({
+  app: (app: AppBitLike): NormalItem => ({
     type: 'app',
     id: `${app.id}`,
     title: app.name,
@@ -34,7 +63,7 @@ const normalizers = {
   }),
 }
 
-export const normalizeItem = (model: Bit | AppBit): NormalItem => {
+export const normalizeItem = (model: Bit | AppBitLike): NormalItem => {
   if (!model) {
     throw new Error('Called normalize without a model')
   }

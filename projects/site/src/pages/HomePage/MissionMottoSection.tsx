@@ -80,11 +80,11 @@ export function AboutSection() {
             edges. And performance must come by default.
           </SubParagraph>
           <SubParagraph>
-            We've been working on delivering this for years, and are excited to share it with you.
+            We're excited to share it with you.
           </SubParagraph>
         </Col>
 
-        {screen === 'large' && (
+        {screen !== 'small' && (
           <Col space="md" justifyContent="flex-end">
             <TitleTextSub textAlign="left" alpha={1} size={1}>
               Our goals

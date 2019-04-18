@@ -49,6 +49,7 @@ export function highlightText(options: HighlightOptions): string {
     style = 'background: rgba(255, 255, 0, 0.75); color: #111; border-radius: 3px;',
     separator = '&nbsp;&middot;&nbsp;',
   } = options
+
   if (!options.words) {
     return cutoff(text, maxChars).trim()
   }

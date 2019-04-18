@@ -3,7 +3,7 @@ import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
 import { ActionMeta } from 'react-select/lib/types'
-import { ListItem } from '../lists/ListItem'
+import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
 import { Omit } from '../types'
 import { View } from '../View/View'
@@ -141,8 +141,8 @@ export function Select({ minWidth, ...props }: SelectProps) {
 }
 
 const components = {
-  Option: ({ data, ...rest }) => <ListItem title={data.label} {...rest} />,
-  SingleValue: ({ data, ...rest }) => <ListItem title={data.label} {...rest} />,
+  Option: ({ data, ...rest }) => <ListItemSimple title={data.label} {...rest} />,
+  SingleValue: ({ data, ...rest }) => <ListItemSimple title={data.label} {...rest} />,
 }
 
 function normalizeOptions(options: SelectProps['options']): { value: string; label: string }[] {

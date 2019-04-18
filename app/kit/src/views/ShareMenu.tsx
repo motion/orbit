@@ -1,8 +1,7 @@
-import { ListItem, Separator, View } from '@o/ui'
+import { ListItem, ListItemProps, Separator, View } from '@o/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { useActiveApps } from '../hooks/useActiveApps'
-import { OrbitListItemProps } from './ListItem'
 import { SearchItemShareContext } from './SearchItemProvide'
 
 export const ShareMenu = memo(function ShareMenu() {
@@ -18,7 +17,7 @@ export const ShareMenu = memo(function ShareMenu() {
       <Separator paddingTop={10}>Send to...</Separator>
       {flatten(
         listApps.map(app => {
-          let items: OrbitListItemProps[] = [
+          let items: ListItemProps[] = [
             {
               id: `app-${app.id}`,
               title: app.name,

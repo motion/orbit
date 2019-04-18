@@ -7,11 +7,7 @@ import { AboveFooter, Footer } from '../HomePage/FooterSection'
 export function BlogLayout({ children, ...props }: ColProps) {
   return (
     <>
-      <Theme name="dark">
-        <SectionContent padding={[0, 0, 20]}>
-          <BlogTitle />
-        </SectionContent>
-      </Theme>
+      <BlogTitle />
       <SectionContent>
         <Col pad {...props}>
           {children}

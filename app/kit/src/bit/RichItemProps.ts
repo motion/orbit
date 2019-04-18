@@ -1,5 +1,4 @@
-import { ItemRenderText, ListItemHide } from '@o/ui'
-import { NormalItem } from '../types/NormalItem'
+import { ItemRenderText, ListItemHide, NormalItem } from '@o/ui'
 
 export type RichItemProps = {
   item?: any

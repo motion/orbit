@@ -2,18 +2,15 @@ import { Templates } from '@o/kit'
 import {
   Button,
   Col,
-  Divider,
   gloss,
+  RoundButton,
   Section,
-  SegmentedRow,
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
-  Title,
   Toolbar,
   useMedia,
   useOnUnmount,
-  useTheme,
 } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
@@ -22,8 +19,10 @@ import { useNavigation, View } from 'react-navi'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
+import DocsInstall from './DocsPage/DocsInstall.mdx'
 
 const views = {
+  install: () => import('./DocsPage/DocsInstall.mdx'),
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
   cards: () => import('./DocsPage/DocsCards.mdx'),
 }
@@ -31,8 +30,9 @@ const views = {
 export default compose(
   withView(req => {
     const id = req.path.slice(1)
+    const item = uiItems.find(x => x.id === id)
     return (
-      <DocsPage title={id ? uiItems.find(x => x.id === id).title : 'Welcome'}>
+      <DocsPage title={id && item ? item.title : 'Welcome'}>
         <View />
       </DocsPage>
     )
@@ -41,10 +41,15 @@ export default compose(
   mount({
     '/': route({
       title: 'Docs',
-      view: <WelcomeDocs />,
+      view: <DocsInstall />,
     }),
     '/:id': route(async req => {
       let id = req.params.id
+      if (!views[id]) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
       let ChildView = (await views[id]()).default || (() => <div>nada {id}</div>)
       return {
         view: <ChildView />,
@@ -58,7 +63,6 @@ const categories = {
     ...docsItems,
     {
       selectable: false,
-      children: <Divider />,
     },
     ...uiItems,
   ],
@@ -71,8 +75,8 @@ function DocsPage(props: { title?: string; children?: any }) {
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
+  const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
-  const theme = useTheme()
 
   useReaction(() => {
     siteStore.setMaxHeight(siteStore.sectionHeight)
@@ -92,13 +96,13 @@ function DocsPage(props: { title?: string; children?: any }) {
           flex: 3,
         }}
         masterProps={{
-          background: theme.sidebarBackground,
+          background: 'transparent',
         }}
         searchable
         onSelect={item => {
           nav.navigate(`/docs/${item.id}`)
         }}
-        belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
+        belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
       >
         <WidthLimit>
           <Content>
@@ -129,25 +133,28 @@ const Content = gloss(Col, {
   padding: [0, 8],
   width: '100%',
   maxWidth: 860,
+  fontSize: 16,
+  lineHeight: 28,
 })
 
-const DocsToolbar = memo(({ section, setSection }: any) => {
+const DocsToolbar = memo(({ section, toggleSection }: any) => {
   return (
     <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
-      <SegmentedRow sizePadding={2} sizeRadius={2}>
-        <Button active={section === 'all'} onClick={() => setSection('all')}>
-          All
-        </Button>
-        <Button active={section === 'docs'} onClick={() => setSection('docs')}>
-          Docs
-        </Button>
-        <Button active={section === 'ui'} onClick={() => setSection('ui')}>
-          UI
-        </Button>
-        <Button active={section === 'kit'} onClick={() => setSection('kit')}>
-          Kit
-        </Button>
-      </SegmentedRow>
+      <RoundButton
+        alt={section === 'docs' ? 'selected' : 'flat'}
+        onClick={() => toggleSection('docs')}
+      >
+        Docs
+      </RoundButton>
+      <RoundButton alt={section === 'ui' ? 'selected' : 'flat'} onClick={() => toggleSection('ui')}>
+        UI
+      </RoundButton>
+      <RoundButton
+        alt={section === 'kit' ? 'selected' : 'flat'}
+        onClick={() => toggleSection('kit')}
+      >
+        Kit
+      </RoundButton>
     </Toolbar>
   )
 })
@@ -180,27 +187,24 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   )
 })
 
+const titleItem = { titleProps: { fontWeight: 600, size: 1.2 } }
+
 const docsItems = [
   {
     selectable: false,
-    children: <SubTitle>Docs</SubTitle>,
+    children: <SubTitle>Start</SubTitle>,
   },
   {
-    id: 'surfaces',
-    icon: 'layer',
+    id: 'install',
     title: 'Getting started',
-    subTitle: 'Lorem ipsum dolor sit amet.',
+    ...titleItem,
   },
 ]
 
 const uiItems = [
   {
     selectable: false,
-    children: (
-      <SubTitle>
-        User Interface &nbsp;&nbsp;<small>@o/ui</small>
-      </SubTitle>
-    ),
+    children: <SubTitle>User Interface</SubTitle>,
   },
   {
     id: 'surfaces',
@@ -279,7 +283,3 @@ const uiItems = [
   { title: 'Visibility' },
   { title: 'PassProps' },
 ]
-
-function WelcomeDocs() {
-  return <Title>Welcome to docs</Title>
-}

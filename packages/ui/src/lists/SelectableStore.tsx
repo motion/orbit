@@ -43,8 +43,15 @@ export function omitSelectableProps(props: any) {
   return omit(props, ...selectablePropKeys)
 }
 
-export function useSelectableStore(props: SelectableProps) {
-  return useStore(SelectableStore, pickSelectableProps(props), { react: false })
+// will grab the parent store if its provided, otherwise create its own
+export function useSelectableStore(props: SelectableProps, options = { react: false }) {
+  const propStore = props.selectableStore
+  const newStore = useStore(
+    propStore ? false : SelectableStore,
+    pickSelectableProps(props),
+    options,
+  )
+  return propStore || newStore
 }
 
 export class SelectableStore {

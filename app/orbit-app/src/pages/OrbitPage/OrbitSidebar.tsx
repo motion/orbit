@@ -1,12 +1,6 @@
 import { Col } from '@o/gloss'
-import {
-  AppLoadContext,
-  AppMainViewProps,
-  ListPropsContext,
-  PassExtraListProps,
-  SubPane,
-} from '@o/kit'
-import { BorderTop, MergeContext, Sidebar } from '@o/ui'
+import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
+import { BorderTop, ListPropsContext, MergeContext, PassExtraListProps, Sidebar } from '@o/ui'
 import React, { memo, useCallback, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
@@ -16,7 +10,10 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
   const { identifier, id } = useContext(AppLoadContext)
   const { orbitStore, appStore } = useStores()
   const onSelectItem = useCallback(
-    (index, appProps) => orbitStore.setSelectItem(id, index, appProps),
+    (index, appProps) => {
+      console.log('setting', index, appProps)
+      orbitStore.setSelectItem(id, index, appProps)
+    },
     [orbitStore],
   )
 

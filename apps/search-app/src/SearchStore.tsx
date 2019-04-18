@@ -4,7 +4,6 @@ import {
   ensure,
   getUser,
   MarkType,
-  OrbitListItemProps,
   react,
   saveUser,
   searchBits,
@@ -14,13 +13,13 @@ import {
   useHook,
   useStoresSimple,
 } from '@o/kit'
-import { fuzzyFilter } from '@o/ui'
+import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'
 
 type SearchResults = {
-  results: OrbitListItemProps[]
+  results: ListItemProps[]
   finished?: boolean
   query: string
 }
@@ -76,14 +75,14 @@ export class SearchStore {
     }
   }
 
-  appToResult = (app: AppBit): OrbitListItemProps => {
+  appToResult = (app: AppBit): ListItemProps => {
     return {
       key: `${app.id}`,
       title: app.name,
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
-      appProps: {
+      extraData: {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,
@@ -118,7 +117,7 @@ export class SearchStore {
     return appStore && appStore.app && appStore.app.tabDisplay === 'permanent'
   }
 
-  getApps(query: string, all = false): OrbitListItemProps[] {
+  getApps(query: string, all = false): ListItemProps[] {
     const apps = [
       ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
       ...this.staticApps(),
@@ -178,7 +177,7 @@ export class SearchStore {
       }
 
       // RESULTS
-      let results: OrbitListItemProps[] = []
+      let results: ListItemProps[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.state.query !== query

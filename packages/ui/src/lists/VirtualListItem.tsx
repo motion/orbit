@@ -2,9 +2,9 @@ import { isEqual } from '@o/fast-compare'
 import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
 import { GenericComponent } from '../types'
-import { ListItem, ListItemProps } from './ListItem'
+import { ListItem } from './ListItem'
 
-export type VirtualListItemProps<Item> = ListItemProps & {
+export type VirtualListItemProps<Item> = {
   //  for keymapper
   id?: string
   //  for keymapper

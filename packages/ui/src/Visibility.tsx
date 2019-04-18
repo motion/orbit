@@ -3,26 +3,23 @@ import { selectDefined } from '@o/utils'
 import { useContext } from 'react'
 
 class VisibilityStore {
-  props: { visible: boolean } = {
-    visible: true,
-  }
+  props: { visible: boolean }
 
-  getVisible = () => {
+  get visible() {
     return this.props.visible
   }
 }
 
-const context = createStoreContext(VisibilityStore)
-export const ProvideVisibility = context.Provider
+const Vis = createStoreContext(VisibilityStore)
 
-export const Visibility = context.Provider
-export const useVisibilityContext = () => useContext(context.Context) || { getVisible: () => true }
+export const ProvideVisibility = Vis.Provider
+export const useVisibilityStore = () => useContext(Vis.Context) || { visible: true }
 
 export function useVisibility() {
   // support may not be provided
   try {
-    const store = context.useStore()
-    return selectDefined(store.getVisible(), true)
+    const store = Vis.useStore()
+    return selectDefined(store.visible, true)
   } catch {
     // no visibility store
     return true

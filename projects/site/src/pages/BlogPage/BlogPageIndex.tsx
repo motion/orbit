@@ -2,6 +2,7 @@ import { gloss, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 import { TitleText } from '../../views/TitleText'
+import { purpleWave } from '../HomePage/EarlyAccessBetaSection'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
 
@@ -31,7 +32,7 @@ export function BlogPageIndex() {
             background: '#eee',
           }}
         >
-          <TitleText selectable={false} textAlign="left">
+          <TitleText color={purpleWave.backgroundColor} selectable={false} textAlign="left">
             {post.title}
           </TitleText>
           {new Date(post.date)

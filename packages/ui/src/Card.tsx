@@ -8,7 +8,7 @@ import {
   splitCollapseProps,
   useCollapseToggle,
 } from './Collapsable'
-import { ListItem, ListItemSpecificProps, useIsSelected } from './lists/ListItem'
+import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
@@ -83,7 +83,7 @@ export function Card(props: CardProps) {
         >
           {/* Cards are ListItems scaled up 1.1 */}
           <Scale size={1.1}>
-            <ListItem
+            <ListItemSimple
               before={<CollapseArrow useToggle={toggle} />}
               className="grid-draggable"
               onClickLocation={onClickLocation}

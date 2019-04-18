@@ -1,6 +1,5 @@
-import { createContextualProps, FullScreen } from '@o/ui'
-import { throttle } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import { createContextualProps } from '@o/ui'
+import React, { useState } from 'react'
 import { IS_CHROME } from '../constants'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
@@ -30,7 +29,6 @@ export function HomePage() {
   return (
     <ParallaxContext.PassProps value={parallax}>
       <Header />
-      <PeekHeader />
       <main>
         <Parallax
           ref={setParallax}
@@ -54,52 +52,3 @@ export function HomePage() {
 }
 
 HomePage.theme = 'home'
-
-function PeekHeader() {
-  const [show, setShow] = useState(false)
-
-  useEffect(() => {
-    const el = document.documentElement
-
-    let top = el.scrollTop
-    let direction: 'down' | 'up' = 'down'
-
-    const onScroll = throttle(() => {
-      const next = el.scrollTop
-      direction = next >= top ? 'down' : 'up'
-
-      // avoid small moves
-      const diff = direction === 'down' ? next - top : top - next
-      if (diff < 150) {
-        return
-      }
-
-      top = next
-
-      if (direction === 'up' && top > 300) {
-        setShow(true)
-      } else {
-        setShow(false)
-      }
-    }, 100)
-
-    window.addEventListener('scroll', onScroll)
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-
-  return (
-    <FullScreen
-      zIndex={100000000}
-      position="fixed"
-      bottom="auto"
-      transition="all ease 200ms"
-      opacity={show ? 1 : 0}
-      transform={{ y: show ? 0 : -40 }}
-    >
-      <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
-    </FullScreen>
-  )
-}

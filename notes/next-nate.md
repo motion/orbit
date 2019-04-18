@@ -1,10 +1,6 @@
 # Website
 
-- Table carousel (Table / List / Form)
-- Import sub-pages
-- Deploy to prod + add in blog
 - Fix docs so they have some under construction stuff / look alright
-- Fix navigation between pages / scroll position etc
 - Go over copy a few times
 
 ## Next

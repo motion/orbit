@@ -281,7 +281,7 @@ async function makeConfig() {
           use: ['file-loader'],
         },
         {
-          test: /\.mdx$/,
+          test: /\.mdx?$/,
           use: [
             'babel-loader',
             {

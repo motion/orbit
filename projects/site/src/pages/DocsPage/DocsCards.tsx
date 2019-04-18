@@ -1,7 +1,7 @@
 import CardSrc from '!raw-loader!@o/ui/src/Card.tsx'
 import { Button, Card, Col, FloatingCard, Row } from '@o/ui'
 import React, { useState } from 'react'
-import Description from '../../tmp/Button.json'
+import Description from '../../../tmp/Button.json'
 import { DocsMeta } from './DocsMeta'
 
 export let Source = <DocsMeta source={CardSrc} displayName="Card" component={Description} />

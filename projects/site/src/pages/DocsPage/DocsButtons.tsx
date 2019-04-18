@@ -1,7 +1,7 @@
 import ButtonSrc from '!raw-loader!@o/ui/src/buttons/Button.tsx'
 import { Button, Row, SubSection } from '@o/ui'
 import React from 'react'
-import Description from '../../tmp/Button.json'
+import Description from '../../../tmp/Button.json'
 import { DocsMeta } from './DocsMeta'
 
 export let Source = <DocsMeta source={ButtonSrc} displayName="Button" component={Description} />

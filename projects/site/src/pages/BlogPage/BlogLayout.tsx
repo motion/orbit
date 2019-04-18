@@ -1,20 +1,15 @@
-import { Col, ColProps, Theme, View } from '@o/ui'
+import { Col, ColProps, Space, Theme } from '@o/ui'
 import React from 'react'
 import { SectionContent } from '../../views/SectionContent'
-import { TitleText } from '../../views/TitleText'
-import { Wavy } from '../HomePage/EarlyAccessBetaSection'
+import { BlogTitle } from '../BlogPage'
+import { AboveFooter, Footer } from '../HomePage/FooterSection'
 
 export function BlogLayout({ children, ...props }: ColProps) {
   return (
     <>
       <Theme name="dark">
         <SectionContent padding={[0, 0, 20]}>
-          <View pad>
-            <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
-            <TitleText textAlign="left" size="lg">
-              The Orbit Blog
-            </TitleText>
-          </View>
+          <BlogTitle />
         </SectionContent>
       </Theme>
       <SectionContent>
@@ -22,6 +17,30 @@ export function BlogLayout({ children, ...props }: ColProps) {
           {children}
         </Col>
       </SectionContent>
+
+      <BlogFooter />
+    </>
+  )
+}
+
+export function BlogFooter() {
+  return (
+    <>
+      <Space size="xxl" />
+      <Space size="xxl" />
+      <Space size="xxl" />
+
+      <Col height={450} pad={[true, 0]}>
+        <AboveFooter />
+      </Col>
+
+      <Space size="xxl" />
+
+      <Theme name="dark">
+        <SectionContent background="#111" padding={[50, 0]}>
+          <Footer />
+        </SectionContent>
+      </Theme>
     </>
   )
 }

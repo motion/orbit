@@ -1,6 +1,5 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Eesti Pro', 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -484,4 +483,11 @@ fieldset {
   height: 0px;
   width: 0px;
   background: transparent;
+}
+
+div.alt {
+  font-size: 75%;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 16px;
+  margin-top: -16px;
 }

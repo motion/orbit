@@ -1,4 +1,15 @@
-import { Center, FullScreen, gloss, Image, Row, Space, toColor, useDebounce, View, ViewProps } from '@o/ui'
+import {
+  Center,
+  FullScreen,
+  gloss,
+  Image,
+  Row,
+  Space,
+  toColor,
+  useDebounce,
+  View,
+  ViewProps,
+} from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
@@ -86,7 +97,7 @@ function HeadText() {
         sizeLineHeight={1.3}
         margin={[0, 'auto']}
         textAlign="center"
-        alpha={0.56}
+        alpha={0.6}
         whiteSpace="nowrap"
       >
         <FadeIn disable={!measured} delay={150}>

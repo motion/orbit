@@ -12,7 +12,7 @@ import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 import { Omit } from './types'
 
-type SidebarProps = Omit<InteractiveProps, 'position'> & {
+export type SidebarProps = Omit<InteractiveProps, 'position'> & {
   /**
    * Toggle sidebar visibility.
    */

@@ -2,10 +2,9 @@ import { Templates } from '@o/kit'
 import {
   Button,
   Col,
-  Divider,
   gloss,
+  RoundButton,
   Section,
-  SegmentedRow,
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
@@ -58,7 +57,6 @@ const categories = {
     ...docsItems,
     {
       selectable: false,
-      children: <Divider />,
     },
     ...uiItems,
   ],
@@ -71,6 +69,7 @@ function DocsPage(props: { title?: string; children?: any }) {
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
+  const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
   const theme = useTheme()
 
@@ -98,7 +97,7 @@ function DocsPage(props: { title?: string; children?: any }) {
         onSelect={item => {
           nav.navigate(`/docs/${item.id}`)
         }}
-        belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
+        belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
       >
         <WidthLimit>
           <Content>
@@ -133,23 +132,21 @@ const Content = gloss(Col, {
   lineHeight: 28,
 })
 
-const DocsToolbar = memo(({ section, setSection }: any) => {
+const DocsToolbar = memo(({ section, toggleSection }: any) => {
   return (
     <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
-      <SegmentedRow sizePadding={2} sizeRadius={2}>
-        <Button active={section === 'all'} onClick={() => setSection('all')}>
-          All
-        </Button>
-        <Button active={section === 'docs'} onClick={() => setSection('docs')}>
-          Docs
-        </Button>
-        <Button active={section === 'ui'} onClick={() => setSection('ui')}>
-          UI
-        </Button>
-        <Button active={section === 'kit'} onClick={() => setSection('kit')}>
-          Kit
-        </Button>
-      </SegmentedRow>
+      <RoundButton
+        alt={section === 'docs' ? 'selected' : null}
+        onClick={() => toggleSection('docs')}
+      >
+        Docs
+      </RoundButton>
+      <RoundButton alt={section === 'ui' ? 'selected' : null} onClick={() => toggleSection('ui')}>
+        UI
+      </RoundButton>
+      <RoundButton alt={section === 'kit' ? 'selected' : null} onClick={() => toggleSection('kit')}>
+        Kit
+      </RoundButton>
     </Toolbar>
   )
 })
@@ -189,9 +186,8 @@ const docsItems = [
   },
   {
     id: 'surfaces',
-    icon: 'layer',
     title: 'Getting started',
-    subTitle: 'Lorem ipsum dolor sit amet.',
+    titleProps: { fontWeight: 600, size: 1.2 },
   },
 ]
 

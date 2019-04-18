@@ -3,9 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
-    "rootDir": "src",
-    "target": "es2018",
-    "module": "esnext"
+    "rootDir": "src"
   },
   "include": ["src/**/*"],
   "references": [

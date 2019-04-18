@@ -230,6 +230,7 @@ async function makeConfig() {
             {
               loader: 'ts-loader',
               options: {
+                configFile: tsConfig,
                 happyPackMode: true,
                 transpileOnly: true, // disable - we use it in fork plugin
                 experimentalWatchApi: true,

@@ -89,7 +89,7 @@ export const LinksRight = props => (
     <HeaderLink {...props} href="/beta">
       Beta
     </HeaderLink>
-    <HeaderLink {...props} href="http://blog.orbitauth.com" external>
+    <HeaderLink {...props} href="/blog">
       Blog
     </HeaderLink>
     <HeaderLink {...props} href="/about">

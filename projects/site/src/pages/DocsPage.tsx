@@ -24,8 +24,8 @@ import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
 
 const views = {
-  buttons: () => import('./DocsButtons.mdx'),
-  cards: () => import('./DocsCards.mdx'),
+  buttons: () => import('./DocsPage/DocsButtons.mdx'),
+  cards: () => import('./DocsPage/DocsCards.mdx'),
 }
 
 export default compose(
@@ -85,38 +85,34 @@ function DocsPage(props: { title?: string; children?: any }) {
   return (
     <MDX>
       <Header slim />
-      <Col flex={1}>
-        <Col flex={1} position="relative">
-          <Templates.MasterDetail
-            items={categories[section]()}
-            showSidebar={showSidebar}
-            detailProps={{
-              flex: 3,
-            }}
-            masterProps={{
-              background: theme.sidebarBackground,
-            }}
-            searchable
-            onSelect={item => {
-              nav.navigate(`/docs/${item.id}`)
-            }}
-            belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
-          >
-            <WidthLimit>
-              <Content>
-                <SelectedSection
-                  onToggleSidebar={() => setShowSidebar(!showSidebar)}
-                  setTheme={siteStore.setTheme}
-                  theme={siteStore.theme}
-                  title={props.title}
-                >
-                  {props.children}
-                </SelectedSection>
-              </Content>
-            </WidthLimit>
-          </Templates.MasterDetail>
-        </Col>
-      </Col>
+      <Templates.MasterDetail
+        items={categories[section]()}
+        showSidebar={showSidebar}
+        detailProps={{
+          flex: 3,
+        }}
+        masterProps={{
+          background: theme.sidebarBackground,
+        }}
+        searchable
+        onSelect={item => {
+          nav.navigate(`/docs/${item.id}`)
+        }}
+        belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
+      >
+        <WidthLimit>
+          <Content>
+            <SelectedSection
+              onToggleSidebar={() => setShowSidebar(!showSidebar)}
+              setTheme={siteStore.setTheme}
+              theme={siteStore.theme}
+              title={props.title}
+            >
+              {props.children}
+            </SelectedSection>
+          </Content>
+        </WidthLimit>
+      </Templates.MasterDetail>
     </MDX>
   )
 }

@@ -32,7 +32,7 @@ export default compose(
   withView(req => {
     const id = req.path.slice(1)
     return (
-      <DocsPage title={uiItems.find(x => x.id === id).title}>
+      <DocsPage title={id ? uiItems.find(x => x.id === id).title : 'Welcome'}>
         <View />
       </DocsPage>
     )

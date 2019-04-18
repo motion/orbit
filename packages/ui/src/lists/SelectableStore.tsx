@@ -1,6 +1,5 @@
 import { always, ensure, react, useStore } from '@o/use-store'
 import { omit, pick } from 'lodash'
-import { MutableRefObject } from 'react'
 import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
@@ -16,7 +15,7 @@ export enum Direction {
 
 export type SelectableProps = {
   selectableStore?: SelectableStore
-  selectableStoreRef?: MutableRefObject<SelectableStore>
+  // selectableStoreRef?: MutableRefObject<SelectableStore>
   onSelect?: (rows: any[], indices?: number[]) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
@@ -27,7 +26,7 @@ export const selectablePropKeys = [
   'alwaysSelected',
   'selectable',
   'selectableStore',
-  'selectableStoreRef',
+  // 'selectableStoreRef',
 ]
 
 type Modifiers = {
@@ -43,8 +42,15 @@ export function omitSelectableProps(props: any) {
   return omit(props, ...selectablePropKeys)
 }
 
-export function useSelectableStore(props: SelectableProps) {
-  return useStore(SelectableStore, pickSelectableProps(props), { react: false })
+// will grab the parent store if its provided, otherwise create its own
+export function useSelectableStore(props: SelectableProps, options = { react: false }) {
+  const propStore = props.selectableStore
+  const newStore = useStore(
+    propStore ? false : SelectableStore,
+    pickSelectableProps(props),
+    options,
+  )
+  return propStore || newStore
 }
 
 export class SelectableStore {

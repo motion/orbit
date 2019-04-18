@@ -101,7 +101,7 @@ type ReactiveStoreState = {
 }
 
 function useReactiveStore<A extends any>(
-  Store: new () => A,
+  Store: new () => A | false,
   props?: any,
 ): { store: A; hasChangedSource: boolean } | null {
   const forceUpdate = useForceUpdate()
@@ -163,7 +163,7 @@ function useReactiveStore<A extends any>(
 // allows us to use instantiated or non-instantiated stores
 // sets up tracking so the component auto re-renders
 export function useStore<A extends ReactiveStore<any> | any>(
-  Store: { new (): A } | A,
+  Store: { new (): A } | A | false,
   props?: A extends { props: infer R } ? R : undefined,
   options?: UseStoreOptions,
 ): A {

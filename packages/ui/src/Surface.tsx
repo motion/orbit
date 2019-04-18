@@ -232,8 +232,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             alt={alt}
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
-            top="-20%"
-            left="-20%"
+            top="-18%"
+            left="-18%"
             size={size}
             {...badgeProps}
           >
@@ -303,7 +303,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {...elementProps}
             surfacePadX={getPadX(getPadding(props).padding)}
             disabled={disabled}
-            tagName={tagName}
           >
             {children}
           </Element>

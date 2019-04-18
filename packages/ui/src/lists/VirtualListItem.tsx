@@ -5,7 +5,6 @@ import { GenericComponent } from '../types'
 import { ListItem } from './ListItem'
 
 export type VirtualListItemProps<Item> = {
-  [key: string]: any
   //  for keymapper
   id?: string
   //  for keymapper
@@ -27,7 +26,6 @@ export class VirtualListItemInner extends React.Component<VirtualListItemProps<a
   render() {
     const { realIndex, ItemView, ...rest } = this.props
     const View = ItemView || ListItem
-    console.log('render item', View, realIndex)
     return <View index={realIndex} {...rest} />
   }
 }

@@ -1,4 +1,5 @@
 import { gloss } from '@o/gloss'
+import { isDefined } from '@o/utils'
 import React, { forwardRef, useCallback } from 'react'
 import { Bit } from '../helpers/BitLike'
 import { Config, CustomItemView } from '../helpers/configure'
@@ -9,25 +10,27 @@ import { useVisibilityStore } from '../Visibility'
 import { ListItemBit } from './ListItemBit'
 import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
 import { ListItemViewProps } from './ListItemViewProps'
-import { SelectableStore } from './SelectableStore'
+import { SelectableStore, useSelectableStore } from './SelectableStore'
 import { VirtualListItemProps } from './VirtualListItem'
 
-export type ListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
-  // Bit | any
-  index?: number
-  // for appconfig merge
-  id?: string
-  identifier?: string
-  subType?: string
-  // extra props for orbit list items
-  people?: Bit[]
-  hidePeople?: boolean
-  itemViewProps?: ListItemViewProps
-  selectableStore?: SelectableStore
-}
+export type ListItemProps = ListItemSimpleProps &
+  Omit<VirtualListItemProps<Bit>, 'index'> & {
+    // Bit | any
+    index?: number
+    // for appconfig merge
+    id?: string
+    identifier?: string
+    subType?: string
+    // extra props for orbit list items
+    people?: Bit[]
+    hidePeople?: boolean
+    itemViewProps?: ListItemViewProps
+    selectableStore?: SelectableStore
+  }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
-  const { item, itemViewProps, people, hidePeople, selectableStore, ...rest } = props
+  const { item, itemViewProps, people, hidePeople, ...rest } = props
+  const selectableStore = useSelectableStore(props)
   const visStore = useVisibilityStore()
 
   // this is the view from sources, each bit type can have its own display
@@ -37,7 +40,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   let getItemProps = null
   const isBit = !!(item && item.target)
 
-  if (isBit) {
+  if (isBit && Config.customItems) {
     normalized = normalizeItem(item)
     itemProps = getNormalPropsForListItem(normalized)
 
@@ -52,15 +55,13 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
 
   const getIsSelected = useCallback((index: number) => {
-    console.log('ok', visStore && visStore.visible, selectableStore, index)
     if (visStore && visStore.visible === false) {
       return false
     }
-    if (props.isSelected) {
+    if (isDefined(props.isSelected)) {
       return props.isSelected
     }
     if (selectableStore) {
-      console.log('getting', selectableStore.isActiveIndex(index))
       return selectableStore.isActiveIndex(index)
     }
     return false

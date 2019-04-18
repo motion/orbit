@@ -1,15 +1,7 @@
 import { CSSPropertySet } from '@o/css'
 import { Bit } from '@o/models'
 import { isDefined, mergeDefined } from '@o/utils'
-import React, {
-  createContext,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { createContext, memo, useCallback, useContext, useEffect, useMemo } from 'react'
 import { Center } from '../Center'
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
@@ -18,14 +10,14 @@ import { useGet, useGetFn } from '../hooks/useGet'
 import { Section, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
-import { Searchable } from '../tables/Searchable'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
-import { Direction, SelectableStore } from './SelectableStore'
+import { ListItem } from './ListItem'
+import { ListItemSimpleProps } from './ListItemSimple'
+import { Direction, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type ListProps = SectionSpecificProps &
@@ -64,22 +56,6 @@ export type HandleOrbitSelect = (index: number, appProps: any) => any
 
 const nullFn = () => null
 
-export type SearchableListProps = ListProps & { belowSearchBar?: React.ReactNode }
-
-export const SearchableList = ({ belowSearchBar, ...listProps }: SearchableListProps) => {
-  return (
-    <Searchable>
-      {({ searchBar, searchTerm }) => (
-        <>
-          <View pad={listProps.padInner || 'sm'}>{searchBar}</View>
-          {belowSearchBar}
-          <List {...listProps} search={searchTerm} />
-        </>
-      )}
-    </Searchable>
-  )
-}
-
 export const List = memo((allProps: ListProps) => {
   const {
     flex = 1,
@@ -97,8 +73,7 @@ export const List = memo((allProps: ListProps) => {
   const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
   const getProps = useGet(props)
   const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
-  const internalRef = useRef<SelectableStore>(null)
-  const selectableStoreRef = listProps.selectableStoreRef || internalRef
+  const selectableStore = useSelectableStore(props)
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
   const { onOpenItem, onSelectItem } = useProps({})
@@ -124,7 +99,6 @@ export const List = memo((allProps: ListProps) => {
       if (getVisibility() !== true) {
         return
       }
-      const selectableStore = selectableStoreRef.current
       switch (shortcut) {
         case 'open':
           console.log('todo open', selectableStore.active)
@@ -146,7 +120,7 @@ export const List = memo((allProps: ListProps) => {
           break
       }
     })
-  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef])
+  }, [onOpen, shortcutStore, shortcutStore, selectableStore])
 
   const onSelectInner = useCallback(
     (selectedRows, selectedIndices) => {
@@ -206,13 +180,12 @@ export const List = memo((allProps: ListProps) => {
         <VirtualList
           disableMeasure={visibility === false}
           items={filtered.results}
-          // TODO fix type
-          ItemView={ListItemSimple as any}
+          ItemView={ListItem}
           {...restProps}
           getItemProps={getItemPropsInner}
           onOpen={onOpenInner}
           onSelect={onSelectInner}
-          selectableStoreRef={selectableStoreRef}
+          selectableStore={selectableStore}
         />
       )}
       {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}

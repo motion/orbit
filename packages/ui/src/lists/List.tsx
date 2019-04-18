@@ -46,11 +46,13 @@ export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any
 }
 
 // extra props if we need to hook into select events
-const { PassProps, useProps } = createContextualProps<{
+type ListExtraProps = {
   onSelectItem?: HandleOrbitSelect
   onOpenItem?: HandleOrbitSelect
-}>()
-export const PassExtraListProps = PassProps
+}
+const listContextProps = createContextualProps<ListExtraProps>()
+export const PassExtraListProps = listContextProps.PassProps
+const useListExtraProps = listContextProps.useProps
 
 export type HandleOrbitSelect = (index: number, extraData: any) => any
 
@@ -73,10 +75,9 @@ export const List = memo((allProps: ListProps) => {
   const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
   const getProps = useGet(props)
   const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
-  const selectableStore = useSelectableStore(props)
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
-  const { onOpenItem, onSelectItem } = useProps({})
+  const { onOpenItem, onSelectItem } = useListExtraProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const visibility = useVisibility()
   const getVisibility = useGet(visibility)
@@ -92,6 +93,29 @@ export const List = memo((allProps: ListProps) => {
   })
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
+
+  const onSelectInner = useCallback(
+    (selectedRows, selectedIndices) => {
+      if (shareable) {
+        shareStore.setSelected(selectedRows)
+      }
+      if (onSelectItem) {
+        const appProps = Config.propsToItem(toListItemProps(selectedRows[0]))
+        onSelectItem(selectedIndices[0], appProps)
+      }
+      const onSelect = getProps().onSelect
+      if (onSelect) {
+        onSelect(selectedRows)
+      }
+    },
+    [shareable, onSelectItem],
+  )
+
+  // wrap select with extra functionality
+  const selectableStore = useSelectableStore({
+    ...props,
+    onSelect: onSelectInner,
+  })
 
   useEffect(() => {
     if (!shortcutStore) return
@@ -121,23 +145,6 @@ export const List = memo((allProps: ListProps) => {
       }
     })
   }, [onOpen, shortcutStore, shortcutStore, selectableStore])
-
-  const onSelectInner = useCallback(
-    (selectedRows, selectedIndices) => {
-      if (shareable) {
-        shareStore.setSelected(selectedRows)
-      }
-      if (onSelectItem) {
-        const appProps = Config.propsToItem(toListItemProps(selectedRows[0]))
-        onSelectItem(selectedIndices[0], appProps)
-      }
-      const onSelect = getProps().onSelect
-      if (onSelect) {
-        onSelect(selectedRows)
-      }
-    },
-    [shareable, onSelectItem],
-  )
 
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }

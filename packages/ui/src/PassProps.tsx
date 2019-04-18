@@ -1,7 +1,7 @@
 import React, { Children, cloneElement, isValidElement } from 'react'
 
 export type PassPropsProps = {
-  passCondition?: (child: any) => boolean
+  passCondition?: (child: any, index: number) => boolean
   getChildProps?: (child: any, index: number) => any
   [key: string]: any
 }
@@ -11,12 +11,6 @@ const getChild = (child: any, props: PassPropsProps) => {
     return child
   }
   if (isValidElement(child)) {
-    // allows conditional passsing of props
-    if (props.passCondition) {
-      if (props.passCondition(child) === false) {
-        return child
-      }
-    }
     return cloneElement(child, {
       ...props,
       ...child.props,
@@ -26,12 +20,15 @@ const getChild = (child: any, props: PassPropsProps) => {
   return <Child {...props} />
 }
 
-export function PassProps({ children, getChildProps, ...props }: PassPropsProps) {
+export function PassProps({ children, getChildProps, passCondition, ...props }: PassPropsProps) {
   return (
     <>
-      {Children.map(children, (child, index) =>
-        getChild(child, { ...props, ...(getChildProps && getChildProps(child, index)) }),
-      )}
+      {Children.map(children, (child, index) => {
+        if (passCondition && passCondition(child, index) === false) {
+          return null
+        }
+        return getChild(child, { ...props, ...(getChildProps && getChildProps(child, index)) })
+      })}
     </>
   )
 }

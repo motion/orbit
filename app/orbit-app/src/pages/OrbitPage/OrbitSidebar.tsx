@@ -10,7 +10,10 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
   const { identifier, id } = useContext(AppLoadContext)
   const { orbitStore, appStore } = useStores()
   const onSelectItem = useCallback(
-    (index, appProps) => orbitStore.setSelectItem(id, index, appProps),
+    (index, appProps) => {
+      console.log('setting', index, appProps)
+      orbitStore.setSelectItem(id, index, appProps)
+    },
     [orbitStore],
   )
 

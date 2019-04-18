@@ -1,12 +1,5 @@
 import { ColorLike, CSSPropertySet, px } from '@o/css'
-import Gloss, {
-  Col,
-  forwardTheme,
-  gloss,
-  propsToStyles,
-  psuedoStyleTheme,
-  useTheme,
-} from '@o/gloss'
+import Gloss, { Col, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
@@ -109,7 +102,7 @@ const iconTransform = {
   y: 0.5,
 }
 
-const acceptsIcon = child => child.type.acceptsIconProps === true
+const acceptsIcon = child => child && child.type.acceptsIconProps === true
 
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = Context.useProps(direct)

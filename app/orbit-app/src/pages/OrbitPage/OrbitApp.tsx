@@ -1,5 +1,13 @@
-import { AppDefinition, AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores, useIsAppActive } from '@o/kit'
-import { Button, Loading, Section, Visibility } from '@o/ui'
+import {
+  AppDefinition,
+  AppLoadContext,
+  AppStore,
+  AppViewsContext,
+  getAppDefinition,
+  ProvideStores,
+  useIsAppActive,
+} from '@o/kit'
+import { Button, Loading, ProvideVisibility, Section } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { Component, memo, Suspense, useCallback, useEffect } from 'react'
 import '../../apps/orbitApps'
@@ -22,9 +30,9 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 
   return (
     <ProvideStores stores={{ appStore }}>
-      <Visibility visible={isActive}>
+      <ProvideVisibility visible={isActive}>
         <OrbitAppRender id={id} identifier={identifier} />
-      </Visibility>
+      </ProvideVisibility>
     </ProvideStores>
   )
 }

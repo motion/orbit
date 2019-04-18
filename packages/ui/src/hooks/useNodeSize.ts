@@ -11,7 +11,7 @@ export type UseNodeSizeProps = {
   ignoreFirst?: boolean
 }
 
-export function useNodeSize(props: UseNodeSizeProps = {}) {
+export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = []) {
   const [state, setState] = useState({ width: 0, height: 0 })
   const updateFn = props.onChange || setState
   const updateFnThrottled = useThrottleFn(updateFn, {
@@ -37,11 +37,14 @@ export function useNodeSize(props: UseNodeSizeProps = {}) {
     [update],
   )
 
-  useResizeObserver({
-    ref,
-    disable,
-    onChange,
-  })
+  useResizeObserver(
+    {
+      ref,
+      disable,
+      onChange,
+    },
+    [mountArgs],
+  )
 
   useEffect(() => {
     if (disable) return
@@ -54,7 +57,7 @@ export function useNodeSize(props: UseNodeSizeProps = {}) {
         setState(next)
       }
     }
-  }, [disable, ref])
+  }, [disable, ref, ...mountArgs])
 
   return {
     ...state,

@@ -73,10 +73,10 @@ export const ProvideFocus = context.Provider
 // attaches them as focsed when visibile
 export function useFocusableItem(id: string, forceVisible?: boolean) {
   const focusStore = useFocusStore()
-  const getVisible = useVisibilityContext().getVisible
+  const visibility = useVisibilityContext()
 
   useReaction(
-    () => selectDefined(forceVisible, getVisible()),
+    () => selectDefined(forceVisible, visibility.visible),
     isVisible => {
       if (isVisible) {
         focusStore.mountItem(id)

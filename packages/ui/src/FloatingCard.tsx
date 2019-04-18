@@ -3,7 +3,7 @@ import { selectDefined } from '@o/utils'
 import React, { useState } from 'react'
 import { Card, CardProps } from './Card'
 import { FloatingView, FloatingViewProps } from './FloatingView'
-import { Visibility } from './Visibility'
+import { ProvideVisibility } from './Visibility'
 
 type FloatingCardProps = CardProps &
   Pick<
@@ -51,7 +51,7 @@ export function FloatingCard({
     },
   }
   return (
-    <Visibility visible={!isInvisible}>
+    <ProvideVisibility visible={!isInvisible}>
       <FloatingView
         disabled={collapsed}
         resizable
@@ -79,6 +79,6 @@ export function FloatingCard({
           {...cardProps}
         />
       </FloatingView>
-    </Visibility>
+    </ProvideVisibility>
   )
 }

@@ -12,12 +12,6 @@ export type PostDirectory = {
 
 // order important, most recent at top
 export const posts: PostDirectory = {
-  roadmap: {
-    view: () => import('./roadmap/index.mdx'),
-    title: 'Roadmap',
-    date: '2018-10-12T22:12:03.284Z',
-    author: 'Nathan Wienert',
-  },
   releases: {
     view: () => import('./releases/index.mdx'),
     title: 'Releases',

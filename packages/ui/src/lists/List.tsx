@@ -15,13 +15,13 @@ import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { ListItem } from './ListItem'
+import { ListItem, ListItemProps } from './ListItem'
 import { ListItemSimpleProps } from './ListItemSimple'
 import { Direction, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type ListProps = SectionSpecificProps &
-  VirtualListProps<Bit | ListItemSimpleProps> &
+  VirtualListProps<Bit | ListItemProps> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     search?: string

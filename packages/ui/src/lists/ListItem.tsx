@@ -23,7 +23,6 @@ export type ListItemProps = ListItemSimpleProps &
     hidePeople?: boolean
     itemViewProps?: ListItemViewProps
     selectableStore?: SelectableStore
-
     // you can attach some extra data, if you need it elsewhere
     extraData?: any
   }

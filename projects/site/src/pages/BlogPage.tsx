@@ -73,12 +73,15 @@ function PostPage(props: { post: PostEntry; children?: any }) {
 }
 
 export const BlogTitle = () => (
-  <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-    <Col pad position="relative" cursor="pointer">
-      <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
-      <TitleText textAlign="left" size="sm">
-        The Orbit Blog
-      </TitleText>
-    </Col>
-  </Link>
+  <>
+    <Space />
+    <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+      <Col pad position="relative" cursor="pointer">
+        <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
+        <TitleText textAlign="left" size="sm">
+          The Orbit Blog
+        </TitleText>
+      </Col>
+    </Link>
+  </>
 )

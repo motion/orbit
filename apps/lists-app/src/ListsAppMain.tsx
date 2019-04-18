@@ -1,5 +1,5 @@
-import { AppMainView, AppProps, OrbitListItemProps, useTreeList } from '@o/kit'
-import { List, TitleRow, TitleRowProps } from '@o/ui'
+import { AppMainView, AppProps, useTreeList } from '@o/kit'
+import { List, ListItemProps, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {
@@ -21,7 +21,7 @@ function ListAppTitle(props: TitleRowProps) {
 function ListsAppMainFolder(props: AppProps) {
   const treeList = useTreeList('list')
   const selectedItem = treeList.userState.currentFolder[+props.subId]
-  const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
+  const [children, setChildren] = React.useState<ListItemProps[]>([])
 
   React.useEffect(() => {
     if (selectedItem && selectedItem.type === 'folder') {

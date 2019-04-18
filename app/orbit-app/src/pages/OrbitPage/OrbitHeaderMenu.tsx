@@ -1,6 +1,6 @@
-import { ListItem, useActiveApps, useLocationLink } from '@o/kit'
+import { useActiveApps, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
-import { Button, PassProps, Popover } from '@o/ui'
+import { Button, ListItem, PassProps, Popover } from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'

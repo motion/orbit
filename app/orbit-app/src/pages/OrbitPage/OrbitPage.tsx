@@ -1,16 +1,7 @@
 import { command } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import * as KIT from '@o/kit'
-import {
-  AppDefinition,
-  LocationStore,
-  PaneManagerStore,
-  ProvideStores,
-  QueryStore,
-  showConfirmDialog,
-  SpaceStore,
-  ThemeStore,
-} from '@o/kit'
+import { AppDefinition, LocationStore, PaneManagerStore, ProvideStores, QueryStore, showConfirmDialog, SpaceStore, ThemeStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import * as UI from '@o/ui'
@@ -168,8 +159,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
   }
 
-  console.warn('debugging')
-  contentArea = contentArea.filter(x => x.props.id === '6')
+  // want to isolate an app?
+  // console.log(contentArea)
+  // console.warn('debugging')
+  // contentArea = contentArea.filter(x => x.props.id === '6')
 
   return (
     <ProvideStores stores={{ orbitStore, headerStore }}>

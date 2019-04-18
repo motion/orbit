@@ -1,6 +1,6 @@
 import { gloss } from '@o/gloss'
-import { Bit } from '@o/models'
 import React, { forwardRef, useCallback } from 'react'
+import { Bit } from '../helpers/BitLike'
 import { Config, CustomItemView } from '../helpers/configure'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'

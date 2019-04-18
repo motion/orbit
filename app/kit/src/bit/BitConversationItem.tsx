@@ -1,6 +1,5 @@
-import { ChatMessage, HighlightText, ItemPropsContext } from '@o/ui'
-import * as React from 'react'
-import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
+import { ChatMessage, HighlightText, ItemPropsContext, ListItemProps } from '@o/ui'
+import React, { useContext } from 'react'
 
 const getMessages = (messages: any[], { shownLimit, searchTerm }) => {
   // todo: fix any type
@@ -14,10 +13,10 @@ const getMessages = (messages: any[], { shownLimit, searchTerm }) => {
   return res
 }
 
-export function ConversationItem(rawProps: OrbitItemViewProps) {
-  const itemProps = React.useContext(ItemPropsContext)
-  const { item, searchTerm, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
-  const { data, people } = item
+export function ConversationItem(props: ListItemProps) {
+  const { oneLine, renderText } = useContext(ItemPropsContext)
+  const { searchTerm, shownLimit } = props
+  const { data, people } = props.item
 
   if (!data || !data.messages) {
     return null
@@ -35,22 +34,26 @@ export function ConversationItem(rawProps: OrbitItemViewProps) {
     return <HighlightText ellipse>{text.slice(0, 200)}</HighlightText>
   }
 
-  return messages.map((message, index) => {
-    for (let person of people || []) {
-      message.text = message.text.replace(
-        new RegExp(`<@${person.originalId}>`, 'g'),
-        '@' + person.title,
-      )
-    }
-    return (
-      <ChatMessage
-        key={index}
-        {...rawProps}
-        message={message}
-        previousMessage={data.messages[index - 1]}
-        oneLine={oneLine}
-        renderText={renderText}
-      />
-    )
-  })
+  return (
+    <>
+      {messages.map((message, index) => {
+        for (let person of people || []) {
+          message.text = message.text.replace(
+            new RegExp(`<@${person.originalId}>`, 'g'),
+            '@' + person.title,
+          )
+        }
+        return (
+          <ChatMessage
+            key={index}
+            {...props}
+            message={message}
+            previousMessage={data.messages[index - 1]}
+            oneLine={oneLine}
+            renderText={renderText}
+          />
+        )
+      })}
+    </>
+  )
 }

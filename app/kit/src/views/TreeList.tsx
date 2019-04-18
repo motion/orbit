@@ -1,6 +1,14 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import { Button, HandleOrbitSelect, List, TreeItem, useGet, VirtualListProps } from '@o/ui'
+import {
+  Button,
+  HandleOrbitSelect,
+  List,
+  ListItemProps,
+  TreeItem,
+  useGet,
+  VirtualListProps,
+} from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
 import { useStoresSimple } from '../hooks/useStores'
@@ -8,7 +16,6 @@ import { ScopedUserState, useUserState } from '../hooks/useUserState'
 import { KitStores } from '../stores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
-import { OrbitListItemProps } from './ListItem'
 
 type TreeItems = { [key: number]: TreeItem }
 
@@ -17,7 +24,7 @@ export type TreeListProps = Omit<VirtualListProps<any>, 'items' | 'getItemProps'
   items?: TreeItems
   use?: UseTreeList
   rootItemID?: number
-  getItemProps?: (item: TreeItem) => Promise<OrbitListItemProps>
+  getItemProps?: (item: TreeItem) => Promise<ListItemProps>
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
@@ -98,7 +105,7 @@ export function useTreeList(subSelect: string): UseTreeList {
   }
 }
 
-async function loadListItem(item: TreeItem): Promise<OrbitListItemProps> {
+async function loadListItem(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {

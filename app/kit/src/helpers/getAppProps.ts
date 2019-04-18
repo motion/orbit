@@ -1,10 +1,10 @@
 import { Bit } from '@o/models'
+import { ListItemProps } from '@o/ui'
 import { AppDefinition } from '../types/AppDefinition'
 import { AppProps } from '../types/AppProps'
-import { OrbitListItemProps } from '../views/ListItem'
 import { getAppDefinitions } from './getAppDefinitions'
 
-export function getAppProps(props: OrbitListItemProps, id?: string): AppProps {
+export function getAppProps(props: ListItemProps, id?: string): AppProps {
   if (!props) {
     return {}
   }

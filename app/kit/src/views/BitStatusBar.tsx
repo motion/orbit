@@ -1,7 +1,15 @@
 import { gloss } from '@o/gloss'
-import { DateFormat, StatusBar, StatusBarButton, StatusBarSection, StatusBarSpace, StatusBarText, View } from '@o/ui'
+import {
+  DateFormat,
+  normalizeItem,
+  StatusBar,
+  StatusBarButton,
+  StatusBarSection,
+  StatusBarSpace,
+  StatusBarText,
+  View,
+} from '@o/ui'
 import * as React from 'react'
-import { normalizeItem } from '../helpers/normalizeItem'
 import { AppBitMainProps } from '../types/AppDefinition'
 
 const Cmd = gloss({

@@ -70,7 +70,7 @@ export interface Bit {
   /**
    * Content type, for example "conversation", "message", "email", etc.
    */
-  type?: string
+  type?: any
 
   /**
    * Time when bit was created on its origin.

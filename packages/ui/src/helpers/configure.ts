@@ -3,6 +3,7 @@ import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
 import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
+import { Bit } from './BitLike'
 
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces
@@ -31,11 +32,11 @@ export type ConfigureUIProps = {
   StoreContext?: Context<any>
 }
 
-export type CustomItemView = FunctionComponent<ListItemViewProps>
+export type CustomItemView = FunctionComponent<ListItemViewProps & { item: Bit }>
 export type CustomItemDescription = {
   listItem?: CustomItemView
   item?: CustomItemView
-  getItemProps?: (item: any) => ListItemProps
+  getItemProps?: (item: Bit) => ListItemProps
 }
 
 // safe for react components

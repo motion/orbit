@@ -1,5 +1,4 @@
-import { List } from '@o/kit'
-import { FloatingCard, useScreenPosition, useShareStore } from '@o/ui'
+import { FloatingCard, List, useScreenPosition, useShareStore } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
 import { orbitStaticApps } from '../../apps/orbitApps'

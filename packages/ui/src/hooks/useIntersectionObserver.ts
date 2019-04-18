@@ -1,9 +1,10 @@
-import ixo from 'intersection-observer'
 import { RefObject, useEffect, useRef, useState } from 'react'
+import { isBrowser } from '../constants'
 import { useGet } from './useGet'
 
-// dont side effect it away
-ixo
+if (isBrowser) {
+  require('intersection-observer')
+}
 
 export function useIntersectionObserver(
   props: {

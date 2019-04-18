@@ -1,4 +1,4 @@
-import { List } from '@o/kit'
+import { List } from '@o/ui'
 import React from 'react'
 
 export function SettingsAppIndex() {

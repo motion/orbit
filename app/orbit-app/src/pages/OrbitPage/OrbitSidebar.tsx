@@ -1,12 +1,6 @@
 import { Col } from '@o/gloss'
-import {
-  AppLoadContext,
-  AppMainViewProps,
-  ListPropsContext,
-  PassExtraListProps,
-  SubPane,
-} from '@o/kit'
-import { BorderTop, MergeContext, Sidebar } from '@o/ui'
+import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
+import { BorderTop, ListPropsContext, MergeContext, PassExtraListProps, Sidebar } from '@o/ui'
 import React, { memo, useCallback, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'

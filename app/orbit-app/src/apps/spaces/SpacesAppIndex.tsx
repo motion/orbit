@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
-import { List, OrbitOrb, useActiveUser } from '@o/kit'
+import { OrbitOrb, useActiveUser } from '@o/kit'
 import { SpaceModel } from '@o/models'
-import { Button } from '@o/ui'
+import { Button, List } from '@o/ui'
 import * as React from 'react'
 
 export default function SpacesAppIndex() {

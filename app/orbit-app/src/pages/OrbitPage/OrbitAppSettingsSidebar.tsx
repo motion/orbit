@@ -14,7 +14,7 @@ export function OrbitAppSettingsSidebar() {
       floating
       elevation={5}
       hidden={!showAppSettings}
-      background={theme.background}
+      background={`${theme.background}`}
       pad
     >
       <Title>hi</Title>

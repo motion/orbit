@@ -1,13 +1,13 @@
 import {
   AppDefinition,
   Icon,
-  List,
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
   useActiveSyncAppsWithDefinition,
   useAppDefinitions,
 } from '@o/kit'
+import { List } from '@o/ui'
 import * as React from 'react'
 import { getAppListItem } from './getAppListItem'
 

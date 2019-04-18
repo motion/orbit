@@ -1,7 +1,15 @@
 import { CSSPropertySet } from '@o/css'
 import { Bit } from '@o/models'
 import { isDefined, mergeDefined } from '@o/utils'
-import React, { createContext, memo, useCallback, useContext, useEffect, useRef } from 'react'
+import React, {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { Center } from '../Center'
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
@@ -184,10 +192,12 @@ export const List = memo((allProps: ListProps) => {
   const showPlaceholder = noQuery && !hasResults
   const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
+  const words = useMemo(() => (props.search ? props.search.split(' ') : []), [props.search])
+
   const children = (
     <HighlightProvide
       value={{
-        words: props.search.split(' '),
+        words,
         maxChars: 500,
         maxSurroundChars: 80,
       }}

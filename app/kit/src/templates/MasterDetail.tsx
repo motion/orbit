@@ -93,7 +93,7 @@ export function MasterDetail({
         minWidth={300}
         maxWidth={450}
         {...showSidebar === false && { width: 0 }}
-        {...masterProps}
+        {...masterProps as PaneProps}
       >
         {master}
       </Pane>

@@ -1,13 +1,13 @@
 import { ThemeMaker } from '@o/gloss'
-// import { themes as KitThemes } from '@o/kit'
+import { themes as KitThemes } from '@o/kit'
 
 const Theme = new ThemeMaker()
 
 export const themes = {
-  // ...KitThemes,
+  ...KitThemes,
 
   home: {
-    // ...KitThemes.dark,
+    ...KitThemes.dark,
     ...Theme.colorize({
       background: '#000',
     }),

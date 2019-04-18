@@ -4,6 +4,7 @@ import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import React, { createContext, useContext } from 'react'
 import { Config } from './helpers/configure'
+import { SVG } from './SVG'
 import { View, ViewProps } from './View/View'
 
 export { IconName }
@@ -14,6 +15,8 @@ export type IconProps = ViewProps & {
   type?: 'mini' | 'outline'
   tooltip?: string
   tooltipProps?: Object
+  svg?: string
+  ignoreColor?: boolean
 }
 
 // TODO use createContextProps
@@ -44,7 +47,7 @@ Icon.acceptsIconProps = true
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export function PlainIcon(props: IconProps) {
+export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
   const size = snapToSizes(props.size)
@@ -60,6 +63,36 @@ export function PlainIcon(props: IconProps) {
     }
   }
 
+  if (isDefined(props.svg)) {
+    return (
+      <View
+        {...props}
+        width={size}
+        height={size}
+        className={`icon ${props.className || ''}`}
+        color={color}
+      >
+        <SVG
+          svg={props.svg}
+          width={`${size}px`}
+          height={`${size}px`}
+          style={{
+            fill: 'currentColor',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+            width: size,
+            height: size,
+            ...style,
+          }}
+          cleanup={[ignoreColor ? null : 'fill', 'title', 'desc', 'width', 'height'].filter(
+            Boolean,
+          )}
+        />
+      </View>
+    )
+  }
+
   // choose which pixel grid is most appropriate for given icon size
   const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.
@@ -69,7 +102,7 @@ export function PlainIcon(props: IconProps) {
   return (
     <View width={size} height={size} {...props}>
       <svg
-        style={{ color: `${color}` }}
+        style={{ color: `${color}`, ...style }}
         data-icon={name}
         width={`${size}px`}
         height={`${size}px`}

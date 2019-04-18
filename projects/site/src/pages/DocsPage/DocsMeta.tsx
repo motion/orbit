@@ -16,7 +16,7 @@ export const DocsMeta = (props: { source: string; displayName: string; component
             <Button
               tagName="a"
               {...{ href: 'http://github.com' }}
-              icon={<Icon name="github" size={18} svg={GithubIcon} />}
+              icon={<Icon size={18} svg={GithubIcon} />}
             />
           }
           maxHeight={450}
@@ -24,7 +24,7 @@ export const DocsMeta = (props: { source: string; displayName: string; component
         >
           <CodeBlock className="language-typescript">{props.source}</CodeBlock>
         </Card>
-        <Card collapsable collapseOnClick title="Props" scrollable="y">
+        <Card collapsable defaultCollapsed collapseOnClick title="Props" scrollable="y">
           <PropsTable props={props.component.props} />
         </Card>
       </Col>

@@ -1,7 +1,6 @@
 import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
 import { gloss, useTheme } from '@o/gloss'
-import { SVG } from '@o/kit'
-import { View, ViewProps } from '@o/ui'
+import { SVG, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { Link } from 'react-navi'
 

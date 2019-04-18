@@ -1,7 +1,6 @@
 import orbit from '!raw-loader!../../public/images/orbit-logo.svg'
 import { gloss, useTheme } from '@o/gloss'
-import { SVG } from '@o/kit'
-import { Space, View, ViewProps } from '@o/ui'
+import { Space, SVG, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 import mark from '../../public/images/orbit-mark.svg'

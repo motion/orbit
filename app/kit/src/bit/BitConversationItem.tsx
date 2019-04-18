@@ -1,4 +1,4 @@
-import { ChatMessage, HighlightText, ItemPropsContext, ListItemProps } from '@o/ui'
+import { ChatMessage, HighlightText, ItemPropsContext, ListItemViewProps } from '@o/ui'
 import React, { useContext } from 'react'
 
 const getMessages = (messages: any[], { shownLimit, searchTerm }) => {
@@ -13,7 +13,7 @@ const getMessages = (messages: any[], { shownLimit, searchTerm }) => {
   return res
 }
 
-export function ConversationItem(props: ListItemProps) {
+export function ConversationItem(props: ListItemViewProps) {
   const { oneLine, renderText } = useContext(ItemPropsContext)
   const { searchTerm, shownLimit } = props
   const { data, people } = props.item

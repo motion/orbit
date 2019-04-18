@@ -1,7 +1,8 @@
-import { AppDefinition, AppProps, getAppDefinitions, OrbitListItemProps } from '@o/kit'
+import { AppDefinition, AppProps, getAppDefinitions } from '@o/kit'
 import { Bit } from '@o/models'
+import { ListItemProps } from '@o/ui'
 
-export function getAppProps(props: OrbitListItemProps): AppProps {
+export function getAppProps(props: ListItemProps): AppProps {
   if (!props) {
     return {}
   }
@@ -24,7 +25,7 @@ export function getAppProps(props: OrbitListItemProps): AppProps {
     icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
     subId: props.subId ? `${props.subId}` : undefined,
-    ...props.appProps,
+    ...props.extraData,
   }
 }
 

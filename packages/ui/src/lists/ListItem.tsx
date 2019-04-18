@@ -15,17 +15,17 @@ import { VirtualListItemProps } from './VirtualListItem'
 
 export type ListItemProps = ListItemSimpleProps &
   Omit<VirtualListItemProps<Bit>, 'index'> & {
-    // Bit | any
     index?: number
-    // for appconfig merge
     id?: string
     identifier?: string
     subType?: string
-    // extra props for orbit list items
     people?: Bit[]
     hidePeople?: boolean
     itemViewProps?: ListItemViewProps
     selectableStore?: SelectableStore
+
+    // you can attach some extra data, if you need it elsewhere
+    extraData?: any
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {

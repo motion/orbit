@@ -36,6 +36,18 @@ export const components = {
       <Space />
     </>
   ),
+  li: props => (
+    <>
+      <li style={{ marginLeft: 26 }} {...props} />
+      <Space size="xs" />
+    </>
+  ),
+  ul: props => (
+    <>
+      <ul {...props} />
+      <Space />
+    </>
+  ),
   p: props => (
     <>
       <Paragraph size={1.05} sizeLineHeight={1.25} margin={0} {...props} />
@@ -57,8 +69,12 @@ export const components = {
   },
 }
 
-export function MDX({ children }: any) {
-  return <MDXProvider components={components}>{children}</MDXProvider>
+export function MDX({ children, ...props }: any) {
+  return (
+    <MDXProvider components={components} {...props}>
+      {children}
+    </MDXProvider>
+  )
 }
 
 const InlineCode = gloss({

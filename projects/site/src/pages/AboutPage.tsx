@@ -10,7 +10,7 @@ import { LegsSection } from './HomePage/MissionMottoSection'
 export default mount({
   '/': route({
     title: 'About',
-    view: AboutPage,
+    view: <AboutPage />,
   }),
 })
 
@@ -18,7 +18,7 @@ export function AboutPage() {
   const siteStore = useSiteStore()
 
   return (
-    <>
+    <main>
       <Header slim />
       <Parallax
         pages={2}
@@ -29,7 +29,7 @@ export function AboutPage() {
         <LegsSection offset={0} />
         <FeetSection offset={1} />
       </Parallax>
-    </>
+    </main>
   )
 }
 

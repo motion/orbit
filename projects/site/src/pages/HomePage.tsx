@@ -16,7 +16,11 @@ import { WaistSection } from './HomePage/SecuritySection'
 
 const ParallaxContext = createContextualProps<{ value: Parallax }>({ value: null })
 export const useParallax = () => {
-  return ParallaxContext.useProps().value
+  try {
+    return ParallaxContext.useProps().value
+  } catch {
+    return null
+  }
 }
 
 export function HomePage() {

@@ -34,7 +34,7 @@ export const LogoVertical = memo(
         onClick={async e => {
           e.preventDefault()
           if ((await nav.getRoute()).url.pathname === '/') {
-            parallax.scrollTo(0)
+            parallax && parallax.scrollTo(0)
           } else {
             nav.navigate('/')
           }

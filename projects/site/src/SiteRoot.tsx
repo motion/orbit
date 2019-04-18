@@ -15,18 +15,9 @@ const routes = mount({
   }),
   '/docs': lazy(() => import('./pages/DocsPage')),
   '/blog': lazy(() => import('./pages/BlogPage')),
-  '/about': route({
-    title: 'About',
-    view: lazy(() => import('./pages/AboutPage')),
-  }),
-  '/beta': route({
-    title: 'Beta',
-    view: lazy(() => import('./pages/BetaPage')),
-  }),
-  '/apps': route({
-    title: 'Apps',
-    view: lazy(() => import('./pages/AppsPage')),
-  }),
+  '/about': lazy(() => import('./pages/AboutPage')),
+  '/beta': lazy(() => import('./pages/BetaPage')),
+  '/apps': lazy(() => import('./pages/AppsPage')),
 })
 
 export const Navigation = createBrowserNavigation({

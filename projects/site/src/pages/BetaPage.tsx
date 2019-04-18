@@ -13,7 +13,7 @@ import { bottomSeparator } from './HomePage/SecuritySection'
 export default mount({
   '/': route({
     title: 'Beta',
-    view: BetaPage,
+    view: <BetaPage />,
   }),
 })
 

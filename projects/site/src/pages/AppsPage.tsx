@@ -17,7 +17,7 @@ import { SpacedPageContent } from './HomePage/SpacedPageContent'
 export default mount({
   '/': route({
     title: 'Apps',
-    view: AppsPage,
+    view: <AppsPage />,
   }),
 })
 

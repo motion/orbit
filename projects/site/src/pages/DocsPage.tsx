@@ -19,6 +19,7 @@ import { mount, route } from 'navi'
 import React, { memo, useState } from 'react'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
+import { MDX } from '../views/MDX'
 //
 // can remove this and just use import(), but hmr fails
 import Buttons from './DocsButtons.mdx'
@@ -85,7 +86,7 @@ function DocsPage() {
   })
 
   return (
-    <>
+    <MDX>
       <Header slim />
       <View flex={1}>
         <View flex={1} position="relative">
@@ -118,7 +119,7 @@ function DocsPage() {
           </Templates.MasterDetail>
         </View>
       </View>
-    </>
+    </MDX>
   )
 }
 

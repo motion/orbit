@@ -9,7 +9,6 @@ import { AppsPage } from './pages/AppsPage'
 import { BetaPage } from './pages/BetaPage'
 import { HomePage } from './pages/HomePage'
 import { themes } from './themes'
-import { MDX } from './views/MDX'
 
 // Define your routes
 const routes = mount({
@@ -45,11 +44,9 @@ export const SiteRoot = hot(() => {
   return (
     <ProvideUI themes={themes}>
       <Suspense fallback={null}>
-        <MDX>
-          <Layout>
-            <Router navigation={Navigation} />
-          </Layout>
-        </MDX>
+        <Layout>
+          <Router navigation={Navigation} />
+        </Layout>
       </Suspense>
     </ProvideUI>
   )

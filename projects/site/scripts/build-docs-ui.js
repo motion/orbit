@@ -48,5 +48,5 @@ fs.writeJSON(path.join(outDir, `componentNames.json`), components.map(x => x.dis
 for (const component of components) {
   const outFile = path.join(outDir, `${component.displayName}.json`)
   console.log('🔥', outFile)
-  fs.writeJSON(outFile, components, { spaces: 2 })
+  fs.writeJSON(outFile, component, { spaces: 2 })
 }

@@ -4,6 +4,8 @@ import React from 'react'
 import Description from '../../tmp/Button.json'
 import { DocsMeta } from './DocsMeta'
 
+console.log('Description', Description)
+
 export let Source = <DocsMeta source={ButtonSrc} displayName="Button" component={Description} />
 
 export let One = (

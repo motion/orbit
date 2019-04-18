@@ -1,6 +1,7 @@
 import { Templates } from '@o/kit'
 import {
   Button,
+  Col,
   Divider,
   gloss,
   Section,
@@ -8,38 +9,47 @@ import {
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
+  Title,
   Toolbar,
   useMedia,
   useOnUnmount,
   useTheme,
-  View,
 } from '@o/ui'
-import { ensure, react, useReaction, useStore } from '@o/use-store'
-import { mount, route } from 'navi'
+import { useReaction } from '@o/use-store'
+import { compose, mount, route, withView } from 'navi'
 import React, { memo, useState } from 'react'
+import { useNavigation, View } from 'react-navi'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
-//
-// can remove this and just use import(), but hmr fails
-import Buttons from './DocsButtons.mdx'
-import Cards from './DocsCards.mdx'
-
-export default mount({
-  '/': route({
-    title: 'Docs',
-    view: DocsPage,
-  }),
-})
 
 const views = {
-  buttons: () => <Buttons />,
-  cards: () => <Cards />,
-  // forms: () => Forms,
-  // tables: () => Tables,
+  buttons: () => import('./DocsButtons.mdx'),
+  cards: () => import('./DocsCards.mdx'),
 }
 
-const itemsByIndex = {
+export default compose(
+  withView(req => {
+    const id = req.params.id
+    return <DocsPage title={uiItems.find(x => x.id === id).title} />
+  }),
+
+  mount({
+    '/': route({
+      title: 'Docs',
+      view: <WelcomeDocs />,
+    }),
+    '/:id': route(async req => {
+      let id = req.params.id
+      let ChildView = (await views[id]()).default || (() => <div>nada {id}</div>)
+      return {
+        view: <ChildView />,
+      }
+    }),
+  }),
+)
+
+const categories = {
   all: () => [
     ...docsItems,
     {
@@ -53,28 +63,11 @@ const itemsByIndex = {
   kit: () => uiItems,
 }
 
-class DocsPageStore {
-  SubView = null
-  selected = null
-
-  setSelected = x => (this.selected = x)
-
-  setSubView = async view => {
-    ensure('view', !!view)
-    if (view instanceof Promise) {
-      view = await view
-    }
-    this.SubView = view
-  }
-
-  getView = react(() => this.selected && views[this.selected.id], this.setSubView)
-}
-
-function DocsPage() {
+function DocsPage(props: { title?: string }) {
   const siteStore = useSiteStore()
-  const { selected, setSelected, SubView } = useStore(DocsPageStore)
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
+  const nav = useNavigation()
   const theme = useTheme()
 
   useReaction(() => {
@@ -88,10 +81,10 @@ function DocsPage() {
   return (
     <MDX>
       <Header slim />
-      <View flex={1}>
-        <View flex={1} position="relative">
+      <Col flex={1}>
+        <Col flex={1} position="relative">
           <Templates.MasterDetail
-            items={itemsByIndex[section]()}
+            items={categories[section]()}
             showSidebar={showSidebar}
             detailProps={{
               flex: 3,
@@ -100,25 +93,24 @@ function DocsPage() {
               background: theme.sidebarBackground,
             }}
             searchable
-            onSelect={setSelected}
+            onSelect={item => {
+              nav.navigate(`/docs/${item.id}`)
+            }}
             belowSearchBar={<DocsToolbar section={section} setSection={setSection} />}
           >
             <WidthLimit>
               <Content>
-                {SubView && (
-                  <SelectedSection
-                    onToggleSidebar={() => setShowSidebar(!showSidebar)}
-                    setTheme={siteStore.setTheme}
-                    theme={siteStore.theme}
-                    title={selected.title}
-                    SubView={SubView}
-                  />
-                )}
+                <SelectedSection
+                  onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                  setTheme={siteStore.setTheme}
+                  theme={siteStore.theme}
+                  title={props.title}
+                />
               </Content>
             </WidthLimit>
           </Templates.MasterDetail>
-        </View>
-      </View>
+        </Col>
+      </Col>
     </MDX>
   )
 }
@@ -130,7 +122,7 @@ const WidthLimit = gloss({
   overflowY: 'auto',
 })
 
-const Content = gloss(View, {
+const Content = gloss(Col, {
   margin: [0, 'auto'],
   padding: [0, 8],
   width: '100%',
@@ -158,7 +150,7 @@ const DocsToolbar = memo(({ section, setSection }: any) => {
   )
 })
 
-const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar }: any) => {
+const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar }: any) => {
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
@@ -181,7 +173,7 @@ const SelectedSection = memo(({ setTheme, theme, title, SubView, onToggleSidebar
         </SurfacePassProps>
       }
     >
-      <SubView />
+      <View />
     </Section>
   )
 })
@@ -285,3 +277,7 @@ const uiItems = [
   { title: 'Visibility' },
   { title: 'PassProps' },
 ]
+
+function WelcomeDocs() {
+  return <Title>Welcome to docs</Title>
+}

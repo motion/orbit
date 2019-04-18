@@ -18,7 +18,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 // const Critters = require('critters-webpack-plugin')
 // const PreloadWebpackPlugin = require('preload-webpack-plugin')
-const WebpackNotifierPlugin = require('webpack-notifier')
+// const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
 const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
@@ -303,7 +303,7 @@ async function makeConfig() {
       new IgnoreNotFoundExportPlugin(),
       // new ErrorOverlayPlugin(),
 
-      new WebpackNotifierPlugin(),
+      // new WebpackNotifierPlugin(),
 
       new webpack.DefinePlugin(defines),
 

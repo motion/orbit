@@ -19,15 +19,12 @@ import { SignupForm } from './EarlyAccessBetaSection'
 import { useScreenVal } from './SpacedPageContent'
 
 export function FeetSection(props) {
-  const theme = useTheme()
   return (
     <Theme name="home">
       <Page {...props}>
         <Page.Content pad="xxl" justifyContent="space-between">
           <Space size="xl" />
-          <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
-          <View flex={useScreenVal(1, 3, 4)} />
-          <LogoVertical />
+          <AboveFooter />
           <View flex={1} />
           <Footer />
         </Page.Content>
@@ -47,6 +44,17 @@ export function FeetSection(props) {
         />
       </Page>
     </Theme>
+  )
+}
+
+export const AboveFooter = () => {
+  const theme = useTheme()
+  return (
+    <>
+      <SignupForm width="80%" background={theme.backgroundStrong} borderRadius={20} />
+      <View flex={useScreenVal(1, 3, 4)} />
+      <LogoVertical />
+    </>
   )
 }
 

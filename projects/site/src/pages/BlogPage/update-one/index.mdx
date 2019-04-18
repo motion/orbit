@@ -1,5 +1,3 @@
-_Note: this is for early insiders, please keep the link quiet. I've edited it a bit for clarity over time._
-
 I'm excited to start talking about Orbit. It's been an intense development period, so it's great to get it out into the world. We're sending alpha builds to [mailing list subscribers](https://tryorbit.com) now, please do sign up!
 
 ---
@@ -40,7 +38,17 @@ Orbit wants to tilt us back to being able to manage, understand, and organize in
 - Extend/build on that knowledge in flexible ways.
 - Do all of this without giving up privacy or security.
 
-<div className="demo-image" />
+<div
+  style={{
+    maxHeight: '80vw',
+    height: '547.33333px',
+    background: `url(${require('./demo.jpg')}) no-repeat 50%`,
+    backgroundSize: 'contain',
+    WebkitTransformOrigin: 'top left',
+    transformOrigin: 'top left',
+    margin: '0 -5% 0',
+  }}
+/>
 
 <div className="alt">Orbit Home with experimental Topic Explorer app.</div>
 
@@ -51,8 +59,8 @@ Orbit will need to crawl a lot of your sensitive information. But there's unique
 But today's computers are powerful and is improving nearly weekly to above human-levels in many cases. We want to be the company that delivers that NLP effectively to your daily life, answering questions you have across your cloud knowledge.
 
 <div className="graphic">
-  <div style={{ margin: 'auto', maxWidth: '100vw' }}>
-    <img alt="On-Device = Data stays on your computer" src="./illustration.svg" />
+  <div style={{ margin: '20px -20%', maxWidth: '100vw' }}>
+    <img alt="On-Device = Data stays on your computer" src={require('./illustration.svg')} />
   </div>
 </div>
 
@@ -61,12 +69,6 @@ Today, Orbit runs, syncs, searches -- does everything -- privately on your compu
 ### The Features
 
 For now Orbit is a lot like Spotlight, with a Home. The Home shows recent activity, people, and apps you've installed. Over time Orbit will grow to become more akin to a knowledge assistant. It will get better at understanding english queries, sorting staleness, augmenting as you work, and summarizing noisy data. It will also become more contextually aware, which I explain a bit more in the Context section.
-
-<div
-  style={{ width: 361, borderRadius: 20, overflow: 'hidden', position: 'absolute', right: -400 }}
->
-  <img alt="Orbit Home" src="./nlp.jpg" />
-</div>
 
 We have some interesting pieces in place. You can intuitively search using natural language by time, people, date ranges, integrations and more. We build profiles of people from across your cloud, and we allow you to explore your data intuitively. But we have a long way to go, and we'll update with interesting information here as we go.
 

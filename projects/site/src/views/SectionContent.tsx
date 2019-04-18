@@ -5,9 +5,16 @@ import * as Constants from '../constants'
 
 export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
 
-export const SectionContent = ({ outside, children, zIndex, ...props }: SectionContentProps) => {
+export const SectionContent = ({
+  outside,
+  children,
+  zIndex,
+  background,
+  padding,
+  ...props
+}: SectionContentProps) => {
   return (
-    <Section width="100%" zIndex={zIndex}>
+    <Section width="100%" zIndex={zIndex} background={background} padding={padding}>
       {outside}
       <SectionContentChrome {...props}>
         <div

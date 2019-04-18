@@ -14,19 +14,26 @@ export function BlogPageIndex() {
     .map(x => posts[x])
 
   return (
-    <BlogLayout>
+    <BlogLayout space>
       {recentPosts.map((post, index) => (
         <Post
           pad
           key={index}
           href="what"
           tagName="a"
+          textDecoration="none"
           onClick={e => {
             e.preventDefault()
             navigation.navigate(`/blog/${postIds[index]}`)
           }}
+          cursor="pointer"
+          hoverStyle={{
+            background: '#eee',
+          }}
         >
-          <TitleText textAlign="left">{post.title}</TitleText>
+          <TitleText selectable={false} textAlign="left">
+            {post.title}
+          </TitleText>
           {new Date(post.date)
             .toLocaleDateString('en-US', {
               weekday: 'short',

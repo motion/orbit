@@ -97,7 +97,7 @@ function HeadText() {
         sizeLineHeight={1.3}
         margin={[0, 'auto']}
         textAlign="center"
-        alpha={0.56}
+        alpha={0.6}
         whiteSpace="nowrap"
       >
         <FadeIn disable={!measured} delay={150}>
@@ -276,7 +276,7 @@ export function HeadSection(props) {
               overflow="hidden"
               bottom={60}
               zIndex={1}
-              opacity={0.24}
+              opacity={0.45}
               transform={{
                 scale: 1.3,
               }}

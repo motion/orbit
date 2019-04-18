@@ -1,31 +1,32 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space, Title } from '@o/ui'
+import { gloss, Paragraph, Space } from '@o/ui'
 import React from 'react'
 import componentNames from '../../tmp/componentNames.json'
 import { CodeBlock } from './CodeBlock'
+import { TitleText } from './TitleText'
 
 export const components = {
   h1: props => (
     <>
-      <Title size="xl" {...props} />
+      <TitleText size="xl" {...props} />
       <Space />
     </>
   ),
   h2: props => (
     <>
-      <Title size="lg" {...props} />
+      <TitleText size="lg" {...props} />
       <Space />
     </>
   ),
   h3: props => (
     <>
-      <Title size="md" {...props} />
+      <TitleText size="md" {...props} />
       <Space />
     </>
   ),
   h4: props => (
     <>
-      <Title size="sm" {...props} />
+      <TitleText size="sm" {...props} />
       <Space />
     </>
   ),
@@ -36,10 +37,42 @@ export const components = {
       <Space />
     </>
   ),
+  li: props => (
+    <>
+      <li style={{ marginLeft: 26 }} {...props} />
+      <Space size="xs" />
+    </>
+  ),
+  ul: props => (
+    <>
+      <ul {...props} />
+      <Space />
+    </>
+  ),
   p: props => (
     <>
-      <Paragraph size={1.05} sizeLineHeight={1.25} margin={0} {...props} />
+      <Paragraph margin={0} {...props} fontSize="inherit" lineHeight="inherit" />
       <Space />
+    </>
+  ),
+  description: props => (
+    <>
+      <Paragraph margin={0} {...props} fontSize="inherit" lineHeight="inherit" />
+      <Space />
+    </>
+  ),
+  blockquote: props => (
+    <>
+      <Paragraph
+        fontFamily="GT Eesti"
+        padding={[8, 20, 0]}
+        margin={20}
+        borderLeft={theme => [2, theme.borderColor]}
+        fontSize="110%"
+        lineHeight="inherit"
+        alpha={0.5}
+        {...props}
+      />
     </>
   ),
   inlineCode: ({ children, ...props }) => {
@@ -57,8 +90,12 @@ export const components = {
   },
 }
 
-export function MDX({ children }: any) {
-  return <MDXProvider components={components}>{children}</MDXProvider>
+export function MDX({ children, ...props }: any) {
+  return (
+    <MDXProvider components={components} {...props}>
+      {children}
+    </MDXProvider>
+  )
 }
 
 const InlineCode = gloss({

@@ -5,6 +5,10 @@ export const Paragraph = gloss(SimpleText, {
   alpha: 0.85,
   userSelect: 'text',
   display: 'block',
+
+  '& > img': {
+    maxWidth: '100%',
+  },
 })
 
 Paragraph.defaultProps = {

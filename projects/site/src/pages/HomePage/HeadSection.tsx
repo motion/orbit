@@ -1,15 +1,4 @@
-import {
-  Center,
-  FullScreen,
-  gloss,
-  Image,
-  Row,
-  Space,
-  toColor,
-  useDebounce,
-  View,
-  ViewProps,
-} from '@o/ui'
+import { Center, FullScreen, gloss, Image, Row, Space, toColor, useDebounce, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 import downmark from '../../../public/images/down-mark.svg'
@@ -276,7 +265,7 @@ export function HeadSection(props) {
               overflow="hidden"
               bottom={60}
               zIndex={1}
-              opacity={0.24}
+              opacity={0.45}
               transform={{
                 scale: 1.3,
               }}

@@ -22,12 +22,9 @@ const menuHeightSetter = memoize((index: number) => (height: number) => {
 export default function MenuApp(props: MenuAppProps & { index: number }) {
   const { menuStore } = useStores()
   // memo to prevent expensive renders on height changes
-  const menuApp = React.useMemo(
-    () => {
-      return <AppView viewType="index" {...props} />
-    },
-    [JSON.stringify(props)],
-  )
+  const menuApp = React.useMemo(() => {
+    return <AppView viewType="index" {...props} />
+  }, [JSON.stringify(props)])
 
   return (
     <SubPane

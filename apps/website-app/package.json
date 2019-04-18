@@ -14,7 +14,7 @@
     "@o/ui": "^2.4.1",
     "get-urls": "^8.0.0",
     "immer": "1.7.2",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "node-readability": "3.0.0",
     "puppeteer": "1.13.0",
     "urijs": "^1.19.0"

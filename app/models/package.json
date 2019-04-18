@@ -12,7 +12,7 @@
     "@o/mediator": "^2.4.1",
     "@o/utils": "^2.4.1",
     "global": "^4.3.2",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",
     "typeorm": "^0.3.0-alpha.22",
     "zen-observable": "0.8.13"

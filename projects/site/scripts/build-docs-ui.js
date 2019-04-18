@@ -37,7 +37,16 @@ const { parse } = docgen.withCustomConfig('./tsconfig.json', {
   },
 })
 
-const out = parse(path.join(root, 'index.ts'))
-const outFile = path.join(outDir, `components.json`)
-console.log('🔥', outFile)
-fs.writeJSON(outFile, out, { spaces: 2 })
+const components = parse(path.join(root, 'index.ts'))
+
+// write componentNames
+fs.writeJSON(path.join(outDir, `componentNames.json`), components.map(x => x.displayName), {
+  spaces: 2,
+})
+
+// write every component description
+for (const component of components) {
+  const outFile = path.join(outDir, `${component.displayName}.json`)
+  console.log('🔥', outFile)
+  fs.writeJSON(outFile, components, { spaces: 2 })
+}

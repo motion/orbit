@@ -5,11 +5,11 @@
   "sideEffects": false,
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5000 --target web",
-    "build": "rm -r dist || true && NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
+    "build": "NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
     "start:prod": "NODE_ENV=production mcro-build --prod --report --target web",
     "build:docs:ui": "node ./scripts/build-docs-ui.js",
     "deploy": "./surge-fix.sh && surge dist",
-    "publish:site": "yarn build && yarn deploy"
+    "publish:site": "rm -r dist || true && yarn build && yarn deploy"
   },
   "dependencies": {
     "@babel/runtime": "7.4.3",
@@ -24,7 +24,7 @@
     "@o/wait-for-fonts": "^2.4.1",
     "intersection-observer": "0.5.1",
     "jsonp": "^0.2.1",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "mobx": "5.9.4",
     "navi": "0.12.4",
     "prism-react-renderer": "0.1.6",

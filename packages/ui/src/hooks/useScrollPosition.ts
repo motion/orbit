@@ -5,24 +5,21 @@ export function useScrollPosition<A extends HTMLDivElement, T extends React.RefO
   ref: T,
   cb: (ref: A) => any,
 ) {
-  useEffect(
-    () => {
-      const node = ref.current
-      const scrollParent = getScrollParent(node)
-      console.log('scrollParent', scrollParent)
-      if (!scrollParent) return
-      const onScroll = debounce(() => {
-        console.log('got em')
-        cb(ref.current)
-      }, 32)
-      // TODO can make this deduped by container :)
-      scrollParent.addEventListener('scroll', onScroll)
-      return () => {
-        scrollParent.removeEventListener('scroll', onScroll)
-      }
-    },
-    [ref.current],
-  )
+  useEffect(() => {
+    const node = ref.current
+    const scrollParent = getScrollParent(node)
+    console.log('scrollParent', scrollParent)
+    if (!scrollParent) return
+    const onScroll = debounce(() => {
+      console.log('got em')
+      cb(ref.current)
+    }, 32)
+    // TODO can make this deduped by container :)
+    scrollParent.addEventListener('scroll', onScroll)
+    return () => {
+      scrollParent.removeEventListener('scroll', onScroll)
+    }
+  }, [ref.current])
 }
 
 function getScrollParent(element: HTMLElement, includeHidden?: boolean) {

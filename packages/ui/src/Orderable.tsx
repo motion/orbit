@@ -230,7 +230,7 @@ export class Orderable extends React.Component<OrderableProps, OrderableState> {
     }
 
     // figure out new order
-    const zipped: Array<[string, number]> = []
+    const zipped: [string, number][] = []
     for (const key in sizes) {
       const rect = sizes[key]
       let offset = rect[this.offsetKey]

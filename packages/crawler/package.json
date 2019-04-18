@@ -11,7 +11,7 @@
   "dependencies": {
     "@o/logger": "^2.4.1",
     "babel-polyfill": "7.0.0-beta.3",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "readability-from-string": "^2.0.0",
     "sanitize-html": "^1.16.1",
     "upndown": "^2.1.0",

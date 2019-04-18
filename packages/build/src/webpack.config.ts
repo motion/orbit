@@ -79,45 +79,47 @@ const optimization = {
   prod: {
     usedExports: true,
     sideEffects: true,
-    runtimeChunk: true,
-    splitChunks: {
-      chunks: 'all',
-      name: false,
-    },
+    // runtimeChunk: true,
+    // splitChunks: {
+    //   chunks: 'async',
+    //   name: false,
+    // },
     minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-        cache: true,
-        parallel: true,
-        terserOptions: {
-          parse: {
-            ecma: 8,
+      false &&
+        new TerserPlugin({
+          sourceMap: true,
+          cache: true,
+          parallel: true,
+          terserOptions: {
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 6,
+              warnings: false,
+            },
+            mangle: {
+              safari10: true,
+            },
+            keep_classnames: true,
+            output: {
+              ecma: 6,
+              comments: false,
+              beautify: false,
+              ascii_only: true,
+            },
           },
-          compress: {
-            ecma: 6,
-            warnings: false,
+        }),
+      false &&
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorOptions: {
+            parser: safePostCssParser,
+            map: {
+              inline: false,
+              annotation: true,
+            },
           },
-          mangle: {
-            safari10: true,
-          },
-          keep_classnames: true,
-          output: {
-            ecma: 6,
-            comments: false,
-            beautify: false,
-            ascii_only: true,
-          },
-        },
-      }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: {
-          parser: safePostCssParser,
-          map: {
-            inline: false,
-            annotation: true,
-          },
-        },
-      }),
+        }),
     ].filter(Boolean),
   },
   dev: {
@@ -132,6 +134,7 @@ const alias = {
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
   'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+  lodash: 'lodash',
 }
 
 const babelrcOptions = {
@@ -204,11 +207,11 @@ async function makeConfig() {
     },
     module: {
       rules: [
-        {
-          test: /[wW]orker\.[jt]sx?$/,
-          use: ['workerize-loader'],
-          // exclude: /node_modules/,
-        },
+        // {
+        //   test: /[wW]orker\.[jt]sx?$/,
+        //   use: ['workerize-loader'],
+        //   // exclude: /node_modules/,
+        // },
         // ignore .node.js modules
         {
           test: /\.node.[jt]sx?/,
@@ -242,9 +245,10 @@ async function makeConfig() {
         {
           test: /\.css$/,
           use: [
-            isProd && {
-              loader: MiniCssExtractPlugin.loader,
-            },
+            false &&
+              isProd && {
+                loader: MiniCssExtractPlugin.loader,
+              },
             !isProd && {
               loader: 'style-loader',
             },
@@ -310,27 +314,26 @@ async function makeConfig() {
           useTypescriptIncrementalApi: true,
         }),
 
-      isProd && new WebpackDeepScopeAnalysisPlugin(),
+      false && isProd && new WebpackDeepScopeAnalysisPlugin(),
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',
         template: 'public/index.html',
-        inject: true,
         chunksSortMode: 'none',
-        ...(isProd && {
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true,
-          },
-        }),
+        // ...(isProd && {
+        //   minify: {
+        //     removeComments: true,
+        //     collapseWhitespace: true,
+        //     removeRedundantAttributes: true,
+        //     useShortDoctype: true,
+        //     removeEmptyAttributes: true,
+        //     removeStyleLinkTypeAttributes: true,
+        //     keepClosingSlash: true,
+        //     minifyJS: true,
+        //     minifyCSS: true,
+        //     minifyURLs: true,
+        //   },
+        // }),
       }),
 
       // WARNING: this may or may not work wiht code splitting
@@ -339,15 +342,17 @@ async function makeConfig() {
       //   rel: 'preload',
       // }),
 
-      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      false && isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
-      isProd &&
+      false &&
+        isProd &&
         new MiniCssExtractPlugin({
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      isProd &&
+      false &&
+        isProd &&
         target === 'web' &&
         new HtmlCriticalWebpackPlugin({
           base: outputPath,
@@ -376,9 +381,10 @@ async function makeConfig() {
 
       !isProd && new webpack.NamedModulesPlugin(),
 
-      isProd && new DuplicatePackageCheckerPlugin(),
+      false && isProd && new DuplicatePackageCheckerPlugin(),
 
-      isProd &&
+      false &&
+        isProd &&
         new PrepackPlugin({
           reactEnabled: true,
           compatibility: 'node-react',

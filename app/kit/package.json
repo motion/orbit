@@ -26,7 +26,7 @@
     "fuzzysort": "1.1.4",
     "hash-sum": "1.0.2",
     "immer": "1.7.2",
-    "lodash": "*",
+    "lodash": "4.17.11",
     "react-cache": "2.0.0-alpha.1",
     "react-svg-inline": "2.1.1",
     "sherlockjs": "1.4.0",

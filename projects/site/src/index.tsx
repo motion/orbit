@@ -1,5 +1,6 @@
 import 'react-hot-loader' // must be imported before react
 import './configurations'
+import { SiteRoot } from './SiteRoot'
 
 require('./assets/font-gteesti/stylesheet.css')
 require('./assets/siteBase.css')
@@ -9,7 +10,6 @@ const ReactDOM = require('react-dom')
 
 export function render() {
   const RootNode = document.querySelector('#app')
-  const { SiteRoot } = require('./SiteRoot')
   ReactDOM.render(<SiteRoot />, RootNode)
 }
 

@@ -17,7 +17,7 @@
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "core-js": "2.6.5",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-hot-loader": "4.8.4"

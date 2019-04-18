@@ -91,9 +91,13 @@ function HeadText() {
       <Space size={useScreenVal('sm', 'lg', 'xxl')} />
 
       <Paragraph
-        style={{ ...pFit.style, height: 'auto' }}
+        style={{
+          ...pFit.style,
+          height: 'auto',
+          lineHeight: pFit.isMeasured ? `${pFit.height * 2.5}px` : `30px`,
+        }}
         height="auto"
-        transformOrigin="top center"
+        transformOrigin="top left"
         sizeLineHeight={1.3}
         margin={[0, 'auto']}
         textAlign="center"
@@ -115,10 +119,12 @@ function HeadText() {
 
       {/* this is just to measure */}
       <Paragraph
+        className="measure-p"
         ref={pFit.ref}
-        style={pFit.style}
         opacity={0}
+        fontSize={40}
         position="absolute"
+        whiteSpace="pre"
         pointerEvents="none"
       >
         {longest}
@@ -158,11 +164,12 @@ export function HeadSection(props) {
         <Page.Content>
           <FullScreen opacity={fontsLoaded ? 1 : 0}>
             <Row
-              transform={{ y: '-55%' }}
+              transform={{
+                y: -50,
+              }}
               margin={['auto', 0]}
               alignItems="center"
               justifyContent="center"
-              minHeight="20%"
             >
               <HeadText />
             </Row>

@@ -1,4 +1,5 @@
 import { always, ensure, react, useStore } from '@o/use-store'
+import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
 import { Config } from '../helpers/configure'
@@ -19,6 +20,7 @@ export type SelectableProps = {
   selectableStoreRef?: MutableRefObject<SelectableStore>
   onSelect?: (rows: any[], indices?: number[]) => void
   alwaysSelected?: boolean
+  defaultSelected?: number
   selectable?: 'multi' | boolean
 }
 
@@ -27,6 +29,7 @@ export const selectablePropKeys = [
   'alwaysSelected',
   'selectable',
   'selectableStore',
+  'defaultSelected',
   'selectableStoreRef',
 ]
 
@@ -75,6 +78,7 @@ export class SelectableStore {
     const nextFiltered = next.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
       if (row && row.selectable === false) {
+        console.warn('unselectable', row)
         return false
       }
       return true
@@ -98,15 +102,31 @@ export class SelectableStore {
 
   callbackOnSelectProp = react(
     () => always(this.active),
-    () => {
+    async (_, { sleep }) => {
+      // TODO this should really be handled by concurrent
+      await sleep(16)
       ensure('onSelect', !!this.props.onSelect)
-      const { rows, indices } = this.selectedState
-      this.props.onSelect(rows, indices)
+      this.callbackOnSelect()
     },
     {
       deferFirstRun: true,
     },
   )
+
+  defaultSelectedProp = react(
+    () => this.props.defaultSelected,
+    async (index, { when }) => {
+      ensure('defined', isDefined(index))
+      await when(() => !!this.rows.length)
+      this.setActiveIndex(index)
+      this.callbackOnSelect()
+    },
+  )
+
+  callbackOnSelect = () => {
+    const { rows, indices } = this.selectedState
+    this.props.onSelect(rows, indices)
+  }
 
   get selectedState() {
     const rows = []

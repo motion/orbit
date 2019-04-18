@@ -1,4 +1,4 @@
-import { createContextualProps, FullScreen } from '@o/ui'
+import { createContextualProps, FullScreen, Portal } from '@o/ui'
 import { throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { IS_CHROME } from '../constants'
@@ -91,15 +91,18 @@ function PeekHeader() {
   }, [])
 
   return (
-    <FullScreen
-      zIndex={100000000}
-      position="fixed"
-      bottom="auto"
-      transition="all ease 200ms"
-      opacity={show ? 1 : 0}
-      transform={{ y: show ? 0 : -40 }}
-    >
-      <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
-    </FullScreen>
+    <Portal>
+      <FullScreen
+        zIndex={100000000}
+        position="fixed"
+        bottom="auto"
+        transition="all ease 200ms"
+        opacity={show ? 1 : 0}
+        transform={{ y: show ? 0 : -40 }}
+        className="peek-header"
+      >
+        <Header slim boxShadow={[[0, 0, 30, [0, 0, 0, 1]]]} />
+      </FullScreen>
+    </Portal>
   )
 }

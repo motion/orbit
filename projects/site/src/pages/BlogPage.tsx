@@ -9,7 +9,7 @@ import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { BlogPageIndex } from './BlogPage/BlogPageIndex'
 import { PostEntry, posts } from './BlogPage/posts'
-import { Wavy } from './HomePage/EarlyAccessBetaSection'
+import { purpleWave, Wavy } from './HomePage/EarlyAccessBetaSection'
 
 export default compose(
   withView(() => {
@@ -59,10 +59,12 @@ BlogPage.theme = 'light'
 function PostPage(props: { post: PostEntry; children?: any }) {
   return (
     <>
+      <BlogTitle />
       <SectionContent>
-        <BlogTitle />
         <Col pad="xxxl" maxWidth={800} margin="auto" fontSize={20} lineHeight={32}>
-          <TitleText size="xxl">{props.post.title}</TitleText>
+          <TitleText color={purpleWave.backgroundColor} size="xxl">
+            {props.post.title}
+          </TitleText>
           <Space />
           {props.children}
         </Col>
@@ -73,15 +75,16 @@ function PostPage(props: { post: PostEntry; children?: any }) {
 }
 
 export const BlogTitle = () => (
-  <>
-    <Space />
-    <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-      <Col pad position="relative" cursor="pointer">
-        <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
-        <TitleText textAlign="left" size="sm">
-          The Orbit Blog
-        </TitleText>
-      </Col>
-    </Link>
-  </>
+  <Col position="relative">
+    <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
+    <SectionContent>
+      <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+        <Col padding={[100, 30, 50]} position="relative" cursor="pointer">
+          <TitleText selectable={false} textAlign="left" size="sm">
+            The Orbit Blog
+          </TitleText>
+        </Col>
+      </Link>
+    </SectionContent>
+  </Col>
 )

@@ -51,7 +51,7 @@ export function AppsIndex() {
           small: true,
           subTitle: getDescription(def) || 'No Description',
           after: sourceIcon,
-          appProps: {
+          extraData: {
             identifier: 'apps',
             subType: 'add-app',
             subId: def.id,

@@ -52,7 +52,7 @@ const { PassProps, useProps } = createContextualProps<{
 }>()
 export const PassExtraListProps = PassProps
 
-export type HandleOrbitSelect = (index: number, appProps: any) => any
+export type HandleOrbitSelect = (index: number, extraData: any) => any
 
 const nullFn = () => null
 

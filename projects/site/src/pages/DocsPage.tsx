@@ -58,7 +58,8 @@ export default compose(
 )
 
 function DocsPage(props: { id?: string; children?: any }) {
-  const item = categories.all.find(x => x.id === props.id)
+  const itemIndex = categories.all.findIndex(x => x['id'] === props.id)
+  const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
@@ -80,7 +81,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         items={categories[section]}
         alwaysSelected
         showSidebar={showSidebar}
-        defaultSelected={1}
+        defaultSelected={itemIndex || 1}
         detailProps={{
           flex: 3,
         }}

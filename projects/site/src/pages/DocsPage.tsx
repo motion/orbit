@@ -9,7 +9,6 @@ import {
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
-  Title,
   Toolbar,
   useMedia,
   useOnUnmount,
@@ -22,6 +21,7 @@ import { useNavigation, View } from 'react-navi'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
+import DocsInstall from './DocsPage/DocsInstall.mdx'
 
 const views = {
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
@@ -41,7 +41,7 @@ export default compose(
   mount({
     '/': route({
       title: 'Docs',
-      view: <WelcomeDocs />,
+      view: <DocsInstall />,
     }),
     '/:id': route(async req => {
       let id = req.params.id
@@ -129,6 +129,8 @@ const Content = gloss(Col, {
   padding: [0, 8],
   width: '100%',
   maxWidth: 860,
+  fontSize: 16,
+  lineHeight: 28,
 })
 
 const DocsToolbar = memo(({ section, setSection }: any) => {
@@ -196,11 +198,7 @@ const docsItems = [
 const uiItems = [
   {
     selectable: false,
-    children: (
-      <SubTitle>
-        User Interface &nbsp;&nbsp;<small>@o/ui</small>
-      </SubTitle>
-    ),
+    children: <SubTitle>User Interface</SubTitle>,
   },
   {
     id: 'surfaces',
@@ -279,7 +277,3 @@ const uiItems = [
   { title: 'Visibility' },
   { title: 'PassProps' },
 ]
-
-function WelcomeDocs() {
-  return <Title>Welcome to docs</Title>
-}

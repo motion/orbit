@@ -1,4 +1,4 @@
-import GithubIcon from '!raw-loader!../../public/logos/github.svg'
+import GithubIcon from '!raw-loader!../../../public/logos/github.svg'
 import { Button, Card, Col, Divider, Icon, Space, Table } from '@o/ui'
 import React from 'react'
 import { CodeBlock } from '../../views/CodeBlock'

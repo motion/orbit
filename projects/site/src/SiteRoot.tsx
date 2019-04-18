@@ -14,6 +14,7 @@ const routes = mount({
     view: <HomePage />,
   }),
   '/docs': lazy(() => import('./pages/DocsPage')),
+  '/blog': lazy(() => import('./pages/BlogPage')),
   '/about': route({
     title: 'About',
     view: lazy(() => import('./pages/AboutPage')),

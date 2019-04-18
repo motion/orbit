@@ -1,12 +1,12 @@
+import { Col, Title } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
-
-const posts = {
-  'update-one': () => import('./BlogPage/update-one/index.md'),
-}
+import { SectionContent } from '../views/SectionContent'
+import { BlogPageIndex } from './BlogPage/BlogPageIndex'
+import { PostEntry, posts } from './BlogPage/posts'
 
 export default compose(
   withView(() => {
@@ -19,15 +19,24 @@ export default compose(
 
   mount({
     '/': route({
-      title: 'Docs',
-      view: null,
+      title: 'Blog',
+      view: BlogPageIndex,
     }),
     '/:id': route(async req => {
       let id = req.params.id
-      let ChildView = (await posts[id]()).default || (() => <div>nada {id}</div>)
-      console.log('ChildView', ChildView)
+      if (!posts[id]) {
+        return {
+          // todo
+          view: () => <div>not found</div>,
+        }
+      }
+      let ChildView = (await posts[id].view()).default
       return {
-        view: <ChildView />,
+        view: (
+          <PostPage post={posts[id]}>
+            <ChildView />
+          </PostPage>
+        ),
       }
     }),
   }),
@@ -43,3 +52,14 @@ function BlogPage(props: { title?: string; children?: any }) {
 }
 
 BlogPage.theme = 'light'
+
+function PostPage(props: { post: PostEntry; children?: any }) {
+  return (
+    <SectionContent>
+      <Col pad="xl" maxWidth={800} margin="auto">
+        <Title>{props.post.title}</Title>
+        {props.children}
+      </Col>
+    </SectionContent>
+  )
+}

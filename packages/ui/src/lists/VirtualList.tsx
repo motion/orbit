@@ -68,7 +68,6 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             // add delay when sortable
             const setRowActive = () => {
               selectableStore.setRowMouseDown(index, e)
-              console.log('mouse down on', index, selectableStore.active)
               finishSelect = false
             }
             if (props.sortable) {

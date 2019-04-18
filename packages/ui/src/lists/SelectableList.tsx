@@ -25,8 +25,6 @@ export function useSelectableProps(props: SelectableListProps, ref) {
 
   useEffect(() => {
     if (Array.isArray(props.itemData)) {
-      console.log('new', window['x'] === props.itemData, props.itemData)
-      window['x'] = props.itemData
       selectableStore.setRows(props.itemData)
     }
   }, [props.itemData])

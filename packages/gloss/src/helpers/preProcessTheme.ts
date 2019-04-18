@@ -1,4 +1,5 @@
 import { ThemeObject } from '@o/css'
+import { pick } from 'lodash'
 import { selectThemeSubset } from './selectThemeSubset'
 
 // this lets you do simple subsets using syntax:
@@ -56,7 +57,7 @@ function createAlternateTheme(theme: ThemeObject, alt: string, shouldFallback?: 
     throw new Error(`No alternate theme found: ${alt}`)
   }
   return ({
-    ...(shouldFallback ? theme : null),
+    ...(shouldFallback ? pick(theme, 'background', 'borderColor', 'color') : null),
     ...theme.alternates[alt],
     _alternateName: alt,
     _isAlternate: true,
@@ -69,5 +70,5 @@ function createAlternateTheme(theme: ThemeObject, alt: string, shouldFallback?: 
 //   2. if themeSelect="" prop, select that subset of the theme
 
 export const preProcessTheme = (props: any, theme: ThemeObject) => {
-  return selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme))
+  return selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme, true))
 }

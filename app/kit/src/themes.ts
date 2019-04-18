@@ -114,6 +114,7 @@ const alternates: ThemeSet = {
   action: colorThemes.blue,
   selected: colorThemes.blue,
   bordered: {
+    glintColor: transparent,
     borderWidth: 2,
     ...colorThemes.transparent,
   },

@@ -1,5 +1,5 @@
-import { ColorLike } from '@o/css'
-import { gloss, ThemeSelect } from '@o/gloss'
+import { ColorLike } from '@o/css';
+import { gloss, ThemeSelect } from '@o/gloss';
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -37,6 +37,7 @@ export const Glint = gloss<Props>({
   const isTop = isUndef(bottom)
   const themeProp = isTop ? 'glintColor' : 'glintColorBottom'
   const glintColor = props.color || theme[themeProp] || theme.glintColor || theme.color
+  if (!isTop) console.log(theme, glintColor)
   const radiusStyle = {
     ...(borderRadius && {
       borderRadius,

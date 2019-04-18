@@ -138,12 +138,24 @@ const alternates: ThemeSet = {
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
+  // TODO clear and flat alternates should take parent theme as a function arg
+  // and then they can modify and return it
+  // for example, flat should take a lightbackground and darken a bit, and dark vice-versa
   clear: Theme.fromStyles({
-    color: '#fff',
     background: 'rgba(0,0,0,0.2)',
     borderColor: 'rgba(0,0,0,0)',
     borderWidth: 0,
   }),
+  flat: {
+    glintColor: 'transparent',
+    glintColorBottom: 'transparent',
+    buttonGlintColor: 'transparent',
+    buttonGlintColorBottom: 'transparent',
+    ...Theme.colorize({
+      borderColor: 'rgba(0,0,0,0)',
+      borderWidth: 0,
+    }),
+  },
 }
 
 const base = Theme.colorize({

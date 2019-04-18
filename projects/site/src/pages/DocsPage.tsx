@@ -11,7 +11,6 @@ import {
   Toolbar,
   useMedia,
   useOnUnmount,
-  useTheme,
 } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
@@ -78,7 +77,6 @@ function DocsPage(props: { title?: string; children?: any }) {
   const [section, setSection] = useState('all')
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
-  const theme = useTheme()
 
   useReaction(() => {
     siteStore.setMaxHeight(siteStore.sectionHeight)
@@ -98,7 +96,7 @@ function DocsPage(props: { title?: string; children?: any }) {
           flex: 3,
         }}
         masterProps={{
-          background: theme.sidebarBackground,
+          background: 'transparent',
         }}
         searchable
         onSelect={item => {
@@ -143,15 +141,18 @@ const DocsToolbar = memo(({ section, toggleSection }: any) => {
   return (
     <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
       <RoundButton
-        alt={section === 'docs' ? 'selected' : null}
+        alt={section === 'docs' ? 'selected' : 'flat'}
         onClick={() => toggleSection('docs')}
       >
         Docs
       </RoundButton>
-      <RoundButton alt={section === 'ui' ? 'selected' : null} onClick={() => toggleSection('ui')}>
+      <RoundButton alt={section === 'ui' ? 'selected' : 'flat'} onClick={() => toggleSection('ui')}>
         UI
       </RoundButton>
-      <RoundButton alt={section === 'kit' ? 'selected' : null} onClick={() => toggleSection('kit')}>
+      <RoundButton
+        alt={section === 'kit' ? 'selected' : 'flat'}
+        onClick={() => toggleSection('kit')}
+      >
         Kit
       </RoundButton>
     </Toolbar>

@@ -229,6 +229,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         {before}
         {!!badge && (
           <Badge
+            alt={alt}
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
             top="-20%"
@@ -251,6 +252,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           >
             {glint && !props.chromeless && (
               <Glint
+                alt={alt}
                 size={size}
                 borderLeftRadius={borderLeftRadius}
                 borderRightRadius={borderRightRadius}
@@ -259,6 +261,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             )}
             {glintBottom && !props.chromeless && (
               <Glint
+                alt={alt}
                 size={size}
                 bottom={0}
                 borderLeftRadius={borderLeftRadius}

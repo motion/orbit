@@ -1,7 +1,7 @@
 import { Color } from '@o/gloss'
 import * as React from 'react'
 
-type Props = {
+export type ProgressCircleProps = {
   percent: number
   size: number
   lineType: 'butt' | 'square' | 'round'
@@ -10,7 +10,7 @@ type Props = {
   lineWidth: number
 }
 
-export class ProgressCircle extends React.Component<Props> {
+export class ProgressCircle extends React.Component<ProgressCircleProps> {
   static defaultProps = {
     backgroundColor: [0, 0, 0, 1],
     lineColor: 'green',

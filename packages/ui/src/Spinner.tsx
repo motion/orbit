@@ -6,10 +6,10 @@ import { useDefaultProps } from './hooks/useDefaultProps'
 
 export type SpinnerProps = HTMLAttributes<SVGElement> & {
   color?: any
-  thickness: number
-  gap: number
+  thickness?: number
+  gap?: number
   speed?: 'fast' | 'slow'
-  size: string
+  size?: string
 }
 
 export function Spinner(directProps: SpinnerProps) {

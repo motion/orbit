@@ -25,6 +25,7 @@ const views = {
   install: () => import('./DocsPage/DocsInstall.mdx'),
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
   cards: () => import('./DocsPage/DocsCards.mdx'),
+  progress: () => import('./DocsPage/DocsProgress.mdx'),
 }
 
 export default compose(
@@ -208,7 +209,7 @@ const uiItems = [
   { id: 'install', title: 'Sections', icon: 'application' },
   { id: 'install', title: 'Popovers', icon: 'direction-right' },
   { id: 'install', title: 'Decorations', icon: 'clean' },
-  { id: 'install', title: 'Progress', icon: 'circle' },
+  { id: 'progress', title: 'Progress', icon: 'circle' },
   { id: 'install', title: 'Floating Views', icon: 'square' },
 
   { id: 'install', title: 'Lists', icon: 'list', group: 'Collections' },

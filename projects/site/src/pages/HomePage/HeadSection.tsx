@@ -88,13 +88,13 @@ function HeadText() {
         </TitleText>
       </FadeIn>
 
-      <Space size={useScreenVal('sm', 'lg', 'xxl')} />
+      <Space size={useScreenVal('xs', 'sm', 'sm')} />
 
       <Paragraph
         style={{
           ...pFit.style,
           height: 'auto',
-          lineHeight: pFit.isMeasured ? `${pFit.height * 2.5}px` : `30px`,
+          lineHeight: pFit.isMeasured ? `${pFit.height * 2.75}px` : `30px`,
         }}
         height="auto"
         transformOrigin="top left"

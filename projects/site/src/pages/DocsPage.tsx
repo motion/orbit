@@ -31,6 +31,8 @@ const views = {
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
   cards: () => import('./DocsPage/DocsCards.mdx'),
   progress: () => import('./DocsPage/DocsProgress.mdx'),
+  lists: () => import('./DocsPage/DocsLists.mdx'),
+  start: () => import('./DocsPage/DocsStart.mdx'),
 }
 
 export default compose(
@@ -65,7 +67,7 @@ export default compose(
 
 function DocsPage(props: { id?: string; children?: any }) {
   const screen = useScreenSize()
-  const itemIndex = categories.all.findIndex(x => x['id'] === props.id)
+  const itemIndex = categories.all.findIndex(x => x['id'] === props.id) || 1
   const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
@@ -82,7 +84,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         search={search}
         selectable
         alwaysSelected
-        defaultSelected={itemIndex || 1}
+        defaultSelected={itemIndex}
         items={categories[section]}
         onSelect={rows => {
           nav.navigate(`/docs/${rows[0].id}`, { replace: true })
@@ -114,32 +116,30 @@ function DocsPage(props: { id?: string; children?: any }) {
 
   return (
     <MDX>
+      <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
+        <Row margin={[0, 'auto']} pointerEvents="auto" pad={['sm', 100]} width="90%" maxWidth={800}>
+          <Input
+            ref={inputRef}
+            onChange={e => setSearch(e.target.value)}
+            flex={1}
+            sizeRadius={10}
+            size="xl"
+            iconSize={16}
+            icon="search"
+            placeholder="Search the docs..."
+            after={
+              <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                t
+              </Button>
+            }
+          />
+        </Row>
+      </Portal>
+      <Portal prepend>
+        <Header slim />
+      </Portal>
       <Portal>
         <FixedLayout>
-          <Header slim />
-          <Row
-            margin={[0, 'auto']}
-            pointerEvents="auto"
-            pad={['md', 100]}
-            width="100%"
-            maxWidth={800}
-          >
-            <Input
-              ref={inputRef}
-              onChange={e => setSearch(e.target.value)}
-              flex={1}
-              sizeRadius={10}
-              size="xxl"
-              icon="search"
-              placeholder="Search the docs..."
-              after={
-                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
-                  t
-                </Button>
-              }
-            />
-          </Row>
-
           {isSmall ? (
             <Sidebar
               hidden={!showSidebar}
@@ -162,7 +162,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         </FixedLayout>
       </Portal>
 
-      <SectionContent>
+      <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
           <SelectedSection
             onToggleSidebar={() => setShowSidebar(!showSidebar)}
@@ -182,15 +182,15 @@ DocsPage.theme = 'light'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
-  padding: [100, 0, 0, 300],
+  padding: [0, 0, 0, 300],
   isSmall: {
-    padding: [100, 0, 0, 0],
+    padding: [0, 0, 0, 0],
   },
 })
 
 const FixedLayout = gloss({
   position: 'fixed',
-  top: 0,
+  top: 100,
   left: 0,
   width: '100%',
   height: '100%',
@@ -234,7 +234,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
             <Button
               icon="moon"
               tooltip="Toggle dark mode"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
             />
             {isSmall && (
               <Button icon="panel-stats" tooltip="Toggle menu" onClick={onToggleSidebar} />
@@ -248,15 +248,22 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   )
 })
 
-const titleItem = { titleProps: { fontWeight: 600, size: 1.1 } }
+const titleItem = { titleProps: { size: 1.1 } }
+
+const ListSubTitle = gloss(SubTitle, {
+  margin: [20, 0, -2],
+  fontWeight: 300,
+  fontSize: 18,
+})
 
 const docsItems = [
   {
     selectable: false,
-    children: <SubTitle>Start</SubTitle>,
+    hideBorder: true,
+    children: <ListSubTitle>Start</ListSubTitle>,
   },
   {
-    id: 'install',
+    id: 'start',
     title: 'Getting started',
     ...titleItem,
   },
@@ -265,12 +272,21 @@ const docsItems = [
 const uiItems = [
   {
     selectable: false,
-    children: <SubTitle>User Interface</SubTitle>,
+    hideBorder: true,
+    children: <ListSubTitle>User Interface</ListSubTitle>,
   },
+
+  { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
+  { id: 'tables', title: 'Tables', icon: 'th' },
+  { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
+  { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
+  { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
+
   {
+    group: 'Views',
     id: 'surfaces',
     icon: 'layer',
-    title: 'Surfaces',
+    title: 'Surface',
     subTitle: 'Building block of many views',
   },
   { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
@@ -280,15 +296,8 @@ const uiItems = [
   { id: 'install', title: 'Popovers', icon: 'direction-right' },
   { id: 'install', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
-  { id: 'install', title: 'Floating Views', icon: 'square' },
 
-  { id: 'install', title: 'Lists', icon: 'list', group: 'Collections' },
-  { id: 'install', title: 'Tables', icon: 'table' },
-  { id: 'install', title: 'Tree', icon: 'tree' },
-  { id: 'install', title: 'TreeList', icon: 'chevron-right' },
-  { id: 'install', title: 'DefinitionList', icon: 'dict' },
-
-  { id: 'install', title: 'MasterDetail', icon: 'two-columns', group: 'Templates' },
+  { id: 'install', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
   { id: 'install', title: 'Flow', icon: 'layout' },
   { id: 'install', title: 'Message', icon: 'chat' },
 

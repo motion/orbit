@@ -42,7 +42,6 @@ function ButtonInner(buttonProps: ButtonProps) {
       sizeHeight
       sizeLineHeight
       justifyContent="center"
-      transition="background ease 100ms"
       borderWidth={selectDefined(theme.borderWidth, 1)}
       glint
       glintBottom

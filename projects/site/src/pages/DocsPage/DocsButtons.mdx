@@ -1,9 +1,14 @@
+import ButtonSrc from '!raw-loader!@o/ui/src/buttons/Button.tsx'
+import Description from '../../../tmp/Button.json'
+import { DocsMeta } from './DocsMeta'
 import * as Ex from './DocsButtons'
 import { Example } from './Example'
 
 A `<Button />` is a simple extension of a `<Surface />`.
 
-<Example>{Ex.Source}</Example>
+<Example>
+  <DocsMeta source={ButtonSrc} displayName="Button" component={Description} />
+</Example>
 
 ## Examples
 

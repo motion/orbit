@@ -145,7 +145,8 @@ export class SelectableStore {
       ensure('alwaysSelected', alwaysSelected)
       ensure('noSelection', noSelection)
       ensure('hasRows', hasRows)
-      this.setActive([this.getIndexKey(0)])
+      const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
+      this.setActive([this.getIndexKey(firstValidIndex)])
     },
   )
 

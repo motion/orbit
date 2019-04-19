@@ -27,6 +27,7 @@ export type ListItemHide = {
   hideItemDate?: boolean
   hideDate?: boolean
   hideMeta?: boolean
+  hideBorder?: boolean
 }
 
 export type ListItemSpecificProps = ListItemHide & {
@@ -118,6 +119,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     indent = 0,
     alignItems,
     selectable,
+    hideBorder,
     ...surfaceProps
   } = props
   const isSelected = useIsSelected(props)
@@ -196,9 +198,9 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         padding={padding || defaultPadding}
         width="100%"
         before={before}
-        icon={iconElement}
+        icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
-        after={<BorderBottom right={5} left={5} opacity={0.2} />}
+        after={!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
         paddingLeft={indent ? indent * 22 : undefined}
         {...disablePsuedoProps}
         {...surfaceProps}
@@ -206,6 +208,12 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         <ListItemMainContent oneLine={oneLine}>
           {showTitle && (
             <ListItemTitleBar alignItems={alignItems}>
+              {showIcon && !iconBefore && (
+                <>
+                  {iconElement}
+                  <Space size="sm" />
+                </>
+              )}
               <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
                 {title}
               </HighlightText>

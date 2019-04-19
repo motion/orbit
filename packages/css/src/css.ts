@@ -25,6 +25,15 @@ export type CSSOptions = {
   snakeCase?: boolean
 }
 
+export function toCSSString(styles: Object, opts?: CSSOptions): string {
+  const obj = css(styles, opts)
+  let s = ''
+  for (const key in obj) {
+    s += `${key}: ${obj[key]};`
+  }
+  return s
+}
+
 export function css(styles: Object, opts?: CSSOptions): Object {
   const toReturn: any = {}
   const shouldSnake = !opts || opts.snakeCase !== false

@@ -1,6 +1,7 @@
 import { isDefined } from '@o/kit'
 import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
-import { createStoreContext, useForceUpdate } from '@o/use-store'
+import { createStoreContext, react, useForceUpdate } from '@o/use-store'
+import { isDefined } from '@o/utils'
 import { debounce, throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
@@ -11,12 +12,19 @@ import { themes } from './themes'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 class SiteStore {
-  theme = null
+  theme = 'home'
   screenSize = 'large'
   maxHeight = null
   showSidebar = false
 
   windowHeight = window.innerHeight
+
+  bodyBackground = react(
+    () => this.theme,
+    theme => {
+      document.body.style.background = themes[theme].background.toCSS()
+    },
+  )
 
   toggleSidebar = () => {
     this.showSidebar = !this.showSidebar

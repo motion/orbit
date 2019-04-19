@@ -489,3 +489,31 @@ div.alt {
   margin-bottom: 16px;
   margin-top: -16px;
 }
+
+.mini-scrollbars ::-webkit-scrollbar {
+  width: 1px;
+  border-radius: 20px;
+  background-color: transparent;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 20px;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.7);
+  width: 1px;
+}
+
+.mini-scrollbars *:hover::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-scrollbars *:hover::-webkit-scrollbar-thumb {
+  width: 1px;
+}

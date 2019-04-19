@@ -270,7 +270,7 @@ function DocsPage(props: { id?: string; source?: string; children?: any; types?:
         <Header slim />
       </Portal>
       <Portal>
-        <FixedLayout>
+        <FixedLayout className="mini-scrollbars">
           {isSmall ? (
             <Sidebar
               hidden={!showSidebar}
@@ -323,7 +323,7 @@ const ContentPosition = gloss<{ isSmall?: boolean }>({
 
 const FixedLayout = gloss({
   position: 'fixed',
-  top: 100,
+  top: 120,
   left: 0,
   width: '100%',
   height: '100%',

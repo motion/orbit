@@ -8,7 +8,7 @@ const guides = [
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle>Start</ListSubTitle>,
+    children: <ListSubTitle marginTop={-4}>Start</ListSubTitle>,
   },
   {
     id: '',

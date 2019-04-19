@@ -1,4 +1,5 @@
 import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
+import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 import { useSiteStore } from '../Layout'
@@ -35,7 +36,7 @@ Page.Parallax = ({
       style={{
         pointerEvents: 'none',
         zIndex: parallax.zIndex + (zIndex || 0) + 1,
-        overflow,
+        overflow: selectDefined(overflow, parallax.overflow),
         ...style,
       }}
       {...props}

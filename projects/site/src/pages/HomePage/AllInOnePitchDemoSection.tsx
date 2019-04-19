@@ -197,7 +197,7 @@ export function NeckSection(props) {
   }, [])
 
   return (
-    <Page zIndex={3} {...props}>
+    <Page overflow="hidden" zIndex={3} {...props}>
       <Page.Content
         transform={{
           y: '-4%',

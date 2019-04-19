@@ -147,6 +147,7 @@ const Smaller = gloss({
 }))
 
 export function HeadSection(props) {
+  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const [hoverDownload, setHoverDownload] = useState(true)
 
@@ -159,7 +160,7 @@ export function HeadSection(props) {
 
   return (
     <>
-      <OuterSpace show={hoverDownload} />
+      <OuterSpace show={hoverDownload && screen !== 'small'} />
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen opacity={fontsLoaded ? 1 : 0}>

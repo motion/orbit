@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
+import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { Navigation } from '../SiteRoot'
 import { LogoHorizontal } from './LogoHorizontal'
 import { SectionContent } from './SectionContent'
@@ -152,7 +153,12 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
 
   if (slim) {
     return (
-      <Row background={theme.background.lighten(0.3)} position="relative" {...rest}>
+      <Row
+        pointerEvents="auto"
+        background={theme.background.lighten(0.3)}
+        position="relative"
+        {...rest}
+      >
         <HeaderContain height={34}>
           <LinkSection alignRight>{before}</LinkSection>
           <LogoHorizontal />
@@ -184,15 +190,17 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
   )
 }
 
-export const HeaderContain = props => (
-  <SectionContent
-    padding={[0, '10%']}
-    flexFlow="row"
-    alignItems="center"
-    justifyContent="space-around"
-    {...props}
-  />
-)
+export const HeaderContain = props => {
+  return (
+    <SectionContent
+      padding={[0, useScreenVal('0%', '2%', '10%')]}
+      flexFlow="row"
+      alignItems="center"
+      justifyContent="space-around"
+      {...props}
+    />
+  )
+}
 
 export const LinkSection = gloss({
   flex: 4,

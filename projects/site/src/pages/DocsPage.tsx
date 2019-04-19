@@ -17,7 +17,7 @@ import {
   useMedia,
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { useNavigation, View } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
@@ -73,6 +73,7 @@ function DocsPage(props: { id?: string; children?: any }) {
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
   const [search, setSearch] = useState('')
+  const inputRef = useRef(null)
 
   const content = (
     <React.Fragment key="content">
@@ -93,37 +94,61 @@ function DocsPage(props: { id?: string; children?: any }) {
 
   const isSmall = screen === 'small'
 
+  useEffect(() => {
+    inputRef.current && inputRef.current.focus()
+  }, [inputRef.current])
+
   return (
     <MDX>
       <Portal>
         <FixedLayout>
           <Header slim />
-          <Row pad={['md', 100]}>
+          <Row
+            margin={[0, 'auto']}
+            pointerEvents="auto"
+            pad={['md', 100]}
+            width="100%"
+            maxWidth={800}
+          >
             <Input
+              ref={inputRef}
               onChange={e => setSearch(e.target.value)}
               flex={1}
               sizeRadius={10}
               size="xxl"
               icon="search"
               placeholder="Search the docs..."
+              after={
+                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                  t
+                </Button>
+              }
             />
           </Row>
 
           {isSmall ? (
-            <Sidebar hidden={!showSidebar} zIndex={10000000} elevation={5} pointerEvents="auto">
+            <Sidebar
+              hidden={!showSidebar}
+              zIndex={10000000}
+              elevation={5}
+              pointerEvents="auto"
+              background={theme => theme.background}
+            >
               {content}
             </Sidebar>
           ) : (
-            <Col position="relative" flex={1} width={300} pointerEvents="auto">
-              {content}
-              <BorderRight />
-            </Col>
+            <SectionContent flex={1}>
+              <Col position="relative" flex={1} width={300} pointerEvents="auto">
+                {content}
+                <BorderRight opacity={0.5} />
+              </Col>
+            </SectionContent>
           )}
         </FixedLayout>
       </Portal>
 
       <SectionContent>
-        <ContentPosition>
+        <ContentPosition isSmall={isSmall}>
           <SelectedSection
             onToggleSidebar={() => setShowSidebar(!showSidebar)}
             setTheme={siteStore.setTheme}
@@ -140,9 +165,12 @@ function DocsPage(props: { id?: string; children?: any }) {
 
 DocsPage.theme = 'light'
 
-const ContentPosition = gloss({
+const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
   padding: [100, 0, 0, 300],
+  isSmall: {
+    padding: [100, 0, 0, 0],
+  },
 })
 
 const FixedLayout = gloss({
@@ -151,7 +179,7 @@ const FixedLayout = gloss({
   left: 0,
   width: '100%',
   height: '100%',
-  zIndex: 1000000000,
+  zIndex: 100000,
 })
 
 const DocsToolbar = memo(({ section, toggleSection }: any) => {

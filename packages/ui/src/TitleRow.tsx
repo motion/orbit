@@ -6,6 +6,7 @@ import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
+import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
@@ -26,7 +27,7 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   unpad?: boolean
 }
 
-export type TitleRowProps = RowProps & TitleRowSpecificProps
+export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
 
 export const TitleRow = forwardRef(function TitleRow(
   {

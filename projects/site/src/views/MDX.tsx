@@ -2,6 +2,7 @@ import { MDXProvider } from '@mdx-js/react'
 import { gloss, Paragraph, Space } from '@o/ui'
 import React from 'react'
 import componentNames from '../../tmp/componentNames.json'
+import { Navigation } from '../SiteRoot'
 import { CodeBlock } from './CodeBlock'
 import { TitleText } from './TitleText'
 
@@ -82,7 +83,15 @@ export const components = {
       if (children[0] === '<' && end === '/>' && children.length < 100) {
         const displayName = children.slice(1, len - 2).trim()
         if (!!componentNames.find(x => x === displayName)) {
-          return <LinkedInlineCode onClick={() => alert('hi')}>{children}</LinkedInlineCode>
+          return (
+            <LinkedInlineCode
+              onClick={() => {
+                Navigation.navigate(`/docs/${displayName.toLowerCase().replace(' ', '-')}`)
+              }}
+            >
+              {children}
+            </LinkedInlineCode>
+          )
         }
       }
     }

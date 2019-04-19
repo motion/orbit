@@ -4,9 +4,10 @@ import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Sizes } from './Space'
 import { SpaceGroup } from './SpaceGroup'
 import { SurfacePassProps } from './Surface'
+import { Omit } from './types'
 import { Row, RowProps } from './View/Row'
 
-export type ToolbarProps = RowProps & {
+export type ToolbarProps = Omit<RowProps, 'size'> & {
   attach?: 'bottom' | 'left' | 'right' | 'top'
   size?: Sizes
 }

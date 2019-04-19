@@ -188,8 +188,8 @@ const HeaderTop = gloss(View, {
 
 const ExtraButtonsChrome = gloss({
   flexFlow: 'row',
-  paddingRight: 12,
-  paddingLeft: 2,
+  paddingRight: 22,
+  paddingLeft: 12,
   marginRight: -10,
   borderLeftRadius: 12,
 }).theme((_, theme) => ({
@@ -210,13 +210,13 @@ const OpenButton = memo(() => {
   return (
     <Button
       icon="chevron-right"
+      alt="action"
+      iconSize={18}
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}
     >
-      {/* <SimpleText alpha={0.5} transform={{ y: 1 }} marginLeft={6} size={0.7} fontWeight={200}>
-        ⌘ + ⏎
-      </SimpleText> */}
+      Open
     </Button>
   )
 })

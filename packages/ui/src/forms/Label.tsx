@@ -1,7 +1,8 @@
 import { gloss } from '@o/gloss'
-import { SimpleText } from '../text/SimpleText'
+import { HTMLProps } from 'react'
+import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 
-export const Label = gloss(SimpleText, {
+export const Label = gloss<SimpleTextProps & HTMLProps<HTMLLabelElement>>(SimpleText, {
   padding: 5,
 })
 

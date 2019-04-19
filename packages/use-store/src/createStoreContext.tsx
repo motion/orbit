@@ -26,6 +26,7 @@ export function createStoreContext<Instance, Props extends InferProps<Instance>>
       const value = useContext(Context)
       const store = useStore(value, props as any, options)
       if (!store) {
+        console.error('More Information', props, constructor)
         throw new Error(`No store provided, use createStoreContext().Provider to provide.`)
       }
       return store

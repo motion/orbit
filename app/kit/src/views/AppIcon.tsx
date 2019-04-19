@@ -1,8 +1,7 @@
 import { AppBit } from '@o/models'
-import { IconProps, toColor, View } from '@o/ui'
+import { IconProps, SVG, toColor, View } from '@o/ui'
 import React from 'react'
 import { appIcons } from './icons'
-import { SVG } from './SVG'
 
 export type AppIconProps = Partial<IconProps> & { app: AppBit; removeStroke?: boolean }
 

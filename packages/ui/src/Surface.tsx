@@ -1,5 +1,12 @@
-import { ColorLike, CSSPropertySet, px } from '@o/css'
-import Gloss, { Col, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
+import { ColorLike, CSSPropertySet, CSSPropertySetStrict, px } from '@o/css'
+import Gloss, {
+  Col,
+  forwardTheme,
+  gloss,
+  propsToStyles,
+  psuedoStyleTheme,
+  useTheme,
+} from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
@@ -16,6 +23,7 @@ import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
+import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { getPadding } from './View/PaddedView'
 import { ViewProps } from './View/View'
@@ -67,13 +75,12 @@ export type SurfaceSpecificProps = {
   highlightBackground?: ColorLike
   highlightColor?: ColorLike
   ignoreSegment?: boolean
-  sizeLineHeight?: boolean | number
   type?: string
   themeSelect?: Gloss.ThemeSelect
   iconPad?: number
 }
 
-export type SurfaceProps = ViewProps & SurfaceSpecificProps
+export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()
@@ -140,7 +147,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    themeSelect = 'surface',
+    themeSelect,
     tooltip,
     tooltipProps,
     pad,
@@ -341,6 +348,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderWidth={borderWidth}
           borderPosition={borderPosition}
           alt={alt}
+          applyPsuedoColors
           {...!showInnerElement && elementProps}
           {...throughProps}
           {...viewProps}
@@ -428,7 +436,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   return styles
 })
 
-const Element = gloss<ThroughProps & { disabled?: boolean; surfacePadX: number | string }>({
+const Element = gloss<
+  CSSPropertySetStrict & ThroughProps & { disabled?: boolean; surfacePadX: number | string }
+>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',

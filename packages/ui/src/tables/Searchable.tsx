@@ -33,7 +33,7 @@ type Props = {
   children?: (props: SearchableChildProps) => React.ReactNode
   focusOnMount?: boolean
   // only called once it changes once at least
-  onChange?: Function
+  onChangeSearch?: Function
   onEnter?: Function
   before?: React.ReactNode
   after?: React.ReactNode
@@ -133,8 +133,8 @@ export class Searchable extends React.PureComponent<Props, State> {
       this.context.plugin &&
       (prevState.searchTerm !== this.state.searchTerm || prevState.filters !== this.state.filters)
     ) {
-      if (props.onChange) {
-        props.onChange(this.state.searchTerm)
+      if (props.onChangeSearch) {
+        props.onChangeSearch(this.state.searchTerm)
       }
       let key = this.context.plugin + this.props.tableKey
       window.localStorage.setItem(

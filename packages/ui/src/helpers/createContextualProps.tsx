@@ -11,10 +11,10 @@ export function createContextualProps<A extends any>(defaults?: A) {
       }, [rest])
       return <Context.Provider value={memoVal}>{children}</Context.Provider>
     },
-    useProps(componentProps?: Partial<A>): Partial<A> {
+    useProps<B extends Partial<A>>(componentProps?: B): B & A {
       const extra = useContext(Context)
       if (!extra) {
-        return componentProps
+        return componentProps as any
       }
       // merge just undefined componentProps from extra
       const final = { ...componentProps }
@@ -23,7 +23,7 @@ export function createContextualProps<A extends any>(defaults?: A) {
           final[key] = extra[key]
         }
       }
-      return final
+      return final as any
     },
     Reset({ children }: { children: any }) {
       const extraProps = useContext(Context)

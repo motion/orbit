@@ -6,7 +6,7 @@ import { Space } from '../Space'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
 import { TableFilter } from '../tables/types'
-import { View } from '../View/View'
+import { View, ViewProps } from '../View/View'
 import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {
@@ -88,7 +88,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   )
 })
 
-const SearchClearButton = gloss<{ visible?: boolean }>(ClearButton, {
+const SearchClearButton = gloss<ViewProps & { visible?: boolean }>(ClearButton, {
   opacity: 0,
   pointerEvents: 'none',
   visible: {

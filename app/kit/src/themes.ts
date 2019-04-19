@@ -4,8 +4,6 @@ import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 const Theme = new ThemeMaker()
 
 const orbitColor = toColor('#3E7FD5')
-const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
-const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const colors = {
   orange: '#DC6104',
@@ -25,14 +23,18 @@ const colors = {
   darkYellow: '#8F7B1C',
 }
 
+const transparent = [0, 0, 0, 0]
+
 const colorThemes: ThemeSet = {
   lightRed: Theme.fromStyles({
+    glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkRed,
     background: colors.lightRed,
     iconColor: colors.darkRed,
   }),
   lightGreen: Theme.fromStyles({
+    glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkGreen,
     iconColor: colors.darkGreen,
@@ -82,17 +84,13 @@ const colorThemes: ThemeSet = {
   }),
   blue: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    iconColor: '#fff',
     background: orbitColor,
-    backgroundHover: orbitColor,
-    backgroundActive: orbitColor,
     color: '#fff',
-    borderColor: orbitActiveBg,
   }),
   transparent: Theme.colorize({
-    background: 'transparent',
-    backgroundHover: 'transparent',
-    backgroundActive: 'transparent',
+    background: transparent,
+    backgroundHover: transparent,
+    backgroundActive: transparent,
   }),
 }
 
@@ -111,6 +109,7 @@ const alternates: ThemeSet = {
   action: colorThemes.blue,
   selected: colorThemes.blue,
   bordered: {
+    glintColor: transparent,
     borderWidth: 2,
     ...colorThemes.transparent,
   },
@@ -147,10 +146,10 @@ const alternates: ThemeSet = {
     borderWidth: 0,
   }),
   flat: {
-    glintColor: 'transparent',
-    glintColorBottom: 'transparent',
-    buttonGlintColor: 'transparent',
-    buttonGlintColorBottom: 'transparent',
+    glintColor: transparent,
+    glintColorBottom: transparent,
+    buttonGlintColor: transparent,
+    buttonGlintColorBottom: transparent,
     ...Theme.colorize({
       borderColor: 'rgba(0,0,0,0)',
       borderWidth: 0,
@@ -248,9 +247,9 @@ const darkAlternates: ThemeSet = {
   bordered: {
     ...alternates.bordered,
     ...Theme.colorize({
-      background: 'transparent',
-      backgroundHover: 'transparent',
-      backgroundActive: 'transparent',
+      background: transparent,
+      backgroundHover: transparent,
+      backgroundActive: transparent,
       color: darkColor,
       borderColor: darkColor,
       borderColorHover: darkColor,
@@ -288,7 +287,7 @@ const dark = {
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,
-      'transparent',
+      transparent,
       darkFadeBackground,
     ),
     buttonBackground: darkButtonBg,
@@ -306,12 +305,12 @@ const dark = {
     tabBackgroundHover: [255, 255, 255, 0.015],
     tabInactiveHover: [0, 0, 0, 0.1],
     glintColor: [255, 255, 255, 0.135],
-    inputBackground: 'transparent',
-    inputBackgroundHover: 'transparent',
-    inputBackgroundActive: 'transparent',
-    inputBackgroundFocus: 'transparent',
+    inputBackground: transparent,
+    inputBackgroundHover: transparent,
+    inputBackgroundActive: transparent,
+    inputBackgroundFocus: transparent,
     inputBackgroundSelection: '#111',
-    listItemBackground: 'transparent',
+    listItemBackground: transparent,
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.13],
     floatingBackground: [70, 70, 70],

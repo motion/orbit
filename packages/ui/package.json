@@ -45,7 +45,8 @@
     "react-with-gesture": "4.0.8",
     "remark-emoji": "2.0.2",
     "scroll": "2.0.3",
-    "string-natural-compare": "2.0.3"
+    "string-natural-compare": "2.0.3",
+    "react-svg-inline": "2.1.1"
   },
   "devDependencies": {
     "@types/react": "16.8.8",

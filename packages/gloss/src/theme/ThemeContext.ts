@@ -1,7 +1,7 @@
 import { ThemeObject, toColor } from '@o/css'
 import * as React from 'react'
 
-type ThemeContextType = {
+export type ThemeContextType = {
   allThemes: { [key: string]: ThemeObject }
   activeThemeName: string
   activeTheme: ThemeObject

@@ -14,3 +14,5 @@ export function render() {
 }
 
 render()
+
+window['render'] = render

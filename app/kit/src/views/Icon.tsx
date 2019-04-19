@@ -1,15 +1,13 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
-import { selectObject } from '@o/utils'
 import React, { memo } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
-import { SVG } from './SVG'
 
 export const Icon = memo((props: IconProps & { svg?: string }) => {
-  const { name, color, size = 32, style, opacity, svg, ...restProps } = props
+  const { name, color, size = 32, style, opacity, ...restProps } = props
   const theme = useTheme()
   const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
@@ -41,53 +39,16 @@ export const Icon = memo((props: IconProps & { svg?: string }) => {
     return <AppIconInner {...props} />
   }
 
-  // find our custom streamline icons...
-  const isSVG = name.trim().indexOf('<svg') === 0
-  const svgIcon = svg || icons[name] || (isSVG ? name : null)
-
-  if (!svgIcon) {
-    return (
-      <UI.PlainIcon
-        name={name}
-        color={finalColor}
-        size={size}
-        style={style}
-        opacity={opacity}
-        {...restProps}
-      />
-    )
-  }
-
   return (
-    <View
-      {...restProps}
-      className={`icon ${props.className || ''}`}
-      fill={`${finalColor}`}
+    <UI.PlainIcon
+      name={name}
+      color={finalColor}
+      size={size}
+      style={style}
       opacity={opacity}
-      hoverStyle={{
-        ...selectObject(props.hoverStyle),
-        fill: props.hoverStyle ? props.hoverStyle.color : null,
-      }}
-    >
-      <SVG
-        className={restProps.className}
-        fill="inherit"
-        svg={svgIcon}
-        width={`${size}px`}
-        height={`${size}px`}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          width: size,
-          height: size,
-          ...style,
-        }}
-        cleanup={[finalColor && !isSVG ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(
-          Boolean,
-        )}
-      />
-    </View>
+      {...restProps}
+      svg={props.svg || icons[name]}
+    />
   )
 })
 

@@ -30,9 +30,8 @@ const views = {
 export default compose(
   withView(req => {
     const id = req.path.slice(1)
-    const item = uiItems.find(x => x.id === id)
     return (
-      <DocsPage title={id && item ? item.title : 'Welcome'}>
+      <DocsPage id={id}>
         <View />
       </DocsPage>
     )
@@ -58,20 +57,9 @@ export default compose(
   }),
 )
 
-const categories = {
-  all: () => [
-    ...docsItems,
-    {
-      selectable: false,
-    },
-    ...uiItems,
-  ],
-  ui: () => uiItems,
-  docs: () => docsItems,
-  kit: () => uiItems,
-}
-
-function DocsPage(props: { title?: string; children?: any }) {
+function DocsPage(props: { id?: string; children?: any }) {
+  const itemIndex = categories.all.findIndex(x => x['id'] === props.id)
+  const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
@@ -90,8 +78,10 @@ function DocsPage(props: { title?: string; children?: any }) {
     <MDX>
       <Header slim />
       <Templates.MasterDetail
-        items={categories[section]()}
+        items={categories[section]}
+        alwaysSelected
         showSidebar={showSidebar}
+        defaultSelected={itemIndex || 1}
         detailProps={{
           flex: 3,
         }}
@@ -99,8 +89,8 @@ function DocsPage(props: { title?: string; children?: any }) {
           background: 'transparent',
         }}
         searchable
-        onSelect={item => {
-          nav.navigate(`/docs/${item.id}`)
+        onSelect={next => {
+          nav.navigate(`/docs/${next.id}`, { replace: true })
         }}
         belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
       >
@@ -110,7 +100,7 @@ function DocsPage(props: { title?: string; children?: any }) {
               onToggleSidebar={() => setShowSidebar(!showSidebar)}
               setTheme={siteStore.setTheme}
               theme={siteStore.theme}
-              title={props.title}
+              title={item ? item.title : undefined}
             >
               {props.children}
             </SelectedSection>
@@ -187,7 +177,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   )
 })
 
-const titleItem = { titleProps: { fontWeight: 600, size: 1.2 } }
+const titleItem = { titleProps: { fontWeight: 600, size: 1.1 } }
 
 const docsItems = [
   {
@@ -215,71 +205,78 @@ const uiItems = [
   { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
   { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
   { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
-  { title: 'Sections', icon: 'application' },
-  { title: 'Popovers', icon: 'direction-right' },
-  { title: 'Decorations', icon: 'clean' },
-  { title: 'Progress', icon: 'circle' },
-  { title: 'Floating Views', icon: 'square' },
+  { id: 'install', title: 'Sections', icon: 'application' },
+  { id: 'install', title: 'Popovers', icon: 'direction-right' },
+  { id: 'install', title: 'Decorations', icon: 'clean' },
+  { id: 'install', title: 'Progress', icon: 'circle' },
+  { id: 'install', title: 'Floating Views', icon: 'square' },
 
-  { title: 'Lists', icon: 'list', group: 'Collections' },
-  { title: 'Tables', icon: 'table' },
-  { title: 'Tree', icon: 'tree' },
-  { title: 'TreeList', icon: 'chevron-right' },
-  { title: 'DefinitionList', icon: 'dict' },
+  { id: 'install', title: 'Lists', icon: 'list', group: 'Collections' },
+  { id: 'install', title: 'Tables', icon: 'table' },
+  { id: 'install', title: 'Tree', icon: 'tree' },
+  { id: 'install', title: 'TreeList', icon: 'chevron-right' },
+  { id: 'install', title: 'DefinitionList', icon: 'dict' },
 
-  { title: 'MasterDetail', icon: 'two-columns', group: 'Templates' },
-  { title: 'Flow', icon: 'layout' },
-  { title: 'Message', icon: 'chat' },
+  { id: 'install', title: 'MasterDetail', icon: 'two-columns', group: 'Templates' },
+  { id: 'install', title: 'Flow', icon: 'layout' },
+  { id: 'install', title: 'Message', icon: 'chat' },
 
-  { title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
-  { title: 'DateFormat', icon: 'event' },
-  { title: 'TimeAgo', icon: 'time' },
+  { id: 'install', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
+  { id: 'install', title: 'DateFormat', icon: 'event' },
+  { id: 'install', title: 'TimeAgo', icon: 'time' },
 
-  { title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { title: 'GalleryModal', icon: 'multi-select' },
-  { title: 'MediaModal', icon: 'multi-select' },
+  { id: 'install', title: 'Modal', group: 'Modals', icon: 'multi-select' },
+  { id: 'install', title: 'GalleryModal', icon: 'multi-select' },
+  { id: 'install', title: 'MediaModal', icon: 'multi-select' },
 
-  { title: 'Basics', icon: 'control', group: 'Layout' },
-  { title: 'Sidebar', icon: 'panel-stats' },
-  { title: 'Slider', icon: 'double-caret-horizontal' },
-  { title: 'Tabs', icon: 'add-row-top' },
-  { title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
-  { title: 'Pane', icon: 'column-layout', indent: 1 },
-  { title: 'GridLayout', icon: 'grid-view', indent: 1 },
-  { title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
-  { title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
+  { id: 'install', title: 'Basics', icon: 'control', group: 'Layout' },
+  { id: 'install', title: 'Sidebar', icon: 'panel-stats' },
+  { id: 'install', title: 'Slider', icon: 'double-caret-horizontal' },
+  { id: 'install', title: 'Tabs', icon: 'add-row-top' },
+  { id: 'install', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
+  { id: 'install', title: 'Pane', icon: 'column-layout', indent: 1 },
+  { id: 'install', title: 'GridLayout', icon: 'grid-view', indent: 1 },
+  { id: 'install', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
+  { id: 'install', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
 
-  { title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
-  { title: 'Toolbar', icon: 'bottom' },
+  { id: 'install', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
+  { id: 'install', title: 'Toolbar', icon: 'bottom' },
 
-  { title: 'Form', icon: 'form', group: 'Forms' },
-  { title: 'Flow + Form', icon: 'dot', indent: 1 },
-  { title: 'Form Elements', icon: 'widget' },
-  { title: 'Select', icon: 'dot', indent: 1 },
-  { title: 'Input', icon: 'dot', indent: 1 },
+  { id: 'install', title: 'Form', icon: 'form', group: 'Forms' },
+  { id: 'install', title: 'Flow + Form', icon: 'dot', indent: 1 },
+  { id: 'install', title: 'Form Elements', icon: 'widget' },
+  { id: 'install', title: 'Select', icon: 'dot', indent: 1 },
+  { id: 'install', title: 'Input', icon: 'dot', indent: 1 },
 
-  { title: 'Basics', icon: '', group: 'Text' },
-  { title: 'Titles' },
-  { title: 'Message' },
-  { title: 'Banner' },
+  { id: 'install', title: 'Basics', icon: '', group: 'Text' },
+  { id: 'install', title: 'Titles' },
+  { id: 'install', title: 'Message' },
+  { id: 'install', title: 'Banner' },
 
-  { title: 'Chat', group: 'Media & Content' },
-  { title: 'Document' },
-  { title: 'Markdown' },
-  { title: 'Task' },
-  { title: 'Thread' },
+  { id: 'install', title: 'Chat', group: 'Media & Content' },
+  { id: 'install', title: 'Document' },
+  { id: 'install', title: 'Markdown' },
+  { id: 'install', title: 'Task' },
+  { id: 'install', title: 'Thread' },
 
-  { title: 'HoverGlow', group: 'Effects' },
-  { title: 'TiltHoverGlow' },
-  { title: 'Glint' },
-  { title: 'Tilt' },
+  { id: 'install', title: 'HoverGlow', group: 'Effects' },
+  { id: 'install', title: 'TiltHoverGlow' },
+  { id: 'install', title: 'Glint' },
+  { id: 'install', title: 'Tilt' },
 
-  { title: 'Fetch', group: 'Utilities' },
-  { title: 'Orderable' },
-  { title: 'ContextMenu' },
-  { title: 'Interactive' },
-  { title: 'Collapsable' },
-  { title: 'Scale' },
-  { title: 'Visibility' },
-  { title: 'PassProps' },
+  { id: 'install', title: 'Fetch', group: 'Utilities' },
+  { id: 'install', title: 'Orderable' },
+  { id: 'install', title: 'ContextMenu' },
+  { id: 'install', title: 'Interactive' },
+  { id: 'install', title: 'Collapsable' },
+  { id: 'install', title: 'Scale' },
+  { id: 'install', title: 'Visibility' },
+  { id: 'install', title: 'PassProps' },
 ]
+
+const categories = {
+  all: [...docsItems, ...uiItems],
+  ui: uiItems,
+  docs: docsItems,
+  kit: uiItems,
+}

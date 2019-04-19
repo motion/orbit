@@ -2,20 +2,17 @@ import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
+import { PseudoStyleProps } from './psuedoStyleTheme'
 
 // mutate styles to have alpha if defined in props
 
 export type AlphaColorProps = {
+  applyPsuedoColors?: boolean
   alpha?: number
   alphaHover?: number
-  hoverStyle?: {
-    color?: any
-    alpha?: any
-  }
-  activeStyle?: {
-    color?: any
-    alpha?: any
-  }
+  hoverStyle?: PseudoStyleProps['hoverStyle']
+  activeStyle?: PseudoStyleProps['activeStyle']
+  focusStyle?: PseudoStyleProps['focusStyle']
 }
 
 export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
@@ -31,17 +28,38 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
     }
   }
 
-  mergePsuedoColors('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
-  mergePsuedoColors(
-    '&:active',
-    'activeStyle',
-    'colorActive',
-    'alphaActive',
-    next,
-    color,
-    props,
-    theme,
-  )
+  if (props.applyPsuedoColors) {
+    mergePsuedoColors(
+      '&:focus',
+      'focusStyle',
+      'colorFocus',
+      'alphaFocus',
+      next,
+      color,
+      props,
+      theme,
+    )
+    mergePsuedoColors(
+      '&:hover',
+      'hoverStyle',
+      'colorHover',
+      'alphaHover',
+      next,
+      color,
+      props,
+      theme,
+    )
+    mergePsuedoColors(
+      '&:active',
+      'activeStyle',
+      'colorActive',
+      'alphaActive',
+      next,
+      color,
+      props,
+      theme,
+    )
+  }
 
   return mergeStyles(previous, next)
 }

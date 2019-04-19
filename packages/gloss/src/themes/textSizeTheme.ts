@@ -6,7 +6,7 @@ type TextStyles = {
 }
 
 export type TextSizeProps = {
-  sizeLineHeight?: number
+  sizeLineHeight?: boolean | number
   lineHeight?: number | string | any
   fontSize?: number | string | any
   size?: number
@@ -24,8 +24,9 @@ export function textSizeTheme(props: TextSizeProps) {
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
     lineHeight = Math.log(fontSize * 500) * 2.25 + fontSize / 1.4 - 9.5
-    if (props.sizeLineHeight) {
-      lineHeight = lineHeight * props.sizeLineHeight
+    if (typeof props.sizeLineHeight !== 'undefined') {
+      lineHeight =
+        lineHeight * (typeof props.sizeLineHeight === 'boolean' ? 1 : props.sizeLineHeight)
     }
   }
   let fontSizeNum

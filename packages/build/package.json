@@ -65,7 +65,7 @@
 		"tslint": "5.15.0",
 		"url-loader": "^1.0.1",
 		"webpack": "4.30.0",
-		"webpack-bundle-analyzer": "3.1.0",
+		"webpack-bundle-analyzer": "3.3.2",
 		"webpack-cli": "3.3.0",
 		"webpack-dev-server": "3.3.1",
 		"webpack-notifier": "1.7.0",

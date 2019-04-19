@@ -21,7 +21,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
-const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -299,12 +298,6 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      // see https://github.com/markogresak/ignore-not-found-export-webpack-plugin
-      new IgnoreNotFoundExportPlugin(),
-      // new ErrorOverlayPlugin(),
-
-      // new WebpackNotifierPlugin(),
-
       new webpack.DefinePlugin(defines),
 
       new webpack.IgnorePlugin(/electron-log/),
@@ -340,9 +333,7 @@ async function makeConfig() {
       //   rel: 'preload',
       // }),
 
-      !process.env['ANALYZE_BUNDLE'] &&
-        isProd &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
       isProd &&
         new MiniCssExtractPlugin({
@@ -350,8 +341,7 @@ async function makeConfig() {
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      !process.env['ANALYZE_BUNDLE'] &&
-        isProd &&
+      isProd &&
         target === 'web' &&
         new HtmlCriticalWebpackPlugin({
           base: outputPath,
@@ -382,7 +372,8 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      isProd &&
+      !process.env['ANALYZE_BUNDLE'] &&
+        isProd &&
         new PrepackPlugin({
           reactEnabled: true,
           compatibility: 'node-react',

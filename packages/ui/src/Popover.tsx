@@ -1026,6 +1026,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
             <BreadcrumbReset>
               <SizedSurface
                 className="popover-inner-surface"
+                themeSelect="popover"
                 sizeRadius
                 flex={1}
                 hoverStyle={null}

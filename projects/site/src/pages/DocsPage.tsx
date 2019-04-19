@@ -152,7 +152,7 @@ function DocsPage(props: { id?: string; children?: any }) {
               {content}
             </Sidebar>
           ) : (
-            <SectionContent flex={1}>
+            <SectionContent pointerEvents="none" flex={1}>
               <Col position="relative" flex={1} width={300} pointerEvents="auto">
                 {content}
                 <BorderRight opacity={0.5} />

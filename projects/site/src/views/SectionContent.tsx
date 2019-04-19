@@ -55,10 +55,6 @@ export const SectionContentChrome = gloss(View, {
   maxWidth: Constants.mediumSize,
   padding: [0, Constants.sidePad],
   position: 'relative',
-  pointerEvents: 'none',
-  '& > *': {
-    pointerEvents: 'auto',
-  },
   [Constants.screen.smallQuery]: {
     width: '100%',
     // height: 'auto',

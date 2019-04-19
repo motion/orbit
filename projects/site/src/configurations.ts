@@ -1,5 +1,5 @@
 import { ThemeMaker } from '@o/gloss'
-import { toColor } from '@o/ui'
+import { configureUI, toColor } from '@o/ui'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 import { themes } from './themes'
@@ -15,6 +15,12 @@ function configure() {
   const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
   if (hasConfigured) return
+
+  configureUI({
+    titleDefaultProps: {
+      fontFamily: 'GT Eesti',
+    },
+  })
 
   // just for now since its spitting out so many
   setConfig({

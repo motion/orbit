@@ -101,7 +101,7 @@ function DocsPage(props: { id?: string; children?: any }) {
               onToggleSidebar={() => setShowSidebar(!showSidebar)}
               setTheme={siteStore.setTheme}
               theme={siteStore.theme}
-              title={item ? item.title : undefined}
+              title={item ? item['title'] : undefined}
             >
               {props.children}
             </SelectedSection>
@@ -158,6 +158,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
       titleBorder
       space
       title={title || 'No title'}
+      titleSize="xl"
       afterTitle={
         <SurfacePassProps iconSize={12}>
           <SpaceGroup space="xs">

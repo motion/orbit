@@ -5,6 +5,7 @@ import {
   gloss,
   Input,
   List,
+  ListItem,
   Portal,
   RoundButton,
   Row,
@@ -78,6 +79,8 @@ function DocsPage(props: { id?: string; children?: any }) {
   const content = (
     <React.Fragment key="content">
       <DocsToolbar section={section} toggleSection={toggleSection} />
+      <ListItem icon="home">hihi</ListItem>
+      <Button icon="home" />
       <List
         search={search}
         selectable

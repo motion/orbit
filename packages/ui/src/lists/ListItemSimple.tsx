@@ -175,7 +175,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     </>
   )
 
-  const iconElement = iconBefore && showIcon && showIcon && getIcon(props)
+  const iconElement = showIcon && getIcon(props)
 
   return (
     <Theme alt={isSelected ? 'selected' : null}>

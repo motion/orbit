@@ -11,6 +11,7 @@ export const themes = {
     ...Theme.colorize({
       background: '#000',
       inputBackground: '#000',
+      listItemBackgroundHover: '#111',
     }),
   },
 }

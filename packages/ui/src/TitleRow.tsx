@@ -29,8 +29,6 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
 
 export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
 
-type x = RowProps['size']
-
 export const TitleRow = forwardRef(function TitleRow(
   {
     before,

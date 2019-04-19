@@ -5,11 +5,11 @@ import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
-// import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+// import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -340,7 +340,9 @@ async function makeConfig() {
       //   rel: 'preload',
       // }),
 
-      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      !process.env['ANALYZE_BUNDLE'] &&
+        isProd &&
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
       isProd &&
         new MiniCssExtractPlugin({
@@ -348,7 +350,8 @@ async function makeConfig() {
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      isProd &&
+      !process.env['ANALYZE_BUNDLE'] &&
+        isProd &&
         target === 'web' &&
         new HtmlCriticalWebpackPlugin({
           base: outputPath,

@@ -1,5 +1,5 @@
 import { gloss, ThemeFn } from '@o/gloss'
-import React, { forwardRef, useCallback, useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
@@ -29,7 +29,7 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     forwardRef?: any
   }
 
-export const Input = forwardRef(function Input(
+export const Input = React.forwardRef(function Input(
   { onEnter, type = 'input', ...props }: InputProps,
   ref,
 ) {
@@ -106,9 +106,10 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
 })
 
 const SimpleInput = gloss(
-  ({ placeholder, tagName = 'input', elementProps, ...props }: SizedSurfaceProps) => (
+  ({ placeholder, tagName = 'input', elementProps, forwardRef, ...props }: SizedSurfaceProps) => (
     <SizedSurface
       elementProps={{
+        ref: forwardRef,
         placeholder,
         tagName,
         ...elementProps,
@@ -124,6 +125,7 @@ const SimpleInput = gloss(
       sizeLineHeight
       sizeRadius={0.75}
       label={props.name}
+      activeStyle={null}
       glint={false}
       borderWidth={1}
       {...props}

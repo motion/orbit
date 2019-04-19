@@ -1,23 +1,25 @@
-import { Templates } from '@o/kit'
 import {
+  BorderRight,
   Button,
   Col,
   gloss,
   Input,
+  List,
+  Portal,
   RoundButton,
   Row,
   Section,
+  Sidebar,
   SpaceGroup,
   SubTitle,
   SurfacePassProps,
   Toolbar,
   useMedia,
-  useOnUnmount,
 } from '@o/ui'
-import { useReaction } from '@o/use-store'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { useNavigation, View } from 'react-navi'
+import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
@@ -62,6 +64,7 @@ export default compose(
 )
 
 function DocsPage(props: { id?: string; children?: any }) {
+  const screen = useScreenSize()
   const itemIndex = categories.all.findIndex(x => x['id'] === props.id)
   const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
@@ -70,62 +73,106 @@ function DocsPage(props: { id?: string; children?: any }) {
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
   const [search, setSearch] = useState('')
+  const inputRef = useRef(null)
 
-  useReaction(() => {
-    siteStore.setMaxHeight(siteStore.sectionHeight)
-  })
+  const content = (
+    <React.Fragment key="content">
+      <DocsToolbar section={section} toggleSection={toggleSection} />
+      <List
+        search={search}
+        selectable
+        alwaysSelected
+        defaultSelected={itemIndex || 1}
+        items={categories[section]}
+        onSelect={rows => {
+          nav.navigate(`/docs/${rows[0].id}`, { replace: true })
+        }}
+      />
+    </React.Fragment>
+  )
 
-  useOnUnmount(() => {
-    siteStore.setMaxHeight(null)
-  })
+  const isSmall = screen === 'small'
+
+  useEffect(() => {
+    const keyPress = e => {
+      // console.log('e', e.keyCode)
+      switch (e.keyCode) {
+        case 84: // t
+          inputRef.current.focus()
+          break
+      }
+    }
+    window.addEventListener('keydown', keyPress)
+    return () => {
+      window.removeEventListener('keydown', keyPress)
+    }
+  }, [])
+
+  useEffect(() => {
+    inputRef.current && inputRef.current.focus()
+  }, [inputRef.current])
 
   return (
     <MDX>
-      <Header slim />
+      <Portal>
+        <FixedLayout>
+          <Header slim />
+          <Row
+            margin={[0, 'auto']}
+            pointerEvents="auto"
+            pad={['md', 100]}
+            width="100%"
+            maxWidth={800}
+          >
+            <Input
+              ref={inputRef}
+              onChange={e => setSearch(e.target.value)}
+              flex={1}
+              sizeRadius={10}
+              size="xxl"
+              icon="search"
+              placeholder="Search the docs..."
+              after={
+                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                  t
+                </Button>
+              }
+            />
+          </Row>
 
-      <SectionContent flex={1}>
-        <Row pad={['md', 200]}>
-          <Input
-            onChange={e => setSearch(e.target.value)}
-            flex={1}
-            sizeRadius={10}
-            size="xxl"
-            icon="search"
-            placeholder="Search the docs..."
-          />
-        </Row>
+          {isSmall ? (
+            <Sidebar
+              hidden={!showSidebar}
+              zIndex={10000000}
+              elevation={5}
+              pointerEvents="auto"
+              // @ts-ignore
+              background={theme => theme.background}
+            >
+              {content}
+            </Sidebar>
+          ) : (
+            <SectionContent pointerEvents="none" flex={1}>
+              <Col position="relative" flex={1} width={300} pointerEvents="auto">
+                {content}
+                <BorderRight opacity={0.5} />
+              </Col>
+            </SectionContent>
+          )}
+        </FixedLayout>
+      </Portal>
 
-        <Templates.MasterDetail
-          items={categories[section]}
-          alwaysSelected
-          showSidebar={showSidebar}
-          defaultSelected={itemIndex || 1}
-          detailProps={{
-            flex: 3,
-          }}
-          masterProps={{
-            background: 'transparent',
-          }}
-          searchable={false}
-          search={search}
-          onSelect={next => {
-            nav.navigate(`/docs/${next.id}`, { replace: true })
-          }}
-          belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
-        >
-          <WidthLimit>
-            <Content>
-              <SelectedSection
-                onToggleSidebar={() => setShowSidebar(!showSidebar)}
-                setTheme={siteStore.setTheme}
-                theme={siteStore.theme}
-                title={item ? item['title'] : undefined}
-              >
-                {props.children}
-              </SelectedSection>
-            </Content>
-          </WidthLimit>
-        </Templates.MasterDetail>
+      <SectionContent>
+        <ContentPosition isSmall={isSmall}>
+          <SelectedSection
+            onToggleSidebar={() => setShowSidebar(!showSidebar)}
+            setTheme={siteStore.setTheme}
+            theme={siteStore.theme}
+            title={item ? item['title'] : undefined}
+          >
+            {props.children}
+          </SelectedSection>
+        </ContentPosition>
       </SectionContent>
     </MDX>
   )
@@ -133,18 +180,21 @@ function DocsPage(props: { id?: string; children?: any }) {
 
 DocsPage.theme = 'light'
 
-const WidthLimit = gloss({
-  flex: 1,
-  overflowY: 'auto',
+const ContentPosition = gloss<{ isSmall?: boolean }>({
+  width: '100%',
+  padding: [100, 0, 0, 300],
+  isSmall: {
+    padding: [100, 0, 0, 0],
+  },
 })
 
-const Content = gloss(Col, {
-  margin: [0, 'auto'],
-  padding: [0, 8],
+const FixedLayout = gloss({
+  position: 'fixed',
+  top: 0,
+  left: 0,
   width: '100%',
-  maxWidth: 860,
-  fontSize: 16,
-  lineHeight: 28,
+  height: '100%',
+  zIndex: 100000,
 })
 
 const DocsToolbar = memo(({ section, toggleSection }: any) => {
@@ -173,7 +223,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
-      pad={['xl', true, true, true]}
+      pad={['xl', 'xl', true, 'xl']}
       titleBorder
       space
       title={title || 'No title'}

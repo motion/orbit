@@ -43,9 +43,7 @@ html {
 }
 
 #app {
-  overflow: hidden;
   pointer-events: auto;
-  flex: 1;
 }
 
 small {

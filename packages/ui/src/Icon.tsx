@@ -29,6 +29,7 @@ const findName = (name: string) => {
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
   const matches = fuzzySort.go(name, names).map(x => x.target)
+  console.log('matches', matches, name, names)
   const match = matches.length ? matches : 'none'
   cache[name] = match
   return match

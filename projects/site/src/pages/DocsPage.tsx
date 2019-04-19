@@ -31,6 +31,8 @@ const views = {
   buttons: () => import('./DocsPage/DocsButtons.mdx'),
   cards: () => import('./DocsPage/DocsCards.mdx'),
   progress: () => import('./DocsPage/DocsProgress.mdx'),
+  lists: () => import('./DocsPage/DocsLists.mdx'),
+  start: () => import('./DocsPage/DocsStart.mdx'),
 }
 
 export default compose(
@@ -120,8 +122,8 @@ function DocsPage(props: { id?: string; children?: any }) {
           <Row
             margin={[0, 'auto']}
             pointerEvents="auto"
-            pad={['md', 100]}
-            width="100%"
+            pad={['sm', 100]}
+            width="90%"
             maxWidth={800}
           >
             <Input
@@ -129,7 +131,8 @@ function DocsPage(props: { id?: string; children?: any }) {
               onChange={e => setSearch(e.target.value)}
               flex={1}
               sizeRadius={10}
-              size="xxl"
+              size="xl"
+              iconSize={16}
               icon="search"
               placeholder="Search the docs..."
               after={
@@ -162,7 +165,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         </FixedLayout>
       </Portal>
 
-      <SectionContent>
+      <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
           <SelectedSection
             onToggleSidebar={() => setShowSidebar(!showSidebar)}
@@ -248,15 +251,22 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   )
 })
 
-const titleItem = { titleProps: { fontWeight: 600, size: 1.1 } }
+const titleItem = { titleProps: { size: 1.1 } }
+
+const ListSubTitle = gloss(SubTitle, {
+  margin: [20, 0, -2],
+  fontWeight: 300,
+  fontSize: 18,
+})
 
 const docsItems = [
   {
     selectable: false,
-    children: <SubTitle>Start</SubTitle>,
+    hideBorder: true,
+    children: <ListSubTitle>Start</ListSubTitle>,
   },
   {
-    id: 'install',
+    id: 'start',
     title: 'Getting started',
     ...titleItem,
   },
@@ -265,12 +275,21 @@ const docsItems = [
 const uiItems = [
   {
     selectable: false,
-    children: <SubTitle>User Interface</SubTitle>,
+    hideBorder: true,
+    children: <ListSubTitle>User Interface</ListSubTitle>,
   },
+
+  { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
+  { id: 'tables', title: 'Tables', icon: 'th' },
+  { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
+  { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
+  { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
+
   {
+    group: 'Views',
     id: 'surfaces',
     icon: 'layer',
-    title: 'Surfaces',
+    title: 'Surface',
     subTitle: 'Building block of many views',
   },
   { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
@@ -280,15 +299,8 @@ const uiItems = [
   { id: 'install', title: 'Popovers', icon: 'direction-right' },
   { id: 'install', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
-  { id: 'install', title: 'Floating Views', icon: 'square' },
 
-  { id: 'install', title: 'Lists', icon: 'list', group: 'Collections' },
-  { id: 'install', title: 'Tables', icon: 'table' },
-  { id: 'install', title: 'Tree', icon: 'tree' },
-  { id: 'install', title: 'TreeList', icon: 'chevron-right' },
-  { id: 'install', title: 'DefinitionList', icon: 'dict' },
-
-  { id: 'install', title: 'MasterDetail', icon: 'two-columns', group: 'Templates' },
+  { id: 'install', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
   { id: 'install', title: 'Flow', icon: 'layout' },
   { id: 'install', title: 'Message', icon: 'chat' },
 

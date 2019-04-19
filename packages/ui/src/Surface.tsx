@@ -105,10 +105,6 @@ type ThroughProps = Pick<
   tagName?: string
 }
 
-const iconTransform = {
-  y: 0.5,
-}
-
 const acceptsIcon = child => child && child.type.acceptsIconProps === true
 
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
@@ -205,7 +201,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     +height / 2,
   )
 
-  const hasAnyGlint = !props.chromeless && isDefined(glint, glintBottom)
+  const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
   const paddingStyle = getPadding(props)
   let showElement = false
 
@@ -227,6 +223,20 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   } else {
     showElement = !!(children || elementProps)
+
+    const innerElements = (
+      <PassProps
+        passCondition={acceptsIcon}
+        alt={alt}
+        size={getIconSize(props)}
+        opacity={selectDefined(props.alpha, props.opacity)}
+        {...iconProps}
+      >
+        {icon && !stringIcon && icon}
+        {icon && stringIcon && <Icon name={`${icon}`} />}
+      </PassProps>
+    )
+
     childrenProps.children = (
       <>
         {before}
@@ -274,23 +284,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             )}
           </GlintContain>
         )}
-        <div
-          style={{
-            order: icon && iconAfter ? 3 : 'inherit',
-          }}
-        >
-          <PassProps
-            passCondition={acceptsIcon}
-            alt={alt}
-            size={getIconSize(props)}
-            transform={iconTransform}
-            opacity={selectDefined(props.alpha, props.opacity)}
-            {...iconProps}
+        {icon && iconAfter ? (
+          <div
+            style={{
+              order: 3,
+            }}
           >
-            {icon && !stringIcon && icon}
-            {icon && stringIcon && <Icon name={`${icon}`} />}
-          </PassProps>
-        </div>
+            {innerElements}
+          </div>
+        ) : (
+          innerElements
+        )}
         {glow && !disabled && (
           <HoverGlow
             full

@@ -1,10 +1,15 @@
+import CardSrc from '!raw-loader!@o/ui/src/Card.tsx'
+import Description from '../../../tmp/Button.json'
+import { DocsMeta } from './DocsMeta'
 import * as Ex from './DocsCards'
 import { Example } from './Example'
 
 A `<Card />` combines a `<SizedSurface />` with a `<ListItem />` as it's header.
 It's `<Collapsable />` as well.
 
-<Example>{Ex.Source}</Example>
+<Example>
+  <DocsMeta source={CardSrc} displayName="Card" component={Description} />
+</Example>
 
 ## `<Card />`
 

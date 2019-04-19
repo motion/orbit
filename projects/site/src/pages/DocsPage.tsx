@@ -42,6 +42,9 @@ const views = {
   install: {
     page: () => import('./DocsPage/DocsInstall.mdx'),
   },
+  start: {
+    page: () => import('./DocsPage/DocsStart.mdx'),
+  },
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
@@ -50,17 +53,22 @@ const views = {
   cards: {
     page: () => import('./DocsPage/DocsCards.mdx'),
     source: () => import('!raw-loader!@o/ui/src/Card'),
+    types: () => import('../../tmp/Card.json'),
   },
   progress: {
     page: () => import('./DocsPage/DocsProgress.mdx'),
     source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
+    types: () => import('../../tmp/Progress.json'),
   },
   lists: {
     page: () => import('./DocsPage/DocsLists.mdx'),
     source: () => import('!raw-loader!@o/ui/src/lists/List'),
+    types: () => import('../../tmp/List.json'),
   },
-  start: {
-    page: () => import('./DocsPage/DocsStart.mdx'),
+  tables: {
+    page: () => import('./DocsPage/DocsTables.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/tables/Table'),
+    types: () => import('../../tmp/Table.json'),
   },
 }
 

@@ -1,4 +1,21 @@
-import { BorderRight, Button, Col, gloss, Input, List, Portal, RoundButton, Row, Section, Sidebar, SpaceGroup, SubTitle, SurfacePassProps, Toolbar, useMedia } from '@o/ui'
+import {
+  BorderRight,
+  Button,
+  Col,
+  gloss,
+  Input,
+  List,
+  Portal,
+  RoundButton,
+  Row,
+  Section,
+  Sidebar,
+  SpaceGroup,
+  SubTitle,
+  SurfacePassProps,
+  Toolbar,
+  useMedia,
+} from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useState } from 'react'
 import { useNavigation, View } from 'react-navi'
@@ -93,11 +110,11 @@ function DocsPage(props: { id?: string; children?: any }) {
           </Row>
 
           {isSmall ? (
-            <Sidebar hidden={!showSidebar} zIndex={10000000} elevation={5}>
+            <Sidebar hidden={!showSidebar} zIndex={10000000} elevation={5} pointerEvents="auto">
               {content}
             </Sidebar>
           ) : (
-            <Col position="relative" flex={1} width={300}>
+            <Col position="relative" flex={1} width={300} pointerEvents="auto">
               {content}
               <BorderRight />
             </Col>
@@ -135,13 +152,6 @@ const FixedLayout = gloss({
   width: '100%',
   height: '100%',
   zIndex: 1000000000,
-  pointerEvents: 'auto',
-})
-
-const Content = gloss(Col, {
-  margin: [0, 'auto'],
-  fontSize: 16,
-  lineHeight: 28,
 })
 
 const DocsToolbar = memo(({ section, toggleSection }: any) => {

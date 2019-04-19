@@ -67,7 +67,7 @@ export default compose(
 
 function DocsPage(props: { id?: string; children?: any }) {
   const screen = useScreenSize()
-  const itemIndex = categories.all.findIndex(x => x['id'] === props.id)
+  const itemIndex = categories.all.findIndex(x => x['id'] === props.id) || 1
   const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
@@ -84,7 +84,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         search={search}
         selectable
         alwaysSelected
-        defaultSelected={itemIndex || 1}
+        defaultSelected={itemIndex}
         items={categories[section]}
         onSelect={rows => {
           nav.navigate(`/docs/${rows[0].id}`, { replace: true })

@@ -1,5 +1,5 @@
-import { Color, ColorLike, toColor } from '@o/color'
-import { LinearGradient, ThemeObject } from '@o/css'
+import { Color, ColorLike, toColor } from '@o/color';
+import { LinearGradient, ThemeObject } from '@o/css';
 
 type ColorObject = { [a: string]: ColorLike }
 
@@ -116,17 +116,21 @@ export class ThemeMaker {
     const res: ThemeObject = {
       ...this.colorize({
         // for buttons/surfaces, we generate a nice set of themes
-        colorHover: base.color.lighten(0.1),
-        backgroundHover: base.background.lighten(0.1),
-        borderColorHover: increaseContrast(base.borderColor, smallAmt),
-        backgroundActiveHover: increaseContrast(base.background, largeAmt),
-        backgroundActive: decreaseContrast(base.background, largeAmt),
-        borderColorActive: decreaseContrast(base.borderColor, smallAmt),
-        backgroundBlur: darken(base.background, largeAmt),
-        colorBlur: darken(base.color, largeAmt),
-        borderColorBlur: darken(base.borderColor, largeAmt),
-        backgroundFocus: decreaseContrast(base.background, largeAmt),
-        borderColorFocus: decreaseContrast(base.borderColor, largeAmt),
+        colorHover: s.colorHover || base.color.lighten(0.1),
+        backgroundHover:
+          s.backgroundHover ||
+          base.background.lighten((100 / (base.background.lightness() + 1)) * 0.04),
+        borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmt),
+        backgroundActiveHover:
+          s.backgroundActiveHover || increaseContrast(base.background, largeAmt),
+        backgroundActive: s.backgroundActive || decreaseContrast(base.background, largeAmt),
+        borderColorActive:
+          s.borderColorActive || decreaseContrast(base.borderColor, smallAmt),
+        backgroundBlur: s.backgroundBlur || darken(base.background, largeAmt),
+        colorBlur: s.colorBlur || darken(base.color, largeAmt),
+        borderColorBlur: s.borderColorBlur || darken(base.borderColor, largeAmt),
+        backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmt),
+        borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmt),
         // ensure rest is last so they can override anything
         ...s,
         // except for base which is already using the right order

@@ -147,7 +147,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     size: ogSize,
     sizeLineHeight,
     tagName,
-    themeSelect = 'surface',
+    themeSelect,
     tooltip,
     tooltipProps,
     pad,
@@ -348,6 +348,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderWidth={borderWidth}
           borderPosition={borderPosition}
           alt={alt}
+          applyPsuedoColors
           {...!showInnerElement && elementProps}
           {...throughProps}
           {...viewProps}

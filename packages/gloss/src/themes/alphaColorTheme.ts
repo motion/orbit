@@ -6,6 +6,7 @@ import { mergeStyles } from '../helpers/mergeStyles'
 // mutate styles to have alpha if defined in props
 
 export type AlphaColorProps = {
+  applyPsuedoColors?: boolean
   alpha?: number
   alphaHover?: number
   hoverStyle?: {
@@ -31,17 +32,28 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
     }
   }
 
-  mergePsuedoColors('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
-  mergePsuedoColors(
-    '&:active',
-    'activeStyle',
-    'colorActive',
-    'alphaActive',
-    next,
-    color,
-    props,
-    theme,
-  )
+  if (props.applyPsuedoColors) {
+    mergePsuedoColors(
+      '&:hover',
+      'hoverStyle',
+      'colorHover',
+      'alphaHover',
+      next,
+      color,
+      props,
+      theme,
+    )
+    mergePsuedoColors(
+      '&:active',
+      'activeStyle',
+      'colorActive',
+      'alphaActive',
+      next,
+      color,
+      props,
+      theme,
+    )
+  }
 
   return mergeStyles(previous, next)
 }

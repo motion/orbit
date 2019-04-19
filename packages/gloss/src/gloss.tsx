@@ -228,10 +228,10 @@ export interface GlossView<Props> {
 // export function gloss<Props = any, Parent extends any = any>(
 //   a: Parent,
 // ): Parent extends GlossView<infer P> ? GlossView<Props & P> : GlossView<Props>
-export function gloss<ExtraProps = any, Props = any>(
+export function gloss<Props = any>(
   a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
-): GlossView<ExtraProps & Props> {
+): GlossView<GlossProps<Props>> {
   let target: any = a || 'div'
   let rawStyles = b
   let targetConfig
@@ -261,10 +261,7 @@ export function gloss<ExtraProps = any, Props = any>(
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: ThemeFn | null = null
 
-  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<ExtraProps & Props>>(function Gloss(
-    props,
-    ref,
-  ) {
+  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
@@ -331,9 +328,9 @@ export function gloss<ExtraProps = any, Props = any>(
     }
 
     return createElement(element, finalProps, props.children)
-  }) as unknown) as GlossView<ExtraProps & Props>
+  }) as unknown) as GlossView<Props>
 
-  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<ExtraProps & Props>
+  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.config = {
     themeFns: null,

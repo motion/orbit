@@ -4,8 +4,6 @@ import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 const Theme = new ThemeMaker()
 
 const orbitColor = toColor('#3E7FD5')
-const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
-const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const colors = {
   orange: '#DC6104',
@@ -87,10 +85,7 @@ const colorThemes: ThemeSet = {
   blue: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     background: orbitColor,
-    backgroundHover: orbitColor,
-    backgroundActive: orbitColor,
     color: '#fff',
-    borderColor: orbitActiveBg,
   }),
   transparent: Theme.colorize({
     background: transparent,

@@ -1,5 +1,6 @@
-import 'react-hot-loader' // must be imported before react
 import './configurations'
+import 'react-hot-loader'
+
 import { SiteRoot } from './SiteRoot'
 
 require('./assets/font-gteesti/stylesheet.css')
@@ -10,7 +11,11 @@ const ReactDOM = require('react-dom')
 
 export function render() {
   const RootNode = document.querySelector('#app')
-  ReactDOM.render(<SiteRoot />, RootNode)
+  ReactDOM.unstable_createRoot(RootNode).render(
+    <React.unstable_ConcurrentMode>
+      <SiteRoot />
+    </React.unstable_ConcurrentMode>,
+  )
 }
 
 render()

@@ -21,12 +21,14 @@ import {
   SurfacePassProps,
   Table,
 } from '@o/ui'
+import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { NotFoundBoundary, useNavigation, View } from 'react-navi'
+import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
+import { Navigation } from '../SiteRoot'
 import { CodeBlock } from '../views/CodeBlock'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -72,22 +74,12 @@ const views = {
   },
 }
 
-export default compose(
-  withView(async req => {
-    const id = req.path.slice(1)
-    const view = views[id]
-    if (view) {
-      const source = view.source ? (await view.source()).default : null
-      const types = view.types ? (await view.types()).default : null
-      return (
-        <DocsPage key={0} id={id} source={source} types={types}>
-          <View />
-        </DocsPage>
-      )
-    }
+const emptyPromise = () => Promise.resolve({ default: null })
 
+export default compose(
+  withView(async () => {
     return (
-      <DocsPage key={0} id={id}>
+      <DocsPage>
         <View />
       </DocsPage>
     )
@@ -101,32 +93,50 @@ export default compose(
     '/:id': route(async req => {
       let id = req.params.id
       const view = views[id]
+
       if (!view) {
         return {
           view: () => <div>not found</div>,
         }
       }
-      const ChildView = (await view.page()).default
+
+      const [ChildView, source, types] = await Promise.all([
+        view.page().then(x => x.default),
+        (view.source || emptyPromise)().then(x => x.default),
+        (view.types || emptyPromise)().then(x => x.default),
+      ])
+
+      const item = docsItems.all.find(x => x['id'] === id)
+
       return {
-        view: <ChildView />,
+        view: (
+          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
+            <ChildView />
+          </DocsContents>
+        ),
       }
     }),
   }),
 )
 
-function DocsPage(props: { id?: string; source?: string; children?: any; types?: Object }) {
+const docsNavigate = debounce(id => Navigation.navigate(`/docs/${id}`), 150)
+
+const DocsPage = memo((props: { children?: any }) => {
   const screen = useScreenSize()
-  const itemIndex = docsItems.all.findIndex(x => x['id'] === props.id) || 1
-  const item = docsItems.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
   const toggleSection = val => setSection(section === val ? 'all' : val)
-  const nav = useNavigation()
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
 
   const isSmall = screen === 'small'
+
+  console.log('rendering docspage')
+
+  useEffect(() => {
+    console.log('mounting docspage')
+  }, [])
 
   useEffect(() => {
     const keyPress = e => {
@@ -153,10 +163,10 @@ function DocsPage(props: { id?: string; source?: string; children?: any; types?:
         search={search}
         selectable
         alwaysSelected
-        defaultSelected={itemIndex}
+        defaultSelected={1}
         items={docsItems[section]}
         onSelect={rows => {
-          nav.navigate(`/docs/${rows[0].id}`, { replace: true })
+          docsNavigate(rows[0].id)
         }}
       />
     </React.Fragment>
@@ -295,21 +305,13 @@ function DocsPage(props: { id?: string; source?: string; children?: any; types?:
 
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
-          <NotFoundBoundary render={NotFoundPage}>
-            <DocsContents
-              title={item ? item['title'] : undefined}
-              source={props.source}
-              types={props.types}
-            >
-              {props.children}
-            </DocsContents>
-          </NotFoundBoundary>
+          <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />
         </ContentPosition>
       </SectionContent>
     </MDX>
   )
-}
+})
 
 DocsPage.theme = 'home'
 

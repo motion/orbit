@@ -45,7 +45,8 @@
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
     "zenscroll": "^4.0.2",
-    "faker": "4.1.0"
+    "faker": "4.1.0",
+    "scheduler": "0.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3"

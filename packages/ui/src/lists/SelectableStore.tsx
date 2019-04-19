@@ -2,6 +2,7 @@ import { always, ensure, react, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
+
 import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
@@ -102,9 +103,7 @@ export class SelectableStore {
 
   callbackOnSelectProp = react(
     () => always(this.active),
-    async (_, { sleep }) => {
-      // TODO this should really be handled by concurrent
-      await sleep(16)
+    () => {
       ensure('onSelect', !!this.props.onSelect)
       this.callbackOnSelect()
     },

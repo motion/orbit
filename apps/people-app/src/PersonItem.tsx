@@ -1,7 +1,6 @@
-import { OrbitItemViewProps } from '@o/kit'
 import * as React from 'react'
 
-export class PersonItem extends React.Component<OrbitItemViewProps> {
+export class PersonItem extends React.Component<any> {
   render() {
     return <div>im a person</div>
   }

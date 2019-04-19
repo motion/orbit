@@ -35,7 +35,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 export function Table(tableProps: TableProps) {
   // const focusStore = useFocusStore()
   const shareStore = useShareStore()
-  const sectionProps: SectionSpecificProps = useSectionProps(tableProps)
+  const sectionProps: SectionSpecificProps = useSectionProps(tableProps as any) // TODO fix
   const {
     flex = 1,
     bordered,

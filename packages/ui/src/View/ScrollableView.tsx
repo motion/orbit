@@ -3,6 +3,7 @@ import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
+import { ColProps } from './Col'
 import { getPadding, PaddedView } from './PaddedView'
 import { ViewProps } from './View'
 
@@ -81,7 +82,7 @@ const hideScrollbarsStyle = {
   },
 }
 
-const ScrollableInner = gloss(Col, {
+const ScrollableInner = gloss<ColProps & { isWrapped?: boolean }>(Col, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
 }).theme(props => {

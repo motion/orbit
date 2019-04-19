@@ -200,7 +200,7 @@ export class TreeItems extends React.PureComponent<
   render() {
     const items = this.state.flatTreeItems
     return (
-      <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>
+      <TreeItemsContainer tabIndex={0} onKeyDown={this.onKeyDown}>
         <FixedSizeList
           itemData={`${this.props.selected}`}
           itemCount={items.length}

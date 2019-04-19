@@ -1,11 +1,9 @@
 /* MIT license */
 import { cssColorNames } from './cssColorNames'
 
-function flatten(array: Array<any>): Array<any> {
-  const flattenedArray: Array<any> = [].concat(...array)
-  return flattenedArray.some(Array.isArray)
-    ? flatten(flattenedArray)
-    : flattenedArray
+function flatten(array: any[]): any[] {
+  const flattenedArray: any[] = [].concat(...array)
+  return flattenedArray.some(Array.isArray) ? flatten(flattenedArray) : flattenedArray
 }
 
 var reverseNames = {}
@@ -49,15 +47,16 @@ export const colorString = {
   },
 }
 
+const abbr = /^#([a-f0-9]{3,4})$/i
+const hex = /^#([a-f0-9]{6})([a-f0-9]{2})?$/i
+const rgba = /^rgba?\(\s*([+-]?[\d\.]+)\s*,\s*([+-]?[\d\.]+)\s*,\s*([+-]?[\d\.]+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/
+const per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/
+const keyword = /(\D+)/
+
 function getRgb(string) {
   if (!string) {
     return null
   }
-  var abbr = /^#([a-f0-9]{3,4})$/i
-  var hex = /^#([a-f0-9]{6})([a-f0-9]{2})?$/i
-  var rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/
-  var per = /^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/
-  var keyword = /(\D+)/
   var rgb = [0, 0, 0, 1]
   var match
   var i
@@ -164,13 +163,7 @@ export function toHex(...args) {
 export function toRgb(...args) {
   var rgba = flatten(args)
   return rgba.length < 4 || rgba[3] === 1
-    ? 'rgb(' +
-        Math.round(rgba[0]) +
-        ', ' +
-        Math.round(rgba[1]) +
-        ', ' +
-        Math.round(rgba[2]) +
-        ')'
+    ? 'rgb(' + Math.round(rgba[0]) + ', ' + Math.round(rgba[1]) + ', ' + Math.round(rgba[2]) + ')'
     : 'rgba(' +
         Math.round(rgba[0]) +
         ', ' +
@@ -196,15 +189,7 @@ export function toHsl(...args) {
   var hsla = flatten(args)
   return hsla.length < 4 || hsla[3] === 1
     ? 'hsl(' + hsla[0] + ', ' + hsla[1] + '%, ' + hsla[2] + '%)'
-    : 'hsla(' +
-        hsla[0] +
-        ', ' +
-        hsla[1] +
-        '%, ' +
-        hsla[2] +
-        '%, ' +
-        hsla[3] +
-        ')'
+    : 'hsla(' + hsla[0] + ', ' + hsla[1] + '%, ' + hsla[2] + '%, ' + hsla[3] + ')'
 }
 
 // hwb is a bit different than rgb(a) & hsl(a) since there is no alpha specific syntax

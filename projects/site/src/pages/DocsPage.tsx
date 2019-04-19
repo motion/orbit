@@ -26,6 +26,7 @@ import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
+import { BlogFooter } from './BlogPage/BlogLayout'
 import { docsItems } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
@@ -251,6 +252,8 @@ function DocsPage(props: { id?: string; children?: any }) {
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
           <DocsContents title={item ? item['title'] : undefined}>{props.children}</DocsContents>
+
+          <BlogFooter />
         </ContentPosition>
       </SectionContent>
     </MDX>

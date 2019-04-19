@@ -14,8 +14,9 @@ export type DraggableProps = Omit<FullScreenProps, 'onChange'> & {
   onChange?: (pos: { top: number; left: number }, diffTop: number, diffLeft: number) => any
 }
 
-export function Draggable(props: DraggableProps) {
-  const { ref, top, left } = useDraggable(props)
+// TODO hate destructuring games like this
+export function Draggable({ onChange, ...props }: DraggableProps) {
+  const { ref, top, left } = useDraggable({ onChange, ...props })
   return <FullScreen ref={ref} top={top} left={left} {...props} />
 }
 

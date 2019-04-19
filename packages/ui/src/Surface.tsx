@@ -1,4 +1,4 @@
-import { ColorLike, CSSPropertySet, px } from '@o/css'
+import { ColorLike, CSSPropertySet, CSSPropertySetStrict, px } from '@o/css'
 import Gloss, {
   Col,
   forwardTheme,
@@ -74,7 +74,6 @@ export type SurfaceSpecificProps = {
   highlightBackground?: ColorLike
   highlightColor?: ColorLike
   ignoreSegment?: boolean
-  sizeLineHeight?: boolean | number
   type?: string
   themeSelect?: Gloss.ThemeSelect
   iconPad?: number
@@ -436,7 +435,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   return styles
 })
 
-const Element = gloss<ThroughProps & { disabled?: boolean; surfacePadX: number | string }>({
+const Element = gloss<
+  CSSPropertySetStrict & ThroughProps & { disabled?: boolean; surfacePadX: number | string }
+>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',

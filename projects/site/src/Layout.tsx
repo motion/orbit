@@ -104,8 +104,6 @@ export function Layout(props: any) {
     },
   }
 
-  console.log('render with', themes.light.alternates.selected.color.toCSS())
-
   return (
     <ProvideUI themes={themes}>
       <Theme name={siteStore.theme}>

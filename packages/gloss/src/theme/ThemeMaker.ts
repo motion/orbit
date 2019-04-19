@@ -1,5 +1,5 @@
-import { Color, ColorLike, toColor } from '@o/color';
-import { LinearGradient, ThemeObject } from '@o/css';
+import { Color, ColorLike, toColor } from '@o/color'
+import { LinearGradient, ThemeObject } from '@o/css'
 
 type ColorObject = { [a: string]: ColorLike }
 
@@ -124,8 +124,7 @@ export class ThemeMaker {
         backgroundActiveHover:
           s.backgroundActiveHover || increaseContrast(base.background, largeAmt),
         backgroundActive: s.backgroundActive || decreaseContrast(base.background, largeAmt),
-        borderColorActive:
-          s.borderColorActive || decreaseContrast(base.borderColor, smallAmt),
+        borderColorActive: s.borderColorActive || decreaseContrast(base.borderColor, smallAmt),
         backgroundBlur: s.backgroundBlur || darken(base.background, largeAmt),
         colorBlur: s.colorBlur || darken(base.color, largeAmt),
         borderColorBlur: s.borderColorBlur || darken(base.borderColor, largeAmt),

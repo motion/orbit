@@ -60,7 +60,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
   }
 
   return (
-    <ChatMessageFrame oneLine={itemProps.oneLine} {...itemProps.itemProps}>
+    <ChatMessageFrame {...itemProps.itemProps}>
       {!hideHeader && (
         <Row alignItems="center" cursor="default" padding={[itemProps.oneLine ? 0 : 3, 0]}>
           {itemProps.beforeTitle || null}

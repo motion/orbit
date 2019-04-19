@@ -34,7 +34,7 @@ export type TextProps = CSSPropertySetStrict &
     size?: Sizes
     placeholder?: string
     lineHeight?: number
-    sizeLineHeight?: number
+    sizeLineHeight?: number | boolean
     measure?: boolean
     onMeasure?: Function
     sizeMethod?: string

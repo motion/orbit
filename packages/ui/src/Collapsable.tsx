@@ -62,7 +62,7 @@ export const CollapseArrow = (props: CollapsableProps) => {
       name="chevron-right"
       size={12}
       transform={{
-        rotate: val ? 0 : '90deg',
+        rotate: val ? '0' : '90deg',
       }}
     />
   )
@@ -72,6 +72,6 @@ const Chevron = gloss(Icon, {
   marginRight: 4,
   marginLeft: -2,
   transition: 'all ease 200ms',
-}).theme(theme => ({
-  color: theme.iconColor || theme.color,
+}).theme((props, theme) => ({
+  color: selectDefined(props.color, theme.iconColor, theme.color),
 }))

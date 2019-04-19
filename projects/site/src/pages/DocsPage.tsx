@@ -290,7 +290,7 @@ const DocsContents = memo(({ title, children }: any) => {
       titleBorder
       space
       title={title || 'No title'}
-      titleSize="xl"
+      titleSize="xxl"
     >
       {children}
     </Section>

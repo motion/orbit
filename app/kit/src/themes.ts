@@ -5,7 +5,7 @@ const Theme = new ThemeMaker()
 
 const orbitColor = toColor('#3E7FD5')
 
-const colors = {
+export const colors = {
   orange: '#DC6104',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
@@ -326,7 +326,7 @@ const dark = {
   }),
 }
 
-export const themes: ThemeSet = {
+export const themes = {
   ...alternates,
   tooltip: Theme.fromStyles({
     background: 'rgba(20,20,20,0.94)',

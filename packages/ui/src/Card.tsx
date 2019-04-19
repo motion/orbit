@@ -1,24 +1,20 @@
 import { Theme, useThemeContext } from '@o/gloss'
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import React from 'react'
-import {
-  Collapsable,
-  CollapsableProps,
-  CollapseArrow,
-  splitCollapseProps,
-  useCollapseToggle,
-} from './Collapsable'
+
+import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
 import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { getSpaceSize, Sizes } from './Space'
+import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
 export type CardProps = SizedSurfaceSpecificProps &
   ListItemSpecificProps &
   Partial<CollapsableProps> &
-  ColProps & {
+  Omit<ColProps, 'size'> & {
     space?: Sizes
     collapseOnClick?: boolean
   }
@@ -94,7 +90,6 @@ export function Card(props: CardProps) {
               alignItems="center"
               titleFlex={titleFlex}
               subTitleProps={subTitleProps}
-              padding={0}
               titleProps={{
                 fontWeight: 500,
                 ...titleProps,
@@ -111,6 +106,7 @@ export function Card(props: CardProps) {
               preview={preview}
               iconBefore={iconBefore}
               {...padProps}
+              pad={selectDefined(pad, size)}
             />
           </Scale>
           <Collapsable useToggle={toggle}>

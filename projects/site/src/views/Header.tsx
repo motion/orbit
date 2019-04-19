@@ -3,6 +3,7 @@ import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View 
 import React from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
+
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
@@ -159,7 +160,7 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
         position="relative"
         {...rest}
       >
-        <HeaderContain height={38}>
+        <HeaderContain height={42}>
           <LinkSection alignRight>{before}</LinkSection>
           <LogoHorizontal />
           <LinkSection>{after}</LinkSection>

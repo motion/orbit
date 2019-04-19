@@ -83,7 +83,7 @@ function DocsPage(props: { id?: string; children?: any }) {
     <MDX>
       <Header slim />
 
-      <SectionContent>
+      <SectionContent flex={1}>
         <Row pad={['md', 200]}>
           <Input
             onChange={e => setSearch(e.target.value)}

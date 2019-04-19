@@ -23,6 +23,7 @@ import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
+import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { getPadding } from './View/PaddedView'
 import { ViewProps } from './View/View'
@@ -79,7 +80,7 @@ export type SurfaceSpecificProps = {
   iconPad?: number
 }
 
-export type SurfaceProps = ViewProps & SurfaceSpecificProps
+export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()

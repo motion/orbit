@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row, RowProps } from '@o/gloss'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -15,7 +15,7 @@ import { TableFilter } from './types'
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
-const Token = gloss(Row, {
+const Token = gloss<RowProps & { focused?: boolean }>(Row, {
   alignItems: 'center',
   borderRadius: 4,
   marginRight: 4,
@@ -212,7 +212,7 @@ export class FilterToken extends PureComponent {
     let value = ''
 
     if (filter.type === 'enum') {
-      const getEnum = value => filter.enum.find(e => e.value === value)
+      const getEnum = next => filter.enum.find(e => e.value === next)
       const firstValue = getEnum(filter.value[0])
       const secondValue = getEnum(filter.value[1])
       if (filter.value.length === 0) {

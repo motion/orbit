@@ -11,7 +11,7 @@ export function createContextualProps<A extends any>(defaults?: A) {
       }, [rest])
       return <Context.Provider value={memoVal}>{children}</Context.Provider>
     },
-    useProps(componentProps?: Partial<A>): Partial<A> {
+    useProps<B extends Partial<A>>(componentProps?: B): B {
       const extra = useContext(Context)
       if (!extra) {
         return componentProps

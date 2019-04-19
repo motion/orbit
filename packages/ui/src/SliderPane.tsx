@@ -2,7 +2,7 @@ import { gloss } from '@o/gloss'
 import React, { useRef } from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
-import { View } from './View/View'
+import { View, ViewProps } from './View/View'
 import { useVisibility } from './Visibility'
 
 type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
@@ -24,7 +24,6 @@ export function SliderPane({
   verticalPad,
   framePad,
   isActive,
-  curFrame,
   ...props
 }: SliderPaneProps) {
   const ref = useRef(null)
@@ -48,7 +47,6 @@ export function SliderPane({
       ref={ref}
       padding={[verticalPad, framePad, verticalPad]}
       isActive={isActive}
-      curFrame={curFrame}
       {...props}
     >
       {children}
@@ -56,7 +54,7 @@ export function SliderPane({
   )
 }
 
-const SliderPaneChrome = gloss(View, {
+const SliderPaneChrome = gloss<ViewProps & { isActive?: boolean }>(View, {
   position: 'absolute',
   top: 0,
   left: 0,

@@ -23,7 +23,7 @@ import {
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { useNavigation, View } from 'react-navi'
+import { NotFoundBoundary, useNavigation, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
@@ -36,6 +36,7 @@ import { BlogFooter } from './BlogPage/BlogLayout'
 import { docsItems } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
+import { NotFoundPage } from './NotFoundPage'
 
 const views = {
   install: {
@@ -67,10 +68,18 @@ export default compose(
   withView(async req => {
     const id = req.path.slice(1)
     const view = views[id]
-    const source = view.source ? (await view.source()).default : null
-    const types = view.types ? (await view.types()).default : null
+    if (view) {
+      const source = view.source ? (await view.source()).default : null
+      const types = view.types ? (await view.types()).default : null
+      return (
+        <DocsPage key={0} id={id} source={source} types={types}>
+          <View />
+        </DocsPage>
+      )
+    }
+
     return (
-      <DocsPage key={0} id={id} source={source} types={types}>
+      <DocsPage key={0} id={id}>
         <View />
       </DocsPage>
     )
@@ -278,13 +287,15 @@ function DocsPage(props: { id?: string; source?: string; children?: any; types?:
 
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
-          <DocsContents
-            title={item ? item['title'] : undefined}
-            source={props.source}
-            types={props.types}
-          >
-            {props.children}
-          </DocsContents>
+          <NotFoundBoundary render={NotFoundPage}>
+            <DocsContents
+              title={item ? item['title'] : undefined}
+              source={props.source}
+              types={props.types}
+            >
+              {props.children}
+            </DocsContents>
+          </NotFoundBoundary>
           <BlogFooter />
         </ContentPosition>
       </SectionContent>
@@ -355,17 +366,19 @@ const DocsContents = memo(({ title, source, children, types }: any) => {
       }
     >
       <MetaSection>
-        <Card
-          background={theme => theme.background.alpha(0.1)}
-          collapsable
-          defaultCollapsed
-          collapseOnClick
-          title={`View ${title} Source`}
-          maxHeight={450}
-          scrollable="y"
-        >
-          <CodeBlock className="language-typescript">{source}</CodeBlock>
-        </Card>
+        {!!source && (
+          <Card
+            background={theme => theme.background.alpha(0.1)}
+            collapsable
+            defaultCollapsed
+            collapseOnClick
+            title={`View ${title} Source`}
+            maxHeight={450}
+            scrollable="y"
+          >
+            <CodeBlock className="language-typescript">{source}</CodeBlock>
+          </Card>
+        )}
 
         <Space size="sm" />
 

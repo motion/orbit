@@ -10,6 +10,7 @@ export const themes = {
     ...KitThemes.dark,
     ...Theme.colorize({
       background: '#000',
+      inputBackground: '#000',
     }),
   },
 }

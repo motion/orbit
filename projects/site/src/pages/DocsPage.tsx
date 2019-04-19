@@ -12,8 +12,8 @@ import {
   RoundButton,
   Row,
   Section,
+  SegmentedRow,
   Sidebar,
-  SpaceGroup,
   SurfacePassProps,
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
@@ -120,25 +120,44 @@ function DocsPage(props: { id?: string; children?: any }) {
   return (
     <MDX>
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
-        <Row margin={[0, 'auto']} pointerEvents="auto" pad={['sm', 100]} width="90%" maxWidth={800}>
+        <Row
+          position="relative"
+          margin={[0, 'auto']}
+          pointerEvents="auto"
+          pad={['sm', 0]}
+          width="90%"
+          maxWidth={980}
+          alignItems="center"
+          justifyContent="center"
+        >
           <Input
             ref={inputRef}
             onChange={e => setSearch(e.target.value)}
-            flex={1}
             sizeRadius={10}
             size="xl"
             iconSize={16}
+            maxWidth="calc(60% - 20px)"
+            flex={1}
             icon="search"
-            placeholder="Search the docs..."
+            placeholder={isSmall ? 'Search...' : 'Search the docs...'}
             elevation={3}
             after={
-              <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
-                t
-              </Button>
+              !isSmall && (
+                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                  t
+                </Button>
+              )
             }
           />
 
-          <Absolute top={0} left="10%" bottom={0} alignItems="center" justifyContent="center">
+          <Absolute
+            top={0}
+            width="18%"
+            left={0}
+            bottom={0}
+            alignItems="flex-end"
+            justifyContent="center"
+          >
             <Popover
               background
               width={300}
@@ -146,7 +165,7 @@ function DocsPage(props: { id?: string; children?: any }) {
               closeOnClickAway
               elevation={100}
               zIndex={100000000000000000}
-              target={<RoundButton icon="filter">Filter</RoundButton>}
+              target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
             >
               <>
                 <ListItem selectable={false}>
@@ -175,15 +194,16 @@ function DocsPage(props: { id?: string; children?: any }) {
           </Absolute>
 
           <Absolute
-            width="8%"
+            width="18%"
             top={0}
-            right="10%"
+            right={0}
             bottom={0}
-            alignItems="flex-start"
-            justifyContent="center"
+            alignItems="center"
+            justifyContent="flex-start"
+            flexFlow="row"
           >
             <SurfacePassProps circular iconSize={12}>
-              <SpaceGroup space="xs">
+              <SegmentedRow>
                 <RoundButton
                   icon="moon"
                   tooltip="Toggle dark mode"
@@ -196,7 +216,7 @@ function DocsPage(props: { id?: string; children?: any }) {
                     onClick={() => setShowSidebar(!showSidebar)}
                   />
                 )}
-              </SpaceGroup>
+              </SegmentedRow>
             </SurfacePassProps>
           </Absolute>
         </Row>
@@ -237,7 +257,7 @@ function DocsPage(props: { id?: string; children?: any }) {
   )
 }
 
-DocsPage.theme = 'light'
+DocsPage.theme = 'home'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',

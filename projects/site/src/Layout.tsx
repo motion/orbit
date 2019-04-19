@@ -5,6 +5,7 @@ import { debounce, throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
+
 import { useScreenSize } from './hooks/useScreenSize'
 import { getPageForPath, Navigation } from './SiteRoot'
 import { themes } from './themes'
@@ -21,6 +22,7 @@ class SiteStore {
   bodyBackground = react(
     () => this.theme,
     theme => {
+      console.log('reacting to theme', theme)
       document.body.style.background = themes[theme].background.toCSS()
     },
   )

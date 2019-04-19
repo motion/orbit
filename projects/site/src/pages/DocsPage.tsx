@@ -11,20 +11,21 @@ import {
   Section,
   Sidebar,
   SpaceGroup,
-  SubTitle,
   SurfacePassProps,
   Toolbar,
-  useMedia,
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { useNavigation, View } from 'react-navi'
+
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
+import { docsItems } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
+import { useScreenVal } from './HomePage/SpacedPageContent'
 
 const views = {
   install: () => import('./DocsPage/DocsInstall.mdx'),
@@ -67,8 +68,8 @@ export default compose(
 
 function DocsPage(props: { id?: string; children?: any }) {
   const screen = useScreenSize()
-  const itemIndex = categories.all.findIndex(x => x['id'] === props.id) || 1
-  const item = categories.all[itemIndex]
+  const itemIndex = docsItems.all.findIndex(x => x['id'] === props.id) || 1
+  const item = docsItems.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
@@ -85,7 +86,7 @@ function DocsPage(props: { id?: string; children?: any }) {
         selectable
         alwaysSelected
         defaultSelected={itemIndex}
-        items={categories[section]}
+        items={docsItems[section]}
         onSelect={rows => {
           nav.navigate(`/docs/${rows[0].id}`, { replace: true })
         }}
@@ -127,6 +128,7 @@ function DocsPage(props: { id?: string; children?: any }) {
             iconSize={16}
             icon="search"
             placeholder="Search the docs..."
+            elevation={5}
             after={
               <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
                 t
@@ -164,14 +166,14 @@ function DocsPage(props: { id?: string; children?: any }) {
 
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
-          <SelectedSection
+          <DocsContents
             onToggleSidebar={() => setShowSidebar(!showSidebar)}
             setTheme={siteStore.setTheme}
             theme={siteStore.theme}
             title={item ? item['title'] : undefined}
           >
             {props.children}
-          </SelectedSection>
+          </DocsContents>
         </ContentPosition>
       </SectionContent>
     </MDX>
@@ -219,11 +221,17 @@ const DocsToolbar = memo(({ section, toggleSection }: any) => {
   )
 })
 
-const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, children }: any) => {
-  const isSmall = useMedia({ maxWidth: 700 })
+const DocsContents = memo(({ setTheme, theme, title, onToggleSidebar, children }: any) => {
+  const isSmall = useScreenSize() === 'small'
   return (
     <Section
-      pad={['xl', 'xl', true, 'xl']}
+      maxWidth={800}
+      margin={[0, 'auto']}
+      pad={useScreenVal(
+        ['xl', 'md', true, 'md'],
+        ['xl', 'xl', true, 'xl'],
+        ['xl', 'xxl', true, 'xxl'],
+      )}
       titleBorder
       space
       title={title || 'No title'}
@@ -247,116 +255,3 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
     </Section>
   )
 })
-
-const titleItem = { titleProps: { size: 1.1 } }
-
-const ListSubTitle = gloss(SubTitle, {
-  margin: [20, 0, -2],
-  fontWeight: 300,
-  fontSize: 18,
-})
-
-const docsItems = [
-  {
-    selectable: false,
-    hideBorder: true,
-    children: <ListSubTitle>Start</ListSubTitle>,
-  },
-  {
-    id: 'start',
-    title: 'Getting started',
-    ...titleItem,
-  },
-]
-
-const uiItems = [
-  {
-    selectable: false,
-    hideBorder: true,
-    children: <ListSubTitle>User Interface</ListSubTitle>,
-  },
-
-  { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
-  { id: 'tables', title: 'Tables', icon: 'th' },
-  { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
-  { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
-  { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
-
-  {
-    group: 'Views',
-    id: 'surfaces',
-    icon: 'layer',
-    title: 'Surface',
-    subTitle: 'Building block of many views',
-  },
-  { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
-  { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
-  { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
-  { id: 'install', title: 'Sections', icon: 'application' },
-  { id: 'install', title: 'Popovers', icon: 'direction-right' },
-  { id: 'install', title: 'Decorations', icon: 'clean' },
-  { id: 'progress', title: 'Progress', icon: 'circle' },
-
-  { id: 'install', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
-  { id: 'install', title: 'Flow', icon: 'layout' },
-  { id: 'install', title: 'Message', icon: 'chat' },
-
-  { id: 'install', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
-  { id: 'install', title: 'DateFormat', icon: 'event' },
-  { id: 'install', title: 'TimeAgo', icon: 'time' },
-
-  { id: 'install', title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { id: 'install', title: 'GalleryModal', icon: 'multi-select' },
-  { id: 'install', title: 'MediaModal', icon: 'multi-select' },
-
-  { id: 'install', title: 'Basics', icon: 'control', group: 'Layout' },
-  { id: 'install', title: 'Sidebar', icon: 'panel-stats' },
-  { id: 'install', title: 'Slider', icon: 'double-caret-horizontal' },
-  { id: 'install', title: 'Tabs', icon: 'add-row-top' },
-  { id: 'install', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
-  { id: 'install', title: 'Pane', icon: 'column-layout', indent: 1 },
-  { id: 'install', title: 'GridLayout', icon: 'grid-view', indent: 1 },
-  { id: 'install', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
-  { id: 'install', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
-
-  { id: 'install', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
-  { id: 'install', title: 'Toolbar', icon: 'bottom' },
-
-  { id: 'install', title: 'Form', icon: 'form', group: 'Forms' },
-  { id: 'install', title: 'Flow + Form', icon: 'dot', indent: 1 },
-  { id: 'install', title: 'Form Elements', icon: 'widget' },
-  { id: 'install', title: 'Select', icon: 'dot', indent: 1 },
-  { id: 'install', title: 'Input', icon: 'dot', indent: 1 },
-
-  { id: 'install', title: 'Basics', icon: '', group: 'Text' },
-  { id: 'install', title: 'Titles' },
-  { id: 'install', title: 'Message' },
-  { id: 'install', title: 'Banner' },
-
-  { id: 'install', title: 'Chat', group: 'Media & Content' },
-  { id: 'install', title: 'Document' },
-  { id: 'install', title: 'Markdown' },
-  { id: 'install', title: 'Task' },
-  { id: 'install', title: 'Thread' },
-
-  { id: 'install', title: 'HoverGlow', group: 'Effects' },
-  { id: 'install', title: 'TiltHoverGlow' },
-  { id: 'install', title: 'Glint' },
-  { id: 'install', title: 'Tilt' },
-
-  { id: 'install', title: 'Fetch', group: 'Utilities' },
-  { id: 'install', title: 'Orderable' },
-  { id: 'install', title: 'ContextMenu' },
-  { id: 'install', title: 'Interactive' },
-  { id: 'install', title: 'Collapsable' },
-  { id: 'install', title: 'Scale' },
-  { id: 'install', title: 'Visibility' },
-  { id: 'install', title: 'PassProps' },
-]
-
-const categories = {
-  all: [...docsItems, ...uiItems],
-  ui: uiItems,
-  docs: docsItems,
-  kit: uiItems,
-}

@@ -3,6 +3,7 @@ import React, { useCallback, useContext } from 'react'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
+import { getElevation } from '../View/elevate'
 import { FormContext } from './Form'
 
 export type InputType =
@@ -96,7 +97,10 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
-      boxShadow: [[0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.5)]],
+      boxShadow: [
+        [0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.5)],
+        getElevation(props).boxShadow,
+      ],
     },
   }),
   '&::selection': {

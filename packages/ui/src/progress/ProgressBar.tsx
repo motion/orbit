@@ -1,10 +1,10 @@
+import { ColorLike } from '@o/css'
 import { gloss } from '@o/gloss'
-import { Color } from 'csstype'
 import React from 'react'
 
 export type ProgressBarProps = {
-  background?: Color
-  color?: Color
+  background?: ColorLike
+  color?: ColorLike
   width: number
   percent: number | string
 }

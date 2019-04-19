@@ -3,7 +3,9 @@ import {
   Button,
   Col,
   gloss,
+  Input,
   RoundButton,
+  Row,
   Section,
   SpaceGroup,
   SubTitle,
@@ -19,6 +21,7 @@ import { useNavigation, View } from 'react-navi'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
+import { SectionContent } from '../views/SectionContent'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
 
 const views = {
@@ -66,6 +69,7 @@ function DocsPage(props: { id?: string; children?: any }) {
   const [section, setSection] = useState('all')
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const nav = useNavigation()
+  const [search, setSearch] = useState('')
 
   useReaction(() => {
     siteStore.setMaxHeight(siteStore.sectionHeight)
@@ -78,36 +82,51 @@ function DocsPage(props: { id?: string; children?: any }) {
   return (
     <MDX>
       <Header slim />
-      <Templates.MasterDetail
-        items={categories[section]}
-        alwaysSelected
-        showSidebar={showSidebar}
-        defaultSelected={itemIndex || 1}
-        detailProps={{
-          flex: 3,
-        }}
-        masterProps={{
-          background: 'transparent',
-        }}
-        searchable
-        onSelect={next => {
-          nav.navigate(`/docs/${next.id}`, { replace: true })
-        }}
-        belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
-      >
-        <WidthLimit>
-          <Content>
-            <SelectedSection
-              onToggleSidebar={() => setShowSidebar(!showSidebar)}
-              setTheme={siteStore.setTheme}
-              theme={siteStore.theme}
-              title={item ? item['title'] : undefined}
-            >
-              {props.children}
-            </SelectedSection>
-          </Content>
-        </WidthLimit>
-      </Templates.MasterDetail>
+
+      <SectionContent>
+        <Row pad={['md', 200]}>
+          <Input
+            onChange={e => setSearch(e.target.value)}
+            flex={1}
+            sizeRadius={10}
+            size="xxl"
+            icon="search"
+            placeholder="Search the docs..."
+          />
+        </Row>
+
+        <Templates.MasterDetail
+          items={categories[section]}
+          alwaysSelected
+          showSidebar={showSidebar}
+          defaultSelected={itemIndex || 1}
+          detailProps={{
+            flex: 3,
+          }}
+          masterProps={{
+            background: 'transparent',
+          }}
+          searchable={false}
+          search={search}
+          onSelect={next => {
+            nav.navigate(`/docs/${next.id}`, { replace: true })
+          }}
+          belowSearchBar={<DocsToolbar section={section} toggleSection={toggleSection} />}
+        >
+          <WidthLimit>
+            <Content>
+              <SelectedSection
+                onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                setTheme={siteStore.setTheme}
+                theme={siteStore.theme}
+                title={item ? item['title'] : undefined}
+              >
+                {props.children}
+              </SelectedSection>
+            </Content>
+          </WidthLimit>
+        </Templates.MasterDetail>
+      </SectionContent>
     </MDX>
   )
 }

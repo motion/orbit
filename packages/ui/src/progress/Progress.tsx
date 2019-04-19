@@ -25,6 +25,7 @@ export class Progress extends React.Component<Props> {
     const { type, ...props } = this.props
 
     if (type === 'circle') {
+      // @ts-ignore
       return <ProgressCircle {...props} />
     } else if (type === 'bar') {
       return <ProgressBar {...props} />

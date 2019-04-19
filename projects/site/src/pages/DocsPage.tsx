@@ -340,27 +340,33 @@ const DocsContents = memo(({ title, source, children, types }: any) => {
       afterTitle={
         <SurfacePassProps size="lg" cursor="pointer">
           <Row space="sm">
-            <Button
-              tooltip="View Code"
-              iconSize={20}
-              icon="code"
-              onClick={e => e.stopPropagation()}
-            />
-            <Button
-              tooltip="View Prop Types"
-              iconSize={20}
-              icon="t"
-              onClick={e => e.stopPropagation()}
-            />
-            <Button
-              tooltip="Source in Github"
-              size="lg"
-              tagName="a"
-              cursor="pointer"
-              {...{ href: 'http://github.com', target: '_blank' }}
-              icon={<Icon size={20} svg={GithubIcon} />}
-              onClick={e => e.stopPropagation()}
-            />
+            {!!source && (
+              <Button
+                tooltip="View Code"
+                iconSize={20}
+                icon="code"
+                onClick={e => e.stopPropagation()}
+              />
+            )}
+            {!!types && (
+              <Button
+                tooltip="View Prop Types"
+                iconSize={20}
+                icon="t"
+                onClick={e => e.stopPropagation()}
+              />
+            )}
+            {!!source && (
+              <Button
+                tooltip="Source in Github"
+                size="lg"
+                tagName="a"
+                cursor="pointer"
+                {...{ href: 'http://github.com', target: '_blank' }}
+                icon={<Icon size={20} svg={GithubIcon} />}
+                onClick={e => e.stopPropagation()}
+              />
+            )}
           </Row>
         </SurfacePassProps>
       }

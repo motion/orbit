@@ -207,13 +207,13 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: rgba(40, 40, 40, 0.6);
+  background: rgba(40, 60, 120, 0.8);
   color: #fff;
   text-shadow: none;
 }
 
 *::selection {
-  background: rgba(40, 40, 40, 0.6);
+  background: rgba(40, 60, 120, 0.8);
   color: #fff;
   text-shadow: none;
 }

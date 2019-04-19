@@ -1,4 +1,5 @@
 import { Base, BaseProps, gloss } from '@o/gloss'
+import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { useScale } from '../Scale'
 
@@ -9,7 +10,14 @@ export type SimpleTextProps = BaseProps & {
 
 export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, ref) => {
   const scale = useScale()
-  return <SimpleTextElement ref={ref} size={size * scale} {...props} />
+  return (
+    <SimpleTextElement
+      applyPsuedoColors={isDefined(props.hoverStyle, props.activeStyle, props.focusStyle)}
+      ref={ref}
+      size={size * scale}
+      {...props}
+    />
+  )
 })
 
 export const SimpleTextElement = gloss<SimpleTextProps>(Base, {

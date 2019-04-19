@@ -206,6 +206,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   )
 
   const hasAnyGlint = !props.chromeless && isDefined(glint, glintBottom)
+  const paddingStyle = getPadding(props)
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
@@ -297,11 +298,11 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {...glowProps}
           />
         )}
-        {!!children && (
+        {!!(children || elementProps) && (
           <Element
             {...throughProps}
             {...elementProps}
-            surfacePadX={getPadX(getPadding(props).padding)}
+            surfacePadX={paddingStyle ? getPadX(paddingStyle.padding) : 0}
             disabled={disabled}
           >
             {children}

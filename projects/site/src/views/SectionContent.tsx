@@ -11,12 +11,21 @@ export const SectionContent = ({
   zIndex,
   background,
   padding,
+  height,
+  flex,
   ...props
 }: SectionContentProps) => {
   return (
-    <Section width="100%" zIndex={zIndex} background={background} padding={padding}>
+    <Section
+      width="100%"
+      zIndex={zIndex}
+      background={background}
+      padding={padding}
+      height={height}
+      flex={flex}
+    >
       {outside}
-      <SectionContentChrome {...props}>
+      <SectionContentChrome flex={flex} {...props}>
         <div
           style={{
             position: 'relative',
@@ -40,6 +49,7 @@ const Section = gloss(View, {
 })
 
 export const SectionContentChrome = gloss(View, {
+  minHeight: '100%',
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,

@@ -1,54 +1,45 @@
-import * as React from 'react'
-// import $ from '@o/color'
+import { gloss } from '@o/gloss'
+import { Color } from 'csstype'
+import React from 'react'
 
-// type Props = {
-//   background?: Color,
-//   color?: Color,
-//   width: number,
-//   percent: number | string,
-// }
+export type ProgressBarProps = {
+  background?: Color
+  color?: Color
+  width: number
+  percent: number | string
+}
 
-export class ProgressBar extends React.Component {
+export class ProgressBar extends React.Component<ProgressBarProps> {
   static defaultProps = {
     width: 90,
     percent: 0,
   }
 
   render() {
-    return null
-    // const { percent, color, background, theme, ...props } = this.props
-    // return (
-    //   <div $outer {...props}>
-    //     <div $inner $color={color} />
-    //   </div>
-    // )
+    const { percent, color, ...props } = this.props
+    return (
+      <Outer {...props}>
+        <Inner percent={percent} color={color} />
+      </Outer>
+    )
   }
-
-  // style = {
-  //   outer: {
-  //     height: 6,
-  //     margin: ['auto', 5],
-  //     borderRadius: 100,
-  //     justifyContent: 'center',
-  //   },
-  //   inner: {
-  //     height: '100%',
-  //     borderRadius: 100,
-  //   },
-  // }
-
-  // static theme = ({ color, background, theme, width, percent }) => ({
-  //   outer: {
-  //     minWidth: width,
-  //     width,
-  //     background:
-  //       background || theme.background
-  //         ? $(theme.background).darken(0.5)
-  //         : '#eee',
-  //   },
-  //   inner: {
-  //     width: `${percent}%`,
-  //     background: color || theme.highlightColor,
-  //   },
-  // })
 }
+
+const Outer = gloss({
+  height: 6,
+  margin: ['auto', 5],
+  borderRadius: 100,
+  justifyContent: 'center',
+}).theme(({ width, background }, theme) => ({
+  minWidth: width,
+  width,
+  background: background || theme.background ? theme.background.darken(0.5) : '#eee',
+}))
+
+const Inner = gloss({
+  height: '100%',
+  borderRadius: 100,
+}).theme(({ percent, color }, theme) => ({
+  width: `${percent}%`,
+  background: color || theme.highlightColor,
+}))

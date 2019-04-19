@@ -107,7 +107,12 @@ const alternates: ThemeSet = {
     ...colorThemes.green,
   },
   action: colorThemes.blue,
-  selected: colorThemes.blue,
+  selected: {
+    ...colorThemes.blue,
+    // dont make selected things hover/active, they're active already
+    backgroundHover: colorThemes.blue.background,
+    backgroundActive: colorThemes.blue.background,
+  },
   bordered: {
     glintColor: transparent,
     borderWidth: 2,

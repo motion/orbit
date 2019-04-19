@@ -105,24 +105,29 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   },
 })
 
-const SimpleInput = gloss((props: SizedSurfaceProps) => (
-  <SizedSurface
-    tagName="input"
-    type="input"
-    maxWidth="100%"
-    alignItems="center"
-    flexFlow="row"
-    themeSelect="input"
-    sizeFont
-    sizePadding
-    sizeHeight
-    sizeLineHeight
-    sizeRadius={0.75}
-    noInnerElement
-    label={props.name}
-    glint={false}
-    borderWidth={1}
-    {...props}
-    className={`ui-input ${props.className || ''}`}
-  />
-)).theme(inputSurfaceTheme)
+const SimpleInput = gloss(
+  ({ placeholder, tagName = 'input', elementProps, ...props }: SizedSurfaceProps) => (
+    <SizedSurface
+      elementProps={{
+        placeholder,
+        tagName,
+        ...elementProps,
+      }}
+      type="input"
+      maxWidth="100%"
+      alignItems="center"
+      flexFlow="row"
+      themeSelect="input"
+      sizeFont={0.9}
+      sizePadding
+      sizeHeight
+      sizeLineHeight
+      sizeRadius={0.75}
+      label={props.name}
+      glint={false}
+      borderWidth={1}
+      {...props}
+      className={`ui-input ${props.className || ''}`}
+    />
+  ),
+).theme(inputSurfaceTheme)

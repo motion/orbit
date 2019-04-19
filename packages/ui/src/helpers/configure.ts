@@ -3,23 +3,24 @@ import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
 import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
+import { TitleProps } from '../text/Title'
 import { Bit } from './BitLike'
 
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces
-  useIcon?: any
+  useIcon: any
 
   // set a custom item key getter for lists/tables
-  getItemKey?: (item: any) => string
+  getItemKey: (item: any) => string
 
   // set a custom persistence function for appState
-  useAppState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+  useAppState: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
 
   // set a custom persistence function for userState
-  useUserState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+  useUserState: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
 
   // you can control how list items and bits render
-  customItems?: {
+  customItems: {
     // maps Bit.contentType to a custom view
     [key: string]: CustomItemDescription
   }
@@ -29,7 +30,10 @@ export type ConfigureUIProps = {
   propsToItem: (props: any) => any
 
   // (INTERNAL) use your own store context
-  StoreContext?: Context<any>
+  StoreContext: Context<any>
+
+  // helpful for custom fonts
+  titleDefaultProps: Partial<TitleProps> | null
 }
 
 export type CustomItemView = FunctionComponent<ListItemViewProps & { item: Bit }>
@@ -48,6 +52,8 @@ const KeyCache = new WeakMap<Object, string>()
 let hasSet = false
 
 export let Config: ConfigureUIProps = {
+  useIcon: null,
+  titleDefaultProps: null,
   customItems: {},
 
   propsToItem: x => x,
@@ -77,7 +83,7 @@ export let Config: ConfigureUIProps = {
   },
 }
 
-export function configureUI(opts: ConfigureUIProps) {
+export function configureUI(opts: Partial<ConfigureUIProps>) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
   Object.assign(Config, opts)

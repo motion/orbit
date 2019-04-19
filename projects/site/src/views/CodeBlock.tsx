@@ -24,6 +24,9 @@ export function CodeBlock(props) {
 }
 
 const CodeBlockChrome = gloss({
+  fontSize: 14,
+  lineHeight: 18,
+
   '& span': {
     display: 'inline',
   },

@@ -7,7 +7,14 @@ export type SearchableListProps = ListProps & {
   belowSearchBar?: React.ReactNode
 }
 
-export const SearchableList = ({ belowSearchBar, ...listProps }: SearchableListProps) => {
+export const SearchableList = ({
+  belowSearchBar,
+  searchable,
+  ...listProps
+}: SearchableListProps) => {
+  if (searchable === false) {
+    return <List {...listProps} />
+  }
   return (
     <Searchable>
       {({ searchBar, searchTerm }) => (

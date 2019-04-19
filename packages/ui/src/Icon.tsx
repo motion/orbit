@@ -11,7 +11,7 @@ export { IconName }
 
 export type IconProps = ViewProps & {
   size?: number
-  name: string
+  name?: string
   type?: 'mini' | 'outline'
   tooltip?: string
   tooltipProps?: Object

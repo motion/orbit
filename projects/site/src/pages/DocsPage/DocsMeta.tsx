@@ -14,9 +14,12 @@ export const DocsMeta = (props: { source: string; displayName: string; component
           title={`View ${props.displayName} Source`}
           afterTitle={
             <Button
+              size="sm"
               tagName="a"
-              {...{ href: 'http://github.com' }}
-              icon={<Icon size={18} svg={GithubIcon} />}
+              cursor="pointer"
+              {...{ href: 'http://github.com', target: '_blank' }}
+              icon={<Icon size={16} svg={GithubIcon} />}
+              onClick={e => e.stopPropagation()}
             />
           }
           maxHeight={450}

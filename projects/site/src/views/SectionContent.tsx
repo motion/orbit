@@ -74,7 +74,4 @@ export const SectionContentChrome = gloss(View, {
       paddingRight: '5%',
     },
   },
-}).theme(({ padding }) => ({
-  paddingTop: padding !== true ? padding : 80,
-  paddingBottom: padding !== true ? padding : 80,
-}))
+})

@@ -1,3 +1,4 @@
+import { isDefined } from '@o/kit'
 import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
 import { createStoreContext, useForceUpdate } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
@@ -104,6 +105,8 @@ export function Layout(props: any) {
     },
   }
 
+  const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
+
   return (
     <ProvideUI themes={themes}>
       <Theme name={siteStore.theme}>
@@ -112,8 +115,8 @@ export function Layout(props: any) {
           <View
             minHeight="100vh"
             minWidth="100vw"
-            maxHeight={siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight}
-            overflow="hidden"
+            maxHeight={maxHeight}
+            overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
             transition={transition}
             transform={{
               x: siteStore.showSidebar ? -sidebarWidth : 0,

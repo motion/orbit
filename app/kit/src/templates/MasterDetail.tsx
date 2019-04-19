@@ -13,7 +13,7 @@ import {
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 
 export type MasterDetailProps = SearchableListProps & {
-  children: React.ReactNode | ((selected: ListItemProps) => React.ReactNode)
+  children?: React.ReactNode | ((selected: ListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
   masterProps?: PaneProps | SidebarProps
   detailProps?: PaneProps

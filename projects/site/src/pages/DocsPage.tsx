@@ -116,33 +116,30 @@ function DocsPage(props: { id?: string; children?: any }) {
 
   return (
     <MDX>
+      <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
+        <Row margin={[0, 'auto']} pointerEvents="auto" pad={['sm', 100]} width="90%" maxWidth={800}>
+          <Input
+            ref={inputRef}
+            onChange={e => setSearch(e.target.value)}
+            flex={1}
+            sizeRadius={10}
+            size="xl"
+            iconSize={16}
+            icon="search"
+            placeholder="Search the docs..."
+            after={
+              <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                t
+              </Button>
+            }
+          />
+        </Row>
+      </Portal>
+      <Portal prepend>
+        <Header slim />
+      </Portal>
       <Portal>
         <FixedLayout>
-          <Header slim />
-          <Row
-            margin={[0, 'auto']}
-            pointerEvents="auto"
-            pad={['sm', 100]}
-            width="90%"
-            maxWidth={800}
-          >
-            <Input
-              ref={inputRef}
-              onChange={e => setSearch(e.target.value)}
-              flex={1}
-              sizeRadius={10}
-              size="xl"
-              iconSize={16}
-              icon="search"
-              placeholder="Search the docs..."
-              after={
-                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
-                  t
-                </Button>
-              }
-            />
-          </Row>
-
           {isSmall ? (
             <Sidebar
               hidden={!showSidebar}
@@ -185,15 +182,15 @@ DocsPage.theme = 'light'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
-  padding: [100, 0, 0, 300],
+  padding: [0, 0, 0, 300],
   isSmall: {
-    padding: [100, 0, 0, 0],
+    padding: [0, 0, 0, 0],
   },
 })
 
 const FixedLayout = gloss({
   position: 'fixed',
-  top: 0,
+  top: 100,
   left: 0,
   width: '100%',
   height: '100%',
@@ -237,7 +234,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
             <Button
               icon="moon"
               tooltip="Toggle dark mode"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
             />
             {isSmall && (
               <Button icon="panel-stats" tooltip="Toggle menu" onClick={onToggleSidebar} />

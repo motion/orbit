@@ -1,5 +1,6 @@
 import { gloss } from '@o/gloss'
 import React, { forwardRef, isValidElement } from 'react'
+
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
@@ -57,7 +58,7 @@ export const TitleRow = forwardRef(function TitleRow(
       {...rowProps}
     >
       {above}
-      <Row>
+      <Row alignItems="center">
         {collapsable && <CollapseArrow collapsed={collapsed} />}
         {before && (
           <>

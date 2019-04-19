@@ -10,7 +10,9 @@ export const themes = {
     ...KitThemes.dark,
     ...Theme.colorize({
       background: '#000',
-      inputBackground: '#000',
+      inputBackground: '#111',
+      inputBackgroundHover: '#111',
+      inputBackgroundActive: '#111',
       listItemBackgroundHover: 'rgba(255,255,255,0.05)',
       popoverBackground: '#111',
     }),

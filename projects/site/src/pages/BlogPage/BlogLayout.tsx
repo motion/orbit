@@ -1,5 +1,6 @@
 import { Col, ColProps, Space, Theme } from '@o/ui'
 import React from 'react'
+
 import { SectionContent } from '../../views/SectionContent'
 import { BlogTitle } from '../BlogPage'
 import { AboveFooter, Footer } from '../HomePage/FooterSection'

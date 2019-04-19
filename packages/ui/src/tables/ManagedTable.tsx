@@ -4,11 +4,11 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { CSSPropertySet, gloss } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
+
 import { ContextMenu } from '../ContextMenu'
 import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
@@ -23,6 +23,7 @@ import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
 import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnAddFilter, TableRows } from './types'
+
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -90,6 +91,9 @@ export type ManagedTableProps = SelectableProps &
     onSortOrder?: (next: SortOrder) => any
     onCreatePaste?: Function
     placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
+
+    // some props from virutal list, TODO make them all
+    overscanCount?: number
   }
 
 type ManagedTableState = {
@@ -388,6 +392,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       rows,
       placeholder,
       containerRef,
+      overscanCount,
       ...viewProps
     } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
@@ -434,6 +439,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             width="100%"
             // for now just hardcoded TableHead height
             height={height - 23}
+            overscanCount={overscanCount}
           >
             {this.renderRow}
           </SelectableVariableList>

@@ -11,27 +11,27 @@ const guides = [
     children: <ListSubTitle>Start</ListSubTitle>,
   },
   {
-    id: 'start',
-    title: 'Getting started',
+    id: '',
+    title: 'Introduction',
     ...titleItem,
   },
   {
-    id: 'quick-start',
+    id: 'quickstart',
     title: 'Quick start',
     ...titleItem,
   },
   {
-    id: 'build-app',
+    id: 'buildapp',
     title: 'Building an app',
     ...titleItem,
   },
   {
-    id: 'build-app',
+    id: 'appstore',
     title: 'App Store',
     ...titleItem,
   },
   {
-    id: 'build-app',
+    id: 'examples',
     title: 'Examples',
     ...titleItem,
   },
@@ -41,7 +41,11 @@ const uikit = [
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle marginTop={40}>User Interface</ListSubTitle>,
+    children: (
+      <ListSubTitle marginTop={40} marginBottom={-15}>
+        User Interface
+      </ListSubTitle>
+    ),
   },
   { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
   { id: 'tables', title: 'Tables', icon: 'th' },

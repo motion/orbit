@@ -3,6 +3,7 @@ import { isDefined, selectDefined } from '@o/utils'
 import React from 'react'
 
 import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { ListItemProps } from './lists/ListItem'
 import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
@@ -17,6 +18,7 @@ export type CardProps = SizedSurfaceSpecificProps &
   Omit<ColProps, 'size'> & {
     space?: Sizes
     collapseOnClick?: boolean
+    headerProps?: ListItemProps
   }
 
 export function Card(props: CardProps) {
@@ -46,6 +48,7 @@ export function Card(props: CardProps) {
     maxHeight,
     size,
     iconBefore,
+    headerProps,
     alt,
     ...sizedSurfaceProps
   } = rest
@@ -107,6 +110,7 @@ export function Card(props: CardProps) {
               iconBefore={iconBefore}
               {...padProps}
               pad={selectDefined(pad, size)}
+              {...headerProps}
             />
           </Scale>
           <Collapsable useToggle={toggle}>

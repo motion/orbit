@@ -1,9 +1,12 @@
+import GithubIcon from '!raw-loader!../../public/logos/github.svg'
 import {
   Absolute,
   BorderRight,
   Button,
+  Card,
   Col,
   gloss,
+  Icon,
   Input,
   List,
   ListItem,
@@ -14,7 +17,9 @@ import {
   Section,
   SegmentedRow,
   Sidebar,
+  Space,
   SurfacePassProps,
+  Table,
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -22,6 +27,7 @@ import { useNavigation, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
+import { CodeBlock } from '../views/CodeBlock'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { MDX } from '../views/MDX'
@@ -32,19 +38,39 @@ import DocsInstall from './DocsPage/DocsInstall.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
 const views = {
-  install: () => import('./DocsPage/DocsInstall.mdx'),
-  buttons: () => import('./DocsPage/DocsButtons.mdx'),
-  cards: () => import('./DocsPage/DocsCards.mdx'),
-  progress: () => import('./DocsPage/DocsProgress.mdx'),
-  lists: () => import('./DocsPage/DocsLists.mdx'),
-  start: () => import('./DocsPage/DocsStart.mdx'),
+  install: {
+    page: () => import('./DocsPage/DocsInstall.mdx'),
+  },
+  buttons: {
+    page: () => import('./DocsPage/DocsButtons.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
+    types: () => import('../../tmp/Button.json'),
+  },
+  cards: {
+    page: () => import('./DocsPage/DocsCards.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/Card'),
+  },
+  progress: {
+    page: () => import('./DocsPage/DocsProgress.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
+  },
+  lists: {
+    page: () => import('./DocsPage/DocsLists.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/lists/List'),
+  },
+  start: {
+    page: () => import('./DocsPage/DocsStart.mdx'),
+  },
 }
 
 export default compose(
-  withView(req => {
+  withView(async req => {
     const id = req.path.slice(1)
+    const view = views[id]
+    const source = view.source ? (await view.source()).default : null
+    const types = view.types ? (await view.types()).default : null
     return (
-      <DocsPage id={id}>
+      <DocsPage key={0} id={id} source={source} types={types}>
         <View />
       </DocsPage>
     )
@@ -52,17 +78,18 @@ export default compose(
 
   mount({
     '/': route({
-      title: 'Docs',
+      title: 'Orbit Documentation',
       view: <DocsInstall />,
     }),
     '/:id': route(async req => {
       let id = req.params.id
-      if (!views[id]) {
+      const view = views[id]
+      if (!view) {
         return {
           view: () => <div>not found</div>,
         }
       }
-      let ChildView = (await views[id]()).default || (() => <div>nada {id}</div>)
+      const ChildView = (await view.page()).default
       return {
         view: <ChildView />,
       }
@@ -70,7 +97,7 @@ export default compose(
   }),
 )
 
-function DocsPage(props: { id?: string; children?: any }) {
+function DocsPage(props: { id?: string; source?: string; children?: any; types?: Object }) {
   const screen = useScreenSize()
   const itemIndex = docsItems.all.findIndex(x => x['id'] === props.id) || 1
   const item = docsItems.all[itemIndex]
@@ -81,21 +108,6 @@ function DocsPage(props: { id?: string; children?: any }) {
   const nav = useNavigation()
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
-
-  const content = (
-    <React.Fragment key="content">
-      <List
-        search={search}
-        selectable
-        alwaysSelected
-        defaultSelected={itemIndex}
-        items={docsItems[section]}
-        onSelect={rows => {
-          nav.navigate(`/docs/${rows[0].id}`, { replace: true })
-        }}
-      />
-    </React.Fragment>
-  )
 
   const isSmall = screen === 'small'
 
@@ -117,6 +129,21 @@ function DocsPage(props: { id?: string; children?: any }) {
   useEffect(() => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
+
+  const content = (
+    <React.Fragment key="content">
+      <List
+        search={search}
+        selectable
+        alwaysSelected
+        defaultSelected={itemIndex}
+        items={docsItems[section]}
+        onSelect={rows => {
+          nav.navigate(`/docs/${rows[0].id}`, { replace: true })
+        }}
+      />
+    </React.Fragment>
+  )
 
   return (
     <MDX>
@@ -251,8 +278,13 @@ function DocsPage(props: { id?: string; children?: any }) {
 
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
-          <DocsContents title={item ? item['title'] : undefined}>{props.children}</DocsContents>
-
+          <DocsContents
+            title={item ? item['title'] : undefined}
+            source={props.source}
+            types={props.types}
+          >
+            {props.children}
+          </DocsContents>
           <BlogFooter />
         </ContentPosition>
       </SectionContent>
@@ -279,7 +311,7 @@ const FixedLayout = gloss({
   zIndex: 100000,
 })
 
-const DocsContents = memo(({ title, children }: any) => {
+const DocsContents = memo(({ title, source, children, types }: any) => {
   return (
     <Section
       maxWidth={760}
@@ -288,14 +320,98 @@ const DocsContents = memo(({ title, children }: any) => {
       pad={useScreenVal(
         ['xl', 'md', true, 'md'],
         ['xl', 'xl', true, 'xl'],
-        ['xl', 'xxl', true, 'xxl'],
+        ['xxl', 'xxl', true, 'xxl'],
       )}
       titleBorder
       space
       title={title || 'No title'}
-      titleSize="xxl"
+      titleSize="xxxl"
+      afterTitle={
+        <SurfacePassProps size="lg" cursor="pointer">
+          <Row space="sm">
+            <Button
+              tooltip="View Code"
+              iconSize={20}
+              icon="code"
+              onClick={e => e.stopPropagation()}
+            />
+            <Button
+              tooltip="View Prop Types"
+              iconSize={20}
+              icon="t"
+              onClick={e => e.stopPropagation()}
+            />
+            <Button
+              tooltip="Source in Github"
+              size="lg"
+              tagName="a"
+              cursor="pointer"
+              {...{ href: 'http://github.com', target: '_blank' }}
+              icon={<Icon size={20} svg={GithubIcon} />}
+              onClick={e => e.stopPropagation()}
+            />
+          </Row>
+        </SurfacePassProps>
+      }
     >
+      <MetaSection>
+        <Card
+          background={theme => theme.background.alpha(0.1)}
+          collapsable
+          defaultCollapsed
+          collapseOnClick
+          title={`View ${title} Source`}
+          maxHeight={450}
+          scrollable="y"
+        >
+          <CodeBlock className="language-typescript">{source}</CodeBlock>
+        </Card>
+
+        <Space size="sm" />
+
+        {!!types && (
+          <Card
+            background={theme => theme.background.alpha(0.1)}
+            collapsable
+            defaultCollapsed
+            collapseOnClick
+            title="Props"
+            scrollable="y"
+          >
+            <PropsTable props={types.props} />
+          </Card>
+        )}
+      </MetaSection>
+
       {children}
     </Section>
   )
 })
+
+const MetaSection = gloss({
+  margin: [-30, -30, 0],
+})
+
+function PropsTable(props: { props: Object }) {
+  const propRows = Object.keys(props.props).reduce((acc, key) => {
+    const { type, description, defaultValue, required, ...row } = props.props[key]
+    // discard
+    description
+    acc.push({
+      ...row,
+      type: type.name,
+      'Default Value': defaultValue === null ? '' : defaultValue,
+      required,
+    })
+    return acc
+  }, [])
+  // overscan all for searchability
+  return (
+    <Table
+      overscanCount={100}
+      sortOrder={{ key: 'name', direction: 'down' }}
+      height={400}
+      rows={propRows}
+    />
+  )
+}

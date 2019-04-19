@@ -44,7 +44,8 @@
     "resize-observer-polyfill": "1.5.1",
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
-    "zenscroll": "^4.0.2"
+    "zenscroll": "^4.0.2",
+    "faker": "4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3"

@@ -1,6 +1,7 @@
 import { gloss } from '@o/gloss'
 import { View, ViewProps } from '@o/ui'
 import React from 'react'
+
 import * as Constants from '../constants'
 
 export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
@@ -51,7 +52,7 @@ const Section = gloss(View, {
 export const SectionContentChrome = gloss(View, {
   minHeight: '100%',
   width: '100%',
-  minWidth: Constants.smallSize,
+  // minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,
   padding: [0, Constants.sidePad],
   position: 'relative',

@@ -19,6 +19,8 @@ export const getSize = (size: Sizes) => {
 }
 
 const textSizes = {
+  xxxs: 0.6,
+  xxs: 0.7,
   xs: 0.8,
   sm: 1.0,
   md: 1.2,

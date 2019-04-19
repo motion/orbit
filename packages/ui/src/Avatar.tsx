@@ -1,12 +1,9 @@
 import { gloss } from '@o/gloss'
-import { View } from './View/View'
 
-export const Avatar = gloss(View, {
+import { Image } from './Image'
+
+export const Avatar = gloss(Image, {
   borderRadius: 100,
-  width: 80,
-  height: 80,
+  width: 64,
+  height: 64,
 })
-
-Avatar.defaultProps = {
-  tagName: 'img',
-}

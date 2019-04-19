@@ -1,10 +1,13 @@
 import {
+  Absolute,
   BorderRight,
   Button,
   Col,
   gloss,
   Input,
   List,
+  ListItem,
+  Popover,
   Portal,
   RoundButton,
   Row,
@@ -12,7 +15,6 @@ import {
   Sidebar,
   SpaceGroup,
   SurfacePassProps,
-  Toolbar,
 } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -21,6 +23,7 @@ import { useNavigation, View } from 'react-navi'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../Layout'
 import { Header } from '../views/Header'
+import { ListSubTitle } from '../views/ListSubTitle'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { docsItems } from './docsItems'
@@ -80,7 +83,6 @@ function DocsPage(props: { id?: string; children?: any }) {
 
   const content = (
     <React.Fragment key="content">
-      <DocsToolbar section={section} toggleSection={toggleSection} />
       <List
         search={search}
         selectable
@@ -128,13 +130,75 @@ function DocsPage(props: { id?: string; children?: any }) {
             iconSize={16}
             icon="search"
             placeholder="Search the docs..."
-            elevation={5}
+            elevation={3}
             after={
               <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
                 t
               </Button>
             }
           />
+
+          <Absolute top={0} left="10%" bottom={0} alignItems="center" justifyContent="center">
+            <Popover
+              background
+              width={300}
+              openOnClick
+              closeOnClickAway
+              elevation={100}
+              zIndex={100000000000000000}
+              target={<RoundButton icon="filter">Filter</RoundButton>}
+            >
+              <>
+                <ListItem selectable={false}>
+                  <ListSubTitle marginTop={6}>Sections</ListSubTitle>
+                </ListItem>
+                <ListItem
+                  index={2}
+                  title="Docs"
+                  alt={section === 'docs' ? 'selected' : null}
+                  onClick={() => toggleSection('docs')}
+                />
+                <ListItem
+                  index={2}
+                  title="APIs"
+                  alt={section === 'apis' ? 'selected' : null}
+                  onClick={() => toggleSection('apis')}
+                />
+                <ListItem
+                  index={2}
+                  title="Kit"
+                  alt={section === 'kit' ? 'selected' : null}
+                  onClick={() => toggleSection('kit')}
+                />
+              </>
+            </Popover>
+          </Absolute>
+
+          <Absolute
+            width="8%"
+            top={0}
+            right="10%"
+            bottom={0}
+            alignItems="flex-start"
+            justifyContent="center"
+          >
+            <SurfacePassProps circular iconSize={12}>
+              <SpaceGroup space="xs">
+                <RoundButton
+                  icon="moon"
+                  tooltip="Toggle dark mode"
+                  onClick={() => siteStore.setTheme(siteStore.theme === 'home' ? 'light' : 'home')}
+                />
+                {isSmall && (
+                  <RoundButton
+                    icon="panel-stats"
+                    tooltip="Toggle menu"
+                    onClick={() => setShowSidebar(!showSidebar)}
+                  />
+                )}
+              </SpaceGroup>
+            </SurfacePassProps>
+          </Absolute>
         </Row>
       </Portal>
       <Portal prepend>
@@ -166,14 +230,7 @@ function DocsPage(props: { id?: string; children?: any }) {
 
       <SectionContent fontSize={16} lineHeight={28}>
         <ContentPosition isSmall={isSmall}>
-          <DocsContents
-            onToggleSidebar={() => setShowSidebar(!showSidebar)}
-            setTheme={siteStore.setTheme}
-            theme={siteStore.theme}
-            title={item ? item['title'] : undefined}
-          >
-            {props.children}
-          </DocsContents>
+          <DocsContents title={item ? item['title'] : undefined}>{props.children}</DocsContents>
         </ContentPosition>
       </SectionContent>
     </MDX>
@@ -199,33 +256,11 @@ const FixedLayout = gloss({
   zIndex: 100000,
 })
 
-const DocsToolbar = memo(({ section, toggleSection }: any) => {
-  return (
-    <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
-      <RoundButton
-        alt={section === 'docs' ? 'selected' : 'flat'}
-        onClick={() => toggleSection('docs')}
-      >
-        Docs
-      </RoundButton>
-      <RoundButton alt={section === 'ui' ? 'selected' : 'flat'} onClick={() => toggleSection('ui')}>
-        UI
-      </RoundButton>
-      <RoundButton
-        alt={section === 'kit' ? 'selected' : 'flat'}
-        onClick={() => toggleSection('kit')}
-      >
-        Kit
-      </RoundButton>
-    </Toolbar>
-  )
-})
-
-const DocsContents = memo(({ setTheme, theme, title, onToggleSidebar, children }: any) => {
-  const isSmall = useScreenSize() === 'small'
+const DocsContents = memo(({ title, children }: any) => {
   return (
     <Section
-      maxWidth={800}
+      maxWidth={760}
+      width="100%"
       margin={[0, 'auto']}
       pad={useScreenVal(
         ['xl', 'md', true, 'md'],
@@ -236,20 +271,6 @@ const DocsContents = memo(({ setTheme, theme, title, onToggleSidebar, children }
       space
       title={title || 'No title'}
       titleSize="xl"
-      afterTitle={
-        <SurfacePassProps iconSize={12}>
-          <SpaceGroup space="xs">
-            <Button
-              icon="moon"
-              tooltip="Toggle dark mode"
-              onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
-            />
-            {isSmall && (
-              <Button icon="panel-stats" tooltip="Toggle menu" onClick={onToggleSidebar} />
-            )}
-          </SpaceGroup>
-        </SurfacePassProps>
-      }
     >
       {children}
     </Section>

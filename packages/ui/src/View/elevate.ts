@@ -20,9 +20,13 @@ const elevatedShadow = (x: number) => [
   [0, 0, 0, round(0.025 * smoother(x))],
 ]
 
+const emptyBoxShadow = {
+  boxShadow: null,
+}
+
 export function getElevation(props: ElevatableProps) {
   if (!props.elevation) {
-    return null
+    return emptyBoxShadow
   }
   if (props.boxShadow) {
     return {

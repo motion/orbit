@@ -1,13 +1,8 @@
-import { gloss, SubTitle } from '@o/ui'
 import React from 'react'
 
-const titleItem = { titleProps: { size: 1.1 } }
+import { ListSubTitle } from '../views/ListSubTitle'
 
-const ListSubTitle = gloss(SubTitle, {
-  margin: [20, 0, -2],
-  fontWeight: 300,
-  fontSize: 18,
-})
+const titleItem = { titleProps: { size: 1.1 } }
 
 const guides = [
   {
@@ -20,13 +15,33 @@ const guides = [
     title: 'Getting started',
     ...titleItem,
   },
+  {
+    id: 'quick-start',
+    title: 'Quick start',
+    ...titleItem,
+  },
+  {
+    id: 'build-app',
+    title: 'Building an app',
+    ...titleItem,
+  },
+  {
+    id: 'build-app',
+    title: 'App Store',
+    ...titleItem,
+  },
+  {
+    id: 'build-app',
+    title: 'Examples',
+    ...titleItem,
+  },
 ]
 
 const uikit = [
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle>User Interface</ListSubTitle>,
+    children: <ListSubTitle marginTop={40}>User Interface</ListSubTitle>,
   },
   { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
   { id: 'tables', title: 'Tables', icon: 'th' },

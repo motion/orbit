@@ -85,7 +85,6 @@ function DocsPage(props: { id?: string; children?: any }) {
         defaultSelected={itemIndex || 1}
         items={categories[section]}
         onSelect={rows => {
-          console.log('rows', rows)
           nav.navigate(`/docs/${rows[0].id}`, { replace: true })
         }}
       />
@@ -93,6 +92,21 @@ function DocsPage(props: { id?: string; children?: any }) {
   )
 
   const isSmall = screen === 'small'
+
+  useEffect(() => {
+    const keyPress = e => {
+      // console.log('e', e.keyCode)
+      switch (e.keyCode) {
+        case 84: // t
+          inputRef.current.focus()
+          break
+      }
+    }
+    window.addEventListener('keydown', keyPress)
+    return () => {
+      window.removeEventListener('keydown', keyPress)
+    }
+  }, [])
 
   useEffect(() => {
     inputRef.current && inputRef.current.focus()
@@ -132,6 +146,7 @@ function DocsPage(props: { id?: string; children?: any }) {
               zIndex={10000000}
               elevation={5}
               pointerEvents="auto"
+              // @ts-ignore
               background={theme => theme.background}
             >
               {content}
@@ -208,7 +223,7 @@ const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, childre
   const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
-      pad={['xl', true, true, true]}
+      pad={['xl', 'xl', true, 'xl']}
       titleBorder
       space
       title={title || 'No title'}

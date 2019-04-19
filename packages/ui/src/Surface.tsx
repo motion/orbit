@@ -207,6 +207,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   const hasAnyGlint = !props.chromeless && isDefined(glint, glintBottom)
   const paddingStyle = getPadding(props)
+  let showElement = false
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
@@ -225,6 +226,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
       childrenProps.children = children || null
     }
   } else {
+    showElement = !!(children || elementProps)
     childrenProps.children = (
       <>
         {before}
@@ -298,7 +300,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {...glowProps}
           />
         )}
-        {!!(children || elementProps) && (
+        {showElement && (
           <Element
             {...throughProps}
             {...elementProps}
@@ -312,8 +314,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
       </>
     )
   }
-
-  const showInnerElement = !!children && !noInnerElement
 
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
   const iconColor = `${(props.iconProps && props.iconProps.color) ||
@@ -350,7 +350,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderPosition={borderPosition}
           alt={alt}
           applyPsuedoColors
-          {...!showInnerElement && elementProps}
+          {...!showElement && elementProps}
           {...throughProps}
           {...viewProps}
           {...segmentedStyle}

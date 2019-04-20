@@ -18,4 +18,4 @@ const rows = employees.map(x => ({
   after: avatar,
 }))
 
-export let One = <List overscanCount={1000} height={500} items={rows} />
+export default <List overscanCount={1000} height={500} items={rows} />

@@ -1,7 +1,6 @@
-import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
-import { useForceUpdate } from '@o/use-store'
+import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
 import { isDefined } from '@o/utils'
-import { debounce, throttle } from 'lodash'
+import { throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
@@ -14,8 +13,6 @@ import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 const transition = 'transform ease 300ms'
 
 export function Layout(props: any) {
-  const forceUpdate = useForceUpdate()
-  window['forceUpdate'] = debounce(forceUpdate, 20)
   const loadingRoute = useLoadingRoute()
   const siteStore = useSiteStore()
   const screen = useScreenSize()
@@ -79,36 +76,39 @@ export function Layout(props: any) {
         >
           <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
         </View>
-        <Theme name="home">
-          <View
-            position="fixed"
-            top={0}
-            right={0}
-            width={sidebarWidth}
-            height="100vh"
-            transition={transition}
-            transform={{
-              x: siteStore.showSidebar ? 0 : sidebarWidth,
-            }}
-          >
-            <Button
-              position="absolute"
-              top={20}
-              right={20}
-              chromeless
-              icon="cross"
-              iconSize={16}
-              zIndex={1000}
-              cursor="pointer"
-              onClick={siteStore.toggleSidebar}
-            />
-            <HeaderLink href="/" {...linkProps}>
-              Home
-            </HeaderLink>
-            <LinksLeft {...linkProps} />
-            <LinksRight {...linkProps} />
-          </View>
-        </Theme>
+        <Portal prepend style={{ zIndex: 100000000 }}>
+          <Theme name="home">
+            <View
+              position="fixed"
+              top={0}
+              right={0}
+              width={sidebarWidth}
+              height="100vh"
+              transition={transition}
+              background={theme => theme.background}
+              transform={{
+                x: siteStore.showSidebar ? 0 : sidebarWidth,
+              }}
+            >
+              <Button
+                position="absolute"
+                top={20}
+                right={20}
+                chromeless
+                icon="cross"
+                iconSize={16}
+                zIndex={1000}
+                cursor="pointer"
+                onClick={siteStore.toggleSidebar}
+              />
+              <HeaderLink href="/" {...linkProps}>
+                Home
+              </HeaderLink>
+              <LinksLeft {...linkProps} />
+              <LinksRight {...linkProps} />
+            </View>
+          </Theme>
+        </Portal>
       </Theme>
     </ProvideUI>
   )

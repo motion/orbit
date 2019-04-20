@@ -11,10 +11,10 @@ import {
   Portal,
   RoundButton,
   Row,
-  SegmentedRow,
   Sidebar,
   SurfacePassProps,
 } from '@o/ui'
+import { useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -31,6 +31,7 @@ import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
+import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 
 const views = {
@@ -127,6 +128,9 @@ const DocsPage = memo((props: { children?: any }) => {
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
 
+  // hide sidebar on show global sidebar
+  useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
+
   const isSmall = screen === 'small'
 
   useEffect(() => {
@@ -181,7 +185,7 @@ const DocsPage = memo((props: { children?: any }) => {
           margin={[0, 'auto']}
           pointerEvents="auto"
           pad={['sm', 0]}
-          width="90%"
+          width={useScreenVal('100%', '90%', '90%')}
           maxWidth={980}
           alignItems="center"
           justifyContent="center"
@@ -259,9 +263,8 @@ const DocsPage = memo((props: { children?: any }) => {
             flexFlow="row"
           >
             <SurfacePassProps circular iconSize={12}>
-              <SegmentedRow>
+              <Row space="xs">
                 <RoundButton
-                  size="lg"
                   icon="moon"
                   tooltip="Toggle dark mode"
                   onClick={() => siteStore.setTheme(siteStore.theme === 'home' ? 'light' : 'home')}
@@ -273,7 +276,7 @@ const DocsPage = memo((props: { children?: any }) => {
                     onClick={() => setShowSidebar(!showSidebar)}
                   />
                 )}
-              </SegmentedRow>
+              </Row>
             </SurfacePassProps>
           </Absolute>
         </Row>
@@ -282,16 +285,17 @@ const DocsPage = memo((props: { children?: any }) => {
         <Header slim />
       </Portal>
       <Portal>
-        <FixedLayout className="mini-scrollbars">
+        <FixedLayout isSmall={isSmall} className="mini-scrollbars">
           {isSmall ? (
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
-              elevation={5}
+              elevation={25}
               pointerEvents="auto"
               // @ts-ignore
               background={theme => theme.background}
             >
+              <div style={{ height: 120 }} />
               {content}
             </Sidebar>
           ) : (
@@ -306,7 +310,7 @@ const DocsPage = memo((props: { children?: any }) => {
       </Portal>
 
       <SectionContent fontSize={16} lineHeight={24} whiteSpace="normal">
-        <ContentPosition isSmall={isSmall}>
+        <ContentPosition hahha isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />
         </ContentPosition>
@@ -319,9 +323,10 @@ DocsPage.theme = 'dark'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
-  padding: [0, 0, 0, 300],
+  padding: [0, 0, 0, 'calc(5% + 300px)'],
   isSmall: {
     padding: [0, 0, 0, 0],
+    background: 'red',
   },
 })
 
@@ -332,6 +337,11 @@ const FixedLayout = gloss({
   bottom: 0,
   width: '100%',
   zIndex: 100000,
+
+  isSmall: {
+    top: 0,
+    zIndex: 10000000000000,
+  },
 })
 
 export const MetaSection = gloss({

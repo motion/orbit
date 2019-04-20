@@ -196,7 +196,7 @@ const DocsPage = memo((props: { children?: any }) => {
             flex={1}
             icon="search"
             placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-            elevation={3}
+            elevation={2}
             after={
               !isSmall && (
                 <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>

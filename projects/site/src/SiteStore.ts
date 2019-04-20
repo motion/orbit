@@ -1,4 +1,5 @@
 import { createStoreContext, react } from '@o/use-store'
+import { once } from 'lodash'
 
 import { themes } from './themes'
 
@@ -9,14 +10,7 @@ class SiteStore {
   showSidebar = false
 
   windowHeight = window.innerHeight
-
-  unMount() {
-    debugger
-  }
-
-  dispose() {
-    debugger
-  }
+  tag = document.createElement('style')
 
   bodyBackground = react(
     () => {
@@ -33,7 +27,23 @@ class SiteStore {
     this.showSidebar = !this.showSidebar
   }
 
+  setup = once(() => {
+    this.tag.type = 'text/css'
+    this.tag.appendChild(document.createTextNode(''))
+    document.head.appendChild(this.tag)
+  })
+
   setTheme = (name: string) => {
+    this.setup()
+    const sheet = this.tag.sheet as CSSStyleSheet
+    sheet.insertRule(
+      `
+    * {
+      transition: all ease 1000ms !important;
+    }
+  `,
+      sheet.cssRules.length,
+    )
     this.theme = name
   }
 

@@ -129,10 +129,13 @@ const DocsPage = memo((props: { children?: any }) => {
 
   const isSmall = screen === 'small'
 
-  console.log('rendering docspage')
-
   useEffect(() => {
-    console.log('mounting docspage')
+    let sub = Navigation.subscribe(() => {
+      inputRef.current.focus()
+    })
+    return () => {
+      sub.unsubscribe()
+    }
   }, [])
 
   useEffect(() => {
@@ -258,6 +261,7 @@ const DocsPage = memo((props: { children?: any }) => {
             <SurfacePassProps circular iconSize={12}>
               <SegmentedRow>
                 <RoundButton
+                  size="lg"
                   icon="moon"
                   tooltip="Toggle dark mode"
                   onClick={() => siteStore.setTheme(siteStore.theme === 'home' ? 'light' : 'home')}
@@ -301,7 +305,7 @@ const DocsPage = memo((props: { children?: any }) => {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={16} lineHeight={26}>
+      <SectionContent fontSize={16} lineHeight={24} whiteSpace="normal">
         <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />

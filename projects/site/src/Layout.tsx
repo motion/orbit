@@ -64,6 +64,7 @@ export function Layout(props: any) {
   return (
     <ProvideUI themes={themes}>
       <Theme name={siteStore.theme}>
+        <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader />
         <View
           minHeight="100vh"
@@ -76,10 +77,7 @@ export function Layout(props: any) {
           }}
           background={bg}
         >
-          <NotFoundBoundary render={NotFound}>
-            <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-            {props.children}
-          </NotFoundBoundary>
+          <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
         </View>
         <Theme name="home">
           <View

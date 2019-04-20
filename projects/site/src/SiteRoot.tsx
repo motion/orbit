@@ -2,8 +2,10 @@ import { createBrowserNavigation, lazy, mount, route } from 'navi'
 import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
+
 import { Layout } from './Layout'
 import { HomePage } from './pages/HomePage'
+import { SiteStoreContext } from './SiteStore'
 
 // Define your routes
 const routes = mount({
@@ -29,12 +31,14 @@ export async function getPageForPath() {
 
 export const SiteRoot = hot(() => {
   return (
-    <Router navigation={Navigation}>
-      <Layout>
-        <Suspense fallback={null}>
-          <View />
-        </Suspense>
-      </Layout>
-    </Router>
+    <SiteStoreContext.Provider>
+      <Router navigation={Navigation}>
+        <Layout>
+          <Suspense fallback={null}>
+            <View />
+          </Suspense>
+        </Layout>
+      </Router>
+    </SiteStoreContext.Provider>
   )
 })

@@ -1,6 +1,7 @@
 import { gloss, Row, useTheme, View } from '@o/ui'
 import React from 'react'
-import { useSiteStore } from '../Layout'
+
+import { useSiteStore } from '../SiteStore'
 
 export const Spotlight = () => {
   const siteStore = useSiteStore()

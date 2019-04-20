@@ -1,67 +1,15 @@
 import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
-import { createStoreContext, react, useForceUpdate } from '@o/use-store'
+import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { debounce, throttle } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
-import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
+import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { useScreenSize } from './hooks/useScreenSize'
-import { getPageForPath, Navigation } from './SiteRoot'
+import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
-
-class SiteStore {
-  theme = 'home'
-  screenSize = 'large'
-  maxHeight = null
-  showSidebar = false
-
-  windowHeight = window.innerHeight
-
-  bodyBackground = react(
-    () => this.theme,
-    theme => {
-      console.log('reacting to theme', theme)
-      document.body.style.background = themes[theme].background.toCSS()
-    },
-  )
-
-  toggleSidebar = () => {
-    this.showSidebar = !this.showSidebar
-  }
-
-  setTheme = (name: string) => {
-    this.theme = name
-  }
-
-  setMaxHeight = (val: any) => {
-    this.maxHeight = val
-  }
-
-  get sectionHeight() {
-    let maxHeight = 1050
-    let desiredHeight = this.windowHeight
-    // taller on mobile
-    if (this.screenSize === 'small') {
-      desiredHeight = this.windowHeight
-      maxHeight = 950
-    }
-    return Math.max(
-      // min-height
-      850,
-      Math.min(
-        desiredHeight,
-        // max-height
-        maxHeight,
-      ),
-    )
-  }
-}
-
-const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStore)
-
-export const useSiteStore = useStore
 
 const transition = 'transform ease 300ms'
 
@@ -69,27 +17,24 @@ export function Layout(props: any) {
   const forceUpdate = useForceUpdate()
   window['forceUpdate'] = debounce(forceUpdate, 20)
   const loadingRoute = useLoadingRoute()
-  const siteStore = useCreateStore()
+  const siteStore = useSiteStore()
   const screen = useScreenSize()
   const sidebarWidth = 300
 
-  window['SiteStore'] = siteStore
+  const route = useCurrentRoute()
+
+  useEffect(() => {
+    if (route && route.views[0]) {
+      const theme = route.views[0].type.theme
+      if (theme) {
+        siteStore.setTheme(theme)
+      }
+    }
+  }, [route])
 
   useEffect(() => {
     siteStore.screenSize = screen
   }, [screen])
-
-  useEffect(() => {
-    async function updatePath() {
-      const page = await getPageForPath()
-      if (page && page.theme) {
-        siteStore.setTheme(page.theme)
-      }
-    }
-
-    Navigation.subscribe(updatePath)
-    updatePath()
-  }, [])
 
   useEffect(() => {
     window.addEventListener(
@@ -119,55 +64,53 @@ export function Layout(props: any) {
   return (
     <ProvideUI themes={themes}>
       <Theme name={siteStore.theme}>
-        <SimpleProvider value={siteStore}>
-          <PeekHeader />
+        <PeekHeader />
+        <View
+          minHeight="100vh"
+          minWidth="100vw"
+          maxHeight={maxHeight}
+          overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+          transition={transition}
+          transform={{
+            x: siteStore.showSidebar ? -sidebarWidth : 0,
+          }}
+          background={bg}
+        >
+          <NotFoundBoundary render={NotFound}>
+            <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
+            {props.children}
+          </NotFoundBoundary>
+        </View>
+        <Theme name="home">
           <View
-            minHeight="100vh"
-            minWidth="100vw"
-            maxHeight={maxHeight}
-            overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+            position="fixed"
+            top={0}
+            right={0}
+            width={sidebarWidth}
+            height="100vh"
             transition={transition}
             transform={{
-              x: siteStore.showSidebar ? -sidebarWidth : 0,
+              x: siteStore.showSidebar ? 0 : sidebarWidth,
             }}
-            background={bg}
           >
-            <NotFoundBoundary render={NotFound}>
-              <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-              {props.children}
-            </NotFoundBoundary>
+            <Button
+              position="absolute"
+              top={20}
+              right={20}
+              chromeless
+              icon="cross"
+              iconSize={16}
+              zIndex={1000}
+              cursor="pointer"
+              onClick={siteStore.toggleSidebar}
+            />
+            <HeaderLink href="/" {...linkProps}>
+              Home
+            </HeaderLink>
+            <LinksLeft {...linkProps} />
+            <LinksRight {...linkProps} />
           </View>
-          <Theme name="home">
-            <View
-              position="fixed"
-              top={0}
-              right={0}
-              width={sidebarWidth}
-              height="100vh"
-              transition={transition}
-              transform={{
-                x: siteStore.showSidebar ? 0 : sidebarWidth,
-              }}
-            >
-              <Button
-                position="absolute"
-                top={20}
-                right={20}
-                chromeless
-                icon="cross"
-                iconSize={16}
-                zIndex={1000}
-                cursor="pointer"
-                onClick={siteStore.toggleSidebar}
-              />
-              <HeaderLink href="/" {...linkProps}>
-                Home
-              </HeaderLink>
-              <LinksLeft {...linkProps} />
-              <LinksRight {...linkProps} />
-            </View>
-          </Theme>
-        </SimpleProvider>
+        </Theme>
       </Theme>
     </ProvideUI>
   )

@@ -1,7 +1,8 @@
 import { createContextualProps } from '@o/ui'
 import React, { useState } from 'react'
+
 import { IS_CHROME } from '../constants'
-import { useSiteStore } from '../Layout'
+import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { NeckSection } from './HomePage/AllInOnePitchDemoSection'

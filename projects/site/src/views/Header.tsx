@@ -5,9 +5,9 @@ import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { useSiteStore } from '../Layout'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { Navigation } from '../SiteRoot'
+import { useSiteStore } from '../SiteStore'
 import { LogoHorizontal } from './LogoHorizontal'
 import { SectionContent } from './SectionContent'
 

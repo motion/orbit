@@ -44,7 +44,6 @@
     "react-window": "https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20",
     "react-with-gesture": "4.0.8",
     "remark-emoji": "2.0.2",
-    "scroll": "2.0.3",
     "string-natural-compare": "2.0.3",
     "react-svg-inline": "2.1.1"
   },

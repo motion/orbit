@@ -11,13 +11,19 @@ const ReactDOM = require('react-dom')
 
 export function render() {
   const RootNode = document.querySelector('#app')
-  ReactDOM.unstable_createRoot(RootNode).render(
-    // <React.unstable_ConcurrentMode>
-    <SiteRoot />,
-    // </React.unstable_ConcurrentMode>,
-  )
+  ReactDOM.render(<SiteRoot />, RootNode)
+  // concurrent
+  // ReactDOM.unstable_createRoot(RootNode).render(
+  //   // <React.unstable_ConcurrentMode>
+  //   <SiteRoot />,
+  //   // </React.unstable_ConcurrentMode>,
+  // )
 }
 
 render()
 
 window['render'] = render
+
+if (module['hot']) {
+  module['hot'].accept()
+}

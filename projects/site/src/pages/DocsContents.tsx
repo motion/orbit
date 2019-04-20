@@ -1,9 +1,10 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Card, Icon, Row, Section, Space, SurfacePassProps } from '@o/ui'
+import { Button, Card, Icon, Row, Section, Space, SurfacePassProps, Table } from '@o/ui'
 import React, { memo } from 'react'
 
+import { scrollTo } from '../etc/helpers'
 import { CodeBlock } from '../views/CodeBlock'
-import { MetaSection, PropsTable } from './DocsPage'
+import { MetaSection } from './DocsPage'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export const DocsContents = memo(({ title, source, children, types }: any) => {
@@ -27,17 +28,23 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
             {!!source && (
               <Button
                 tooltip="View Code"
-                iconSize={20}
+                iconSize={16}
                 icon="code"
-                onClick={e => e.stopPropagation()}
+                onClick={e => {
+                  e.stopPropagation()
+                  scrollTo('#component-source')
+                }}
               />
             )}
             {!!types && (
               <Button
                 tooltip="View Prop Types"
-                iconSize={20}
+                iconSize={16}
                 icon="t"
-                onClick={e => e.stopPropagation()}
+                onClick={e => {
+                  e.stopPropagation()
+                  scrollTo('#component-props')
+                }}
               />
             )}
             {!!source && (
@@ -47,7 +54,7 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
                 tagName="a"
                 cursor="pointer"
                 {...{ href: 'http://github.com', target: '_blank' }}
-                icon={<Icon size={20} svg={GithubIcon} />}
+                icon={<Icon size={16} svg={GithubIcon} />}
                 onClick={e => e.stopPropagation()}
               />
             )}
@@ -55,38 +62,63 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
         </SurfacePassProps>
       }
     >
+      {children}
+
       <MetaSection>
-        {!!source && (
-          <Card
-            background={theme => theme.background.alpha(0.1)}
-            collapsable
-            defaultCollapsed
-            collapseOnClick
-            title={`View ${title} Source`}
-            maxHeight={450}
-            scrollable="y"
-          >
-            <CodeBlock className="language-typescript">{source}</CodeBlock>
-          </Card>
-        )}
-
-        <Space size="sm" />
-
         {!!types && (
           <Card
             background={theme => theme.background.alpha(0.1)}
             collapsable
-            defaultCollapsed
             collapseOnClick
             title="Props"
             scrollable="y"
+            id="component-props"
           >
             <PropsTable props={types.props} />
           </Card>
         )}
-      </MetaSection>
 
-      {children}
+        <Space size="xl" />
+
+        {!!source && (
+          <Card
+            background={theme => theme.background.alpha(0.1)}
+            collapsable
+            collapseOnClick
+            title={`View ${title} Source`}
+            maxHeight={650}
+            scrollable="y"
+            id="component-source"
+          >
+            <CodeBlock className="language-typescript">{source}</CodeBlock>
+          </Card>
+        )}
+      </MetaSection>
     </Section>
   )
 })
+
+function PropsTable(props: { props: Object }) {
+  const propRows = Object.keys(props.props).reduce((acc, key) => {
+    const { type, description, defaultValue, required, ...row } = props.props[key]
+    // discard
+    description
+    acc.push({
+      ...row,
+      type: type.name,
+      'Default Value': defaultValue === null ? '' : defaultValue,
+      required,
+    })
+    return acc
+  }, [])
+  // overscan all for searchability
+  return (
+    <Table
+      overscanCount={100}
+      sortOrder={{ key: 'name', direction: 'down' }}
+      maxHeight={750}
+      height={Object.keys(props.props).length * 23}
+      rows={propRows}
+    />
+  )
+}

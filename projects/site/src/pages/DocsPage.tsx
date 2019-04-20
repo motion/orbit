@@ -14,7 +14,6 @@ import {
   SegmentedRow,
   Sidebar,
   SurfacePassProps,
-  Table,
 } from '@o/ui'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -334,27 +333,3 @@ const FixedLayout = gloss({
 export const MetaSection = gloss({
   margin: [-30, -30, 0],
 })
-
-export function PropsTable(props: { props: Object }) {
-  const propRows = Object.keys(props.props).reduce((acc, key) => {
-    const { type, description, defaultValue, required, ...row } = props.props[key]
-    // discard
-    description
-    acc.push({
-      ...row,
-      type: type.name,
-      'Default Value': defaultValue === null ? '' : defaultValue,
-      required,
-    })
-    return acc
-  }, [])
-  // overscan all for searchability
-  return (
-    <Table
-      overscanCount={100}
-      sortOrder={{ key: 'name', direction: 'down' }}
-      height={400}
-      rows={propRows}
-    />
-  )
-}

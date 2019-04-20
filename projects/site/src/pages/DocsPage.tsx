@@ -271,7 +271,7 @@ const DocsPage = memo((props: { children?: any }) => {
                 />
                 {isSmall && (
                   <RoundButton
-                    icon="panel-stats"
+                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
                     tooltip="Toggle menu"
                     onClick={() => setShowSidebar(!showSidebar)}
                   />
@@ -291,11 +291,11 @@ const DocsPage = memo((props: { children?: any }) => {
               hidden={!showSidebar}
               zIndex={10000000}
               elevation={25}
+              width={290}
               pointerEvents="auto"
               // @ts-ignore
               background={theme => theme.background}
             >
-              <div style={{ height: 120 }} />
               {content}
             </Sidebar>
           ) : (

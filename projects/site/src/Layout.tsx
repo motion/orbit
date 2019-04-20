@@ -79,6 +79,7 @@ export function Layout(props: any) {
         <Portal prepend style={{ zIndex: 100000000 }}>
           <Theme name="home">
             <View
+              pointerEvents="auto"
               position="fixed"
               top={0}
               right={0}

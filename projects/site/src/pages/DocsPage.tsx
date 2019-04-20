@@ -323,7 +323,7 @@ DocsPage.theme = 'dark'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
-  padding: [0, 0, 0, 'calc(5% + 300px)'],
+  padding: [0, 0, 0, 'calc(2.5% + 300px)'],
   isSmall: {
     padding: [0, 0, 0, 0],
     background: 'red',

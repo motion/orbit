@@ -311,7 +311,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-DocsPage.theme = 'home'
+DocsPage.theme = 'dark'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',

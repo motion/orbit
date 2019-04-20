@@ -45,7 +45,7 @@
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
     "zenscroll": "^4.0.2",
-    "faker": "4.1.0",
+    "static-mock-data": "4.0.0",
     "scheduler": "0.14.0"
   },
   "devDependencies": {

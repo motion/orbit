@@ -12,9 +12,9 @@ const ReactDOM = require('react-dom')
 export function render() {
   const RootNode = document.querySelector('#app')
   ReactDOM.unstable_createRoot(RootNode).render(
-    <React.unstable_ConcurrentMode>
-      <SiteRoot />
-    </React.unstable_ConcurrentMode>,
+    // <React.unstable_ConcurrentMode>
+    <SiteRoot />,
+    // </React.unstable_ConcurrentMode>,
   )
 }
 

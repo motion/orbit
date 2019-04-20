@@ -1,20 +1,15 @@
-import { Avatar, Table } from '@o/ui'
-import faker from 'faker'
+import { Table } from '@o/ui'
 import React from 'react'
 
-const avatar = (
-  <Avatar width={28} height={28} src={require('../../../public/images/orbit-logo.svg')} />
+import { employees } from './fakeData'
+
+const rows = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
+
+export let One = (
+  <Table
+    overscanCount={100}
+    height={500}
+    columns={['username', 'password', 'ssn', 'dob']}
+    rows={rows}
+  />
 )
-
-const rows = [...new Array(10000)].map(() => ({
-  title: faker.name.firstName(),
-  subTitle: faker.lorem.sentence(),
-  icon: 'home',
-  createdAt: new Date(faker.date.past() * 1000),
-  location: 'somewhere',
-  iconBefore: true,
-  children: faker.lorem.sentence(),
-  after: avatar,
-}))
-
-export let One = <Table height={500} rows={rows} />

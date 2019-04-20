@@ -162,6 +162,7 @@ const DocsPage = memo((props: { children?: any }) => {
         selectable
         alwaysSelected
         defaultSelected={1}
+        overscanCount={500}
         items={docsItems[section]}
         onSelect={rows => {
           docsNavigate(rows[0].id)
@@ -301,7 +302,7 @@ const DocsPage = memo((props: { children?: any }) => {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={16} lineHeight={28}>
+      <SectionContent fontSize={16} lineHeight={26}>
         <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />
@@ -325,8 +326,8 @@ const FixedLayout = gloss({
   position: 'fixed',
   top: 120,
   left: 0,
+  bottom: 0,
   width: '100%',
-  height: '100%',
   zIndex: 100000,
 })
 

@@ -3,7 +3,7 @@ import { createStoreContext, react } from '@o/use-store'
 import { themes } from './themes'
 
 class SiteStore {
-  theme = 'home'
+  theme = localStorage.getItem(`theme-${window.location.pathname}`) || 'home'
   screenSize = 'large'
   maxHeight = null
   showSidebar = false
@@ -27,6 +27,7 @@ class SiteStore {
 
   setTheme = (name: string) => {
     this.theme = name
+    localStorage.setItem(`theme-${window.location.pathname}`, name)
   }
 
   setMaxHeight = (val: any) => {

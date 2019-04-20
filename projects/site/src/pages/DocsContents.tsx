@@ -22,9 +22,9 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
       space
       title={title || 'No title'}
       titleSize="xxxl"
-      afterTitle={
-        <SurfacePassProps size="lg" cursor="pointer">
-          <Row space="sm">
+      belowTitle={
+        <SurfacePassProps alt="flat" borderWidth={0} glint={false} sizeRadius={0} sizePadding={1.5}>
+          <Row>
             {!!source && (
               <Button
                 tooltip="View Code"
@@ -34,7 +34,9 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
                   e.stopPropagation()
                   scrollTo('#component-source')
                 }}
-              />
+              >
+                View Source
+              </Button>
             )}
             {!!types && (
               <Button
@@ -45,8 +47,16 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
                   e.stopPropagation()
                   scrollTo('#component-props')
                 }}
-              />
+              >
+                View Props
+              </Button>
             )}
+          </Row>
+        </SurfacePassProps>
+      }
+      afterTitle={
+        <SurfacePassProps size="lg" cursor="pointer">
+          <Row space="sm">
             {!!source && (
               <Button
                 tooltip="Source in Github"

@@ -22,7 +22,8 @@ export function Layout(props: any) {
 
   useEffect(() => {
     if (route && route.views[0]) {
-      const theme = route.views[0].type.theme
+      const theme =
+        localStorage.getItem(`theme-${window.location.pathname}`) || route.views[0].type.theme
       if (theme) {
         siteStore.setTheme(theme)
       }

@@ -147,15 +147,26 @@ const alternates: ThemeSet = {
     borderColor: transparent,
     borderWidth: 0,
   }),
-  flat: ({ background }) => ({
-    background: background.isDark() ? background.lighten(0.08) : background.darken(0.05),
-    glintColor: transparent,
-    glintColorBottom: transparent,
-    ...Theme.colorize({
-      borderColor: transparent,
-      borderWidth: 0,
-    }),
-  }),
+  flat: parent => {
+    const background = parent.background.isDark()
+      ? parent.background.lighten(0.08)
+      : parent.background.darken(0.05)
+    const theme = Theme.fromStyles({
+      background,
+    })
+    return {
+      background,
+      backgroundHover: theme.backgroundHover,
+      backgroundFocus: theme.backgroundFocus,
+      backgroundActive: theme.backgroundActive,
+      glintColor: transparent,
+      glintColorBottom: transparent,
+      ...Theme.colorize({
+        borderColor: transparent,
+        borderWidth: 0,
+      }),
+    }
+  },
 }
 
 const base = Theme.colorize({

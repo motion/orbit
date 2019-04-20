@@ -127,6 +127,10 @@ const DocsPage = memo((props: { children?: any }) => {
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
+  const initialPath = window.location.pathname.replace('/docs/', '')
+  const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
+
+  console.log('initialIndex', initialIndex)
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -167,10 +171,11 @@ const DocsPage = memo((props: { children?: any }) => {
         search={search}
         selectable
         alwaysSelected
-        defaultSelected={1}
+        defaultSelected={initialIndex}
         overscanCount={500}
         items={docsItems[section]}
         onSelect={rows => {
+          console.log('selecting', rows)
           docsNavigate(rows[0].id)
         }}
       />
@@ -310,7 +315,7 @@ const DocsPage = memo((props: { children?: any }) => {
       </Portal>
 
       <SectionContent fontSize={16} lineHeight={24} whiteSpace="normal">
-        <ContentPosition hahha isSmall={isSmall}>
+        <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />
         </ContentPosition>

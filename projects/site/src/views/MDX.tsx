@@ -53,7 +53,13 @@ export const components = {
   ),
   p: props => (
     <>
-      <Paragraph margin={0} fontSize="inherit" lineHeight="inherit" {...props} />
+      <Paragraph
+        margin={0}
+        fontSize="inherit"
+        lineHeight="inherit"
+        WebkitFontSmoothing="auto"
+        {...props}
+      />
       <Space />
     </>
   ),

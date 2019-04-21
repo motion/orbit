@@ -13,6 +13,10 @@ import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
 
+export const setThemeForPage = (name: string) => {
+  localStorage.setItem(`theme-${window.location.pathname.split('/')[1]}`, name)
+}
+
 export const getThemeForPage = () =>
   localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
 

@@ -1,6 +1,6 @@
 import { createStoreContext, react } from '@o/use-store'
 
-import { getThemeForPage } from './Layout'
+import { getThemeForPage, setThemeForPage } from './Layout'
 import { themes } from './themes'
 
 class SiteStore {
@@ -35,7 +35,7 @@ class SiteStore {
 
   setLoadingTheme = (name: string) => {
     this.loadingTheme = name
-    localStorage.setItem(`theme-${window.location.pathname}`, name)
+    setThemeForPage(name)
   }
 
   setTheme = (name: string) => {

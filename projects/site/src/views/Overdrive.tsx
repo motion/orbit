@@ -20,6 +20,8 @@ export const Overdrive = ({
       flexDirection: 'inherit',
       flexWrap: 'inherit',
       flexGrow: 'inherit',
+      alignItems: 'inherit',
+      justifyContent: 'inherit',
       ...style,
     }}
     {...props}

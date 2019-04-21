@@ -1,4 +1,4 @@
-import { Col, ColProps, Space, Theme } from '@o/ui'
+import { Col, ColProps, Space } from '@o/ui'
 import React from 'react'
 
 import { SectionContent } from '../../views/SectionContent'
@@ -33,11 +33,9 @@ export function BlogFooter() {
 
       <Space size="xxl" />
 
-      <Theme name="dark">
-        <SectionContent background="#111" padding={[50, 0]}>
-          <Footer />
-        </SectionContent>
-      </Theme>
+      <SectionContent padding={[50, 0]}>
+        <Footer />
+      </SectionContent>
     </>
   )
 }

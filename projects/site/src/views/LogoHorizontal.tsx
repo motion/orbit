@@ -4,9 +4,9 @@ import { SVG, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { Link } from 'react-navi'
 
-export const LogoHorizontal = memo((props: ViewProps) => {
+export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()
-  const scaleDown = 0.3333
+  const scaleDown = 0.3333 + (props.slim ? 0 : 0.075)
 
   return (
     <View

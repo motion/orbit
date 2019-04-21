@@ -21,8 +21,8 @@ import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
-let medSpc = <Space size="xxxl" />
-let lgSpc = <Space size="xxxl" />
+let medSpc = <Space size="xxl" />
+let lgSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'The decentralized app platform.',
@@ -32,8 +32,8 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Code powerful apps and internal tools without configuration or servers`,
-    `with a vertically integrated platform, from UI kit to dev environment to deploy.`,
+    `Create apps your team, or anyone, can use without setting up a server.`,
+    `Runs entirely behind the firewall, and makes common internal apps easy.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,

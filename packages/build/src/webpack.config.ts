@@ -45,9 +45,14 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
+if (getFlag('--prod')) {
+  process.env.NODE_ENV = 'production'
+}
+
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
+
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const outputPath = Path.join(cwd, 'dist')

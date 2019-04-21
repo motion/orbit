@@ -3,6 +3,7 @@
   "version": "2.4.1",
   "private": true,
   "sideEffects": false,
+  "main": "./src/index.tsx",
   "scripts": {
     "start": "mcro-build --port 5000 --target web",
     "build": "NODE_ENV=production mcro-build --build --target web",

@@ -25,7 +25,7 @@ let medSpc = <Space size="xxxl" />
 let lgSpc = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Amazingly easy internal apps.',
+  large: 'The decentralized app platform.',
   medium: 'Amazingly easy internal apps.',
   small: 'Amazing internal apps.',
 }

@@ -1,14 +1,8 @@
 import { ColorLike, CSSPropertySet, CSSPropertySetStrict, px } from '@o/css'
-import Gloss, {
-  Col,
-  forwardTheme,
-  gloss,
-  propsToStyles,
-  psuedoStyleTheme,
-  useTheme,
-} from '@o/gloss'
+import Gloss, { Col, ColProps, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
+
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -260,6 +254,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         )}
         {hasAnyGlint && (
           <GlintContain
+            positionInside={borderPosition === 'inside'}
             borderLeftRadius={borderLeftRadius + 1}
             borderRightRadius={borderRightRadius + 1}
           >
@@ -493,17 +488,20 @@ const getIconSize = (props: SurfaceProps) => {
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-const GlintContain = gloss(Col, {
+const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {
+  height: '100%',
   position: 'absolute',
-  height: 'calc(100% - 1px)',
   top: 0,
   left: 0,
   right: 0,
   pointerEvents: 'none',
   zIndex: 10,
   overflow: 'hidden',
-  transform: {
-    y: 0.5,
+  positionInside: {
+    height: 'calc(100% - 1px)',
+    transform: {
+      y: 0.5,
+    },
   },
 })
 

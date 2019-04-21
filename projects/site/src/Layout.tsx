@@ -1,7 +1,8 @@
-import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
+import { Col } from '@o/gloss'
+import { Button, ColProps, FullScreen, gloss, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
@@ -25,7 +26,7 @@ export function Layout(props: any) {
       const theme =
         localStorage.getItem(`theme-${window.location.pathname}`) || route.views[0].type.theme
       if (theme) {
-        siteStore.setTheme(theme)
+        siteStore.setLoadingTheme(theme)
       }
     }
   }, [route])
@@ -41,6 +42,12 @@ export function Layout(props: any) {
         siteStore.windowHeight = window.innerHeight
       }, 64),
     )
+  }, [])
+
+  const finishTransition = useCallback(() => {
+    if (siteStore.loadingTheme) {
+      siteStore.setTheme(siteStore.loadingTheme)
+    }
   }, [])
 
   if (!siteStore.theme) {
@@ -61,6 +68,13 @@ export function Layout(props: any) {
 
   return (
     <ProvideUI themes={themes}>
+      <Portal prepend style={{ top: 0, left: 0, position: 'fixed', zIndex: 10000000000 }}>
+        <ThemeTransition
+          shouldAnimate={!!siteStore.loadingTheme}
+          background={themes[siteStore.loadingTheme || siteStore.theme].background}
+          onTransitionEnd={finishTransition}
+        />
+      </Portal>
       <Theme name={siteStore.theme}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader />
@@ -177,3 +191,24 @@ function PeekHeader() {
     </Theme>
   )
 }
+
+const ThemeTransition = gloss<ColProps & { shouldAnimate?: boolean }>(Col, {
+  zIndex: 10000000000,
+  width: '200vw',
+  height: '200vh',
+  poisition: 'fixed',
+  top: 0,
+  left: 0,
+  transition: 'all ease 300ms',
+  opacity: 0,
+  transformOrigin: 'top left',
+  transform: {
+    rotate: '-90deg',
+  },
+  shouldAnimate: {
+    opacity: 1,
+    transform: {
+      rotate: '0deg',
+    },
+  },
+})

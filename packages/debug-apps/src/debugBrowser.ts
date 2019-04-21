@@ -1,4 +1,3 @@
-import * as r2 from '@o/r2'
 import { flatten, range } from 'lodash'
 import puppeteer from 'puppeteer'
 
@@ -129,7 +128,7 @@ export default class DebugApps {
         resolve(null)
       }, 5000)
       try {
-        const answers = await r2.get(infoUrl).json
+        const answers = await fetch(infoUrl).then(res => res.json())
         const sortedAnswers = answers
           .map(answer => {
             if (answer.url.indexOf('file://') === 0 || answer.url.indexOf(REMOTE_URL) === 0) {

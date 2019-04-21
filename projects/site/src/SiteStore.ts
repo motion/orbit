@@ -4,6 +4,7 @@ import { themes } from './themes'
 
 class SiteStore {
   theme = localStorage.getItem(`theme-${window.location.pathname}`) || 'home'
+  loadingTheme = null
   screenSize = 'large'
   maxHeight = null
   showSidebar = false
@@ -25,9 +26,14 @@ class SiteStore {
     this.showSidebar = !this.showSidebar
   }
 
-  setTheme = (name: string) => {
-    this.theme = name
+  setLoadingTheme = (name: string) => {
+    this.loadingTheme = name
     localStorage.setItem(`theme-${window.location.pathname}`, name)
+  }
+
+  setTheme = (name: string) => {
+    this.loadingTheme = null
+    this.theme = name
   }
 
   setMaxHeight = (val: any) => {

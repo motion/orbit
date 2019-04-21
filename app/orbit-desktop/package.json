@@ -27,7 +27,6 @@
     "@o/orbit-app": "^2.4.1",
     "@o/orbit-fork-process": "^2.4.1",
     "@o/postgres-app": "^2.4.1",
-    "@o/r2": "^2.4.1",
     "@o/screen": "^2.4.1",
     "@o/slack-app": "^2.4.1",
     "@o/stores": "^2.4.1",

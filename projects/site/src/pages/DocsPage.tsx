@@ -272,7 +272,9 @@ const DocsPage = memo((props: { children?: any }) => {
                 <RoundButton
                   icon="moon"
                   tooltip="Toggle dark mode"
-                  onClick={() => siteStore.setTheme(siteStore.theme === 'home' ? 'light' : 'home')}
+                  onClick={() =>
+                    siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
+                  }
                 />
                 {isSmall && (
                   <RoundButton

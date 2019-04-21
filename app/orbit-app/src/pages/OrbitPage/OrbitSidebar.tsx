@@ -2,6 +2,7 @@ import { Col } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
 import { BorderTop, ListPropsContext, MergeContext, PassExtraListProps, Sidebar } from '@o/ui'
 import React, { memo, useCallback, useContext, useEffect } from 'react'
+
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
@@ -42,7 +43,12 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <MergeContext
             Context={ListPropsContext}
-            value={{ selectable: true, searchable: true, alwaysSelected: true }}
+            value={{
+              selectable: true,
+              searchable: true,
+              alwaysSelected: true,
+              itemProps: { iconBefore: true },
+            }}
           >
             <PassExtraListProps onSelectItem={onSelectItem}>{props.children}</PassExtraListProps>
           </MergeContext>

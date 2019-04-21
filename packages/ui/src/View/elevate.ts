@@ -29,7 +29,7 @@ export function getElevation(props: ElevatableProps) {
   return {
     boxShadow: [
       elevatedShadow(props.elevation),
-      ...(Array.isArray(props.boxShadow) ? props.boxShadow : null),
+      ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
     ],
   }
 }

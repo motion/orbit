@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Config } from '../helpers/configure'
 import { getTextSize } from '../Sizes'
 import { Text, TextProps } from './Text'
@@ -11,7 +12,7 @@ export function Title({ size = 'xl', children, ...props }: TitleProps) {
   return (
     <Text
       fontWeight={700}
-      {...Config.titleDefaultProps}
+      {...Config.defaultProps.title}
       size={sz}
       sizeLineHeight={sizeLineHeight}
       {...props}

@@ -1,5 +1,6 @@
 import { gloss, ThemeFn } from '@o/gloss'
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useMemo } from 'react'
+
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
@@ -112,12 +113,15 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
 const SimpleInput = gloss(
   ({ placeholder, tagName = 'input', elementProps, forwardRef, ...props }: SizedSurfaceProps) => (
     <SizedSurface
-      elementProps={{
-        ref: forwardRef,
-        placeholder,
-        tagName,
-        ...elementProps,
-      }}
+      elementProps={useMemo(
+        () => ({
+          ref: forwardRef,
+          placeholder,
+          tagName,
+          ...elementProps,
+        }),
+        [forwardRef, placeholder, tagName, elementProps],
+      )}
       type="input"
       maxWidth="100%"
       alignItems="center"

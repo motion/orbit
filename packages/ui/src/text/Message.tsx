@@ -21,7 +21,6 @@ const defaultProps: Partial<SizedSurfaceProps> = {
   pad: 'sm',
   sizeRadius: true,
   iconSize: 22,
-  iconAfter: true,
   iconProps: {
     margin: 4,
   },

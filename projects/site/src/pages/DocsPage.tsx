@@ -18,7 +18,7 @@ import {
 import { useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -173,13 +173,13 @@ const DocsPage = memo((props: { children?: any }) => {
         defaultSelected={initialIndex}
         overscanCount={500}
         items={docsItems[section]}
-        onSelect={rows => {
+        onSelect={useCallback(rows => {
           if (!rows[0]) {
             console.warn('no row on select!', rows)
           } else {
             docsNavigate(rows[0].id)
           }
-        }}
+        }, [])}
       />
     </React.Fragment>
   )
@@ -308,7 +308,7 @@ const DocsPage = memo((props: { children?: any }) => {
               hidden={!showSidebar}
               zIndex={10000000}
               elevation={25}
-              width={290}
+              width={280}
               pointerEvents="auto"
               // @ts-ignore
               background={theme => theme.background}

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Button, ButtonProps } from './buttons/Button'
 
 /**
@@ -62,7 +63,9 @@ export function TabItem(props: ButtonProps) {
       iconAfter={false}
       borderWidth={1}
       borderPosition="outside"
-      flex={typeof props.width === 'number' ? 'none' : 'inherit'}
+      elementProps={{
+        flex: typeof props.width === 'number' ? 'none' : 'inherit',
+      }}
       {...props}
     />
   )

@@ -1,17 +1,7 @@
-import {
-  Center,
-  FullScreen,
-  gloss,
-  Image,
-  Row,
-  Space,
-  toColor,
-  useDebounce,
-  View,
-  ViewProps,
-} from '@o/ui'
+import { Center, FullScreen, gloss, Image, Row, Space, toColor, useDebounce, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
+
 import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
@@ -29,6 +19,10 @@ import { useTextFit } from '../../views/useTextFit'
 import { useParallax } from '../HomePage'
 import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
+
+let smallSpc = <Space size="xxl" />
+let medSpc = <Space size="xxxl" />
+let lgSpc = <Space size="xxxl" />
 
 let allTitles = {
   large: 'Amazingly easy internal apps.',
@@ -68,6 +62,7 @@ function HeadText() {
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
+  const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
     <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
@@ -88,34 +83,48 @@ function HeadText() {
         </TitleText>
       </FadeIn>
 
-      <Space size={useScreenVal('xs', 'sm', 'sm')} />
+      <Space size={useScreenVal('md', 'lg', 'xl')} />
 
-      <Paragraph
-        style={{
-          ...pFit.style,
-          height: 'auto',
-          lineHeight: pFit.isMeasured ? `${pFit.height * 2.75}px` : `30px`,
-        }}
-        height="auto"
-        transformOrigin="top left"
-        sizeLineHeight={1.3}
-        margin={[0, 'auto']}
-        textAlign="center"
-        alpha={0.6}
-        whiteSpace="nowrap"
-      >
-        <FadeIn disable={!measured} delay={150}>
-          {texts[0]}
-        </FadeIn>
-        <FadeIn disable={!measured} delay={300}>
-          {texts[1]}
-        </FadeIn>
-        <Smaller fontSize={screen === 'large' ? '70%' : '80%'}>
-          <FadeIn {...fadeUpProps} delay={500}>
-            {subTexts[screen]}
+      {screen === 'small' ? (
+        <Paragraph
+          size={1.5}
+          sizeLineHeight={1.4}
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.6}
+        >
+          Create incredibly powerful tools without config or a server, with everything included.
+        </Paragraph>
+      ) : (
+        <Paragraph
+          style={{
+            ...pFit.style,
+            height: 'auto',
+          }}
+          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+          height="auto"
+          transformOrigin="top left"
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.6}
+          whiteSpace="nowrap"
+        >
+          <FadeIn disable={!measured} delay={150}>
+            {texts[0]}
           </FadeIn>
-        </Smaller>
-      </Paragraph>
+          {br}
+          <FadeIn disable={!measured} delay={300}>
+            {texts[1]}
+          </FadeIn>
+          {br}
+
+          <Smaller fontSize={screen === 'large' ? '70%' : '90%'}>
+            <FadeIn {...fadeUpProps} delay={500}>
+              {subTexts[screen]}
+            </FadeIn>
+          </Smaller>
+        </Paragraph>
+      )}
 
       {/* this is just to measure */}
       <Paragraph

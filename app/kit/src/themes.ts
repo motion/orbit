@@ -5,7 +5,7 @@ const Theme = new ThemeMaker()
 
 const orbitColor = toColor('#3E7FD5')
 
-const colors = {
+export const colors = {
   orange: '#DC6104',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
@@ -142,23 +142,30 @@ const alternates: ThemeSet = {
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
-  // TODO clear and flat alternates should take parent theme as a function arg
-  // and then they can modify and return it
-  // for example, flat should take a lightbackground and darken a bit, and dark vice-versa
   clear: Theme.fromStyles({
     background: 'rgba(0,0,0,0.2)',
-    borderColor: 'rgba(0,0,0,0)',
+    borderColor: transparent,
     borderWidth: 0,
   }),
-  flat: {
-    glintColor: transparent,
-    glintColorBottom: transparent,
-    buttonGlintColor: transparent,
-    buttonGlintColorBottom: transparent,
-    ...Theme.colorize({
-      borderColor: 'rgba(0,0,0,0)',
-      borderWidth: 0,
-    }),
+  flat: parent => {
+    const background = parent.background.isDark()
+      ? parent.background.lighten(0.08)
+      : parent.background.darken(0.05)
+    const theme = Theme.fromStyles({
+      background,
+    })
+    return {
+      background,
+      backgroundHover: theme.backgroundHover,
+      backgroundFocus: theme.backgroundFocus,
+      backgroundActive: theme.backgroundActive,
+      glintColor: transparent,
+      glintColorBottom: transparent,
+      ...Theme.colorize({
+        borderColor: transparent,
+        borderWidth: 0,
+      }),
+    }
   },
 }
 
@@ -330,7 +337,7 @@ const dark = {
   }),
 }
 
-export const themes: ThemeSet = {
+export const themes = {
   ...alternates,
   tooltip: Theme.fromStyles({
     background: 'rgba(20,20,20,0.94)',

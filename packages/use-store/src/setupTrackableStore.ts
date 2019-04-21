@@ -3,6 +3,7 @@ import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
 import { Lambda, observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
+
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm, ProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
@@ -157,12 +158,14 @@ export function useTrackableStore<A>(
 ): A {
   const component = useCurrentComponent()
   const trackableStore = useRef<ReturnType<typeof setupTrackableStore>>({} as any)
-  const shouldUpdate = opts && opts.shouldUpdate
   let cur = trackableStore.current
 
+  // [HMR] shouldUpdate replaces with new store
+  const shouldUpdate = opts && opts.shouldUpdate
   if (cur && cur.store && shouldUpdate) {
-    cur.store.dispose()
+    cur.dispose()
   }
+
   if (plainStore && (!(cur && cur.store) || shouldUpdate)) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
     cur = trackableStore.current

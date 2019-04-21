@@ -2,6 +2,7 @@ import { always, ensure, react, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
+
 import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
@@ -102,10 +103,9 @@ export class SelectableStore {
 
   callbackOnSelectProp = react(
     () => always(this.active),
-    async (_, { sleep }) => {
-      // TODO this should really be handled by concurrent
-      await sleep(16)
+    () => {
       ensure('onSelect', !!this.props.onSelect)
+      ensure('has rows', !!this.rows.length)
       this.callbackOnSelect()
     },
     {
@@ -145,6 +145,8 @@ export class SelectableStore {
       ensure('alwaysSelected', alwaysSelected)
       ensure('noSelection', noSelection)
       ensure('hasRows', hasRows)
+      // dont interfere with default selection
+      ensure('no default selection', !this.props.defaultSelected)
       const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
       this.setActive([this.getIndexKey(firstValidIndex)])
     },

@@ -1,6 +1,7 @@
 import { react, useStore } from '@o/use-store'
 import React from 'react'
-import { useSiteStore } from '../../Layout'
+
+import { useSiteStore } from '../../SiteStore'
 
 const duration = 1500
 

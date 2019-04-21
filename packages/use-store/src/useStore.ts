@@ -1,6 +1,7 @@
 import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
@@ -170,15 +171,20 @@ export function useStore<A extends ReactiveStore<any> | any>(
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
-  const instantiated = useRef(Store && Store['constructor'].name !== 'Function').current
+  const construct = Store && Store['constructor'].name !== 'Function'
   let store: A | null = null
 
-  if (instantiated) {
+  if (construct) {
     if (options && options.react === false) {
       throw new Error(`Doesn't make sense to not react to an instatiated store.`)
     }
-    // shouldUpdate handles if a new store comes down for the same hook, update it
+
+    // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
     const shouldUpdate = lastStore.current !== Store
+    if (shouldUpdate && lastStore.current) {
+      disposeStore(lastStore.current)
+    }
+
     lastStore.current = Store
     store = (Store as unknown) as A
     store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
@@ -196,12 +202,12 @@ export function useStore<A extends ReactiveStore<any> | any>(
 
   // dispose on unmount
   useEffect(() => {
-    if (instantiated) {
+    if (!construct) {
       return () => {
         store && disposeStore(store, component)
       }
     }
-  }, [])
+  }, [store, construct])
 
   return store as A
 }

@@ -1,6 +1,7 @@
 import { Col, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
+
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
 import { ColProps } from './Col'
@@ -68,7 +69,14 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   }
 
   return (
-    <ScrollableChrome ref={ref} scrollable={scrollable} {...viewProps} {...props} padding={0}>
+    <ScrollableChrome
+      className="ui-scrollable"
+      ref={ref}
+      scrollable={scrollable}
+      {...viewProps}
+      {...props}
+      padding={0}
+    >
       {content}
     </ScrollableChrome>
   )

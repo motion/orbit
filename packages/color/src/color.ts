@@ -136,7 +136,7 @@ export class Color {
     const { color, valpha } = this.rgb()
     const [r, g, b] = color
     const next =
-      typeof this.valpha === 'number'
+      typeof this.valpha === 'number' && valpha !== 1
         ? `rgba(${r}, ${g}, ${b}, ${valpha})`
         : `rgb(${r}, ${g}, ${b})`
     cached.set(this, next)

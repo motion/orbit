@@ -1,15 +1,8 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import {
-  Button,
-  HandleOrbitSelect,
-  List,
-  ListItemProps,
-  TreeItem,
-  useGet,
-  VirtualListProps,
-} from '@o/ui'
+import { Button, HandleOrbitSelect, List, ListItemProps, TreeItem, useGet, VirtualListProps } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
+
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
 import { useStoresSimple } from '../hooks/useStores'
 import { ScopedUserState, useUserState } from '../hooks/useUserState'
@@ -105,13 +98,15 @@ export function useTreeList(subSelect: string): UseTreeList {
   }
 }
 
+const itemArrowRight = <Button circular chromeless iconSize={14} icon="chevron-right" />
+
 async function loadListItem(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {
         title: item.name,
         subTitle: `${item.children.length} items`,
-        after: <Button circular chromeless size={0.9} icon="chevron-right" />,
+        after: itemArrowRight,
         subId: `${item.id}`,
         subType: 'folder',
       }

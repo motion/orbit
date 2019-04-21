@@ -1,94 +1,39 @@
-import { isDefined } from '@o/kit'
-import { Button, FullScreen, ProvideUI, Theme, Title, View } from '@o/ui'
-import { createStoreContext, react, useForceUpdate } from '@o/use-store'
+import { Col } from '@o/gloss'
+import { Button, ColProps, FullScreen, gloss, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
 import { isDefined } from '@o/utils'
-import { debounce, throttle } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import { throttle } from 'lodash'
+import React, { useCallback, useEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
-import { NotFoundBoundary, useLoadingRoute } from 'react-navi'
+import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
+
 import { useScreenSize } from './hooks/useScreenSize'
-import { getPageForPath, Navigation } from './SiteRoot'
+import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
-
-class SiteStore {
-  theme = 'home'
-  screenSize = 'large'
-  maxHeight = null
-  showSidebar = false
-
-  windowHeight = window.innerHeight
-
-  bodyBackground = react(
-    () => this.theme,
-    theme => {
-      document.body.style.background = themes[theme].background.toCSS()
-    },
-  )
-
-  toggleSidebar = () => {
-    this.showSidebar = !this.showSidebar
-  }
-
-  setTheme = (name: string) => {
-    this.theme = name
-  }
-
-  setMaxHeight = (val: any) => {
-    this.maxHeight = val
-  }
-
-  get sectionHeight() {
-    let maxHeight = 1050
-    let desiredHeight = this.windowHeight
-    // taller on mobile
-    if (this.screenSize === 'small') {
-      desiredHeight = this.windowHeight
-      maxHeight = 950
-    }
-    return Math.max(
-      // min-height
-      850,
-      Math.min(
-        desiredHeight,
-        // max-height
-        maxHeight,
-      ),
-    )
-  }
-}
-
-const { SimpleProvider, useStore, useCreateStore } = createStoreContext(SiteStore)
-
-export const useSiteStore = useStore
 
 const transition = 'transform ease 300ms'
 
 export function Layout(props: any) {
-  const forceUpdate = useForceUpdate()
-  window['forceUpdate'] = debounce(forceUpdate, 20)
   const loadingRoute = useLoadingRoute()
-  const siteStore = useCreateStore()
+  const siteStore = useSiteStore()
   const screen = useScreenSize()
   const sidebarWidth = 300
 
-  window['SiteStore'] = siteStore
+  const route = useCurrentRoute()
+
+  useEffect(() => {
+    if (route && route.views[0]) {
+      const theme =
+        localStorage.getItem(`theme-${window.location.pathname}`) || route.views[0].type.theme
+      if (theme) {
+        siteStore.setLoadingTheme(theme)
+      }
+    }
+  }, [route])
 
   useEffect(() => {
     siteStore.screenSize = screen
   }, [screen])
-
-  useEffect(() => {
-    async function updatePath() {
-      const page = await getPageForPath()
-      if (page && page.theme) {
-        siteStore.setTheme(page.theme)
-      }
-    }
-
-    Navigation.subscribe(updatePath)
-    updatePath()
-  }, [])
 
   useEffect(() => {
     window.addEventListener(
@@ -97,6 +42,12 @@ export function Layout(props: any) {
         siteStore.windowHeight = window.innerHeight
       }, 64),
     )
+  }, [])
+
+  const finishTransition = useCallback(() => {
+    if (siteStore.loadingTheme) {
+      siteStore.setTheme(siteStore.loadingTheme)
+    }
   }, [])
 
   if (!siteStore.theme) {
@@ -117,33 +68,40 @@ export function Layout(props: any) {
 
   return (
     <ProvideUI themes={themes}>
+      <Portal prepend style={{ top: 0, left: 0, position: 'fixed', zIndex: 10000000000 }}>
+        <ThemeTransition
+          shouldAnimate={!!siteStore.loadingTheme}
+          background={themes[siteStore.loadingTheme || siteStore.theme].background}
+          onTransitionEnd={finishTransition}
+        />
+      </Portal>
       <Theme name={siteStore.theme}>
-        <SimpleProvider value={siteStore}>
-          <PeekHeader />
-          <View
-            minHeight="100vh"
-            minWidth="100vw"
-            maxHeight={maxHeight}
-            overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
-            transition={transition}
-            transform={{
-              x: siteStore.showSidebar ? -sidebarWidth : 0,
-            }}
-            background={bg}
-          >
-            <NotFoundBoundary render={NotFound}>
-              <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-              {props.children}
-            </NotFoundBoundary>
-          </View>
+        <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
+        <PeekHeader />
+        <View
+          minHeight="100vh"
+          minWidth="100vw"
+          maxHeight={maxHeight}
+          overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+          transition={transition}
+          transform={{
+            x: siteStore.showSidebar ? -sidebarWidth : 0,
+          }}
+          background={bg}
+        >
+          <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
+        </View>
+        <Portal prepend style={{ zIndex: 100000000 }}>
           <Theme name="home">
             <View
+              pointerEvents="auto"
               position="fixed"
               top={0}
               right={0}
               width={sidebarWidth}
               height="100vh"
               transition={transition}
+              background={theme => theme.background}
               transform={{
                 x: siteStore.showSidebar ? 0 : sidebarWidth,
               }}
@@ -166,7 +124,7 @@ export function Layout(props: any) {
               <LinksRight {...linkProps} />
             </View>
           </Theme>
-        </SimpleProvider>
+        </Portal>
       </Theme>
     </ProvideUI>
   )
@@ -233,3 +191,24 @@ function PeekHeader() {
     </Theme>
   )
 }
+
+const ThemeTransition = gloss<ColProps & { shouldAnimate?: boolean }>(Col, {
+  zIndex: 10000000000,
+  width: '200vw',
+  height: '200vh',
+  poisition: 'fixed',
+  top: 0,
+  left: 0,
+  transition: 'all ease 300ms',
+  opacity: 0,
+  transformOrigin: 'top left',
+  transform: {
+    rotate: '-90deg',
+  },
+  shouldAnimate: {
+    opacity: 1,
+    transform: {
+      rotate: '0deg',
+    },
+  },
+})

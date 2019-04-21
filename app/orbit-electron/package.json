@@ -24,7 +24,6 @@
     "@o/models": "^2.4.1",
     "@o/orbit-desktop": "^2.4.1",
     "@o/orbit-fork-process": "^2.4.1",
-    "@o/r2": "^2.4.1",
     "@o/react-devtools": "^2.4.1",
     "@o/reactron": "^2.4.1",
     "@o/stores": "^2.4.1",

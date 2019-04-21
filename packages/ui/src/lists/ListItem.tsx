@@ -1,6 +1,7 @@
-import { gloss } from '@o/gloss'
+import { gloss, Theme } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef, useCallback } from 'react'
+
 import { Bit } from '../helpers/BitLike'
 import { Config, CustomItemView } from '../helpers/configure'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
@@ -86,20 +87,22 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   }
 
   return (
-    <ListItemSimple
-      ref={ref}
-      searchTerm={props.query}
-      {...itemProps}
-      {...rest}
-      icon={icon}
-      date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
-      location={normalized ? normalized.location : props.location}
-      {...getItemProps && getItemProps(item)}
-      isSelected={getIsSelected}
-      // dont put children unless you actually have children,
-      // otherwise you trip up some spacing stuff in ListItem
-      {...childrenProps}
-    />
+    <Theme alt={props.alt}>
+      <ListItemSimple
+        ref={ref}
+        searchTerm={props.query}
+        {...itemProps}
+        {...rest}
+        icon={icon}
+        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+        location={normalized ? normalized.location : props.location}
+        {...getItemProps && getItemProps(item)}
+        isSelected={getIsSelected}
+        // dont put children unless you actually have children,
+        // otherwise you trip up some spacing stuff in ListItem
+        {...childrenProps}
+      />
+    </Theme>
   )
 })
 

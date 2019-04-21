@@ -5,6 +5,7 @@ import { on } from '@o/utils'
 import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
+
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
 import { MergeUIContext } from './helpers/contexts'
@@ -949,6 +950,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       transition,
       noPortal,
       popoverTheme,
+      zIndex,
       ...restProps
     } = this.props
     const {
@@ -998,7 +1000,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           maxHeight={maxHeight}
           left={left}
           top={top}
-          style={style}
           noHoverOnChildren={noHoverOnChildren}
         >
           <PopoverInner>
@@ -1025,6 +1026,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
             <BreadcrumbReset>
               <SizedSurface
                 className="popover-inner-surface"
+                themeSelect="popover"
                 sizeRadius
                 flex={1}
                 hoverStyle={null}
@@ -1062,7 +1064,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal>
+        <Portal style={{ ...style, zIndex }}>
           <span
             className="popover-portal"
             style={{

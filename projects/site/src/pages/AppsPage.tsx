@@ -1,10 +1,11 @@
 import { Col, FullScreen, Grid, Space, Theme, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
+
 import earth from '../../public/images/earth.jpg'
 import { IS_CHROME } from '../constants'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { useSiteStore } from '../Layout'
+import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'

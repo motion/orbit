@@ -1,6 +1,7 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
 import React, { forwardRef, RefObject, useCallback } from 'react'
+
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { GenericComponent, Omit } from '../types'
@@ -9,15 +10,15 @@ import { ListItemProps } from './ListItem'
 import { HandleSelection } from './ListItemSimple'
 import { SelectableDynamicList } from './SelectableList'
 import { SelectableProps, useSelectableStore } from './SelectableStore'
-import { VirtualListItem, VirtualListItemProps } from './VirtualListItem'
+import { VirtualListItem } from './VirtualListItem'
 
 export type VirtualListProps<A> = SelectableProps &
   SortableContainerProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
-    itemProps?: Partial<VirtualListItemProps<any>>
-    ItemView?: GenericComponent<VirtualListItemProps<any>>
+    itemProps?: Partial<A>
+    ItemView?: GenericComponent<A>
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
     items: A[]

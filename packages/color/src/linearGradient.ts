@@ -15,7 +15,7 @@ export class LinearGradient {
   }
 
   getColors() {
-    return this.items.filter(isColorLike)
+    return this.items.filter(isColorLike).map(convertToColor)
   }
 
   toString() {

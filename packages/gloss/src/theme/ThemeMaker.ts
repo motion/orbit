@@ -128,8 +128,9 @@ export class ThemeMaker {
         backgroundBlur: s.backgroundBlur || darken(base.background, largeAmt),
         colorBlur: s.colorBlur || darken(base.color, largeAmt),
         borderColorBlur: s.borderColorBlur || darken(base.borderColor, largeAmt),
-        backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmt),
-        borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmt),
+        // focus is not desirable for many things...
+        // backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmt),
+        // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmt),
         // ensure rest is last so they can override anything
         ...s,
         // except for base which is already using the right order

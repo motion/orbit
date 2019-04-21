@@ -1,45 +1,79 @@
 import {
+  Absolute,
   BorderRight,
   Button,
   Col,
   gloss,
   Input,
   List,
+  ListItem,
+  Popover,
   Portal,
   RoundButton,
   Row,
-  Section,
   Sidebar,
-  SpaceGroup,
-  SubTitle,
   SurfacePassProps,
-  Toolbar,
-  useMedia,
 } from '@o/ui'
+import { useReaction } from '@o/use-store'
+import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { useNavigation, View } from 'react-navi'
+import { NotFoundBoundary, View } from 'react-navi'
+
 import { useScreenSize } from '../hooks/useScreenSize'
-import { useSiteStore } from '../Layout'
+import { Navigation } from '../SiteRoot'
+import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
+import { ListSubTitle } from '../views/ListSubTitle'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
+import { BlogFooter } from './BlogPage/BlogLayout'
+import { DocsContents } from './DocsContents'
+import { docsItems } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
+import { useScreenVal } from './HomePage/SpacedPageContent'
+import { NotFoundPage } from './NotFoundPage'
 
 const views = {
-  install: () => import('./DocsPage/DocsInstall.mdx'),
-  buttons: () => import('./DocsPage/DocsButtons.mdx'),
-  cards: () => import('./DocsPage/DocsCards.mdx'),
-  progress: () => import('./DocsPage/DocsProgress.mdx'),
-  lists: () => import('./DocsPage/DocsLists.mdx'),
-  start: () => import('./DocsPage/DocsStart.mdx'),
+  install: {
+    page: () => import('./DocsPage/DocsInstall.mdx'),
+  },
+  start: {
+    page: () => import('./DocsPage/DocsStart.mdx'),
+  },
+  buttons: {
+    page: () => import('./DocsPage/DocsButtons.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
+    types: () => import('../../tmp/Button.json'),
+  },
+  cards: {
+    page: () => import('./DocsPage/DocsCards.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/Card'),
+    types: () => import('../../tmp/Card.json'),
+  },
+  progress: {
+    page: () => import('./DocsPage/DocsProgress.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
+    types: () => import('../../tmp/Progress.json'),
+  },
+  lists: {
+    page: () => import('./DocsPage/DocsLists.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/lists/List'),
+    types: () => import('../../tmp/List.json'),
+  },
+  tables: {
+    page: () => import('./DocsPage/DocsTables.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/tables/Table'),
+    types: () => import('../../tmp/Table.json'),
+  },
 }
 
+const emptyPromise = () => Promise.resolve({ default: null })
+
 export default compose(
-  withView(req => {
-    const id = req.path.slice(1)
+  withView(async () => {
     return (
-      <DocsPage id={id}>
+      <DocsPage>
         <View />
       </DocsPage>
     )
@@ -47,53 +81,70 @@ export default compose(
 
   mount({
     '/': route({
-      title: 'Docs',
-      view: <DocsInstall />,
+      title: 'Orbit Documentation',
+      view: (
+        <DocsContents title="Introduction">
+          <DocsInstall />
+        </DocsContents>
+      ),
     }),
     '/:id': route(async req => {
       let id = req.params.id
-      if (!views[id]) {
+      const view = views[id]
+
+      if (!view) {
         return {
           view: () => <div>not found</div>,
         }
       }
-      let ChildView = (await views[id]()).default || (() => <div>nada {id}</div>)
+
+      const [ChildView, source, types] = await Promise.all([
+        view.page().then(x => x.default),
+        (view.source || emptyPromise)().then(x => x.default),
+        (view.types || emptyPromise)().then(x => x.default),
+      ])
+
+      const item = docsItems.all.find(x => x['id'] === id)
+
       return {
-        view: <ChildView />,
+        view: (
+          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
+            <ChildView />
+          </DocsContents>
+        ),
       }
     }),
   }),
 )
 
-function DocsPage(props: { id?: string; children?: any }) {
+const docsNavigate = debounce(id => Navigation.navigate(`/docs/${id}`), 150)
+
+const DocsPage = memo((props: { children?: any }) => {
   const screen = useScreenSize()
-  const itemIndex = categories.all.findIndex(x => x['id'] === props.id) || 1
-  const item = categories.all[itemIndex]
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
   const [section, setSection] = useState('all')
   const toggleSection = val => setSection(section === val ? 'all' : val)
-  const nav = useNavigation()
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
+  const initialPath = window.location.pathname.replace('/docs/', '')
+  const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
 
-  const content = (
-    <React.Fragment key="content">
-      <DocsToolbar section={section} toggleSection={toggleSection} />
-      <List
-        search={search}
-        selectable
-        alwaysSelected
-        defaultSelected={itemIndex}
-        items={categories[section]}
-        onSelect={rows => {
-          nav.navigate(`/docs/${rows[0].id}`, { replace: true })
-        }}
-      />
-    </React.Fragment>
-  )
+  console.log('initialIndex', initialIndex)
+
+  // hide sidebar on show global sidebar
+  useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
 
   const isSmall = screen === 'small'
+
+  useEffect(() => {
+    let sub = Navigation.subscribe(() => {
+      inputRef.current.focus()
+    })
+    return () => {
+      sub.unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     const keyPress = e => {
@@ -114,37 +165,140 @@ function DocsPage(props: { id?: string; children?: any }) {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
+  const content = (
+    <React.Fragment key="content">
+      <List
+        search={search}
+        selectable
+        alwaysSelected
+        defaultSelected={initialIndex}
+        overscanCount={500}
+        items={docsItems[section]}
+        onSelect={rows => {
+          console.log('selecting', rows)
+          docsNavigate(rows[0].id)
+        }}
+      />
+    </React.Fragment>
+  )
+
   return (
     <MDX>
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
-        <Row margin={[0, 'auto']} pointerEvents="auto" pad={['sm', 100]} width="90%" maxWidth={800}>
+        <Row
+          position="relative"
+          margin={[0, 'auto']}
+          pointerEvents="auto"
+          pad={['sm', 0]}
+          width={useScreenVal('100%', '90%', '90%')}
+          maxWidth={980}
+          alignItems="center"
+          justifyContent="center"
+        >
           <Input
             ref={inputRef}
             onChange={e => setSearch(e.target.value)}
-            flex={1}
             sizeRadius={10}
             size="xl"
             iconSize={16}
+            maxWidth="calc(60% - 20px)"
+            flex={1}
             icon="search"
-            placeholder="Search the docs..."
+            placeholder={isSmall ? 'Search...' : 'Search the docs...'}
+            elevation={2}
             after={
-              <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
-                t
-              </Button>
+              !isSmall && (
+                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                  t
+                </Button>
+              )
             }
           />
+
+          <Absolute
+            top={0}
+            width="18%"
+            left={0}
+            bottom={0}
+            alignItems="flex-end"
+            justifyContent="center"
+          >
+            <Popover
+              background
+              width={300}
+              openOnClick
+              closeOnClickAway
+              elevation={100}
+              zIndex={100000000000000000}
+              target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
+            >
+              <>
+                <ListItem selectable={false}>
+                  <ListSubTitle marginTop={6}>Sections</ListSubTitle>
+                </ListItem>
+                <ListItem
+                  index={2}
+                  title="Docs"
+                  alt={section === 'docs' ? 'selected' : null}
+                  onClick={() => toggleSection('docs')}
+                />
+                <ListItem
+                  index={2}
+                  title="APIs"
+                  alt={section === 'apis' ? 'selected' : null}
+                  onClick={() => toggleSection('apis')}
+                />
+                <ListItem
+                  index={2}
+                  title="Kit"
+                  alt={section === 'kit' ? 'selected' : null}
+                  onClick={() => toggleSection('kit')}
+                />
+              </>
+            </Popover>
+          </Absolute>
+
+          <Absolute
+            width="18%"
+            top={0}
+            right={0}
+            bottom={0}
+            alignItems="center"
+            justifyContent="flex-start"
+            flexFlow="row"
+          >
+            <SurfacePassProps circular iconSize={12}>
+              <Row space="xs">
+                <RoundButton
+                  icon="moon"
+                  tooltip="Toggle dark mode"
+                  onClick={() =>
+                    siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
+                  }
+                />
+                {isSmall && (
+                  <RoundButton
+                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                    tooltip="Toggle menu"
+                    onClick={() => setShowSidebar(!showSidebar)}
+                  />
+                )}
+              </Row>
+            </SurfacePassProps>
+          </Absolute>
         </Row>
       </Portal>
       <Portal prepend>
         <Header slim />
       </Portal>
       <Portal>
-        <FixedLayout>
+        <FixedLayout isSmall={isSmall} className="mini-scrollbars">
           {isSmall ? (
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
-              elevation={5}
+              elevation={25}
+              width={290}
               pointerEvents="auto"
               // @ts-ignore
               background={theme => theme.background}
@@ -162,201 +316,41 @@ function DocsPage(props: { id?: string; children?: any }) {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={16} lineHeight={28}>
+      <SectionContent fontSize={16} lineHeight={24} whiteSpace="normal">
         <ContentPosition isSmall={isSmall}>
-          <SelectedSection
-            onToggleSidebar={() => setShowSidebar(!showSidebar)}
-            setTheme={siteStore.setTheme}
-            theme={siteStore.theme}
-            title={item ? item['title'] : undefined}
-          >
-            {props.children}
-          </SelectedSection>
+          <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+          <BlogFooter />
         </ContentPosition>
       </SectionContent>
     </MDX>
   )
-}
+})
 
-DocsPage.theme = 'light'
+DocsPage.theme = 'dark'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
-  padding: [0, 0, 0, 300],
+  padding: [0, 0, 0, 'calc(2.5% + 300px)'],
   isSmall: {
     padding: [0, 0, 0, 0],
+    background: 'red',
   },
 })
 
 const FixedLayout = gloss({
   position: 'fixed',
-  top: 100,
+  top: 120,
   left: 0,
+  bottom: 0,
   width: '100%',
-  height: '100%',
   zIndex: 100000,
+
+  isSmall: {
+    top: 0,
+    zIndex: 10000000000000,
+  },
 })
 
-const DocsToolbar = memo(({ section, toggleSection }: any) => {
-  return (
-    <Toolbar background="transparent" pad="xs" justifyContent="center" border={false}>
-      <RoundButton
-        alt={section === 'docs' ? 'selected' : 'flat'}
-        onClick={() => toggleSection('docs')}
-      >
-        Docs
-      </RoundButton>
-      <RoundButton alt={section === 'ui' ? 'selected' : 'flat'} onClick={() => toggleSection('ui')}>
-        UI
-      </RoundButton>
-      <RoundButton
-        alt={section === 'kit' ? 'selected' : 'flat'}
-        onClick={() => toggleSection('kit')}
-      >
-        Kit
-      </RoundButton>
-    </Toolbar>
-  )
+export const MetaSection = gloss({
+  margin: [-30, -30, 0],
 })
-
-const SelectedSection = memo(({ setTheme, theme, title, onToggleSidebar, children }: any) => {
-  const isSmall = useMedia({ maxWidth: 700 })
-  return (
-    <Section
-      pad={['xl', 'xl', true, 'xl']}
-      titleBorder
-      space
-      title={title || 'No title'}
-      titleSize="xl"
-      afterTitle={
-        <SurfacePassProps iconSize={12}>
-          <SpaceGroup space="xs">
-            <Button
-              icon="moon"
-              tooltip="Toggle dark mode"
-              onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
-            />
-            {isSmall && (
-              <Button icon="panel-stats" tooltip="Toggle menu" onClick={onToggleSidebar} />
-            )}
-          </SpaceGroup>
-        </SurfacePassProps>
-      }
-    >
-      {children}
-    </Section>
-  )
-})
-
-const titleItem = { titleProps: { size: 1.1 } }
-
-const ListSubTitle = gloss(SubTitle, {
-  margin: [20, 0, -2],
-  fontWeight: 300,
-  fontSize: 18,
-})
-
-const docsItems = [
-  {
-    selectable: false,
-    hideBorder: true,
-    children: <ListSubTitle>Start</ListSubTitle>,
-  },
-  {
-    id: 'start',
-    title: 'Getting started',
-    ...titleItem,
-  },
-]
-
-const uiItems = [
-  {
-    selectable: false,
-    hideBorder: true,
-    children: <ListSubTitle>User Interface</ListSubTitle>,
-  },
-
-  { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
-  { id: 'tables', title: 'Tables', icon: 'th' },
-  { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
-  { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
-  { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
-
-  {
-    group: 'Views',
-    id: 'surfaces',
-    icon: 'layer',
-    title: 'Surface',
-    subTitle: 'Building block of many views',
-  },
-  { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
-  { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
-  { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
-  { id: 'install', title: 'Sections', icon: 'application' },
-  { id: 'install', title: 'Popovers', icon: 'direction-right' },
-  { id: 'install', title: 'Decorations', icon: 'clean' },
-  { id: 'progress', title: 'Progress', icon: 'circle' },
-
-  { id: 'install', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
-  { id: 'install', title: 'Flow', icon: 'layout' },
-  { id: 'install', title: 'Message', icon: 'chat' },
-
-  { id: 'install', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
-  { id: 'install', title: 'DateFormat', icon: 'event' },
-  { id: 'install', title: 'TimeAgo', icon: 'time' },
-
-  { id: 'install', title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { id: 'install', title: 'GalleryModal', icon: 'multi-select' },
-  { id: 'install', title: 'MediaModal', icon: 'multi-select' },
-
-  { id: 'install', title: 'Basics', icon: 'control', group: 'Layout' },
-  { id: 'install', title: 'Sidebar', icon: 'panel-stats' },
-  { id: 'install', title: 'Slider', icon: 'double-caret-horizontal' },
-  { id: 'install', title: 'Tabs', icon: 'add-row-top' },
-  { id: 'install', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
-  { id: 'install', title: 'Pane', icon: 'column-layout', indent: 1 },
-  { id: 'install', title: 'GridLayout', icon: 'grid-view', indent: 1 },
-  { id: 'install', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
-  { id: 'install', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
-
-  { id: 'install', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
-  { id: 'install', title: 'Toolbar', icon: 'bottom' },
-
-  { id: 'install', title: 'Form', icon: 'form', group: 'Forms' },
-  { id: 'install', title: 'Flow + Form', icon: 'dot', indent: 1 },
-  { id: 'install', title: 'Form Elements', icon: 'widget' },
-  { id: 'install', title: 'Select', icon: 'dot', indent: 1 },
-  { id: 'install', title: 'Input', icon: 'dot', indent: 1 },
-
-  { id: 'install', title: 'Basics', icon: '', group: 'Text' },
-  { id: 'install', title: 'Titles' },
-  { id: 'install', title: 'Message' },
-  { id: 'install', title: 'Banner' },
-
-  { id: 'install', title: 'Chat', group: 'Media & Content' },
-  { id: 'install', title: 'Document' },
-  { id: 'install', title: 'Markdown' },
-  { id: 'install', title: 'Task' },
-  { id: 'install', title: 'Thread' },
-
-  { id: 'install', title: 'HoverGlow', group: 'Effects' },
-  { id: 'install', title: 'TiltHoverGlow' },
-  { id: 'install', title: 'Glint' },
-  { id: 'install', title: 'Tilt' },
-
-  { id: 'install', title: 'Fetch', group: 'Utilities' },
-  { id: 'install', title: 'Orderable' },
-  { id: 'install', title: 'ContextMenu' },
-  { id: 'install', title: 'Interactive' },
-  { id: 'install', title: 'Collapsable' },
-  { id: 'install', title: 'Scale' },
-  { id: 'install', title: 'Visibility' },
-  { id: 'install', title: 'PassProps' },
-]
-
-const categories = {
-  all: [...docsItems, ...uiItems],
-  ui: uiItems,
-  docs: docsItems,
-  kit: uiItems,
-}

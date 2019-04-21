@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
+
 import { Button, ButtonProps } from './Button'
 
-export function RoundButton(props: ButtonProps) {
+export const RoundButton = forwardRef((props: ButtonProps, ref) => {
   return (
     <Button
+      ref={ref}
       glint={false}
       sizeRadius={3}
       sizePadding={1.2}
@@ -13,4 +15,4 @@ export function RoundButton(props: ButtonProps) {
       {...props}
     />
   )
-}
+})

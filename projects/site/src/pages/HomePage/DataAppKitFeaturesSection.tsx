@@ -1,19 +1,9 @@
-import {
-  Button,
-  ButtonProps,
-  FullScreen,
-  gloss,
-  Grid,
-  Image,
-  PassProps,
-  Row,
-  Space,
-  View,
-} from '@o/ui'
+import { Button, ButtonProps, FullScreen, gloss, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React from 'react'
+
 import orbits from '../../../public/images/orbits.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { useSiteStore } from '../../Layout'
+import { useSiteStore } from '../../SiteStore'
 import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'

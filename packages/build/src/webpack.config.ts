@@ -5,11 +5,11 @@ import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
-// import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+// import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -21,7 +21,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 const RehypePrism = require('@mapbox/rehype-prism')
-const IgnoreNotFoundExportPlugin = require('ignore-not-found-export-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -299,12 +298,6 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      // see https://github.com/markogresak/ignore-not-found-export-webpack-plugin
-      new IgnoreNotFoundExportPlugin(),
-      // new ErrorOverlayPlugin(),
-
-      // new WebpackNotifierPlugin(),
-
       new webpack.DefinePlugin(defines),
 
       new webpack.IgnorePlugin(/electron-log/),
@@ -379,7 +372,8 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      isProd &&
+      !process.env['ANALYZE_BUNDLE'] &&
+        isProd &&
         new PrepackPlugin({
           reactEnabled: true,
           compatibility: 'node-react',

@@ -2,6 +2,7 @@ import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr 
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
 import { createElement, forwardRef, memo, useContext, useEffect, useRef } from 'react'
+
 import { Config } from './config'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
@@ -354,6 +355,11 @@ export function gloss<Props = any>(
   ThemedView.theme = (...themeFns) => {
     ThemedView.config.themeFns = themeFns
     return ThemedView
+  }
+
+  // inherit default props
+  if (isGlossParent) {
+    ThemedView.defaultProps = target.defaultProps
   }
 
   return ThemedView

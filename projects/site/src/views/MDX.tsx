@@ -1,6 +1,7 @@
 import { MDXProvider } from '@mdx-js/react'
 import { gloss, Paragraph, Space } from '@o/ui'
 import React from 'react'
+
 import componentNames from '../../tmp/componentNames.json'
 import { Navigation } from '../SiteRoot'
 import { CodeBlock } from './CodeBlock'
@@ -52,7 +53,7 @@ export const components = {
   ),
   p: props => (
     <>
-      <Paragraph margin={0} {...props} fontSize="inherit" lineHeight="inherit" />
+      <Paragraph margin={0} fontSize="inherit" lineHeight="inherit" {...props} />
       <Space />
     </>
   ),

@@ -3,6 +3,7 @@ import { toColor, useTheme } from '@o/gloss'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import React, { createContext, useContext } from 'react'
+
 import { Config } from './helpers/configure'
 import { SVG } from './SVG'
 import { View, ViewProps } from './View/View'
@@ -28,9 +29,8 @@ const cache = {}
 const findName = (name: string) => {
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
-  const matches = fuzzySort.go(name, names).map(x => x.target)
-  console.log('matches', matches, name, names)
-  const match = matches.length ? matches : 'none'
+  const matches = fuzzySort.go(name, names)
+  const match = matches.length ? matches[0].target : 'none'
   cache[name] = match
   return match
 }
@@ -52,17 +52,17 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
   const size = snapToSizes(props.size)
-  let color = props.color || theme.color ? theme.color.toCSS() : '#fff'
+  let color = toColor(props.color || (theme.color ? theme.color.toCSS() : '#fff'))
 
   if (isDefined(props.opacity)) {
     try {
-      color = toColor(color)
-        .alpha(props.opacity)
-        .toCSS()
+      color = color.alpha(props.opacity)
     } catch {
       console.debug('bad color')
     }
   }
+
+  color = color.toCSS()
 
   if (isDefined(props.svg)) {
     return (

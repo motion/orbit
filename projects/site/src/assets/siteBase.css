@@ -207,13 +207,13 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: rgba(40, 40, 40, 0.6);
+  background: rgba(40, 60, 120, 0.8);
   color: #fff;
   text-shadow: none;
 }
 
 *::selection {
-  background: rgba(40, 40, 40, 0.6);
+  background: rgba(40, 60, 120, 0.8);
   color: #fff;
   text-shadow: none;
 }
@@ -291,6 +291,7 @@ ol,
 ul {
   margin: 0;
   padding: 0;
+  white-space: normal;
 }
 
 p,
@@ -488,4 +489,32 @@ div.alt {
   color: rgba(0, 0, 0, 0.5);
   margin-bottom: 16px;
   margin-top: -16px;
+}
+
+.mini-scrollbars ::-webkit-scrollbar {
+  width: 1px;
+  border-radius: 20px;
+  background-color: transparent;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 20px;
+}
+
+.mini-scrollbars ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.7);
+  width: 1px;
+}
+
+.mini-scrollbars *:hover::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-scrollbars *:hover::-webkit-scrollbar-thumb {
+  width: 1px;
 }

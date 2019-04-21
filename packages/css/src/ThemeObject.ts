@@ -4,8 +4,12 @@ export type ThemeSet = {
   [key: string]: Partial<ThemeObject>
 }
 
+export type AlternateThemeSet = {
+  [key: string]: Partial<ThemeObject> | ((parentTheme: ThemeObject) => Partial<ThemeObject>)
+}
+
 export type ThemeObject = {
-  alternates?: ThemeSet
+  alternates?: AlternateThemeSet
   background: Color
   color: Color
   borderColor?: Color

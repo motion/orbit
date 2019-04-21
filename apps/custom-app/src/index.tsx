@@ -12,7 +12,7 @@ function CustomApp() {
             const res = api.channelsList()
             return (
               <Table
-                columns={['id', 'members']}
+                // columns={['id', 'members']}
                 shareable
                 // focusable
                 selectable="multi"

@@ -14,9 +14,8 @@ function makeStyleTag(): HTMLStyleElement | null {
   const tag = document.createElement('style')
   tag.type = 'text/css'
   tag.appendChild(document.createTextNode(''))
-  const { head } = document
-  invariant(head, 'expected head')
-  head.appendChild(tag)
+  invariant(document.head, 'expected head')
+  document.head.appendChild(tag)
   return tag
 }
 

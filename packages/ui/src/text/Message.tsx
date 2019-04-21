@@ -1,5 +1,6 @@
 import { gloss } from '@o/gloss'
 import React from 'react'
+
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
 export const Message = gloss<SizedSurfaceProps>(

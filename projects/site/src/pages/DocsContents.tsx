@@ -23,11 +23,24 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
       title={title || 'No title'}
       titleSize="xxxl"
       belowTitle={
-        <SurfacePassProps alt="flat" borderWidth={0} glint={false} sizeRadius={0} sizePadding={1.5}>
+        <SurfacePassProps
+          chromeless
+          cursor="pointer"
+          tagName="a"
+          textDecoration="none"
+          borderWidth={0}
+          glint={false}
+          sizeRadius={0}
+          sizePadding={0}
+          marginRight={30}
+          alpha={0.75}
+          hoverStyle={{
+            alpha: 1,
+          }}
+        >
           <Row>
             {!!source && (
               <Button
-                tooltip="View Code"
                 iconSize={16}
                 icon="code"
                 onClick={e => {
@@ -40,7 +53,6 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
             )}
             {!!types && (
               <Button
-                tooltip="View Prop Types"
                 iconSize={16}
                 icon="t"
                 onClick={e => {

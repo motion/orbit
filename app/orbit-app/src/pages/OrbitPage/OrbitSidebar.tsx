@@ -47,7 +47,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
               selectable: true,
               searchable: true,
               alwaysSelected: true,
-              itemProps: { iconBefore: true },
+              itemProps: { iconBefore: true, iconSize: 26 },
             }}
           >
             <PassExtraListProps onSelectItem={onSelectItem}>{props.children}</PassExtraListProps>

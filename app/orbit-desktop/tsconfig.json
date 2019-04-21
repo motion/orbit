@@ -19,7 +19,6 @@
     { "path": "../../packages/constants" },
     { "path": "../../packages/config" },
     { "path": "../../packages/logger" },
-    { "path": "../../packages/r2" },
     { "path": "../../packages/electron-sudo" },
     { "path": "../../packages/devcert" },
     { "path": "../../packages/orbit-fork-process" }

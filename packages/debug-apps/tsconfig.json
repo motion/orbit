@@ -6,6 +6,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../r2" }]
+  "include": ["src/**/*"]
 }

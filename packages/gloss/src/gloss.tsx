@@ -357,6 +357,11 @@ export function gloss<Props = any>(
     return ThemedView
   }
 
+  // inherit default props
+  if (isGlossParent) {
+    ThemedView.defaultProps = target.defaultProps
+  }
+
   return ThemedView
 }
 

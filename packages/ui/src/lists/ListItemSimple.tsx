@@ -2,6 +2,7 @@ import { gloss, Theme, ThemeContext } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
+
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
@@ -322,11 +323,21 @@ const ListItemMainContent = gloss({
   },
 })
 
-function getIcon({ icon, iconBefore, small, subTitle, iconProps }: ListItemSimpleProps) {
-  let iconSize =
-    (iconProps && iconProps.size) || (iconBefore ? (small || !subTitle ? 16 : 26) : small ? 12 : 14)
+function getIcon({
+  icon,
+  iconBefore,
+  small,
+  subTitle,
+  iconProps,
+  iconSize,
+  children,
+}: ListItemSimpleProps) {
+  let size =
+    iconSize ||
+    (iconProps && iconProps.size) ||
+    (iconBefore ? (small || !(subTitle || children) ? 20 : 26) : small ? 12 : 14)
   const iconPropsFinal = {
-    size: iconSize,
+    size: size,
     ...iconProps,
   }
   if (!iconBefore) {

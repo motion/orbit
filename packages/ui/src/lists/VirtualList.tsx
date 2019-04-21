@@ -17,8 +17,8 @@ export type VirtualListProps<A> = SelectableProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
-    itemProps?: Partial<ListItemProps>
-    ItemView?: GenericComponent<ListItemProps>
+    itemProps?: Partial<A>
+    ItemView?: GenericComponent<A>
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
     items: A[]

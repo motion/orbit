@@ -21,6 +21,8 @@ export function Layout(props: any) {
 
   const route = useCurrentRoute()
 
+  window['SiteStore'] = siteStore
+
   useEffect(() => {
     if (route && route.views[0]) {
       const theme =

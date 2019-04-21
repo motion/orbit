@@ -12,13 +12,19 @@ class SiteStore {
   windowHeight = window.innerHeight
 
   bodyBackground = react(
-    () => {
-      console.log('run reaction')
-      return this.theme
-    },
+    () => this.theme,
     theme => {
-      console.log('reacting to theme', theme)
       document.body.style.background = themes[theme].background.toCSS()
+    },
+  )
+
+  ensureDontGetStuckLoadingTheme = react(
+    () => this.loadingTheme,
+    async (_, { sleep }) => {
+      await sleep(300)
+      if (this.loadingTheme) {
+        this.setTheme(this.loadingTheme)
+      }
     },
   )
 

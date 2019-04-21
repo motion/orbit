@@ -130,8 +130,6 @@ const DocsPage = memo((props: { children?: any }) => {
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
 
-  console.log('initialIndex', initialIndex)
-
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
 
@@ -175,8 +173,11 @@ const DocsPage = memo((props: { children?: any }) => {
         overscanCount={500}
         items={docsItems[section]}
         onSelect={rows => {
-          console.log('selecting', rows)
-          docsNavigate(rows[0].id)
+          if (!rows[0]) {
+            console.warn('no row on select!', rows)
+          } else {
+            docsNavigate(rows[0].id)
+          }
         }}
       />
     </React.Fragment>

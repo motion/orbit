@@ -1,4 +1,5 @@
 import * as Ex from './DocsButtons'
+import ExSource from '!raw-loader!./DocsButtons'
 import { Example } from './Example'
 
 A `<Button />` is a simple extension of a `<Surface />`.
@@ -7,16 +8,16 @@ A `<Button />` is a simple extension of a `<Surface />`.
 
 ### Basics
 
-<Example>{Ex.One}</Example>
+<Example examples={Ex} source={ExSource} id="One" />
 
 ### Alternates
 
-<Example>{Ex.Two}</Example>
+<Example examples={Ex} source={ExSource} id="Two" />
 
 ### Sizing (Preset)
 
-<Example>{Ex.Three}</Example>
+<Example examples={Ex} source={ExSource} id="Three" />
 
 ### Elevation + Sizing (Absolute)
 
-<Example>{Ex.Four}</Example>
+<Example examples={Ex} source={ExSource} id="Four" />

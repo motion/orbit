@@ -1,6 +1,7 @@
 import { fromEntries } from '@o/utils'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
+
 import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
 import { TitleProps } from '../text/Title'
@@ -32,8 +33,10 @@ export type ConfigureUIProps = {
   // (INTERNAL) use your own store context
   StoreContext: Context<any>
 
-  // helpful for custom fonts
-  titleDefaultProps: Partial<TitleProps> | null
+  // helpful for custom fonts, etc
+  defaultProps: {
+    title?: Partial<TitleProps> | null
+  }
 }
 
 export type CustomItemView = FunctionComponent<ListItemViewProps & { item: Bit }>
@@ -53,7 +56,7 @@ let hasSet = false
 
 export let Config: ConfigureUIProps = {
   useIcon: null,
-  titleDefaultProps: null,
+  defaultProps: {},
   customItems: {},
 
   propsToItem: x => x,

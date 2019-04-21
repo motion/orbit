@@ -3,6 +3,7 @@ import { gloss, useTheme } from '@o/gloss'
 import { Space, SVG, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
+
 import mark from '../../public/images/orbit-mark.svg'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useParallax } from '../pages/HomePage'
@@ -10,7 +11,7 @@ import { useParallax } from '../pages/HomePage'
 let logoScales = {
   small: 0.5,
   medium: 0.75,
-  large: 1,
+  large: 0.75,
 }
 
 export const LogoVertical = memo(
@@ -42,7 +43,7 @@ export const LogoVertical = memo(
       >
         <Image src={mark} />
         <Space size="lg" />
-        <SVG cleanup fill={theme.color} width={102 * 0.8} height={23 * 0.8} svg={orbit} />
+        <SVG cleanup fill={theme.color} width={102 * 0.9} height={23 * 0.9} svg={orbit} />
       </View>
     )
   },

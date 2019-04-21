@@ -3,10 +3,11 @@
   "version": "2.4.1",
   "private": true,
   "sideEffects": false,
+  "main": "./src/index.tsx",
   "scripts": {
-    "start": "mcro-build --entry ./src/index --port 5000 --target web",
-    "build": "NODE_ENV=production mcro-build --build --entry ./src/index.tsx --target web",
-    "start:prod": "NODE_ENV=production mcro-build --prod --report --target web",
+    "start": "mcro-build --port 5000 --target web",
+    "build": "NODE_ENV=production mcro-build --build --target web",
+    "start:prod": "NODE_ENV=production mcro-build --prod --port 5000 --report --target web",
     "build:docs:ui": "node ./scripts/build-docs-ui.js",
     "deploy": "./surge-fix.sh && surge dist",
     "publish:site": "rm -r dist || true && yarn build && yarn deploy"

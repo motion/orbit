@@ -1,11 +1,6 @@
 import { toColorString } from '@o/color'
-import {
-  COLOR_KEYS,
-  FALSE_VALUES,
-  psuedoKeys,
-  SHORTHANDS,
-  unitlessNumberProperties,
-} from './constants'
+
+import { COLOR_KEYS, FALSE_VALUES, psuedoKeys, SHORTHANDS, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 
@@ -49,10 +44,12 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       value === FALSE_VALUES[key]
       valueType = typeof value
     }
-    // simple syles
+
+    // remove nullish
     if (value === undefined || value === null || value === false) {
       continue
     }
+
     let finalKey = key
     // convert camel to snake
     if (shouldSnake) {

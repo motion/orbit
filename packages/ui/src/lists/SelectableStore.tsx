@@ -79,7 +79,6 @@ export class SelectableStore {
     const nextFiltered = next.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
       if (row && row.selectable === false) {
-        console.warn('unselectable', row)
         return false
       }
       return true
@@ -145,8 +144,6 @@ export class SelectableStore {
       ensure('alwaysSelected', alwaysSelected)
       ensure('noSelection', noSelection)
       ensure('hasRows', hasRows)
-      // dont interfere with default selection
-      ensure('no default selection', !this.props.defaultSelected)
       const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
       this.setActive([this.getIndexKey(firstValidIndex)])
     },
@@ -157,20 +154,32 @@ export class SelectableStore {
     if (active.size === 0) {
       return
     }
-    const lastItemKey = Array.from(active).pop()
-    const lastItemIndex = rows.findIndex(row => key(row) === lastItemKey)
-    const newIndex = Math.min(
-      rows.length - 1,
-      Math.max(0, direction === Direction.up ? lastItemIndex - 1 : lastItemIndex + 1),
-    )
+    if (this.props.selectable === false) {
+      return
+    }
+
+    const lastKey = Array.from(active).pop()
+    const lastIndex = this.keyToIndex[lastKey]
+
+    const step = direction === Direction.up ? -1 : 1
+    let next: number = lastIndex
+    let found: number
+
+    while (typeof found === 'undefined') {
+      next += step
+      if (!rows[next]) break
+      if (rows[next].selectable === false) continue
+      found = next
+    }
+
     if (modifiers.shift === false) {
       active.clear()
     }
-    active.add(this.getIndexKey(newIndex))
-    if (!!this.props.selectable) {
-      this.setActive([...active])
-    }
-    return newIndex
+
+    active.add(this.getIndexKey(next))
+    this.setActive([...active])
+
+    return next
   }
 
   moveToId = (rowKey: string) => {

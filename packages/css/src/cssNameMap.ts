@@ -8,6 +8,7 @@ export const CAMEL_TO_SNAKE = {
   WebkitTextStroke: '-webkit-text-fill-color',
   WebkitTextStrokeWidth: '-webkit-text-stroke-width',
   WebkitTextStrokeColor: '-webkit-text-stroke-color',
+  WebkitFontSmoothing: '-webkit-font-smoothing',
   alignContent: 'align-content',
   alignItems: 'align-items',
   alignSelf: 'align-self',

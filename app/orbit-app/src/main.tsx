@@ -1,18 +1,19 @@
 // Be careful not to import anything that depends on getGlobalConfig() here
 // we set it up once with setGlobalConfig() and then import the rest of the app
+import '../public/styles/base.css'
+import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
-import '@o/nucleo'
 import * as firebase from 'firebase'
 import * as React from 'react'
-// @ts-ignore
 import { unstable_Profiler as Profiler } from 'react'
 import { render } from 'react-dom'
-import 'react-hot-loader' // must be imported before react
-import '../public/styles/base.css'
+
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
+
+// @ts-ignore
 if (IS_ELECTRON) {
   require('electron')
 }

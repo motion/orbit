@@ -1,9 +1,10 @@
 import { createStoreContext, react } from '@o/use-store'
 
+import { getThemeForPage, setThemeForPage } from './Layout'
 import { themes } from './themes'
 
 class SiteStore {
-  theme = localStorage.getItem(`theme-${window.location.pathname}`) || 'home'
+  theme = getThemeForPage() || 'home'
   loadingTheme = null
   screenSize = 'large'
   maxHeight = null
@@ -12,13 +13,19 @@ class SiteStore {
   windowHeight = window.innerHeight
 
   bodyBackground = react(
-    () => {
-      console.log('run reaction')
-      return this.theme
-    },
+    () => this.theme,
     theme => {
-      console.log('reacting to theme', theme)
       document.body.style.background = themes[theme].background.toCSS()
+    },
+  )
+
+  ensureDontGetStuckLoadingTheme = react(
+    () => this.loadingTheme,
+    async (_, { sleep }) => {
+      await sleep(300)
+      if (this.loadingTheme) {
+        this.setTheme(this.loadingTheme)
+      }
     },
   )
 
@@ -28,7 +35,7 @@ class SiteStore {
 
   setLoadingTheme = (name: string) => {
     this.loadingTheme = name
-    localStorage.setItem(`theme-${window.location.pathname}`, name)
+    setThemeForPage(name)
   }
 
   setTheme = (name: string) => {

@@ -2,6 +2,7 @@ import { CSSPropertySet } from '@o/css'
 import { Bit } from '@o/models'
 import { isDefined, mergeDefined } from '@o/utils'
 import React, { createContext, memo, useCallback, useContext, useEffect, useMemo } from 'react'
+import { GlobalHotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
 import { Config } from '../helpers/configure'
@@ -241,4 +242,42 @@ function ListPlaceholder(props: ListProps) {
 // @ts-ignore
 List.accepts = {
   surfaceProps: true,
+}
+
+export const ListShortcuts = memo(({ keyMap, handlers, ...props }: Partial<HotKeysProps>) => {
+  const shortcutStore = useShortcutStore()
+
+  const innerHandlers = useMemo(() => {
+    const emit = key => {
+      console.log('emitting', key)
+      shortcutStore.emit(key)
+    }
+    return {
+      up: () => emit('up'),
+      down: () => emit('down'),
+      command_k: () => {
+        console.log('command_k')
+      },
+      ...handlers,
+    }
+  }, [handlers])
+
+  return (
+    <GlobalHotKeys
+      keyMap={{
+        k: 'command_k',
+        down: 'down',
+        up: 'up',
+        command_k: 'command+k',
+        ...keyMap,
+      }}
+      style={hotKeyStyle}
+      handlers={innerHandlers}
+      {...props}
+    />
+  )
+})
+
+const hotKeyStyle = {
+  flex: 'inherit',
 }

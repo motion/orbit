@@ -78,7 +78,7 @@ export const TitleRow = forwardRef(function TitleRow(
           {isValidElement(title) ? (
             title
           ) : (
-            <Title size={size} marginTop={0} marginBottom={0} ellipse>
+            <Title size={size} ellipse>
               {title}
             </Title>
           )}

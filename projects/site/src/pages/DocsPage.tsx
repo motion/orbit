@@ -7,6 +7,7 @@ import {
   Input,
   List,
   ListItem,
+  ListShortcuts,
   Popover,
   Portal,
   RoundButton,
@@ -17,7 +18,7 @@ import {
 import { useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -130,8 +131,6 @@ const DocsPage = memo((props: { children?: any }) => {
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
 
-  console.log('initialIndex', initialIndex)
-
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
 
@@ -174,10 +173,13 @@ const DocsPage = memo((props: { children?: any }) => {
         defaultSelected={initialIndex}
         overscanCount={500}
         items={docsItems[section]}
-        onSelect={rows => {
-          console.log('selecting', rows)
-          docsNavigate(rows[0].id)
-        }}
+        onSelect={useCallback(rows => {
+          if (!rows[0]) {
+            console.warn('no row on select!', rows)
+          } else {
+            docsNavigate(rows[0].id)
+          }
+        }, [])}
       />
     </React.Fragment>
   )
@@ -185,108 +187,116 @@ const DocsPage = memo((props: { children?: any }) => {
   return (
     <MDX>
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
-        <Row
-          position="relative"
-          margin={[0, 'auto']}
-          pointerEvents="auto"
-          pad={['sm', 0]}
-          width={useScreenVal('100%', '90%', '90%')}
-          maxWidth={980}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Input
-            ref={inputRef}
-            onChange={e => setSearch(e.target.value)}
-            sizeRadius={10}
-            size="xl"
-            iconSize={16}
-            maxWidth="calc(60% - 20px)"
-            flex={1}
-            icon="search"
-            placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-            elevation={2}
-            after={
-              !isSmall && (
-                <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
-                  t
-                </Button>
-              )
-            }
-          />
-
-          <Absolute
-            top={0}
-            width="18%"
-            left={0}
-            bottom={0}
-            alignItems="flex-end"
+        <ListShortcuts>
+          <Row
+            position="relative"
+            margin={[0, 'auto']}
+            pointerEvents="auto"
+            pad={['sm', 0]}
+            width={useScreenVal('100%', '90%', '90%')}
+            maxWidth={980}
+            alignItems="center"
             justifyContent="center"
           >
-            <Popover
-              background
-              width={300}
-              openOnClick
-              closeOnClickAway
-              elevation={100}
-              zIndex={100000000000000000}
-              target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
-            >
-              <>
-                <ListItem selectable={false}>
-                  <ListSubTitle marginTop={6}>Sections</ListSubTitle>
-                </ListItem>
-                <ListItem
-                  index={2}
-                  title="Docs"
-                  alt={section === 'docs' ? 'selected' : null}
-                  onClick={() => toggleSection('docs')}
-                />
-                <ListItem
-                  index={2}
-                  title="APIs"
-                  alt={section === 'apis' ? 'selected' : null}
-                  onClick={() => toggleSection('apis')}
-                />
-                <ListItem
-                  index={2}
-                  title="Kit"
-                  alt={section === 'kit' ? 'selected' : null}
-                  onClick={() => toggleSection('kit')}
-                />
-              </>
-            </Popover>
-          </Absolute>
+            <Input
+              ref={inputRef}
+              onChange={e => setSearch(e.target.value)}
+              sizeRadius={10}
+              size="xl"
+              iconSize={16}
+              maxWidth="calc(60% - 20px)"
+              flex={1}
+              icon="search"
+              placeholder={isSmall ? 'Search...' : 'Search the docs...'}
+              boxShadow={[[0, 5, 8, [0, 0, 0, 0.05]]]}
+              onKeyDown={e => {
+                // avoid movement on down/up
+                if (e.keyCode === 38 || e.keyCode === 40) {
+                  e.preventDefault()
+                }
+              }}
+              after={
+                !isSmall && (
+                  <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                    t
+                  </Button>
+                )
+              }
+            />
 
-          <Absolute
-            width="18%"
-            top={0}
-            right={0}
-            bottom={0}
-            alignItems="center"
-            justifyContent="flex-start"
-            flexFlow="row"
-          >
-            <SurfacePassProps circular iconSize={12}>
-              <Row space="xs">
-                <RoundButton
-                  icon="moon"
-                  tooltip="Toggle dark mode"
-                  onClick={() =>
-                    siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
-                  }
-                />
-                {isSmall && (
-                  <RoundButton
-                    icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                    tooltip="Toggle menu"
-                    onClick={() => setShowSidebar(!showSidebar)}
+            <Absolute
+              top={0}
+              width="18%"
+              left={0}
+              bottom={0}
+              alignItems="flex-end"
+              justifyContent="center"
+            >
+              <Popover
+                background
+                width={300}
+                openOnClick
+                closeOnClickAway
+                elevation={100}
+                zIndex={100000000000000000}
+                target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
+              >
+                <>
+                  <ListItem selectable={false}>
+                    <ListSubTitle marginTop={6}>Sections</ListSubTitle>
+                  </ListItem>
+                  <ListItem
+                    index={2}
+                    title="Docs"
+                    alt={section === 'docs' ? 'selected' : null}
+                    onClick={() => toggleSection('docs')}
                   />
-                )}
-              </Row>
-            </SurfacePassProps>
-          </Absolute>
-        </Row>
+                  <ListItem
+                    index={2}
+                    title="APIs"
+                    alt={section === 'apis' ? 'selected' : null}
+                    onClick={() => toggleSection('apis')}
+                  />
+                  <ListItem
+                    index={2}
+                    title="Kit"
+                    alt={section === 'kit' ? 'selected' : null}
+                    onClick={() => toggleSection('kit')}
+                  />
+                </>
+              </Popover>
+            </Absolute>
+
+            <Absolute
+              width="18%"
+              top={0}
+              right={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="flex-start"
+              flexFlow="row"
+            >
+              <SurfacePassProps circular iconSize={12}>
+                <Row space="xs">
+                  <RoundButton
+                    icon="moon"
+                    tooltip="Toggle dark mode"
+                    onClick={() =>
+                      siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
+                    }
+                  />
+                  {isSmall && (
+                    <RoundButton
+                      icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                      tooltip="Toggle menu"
+                      onClick={() => setShowSidebar(!showSidebar)}
+                    />
+                  )}
+                </Row>
+              </SurfacePassProps>
+            </Absolute>
+          </Row>
+        </ListShortcuts>
       </Portal>
       <Portal prepend>
         <Header slim />
@@ -298,7 +308,7 @@ const DocsPage = memo((props: { children?: any }) => {
               hidden={!showSidebar}
               zIndex={10000000}
               elevation={25}
-              width={290}
+              width={280}
               pointerEvents="auto"
               // @ts-ignore
               background={theme => theme.background}
@@ -326,7 +336,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-DocsPage.theme = 'dark'
+DocsPage.theme = 'light'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',

@@ -1,4 +1,4 @@
-import { ColorLike, CSSPropertySet, CSSPropertySetStrict, px } from '@o/css'
+import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import Gloss, { Col, ColProps, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
@@ -162,7 +162,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // goes to BOTH the outer element and inner element
   const throughProps: ThroughProps = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
+    iconPad: typeof iconPad === 'number' ? iconPad : size * 8,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -462,9 +462,9 @@ const Element = gloss<
     whiteSpace: 'nowrap',
   },
 }).theme(props => {
-  const padX = px(selectDefined(props.surfacePadX, 0))
-  const iconSize = getIconSize(props)
-  const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
+  // const padX = px(selectDefined(props.surfacePadX, 0))
+  // const iconSize = getIconSize(props)
+  // const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
   const style: CSSPropertySet = {}
   // spacing between icon
   const hasIconBefore = props.hasIcon && !props.iconAfter
@@ -477,15 +477,16 @@ const Element = gloss<
   }
   return {
     ...props,
-    maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
+    // maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
     ...style,
   }
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size =
-    getSize(props.size) * (props.height ? +props.height * 0.15 + 5 : 12) * (props.sizeIcon || 1)
-  return props.iconSize || Math.round(size * 100) / 100
+  if (isDefined(props.iconSize)) return props.iconSize
+  const iconSize = props.height ? +props.height * 0.15 + 5 : 12
+  const size = getSize(props.size) * iconSize * (props.sizeIcon || 1)
+  return Math.round(size * 100) / 100
 }
 
 const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {

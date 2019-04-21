@@ -235,7 +235,7 @@ const light = {
 const darkColor = [250, 250, 250]
 const darkBackground = toColor([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
-const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
+const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 
 const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes translucent

@@ -13,6 +13,9 @@ import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
 
+export const getThemeForPage = () =>
+  localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
+
 export function Layout(props: any) {
   const loadingRoute = useLoadingRoute()
   const siteStore = useSiteStore()
@@ -25,9 +28,10 @@ export function Layout(props: any) {
 
   useEffect(() => {
     if (route && route.views[0]) {
-      const theme =
-        localStorage.getItem(`theme-${window.location.pathname}`) || route.views[0].type.theme
-      if (theme) {
+      const theme = getThemeForPage() || route.views[0].type.theme
+
+      // change theme
+      if (theme && theme !== siteStore.theme) {
         siteStore.setLoadingTheme(theme)
       }
     }

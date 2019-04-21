@@ -1,9 +1,10 @@
 import { createStoreContext, react } from '@o/use-store'
 
+import { getThemeForPage } from './Layout'
 import { themes } from './themes'
 
 class SiteStore {
-  theme = localStorage.getItem(`theme-${window.location.pathname}`) || 'home'
+  theme = getThemeForPage() || 'home'
   loadingTheme = null
   screenSize = 'large'
   maxHeight = null

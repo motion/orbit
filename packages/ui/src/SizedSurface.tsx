@@ -8,24 +8,22 @@ import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './
 const LINE_HEIGHT = 29
 
 export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
-  flex?: any
-
-  // Controlled height, relative adjusted to size
+  /** Controlled height, relative adjusted to size */
   sizeHeight?: boolean | number
 
-  // Controlled font size, relative adjusted to size
+  /** Controlled font size, relative adjusted to size */
   sizeFont?: boolean | number
 
-  // Controlled horizontal padding, relative adjusted to size
+  /** Controlled horizontal padding, relative adjusted to size */
   sizePadding?: boolean | number
 
-  // Controlled margin, relative adjusted to size
+  /** Controlled margin, relative adjusted to size */
   sizeMargin?: boolean | number
 
-  // Controlled border radius size, relative adjusted to size
+  /** Controlled border radius size, relative adjusted to size */
   sizeRadius?: boolean | number
 
-  // Controlled icon size, relative adjusted to size
+  /** Controlled icon size, relative adjusted to size */
   sizeIcon?: boolean | number
 }
 

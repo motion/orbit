@@ -1,8 +1,9 @@
 import { selectDefined } from '@o/utils'
 import React from 'react'
+
 import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
 import { SizedSurfaceProps } from './SizedSurface'
-import { SurfacePassProps, useSurfaceProps } from './Surface'
+import { SurfacePassProps, SurfaceProps, useSurfaceProps } from './Surface'
 
 // manages a row of surfaces nicely
 // will round the start/end corners
@@ -21,39 +22,54 @@ export function SegmentedRow({
   )
 }
 
-export function getSegmentedStyle(
-  props: { ignoreSegment?: boolean; borderRadius?: number },
-  item: BreadcrumbInfo,
-) {
-  const radius = selectDefined(props.borderRadius, 0)
-  // support being inside a segmented list
-  if (!props.ignoreSegment) {
-    if (item) {
-      if (item.isFirst && item.isLast) {
-        return {
-          borderRadius: radius,
-        }
-      }
-      if (item.isFirst) {
-        return {
-          borderRightRadius: 0,
-          borderRightWidth: 0,
-          borderLeftRadius: radius,
-        }
-      } else if (item.isLast) {
-        return {
-          borderLeftRadius: 0,
-          borderRightRadius: radius,
-        }
-      } else {
-        return {
-          borderRightRadius: 0,
-          borderRightWidth: 0,
-          borderLeftRadius: 0,
-        }
+export function getSegmentedStyle(props: SurfaceProps, item: BreadcrumbInfo) {
+  if (props.ignoreSegment) {
+    return
+  }
+  return {
+    ...getSegmentBorderRadius(props, item),
+    ...getInnerBorderOffsetStyle(props, item),
+  }
+}
+
+const getInnerBorderOffsetStyle = (props: SurfaceProps, item: BreadcrumbInfo) => {
+  if (item && props.borderPosition === 'inside') {
+    if (!item.isFirst) {
+      return {
+        marginLeft: -1,
       }
     }
   }
+}
+
+const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
+  const radius = selectDefined(props.borderRadius, 0)
+  if (item) {
+    if (item.isFirst && item.isLast) {
+      return {
+        borderRadius: radius,
+      }
+    }
+    if (item.isFirst) {
+      return {
+        borderRightRadius: 0,
+        borderRightWidth: 0,
+        borderLeftRadius: radius,
+      }
+    } else if (item.isLast) {
+      return {
+        borderLeftRadius: 0,
+        borderRightRadius: radius,
+      }
+    } else {
+      return {
+        borderRightRadius: 0,
+        borderRightWidth: 0,
+        borderLeftRadius: 0,
+      }
+    }
+  }
+  // support being inside a segmented list
   return {
     borderRightRadius: radius,
     borderLeftRadius: radius,

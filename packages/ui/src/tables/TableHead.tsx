@@ -4,21 +4,16 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { gloss, linearGradient, Row } from '@o/gloss'
 import invariant from 'invariant'
 import * as React from 'react'
+
 import { ContextMenu } from '../ContextMenu'
 import { Interactive } from '../Interactive'
 import { DataColumns, DataType } from '../types'
-import {
-  SortOrder,
-  TableColumnOrder,
-  TableColumnSizes,
-  TableOnColumnResize,
-  TableOnSort,
-} from './types'
+import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
+
 
 const TableHeaderArrow = gloss({
   display: 'block',
@@ -92,7 +87,8 @@ const TableHeadColumnContainer = gloss({
     display: 'none',
   },
 }).theme(({ width }, theme) => ({
-  background: linearGradient(theme.background, theme.background.darken(0.05)),
+  background:
+    theme.tableHeadBackground || linearGradient(theme.background, theme.background.darken(0.05)),
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
   '&:after': {

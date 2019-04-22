@@ -153,10 +153,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
-  const segmentedStyle = getSegmentedStyle(
-    { borderRadius: +props.borderRadius, ignoreSegment: props.ignoreSegment },
-    crumb,
-  )
+  const segmentedStyle = getSegmentedStyle(props, crumb)
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element

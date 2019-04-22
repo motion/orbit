@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Card, Icon, Row, Section, Space, SurfacePassProps, Table } from '@o/ui'
+import { Button, Icon, Row, Section, Space, SurfacePassProps, Table } from '@o/ui'
 import React, { memo } from 'react'
 
 import { scrollTo } from '../etc/helpers'
@@ -88,32 +88,17 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
 
       <MetaSection>
         {!!types && (
-          <Card
-            background={theme => theme.background.alpha(0.1)}
-            collapsable
-            collapseOnClick
-            title="Props"
-            scrollable="y"
-            id="component-props"
-          >
+          <Section size="sm" titleBorder title="Props" id="component-props">
             <PropsTable props={types.props} />
-          </Card>
+          </Section>
         )}
 
         <Space size="xl" />
 
         {!!source && (
-          <Card
-            background={theme => theme.background.alpha(0.1)}
-            collapsable
-            collapseOnClick
-            title={`View ${title} Source`}
-            maxHeight={650}
-            scrollable="y"
-            id="component-source"
-          >
+          <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
             <CodeBlock className="language-typescript">{source}</CodeBlock>
-          </Card>
+          </Section>
         )}
       </MetaSection>
     </Section>
@@ -136,9 +121,9 @@ function PropsTable(props: { props: Object }) {
   // overscan all for searchability
   return (
     <Table
+      zebra={false}
       overscanCount={100}
       sortOrder={{ key: 'name', direction: 'down' }}
-      maxHeight={750}
       height={Object.keys(props.props).length * 23}
       rows={propRows}
     />

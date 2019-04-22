@@ -59,7 +59,7 @@ export const TitleRow = forwardRef(function TitleRow(
     (isValidElement(title) ? (
       title
     ) : (
-      <Title size={size} ellipse>
+      <Title size={size} selectable ellipse>
         {title}
       </Title>
     ))
@@ -93,7 +93,7 @@ export const TitleRow = forwardRef(function TitleRow(
           {children}
           {!!subTitle && (
             <>
-              <SubTitle ellipse marginBottom={0}>
+              <SubTitle selectable ellipse marginBottom={0}>
                 {subTitle}
               </SubTitle>
             </>

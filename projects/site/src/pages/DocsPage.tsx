@@ -109,7 +109,11 @@ export default compose(
 
       return {
         view: (
-          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
+          <DocsContents
+            title={item ? item['title'] : ''}
+            source={source}
+            types={types}
+          >
             <ChildView />
           </DocsContents>
         ),

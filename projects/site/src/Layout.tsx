@@ -85,7 +85,7 @@ export function Layout(props: any) {
       </Portal> */}
       <Theme name={siteStore.theme}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-        <PeekHeader isActive={route.views.some(x => x.type.showPeekHeader)} />
+        <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"
           minWidth="100vw"

@@ -32,7 +32,11 @@ export async function getPageForPath() {
 export const SiteRoot = hot(() => {
   return (
     <SiteStoreContext.Provider>
-      <Router navigation={Navigation}>
+      {/* this key helps HMR for lazy imports... */}
+      <Router
+        key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+        navigation={Navigation}
+      >
         <Layout>
           <Suspense fallback={null}>
             <View />

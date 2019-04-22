@@ -37,12 +37,25 @@ export const SiteRoot = hot(() => {
         key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
         navigation={Navigation}
       >
-        <Layout>
+        <Layout key={0}>
           <Suspense fallback={null}>
-            <View />
+            <View disableScrolling={recentHMR} hashScrollBehavior="smooth" />
           </Suspense>
         </Layout>
       </Router>
     </SiteStoreContext.Provider>
   )
 })
+
+export let recentHMR = false
+
+if (module['hot']) {
+  let tm
+  module['hot'].addStatusHandler(() => {
+    recentHMR = true
+    clearTimeout(tm)
+    tm = setTimeout(() => {
+      recentHMR = false
+    }, 500)
+  })
+}

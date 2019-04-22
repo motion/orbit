@@ -22,7 +22,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation } from '../SiteRoot'
+import { Navigation, recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -75,7 +75,7 @@ export default compose(
   withView(async () => {
     return (
       <DocsPage>
-        <View />
+        <View disableScrolling={recentHMR} />
       </DocsPage>
     )
   }),
@@ -109,11 +109,7 @@ export default compose(
 
       return {
         view: (
-          <DocsContents
-            title={item ? item['title'] : ''}
-            source={source}
-            types={types}
-          >
+          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
             <ChildView />
           </DocsContents>
         ),

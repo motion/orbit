@@ -25,15 +25,15 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'The decentralized app platform.',
+  large: 'Powerful apps, no config.',
   medium: 'Amazingly easy internal apps.',
   small: 'Amazing internal apps.',
 }
 
 let allTexts = {
   large: [
-    `Create apps your team, or anyone, can use without setting up a server.`,
-    `Runs entirely behind the firewall, and makes common internal apps easy.`,
+    `Create powerful internal apps your team can use without setting up a server.`,
+    `It's the desktop app platform for internal tools & more.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -43,7 +43,7 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `How Orbit makes creating common apps easy, with just lines of code.`,
+  large: `The five ways Orbit saves you more time.`,
   medium: `Learn how Orbit makes common apps easy.`,
   small: `Learn how.`,
 }

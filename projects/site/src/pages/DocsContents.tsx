@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Icon, Row, Section, Space, SurfacePassProps, Table } from '@o/ui'
+import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, TitleRow } from '@o/ui'
 import React, { memo } from 'react'
 
 import { scrollTo } from '../etc/helpers'
@@ -106,26 +106,36 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
 })
 
 function PropsTable(props: { props: Object }) {
-  const propRows = Object.keys(props.props).reduce((acc, key) => {
-    const { type, description, defaultValue, required, ...row } = props.props[key]
-    // discard
-    description
-    acc.push({
-      ...row,
-      type: type.name,
-      'Default Value': defaultValue === null ? '' : defaultValue,
-      required,
-    })
-    return acc
-  }, [])
+  const propRows = Object.keys(props.props)
+    .reduce((acc, key) => {
+      const { type, description, defaultValue, required, ...row } = props.props[key]
+      // discard
+      description
+      acc.push({
+        ...row,
+        type: type.name,
+        'Default Value': defaultValue === null ? '' : defaultValue,
+        required,
+      })
+      return acc
+    }, [])
+    .sort((a, b) => (a.required && !b.required ? -1 : 1))
   // overscan all for searchability
   return (
-    <Table
-      zebra={false}
-      overscanCount={100}
-      sortOrder={{ key: 'name', direction: 'down' }}
-      height={Object.keys(props.props).length * 23}
-      rows={propRows}
-    />
+    <>
+      {propRows.map(row => (
+        <Col key={row.name}>
+          <TitleRow pad bordered borderSize={2}>
+            <Row space alignItems="center">
+              <Tag alt="lightBlue">{row.name}</Tag>
+              <Tag alt="lightRed" size={0.9}>
+                {row.type}
+              </Tag>
+            </Row>
+          </TitleRow>
+          {JSON.stringify(row)}
+        </Col>
+      ))}
+    </>
   )
 }

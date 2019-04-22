@@ -10,9 +10,9 @@ import { styleVal } from './propStyleTheme'
 // TODO make this better (configurable + granular)...
 export type PseudoStyleProps = {
   disablePseudoStyles?: boolean
-  hoverStyle?: CSSPropertySetStrict & { alpha?: number } | false | null
-  activeStyle?: CSSPropertySetStrict & { alpha?: number } | false | null
-  focusStyle?: CSSPropertySetStrict & { alpha?: number } | false | null
+  hoverStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
 }
 
 export const psuedoStyleTheme: ThemeFn = (a, b, c) => {

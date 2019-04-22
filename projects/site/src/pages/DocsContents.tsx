@@ -4,6 +4,7 @@ import React, { memo } from 'react'
 
 import { scrollTo } from '../etc/helpers'
 import { CodeBlock } from '../views/CodeBlock'
+import { Paragraph } from '../views/Paragraph'
 import { MetaSection } from './DocsPage'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
@@ -109,10 +110,9 @@ function PropsTable(props: { props: Object }) {
   const propRows = Object.keys(props.props)
     .reduce((acc, key) => {
       const { type, description, defaultValue, required, ...row } = props.props[key]
-      // discard
-      description
       acc.push({
         ...row,
+        description,
         type: type.name,
         'Default Value': defaultValue === null ? '' : defaultValue,
         required,
@@ -122,20 +122,25 @@ function PropsTable(props: { props: Object }) {
     .sort((a, b) => (a.required && !b.required ? -1 : 1))
   // overscan all for searchability
   return (
-    <>
+    <Col space>
       {propRows.map(row => (
-        <Col key={row.name}>
+        <Col space key={row.name}>
           <TitleRow pad bordered borderSize={2}>
             <Row space alignItems="center">
               <Tag alt="lightBlue">{row.name}</Tag>
-              <Tag alt="lightRed" size={0.9}>
+              <Tag alt="lightGreen" size={0.75}>
                 {row.type}
               </Tag>
+              {row.required && (
+                <Tag alt="lightRed" size={0.75}>
+                  Required
+                </Tag>
+              )}
             </Row>
           </TitleRow>
-          {JSON.stringify(row)}
+          {!!row.description && <Paragraph>{row.description}</Paragraph>}
         </Col>
       ))}
-    </>
+    </Col>
   )
 }

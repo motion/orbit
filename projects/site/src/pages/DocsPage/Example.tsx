@@ -9,7 +9,6 @@ export function Example({
   id,
   ...props
 }: SectionProps & { source: string; examples: any; id: string }) {
-  console.log(source, id)
   if (!source || !id) {
     return props.children || null
   }
@@ -31,11 +30,15 @@ function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
   const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
   const allLines = keyBlock.split('\n')
-  const lines = removeIndent(allLines.slice(1, allLines.length - 2))
-  return lines.join('\n')
+  const lines = indent(allLines.slice(1, allLines.length - 2)).join('\n')
+  return lines
+  //   return `export (
+  // ${lines}
+  // )`
 }
 
-const removeIndent = (lines: string[]) => {
+const indent = (lines: string[], space = 0) => {
   const spacePad = lines.reduce((a, b) => Math.min(a, b.search(/\S/)), 100)
-  return lines.map(line => line.slice(spacePad))
+  const whiteSpace = [...new Array(space)].map(() => ' ').join('')
+  return lines.map(line => `${whiteSpace}${line.slice(spacePad)}`)
 }

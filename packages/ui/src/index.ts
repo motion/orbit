@@ -1,5 +1,6 @@
 // until next hotkeys patches types
 import * as HotKeys from 'react-hotkeys'
+
 export const configureHotKeys = HotKeys['configure']
 
 export * from '@o/color'
@@ -156,6 +157,7 @@ export * from './SubSection'
 export * from './Surface'
 export * from './SVG'
 export * from './Tab'
+export * from './Tag'
 export * from './tables/createFilter'
 export * from './tables/ManagedTable'
 export * from './tables/Searchable'

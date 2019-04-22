@@ -24,7 +24,6 @@ export function Layout(props: any) {
   const siteStore = useSiteStore()
   const screen = useScreenSize()
   const sidebarWidth = 300
-
   const route = useCurrentRoute()
 
   window['SiteStore'] = siteStore
@@ -53,11 +52,11 @@ export function Layout(props: any) {
     )
   }, [])
 
-  const finishTransition = useCallback(() => {
-    if (siteStore.loadingTheme) {
-      siteStore.setTheme(siteStore.loadingTheme)
-    }
-  }, [])
+  // const finishTransition = useCallback(() => {
+  //   if (siteStore.loadingTheme) {
+  //     siteStore.setTheme(siteStore.loadingTheme)
+  //   }
+  // }, [])
 
   if (!siteStore.theme) {
     return null
@@ -86,7 +85,7 @@ export function Layout(props: any) {
       </Portal> */}
       <Theme name={siteStore.theme}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-        <PeekHeader />
+        <PeekHeader isActive={route.views.some(x => x.type.showPeekHeader)} />
         <View
           minHeight="100vh"
           minWidth="100vw"
@@ -149,7 +148,7 @@ function NotFound() {
   )
 }
 
-function PeekHeader() {
+function PeekHeader(props: { isActive?: boolean }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -183,6 +182,10 @@ function PeekHeader() {
       window.removeEventListener('scroll', onScroll)
     }
   }, [])
+
+  if (!props.isActive) {
+    return null
+  }
 
   return (
     <Theme name="home">

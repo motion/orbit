@@ -110,7 +110,11 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
-export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
+export function Header({
+  slim,
+  noBorder,
+  ...rest
+}: { slim?: boolean; noBorder?: boolean } & RowProps) {
   const size = useScreenSize()
   const theme = useTheme()
   const siteStore = useSiteStore()
@@ -165,7 +169,7 @@ export function Header({ slim, ...rest }: { slim?: boolean } & RowProps) {
           <LogoHorizontal slim />
           <LinkSection>{after}</LinkSection>
         </HeaderContain>
-        {theme.background.isLight() ? <BorderBottom opacity={0.5} /> : null}
+        {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
       </Row>
     )
   }

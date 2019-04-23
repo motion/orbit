@@ -229,49 +229,51 @@ export function HeadSection(props) {
                 />
               </FullScreen>
 
-              <View
-                position="absolute"
-                bottom="12%"
-                left={0}
-                right={0}
-                alignItems="center"
-                justifyContent="center"
-                height={160}
-              >
+              {false && (
                 <View
-                  height={160}
-                  margin={[0, 'auto']}
-                  width={200}
-                  position="relative"
+                  position="absolute"
+                  bottom="12%"
+                  left={0}
+                  right={0}
                   alignItems="center"
                   justifyContent="center"
+                  height={160}
                 >
-                  <Image
-                    position="absolute"
-                    top={0}
-                    transform={{ scale: 0.5 }}
-                    transformOrigin="top center"
-                    src={macbook}
-                  />
                   <View
-                    className="macbook-shadow"
-                    boxShadow={[[0, 20, 80, 10, '#000']]}
-                    zIndex={-1}
-                    position="absolute"
-                    top={10}
-                    left={0}
-                    right={0}
-                    bottom={10}
-                  />
-                  <RoundButton
-                    aria-label="See how Orbit Works"
-                    primary="#290C3C"
-                    padding={[10, 20]}
+                    height={160}
+                    margin={[0, 'auto']}
+                    width={200}
+                    position="relative"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    See how Orbit works
-                  </RoundButton>
+                    <Image
+                      position="absolute"
+                      top={0}
+                      transform={{ scale: 0.5 }}
+                      transformOrigin="top center"
+                      src={macbook}
+                    />
+                    <View
+                      className="macbook-shadow"
+                      boxShadow={[[0, 20, 80, 10, '#000']]}
+                      zIndex={-1}
+                      position="absolute"
+                      top={10}
+                      left={0}
+                      right={0}
+                      bottom={10}
+                    />
+                    <RoundButton
+                      aria-label="See how Orbit Works"
+                      primary="#290C3C"
+                      padding={[10, 20]}
+                    >
+                      See how Orbit works
+                    </RoundButton>
+                  </View>
                 </View>
-              </View>
+              )}
             </FullScreen>
           </FullScreen>
         </Page.Content>

@@ -214,9 +214,9 @@ export const LinkSection = gloss({
   maxWidth: 380,
   alignItems: 'center',
 
-  padding: [0, '3%', 0, 0],
+  padding: [0, '3%', 0, '1%'],
 
   alignRight: {
-    padding: [0, 0, 0, '3%'],
+    padding: [0, '1%', 0, '3%'],
   },
 })

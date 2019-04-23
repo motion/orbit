@@ -22,7 +22,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-28%',
+            y: '-12%',
           }}
           header={
             <>
@@ -31,7 +31,9 @@ export function ShoulderSection(props) {
               </FadeIn>
               <Space size="sm" />
               <FadeIn delay={50}>
-                <TitleText size="xxl">Private, serverless, easy.</TitleText>
+                <TitleText textAlign="center" size="xxl">
+                  Private, serverless, easy.
+                </TitleText>
               </FadeIn>
             </>
           }
@@ -125,7 +127,7 @@ export function ShoulderSection(props) {
       <Page.Parallax speed={0.2} zIndex={-2}>
         <FullScreen
           transform={{
-            y: '-35%',
+            y: '-20%',
           }}
         >
           <FullScreen

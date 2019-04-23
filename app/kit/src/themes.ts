@@ -159,6 +159,8 @@ const alternates: ThemeSet = {
       backgroundHover: theme.backgroundHover,
       backgroundFocus: theme.backgroundFocus,
       backgroundActive: theme.backgroundActive,
+      color: theme.color,
+      colorHover: theme.colorHover,
       glintColor: transparent,
       glintColorBottom: transparent,
       ...Theme.colorize({

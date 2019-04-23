@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 
@@ -110,90 +110,89 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
-export function Header({
-  slim,
-  noBorder,
-  ...rest
-}: { slim?: boolean; noBorder?: boolean } & RowProps) {
-  const size = useScreenSize()
-  const theme = useTheme()
-  const siteStore = useSiteStore()
+export const Header = memo(
+  ({ slim, noBorder, ...rest }: { slim?: boolean; noBorder?: boolean } & RowProps) => {
+    const size = useScreenSize()
+    const theme = useTheme()
+    const siteStore = useSiteStore()
 
-  let before = null
-  let after = null
+    let before = null
+    let after = null
 
-  if (size !== 'small') {
-    before = (
-      <LinkRow>
-        <LinksLeft />
-      </LinkRow>
-    )
-    after = (
-      <LinkRow>
-        <LinksRight />
-      </LinkRow>
-    )
-  } else {
-    after = (
-      <>
-        <View flex={1} />
-        <Button
-          color="#fff"
-          hoverStyle={{
-            color: '#fff',
-          }}
-          icon="menu"
-          iconSize={16}
-          size={2}
-          chromeless
-          transform={{
-            y: 0,
-            x: 18,
-          }}
-          onClick={siteStore.toggleSidebar}
-        />
-      </>
-    )
-  }
+    if (size !== 'small') {
+      before = (
+        <LinkRow>
+          <LinksLeft />
+        </LinkRow>
+      )
+      after = (
+        <LinkRow>
+          <LinksRight />
+        </LinkRow>
+      )
+    } else {
+      after = (
+        <>
+          <View flex={1} />
+          <Button
+            color="#fff"
+            hoverStyle={{
+              color: '#fff',
+            }}
+            icon="menu"
+            iconSize={16}
+            size={2}
+            chromeless
+            transform={{
+              y: 0,
+              x: 18,
+            }}
+            onClick={siteStore.toggleSidebar}
+          />
+        </>
+      )
+    }
 
-  if (slim) {
+    if (slim) {
+      return (
+        <Row
+          pointerEvents="auto"
+          background={theme.background.lighten(0.3)}
+          position="relative"
+          zIndex={1000000}
+          {...rest}
+        >
+          <HeaderContain height={42}>
+            <LinkSection alignRight>{before}</LinkSection>
+            <LogoHorizontal slim />
+            <LinkSection>{after}</LinkSection>
+          </HeaderContain>
+          {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
+        </Row>
+      )
+    }
+
     return (
       <Row
-        pointerEvents="auto"
-        background={theme.background.lighten(0.3)}
-        position="relative"
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={1000000}
+        alignItems="center"
+        justifyContent="space-around"
+        padding={[30, 0]}
         {...rest}
       >
-        <HeaderContain height={42}>
+        <HeaderContain>
           <LinkSection alignRight>{before}</LinkSection>
-          <LogoHorizontal slim />
+          <LogoHorizontal />
           <LinkSection>{after}</LinkSection>
         </HeaderContain>
-        {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
       </Row>
     )
-  }
-
-  return (
-    <Row
-      position="absolute"
-      top={0}
-      left={0}
-      right={0}
-      zIndex={100000}
-      alignItems="center"
-      justifyContent="space-around"
-      padding={['3.5vh', 0]}
-      {...rest}
-    >
-      <HeaderContain>
-        <LinkSection alignRight>{before}</LinkSection>
-        <LogoHorizontal />
-        <LinkSection>{after}</LinkSection>
-      </HeaderContain>
-    </Row>
-  )
-}
+  },
+)
 
 export const HeaderContain = props => {
   return (

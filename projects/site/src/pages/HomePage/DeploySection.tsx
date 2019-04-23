@@ -14,7 +14,7 @@ import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent } from './SpacedPageContent'
 
-const Para = props => <Paragraph sizeLineHeight={1.15} size={1.2} alpha={0.65} {...props} />
+const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.8} {...props} />
 
 export function ShoulderSection(props) {
   return (

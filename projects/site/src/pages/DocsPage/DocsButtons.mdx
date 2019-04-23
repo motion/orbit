@@ -1,22 +1,31 @@
 import * as Ex from './DocsButtons'
+import ExSource from '!raw-loader!./DocsButtons'
 import { Example } from './Example'
 
 A `<Button />` is a simple extension of a `<Surface />`.
+
+```tsx
+import { Button } from '@o/ui'
+```
 
 ## Examples
 
 ### Basics
 
-<Example>{Ex.One}</Example>
+<Example examples={Ex} source={ExSource} id="Basic" />
 
 ### Alternates
 
-<Example>{Ex.Two}</Example>
+<Example examples={Ex} source={ExSource} id="Alternates" />
 
 ### Sizing (Preset)
 
-<Example>{Ex.Three}</Example>
+<Example examples={Ex} source={ExSource} id="Sizing" />
+
+### Grouping
+
+<Example examples={Ex} source={ExSource} id="Group" />
 
 ### Elevation + Sizing (Absolute)
 
-<Example>{Ex.Four}</Example>
+<Example examples={Ex} source={ExSource} id="Elevation" />

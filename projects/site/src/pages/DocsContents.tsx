@@ -1,9 +1,10 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Card, Icon, Row, Section, Space, SurfacePassProps, Table } from '@o/ui'
+import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, TitleRow } from '@o/ui'
 import React, { memo } from 'react'
 
 import { scrollTo } from '../etc/helpers'
 import { CodeBlock } from '../views/CodeBlock'
+import { Paragraph } from '../views/Paragraph'
 import { MetaSection } from './DocsPage'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
@@ -88,32 +89,17 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
 
       <MetaSection>
         {!!types && (
-          <Card
-            background={theme => theme.background.alpha(0.1)}
-            collapsable
-            collapseOnClick
-            title="Props"
-            scrollable="y"
-            id="component-props"
-          >
+          <Section size="sm" titleBorder title="Props" id="component-props">
             <PropsTable props={types.props} />
-          </Card>
+          </Section>
         )}
 
         <Space size="xl" />
 
         {!!source && (
-          <Card
-            background={theme => theme.background.alpha(0.1)}
-            collapsable
-            collapseOnClick
-            title={`View ${title} Source`}
-            maxHeight={650}
-            scrollable="y"
-            id="component-source"
-          >
+          <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
             <CodeBlock className="language-typescript">{source}</CodeBlock>
-          </Card>
+          </Section>
         )}
       </MetaSection>
     </Section>
@@ -121,26 +107,40 @@ export const DocsContents = memo(({ title, source, children, types }: any) => {
 })
 
 function PropsTable(props: { props: Object }) {
-  const propRows = Object.keys(props.props).reduce((acc, key) => {
-    const { type, description, defaultValue, required, ...row } = props.props[key]
-    // discard
-    description
-    acc.push({
-      ...row,
-      type: type.name,
-      'Default Value': defaultValue === null ? '' : defaultValue,
-      required,
-    })
-    return acc
-  }, [])
+  const propRows = Object.keys(props.props)
+    .reduce((acc, key) => {
+      const { type, description, defaultValue, required, ...row } = props.props[key]
+      acc.push({
+        ...row,
+        description,
+        type: type.name,
+        'Default Value': defaultValue === null ? '' : defaultValue,
+        required,
+      })
+      return acc
+    }, [])
+    .sort((a, b) => (a.required && !b.required ? -1 : 1))
   // overscan all for searchability
   return (
-    <Table
-      overscanCount={100}
-      sortOrder={{ key: 'name', direction: 'down' }}
-      maxHeight={750}
-      height={Object.keys(props.props).length * 23}
-      rows={propRows}
-    />
+    <Col space>
+      {propRows.map(row => (
+        <Col space key={row.name}>
+          <TitleRow pad bordered borderSize={2}>
+            <Row space alignItems="center">
+              <Tag alt="lightBlue">{row.name}</Tag>
+              <Tag alt="lightGreen" size={0.75}>
+                {row.type}
+              </Tag>
+              {row.required && (
+                <Tag alt="lightRed" size={0.75}>
+                  Required
+                </Tag>
+              )}
+            </Row>
+          </TitleRow>
+          {!!row.description && <Paragraph>{row.description}</Paragraph>}
+        </Col>
+      ))}
+    </Col>
   )
 }

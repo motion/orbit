@@ -12,18 +12,20 @@ export const Overdrive = ({
   easing?: string
   element?: string
   style?: Object
-}) => (
-  <ReactOverdrive
-    style={{
-      zIndex: 10000000,
-      display: 'flex',
-      flexDirection: 'inherit',
-      flexWrap: 'inherit',
-      flexGrow: 'inherit',
-      alignItems: 'inherit',
-      justifyContent: 'inherit',
-      ...style,
-    }}
-    {...props}
-  />
-)
+}) =>
+  // disable for now
+  props.children || (
+    <ReactOverdrive
+      style={{
+        zIndex: 10000000,
+        display: 'flex',
+        flexDirection: 'inherit',
+        flexWrap: 'inherit',
+        flexGrow: 'inherit',
+        alignItems: 'inherit',
+        justifyContent: 'inherit',
+        ...style,
+      }}
+      {...props}
+    />
+  )

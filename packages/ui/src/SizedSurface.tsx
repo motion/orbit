@@ -1,5 +1,6 @@
 import { mergeDefined } from '@o/utils'
 import React from 'react'
+
 import { useScale } from './Scale'
 import { getSize } from './Sizes'
 import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
@@ -7,12 +8,22 @@ import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './
 const LINE_HEIGHT = 29
 
 export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
-  flex?: any
+  /** Controlled height, relative adjusted to size */
   sizeHeight?: boolean | number
+
+  /** Controlled font size, relative adjusted to size */
   sizeFont?: boolean | number
+
+  /** Controlled horizontal padding, relative adjusted to size */
   sizePadding?: boolean | number
+
+  /** Controlled margin, relative adjusted to size */
   sizeMargin?: boolean | number
+
+  /** Controlled border radius size, relative adjusted to size */
   sizeRadius?: boolean | number
+
+  /** Controlled icon size, relative adjusted to size */
   sizeIcon?: boolean | number
 }
 
@@ -21,13 +32,15 @@ export type SizedSurfaceProps = SurfaceProps & SizedSurfaceSpecificProps
 export const sizeProps = ['sizeHeight', 'sizeFont', 'sizePadding', 'sizeRadius', 'sizeIcon']
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
+const clampRound = (x: number) => Math.round(x * 100) / 100
 
-export const getSizedRadius = (size: number, sizeRadius: number | true) =>
-  Math.round(num(sizeRadius) * 7 * size)
+export const getSizedRadius = (size: number, sizeRadius: number | true) => {
+  return clampRound(num(sizeRadius) * 6 * size)
+}
 
 // always return even so things center
 const getHeight = (size: number, sizeHeight: number | boolean) => {
-  const height = Math.round(LINE_HEIGHT * num(sizeHeight) * size)
+  const height = clampRound(LINE_HEIGHT * num(sizeHeight) * size)
   return height % 2 === 1 ? height : height + 1
 }
 
@@ -51,25 +64,25 @@ export function SizedSurface(direct: SizedSurfaceProps) {
     typeof props.height === 'number'
       ? props.height
       : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
-  let iconPad = Math.round(LINE_HEIGHT * 0.3 * num(sizeHeight || 1))
+  let iconPad = clampRound(LINE_HEIGHT * 0.22 * num(sizeHeight || 1))
   const pass = {} as any
   if (sizeHeight) {
     pass.height = height
   }
   if (sizeFont) {
     const fontSize = LINE_HEIGHT * 0.45 * num(sizeFont) * size
-    pass.fontSize = Math.round(fontSize)
+    pass.fontSize = clampRound(fontSize)
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const topPad = sizeHeight ? 0 : Math.round(padSize * 1.5)
-    const sidePad = Math.round(9 * padSize)
+    const topPad = sizeHeight ? 0 : clampRound(padSize * 1.5)
+    const sidePad = clampRound(9 * padSize)
     pass.padding = [topPad, sidePad]
     iconPad = iconPad * padSize
   }
   if (sizeMargin) {
     const margin = num(sizeMargin) * 0.25 * size
-    pass.margin = Math.round(margin)
+    pass.margin = clampRound(margin)
   }
   if (sizeRadius) {
     pass.borderRadius = getSizedRadius(size, sizeRadius)
@@ -80,7 +93,7 @@ export function SizedSurface(direct: SizedSurfaceProps) {
   }
   // clamp radius to max, because we use it for Glint/Hoverglow in Surface and they need actual radius
   if (pass.borderRadius && typeof height === 'number') {
-    pass.borderRadius = Math.round(Math.min(height / 2, pass.borderRadius))
+    pass.borderRadius = clampRound(Math.min(height / 2, pass.borderRadius))
   }
   // icon already tracks height so no need to size it from here
   if (sizeIcon) {

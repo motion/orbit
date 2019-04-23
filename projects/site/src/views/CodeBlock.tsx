@@ -1,24 +1,21 @@
+import './duotone-dark.css'
+
 import { gloss } from '@o/ui'
-import Highlight, { defaultProps } from 'prism-react-renderer'
+import { javascript, tsx } from 'illuminate-js/lib/languages'
 import React from 'react'
+import { Illuminate } from 'react-Illuminate'
+
+Illuminate.addLanguage('js', javascript)
+Illuminate.addLanguage('tsx', tsx)
 
 export function CodeBlock(props) {
-  const language = props.className.replace('language-', '')
+  // const language = props.language || 'tsx'
+  // console.log('props.language', props.language)
   return (
     <CodeBlockChrome>
-      <Highlight {...defaultProps} code={props.children.trim()} language={language}>
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className} style={{ ...style, padding: '20px' }}>
-            {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </pre>
-        )}
-      </Highlight>
+      <Illuminate lineNumbers lang="tsx">
+        {props.children.trim()}
+      </Illuminate>
     </CodeBlockChrome>
   )
 }

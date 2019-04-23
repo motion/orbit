@@ -20,7 +20,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const PreloadWebpackPlugin = require('preload-webpack-plugin')
 // const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
-const RehypePrism = require('@mapbox/rehype-prism')
+// const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -290,9 +290,9 @@ async function makeConfig() {
             'babel-loader',
             {
               loader: '@mdx-js/loader',
-              options: {
-                rehypePlugins: [RehypePrism],
-              },
+              // options: {
+              //   rehypePlugins: [RehypePrism],
+              // },
             },
           ],
         },

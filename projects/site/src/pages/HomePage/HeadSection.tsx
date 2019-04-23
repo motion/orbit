@@ -12,6 +12,7 @@ import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn, fadeUpProps } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
+import { SectionContent } from '../../views/SectionContent'
 import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
@@ -25,15 +26,15 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'The decentralized app platform.',
-  medium: 'Amazingly easy internal apps.',
-  small: 'Amazing internal apps.',
+  large: 'Apps without servers',
+  medium: 'Apps without servers',
+  small: 'Apps without servers',
 }
 
 let allTexts = {
   large: [
-    `Create apps your team, or anyone, can use without setting up a server.`,
-    `Runs entirely behind the firewall, and makes common internal apps easy.`,
+    `Create powerful internal apps your team can use without setting up a server.`,
+    `It's the desktop app platform for internal tools & more.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -43,7 +44,7 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `How Orbit makes creating common apps easy, with just lines of code.`,
+  large: `The five ways Orbit saves you more time.`,
   medium: `Learn how Orbit makes common apps easy.`,
   small: `Learn how.`,
 }
@@ -106,7 +107,7 @@ function HeadText() {
           transformOrigin="top left"
           margin={[0, 'auto']}
           textAlign="center"
-          alpha={0.6}
+          alpha={0.8}
           whiteSpace="nowrap"
         >
           <FadeIn disable={!measured} delay={150}>
@@ -228,49 +229,51 @@ export function HeadSection(props) {
                 />
               </FullScreen>
 
-              <View
-                position="absolute"
-                bottom="12%"
-                left={0}
-                right={0}
-                alignItems="center"
-                justifyContent="center"
-                height={160}
-              >
+              {false && (
                 <View
-                  height={160}
-                  margin={[0, 'auto']}
-                  width={200}
-                  position="relative"
+                  position="absolute"
+                  bottom="12%"
+                  left={0}
+                  right={0}
                   alignItems="center"
                   justifyContent="center"
+                  height={160}
                 >
-                  <Image
-                    position="absolute"
-                    top={0}
-                    transform={{ scale: 0.5 }}
-                    transformOrigin="top center"
-                    src={macbook}
-                  />
                   <View
-                    className="macbook-shadow"
-                    boxShadow={[[0, 20, 80, 10, '#000']]}
-                    zIndex={-1}
-                    position="absolute"
-                    top={10}
-                    left={0}
-                    right={0}
-                    bottom={10}
-                  />
-                  <RoundButton
-                    aria-label="See how Orbit Works"
-                    primary="#290C3C"
-                    padding={[10, 20]}
+                    height={160}
+                    margin={[0, 'auto']}
+                    width={200}
+                    position="relative"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    See how Orbit works
-                  </RoundButton>
+                    <Image
+                      position="absolute"
+                      top={0}
+                      transform={{ scale: 0.5 }}
+                      transformOrigin="top center"
+                      src={macbook}
+                    />
+                    <View
+                      className="macbook-shadow"
+                      boxShadow={[[0, 20, 80, 10, '#000']]}
+                      zIndex={-1}
+                      position="absolute"
+                      top={10}
+                      left={0}
+                      right={0}
+                      bottom={10}
+                    />
+                    <RoundButton
+                      aria-label="See how Orbit Works"
+                      primary="#290C3C"
+                      padding={[10, 20]}
+                    >
+                      See how Orbit works
+                    </RoundButton>
+                  </View>
                 </View>
-              </View>
+              )}
             </FullScreen>
           </FullScreen>
         </Page.Content>
@@ -284,22 +287,24 @@ export function HeadSection(props) {
 
         {IS_CHROME && (
           <Page.Parallax speed={0.2} zIndex={-2}>
-            <View
-              pointerEvents="none"
-              position="absolute"
-              top="45%"
-              left={0}
-              right={0}
-              overflow="hidden"
-              bottom={60}
-              zIndex={1}
-              opacity={0.45}
-              transform={{
-                scale: 1.3,
-              }}
-            >
-              <img src={glow} />
-            </View>
+            <SectionContent position="relative" flex={1}>
+              <View
+                pointerEvents="none"
+                position="absolute"
+                top="45%"
+                left={0}
+                right={0}
+                overflow="hidden"
+                bottom={60}
+                zIndex={1}
+                opacity={0.35}
+                transform={{
+                  scale: 1.5,
+                }}
+              >
+                <img src={glow} />
+              </View>
+            </SectionContent>
           </Page.Parallax>
         )}
 

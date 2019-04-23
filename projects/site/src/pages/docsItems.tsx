@@ -42,11 +42,13 @@ const uikit = [
     selectable: false,
     hideBorder: true,
     children: (
-      <ListSubTitle marginTop={40} marginBottom={-15}>
+      <ListSubTitle marginTop={40} marginBottom={0}>
         User Interface
       </ListSubTitle>
     ),
   },
+  { id: 'ui-intro', title: 'User Interface Introduction', ...titleItem },
+
   { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
   { id: 'tables', title: 'Tables', icon: 'th' },
   { id: 'tree', title: 'Tree', icon: 'diagram-tree' },

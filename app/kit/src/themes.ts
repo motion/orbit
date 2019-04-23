@@ -11,7 +11,7 @@ export const colors = {
   darkOrange: '#9F4604',
   blue: '#3E7FD5',
   darkBlue: '#0E3D7B',
-  lightBlue: '#B0C6E3',
+  lightBlue: '#CBDFFA',
   red: '#c80000',
   lightRed: '#FFB0B0',
   darkRed: '#A12727',
@@ -232,10 +232,10 @@ const light = {
   }),
 }
 
-const darkColor = [250, 250, 250]
+const darkColor = [255, 255, 255]
 const darkBackground = toColor([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
-const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
+const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 
 const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes translucent

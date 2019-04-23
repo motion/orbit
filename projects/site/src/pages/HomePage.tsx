@@ -53,3 +53,4 @@ export function HomePage() {
 }
 
 HomePage.theme = 'home'
+HomePage.showPeekHeader = true

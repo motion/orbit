@@ -3,15 +3,13 @@ import { selectDefined } from '@o/utils'
 import React, { forwardRef, useContext } from 'react'
 
 import { UIContext } from '../helpers/contexts'
-import { IconProps } from '../Icon'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
+    /** force button not to apply hover styles */
     ignoreHover?: boolean
-    iconProps?: Partial<IconProps>
-    someNewProp?: string
   }
 
 const glowProps = {

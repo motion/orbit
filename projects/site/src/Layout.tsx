@@ -1,7 +1,8 @@
 import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
@@ -12,33 +13,26 @@ import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
 
+let updateLayout = null
+
 export const setThemeForPage = (name: string) => {
   localStorage.setItem(`theme-${window.location.pathname.split('/')[1]}`, name)
+  updateLayout()
 }
 
 export const getThemeForPage = () =>
   localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
 
 export function Layout(props: any) {
+  const forceUpdate = useForceUpdate()
+  updateLayout = forceUpdate
   const loadingRoute = useLoadingRoute()
   const siteStore = useSiteStore()
   const screen = useScreenSize()
   const sidebarWidth = 300
-
   const route = useCurrentRoute()
 
   window['SiteStore'] = siteStore
-
-  useEffect(() => {
-    if (route && route.views[0]) {
-      const theme = getThemeForPage() || route.views[0].type.theme
-
-      // change theme
-      if (theme && theme !== siteStore.theme) {
-        siteStore.setLoadingTheme(theme)
-      }
-    }
-  }, [route])
 
   useEffect(() => {
     siteStore.screenSize = screen
@@ -53,16 +47,6 @@ export function Layout(props: any) {
     )
   }, [])
 
-  const finishTransition = useCallback(() => {
-    if (siteStore.loadingTheme) {
-      siteStore.setTheme(siteStore.loadingTheme)
-    }
-  }, [])
-
-  if (!siteStore.theme) {
-    return null
-  }
-
   const linkProps = {
     width: '100%',
     padding: 20,
@@ -74,19 +58,19 @@ export function Layout(props: any) {
   }
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
+  const curView = route.views.find(x => x.type && x.type.theme)
+  const theme = getThemeForPage() || (curView && curView.type.theme) || 'home'
+  console.log('theme', theme)
+
+  useLayoutEffect(() => {
+    document.body.style.background = themes[theme].background.toCSS()
+  }, [theme])
 
   return (
     <ProvideUI themes={themes}>
-      {/* <Portal prepend style={{ top: 0, left: 0, position: 'fixed', zIndex: 10000000000 }}>
-        <ThemeTransition
-          shouldAnimate={!!siteStore.loadingTheme}
-          background={themes[siteStore.loadingTheme || siteStore.theme].background}
-          onTransitionEnd={finishTransition}
-        />
-      </Portal> */}
-      <Theme name={siteStore.theme}>
+      <Theme name={theme}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
-        <PeekHeader />
+        <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"
           minWidth="100vw"
@@ -149,7 +133,7 @@ function NotFound() {
   )
 }
 
-function PeekHeader() {
+function PeekHeader(props: { isActive?: boolean }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -184,6 +168,10 @@ function PeekHeader() {
     }
   }, [])
 
+  if (!props.isActive) {
+    return null
+  }
+
   return (
     <Theme name="home">
       <FullScreen
@@ -200,24 +188,3 @@ function PeekHeader() {
     </Theme>
   )
 }
-
-// const ThemeTransition = gloss<ColProps & { shouldAnimate?: boolean }>(Col, {
-//   zIndex: 10000000000,
-//   width: '200vw',
-//   height: '200vh',
-//   poisition: 'fixed',
-//   top: 0,
-//   left: 0,
-//   transition: 'all ease 300ms',
-//   opacity: 0,
-//   transformOrigin: 'top left',
-//   transform: {
-//     rotate: '-90deg',
-//   },
-//   shouldAnimate: {
-//     opacity: 1,
-//     transform: {
-//       rotate: '0deg',
-//     },
-//   },
-// })

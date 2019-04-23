@@ -15,9 +15,10 @@ import { View } from './View/View'
 export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   size?: Sizes
   icon?: React.ReactNode
-  title: React.ReactNode
+  title?: React.ReactNode
   before?: React.ReactNode
   bordered?: boolean
+  borderSize?: number
   after?: React.ReactNode
   above?: React.ReactNode
   below?: React.ReactNode
@@ -26,6 +27,7 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   subTitle?: React.ReactNode
   margin?: number | number[]
   unpad?: boolean
+  children?: React.ReactNode
 }
 
 export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
@@ -33,6 +35,7 @@ export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
 export const TitleRow = forwardRef(function TitleRow(
   {
     before,
+    borderSize = 1,
     bordered,
     after,
     size = 'md',
@@ -46,10 +49,21 @@ export const TitleRow = forwardRef(function TitleRow(
     collapsable,
     collapsed,
     onCollapse,
+    children,
     ...rowProps
   }: TitleRowProps,
   ref,
 ) {
+  const titleElement =
+    !!title &&
+    (isValidElement(title) ? (
+      title
+    ) : (
+      <Title size={size} selectable ellipse>
+        {title}
+      </Title>
+    ))
+
   return (
     <TitleRowChrome
       background={backgrounded ? theme => theme.backgroundZebra : null}
@@ -74,17 +88,12 @@ export const TitleRow = forwardRef(function TitleRow(
         ) : (
           icon || null
         )}
-        <View flex={1}>
-          {isValidElement(title) ? (
-            title
-          ) : (
-            <Title size={size} ellipse>
-              {title}
-            </Title>
-          )}
+        <View flex={1} alignItems="flex-start">
+          {titleElement}
+          {children}
           {!!subTitle && (
             <>
-              <SubTitle ellipse marginBottom={0}>
+              <SubTitle selectable ellipse marginBottom={0}>
                 {subTitle}
               </SubTitle>
             </>
@@ -93,7 +102,14 @@ export const TitleRow = forwardRef(function TitleRow(
         {after}
       </Row>
       {below}
-      {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
+      {bordered && (
+        <BorderBottom
+          height={borderSize}
+          left={10 * sizePadding}
+          right={10 * sizePadding}
+          opacity={0.5}
+        />
+      )}
     </TitleRowChrome>
   )
 })

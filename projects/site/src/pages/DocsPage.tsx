@@ -22,7 +22,9 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation } from '../SiteRoot'
+import { getThemeForPage, setThemeForPage } from '../Layout'
+import { Navigation } from '../Navigation'
+import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -75,7 +77,7 @@ export default compose(
   withView(async () => {
     return (
       <DocsPage>
-        <View />
+        <View disableScrolling={recentHMR} />
       </DocsPage>
     )
   }),
@@ -202,7 +204,7 @@ const DocsPage = memo((props: { children?: any }) => {
               ref={inputRef}
               onChange={e => setSearch(e.target.value)}
               sizeRadius={10}
-              size="xl"
+              size="lg"
               iconSize={16}
               maxWidth="calc(60% - 20px)"
               flex={1}
@@ -217,7 +219,7 @@ const DocsPage = memo((props: { children?: any }) => {
               }}
               after={
                 !isSmall && (
-                  <Button tooltip="Shortcut: t" size="sm" alt="flat" fontWeight={600}>
+                  <Button tooltip="Shortcut: t" size="xs" alt="flat" fontWeight={600}>
                     t
                   </Button>
                 )
@@ -276,14 +278,12 @@ const DocsPage = memo((props: { children?: any }) => {
               justifyContent="flex-start"
               flexFlow="row"
             >
-              <SurfacePassProps circular iconSize={12}>
+              <SurfacePassProps size={1.2} circular iconSize={12}>
                 <Row space="xs">
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
-                    onClick={() =>
-                      siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
-                    }
+                    onClick={() => setThemeForPage(getThemeForPage() === 'home' ? 'light' : 'home')}
                   />
                   {isSmall && (
                     <RoundButton

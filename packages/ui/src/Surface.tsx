@@ -1,4 +1,4 @@
-import { ColorLike, CSSPropertySet, CSSPropertySetStrict, px } from '@o/css'
+import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import Gloss, { Col, ColProps, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
@@ -26,49 +26,109 @@ import { ViewProps } from './View/View'
 // they basically can control a prefix/postfix icon, and a few other bells
 
 export type SurfaceSpecificProps = {
+  /** Inside uses a shadow instead of border for finder borders */
   borderPosition?: 'inside' | 'outside'
+
+  /** Force focus state on */
   focus?: boolean
+
+  /** Force hover state on */
   hover?: boolean
+
+  /** Force active state on  */
   active?: boolean
+
+  /** Ellipse text used inside children of surface */
   ellipse?: boolean
+
+  /** Element before surface elements */
   before?: React.ReactNode
+
+  /** Element after surface elements */
   after?: React.ReactNode
+
+  /** Add a badge to surface, see <Badge /> */
   badge?: React.ReactNode
+
+  /** Extra props for badge */
   badgeProps?: Object
+
+  /** Button children / text */
   children?: React.ReactNode
+
+  /** Name for surface  */
   name?: string
+
+  /** Removes background, border, glint styles */
   chromeless?: boolean
+
+  /** Forces surface into circle shape */
   circular?: boolean
-  clickable?: boolean
+
+  /** Add extra props to the inner element  */
   elementProps?: Object
+
+  /** Pass a ref to the outer html element */
   forwardRef?: React.Ref<any>
+
+  /** Props for <Glint />, shown at bottom of surface */
   glintBottom?: boolean
+
+  /** Props for <Glint />, shown at top of surface */
   glint?: boolean
+
+  /** Add a <HoverGlow /> to the surface */
   glow?: boolean
+
+  /** Add <HoverGlwo /> props if glow enabled */
   glowProps?: Object
-  highlight?: boolean
+
+  /** Add a <HoverGlow /> to the surface */
   hovered?: boolean
+
+  /** Name for <Icon /> element, or custom element */
   icon?: React.ReactNode
+
+  /** Show icon after text */
   iconAfter?: boolean
+
+  /** Set icon color separately */
   iconColor?: ColorLike
+
+  /** Extra props for <Icon /> element */
   iconProps?: Partial<IconProps>
+
+  /** Set icon size separately */
   iconSize?: number
+
+  /** Avoid adding the inner element: will prevent icons from working */
   noInnerElement?: boolean
+
+  /** Size of the surface */
   size?: Sizes
+
+  /** Size (relative) of the icon */
   sizeIcon?: number
-  spaced?: boolean
-  stretch?: boolean
+
   theme?: Gloss.ThemeObject | string
+
+  /** Adds a <Tooltip /> on the surface */
   tooltip?: React.ReactNode
+
+  /** Extra props for the <Tooltip /> */
   tooltipProps?: PopoverProps
+
   width?: number | string
+
+  /** Text alpha */
   alpha?: number
+
+  /** Text alpha on hover */
   alphaHover?: number
+
+  /** Force disabled state of surface */
   disabled?: boolean
-  placeholderColor?: ColorLike
-  highlightBackground?: ColorLike
-  highlightColor?: ColorLike
-  ignoreSegment?: boolean
+
   type?: string
   themeSelect?: Gloss.ThemeSelect
   iconPad?: number
@@ -153,16 +213,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
-  const segmentedStyle = getSegmentedStyle(
-    { borderRadius: +props.borderRadius, ignoreSegment: props.ignoreSegment },
-    crumb,
-  )
+  const segmentedStyle = getSegmentedStyle(props, crumb)
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
   const throughProps: ThroughProps = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
+    iconPad: typeof iconPad === 'number' ? iconPad : size * 8,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -462,9 +519,9 @@ const Element = gloss<
     whiteSpace: 'nowrap',
   },
 }).theme(props => {
-  const padX = px(selectDefined(props.surfacePadX, 0))
-  const iconSize = getIconSize(props)
-  const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
+  // const padX = px(selectDefined(props.surfacePadX, 0))
+  // const iconSize = getIconSize(props)
+  // const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
   const style: CSSPropertySet = {}
   // spacing between icon
   const hasIconBefore = props.hasIcon && !props.iconAfter
@@ -477,15 +534,16 @@ const Element = gloss<
   }
   return {
     ...props,
-    maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
+    // maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
     ...style,
   }
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size =
-    getSize(props.size) * (props.height ? +props.height * 0.15 + 5 : 12) * (props.sizeIcon || 1)
-  return props.iconSize || Math.round(size * 100) / 100
+  if (isDefined(props.iconSize)) return props.iconSize
+  const iconSize = props.height ? +props.height * 0.15 + 5 : 12
+  const size = getSize(props.size) * iconSize * (props.sizeIcon || 1)
+  return Math.round(size * 100) / 100
 }
 
 const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {

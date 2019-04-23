@@ -52,7 +52,7 @@ export function ChestSection(props) {
               </FadeIn>
               <Space size="xs" />
               <FadeIn delay={100}>
-                <TitleText size="lg">Data, meet app.</TitleText>
+                <TitleText size="xxl">Data, meet app.</TitleText>
               </FadeIn>
               <TitleTextSub alpha={0.9} size="md">
                 <FadeIn delay={200}>The platform where apps know how to talk to each other.</FadeIn>
@@ -60,8 +60,6 @@ export function ChestSection(props) {
               <TitleTextSub size="xs">
                 <FadeIn delay={300}>
                   Every Orbit app exposes a single typed API and syncs data into a standard format.
-                  They&nbsp;understand handling credentials, and install with a click to your
-                  workspace.
                 </FadeIn>
               </TitleTextSub>
             </>

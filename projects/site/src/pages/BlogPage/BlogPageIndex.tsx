@@ -1,6 +1,7 @@
 import { gloss, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navi'
+
 import { TitleText } from '../../views/TitleText'
 import { purpleWave } from '../HomePage/EarlyAccessBetaSection'
 import { BlogLayout } from './BlogLayout'
@@ -29,7 +30,7 @@ export function BlogPageIndex() {
           }}
           cursor="pointer"
           hoverStyle={{
-            background: '#eee',
+            background: '#f9f9f9',
           }}
         >
           <TitleText color={purpleWave.backgroundColor} selectable={false} textAlign="left">

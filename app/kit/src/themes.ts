@@ -232,7 +232,7 @@ const light = {
   }),
 }
 
-const darkColor = [250, 250, 250]
+const darkColor = [255, 255, 255]
 const darkBackground = toColor([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])

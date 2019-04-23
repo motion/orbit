@@ -25,9 +25,9 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Powerful apps, no config.',
-  medium: 'Amazingly easy internal apps.',
-  small: 'Amazing internal apps.',
+  large: 'Apps without servers',
+  medium: 'Apps without servers',
+  small: 'Apps without servers',
 }
 
 let allTexts = {

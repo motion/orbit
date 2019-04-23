@@ -1,23 +1,12 @@
 import { createStoreContext, react } from '@o/use-store'
 
-import { getThemeForPage, setThemeForPage } from './Layout'
-import { themes } from './themes'
-
 class SiteStore {
-  theme = getThemeForPage() || 'home'
   loadingTheme = null
   screenSize = 'large'
   maxHeight = null
   showSidebar = false
 
   windowHeight = window.innerHeight
-
-  bodyBackground = react(
-    () => this.theme,
-    theme => {
-      document.body.style.background = themes[theme].background.toCSS()
-    },
-  )
 
   ensureDontGetStuckLoadingTheme = react(
     () => this.loadingTheme,
@@ -31,16 +20,6 @@ class SiteStore {
 
   toggleSidebar = () => {
     this.showSidebar = !this.showSidebar
-  }
-
-  setLoadingTheme = (name: string) => {
-    this.loadingTheme = name
-    setThemeForPage(name)
-  }
-
-  setTheme = (name: string) => {
-    this.loadingTheme = null
-    this.theme = name
   }
 
   setMaxHeight = (val: any) => {

@@ -29,17 +29,6 @@ export function Layout(props: any) {
   window['SiteStore'] = siteStore
 
   useEffect(() => {
-    if (route && route.views[0]) {
-      const theme = getThemeForPage() || route.views[0].type.theme
-
-      // change theme
-      if (theme && theme !== siteStore.theme) {
-        siteStore.setLoadingTheme(theme)
-      }
-    }
-  }, [route])
-
-  useEffect(() => {
     siteStore.screenSize = screen
   }, [screen])
 
@@ -58,10 +47,6 @@ export function Layout(props: any) {
   //   }
   // }, [])
 
-  if (!siteStore.theme) {
-    return null
-  }
-
   const linkProps = {
     width: '100%',
     padding: 20,
@@ -73,17 +58,12 @@ export function Layout(props: any) {
   }
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
+  const curView = route.views.find(x => x.type && x.type.theme)
+  console.log('curView', curView)
 
   return (
     <ProvideUI themes={themes}>
-      {/* <Portal prepend style={{ top: 0, left: 0, position: 'fixed', zIndex: 10000000000 }}>
-        <ThemeTransition
-          shouldAnimate={!!siteStore.loadingTheme}
-          background={themes[siteStore.loadingTheme || siteStore.theme].background}
-          onTransitionEnd={finishTransition}
-        />
-      </Portal> */}
-      <Theme name={siteStore.theme}>
+      <Theme name={(curView && curView.type.theme) || 'home'}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View

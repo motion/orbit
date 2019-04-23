@@ -37,7 +37,7 @@ export const SiteRoot = hot(() => {
         key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
         navigation={Navigation}
       >
-        <Layout key={0}>
+        <Layout>
           <Suspense fallback={null}>
             <View disableScrolling={recentHMR} hashScrollBehavior="smooth" />
           </Suspense>

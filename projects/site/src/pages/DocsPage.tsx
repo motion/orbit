@@ -299,7 +299,7 @@ const DocsPage = memo((props: { children?: any }) => {
         </ListShortcuts>
       </Portal>
       <Portal prepend>
-        <Header slim />
+        <Header slim noBorder />
       </Portal>
       <Portal>
         <FixedLayout isSmall={isSmall} className="mini-scrollbars">
@@ -336,7 +336,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-DocsPage.theme = 'light'
+DocsPage.theme = 'home'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',

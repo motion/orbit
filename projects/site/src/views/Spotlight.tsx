@@ -16,7 +16,7 @@ export const Spotlight = () => {
           height={siteStore.sectionHeight}
           className="spotlight"
           zIndex={10}
-          background={`radial-gradient(circle farthest-side, transparent 40%, ${theme.background})`}
+          background={`radial-gradient(circle farthest-side, transparent 60%, ${theme.background})`}
         />
         <Right />
       </Row>

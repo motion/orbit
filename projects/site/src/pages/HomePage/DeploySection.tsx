@@ -1,5 +1,6 @@
 import { Col, FullScreen, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
+
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
@@ -30,7 +31,7 @@ export function ShoulderSection(props) {
               </FadeIn>
               <Space size="sm" />
               <FadeIn delay={50}>
-                <TitleText size="lg">The worlds fastest idea-to-deploy.</TitleText>
+                <TitleText size="xxl">Private, serverless, easy.</TitleText>
               </FadeIn>
             </>
           }
@@ -124,12 +125,12 @@ export function ShoulderSection(props) {
       <Page.Parallax speed={0.2} zIndex={-2}>
         <FullScreen
           transform={{
-            y: '-18%',
+            y: '-35%',
           }}
         >
           <FullScreen
             className="orbits-bg"
-            opacity={0.14}
+            opacity={0.18}
             backgroundImage={`url(${background})`}
             backgroundSize="cover"
             backgroundPosition="center center"

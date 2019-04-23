@@ -3,6 +3,7 @@ import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn,
 import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
+
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
@@ -10,6 +11,7 @@ import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
+import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
@@ -206,13 +208,15 @@ export function NeckSection(props) {
         <SpacedPageContent
           header={
             <>
+              <PillButton>How</PillButton>
               <FadeIn delay={100} intersection="20px">
-                <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Everything you need.</TitleText>
               </FadeIn>
               <TitleTextSub width="87%" margin="auto" minWidth={320}>
                 <FadeIn delay={200} intersection="20px">
-                  Orbit has everything you need to build powerful apps with code, easily. Including
-                  the development environment.
+                  A desktop-class UI kit meets an all new app platform.
+                  <br />
+                  Orbit has every pattern your internal tools need.
                 </FadeIn>
               </TitleTextSub>
             </>
@@ -368,7 +372,7 @@ export function NeckSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      <Page.Parallax speed={0.3} zIndex={-2}>
+      <FullScreen transform={{ scale: 2 }} zIndex={-10}>
         <FullScreen
           className="northern-lights"
           backgroundImage={`url(${northernlights})`}
@@ -378,7 +382,9 @@ export function NeckSection(props) {
           opacity={0.8}
         />
         <Spotlight />
-      </Page.Parallax>
+      </FullScreen>
+
+      <Page.Parallax speed={0.3} zIndex={-2} />
     </Page>
   )
 }

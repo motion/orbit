@@ -12,6 +12,7 @@ import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn, fadeUpProps } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
+import { SectionContent } from '../../views/SectionContent'
 import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
@@ -106,7 +107,7 @@ function HeadText() {
           transformOrigin="top left"
           margin={[0, 'auto']}
           textAlign="center"
-          alpha={0.6}
+          alpha={0.8}
           whiteSpace="nowrap"
         >
           <FadeIn disable={!measured} delay={150}>
@@ -284,22 +285,24 @@ export function HeadSection(props) {
 
         {IS_CHROME && (
           <Page.Parallax speed={0.2} zIndex={-2}>
-            <View
-              pointerEvents="none"
-              position="absolute"
-              top="45%"
-              left={0}
-              right={0}
-              overflow="hidden"
-              bottom={60}
-              zIndex={1}
-              opacity={0.45}
-              transform={{
-                scale: 1.3,
-              }}
-            >
-              <img src={glow} />
-            </View>
+            <SectionContent position="relative" flex={1}>
+              <View
+                pointerEvents="none"
+                position="absolute"
+                top="45%"
+                left={0}
+                right={0}
+                overflow="hidden"
+                bottom={60}
+                zIndex={1}
+                opacity={0.35}
+                transform={{
+                  scale: 1.5,
+                }}
+              >
+                <img src={glow} />
+              </View>
+            </SectionContent>
           </Page.Parallax>
         )}
 

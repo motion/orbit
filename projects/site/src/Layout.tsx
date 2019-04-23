@@ -1,7 +1,8 @@
 import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
@@ -12,14 +13,19 @@ import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
 
+let updateLayout = null
+
 export const setThemeForPage = (name: string) => {
   localStorage.setItem(`theme-${window.location.pathname.split('/')[1]}`, name)
+  updateLayout()
 }
 
 export const getThemeForPage = () =>
   localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
 
 export function Layout(props: any) {
+  const forceUpdate = useForceUpdate()
+  updateLayout = forceUpdate
   const loadingRoute = useLoadingRoute()
   const siteStore = useSiteStore()
   const screen = useScreenSize()
@@ -41,12 +47,6 @@ export function Layout(props: any) {
     )
   }, [])
 
-  // const finishTransition = useCallback(() => {
-  //   if (siteStore.loadingTheme) {
-  //     siteStore.setTheme(siteStore.loadingTheme)
-  //   }
-  // }, [])
-
   const linkProps = {
     width: '100%',
     padding: 20,
@@ -59,11 +59,16 @@ export function Layout(props: any) {
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
   const curView = route.views.find(x => x.type && x.type.theme)
-  console.log('curView', curView)
+  const theme = getThemeForPage() || (curView && curView.type.theme) || 'home'
+  console.log('theme', theme)
+
+  useLayoutEffect(() => {
+    document.body.style.background = themes[theme].background.toCSS()
+  }, [theme])
 
   return (
     <ProvideUI themes={themes}>
-      <Theme name={(curView && curView.type.theme) || 'home'}>
+      <Theme name={theme}>
         <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
@@ -183,24 +188,3 @@ function PeekHeader(props: { isActive?: boolean }) {
     </Theme>
   )
 }
-
-// const ThemeTransition = gloss<ColProps & { shouldAnimate?: boolean }>(Col, {
-//   zIndex: 10000000000,
-//   width: '200vw',
-//   height: '200vh',
-//   poisition: 'fixed',
-//   top: 0,
-//   left: 0,
-//   transition: 'all ease 300ms',
-//   opacity: 0,
-//   transformOrigin: 'top left',
-//   transform: {
-//     rotate: '-90deg',
-//   },
-//   shouldAnimate: {
-//     opacity: 1,
-//     transform: {
-//       rotate: '0deg',
-//     },
-//   },
-// })

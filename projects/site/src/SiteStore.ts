@@ -1,22 +1,11 @@
-import { createStoreContext, react } from '@o/use-store'
+import { createStoreContext } from '@o/use-store'
 
 class SiteStore {
-  loadingTheme = null
   screenSize = 'large'
   maxHeight = null
   showSidebar = false
 
   windowHeight = window.innerHeight
-
-  ensureDontGetStuckLoadingTheme = react(
-    () => this.loadingTheme,
-    async (_, { sleep }) => {
-      await sleep(300)
-      if (this.loadingTheme) {
-        this.setTheme(this.loadingTheme)
-      }
-    },
-  )
 
   toggleSidebar = () => {
     this.showSidebar = !this.showSidebar

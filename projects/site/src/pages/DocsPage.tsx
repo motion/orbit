@@ -22,7 +22,9 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation, recentHMR } from '../SiteRoot'
+import { getThemeForPage, setThemeForPage } from '../Layout'
+import { Navigation } from '../Navigation'
+import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -281,9 +283,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
-                    onClick={() =>
-                      siteStore.setLoadingTheme(siteStore.theme === 'home' ? 'light' : 'home')
-                    }
+                    onClick={() => setThemeForPage(getThemeForPage() === 'home' ? 'light' : 'home')}
                   />
                   {isSmall && (
                     <RoundButton

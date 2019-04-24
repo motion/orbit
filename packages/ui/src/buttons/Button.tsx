@@ -2,12 +2,11 @@ import { Theme, useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef, useContext } from 'react'
 
-import { ButtonElementProps } from '../aggregateTypes'
 import { UIContext } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
 
-export type ButtonProps = ButtonElementProps &
+export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
     /** force button not to apply hover styles */
     ignoreHover?: boolean

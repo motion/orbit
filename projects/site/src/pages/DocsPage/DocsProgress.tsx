@@ -11,4 +11,3 @@ export let One = (
     <Progress type="circle" percent={10} />
   </Row>
 )
-T

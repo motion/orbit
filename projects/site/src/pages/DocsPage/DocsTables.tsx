@@ -5,7 +5,7 @@ import { employees } from './fakeData'
 
 const rows = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
 
-export let One = (
+export let Simple = (
   <Table
     overscanCount={100}
     height={500}

@@ -28,7 +28,6 @@ import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
-import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -46,26 +45,31 @@ const views = {
   },
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
+    examples: () => import('./DocsPage/DocsButtons'),
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
     types: () => import('../../tmp/Button.json'),
   },
   cards: {
     page: () => import('./DocsPage/DocsCards.mdx'),
+    examples: () => import('./DocsPage/DocsCards'),
     source: () => import('!raw-loader!@o/ui/src/Card'),
     types: () => import('../../tmp/Card.json'),
   },
   progress: {
     page: () => import('./DocsPage/DocsProgress.mdx'),
+    examples: () => import('./DocsPage/DocsProgress'),
     source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
     types: () => import('../../tmp/Progress.json'),
   },
   lists: {
     page: () => import('./DocsPage/DocsLists.mdx'),
+    examples: () => import('./DocsPage/DocsLists'),
     source: () => import('!raw-loader!@o/ui/src/lists/List'),
     types: () => import('../../tmp/List.json'),
   },
   tables: {
     page: () => import('./DocsPage/DocsTables.mdx'),
+    examples: () => import('./DocsPage/DocsTables'),
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
   },
@@ -101,9 +105,10 @@ export default compose(
         }
       }
 
-      const [ChildView, source, types] = await Promise.all([
+      const [ChildView, source, examples, types] = await Promise.all([
         view.page().then(x => x.default),
         (view.source || emptyPromise)().then(x => x.default),
+        (view.examples || emptyPromise)(),
         (view.types || emptyPromise)().then(x => x.default),
       ])
 
@@ -111,7 +116,12 @@ export default compose(
 
       return {
         view: (
-          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
+          <DocsContents
+            title={item ? item['title'] : ''}
+            source={source}
+            types={types}
+            examples={examples}
+          >
             <ChildView />
           </DocsContents>
         ),
@@ -188,7 +198,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 
   return (
-    <MDX>
+    <>
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
           <Row
@@ -299,9 +309,11 @@ const DocsPage = memo((props: { children?: any }) => {
           </Row>
         </ListShortcuts>
       </Portal>
+
       <Portal prepend>
         <Header slim noBorder />
       </Portal>
+
       <Portal>
         <FixedLayout isSmall={isSmall} className="mini-scrollbars">
           {isSmall ? (
@@ -333,7 +345,7 @@ const DocsPage = memo((props: { children?: any }) => {
           <BlogFooter />
         </ContentPosition>
       </SectionContent>
-    </MDX>
+    </>
   )
 })
 

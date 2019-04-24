@@ -37,7 +37,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
         )}
         <SubCard>{examples[id]}</SubCard>
       </Card>
-      <Space size="md" />
+      <Space size="lg" />
     </>
   )
 })

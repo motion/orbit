@@ -47,6 +47,7 @@ export let Section = (
   <List
     title="My List"
     subTitle="Subtitle for my section"
+    collapsable
     afterTitle={
       <>
         <Button icon="wave" tooltip="Some tooltip" />

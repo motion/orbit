@@ -1,10 +1,11 @@
-import * as React from 'react'
-import { Tilt } from './Tilt'
+import React, { memo } from 'react'
+
 import { HoverGlow, HoverGlowProps } from './HoverGlow'
+import { Tilt } from './Tilt'
 
 type TiltHoverGlowProps = {
-  width: number
-  height: number
+  width?: number
+  height?: number
   tiltOptions?: Object
   children?: React.ReactNode
   css?: Object
@@ -15,30 +16,25 @@ type TiltHoverGlowProps = {
   shadowProps?: Object
 }
 
-export class TiltHoverGlow extends React.PureComponent<TiltHoverGlowProps> {
-  version() {
-    return 1
-  }
-
-  render() {
-    const {
-      width,
-      height,
-      tiltOptions,
-      children,
-      restingPosition,
-      hideShadow,
-      hideGlow,
-      shadowProps,
-      glowProps,
-      ...props
-    } = this.props
+export const TiltHoverGlow = memo(
+  ({
+    width,
+    height,
+    tiltOptions,
+    children,
+    restingPosition,
+    hideShadow,
+    hideGlow,
+    shadowProps,
+    glowProps,
+    ...props
+  }: TiltHoverGlowProps) => {
     return (
       <Tilt
         options={{
           max: 20,
           perspective: 2000,
-          scale: 1,
+          scale: 1.5,
           speed: 200,
           reverse: true,
           ...tiltOptions,
@@ -93,5 +89,5 @@ export class TiltHoverGlow extends React.PureComponent<TiltHoverGlowProps> {
         </div>
       </Tilt>
     )
-  }
-}
+  },
+)

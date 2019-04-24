@@ -2,11 +2,12 @@ import { Theme, useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef, useContext } from 'react'
 
+import { ButtonElementProps } from '../aggregateTypes'
 import { UIContext } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
 
-export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = ButtonElementProps &
   SizedSurfaceProps & {
     /** force button not to apply hover styles */
     ignoreHover?: boolean
@@ -33,7 +34,6 @@ function ButtonInner(props: ButtonProps) {
       WebkitAppRegion="no-drag"
       outline="0"
       cursor="default"
-      clickable
       sizeFont
       sizePadding
       sizeRadius

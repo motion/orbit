@@ -25,7 +25,7 @@ const LinkText = gloss(View, {
 export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
 export function Link({
   children,
-  fontSize = 16,
+  fontSize = 15,
   href,
   width,
   margin,

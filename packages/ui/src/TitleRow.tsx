@@ -103,12 +103,7 @@ export const TitleRow = forwardRef(function TitleRow(
       </Row>
       {below}
       {bordered && (
-        <BorderBottom
-          height={borderSize}
-          left={10 * sizePadding}
-          right={10 * sizePadding}
-          opacity={0.5}
-        />
+        <BorderBottom height={borderSize} left={10 * sizePadding} right={10 * sizePadding} />
       )}
     </TitleRowChrome>
   )

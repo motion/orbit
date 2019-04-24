@@ -3,6 +3,8 @@ import * as HotKeys from 'react-hotkeys'
 
 export const configureHotKeys = HotKeys['configure']
 
+export { default as allIcons } from '@blueprintjs/icons/resources/icons/icons.json'
+
 export * from '@o/color'
 export {
   Absolute,

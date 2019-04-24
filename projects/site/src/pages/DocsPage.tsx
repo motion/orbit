@@ -4,7 +4,6 @@ import {
   Button,
   Col,
   gloss,
-  Input,
   List,
   ListItem,
   ListShortcuts,
@@ -28,6 +27,7 @@ import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
+import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -42,6 +42,13 @@ const views = {
   },
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
+  },
+  icons: {
+    page: () => import('./DocsPage/DocsIcons.mdx'),
+    examples: () => import('./DocsPage/DocsIcons'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsIcons'),
+    source: () => import('!raw-loader!@o/ui/src/Icon'),
+    types: () => import('../../tmp/Icon.json'),
   },
   tree: {
     page: () => import('./DocsPage/DocsTree.mdx'),
@@ -232,23 +239,12 @@ const DocsPage = memo((props: { children?: any }) => {
             alignItems="center"
             justifyContent="center"
           >
-            <Input
+            <SearchInput
               ref={inputRef}
               onChange={e => setSearch(e.target.value)}
-              sizeRadius={10}
-              size="lg"
-              iconSize={16}
               maxWidth="calc(60% - 20px)"
               flex={1}
-              icon="search"
               placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-              boxShadow={[[0, 5, 8, [0, 0, 0, 0.05]]]}
-              onKeyDown={e => {
-                // avoid movement on down/up
-                if (e.keyCode === 38 || e.keyCode === 40) {
-                  e.preventDefault()
-                }
-              }}
               after={
                 !isSmall && (
                   <Button tooltip="Shortcut: t" size="xs" alt="flat" fontWeight={600}>

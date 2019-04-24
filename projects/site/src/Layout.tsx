@@ -8,7 +8,7 @@ import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
-import BusyIndicator from './views/BusyIndicator'
+import { BusyIndicator } from './views/BusyIndicator'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'

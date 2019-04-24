@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const baseClass =
   'BusyIndicator-' +
@@ -54,7 +54,7 @@ interface BusyIndicatorProps extends React.HTMLAttributes<any> {
   isBusy?: boolean
 }
 
-export default function BusyIndicator({
+export function BusyIndicator({
   className,
   color,
   isBusy,
@@ -68,10 +68,12 @@ export default function BusyIndicator({
   // Prevent the `active` class from being applied on the first render,
   // to allow the CSS animation's delay prop to work even if `isActive`
   // is true when the component is mounted.
-  if (!hasRendered) {
-    isActive = false
-    setTimeout(() => setHasRendered(true))
-  }
+  useEffect(() => {
+    if (!hasRendered) {
+      isActive = false
+      setTimeout(() => setHasRendered(true))
+    }
+  })
 
   // Only add the `active` class to this element while the
   // next page is loading, triggering a CSS animation to

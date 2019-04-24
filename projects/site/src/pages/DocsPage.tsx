@@ -356,7 +356,7 @@ const DocsPage = memo((props: { children?: any }) => {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={15} lineHeight={24} whiteSpace="normal">
+      <SectionContent fontSize={16} lineHeight={26} whiteSpace="normal">
         <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />

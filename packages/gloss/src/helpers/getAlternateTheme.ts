@@ -58,7 +58,6 @@ function createAlternateTheme(
 
   // alternates can take parent theme as argument and return their theme:
   const a = theme.alternates[alt]
-  console.log('it is', alt, a)
   const altTheme = typeof a === 'function' ? a(theme) : a
 
   return {

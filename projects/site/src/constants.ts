@@ -1,7 +1,7 @@
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export const sectionMaxHeight = 1250
-export const sidePad = 40
+export const sidePad = 24
 export const smallSize = 980
 export const mediumSize = 1250
 export const smallMax = smallSize - 1

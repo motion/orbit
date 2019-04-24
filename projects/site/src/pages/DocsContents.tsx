@@ -24,8 +24,8 @@ export const DocsContents = memo(
           margin={[0, 'auto']}
           pad={useScreenVal(
             ['xl', 'md', true, 'md'],
-            ['xl', 'xl', true, 'xl'],
-            ['xl', 'xxl', true, 'xxl'],
+            ['xl', 'md', true, 'md'],
+            ['xl', 'lg', true, 'lg'],
           )}
           titleBorder
           space

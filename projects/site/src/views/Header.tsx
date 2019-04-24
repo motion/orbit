@@ -106,6 +106,7 @@ const LinkRow = gloss({
   flexFlow: 'row',
   flex: 1,
   alignItems: 'center',
+  justifyContent: 'center',
   zIndex: 1000000000,
   position: 'relative',
 })

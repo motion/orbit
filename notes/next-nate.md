@@ -1,8 +1,3 @@
-# Website
-
-- Fix docs so they have some under construction stuff / look alright
-- Go over copy a few times
-
 ## Next
 
 - Grid persistance, Slack import app
@@ -85,10 +80,6 @@ Beta:
 
 (if all that is done, bonus stuff)
 
-- move to blueprint icons, free to distribute
-  - https://blueprintjs.com/docs/#core
-  - copy docs from https://sancho-ui.com/components/icon/
-
 - Unification app <=> searchbar <=> table
   - EnumFilter support in searchbar
   - App settings can define JSON-style EnumFilter
@@ -103,8 +94,6 @@ Beta:
 ---
 
 April:
-
-Website + onboarding
 
 - Account/space
 
@@ -132,12 +121,6 @@ Week 1: Working on various apps to make them work better
 Week 2: Putting together a app demos and documentation
 Week 3: Get a rough first pass at website stood up by end of week
 Week 4: Get a nice website with mobile + start on docs
-
----
-
-website:
-
-https://codesandbox.io/embed/ly0oxkp899
 
 ---
 

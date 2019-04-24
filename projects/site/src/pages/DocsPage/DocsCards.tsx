@@ -8,7 +8,7 @@ const ExampleCard = ({ children = 'Hello world content', ...props }) => (
 )
 
 export let Basic = (
-  <Row flexWrap="wrap">
+  <Row space flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
     <ExampleCard alt="warn" location="warn" title="Alt = warn" elevation={4} />

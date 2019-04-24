@@ -43,6 +43,9 @@ const views = {
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },
+  quickStart: {
+    page: () => import('./DocsPage/DocsQuickStart.mdx'),
+  },
   icons: {
     page: () => import('./DocsPage/DocsIcons.mdx'),
     examples: () => import('./DocsPage/DocsIcons'),

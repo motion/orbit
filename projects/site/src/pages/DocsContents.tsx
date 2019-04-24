@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import { colors } from '../constants'
 import { scrollTo } from '../etc/helpers'
 import { CodeBlock } from '../views/CodeBlock'
+import { IntroText } from '../views/IntroText'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
 import { MetaSection } from './DocsPage'
@@ -17,6 +18,12 @@ export const DocsContents = memo(
       <MDX
         components={{
           Example: props => <Example examples={examples} source={examplesSource} {...props} />,
+          IntroText: props => (
+            <>
+              <IntroText {...props} />
+              <Space size="lg" />
+            </>
+          ),
         }}
       >
         <Section

@@ -16,7 +16,7 @@ const guides = [
     ...titleItem,
   },
   {
-    id: 'quickstart',
+    id: 'quickStart',
     title: 'Quick start',
     ...titleItem,
   },

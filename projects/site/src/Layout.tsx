@@ -2,26 +2,37 @@ import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import BusyIndicator from 'react-busy-indicator'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
+import { BusyIndicator } from './views/BusyIndicator'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
 
 let updateLayout = null
 
-export const setThemeForPage = (name: string) => {
-  localStorage.setItem(`theme-${window.location.pathname.split('/')[1]}`, name)
-  updateLayout()
+export const usePageTheme = () => {
+  const forceUpdate = useForceUpdate()
+  const route = useCurrentRoute()
+  const curView = route.views.find(x => x.type && x.type.theme)
+  const key = `theme-${route.url.pathname.split('/')[1] || ''}`
+  const theme = localStorage.getItem(key) || (curView && curView.type.theme) || 'home'
+  return [
+    theme,
+    useCallback(
+      next => {
+        localStorage.setItem(key, next)
+        forceUpdate()
+        updateLayout()
+      },
+      [key],
+    ),
+  ]
 }
-
-export const getThemeForPage = () =>
-  localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
 
 export function Layout(props: any) {
   const forceUpdate = useForceUpdate()
@@ -31,6 +42,7 @@ export function Layout(props: any) {
   const screen = useScreenSize()
   const sidebarWidth = 300
   const route = useCurrentRoute()
+  const [theme] = usePageTheme()
 
   window['SiteStore'] = siteStore
 
@@ -58,9 +70,6 @@ export function Layout(props: any) {
   }
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
-  const curView = route.views.find(x => x.type && x.type.theme)
-  const theme = getThemeForPage() || (curView && curView.type.theme) || 'home'
-  console.log('theme', theme)
 
   useLayoutEffect(() => {
     document.body.style.background = themes[theme].background.toCSS()
@@ -69,7 +78,7 @@ export function Layout(props: any) {
   return (
     <ProvideUI themes={themes}>
       <Theme name={theme}>
-        <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
+        <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"

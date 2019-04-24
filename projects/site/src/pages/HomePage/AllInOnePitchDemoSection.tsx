@@ -202,7 +202,7 @@ export function NeckSection(props) {
     <Page overflow="hidden" zIndex={3} {...props}>
       <Page.Content
         transform={{
-          y: '-4%',
+          y: '-2%',
         }}
       >
         <SpacedPageContent
@@ -283,7 +283,7 @@ export function NeckSection(props) {
               </Flex>
               <Flex flex={2} position="relative">
                 <Button
-                  alt="clear"
+                  alt="flat"
                   cursor="pointer"
                   size={2}
                   iconSize={22}
@@ -291,12 +291,12 @@ export function NeckSection(props) {
                   zIndex={100}
                   position="absolute"
                   top={-4}
-                  left={10}
+                  left={useScreenVal(-60, 10, 10)}
                   icon="chevron-left"
                   onClick={prev}
                 />
                 <Button
-                  alt="clear"
+                  alt="flat"
                   cursor="pointer"
                   size={2}
                   iconSize={22}
@@ -304,7 +304,7 @@ export function NeckSection(props) {
                   zIndex={100}
                   position="absolute"
                   top={-4}
-                  right={10}
+                  right={useScreenVal(-60, 10, 10)}
                   icon="chevron-right"
                   onClick={next}
                 />

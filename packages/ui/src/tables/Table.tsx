@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
+
 import { guessColumns } from '../forms/guessColumns'
 import { normalizeRow } from '../forms/normalizeRow'
 import { useNodeSize } from '../hooks/useNodeSize'
@@ -9,8 +10,8 @@ import { DataColumnsShort, Omit } from '../types'
 import { useVisibility } from '../Visibility'
 import { SearchableTable, SearchableTableProps } from './SearchableTable'
 
-export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title'>> &
-  Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
+export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
+  Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
   SectionParentProps & {
     columns?: DataColumnsShort
     searchable?: boolean

@@ -1,40 +1,71 @@
-import { Section, SectionProps, Space } from '@o/ui'
-import React from 'react'
+import { Card, gloss, Icon, Space, View } from '@o/ui'
+import React, { createElement, isValidElement, memo, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 
-export function Example({
-  source,
-  examples,
-  id,
-  ...props
-}: SectionProps & { source: string; examples: any; id: string }) {
+export type ExampleProps = {
+  source: string
+  examples: any
+  id: string
+  name?: string
+  children: any
+}
+
+export const Example = memo(({ source, examples, id, name, ...props }: ExampleProps) => {
+  const [showSource, setShowSource] = useState(false)
+
   if (!source || !id) {
     return props.children || null
   }
+
+  const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
+  console.log(['exampleElement'], examples[id], exampleElement)
+
   return (
     <>
-      <Section space {...props}>
-        {examples[id]}
-      </Section>
-      <Space />
-      <Section>
-        <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-      </Section>
-      <Space size="xl" />
+      <Space size="sm" />
+      <Card
+        pad
+        space
+        background={theme => theme.backgroundStrong}
+        title={name || id}
+        afterTitle={
+          <Icon size={20} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+        }
+        onClickTitle={() => {
+          setShowSource(!showSource)
+        }}
+      >
+        {showSource && (
+          <SubCard>
+            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
+          </SubCard>
+        )}
+        <SubCard>{exampleElement}</SubCard>
+      </Card>
+      <Space size="lg" />
     </>
   )
-}
+})
+
+const SubCard = gloss(View, {
+  margin: 5,
+  borderRadius: 5,
+})
 
 function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
   const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
   const allLines = keyBlock.split('\n')
-  const lines = indent(allLines.slice(1, allLines.length - 2)).join('\n')
-  return lines
-  //   return `export (
-  // ${lines}
-  // )`
+  const lines = allLines[0].indexOf(') => {')
+    ? // if a component, dont remove first/last line
+      allLines
+    : // if not a component, remove first/last lines
+      indent(allLines.slice(1, allLines.length - 2))
+  // remove empty comment line which forces spacing
+  const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
+  console.log('lines', lines)
+  return next.join('\n')
 }
 
 const indent = (lines: string[], space = 0) => {

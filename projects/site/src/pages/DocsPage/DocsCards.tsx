@@ -7,8 +7,8 @@ const ExampleCard = ({ children = 'Hello world content', ...props }) => (
   </Card>
 )
 
-export let Basics = (
-  <Row flexWrap="wrap">
+export let Basic = (
+  <Row space flexWrap="wrap">
     <ExampleCard>hello worl2</ExampleCard>
     <ExampleCard title="Elevation = 2" elevation={2} />
     <ExampleCard alt="warn" location="warn" title="Alt = warn" elevation={4} />
@@ -22,7 +22,11 @@ export let Basics = (
   </Row>
 )
 
-export let Collapsable = <ExampleCard collapsable />
+export let Collapsable = (
+  <Card title="Title" pad width={180} iconBefore collapsable>
+    Hello World
+  </Card>
+)
 
 export let Floating = () => {
   const [show, setShow] = useState(false)

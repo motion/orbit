@@ -1,13 +1,27 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space } from '@o/ui'
+import { gloss, Paragraph, SimpleText, Space } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
-import { Navigation } from '../SiteRoot'
+import { Navigation } from '../Navigation'
+import { Example } from '../pages/DocsPage/Example'
 import { CodeBlock } from './CodeBlock'
 import { TitleText } from './TitleText'
 
+const Key = gloss(props => <SimpleText alpha={0.8} fontWeight={400} {...props} />, {
+  padding: 2,
+  margin: [0, -1],
+  borderRadius: 5,
+}).theme((_, theme) => ({
+  background: theme.backgroundStrong,
+  border: [1, theme.borderColor],
+}))
+
 export const components = {
+  // custom
+  Example,
+  Key,
+
   h1: props => (
     <>
       <TitleText size="xl" {...props} />
@@ -108,7 +122,7 @@ export const components = {
 
 export function MDX({ children, ...props }: any) {
   return (
-    <MDXProvider components={components} {...props}>
+    <MDXProvider {...props} components={{ ...components, ...props.components }}>
       {children}
     </MDXProvider>
   )

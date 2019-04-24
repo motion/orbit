@@ -33,7 +33,6 @@
     "prism-react-renderer": "0.1.6",
     "query-string": "6.2.0",
     "react": "16.8.3",
-    "react-busy-indicator": "1.0.0",
     "react-docgen-typescript": "1.12.3",
     "react-dom": "16.8.3",
     "react-hot-loader": "4.8.4",

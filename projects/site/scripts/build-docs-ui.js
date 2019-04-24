@@ -2,7 +2,7 @@ const docgen = require('react-docgen-typescript')
 const ui = require.resolve('@o/ui')
 const path = require('path')
 const fs = require('fs-extra')
-const _ = require('lodash')
+// const _ = require('lodash')
 
 const srcDir = path.join(ui, '..', '..', 'src')
 const outDir = './tmp'
@@ -10,7 +10,7 @@ fs.ensureDir(outDir)
 
 const parseBaseProps = docgen.withCustomConfig('./tsconfig.json', {}).parse
 
-const basePropsPath = path.join(srcDir, 'index.ts')
+const basePropsPath = path.join(srcDir, 'View', 'types.ts')
 const basePropsDef = parseBaseProps(basePropsPath)
 const baseProps = [
   ...new Set([...Object.keys(basePropsDef[0].props), ...Object.keys(basePropsDef[1].props)]),

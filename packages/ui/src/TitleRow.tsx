@@ -2,7 +2,7 @@ import { gloss } from '@o/gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
 import { BorderBottom } from './Border'
-import { CollapsableProps, CollapseArrow } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps } from './Collapsable'
 import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
@@ -46,14 +46,13 @@ export const TitleRow = forwardRef(function TitleRow(
     above,
     icon,
     title,
-    collapsable,
-    collapsed,
-    onCollapse,
     children,
-    ...rowProps
+    ...allProps
   }: TitleRowProps,
   ref,
 ) {
+  const [collapseProps, rowProps] = splitCollapseProps(allProps)
+  const { collapsable, onCollapse, collapsed } = collapseProps
   const titleElement =
     !!title &&
     (isValidElement(title) ? (
@@ -73,7 +72,7 @@ export const TitleRow = forwardRef(function TitleRow(
     >
       {above}
       <Row alignItems="center">
-        {collapsable && <CollapseArrow collapsed={collapsed} />}
+        {collapsable && <CollapseArrow {...collapseProps} />}
         {before && (
           <>
             {before}
@@ -103,12 +102,7 @@ export const TitleRow = forwardRef(function TitleRow(
       </Row>
       {below}
       {bordered && (
-        <BorderBottom
-          height={borderSize}
-          left={10 * sizePadding}
-          right={10 * sizePadding}
-          opacity={0.5}
-        />
+        <BorderBottom height={borderSize} left={10 * sizePadding} right={10 * sizePadding} />
       )}
     </TitleRowChrome>
   )

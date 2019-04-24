@@ -37,6 +37,8 @@ export enum DataType {
 }
 
 export type DataColumn = {
+  // key is only necessary when doing array-style columns
+  key?: string
   value: string
   sortable?: boolean
   resizable?: boolean
@@ -49,4 +51,6 @@ export type DataColumns = {
   [key: string]: DataColumn
 }
 
-export type DataColumnsShort = { [key: string]: DataColumn | string } | string[]
+type DataColumnsObject = { [key: string]: DataColumn | string }
+
+export type DataColumnsShort = DataColumnsObject | (DataColumn | string)[]

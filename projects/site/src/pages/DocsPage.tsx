@@ -4,7 +4,6 @@ import {
   Button,
   Col,
   gloss,
-  Input,
   List,
   ListItem,
   ListShortcuts,
@@ -22,13 +21,13 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { getThemeForPage, setThemeForPage } from '../Layout'
+import { usePageTheme } from '../Layout'
 import { Navigation } from '../Navigation'
 import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { ListSubTitle } from '../views/ListSubTitle'
-import { MDX } from '../views/MDX'
+import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -44,28 +43,59 @@ const views = {
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },
+  icons: {
+    page: () => import('./DocsPage/DocsIcons.mdx'),
+    examples: () => import('./DocsPage/DocsIcons'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsIcons'),
+    source: () => import('!raw-loader!@o/ui/src/Icon'),
+    types: () => import('../../tmp/Icon.json'),
+  },
+  tree: {
+    page: () => import('./DocsPage/DocsTree.mdx'),
+    examples: () => import('./DocsPage/DocsTree'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTree'),
+    source: () => import('!raw-loader!@o/ui/src/Tree'),
+    types: () => import('../../tmp/Tree.json'),
+  },
+  definitionList: {
+    page: () => import('./DocsPage/DocsDefinitionList.mdx'),
+    examples: () => import('./DocsPage/DocsDefinitionList'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsDefinitionList'),
+    source: () => import('!raw-loader!@o/ui/src/DefinitionList'),
+    types: () => import('../../tmp/DefinitionList.json'),
+  },
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
+    examples: () => import('./DocsPage/DocsButtons'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsButtons'),
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
     types: () => import('../../tmp/Button.json'),
   },
   cards: {
     page: () => import('./DocsPage/DocsCards.mdx'),
+    examples: () => import('./DocsPage/DocsCards'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsCards'),
     source: () => import('!raw-loader!@o/ui/src/Card'),
     types: () => import('../../tmp/Card.json'),
   },
   progress: {
     page: () => import('./DocsPage/DocsProgress.mdx'),
+    examples: () => import('./DocsPage/DocsProgress'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsProgress'),
     source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
     types: () => import('../../tmp/Progress.json'),
   },
   lists: {
     page: () => import('./DocsPage/DocsLists.mdx'),
+    examples: () => import('./DocsPage/DocsLists'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsLists'),
     source: () => import('!raw-loader!@o/ui/src/lists/List'),
     types: () => import('../../tmp/List.json'),
   },
   tables: {
     page: () => import('./DocsPage/DocsTables.mdx'),
+    examples: () => import('./DocsPage/DocsTables'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTables'),
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
   },
@@ -101,9 +131,11 @@ export default compose(
         }
       }
 
-      const [ChildView, source, types] = await Promise.all([
+      const [ChildView, source, examples, examplesSource, types] = await Promise.all([
         view.page().then(x => x.default),
         (view.source || emptyPromise)().then(x => x.default),
+        (view.examples || emptyPromise)(),
+        (view.examplesSource || emptyPromise)().then(x => x.default),
         (view.types || emptyPromise)().then(x => x.default),
       ])
 
@@ -111,7 +143,13 @@ export default compose(
 
       return {
         view: (
-          <DocsContents title={item ? item['title'] : ''} source={source} types={types}>
+          <DocsContents
+            title={item ? item['title'] : ''}
+            source={source}
+            types={types}
+            examples={examples}
+            examplesSource={examplesSource}
+          >
             <ChildView />
           </DocsContents>
         ),
@@ -132,6 +170,7 @@ const DocsPage = memo((props: { children?: any }) => {
   const inputRef = useRef(null)
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
+  const [theme, setTheme] = usePageTheme()
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -187,7 +226,7 @@ const DocsPage = memo((props: { children?: any }) => {
   )
 
   return (
-    <MDX>
+    <>
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
           <Row
@@ -200,23 +239,12 @@ const DocsPage = memo((props: { children?: any }) => {
             alignItems="center"
             justifyContent="center"
           >
-            <Input
+            <SearchInput
               ref={inputRef}
               onChange={e => setSearch(e.target.value)}
-              sizeRadius={10}
-              size="lg"
-              iconSize={16}
               maxWidth="calc(60% - 20px)"
               flex={1}
-              icon="search"
               placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-              boxShadow={[[0, 5, 8, [0, 0, 0, 0.05]]]}
-              onKeyDown={e => {
-                // avoid movement on down/up
-                if (e.keyCode === 38 || e.keyCode === 40) {
-                  e.preventDefault()
-                }
-              }}
               after={
                 !isSmall && (
                   <Button tooltip="Shortcut: t" size="xs" alt="flat" fontWeight={600}>
@@ -240,7 +268,7 @@ const DocsPage = memo((props: { children?: any }) => {
                 openOnClick
                 closeOnClickAway
                 elevation={100}
-                zIndex={100000000000000000}
+                zIndex={1000000000000000}
                 target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
               >
                 <>
@@ -283,7 +311,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
-                    onClick={() => setThemeForPage(getThemeForPage() === 'home' ? 'light' : 'home')}
+                    onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
                   />
                   {isSmall && (
                     <RoundButton
@@ -298,9 +326,11 @@ const DocsPage = memo((props: { children?: any }) => {
           </Row>
         </ListShortcuts>
       </Portal>
+
       <Portal prepend>
-        <Header slim />
+        <Header slim noBorder />
       </Portal>
+
       <Portal>
         <FixedLayout isSmall={isSmall} className="mini-scrollbars">
           {isSmall ? (
@@ -326,17 +356,17 @@ const DocsPage = memo((props: { children?: any }) => {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={16} lineHeight={24} whiteSpace="normal">
+      <SectionContent fontSize={15} lineHeight={24} whiteSpace="normal">
         <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />
         </ContentPosition>
       </SectionContent>
-    </MDX>
+    </>
   )
 })
 
-DocsPage.theme = 'light'
+DocsPage.theme = 'home'
 
 const ContentPosition = gloss<{ isSmall?: boolean }>({
   width: '100%',
@@ -357,10 +387,10 @@ const FixedLayout = gloss({
 
   isSmall: {
     top: 0,
-    zIndex: 10000000000000,
+    zIndex: 100000000,
   },
 })
 
 export const MetaSection = gloss({
-  margin: [-30, -30, 0],
+  margin: [0, -30, 0],
 })

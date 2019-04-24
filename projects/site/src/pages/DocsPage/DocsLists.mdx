@@ -1,8 +1,9 @@
-import ExampleOne from './DocsLists'
-import { Example } from './Example'
-
 A `<List />` is the highest level and most powerful list view in the interface kit.
 It is virtualized by default, but acts almost entirely like a non-virtualized list.
+
+Lists ultimately will render a `<ListItem />`, though you can change the view it renders
+with the `ItemView` property.
+
 It has many features built-in, including:
 
 - Ordering, filtering, searching, and grouping through `useFilter()` props.
@@ -13,8 +14,72 @@ It has many features built-in, including:
 - Keyboard navigation through the `Shortcut` store.
 - Sizeable with the `scale` prop.
 
+To use a List:
+
+```tsx
+import { List } from '@o/ui'
+```
+
+<br />
+
 ## Examples
 
 ### Basics
 
-<Example>{ExampleOne}</Example>
+Lists are simple to use. The items are dynamically sized, and most of the elements like icon, title, subtitle, and children accept any `ReactNode` you'd prefer. You can add extra elements
+using `before` and `after`.
+
+<Example id="Simple" />
+
+Here's some slightly different item props.
+
+<Example id="SimpleAlt" />
+
+### Grouping, sorting, searching
+
+Lists have built in support for grouping, searching, sorting, and filtering. This is important for building
+many types of apps, and all of these props must work together.
+
+Grouping works by setting the `separator` prop for each `<ListItem />` automatically.
+
+<Example id="Grouping" />
+
+Because all text elements are higlightable, searching will automatically highlight the found phrases. Here we are searching for "st" and sorting them by their email address.
+
+<Example id="OrderFilter" name="Search + Sort" />
+
+### Selection and shortcuts
+
+Lists support selection the same as tables. That means you can use `selectable` or `selectable="multi"`. Selection
+is powerful and has many features you'd expect in native desktop selections. You can:
+
+- Hold your mouse down after clicking an item, to move your selection down.
+- Move your mouse to the edge as you select to automatically scroll the list.
+
+<Example id="Selection" name="Single Selection" />
+
+Multiple selections are powerful, and add the following shortcuts and useful ways to select:
+
+- Hold <Key>⌘</Key> to select more than one.
+- Hold <Key>shift</Key> to select a range.
+- Unselect by holding <Key>⌘</Key> and clicking a previously selected item.
+
+<Example id="MultipleSelection" name="Multiple Selection" />
+
+There are also a few props to enforce certain types of selection. You can force on selection with `alwaysSelected`, and have a default selection with `defaultSelected`.
+Callback from selections are `onSelect`.
+
+To see more complex lists, check out the [Master Detail](/docs/master-detail) template, which shows onSelect and keyboard navigation.
+
+### Scaling
+
+Scale works for lists.
+
+<Example id="Scaling" name="Scale" />
+
+### Using as a section
+
+Orbit aims to make building apps easy, so many of the high level views are wrapped in a `<Section />`. List is no exception.
+This lets you quickly and easily show a list, elevate it, add a title and subtitle, and make it collapsable.
+
+<Example id="Section" name="Using as Section" />

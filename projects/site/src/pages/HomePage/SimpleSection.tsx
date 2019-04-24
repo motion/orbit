@@ -1,11 +1,11 @@
 import { Col, gloss, Icon, Row, Space, View } from '@o/ui'
 import { isDefined } from '@o/utils'
 import React from 'react'
+
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
-import { purpleWaveUrl } from './EarlyAccessBetaSection'
 
 export const SimpleSection = ({ index = undefined, title, children, ...rest }) => {
   const screen = useScreenSize()
@@ -24,7 +24,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
             }}
             {...{
               WebkitTextFillColor: 'transparent',
-              background: purpleWaveUrl,
+              background: 'linear-gradient(to right, #B65138, #BE0DBE)',
               backgroundSize: 300,
             }}
             size="sm"
@@ -58,7 +58,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={52} color="#000" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={52} {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,
@@ -80,10 +80,10 @@ const Badge = gloss(View, {
   borderRadius: 100,
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: 24,
+  fontSize: 20,
 }).theme((_, theme) => ({
   color: theme.color,
-  border: [1, theme.color.alpha(0.25)],
+  border: [1, theme.color.alpha(0.1)],
 }))
 
 const BadgeText = gloss({

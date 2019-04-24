@@ -3,4 +3,4 @@ import React from 'react'
 
 import { Text } from './Text'
 
-export const IntroText = (props: TextProps) => <Text size={1.9} sizeLineHeight={1.25} {...props} />
+export const IntroText = (props: TextProps) => <Text size={1.8} sizeLineHeight={1.25} {...props} />

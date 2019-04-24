@@ -159,6 +159,8 @@ const alternates: ThemeSet = {
       backgroundHover: theme.backgroundHover,
       backgroundFocus: theme.backgroundFocus,
       backgroundActive: theme.backgroundActive,
+      color: theme.color,
+      colorHover: theme.colorHover,
       glintColor: transparent,
       glintColorBottom: transparent,
       ...Theme.colorize({
@@ -228,7 +230,7 @@ const light = {
     cardBackground: [255, 255, 255],
     cardBackgroundHover: [255, 255, 255],
     cardBackgroundActive: [255, 255, 255],
-    cardBorderColor: [0, 0, 0, 0.1],
+    cardBorderColor: [0, 0, 0, 0.05],
   }),
 }
 

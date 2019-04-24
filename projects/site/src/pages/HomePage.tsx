@@ -30,7 +30,7 @@ export function HomePage() {
   return (
     <ParallaxContext.PassProps value={parallax}>
       <Header />
-      <main>
+      <main style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
           ref={setParallax}
           pages={9}

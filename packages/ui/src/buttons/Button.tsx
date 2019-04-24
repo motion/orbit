@@ -33,7 +33,6 @@ function ButtonInner(props: ButtonProps) {
       WebkitAppRegion="no-drag"
       outline="0"
       cursor="default"
-      clickable
       sizeFont
       sizePadding
       sizeRadius

@@ -1,10 +1,11 @@
 import { sortBy } from 'lodash'
 import { useMemo } from 'react'
+
 import { fuzzyFilter } from '../helpers/fuzzyFilter'
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 import { UseFilterProps } from '../hooks/useFilter'
 
-export function useFilteredList({ filterKey = 'name', ...props }: UseFilterProps<any>) {
+export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProps<any>) {
   const search =
     props.searchable === false
       ? ''
@@ -22,7 +23,7 @@ export function useFilteredList({ filterKey = 'name', ...props }: UseFilterProps
     ? fuzzyFilter(search, sortedItems, { key: filterKey })
     : sortedItems
 
-  const shouldGroup = (props.groupByLetter && filteredItems.length > props.groupMinimum) || 0
+  const shouldGroup = props.groupByLetter && filteredItems.length > (props.groupMinimum || 0)
   const getGroupProps = shouldGroup && groupByFirstLetter(filterKey)
 
   return {

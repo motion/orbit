@@ -1,16 +1,6 @@
-import {
-  Button,
-  ButtonProps,
-  Col,
-  Image,
-  Row,
-  Space,
-  TextProps,
-  Theme,
-  useTheme,
-  View,
-} from '@o/ui'
+import { Button, ButtonProps, Col, Image, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
 import React from 'react'
+
 import { Link, LinkProps } from '../../views/Header'
 import { LogoVertical } from '../../views/LogoVertical'
 import { Page } from '../../views/Page'

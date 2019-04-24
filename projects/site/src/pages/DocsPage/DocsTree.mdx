@@ -1,0 +1,22 @@
+A `<Tree />` is a virtualized treeview, built to handle hundreds of thousands of elements,
+and with selection, expansion, and keyboard movement built in.
+
+Trees use a denormalized object to render, so you'll need to convert any array into an object
+before your use a tree.
+
+To use a Tree:
+
+```tsx
+import { Tree } from '@o/ui'
+```
+
+<br />
+
+## Examples
+
+### Basics
+
+Lists are simple to use. The items are dynamically sized, and most of the elements like icon, title, subtitle, and children accept any `ReactNode` you'd prefer. You can add extra elements
+using `before` and `after`.
+
+<Example id="Simple" />

@@ -6,4 +6,5 @@ export const Avatar = gloss(Image, {
   borderRadius: 100,
   width: 64,
   height: 64,
+  userSelect: 'none'
 })

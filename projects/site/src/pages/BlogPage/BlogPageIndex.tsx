@@ -33,7 +33,12 @@ export function BlogPageIndex() {
             background: '#f9f9f9',
           }}
         >
-          <TitleText color={purpleWave.backgroundColor} selectable={false} textAlign="left">
+          <TitleText
+            fontWeight={200}
+            color={purpleWave.backgroundColor}
+            selectable={false}
+            textAlign="left"
+          >
             {post.title}
           </TitleText>
           {new Date(post.date)

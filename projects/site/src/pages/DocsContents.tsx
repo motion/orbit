@@ -113,13 +113,21 @@ function PropsTable(props: { props: Object }) {
       acc.push({
         ...row,
         description,
-        type: type.name,
+        type: type.name.trim(),
         'Default Value': defaultValue === null ? '' : defaultValue,
         required,
       })
       return acc
     }, [])
-    .sort((a, b) => (a.required && !b.required ? -1 : 1))
+    .sort((a, b) => {
+      if (a.required && !b.required) {
+        return -1
+      }
+      // if (a.description && !b.description) {
+      //   return -1
+      // }
+      return a.type.localeCompare(b.type)
+    })
   // overscan all for searchability
   return (
     <Col space>

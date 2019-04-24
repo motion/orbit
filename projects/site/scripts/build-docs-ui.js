@@ -10,7 +10,7 @@ fs.ensureDir(outDir)
 
 const parseBaseProps = docgen.withCustomConfig('./tsconfig.json', {}).parse
 
-const basePropsPath = path.join(srcDir, 'DocGenBaseTypes.tsx')
+const basePropsPath = path.join(srcDir, 'View', 'types.ts')
 const basePropsDef = parseBaseProps(basePropsPath)
 const baseProps = [
   ...new Set([...Object.keys(basePropsDef[0].props), ...Object.keys(basePropsDef[1].props)]),

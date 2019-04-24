@@ -1,6 +1,5 @@
-import CardSrc from '!raw-loader!@o/ui/src/Card.tsx'
-import Description from '../../../tmp/Button.json'
 import * as Ex from './DocsCards'
+import ExSource from '!raw-loader!./DocsCards'
 import { Example } from './Example'
 
 A `<Card />` combines a `<SizedSurface />` with a `<ListItem />` as it's header.
@@ -10,16 +9,14 @@ It's `<Collapsable />` as well.
 
 ### Props, Sizing, and Theme
 
-<Example>{Ex.Basics}</Example>
+<Example examples={Ex} source={ExSource} id="Basic" />
 
 ### Collapsable
 
-<Example>{Ex.Collapsable}</Example>
+<Example examples={Ex} source={ExSource} id="Collapsable" />
 
 ## `<FloatingCard />` <small>(BETA)</small>
 
 A `<FloatingCard />` allows you to place a card somewhere floating in the interface.
 
-<Example>
-  <Ex.Floating />
-</Example>
+<Example examples={Ex} source={ExSource} id="Floating" />

@@ -19,8 +19,6 @@ export function DefinitionList(props: DefinitionListProps) {
     const columns = guessColumns(props.columns, props.row)
     const values = getRowValues(props.row)
 
-    console.log(columns, values)
-
     return (
       <>
         {Object.keys(columns).map((colKey, index) => {

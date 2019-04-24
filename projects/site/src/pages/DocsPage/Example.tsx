@@ -19,6 +19,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
   }
 
   const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
+  console.log(['exampleElement'], examples[id], exampleElement)
 
   return (
     <>

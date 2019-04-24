@@ -1,3 +1,4 @@
+import { Col } from '@o/gloss'
 import { Tree } from '@o/ui'
 import produce from 'immer'
 import React, { useState } from 'react'
@@ -40,20 +41,22 @@ export let Simple = () => {
   const [selected, setSelected] = useState(0)
 
   return (
-    <Tree
-      root={0}
-      selected={selected}
-      onTreeItemSelected={id => {
-        setSelected(id)
-      }}
-      onTreeItemExpanded={id => {
-        setTreeState(
-          produce(treeState, next => {
-            next[id].expanded = !next[id].expanded
-          }),
-        )
-      }}
-      elements={treeState}
-    />
+    <Col height={100}>
+      <Tree
+        root={0}
+        selected={selected}
+        onTreeItemSelected={id => {
+          setSelected(id)
+        }}
+        onTreeItemExpanded={id => {
+          setTreeState(
+            produce(treeState, next => {
+              next[id].expanded = !next[id].expanded
+            }),
+          )
+        }}
+        elements={treeState}
+      />
+    </Col>
   )
 }

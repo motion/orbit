@@ -1,4 +1,4 @@
-import React, { cloneElement, Fragment } from 'react'
+import React, { Fragment } from 'react'
 
 import { Sizes, Space } from './Space'
 

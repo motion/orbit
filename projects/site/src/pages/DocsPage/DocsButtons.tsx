@@ -1,4 +1,4 @@
-import { Button, Row, SubSection } from '@o/ui'
+import { Button, Row, SubSection, SurfacePassProps } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
@@ -22,8 +22,8 @@ export let Alternates = (
 )
 
 export let Sizing = (
-  <Row space>
-    {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
+  <Row space flexWrap="wrap">
+    {['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 1, 2, 3].map(size => (
       <Button key={size} size={size} icon="cog" iconAfter>
         Size {size}
       </Button>
@@ -32,15 +32,15 @@ export let Sizing = (
 )
 
 export let Elevation = (
-  <>
-    {[0, 1, 2, 3, 4, 5].map(i => (
-      <SubSection title={`Elevation ${i}, Size ${i + 1}`} key={i}>
-        <Button key={i} size={i + 1} elevation={i} icon="cog" iconAfter>
-          Hello World
+  <Row space flexWrap="wrap">
+    {[2, 3, 4, 5].map(i => (
+      <SubSection title={`Elevation ${i}, Size ${i}`} key={i}>
+        <Button key={i} size={i} elevation={i} icon="cog" iconAfter>
+          {i}
         </Button>
       </SubSection>
     ))}
-  </>
+  </Row>
 )
 
 export let Group = (
@@ -48,4 +48,19 @@ export let Group = (
     <Button>Hello</Button>
     <Button>World</Button>
   </Row>
+)
+
+export let PassMultipleProps = (
+  <SurfacePassProps icon="home" alt="action" size="lg">
+    <Row space>
+      <Button>Hello</Button>
+      <Button>World</Button>
+    </Row>
+  </SurfacePassProps>
+)
+
+export let SizingProps = (
+  <Button size={2} sizePadding={3} sizeRadius={3} sizeHeight={2} sizeIcon={0.75} icon="home">
+    Hello
+  </Button>
 )

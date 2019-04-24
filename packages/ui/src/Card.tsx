@@ -63,6 +63,7 @@ export function Card(props: CardProps) {
     pad,
     padding,
   }
+  const hasTitleClick = !!(collapseOnClick || onClickTitle || (headerProps && headerProps.onClick))
   return (
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
@@ -98,14 +99,15 @@ export function Card(props: CardProps) {
                 },
                 [collapseOnClick, onClickTitle],
               )}
+              cursor={hasTitleClick ? 'pointer' : 'auto'}
               alignItems="center"
               titleFlex={titleFlex}
               subTitleProps={subTitleProps}
               titleProps={{
-                fontWeight: 500,
+                fontWeight: 600,
                 ...titleProps,
               }}
-              hoverStyle={null}
+              hoverStyle={hasTitleClick ? true : false}
               afterTitle={afterTitle}
               title={title}
               subTitle={subTitle}
@@ -127,7 +129,7 @@ export function Card(props: CardProps) {
               <Col
                 scrollable={scrollable}
                 flexDirection={flexDirection}
-                space={getSpaceSize(space) * getSize(size)}
+                space={!!space && getSpaceSize(space) * getSize(size)}
                 pad={pad}
                 padding={padding}
                 flex={1}

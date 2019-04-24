@@ -1,14 +1,17 @@
-import { Card, gloss, Icon, SectionProps, Space, View } from '@o/ui'
-import React, { useState } from 'react'
+import { Card, gloss, Icon, Space, View } from '@o/ui'
+import React, { memo, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 
-export function Example({
-  source,
-  examples,
-  id,
-  ...props
-}: SectionProps & { source: string; examples: any; id: string }) {
+export type ExampleProps = {
+  source: string
+  examples: any
+  id: string
+  name?: string
+  children: any
+}
+
+export const Example = memo(({ source, examples, id, name, ...props }: ExampleProps) => {
   const [showSource, setShowSource] = useState(false)
 
   if (!source || !id) {
@@ -18,8 +21,8 @@ export function Example({
     <>
       <Card
         background={theme => theme.backgroundStrong}
-        title={id}
-        afterTitle={<Icon size={24} name="code" />}
+        title={name || id}
+        afterTitle={<Icon size={20} name="code" color="#B65138" />}
         onClickTitle={() => {
           setShowSource(!showSource)
         }}
@@ -32,7 +35,7 @@ export function Example({
       <Space size="xl" />
     </>
   )
-}
+})
 
 const SubCard = gloss(View, {
   margin: 5,

@@ -1,4 +1,4 @@
-import { Avatar, List } from '@o/ui'
+import { Avatar, Button, List } from '@o/ui'
 import React from 'react'
 
 import { employees } from './fakeData'
@@ -19,6 +19,32 @@ const rows = employees.map(x => ({
 }))
 
 export let Simple = (
-  // simple list
-  <List overscanCount={1000} height={500} items={rows} />
+  //
+  <List height={350} items={rows} />
+)
+
+export let Grouping = (
+  //
+  <List groupByLetter items={rows.slice(0, 20)} height={350} />
+)
+
+export let OrderFilter = (
+  //
+  <List sortBy={x => x.subTitle} search="St" items={rows.slice(0, 200)} height={350} />
+)
+
+export let Section = (
+  <List
+    title="My List"
+    subTitle="Subtitle for my section"
+    afterTitle={
+      <>
+        <Button icon="wave" tooltip="Some tooltip" />
+      </>
+    }
+    bordered
+    backgrounded
+    items={rows.slice(0, 20)}
+    height={350}
+  />
 )

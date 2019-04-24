@@ -230,7 +230,7 @@ const light = {
     cardBackground: [255, 255, 255],
     cardBackgroundHover: [255, 255, 255],
     cardBackgroundActive: [255, 255, 255],
-    cardBorderColor: [0, 0, 0, 0.1],
+    cardBorderColor: [0, 0, 0, 0.05],
   }),
 }
 

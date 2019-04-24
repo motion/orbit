@@ -5,6 +5,7 @@ import React, { createContext, memo, useCallback, useContext, useEffect, useMemo
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
+import { splitCollapseProps } from '../Collapsable'
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
@@ -61,6 +62,7 @@ export type HandleOrbitSelect = (index: number, extraData: any) => any
 const nullFn = () => null
 
 export const List = memo((allProps: ListProps) => {
+  const [collapseProps, allListProps] = splitCollapseProps(allProps)
   const {
     flex = 1,
     titleBorder = true,
@@ -70,8 +72,10 @@ export const List = memo((allProps: ListProps) => {
     icon,
     beforeTitle,
     afterTitle,
+    backgrounded,
+    elevation,
     ...listProps
-  } = allProps
+  } = allListProps
   // const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
@@ -216,6 +220,9 @@ export const List = memo((allProps: ListProps) => {
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
       titleBorder={titleBorder}
+      backgrounded={backgrounded}
+      elevation={elevation}
+      {...collapseProps}
     >
       {children}
     </Section>

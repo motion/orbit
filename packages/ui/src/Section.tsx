@@ -1,7 +1,8 @@
 import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
+
 import { createContextualProps } from './helpers/createContextualProps'
-import { SizedSurface } from './SizedSurface'
+import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
@@ -13,6 +14,7 @@ export type SectionSpecificProps = Omit<
   Partial<TitleRowSpecificProps>,
   'after' | 'below' | 'margin' | 'unpad' | 'size'
 > & {
+  elevation?: SizedSurfaceProps['elevation']
   size?: Sizes
   titleSize?: Sizes
   beforeTitle?: React.ReactNode
@@ -67,6 +69,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleSize,
     size,
     fixedTitle,
+    elevation,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -98,7 +101,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       hoverStyle={null}
       activeStyle={null}
       sizeRadius={bordered ? 1 : 0}
-      elevation={bordered ? 1 : 0}
+      elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}
       margin={typeof margin !== 'undefined' ? margin : bordered ? 10 : 0}
       noInnerElement

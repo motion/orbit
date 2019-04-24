@@ -20,6 +20,8 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
   return (
     <>
       <Card
+        pad
+        space
         background={theme => theme.backgroundStrong}
         title={name || id}
         afterTitle={<Icon size={20} name="code" color="#B65138" />}
@@ -27,9 +29,11 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
           setShowSource(!showSource)
         }}
       >
-        <SubCard hidden={!showSource}>
-          <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-        </SubCard>
+        {showSource && (
+          <SubCard>
+            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
+          </SubCard>
+        )}
         <SubCard>{examples[id]}</SubCard>
       </Card>
       <Space size="xl" />
@@ -40,12 +44,6 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
 const SubCard = gloss(View, {
   margin: 5,
   borderRadius: 5,
-  overflow: 'hidden',
-
-  hidden: {
-    height: 0,
-    margin: 0,
-  },
 })
 
 function parseSource(source: string, id: string) {

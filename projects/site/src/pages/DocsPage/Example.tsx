@@ -1,5 +1,5 @@
 import { Card, gloss, Icon, Space, View } from '@o/ui'
-import React, { memo, useState } from 'react'
+import React, { createElement, isValidElement, memo, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 
@@ -18,7 +18,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
     return props.children || null
   }
 
-  console.log('source is', source)
+  const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
   return (
     <>
@@ -40,7 +40,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
           </SubCard>
         )}
-        <SubCard>{examples[id]}</SubCard>
+        <SubCard>{exampleElement}</SubCard>
       </Card>
       <Space size="lg" />
     </>
@@ -56,9 +56,14 @@ function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
   const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
   const allLines = keyBlock.split('\n')
-  const lines = indent(allLines.slice(1, allLines.length - 2))
+  const lines = allLines[0].indexOf(') => {')
+    ? // if a component, dont remove first/last line
+      allLines
+    : // if not a component, remove first/last lines
+      indent(allLines.slice(1, allLines.length - 2))
   // remove empty comment line which forces spacing
   const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
+  console.log('lines', lines)
   return next.join('\n')
 }
 

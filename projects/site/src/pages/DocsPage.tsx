@@ -43,6 +43,13 @@ const views = {
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },
+  tree: {
+    page: () => import('./DocsPage/DocsTree.mdx'),
+    examples: () => import('./DocsPage/DocsTree'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTree'),
+    source: () => import('!raw-loader!@o/ui/src/Tree'),
+    types: () => import('../../tmp/Tree.json'),
+  },
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
     examples: () => import('./DocsPage/DocsButtons'),

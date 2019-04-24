@@ -1,6 +1,6 @@
 import { Theme, useThemeContext } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
 import { ListItemProps } from './lists/ListItem'
@@ -18,6 +18,7 @@ export type CardProps = SizedSurfaceSpecificProps &
   Omit<ColProps, 'size'> & {
     space?: Sizes
     collapseOnClick?: boolean
+    onClickTitle?: Function
     headerProps?: ListItemProps
   }
 
@@ -50,6 +51,7 @@ export function Card(props: CardProps) {
     iconBefore,
     headerProps,
     alt,
+    onClickTitle,
     ...sizedSurfaceProps
   } = rest
   // end
@@ -89,7 +91,13 @@ export function Card(props: CardProps) {
               onDoubleClick={
                 (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
               }
-              onClick={collapseOnClick && toggle.toggle}
+              onClick={useCallback(
+                e => {
+                  collapseOnClick && toggle.toggle()
+                  onClickTitle && onClickTitle(e)
+                },
+                [collapseOnClick, onClickTitle],
+              )}
               alignItems="center"
               titleFlex={titleFlex}
               subTitleProps={subTitleProps}
@@ -113,9 +121,9 @@ export function Card(props: CardProps) {
               {...headerProps}
             />
           </Scale>
-          <Collapsable useToggle={toggle}>
-            {/* reset inner contents to be original theme */}
-            <Theme name={activeThemeName}>
+          {/* reset inner contents to be original theme */}
+          <Theme name={activeThemeName}>
+            <Collapsable useToggle={toggle}>
               <Col
                 scrollable={scrollable}
                 flexDirection={flexDirection}
@@ -129,8 +137,8 @@ export function Card(props: CardProps) {
               >
                 {showChildren && children}
               </Col>
-            </Theme>
-          </Collapsable>
+            </Collapsable>
+          </Theme>
         </SizedSurface>
       </Scale>
     </Theme>

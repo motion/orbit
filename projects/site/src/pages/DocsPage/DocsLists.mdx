@@ -1,4 +1,5 @@
-import ExampleOne from './DocsLists'
+import * as Ex from './DocsLists'
+import ExSource from '!raw-loader!./DocsLists'
 import { Example } from './Example'
 
 A `<List />` is the highest level and most powerful list view in the interface kit.
@@ -13,8 +14,14 @@ It has many features built-in, including:
 - Keyboard navigation through the `Shortcut` store.
 - Sizeable with the `scale` prop.
 
+To use a List:
+
+```tsx
+import { List } from '@o/ui'
+```
+
 ## Examples
 
 ### Basics
 
-<Example>{ExampleOne}</Example>
+<Example examples={Ex} source={ExSource} id="Simple" />

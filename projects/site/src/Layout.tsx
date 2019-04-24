@@ -2,7 +2,7 @@ import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
@@ -15,13 +15,21 @@ const transition = 'transform ease 300ms'
 
 let updateLayout = null
 
-export const setThemeForPage = (name: string) => {
-  localStorage.setItem(`theme-${window.location.pathname.split('/')[1]}`, name)
-  updateLayout()
+export const usePageTheme = () => {
+  const forceUpdate = useForceUpdate()
+  const route = useCurrentRoute()
+  const curView = route.views.find(x => x.type && x.type.theme)
+  const key = `theme-${route.url.pathname.split('/')[0]}`
+  const theme = localStorage.getItem(key) || (curView && curView.type.theme) || 'home'
+  return [
+    theme,
+    useCallback(next => {
+      localStorage.setItem(key, next)
+      forceUpdate()
+      updateLayout()
+    }, []),
+  ]
 }
-
-export const getThemeForPage = () =>
-  localStorage.getItem(`theme-${window.location.pathname.split('/')[1]}`)
 
 export function Layout(props: any) {
   const forceUpdate = useForceUpdate()
@@ -31,6 +39,7 @@ export function Layout(props: any) {
   const screen = useScreenSize()
   const sidebarWidth = 300
   const route = useCurrentRoute()
+  const [theme] = usePageTheme()
 
   window['SiteStore'] = siteStore
 
@@ -58,9 +67,7 @@ export function Layout(props: any) {
   }
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
-  const curView = route.views.find(x => x.type && x.type.theme)
-  const theme = getThemeForPage() || (curView && curView.type.theme) || 'home'
-  console.log('theme', theme)
+  console.log('route', route)
 
   useLayoutEffect(() => {
     document.body.style.background = themes[theme].background.toCSS()

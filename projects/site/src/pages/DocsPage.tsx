@@ -22,7 +22,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { getThemeForPage, setThemeForPage } from '../Layout'
+import { usePageTheme } from '../Layout'
 import { Navigation } from '../Navigation'
 import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
@@ -132,6 +132,7 @@ const DocsPage = memo((props: { children?: any }) => {
   const inputRef = useRef(null)
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
+  const [theme, setTheme] = usePageTheme()
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -283,7 +284,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
-                    onClick={() => setThemeForPage(getThemeForPage() === 'home' ? 'light' : 'home')}
+                    onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
                   />
                   {isSmall && (
                     <RoundButton

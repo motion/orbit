@@ -1,5 +1,5 @@
-import { Section, SectionProps, Space } from '@o/ui'
-import React from 'react'
+import { Card, gloss, Icon, SectionProps, Space, View } from '@o/ui'
+import React, { useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 
@@ -9,22 +9,41 @@ export function Example({
   id,
   ...props
 }: SectionProps & { source: string; examples: any; id: string }) {
+  const [showSource, setShowSource] = useState(false)
+
   if (!source || !id) {
     return props.children || null
   }
   return (
     <>
-      <Section space {...props}>
-        {examples[id]}
-      </Section>
-      <Space />
-      <Section>
-        <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-      </Section>
+      <Card
+        background={theme => theme.backgroundStrong}
+        title={id}
+        afterTitle={<Icon size={24} name="code" />}
+        onClickTitle={() => {
+          setShowSource(!showSource)
+        }}
+      >
+        <SubCard hidden={!showSource}>
+          <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
+        </SubCard>
+        <SubCard>{examples[id]}</SubCard>
+      </Card>
       <Space size="xl" />
     </>
   )
 }
+
+const SubCard = gloss(View, {
+  margin: 5,
+  borderRadius: 5,
+  overflow: 'hidden',
+
+  hidden: {
+    height: 0,
+    margin: 0,
+  },
+})
 
 function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)

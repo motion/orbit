@@ -6,6 +6,13 @@ const Theme = new ThemeMaker()
 export const themes = {
   ...KitThemes,
 
+  light: {
+    ...KitThemes.light,
+    ...Theme.colorize({
+      color: '#000',
+    }),
+  },
+
   dark: {
     ...KitThemes.dark,
     ...Theme.colorize({

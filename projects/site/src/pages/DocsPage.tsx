@@ -272,7 +272,7 @@ const DocsPage = memo((props: { children?: any }) => {
                 openOnClick
                 closeOnClickAway
                 elevation={100}
-                zIndex={100000000000000000}
+                zIndex={1000000000000000}
                 target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
               >
                 <>
@@ -391,7 +391,7 @@ const FixedLayout = gloss({
 
   isSmall: {
     top: 0,
-    zIndex: 10000000000000,
+    zIndex: 100000000,
   },
 })
 

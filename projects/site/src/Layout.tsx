@@ -3,12 +3,12 @@ import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import BusyIndicator from 'react-busy-indicator'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
+import BusyIndicator from './views/BusyIndicator'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
@@ -72,14 +72,13 @@ export function Layout(props: any) {
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
 
   useLayoutEffect(() => {
-    console.log('got theme', theme)
     document.body.style.background = themes[theme].background.toCSS()
   }, [theme])
 
   return (
     <ProvideUI themes={themes}>
       <Theme name={theme}>
-        <BusyIndicator isBusy={!!loadingRoute} delayMs={50} />
+        <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"

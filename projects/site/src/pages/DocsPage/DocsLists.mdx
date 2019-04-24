@@ -1,6 +1,5 @@
 import * as Ex from './DocsLists'
 import ExSource from '!raw-loader!./DocsLists'
-import { Example } from './Example'
 
 A `<List />` is the highest level and most powerful list view in the interface kit.
 It is virtualized by default, but acts almost entirely like a non-virtualized list.
@@ -26,7 +25,8 @@ import { List } from '@o/ui'
 
 ### Basics
 
-Lists are simple to use:
+Lists are simple to use. The items are dynamically sized, and most of the elements like icon, title, subtitle, and children accept any `ReactNode` you'd prefer. You can add extra elements
+using `before` and `after`.
 
 <Example examples={Ex} source={ExSource} id="Simple" />
 
@@ -42,6 +42,29 @@ Grouping works by setting the `separator` prop for each `<ListItem />` automatic
 Because all text elements are higlightable, searching will automatically highlight the found phrases. Here we are searching for "st" and sorting them by their email address.
 
 <Example examples={Ex} source={ExSource} id="OrderFilter" name="Search + Sort" />
+
+### Selection and shortcuts
+
+Lists support selection the same as tables. That means you can use `selectable` or `selectable="multi"`. Selection
+is powerful and has many features you'd expect in native desktop selections. You can:
+
+- Hold your mouse down after clicking an item, to move your selection down.
+- Move your mouse to the edge as you select to automatically scroll the list.
+
+<Example examples={Ex} source={ExSource} id="Selection" name="Single Selection" />
+
+Multiple selections are powerful, and add the following shortcuts and useful ways to select:
+
+- Hold <Key>⌘</Key> to select more than one.
+- Hold <Key>shift</Key> to select a range.
+- Unselect by holding <Key>⌘</Key> and clicking a previously selected item.
+
+<Example examples={Ex} source={ExSource} id="MultipleSelection" name="Multiple Selection" />
+
+There are also a few props to enforce certain types of selection. You can force on selection with `alwaysSelected`, and have a default selection with `defaultSelected`.
+Callback from selections are `onSelect`.
+
+To see more complex lists, check out the [Master Detail](/docs/master-detail) template, which shows onSelect and keyboard navigation.
 
 ### Using as a section
 

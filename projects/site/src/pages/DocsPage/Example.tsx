@@ -19,6 +19,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
   }
   return (
     <>
+      <Space size="sm" />
       <Card
         pad
         space
@@ -36,7 +37,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
         )}
         <SubCard>{examples[id]}</SubCard>
       </Card>
-      <Space size="xl" />
+      <Space size="md" />
     </>
   )
 })

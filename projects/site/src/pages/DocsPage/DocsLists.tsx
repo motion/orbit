@@ -33,6 +33,16 @@ export let OrderFilter = (
   <List sortBy={x => x.subTitle} search="St" items={rows.slice(0, 200)} height={350} />
 )
 
+export let Selection = (
+  //
+  <List selectable items={rows.slice(0, 20)} height={350} />
+)
+
+export let MultipleSelection = (
+  //
+  <List selectable="multi" items={rows.slice(0, 20)} height={350} />
+)
+
 export let Section = (
   <List
     title="My List"

@@ -281,6 +281,10 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         alt={alt}
         size={getIconSize(props)}
         opacity={selectDefined(props.alpha, props.opacity)}
+        hoverStyle={props.hoverStyle}
+        activeStyle={props.activeStyle}
+        focusStyle={props.focusStyle}
+        color="inherit"
         {...iconProps}
       >
         {icon && !stringIcon && icon}

@@ -46,30 +46,35 @@ const views = {
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
     examples: () => import('./DocsPage/DocsButtons'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsButtons'),
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
     types: () => import('../../tmp/Button.json'),
   },
   cards: {
     page: () => import('./DocsPage/DocsCards.mdx'),
     examples: () => import('./DocsPage/DocsCards'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsCards'),
     source: () => import('!raw-loader!@o/ui/src/Card'),
     types: () => import('../../tmp/Card.json'),
   },
   progress: {
     page: () => import('./DocsPage/DocsProgress.mdx'),
     examples: () => import('./DocsPage/DocsProgress'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsProgress'),
     source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
     types: () => import('../../tmp/Progress.json'),
   },
   lists: {
     page: () => import('./DocsPage/DocsLists.mdx'),
     examples: () => import('./DocsPage/DocsLists'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsLists'),
     source: () => import('!raw-loader!@o/ui/src/lists/List'),
     types: () => import('../../tmp/List.json'),
   },
   tables: {
     page: () => import('./DocsPage/DocsTables.mdx'),
     examples: () => import('./DocsPage/DocsTables'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTables'),
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
   },
@@ -105,10 +110,11 @@ export default compose(
         }
       }
 
-      const [ChildView, source, examples, types] = await Promise.all([
+      const [ChildView, source, examples, examplesSource, types] = await Promise.all([
         view.page().then(x => x.default),
         (view.source || emptyPromise)().then(x => x.default),
         (view.examples || emptyPromise)(),
+        (view.examplesSource || emptyPromise)().then(x => x.default),
         (view.types || emptyPromise)().then(x => x.default),
       ])
 
@@ -121,6 +127,7 @@ export default compose(
             source={source}
             types={types}
             examples={examples}
+            examplesSource={examplesSource}
           >
             <ChildView />
           </DocsContents>

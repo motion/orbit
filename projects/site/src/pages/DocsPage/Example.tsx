@@ -17,6 +17,9 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
   if (!source || !id) {
     return props.children || null
   }
+
+  console.log('source is', source)
+
   return (
     <>
       <Space size="sm" />

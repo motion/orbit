@@ -1,4 +1,5 @@
 import { capitalize } from 'lodash'
+
 import { getDataType } from '../helpers/getDataType'
 import { DataColumns, DataColumnsShort, GenericDataRow } from '../types'
 import { normalizeRow } from './normalizeRow'
@@ -10,7 +11,7 @@ export function guessColumns(
   // array to object
   let cols = Array.isArray(userCols)
     ? userCols.reduce((acc, cur) => {
-        acc[cur] = cur
+        acc[typeof cur === 'string' ? cur : cur.key] = cur
         return acc
       }, {})
     : userCols

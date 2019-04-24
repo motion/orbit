@@ -19,15 +19,18 @@ export const usePageTheme = () => {
   const forceUpdate = useForceUpdate()
   const route = useCurrentRoute()
   const curView = route.views.find(x => x.type && x.type.theme)
-  const key = `theme-${route.url.pathname.split('/')[0]}`
+  const key = `theme-${route.url.pathname.split('/')[1] || ''}`
   const theme = localStorage.getItem(key) || (curView && curView.type.theme) || 'home'
   return [
     theme,
-    useCallback(next => {
-      localStorage.setItem(key, next)
-      forceUpdate()
-      updateLayout()
-    }, []),
+    useCallback(
+      next => {
+        localStorage.setItem(key, next)
+        forceUpdate()
+        updateLayout()
+      },
+      [key],
+    ),
   ]
 }
 
@@ -67,9 +70,9 @@ export function Layout(props: any) {
   }
 
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
-  console.log('route', route)
 
   useLayoutEffect(() => {
+    console.log('got theme', theme)
     document.body.style.background = themes[theme].background.toCSS()
   }, [theme])
 

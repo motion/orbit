@@ -50,6 +50,13 @@ const views = {
     source: () => import('!raw-loader!@o/ui/src/Tree'),
     types: () => import('../../tmp/Tree.json'),
   },
+  definitionList: {
+    page: () => import('./DocsPage/DocsDefinitionList.mdx'),
+    examples: () => import('./DocsPage/DocsDefinitionList'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsDefinitionList'),
+    source: () => import('!raw-loader!@o/ui/src/DefinitionList'),
+    types: () => import('../../tmp/DefinitionList.json'),
+  },
   buttons: {
     page: () => import('./DocsPage/DocsButtons.mdx'),
     examples: () => import('./DocsPage/DocsButtons'),
@@ -389,5 +396,5 @@ const FixedLayout = gloss({
 })
 
 export const MetaSection = gloss({
-  margin: [-30, -30, 0],
+  margin: [0, -30, 0],
 })

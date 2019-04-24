@@ -1,0 +1,22 @@
+A `<DefinitionList />` is a simple way to show strucured key/value-like data.
+Becuase it accepts similar props to `<Table />` and `<List />`, it's very easy to move your view
+data between these views.
+
+That means Definition Lists accept the `rows` and `columns` props, though the `columns` prop is
+optional and will be automatically guessed based on the keys of the rows.
+
+Definition Lists use a `<DefinitionItem />` to render each item.
+
+To use a DefinitionList:
+
+```tsx
+import { DefinitionList } from '@o/ui'
+```
+
+<br />
+
+## Examples
+
+### Basics
+
+<Example id="Simple" />

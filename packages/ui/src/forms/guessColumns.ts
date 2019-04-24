@@ -10,8 +10,8 @@ export function guessColumns(
 ): DataColumns {
   // array to object
   let cols = Array.isArray(userCols)
-    ? userCols.reduce((acc, cur) => {
-        acc[typeof cur === 'string' ? cur : cur.key] = cur
+    ? userCols.reduce((acc, cur, index) => {
+        acc[typeof cur === 'string' ? guessColKey(cur, firstRow, index) : cur.key] = cur
         return acc
       }, {})
     : userCols
@@ -48,4 +48,15 @@ export function guessColumns(
   }
 
   return res
+}
+
+function guessColKey(key: string, firstRow: GenericDataRow | false, index: number) {
+  if (!firstRow) {
+    return key
+  }
+  const rowKeys = Object.keys(firstRow)
+  if (rowKeys.indexOf(key) >= 0) {
+    return key
+  }
+  return rowKeys[index]
 }

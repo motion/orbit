@@ -28,7 +28,9 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
         space
         background={theme => theme.backgroundStrong}
         title={name || id}
-        afterTitle={<Icon size={20} name="code" color="#B65138" />}
+        afterTitle={
+          <Icon size={20} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+        }
         onClickTitle={() => {
           setShowSource(!showSource)
         }}
@@ -54,11 +56,10 @@ function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
   const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
   const allLines = keyBlock.split('\n')
-  const lines = indent(allLines.slice(1, allLines.length - 2)).join('\n')
-  return lines
-  //   return `export (
-  // ${lines}
-  // )`
+  const lines = indent(allLines.slice(1, allLines.length - 2))
+  // remove empty comment line which forces spacing
+  const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
+  return next.join('\n')
 }
 
 const indent = (lines: string[], space = 0) => {

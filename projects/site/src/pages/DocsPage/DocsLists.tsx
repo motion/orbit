@@ -1,4 +1,4 @@
-import { Avatar, Button, List } from '@o/ui'
+import { Avatar, Button, List, Scale } from '@o/ui'
 import React from 'react'
 
 import { employees } from './fakeData'
@@ -10,7 +10,7 @@ const avatar = (
 const rows = employees.map(x => ({
   title: x.name.first + ' ' + x.name.last,
   subTitle: x.email,
-  icon: x.gender,
+  icon: x.gender ? 'man' : 'woman',
   createdAt: x.dob,
   location: x.address.city,
   iconBefore: true,
@@ -18,29 +18,56 @@ const rows = employees.map(x => ({
   after: avatar,
 }))
 
+const simpleRows = employees.map(x => ({
+  title: x.name.first + ' ' + x.name.last,
+  subTitle: x.email,
+  icon: 'pane',
+  createdAt: x.dob,
+  location: x.address.city,
+}))
+
 export let Simple = (
   //
-  <List height={350} items={rows} />
+  <List height={300} items={rows} />
+)
+
+export let SimpleAlt = (
+  //
+  <List
+    items={simpleRows}
+    height={300}
+    itemProps={{
+      titleProps: {
+        fontWeight: 600,
+      },
+    }}
+  />
 )
 
 export let Grouping = (
   //
-  <List groupByLetter items={rows.slice(0, 20)} height={350} />
+  <List sortBy={x => x.subTitle} groupByLetter items={rows.slice(0, 20)} height={300} />
 )
 
 export let OrderFilter = (
   //
-  <List sortBy={x => x.subTitle} search="St" items={rows.slice(0, 200)} height={350} />
+  <List sortBy={x => x.subTitle} search="St" items={rows.slice(0, 200)} height={300} />
 )
 
 export let Selection = (
   //
-  <List selectable items={rows.slice(0, 20)} height={350} />
+  <List selectable items={rows.slice(0, 20)} height={300} />
 )
 
 export let MultipleSelection = (
   //
-  <List selectable="multi" items={rows.slice(0, 20)} height={350} />
+  <List selectable="multi" items={rows.slice(0, 20)} height={300} />
+)
+
+export let Scaling = (
+  <Scale size={2}>
+    <List items={rows.slice(0, 20)} height={300} />
+  </Scale>
 )
 
 export let Section = (

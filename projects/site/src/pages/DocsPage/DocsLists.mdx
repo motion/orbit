@@ -1,5 +1,9 @@
 A `<List />` is the highest level and most powerful list view in the interface kit.
 It is virtualized by default, but acts almost entirely like a non-virtualized list.
+
+Lists ultimately will render a `<ListItem />`, though you can change the view it renders
+with the `ItemView` property.
+
 It has many features built-in, including:
 
 - Ordering, filtering, searching, and grouping through `useFilter()` props.
@@ -26,6 +30,10 @@ Lists are simple to use. The items are dynamically sized, and most of the elemen
 using `before` and `after`.
 
 <Example id="Simple" />
+
+Here's some slightly different item props.
+
+<Example id="SimpleAlt" />
 
 ### Grouping, sorting, searching
 
@@ -62,6 +70,12 @@ There are also a few props to enforce certain types of selection. You can force 
 Callback from selections are `onSelect`.
 
 To see more complex lists, check out the [Master Detail](/docs/master-detail) template, which shows onSelect and keyboard navigation.
+
+### Scaling
+
+Scale works for lists.
+
+<Example id="Scaling" name="Scale" />
 
 ### Using as a section
 

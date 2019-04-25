@@ -17,45 +17,60 @@ import { Omit } from './types'
 import { getElevation } from './View/elevate'
 
 export type PopoverProps = Omit<SurfaceProps, 'background'> & {
-  // custom theme for just the popover content
+  /** Custom theme for just the popover content */
   popoverTheme?: string
-  // if you set a group, it acts as an ID that makes sure only ONE popover
-  // within that ID is ever open
+
+  /** If you set a group, it acts as an ID that makes sure only one popover within that ID is ever open */
   group?: string
-  // can pass function to get isOpen passed in
+
+  /** Can pass function to get isOpen passed in */
   children?: React.ReactNode | PopoverChildrenFn
-  // element or function that returns element, or querySelector to element
+
+  /** Element or function that returns element, or querySelector to element */
   target?: React.ReactNode | (() => React.ReactNode) | string
   open?: boolean
-  // the amount of space around popover you can move mouse
-  // before it triggers it to close
+
+  /** The amount of space around popover you can move mouse */
+
+  /** Before it triggers it to close */
   forgiveness?: number
-  // show a background over content
+
+  /** Show a background over content */
   overlay?: boolean
   left?: number
   top?: number
-  // the distance the popover is from the target
-  // so it displays nicely spaced away
+
+  /** The distance the popover is from the target */
   distance?: number
-  // open when target is clicked
+
+  /** Open when target is clicked */
   openOnClick?: boolean
-  // open automatically when target is hovered
+
+  /** Open automatically when target is hovered */
   openOnHover?: boolean
-  // delay until openOnHover
+
+  /** Delay until openOnHover */
   delay?: number
-  // prevent popover itself from catching pointer events
+
+  /** Prevent popover itself from catching pointer events */
   noHoverOnChildren?: boolean
-  // size of shown arrow
+
+  /** Size of shown arrow */
   arrowSize?: number
-  // close when you click outside it
+
+  /** Close when you click outside it */
   closeOnClickAway?: boolean
-  // close when you click inside it
+
+  /** Close when you click inside it */
   closeOnClick?: boolean
   closeOnEsc?: boolean
-  // which direction it shows towards
-  // default determine direction automatically
+
+  /** Which direction it shows towards */
+
+  /** Default determine direction automatically */
   towards?: PopoverDirection
-  // popover can aim to be centered or left aligned on the target
+
+  /** Popover can aim to be centered or left aligned on the target */
   alignPopover?: 'left' | 'center'
   padding?: number[] | number
   onMouseEnter?: Function
@@ -63,17 +78,23 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   onClose?: Function
   openAnimation?: string
   closeAnimation?: string
-  // lets you adjust position after target is positioned
+
+  /** Lets you adjust position after target is positioned */
   adjust?: number[]
-  // hide arrow
+
+  /** Hide arrow */
   noArrow?: boolean
-  // padding from edge of window
+
+  /** Padding from edge of window */
   edgePadding?: number
-  // pretty much what it says, for use with closeOnClick
+
+  /** Pretty much what it says, for use with closeOnClick */
   keepOpenOnClickTarget?: boolean
-  // callback after close
+
+  /** Callback after close */
   onDidClose?: Function
-  // callback after open
+
+  /** Callback after open */
   onDidOpen?: Function
   onOpen?: Function
   height?: number
@@ -86,7 +107,8 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   ignoreSegment?: boolean
   onChangeVisibility?: (visibility: boolean) => any
   noPortal?: boolean
-  // helps you see forgiveness zone
+
+  /** Helps you see forgiveness zone */
   showForgiveness?: boolean
   popoverRef?: Function
 }
@@ -1064,7 +1086,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal style={{ ...style, zIndex }}>
+        <Portal prepend style={{ ...style, zIndex }}>
           <span
             className="popover-portal"
             style={{

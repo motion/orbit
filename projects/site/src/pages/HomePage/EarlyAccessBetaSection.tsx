@@ -1,4 +1,4 @@
-import { Button, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui'
+import { Button, Col, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
@@ -131,6 +131,7 @@ export class Join extends React.Component<any> {
   }
 
   submit = async e => {
+    console.log('got submit')
     e.preventDefault()
     this.clearState()
     this.setState({ submitting: true })
@@ -209,7 +210,7 @@ export class Join extends React.Component<any> {
           </Button>
         </Form>
         {!!message && (
-          <>
+          <Col maxWidth={500} margin={[0, 'auto']}>
             <Space size="lg" />
             <Message
               alt={success ? 'success' : error ? 'error' : undefined}
@@ -217,7 +218,7 @@ export class Join extends React.Component<any> {
                 __html: message,
               }}
             />
-          </>
+          </Col>
         )}
       </>
     )

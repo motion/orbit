@@ -416,7 +416,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           {...viewProps}
           {...segmentedStyle}
           {...childrenProps}
-          {...!children && { tagName }}
+          {...!noInnerElement && { tagName }}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>

@@ -1,4 +1,3 @@
-import { CSSPropertySet } from '@o/css'
 import { Bit } from '@o/models'
 import { isDefined, mergeDefined } from '@o/utils'
 import React, { createContext, memo, useCallback, useContext, useEffect, useMemo } from 'react'
@@ -26,13 +25,22 @@ import { VirtualList, VirtualListProps } from './VirtualList'
 export type ListProps = SectionSpecificProps &
   VirtualListProps<Bit | ListItemProps> &
   Partial<UseFilterProps<any>> & {
-    isActive?: boolean
+    /** Filter by search string */
     search?: string
+
+    /** Callback on selection change with an array of rows */
     onSelect?: HandleOrbitSelect
+
+    /** Callback on double-click or keyboard enter, with array of rows */
     onOpen?: HandleOrbitSelect
+
+    /** Item to show when list has no elements passed in */
     placeholder?: React.ReactNode
+
+    /** On selection, automatically update Share with selection */
     shareable?: boolean
-    flex?: CSSPropertySet['flex']
+
+    // flex?: CSSPropertySet['flex']
   }
 
 // TODO use creaetPropsContext

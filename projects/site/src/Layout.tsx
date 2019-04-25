@@ -9,6 +9,7 @@ import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { BusyIndicator } from './views/BusyIndicator'
+import { useFadePage } from './views/FadeIn'
 import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
 
 const transition = 'transform ease 300ms'
@@ -43,6 +44,7 @@ export function Layout(props: any) {
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
+  const Fade = useFadePage()
 
   window['SiteStore'] = siteStore
 
@@ -96,6 +98,7 @@ export function Layout(props: any) {
         <Portal prepend style={{ zIndex: 100000000 }}>
           <Theme name="home">
             <View
+              ref={Fade.ref}
               pointerEvents="auto"
               position="fixed"
               top={0}
@@ -119,11 +122,13 @@ export function Layout(props: any) {
                 cursor="pointer"
                 onClick={siteStore.toggleSidebar}
               />
-              <HeaderLink href="/" {...linkProps}>
-                Home
-              </HeaderLink>
-              <LinksLeft {...linkProps} />
-              <LinksRight {...linkProps} />
+              <Fade.FadeProvide>
+                <HeaderLink href="/" {...linkProps}>
+                  Home
+                </HeaderLink>
+                <LinksLeft {...linkProps} />
+                <LinksRight {...linkProps} />
+              </Fade.FadeProvide>
             </View>
           </Theme>
         </Portal>

@@ -8,6 +8,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
+import { FadeChild, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
 import { SectionContent } from './SectionContent'
 
@@ -70,18 +71,26 @@ export function Link({
   )
 }
 
-export const HeaderLink = props => <Link width="33%" {...props} />
+export const HeaderLink = ({ delay, children, ...props }: any) => {
+  return (
+    <Link width="33%" {...props}>
+      <FadeChild delay={delay}>{children}</FadeChild>
+    </Link>
+  )
+}
+
+const linkDelay = 80
 
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 0} {...props} href="/docs">
         Start
       </HeaderLink>
-      <HeaderLink {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
         Docs
       </HeaderLink>
-      <HeaderLink {...props} href="/apps">
+      <HeaderLink delay={linkDelay * 2} {...props} href="/apps">
         Apps
       </HeaderLink>
     </>
@@ -90,13 +99,13 @@ export const LinksLeft = props => {
 
 export const LinksRight = props => (
   <>
-    <HeaderLink {...props} href="/beta">
+    <HeaderLink delay={linkDelay * 4} {...props} href="/beta">
       Beta
     </HeaderLink>
-    <HeaderLink {...props} href="/blog">
+    <HeaderLink delay={linkDelay * 5} {...props} href="/blog">
       Blog
     </HeaderLink>
-    <HeaderLink {...props} href="/about">
+    <HeaderLink delay={linkDelay * 6} {...props} href="/about">
       About
     </HeaderLink>
   </>
@@ -116,6 +125,7 @@ export const Header = memo(
     const size = useScreenSize()
     const theme = useTheme()
     const siteStore = useSiteStore()
+    const Fade = useFadePage()
 
     let before = null
     let after = null
@@ -156,41 +166,48 @@ export const Header = memo(
 
     if (slim) {
       return (
-        <Row
-          pointerEvents="auto"
-          background={theme.background.lighten(0.3)}
-          position="relative"
-          zIndex={1000000}
-          {...rest}
-        >
-          <HeaderContain height={42}>
-            <LinkSection alignRight>{before}</LinkSection>
-            <LogoHorizontal slim />
-            <LinkSection>{after}</LinkSection>
-          </HeaderContain>
-          {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
-        </Row>
+        <Fade.FadeProvide>
+          <Row
+            pointerEvents="auto"
+            background={theme.background.lighten(0.3)}
+            position="relative"
+            zIndex={1000000}
+            {...rest}
+          >
+            <HeaderContain height={42}>
+              <LinkSection alignRight>{before}</LinkSection>
+              <LogoHorizontal slim />
+              <LinkSection>{after}</LinkSection>
+            </HeaderContain>
+            {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
+          </Row>
+        </Fade.FadeProvide>
       )
     }
 
     return (
-      <Row
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        zIndex={1000000}
-        alignItems="center"
-        justifyContent="space-around"
-        padding={[30, 0]}
-        {...rest}
-      >
-        <HeaderContain>
-          <LinkSection alignRight>{before}</LinkSection>
-          <LogoHorizontal />
-          <LinkSection>{after}</LinkSection>
-        </HeaderContain>
-      </Row>
+      <Fade.FadeProvide>
+        <Row
+          ref={Fade.ref}
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          zIndex={1000000}
+          alignItems="center"
+          justifyContent="space-around"
+          padding={[30, 0]}
+          {...rest}
+        >
+          <HeaderContain>
+            <LinkSection alignRight>{before}</LinkSection>
+            <FadeChild delay={100}>
+              <LogoHorizontal />
+            </FadeChild>
+            <LinkSection>{after}</LinkSection>
+          </HeaderContain>
+        </Row>
+      </Fade.FadeProvide>
     )
   },
 )

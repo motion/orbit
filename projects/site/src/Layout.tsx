@@ -78,7 +78,7 @@ export function Layout(props: any) {
   return (
     <ProvideUI themes={themes}>
       <Theme name={theme}>
-        <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={1} />
+        <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={10} />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"

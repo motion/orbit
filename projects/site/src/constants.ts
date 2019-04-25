@@ -9,7 +9,7 @@ export const colors = {
 export const widths = {
   small: 740,
   medium: 820,
-  large: 1024,
+  large: 1080,
 }
 
 export const sectionMaxHeight = 1250

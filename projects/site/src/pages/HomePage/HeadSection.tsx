@@ -7,7 +7,7 @@ import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
 import appScreen from '../../../public/images/screen.jpg'
-import { IS_CHROME } from '../../constants'
+import { colors, IS_CHROME } from '../../constants'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeIn, fadeUpProps } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -320,7 +320,7 @@ export function HeadSection(props) {
   )
 }
 
-const RoundButton = ({ primary = '#21AA0F', ...props }: ViewProps & { primary?: string }) => (
+const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: string }) => (
   <View
     tagName="a"
     href="ok"

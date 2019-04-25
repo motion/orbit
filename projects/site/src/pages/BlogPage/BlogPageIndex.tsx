@@ -1,4 +1,4 @@
-import { gloss, View } from '@o/ui'
+import { Avatar, gloss, Row, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
@@ -19,7 +19,7 @@ export function BlogPageIndex() {
     <BlogLayout space>
       {recentPosts.map((post, index) => (
         <Post
-          pad
+          pad="xl"
           key={index}
           href="what"
           tagName="a"
@@ -34,25 +34,37 @@ export function BlogPageIndex() {
           }}
         >
           <TitleText
-            fontWeight={200}
+            fontWeight={300}
             color={purpleWave.backgroundColor}
             selectable={false}
             textAlign="left"
           >
             {post.title}
           </TitleText>
-          {new Date(post.date)
-            .toLocaleDateString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-            })
-            .replace(/,.*,/, ',')
-            .replace(/\//g, '·')}{' '}
-          by {post.author}
+
+          <PostMeta post={post} />
         </Post>
       ))}
     </BlogLayout>
+  )
+}
+
+export const PostMeta = ({ post }) => {
+  return (
+    <Row alignItems="center" fontSize={16} alpha={0.65}>
+      <Avatar size={16} src={post.authorImage} />
+      &nbsp; &nbsp;
+      {post.author}
+      &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+      {new Date(post.date)
+        .toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        })
+        .replace(/,.*,/, ',')
+        .replace(/\//g, '·')}{' '}
+    </Row>
   )
 }
 

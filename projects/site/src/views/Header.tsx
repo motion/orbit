@@ -42,7 +42,7 @@ export function Link({
     >
       <SimpleText
         fontSize={fontSize}
-        alpha={0.65}
+        alpha={0.6}
         fontWeight={400}
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: 0.7 }}

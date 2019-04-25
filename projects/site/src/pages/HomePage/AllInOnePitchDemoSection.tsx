@@ -200,11 +200,7 @@ export function NeckSection(props) {
 
   return (
     <Page overflow="hidden" zIndex={3} {...props}>
-      <Page.Content
-        transform={{
-          y: '-2%',
-        }}
-      >
+      <Page.Content>
         <SpacedPageContent
           header={
             <>

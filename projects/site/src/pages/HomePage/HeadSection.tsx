@@ -174,18 +174,11 @@ export function HeadSection(props) {
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen opacity={fontsLoaded ? 1 : 0}>
-            <Row
-              transform={{
-                y: -50,
-              }}
-              margin={['auto', 0]}
-              alignItems="center"
-              justifyContent="center"
-            >
+            <Row margin={['auto', 0]} alignItems="center" justifyContent="center">
               <HeadText />
             </Row>
 
-            <FullScreen top="auto">
+            <FullScreen top="auto" transform={{ y: 66 }}>
               <FadeIn {...fadeUpProps}>
                 <View
                   flex={1}
@@ -216,10 +209,8 @@ export function HeadSection(props) {
                 </View>
               </FadeIn>
 
-              <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-                <FadeIn {...fadeUpProps}>
-                  <img src={lineSep} />
-                </FadeIn>
+              <FullScreen transform={{ y: 66 }} minWidth={1512} margin={[0, -220]} top="auto">
+                <img src={lineSep} />
                 <View
                   position="absolute"
                   bottom={0}
@@ -301,7 +292,8 @@ export function HeadSection(props) {
                 zIndex={1}
                 opacity={0.35}
                 transform={{
-                  scale: 1.5,
+                  y: '25%',
+                  scale: 1.25,
                 }}
               >
                 <FadeIn {...fadeUpProps}>

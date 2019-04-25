@@ -1,16 +1,16 @@
-import { Table } from '@o/ui'
-import React from 'react'
+import { List, Table } from '@o/ui'
+import React, { useState } from 'react'
 
 import { employees } from './fakeData'
 
-const rows = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
+const data = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
 
 export let Simple = (
   <Table
     overscanCount={100}
     height={300}
     columns={['username', 'password', 'ssn', 'dob']}
-    rows={rows}
+    rows={data}
   />
 )
 
@@ -31,6 +31,37 @@ export let Columns = (
       'password',
       'ssn',
       'dob',
+    ]}
+    rows={employees}
+  />
+)
+
+export let Selections = () => {
+  const [rows, setRows] = useState([])
+  return (
+    <>
+      <Table height={250} selectable="multi" onSelect={setRows} rows={employees} />
+      <List
+        title="Selected"
+        height={200}
+        items={rows.map(employee => ({
+          title: employee.username,
+          subTitle: employee.ssn,
+        }))}
+      />
+    </>
+  )
+}
+
+export let Filters = (
+  <Table
+    height={250}
+    filters={[
+      {
+        value: 'beau',
+        type: 'include',
+        key: 'username',
+      },
     ]}
     rows={employees}
   />

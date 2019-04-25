@@ -30,9 +30,22 @@ const guides = [
     title: 'App Store',
     ...titleItem,
   },
+
   {
-    id: 'examples',
-    title: 'Examples',
+    selectable: false,
+    hideBorder: true,
+    children: <ListSubTitle marginTop={40}>Examples</ListSubTitle>,
+  },
+  {
+    id: 'databaseviewer',
+    title: 'Database Viewer',
+    subTitle: 'An app that lets you write custom queries, save, edit.',
+    ...titleItem,
+  },
+  {
+    id: 'customermanager',
+    title: 'Customer Manager',
+    subTitle: 'Build an interface to manage Postgres customers.',
     ...titleItem,
   },
 ]

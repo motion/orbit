@@ -217,7 +217,9 @@ export function HeadSection(props) {
               </FadeIn>
 
               <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-                <img src={lineSep} />
+                <FadeIn {...fadeUpProps}>
+                  <img src={lineSep} />
+                </FadeIn>
                 <View
                   position="absolute"
                   bottom={0}
@@ -302,7 +304,9 @@ export function HeadSection(props) {
                   scale: 1.5,
                 }}
               >
-                <img src={glow} />
+                <FadeIn {...fadeUpProps}>
+                  <img src={glow} />
+                </FadeIn>
               </View>
             </SectionContent>
           </Page.Parallax>

@@ -23,8 +23,6 @@
     "@o/ui": "^2.4.1",
     "@o/use-store": "^2.4.1",
     "@o/wait-for-fonts": "^2.4.1",
-    "illuminate-js": "1.0.0-alpha.2",
-    "react-illuminate": "2.0.0-alpha.2",
     "intersection-observer": "0.5.1",
     "jsonp": "^0.2.1",
     "lodash": "4.17.11",

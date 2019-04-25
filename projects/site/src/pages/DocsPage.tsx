@@ -287,7 +287,7 @@ const DocsPageHeader = memo(
         <ListShortcuts>
           <Row
             position="relative"
-            margin={[0, 'auto']}
+            margin={[0, 'auto', 0, 'auto']}
             pointerEvents="auto"
             pad={['sm', 0]}
             width={useScreenVal('100%', '90%', '90%')}
@@ -300,6 +300,7 @@ const DocsPageHeader = memo(
               onChange={e => setSearch(e.target.value)}
               maxWidth="calc(55% - 20px)"
               flex={1}
+              size="xl"
               placeholder={isSmall ? 'Search...' : 'Search the docs...'}
               after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
             />

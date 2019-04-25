@@ -1,5 +1,5 @@
-import { Card, gloss, Icon, Space, View } from '@o/ui'
-import React, { createElement, isValidElement, memo, useState } from 'react'
+import { Card, gloss, Icon, SimpleText, Space, View } from '@o/ui'
+import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 
@@ -13,6 +13,8 @@ export type ExampleProps = {
 
 export const Example = memo(({ source, examples, id, name, ...props }: ExampleProps) => {
   const [showSource, setShowSource] = useState(true)
+  const [hovered, setHovered] = useState(false)
+  const tm = useRef(null)
 
   if (!source || !id) {
     return props.children || null
@@ -41,16 +43,54 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
           </SubCard>
         )}
-        <SubCard>{exampleElement}</SubCard>
+        <SubCard
+          onMouseEnter={() => {
+            tm.current = setTimeout(() => setHovered(true), 200)
+          }}
+          onMouseLeave={() => {
+            clearTimeout(tm.current)
+            setHovered(false)
+          }}
+        >
+          {exampleElement}
+          <AccidentalScrollPrevent disabled={hovered}>
+            <View
+              position="absolute"
+              bottom={0}
+              right={0}
+              padding={5}
+              background={theme => theme.backgroundStronger}
+            >
+              <SimpleText size={0.8}>Hover to enable</SimpleText>
+            </View>
+          </AccidentalScrollPrevent>
+        </SubCard>
       </Card>
       <Space size="xl" />
     </>
   )
 })
 
+const AccidentalScrollPrevent = gloss({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  // background: [150, 150, 150, 0.025],
+  borderRadius: 5,
+  zIndex: 10,
+
+  disabled: {
+    opacity: 0,
+    pointerEvents: 'none',
+  },
+})
+
 const SubCard = gloss(View, {
   margin: 5,
   borderRadius: 5,
+  position: 'relative',
 })
 
 function parseSource(source: string, id: string) {

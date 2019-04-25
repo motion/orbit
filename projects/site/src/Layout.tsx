@@ -89,7 +89,7 @@ export function Layout(props: any) {
           overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
           transition={transition}
           transform={{
-            x: siteStore.showSidebar ? -sidebarWidth : 0,
+            x: siteStore.showSidebar ? -sidebarWidth : 'none',
           }}
           background={bg}
         >

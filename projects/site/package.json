@@ -48,7 +48,8 @@
     "warpjs": "1.0.8",
     "zenscroll": "^4.0.2",
     "static-mock-data": "4.0.0",
-    "scheduler": "0.14.0"
+    "scheduler": "0.14.0",
+    "sticky-sidebar": "3.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3"

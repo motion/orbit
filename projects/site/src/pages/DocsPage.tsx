@@ -16,8 +16,9 @@ import {
 import { useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
+import StickySidebar from 'sticky-sidebar'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
@@ -198,6 +199,23 @@ const DocsPage = memo((props: { children?: any }) => {
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
   const [theme, setTheme] = usePageTheme()
 
+  useLayoutEffect(() => {
+    // return
+    const sidebar = new StickySidebar('#sidebar', {
+      containerSelector: '#main',
+      topSpacing: 0,
+      bottomSpacing: 0,
+      innerWrapperSelector: '.sidebar__inner',
+      stickyClass: 'is-affixed',
+      minWidth: 0,
+      resizeSensor: true,
+    })
+
+    return () => {
+      sidebar.destroy()
+    }
+  }, [])
+
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
 
@@ -231,7 +249,7 @@ const DocsPage = memo((props: { children?: any }) => {
     inputRef.current && inputRef.current.focus()
   }, [inputRef.current])
 
-  const content = (
+  const sidebarChildren = (
     <React.Fragment key="content">
       <List
         search={search}
@@ -357,51 +375,47 @@ const DocsPage = memo((props: { children?: any }) => {
         <Header slim noBorder />
       </Portal>
 
-      <Portal>
-        <FixedLayout isSmall={isSmall} className="mini-scrollbars">
-          {isSmall ? (
+      {isSmall && (
+        <Portal>
+          <FixedLayout isSmall={isSmall} className="mini-scrollbars">
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
               elevation={25}
               width={280}
               pointerEvents="auto"
-              // @ts-ignore
-              background={theme => theme.background}
+              background={theme.background}
             >
-              {content}
+              {sidebarChildren}
             </Sidebar>
-          ) : (
-            <SectionContent pointerEvents="none" flex={1}>
-              <Col position="relative" flex={1} width={300} pointerEvents="auto">
-                {content}
-                <BorderRight opacity={0.5} />
-              </Col>
-            </SectionContent>
-          )}
-        </FixedLayout>
-      </Portal>
+          </FixedLayout>
+        </Portal>
+      )}
 
       <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
-        <ContentPosition isSmall={isSmall}>
-          <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-          <BlogFooter />
-        </ContentPosition>
+        <Row id="main" className="main">
+          {!isSmall && (
+            <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
+              <Col position="relative" className="sidebar__inner" flex={1}>
+                <Col margin={[50, 0, 0]} flex={1} position="relative">
+                  {sidebarChildren}
+                  <BorderRight top={10} opacity={0.5} />
+                </Col>
+              </Col>
+            </Col>
+          )}
+          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
+            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+          </Col>
+        </Row>
+
+        <BlogFooter />
       </SectionContent>
     </>
   )
 })
 
 DocsPage.theme = 'home'
-
-const ContentPosition = gloss<{ isSmall?: boolean }>({
-  width: '100%',
-  padding: [0, 0, 0, 'calc(2.5% + 300px)'],
-  isSmall: {
-    padding: [0, 0, 0, 0],
-    background: 'red',
-  },
-})
 
 const FixedLayout = gloss({
   position: 'fixed',
@@ -418,5 +432,5 @@ const FixedLayout = gloss({
 })
 
 export const MetaSection = gloss({
-  margin: [0, -30, 0],
+  margin: 0,
 })

@@ -1,5 +1,6 @@
 import { gloss, Theme, ThemeContext } from '@o/gloss'
 import { useReaction } from '@o/use-store'
+import { isDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
 
@@ -186,7 +187,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = small ? 0.8 : 1
-  const defaultPadding = small ? [7, 9] : [8, 10]
+  let defaultPadding = small ? 'xs' : 'sm'
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
@@ -196,7 +197,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
-    defaultPadding[0] += 2
+    defaultPadding = 'sm'
   }
 
   const hasChildren = showChildren && !!children
@@ -221,7 +222,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        margin={[2, -1]}
+        margin={[2, 0]}
         maxWidth={120}
         alpha={subTextOpacity}
         onClick={onClickLocation || undefined}
@@ -251,13 +252,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         themeSelect="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
-        padding={padding || defaultPadding}
+        pad={isDefined(padding) ? surfaceProps.pad : defaultPadding}
+        paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
         after={!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
-        paddingLeft={indent ? indent * 22 : undefined}
         {...disablePsuedoProps}
         {...surfaceProps}
       >

@@ -353,7 +353,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         ) : (
           <>
             {innerElements}
-            {showElement && <Space />}
+            {showElement && icon && <Space />}
           </>
         )}
         {glow && !disabled && (

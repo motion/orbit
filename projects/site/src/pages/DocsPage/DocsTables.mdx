@@ -28,6 +28,13 @@ You can click on the table headers to sort, and drag on their edges to resize.
 
 <Example id="Simple" />
 
+### Searchable
+
+Adding a searchbox to a table is as easy as a single property, `searchable`. Searchable for now
+just adds a plain `<SearchInput />` above the table.
+
+<Example id="Searching" name="Searching" />
+
 ### Customizing Columns
 
 Controlling the order and various properties of the columns, including if they are resizable, the value they use for sorting, their default width, and what happens when they change is all possible.
@@ -55,6 +62,9 @@ Table filters are very flexible. You can filter as many columns as you like, and
 
 <Example id="Filters" name="Filtering" />
 
-### Searchable
-
 ### Using as a Section
+
+Orbit aims to make building apps easy, so many of the high level views are wrapped in a `<Section />`. Table is no exception.
+This lets you quickly and easily show a table, elevate it, add a title and subtitle, and make it collapsable.
+
+<Example id="Section" name="Using as Section" />

@@ -1,4 +1,4 @@
-import { List, Table } from '@o/ui'
+import { Button, List, Table } from '@o/ui'
 import React, { useState } from 'react'
 
 import { employees } from './fakeData'
@@ -64,5 +64,28 @@ export let Filters = (
       },
     ]}
     rows={employees}
+  />
+)
+
+export let Searching = (
+  //
+  <Table searchable height={250} rows={employees} />
+)
+
+export let Section = (
+  <Table
+    title="My List"
+    subTitle="Subtitle for my section"
+    collapsable
+    searchable
+    afterTitle={
+      <>
+        <Button icon="wave" tooltip="Some tooltip" />
+      </>
+    }
+    bordered
+    backgrounded
+    rows={employees}
+    height={250}
   />
 )

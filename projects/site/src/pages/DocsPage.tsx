@@ -77,6 +77,11 @@ const views = {
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
     types: () => import('../../tmp/Button.json'),
   },
+  surfaces: {
+    page: () => import('./DocsPage/DocsSurfaces.mdx'),
+    source: () => import('!raw-loader!@o/ui/src/Surface'),
+    types: () => import('../../tmp/Surface.json'),
+  },
   cards: {
     page: () => import('./DocsPage/DocsCards.mdx'),
     examples: () => import('./DocsPage/DocsCards'),

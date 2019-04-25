@@ -106,7 +106,6 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     <Theme alt={props.alt}>
       <ListItemSimple
         ref={ref}
-        searchTerm={props.query}
         {...itemProps}
         {...rest}
         icon={icon}

@@ -34,10 +34,11 @@ export function BlogPageIndex() {
           }}
         >
           <TitleText
-            fontWeight={300}
+            fontWeight={200}
             color={purpleWave.backgroundColor}
             selectable={false}
             textAlign="left"
+            size="lg"
           >
             {post.title}
           </TitleText>

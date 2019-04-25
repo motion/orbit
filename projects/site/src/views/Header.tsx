@@ -34,7 +34,8 @@ export function Link({
   ...props
 }: LinkProps) {
   const route = useCurrentRoute()
-  const isActive = route.url.pathname.indexOf(href) === 0
+  const isActive =
+    href === '/' ? route.url.pathname === href : route.url.pathname.indexOf(href) === 0
 
   return (
     <LinkText

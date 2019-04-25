@@ -64,27 +64,25 @@ export const Footer = () => {
       <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle alt="lightRed">Orbit</SmallTitle>
         <SmallLink href="/">Home</SmallLink>
-        <SmallLink href="/">Download</SmallLink>
-        <SmallLink href="/">Getting Started</SmallLink>
-        <SmallLink href="/">Apps</SmallLink>
-        <SmallLink href="/">Documentation</SmallLink>
-        <SmallLink href="/">Pricing</SmallLink>
-        <SmallLink href="/">Team</SmallLink>
-        <SmallLink href="/">Beta</SmallLink>
+        <SmallLink href="/beta">Download</SmallLink>
+        <SmallLink href="/start">Getting Started</SmallLink>
+        <SmallLink href="/apps">Apps</SmallLink>
+        <SmallLink href="/docs">Documentation</SmallLink>
+        <SmallLink href="/about">Team</SmallLink>
+        <SmallLink href="/beta">Beta</SmallLink>
       </Col>
 
       <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Support & Terms</SmallTitle>
-        <SmallLink href="/">Contact us</SmallLink>
-        <SmallLink href="/">Orbit Chat</SmallLink>
-        <SmallLink href="/">Privacy Policy</SmallLink>
-        <SmallLink href="/">Terms & Conditions</SmallLink>
-        <SmallLink href="/">FAQ</SmallLink>
+        <SmallLink href="mailto:hi@tryorbit.com">Contact us</SmallLink>
+        <SmallLink href="/privacy">Privacy Policy</SmallLink>
+        <SmallLink href="/terms">Terms & Conditions</SmallLink>
+        <SmallLink href="/faq">FAQ</SmallLink>
       </Col>
 
       <Col minWidth={sectionMinWidth} flex={1} space="sm">
         <SmallTitle>Community</SmallTitle>
-        <SmallLink href="/">About</SmallLink>
+        <SmallLink href="/about">About</SmallLink>
         <SmallLink href="/blog">Blog</SmallLink>
         <SmallLink href="mailto:hi@tryorbit.com">Contact</SmallLink>
         <SmallLink href="https://twitter.com/tryorbit">Twitter</SmallLink>
@@ -166,5 +164,5 @@ const BottomButton = ({ src, href, ...props }: ButtonProps & { src?: string; hre
 const SmallTitle = (props: TextProps) => <Text fontSize={14} textTransform="uppercase" {...props} />
 
 export const SmallLink = (props: Partial<LinkProps>) => (
-  <Link width="100%" textAlign="left" fontWeight={600} fontSize={14} href="" {...props} />
+  <Link width="100%" textAlign="left" fontWeight={500} fontSize={15} href="" {...props} />
 )

@@ -4,6 +4,7 @@ import React from 'react'
 export const Key = (props: ButtonProps) => {
   return (
     <Button
+      display="inline"
       size="xs"
       glint={false}
       fontWeight={600}

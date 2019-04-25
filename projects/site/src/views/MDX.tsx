@@ -28,6 +28,7 @@ export const components = {
   ),
   h3: props => (
     <>
+      <Space />
       <TitleText size="md" {...props} />
       <Space />
     </>

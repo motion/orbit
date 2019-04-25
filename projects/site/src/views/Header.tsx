@@ -1,15 +1,15 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React, { memo, useEffect } from 'react'
-import { Link as RouterLink } from 'react-navi'
-import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
+import { Link as RouterLink, useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation } from '../Navigation'
+import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
+import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
@@ -23,16 +23,19 @@ const LinkText = gloss(View, {
   },
 })
 
-export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
+export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
-  fontSize = 15,
+  fontSize = 16,
   href,
   width,
   margin,
   external,
   ...props
 }: LinkProps) {
+  const route = useCurrentRoute()
+  const isActive = route.url.pathname.indexOf(href) === 0
+
   return (
     <LinkText
       cursor="pointer"
@@ -40,13 +43,20 @@ export function Link({
       fontSize={fontSize}
       width={width}
       margin={margin}
+      onMouseEnter={() => {
+        // pre load pages on hover
+        if (routeTable[href]) {
+          routeTable[href]().then(console.log.bind(console))
+        }
+      }}
     >
       <SimpleText
         fontSize={fontSize}
-        alpha={0.6}
-        fontWeight={400}
+        alpha={isActive ? 1 : 0.6}
+        fontWeight={300}
+        fontFamily="GT Eesti"
         hoverStyle={{ alpha: 1 }}
-        activeStyle={{ alpha: 0.7 }}
+        activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"
         {...props}
       >
@@ -130,7 +140,9 @@ export const Header = memo(
     const Fade = useFadePage({ off: hasShownOnce })
 
     useEffect(() => {
-      hasShownOnce = true
+      setTimeout(() => {
+        hasShownOnce = true
+      }, 1000)
     }, [])
 
     let before = null
@@ -181,9 +193,11 @@ export const Header = memo(
             zIndex={1000000}
             {...rest}
           >
-            <HeaderContain height={42}>
+            <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
-              <LogoHorizontal slim />
+              <FadeChild delay={500}>
+                <LogoHorizontal slim />
+              </FadeChild>
               <LinkSection>{after}</LinkSection>
             </HeaderContain>
             {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
@@ -209,7 +223,7 @@ export const Header = memo(
           <HeaderContain>
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild delay={100}>
-              <LogoHorizontal />
+              <LogoVertical />
             </FadeChild>
             <LinkSection>{after}</LinkSection>
           </HeaderContain>

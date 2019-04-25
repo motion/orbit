@@ -12,18 +12,17 @@ export type ExampleProps = {
 }
 
 export const Example = memo(({ source, examples, id, name, ...props }: ExampleProps) => {
-  const [showSource, setShowSource] = useState(false)
+  const [showSource, setShowSource] = useState(true)
 
   if (!source || !id) {
     return props.children || null
   }
 
   const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
-  console.log(['exampleElement'], examples[id], exampleElement)
 
   return (
     <>
-      <Space size="sm" />
+      <Space size="md" />
       <Card
         elevation={1}
         pad
@@ -44,7 +43,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
         )}
         <SubCard>{exampleElement}</SubCard>
       </Card>
-      <Space size="lg" />
+      <Space size="xl" />
     </>
   )
 })
@@ -58,14 +57,14 @@ function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
   const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
   const allLines = keyBlock.split('\n')
-  const lines = allLines[0].indexOf(') => {')
-    ? // if a component, dont remove first/last line
-      allLines
-    : // if not a component, remove first/last lines
-      indent(allLines.slice(1, allLines.length - 2))
+  const lines =
+    allLines[0].indexOf(') => {') > -1
+      ? // if a component, dont remove first/last line
+        allLines
+      : // if not a component, remove first/last lines
+        indent(allLines.slice(1, allLines.length - 2))
   // remove empty comment line which forces spacing
   const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
-  console.log('lines', lines)
   return next.join('\n')
 }
 

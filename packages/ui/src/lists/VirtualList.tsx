@@ -21,8 +21,12 @@ export type VirtualListProps<A> = SelectableProps &
     ItemView?: GenericComponent<A>
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
+
+    /** Filter by search string */
     items: A[]
-    getItemProps?: (item: A, index: number, items: A[]) => Record<string, any> | null | false
+
+    /** Dynamically add extra props to each item */
+    getItemProps?: (item: A, index: number, items: A[]) => ListItemProps | null | false
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
@@ -77,8 +81,16 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             } else {
               setRowActive()
             }
+            if (itemProps.onMouseDown) {
+              itemProps.onMouseDown(e)
+            }
           }, [])}
-          onMouseEnter={useCallback(() => selectableStore.onHoverRow(index), [])}
+          onMouseEnter={useCallback(e => {
+            selectableStore.onHoverRow(index)
+            if (itemProps.onMouseEnter) {
+              itemProps.onMouseEnter(e)
+            }
+          }, [])}
           selectableStore={selectableStore}
           {...item}
           index={index}

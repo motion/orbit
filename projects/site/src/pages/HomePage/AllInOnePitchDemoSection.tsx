@@ -4,6 +4,7 @@ import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
+import lineSep from '../../../public/images/line-sep.svg'
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
@@ -200,7 +201,7 @@ export function NeckSection(props) {
 
   return (
     <Page overflow="hidden" zIndex={3} {...props}>
-      <Page.Content transform={{ y: '5%' }}>
+      <Page.Content transform={{ y: '2%' }}>
         <SpacedPageContent
           header={
             <>
@@ -368,19 +369,31 @@ export function NeckSection(props) {
         </SpacedPageContent>
       </Page.Content>
 
-      <FullScreen transform={{ scale: 2 }} zIndex={-10}>
+      <Page.Parallax overflow="visible" speed={0} zIndex={0}>
         <FullScreen
-          className="northern-lights"
-          backgroundImage={`url(${northernlights})`}
-          backgroundSize="cover"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-          opacity={0.8}
-        />
-        <Spotlight />
-      </FullScreen>
+          transform={{ y: -100 }}
+          minWidth={2012}
+          margin={[0, -620]}
+          top={0}
+          bottom="auto"
+        >
+          <img src={lineSep} />
+        </FullScreen>
+      </Page.Parallax>
 
-      <Page.Parallax speed={0.3} zIndex={-2} />
+      <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
+        <FullScreen zIndex={0}>
+          <FullScreen
+            className="northern-lights"
+            backgroundImage={`url(${northernlights})`}
+            backgroundSize="cover"
+            backgroundPosition="center center"
+            backgroundRepeat="no-repeat"
+            opacity={0.6}
+          />
+          <Spotlight />
+        </FullScreen>
+      </Page.Parallax>
     </Page>
   )
 }

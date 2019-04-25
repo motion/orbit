@@ -7,10 +7,19 @@ import { Icon } from './Icon'
 import { Omit } from './types'
 
 export type CollapsableProps = {
+  /** Uncontrolled: set initial state as collapsed */
   defaultCollapsed?: boolean
+
+  /** Enable collapsing this element */
   collapsable?: boolean
+
+  /** Controlled: set state collapsed */
   collapsed?: boolean
+
+  /** Callback on collapse change */
   onCollapse?: (next: boolean) => any
+
+  /** Pass in a `useToggle` that controls collapse state */
   useToggle?: Toggler
 }
 

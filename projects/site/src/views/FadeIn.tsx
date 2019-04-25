@@ -1,4 +1,4 @@
-import { createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
+import { createContextualProps, FullScreen, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
@@ -10,7 +10,7 @@ export type FadeInProps = UseSpringProps<any> & {
 }
 
 export const fadeUpProps = {
-  from: { transform: `translate3d(0,10px,0)` },
+  from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
 }
 
 const config = {
@@ -52,10 +52,14 @@ export const FadeChild = memo(
     ...springProps
   }: UseSpringProps<any> & { delay?: number; disable?: boolean }) => {
     const props = FadeContext.useProps()
-
-    const shown = useDebounceValue(!disable && props.shown, delay)
-    const springStyle = useSimpleFade({ shown, from, to, ...springProps, off: props.off })
-    return <animated.div style={{ ...style, ...springStyle }}>{children}</animated.div>
+    const shown = !!useDebounceValue(!disable && props.shown, delay)
+    const off = props.off
+    const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
+    return (
+      <animated.div style={style ? { ...style, ...springStyle } : springStyle}>
+        {children}
+      </animated.div>
+    )
   },
 )
 
@@ -72,6 +76,15 @@ export const useFadePage = ({ delay = 0, off, ...props }: UseFadePageProps = {})
     }, []),
   }
 }
+
+export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { children?: any }) => {
+  const Fade = useFadePage(props)
+  return (
+    <Fade.FadeProvide>
+      <FullScreen ref={Fade.ref}>{children}</FullScreen>
+    </Fade.FadeProvide>
+  )
+})
 
 export const useSimpleFade = ({
   off,

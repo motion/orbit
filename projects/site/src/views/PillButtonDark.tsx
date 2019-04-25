@@ -1,10 +1,11 @@
 import { ButtonProps } from '@o/ui'
 import React from 'react'
+
 import { PillButton } from './PillButton'
 
 export function PillButtonDark({ children, ...props }: ButtonProps) {
   return (
-    <PillButton background="#111" {...props}>
+    <PillButton background="#000" {...props}>
       <span
         className="clip-text"
         style={{

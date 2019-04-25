@@ -4,6 +4,7 @@ import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 
+import { ResizeSensor } from './pages/DocsPage/ResizeSensor'
 import { themes } from './themes'
 
 if (process.env.NODE_ENV === 'development') {
@@ -18,10 +19,13 @@ function configure() {
   window['hasConfigured'] = true
   if (hasConfigured) return
 
+  window['ResizeSensor'] = ResizeSensor
+
   configureUI({
     defaultProps: {
       title: {
         fontFamily: 'GT Eesti',
+        className: 'font-smooth',
       },
     },
   })

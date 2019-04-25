@@ -15,17 +15,40 @@ export type SectionSpecificProps = Omit<
   Partial<TitleRowSpecificProps>,
   'after' | 'below' | 'margin' | 'unpad' | 'size'
 > & {
+  /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
+
+  /** Size the section: title, padding, border radius */
   size?: Sizes
+
+  /** Set the title size */
   titleSize?: Sizes
+
+  /** Insert an element before, horizontally */
   beforeTitle?: React.ReactNode
-  belowTitle?: React.ReactNode
+
+  /** Insert an element after, horizontally */
   afterTitle?: React.ReactNode
+
+  /** Insert an element below the title */
+  belowTitle?: React.ReactNode
+
+  /** Adds a border below the title */
   titleBorder?: boolean
+
+  /** Insert an element below the section */
   below?: React.ReactNode
+
+  /** Attach a ref to the inner section div */
   innerRef?: any
+
+  /** Limit the height of the inside of section */
   maxInnerHeight?: number
+
+  /** Set padding of inside of section independently */
   padInner?: Sizes
+
+  /** Prevent the title from scrolling when using scrollable property */
   fixedTitle?: boolean
 }
 

@@ -1,7 +1,7 @@
 import { createContextualProps } from '@o/ui'
 import React, { useState } from 'react'
 
-import { IS_CHROME } from '../constants'
+import { bodyElement } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
@@ -35,7 +35,7 @@ export function HomePage() {
           ref={setParallax}
           pages={9}
           scrollingElement={window}
-          container={IS_CHROME ? document.documentElement : document.body}
+          container={bodyElement}
           pageHeight={siteStore.sectionHeight}
         >
           <HeadSection offset={0} />

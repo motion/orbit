@@ -5,7 +5,6 @@ import React, { memo } from 'react'
 import { colors } from '../constants'
 import { scrollTo } from '../etc/helpers'
 import { CodeBlock } from '../views/CodeBlock'
-import { IntroText } from '../views/IntroText'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
 import { MetaSection } from './DocsPage'
@@ -18,14 +17,9 @@ export const DocsContents = memo(
       <MDX
         components={{
           Example: props => <Example examples={examples} source={examplesSource} {...props} />,
-          IntroText: props => (
-            <>
-              <IntroText {...props} />
-              <Space size="lg" />
-            </>
-          ),
         }}
       >
+        <Space size />
         <Section
           maxWidth={760}
           width="100%"
@@ -38,7 +32,7 @@ export const DocsContents = memo(
           titleBorder
           space
           title={title || 'No title'}
-          titleSize="xxxl"
+          titleSize={5}
           belowTitle={
             <SurfacePassProps
               chromeless
@@ -50,6 +44,7 @@ export const DocsContents = memo(
               sizeRadius={0}
               sizePadding={0}
               marginRight={30}
+              size="lg"
               alpha={0.75}
               hoverStyle={{
                 color: colors.purple,

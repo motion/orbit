@@ -12,8 +12,8 @@ export const Spotlight = () => {
       <Row>
         <Left />
         <Square
-          width={siteStore.sectionHeight}
-          height={siteStore.sectionHeight}
+          width={siteStore.sectionHeight * 0.8}
+          height={siteStore.sectionHeight * 0.8}
           className="spotlight"
           zIndex={10}
           background={`radial-gradient(circle farthest-side, transparent 60%, ${theme.background})`}

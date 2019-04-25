@@ -2,6 +2,7 @@ import { createStoreContext } from '@o/use-store'
 
 class SiteStore {
   screenSize = 'large'
+  codeCollapsed = false
   maxHeight = null
   showSidebar = false
 
@@ -11,12 +12,16 @@ class SiteStore {
     this.showSidebar = !this.showSidebar
   }
 
+  toggleCodeCollapsed = () => {
+    this.codeCollapsed = !this.codeCollapsed
+  }
+
   setMaxHeight = (val: any) => {
     this.maxHeight = val
   }
 
   get sectionHeight() {
-    let maxHeight = 1050
+    let maxHeight = 1200
     let desiredHeight = this.windowHeight
     // taller on mobile
     if (this.screenSize === 'small') {

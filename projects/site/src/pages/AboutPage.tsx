@@ -1,7 +1,7 @@
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { IS_CHROME } from '../constants'
+import { bodyElement, scrollingElement } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
@@ -24,7 +24,7 @@ export function AboutPage() {
       <Parallax
         pages={2}
         scrollingElement={window}
-        container={IS_CHROME ? document.documentElement : document.body}
+        container={bodyElement}
         pageHeight={siteStore.sectionHeight}
       >
         <LegsSection offset={0} />

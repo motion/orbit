@@ -8,6 +8,20 @@ export const themes = {
 
   light: {
     ...KitThemes.light,
+
+    alternates: {
+      ...KitThemes.light.alternates,
+
+      selected: {
+        ...KitThemes.light.alternates.selected,
+        color: '#000',
+        background: '#f2f2f2',
+        backgroundHover: '#f2f2f2',
+        backgroundActive: '#f2f2f2',
+        borderColor: 'transparent',
+      },
+    },
+
     ...Theme.colorize({
       color: '#000',
     }),

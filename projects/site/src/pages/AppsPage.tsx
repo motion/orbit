@@ -3,7 +3,7 @@ import { mount, route } from 'navi'
 import React from 'react'
 
 import earth from '../../public/images/earth.jpg'
-import { IS_CHROME } from '../constants'
+import { bodyElement } from '../constants'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
@@ -31,7 +31,7 @@ export function AppsPage() {
       <Parallax
         pages={2}
         scrollingElement={window}
-        container={IS_CHROME ? document.documentElement : document.body}
+        container={bodyElement}
         pageHeight={siteStore.sectionHeight}
       >
         <ComingSoonSection offset={0} />

@@ -1,20 +1,31 @@
 import { isEqual } from '@o/fast-compare'
 import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
+
 import { GenericComponent } from '../types'
 import { ListItem } from './ListItem'
 
 export type VirtualListItemProps<Item> = {
-  //  for keymapper
+  /** Used for key-mapping */
   id?: string
-  //  for keymapper
   key?: any
+
+  /** Render the children in a custom way, used for media item types */
   ItemView?: GenericComponent<any>
+
+  /** The item used for this view */
   item?: Item
-  query?: string
+
+  /** Extra styles */
   style?: Object
+
+  /** Optionally set width of ListItem */
   width?: number
+
+  /** Internal: used for virtualization */
   realIndex?: number
+
+  /** Index of the ListItem */
   index: number
 }
 

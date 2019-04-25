@@ -13,8 +13,13 @@ import { SearchableTable, SearchableTableProps } from './SearchableTable'
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
   SectionParentProps & {
+    /** Flexibly define which columns to show, how to show them, and attach events to changes. Accepts array of strings, objects, or an object. */
     columns?: DataColumnsShort
+
+    /** Automatically adds a search input to the table */
     searchable?: boolean
+
+    /** Automatically exports selections to the Share store */
     shareable?: boolean
   }
 

@@ -9,7 +9,7 @@ export const colors = {
 export const widths = {
   small: 740,
   medium: 820,
-  large: 1080,
+  large: 1120,
 }
 
 export const sectionMaxHeight = 1250
@@ -20,3 +20,5 @@ export const screen = {
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
+
+export const bodyElement = IS_CHROME ? document.documentElement : document.body

@@ -1,6 +1,7 @@
 import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import Gloss, { Col, ColProps, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
+import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -381,7 +382,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     theme.color ||
     ''}`
   const iconColorHover =
-    (props.hoverStyle && props.hoverStyle.color) || theme.colorHover || 'inherit'
+    (isObject(props.hoverStyle) && props.hoverStyle.color) || theme.colorHover || 'inherit'
 
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
@@ -415,7 +416,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           {...viewProps}
           {...segmentedStyle}
           {...childrenProps}
-          {...!children && { tagName }}
+          {...!noInnerElement && { tagName }}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>

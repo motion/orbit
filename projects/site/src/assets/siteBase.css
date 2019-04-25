@@ -9,12 +9,17 @@ body {
   font-weight: 300;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
   font-kerning: auto;
   pointer-events: none;
+  text-rendering: optimizeLegibility;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   min-height: 100vh;
+}
+
+.font-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 script {
@@ -517,4 +522,16 @@ div.alt {
 
 .mini-scrollbars *:hover::-webkit-scrollbar-thumb {
   width: 1px;
+}
+
+/* for StickySidebar */
+
+#sidebar {
+  will-change: min-height;
+}
+
+.sidebar__inner {
+  transform: translate(0, 0); /* For browsers don't support translate3d. */
+  transform: translate3d(0, 0, 0);
+  will-change: position, transform;
 }

@@ -1,4 +1,5 @@
 import { createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
+import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
@@ -38,7 +39,7 @@ FadeIn.defaultProps = {
 // const Fade = useFadePage(config)
 //  <Fade.Div key="one"></Fade.Div>
 
-const FadeContext = createContextualProps({ shown: false })
+const FadeContext = createContextualProps({ shown: undefined, off: false })
 
 export const FadeChild = memo(
   ({
@@ -51,39 +52,41 @@ export const FadeChild = memo(
     ...springProps
   }: UseSpringProps<any> & { delay?: number; disable?: boolean }) => {
     const props = FadeContext.useProps()
+
     const shown = useDebounceValue(!disable && props.shown, delay)
-    const springStyle = useSimpleFade({ shown, from, to, ...springProps })
+    const springStyle = useSimpleFade({ shown, from, to, ...springProps, off: props.off })
     return <animated.div style={{ ...style, ...springStyle }}>{children}</animated.div>
   },
 )
 
-export const useFadePage = (props: FadeInProps = { delay: 0 }) => {
-  const { ref, shown } = useDebouncedIntersection(props)
-  const getShown = useGet(shown)
+export type UseFadePageProps = FadeInProps & { off?: boolean }
+
+export const useFadePage = ({ delay = 0, off, ...props }: UseFadePageProps = {}) => {
+  const { ref, shown } = useDebouncedIntersection({ delay, ...props })
+  const getShown = useGet(selectDefined(props.shown, shown))
+  const getOff = useGet(off)
   return {
     ref,
     FadeProvide: useCallback((p: { children: any }) => {
-      return <FadeContext.PassProps shown={getShown()} {...p} />
+      return <FadeContext.PassProps shown={getShown()} off={getOff()} {...p} />
     }, []),
   }
 }
 
-export const useSimpleFade = ({ shown, from, to, ...rest }: UseSpringProps<any>) => {
-  const fromConf = {
+export const useSimpleFade = ({
+  off,
+  shown,
+  from = {
     opacity: 0,
     transform: `translate3d(0,-15px,0)`,
-    ...from,
-  }
+  },
+  to = { opacity: 1, transform: `translate3d(0,0,0)` },
+  ...rest
+}: UseFadePageProps) => {
   return useSpring({
     ...rest,
-    from: fromConf,
-    to: !shown
-      ? fromConf
-      : {
-          opacity: 1,
-          transform: `translate3d(0,0,0)`,
-          ...to,
-        },
+    from: off ? to : from,
+    to: shown || off ? to : from,
     config,
   })
 }

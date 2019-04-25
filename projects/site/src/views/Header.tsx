@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { Link as RouterLink } from 'react-navi'
 import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 
@@ -120,12 +120,18 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
+let hasShownOnce = false
+
 export const Header = memo(
   ({ slim, noBorder, ...rest }: { slim?: boolean; noBorder?: boolean } & RowProps) => {
     const size = useScreenSize()
     const theme = useTheme()
     const siteStore = useSiteStore()
-    const Fade = useFadePage()
+    const Fade = useFadePage({ off: hasShownOnce })
+
+    useEffect(() => {
+      hasShownOnce = true
+    }, [])
 
     let before = null
     let after = null
@@ -168,6 +174,7 @@ export const Header = memo(
       return (
         <Fade.FadeProvide>
           <Row
+            ref={Fade.ref}
             pointerEvents="auto"
             background={theme.background.lighten(0.3)}
             position="relative"

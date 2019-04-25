@@ -33,7 +33,7 @@ import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
-import DocsInstall from './DocsPage/DocsInstall.mdx'
+import DocsStart from './DocsPage/DocsStart.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 
@@ -63,7 +63,7 @@ export default compose(
       title: 'Orbit Documentation',
       view: (
         <DocsContents title="Introduction">
-          <DocsInstall />
+          <DocsStart />
         </DocsContents>
       ),
     }),
@@ -277,6 +277,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   />
                   <RoundButton
                     icon="code"
+                    iconSize={16}
                     tooltip="Toggle all code collapsed"
                     onClick={siteStore.toggleCodeCollapsed}
                   />

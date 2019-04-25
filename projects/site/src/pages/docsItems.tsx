@@ -76,7 +76,7 @@ const uikit = [
   { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
   { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
   { id: 'icons', icon: 'star', title: 'Icons' },
-  { id: 'install', title: 'Sections', icon: 'application' },
+  { id: 'sections', title: 'Sections', icon: 'application' },
   { id: 'popovers', title: 'Popovers', icon: 'direction-right' },
   { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
@@ -136,9 +136,6 @@ export const docsItems = {
 }
 
 export const docsViews = {
-  install: {
-    page: () => import('./DocsPage/DocsInstall.mdx'),
-  },
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },

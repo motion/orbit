@@ -83,6 +83,7 @@ export default compose(
       return {
         view: (
           <DocsContents
+            id={id}
             title={item ? item['title'] : ''}
             source={source}
             types={types}

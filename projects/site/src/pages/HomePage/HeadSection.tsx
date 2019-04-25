@@ -1,4 +1,4 @@
-import { FullScreen, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 
@@ -23,15 +23,15 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size={50} />
 
 let allTitles = {
-  large: 'Apps without servers',
+  large: 'Amazing apps in minutes',
   medium: 'Apps without servers',
   small: 'Apps without servers',
 }
 
 let allTexts = {
   large: [
-    `Create powerful internal apps your team can use without setting up a server.`,
-    `It's the desktop app platform for internal tools & more.`,
+    `The ideal internal tool platform for teams. Move faster without servers.`,
+    `Orbit includes a massive toolkit for building beautiful, flexible, apps.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -40,11 +40,11 @@ let allTexts = {
   small: [`Code internal tools, no config or servers.`, `UI kit, dev environment & deploy.`],
 }
 
-// const subTexts = {
-//   large: `The five ways Orbit saves you more time.`,
-//   medium: `Learn how Orbit makes common apps easy.`,
-//   small: `Learn how.`,
-// }
+const subTexts = {
+  large: `Five ways Orbit improves the state of the art.`,
+  medium: `Learn how Orbit makes common apps easy.`,
+  small: `Learn how.`,
+}
 
 function HeadText() {
   const screen = useScreenSize()
@@ -69,7 +69,6 @@ function HeadText() {
           forwardRef={titleFit.ref}
           style={titleFit.style}
           fontWeight={100}
-          margin={[0, '-5%']}
           alignSelf="center"
           // transition="transform ease 160ms"
           transformOrigin="top center"
@@ -81,7 +80,7 @@ function HeadText() {
         </TitleText>
       </FadeChild>
 
-      <Space size={useScreenVal('md', 'lg', 'xl')} />
+      <Space size={useScreenVal('md', 'lg', 'xxl')} />
 
       {screen === 'small' ? (
         <Paragraph
@@ -105,8 +104,10 @@ function HeadText() {
           transformOrigin="top left"
           margin={[0, 'auto']}
           textAlign="center"
-          alpha={0.8}
+          alpha={0.7}
           whiteSpace="nowrap"
+          fontWeight={100}
+          width="90%"
         >
           <FadeChild disable={!measured} delay={150}>
             {texts[0]}
@@ -114,6 +115,10 @@ function HeadText() {
           {br}
           <FadeChild disable={!measured} delay={300}>
             {texts[1]}
+          </FadeChild>
+          {br}
+          <FadeChild {...fadeUpProps} disable={!measured} delay={450}>
+            <Smaller>{subTexts[screen]}</Smaller>
           </FadeChild>
         </Paragraph>
       )}
@@ -134,18 +139,19 @@ function HeadText() {
   )
 }
 
-// const Smaller = gloss({
-//   cursor: 'pointer',
-//   textDecoration: 'underline',
-//   textDecorationColor: '#222',
-//   transition: 'color ease 350ms',
-// }).theme((props, theme) => ({
-//   ...props,
-//   color: theme.color.alpha(0.5),
-//   '&:hover': {
-//     color: theme.color.alpha(1),
-//   },
-// }))
+const Smaller = gloss({
+  cursor: 'pointer',
+  textDecoration: 'underline',
+  textDecorationColor: '#222',
+  transition: 'color ease 350ms',
+  fontSize: '80%',
+}).theme((props, theme) => ({
+  ...props,
+  color: theme.color.alpha(0.5),
+  '&:hover': {
+    color: theme.color.alpha(1),
+  },
+}))
 
 export function HeadSection(props) {
   const screen = useScreenSize()

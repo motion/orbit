@@ -80,6 +80,7 @@ export const components = {
         fontSize="inherit"
         lineHeight="inherit"
         WebkitFontSmoothing="auto"
+        color="inherit"
         {...props}
       />
       <Space />

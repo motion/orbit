@@ -1,4 +1,4 @@
-import { Absolute, Col, Space } from '@o/ui'
+import { Absolute, Col, Space, useTheme } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { Link, View } from 'react-navi'
@@ -58,11 +58,19 @@ function BlogPage(props: { title?: string; children?: any }) {
 BlogPage.theme = 'light'
 
 function PostPage(props: { post: PostEntry; children?: any }) {
+  const theme = useTheme()
   return (
     <>
       <BlogTitle paddingTop={50} />
       <SectionContent>
-        <Col pad="xxxl" maxWidth={800} margin="auto" fontSize={20} lineHeight={32}>
+        <Col
+          pad="xxxl"
+          maxWidth={800}
+          margin="auto"
+          fontSize={18}
+          lineHeight={32}
+          color={theme.color.alpha(0.85)}
+        >
           <TitleText size="xxxl">{props.post.title}</TitleText>
           <Space />
           <PostMeta post={props.post} />

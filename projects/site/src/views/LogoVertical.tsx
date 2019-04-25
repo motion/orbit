@@ -9,9 +9,9 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { useParallax } from '../pages/HomePage'
 
 let logoScales = {
-  small: 0.5,
-  medium: 0.75,
-  large: 0.75,
+  small: 0.8,
+  medium: 0.9,
+  large: 1,
 }
 
 export const LogoVertical = memo(

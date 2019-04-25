@@ -1,8 +1,7 @@
-import { Center, FullScreen, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
+import { FullScreen, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { useEffect, useState } from 'react'
 
-import downmark from '../../../public/images/down-mark.svg'
 import glow from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
 import appScreen from '../../../public/images/screen.jpg'
@@ -12,11 +11,9 @@ import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { SectionContent } from '../../views/SectionContent'
-import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
-import { useParallax } from '../HomePage'
 import { Join } from './EarlyAccessBetaSection'
 import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
@@ -175,8 +172,8 @@ export function HeadSection(props) {
           </FullScreen>
         </Page.Content>
 
-        <Page.Parallax speed={0.01}>
-          <FullScreen top="auto" transform={{ y: 50 }}>
+        <Page.Parallax zIndex={1} speed={0.01}>
+          <FullScreen top="auto" transform={{ y: 50 }} zIndex={1000}>
             <FadeChild {...fadeUpProps} delay={200}>
               <View
                 flex={1}
@@ -199,6 +196,7 @@ export function HeadSection(props) {
                   height="100%"
                   zIndex={-1}
                   boxShadow={[[0, 0, 100, [0, 0, 0]]]}
+                  pointerEvents="auto"
                 />
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
@@ -316,28 +314,28 @@ const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?:
   />
 )
 
-const DownloadButton = props => {
-  const parallax = useParallax()
-  return (
-    <FadeChild delay={1000}>
-      <Center bottom="auto" top={0}>
-        <RoundButton
-          aria-label="Download Button"
-          width={159}
-          height={45}
-          onClick={e => {
-            e.preventDefault()
-            parallax.scrollTo(5)
-          }}
-          {...props}
-        >
-          <Image userSelect="none" position="absolute" right={22} src={downmark} />
-          <Text zIndex={1} size={1.15} fontWeight={700} letterSpacing={1} pointerEvents="none">
-            Download
-          </Text>
-          <div style={{ width: 25 }} />
-        </RoundButton>
-      </Center>
-    </FadeChild>
-  )
-}
+// const DownloadButton = props => {
+//   const parallax = useParallax()
+//   return (
+//     <FadeChild delay={1000}>
+//       <Center bottom="auto" top={0}>
+//         <RoundButton
+//           aria-label="Download Button"
+//           width={159}
+//           height={45}
+//           onClick={e => {
+//             e.preventDefault()
+//             parallax.scrollTo(5)
+//           }}
+//           {...props}
+//         >
+//           <Image userSelect="none" position="absolute" right={22} src={downmark} />
+//           <Text zIndex={1} size={1.15} fontWeight={700} letterSpacing={1} pointerEvents="none">
+//             Download
+//           </Text>
+//           <div style={{ width: 25 }} />
+//         </RoundButton>
+//       </Center>
+//     </FadeChild>
+//   )
+// }

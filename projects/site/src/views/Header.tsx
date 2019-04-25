@@ -9,6 +9,7 @@ import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
+import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
 
 const LinkText = gloss(View, {
@@ -25,7 +26,7 @@ const LinkText = gloss(View, {
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
-  fontSize = 18,
+  fontSize = 16,
   href,
   width,
   margin,
@@ -52,7 +53,7 @@ export function Link({
       <SimpleText
         fontSize={fontSize}
         alpha={isActive ? 1 : 0.6}
-        fontWeight={isActive ? 500 : 200}
+        fontWeight={isActive ? 600 : 300}
         fontFamily="GT Eesti"
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
@@ -222,7 +223,7 @@ export const Header = memo(
           <HeaderContain>
             <LinkSection alignRight>{before}</LinkSection>
             <FadeChild delay={100}>
-              <LogoHorizontal />
+              <LogoVertical />
             </FadeChild>
             <LinkSection>{after}</LinkSection>
           </HeaderContain>

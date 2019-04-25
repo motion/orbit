@@ -45,7 +45,7 @@ export const DocsContents = memo(
               sizePadding={0}
               marginRight={30}
               size="lg"
-              alpha={0.75}
+              alpha={0.5}
               hoverStyle={{
                 color: colors.purple,
               }}

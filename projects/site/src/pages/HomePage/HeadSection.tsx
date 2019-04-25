@@ -191,18 +191,19 @@ export function HeadSection(props) {
                   position="absolute"
                   overflow="hidden"
                   backgroundImage={`url(${appScreen})`}
-                  backgroundSize="contain"
+                  backgroundSize="cover"
                   backgroundPosition="center center"
                   backgroundRepeat="no-repeat"
                   borderRadius={10}
                   width="100%"
                   height="100%"
                   zIndex={-1}
+                  boxShadow={[[0, 0, 100, [0, 0, 0]]]}
                 />
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
                     <Scale size={1.1}>
-                      <Join flexFlow="row" group margin={[0, 'auto']} />
+                      <Join transform={{ y: -23 }} flexFlow="row" group margin={[0, 'auto']} />
                     </Scale>
                   </SurfacePassProps>
                 </FadeChild>

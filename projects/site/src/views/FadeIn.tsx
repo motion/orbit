@@ -65,8 +65,13 @@ export const FadeChild = memo(
 
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
-export const useFadePage = ({ delay = 0, off, ...props }: UseFadePageProps = {}) => {
-  const { ref, shown } = useDebouncedIntersection({ delay, ...props })
+export const useFadePage = ({
+  delay = 0,
+  threshold = 0.4,
+  off,
+  ...props
+}: UseFadePageProps = {}) => {
+  const { ref, shown } = useDebouncedIntersection({ delay, threshold, ...props })
   const getShown = useGet(selectDefined(props.shown, shown))
   const getOff = useGet(off)
   return {

@@ -9,7 +9,7 @@ import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeIn } from '../../views/FadeIn'
+import { FadeChild, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -199,202 +199,213 @@ export function NeckSection(props) {
     return () => clearInterval(nextInt.current)
   }, [])
 
+  const Fade = useFadePage()
+
   return (
-    <Page overflow="hidden" zIndex={3} {...props}>
-      <Page.Content transform={{ y: '2%' }}>
-        <SpacedPageContent
-          header={
-            <>
-              <PillButton>How</PillButton>
-              <FadeIn delay={100} intersection="20px">
-                <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Everything you need.</TitleText>
-              </FadeIn>
-              <TitleTextSub width="87%" margin="auto" minWidth={320}>
-                <FadeIn delay={200} intersection="20px">
-                  A desktop-class UI kit meets an all new app platform.
-                  <br />
-                  Orbit has every pattern your internal tools need.
-                </FadeIn>
-              </TitleTextSub>
-            </>
-          }
-        >
-          <Col maxWidth="100%" margin={[0, 'auto']}>
-            {screen !== 'small' && (
-              <Row space>
-                <SubSection maxWidth="33%">
-                  <FadeIn delay={300} intersection="20px">
-                    <PillButtonDark>Import</PillButtonDark>
-                    <Space />
-                    <CenterText>
-                      Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
-                      data with just a line of code.
-                    </CenterText>
-                  </FadeIn>
-                </SubSection>
-                <SubSection flex={2} pad={[true, 'xxl']}>
-                  <FadeIn delay={400} intersection="20px">
-                    <PillButtonDark>Display</PillButtonDark>
-                    <Space />
-                    <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Orbit provides a large, cohesive set of views and APIs that are useful for
-                      internal tools, like a {elements[cur].title}.
-                    </CenterText>
-                  </FadeIn>
-                </SubSection>
-                <SubSection maxWidth="33%">
-                  <FadeIn delay={500} intersection="20px">
-                    <PillButtonDark>Export</PillButtonDark>
-                    <Space />
-                    <CenterText>
-                      With selections + actions, exporting to{' '}
-                      <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
-                    </CenterText>
-                  </FadeIn>
-                </SubSection>
-              </Row>
-            )}
+    <Fade.FadeProvide>
+      <Page overflow="hidden" zIndex={3} {...props}>
+        <Page.Content ref={Fade.ref} transform={{ y: '2%' }}>
+          <SpacedPageContent
+            header={
+              <>
+                <FadeChild delay={0}>
+                  <PillButton>How</PillButton>
+                </FadeChild>
+                <FadeChild delay={100}>
+                  <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
+                    Everything you need.
+                  </TitleText>
+                </FadeChild>
+                <TitleTextSub width="87%" margin="auto" minWidth={320}>
+                  <FadeChild delay={200}>
+                    A desktop-class UI kit meets an all new app platform. Orbit has every pattern
+                    your internal tools need.
+                  </FadeChild>
+                </TitleTextSub>
+              </>
+            }
+          >
+            <Col maxWidth="100%" margin={[0, 'auto']}>
+              {screen !== 'small' && (
+                <Row space>
+                  <SubSection maxWidth="33%">
+                    <FadeChild delay={300}>
+                      <PillButtonDark>Import</PillButtonDark>
+                      <Space />
+                      <CenterText>
+                        Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline>{' '}
+                        provide data with just a line of code.
+                      </CenterText>
+                    </FadeChild>
+                  </SubSection>
+                  <SubSection flex={2} pad={[true, 'xxl']}>
+                    <FadeChild delay={400}>
+                      <PillButtonDark>Display</PillButtonDark>
+                      <Space />
+                      <CenterText maxWidth={400} margin={[0, 'auto']}>
+                        Orbit provides a large, cohesive set of views and APIs that are useful for
+                        internal tools, like a {elements[cur].title}.
+                      </CenterText>
+                    </FadeChild>
+                  </SubSection>
+                  <SubSection maxWidth="33%">
+                    <FadeChild delay={500}>
+                      <PillButtonDark>Export</PillButtonDark>
+                      <Space />
+                      <CenterText>
+                        With selections + actions, exporting to{' '}
+                        <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
+                      </CenterText>
+                    </FadeChild>
+                  </SubSection>
+                </Row>
+              )}
 
-            <Space />
+              <Space />
 
-            <Row space>
-              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <animated.div style={springFast}>
-                  <Image
-                    alignSelf="center"
-                    width={124}
-                    height={124}
-                    src={elements[cur].iconBefore}
-                  />
-                </animated.div>
-                <Space size="xxl" />
-                <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                  <Image
-                    opacity={0.5}
-                    src={require('../../../public/images/curve-arrow.svg')}
-                    transform={{
-                      scale: 0.8,
-                    }}
-                  />
-                </animated.div>
-              </Flex>
-              <Flex flex={2} position="relative">
-                <Button
-                  alt="flat"
-                  cursor="pointer"
-                  size={2}
-                  iconSize={22}
-                  circular
-                  zIndex={100}
-                  position="absolute"
-                  top={-4}
-                  left={useScreenVal(-60, 10, 10)}
-                  icon="chevron-left"
-                  onClick={prev}
-                />
-                <Button
-                  alt="flat"
-                  cursor="pointer"
-                  size={2}
-                  iconSize={22}
-                  circular
-                  zIndex={100}
-                  position="absolute"
-                  top={-4}
-                  right={useScreenVal(-60, 10, 10)}
-                  icon="chevron-right"
-                  onClick={next}
-                />
+              <FadeChild delay={300}>
+                <Row space>
+                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                    <animated.div style={springFast}>
+                      <Image
+                        alignSelf="center"
+                        width={124}
+                        height={124}
+                        src={elements[cur].iconBefore}
+                      />
+                    </animated.div>
+                    <Space size="xxl" />
+                    <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
+                      <Image
+                        opacity={0.5}
+                        src={require('../../../public/images/curve-arrow.svg')}
+                        transform={{
+                          scale: 0.8,
+                        }}
+                      />
+                    </animated.div>
+                  </Flex>
+                  <Flex flex={2} position="relative">
+                    <Button
+                      alt="flat"
+                      cursor="pointer"
+                      size={2}
+                      iconSize={22}
+                      circular
+                      zIndex={100}
+                      position="absolute"
+                      top={-4}
+                      left={useScreenVal(-60, 10, 10)}
+                      icon="chevron-left"
+                      onClick={prev}
+                    />
+                    <Button
+                      alt="flat"
+                      cursor="pointer"
+                      size={2}
+                      iconSize={22}
+                      circular
+                      zIndex={100}
+                      position="absolute"
+                      top={-4}
+                      right={useScreenVal(-60, 10, 10)}
+                      icon="chevron-right"
+                      onClick={next}
+                    />
 
-                <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                  <Squircle
-                    width={280}
-                    height={280}
-                    background="linear-gradient(125deg, #78009F, #4C1966)"
-                    boxShadow="0 10px 50px rgba(0,0,0,0.5)"
-                    padding={30}
-                  >
-                    <TitleText
-                      fontSize={18}
-                      margin={[0, 'auto']}
-                      letterSpacing={2}
-                      alpha={0.65}
-                      textTransform="uppercase"
+                    <animated.div style={{ ...springSlowest, margin: 'auto' }}>
+                      <Squircle
+                        width={280}
+                        height={280}
+                        background="linear-gradient(125deg, #78009F, #4C1966)"
+                        boxShadow="0 10px 50px rgba(0,0,0,0.5)"
+                        padding={30}
+                      >
+                        <TitleText
+                          fontSize={18}
+                          margin={[0, 'auto']}
+                          letterSpacing={2}
+                          alpha={0.65}
+                          textTransform="uppercase"
+                        >
+                          {`<${elements[cur].title} />`}
+                        </TitleText>
+                        <Space />
+                        <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>
+                          {elements[cur].body}
+                        </Paragraph>
+                      </Squircle>
+                    </animated.div>
+
+                    <animated.div
+                      style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}
                     >
-                      {`<${elements[cur].title} />`}
-                    </TitleText>
-                    <Space />
-                    <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>
-                      {elements[cur].body}
-                    </Paragraph>
-                  </Squircle>
-                </animated.div>
+                      <View
+                        backgroundImage={`url(${elements[cur].image})`}
+                        backgroundSize="101%"
+                        backgroundPosition="-1px -2px -2px -2px"
+                        width="100%"
+                        height={300}
+                        borderRadius={10}
+                        boxShadow={[[0, 10, 30, [0, 0, 0]]]}
+                      />
+                    </animated.div>
+                  </Flex>
 
-                <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
-                  <View
-                    backgroundImage={`url(${elements[cur].image})`}
-                    backgroundSize="101%"
-                    backgroundPosition="-1px -2px -2px -2px"
-                    width="100%"
-                    height={300}
-                    borderRadius={10}
-                    boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                  />
-                </animated.div>
-              </Flex>
+                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                    <animated.div style={springSlowest}>
+                      <Image
+                        alignSelf="center"
+                        width={124}
+                        height={124}
+                        src={elements[cur].iconAfter}
+                      />
+                    </animated.div>
+                    <Space size="xxl" />
+                    <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
+                      <Image
+                        opacity={0.5}
+                        transform={{
+                          rotate: '275deg',
+                          scale: 0.8,
+                        }}
+                        src={require('../../../public/images/curve-arrow.svg')}
+                      />
+                    </animated.div>
+                  </Flex>
+                </Row>
+              </FadeChild>
+            </Col>
+          </SpacedPageContent>
+        </Page.Content>
 
-              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <animated.div style={springSlowest}>
-                  <Image
-                    alignSelf="center"
-                    width={124}
-                    height={124}
-                    src={elements[cur].iconAfter}
-                  />
-                </animated.div>
-                <Space size="xxl" />
-                <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                  <Image
-                    opacity={0.5}
-                    transform={{
-                      rotate: '275deg',
-                      scale: 0.8,
-                    }}
-                    src={require('../../../public/images/curve-arrow.svg')}
-                  />
-                </animated.div>
-              </Flex>
-            </Row>
-          </Col>
-        </SpacedPageContent>
-      </Page.Content>
-
-      <Page.Parallax overflow="visible" speed={0} zIndex={0}>
-        <FullScreen
-          transform={{ y: -100 }}
-          minWidth={2012}
-          margin={[0, -620]}
-          top={0}
-          bottom="auto"
-        >
-          <img src={lineSep} />
-        </FullScreen>
-      </Page.Parallax>
-
-      <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-        <FullScreen zIndex={0}>
+        <Page.Parallax overflow="visible" speed={0} zIndex={0}>
           <FullScreen
-            className="northern-lights"
-            backgroundImage={`url(${northernlights})`}
-            backgroundSize="cover"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-            opacity={0.6}
-          />
-          <Spotlight />
-        </FullScreen>
-      </Page.Parallax>
-    </Page>
+            transform={{ y: -100 }}
+            minWidth={2012}
+            margin={[0, -620]}
+            top={0}
+            bottom="auto"
+          >
+            <img src={lineSep} />
+          </FullScreen>
+        </Page.Parallax>
+
+        <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
+          <FullScreen zIndex={0}>
+            <FullScreen
+              className="northern-lights"
+              backgroundImage={`url(${northernlights})`}
+              backgroundSize="cover"
+              backgroundPosition="center center"
+              backgroundRepeat="no-repeat"
+              opacity={0.6}
+            />
+            <Spotlight />
+          </FullScreen>
+        </Page.Parallax>
+      </Page>
+    </Fade.FadeProvide>
   )
 }
 

@@ -1,6 +1,6 @@
 import { createContextualProps, FullScreen, ViewProps } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import * as React from 'react'
+import React, { forwardRef } from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 
 import { useSiteStore } from '../SiteStore'
@@ -16,6 +16,7 @@ type PageProps = {
   offset: number
   zIndex?: number
   children: any
+  fadeable?: boolean
 }
 
 export function Page(props: PageProps) {
@@ -45,19 +46,20 @@ Page.Parallax = ({
   )
 }
 
-Page.Content = (props: SectionContentProps) => {
+Page.Content = forwardRef((props: SectionContentProps, ref) => {
   const parallax = useProps()
   const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
   const siteStore = useSiteStore()
   return (
     <SectionContent
+      forwardRef={ref}
       className="page-content"
       height={siteStore.sectionHeight}
       {...props}
       zIndex={zIndex}
     />
   )
-}
+})
 
 Page.Background = ({ speed = 0, ...props }: ViewProps & { speed?: number }) => {
   const { zIndex, offset } = useProps()

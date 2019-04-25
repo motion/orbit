@@ -20,7 +20,7 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
 let medSpc = <Space size="xxl" />
-let lgSpc = <Space size={50} />
+let lgSpc = <Space size={65} />
 
 let allTitles = {
   large: 'Amazing apps in minutes',
@@ -93,48 +93,49 @@ function HeadText() {
           Create incredibly powerful tools without config or a server, with everything included.
         </Paragraph>
       ) : (
-        <Paragraph
-          tagName="div"
-          style={{
-            ...pFit.style,
-            height: 'auto',
-          }}
-          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-          height="auto"
-          transformOrigin="top left"
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.7}
-          whiteSpace="nowrap"
-          fontWeight={100}
-          width="90%"
-        >
-          <FadeChild disable={!measured} delay={150}>
-            {texts[0]}
-          </FadeChild>
-          {br}
-          <FadeChild disable={!measured} delay={300}>
-            {texts[1]}
-          </FadeChild>
-          {br}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={450}>
-            <Smaller>{subTexts[screen]}</Smaller>
-          </FadeChild>
-        </Paragraph>
-      )}
+        <View margin={[0, '10%']} position="relative">
+          <Paragraph
+            tagName="div"
+            style={{
+              ...pFit.style,
+              height: 'auto',
+            }}
+            lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+            height="auto"
+            transformOrigin="top left"
+            margin={[0, 'auto']}
+            textAlign="center"
+            alpha={0.7}
+            whiteSpace="nowrap"
+            width="80%"
+          >
+            <FadeChild disable={!measured} delay={150}>
+              {texts[0]}
+            </FadeChild>
+            {br}
+            <FadeChild disable={!measured} delay={300}>
+              {texts[1]}
+            </FadeChild>
+            {br}
+            <FadeChild {...fadeUpProps} disable={!measured} delay={450}>
+              <Smaller>{subTexts[screen]}</Smaller>
+            </FadeChild>
+          </Paragraph>
 
-      {/* this is just to measure */}
-      <Paragraph
-        className="measure-p"
-        ref={pFit.ref}
-        opacity={0}
-        fontSize={40}
-        position="absolute"
-        whiteSpace="pre"
-        pointerEvents="none"
-      >
-        {longest}
-      </Paragraph>
+          {/* this is just to measure */}
+          <Paragraph
+            className="measure-p"
+            ref={pFit.ref}
+            opacity={0}
+            fontSize={40}
+            position="absolute"
+            whiteSpace="pre"
+            pointerEvents="none"
+          >
+            {longest}
+          </Paragraph>
+        </View>
+      )}
     </View>
   )
 }

@@ -325,7 +325,7 @@ const DocsPage = memo((props: { children?: any }) => {
               justifyContent="flex-start"
               flexFlow="row"
             >
-              <SurfacePassProps size={1.2} circular iconSize={12}>
+              <SurfacePassProps size={1.2} iconSize={12}>
                 <Row group>
                   <RoundButton
                     icon="moon"
@@ -334,7 +334,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   />
                   <RoundButton
                     icon="code"
-                    tooltip="Toggle code collapsed"
+                    tooltip="Toggle all code collapsed"
                     onClick={siteStore.toggleCodeCollapsed}
                   />
                   {isSmall && (

@@ -1,7 +1,7 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React, { memo, useEffect } from 'react'
-import { Link as RouterLink } from 'react-navi'
+import { Link as RouterLink, useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation, routeTable } from '../Navigation'
@@ -32,6 +32,9 @@ export function Link({
   external,
   ...props
 }: LinkProps) {
+  const route = useCurrentRoute()
+  const isActive = route.url.pathname.indexOf(href) === 0
+
   return (
     <LinkText
       cursor="pointer"
@@ -48,11 +51,11 @@ export function Link({
     >
       <SimpleText
         fontSize={fontSize}
-        alpha={0.6}
-        fontWeight={200}
+        alpha={isActive ? 1 : 0.6}
+        fontWeight={isActive ? 500 : 200}
         fontFamily="GT Eesti"
         hoverStyle={{ alpha: 1 }}
-        activeStyle={{ alpha: 0.7 }}
+        activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"
         {...props}
       >
@@ -136,7 +139,9 @@ export const Header = memo(
     const Fade = useFadePage({ off: hasShownOnce })
 
     useEffect(() => {
-      hasShownOnce = true
+      setTimeout(() => {
+        hasShownOnce = true
+      }, 1000)
     }, [])
 
     let before = null
@@ -187,9 +192,11 @@ export const Header = memo(
             zIndex={1000000}
             {...rest}
           >
-            <HeaderContain height={42}>
+            <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
-              <LogoHorizontal slim />
+              <FadeChild delay={500}>
+                <LogoHorizontal slim />
+              </FadeChild>
               <LinkSection>{after}</LinkSection>
             </HeaderContain>
             {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}

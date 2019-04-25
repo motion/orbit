@@ -17,6 +17,11 @@ body {
   min-height: 100vh;
 }
 
+.font-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 script {
   display: none;
 }

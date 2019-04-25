@@ -30,7 +30,7 @@ export function OuterSpace(props) {
         left: 0,
         right: 0,
         height: siteStore.sectionHeight,
-        opacity: 0.5,
+        opacity: 0.25,
         zIndex: -1,
         pointerEvents: 'none',
         transition: `all  ease ${duration}ms`,

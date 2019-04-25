@@ -19,7 +19,7 @@ export function SpacedPageContent({
       {...props}
     >
       <div style={{ flex: 1 }} />
-      <Col space="sm" alignItems="center" pad={useScreenVal(false, true, true)}>
+      <Col space="sm" alignItems="center">
         {header}
       </Col>
       {children}

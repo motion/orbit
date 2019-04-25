@@ -72,7 +72,16 @@ export const SignupForm = (props: ViewProps) => (
   >
     <Wavy width="100%" height={16} />
     <View pad="lg">
-      <Join />
+      <Join
+        header={
+          <>
+            <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
+            <Space size="sm" />
+            <TitleTextSub size="xs">We're rolling out to teams now.</TitleTextSub>
+          </>
+        }
+        space="lg"
+      />
     </View>
 
     <Wavy width="100%" height={16} />
@@ -107,7 +116,7 @@ const queryString = query => {
     .join('&')
 }
 
-export class Join extends React.Component {
+export class Join extends React.Component<any> {
   state = {
     error: null,
     success: null,
@@ -157,56 +166,60 @@ export class Join extends React.Component {
 
   render() {
     const { success, error, submitting } = this.state
+    const { header, ...props } = this.props
     const message = success || error || ''
     return (
-      <Form
-        action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
-        method="post"
-        id="mc-embedded-subscribe-form-1"
-        name="mc-embedded-subscribe-form"
-        target="_blank"
-        ref={this.form}
-        onSubmit={this.submit}
-        space="lg"
-      >
-        <>
-          <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
-          <Space size="sm" />
-          <TitleTextSub size="xs">We're rolling out to teams now.</TitleTextSub>
-        </>
-        <Input
-          type="email"
-          ref={this.email}
-          name="EMAIL"
-          id="mce-EMAIL"
-          placeholder="Email address..."
-          flex={0}
-          size={2}
-          sizeRadius={2}
-          sizePadding={2}
-        />
-
-        <Button
-          size={2}
-          sizeRadius={2}
-          margin={[0, '20%']}
-          type="submit"
-          disabled={submitting}
-          opacity={submitting ? 0.5 : 1}
-          pointerEvents={submitting ? 'none' : 'auto'}
+      <>
+        <Form
+          action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
+          method="post"
+          id="mc-embedded-subscribe-form-1"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+          ref={this.form}
+          onSubmit={this.submit}
+          {...props}
         >
-          Signup
-        </Button>
+          {header}
 
-        {!!message && (
-          <Message
-            alt={success ? 'success' : error ? 'error' : undefined}
-            dangerouslySetInnerHTML={{
-              __html: message,
-            }}
+          <Input
+            type="email"
+            ref={this.email}
+            name="EMAIL"
+            id="mce-EMAIL"
+            placeholder="Email address..."
+            flex={0}
+            size={2}
+            sizeRadius={5}
+            sizePadding={1.5}
           />
+
+          <Button
+            size={2}
+            sizeRadius={5}
+            sizeFont={0.8}
+            sizePadding={2}
+            margin={[0, '20%']}
+            type="submit"
+            disabled={submitting}
+            opacity={submitting ? 0.5 : 1}
+            pointerEvents={submitting ? 'none' : 'auto'}
+          >
+            Early access
+          </Button>
+        </Form>
+        {!!message && (
+          <>
+            <Space size="lg" />
+            <Message
+              alt={success ? 'success' : error ? 'error' : undefined}
+              dangerouslySetInnerHTML={{
+                __html: message,
+              }}
+            />
+          </>
         )}
-      </Form>
+      </>
     )
   }
 }

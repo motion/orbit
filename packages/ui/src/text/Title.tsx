@@ -11,6 +11,7 @@ export function Title({ size = 'xl', children, ...props }: TitleProps) {
   const sizeLineHeight = Math.max(0.1, sz * 0.15 - 1) + sz * 0.075 + 0.9
   return (
     <Text
+      className="ui-title"
       fontWeight={700}
       {...Config.defaultProps.title}
       size={sz}

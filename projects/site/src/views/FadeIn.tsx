@@ -10,7 +10,7 @@ export type FadeInProps = UseSpringProps<any> & {
 }
 
 export const fadeUpProps = {
-  from: { transform: `translate3d(0,10px,0)` },
+  from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
 }
 
 const config = {

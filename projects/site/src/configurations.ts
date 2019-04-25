@@ -22,6 +22,7 @@ function configure() {
     defaultProps: {
       title: {
         fontFamily: 'GT Eesti',
+        className: 'font-smooth',
       },
     },
   })

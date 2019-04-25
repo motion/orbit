@@ -23,7 +23,7 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
 let medSpc = <Space size="xxl" />
-let lgSpc = <Space size="xxl" />
+let lgSpc = <Space size={60} />
 
 let allTitles = {
   large: 'Apps without servers',

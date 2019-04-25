@@ -1,5 +1,7 @@
 import { Base, gloss } from '@o/gloss'
 
+import { useScale } from './Scale'
+
 export type Sizes =
   | 'xs'
   | 'sm'
@@ -41,7 +43,7 @@ export function getSpaceSize(space: Sizes) {
 }
 
 export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
-  const spacing = getSpaceSize(props.size)
+  const spacing = getSpaceSize(props.size) * useScale()
   return {
     width: spacing,
     height: spacing,

@@ -199,7 +199,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     defaultPadding[0] += 2
   }
 
-  const childrenElement = showChildren && !!children && (
+  const hasChildren = showChildren && !!children
+  const childrenElement = hasChildren && (
     <SimpleText margin={['auto', 0]} flex={1} size={0.9} alpha={subTextOpacity}>
       {children}
     </SimpleText>

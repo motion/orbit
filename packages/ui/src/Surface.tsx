@@ -16,7 +16,7 @@ import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
-import { Sizes } from './Space'
+import { Sizes, Space } from './Space'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
@@ -347,10 +347,14 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               order: 3,
             }}
           >
+            {showElement && <Space />}
             {innerElements}
           </div>
         ) : (
-          innerElements
+          <>
+            {innerElements}
+            {showElement && <Space />}
+          </>
         )}
         {glow && !disabled && (
           <HoverGlow
@@ -523,25 +527,6 @@ const Element = gloss<
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(props => {
-  // const padX = px(selectDefined(props.surfacePadX, 0))
-  // const iconSize = getIconSize(props)
-  // const iconNegativePad = props.hasIcon ? `- ${padX} - ${iconSize + props.iconPad}px` : ''
-  const style: CSSPropertySet = {}
-  // spacing between icon
-  const hasIconBefore = props.hasIcon && !props.iconAfter
-  const hasIconAfter = props.hasIcon && props.iconAfter
-  if (hasIconBefore) {
-    style.marginLeft = props.iconPad
-  }
-  if (hasIconAfter) {
-    style.marginRight = props.iconPad
-  }
-  return {
-    ...props,
-    // maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
-    ...style,
-  }
 })
 
 const getIconSize = (props: SurfaceProps) => {

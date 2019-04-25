@@ -5,6 +5,7 @@ import fuzzySort from 'fuzzysort'
 import React, { createContext, useContext } from 'react'
 
 import { Config } from './helpers/configure'
+import { useScale } from './Scale'
 import { SVG } from './SVG'
 import { View, ViewProps } from './View/View'
 
@@ -50,7 +51,7 @@ const SIZE_LARGE = 20
 export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
-  const size = snapToSizes(props.size)
+  const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
 
   if (isDefined(props.opacity)) {

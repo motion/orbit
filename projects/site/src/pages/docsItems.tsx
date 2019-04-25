@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { titleProps: { size: 1.1, fontWeight: 500 } }
+const titleItem = { titleProps: { size: 1, fontWeight: 500 } }
 
 const guides = [
   {

@@ -6,6 +6,7 @@ type Props = {
   children?: any
   prepend?: any
   style?: any
+  className?: string
 }
 
 export class Portal extends Component<Props> {
@@ -17,6 +18,9 @@ export class Portal extends Component<Props> {
     document.body[this.props.prepend ? 'prepend' : 'appendChild'](this.popup)
     if (this.props.style) {
       this.popup.setAttribute('style', toCSSString(this.props.style))
+    }
+    if (this.props.className) {
+      this.popup.setAttribute('className', this.props.className)
     }
   }
 

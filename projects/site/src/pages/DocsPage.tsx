@@ -124,7 +124,7 @@ const DocsPage = memo((props: { children?: any }) => {
   const [theme, setTheme] = usePageTheme()
 
   useLayoutEffect(() => {
-    // return
+    return
     const sidebar = new StickySidebar('#sidebar', {
       containerSelector: '#main',
       topSpacing: 0,

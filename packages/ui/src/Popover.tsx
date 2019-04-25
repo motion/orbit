@@ -135,7 +135,7 @@ type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 type Bounds = { top: number; left: number; width: number; height: number }
 
-const OpenPopovers = new Set()
+const OpenPopovers = new Set<any>()
 
 export const PopoverState = {
   openPopovers: OpenPopovers,
@@ -206,7 +206,7 @@ const positionStateY = (
   const targetCenter = targetBounds
     ? targetBounds.top + targetBounds.height / 2
     : popoverBounds.height / 2
-  const targetTopReal = targetBounds ? targetBounds.top - window.scrollY : popoverBounds.top
+  const targetTopReal = targetBounds ? targetBounds.top : popoverBounds.top
 
   let arrowTop = 0
   let maxHeight = window.innerHeight
@@ -226,7 +226,7 @@ const positionStateY = (
     }
 
     // final top
-    top = getEdgePadding(props, top, window.innerHeight, popoverBounds.height)
+    top = getEdgePadding(props, top, window.innerHeight + window.scrollY, popoverBounds.height)
   } else {
     // HORIZONTAL
     const popoverCenter = popoverBounds.height / 2
@@ -531,10 +531,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
     const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
+    const targetBounds = this.target.getBoundingClientRect()
+    const extraY = window.scrollY
     const nextState = {
-      targetBounds: JSON.parse(JSON.stringify(this.target.getBoundingClientRect())),
+      targetBounds: {
+        top: targetBounds.top + extraY,
+        left: targetBounds.left,
+        width: targetBounds.width,
+        height: targetBounds.height,
+      },
       popoverBounds: {
-        top: popoverBounds.top,
+        top: popoverBounds.top + extraY,
         left: popoverBounds.left,
         width: Math.min(window.innerWidth, popoverBounds.width),
         height: Math.min(window.innerHeight, popoverBounds.height),
@@ -830,17 +837,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   // hover helpers
-  hoverStateSet(name, isHovered) {
+  hoverStateSet(name: string, next: boolean) {
     const { openOnHover, onMouseEnter } = this.props
     const setter = () => {
-      const val = isHovered ? Date.now() : 0
+      const val = next ? Date.now() : 0
       if (name === 'target') {
         this.setState({ targetHovered: val })
       } else {
         this.setState({ menuHovered: val })
       }
     }
-    if (isHovered) {
+    if (next) {
       if (openOnHover) {
         setter()
       }
@@ -852,7 +859,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         setter()
       }
     }
-    return isHovered
+    return next
   }
 
   isNodeHovered = (node: HTMLElement) => {
@@ -1086,7 +1093,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal prepend style={{ ...style, zIndex }}>
+        <Portal className="ui-popover" style={{ ...style, zIndex }}>
           <span
             className="popover-portal"
             style={{

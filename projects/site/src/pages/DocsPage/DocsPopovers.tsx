@@ -3,9 +3,13 @@ import React from 'react'
 
 export let Basic = (
   <Popover
-    openOnHover
+    group="demo"
+    open
+    towards="bottom"
+    elevation={2}
+    width={300}
     target={
-      <Button alt="action" size="lg">
+      <Button alt="action" size="lg" marginBottom={100}>
         Hover me
       </Button>
     }
@@ -16,7 +20,7 @@ export let Basic = (
   </Popover>
 )
 
-export let WithLists = (
+export let Hover = (
   <Popover
     openOnHover
     target={

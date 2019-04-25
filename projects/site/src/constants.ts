@@ -20,3 +20,5 @@ export const screen = {
 }
 
 export const IS_CHROME = navigator.userAgent.toLowerCase().indexOf('chrome') > -1
+
+export const bodyElement = IS_CHROME ? document.documentElement : document.body

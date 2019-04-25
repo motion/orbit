@@ -158,7 +158,8 @@ export const List = memo((allProps: ListProps) => {
     const itemExtraProps = getItemPropsGet()(a, b, c)
     const filterExtraProps = filteredGetItemProps(a, b, c)
     // const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
-    return { ...normalized, ...itemExtraProps, ...filterExtraProps }
+    const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps }
+    return itemProps
   }, [])
 
   const onOpenInner = useCallback(

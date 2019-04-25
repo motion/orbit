@@ -2,10 +2,9 @@ import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React, { memo, useEffect } from 'react'
 import { Link as RouterLink } from 'react-navi'
-import { LinkProps as NaviLinkProps } from 'react-navi/dist/types/Link'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation } from '../Navigation'
+import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from './FadeIn'
@@ -23,10 +22,10 @@ const LinkText = gloss(View, {
   },
 })
 
-export type LinkProps = Pick<NaviLinkProps, 'href'> & SimpleTextProps & { external?: boolean }
+export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
-  fontSize = 15,
+  fontSize = 18,
   href,
   width,
   margin,
@@ -40,11 +39,18 @@ export function Link({
       fontSize={fontSize}
       width={width}
       margin={margin}
+      onMouseEnter={() => {
+        // pre load pages on hover
+        if (routeTable[href]) {
+          routeTable[href]().then(console.log.bind(console))
+        }
+      }}
     >
       <SimpleText
         fontSize={fontSize}
         alpha={0.6}
-        fontWeight={400}
+        fontWeight={200}
+        fontFamily="GT Eesti"
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: 0.7 }}
         transition="all ease 300ms"

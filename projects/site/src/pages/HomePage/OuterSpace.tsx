@@ -1,32 +1,26 @@
-import { react, useStore } from '@o/use-store'
 import React from 'react'
 
 import { useSiteStore } from '../../SiteStore'
 
 const duration = 1500
 
-type ShownState = boolean | 'animating'
+// type ShownState = boolean | 'animating'
 
-class SpaceStore {
-  props: { show: boolean }
+// class SpaceStore {
+//   props: { show: boolean }
 
-  shown: ShownState = react(
-    () => this.props.show,
-    async (next, { sleep, setValue }) => {
-      setValue('animating')
-      await sleep(next ? 0 : duration)
-      return next
-    },
-  )
-}
+//   shown: ShownState = react(
+//     () => this.props.show,
+//     async (next, { sleep, setValue }) => {
+//       setValue('animating')
+//       await sleep(next ? 0 : duration)
+//       return next
+//     },
+//   )
+// }
 
 export function OuterSpace(props) {
-  const store = useStore(SpaceStore, props)
   const siteStore = useSiteStore()
-
-  if (store.shown === false) {
-    return null
-  }
 
   return (
     <div
@@ -36,7 +30,7 @@ export function OuterSpace(props) {
         left: 0,
         right: 0,
         height: siteStore.sectionHeight,
-        opacity: props.show && store.shown !== 'animating' ? 0.75 : 0,
+        opacity: 0.5,
         zIndex: -1,
         pointerEvents: 'none',
         transition: `all  ease ${duration}ms`,

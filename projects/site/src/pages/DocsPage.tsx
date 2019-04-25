@@ -114,6 +114,16 @@ const views = {
 
 const emptyPromise = () => Promise.resolve({ default: null })
 
+const loadDocsPage = async view => {
+  return await Promise.all([
+    view.page().then(x => x.default),
+    (view.source || emptyPromise)().then(x => x.default),
+    (view.examples || emptyPromise)(),
+    (view.examplesSource || emptyPromise)().then(x => x.default),
+    (view.types || emptyPromise)().then(x => x.default),
+  ])
+}
+
 export default compose(
   withView(async () => {
     return (
@@ -142,14 +152,7 @@ export default compose(
         }
       }
 
-      const [ChildView, source, examples, examplesSource, types] = await Promise.all([
-        view.page().then(x => x.default),
-        (view.source || emptyPromise)().then(x => x.default),
-        (view.examples || emptyPromise)(),
-        (view.examplesSource || emptyPromise)().then(x => x.default),
-        (view.types || emptyPromise)().then(x => x.default),
-      ])
-
+      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
       const item = docsItems.all.find(x => x['id'] === id)
 
       return {
@@ -170,6 +173,16 @@ export default compose(
 )
 
 const docsNavigate = debounce(id => Navigation.navigate(`/docs/${id}`), 150)
+
+const preloadItem = item => {
+  return {
+    onMouseEnter() {
+      if (views[item.id]) {
+        loadDocsPage(views[item.id])
+      }
+    },
+  }
+}
 
 const DocsPage = memo((props: { children?: any }) => {
   const screen = useScreenSize()
@@ -225,6 +238,7 @@ const DocsPage = memo((props: { children?: any }) => {
         defaultSelected={initialIndex}
         overscanCount={500}
         items={docsItems[section]}
+        getItemProps={preloadItem}
         onSelect={useCallback(rows => {
           if (!rows[0]) {
             console.warn('no row on select!', rows)

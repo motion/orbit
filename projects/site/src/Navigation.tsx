@@ -3,23 +3,29 @@ import React from 'react'
 
 import { HomePage } from './pages/HomePage'
 
-// Define your routes
-const routes = mount({
-  '/': route({
-    title: 'Orbit',
-    view: <HomePage />,
-  }),
-  '/docs': lazy(() => import('./pages/DocsPage')),
-  '/blog': lazy(() => import('./pages/BlogPage')),
-  '/about': lazy(() => import('./pages/AboutPage')),
-  '/beta': lazy(() => import('./pages/BetaPage')),
-  '/apps': lazy(() => import('./pages/AppsPage')),
-})
+// for easy pre-loading
+export const routeTable = {
+  '/docs': () => import('./pages/DocsPage'),
+  '/blog': () => import('./pages/BlogPage'),
+  '/about': () => import('./pages/AboutPage'),
+  '/beta': () => import('./pages/BetaPage'),
+  '/apps': () => import('./pages/AppsPage'),
+}
 
 // window for hmr preservation
 
 export const Navigation = createBrowserNavigation({
-  routes,
+  routes: mount({
+    '/': route({
+      title: 'Orbit',
+      view: <HomePage />,
+    }),
+    '/docs': lazy(routeTable['/docs']),
+    '/blog': lazy(routeTable['/blog']),
+    '/about': lazy(routeTable['/about']),
+    '/beta': lazy(routeTable['/beta']),
+    '/apps': lazy(routeTable['/apps']),
+  }),
 })
 
 window['Navigation'] = Navigation

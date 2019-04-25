@@ -15,7 +15,7 @@ export function SpacedPageContent({
       margin={screen === 'small' ? 0 : ['auto', 0]}
       height="80vh"
       maxHeight={900}
-      space="xl"
+      space="xxl"
       {...props}
     >
       <div style={{ flex: 1 }} />

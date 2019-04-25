@@ -201,7 +201,7 @@ export function NeckSection(props) {
 
   return (
     <Page overflow="hidden" zIndex={3} {...props}>
-      <Page.Content transform={{ y: '5%' }}>
+      <Page.Content transform={{ y: '2%' }}>
         <SpacedPageContent
           header={
             <>
@@ -389,7 +389,7 @@ export function NeckSection(props) {
             backgroundSize="cover"
             backgroundPosition="center center"
             backgroundRepeat="no-repeat"
-            opacity={0.8}
+            opacity={0.6}
           />
           <Spotlight />
         </FullScreen>

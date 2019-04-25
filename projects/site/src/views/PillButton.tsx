@@ -12,7 +12,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       letterSpacing={2}
       textTransform="uppercase"
       width="min-content"
-      padding={[1, 12]}
+      padding={[2, 12]}
       margin={[0, 'auto']}
       {...props}
     >

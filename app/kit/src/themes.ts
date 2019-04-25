@@ -270,8 +270,8 @@ const darkAlternates: ThemeSet = {
       backgroundHover: transparent,
       backgroundActive: transparent,
       color: darkColor,
-      borderColor: darkColor,
-      borderColorHover: darkColor,
+      borderColor: [...darkColor, 0.2],
+      borderColorHover: [...darkColor, 0.3],
     }),
   },
 }

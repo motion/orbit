@@ -23,11 +23,20 @@ export const DocsContents = memo(
       <>
         <Title>Continue reading docs</Title>
         <Space />
-        <SurfacePassProps alt="bordered" size={2} flex={1} ellipse>
+        <SurfacePassProps
+          alt="bordered"
+          size={2}
+          flex={1}
+          ellipse
+          cursor="pointer"
+          elementProps={{ tagName: 'a' }}
+          textDecoration="none"
+        >
           <Row width="100%" space>
             {!!prevItem && (
               <Button
-                onClick={() => {
+                onClick={e => {
+                  e.preventDefault()
                   Navigation.navigate(`/docs/${prevItem['id']}`, { replace: true })
                 }}
               >
@@ -36,7 +45,8 @@ export const DocsContents = memo(
             )}
             {!!nextItem && (
               <Button
-                onClick={() => {
+                onClick={e => {
+                  e.preventDefault()
                   Navigation.navigate(`/docs/${nextItem['id']}`, { replace: true })
                 }}
               >

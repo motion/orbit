@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { titleProps: { size: 1.1 } }
+const titleItem = { titleProps: { size: 1.1, fontWeight: 500 } }
 
 const guides = [
   {
@@ -39,13 +39,13 @@ const guides = [
   {
     id: 'databaseviewer',
     title: 'Database Viewer',
-    subTitle: 'An app that lets you write custom queries, save, edit.',
+    subTitle: 'Apps, custom queries, mutations.',
     ...titleItem,
   },
   {
     id: 'customermanager',
     title: 'Customer Manager',
-    subTitle: 'Build an interface to manage Postgres customers.',
+    subTitle: 'Postgres, multiple views.',
     ...titleItem,
   },
 ]

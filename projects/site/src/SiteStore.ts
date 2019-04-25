@@ -2,6 +2,7 @@ import { createStoreContext } from '@o/use-store'
 
 class SiteStore {
   screenSize = 'large'
+  codeCollapsed = false
   maxHeight = null
   showSidebar = false
 
@@ -9,6 +10,10 @@ class SiteStore {
 
   toggleSidebar = () => {
     this.showSidebar = !this.showSidebar
+  }
+
+  toggleCodeCollapsed = () => {
+    this.codeCollapsed = !this.codeCollapsed
   }
 
   setMaxHeight = (val: any) => {

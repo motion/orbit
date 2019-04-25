@@ -21,11 +21,12 @@ export const DocsContents = memo(
           IntroText: props => (
             <>
               <IntroText {...props} />
-              <Space size="lg" />
+              <Space />
             </>
           ),
         }}
       >
+        <Space size />
         <Section
           maxWidth={760}
           width="100%"
@@ -38,7 +39,7 @@ export const DocsContents = memo(
           titleBorder
           space
           title={title || 'No title'}
-          titleSize="xxxl"
+          titleSize={5}
           belowTitle={
             <SurfacePassProps
               chromeless
@@ -50,6 +51,7 @@ export const DocsContents = memo(
               sizeRadius={0}
               sizePadding={0}
               marginRight={30}
+              size="lg"
               alpha={0.75}
               hoverStyle={{
                 color: colors.purple,

@@ -1,7 +1,6 @@
 import {
   Absolute,
   BorderRight,
-  Button,
   Col,
   gloss,
   List,
@@ -26,6 +25,7 @@ import { Navigation } from '../Navigation'
 import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
+import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
 import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
@@ -248,16 +248,10 @@ const DocsPage = memo((props: { children?: any }) => {
             <SearchInput
               ref={inputRef}
               onChange={e => setSearch(e.target.value)}
-              maxWidth="calc(60% - 20px)"
+              maxWidth="calc(55% - 20px)"
               flex={1}
               placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-              after={
-                !isSmall && (
-                  <Button tooltip="Shortcut: t" size="xs" alt="flat" fontWeight={600}>
-                    t
-                  </Button>
-                )
-              }
+              after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
             />
 
             <Absolute
@@ -313,11 +307,16 @@ const DocsPage = memo((props: { children?: any }) => {
               flexFlow="row"
             >
               <SurfacePassProps size={1.2} circular iconSize={12}>
-                <Row space="xs">
+                <Row group>
                   <RoundButton
                     icon="moon"
                     tooltip="Toggle dark mode"
                     onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
+                  />
+                  <RoundButton
+                    icon="code"
+                    tooltip="Toggle code collapsed"
+                    onClick={siteStore.toggleCodeCollapsed}
                   />
                   {isSmall && (
                     <RoundButton

@@ -32,86 +32,10 @@ import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
-import { docsItems } from './docsItems'
+import { docsItems, docsViews } from './docsItems'
 import DocsInstall from './DocsPage/DocsInstall.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
-
-const views = {
-  install: {
-    page: () => import('./DocsPage/DocsInstall.mdx'),
-  },
-  start: {
-    page: () => import('./DocsPage/DocsStart.mdx'),
-  },
-  quickStart: {
-    page: () => import('./DocsPage/DocsQuickStart.mdx'),
-  },
-  buildapp: {
-    page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
-  },
-  icons: {
-    page: () => import('./DocsPage/DocsIcons.mdx'),
-    examples: () => import('./DocsPage/DocsIcons'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsIcons'),
-    source: () => import('!raw-loader!@o/ui/src/Icon'),
-    types: () => import('../../tmp/Icon.json'),
-  },
-  tree: {
-    page: () => import('./DocsPage/DocsTree.mdx'),
-    examples: () => import('./DocsPage/DocsTree'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsTree'),
-    source: () => import('!raw-loader!@o/ui/src/Tree'),
-    types: () => import('../../tmp/Tree.json'),
-  },
-  definitionList: {
-    page: () => import('./DocsPage/DocsDefinitionList.mdx'),
-    examples: () => import('./DocsPage/DocsDefinitionList'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsDefinitionList'),
-    source: () => import('!raw-loader!@o/ui/src/DefinitionList'),
-    types: () => import('../../tmp/DefinitionList.json'),
-  },
-  buttons: {
-    page: () => import('./DocsPage/DocsButtons.mdx'),
-    examples: () => import('./DocsPage/DocsButtons'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsButtons'),
-    source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
-    types: () => import('../../tmp/Button.json'),
-  },
-  surfaces: {
-    page: () => import('./DocsPage/DocsSurfaces.mdx'),
-    source: () => import('!raw-loader!@o/ui/src/Surface'),
-    types: () => import('../../tmp/Surface.json'),
-  },
-  cards: {
-    page: () => import('./DocsPage/DocsCards.mdx'),
-    examples: () => import('./DocsPage/DocsCards'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsCards'),
-    source: () => import('!raw-loader!@o/ui/src/Card'),
-    types: () => import('../../tmp/Card.json'),
-  },
-  progress: {
-    page: () => import('./DocsPage/DocsProgress.mdx'),
-    examples: () => import('./DocsPage/DocsProgress'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsProgress'),
-    source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
-    types: () => import('../../tmp/Progress.json'),
-  },
-  lists: {
-    page: () => import('./DocsPage/DocsLists.mdx'),
-    examples: () => import('./DocsPage/DocsLists'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsLists'),
-    source: () => import('!raw-loader!@o/ui/src/lists/List'),
-    types: () => import('../../tmp/List.json'),
-  },
-  tables: {
-    page: () => import('./DocsPage/DocsTables.mdx'),
-    examples: () => import('./DocsPage/DocsTables'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsTables'),
-    source: () => import('!raw-loader!@o/ui/src/tables/Table'),
-    types: () => import('../../tmp/Table.json'),
-  },
-}
 
 const emptyPromise = () => Promise.resolve({ default: null })
 
@@ -145,7 +69,7 @@ export default compose(
     }),
     '/:id': route(async req => {
       let id = req.params.id
-      const view = views[id]
+      const view = docsViews[id]
 
       if (!view) {
         return {
@@ -180,8 +104,8 @@ const docsNavigate = debounce(id => {
 const preloadItem = item => {
   return {
     onMouseEnter() {
-      if (views[item.id]) {
-        loadDocsPage(views[item.id])
+      if (docsViews[item.id]) {
+        loadDocsPage(docsViews[item.id])
       }
     },
   }

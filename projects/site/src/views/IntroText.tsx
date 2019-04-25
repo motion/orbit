@@ -5,7 +5,7 @@ import markSolid from '../../public/images/mark-solid.svg'
 import { Text } from './Text'
 
 export const IntroText = (props: TextProps) => (
-  <Text size={1.8} sizeLineHeight={1.2}>
+  <Text size={1.8} sizeLineHeight={1.25}>
     {props.children}
     <Image src={markSolid} display="inline" width={16} height={16} marginLeft={8} />
   </Text>

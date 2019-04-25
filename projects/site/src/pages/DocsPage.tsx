@@ -43,6 +43,12 @@ const views = {
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },
+  quickStart: {
+    page: () => import('./DocsPage/DocsQuickStart.mdx'),
+  },
+  buildapp: {
+    page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
+  },
   icons: {
     page: () => import('./DocsPage/DocsIcons.mdx'),
     examples: () => import('./DocsPage/DocsIcons'),
@@ -356,7 +362,7 @@ const DocsPage = memo((props: { children?: any }) => {
         </FixedLayout>
       </Portal>
 
-      <SectionContent fontSize={15} lineHeight={24} whiteSpace="normal">
+      <SectionContent fontSize={16} lineHeight={26} whiteSpace="normal">
         <ContentPosition isSmall={isSmall}>
           <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           <BlogFooter />

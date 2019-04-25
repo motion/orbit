@@ -65,6 +65,12 @@ export const components = {
       <Space />
     </>
   ),
+  ol: props => (
+    <>
+      <ol {...props} />
+      <Space />
+    </>
+  ),
   p: props => (
     <>
       <Paragraph

@@ -1,10 +1,6 @@
 import { useMedia } from '@o/ui'
 
-const widths = {
-  small: 680,
-  medium: 720,
-  large: 1024,
-}
+import { widths } from '../constants'
 
 type ScreenSize = 'small' | 'medium' | 'large'
 

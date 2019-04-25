@@ -25,6 +25,11 @@ export const splitCollapseProps = <A extends CollapsableProps>(
     useToggle: useToggleOg,
     ...rest
   } = all
+  if (
+    selectDefined(defaultCollapsed, collapsed, collapsable, onCollapse, useToggle) === undefined
+  ) {
+    return [null, rest]
+  }
   return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useToggle: useToggleOg }, rest]
 }
 
@@ -36,7 +41,13 @@ export const useCollapseToggle = (props: CollapsableProps) => {
   )
 }
 
-export const Collapsable = (props: CollapsableProps & { children: React.ReactNode }) => {
+export type CollapsableViewProps = CollapsableProps & { children: React.ReactNode }
+
+export const Collapsable = (props: CollapsableViewProps) => {
+  return createCollapsableChildren(props)
+}
+
+export const createCollapsableChildren = (props: CollapsableViewProps) => {
   const innerToggle = useCollapseToggle(props)
   const toggle = props.useToggle || innerToggle
   // this inherits from useToggle nicely, not the clearest pattern...

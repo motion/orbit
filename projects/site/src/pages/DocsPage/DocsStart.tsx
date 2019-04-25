@@ -25,6 +25,7 @@ export const LatestUpdates = () => (
         cursor="pointer"
         tagName="a"
         textDecoration="none"
+        elevation={1}
       >
         <Col
           height={200}

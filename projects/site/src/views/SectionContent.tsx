@@ -52,23 +52,13 @@ const Section = gloss(View, {
 export const SectionContentChrome = gloss(View, {
   minHeight: '100%',
   width: '100%',
-  // minWidth: Constants.smallSize,
-  maxWidth: Constants.mediumSize,
+  maxWidth: Constants.widths.large,
   padding: [0, Constants.sidePad],
   position: 'relative',
   [Constants.screen.smallQuery]: {
     width: '100%',
-    // height: 'auto',
     minWidth: 'auto',
     maxWidth: 'auto',
     padding: [0, '5%'],
-  },
-  padHorizontal: {
-    paddingLeft: Constants.sidePad,
-    paddingRight: Constants.sidePad,
-    [Constants.screen.smallQuery]: {
-      paddingLeft: '5%',
-      paddingRight: '5%',
-    },
   },
 })

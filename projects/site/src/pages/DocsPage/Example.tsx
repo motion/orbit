@@ -25,6 +25,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
     <>
       <Space size="sm" />
       <Card
+        elevation={1}
         pad
         space
         background={theme => theme.backgroundStrong}

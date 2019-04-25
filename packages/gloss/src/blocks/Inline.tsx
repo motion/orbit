@@ -6,3 +6,7 @@ export type InlineProps = BaseProps
 export const Inline = gloss(Base, {
   display: 'inline',
 })
+
+Inline.defaultProps = {
+  tagName: 'span',
+}

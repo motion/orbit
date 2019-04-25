@@ -12,8 +12,8 @@ body {
   text-rendering: optimizeLegibility;
   font-kerning: auto;
   pointer-events: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
   min-height: 100vh;
 }
 

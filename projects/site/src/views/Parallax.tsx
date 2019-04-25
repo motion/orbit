@@ -1,9 +1,9 @@
 import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-// @ts-ignore
 import { animated, config, Controller, Globals } from 'react-spring/renderprops'
 
+// @ts-ignore
 const El = Globals.defaultElement
 const AnimatedDiv = animated(El)
 const { Provider, Consumer } = React.createContext(null)

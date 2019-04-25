@@ -51,26 +51,26 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   const name = findName(props.name)
   const theme = useTheme(props)
   const size = snapToSizes(props.size)
-  let color = toColor(props.color || (theme.color ? theme.color.toCSS() : '#fff'))
+  let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
 
   if (isDefined(props.opacity)) {
     try {
-      color = color.alpha(props.opacity)
+      color = toColor(color)
+        .alpha(props.opacity)
+        .toCSS()
     } catch {
       console.debug('bad color')
     }
   }
 
-  color = color.toCSS()
-
   if (isDefined(props.svg)) {
     return (
       <View
-        {...props}
         width={size}
         height={size}
         className={`icon ${props.className || ''}`}
         color={color}
+        {...props}
       >
         <SVG
           svg={props.svg}

@@ -22,7 +22,7 @@ export function ShoulderSection(props) {
       <Page.Content>
         <SpacedPageContent
           transform={{
-            y: '-12%',
+            y: '-11%',
           }}
           header={
             <>
@@ -132,7 +132,7 @@ export function ShoulderSection(props) {
         >
           <FullScreen
             className="orbits-bg"
-            opacity={0.18}
+            opacity={0.125}
             backgroundImage={`url(${background})`}
             backgroundSize="cover"
             backgroundPosition="center center"

@@ -3,15 +3,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export function useDebounce(fn: Function, amount: number) {
   const tm = useRef(null)
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    clearTimeout(tm.current)
+    return () => {
       clearTimeout(tm.current)
-      return () => {
-        clearTimeout(tm.current)
-      }
-    },
-    [fn, amount],
-  )
+    }
+  }, [fn, amount])
 
   return useCallback(
     (...args) => {
@@ -23,20 +20,17 @@ export function useDebounce(fn: Function, amount: number) {
 }
 
 export function useDebounceValue(val: any, amt = 0) {
-  const [state, setState] = useState(val)
+  const [state, setState] = useState(undefined)
 
-  useEffect(
-    () => {
-      let tm = setTimeout(() => {
-        setState(val)
-      }, amt)
+  useEffect(() => {
+    let tm = setTimeout(() => {
+      setState(val)
+    }, amt)
 
-      return () => {
-        clearTimeout(tm)
-      }
-    },
-    [val],
-  )
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [val])
 
   return state
 }

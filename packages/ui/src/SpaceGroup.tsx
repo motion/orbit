@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 import { Sizes, Space } from './Space'
 
 export type SpaceGroupProps = {
-  children?: React.ReactNode
+  children: React.ReactNode
   space?: Sizes
   spaceAround?: boolean
   separator?: React.ReactNode
@@ -13,7 +13,11 @@ export type SpaceGroupProps = {
 
 const childrenToArr = (x: React.ReactNode): JSX.Element[] => React.Children.map(x, _ => _) as any
 
-export function SpaceGroup({
+export function SpaceGroup(props: SpaceGroupProps) {
+  return createSpacedChildren(props)
+}
+
+export function createSpacedChildren({
   children,
   space = true,
   spaceAround,

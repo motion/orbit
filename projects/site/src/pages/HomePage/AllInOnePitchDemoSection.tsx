@@ -138,7 +138,7 @@ const elements = [
     image: listScreen,
     iconAfter: require('../../../public/logos/sheets.svg'),
     afterName: 'GSheets',
-    beforeName: 'Web Crawl',
+    beforeName: 'Crawler',
   },
 ]
 
@@ -147,25 +147,25 @@ export function NeckSection(props) {
   const forceUpdate = useForceUpdate()
   const nextInt = useRef(null)
 
-  const longDelay = 150
+  const longDelay = 100
   const springFast = useSlideSpring({
-    mass: 1,
+    mass: 0.5,
     tension: 150,
-    friction: 10,
+    friction: 12,
   })
   const springSlow = useSlideSpring(
     {
-      mass: 1,
+      mass: 0.5,
       tension: 120,
-      friction: 8,
+      friction: 12,
     },
     longDelay / 2,
   )
   const springSlowest = useSlideSpring(
     {
-      mass: 1,
+      mass: 0.5,
       tension: 120,
-      friction: 8,
+      friction: 12,
     },
     longDelay,
   )
@@ -200,11 +200,7 @@ export function NeckSection(props) {
 
   return (
     <Page overflow="hidden" zIndex={3} {...props}>
-      <Page.Content
-        transform={{
-          y: '-2%',
-        }}
-      >
+      <Page.Content transform={{ y: '5%' }}>
         <SpacedPageContent
           header={
             <>
@@ -224,7 +220,7 @@ export function NeckSection(props) {
         >
           <Col maxWidth="100%" margin={[0, 'auto']}>
             {screen !== 'small' && (
-              <Row space flexWrap={screen === 'small' ? 'wrap' : 'nowrap'}>
+              <Row space>
                 <SubSection maxWidth="33%">
                   <FadeIn delay={300} intersection="20px">
                     <PillButtonDark>Import</PillButtonDark>
@@ -395,7 +391,7 @@ const CenterText = gloss(
       {...{
         selectable: true,
         sizeLineHeight: 1.2,
-        size: 1.25,
+        size: 1.2,
         alpha: 0.8,
       }}
       {...props}

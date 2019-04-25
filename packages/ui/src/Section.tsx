@@ -1,7 +1,7 @@
 import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 
-import { Collapsable, splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { splitCollapseProps, useCollapseToggle } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
@@ -76,7 +76,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   } = props
   const hasTitle = isDefined(title, afterTitle)
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
-  const spaceSize = space === true ? selectDefined(size, space) : space
+  const spaceSize = !!space ? selectDefined(size, space) : space
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const toggle = useCollapseToggle(collapseProps)
 
@@ -134,9 +134,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           scrollable={scrollable}
           pad={innerPad}
           beforeSpace={!showTitleAbove && titleElement}
+          useToggle={toggle}
           {...viewProps}
         >
-          <Collapsable useToggle={toggle}>{children}</Collapsable>
+          {children}
         </Col>
       </Reset>
       {below}

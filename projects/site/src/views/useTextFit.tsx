@@ -6,9 +6,16 @@ export type UseTextFitProps = {
   max?: number
   throttle?: number
   updateKey?: any
+  extraScale?: number
 }
 
-export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: UseTextFitProps = {}) {
+export function useTextFit({
+  min = 8,
+  throttle = 32,
+  max = 100,
+  extraScale = 1,
+  updateKey,
+}: UseTextFitProps = {}) {
   const ref = useRef<HTMLElement>(null)
   const node = ref.current
   const parentRef = useRef(null)
@@ -51,7 +58,7 @@ export function useTextFit({ min = 8, throttle = 32, max = 100, updateKey }: Use
     height: scale * height,
     style: {
       fontSize: ref.current ? fontSizeOG : undefined,
-      transform: `scale(${scale})`,
+      transform: `scale(${scale * extraScale})`,
       height: ref.current ? `${scale * height}px` : 'auto',
       width: 'max-content',
     },

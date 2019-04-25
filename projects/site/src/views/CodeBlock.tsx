@@ -15,7 +15,7 @@ export const CodeBlock = memo(props => {
     <CodeBlockChrome>
       <Highlight
         {...defaultProps}
-        code={`${props.children}`}
+        code={`${props.children}`.trim()}
         language="jsx"
         theme={theme.background.isDark() ? darkTheme : darkTheme}
       >

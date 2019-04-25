@@ -53,7 +53,7 @@ export function Link({
       <SimpleText
         fontSize={fontSize}
         alpha={isActive ? 1 : 0.6}
-        fontWeight={isActive ? 600 : 300}
+        fontWeight={300}
         fontFamily="GT Eesti"
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}

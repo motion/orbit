@@ -1,4 +1,4 @@
-import { createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
+import { createContextualProps, FullScreen, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
@@ -76,6 +76,15 @@ export const useFadePage = ({ delay = 0, off, ...props }: UseFadePageProps = {})
     }, []),
   }
 }
+
+export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { children?: any }) => {
+  const Fade = useFadePage(props)
+  return (
+    <Fade.FadeProvide>
+      <FullScreen ref={Fade.ref}>{children}</FullScreen>
+    </Fade.FadeProvide>
+  )
+})
 
 export const useSimpleFade = ({
   off,

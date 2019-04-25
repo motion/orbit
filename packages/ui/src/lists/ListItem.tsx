@@ -16,15 +16,31 @@ import { VirtualListItemProps } from './VirtualListItem'
 
 export type ListItemProps = ListItemSimpleProps &
   Omit<VirtualListItemProps<Bit>, 'index'> & {
+    /** Internally used for selection, can be overridden */
     index?: number
+
+    /** Attach an ID for index view selection, see AppProps */
     id?: string
+
+    /** Attach an identifier for index view selection, see AppProps */
     identifier?: string
+
+    /** Attach a subType for index view selection, see AppProps */
     subType?: string
+
+    /** Show a row of people below the list item */
     people?: Bit[]
+
+    /** Disable automatically showing people when passing in a Bit */
     hidePeople?: boolean
+
+    /** Props for the inner ItemView, when displaying a media item type */
     itemViewProps?: ListItemViewProps
+
+    /** Pass in your own SelectableStore */
     selectableStore?: SelectableStore
-    // you can attach some extra data, if you need it elsewhere
+
+    /** Arbitrarily add extra data, makes search and doing things on onSelect callbacks easier */
     extraData?: any
   }
 

@@ -7,13 +7,13 @@ import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
-import { Separator } from '../Separator'
+import { Separator, SeparatorProps } from '../Separator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
-import { Text } from '../text/Text'
+import { Text, TextProps } from '../text/Text'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 
@@ -32,51 +32,105 @@ export type ListItemHide = {
 }
 
 export type ListItemSpecificProps = ListItemHide & {
+  /** Condensed view for list items */
   oneLine?: boolean
+
+  /** Disable/enable selection */
   selectable?: boolean
+
+  /** Padding */
   padding?: number | number[]
-  // TODO make it a Sizes
+
+  /** Adds extra indentation for tree-style view */
   indent?: number
+
+  /** Attach a subId for index view selection, see AppProps */
   subId?: string | number
+
+  /** Adds a button before the subtitle */
   location?: React.ReactNode
+
+  /** Adds multi-line text below the Title and Subtitle */
   preview?: React.ReactNode
+
+  /** Adds a title element */
   title?: React.ReactNode
+
+  /** Override the opacity of the text elements below title */
   subTextOpacity?: number
+
+  /** Display a more condensed list item */
   small?: boolean
+
+  /** Adds an element vertically above list item */
   above?: React.ReactNode
+
+  /** Adds an element horizontally before list item */
   before?: React.ReactNode
-  listItem?: boolean
+
+  /** Adds a SubTitle to item */
   subTitle?: React.ReactNode
+
+  /** Adds a date with formatting after list item */
   date?: Date
+
+  /** String or ReactNode to show icon on list item */
   icon?: any
+
+  /** Internal: used for selection */
   index?: number
+
+  /** Adds an element horizontally after title */
   afterTitle?: React.ReactNode
+
+  /** Adds an element horizontally after list item */
   after?: React.ReactNode
-  titleProps?: Record<string, any>
+
+  titleProps?: Partial<TextProps>
+
+  /** Icons default to showing inline with the title, this forces them to show before the list item */
   iconBefore?: boolean
+
+  /** Adds extra IconProps to icon elements */
   iconProps?: Partial<IconProps>
-  separatorProps?: Record<string, any>
+
+  separatorProps?: Partial<SeparatorProps>
+
+  /** Add className */
   className?: string
-  pane?: string
-  subPane?: string
+
+  /** Custom function to parse text */
   renderText?: ItemRenderText
+
+  /** Add custom children below list item */
   children?: React.ReactNode
-  // its helpful to have a separate disableSelect for various JS-object/intuitiveness reasons
+
+  /** Disable selection */
   disableSelect?: boolean
-  // single click / keyboard select
+
+  /** Event used on selection */
   onSelect?: HandleSelection
-  // double click / keyboard enter
+
+  /** Event used on double-click or keyboard enter */
   onOpen?: HandleSelection
+
+  /** Add border radius */
   borderRadius?: number
-  nextUpStyle?: Record<string, any>
+
+  /** Override selection conditional logic */
   isSelected?: boolean | ((index: number) => boolean)
+
+  /** Whether to make the title push after elements */
   titleFlex?: number
-  subTitleProps?: Record<string, any>
-  getIndex?: (id: number) => number
-  searchTerm?: string
+
+  /** Add extra SubTitle props */
+  subTitleProps?: Partial<TextProps>
+
+  /** Event on clicking location element */
   onClickLocation?: (index: number, e?: Event) => any
+
+  /** Text to show in prefixed separator */
   separator?: React.ReactNode
-  group?: string
 }
 
 export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps

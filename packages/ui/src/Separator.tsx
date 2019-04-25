@@ -1,7 +1,10 @@
 import { gloss } from '@o/gloss'
-import { Text } from './text/Text'
 
-export const Separator = gloss(Text, {
+import { Text, TextProps } from './text/Text'
+
+export type SeparatorProps = TextProps
+
+export const Separator = gloss<SeparatorProps>(Text, {
   paddingTop: 18,
   paddingLeft: 10,
   paddingRight: 10,

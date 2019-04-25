@@ -21,8 +21,12 @@ export type VirtualListProps<A> = SelectableProps &
     ItemView?: GenericComponent<A>
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
+
+    /** Filter by search string */
     items: A[]
-    getItemProps?: (item: A, index: number, items: A[]) => Record<string, any> | null | false
+
+    /** Dynamically add extra props to each item */
+    getItemProps?: (item: A, index: number, items: A[]) => ListItemProps | null | false
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })

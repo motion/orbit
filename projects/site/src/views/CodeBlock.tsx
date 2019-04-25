@@ -2,9 +2,10 @@ import './duotone-dark.css'
 
 import { gloss, useTheme } from '@o/ui'
 import Highlight, { defaultProps } from 'prism-react-renderer'
-import lightTheme from 'prism-react-renderer/themes/duotoneLight'
 import darkTheme from 'prism-react-renderer/themes/nightOwl'
 import React, { memo } from 'react'
+
+// import lightTheme from 'prism-react-renderer/themes/nightOwl'
 
 export const CodeBlock = memo(props => {
   const theme = useTheme()
@@ -16,7 +17,7 @@ export const CodeBlock = memo(props => {
         {...defaultProps}
         code={`${props.children}`}
         language="jsx"
-        theme={theme.background.isDark() ? darkTheme : lightTheme}
+        theme={theme.background.isDark() ? darkTheme : darkTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>

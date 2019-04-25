@@ -13,7 +13,7 @@ import {
   Sidebar,
   SurfacePassProps,
 } from '@o/ui'
-import { useReaction } from '@o/use-store'
+import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -195,6 +195,93 @@ const DocsPage = memo((props: { children?: any }) => {
 
   return (
     <>
+      <DocsPageHeader
+        {...{
+          setSearch,
+          isSmall,
+          inputRef,
+          toggleSection,
+          section,
+          setTheme,
+          theme,
+          setShowSidebar,
+          siteStore,
+          showSidebar,
+        }}
+      />
+
+      <Portal prepend>
+        <Header slim noBorder />
+      </Portal>
+
+      {isSmall && (
+        <Portal>
+          <FixedLayout isSmall={isSmall} className="mini-scrollbars">
+            <Sidebar
+              hidden={!showSidebar}
+              zIndex={10000000}
+              elevation={25}
+              width={280}
+              pointerEvents="auto"
+              background={theme.background}
+            >
+              {sidebarChildren}
+            </Sidebar>
+          </FixedLayout>
+        </Portal>
+      )}
+
+      <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
+        <Row id="main" className="main">
+          {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
+            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+          </Col>
+        </Row>
+
+        <BlogFooter />
+      </SectionContent>
+    </>
+  )
+})
+
+const DocsPageSidebar = memo(({ children }) => {
+  const forceUpdate = useForceUpdate()
+
+  useEffect(() => {
+    const updateSlow = debounce(forceUpdate, 100)
+    window.addEventListener('resize', updateSlow, { passive: true })
+    return () => {
+      window.removeEventListener('resize', updateSlow)
+    }
+  })
+
+  return (
+    <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
+      <Col position="relative" className="sidebar__inner" flex={1}>
+        <Col margin={[50, 0, 0]} flex={1} position="relative">
+          {children}
+          <BorderRight top={10} opacity={0.5} />
+        </Col>
+      </Col>
+    </Col>
+  )
+})
+
+const DocsPageHeader = memo(
+  ({
+    setSearch,
+    isSmall,
+    inputRef,
+    toggleSection,
+    section,
+    setTheme,
+    theme,
+    setShowSidebar,
+    siteStore,
+    showSidebar,
+  }: any) => {
+    return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
           <Row
@@ -294,50 +381,9 @@ const DocsPage = memo((props: { children?: any }) => {
           </Row>
         </ListShortcuts>
       </Portal>
-
-      <Portal prepend>
-        <Header slim noBorder />
-      </Portal>
-
-      {isSmall && (
-        <Portal>
-          <FixedLayout isSmall={isSmall} className="mini-scrollbars">
-            <Sidebar
-              hidden={!showSidebar}
-              zIndex={10000000}
-              elevation={25}
-              width={280}
-              pointerEvents="auto"
-              background={theme.background}
-            >
-              {sidebarChildren}
-            </Sidebar>
-          </FixedLayout>
-        </Portal>
-      )}
-
-      <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
-        <Row id="main" className="main">
-          {!isSmall && (
-            <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
-              <Col position="relative" className="sidebar__inner" flex={1}>
-                <Col margin={[50, 0, 0]} flex={1} position="relative">
-                  {sidebarChildren}
-                  <BorderRight top={10} opacity={0.5} />
-                </Col>
-              </Col>
-            </Col>
-          )}
-          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
-            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-          </Col>
-        </Row>
-
-        <BlogFooter />
-      </SectionContent>
-    </>
-  )
-})
+    )
+  },
+)
 
 DocsPage.theme = 'home'
 

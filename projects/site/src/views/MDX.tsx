@@ -6,6 +6,7 @@ import componentNames from '../../tmp/componentNames.json'
 import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
 import { CodeBlock } from './CodeBlock'
+import { IntroText } from './IntroText'
 import { Key } from './Key'
 import { TitleText } from './TitleText'
 
@@ -13,6 +14,13 @@ export const components = {
   // custom
   Example,
   Key,
+
+  IntroText: props => (
+    <>
+      <IntroText {...props} />
+      <Space size="lg" />
+    </>
+  ),
 
   h1: props => (
     <>
@@ -22,6 +30,7 @@ export const components = {
   ),
   h2: props => (
     <>
+      <Space />
       <TitleText size="lg" {...props} />
       <Space />
     </>

@@ -172,7 +172,9 @@ export default compose(
   }),
 )
 
-const docsNavigate = debounce(id => Navigation.navigate(`/docs/${id}`), 150)
+const docsNavigate = debounce(id => {
+  Navigation.navigate(`/docs/${id}`, { replace: true })
+}, 150)
 
 const preloadItem = item => {
   return {

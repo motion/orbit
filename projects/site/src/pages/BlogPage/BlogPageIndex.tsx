@@ -10,23 +10,26 @@ import { posts } from './posts'
 export function BlogPageIndex() {
   const navigation = useNavigation()
 
-  const postIds = Object.keys(posts)
-  const recentPosts = Object.keys(posts)
+  const all = Object.keys(posts)
     .slice(0, 10)
-    .map(x => posts[x])
+    .map(id => ({
+      ...posts[id],
+      id,
+    }))
+    .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
 
   return (
     <BlogLayout space>
-      {recentPosts.map((post, index) => (
+      {all.map((post, index) => (
         <Post
           pad="xl"
-          key={index}
-          href="what"
+          key={post.date}
           tagName="a"
+          {...{ href: `/blog/${all[index].id}` }}
           textDecoration="none"
           onClick={e => {
             e.preventDefault()
-            navigation.navigate(`/blog/${postIds[index]}`)
+            navigation.navigate(`/blog/${all[index].id}`)
           }}
           cursor="pointer"
           hoverStyle={{

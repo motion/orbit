@@ -29,4 +29,11 @@ export const posts: PostDirectory = {
     author: 'Nathan Wienert',
     authorImage: nateImg,
   },
+  'update-two': {
+    view: () => import('./update-two/index.mdx'),
+    title: 'Update Two: Halfway to a Beta',
+    date: '2019-04-25T22:12:03.284Z',
+    author: 'Nathan Wienert',
+    authorImage: nateImg,
+  },
 }

@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React, { memo, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -26,6 +26,8 @@ const LinkText = gloss(View, {
 const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
 let tm = null
 
+const loadedRoutes = {}
+
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
@@ -45,21 +47,35 @@ export function Link({
     <LinkText
       cursor="pointer"
       onClick={() => {
-        if (header) {
-          header.setShown(false)
-        }
         clearTimeout(tm)
-        tm = setTimeout(() => {
+
+        if (!loadedRoutes[href]) {
+          // if we didnt finish preloading, show fancy animation
+          if (header) {
+            header.setShown(false)
+          }
+          tm = setTimeout(() => {
+            Navigation.navigate(href)
+          }, 90)
+        } else {
+          // otherwise just go right there, because nerds would get mad
+          // if god fobid you slow something down 90ms to show a nice animation
           Navigation.navigate(href)
-        }, 90)
+        }
       }}
       fontSize={fontSize}
       width={width}
       margin={margin}
       onMouseEnter={() => {
         // pre load pages on hover
+        if (loadedRoutes[href]) {
+          return
+        }
         if (routeTable[href]) {
-          routeTable[href]().then(console.log.bind(console))
+          routeTable[href]().then(() => {
+            console.log('finished loading')
+            loadedRoutes[href] = true
+          })
         }
       }}
     >

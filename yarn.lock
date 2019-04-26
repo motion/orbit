@@ -851,7 +851,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
-"@babel/runtime@7.4.3", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2":
+"@babel/runtime@7.4.3", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2":
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.3.tgz#79888e452034223ad9609187a0ad1fe0d2ad4bdc"
   integrity sha512-9lsJwJLxDh/T3Q3SZszfWOTkk3pHbkmH+3KY+zwIDmsNlxsumuhS2TH3NIpktU4kNvfzy+k3eLT7aTJSPTo0OA==
@@ -9399,11 +9399,6 @@ ignore@^4.0.6:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
-illuminate-js@1.0.0-alpha.2:
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/illuminate-js/-/illuminate-js-1.0.0-alpha.2.tgz#bc9e782b038f921e6b27da91ad5978c0d667a112"
-  integrity sha512-Qjwvjwsu4RXfkpM0mSqOMZlom3KevYC2/JalIzFlslb4gtRcURIN6Ydq9QHlP74l8j/SxhkP4v8VSscQxcULrQ==
-
 iltorb@^2.0.5:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/iltorb/-/iltorb-2.4.2.tgz#51e341045ad5181bf64832a569ec576e7df0faf2"
@@ -15625,13 +15620,6 @@ react-hotkeys@2.0.0-pre5:
   dependencies:
     prop-types "^15.6.1"
 
-react-illuminate@2.0.0-alpha.2:
-  version "2.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-illuminate/-/react-illuminate-2.0.0-alpha.2.tgz#d67d9920c0562cf82f1a44e6633f0c71183e19cc"
-  integrity sha512-e1WYtnBfUY3HkuB07nnXbIV27NeF+/CnzPMVaL/2CPK2kWB7Gb4gV4kwVYOnyHpSANGKZNcWZOy88vZ7w19vqg==
-  dependencies:
-    classnames "^2.2.5"
-
 react-input-autosize@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"
@@ -15737,15 +15725,6 @@ react-spring@8.0.18:
   integrity sha512-gb1Rtsnez2gxIHtbrbwQsAjE4ir/62m+gI+eT+1E0Uky5L1PbLccbywRIdIpK3W5jiNmU6OlEazVk0tfI8pZrA==
   dependencies:
     "@babel/runtime" "^7.3.1"
-
-react-sticky-box@0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/react-sticky-box/-/react-sticky-box-0.8.0.tgz#1c191936af8f5420087b703ec6da4ef46060076c"
-  integrity sha512-al7fY+VzTKBgVrn14l21jQfhuG582Z6FD8tVbWVQDDqzcjLmUrFb+ljG2phxHhRRazg64L3yH4nOKjn78PZmag==
-  dependencies:
-    "@babel/runtime" "^7.1.5"
-    prop-types "^15.6.2"
-    resize-observer-polyfill "^1.5.1"
 
 react-svg-inline@2.1.1, react-svg-inline@^2.1.0:
   version "2.1.1"
@@ -16459,7 +16438,7 @@ reserved-words@^0.1.2:
   resolved "https://registry.yarnpkg.com/reserved-words/-/reserved-words-0.1.2.tgz#00a0940f98cd501aeaaac316411d9adc52b31ab1"
   integrity sha1-AKCUD5jNUBrqqsMWQR2a3FKzGrE=
 
-resize-observer-polyfill@1.5.1, resize-observer-polyfill@^1.5.0, resize-observer-polyfill@^1.5.1:
+resize-observer-polyfill@1.5.1, resize-observer-polyfill@^1.5.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
   integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
@@ -19410,6 +19389,11 @@ vinyl@^2.2.0:
     cloneable-readable "^1.0.0"
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
+
+vivus@0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/vivus/-/vivus-0.4.4.tgz#34363eb833d5f6fe0b63a92cfccff14ad099ba44"
+  integrity sha1-NDY+uDPV9v4LY6ks/M/xStCZukQ=
 
 vlq@^0.2.1, vlq@^0.2.2:
   version "0.2.3"

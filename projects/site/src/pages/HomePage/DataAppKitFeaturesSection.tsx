@@ -15,8 +15,9 @@ import { blackWavePattern } from './FooterSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export const linkProps = href => {
+export const linkProps = (href): ButtonProps => {
   return {
+    // @ts-ignore
     href,
     tagName: 'a',
     textDecoration: 'none',
@@ -73,7 +74,7 @@ export const ChestSection = memo((props: any) => {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
-  const FadeDataApps = useFadePage({ threshold: 0.5 })
+  const FadeDataApps = useFadePage({ threshold: 0 })
   const Fade = useFadePage()
   return (
     <Page {...props}>
@@ -82,11 +83,7 @@ export const ChestSection = memo((props: any) => {
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen
-              ref={FadeDataApps.ref}
-              transform={{ y: '-85%', scale: 0.65 }}
-              transformOrigin="bottom center"
-            >
+            <FullScreen transform={{ y: '-85%', scale: 0.65 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}
@@ -104,16 +101,13 @@ export const ChestSection = memo((props: any) => {
           </Page.Parallax>
         )}
 
-        <Page.Content height={sectionHeight * 2} flex={1}>
+        <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2} flex={1}>
           <SpacedPageContent
             maxHeight={100000}
             margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
             height="auto"
             header={
               <>
-                <FadeChild delay={0}>
-                  <PillButton>Data</PillButton>
-                </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText size="xxl">Import, search, filter, export.</TitleText>
                 </FadeChild>
@@ -121,7 +115,7 @@ export const ChestSection = memo((props: any) => {
                   <FadeChild delay={200}>
                     Every app exposes a simple typed API.
                     <br />
-                    Build on top of an open ecosystem.
+                    Find apps in the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -129,8 +123,8 @@ export const ChestSection = memo((props: any) => {
           >
             <Row
               className="hide-scrollbars"
-              margin="0 -40px"
-              width="calc(100% + 80px)"
+              margin="0 -10vw"
+              width="100vw"
               height="auto"
               space="md"
               spaceAround
@@ -147,7 +141,7 @@ export const ChestSection = memo((props: any) => {
             <FadeChild delay={0}>
               <Row space margin={[0, 'auto']}>
                 <BodyButton {...linkProps('/apps')} size={2}>
-                  See apps
+                  Explore apps
                 </BodyButton>
               </Row>
             </FadeChild>
@@ -159,6 +153,7 @@ export const ChestSection = memo((props: any) => {
 
           <Fade.FadeProvide>
             <SpacedPageContent
+              ref={Fade.ref}
               maxHeight={100000}
               height="auto"
               flex={1}
@@ -183,7 +178,6 @@ export const ChestSection = memo((props: any) => {
             >
               <Space size="lg" />
               <Grid
-                ref={Fade.ref}
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}
                 itemMinWidth={240}
@@ -240,13 +234,13 @@ export const ChestSection = memo((props: any) => {
 
                   <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
                     <SectionP>
-                      <SectionIcon name="widget" />A proper, powerful and flexible list view is no
-                      joke. Neither is a table or form. But that's just the start. Orbit makes them
-                      work together, accepting similar data formats and automatically normalizing.
+                      <SectionIcon name="widget" />A proper, powerful list view is no joke. Neither
+                      are a table or form. Orbit makes them work, and all work together, accepting
+                      similar data formats and normalizing.
                       {screen !== 'small' && (
                         <>
                           <Space />
-                          Plus, Orbit understands how to lay them out when they are used together.
+                          Layouts, templates, combining views and more.
                         </>
                       )}
                     </SectionP>
@@ -277,7 +271,7 @@ export const ChestSection = memo((props: any) => {
         left="-40%"
         right="-40%"
         width="180%"
-        top="0%"
+        top="30%"
         backgroundPosition="top center"
         opacity={0.5}
         backgroundImage={blackWavePattern}

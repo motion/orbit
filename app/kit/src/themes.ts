@@ -154,18 +154,14 @@ const alternates: ThemeSet = {
     }),
   flat: parent => {
     const background = parent.background.isDark()
-      ? parent.background.lighten(0.08)
-      : parent.background.darken(0.05)
-    const theme = Theme.fromStyles({
-      background,
-    })
+      ? parent.background.lighten(0.08).alpha(0.5)
+      : parent.background.darken(0.05).alpha(0.5)
     return {
+      color: parent.color,
       background,
-      backgroundHover: theme.backgroundHover,
-      backgroundFocus: theme.backgroundFocus,
-      backgroundActive: theme.backgroundActive,
-      color: theme.color,
-      colorHover: theme.colorHover,
+      backgroundHover: background.alpha(1),
+      backgroundFocus: background.alpha(1),
+      backgroundActive: background.alpha(1),
       glintColor: transparent,
       glintColorBottom: transparent,
       ...Theme.colorize({

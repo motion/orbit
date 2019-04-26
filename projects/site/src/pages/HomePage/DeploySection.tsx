@@ -132,6 +132,9 @@ export function ShoulderSection(props) {
               backgroundSize="cover"
               backgroundPosition="center center"
               backgroundRepeat="no-repeat"
+              transform={{
+                scale: 0.8,
+              }}
             />
             <Spotlight />
           </FullScreen>

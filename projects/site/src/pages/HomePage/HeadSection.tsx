@@ -4,18 +4,17 @@ import React, { memo, useEffect, useState } from 'react'
 
 import glow from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
-import appScreen from '../../../public/images/screen.jpg'
 import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
-import { SectionContent } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
 import { GradientDown } from './DataAppKitFeaturesSection'
 import { Join } from './EarlyAccessBetaSection'
+import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
@@ -23,15 +22,15 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Apps without servers',
+  large: 'Build better apps with your team',
   medium: 'Apps without servers',
   small: 'Apps without servers',
 }
 
 let allTexts = {
   large: [
-    `Code internal tools for your team in minutes, without a server.`,
-    `Orbit is a toolkit for building beautiful, flexible apps.`,
+    `Code internal tools and desktop apps that coordinate without a server.`,
+    `Plug in data, apps, and more with a click.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -148,12 +147,13 @@ const Smaller = gloss({
 }))
 
 export function HeadSection(props) {
+  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
 
   return (
     <Fade.FadeProvide>
-      {/* <OuterSpace show={screen !== 'small'} /> */}
+      <OuterSpace show={screen !== 'small'} />
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen
@@ -180,7 +180,7 @@ export function HeadSection(props) {
                 position="relative"
                 bottom={0}
               >
-                <View
+                {/* <View
                   position="absolute"
                   overflow="hidden"
                   backgroundImage={`url(${appScreen})`}
@@ -193,7 +193,7 @@ export function HeadSection(props) {
                   zIndex={-1}
                   boxShadow={[[0, 0, 100, [0, 0, 0]]]}
                   pointerEvents="auto"
-                />
+                /> */}
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
                     <Theme name="orbitOneDark">
@@ -267,27 +267,28 @@ export function HeadSection(props) {
 
         <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
           <FullScreen zIndex={-100}>
-            <SectionContent position="absolute" flex={1}>
-              <View
-                pointerEvents="none"
-                position="absolute"
-                top="60%"
-                left={0}
-                right={0}
-                overflow="hidden"
-                bottom={0}
-                userSelect="none"
-                opacity={0.7}
-                transform={{
-                  scale: 1.5,
-                }}
-              >
-                <FadeChild {...fadeUpProps}>
-                  <Image src={glow} />
-                </FadeChild>
-                <GradientDown top="50%" zIndex={100} />
-              </View>
-            </SectionContent>
+            <View
+              pointerEvents="none"
+              position="absolute"
+              top="20%"
+              left={0}
+              right={0}
+              overflow="hidden"
+              bottom={0}
+              userSelect="none"
+              opacity={0.247}
+            >
+              <FadeChild {...fadeUpProps}>
+                <Image
+                  src={glow}
+                  transformOrigin="top center"
+                  transform={{
+                    scale: 1.5,
+                  }}
+                />
+              </FadeChild>
+              <GradientDown top="50%" zIndex={100} />
+            </View>
           </FullScreen>
         </Page.Parallax>
 

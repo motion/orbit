@@ -45,23 +45,42 @@ export let SimpleAlt = (
 )
 
 export let Grouping = (
-  //
-  <List sortBy={x => x.subTitle} groupByLetter items={rows.slice(0, 20)} height={300} />
+  <List
+    sortBy={x => x.subTitle}
+    // you can also use a groupBy function
+    groupByLetter
+    items={rows.slice(0, 20)}
+    height={300}
+  />
 )
 
 export let OrderFilter = (
-  //
-  <List sortBy={x => x.subTitle} search="St" items={rows.slice(0, 200)} height={300} />
+  <List
+    items={rows.slice(0, 200)}
+    // filter by "St"
+    search="St"
+    // then sort by subTitle
+    sortBy={x => x.subTitle}
+    height={300}
+  />
 )
 
 export let Selection = (
-  //
-  <List selectable items={rows.slice(0, 20)} height={300} />
+  <List
+    // allows single selection
+    selectable
+    items={rows.slice(0, 20)}
+    height={300}
+  />
 )
 
 export let MultipleSelection = (
-  //
-  <List selectable="multi" items={rows.slice(0, 20)} height={300} />
+  <List
+    // allows multiple selection
+    selectable="multi"
+    items={rows.slice(0, 20)}
+    height={300}
+  />
 )
 
 export let Scaling = (

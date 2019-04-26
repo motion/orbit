@@ -21,6 +21,9 @@ export type UseFilterProps<A> = {
   /** Will remove the string from the front of your search, optionally, on filter */
   removePrefix?: string
 
+  /** Group items using a function */
+  groupBy?: (item: any) => string
+
   /** Group items by first letter */
   groupByLetter?: boolean
 

@@ -16,7 +16,7 @@ export const fadeUpProps = {
 const config = {
   mass: 1,
   tension: 40,
-  friction: 10,
+  friction: 8,
 }
 
 export const FadeIn = memo(

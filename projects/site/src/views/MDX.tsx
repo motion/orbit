@@ -57,7 +57,7 @@ export const components = {
   ),
   li: props => (
     <>
-      <li style={{ marginLeft: 26, '-webkit-font-smoothing': 'auto' }} {...props} />
+      <li style={{ marginLeft: 26 }} {...props} />
       <Space size="xs" />
     </>
   ),

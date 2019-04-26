@@ -208,11 +208,18 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
   },
-  sections: {
+  section: {
     page: () => import('./DocsPage/DocsSection.mdx'),
     examples: () => import('./DocsPage/DocsSection'),
     examplesSource: () => import('!raw-loader!./DocsPage/DocsSection'),
     source: () => import('!raw-loader!@o/ui/src/Section'),
     types: () => import('../../tmp/Section.json'),
+  },
+  calendar: {
+    page: () => import('./DocsPage/DocsCalendar.mdx'),
+    examples: () => import('./DocsPage/DocsCalendar'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsCalendar'),
+    source: () => import('!raw-loader!@o/ui/src/Calendar'),
+    types: () => import('../../tmp/Calendar.json'),
   },
 }

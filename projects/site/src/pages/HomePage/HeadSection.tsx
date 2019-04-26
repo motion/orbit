@@ -182,7 +182,7 @@ export function HeadSection(props) {
         </Page.Content>
 
         <Page.Parallax zIndex={1} speed={0.01}>
-          <FullScreen top="auto" transform={{ y: 50 }} zIndex={1000}>
+          <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
             <FadeChild {...fadeUpProps} delay={200}>
               <View
                 flex={1}
@@ -280,6 +280,7 @@ export function HeadSection(props) {
                 right={0}
                 overflow="hidden"
                 bottom={60}
+                userSelect="none"
                 opacity={0.35}
                 transform={{
                   y: '45%',

@@ -29,6 +29,7 @@ export const LogoVertical = memo(
         cursor="pointer"
         alignItems="center"
         justifyContent="center"
+        userSelect="none"
         transform={{ scale }}
         padding={[0, 20]}
         onClick={async e => {

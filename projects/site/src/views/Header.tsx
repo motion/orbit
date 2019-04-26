@@ -29,6 +29,9 @@ let tm = null
 const loadedRoutes = {}
 let didAnimateOut = false
 
+const isOnRoute = (path, route) =>
+  path === '/' ? route.url.pathname === path : route.url.pathname.indexOf(path) === 0
+
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
@@ -41,13 +44,13 @@ export function Link({
 }: LinkProps) {
   const header = HeaderContext.useProps()
   const route = useCurrentRoute()
-  const isActive =
-    href === '/' ? route.url.pathname === href : route.url.pathname.indexOf(href) === 0
+  const isActive = isOnRoute(href, route)
 
   return (
     <LinkText
       cursor="pointer"
       onClick={() => {
+        if (isActive) return
         clearTimeout(tm)
         didAnimateOut = true
         // if (!loadedRoutes[href]) {

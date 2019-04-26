@@ -208,4 +208,11 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
   },
+  sections: {
+    page: () => import('./DocsPage/DocsSections.mdx'),
+    examples: () => import('./DocsPage/DocsSections'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSections'),
+    source: () => import('!raw-loader!@o/ui/src/Section'),
+    types: () => import('../../tmp/Section.json'),
+  },
 }

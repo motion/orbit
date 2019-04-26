@@ -25,6 +25,10 @@ export const fastConfig = {
   friction: 3,
 }
 
+export const fastStatticConfig = {
+  duration: 80,
+}
+
 export const FadeIn = memo(
   ({ delay, intersection, threshold, from, to, children, style, ...springProps }: FadeInProps) => {
     const { shown, ref } = useDebouncedIntersection({ delay, intersection, threshold })

@@ -7,7 +7,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
-import { defaultConfig, FadeChild, fastConfig, useFadePage } from './FadeIn'
+import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
@@ -51,7 +51,7 @@ export function Link({
         clearTimeout(tm)
         tm = setTimeout(() => {
           Navigation.navigate(href)
-        }, 100)
+        }, 90)
       }}
       fontSize={fontSize}
       width={width}
@@ -99,7 +99,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   const leaving = header && header.shown === false
   return (
     <Link width="33%" {...props}>
-      <FadeChild delay={leaving ? 0 : delay} config={leaving ? fastConfig : defaultConfig}>
+      <FadeChild delay={leaving ? 0 : delay} config={leaving ? fastStatticConfig : defaultConfig}>
         {children}
       </FadeChild>
     </Link>
@@ -186,7 +186,7 @@ export const Header = memo(
           >
             <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild config={shown ? defaultConfig : fastConfig} delay={shown ? 400 : 0}>
+              <FadeChild config={shown ? defaultConfig : fastStatticConfig} delay={shown ? 400 : 0}>
                 <LogoHorizontal slim />
               </FadeChild>
               <LinkSection>{after}</LinkSection>
@@ -229,7 +229,7 @@ export const Header = memo(
           >
             <HeaderContain>
               <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild config={shown ? defaultConfig : fastConfig} delay={shown ? 100 : 0}>
+              <FadeChild config={shown ? defaultConfig : fastStatticConfig} delay={shown ? 100 : 0}>
                 <LogoVertical />
               </FadeChild>
               <LinkSection>{after}</LinkSection>

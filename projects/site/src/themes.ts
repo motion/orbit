@@ -1,9 +1,11 @@
-import { ThemeMaker } from '@o/gloss'
+import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 import { themes as KitThemes } from '@o/kit'
 
 import { colors } from './constants'
 
 const Theme = new ThemeMaker()
+
+const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
 
 export const themes = {
   ...KitThemes,
@@ -12,8 +14,8 @@ export const themes = {
     background: '#000',
     backgroundHover: '#000',
     borderColor: '#222',
-    buttonBackground: colors.purple,
-    buttonBackgroundHover: colors.purple.lighten(0.1),
+    buttonBackground: buttonBackground,
+    buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
     color: '#fff',
   }),
 
@@ -62,6 +64,13 @@ export const themes = {
       inputBackgroundActive: '#222',
       listItemBackgroundHover: 'rgba(255,255,255,0.075)',
       popoverBackground: '#111',
+    }),
+  },
+
+  darkAlt: {
+    ...KitThemes.dark,
+    ...Theme.fromStyles({
+      background: '#2C2B40',
     }),
   },
 

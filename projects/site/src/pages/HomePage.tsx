@@ -44,10 +44,10 @@ export function HomePage() {
           <NeckSection offset={1} />
           <ShoulderSection offset={2} />
           <ChestSection offset={3} />
-          <Theme name="light">
+          <Theme name="darkAlt">
             <EarlyAccessSection offset={5} />
+            <WaistSection offset={6} />
           </Theme>
-          <WaistSection offset={6} />
           <LegsSection offset={7} />
           <Theme name="home">
             <FeetSection offset={8} />

@@ -25,20 +25,20 @@
             <stop stop-color="#00FDFF" stop-opacity="0.47729846" offset="100%"></stop>
             <stop stop-color="#00FFA2" stop-opacity="0" offset="100%"></stop>
         </linearGradient>
-        <radialGradient cx="56.8333877%" cy="100%" fx="56.8333877%" fy="100%" r="88.2872966%" gradientTransform="translate(0.568334,1.000000),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,2.709788),translate(-0.568334,-1.000000)" id="radialGradient-4">
+        <linearGradient x1="50%" y1="8.22482325%" x2="50%" y2="63.1301553%" id="linearGradient-4">
+            <stop stop-color="#2B2B40" offset="0.0659839527%"></stop>
+            <stop stop-color="#2C2B40" stop-opacity="0.652207168" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="56.8333877%" cy="100%" fx="56.8333877%" fy="100%" r="88.2872966%" gradientTransform="translate(0.568334,1.000000),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,2.709788),translate(-0.568334,-1.000000)" id="radialGradient-5">
             <stop stop-color="#A8001E" offset="0%"></stop>
             <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="75.0052787%"></stop>
             <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
         </radialGradient>
-        <radialGradient cx="22.1682237%" cy="104.828696%" fx="22.1682237%" fy="104.828696%" r="93.5140924%" gradientTransform="translate(0.221682,1.048287),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,1.717567),translate(-0.221682,-1.048287)" id="radialGradient-5">
+        <radialGradient cx="22.1682237%" cy="104.828696%" fx="22.1682237%" fy="104.828696%" r="93.5140924%" gradientTransform="translate(0.221682,1.048287),scale(0.154997,1.000000),rotate(-90.000000),scale(1.000000,1.717567),translate(-0.221682,-1.048287)" id="radialGradient-6">
             <stop stop-color="#9D31A5" offset="0%"></stop>
             <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="79.0566934%"></stop>
             <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
         </radialGradient>
-        <linearGradient x1="50%" y1="0.0659839527%" x2="50%" y2="100%" id="linearGradient-6">
-            <stop stop-color="#2B2B40" offset="0.0659839527%"></stop>
-            <stop stop-color="#2C2B40" stop-opacity="0.652207168" offset="100%"></stop>
-        </linearGradient>
         <path d="M0,189.588026 C357.666667,226.529342 615.881866,242.088957 774.645598,236.26687 C1012.7912,227.53374 1251,205.398438 1532,223.554239 C1532,239.148357 1532,164.630277 1532,0 L0,0 L0,189.588026 Z" id="path-7"></path>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -48,9 +48,9 @@
                     <use fill="url(#linearGradient-1)" xlink:href="#path-7"></use>
                     <use fill="url(#linearGradient-2)" xlink:href="#path-7"></use>
                     <use fill-opacity="0.1" fill="url(#linearGradient-3)" xlink:href="#path-7"></use>
-                    <use fill-opacity="0.15" fill="url(#radialGradient-4)" xlink:href="#path-7"></use>
-                    <use fill-opacity="0.08" fill="url(#radialGradient-5)" xlink:href="#path-7"></use>
-                    <use fill="url(#linearGradient-6)" xlink:href="#path-7"></use>
+                    <use fill="url(#linearGradient-4)" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.15" fill="url(#radialGradient-5)" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.08" fill="url(#radialGradient-6)" xlink:href="#path-7"></use>
                 </g>
             </g>
         </g>

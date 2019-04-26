@@ -15,7 +15,6 @@ import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './EarlyAccessBetaSection'
-import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
@@ -162,7 +161,7 @@ export function HeadSection(props) {
 
   return (
     <Fade.FadeProvide>
-      <OuterSpace show={hoverDownload && screen !== 'small'} />
+      {/* <OuterSpace show={hoverDownload && screen !== 'small'} /> */}
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen

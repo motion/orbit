@@ -112,6 +112,27 @@ const preloadItem = item => {
   }
 }
 
+export function useStickySidebar({ condition = true, id, ...rest }) {
+  useLayoutEffect(() => {
+    if (condition === false) {
+      return
+    }
+    const sidebar = new StickySidebar(id, {
+      topSpacing: 0,
+      bottomSpacing: 0,
+      innerWrapperSelector: '.sidebar__inner',
+      stickyClass: 'is-affixed',
+      minWidth: 0,
+      resizeSensor: true,
+      ...rest,
+    })
+
+    return () => {
+      sidebar.destroy()
+    }
+  }, [screen])
+}
+
 const DocsPage = memo((props: { children?: any }) => {
   const screen = useScreenSize()
   const siteStore = useSiteStore()
@@ -124,25 +145,11 @@ const DocsPage = memo((props: { children?: any }) => {
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
   const [themeName, setThemeName] = usePageTheme()
 
-  useLayoutEffect(() => {
-    if (screen === 'small') {
-      return
-    }
-
-    const sidebar = new StickySidebar('#sidebar', {
-      containerSelector: '#main',
-      topSpacing: 0,
-      bottomSpacing: 0,
-      innerWrapperSelector: '.sidebar__inner',
-      stickyClass: 'is-affixed',
-      minWidth: 0,
-      resizeSensor: true,
-    })
-
-    return () => {
-      sidebar.destroy()
-    }
-  }, [screen])
+  useStickySidebar({
+    condition: screen !== 'small',
+    id: '#sidebar',
+    containerSelector: '#main',
+  })
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))

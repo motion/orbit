@@ -10,7 +10,7 @@ const examples = [
 ]
 
 export const LatestUpdates = () => (
-  <Grid space="xl" itemMinWidth={200}>
+  <Grid space="xl" itemMinWidth={220}>
     {examples.map(example => (
       <Card
         key={example.title}

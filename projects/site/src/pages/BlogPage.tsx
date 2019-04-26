@@ -3,14 +3,15 @@ import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { Link, View } from 'react-navi'
 
+import { ContentSection } from '../views/ContentSection'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
-import { BlogPageIndex } from './BlogPage/BlogPageIndex'
+import { BlogPageIndex, PostMeta } from './BlogPage/BlogPageIndex'
 import { PostEntry, posts } from './BlogPage/posts'
-import { purpleWave, Wavy } from './HomePage/EarlyAccessBetaSection'
+import { Wavy } from './HomePage/EarlyAccessBetaSection'
 
 export default compose(
   withView(() => {
@@ -60,26 +61,27 @@ BlogPage.theme = 'light'
 function PostPage(props: { post: PostEntry; children?: any }) {
   return (
     <>
-      <BlogTitle />
+      <BlogTitle paddingTop={50} />
       <SectionContent>
-        <Col pad="xxxl" maxWidth={800} margin="auto" fontSize={20} lineHeight={32}>
-          <TitleText color={purpleWave.backgroundColor} size="xxl">
-            {props.post.title}
-          </TitleText>
+        <ContentSection>
+          <TitleText size="xxxl">{props.post.title}</TitleText>
+          <Space />
+          <PostMeta post={props.post} />
+          <Space />
           <Space />
           {props.children}
-        </Col>
+        </ContentSection>
       </SectionContent>
       <BlogFooter />
     </>
   )
 }
 
-export const BlogTitle = () => (
+export const BlogTitle = (props: any) => (
   <Col position="relative">
     <SectionContent>
       <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-        <Col padding={[100, 30, 50]} position="relative" cursor="pointer">
+        <Col padding={[100, 30, 50]} position="relative" cursor="pointer" {...props}>
           <TitleText selectable={false} textAlign="left" size="xxl" fontWeight={200}>
             The Orbit Blog
           </TitleText>

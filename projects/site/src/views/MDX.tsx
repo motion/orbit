@@ -57,7 +57,7 @@ export const components = {
   ),
   li: props => (
     <>
-      <li style={{ marginLeft: 26, '-webkit-font-smoothing': 'auto' }} {...props} />
+      <li style={{ marginLeft: 26 }} {...props} />
       <Space size="xs" />
     </>
   ),
@@ -67,6 +67,19 @@ export const components = {
       <Space />
     </>
   ),
+  a: props => {
+    return (
+      <a
+        onClick={e => {
+          if (`${props.href}`.indexOf('/') === 0) {
+            e.preventDefault()
+            Navigation.go(props.href)
+          }
+        }}
+        {...props}
+      />
+    )
+  },
   ol: props => (
     <>
       <ol {...props} />
@@ -80,6 +93,7 @@ export const components = {
         fontSize="inherit"
         lineHeight="inherit"
         WebkitFontSmoothing="auto"
+        color="inherit"
         {...props}
       />
       <Space />

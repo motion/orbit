@@ -1,18 +1,63 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, TitleRow } from '@o/ui'
+import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
 import React, { memo } from 'react'
 
 import { colors } from '../constants'
 import { scrollTo } from '../etc/helpers'
+import { Navigation } from '../Navigation'
 import { CodeBlock } from '../views/CodeBlock'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
+import { docsItems } from './docsItems'
 import { MetaSection } from './DocsPage'
 import { Example } from './DocsPage/Example'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
 export const DocsContents = memo(
-  ({ title, examples, examplesSource, source, children, types }: any) => {
+  ({ id, title, examples, examplesSource, source, children, types }: any) => {
+    const thisIndex = docsItems.all.findIndex(x => x['id'] === id)
+    const nextItem = docsItems.all[thisIndex + 1]
+    const prevItem = docsItems.all[thisIndex - 1]
+
+    const nextPrevious = (
+      <>
+        <Title>Continue reading docs</Title>
+        <Space />
+        <SurfacePassProps
+          alt="bordered"
+          size={2}
+          flex={1}
+          ellipse
+          cursor="pointer"
+          elementProps={{ tagName: 'a' }}
+          textDecoration="none"
+        >
+          <Row width="100%" space>
+            {!!prevItem && (
+              <Button
+                onClick={e => {
+                  e.preventDefault()
+                  Navigation.navigate(`/docs/${prevItem['id']}`, { replace: true })
+                }}
+              >
+                Previous: {prevItem['title']}
+              </Button>
+            )}
+            {!!nextItem && (
+              <Button
+                onClick={e => {
+                  e.preventDefault()
+                  Navigation.navigate(`/docs/${nextItem['id']}`, { replace: true })
+                }}
+              >
+                Next: {nextItem['title']}
+              </Button>
+            )}
+          </Row>
+        </SurfacePassProps>
+      </>
+    )
+
     return (
       <MDX
         components={{
@@ -45,7 +90,7 @@ export const DocsContents = memo(
               sizePadding={0}
               marginRight={30}
               size="lg"
-              alpha={0.75}
+              alpha={0.5}
               hoverStyle={{
                 color: colors.purple,
               }}
@@ -98,6 +143,12 @@ export const DocsContents = memo(
         >
           {children}
 
+          <Space size="xxl" />
+
+          {nextPrevious}
+
+          <Space size="xxl" />
+
           <MetaSection>
             {!!types && (
               <Section size="sm" titleBorder title="Props" id="component-props">
@@ -113,6 +164,10 @@ export const DocsContents = memo(
               </Section>
             )}
           </MetaSection>
+
+          <Space size="xxl" />
+
+          {nextPrevious}
         </Section>
       </MDX>
     )

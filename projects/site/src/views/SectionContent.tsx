@@ -4,7 +4,7 @@ import React from 'react'
 
 import * as Constants from '../constants'
 
-export type SectionContentProps = ViewProps & { outside?: React.ReactNode }
+export type SectionContentProps = ViewProps & { outside?: React.ReactNode; forwardRef?: any }
 
 export const SectionContent = ({
   outside,
@@ -14,6 +14,7 @@ export const SectionContent = ({
   padding,
   height,
   flex,
+  forwardRef,
   ...props
 }: SectionContentProps) => {
   return (
@@ -24,6 +25,7 @@ export const SectionContent = ({
       padding={padding}
       height={height}
       flex={flex}
+      ref={forwardRef}
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>

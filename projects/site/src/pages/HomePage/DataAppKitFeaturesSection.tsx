@@ -1,216 +1,260 @@
 import { Button, ButtonProps, FullScreen, gloss, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
-import { useScreenSize } from '../../hooks/useScreenSize'
+import { useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
-import { FadeIn } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
+import { blackWavePattern } from './FooterSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent } from './SpacedPageContent'
 
-const FadeDown = gloss(FullScreen).theme((_, theme) => ({
+const GradientDown = gloss(FullScreen).theme((_, theme) => ({
   background: `linear-gradient(transparent, ${theme.background} 65%)`,
 }))
 
-export function ChestSection(props) {
+const dly = 100
+
+const apps = [
+  {
+    icon: require('../../../public/logos/slack.svg'),
+    title: 'Slack',
+  },
+  {
+    icon: require('../../../public/logos/github-octocat.svg'),
+    title: 'Github',
+  },
+  {
+    icon: require('../../../public/logos/gmail.svg'),
+    title: 'Gmail',
+  },
+  {
+    icon: require('../../../public/logos/drive.svg'),
+    title: 'Drive',
+  },
+  {
+    icon: require('../../../public/logos/confluence.svg'),
+    title: 'Confluence',
+  },
+  {
+    icon: require('../../../public/logos/jira.svg'),
+    title: 'Jira',
+  },
+  {
+    icon: require('../../../public/logos/sheets.svg'),
+    title: 'Sheets',
+  },
+  {
+    icon: require('../../../public/logos/postgres.svg'),
+    title: 'Postgres',
+  },
+]
+
+export const ChestSection = memo((props: any) => {
   const screen = useScreenSize()
+  const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
+  const FadeDataApps = useFadePage({ threshold: 1 })
+  const Fade = useFadePage()
   return (
     <Page {...props}>
-      {/* Data, meet app */}
+      <FadeDataApps.FadeProvide>
+        {/* Data, meet app */}
 
-      {screen !== 'small' && (
-        <Page.Parallax speed={-0.05} zIndex={-2}>
-          <FullScreen transform={{ y: '-85%', scale: 0.5 }} transformOrigin="bottom center">
+        {screen !== 'small' && (
+          <Page.Parallax speed={-0.05} zIndex={-2}>
             <FullScreen
-              left={-100}
-              right={-100}
-              top="auto"
-              height="50%"
-              className="orbitals"
-              backgroundImage={`url(${orbits})`}
-              backgroundPosition="top center"
-              backgroundRepeat="no-repeat"
-            />
-            <FadeDown left={-100} right={-100} top="auto" height="50%" />
-          </FullScreen>
-        </Page.Parallax>
-      )}
-
-      <Page.Content height={sectionHeight * 2} flex={1}>
-        <SpacedPageContent
-          maxHeight={100000}
-          margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
-          height="auto"
-          header={
-            <>
-              <FadeIn delay={0}>
-                <PillButton>Data</PillButton>
-              </FadeIn>
-              <Space size="xs" />
-              <FadeIn delay={100}>
-                <TitleText size="xxl">Data, meet app.</TitleText>
-              </FadeIn>
-              <TitleTextSub alpha={0.9} size="md">
-                <FadeIn delay={200}>The platform where apps know how to talk to each other.</FadeIn>
-              </TitleTextSub>
-              <TitleTextSub size="xs">
-                <FadeIn delay={300}>
-                  Every Orbit app exposes a single typed API and syncs data into a standard format.
-                </FadeIn>
-              </TitleTextSub>
-            </>
-          }
-        >
-          <Row
-            className="hide-scrollbars"
-            margin="0 -40px"
-            width="calc(100% + 80px)"
-            height="auto"
-            space="md"
-            spaceAround
-            scrollable="x"
-            justifyContent="center"
-          >
-            <Integration icon={require('../../../public/logos/slack.svg')} title="Slack" />
-            <Integration
-              icon={require('../../../public/logos/github-octocat.svg')}
-              title="Github"
-            />
-            <Integration icon={require('../../../public/logos/gmail.svg')} title="Gmail" />
-            <Integration icon={require('../../../public/logos/drive.svg')} title="Drive" />
-            <Integration
-              icon={require('../../../public/logos/confluence.svg')}
-              title="Confluence"
-            />
-            <Integration icon={require('../../../public/logos/jira.svg')} title="Jira" />
-            <Integration icon={require('../../../public/logos/sheets.svg')} title="Sheets" />
-            <Integration icon={require('../../../public/logos/postgres.svg')} title="Postgres" />
-          </Row>
-
-          <Space />
-
-          <Row space margin={[0, 'auto']}>
-            <BodyButton>Installing an integration</BodyButton>
-
-            <BodyButton>Writing an integration</BodyButton>
-          </Row>
-        </SpacedPageContent>
-
-        {/* Batteries Included. */}
-
-        <Space size="sm" />
-
-        <SpacedPageContent
-          maxHeight={100000}
-          height="auto"
-          flex={1}
-          margin={[0, 'auto']}
-          header={
-            <>
-              <FadeIn delay={0}>
-                <PillButton>App Kit</PillButton>
-              </FadeIn>
-              <Space size="xs" />
-              <FadeIn delay={100}>
-                <TitleText size="xxl">Batteries Included.</TitleText>
-              </FadeIn>
-              <TitleTextSub>
-                <FadeIn delay={200}>
-                  Internal tools share patterns. Orbit makes building those types of apps easy.
-                </FadeIn>
-              </TitleTextSub>
-            </>
-          }
-        >
-          <Space size="lg" />
-          <Grid
-            alignItems="start"
-            space={screen === 'small' ? '40px 15%' : '20% 15%'}
-            itemMinWidth={240}
-            maxWidth={800}
-            margin="auto"
-          >
-            <PassProps
-              getChildProps={(_, index) => ({
-                index: screen === 'small' ? undefined : index + 1,
-                ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '70%' } }),
-              })}
+              ref={FadeDataApps.ref}
+              transform={{ y: '-85%', scale: 0.5 }}
+              transformOrigin="bottom center"
             >
-              <SimpleSection title="Apps work together.">
-                <SectionP>
-                  <SectionIcon name="apps" />
-                  Apps talk to each other with simple typed APIs. Orbit comes with many data apps.
-                  {screen !== 'small' && (
-                    <>
-                      <Space />
-                      They can also sync data into a common format to display, share and export.
-                    </>
-                  )}
-                </SectionP>
-              </SimpleSection>
+              <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
+                <FullScreen
+                  left={-100}
+                  right={-100}
+                  top="auto"
+                  height="50%"
+                  className="orbitals"
+                  backgroundImage={`url(${orbits})`}
+                  backgroundPosition="top center"
+                  backgroundRepeat="no-repeat"
+                />
+              </FadeChild>
+              <GradientDown left={-100} right={-100} top="auto" height="50%" />
+            </FullScreen>
+          </Page.Parallax>
+        )}
 
-              <SimpleSection title="Spaces to collaborate.">
-                <SectionP>
-                  <SectionIcon name="satellite" />
-                  Anyone on your team can use, edit, and add new apps. This happens decentralized,
-                  so your team can collaborate behind the firewall.
-                  {screen !== 'small' && (
-                    <>
-                      <Space />
-                      Press edit and in seconds deploy a rich app to everyone.
-                    </>
-                  )}
-                </SectionP>
-              </SimpleSection>
+        <Page.Content height={sectionHeight * 2} flex={1}>
+          <SpacedPageContent
+            maxHeight={100000}
+            margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
+            height="auto"
+            header={
+              <>
+                <FadeChild delay={0}>
+                  <PillButton>Data</PillButton>
+                </FadeChild>
+                <FadeChild delay={100}>
+                  <TitleText size="xxl">Data, meet app.</TitleText>
+                </FadeChild>
+                <TitleTextSub alpha={0.8} size="md">
+                  <FadeChild delay={200}>
+                    The platform where apps know how to talk to each other.
+                  </FadeChild>
+                </TitleTextSub>
+                <TitleTextSub size="xs">
+                  <FadeChild delay={300}>
+                    Every Orbit app exposes a single typed API and syncs data into a standard
+                    format.
+                  </FadeChild>
+                </TitleTextSub>
+              </>
+            }
+          >
+            <Row
+              className="hide-scrollbars"
+              margin="0 -40px"
+              width="calc(100% + 80px)"
+              height="auto"
+              space="md"
+              spaceAround
+              scrollable="x"
+              justifyContent="center"
+            >
+              {apps.map((app, index) => (
+                <Integration key={app.title} index={index} icon={app.icon} title={app.title} />
+              ))}
+            </Row>
 
-              <SimpleSection title="Multi-process apps.">
-                <SectionP>
-                  <SectionIcon name="shop" />
-                  Apps are written using React and Typescript, and publish like node modules.
-                  Running multiple processes is done through simple naming conventions.
-                  {screen !== 'small' && (
-                    <>
-                      <Space />
-                      When you're ready, publish it in seconds on the app store.
-                    </>
-                  )}
-                </SectionP>
-              </SimpleSection>
+            <Space />
 
-              <SimpleSection title="Native-level UI Kit.">
-                <SectionP>
-                  <SectionIcon name="widget" />A proper, powerful and flexible list view is no joke.
-                  Neither is a table or form. But that's just the start. Orbit makes them work
-                  together, accepting similar data formats and automatically normalizing.
-                  {screen !== 'small' && (
-                    <>
-                      <Space />
-                      Plus, Orbit understands how to lay them out when they are used together.
-                    </>
-                  )}
-                </SectionP>
-              </SimpleSection>
-            </PassProps>
-          </Grid>
+            <Row space margin={[0, 'auto']}>
+              <BodyButton>Installing an integration</BodyButton>
 
-          <View flex={3} />
+              <BodyButton>Writing an integration</BodyButton>
+            </Row>
+          </SpacedPageContent>
 
-          {screen === 'large' && (
-            <>
-              <Space size="xxl" />
-              <BodyButton margin={[0, 'auto']} size="xl">
-                Read the feature overview
-              </BodyButton>
-            </>
-          )}
-        </SpacedPageContent>
-      </Page.Content>
+          {/* Batteries Included. */}
+
+          <Space size="sm" />
+
+          <Fade.FadeProvide>
+            <SpacedPageContent
+              maxHeight={100000}
+              height="auto"
+              flex={1}
+              margin={[0, 'auto']}
+              header={
+                <>
+                  <FadeChild delay={0}>
+                    <PillButton>App Kit</PillButton>
+                  </FadeChild>
+                  <Space size="xs" />
+                  <FadeChild delay={100}>
+                    <TitleText size="xxl">Batteries Included.</TitleText>
+                  </FadeChild>
+                  <TitleTextSub>
+                    <FadeChild delay={200}>
+                      Internal tools share patterns. Orbit makes building those types of apps easy.
+                    </FadeChild>
+                  </TitleTextSub>
+                </>
+              }
+            >
+              <Space size="lg" />
+              <Grid
+                ref={Fade.ref}
+                alignItems="start"
+                space={screen === 'small' ? '40px 15%' : '20% 15%'}
+                itemMinWidth={240}
+                maxWidth={800}
+                margin="auto"
+              >
+                <PassProps
+                  getChildProps={(_, index) => ({
+                    index: screen === 'small' ? undefined : index + 1,
+                    ...(screen !== 'small' && index % 2 === 1 && { transform: { y: '70%' } }),
+                  })}
+                >
+                  <SimpleSection delay={dly * 1} title="Apps work together.">
+                    <SectionP>
+                      <SectionIcon name="apps" />
+                      Apps talk to each other with simple typed APIs. Orbit comes with many data
+                      apps.
+                      {screen !== 'small' && (
+                        <>
+                          <Space />
+                          They can also sync data into a common format to display, share and export.
+                        </>
+                      )}
+                    </SectionP>
+                  </SimpleSection>
+
+                  <SimpleSection delay={dly * 2} title="Spaces to collaborate.">
+                    <SectionP>
+                      <SectionIcon name="satellite" />
+                      Anyone on your team can use, edit, and add new apps. This happens
+                      decentralized, so your team can collaborate behind the firewall.
+                      {screen !== 'small' && (
+                        <>
+                          <Space />
+                          Press edit and in seconds deploy a rich app to everyone.
+                        </>
+                      )}
+                    </SectionP>
+                  </SimpleSection>
+
+                  <SimpleSection delay={dly * 3} title="Multi-process apps.">
+                    <SectionP>
+                      <SectionIcon name="shop" />
+                      Apps are written using React and Typescript, and publish like node modules.
+                      Running multiple processes is done through simple naming conventions.
+                      {screen !== 'small' && (
+                        <>
+                          <Space />
+                          When you're ready, publish it in seconds on the app store.
+                        </>
+                      )}
+                    </SectionP>
+                  </SimpleSection>
+
+                  <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
+                    <SectionP>
+                      <SectionIcon name="widget" />A proper, powerful and flexible list view is no
+                      joke. Neither is a table or form. But that's just the start. Orbit makes them
+                      work together, accepting similar data formats and automatically normalizing.
+                      {screen !== 'small' && (
+                        <>
+                          <Space />
+                          Plus, Orbit understands how to lay them out when they are used together.
+                        </>
+                      )}
+                    </SectionP>
+                  </SimpleSection>
+                </PassProps>
+              </Grid>
+
+              <View flex={3} />
+
+              {screen === 'large' && height !== 'short' && (
+                <>
+                  <Space size="xxl" />
+                  <BodyButton margin={[0, 'auto']} size="xl">
+                    Read the feature overview
+                  </BodyButton>
+                </>
+              )}
+            </SpacedPageContent>
+          </Fade.FadeProvide>
+        </Page.Content>
+      </FadeDataApps.FadeProvide>
 
       <Page.Background
         speed={-0.2}
@@ -223,7 +267,7 @@ export function ChestSection(props) {
         top="0%"
         backgroundPosition="top center"
         opacity={0.5}
-        backgroundImage={`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%231f1f1f' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%231b1b1b' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%23181818' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%23151515' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%23111111' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%230e0e0e' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%23000000' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%23000000' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%23000000' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%23000000' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E")`}
+        backgroundImage={blackWavePattern}
       />
 
       {/* <Page.Parallax speed={0.25} zIndex={3}>
@@ -242,7 +286,7 @@ export function ChestSection(props) {
       </Page.Parallax> */}
     </Page>
   )
-}
+})
 
 export const BodyButton = (props: ButtonProps) => (
   <Button
@@ -256,18 +300,20 @@ export const BodyButton = (props: ButtonProps) => (
   />
 )
 
-const Integration = props => (
-  <View alignItems="center" justifyContent="center">
-    <Image
-      src={props.icon}
-      transition="all ease 200ms"
-      maxWidth={100}
-      width="50%"
-      height="auto"
-      opacity={0.5}
-      hoverStyle={{ opacity: 1 }}
-    />
-    <Space />
-    <Paragraph size="xl">{props.title}</Paragraph>
-  </View>
-)
+const Integration = memo(({ icon, title, index }: any) => (
+  <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>
+    <View alignItems="center" justifyContent="center">
+      <Image
+        src={icon}
+        transition="all ease 200ms"
+        maxWidth={100}
+        width="50%"
+        height="auto"
+        opacity={0.5}
+        hoverStyle={{ opacity: 1 }}
+      />
+      <Space />
+      <Paragraph size="xl">{title}</Paragraph>
+    </View>
+  </FadeChild>
+))

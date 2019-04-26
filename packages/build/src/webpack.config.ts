@@ -200,7 +200,7 @@ async function makeConfig() {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields: isProd
         ? ['ts:main', 'module', 'browser', 'main']
-        : ['ts:main', 'browser', 'main'],
+        : ['ts:main', 'module', 'browser', 'main'],
       alias,
       // plugins: [new ModuleScopePlugin(appSrc, [appPackageJson])],
     },

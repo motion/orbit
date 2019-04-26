@@ -1,7 +1,7 @@
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { bodyElement, scrollingElement } from '../constants'
+import { bodyElement } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { titleProps: { size: 1.1, fontWeight: 500 } }
+const titleItem = { titleProps: { size: 1, fontWeight: 500 } }
 
 const guides = [
   {
@@ -25,16 +25,11 @@ const guides = [
     title: 'Building an app',
     ...titleItem,
   },
-  {
-    id: 'appstore',
-    title: 'App Store',
-    ...titleItem,
-  },
 
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle marginTop={40}>Examples</ListSubTitle>,
+    children: <ListSubTitle marginTop={30}>Examples</ListSubTitle>,
   },
   {
     id: 'databaseviewer',
@@ -55,29 +50,29 @@ const uikit = [
     selectable: false,
     hideBorder: true,
     children: (
-      <ListSubTitle marginTop={40} marginBottom={0}>
+      <ListSubTitle marginTop={30} marginBottom={0}>
         User Interface
       </ListSubTitle>
     ),
   },
   { id: 'ui-intro', title: 'User Interface Introduction', ...titleItem },
 
-  { id: 'lists', title: 'Lists', icon: 'th-list', group: 'Collections' },
-  { id: 'tables', title: 'Tables', icon: 'th' },
+  { id: 'list', title: 'List', icon: 'th-list', group: 'Collections' },
+  { id: 'table', title: 'Table', icon: 'th' },
   { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
   { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
   { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
   {
     group: 'Views',
-    id: 'surfaces',
+    id: 'surface',
     icon: 'layer',
     title: 'Surface',
   },
-  { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
-  { id: 'cards', title: 'Cards', icon: 'credit-card', indent: 1 },
-  { id: 'icons', icon: 'star', title: 'Icons' },
-  { id: 'install', title: 'Sections', icon: 'application' },
-  { id: 'popovers', title: 'Popovers', icon: 'direction-right' },
+  { id: 'button', icon: 'button', title: 'Button', indent: 1 },
+  { id: 'card', title: 'Cards', icon: 'credit-card', indent: 1 },
+  { id: 'icon', icon: 'star', title: 'Icons' },
+  { id: 'section', title: 'Section', icon: 'application' },
+  { id: 'popover', title: 'Popover', icon: 'direction-right' },
   { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
   { id: 'masterdetail', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
@@ -136,9 +131,6 @@ export const docsItems = {
 }
 
 export const docsViews = {
-  install: {
-    page: () => import('./DocsPage/DocsInstall.mdx'),
-  },
   start: {
     page: () => import('./DocsPage/DocsStart.mdx'),
   },
@@ -148,17 +140,17 @@ export const docsViews = {
   buildapp: {
     page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
   },
-  icons: {
-    page: () => import('./DocsPage/DocsIcons.mdx'),
-    examples: () => import('./DocsPage/DocsIcons'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsIcons'),
+  icon: {
+    page: () => import('./DocsPage/DocsIcon.mdx'),
+    examples: () => import('./DocsPage/DocsIcon'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsIcon'),
     source: () => import('!raw-loader!@o/ui/src/Icon'),
     types: () => import('../../tmp/Icon.json'),
   },
-  popovers: {
-    page: () => import('./DocsPage/DocsPopovers.mdx'),
-    examples: () => import('./DocsPage/DocsPopovers'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsPopovers'),
+  popover: {
+    page: () => import('./DocsPage/DocsPopover.mdx'),
+    examples: () => import('./DocsPage/DocsPopover'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsPopover'),
     source: () => import('!raw-loader!@o/ui/src/Popover'),
     types: () => import('../../tmp/Popover.json'),
   },
@@ -176,22 +168,22 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/DefinitionList'),
     types: () => import('../../tmp/DefinitionList.json'),
   },
-  buttons: {
-    page: () => import('./DocsPage/DocsButtons.mdx'),
-    examples: () => import('./DocsPage/DocsButtons'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsButtons'),
+  button: {
+    page: () => import('./DocsPage/DocsButton.mdx'),
+    examples: () => import('./DocsPage/DocsButton'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsButton'),
     source: () => import('!raw-loader!@o/ui/src/buttons/Button'),
     types: () => import('../../tmp/Button.json'),
   },
-  surfaces: {
-    page: () => import('./DocsPage/DocsSurfaces.mdx'),
+  surface: {
+    page: () => import('./DocsPage/DocsSurface.mdx'),
     source: () => import('!raw-loader!@o/ui/src/Surface'),
     types: () => import('../../tmp/Surface.json'),
   },
-  cards: {
-    page: () => import('./DocsPage/DocsCards.mdx'),
-    examples: () => import('./DocsPage/DocsCards'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsCards'),
+  card: {
+    page: () => import('./DocsPage/DocsCard.mdx'),
+    examples: () => import('./DocsPage/DocsCard'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsCard'),
     source: () => import('!raw-loader!@o/ui/src/Card'),
     types: () => import('../../tmp/Card.json'),
   },
@@ -202,18 +194,32 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/progress/Progress'),
     types: () => import('../../tmp/Progress.json'),
   },
-  lists: {
-    page: () => import('./DocsPage/DocsLists.mdx'),
-    examples: () => import('./DocsPage/DocsLists'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsLists'),
+  list: {
+    page: () => import('./DocsPage/DocsList.mdx'),
+    examples: () => import('./DocsPage/DocsList'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsList'),
     source: () => import('!raw-loader!@o/ui/src/lists/List'),
     types: () => import('../../tmp/List.json'),
   },
-  tables: {
-    page: () => import('./DocsPage/DocsTables.mdx'),
-    examples: () => import('./DocsPage/DocsTables'),
-    examplesSource: () => import('!raw-loader!./DocsPage/DocsTables'),
+  table: {
+    page: () => import('./DocsPage/DocsTable.mdx'),
+    examples: () => import('./DocsPage/DocsTable'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTable'),
     source: () => import('!raw-loader!@o/ui/src/tables/Table'),
     types: () => import('../../tmp/Table.json'),
+  },
+  section: {
+    page: () => import('./DocsPage/DocsSection.mdx'),
+    examples: () => import('./DocsPage/DocsSection'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSection'),
+    source: () => import('!raw-loader!@o/ui/src/Section'),
+    types: () => import('../../tmp/Section.json'),
+  },
+  calendar: {
+    page: () => import('./DocsPage/DocsCalendar.mdx'),
+    examples: () => import('./DocsPage/DocsCalendar'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsCalendar'),
+    source: () => import('!raw-loader!@o/ui/src/Calendar'),
+    types: () => import('../../tmp/Calendar.json'),
   },
 }

@@ -13,10 +13,20 @@ export const fadeUpProps = {
   from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
 }
 
-const config = {
+export const defaultConfig = {
   mass: 1,
   tension: 40,
-  friction: 10,
+  friction: 8,
+}
+
+export const fastConfig = {
+  mass: 0.1,
+  tension: 40,
+  friction: 3,
+}
+
+export const fastStatticConfig = {
+  duration: 80,
 }
 
 export const FadeIn = memo(
@@ -55,18 +65,22 @@ export const FadeChild = memo(
     const shown = !!useDebounceValue(!disable && props.shown, delay)
     const off = props.off
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
-    return (
-      <animated.div style={style ? { ...style, ...springStyle } : springStyle}>
-        {children}
-      </animated.div>
-    )
+    const styleFin = style
+      ? { ...(typeof style === 'function' ? style(springStyle) : style), ...springStyle }
+      : springStyle
+    return <animated.div style={styleFin}>{children}</animated.div>
   },
 )
 
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
-export const useFadePage = ({ delay = 0, off, ...props }: UseFadePageProps = {}) => {
-  const { ref, shown } = useDebouncedIntersection({ delay, ...props })
+export const useFadePage = ({
+  delay = 0,
+  threshold = 0.4,
+  off,
+  ...props
+}: UseFadePageProps = {}) => {
+  const { ref, shown } = useDebouncedIntersection({ delay, threshold, ...props })
   const getShown = useGet(selectDefined(props.shown, shown))
   const getOff = useGet(off)
   return {
@@ -94,14 +108,17 @@ export const useSimpleFade = ({
     transform: `translate3d(0,-15px,0)`,
   },
   to = { opacity: 1, transform: `translate3d(0,0,0)` },
+  spring,
   ...rest
 }: UseFadePageProps) => {
-  return useSpring({
-    ...rest,
-    from: off ? to : from,
-    to: shown || off ? to : from,
-    config,
-  })
+  return useSpring(
+    spring || {
+      from: off ? to : from,
+      to: shown || off ? to : from,
+      config: defaultConfig,
+      ...rest,
+    },
+  )
 }
 
 export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
@@ -131,4 +148,36 @@ export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
     ref,
     shown,
   }
+}
+
+export const fadeRightProps = {
+  from: {
+    opacity: 0,
+    xys: [-20, -20, 0.8],
+  },
+  to: {
+    opacity: 1,
+    xys: [0, 0, 1],
+  },
+  style: spring => ({
+    transform: spring.xys.interpolate(
+      (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
+    ),
+  }),
+}
+
+export const fadeLeftProps = {
+  from: {
+    opacity: 0,
+    xys: [20, 20, 0.8],
+  },
+  to: {
+    opacity: 1,
+    xys: [0, 0, 1],
+  },
+  style: spring => ({
+    transform: spring.xys.interpolate(
+      (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
+    ),
+  }),
 }

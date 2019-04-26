@@ -10,8 +10,9 @@ export function PillButton({ children, ...props }: ButtonProps) {
       fontWeight={800}
       fontSize={12}
       letterSpacing={2}
+      whiteSpace="pre"
       textTransform="uppercase"
-      width="min-content"
+      width="max-content"
       padding={[2, 12]}
       margin={[0, 'auto']}
       {...props}

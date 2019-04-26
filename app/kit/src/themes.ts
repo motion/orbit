@@ -142,11 +142,16 @@ const alternates: ThemeSet = {
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   }),
-  clear: Theme.fromStyles({
-    background: 'rgba(0,0,0,0.2)',
-    borderColor: transparent,
-    borderWidth: 0,
-  }),
+  clear: parent =>
+    Theme.fromStyles({
+      glintColor: 'transparent',
+      color: parent.color,
+      background: parent.background.isDark()
+        ? parent.background.lighten(0.1).alpha(0.15)
+        : parent.background.darken(0.1).alpha(0.15),
+      borderColor: transparent,
+      borderWidth: 0,
+    }),
   flat: parent => {
     const background = parent.background.isDark()
       ? parent.background.lighten(0.08)
@@ -265,8 +270,8 @@ const darkAlternates: ThemeSet = {
       backgroundHover: transparent,
       backgroundActive: transparent,
       color: darkColor,
-      borderColor: darkColor,
-      borderColorHover: darkColor,
+      borderColor: [...darkColor, 0.2],
+      borderColorHover: [...darkColor, 0.3],
     }),
   },
 }

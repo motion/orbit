@@ -1,4 +1,4 @@
-import { gloss, View } from '@o/ui'
+import { Avatar, gloss, Row, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
@@ -10,23 +10,26 @@ import { posts } from './posts'
 export function BlogPageIndex() {
   const navigation = useNavigation()
 
-  const postIds = Object.keys(posts)
-  const recentPosts = Object.keys(posts)
+  const all = Object.keys(posts)
     .slice(0, 10)
-    .map(x => posts[x])
+    .map(id => ({
+      ...posts[id],
+      id,
+    }))
+    .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
 
   return (
     <BlogLayout space>
-      {recentPosts.map((post, index) => (
+      {all.map((post, index) => (
         <Post
-          pad
-          key={index}
-          href="what"
+          pad="xl"
+          key={post.date}
           tagName="a"
+          {...{ href: `/blog/${all[index].id}` }}
           textDecoration="none"
           onClick={e => {
             e.preventDefault()
-            navigation.navigate(`/blog/${postIds[index]}`)
+            navigation.navigate(`/blog/${all[index].id}`)
           }}
           cursor="pointer"
           hoverStyle={{
@@ -38,21 +41,34 @@ export function BlogPageIndex() {
             color={purpleWave.backgroundColor}
             selectable={false}
             textAlign="left"
+            size="lg"
           >
             {post.title}
           </TitleText>
-          {new Date(post.date)
-            .toLocaleDateString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-            })
-            .replace(/,.*,/, ',')
-            .replace(/\//g, '·')}{' '}
-          by {post.author}
+
+          <PostMeta post={post} />
         </Post>
       ))}
     </BlogLayout>
+  )
+}
+
+export const PostMeta = ({ post }) => {
+  return (
+    <Row alignItems="center" fontSize={16} alpha={0.65}>
+      <Avatar size={16} src={post.authorImage} />
+      &nbsp; &nbsp;
+      {post.author}
+      &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+      {new Date(post.date)
+        .toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        })
+        .replace(/,.*,/, ',')
+        .replace(/\//g, '·')}{' '}
+    </Row>
   )
 }
 

@@ -1,8 +1,11 @@
+import nateImg from '../../../public/images/nate.jpg'
+
 export type PostEntry = {
   view: () => Promise<{ default: any }>
   title: string
   date: string
   author: string
+  authorImage: string
   preview?: string
 }
 
@@ -17,11 +20,20 @@ export const posts: PostDirectory = {
     title: 'Releases',
     date: '2018-10-05T22:12:03.284Z',
     author: 'Nathan Wienert',
+    authorImage: nateImg,
   },
   'update-one': {
     view: () => import('./update-one/index.mdx'),
     title: 'Update One',
     date: '2018-09-29T22:12:03.284Z',
     author: 'Nathan Wienert',
+    authorImage: nateImg,
+  },
+  'update-two': {
+    view: () => import('./update-two/index.mdx'),
+    title: 'Update Two: Halfway to a Half-Decent Beta',
+    date: '2019-04-25T22:12:03.284Z',
+    author: 'Nathan Wienert',
+    authorImage: nateImg,
   },
 }

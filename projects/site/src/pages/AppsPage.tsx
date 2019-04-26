@@ -1,19 +1,12 @@
-import { Col, FullScreen, Grid, Space, Theme, View } from '@o/ui'
+import { Col, FullScreen, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
-import earth from '../../public/images/earth.jpg'
-import { bodyElement } from '../constants'
-import { useScreenSize } from '../hooks/useScreenSize'
-import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
-import { Page } from '../views/Page'
-import { Parallax } from '../views/Parallax'
-import { TitleText } from '../views/TitleText'
-import { TitleTextSub } from './HomePage/AllInOnePitchDemoSection'
-import { FeetSection } from './HomePage/FooterSection'
-import { SubParagraph } from './HomePage/MissionMottoSection'
-import { SpacedPageContent } from './HomePage/SpacedPageContent'
+import { SearchInput } from '../views/SearchInput'
+import { SectionContent } from '../views/SectionContent'
+import { BlogFooter } from './BlogPage/BlogLayout'
+import { blackWavePattern } from './HomePage/FooterSection'
 
 export default mount({
   '/': route({
@@ -23,70 +16,34 @@ export default mount({
 })
 
 export function AppsPage() {
-  const siteStore = useSiteStore()
-
   return (
-    <>
-      <Header slim />
-      <Parallax
-        pages={2}
-        scrollingElement={window}
-        container={bodyElement}
-        pageHeight={siteStore.sectionHeight}
-      >
-        <ComingSoonSection offset={0} />
-        <FeetSection offset={1} />
-      </Parallax>
-    </>
-  )
-}
+    <main style={{ minHeight: 2000 }}>
+      <Header position="absolute" left={0} right={0} background="transparent" slim />
 
-export function ComingSoonSection(props) {
-  const screen = useScreenSize()
-  return (
-    <Theme name="home">
-      <Page {...props}>
-        <Page.Content>
-          <View height={70} />
-          <SpacedPageContent
-            padding={screen === 'small' ? 0 : [0, '10%']}
-            header={
-              <>
-                <TitleText size="xl">Coming Soon</TitleText>
-                <Space />
-              </>
-            }
-          >
-            <Grid space="10%" itemMinWidth={340} height="70%">
-              <Col space="lg">
-                <TitleTextSub textAlign="left" alpha={1} size={1}>
-                  We're currently building out the App building documentation.
-                </TitleTextSub>
+      <FullScreen
+        backgroundSize="200%"
+        backgroundRepeat="no-repeat"
+        backgroundPosition="bottom center"
+        right={-200}
+        left={-200}
+        opacity={1}
+        backgroundImage={blackWavePattern}
+      />
 
-                <SubParagraph>Please bear with us as we get this thing going.</SubParagraph>
-              </Col>
-            </Grid>
+      <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
+        <Col space="lg">
+          <Title margin={[0, 'auto']}>Discover apps</Title>
 
-            <View minHeight={80} />
-          </SpacedPageContent>
-        </Page.Content>
+          <View margin={[0, 'auto']}>
+            <SearchInput width={400} size={2.5} placeholder="Search apps..." />
+          </View>
+        </Col>
+      </SectionContent>
 
-        <Page.Parallax speed={0.1} zIndex={-1}>
-          <FullScreen
-            className="earth"
-            backgroundImage={`url(${earth})`}
-            backgroundSize="contain"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-            transform={{
-              scale: 1,
-              x: '6%',
-              y: '-5%',
-            }}
-          />
-        </Page.Parallax>
-      </Page>
-    </Theme>
+      <View flex={1} />
+
+      <BlogFooter />
+    </main>
   )
 }
 

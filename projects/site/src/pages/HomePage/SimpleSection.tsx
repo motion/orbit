@@ -3,15 +3,16 @@ import { isDefined } from '@o/utils'
 import React from 'react'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeIn } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
-export const SimpleSection = ({ index = undefined, title, children, ...rest }) => {
+export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
   const screen = useScreenSize()
+  const isLeft = isDefined(index) && index % 2 === 0
   return (
     <SectionChrome space {...rest}>
-      <FadeIn delay={100} intersection="60px" threshold={1}>
+      <FadeChild {...(isLeft ? fadeRightProps : fadeLeftProps)} delay={delay}>
         <SectionTitle>
           {isDefined(index) && (
             <Badge opacity={screen === 'large' ? 1 : 0}>
@@ -37,7 +38,7 @@ export const SimpleSection = ({ index = undefined, title, children, ...rest }) =
         </SectionTitle>
         <Space />
         <SectionBody>{children}</SectionBody>
-      </FadeIn>
+      </FadeChild>
     </SectionChrome>
   )
 }
@@ -83,7 +84,7 @@ const Badge = gloss(View, {
   fontSize: 20,
 }).theme((_, theme) => ({
   color: theme.color,
-  border: [1, theme.color.alpha(0.1)],
+  // border: [1, theme.color.alpha(0.1)],
 }))
 
 const BadgeText = gloss({

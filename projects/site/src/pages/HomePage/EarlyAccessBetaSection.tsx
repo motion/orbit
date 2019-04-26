@@ -39,11 +39,11 @@ export function EarlyAccessSection({ outside = null, ...props }) {
                   <PillButton>Beta</PillButton>
                   <Space size="sm" />
                   <TitleText size="xxl">Early Access.</TitleText>
-                  <TitleTextSub size={useScreenVal('md', 'lg', 'lg')}>
+                  <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>
                     Orbit is now in beta.
                   </TitleTextSub>
                   <TitleTextSub>
-                    We're seeking teams who have unique use cases for internal tooling.
+                    Have a unique case for internal tools? Contact us.
                   </TitleTextSub>
                 </>
               }

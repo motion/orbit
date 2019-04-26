@@ -13,7 +13,7 @@ import {
   Sidebar,
   SurfacePassProps,
 } from '@o/ui'
-import { useReaction } from '@o/use-store'
+import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -33,7 +33,7 @@ import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
-import DocsInstall from './DocsPage/DocsInstall.mdx'
+import DocsStart from './DocsPage/DocsStart.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 
@@ -63,7 +63,7 @@ export default compose(
       title: 'Orbit Documentation',
       view: (
         <DocsContents title="Introduction">
-          <DocsInstall />
+          <DocsStart />
         </DocsContents>
       ),
     }),
@@ -83,6 +83,7 @@ export default compose(
       return {
         view: (
           <DocsContents
+            id={id}
             title={item ? item['title'] : ''}
             source={source}
             types={types}
@@ -121,9 +122,13 @@ const DocsPage = memo((props: { children?: any }) => {
   const inputRef = useRef(null)
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
-  const [theme, setTheme] = usePageTheme()
+  const [themeName, setThemeName] = usePageTheme()
 
   useLayoutEffect(() => {
+    if (screen === 'small') {
+      return
+    }
+
     const sidebar = new StickySidebar('#sidebar', {
       containerSelector: '#main',
       topSpacing: 0,
@@ -137,7 +142,7 @@ const DocsPage = memo((props: { children?: any }) => {
     return () => {
       sidebar.destroy()
     }
-  }, [])
+  }, [screen])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -195,11 +200,98 @@ const DocsPage = memo((props: { children?: any }) => {
 
   return (
     <>
+      <DocsPageHeader
+        {...{
+          setSearch,
+          isSmall,
+          inputRef,
+          toggleSection,
+          section,
+          setTheme: setThemeName,
+          theme: themeName,
+          setShowSidebar,
+          siteStore,
+          showSidebar,
+        }}
+      />
+
+      <Portal prepend>
+        <Header slim noBorder />
+      </Portal>
+
+      {isSmall && (
+        <Portal>
+          <FixedLayout isSmall={isSmall}>
+            <Sidebar
+              hidden={!showSidebar}
+              zIndex={10000000}
+              elevation={25}
+              width={280}
+              pointerEvents="auto"
+              background={theme => theme.background}
+            >
+              {sidebarChildren}
+            </Sidebar>
+          </FixedLayout>
+        </Portal>
+      )}
+
+      <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
+        <Row id="main" className="main">
+          {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
+            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+          </Col>
+        </Row>
+
+        <BlogFooter />
+      </SectionContent>
+    </>
+  )
+})
+
+const DocsPageSidebar = memo(({ children }) => {
+  const forceUpdate = useForceUpdate()
+
+  useEffect(() => {
+    const updateSlow = debounce(forceUpdate, 100)
+    window.addEventListener('resize', updateSlow, { passive: true })
+    return () => {
+      window.removeEventListener('resize', updateSlow)
+    }
+  })
+
+  return (
+    <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
+      <Col position="relative" className="sidebar__inner" flex={1}>
+        <Col margin={[50, 0, 0]} flex={1} position="relative">
+          {children}
+          <BorderRight top={10} opacity={0.5} />
+        </Col>
+      </Col>
+    </Col>
+  )
+})
+
+const DocsPageHeader = memo(
+  ({
+    setSearch,
+    isSmall,
+    inputRef,
+    toggleSection,
+    section,
+    setTheme,
+    theme,
+    setShowSidebar,
+    siteStore,
+    showSidebar,
+  }: any) => {
+    return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
           <Row
             position="relative"
-            margin={[0, 'auto']}
+            margin={[0, 'auto', 0, 'auto']}
             pointerEvents="auto"
             pad={['sm', 0]}
             width={useScreenVal('100%', '90%', '90%')}
@@ -212,6 +304,7 @@ const DocsPage = memo((props: { children?: any }) => {
               onChange={e => setSearch(e.target.value)}
               maxWidth="calc(55% - 20px)"
               flex={1}
+              size="xl"
               placeholder={isSmall ? 'Search...' : 'Search the docs...'}
               after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
             />
@@ -268,7 +361,7 @@ const DocsPage = memo((props: { children?: any }) => {
               justifyContent="flex-start"
               flexFlow="row"
             >
-              <SurfacePassProps size={1.2} iconSize={12}>
+              <SurfacePassProps size={1} iconSize={12}>
                 <Row group>
                   <RoundButton
                     icon="moon"
@@ -277,6 +370,7 @@ const DocsPage = memo((props: { children?: any }) => {
                   />
                   <RoundButton
                     icon="code"
+                    iconSize={16}
                     tooltip="Toggle all code collapsed"
                     onClick={siteStore.toggleCodeCollapsed}
                   />
@@ -293,50 +387,9 @@ const DocsPage = memo((props: { children?: any }) => {
           </Row>
         </ListShortcuts>
       </Portal>
-
-      <Portal prepend>
-        <Header slim noBorder />
-      </Portal>
-
-      {isSmall && (
-        <Portal>
-          <FixedLayout isSmall={isSmall} className="mini-scrollbars">
-            <Sidebar
-              hidden={!showSidebar}
-              zIndex={10000000}
-              elevation={25}
-              width={280}
-              pointerEvents="auto"
-              background={theme.background}
-            >
-              {sidebarChildren}
-            </Sidebar>
-          </FixedLayout>
-        </Portal>
-      )}
-
-      <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
-        <Row id="main" className="main">
-          {!isSmall && (
-            <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
-              <Col position="relative" className="sidebar__inner" flex={1}>
-                <Col margin={[50, 0, 0]} flex={1} position="relative">
-                  {sidebarChildren}
-                  <BorderRight top={10} opacity={0.5} />
-                </Col>
-              </Col>
-            </Col>
-          )}
-          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
-            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-          </Col>
-        </Row>
-
-        <BlogFooter />
-      </SectionContent>
-    </>
-  )
-})
+    )
+  },
+)
 
 DocsPage.theme = 'home'
 

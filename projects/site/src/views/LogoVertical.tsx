@@ -9,9 +9,9 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { useParallax } from '../pages/HomePage'
 
 let logoScales = {
-  small: 0.8,
-  medium: 0.9,
-  large: 1,
+  small: 0.7,
+  medium: 0.8,
+  large: 0.9,
 }
 
 export const LogoVertical = memo(
@@ -29,6 +29,7 @@ export const LogoVertical = memo(
         cursor="pointer"
         alignItems="center"
         justifyContent="center"
+        userSelect="none"
         transform={{ scale }}
         padding={[0, 20]}
         onClick={async e => {
@@ -43,7 +44,7 @@ export const LogoVertical = memo(
       >
         <Image src={mark} />
         <Space size="lg" />
-        <SVG cleanup fill={theme.color} width={102 * 0.9} height={23 * 0.9} svg={orbit} />
+        <SVG cleanup fill={theme.color} width={102} height={23} svg={orbit} />
       </View>
     )
   },

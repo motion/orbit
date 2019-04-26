@@ -52,7 +52,7 @@ export function LegsSection(props) {
 
 const Item = gloss(SubParagraph)
 
-const dly = 50
+const dly = 120
 
 export function AboutSection() {
   const screen = useScreenSize()
@@ -66,7 +66,7 @@ export function AboutSection() {
               <PillButton>About</PillButton>
             </FadeChild>
             <Space size="sm" />
-            <FadeChild delay={dly * 0}>
+            <FadeChild delay={dly * 1}>
               <TitleText size="xl">A better deal for apps.</TitleText>
             </FadeChild>
             <Space />
@@ -75,28 +75,28 @@ export function AboutSection() {
       >
         <Grid space="10%" itemMinWidth={340} height="70%">
           <Col space="lg">
-            <FadeChild delay={dly * 1}>
+            <FadeChild delay={dly * 2}>
               <TitleTextSub textAlign="left" alpha={1} size={1}>
                 Our app platforms are broken. They give us no control, and design apps to be silos
                 that don't work together.
               </TitleTextSub>
             </FadeChild>
 
-            <FadeChild delay={dly * 2}>
+            <FadeChild delay={dly * 3}>
               <SubParagraph>
                 We think we can do better. It starts by enforcing a common way for apps to share
                 data with each other, and building an open platform.
               </SubParagraph>
             </FadeChild>
 
-            <FadeChild delay={dly * 3}>
+            <FadeChild delay={dly * 4}>
               <SubParagraph>
                 Then, it requires a commitment to making apps easier to build, with less code and
                 sharp edges. And performance must come by default.
               </SubParagraph>
             </FadeChild>
 
-            <FadeChild delay={dly * 4}>
+            <FadeChild delay={dly * 5}>
               <SubParagraph>We're excited to share it with you.</SubParagraph>
             </FadeChild>
           </Col>

@@ -35,8 +35,10 @@ export function AppsPage() {
         <Header position="absolute" left={0} right={0} background="transparent" slim />
 
         <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
-          <Col space="lg">
-            <Title margin={[0, 'auto']}>Discover apps</Title>
+          <Col space="xxxl">
+            <Title size="xxl" margin={[0, 'auto']}>
+              Discover apps
+            </Title>
             <AppSearch />
           </Col>
         </SectionContent>
@@ -72,10 +74,11 @@ const AppSearch = memo(() => {
             setResults(next.map(x => appElements[allApps.findIndex(app => app.title === x.title)]))
           }}
         />
+        <Space size="xxxl" />
       </View>
 
       <Col pad>
-        <Grid height={400} scrollable="y" space="xl" itemMinWidth={dim}>
+        <Grid height={640} overflow="hidden" space="xl" itemMinWidth={dim}>
           {results}
         </Grid>
       </Col>

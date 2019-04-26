@@ -198,6 +198,12 @@ const DocsPage = memo((props: { children?: any }) => {
           defaultSelected={initialIndex}
           overscanCount={500}
           items={docsItems[section]}
+          itemProps={{
+            iconProps: {
+              size: 16,
+              opacity: 0.65,
+            },
+          }}
           getItemProps={preloadItem}
           onSelect={useCallback(rows => {
             if (!rows[0]) {

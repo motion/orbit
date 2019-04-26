@@ -8,6 +8,7 @@ import lineSep from '../../../public/images/line-sep.svg'
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
+import { colors } from '../../constants'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -332,8 +333,8 @@ export function NeckSection(props) {
                       <Squircle
                         width={280}
                         height={280}
-                        background="linear-gradient(125deg, #78009F, #4C1966)"
-                        boxShadow="0 10px 50px rgba(0,0,0,0.5)"
+                        background="linear-gradient(125deg, #151515, #000)"
+                        boxShadow="0 10px 80px rgba(0,0,0,1)"
                         padding={30}
                       >
                         <TitleText
@@ -342,6 +343,7 @@ export function NeckSection(props) {
                           letterSpacing={2}
                           alpha={0.65}
                           textTransform="uppercase"
+                          color={colors.purple}
                         >
                           {`<${elements[cur].title} />`}
                         </TitleText>

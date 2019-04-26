@@ -33,8 +33,8 @@ export function ShoulderSection(props) {
                 </FadeChild>
                 <Space size="sm" />
                 <FadeChild delay={200}>
-                  <TitleText textAlign="center" size="xxl">
-                    Sync without a server.
+                  <TitleText textAlign="center" size="xxxl">
+                    Synced without a server.
                   </TitleText>
                 </FadeChild>
               </>

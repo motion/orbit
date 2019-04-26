@@ -18,7 +18,7 @@ const GradientDown = gloss(FullScreen).theme((_, theme) => ({
   background: `linear-gradient(transparent, ${theme.background} 65%)`,
 }))
 
-const dly = 100
+const dly = 200
 
 const apps = [
   {
@@ -70,7 +70,7 @@ export const ChestSection = memo((props: any) => {
           <Page.Parallax speed={-0.05} zIndex={-2}>
             <FullScreen
               ref={FadeDataApps.ref}
-              transform={{ y: '-85%', scale: 0.5 }}
+              transform={{ y: '-85%', scale: 0.65 }}
               transformOrigin="bottom center"
             >
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
@@ -101,17 +101,13 @@ export const ChestSection = memo((props: any) => {
                   <PillButton>Data</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size="xxl">Data, meet app.</TitleText>
+                  <TitleText size="xxl">Import, search, filter, export.</TitleText>
                 </FadeChild>
-                <TitleTextSub alpha={0.8} size="md">
+                <TitleTextSub alpha={0.7} size="md">
                   <FadeChild delay={200}>
-                    The platform where apps know how to talk to each other.
-                  </FadeChild>
-                </TitleTextSub>
-                <TitleTextSub size="xs">
-                  <FadeChild delay={300}>
-                    Every Orbit app exposes a single typed API and syncs data into a standard
-                    format.
+                    Every app exposes a simple typed API.
+                    <br />
+                    Build on top of an open ecosystem.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -132,13 +128,13 @@ export const ChestSection = memo((props: any) => {
               ))}
             </Row>
 
-            <Space />
+            {/* <Space /> */}
 
-            <Row space margin={[0, 'auto']}>
+            {/* <Row space margin={[0, 'auto']}>
               <BodyButton>Installing an integration</BodyButton>
 
               <BodyButton>Writing an integration</BodyButton>
-            </Row>
+            </Row> */}
           </SpacedPageContent>
 
           {/* Batteries Included. */}
@@ -302,14 +298,13 @@ export const BodyButton = (props: ButtonProps) => (
 
 const Integration = memo(({ icon, title, index }: any) => (
   <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>
-    <View alignItems="center" justifyContent="center">
+    <View height={150} width={150} alignItems="center" justifyContent="center">
       <Image
         src={icon}
         transition="all ease 200ms"
         maxWidth={100}
         width="50%"
         height="auto"
-        opacity={0.5}
         hoverStyle={{ opacity: 1 }}
       />
       <Space />

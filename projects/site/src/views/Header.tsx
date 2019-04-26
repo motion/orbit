@@ -7,7 +7,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
-import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './FadeIn'
+import { defaultConfig, FadeChild, fastConfig, fastStatticConfig, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
@@ -121,7 +121,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
       <FadeChild
         off={!didAnimateOut}
         delay={leaving ? 0 : delay}
-        config={leaving ? fastStatticConfig : defaultConfig}
+        config={leaving ? fastStatticConfig : fastConfig}
       >
         {children}
       </FadeChild>
@@ -176,7 +176,7 @@ export const Header = memo(
     const theme = useTheme()
     const siteStore = useSiteStore()
     const [shown, setShown] = useState(true)
-    const Fade = useFadePage({ shown })
+    const Fade = useFadePage({ shown, threshold: 0 })
 
     let before = null
     let after = null
@@ -212,7 +212,7 @@ export const Header = memo(
               <FadeChild
                 off={!didAnimateOut}
                 config={shown ? defaultConfig : fastStatticConfig}
-                delay={shown ? 400 : 0}
+                delay={shown ? 0 : 0}
               >
                 <LogoHorizontal slim />
               </FadeChild>

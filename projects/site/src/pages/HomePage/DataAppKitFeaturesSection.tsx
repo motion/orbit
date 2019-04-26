@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
 import { useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
+import { Navigation } from '../../Navigation'
 import { useSiteStore } from '../../SiteStore'
 import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -13,6 +14,19 @@ import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { blackWavePattern } from './FooterSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+
+export const linkProps = href => {
+  return {
+    href,
+    tagName: 'a',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    onClick(e) {
+      e.preventDefault()
+      Navigation.navigate(href)
+    },
+  }
+}
 
 export const GradientDown = gloss(FullScreen).theme((_, theme) => ({
   background: `linear-gradient(transparent, ${theme.background} 65%)`,
@@ -128,13 +142,15 @@ export const ChestSection = memo((props: any) => {
               ))}
             </Row>
 
-            {/* <Space /> */}
+            <Space />
 
-            {/* <Row space margin={[0, 'auto']}>
-              <BodyButton>Installing an integration</BodyButton>
-
-              <BodyButton>Writing an integration</BodyButton>
-            </Row> */}
+            <FadeChild delay={0}>
+              <Row space margin={[0, 'auto']}>
+                <BodyButton {...linkProps('/apps')} size={2}>
+                  See apps
+                </BodyButton>
+              </Row>
+            </FadeChild>
           </SpacedPageContent>
 
           {/* Batteries Included. */}
@@ -243,7 +259,7 @@ export const ChestSection = memo((props: any) => {
               {screen === 'large' && height !== 'short' && (
                 <>
                   <Space size="xxl" />
-                  <BodyButton margin={[0, 'auto']} size="xl">
+                  <BodyButton {...linkProps('/docs')} margin={[0, 'auto']} size="xl">
                     Read the feature overview
                   </BodyButton>
                 </>

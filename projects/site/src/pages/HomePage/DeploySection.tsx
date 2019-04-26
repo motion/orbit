@@ -127,7 +127,7 @@ export function ShoulderSection(props) {
           >
             <FullScreen
               className="orbits-bg"
-              opacity={0.125}
+              opacity={0.2}
               backgroundImage={`url(${background})`}
               backgroundSize="cover"
               backgroundPosition="center center"

@@ -165,7 +165,7 @@ export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
 export const fadeRightProps = {
   from: {
     opacity: 0,
-    txys: [100, -20, -40, 0.8],
+    txys: [60, -20, 40, 0.9],
   },
   to: {
     opacity: 1,
@@ -182,7 +182,7 @@ export const fadeRightProps = {
 export const fadeLeftProps = {
   from: {
     opacity: 0,
-    txys: [-100, 20, 40, 0.8],
+    txys: [-60, 20, -40, 0.9],
   },
   to: {
     opacity: 1,

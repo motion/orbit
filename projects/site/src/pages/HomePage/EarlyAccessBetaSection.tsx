@@ -1,59 +1,71 @@
-import { Button, Col, Form, gloss, Image, Input, Message, Space, Theme, View, ViewProps } from '@o/ui'
+import lightSeparator from '!raw-loader!../../../public/images/light-separator.svg'
+import { Button, Col, Form, gloss, Input, Message, Space, SVG, useTheme, View, ViewProps } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
-import lightSeparator from '../../../public/images/light-separator.svg'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export default function EarlyAccessSection({ outside = null, ...props }) {
+export default function EarlyAccessSection({ outside = null, ...props }: any) {
   return (
-    <Theme name="light">
-      <Page zIndex={1} {...props}>
-        <Page.Content
-          zIndex={10}
-          outside={
-            <>
-              <Image
-                position="absolute"
-                top={0}
-                width="100%"
-                minWidth={1200}
-                height={100}
-                src={lightSeparator}
-              />
-              {outside}
-            </>
-          }
-        >
-          {/* offset header stripe */}
-          <View height={20} />
+    <Page zIndex={1} {...props}>
+      <Page.Content
+        zIndex={10}
+        outside={
+          <>
+            <LineSep />
+            {outside}
+          </>
+        }
+      >
+        {/* offset header stripe */}
+        <View height={20} />
 
-          <View margin={['auto', 0]} transform={{ y: '-3%' }}>
-            <SpacedPageContent
-              header={
-                <>
-                  <PillButton>Beta</PillButton>
-                  <Space size="sm" />
-                  <TitleText size="xxl">Early Access.</TitleText>
-                  <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>
-                    Orbit is now in beta.
-                  </TitleTextSub>
-                  <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>
-                </>
-              }
-            >
-              <SignupForm />
-            </SpacedPageContent>
-          </View>
-        </Page.Content>
+        <View margin={['auto', 0]} transform={{ y: '-3%' }}>
+          <EarlyAccessContent />
+        </View>
+      </Page.Content>
 
-        <Page.Background background={theme => theme.background} top={80} />
-      </Page>
-    </Theme>
+      <Page.Background background={theme => theme.background} top={80} />
+    </Page>
+  )
+}
+
+export const LineSep = props => {
+  const theme = useTheme()
+  return (
+    <View
+      color={theme.background}
+      position="absolute"
+      top={0}
+      width="100%"
+      minWidth={1200}
+      height={100}
+      {...props}
+    >
+      <SVG svg={lightSeparator} />
+    </View>
+  )
+}
+
+export const EarlyAccessContent = () => {
+  return (
+    <SpacedPageContent
+      header={
+        <>
+          <PillButton>Beta</PillButton>
+          <Space size="sm" />
+          <TitleText size="xxl">Early Access.</TitleText>
+          <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>Orbit is now in beta.</TitleTextSub>
+          <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>
+        </>
+      }
+    >
+      <SignupForm />
+    </SpacedPageContent>
   )
 }
 

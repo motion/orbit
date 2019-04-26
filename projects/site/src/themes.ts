@@ -1,10 +1,27 @@
 import { ThemeMaker } from '@o/gloss'
 import { themes as KitThemes } from '@o/kit'
 
+import { colors } from './constants'
+
 const Theme = new ThemeMaker()
 
 export const themes = {
   ...KitThemes,
+
+  orbitOne: Theme.fromStyles({
+    background: '#fff',
+    color: colors.purple,
+  }),
+
+  orbitTwo: Theme.fromStyles({
+    background: colors.red,
+    color: colors.purple,
+  }),
+
+  orbitThree: Theme.fromStyles({
+    background: colors.purple,
+    color: colors.red,
+  }),
 
   light: {
     ...KitThemes.light,

@@ -1,4 +1,4 @@
-import { createContextualProps, useIntersectionObserver } from '@o/ui'
+import { createContextualProps, Theme, useIntersectionObserver } from '@o/ui'
 import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
@@ -44,10 +44,14 @@ export function HomePage() {
           <NeckSection offset={1} />
           <ShoulderSection offset={2} />
           <ChestSection offset={3} />
-          <EarlyAccessSection offset={5} />
+          <Theme name="light">
+            <EarlyAccessSection offset={5} />
+          </Theme>
           <WaistSection offset={6} />
           <LegsSection offset={7} />
-          <FeetSection offset={8} />
+          <Theme name="home">
+            <FeetSection offset={8} />
+          </Theme>
         </Parallax>
       </main>
     </ParallaxContext.PassProps>

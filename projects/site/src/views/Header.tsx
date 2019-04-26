@@ -201,7 +201,7 @@ export const Header = memo(
           <Row
             ref={Fade.ref}
             pointerEvents="auto"
-            background={theme.background.lighten(0.3)}
+            background={theme.background.lighten(0.05)}
             position="relative"
             zIndex={1000000}
             {...rest}

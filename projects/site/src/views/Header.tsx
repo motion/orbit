@@ -23,7 +23,7 @@ const LinkText = gloss(View, {
   },
 })
 
-const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
+export const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
 let tm = null
 
 const loadedRoutes = {}
@@ -53,22 +53,10 @@ export function Link({
         if (isActive) return
         clearTimeout(tm)
         didAnimateOut = true
-        // if (!loadedRoutes[href]) {
-        //   // if we didnt finish preloading, show fancy animation
-        //   if (header) {
-
-        //     didAnimateOut = true
-        //   }
-
-        // } else {
-        //   didAnimateOut = false
-        // otherwise just go right there, because nerds would get mad
-        // if god fobid you slow something down 90ms to show a nice animation
         header.setShown(false)
         tm = setTimeout(() => {
           Navigation.navigate(href)
         }, 120)
-        // }
       }}
       fontSize={fontSize}
       width={width}

@@ -212,14 +212,11 @@ export function NeckSection(props) {
                   <PillButton>How</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
-                    Everything you need.
-                  </TitleText>
+                  <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Easiest apps ever.</TitleText>
                 </FadeChild>
                 <TitleTextSub width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
-                    A desktop-class UI kit meets an all new app platform. Orbit has every pattern
-                    your internal tools need.
+                    Create apps using common data sources in just a few lines of code.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -230,7 +227,7 @@ export function NeckSection(props) {
                 <Row space>
                   <SubSection maxWidth="33%">
                     <FadeChild delay={300}>
-                      <PillButtonDark>Import</PillButtonDark>
+                      <PillButtonDark>1. Import</PillButtonDark>
                       <Space />
                       <CenterText>
                         Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline>{' '}
@@ -240,7 +237,7 @@ export function NeckSection(props) {
                   </SubSection>
                   <SubSection flex={2} pad={[true, 'xxl']}>
                     <FadeChild delay={400}>
-                      <PillButtonDark>Display</PillButtonDark>
+                      <PillButtonDark>2. Display</PillButtonDark>
                       <Space />
                       <CenterText maxWidth={400} margin={[0, 'auto']}>
                         Orbit provides a large, cohesive set of views and APIs that are useful for
@@ -250,7 +247,7 @@ export function NeckSection(props) {
                   </SubSection>
                   <SubSection maxWidth="33%">
                     <FadeChild delay={500}>
-                      <PillButtonDark>Export</PillButtonDark>
+                      <PillButtonDark>3. Export</PillButtonDark>
                       <Space />
                       <CenterText>
                         With selections + actions, exporting to{' '}

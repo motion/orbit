@@ -527,7 +527,7 @@ const Element = gloss<
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-})
+}).theme(propsToStyles)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize

@@ -34,7 +34,7 @@ export function ShoulderSection(props) {
                 <Space size="sm" />
                 <FadeChild delay={200}>
                   <TitleText textAlign="center" size="xxl">
-                    Private, serverless, easy.
+                    Sync without a server.
                   </TitleText>
                 </FadeChild>
               </>
@@ -69,24 +69,16 @@ export function ShoulderSection(props) {
               <Col space flex={2} minWidth={300} maxWidth={340}>
                 <FadeChild delay={200}>
                   <ParagraphIntro>
-                    Orbit runs locally on your computer, but can sync data from any cloud
-                    integration.
+                    It's time we had control over our platforms. Orbit is designed to power the next
+                    generation of apps and give users complete control.
                   </ParagraphIntro>
                 </FadeChild>
 
                 <FadeChild delay={350}>
                   <Para>
-                    It's a lot like a web browser, but designed from the ground up to make building
-                    rich collaborative apps as easy as possible. It does so with an app kit that
-                    handles many hard things for you - from syncing data, to complex views, to
-                    providing APIs to do realtime peer-to-peer with your team.
-                  </Para>
-                </FadeChild>
-
-                <FadeChild delay={400}>
-                  <Para>
-                    Built on open standards like Typescript and React, it's your ultimate
-                    intranet-in-a-box.
+                    Your team can use Orbit to make apps together fast, without having to trust all
+                    your sensitive internal data to the cloud, or get locked into a proprietary
+                    platform.
                   </Para>
                 </FadeChild>
 
@@ -102,8 +94,9 @@ export function ShoulderSection(props) {
                     textDecoration="underline"
                     display="inline-block"
                     pointable
+                    fontSize={16}
                   >
-                    How Orbit gives users control.
+                    Two ways we've lost control, and why it matters.
                   </Para>
                 </FadeChild>
               </Col>

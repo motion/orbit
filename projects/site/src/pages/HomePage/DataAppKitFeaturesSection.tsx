@@ -59,7 +59,7 @@ export const ChestSection = memo((props: any) => {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
-  const FadeDataApps = useFadePage()
+  const FadeDataApps = useFadePage({ threshold: 1 })
   const Fade = useFadePage()
   return (
     <Page {...props}>

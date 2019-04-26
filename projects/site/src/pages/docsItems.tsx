@@ -25,16 +25,11 @@ const guides = [
     title: 'Building an app',
     ...titleItem,
   },
-  {
-    id: 'appstore',
-    title: 'App Store',
-    ...titleItem,
-  },
 
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle marginTop={40}>Examples</ListSubTitle>,
+    children: <ListSubTitle marginTop={30}>Examples</ListSubTitle>,
   },
   {
     id: 'databaseviewer',
@@ -55,7 +50,7 @@ const uikit = [
     selectable: false,
     hideBorder: true,
     children: (
-      <ListSubTitle marginTop={40} marginBottom={0}>
+      <ListSubTitle marginTop={30} marginBottom={0}>
         User Interface
       </ListSubTitle>
     ),

@@ -5,8 +5,8 @@ import { bodyElement } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
-import { FeetSection } from './HomePage/FooterSection'
-import { LegsSection } from './HomePage/MissionMottoSection'
+import FeetSection from './HomePage/FooterSection'
+import LegsSection from './HomePage/MissionMottoSection'
 
 export default mount({
   '/': route({

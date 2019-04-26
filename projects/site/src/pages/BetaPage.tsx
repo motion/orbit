@@ -7,7 +7,7 @@ import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Parallax } from '../views/Parallax'
 import { SectionContent } from '../views/SectionContent'
-import { EarlyAccessSection } from './HomePage/EarlyAccessBetaSection'
+import EarlyAccessSection from './HomePage/EarlyAccessBetaSection'
 import { Footer } from './HomePage/FooterSection'
 
 export default mount({

@@ -228,7 +228,7 @@ export function NeckSection(props) {
                   <PillButton>Build</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Easiest apps ever.</TitleText>
+                  <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>Easiest apps ever.</TitleText>
                 </FadeChild>
                 <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
@@ -416,9 +416,9 @@ export function NeckSection(props) {
         <Page.Parallax overflow="visible" speed={0} zIndex={0}>
           <FullScreen
             transform={{ y: -100 }}
-            minWidth={1200}
-            margin={[0, -520]}
-            top={0}
+            minWidth={1000}
+            margin={[0, '-5vw']}
+            top={40}
             bottom="auto"
             className="head-line-sep"
           >
@@ -427,7 +427,7 @@ export function NeckSection(props) {
         </Page.Parallax>
 
         <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-          <FullScreen zIndex={0} transform={{ scale: 1.5 }}>
+          <FullScreen zIndex={0} transform={{ scale: 1.25 }}>
             <FullScreen
               className="northern-lights"
               backgroundImage={`url(${northernlights})`}

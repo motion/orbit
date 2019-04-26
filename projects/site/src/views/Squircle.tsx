@@ -8,7 +8,7 @@ if (CSS.paintWorklet) {
   CSS.paintWorklet.addModule('/public/smooth-corners.js')
 }
 
-const calc = (x, y) => [-(y - window.innerHeight / 2) / 20, (x - window.innerWidth / 2) / 20, 1.1]
+const calc = (x, y) => [-(y - window.innerHeight / 2) / 40, (x - window.innerWidth / 2) / 40, 1.05]
 const trans = (x, y, s) => `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
 
 export const TiltSquircle = ({ style, ...rest }: ViewProps) => {

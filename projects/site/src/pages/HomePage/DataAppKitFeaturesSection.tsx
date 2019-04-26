@@ -12,9 +12,9 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { blackWavePattern } from './FooterSection'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
-import { SpacedPageContent } from './SpacedPageContent'
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-const GradientDown = gloss(FullScreen).theme((_, theme) => ({
+export const GradientDown = gloss(FullScreen).theme((_, theme) => ({
   background: `linear-gradient(transparent, ${theme.background} 65%)`,
 }))
 
@@ -152,9 +152,10 @@ export const ChestSection = memo((props: any) => {
                   <FadeChild delay={0}>
                     <PillButton>App Kit</PillButton>
                   </FadeChild>
-                  <Space size="xs" />
                   <FadeChild delay={100}>
-                    <TitleText size="xxl">Batteries Included.</TitleText>
+                    <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>
+                      Batteries Included.
+                    </TitleText>
                   </FadeChild>
                   <TitleTextSub>
                     <FadeChild delay={200}>

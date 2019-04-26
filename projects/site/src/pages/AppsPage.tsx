@@ -2,7 +2,6 @@ import { Col, FullScreen, Theme, Title, toColor, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { colors } from '../constants'
 import { Header } from '../views/Header'
 import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
@@ -34,19 +33,21 @@ export default mount({
 
 export function AppsPage() {
   return (
-    <Theme name="orbitThree">
-      <main style={{ minHeight: 2000 }}>
-        <Header position="absolute" left={0} right={0} background="transparent" slim />
+    <Theme name={AppsPage.theme}>
+      <FullScreen
+        position="fixed"
+        backgroundSize="200%"
+        backgroundRepeat="no-repeat"
+        backgroundPosition="bottom center"
+        right={-200}
+        left={-200}
+        opacity={0.5}
+        backgroundImage={makeWavePattern('#333')}
+        pointerEvents="none"
+      />
 
-        <FullScreen
-          backgroundSize="200%"
-          backgroundRepeat="no-repeat"
-          backgroundPosition="bottom center"
-          right={-200}
-          left={-200}
-          opacity={0.5}
-          backgroundImage={makeWavePattern(colors.purple)}
-        />
+      <main style={{ minHeight: 1600 }}>
+        <Header position="absolute" left={0} right={0} background="transparent" slim />
 
         <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
           <Col space="lg">
@@ -66,4 +67,4 @@ export function AppsPage() {
   )
 }
 
-AppsPage.theme = 'orbitThree'
+AppsPage.theme = 'home'

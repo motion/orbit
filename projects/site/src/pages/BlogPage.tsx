@@ -82,13 +82,20 @@ export const BlogTitle = (props: any) => (
     <SectionContent>
       <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
         <Col padding={[100, 30, 50]} position="relative" cursor="pointer" {...props}>
-          <TitleText selectable={false} textAlign="left" size="xxl" fontWeight={200}>
+          <TitleText
+            cursor="pointer"
+            textAlign="left"
+            size="lg"
+            fontWeight={200}
+            alpha={0.5}
+            hoverStyle={{ alpha: 1 }}
+          >
             The Orbit Blog
           </TitleText>
         </Col>
       </Link>
 
-      <Absolute bottom={0} left={0} right={0} height={10}>
+      <Absolute bottom={0} left={0} right={0} height={5}>
         <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
       </Absolute>
     </SectionContent>

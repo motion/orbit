@@ -228,7 +228,7 @@ export function NeckSection(props) {
                   <PillButton>Build</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>Easiest apps ever.</TitleText>
+                  <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
                 </FadeChild>
                 <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>

@@ -27,7 +27,7 @@ export const HeaderContext = createContextualProps<{ setShown?: Function; shown?
 let tm = null
 
 const loadedRoutes = {}
-let didAnimateOut = false
+let didAnimateOut = true
 
 const isOnRoute = (path, route) =>
   path === '/' ? route.url.pathname === path : route.url.pathname.indexOf(path) === 0
@@ -120,7 +120,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   )
 }
 
-const linkDelay = 100
+const linkDelay = 80
 
 export const LinksLeft = props => {
   return (

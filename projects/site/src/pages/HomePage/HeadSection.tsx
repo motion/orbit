@@ -23,7 +23,7 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Amazing apps in minutes',
+  large: 'Apps without servers',
   medium: 'Apps without servers',
   small: 'Apps without servers',
 }
@@ -58,12 +58,7 @@ const HeadText = memo(() => {
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View
-      justifyContent="space-between"
-      width={useScreenVal('100%', '90%', '85%')}
-      maxWidth={960}
-      textAlign="center"
-    >
+    <View width={useScreenVal('100%', '90%', '85%')} maxWidth={960} textAlign="center">
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
@@ -143,7 +138,7 @@ const Smaller = gloss({
   textDecoration: 'underline',
   textDecorationColor: '#222',
   transition: 'color ease 350ms',
-  fontSize: '80%',
+  fontSize: 24,
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),
@@ -158,7 +153,7 @@ export function HeadSection(props) {
 
   return (
     <Fade.FadeProvide>
-      {/* <OuterSpace show={hoverDownload && screen !== 'small'} /> */}
+      {/* <OuterSpace show={screen !== 'small'} /> */}
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen
@@ -204,8 +199,9 @@ export function HeadSection(props) {
                     <Theme name="orbitOneDark">
                       <Scale size={1.1}>
                         <Join
-                          boxShadow={[[0, 10, 20, [0, 0, 0.5]]]}
-                          transform={{ y: -23 }}
+                          borderRadius={1000}
+                          boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
+                          transform={{ y: -123 }}
                           flexFlow="row"
                           group
                           margin={[0, 'auto']}
@@ -269,25 +265,25 @@ export function HeadSection(props) {
           </FullScreen>
         </Page.Parallax>
 
-        <Page.Parallax speed={0} zIndex={-1}>
+        <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
           <FullScreen zIndex={-100}>
             <SectionContent position="absolute" flex={1}>
               <View
                 pointerEvents="none"
                 position="absolute"
-                top="55%"
+                top="60%"
                 left={0}
                 right={0}
                 overflow="hidden"
-                bottom={60}
+                bottom={0}
                 userSelect="none"
-                opacity={0.4}
+                opacity={0.7}
                 transform={{
-                  scale: 2,
+                  scale: 1.5,
                 }}
               >
                 <FadeChild {...fadeUpProps}>
-                  <img src={glow} />
+                  <Image src={glow} />
                 </FadeChild>
                 <GradientDown top="50%" zIndex={100} />
               </View>

@@ -49,22 +49,23 @@ export function Link({
       cursor="pointer"
       onClick={() => {
         clearTimeout(tm)
+        didAnimateOut = true
+        // if (!loadedRoutes[href]) {
+        //   // if we didnt finish preloading, show fancy animation
+        //   if (header) {
 
-        if (!loadedRoutes[href]) {
-          // if we didnt finish preloading, show fancy animation
-          if (header) {
-            header.setShown(false)
-            didAnimateOut = true
-          }
-          tm = setTimeout(() => {
-            Navigation.navigate(href)
-          }, 90)
-        } else {
-          didAnimateOut = false
-          // otherwise just go right there, because nerds would get mad
-          // if god fobid you slow something down 90ms to show a nice animation
+        //     didAnimateOut = true
+        //   }
+
+        // } else {
+        //   didAnimateOut = false
+        // otherwise just go right there, because nerds would get mad
+        // if god fobid you slow something down 90ms to show a nice animation
+        header.setShown(false)
+        tm = setTimeout(() => {
           Navigation.navigate(href)
-        }
+        }, 120)
+        // }
       }}
       fontSize={fontSize}
       width={width}
@@ -128,7 +129,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   )
 }
 
-const linkDelay = 180
+const linkDelay = 120
 
 export const LinksLeft = props => {
   return (

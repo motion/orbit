@@ -42,7 +42,7 @@ export function ShoulderSection(props) {
           >
             <Row space={60} margin={[0, '-180%']}>
               <Col flex={2} alignItems="flex-end" justifyContent="center">
-                <FadeChild {...fadeRightProps} delay={250}>
+                <FadeChild {...fadeLeftProps} delay={250}>
                   <View
                     borderRadius={10}
                     elevation={3}
@@ -102,7 +102,7 @@ export function ShoulderSection(props) {
               </Col>
 
               <Col flex={2} alignItems="flex-start" justifyContent="center">
-                <FadeChild {...fadeLeftProps} delay={400}>
+                <FadeChild {...fadeRightProps} delay={400}>
                   <View
                     borderRadius={10}
                     elevation={3}

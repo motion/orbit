@@ -9,7 +9,7 @@ import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, useFadePage } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -222,11 +222,11 @@ export function NeckSection(props) {
               </>
             }
           >
-            <Col maxWidth="100%" margin={[0, 'auto']}>
+            <Col maxWidth="100%" margin={[-20, 'auto', 0, 0]}>
               {screen !== 'small' && (
                 <Row space>
                   <SubSection maxWidth="33%">
-                    <FadeChild delay={300}>
+                    <FadeChild {...fadeLeftProps} delay={200}>
                       <PillButtonDark>1. Import</PillButtonDark>
                       <Space />
                       <CenterText>
@@ -240,13 +240,13 @@ export function NeckSection(props) {
                       <PillButtonDark>2. Display</PillButtonDark>
                       <Space />
                       <CenterText maxWidth={400} margin={[0, 'auto']}>
-                        Orbit provides a large, cohesive set of views and APIs that are useful for
-                        internal tools, like a {elements[cur].title}.
+                        Orbit provides everything you need to build tools fast, with powerful views
+                        like a {elements[cur].title}.
                       </CenterText>
                     </FadeChild>
                   </SubSection>
                   <SubSection maxWidth="33%">
-                    <FadeChild delay={500}>
+                    <FadeChild {...fadeRightProps} delay={200}>
                       <PillButtonDark>3. Export</PillButtonDark>
                       <Space />
                       <CenterText>
@@ -260,56 +260,58 @@ export function NeckSection(props) {
 
               <Space />
 
-              <FadeChild delay={300}>
-                <Row space>
-                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                    <animated.div style={springFast}>
+              <Row space>
+                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                  <animated.div style={springFast}>
+                    <FadeChild {...fadeLeftProps} delay={300}>
                       <Image
                         alignSelf="center"
                         width={124}
                         height={124}
                         src={elements[cur].iconBefore}
                       />
-                    </animated.div>
-                    <Space size="xxl" />
-                    <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                      <Image
-                        opacity={0.5}
-                        src={require('../../../public/images/curve-arrow.svg')}
-                        transform={{
-                          scale: 0.8,
-                        }}
-                      />
-                    </animated.div>
-                  </Flex>
-                  <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      left={useScreenVal(-20, 10, 10)}
-                      icon="chevron-left"
-                      onClick={prev}
+                    </FadeChild>
+                  </animated.div>
+                  <Space size="xxl" />
+                  <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
+                    <Image
+                      opacity={0.5}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                      transform={{
+                        scale: 0.8,
+                      }}
                     />
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      right={useScreenVal(-20, 10, 10)}
-                      icon="chevron-right"
-                      onClick={next}
-                    />
+                  </animated.div>
+                </Flex>
+                <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    left={useScreenVal(-20, 10, 10)}
+                    icon="chevron-left"
+                    onClick={prev}
+                  />
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    right={useScreenVal(-20, 10, 10)}
+                    icon="chevron-right"
+                    onClick={next}
+                  />
 
+                  <FadeChild config={slowConfigLessBounce} delay={300}>
                     <animated.div style={{ ...springSlowest, margin: 'auto' }}>
                       <Squircle
                         width={280}
@@ -333,10 +335,10 @@ export function NeckSection(props) {
                         </Paragraph>
                       </Squircle>
                     </animated.div>
+                  </FadeChild>
 
-                    <animated.div
-                      style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}
-                    >
+                  <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
+                    <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
                       <View
                         width="100%"
                         height={280}
@@ -348,10 +350,12 @@ export function NeckSection(props) {
                       >
                         <Image src={elements[cur].image} width="100%" height="auto" />
                       </View>
-                    </animated.div>
-                  </Flex>
+                    </FadeChild>
+                  </animated.div>
+                </Flex>
 
-                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                  <FadeChild {...fadeRightProps} delay={200}>
                     <animated.div style={springSlowest}>
                       <Image
                         alignSelf="center"
@@ -360,20 +364,20 @@ export function NeckSection(props) {
                         src={elements[cur].iconAfter}
                       />
                     </animated.div>
-                    <Space size="xxl" />
-                    <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                      <Image
-                        opacity={0.5}
-                        transform={{
-                          rotate: '275deg',
-                          scale: 0.8,
-                        }}
-                        src={require('../../../public/images/curve-arrow.svg')}
-                      />
-                    </animated.div>
-                  </Flex>
-                </Row>
-              </FadeChild>
+                  </FadeChild>
+                  <Space size="xxl" />
+                  <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
+                    <Image
+                      opacity={0.5}
+                      transform={{
+                        rotate: '275deg',
+                        scale: 0.8,
+                      }}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                    />
+                  </animated.div>
+                </Flex>
+              </Row>
             </Col>
           </SpacedPageContent>
         </Page.Content>

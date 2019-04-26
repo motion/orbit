@@ -13,9 +13,21 @@ export const fadeUpProps = {
   from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
 }
 
+export const slowConfigLessBounce = {
+  mass: 0.5,
+  tension: 50,
+  friction: 8,
+}
+
+export const slowConfig = {
+  mass: 0.9,
+  tension: 50,
+  friction: 5,
+}
+
 export const defaultConfig = {
   mass: 1,
-  tension: 40,
+  tension: 50,
   friction: 8,
 }
 
@@ -153,15 +165,16 @@ export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
 export const fadeRightProps = {
   from: {
     opacity: 0,
-    xys: [-20, -20, 0.8],
+    txys: [100, -20, -40, 0.8],
   },
   to: {
     opacity: 1,
-    xys: [0, 0, 1],
+    txys: [0, 0, 0, 1],
   },
   style: spring => ({
-    transform: spring.xys.interpolate(
-      (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
+    transform: spring.txys.interpolate(
+      (t, x, y, s) =>
+        `perspective(600px) translateX(${t}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
     ),
   }),
 }
@@ -169,15 +182,16 @@ export const fadeRightProps = {
 export const fadeLeftProps = {
   from: {
     opacity: 0,
-    xys: [20, 20, 0.8],
+    txys: [-100, 20, 40, 0.8],
   },
   to: {
     opacity: 1,
-    xys: [0, 0, 1],
+    txys: [0, 0, 0, 1],
   },
   style: spring => ({
-    transform: spring.xys.interpolate(
-      (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
+    transform: spring.txys.interpolate(
+      (t, x, y, s) =>
+        `perspective(600px) translateX(${t}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
     ),
   }),
 }

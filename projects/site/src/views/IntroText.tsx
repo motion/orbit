@@ -12,7 +12,10 @@ export const IntroText = (props: TextProps) => (
       display="inline"
       width={16}
       height={16}
-      marginLeft={8}
+      transform={{
+        y: -2,
+      }}
+      margin={[-2, 8]}
       userSelect="none"
     />
   </Text>

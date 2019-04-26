@@ -65,7 +65,7 @@ function lazyScroll(LazyComponent) {
     const fallback = (
       <Page {...props}>
         <Page.Content>
-          <div ref={ref} />
+          <div style={{ position: 'absolute', top: -300, bottom: 0 }} ref={ref} />
         </Page.Content>
       </Page>
     )

@@ -35,7 +35,7 @@ export function AppsPage() {
           <Title margin={[0, 'auto']}>Discover apps</Title>
 
           <View margin={[0, 'auto']}>
-            <SearchInput width={400} size={2.5} placeholder="Search apps..." />
+            <SearchInput width={450} size={2.75} placeholder="Search apps..." />
           </View>
         </Col>
       </SectionContent>

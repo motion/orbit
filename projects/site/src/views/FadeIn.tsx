@@ -63,7 +63,7 @@ export const FadeChild = memo(
   }: UseSpringProps<any> & { delay?: number; disable?: boolean }) => {
     const props = FadeContext.useProps()
     const shown = !!useDebounceValue(!disable && props.shown, delay)
-    const off = props.off
+    const off = selectDefined(springProps.off, props.off)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
     const styleFin = style
       ? { ...(typeof style === 'function' ? style(springStyle) : style), ...springStyle }

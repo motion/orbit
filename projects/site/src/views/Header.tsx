@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -265,7 +265,7 @@ export const Header = memo(
 export const HeaderContain = props => {
   return (
     <SectionContent
-      padding={[0, useScreenVal('0%', '2%', '10%')]}
+      padding={[0, useScreenVal('0%', '1%', '10%')]}
       flexFlow="row"
       alignItems="center"
       justifyContent="space-around"

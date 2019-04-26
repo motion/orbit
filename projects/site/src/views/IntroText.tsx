@@ -7,6 +7,13 @@ import { Text } from './Text'
 export const IntroText = (props: TextProps) => (
   <Text size={1.8} sizeLineHeight={1.3}>
     {props.children}
-    <Image src={markSolid} display="inline" width={16} height={16} marginLeft={8} />
+    <Image
+      src={markSolid}
+      display="inline"
+      width={16}
+      height={16}
+      marginLeft={8}
+      userSelect="none"
+    />
   </Text>
 )

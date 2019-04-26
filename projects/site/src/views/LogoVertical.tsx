@@ -31,7 +31,7 @@ export const LogoVertical = memo(
         justifyContent="center"
         userSelect="none"
         transform={{ scale }}
-        padding={[0, 20]}
+        padding={[0, 25]}
         onClick={async e => {
           e.preventDefault()
           if ((await nav.getRoute()).url.pathname === '/') {

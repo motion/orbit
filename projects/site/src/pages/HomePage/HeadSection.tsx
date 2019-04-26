@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo, useEffect, useState } from 'react'
 
@@ -48,15 +48,10 @@ const subTexts = {
 
 const HeadText = memo(() => {
   const screen = useScreenSize()
-  const [measured, setMeasured] = useState(false)
-  const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const measured = fontsLoaded
   const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded, extraScale: 1 })
-
-  useEffect(() => {
-    setMeasuredDelayed(true)
-  }, [])
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
@@ -108,15 +103,15 @@ const HeadText = memo(() => {
           alpha={0.7}
           whiteSpace="nowrap"
         >
-          <FadeChild disable={!measured} delay={200}>
+          <FadeChild disable={!measured} delay={400}>
             {texts[0]}
           </FadeChild>
           {br}
-          <FadeChild disable={!measured} delay={300}>
+          <FadeChild disable={!measured} delay={500}>
             {texts[1]}
           </FadeChild>
           {br}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={450}>
+          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller>{subTexts[screen]}</Smaller>
           </FadeChild>
         </Paragraph>
@@ -184,7 +179,7 @@ export function HeadSection(props) {
 
         <Page.Parallax zIndex={1} speed={0.01}>
           <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-            <FadeChild {...fadeUpProps} delay={200}>
+            <FadeChild {...fadeUpProps} delay={600}>
               <View
                 flex={1}
                 width="100%"

@@ -1,4 +1,4 @@
-import { FullScreen, View } from '@o/ui'
+import { Col, FullScreen, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
@@ -30,10 +30,14 @@ export function AppsPage() {
         backgroundImage={blackWavePattern}
       />
 
-      <SectionContent flex={1} marginTop={54}>
-        <View margin={[0, 'auto']}>
-          <SearchInput width={400} size={2.5} placeholder="Search apps..." />
-        </View>
+      <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
+        <Col space="lg">
+          <Title margin={[0, 'auto']}>Discover apps</Title>
+
+          <View margin={[0, 'auto']}>
+            <SearchInput width={400} size={2.5} placeholder="Search apps..." />
+          </View>
+        </Col>
       </SectionContent>
 
       <View flex={1} />

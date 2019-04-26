@@ -8,7 +8,7 @@ import { Text } from '../../views/Text'
 import { SignupForm } from './EarlyAccessBetaSection'
 import { useScreenVal } from './SpacedPageContent'
 
-export function FeetSection(props) {
+export default function FeetSection(props) {
   return (
     <Theme name="home">
       <Page {...props}>

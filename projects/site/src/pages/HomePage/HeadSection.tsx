@@ -58,7 +58,7 @@ const HeadText = memo(() => {
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
+    <View justifyContent="space-between" width="80%" maxWidth={960} textAlign="center">
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}

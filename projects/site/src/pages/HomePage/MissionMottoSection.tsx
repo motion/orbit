@@ -22,7 +22,7 @@ export const SubParagraph = (props: TextProps) => (
   />
 )
 
-export function LegsSection(props) {
+export default function LegsSection(props) {
   return (
     <Theme name="home">
       <Page {...props}>

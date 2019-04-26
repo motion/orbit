@@ -9,7 +9,7 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export function EarlyAccessSection({ outside = null, ...props }) {
+export default function EarlyAccessSection({ outside = null, ...props }) {
   return (
     <Theme name="light">
       <Page zIndex={1} {...props}>

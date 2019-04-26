@@ -1,5 +1,6 @@
 import { Col, Grid, Image, Space, Theme } from '@o/ui'
 import React from 'react'
+
 import bottomLightSeparator from '../../../public/images/bottom-sep.svg'
 import lightSeparator from '../../../public/images/light-separator.svg'
 import people from '../../../public/images/people.svg'
@@ -12,7 +13,7 @@ import { SpacedPageContent } from './SpacedPageContent'
 
 export const bottomSeparator = bottomLightSeparator
 
-export function WaistSection(props) {
+export default function WaistSection(props) {
   const screen = useScreenSize()
   return (
     <Theme name="light">

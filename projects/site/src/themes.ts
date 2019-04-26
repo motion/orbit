@@ -8,6 +8,15 @@ const Theme = new ThemeMaker()
 export const themes = {
   ...KitThemes,
 
+  orbitOneDark: Theme.fromStyles({
+    background: '#000',
+    backgroundHover: '#000',
+    borderColor: '#222',
+    buttonBackground: colors.purple,
+    buttonBackgroundHover: colors.purple.lighten(0.1),
+    color: '#fff',
+  }),
+
   orbitOne: Theme.fromStyles({
     background: '#fff',
     color: colors.purple,

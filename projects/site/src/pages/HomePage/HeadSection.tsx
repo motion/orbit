@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, View, ViewProps } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo, useEffect, useState } from 'react'
 
@@ -205,9 +205,11 @@ export function HeadSection(props) {
                 />
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
-                    <Scale size={1.1}>
-                      <Join transform={{ y: -23 }} flexFlow="row" group margin={[0, 'auto']} />
-                    </Scale>
+                    <Theme name="orbitOneDark">
+                      <Scale size={1.1}>
+                        <Join transform={{ y: -23 }} flexFlow="row" group margin={[0, 'auto']} />
+                      </Scale>
+                    </Theme>
                   </SurfacePassProps>
                 </FadeChild>
                 {/* <DownloadButton
@@ -299,7 +301,7 @@ export function HeadSection(props) {
   )
 }
 
-const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: string }) => (
+const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
   <View
     tagName="a"
     flexFlow="row"

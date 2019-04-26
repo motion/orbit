@@ -52,7 +52,7 @@ function ButtonInner(props: ButtonProps) {
 
 export const Button = forwardRef((buttonProps: ButtonProps, ref) => {
   const props = useSurfaceProps(buttonProps)
-  const { alt, theme, themeSelect = 'button', ...rest } = props
+  const { alt, theme, themeSelect, ...rest } = props
   const uiContext = useContext(UIContext)
 
   let element = null
@@ -68,3 +68,7 @@ export const Button = forwardRef((buttonProps: ButtonProps, ref) => {
     </Theme>
   )
 })
+
+Button.defaultProps = {
+  themeSelect: 'button',
+}

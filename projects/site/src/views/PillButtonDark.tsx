@@ -5,7 +5,7 @@ import { PillButton } from './PillButton'
 
 export function PillButtonDark({ children, ...props }: ButtonProps) {
   return (
-    <PillButton background="#000" {...props}>
+    <PillButton letterSpacing={2} background="#000" {...props}>
       <span
         className="clip-text"
         style={{

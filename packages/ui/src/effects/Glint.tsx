@@ -1,5 +1,6 @@
 import { ColorLike } from '@o/css'
 import { gloss, ThemeSelect } from '@o/gloss'
+import { isDefined } from '@o/utils'
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -36,7 +37,14 @@ export const Glint = gloss<Props>({
   } = props
   const isTop = isUndef(bottom)
   const themeProp = isTop ? 'glintColor' : 'glintColorBottom'
-  const glintColor = props.color || theme[themeProp] || theme.glintColor || theme.color
+  let glintColor = props.color || theme[themeProp]
+  if (!isDefined(glintColor)) {
+    if (isTop) {
+      glintColor = theme.glintColor || theme.color
+    } else {
+      glintColor = theme.backgroundStrong || theme.background.darken(0.1)
+    }
+  }
   const radiusStyle = {
     ...(borderRadius && {
       borderRadius,

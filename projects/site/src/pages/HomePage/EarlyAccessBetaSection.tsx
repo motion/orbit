@@ -205,6 +205,7 @@ export class Join extends React.Component<any> {
             placeholder="Email address..."
             flex={0}
             size={2}
+            minWidth={300}
             sizeRadius={5}
             sizePadding={1.5}
           />

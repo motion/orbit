@@ -250,33 +250,19 @@ export const ChestSection = memo((props: any) => {
       </FadeDataApps.FadeProvide>
 
       <Page.Background
-        speed={-0.2}
-        zIndex={100}
-        bottom="-110%"
+        speed={0.1}
+        zIndex={-20}
+        bottom="-150%"
         backgroundSize="cover"
         left="-40%"
         right="-40%"
         width="180%"
-        top="30%"
+        top="-10%"
+        backgroundColor="transparent"
         backgroundPosition="top center"
-        opacity={0.5}
+        opacity={1}
         backgroundImage={blackWavePattern}
       />
-
-      {/* <Page.Parallax speed={0.25} zIndex={3}>
-        <FullScreen
-          transform={{
-            y: '-50%',
-          }}
-          className="northern-lights"
-          backgroundImage={`url(${redshift})`}
-          opacity={0.65}
-          backgroundSize="contain"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-          bottom="-50%"
-        />
-      </Page.Parallax> */}
     </Page>
   )
 })

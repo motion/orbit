@@ -73,7 +73,6 @@ export function Link({
         }
         if (routeTable[href]) {
           routeTable[href]().then(() => {
-            console.log('finished loading')
             loadedRoutes[href] = true
           })
         }
@@ -122,18 +121,18 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   )
 }
 
-const linkDelay = 80
+const linkDelay = 180
 
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink delay={linkDelay * 0} {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
         Start
       </HeaderLink>
-      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 2} {...props} href="/docs">
         Docs
       </HeaderLink>
-      <HeaderLink delay={linkDelay * 2} {...props} href="/apps">
+      <HeaderLink delay={linkDelay * 3} {...props} href="/apps">
         Apps
       </HeaderLink>
     </>

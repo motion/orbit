@@ -42,9 +42,7 @@ export function EarlyAccessSection({ outside = null, ...props }) {
                   <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>
                     Orbit is now in beta.
                   </TitleTextSub>
-                  <TitleTextSub>
-                    Have a unique case for internal tools? Contact us.
-                  </TitleTextSub>
+                  <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>
                 </>
               }
             >

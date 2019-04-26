@@ -20,7 +20,7 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
 let medSpc = <Space size="xxl" />
-let lgSpc = <Space size={40} />
+let lgSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'Amazing apps in minutes',
@@ -30,8 +30,8 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `The ideal internal tool platform for teams. Move faster without servers.`,
-    `Orbit includes a massive toolkit for building beautiful, flexible, apps.`,
+    `Code internal tools for your team in minutes, without a server.`,
+    `Orbit is a toolkit for building beautiful, flexible apps.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -41,7 +41,7 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `Five ways Orbit improves the state of the art.`,
+  large: `Five ways Orbit makes common apps easy.`,
   medium: `Learn how Orbit makes common apps easy.`,
   small: `Learn how.`,
 }
@@ -80,7 +80,7 @@ const HeadText = memo(() => {
         </TitleText>
       </FadeChild>
 
-      <Space size={useScreenVal('md', 'lg', 'xxl')} />
+      <Space size={useScreenVal('md', 'lg', 'xl')} />
 
       {screen === 'small' ? (
         <Paragraph
@@ -94,6 +94,7 @@ const HeadText = memo(() => {
         </Paragraph>
       ) : (
         <Paragraph
+          fontWeight={100}
           tagName="div"
           style={{
             ...pFit.style,
@@ -107,7 +108,7 @@ const HeadText = memo(() => {
           alpha={0.7}
           whiteSpace="nowrap"
         >
-          <FadeChild disable={!measured} delay={150}>
+          <FadeChild disable={!measured} delay={200}>
             {texts[0]}
           </FadeChild>
           {br}

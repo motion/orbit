@@ -1,13 +1,13 @@
 import { gloss, useTheme } from '@o/gloss'
-import { BorderBottom, Button, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React, { memo, useEffect } from 'react'
-import { Link as RouterLink, useCurrentRoute } from 'react-navi'
+import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
+import React, { memo, useState } from 'react'
+import { useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
-import { FadeChild, useFadePage } from './FadeIn'
+import { defaultConfig, FadeChild, fastConfig, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
@@ -23,6 +23,9 @@ const LinkText = gloss(View, {
   },
 })
 
+const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
+let tm = null
+
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
   children,
@@ -33,6 +36,7 @@ export function Link({
   external,
   ...props
 }: LinkProps) {
+  const header = HeaderContext.useProps()
   const route = useCurrentRoute()
   const isActive =
     href === '/' ? route.url.pathname === href : route.url.pathname.indexOf(href) === 0
@@ -40,7 +44,15 @@ export function Link({
   return (
     <LinkText
       cursor="pointer"
-      onClick={() => Navigation.navigate(href)}
+      onClick={() => {
+        if (header) {
+          header.setShown(false)
+        }
+        clearTimeout(tm)
+        tm = setTimeout(() => {
+          Navigation.navigate(href)
+        }, 100)
+      }}
       fontSize={fontSize}
       width={width}
       margin={margin}
@@ -75,7 +87,7 @@ export function Link({
             {children}
           </a>
         ) : (
-          <RouterLink href={href}>{children}</RouterLink>
+          children
         )}
       </SimpleText>
     </LinkText>
@@ -83,9 +95,13 @@ export function Link({
 }
 
 export const HeaderLink = ({ delay, children, ...props }: any) => {
+  const header = HeaderContext.useProps()
+  const leaving = header && header.shown === false
   return (
     <Link width="33%" {...props}>
-      <FadeChild delay={delay}>{children}</FadeChild>
+      <FadeChild delay={leaving ? 0 : delay} config={leaving ? fastConfig : defaultConfig}>
+        {children}
+      </FadeChild>
     </Link>
   )
 }
@@ -131,20 +147,13 @@ const LinkRow = gloss({
   position: 'relative',
 })
 
-let hasShownOnce = false
-
 export const Header = memo(
   ({ slim, noBorder, ...rest }: { slim?: boolean; noBorder?: boolean } & RowProps) => {
     const size = useScreenSize()
     const theme = useTheme()
     const siteStore = useSiteStore()
-    const Fade = useFadePage({ off: hasShownOnce })
-
-    useEffect(() => {
-      setTimeout(() => {
-        hasShownOnce = true
-      }, 1000)
-    }, [])
+    const [shown, setShown] = useState(true)
+    const Fade = useFadePage({ shown })
 
     let before = null
     let after = null
@@ -162,8 +171,10 @@ export const Header = memo(
       )
     }
 
+    let children
+
     if (slim) {
-      return (
+      children = (
         <Fade.FadeProvide>
           <Row
             ref={Fade.ref}
@@ -175,7 +186,7 @@ export const Header = memo(
           >
             <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild delay={500}>
+              <FadeChild config={shown ? defaultConfig : fastConfig} delay={shown ? 400 : 0}>
                 <LogoHorizontal slim />
               </FadeChild>
               <LinkSection>{after}</LinkSection>
@@ -184,48 +195,54 @@ export const Header = memo(
           </Row>
         </Fade.FadeProvide>
       )
+    } else {
+      children = (
+        <Fade.FadeProvide>
+          {size === 'small' && (
+            <Button
+              position="fixed"
+              top={10}
+              right={10}
+              color="#fff"
+              zIndex={1000000000}
+              hoverStyle={{
+                color: '#fff',
+              }}
+              icon="menu"
+              iconSize={16}
+              size={2}
+              chromeless
+              onClick={siteStore.toggleSidebar}
+            />
+          )}
+          <Row
+            ref={Fade.ref}
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            zIndex={1000000}
+            alignItems="center"
+            justifyContent="space-around"
+            padding={[30, 0]}
+            {...rest}
+          >
+            <HeaderContain>
+              <LinkSection alignRight>{before}</LinkSection>
+              <FadeChild config={shown ? defaultConfig : fastConfig} delay={shown ? 100 : 0}>
+                <LogoVertical />
+              </FadeChild>
+              <LinkSection>{after}</LinkSection>
+            </HeaderContain>
+          </Row>
+        </Fade.FadeProvide>
+      )
     }
 
     return (
-      <Fade.FadeProvide>
-        {size === 'small' && (
-          <Button
-            position="fixed"
-            top={10}
-            right={10}
-            color="#fff"
-            zIndex={1000000000}
-            hoverStyle={{
-              color: '#fff',
-            }}
-            icon="menu"
-            iconSize={16}
-            size={2}
-            chromeless
-            onClick={siteStore.toggleSidebar}
-          />
-        )}
-        <Row
-          ref={Fade.ref}
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          zIndex={1000000}
-          alignItems="center"
-          justifyContent="space-around"
-          padding={[30, 0]}
-          {...rest}
-        >
-          <HeaderContain>
-            <LinkSection alignRight>{before}</LinkSection>
-            <FadeChild delay={100}>
-              <LogoVertical />
-            </FadeChild>
-            <LinkSection>{after}</LinkSection>
-          </HeaderContain>
-        </Row>
-      </Fade.FadeProvide>
+      <HeaderContext.PassProps setShown={setShown} shown={shown}>
+        {children}
+      </HeaderContext.PassProps>
     )
   },
 )

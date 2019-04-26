@@ -13,10 +13,16 @@ export const fadeUpProps = {
   from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
 }
 
-const config = {
+export const defaultConfig = {
   mass: 1,
   tension: 40,
   friction: 8,
+}
+
+export const fastConfig = {
+  mass: 0.1,
+  tension: 40,
+  friction: 3,
 }
 
 export const FadeIn = memo(
@@ -105,7 +111,7 @@ export const useSimpleFade = ({
     spring || {
       from: off ? to : from,
       to: shown || off ? to : from,
-      config,
+      config: defaultConfig,
       ...rest,
     },
   )

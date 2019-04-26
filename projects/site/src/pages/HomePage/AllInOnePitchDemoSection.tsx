@@ -285,7 +285,7 @@ export function NeckSection(props) {
                       />
                     </animated.div>
                   </Flex>
-                  <Flex flex={2} position="relative">
+                  <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
                     <Button
                       alt="flat"
                       cursor="pointer"
@@ -295,7 +295,7 @@ export function NeckSection(props) {
                       zIndex={100}
                       position="absolute"
                       top={-4}
-                      left={useScreenVal(-60, 10, 10)}
+                      left={useScreenVal(-20, 10, 10)}
                       icon="chevron-left"
                       onClick={prev}
                     />
@@ -308,7 +308,7 @@ export function NeckSection(props) {
                       zIndex={100}
                       position="absolute"
                       top={-4}
-                      right={useScreenVal(-60, 10, 10)}
+                      right={useScreenVal(-20, 10, 10)}
                       icon="chevron-right"
                       onClick={next}
                     />
@@ -341,14 +341,16 @@ export function NeckSection(props) {
                       style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}
                     >
                       <View
-                        backgroundImage={`url(${elements[cur].image})`}
-                        backgroundSize="101%"
-                        backgroundPosition="-1px -2px -2px -2px"
                         width="100%"
-                        height={300}
+                        height={280}
+                        minWidth={360}
+                        margin={[0, -10]}
                         borderRadius={10}
                         boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                      />
+                        overflow="hidden"
+                      >
+                        <Image src={elements[cur].image} width="100%" height="auto" />
+                      </View>
                     </animated.div>
                   </Flex>
 

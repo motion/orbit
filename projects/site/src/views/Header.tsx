@@ -160,27 +160,6 @@ export const Header = memo(
           <LinksRight />
         </LinkRow>
       )
-    } else {
-      after = (
-        <>
-          <View flex={1} />
-          <Button
-            color="#fff"
-            hoverStyle={{
-              color: '#fff',
-            }}
-            icon="menu"
-            iconSize={16}
-            size={2}
-            chromeless
-            transform={{
-              y: 0,
-              x: 18,
-            }}
-            onClick={siteStore.toggleSidebar}
-          />
-        </>
-      )
     }
 
     if (slim) {
@@ -209,6 +188,23 @@ export const Header = memo(
 
     return (
       <Fade.FadeProvide>
+        {size === 'small' && (
+          <Button
+            position="fixed"
+            top={10}
+            right={10}
+            color="#fff"
+            zIndex={1000000000}
+            hoverStyle={{
+              color: '#fff',
+            }}
+            icon="menu"
+            iconSize={16}
+            size={2}
+            chromeless
+            onClick={siteStore.toggleSidebar}
+          />
+        )}
         <Row
           ref={Fade.ref}
           position="absolute"

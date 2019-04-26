@@ -4,9 +4,26 @@ import { widths } from '../constants'
 
 type ScreenSize = 'small' | 'medium' | 'large'
 
+const sizes = {
+  small: { maxWidth: widths.small },
+  medium: { minWidth: widths.medium },
+  large: { minWidth: widths.large },
+  short: { maxHeight: 780 },
+}
+
 export function useScreenSize(): ScreenSize {
-  const isSmall = useMedia({ maxWidth: widths.small })
-  const isMedium = useMedia({ minWidth: widths.medium })
-  const isLarge = useMedia({ minWidth: widths.large })
+  const isSmall = useMedia(sizes.small)
+  const isMedium = useMedia(sizes.medium)
+  const isLarge = useMedia(sizes.large)
   return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
+}
+
+export function useScreenHeight(): 'short' | 'medium' {
+  const isShort = useMedia(sizes.short)
+  return isShort ? 'short' : 'medium'
+}
+
+export const useScreenHeightVal = (short: any, normal: any) => {
+  const screen = useScreenHeight()
+  return screen === 'short' ? short : normal
 }

@@ -1,6 +1,6 @@
 import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 
 import glow from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
@@ -46,7 +46,7 @@ const subTexts = {
   small: `Learn how.`,
 }
 
-function HeadText() {
+const HeadText = memo(() => {
   const screen = useScreenSize()
   const [measured, setMeasured] = useState(false)
   const setMeasuredDelayed = useDebounce(setMeasured, 1)
@@ -84,7 +84,7 @@ function HeadText() {
 
       {screen === 'small' ? (
         <Paragraph
-          size={1.5}
+          size={1.75}
           sizeLineHeight={1.4}
           margin={[0, 'auto']}
           textAlign="center"
@@ -135,7 +135,7 @@ function HeadText() {
       </Paragraph>
     </View>
   )
-}
+})
 
 const Smaller = gloss({
   cursor: 'pointer',
@@ -169,7 +169,7 @@ export function HeadSection(props) {
       <OuterSpace show={hoverDownload && screen !== 'small'} />
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
-          <FullScreen opacity={fontsLoaded ? 1 : 0}>
+          <FullScreen opacity={fontsLoaded ? 1 : 0} bottom={100}>
             <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
               <HeadText />
             </Row>

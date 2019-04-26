@@ -1,21 +1,21 @@
 import { Col, ViewProps } from '@o/ui'
 import React from 'react'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
+import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 
 export function SpacedPageContent({
   header = null,
   children,
   ...props
 }: ViewProps & { header?: any }) {
-  const screen = useScreenSize()
+  const width = useScreenSize()
   return (
     <Col
       width="100%"
-      margin={screen === 'small' ? 0 : ['auto', 0]}
+      margin={width === 'small' ? 0 : ['auto', 0]}
       height="80vh"
       maxHeight={900}
-      space="xxl"
+      space={useScreenHeightVal('lg', 'xxl')}
       {...props}
     >
       <div style={{ flex: 1 }} />

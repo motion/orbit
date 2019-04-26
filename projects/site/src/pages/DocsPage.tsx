@@ -122,9 +122,13 @@ const DocsPage = memo((props: { children?: any }) => {
   const inputRef = useRef(null)
   const initialPath = window.location.pathname.replace('/docs/', '')
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
-  const [theme, setTheme] = usePageTheme()
+  const [themeName, setThemeName] = usePageTheme()
 
   useLayoutEffect(() => {
+    if (screen === 'small') {
+      return
+    }
+
     const sidebar = new StickySidebar('#sidebar', {
       containerSelector: '#main',
       topSpacing: 0,
@@ -138,7 +142,7 @@ const DocsPage = memo((props: { children?: any }) => {
     return () => {
       sidebar.destroy()
     }
-  }, [])
+  }, [screen])
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -203,8 +207,8 @@ const DocsPage = memo((props: { children?: any }) => {
           inputRef,
           toggleSection,
           section,
-          setTheme,
-          theme,
+          setTheme: setThemeName,
+          theme: themeName,
           setShowSidebar,
           siteStore,
           showSidebar,
@@ -217,14 +221,14 @@ const DocsPage = memo((props: { children?: any }) => {
 
       {isSmall && (
         <Portal>
-          <FixedLayout isSmall={isSmall} className="mini-scrollbars">
+          <FixedLayout isSmall={isSmall}>
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
               elevation={25}
               width={280}
               pointerEvents="auto"
-              background={theme.background}
+              background={theme => theme.background}
             >
               {sidebarChildren}
             </Sidebar>

@@ -8,6 +8,9 @@ const titleProps = {
   selectable: true,
 }
 
-export const TitleText = gloss(props => <Title selectable {...titleProps} {...props} />, {
-  fontFamily: 'GT Eesti',
-})
+export const TitleText = gloss(
+  props => <Title className="font-smooth" selectable {...titleProps} {...props} />,
+  {
+    fontFamily: 'GT Eesti',
+  },
+)

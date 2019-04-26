@@ -4,11 +4,9 @@ import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
-import lineSep from '../../../public/images/line-sep.svg'
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
-import { colors } from '../../constants'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -18,6 +16,7 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
 import { Squircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
+import { LineSep } from './EarlyAccessBetaSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
@@ -226,20 +225,20 @@ export function NeckSection(props) {
             header={
               <>
                 <FadeChild delay={0}>
-                  <PillButton>How</PillButton>
+                  <PillButton>Build</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Easiest apps ever.</TitleText>
                 </FadeChild>
                 <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
-                    Create apps using common data sources in just a few lines of code.
+                    Create apps that connect data sources in just a few lines of code.
                   </FadeChild>
                 </TitleTextSub>
               </>
             }
           >
-            <Col maxWidth="100%" margin={[-20, 'auto', 0, 0]}>
+            <Col maxWidth="100%" margin={[-10, 'auto', 0, 0]}>
               {screen !== 'small' && (
                 <Row space>
                   <SubSection maxWidth="33%">
@@ -282,9 +281,10 @@ export function NeckSection(props) {
                   <animated.div style={springFast}>
                     <FadeChild {...fadeLeftProps} delay={300}>
                       <Image
+                        userSelect="none"
                         alignSelf="center"
-                        width={124}
-                        height={124}
+                        width={100}
+                        height={100}
                         src={elements[cur].iconBefore}
                       />
                     </FadeChild>
@@ -292,6 +292,7 @@ export function NeckSection(props) {
                   <Space size="xxl" />
                   <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
                     <Image
+                      userSelect="none"
                       opacity={0.5}
                       src={require('../../../public/images/curve-arrow.svg')}
                       transform={{
@@ -333,17 +334,18 @@ export function NeckSection(props) {
                       <Squircle
                         width={280}
                         height={280}
-                        background="linear-gradient(125deg, #151515, #000)"
-                        boxShadow="0 10px 80px rgba(0,0,0,1)"
+                        background={`linear-gradient(125deg, #78009F, #4C1966)`}
+                        boxShadow="0 20px 50px rgba(0,0,0,0.6)"
                         padding={30}
                       >
                         <TitleText
                           fontSize={18}
                           margin={[0, 'auto']}
                           letterSpacing={2}
-                          alpha={0.65}
+                          alpha={0.4}
                           textTransform="uppercase"
-                          color={colors.purple}
+                          fontWeight={300}
+                          color="#fff"
                         >
                           {`<${elements[cur].title} />`}
                         </TitleText>
@@ -362,11 +364,18 @@ export function NeckSection(props) {
                         height={280}
                         minWidth={360}
                         margin={[0, -10]}
-                        borderRadius={10}
+                        borderRadius={22}
+                        background="#000"
                         boxShadow={[[0, 10, 30, [0, 0, 0]]]}
                         overflow="hidden"
                       >
-                        <Image src={elements[cur].image} width="100%" height="auto" />
+                        <Image
+                          userSelect="none"
+                          src={elements[cur].image}
+                          width="100%"
+                          height="auto"
+                          opacity={0.45}
+                        />
                       </View>
                     </FadeChild>
                   </animated.div>
@@ -376,9 +385,10 @@ export function NeckSection(props) {
                   <FadeChild {...fadeRightProps} delay={200}>
                     <animated.div style={springSlowest}>
                       <Image
+                        userSelect="none"
                         alignSelf="center"
-                        width={124}
-                        height={124}
+                        width={100}
+                        height={100}
                         src={elements[cur].iconAfter}
                       />
                     </animated.div>
@@ -386,6 +396,7 @@ export function NeckSection(props) {
                   <Space size="xxl" />
                   <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
                     <Image
+                      userSelect="none"
                       opacity={0.5}
                       transform={{
                         rotate: '275deg',
@@ -403,17 +414,18 @@ export function NeckSection(props) {
         <Page.Parallax overflow="visible" speed={0} zIndex={0}>
           <FullScreen
             transform={{ y: -100 }}
-            minWidth={2012}
-            margin={[0, -620]}
+            minWidth={1200}
+            margin={[0, -520]}
             top={0}
             bottom="auto"
+            className="head-line-sep"
           >
-            <img src={lineSep} />
+            <LineSep />
           </FullScreen>
         </Page.Parallax>
 
         <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-          <FullScreen zIndex={0}>
+          <FullScreen zIndex={0} transform={{ scale: 1.5 }}>
             <FullScreen
               className="northern-lights"
               backgroundImage={`url(${northernlights})`}

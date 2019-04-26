@@ -1,4 +1,4 @@
-import lightSeparator from '!raw-loader!../../../public/images/light-separator.svg'
+import lightSeparator from '!raw-loader!../../../public/images/line-sep.svg'
 import { Button, Col, Form, gloss, Input, Message, Space, SVG, useTheme, View, ViewProps } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
@@ -16,7 +16,7 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
         zIndex={10}
         outside={
           <>
-            <LineSep />
+            <LineSep top={30} />
             {outside}
           </>
         }
@@ -46,7 +46,7 @@ export const LineSep = props => {
       height={100}
       {...props}
     >
-      <SVG svg={lightSeparator} />
+      <SVG svg={lightSeparator} width="100%" />
     </View>
   )
 }
@@ -215,6 +215,7 @@ export class Join extends React.Component<any> {
             disabled={submitting}
             opacity={submitting ? 0.5 : 1}
             pointerEvents={submitting ? 'none' : 'auto'}
+            cursor="pointer"
           >
             Early access
           </Button>

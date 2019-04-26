@@ -361,7 +361,7 @@ const DocsPageHeader = memo(
               justifyContent="flex-start"
               flexFlow="row"
             >
-              <SurfacePassProps size={1.2} iconSize={12}>
+              <SurfacePassProps size={1} iconSize={12}>
                 <Row group>
                   <RoundButton
                     icon="moon"

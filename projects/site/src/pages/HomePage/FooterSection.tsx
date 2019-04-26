@@ -45,6 +45,7 @@ export const AboveFooter = () => {
       <View flex={useScreenVal(1, 3, 4)} />
       <Space size={75} />
       <LogoVertical />
+      <Space size={75} />
     </>
   )
 }

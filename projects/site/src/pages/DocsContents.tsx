@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
+import { Button, Col, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
 import React, { memo } from 'react'
 
 import { colors } from '../constants'

@@ -32,7 +32,7 @@ export const defaultConfig = {
 }
 
 export const fastConfig = {
-  mass: 0.1,
+  mass: 0.3,
   tension: 40,
   friction: 3,
 }

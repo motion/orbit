@@ -132,7 +132,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   )
 }
 
-const linkDelay = 120
+const linkDelay = 100
 
 export const LinksLeft = props => {
   return (

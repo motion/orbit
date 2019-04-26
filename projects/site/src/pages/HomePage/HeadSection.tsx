@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, useDebounce, View, ViewProps } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo, useEffect, useState } from 'react'
 
@@ -20,7 +20,7 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
 let medSpc = <Space size="xxl" />
-let lgSpc = <Space size={40} />
+let lgSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'Amazing apps in minutes',
@@ -30,8 +30,8 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `The ideal internal tool platform for teams. Move faster without servers.`,
-    `Orbit includes a massive toolkit for building beautiful, flexible, apps.`,
+    `Code internal tools for your team in minutes, without a server.`,
+    `Orbit is a toolkit for building beautiful, flexible apps.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -41,29 +41,24 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `Five ways Orbit improves the state of the art.`,
+  large: `Five ways Orbit makes common apps easy.`,
   medium: `Learn how Orbit makes common apps easy.`,
   small: `Learn how.`,
 }
 
 const HeadText = memo(() => {
   const screen = useScreenSize()
-  const [measured, setMeasured] = useState(false)
-  const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  const measured = fontsLoaded
   const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
   const pFit = useTextFit({ min: 16, updateKey: fontsLoaded, extraScale: 1 })
-
-  useEffect(() => {
-    setMeasuredDelayed(true)
-  }, [])
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View justifyContent="space-between" width="90%" maxWidth={960} textAlign="center">
+    <View justifyContent="space-between" width="80%" maxWidth={960} textAlign="center">
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
@@ -80,7 +75,7 @@ const HeadText = memo(() => {
         </TitleText>
       </FadeChild>
 
-      <Space size={useScreenVal('md', 'lg', 'xxl')} />
+      <Space size={useScreenVal('md', 'lg', 'xl')} />
 
       {screen === 'small' ? (
         <Paragraph
@@ -94,6 +89,7 @@ const HeadText = memo(() => {
         </Paragraph>
       ) : (
         <Paragraph
+          fontWeight={100}
           tagName="div"
           style={{
             ...pFit.style,
@@ -107,15 +103,15 @@ const HeadText = memo(() => {
           alpha={0.7}
           whiteSpace="nowrap"
         >
-          <FadeChild disable={!measured} delay={150}>
+          <FadeChild disable={!measured} delay={400}>
             {texts[0]}
           </FadeChild>
           {br}
-          <FadeChild disable={!measured} delay={300}>
+          <FadeChild disable={!measured} delay={500}>
             {texts[1]}
           </FadeChild>
           {br}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={450}>
+          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller>{subTexts[screen]}</Smaller>
           </FadeChild>
         </Paragraph>
@@ -183,7 +179,7 @@ export function HeadSection(props) {
 
         <Page.Parallax zIndex={1} speed={0.01}>
           <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-            <FadeChild {...fadeUpProps} delay={200}>
+            <FadeChild {...fadeUpProps} delay={600}>
               <View
                 flex={1}
                 width="100%"

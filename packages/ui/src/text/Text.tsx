@@ -1,15 +1,9 @@
 import { CSSPropertySetStrict } from '@o/css'
-import {
-  alphaColorTheme,
-  CSSPropertySet,
-  gloss,
-  propStyleTheme,
-  textSizeTheme,
-  ThemeFn,
-} from '@o/gloss'
+import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, ThemeFn } from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
+
 import { ScaleContext } from '../Scale'
 import { getTextSize } from '../Sizes'
 import { Sizes } from '../Space'
@@ -88,7 +82,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   measure() {
-    if (this.props.ellipse && this.props.ellipse > 1) {
+    if (this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,
@@ -167,6 +161,7 @@ export class Text extends React.PureComponent<TextProps> {
       highlight,
       renderAsHtml,
       ignoreColor,
+      className,
       ...props
     } = this.props
     const { doClamp, textHeight } = this.state
@@ -238,6 +233,7 @@ export class Text extends React.PureComponent<TextProps> {
       finalProps = {
         children: (
           <TextEllipse
+            className={className}
             ellipse={ellipse}
             numLinesToShow={numLinesToShow}
             maxHeight={maxHeight}
@@ -251,6 +247,7 @@ export class Text extends React.PureComponent<TextProps> {
 
     return (
       <TextBlock
+        className={className}
         tagName={tagName}
         contentEditable={editable}
         selectable={selectable}

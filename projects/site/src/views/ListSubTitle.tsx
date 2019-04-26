@@ -1,7 +1,7 @@
 import { gloss, SubTitle } from '@o/ui'
 
 export const ListSubTitle = gloss(SubTitle, {
-  margin: [20, 0, -2],
+  padding: [20, 0, 0],
   fontWeight: 300,
-  fontSize: 18,
+  fontSize: 24,
 })

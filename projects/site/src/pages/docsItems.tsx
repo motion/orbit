@@ -8,7 +8,7 @@ const guides = [
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle marginTop={-4}>Start</ListSubTitle>,
+    children: <ListSubTitle>Start</ListSubTitle>,
   },
   {
     id: '',
@@ -75,15 +75,19 @@ const uikit = [
   { id: 'popover', title: 'Popover', icon: 'direction-right' },
   { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
+
   { id: 'masterdetail', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
   { id: 'flow', title: 'Flow', icon: 'layout' },
   { id: 'message', title: 'Message', icon: 'chat' },
+
   { id: 'calendar', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
   { id: 'dateformat', title: 'DateFormat', icon: 'event' },
   { id: 'timeago', title: 'TimeAgo', icon: 'time' },
+
   { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select' },
   { id: 'gallerymodal', title: 'GalleryModal', icon: 'multi-select' },
   { id: 'mediamodal', title: 'MediaModal', icon: 'multi-select' },
+
   { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
   { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },
   { id: 'slider', title: 'Slider', icon: 'double-caret-horizontal' },
@@ -93,26 +97,32 @@ const uikit = [
   { id: 'gridlayout', title: 'GridLayout', icon: 'grid-view', indent: 1 },
   { id: 'masonrylayout', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
   { id: 'flowlayout', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
+
   { id: 'statusbar', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
   { id: 'toolbar', title: 'Toolbar', icon: 'bottom' },
+
   { id: 'form', title: 'Form', icon: 'form', group: 'Forms' },
   { id: 'flow', title: 'Flow + Form', icon: 'dot', indent: 1 },
   { id: 'form', title: 'Form Elements', icon: 'widget' },
   { id: 'select', title: 'Select', icon: 'dot', indent: 1 },
   { id: 'input', title: 'Input', icon: 'dot', indent: 1 },
-  { id: 'basics', title: 'Basics', icon: '', group: 'Text' },
+
+  { id: 'text', title: 'Text', icon: '', group: 'Text' },
   { id: 'titles', title: 'Titles' },
   { id: 'message', title: 'Message' },
   { id: 'banner', title: 'Banner' },
+
   { id: 'chat', title: 'Chat', group: 'Media & Content' },
   { id: 'document', title: 'Document' },
   { id: 'markdown', title: 'Markdown' },
   { id: 'task', title: 'Task' },
   { id: 'thread', title: 'Thread' },
+
   { id: 'hoverglow', title: 'HoverGlow', group: 'Effects' },
   { id: 'tilthoverglow', title: 'TiltHoverGlow' },
   { id: 'glint', title: 'Glint' },
   { id: 'tilt', title: 'Tilt' },
+
   { id: 'fetch', title: 'Fetch', group: 'Utilities' },
   { id: 'orderable', title: 'Orderable' },
   { id: 'contextmenu', title: 'ContextMenu' },

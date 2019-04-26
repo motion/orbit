@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -27,6 +27,7 @@ const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boole
 let tm = null
 
 const loadedRoutes = {}
+let didAnimateOut = false
 
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
@@ -53,11 +54,13 @@ export function Link({
           // if we didnt finish preloading, show fancy animation
           if (header) {
             header.setShown(false)
+            didAnimateOut = true
           }
           tm = setTimeout(() => {
             Navigation.navigate(href)
           }, 90)
         } else {
+          didAnimateOut = false
           // otherwise just go right there, because nerds would get mad
           // if god fobid you slow something down 90ms to show a nice animation
           Navigation.navigate(href)
@@ -73,7 +76,6 @@ export function Link({
         }
         if (routeTable[href]) {
           routeTable[href]().then(() => {
-            console.log('finished loading')
             loadedRoutes[href] = true
           })
         }
@@ -115,25 +117,29 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   const leaving = header && header.shown === false
   return (
     <Link width="33%" {...props}>
-      <FadeChild delay={leaving ? 0 : delay} config={leaving ? fastStatticConfig : defaultConfig}>
+      <FadeChild
+        off={!didAnimateOut}
+        delay={leaving ? 0 : delay}
+        config={leaving ? fastStatticConfig : defaultConfig}
+      >
         {children}
       </FadeChild>
     </Link>
   )
 }
 
-const linkDelay = 80
+const linkDelay = 180
 
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink delay={linkDelay * 0} {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
         Start
       </HeaderLink>
-      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 2} {...props} href="/docs">
         Docs
       </HeaderLink>
-      <HeaderLink delay={linkDelay * 2} {...props} href="/apps">
+      <HeaderLink delay={linkDelay * 3} {...props} href="/apps">
         Apps
       </HeaderLink>
     </>
@@ -202,7 +208,11 @@ export const Header = memo(
           >
             <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild config={shown ? defaultConfig : fastStatticConfig} delay={shown ? 400 : 0}>
+              <FadeChild
+                off={!didAnimateOut}
+                config={shown ? defaultConfig : fastStatticConfig}
+                delay={shown ? 400 : 0}
+              >
                 <LogoHorizontal slim />
               </FadeChild>
               <LinkSection>{after}</LinkSection>
@@ -245,7 +255,11 @@ export const Header = memo(
           >
             <HeaderContain>
               <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild config={shown ? defaultConfig : fastStatticConfig} delay={shown ? 100 : 0}>
+              <FadeChild
+                off={!didAnimateOut}
+                config={shown ? defaultConfig : fastStatticConfig}
+                delay={shown ? 100 : 0}
+              >
                 <LogoVertical />
               </FadeChild>
               <LinkSection>{after}</LinkSection>
@@ -266,7 +280,7 @@ export const Header = memo(
 export const HeaderContain = props => {
   return (
     <SectionContent
-      padding={[0, useScreenVal('0%', '2%', '10%')]}
+      padding={[0, useScreenVal('0%', '1%', '10%')]}
       flexFlow="row"
       alignItems="center"
       justifyContent="space-around"

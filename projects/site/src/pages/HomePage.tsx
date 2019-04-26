@@ -1,18 +1,15 @@
-import { createContextualProps } from '@o/ui'
-import React, { useState } from 'react'
+import { createContextualProps, useIntersectionObserver } from '@o/ui'
+import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
+import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
 import { NeckSection } from './HomePage/AllInOnePitchDemoSection'
 import { ChestSection } from './HomePage/DataAppKitFeaturesSection'
 import { ShoulderSection } from './HomePage/DeploySection'
-import { EarlyAccessSection } from './HomePage/EarlyAccessBetaSection'
-import { FeetSection } from './HomePage/FooterSection'
 import { HeadSection } from './HomePage/HeadSection'
-import { LegsSection } from './HomePage/MissionMottoSection'
-import { WaistSection } from './HomePage/SecuritySection'
 
 const ParallaxContext = createContextualProps<{ value: Parallax }>({ value: null })
 export const useParallax = () => {
@@ -22,6 +19,11 @@ export const useParallax = () => {
     return null
   }
 }
+
+const FeetSection = lazyScroll(lazy(() => import('./HomePage/FooterSection')))
+const LegsSection = lazyScroll(lazy(() => import('./HomePage/MissionMottoSection')))
+const WaistSection = lazyScroll(lazy(() => import('./HomePage/SecuritySection')))
+const EarlyAccessSection = lazyScroll(lazy(() => import('./HomePage/EarlyAccessBetaSection')))
 
 export function HomePage() {
   const siteStore = useSiteStore()
@@ -54,3 +56,30 @@ export function HomePage() {
 
 HomePage.theme = 'home'
 HomePage.showPeekHeader = true
+
+function lazyScroll(LazyComponent) {
+  return props => {
+    const hasIntersected = useRef(false)
+    const ref = useRef(null)
+    const intersect = useIntersectionObserver({ ref, options: { threshold: 0.01 } })
+    const fallback = (
+      <Page {...props}>
+        <Page.Content>
+          <div ref={ref} />
+        </Page.Content>
+      </Page>
+    )
+    hasIntersected.current =
+      hasIntersected.current || (intersect && intersect[0].isIntersecting === true)
+
+    if (!hasIntersected.current) {
+      return fallback
+    }
+
+    return (
+      <Suspense fallback={fallback}>
+        <LazyComponent {...props} />
+      </Suspense>
+    )
+  }
+}

@@ -25,6 +25,7 @@ import { usePageTheme } from '../Layout'
 import { Navigation } from '../Navigation'
 import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
+import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { Key } from '../views/Key'
 import { ListSubTitle } from '../views/ListSubTitle'
@@ -112,7 +113,31 @@ const preloadItem = item => {
   }
 }
 
+export function useStickySidebar({ condition = true, id, ...rest }) {
+  useLayoutEffect(() => {
+    if (condition === false) {
+      return
+    }
+    const sidebar = new StickySidebar(id, {
+      topSpacing: 0,
+      bottomSpacing: 0,
+      innerWrapperSelector: '.sidebar__inner',
+      stickyClass: 'is-affixed',
+      minWidth: 0,
+      resizeSensor: true,
+      ...rest,
+    })
+
+    return () => {
+      sidebar.destroy()
+    }
+  }, [screen])
+}
+
 const DocsPage = memo((props: { children?: any }) => {
+  const Fade = useFadePage({
+    threshold: 0,
+  })
   const screen = useScreenSize()
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
@@ -124,25 +149,11 @@ const DocsPage = memo((props: { children?: any }) => {
   const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
   const [themeName, setThemeName] = usePageTheme()
 
-  useLayoutEffect(() => {
-    if (screen === 'small') {
-      return
-    }
-
-    const sidebar = new StickySidebar('#sidebar', {
-      containerSelector: '#main',
-      topSpacing: 0,
-      bottomSpacing: 0,
-      innerWrapperSelector: '.sidebar__inner',
-      stickyClass: 'is-affixed',
-      minWidth: 0,
-      resizeSensor: true,
-    })
-
-    return () => {
-      sidebar.destroy()
-    }
-  }, [screen])
+  useStickySidebar({
+    condition: screen !== 'small',
+    id: '#sidebar',
+    containerSelector: '#main',
+  })
 
   // hide sidebar on show global sidebar
   useReaction(() => siteStore.showSidebar, show => show && setShowSidebar(false))
@@ -179,27 +190,29 @@ const DocsPage = memo((props: { children?: any }) => {
 
   const sidebarChildren = (
     <React.Fragment key="content">
-      <List
-        search={search}
-        selectable
-        alwaysSelected
-        defaultSelected={initialIndex}
-        overscanCount={500}
-        items={docsItems[section]}
-        getItemProps={preloadItem}
-        onSelect={useCallback(rows => {
-          if (!rows[0]) {
-            console.warn('no row on select!', rows)
-          } else {
-            docsNavigate(rows[0].id)
-          }
-        }, [])}
-      />
+      <FadeChild style={{ flex: 1 }}>
+        <List
+          search={search}
+          selectable
+          alwaysSelected
+          defaultSelected={initialIndex}
+          overscanCount={500}
+          items={docsItems[section]}
+          getItemProps={preloadItem}
+          onSelect={useCallback(rows => {
+            if (!rows[0]) {
+              console.warn('no row on select!', rows)
+            } else {
+              docsNavigate(rows[0].id)
+            }
+          }, [])}
+        />
+      </FadeChild>
     </React.Fragment>
   )
 
   return (
-    <>
+    <Fade.FadeProvide>
       <DocsPageHeader
         {...{
           setSearch,
@@ -239,14 +252,20 @@ const DocsPage = memo((props: { children?: any }) => {
       <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
         <Row id="main" className="main">
           {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-          <Col flex={1} overflow="hidden" padding={isSmall ? 0 : [0, 0, 0, 24]} className="content">
+          <Col
+            ref={Fade.ref}
+            flex={1}
+            overflow="hidden"
+            padding={isSmall ? 0 : [0, 0, 0, 24]}
+            className="content"
+          >
             <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
           </Col>
         </Row>
 
         <BlogFooter />
       </SectionContent>
-    </>
+    </Fade.FadeProvide>
   )
 })
 
@@ -289,102 +308,104 @@ const DocsPageHeader = memo(
     return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
-          <Row
-            position="relative"
-            margin={[0, 'auto', 0, 'auto']}
-            pointerEvents="auto"
-            pad={['sm', 0]}
-            width={useScreenVal('100%', '90%', '90%')}
-            maxWidth={980}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <SearchInput
-              ref={inputRef}
-              onChange={e => setSearch(e.target.value)}
-              maxWidth="calc(55% - 20px)"
-              flex={1}
-              size="xl"
-              placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-              after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
-            />
-
-            <Absolute
-              top={0}
-              width="18%"
-              left={0}
-              bottom={0}
-              alignItems="flex-end"
+          <FadeChild style={{ flex: 1 }}>
+            <Row
+              position="relative"
+              margin={[0, 'auto', 0, 'auto']}
+              pointerEvents="auto"
+              pad={['sm', 0]}
+              width={useScreenVal('100%', '90%', '90%')}
+              maxWidth={980}
+              alignItems="center"
               justifyContent="center"
             >
-              <Popover
-                background
-                width={300}
-                openOnClick
-                closeOnClickAway
-                elevation={100}
-                zIndex={1000000000000000}
-                target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
-              >
-                <>
-                  <ListItem selectable={false}>
-                    <ListSubTitle marginTop={6}>Sections</ListSubTitle>
-                  </ListItem>
-                  <ListItem
-                    index={2}
-                    title="Docs"
-                    alt={section === 'docs' ? 'selected' : null}
-                    onClick={() => toggleSection('docs')}
-                  />
-                  <ListItem
-                    index={2}
-                    title="APIs"
-                    alt={section === 'apis' ? 'selected' : null}
-                    onClick={() => toggleSection('apis')}
-                  />
-                  <ListItem
-                    index={2}
-                    title="Kit"
-                    alt={section === 'kit' ? 'selected' : null}
-                    onClick={() => toggleSection('kit')}
-                  />
-                </>
-              </Popover>
-            </Absolute>
+              <SearchInput
+                ref={inputRef}
+                onChange={e => setSearch(e.target.value)}
+                maxWidth="calc(55% - 20px)"
+                flex={1}
+                size="xl"
+                placeholder={isSmall ? 'Search...' : 'Search the docs...'}
+                after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
+              />
 
-            <Absolute
-              width="18%"
-              top={0}
-              right={0}
-              bottom={0}
-              alignItems="center"
-              justifyContent="flex-start"
-              flexFlow="row"
-            >
-              <SurfacePassProps size={1} iconSize={12}>
-                <Row group>
-                  <RoundButton
-                    icon="moon"
-                    tooltip="Toggle dark mode"
-                    onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
-                  />
-                  <RoundButton
-                    icon="code"
-                    iconSize={16}
-                    tooltip="Toggle all code collapsed"
-                    onClick={siteStore.toggleCodeCollapsed}
-                  />
-                  {isSmall && (
-                    <RoundButton
-                      icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                      tooltip="Toggle menu"
-                      onClick={() => setShowSidebar(!showSidebar)}
+              <Absolute
+                top={0}
+                width="18%"
+                left={0}
+                bottom={0}
+                alignItems="flex-end"
+                justifyContent="center"
+              >
+                <Popover
+                  background
+                  width={300}
+                  openOnClick
+                  closeOnClickAway
+                  elevation={100}
+                  zIndex={1000000000000000}
+                  target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
+                >
+                  <>
+                    <ListItem selectable={false}>
+                      <ListSubTitle marginTop={6}>Sections</ListSubTitle>
+                    </ListItem>
+                    <ListItem
+                      index={2}
+                      title="Docs"
+                      alt={section === 'docs' ? 'selected' : null}
+                      onClick={() => toggleSection('docs')}
                     />
-                  )}
-                </Row>
-              </SurfacePassProps>
-            </Absolute>
-          </Row>
+                    <ListItem
+                      index={2}
+                      title="APIs"
+                      alt={section === 'apis' ? 'selected' : null}
+                      onClick={() => toggleSection('apis')}
+                    />
+                    <ListItem
+                      index={2}
+                      title="Kit"
+                      alt={section === 'kit' ? 'selected' : null}
+                      onClick={() => toggleSection('kit')}
+                    />
+                  </>
+                </Popover>
+              </Absolute>
+
+              <Absolute
+                width="18%"
+                top={0}
+                right={0}
+                bottom={0}
+                alignItems="center"
+                justifyContent="flex-start"
+                flexFlow="row"
+              >
+                <SurfacePassProps size={1} iconSize={12}>
+                  <Row group>
+                    <RoundButton
+                      icon="moon"
+                      tooltip="Toggle dark mode"
+                      onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
+                    />
+                    <RoundButton
+                      icon="code"
+                      iconSize={16}
+                      tooltip="Toggle all code collapsed"
+                      onClick={siteStore.toggleCodeCollapsed}
+                    />
+                    {isSmall && (
+                      <RoundButton
+                        icon={showSidebar ? 'arrowleft' : 'arrowright'}
+                        tooltip="Toggle menu"
+                        onClick={() => setShowSidebar(!showSidebar)}
+                      />
+                    )}
+                  </Row>
+                </SurfacePassProps>
+              </Absolute>
+            </Row>
+          </FadeChild>
         </ListShortcuts>
       </Portal>
     )

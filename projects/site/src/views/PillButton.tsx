@@ -9,9 +9,10 @@ export function PillButton({ children, ...props }: ButtonProps) {
       color={theme => theme.background}
       fontWeight={800}
       fontSize={12}
-      letterSpacing={2}
+      letterSpacing={4}
       whiteSpace="pre"
       textTransform="uppercase"
+      fontFamily="GT Eesti"
       width="max-content"
       padding={[2, 12]}
       margin={[0, 'auto']}

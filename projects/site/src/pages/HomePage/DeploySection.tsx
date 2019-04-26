@@ -1,4 +1,4 @@
-import { Col, FullScreen, Image, Row, Space, toColor, View } from '@o/ui'
+import { Col, FullScreen, Image, Row, toColor, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
@@ -12,7 +12,7 @@ import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
 import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
-import { SpacedPageContent } from './SpacedPageContent'
+import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.8} {...props} />
 
@@ -31,10 +31,9 @@ export function ShoulderSection(props) {
                 <FadeChild delay={0}>
                   <PillButton>Deploy</PillButton>
                 </FadeChild>
-                <Space size="sm" />
                 <FadeChild delay={200}>
-                  <TitleText textAlign="center" size="xxl">
-                    Sync without a server.
+                  <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
+                    Synced without a server.
                   </TitleText>
                 </FadeChild>
               </>
@@ -42,7 +41,7 @@ export function ShoulderSection(props) {
           >
             <Row space={60} margin={[0, '-180%']}>
               <Col flex={2} alignItems="flex-end" justifyContent="center">
-                <FadeChild {...fadeRightProps} delay={250}>
+                <FadeChild {...fadeLeftProps} delay={250}>
                   <View
                     borderRadius={10}
                     elevation={3}
@@ -102,7 +101,7 @@ export function ShoulderSection(props) {
               </Col>
 
               <Col flex={2} alignItems="flex-start" justifyContent="center">
-                <FadeChild {...fadeLeftProps} delay={400}>
+                <FadeChild {...fadeRightProps} delay={400}>
                   <View
                     borderRadius={10}
                     elevation={3}

@@ -1,22 +1,22 @@
 import { Inline } from '@o/gloss'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, View } from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
-import lineSep from '../../../public/images/line-sep.svg'
 import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { FadeChild, useFadePage } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
-import { Squircle } from '../../views/Squircle'
+import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
+import { LineSep } from './EarlyAccessBetaSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
@@ -143,10 +143,24 @@ const elements = [
   },
 ]
 
+const useIntersectedOnce = () => {
+  const ref = useRef(null)
+  const [val, setVal] = useState(false)
+  const entries = useIntersectionObserver({ ref })
+  const isIntersecting = entries && entries[0].isIntersecting
+  useEffect(() => {
+    if (isIntersecting && !val) {
+      setVal(true)
+    }
+  }, [val, isIntersecting])
+  return [ref, val]
+}
+
 export function NeckSection(props) {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
   const nextInt = useRef(null)
+  const [ref, show] = useIntersectedOnce()
 
   const longDelay = 100
   const springFast = useSlideSpring({
@@ -190,14 +204,16 @@ export function NeckSection(props) {
     setCur(n < 0 ? elements.length - 1 : n)
   }
 
+  // autoplay on intersect
   const curNext = useGetFn(next)
   useEffect(() => {
+    if (!show) return
     nextInt.current = setInterval(() => {
       curNext()
     }, 8000)
 
     return () => clearInterval(nextInt.current)
-  }, [])
+  }, [show])
 
   const Fade = useFadePage()
 
@@ -209,24 +225,24 @@ export function NeckSection(props) {
             header={
               <>
                 <FadeChild delay={0}>
-                  <PillButton>How</PillButton>
+                  <PillButton>Build</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Easiest apps ever.</TitleText>
+                  <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>Easiest apps ever.</TitleText>
                 </FadeChild>
-                <TitleTextSub width="87%" margin="auto" minWidth={320}>
+                <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
-                    Create apps using common data sources in just a few lines of code.
+                    Create apps that connect data sources in just a few lines of code.
                   </FadeChild>
                 </TitleTextSub>
               </>
             }
           >
-            <Col maxWidth="100%" margin={[0, 'auto']}>
+            <Col maxWidth="100%" margin={[-10, 'auto', 0, 0]}>
               {screen !== 'small' && (
                 <Row space>
                   <SubSection maxWidth="33%">
-                    <FadeChild delay={300}>
+                    <FadeChild {...fadeLeftProps} delay={200}>
                       <PillButtonDark>1. Import</PillButtonDark>
                       <Space />
                       <CenterText>
@@ -240,13 +256,13 @@ export function NeckSection(props) {
                       <PillButtonDark>2. Display</PillButtonDark>
                       <Space />
                       <CenterText maxWidth={400} margin={[0, 'auto']}>
-                        Orbit provides a large, cohesive set of views and APIs that are useful for
-                        internal tools, like a {elements[cur].title}.
+                        Orbit provides everything you need to build tools fast, with powerful views
+                        like a {elements[cur].title}.
                       </CenterText>
                     </FadeChild>
                   </SubSection>
                   <SubSection maxWidth="33%">
-                    <FadeChild delay={500}>
+                    <FadeChild {...fadeRightProps} delay={200}>
                       <PillButtonDark>3. Export</PillButtonDark>
                       <Space />
                       <CenterText>
@@ -260,120 +276,139 @@ export function NeckSection(props) {
 
               <Space />
 
-              <FadeChild delay={300}>
-                <Row space>
-                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                    <animated.div style={springFast}>
+              <Row space>
+                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                  <animated.div style={springFast}>
+                    <FadeChild {...fadeLeftProps} delay={300}>
                       <Image
+                        userSelect="none"
                         alignSelf="center"
-                        width={124}
-                        height={124}
+                        width={100}
+                        height={100}
                         src={elements[cur].iconBefore}
                       />
-                    </animated.div>
-                    <Space size="xxl" />
-                    <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                      <Image
-                        opacity={0.5}
-                        src={require('../../../public/images/curve-arrow.svg')}
-                        transform={{
-                          scale: 0.8,
-                        }}
-                      />
-                    </animated.div>
-                  </Flex>
-                  <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      left={useScreenVal(-20, 10, 10)}
-                      icon="chevron-left"
-                      onClick={prev}
+                    </FadeChild>
+                  </animated.div>
+                  <Space size="xxl" />
+                  <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
+                    <Image
+                      userSelect="none"
+                      opacity={0.5}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                      transform={{
+                        scale: 0.8,
+                      }}
                     />
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      right={useScreenVal(-20, 10, 10)}
-                      icon="chevron-right"
-                      onClick={next}
-                    />
+                  </animated.div>
+                </Flex>
+                <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    left={useScreenVal(-20, 10, 10)}
+                    icon="chevron-left"
+                    onClick={prev}
+                  />
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    right={useScreenVal(-20, 10, 10)}
+                    icon="chevron-right"
+                    onClick={next}
+                  />
 
+                  <FadeChild config={slowConfigLessBounce} delay={300}>
                     <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                      <Squircle
+                      <TiltSquircle
                         width={280}
                         height={280}
-                        background="linear-gradient(125deg, #78009F, #4C1966)"
-                        boxShadow="0 10px 50px rgba(0,0,0,0.5)"
+                        background={`linear-gradient(125deg, #78009F, #4C1966)`}
+                        boxShadow="0 20px 50px rgba(0,0,0,0.6)"
                         padding={30}
+                        cursor="pointer"
                       >
                         <TitleText
                           fontSize={18}
                           margin={[0, 'auto']}
                           letterSpacing={2}
-                          alpha={0.65}
+                          alpha={0.4}
                           textTransform="uppercase"
+                          fontWeight={300}
+                          color="#fff"
+                          cursor="inherit"
                         >
                           {`<${elements[cur].title} />`}
                         </TitleText>
                         <Space />
-                        <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>
+                        <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
                           {elements[cur].body}
                         </Paragraph>
-                      </Squircle>
+                      </TiltSquircle>
                     </animated.div>
+                  </FadeChild>
 
-                    <animated.div
-                      style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}
-                    >
+                  <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
+                    <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
                       <View
                         width="100%"
                         height={280}
                         minWidth={360}
                         margin={[0, -10]}
-                        borderRadius={10}
+                        borderRadius={22}
+                        background="#000"
                         boxShadow={[[0, 10, 30, [0, 0, 0]]]}
                         overflow="hidden"
                       >
-                        <Image src={elements[cur].image} width="100%" height="auto" />
+                        <Image
+                          userSelect="none"
+                          src={elements[cur].image}
+                          width="100%"
+                          height="auto"
+                          opacity={0.45}
+                        />
                       </View>
-                    </animated.div>
-                  </Flex>
+                    </FadeChild>
+                  </animated.div>
+                </Flex>
 
-                  <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                  <FadeChild {...fadeRightProps} delay={200}>
                     <animated.div style={springSlowest}>
                       <Image
+                        userSelect="none"
                         alignSelf="center"
-                        width={124}
-                        height={124}
+                        width={100}
+                        height={100}
                         src={elements[cur].iconAfter}
                       />
                     </animated.div>
-                    <Space size="xxl" />
-                    <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                      <Image
-                        opacity={0.5}
-                        transform={{
-                          rotate: '275deg',
-                          scale: 0.8,
-                        }}
-                        src={require('../../../public/images/curve-arrow.svg')}
-                      />
-                    </animated.div>
-                  </Flex>
-                </Row>
-              </FadeChild>
+                  </FadeChild>
+                  <Space size="xxl" />
+                  <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
+                    <Image
+                      userSelect="none"
+                      opacity={0.5}
+                      transform={{
+                        rotate: '275deg',
+                        scale: 0.8,
+                      }}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                    />
+                  </animated.div>
+                </Flex>
+              </Row>
             </Col>
           </SpacedPageContent>
         </Page.Content>
@@ -381,17 +416,18 @@ export function NeckSection(props) {
         <Page.Parallax overflow="visible" speed={0} zIndex={0}>
           <FullScreen
             transform={{ y: -100 }}
-            minWidth={2012}
-            margin={[0, -620]}
-            top={0}
+            minWidth={1000}
+            margin={[0, '-5vw']}
+            top={40}
             bottom="auto"
+            className="head-line-sep"
           >
-            <img src={lineSep} />
+            <LineSep />
           </FullScreen>
         </Page.Parallax>
 
         <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-          <FullScreen zIndex={0}>
+          <FullScreen zIndex={0} transform={{ scale: 1.25 }}>
             <FullScreen
               className="northern-lights"
               backgroundImage={`url(${northernlights})`}

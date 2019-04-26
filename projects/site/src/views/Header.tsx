@@ -7,7 +7,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { Navigation, routeTable } from '../Navigation'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
-import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './FadeIn'
+import { defaultConfig, FadeChild, fastConfig, fastStatticConfig, useFadePage } from './FadeIn'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
@@ -23,11 +23,14 @@ const LinkText = gloss(View, {
   },
 })
 
-const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
+export const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
 let tm = null
 
 const loadedRoutes = {}
 let didAnimateOut = false
+
+const isOnRoute = (path, route) =>
+  path === '/' ? route.url.pathname === path : route.url.pathname.indexOf(path) === 0
 
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
 export function Link({
@@ -41,30 +44,19 @@ export function Link({
 }: LinkProps) {
   const header = HeaderContext.useProps()
   const route = useCurrentRoute()
-  const isActive =
-    href === '/' ? route.url.pathname === href : route.url.pathname.indexOf(href) === 0
+  const isActive = isOnRoute(href, route)
 
   return (
     <LinkText
       cursor="pointer"
       onClick={() => {
+        if (isActive) return
         clearTimeout(tm)
-
-        if (!loadedRoutes[href]) {
-          // if we didnt finish preloading, show fancy animation
-          if (header) {
-            header.setShown(false)
-            didAnimateOut = true
-          }
-          tm = setTimeout(() => {
-            Navigation.navigate(href)
-          }, 90)
-        } else {
-          didAnimateOut = false
-          // otherwise just go right there, because nerds would get mad
-          // if god fobid you slow something down 90ms to show a nice animation
+        didAnimateOut = true
+        header.setShown(false)
+        tm = setTimeout(() => {
           Navigation.navigate(href)
-        }
+        }, 120)
       }}
       fontSize={fontSize}
       width={width}
@@ -120,7 +112,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
       <FadeChild
         off={!didAnimateOut}
         delay={leaving ? 0 : delay}
-        config={leaving ? fastStatticConfig : defaultConfig}
+        config={leaving ? fastStatticConfig : fastConfig}
       >
         {children}
       </FadeChild>
@@ -128,7 +120,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   )
 }
 
-const linkDelay = 180
+const linkDelay = 100
 
 export const LinksLeft = props => {
   return (
@@ -175,7 +167,7 @@ export const Header = memo(
     const theme = useTheme()
     const siteStore = useSiteStore()
     const [shown, setShown] = useState(true)
-    const Fade = useFadePage({ shown })
+    const Fade = useFadePage({ shown, threshold: 0 })
 
     let before = null
     let after = null
@@ -201,7 +193,7 @@ export const Header = memo(
           <Row
             ref={Fade.ref}
             pointerEvents="auto"
-            background={theme.background.lighten(0.3)}
+            background={theme.background.lighten(0.05)}
             position="relative"
             zIndex={1000000}
             {...rest}
@@ -211,7 +203,7 @@ export const Header = memo(
               <FadeChild
                 off={!didAnimateOut}
                 config={shown ? defaultConfig : fastStatticConfig}
-                delay={shown ? 400 : 0}
+                delay={shown ? 0 : 0}
               >
                 <LogoHorizontal slim />
               </FadeChild>

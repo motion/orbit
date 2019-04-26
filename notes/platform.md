@@ -167,3 +167,20 @@ They don't have a password, they can be private and only allow specific username
 Username first means its end-user focused and can spread organically. You never leave your username.
 
 Unlike Slack which is team-focused. With one username you can join many orbits. Not having many different passwords and profiles, just the one you want.
+
+----
+
+function Thing({ a, b }) {
+  let x = 0
+  let y = [x, b] >> a + b
+  let y = [x, b] >> {
+    a + b
+  }
+
+  <div { x, y }>
+    hi
+  </div>
+}
+
+
+

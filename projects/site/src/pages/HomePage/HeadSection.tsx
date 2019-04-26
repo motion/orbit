@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, toColor, View, ViewProps } from '@o/ui'
+import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo, useEffect, useState } from 'react'
 
@@ -14,8 +14,8 @@ import { SectionContent } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
+import { GradientDown } from './DataAppKitFeaturesSection'
 import { Join } from './EarlyAccessBetaSection'
-import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
@@ -58,7 +58,7 @@ const HeadText = memo(() => {
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View justifyContent="space-between" width="80%" maxWidth={960} textAlign="center">
+    <View justifyContent="space-between" width="85%" maxWidth={960} textAlign="center">
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
@@ -148,28 +148,19 @@ const Smaller = gloss({
 }))
 
 export function HeadSection(props) {
-  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const [hoverDownload, setHoverDownload] = useState(true)
   const Fade = useFadePage()
-
-  useEffect(() => {
-    let tm = setTimeout(() => {
-      setHoverDownload(false)
-    }, 7000)
-    return () => clearTimeout(tm)
-  }, [])
 
   return (
     <Fade.FadeProvide>
-      <OuterSpace show={hoverDownload && screen !== 'small'} />
+      {/* <OuterSpace show={hoverDownload && screen !== 'small'} /> */}
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen
             right={useScreenHeightVal(40, 0)}
             left={useScreenHeightVal(40, 0)}
             opacity={fontsLoaded ? 1 : 0}
-            bottom={100}
+            bottom={50}
           >
             <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
               <HeadText />
@@ -205,9 +196,17 @@ export function HeadSection(props) {
                 />
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
-                    <Scale size={1.1}>
-                      <Join transform={{ y: -23 }} flexFlow="row" group margin={[0, 'auto']} />
-                    </Scale>
+                    <Theme name="orbitOneDark">
+                      <Scale size={1.1}>
+                        <Join
+                          boxShadow={[[0, 10, 20, [0, 0, 0.5]]]}
+                          transform={{ y: -23 }}
+                          flexFlow="row"
+                          group
+                          margin={[0, 'auto']}
+                        />
+                      </Scale>
+                    </Theme>
                   </SurfacePassProps>
                 </FadeChild>
                 {/* <DownloadButton
@@ -271,21 +270,21 @@ export function HeadSection(props) {
               <View
                 pointerEvents="none"
                 position="absolute"
-                top="45%"
+                top="55%"
                 left={0}
                 right={0}
                 overflow="hidden"
                 bottom={60}
                 userSelect="none"
-                opacity={0.35}
+                opacity={0.4}
                 transform={{
-                  y: '45%',
-                  scale: 1.75,
+                  scale: 2,
                 }}
               >
                 <FadeChild {...fadeUpProps}>
                   <img src={glow} />
                 </FadeChild>
+                <GradientDown top="50%" zIndex={100} />
               </View>
             </SectionContent>
           </FullScreen>
@@ -299,7 +298,7 @@ export function HeadSection(props) {
   )
 }
 
-const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: string }) => (
+const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
   <View
     tagName="a"
     flexFlow="row"

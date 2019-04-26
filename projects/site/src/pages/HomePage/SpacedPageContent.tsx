@@ -15,11 +15,11 @@ export function SpacedPageContent({
       margin={width === 'small' ? 0 : ['auto', 0]}
       height="80vh"
       maxHeight={900}
-      space={useScreenHeightVal('lg', 'xxl')}
+      space={useScreenHeightVal('xl', 'xxl')}
       {...props}
     >
       <div style={{ flex: 1 }} />
-      <Col space="sm" alignItems="center">
+      <Col space="md" alignItems="center">
         {header}
       </Col>
       {children}

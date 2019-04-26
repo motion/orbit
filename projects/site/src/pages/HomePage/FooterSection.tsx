@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Col, Icon, Image, Row, Space, TextProps, Theme, useTheme, View } from '@o/ui'
+import { Button, ButtonProps, Col, Icon, Image, Row, Space, TextProps, useTheme, View } from '@o/ui'
 import React from 'react'
 
 import { Link, LinkProps } from '../../views/Header'
@@ -10,30 +10,28 @@ import { useScreenVal } from './SpacedPageContent'
 
 export default function FeetSection(props) {
   return (
-    <Theme name="home">
-      <Page {...props}>
-        <Page.Content pad="xxl" justifyContent="space-between">
-          <Space size="xl" />
-          <AboveFooter />
-          <View flex={1} />
-          <Footer />
-        </Page.Content>
+    <Page {...props}>
+      <Page.Content pad="xxl" justifyContent="space-between">
+        <Space size="xl" />
+        <AboveFooter />
+        <View flex={1} />
+        <Footer />
+      </Page.Content>
 
-        <Page.Background
-          speed={0.1}
-          zIndex={-10}
-          bottom="-110%"
-          backgroundSize="cover"
-          left="-40%"
-          right="-40%"
-          width="180%"
-          top="-50%"
-          backgroundPosition="top center"
-          opacity={1}
-          backgroundImage={blackWavePattern}
-        />
-      </Page>
-    </Theme>
+      <Page.Background
+        speed={0.1}
+        zIndex={-10}
+        bottom="-110%"
+        backgroundSize="cover"
+        left="-40%"
+        right="-40%"
+        width="180%"
+        top="-50%"
+        backgroundPosition="top center"
+        opacity={1}
+        backgroundImage={blackWavePattern}
+      />
+    </Page>
   )
 }
 

@@ -1,13 +1,10 @@
-import { Space } from '@o/ui'
+import { Space, Theme } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { bodyElement } from '../constants'
-import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
-import { Parallax } from '../views/Parallax'
 import { SectionContent } from '../views/SectionContent'
-import { EarlyAccessSection } from './HomePage/EarlyAccessBetaSection'
+import { EarlyAccessContent, LineSep } from './HomePage/EarlyAccessBetaSection'
 import { Footer } from './HomePage/FooterSection'
 
 export default mount({
@@ -18,28 +15,19 @@ export default mount({
 })
 
 export function BetaPage() {
-  const siteStore = useSiteStore()
-
   return (
-    <>
-      <Header slim noBorder />
-      <Parallax
-        pages={1}
-        scrollingElement={window}
-        container={bodyElement}
-        pageHeight={siteStore.sectionHeight}
-        innerStyle={{
-          overflow: 'visible',
-        }}
-      >
-        <EarlyAccessSection offset={0} />
-      </Parallax>
-      <SectionContent minHeight={450} position="relative" zIndex={-1} padding={[100, 32]}>
+    <Theme name="orbitOne">
+      <Header slim noBorder background="transparent" />
+      <LineSep top={30} />
+      <EarlyAccessContent />
+      <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
         <Footer />
         <Space size="xl" />
       </SectionContent>
-    </>
+
+      <LineSep top="auto" bottom={20} transform={{ scaleX: -1 }} />
+    </Theme>
   )
 }
 
-BetaPage.theme = 'light'
+BetaPage.theme = 'orbitOne'

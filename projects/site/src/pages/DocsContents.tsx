@@ -6,6 +6,7 @@ import { colors } from '../constants'
 import { scrollTo } from '../etc/helpers'
 import { Navigation } from '../Navigation'
 import { CodeBlock } from '../views/CodeBlock'
+import { FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
 import { docsItems } from './docsItems'
@@ -76,52 +77,57 @@ export const DocsContents = memo(
           )}
           titleBorder
           space
-          title={title || 'No title'}
-          titleSize={5}
+          title={
+            <FadeChild>
+              <Title size={5}>{title || 'No title'}</Title>
+            </FadeChild>
+          }
           belowTitle={
-            <SurfacePassProps
-              chromeless
-              cursor="pointer"
-              tagName="a"
-              textDecoration="none"
-              borderWidth={0}
-              glint={false}
-              sizeRadius={0}
-              sizePadding={0}
-              marginRight={30}
-              size="lg"
-              alpha={0.5}
-              hoverStyle={{
-                color: colors.purple,
-              }}
-            >
-              <Row>
-                {!!source && (
-                  <Button
-                    iconSize={16}
-                    icon="code"
-                    onClick={e => {
-                      e.stopPropagation()
-                      scrollTo('#component-source')
-                    }}
-                  >
-                    View Source
-                  </Button>
-                )}
-                {!!types && (
-                  <Button
-                    iconSize={16}
-                    icon="t"
-                    onClick={e => {
-                      e.stopPropagation()
-                      scrollTo('#component-props')
-                    }}
-                  >
-                    View Props
-                  </Button>
-                )}
-              </Row>
-            </SurfacePassProps>
+            <FadeChild>
+              <SurfacePassProps
+                chromeless
+                cursor="pointer"
+                tagName="a"
+                textDecoration="none"
+                borderWidth={0}
+                glint={false}
+                sizeRadius={0}
+                sizePadding={0}
+                marginRight={30}
+                size="lg"
+                alpha={0.5}
+                hoverStyle={{
+                  color: colors.purple,
+                }}
+              >
+                <Row>
+                  {!!source && (
+                    <Button
+                      iconSize={16}
+                      icon="code"
+                      onClick={e => {
+                        e.stopPropagation()
+                        scrollTo('#component-source')
+                      }}
+                    >
+                      View Source
+                    </Button>
+                  )}
+                  {!!types && (
+                    <Button
+                      iconSize={16}
+                      icon="t"
+                      onClick={e => {
+                        e.stopPropagation()
+                        scrollTo('#component-props')
+                      }}
+                    >
+                      View Props
+                    </Button>
+                  )}
+                </Row>
+              </SurfacePassProps>
+            </FadeChild>
           }
           afterTitle={
             <SurfacePassProps size="lg" cursor="pointer">
@@ -141,7 +147,7 @@ export const DocsContents = memo(
             </SurfacePassProps>
           }
         >
-          {children}
+          <FadeChild delay={100}>{children}</FadeChild>
 
           <Space size="xxl" />
 

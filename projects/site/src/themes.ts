@@ -1,10 +1,38 @@
-import { ThemeMaker } from '@o/gloss'
+import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 import { themes as KitThemes } from '@o/kit'
+
+import { colors } from './constants'
 
 const Theme = new ThemeMaker()
 
+const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
+
 export const themes = {
   ...KitThemes,
+
+  orbitOneDark: Theme.fromStyles({
+    background: '#000',
+    backgroundHover: '#000',
+    borderColor: '#222',
+    buttonBackground: buttonBackground,
+    buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
+    color: '#fff',
+  }),
+
+  orbitOne: Theme.fromStyles({
+    background: '#fff',
+    color: colors.purple,
+  }),
+
+  orbitTwo: Theme.fromStyles({
+    background: colors.red,
+    color: colors.purple,
+  }),
+
+  orbitThree: Theme.fromStyles({
+    background: colors.purple,
+    color: colors.red,
+  }),
 
   light: {
     ...KitThemes.light,
@@ -36,6 +64,13 @@ export const themes = {
       inputBackgroundActive: '#222',
       listItemBackgroundHover: 'rgba(255,255,255,0.075)',
       popoverBackground: '#111',
+    }),
+  },
+
+  darkAlt: {
+    ...KitThemes.dark,
+    ...Theme.fromStyles({
+      background: '#2C2B40',
     }),
   },
 

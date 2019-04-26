@@ -56,7 +56,7 @@ export function Link({
         header.setShown(false)
         tm = setTimeout(() => {
           Navigation.navigate(href)
-        }, 120)
+        }, 140)
       }}
       fontSize={fontSize}
       width={width}

@@ -1,14 +1,14 @@
-import { Row } from '@o/gloss'
+import { Inline, Row } from '@o/gloss'
 import { BorderRight, Col, Divider, ListItemSimple, PassProps, Space, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
-import { PillButton } from '../views/PillButton'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { useStickySidebar } from './DocsPage'
+import { linkProps } from './HomePage/linkProps'
 
 export default mount({
   '/': route({
@@ -85,50 +85,18 @@ export function AboutPage() {
                   <Space size="xxxl" />
 
                   <Col space="xxxl" id="team">
-                    <PillButton>Team</PillButton>
                     <Title selectable size={4} fontWeight={100}>
-                      Making it easy to build beautiful apps that work for the user first.
+                      Passionate about making it easy to build creatively.
                     </Title>
 
                     <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
+                      Our team is all over the world. We're always looking for great developers who
+                      are passionate about making development easier, and who are driven by creating
+                      high quality products.
                     </Title>
 
                     <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
-                    </Title>
-
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
-                    </Title>
-                  </Col>
-
-                  <Space size="xxxl" />
-                  <Divider />
-                  <Space size="xxxl" />
-
-                  <Col space="xxxl" id="jobs">
-                    <PillButton>Jobs</PillButton>
-                    <Title selectable size={4} fontWeight={100}>
-                      Making it easy to build beautiful apps that work for the user first.
-                    </Title>
-
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
-                    </Title>
-
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
-                    </Title>
-
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
+                      <Inline {...linkProps('mailto:hi@tryorbit.com')}>Get in touch</Inline>.
                     </Title>
                   </Col>
 
@@ -137,24 +105,20 @@ export function AboutPage() {
                   <Space size="xxxl" />
 
                   <Col space="xxxl" id="contact">
-                    <PillButton>Contact</PillButton>
                     <Title selectable size={4} fontWeight={100}>
-                      Making it easy to build beautiful apps that work for the user first.
+                      Get in touch
                     </Title>
 
                     <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
+                      <Inline {...linkProps('mailto:hi@tryorbit.com')}>Email</Inline>
                     </Title>
 
                     <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
+                      <Inline {...linkProps('https://twitter.com/tryorbit')}>Twitter</Inline>
                     </Title>
 
                     <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
-                      Developers spend too much time re-inventing the wheel, and not enough time
-                      building higher level, richer and more powerful platforms.
+                      <Inline {...linkProps('https://github.com/natew')}>Github</Inline>
                     </Title>
                   </Col>
                 </Col>

@@ -1,7 +1,9 @@
 import { Base, BaseProps, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
+
 import { useScale } from '../Scale'
+import { selectableTheme } from './Text'
 
 export type SimpleTextProps = BaseProps & {
   ellipse?: boolean
@@ -31,9 +33,8 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   },
   selectable: {
     userSelect: 'text',
-    cursor: 'text',
   },
   pointable: {
     cursor: 'pointer',
   },
-})
+}).theme(selectableTheme)

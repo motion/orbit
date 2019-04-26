@@ -279,14 +279,26 @@ const TextBlock = gloss({
   maxWidth: '100%',
   selectable: {
     userSelect: 'text',
-    cursor: 'text',
   },
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(propStyleTheme, alphaColorTheme)
+}).theme(propStyleTheme, alphaColorTheme, selectableTheme)
 
-const ellipseTheme: ThemeFn = ({ ellipse, doClamp, maxHeight }) => {
+export function selectableTheme(props) {
+  return {
+    cursor:
+      props.cursor ||
+      (props.selectable === false ? 'default' : props.selectable === true ? 'text' : 'inherit'),
+  }
+}
+
+const TextEllipse = gloss({
+  display: 'inline',
+  maxWidth: '100%',
+}).theme(propStyleTheme, ellipseTheme as ThemeFn)
+
+function ellipseTheme({ ellipse, doClamp, maxHeight }) {
   if (ellipse === 1 || ellipse === true)
     return {
       display: 'block',
@@ -306,8 +318,3 @@ const ellipseTheme: ThemeFn = ({ ellipse, doClamp, maxHeight }) => {
       WebkitBoxOrient: 'vertical',
     }
 }
-
-const TextEllipse = gloss({
-  display: 'inline',
-  maxWidth: '100%',
-}).theme(propStyleTheme, ellipseTheme)

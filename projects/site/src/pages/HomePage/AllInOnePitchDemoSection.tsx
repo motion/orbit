@@ -14,7 +14,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
-import { Squircle } from '../../views/Squircle'
+import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { LineSep } from './EarlyAccessBetaSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
@@ -331,12 +331,13 @@ export function NeckSection(props) {
 
                   <FadeChild config={slowConfigLessBounce} delay={300}>
                     <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                      <Squircle
+                      <TiltSquircle
                         width={280}
                         height={280}
                         background={`linear-gradient(125deg, #78009F, #4C1966)`}
                         boxShadow="0 20px 50px rgba(0,0,0,0.6)"
                         padding={30}
+                        cursor="pointer"
                       >
                         <TitleText
                           fontSize={18}
@@ -346,14 +347,15 @@ export function NeckSection(props) {
                           textTransform="uppercase"
                           fontWeight={300}
                           color="#fff"
+                          cursor="inherit"
                         >
                           {`<${elements[cur].title} />`}
                         </TitleText>
                         <Space />
-                        <Paragraph sizeLineHeight={1.2} size={1.2} alpha={0.8}>
+                        <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
                           {elements[cur].body}
                         </Paragraph>
-                      </Squircle>
+                      </TiltSquircle>
                     </animated.div>
                   </FadeChild>
 

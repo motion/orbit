@@ -12,8 +12,8 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
-import { GradientDown } from './DataAppKitFeaturesSection'
-import { Join } from './EarlyAccessBetaSection'
+import { GradientDown } from './GradientDown'
+import { Join } from './Join'
 import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
@@ -23,8 +23,8 @@ let lgSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'Build better apps with your team',
-  medium: 'Apps without servers',
-  small: 'Apps without servers',
+  medium: 'Build better apps with your team',
+  small: 'Build better apps',
 }
 
 let allTexts = {
@@ -199,6 +199,9 @@ export function HeadSection(props) {
                     <Theme name="orbitOneDark">
                       <Scale size={1.1}>
                         <Join
+                          inputProps={{
+                            minWidth: useScreenVal('auto', 300, 300),
+                          }}
                           borderRadius={1000}
                           boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
                           transform={{ y: -123 }}

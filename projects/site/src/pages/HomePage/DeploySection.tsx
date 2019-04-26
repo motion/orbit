@@ -122,7 +122,8 @@ export function ShoulderSection(props) {
         <Page.Parallax speed={0.2} zIndex={-2}>
           <FullScreen
             transform={{
-              y: '-20%',
+              y: '-25%',
+              scale: useScreenVal(1.2, 0.7, 0.7),
             }}
           >
             <FullScreen
@@ -132,9 +133,6 @@ export function ShoulderSection(props) {
               backgroundSize="cover"
               backgroundPosition="center center"
               backgroundRepeat="no-repeat"
-              transform={{
-                scale: 0.8,
-              }}
             />
             <Spotlight />
           </FullScreen>

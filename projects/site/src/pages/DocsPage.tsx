@@ -433,7 +433,3 @@ const FixedLayout = gloss({
     zIndex: 100000000,
   },
 })
-
-export const MetaSection = gloss({
-  margin: 0,
-})

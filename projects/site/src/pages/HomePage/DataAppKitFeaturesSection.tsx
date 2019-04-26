@@ -1,9 +1,8 @@
-import { Button, ButtonProps, FullScreen, gloss, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
 import { useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
-import { Navigation } from '../../Navigation'
 import { useSiteStore } from '../../SiteStore'
 import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -11,27 +10,12 @@ import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
+import { BodyButton } from './BodyButton'
 import { blackWavePattern } from './FooterSection'
+import { GradientDown } from './GradientDown'
+import { linkProps } from './linkProps'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
-
-export const linkProps = (href): ButtonProps => {
-  return {
-    // @ts-ignore
-    href,
-    tagName: 'a',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    onClick(e) {
-      e.preventDefault()
-      Navigation.navigate(href)
-    },
-  }
-}
-
-export const GradientDown = gloss(FullScreen).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.background} 65%)`,
-}))
 
 const dly = 200
 
@@ -109,13 +93,15 @@ export const ChestSection = memo((props: any) => {
             header={
               <>
                 <FadeChild delay={100}>
-                  <TitleText size="xxl">Import, search, filter, export.</TitleText>
+                  <TitleText textAlign="center" size="xxl">
+                    Import, search, filter, export.
+                  </TitleText>
                 </FadeChild>
                 <TitleTextSub alpha={0.7} size="md">
                   <FadeChild delay={200}>
                     Every app exposes a simple typed API.
-                    <br />
-                    Find apps in the open app store.
+                    {screen !== 'small' && <br />}
+                    &nbsp;Publish apps in the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -294,18 +280,6 @@ export const ChestSection = memo((props: any) => {
     </Page>
   )
 })
-
-export const BodyButton = (props: ButtonProps) => (
-  <Button
-    sizePadding={1.6}
-    sizeRadius={2}
-    cursor="pointer"
-    tagName="a"
-    textDecoration="none"
-    borderWidth={0}
-    {...props}
-  />
-)
 
 const Integration = memo(({ icon, title, index }: any) => (
   <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>

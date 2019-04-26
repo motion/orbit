@@ -10,7 +10,6 @@ import { FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
 import { docsItems } from './docsItems'
-import { MetaSection } from './DocsPage'
 import { Example } from './DocsPage/Example'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
@@ -226,3 +225,7 @@ function PropsTable(props: { props: Object }) {
     </Col>
   )
 }
+
+const MetaSection = gloss({
+  margin: 0,
+})

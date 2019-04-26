@@ -1,5 +1,5 @@
 import { Inline } from '@o/gloss'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, View } from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
@@ -143,10 +143,24 @@ const elements = [
   },
 ]
 
+const useIntersectedOnce = () => {
+  const ref = useRef(null)
+  const [val, setVal] = useState(false)
+  const entries = useIntersectionObserver({ ref })
+  const isIntersecting = entries && entries[0].isIntersecting
+  useEffect(() => {
+    if (isIntersecting && !val) {
+      setVal(true)
+    }
+  }, [val, isIntersecting])
+  return [ref, val]
+}
+
 export function NeckSection(props) {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
   const nextInt = useRef(null)
+  const [ref, show] = useIntersectedOnce()
 
   const longDelay = 100
   const springFast = useSlideSpring({
@@ -190,14 +204,16 @@ export function NeckSection(props) {
     setCur(n < 0 ? elements.length - 1 : n)
   }
 
+  // autoplay on intersect
   const curNext = useGetFn(next)
   useEffect(() => {
+    if (!show) return
     nextInt.current = setInterval(() => {
       curNext()
     }, 8000)
 
     return () => clearInterval(nextInt.current)
-  }, [])
+  }, [show])
 
   const Fade = useFadePage()
 
@@ -214,7 +230,7 @@ export function NeckSection(props) {
                 <FadeChild delay={100}>
                   <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>Easiest apps ever.</TitleText>
                 </FadeChild>
-                <TitleTextSub width="87%" margin="auto" minWidth={320}>
+                <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
                     Create apps using common data sources in just a few lines of code.
                   </FadeChild>

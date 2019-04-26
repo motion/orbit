@@ -1,7 +1,8 @@
-import lightSeparator from '!raw-loader!../../../public/images/line-sep.svg'
+import sepFilled from '!raw-loader!../../../public/images/line-sep-filled.svg'
+import sep from '!raw-loader!../../../public/images/line-sep.svg'
 import { Button, Col, Form, gloss, Input, Message, Space, SVG, useTheme, View, ViewProps } from '@o/ui'
 import jsonp from 'jsonp'
-import React from 'react'
+import React, { memo } from 'react'
 
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -16,7 +17,7 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
         zIndex={10}
         outside={
           <>
-            <LineSep top={30} />
+            <LineSep top={-10} fill />
             {outside}
           </>
         }
@@ -34,8 +35,11 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
   )
 }
 
-export const LineSep = props => {
+export const LineSep = memo(({ fill = null, ...props }: ViewProps & { fill?: any }) => {
   const theme = useTheme()
+  const svg = fill
+    ? sepFilled.replace('fill="#000000"', `fill="${fill === true ? theme.background.hex() : fill}"`)
+    : sep
   return (
     <View
       color={theme.background}
@@ -46,10 +50,10 @@ export const LineSep = props => {
       height={100}
       {...props}
     >
-      <SVG svg={lightSeparator} width="100%" />
+      <SVG svg={svg} width="100%" />
     </View>
   )
-}
+})
 
 export const EarlyAccessContent = () => {
   return (

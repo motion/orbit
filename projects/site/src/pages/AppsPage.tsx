@@ -1,8 +1,9 @@
-import { FullScreen, Input, View } from '@o/ui'
+import { FullScreen, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
 import { Header } from '../views/Header'
+import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { blackWavePattern } from './HomePage/FooterSection'
@@ -29,9 +30,9 @@ export function AppsPage() {
         backgroundImage={blackWavePattern}
       />
 
-      <SectionContent flex={1}>
-        <View margin="auto">
-          <Input width={400} size={2.5} placeholder="Search apps..." />
+      <SectionContent flex={1} marginTop={54}>
+        <View margin={[0, 'auto']}>
+          <SearchInput width={400} size={2.5} placeholder="Search apps..." />
         </View>
       </SectionContent>
 

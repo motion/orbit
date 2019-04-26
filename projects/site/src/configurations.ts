@@ -8,7 +8,6 @@ import { ResizeSensor } from './pages/DocsPage/ResizeSensor'
 import { themes } from './themes'
 
 if (process.env.NODE_ENV === 'development') {
-  window['ResizeObserver'] = ResizeObserver
   window['Themes'] = themes
   window['toColor'] = toColor
   window['ThemeMaker'] = new ThemeMaker()
@@ -19,6 +18,8 @@ function configure() {
   window['hasConfigured'] = true
   if (hasConfigured) return
 
+  // required in production
+  window['ResizeObserver'] = ResizeObserver
   window['ResizeSensor'] = ResizeSensor
 
   configureUI({

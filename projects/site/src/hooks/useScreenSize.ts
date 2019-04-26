@@ -20,7 +20,9 @@ export function useScreenSize(): ScreenSize {
 
 export function useScreenHeight(): 'short' | 'medium' {
   const isShort = useMedia(sizes.short)
-  return isShort ? 'short' : 'medium'
+  const isSmall = useMedia(sizes.small)
+  // only return "short" if its "fat" ie wider than it is tall
+  return isShort && !isSmall ? 'short' : 'medium'
 }
 
 export const useScreenHeightVal = (short: any, normal: any) => {

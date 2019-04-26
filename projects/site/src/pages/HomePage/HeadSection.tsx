@@ -6,7 +6,7 @@ import glow from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
 import appScreen from '../../../public/images/screen.jpg'
 import { colors } from '../../constants'
-import { useScreenSize } from '../../hooks/useScreenSize'
+import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -169,7 +169,12 @@ export function HeadSection(props) {
       <OuterSpace show={hoverDownload && screen !== 'small'} />
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
-          <FullScreen opacity={fontsLoaded ? 1 : 0} bottom={100}>
+          <FullScreen
+            right={useScreenHeightVal(40, 0)}
+            left={useScreenHeightVal(40, 0)}
+            opacity={fontsLoaded ? 1 : 0}
+            bottom={100}
+          >
             <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
               <HeadText />
             </Row>

@@ -289,7 +289,7 @@ export function selectableTheme(props) {
   return {
     cursor:
       props.cursor ||
-      (props.selectable === false ? 'default' : props.selectable === true ? 'text' : 'inherit'),
+      (props.selectable === false ? 'default' : props.selectable === true ? 'inherit' : 'inherit'),
   }
 }
 

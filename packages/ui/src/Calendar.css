@@ -1,0 +1,246 @@
+.calendar-dom .rdrCalendarWrapper {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: #ffffff;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.calendar-dom .rdrDateDisplay {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.calendar-dom .rdrDateDisplayItem {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  width: 0;
+  text-align: center;
+  color: inherit;
+}
+
+.calendar-dom .rdrDateDisplayItem + .rdrDateDisplayItem {
+  margin-left: 0.833em;
+}
+
+.calendar-dom .rdrDateDisplayItem input {
+  text-align: inherit;
+}
+
+.calendar-dom .rdrDateDisplayItem input:disabled {
+  cursor: default;
+}
+
+.calendar-dom .rdrDateDisplayItemActive {
+}
+
+.calendar-dom .rdrMonthAndYearWrapper {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.calendar-dom .rdrMonthAndYearPickers {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.calendar-dom .rdrMonthPicker {
+}
+
+.calendar-dom .rdrYearPicker {
+}
+
+.calendar-dom .rdrNextPrevButton {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.calendar-dom .rdrPprevButton {
+}
+
+.calendar-dom .rdrNextButton {
+}
+
+.calendar-dom .rdrMonths {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.calendar-dom .rdrMonthsVertical {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.calendar-dom .rdrMonthsHorizontal > div > div > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.calendar-dom .rdrMonth {
+  width: 27.667em;
+}
+
+.calendar-dom .rdrWeekDays {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.calendar-dom .rdrWeekDay {
+  -ms-flex-preferred-size: calc(100% / 7);
+  flex-basis: calc(100% / 7);
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+  text-align: center;
+}
+
+.calendar-dom .rdrDays {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.calendar-dom .rdrDateDisplayWrapper {
+}
+
+.calendar-dom .rdrMonthName {
+}
+
+.calendar-dom .rdrInfiniteMonths {
+  overflow: auto;
+}
+
+.calendar-dom .rdrDateRangeWrapper {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.calendar-dom .rdrDay {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+  width: calc(100% / 7);
+  position: relative;
+  font: inherit;
+  cursor: pointer;
+}
+
+.calendar-dom .rdrDayNumber {
+  display: block;
+  position: relative;
+}
+
+.calendar-dom .rdrDayNumber span {
+  color: #1d2429;
+}
+
+.calendar-dom .rdrDayDisabled {
+  cursor: not-allowed;
+}
+
+.calendar-dom .rdrSelected,
+.rdrInRange,
+.rdrStartEdge,
+.rdrEndEdge {
+  pointer-events: none;
+}
+
+.calendar-dom .rdrInRange {
+}
+
+.calendar-dom .rdrDayStartPreview,
+.rdrDayInPreview,
+.rdrDayEndPreview {
+  pointer-events: none;
+}
+
+.calendar-dom .rdrDayHovered {
+}
+
+.calendar-dom .rdrDayActive {
+}
+
+.calendar-dom .rdrDateRangePickerWrapper {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.calendar-dom .rdrDefinedRangesWrapper {
+}
+
+.calendar-dom .rdrStaticRanges {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.calendar-dom .rdrStaticRange {
+  font-size: inherit;
+}
+
+.calendar-dom .rdrStaticRangeLabel {
+}
+
+.calendar-dom .rdrInputRanges {
+}
+
+.calendar-dom .rdrInputRange {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.calendar-dom .rdrInputRangeInput {
+}

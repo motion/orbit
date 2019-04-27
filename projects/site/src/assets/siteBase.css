@@ -557,3 +557,10 @@ svg .animate-path {
     stroke-dashoffset: 0;
   }
 }
+
+.calendar-dom *,
+.display-block * {
+  display: block;
+  flex-shrink: initial;
+  flex-direction: row;
+}

@@ -16,18 +16,18 @@ export default mount({
 
 export function BetaPage() {
   return (
-    <Theme name="orbitOne">
+    <Theme name={BetaPage.theme}>
       <Header slim noBorder background="transparent" />
-      <LineSep top={30} />
+      <LineSep opacity={0.2} noOverlay top={30} />
       <EarlyAccessContent />
       <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
         <Footer />
         <Space size="xl" />
       </SectionContent>
 
-      <LineSep top="auto" bottom={20} transform={{ scaleX: -1 }} />
+      <LineSep opacity={0.2} noOverlay top="auto" bottom={20} transform={{ scaleX: -1 }} />
     </Theme>
   )
 }
 
-BetaPage.theme = 'orbitOne'
+BetaPage.theme = 'light'

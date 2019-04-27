@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Col, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
+import { Button, Col, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
 import React, { memo } from 'react'
 
 import { colors } from '../constants'
@@ -10,7 +10,6 @@ import { FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { Paragraph } from '../views/Paragraph'
 import { docsItems } from './docsItems'
-import { MetaSection } from './DocsPage'
 import { Example } from './DocsPage/Example'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 
@@ -22,7 +21,7 @@ export const DocsContents = memo(
 
     const nextPrevious = (
       <>
-        <Title>Continue reading docs</Title>
+        <Title size="md">Continue reading docs</Title>
         <Space />
         <SurfacePassProps
           alt="bordered"
@@ -153,27 +152,31 @@ export const DocsContents = memo(
 
           {nextPrevious}
 
-          <Space size="xxl" />
+          {!!(types || source) && (
+            <>
+              <Space size="xxl" />
 
-          <MetaSection>
-            {!!types && (
-              <Section size="sm" titleBorder title="Props" id="component-props">
-                <PropsTable props={types.props} />
-              </Section>
-            )}
+              <MetaSection>
+                {!!types && (
+                  <Section size="sm" titleBorder title="Props" id="component-props">
+                    <PropsTable props={types.props} />
+                  </Section>
+                )}
 
-            <Space size="xl" />
+                <Space size="xl" />
 
-            {!!source && (
-              <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
-                <CodeBlock className="language-typescript">{source}</CodeBlock>
-              </Section>
-            )}
-          </MetaSection>
+                {!!source && (
+                  <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
+                    <CodeBlock className="language-typescript">{source}</CodeBlock>
+                  </Section>
+                )}
+              </MetaSection>
 
-          <Space size="xxl" />
+              <Space size="xxl" />
 
-          {nextPrevious}
+              {nextPrevious}
+            </>
+          )}
         </Section>
       </MDX>
     )
@@ -226,3 +229,7 @@ function PropsTable(props: { props: Object }) {
     </Col>
   )
 }
+
+const MetaSection = gloss({
+  margin: 0,
+})

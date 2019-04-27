@@ -33,7 +33,7 @@ export function ShoulderSection(props) {
                 </FadeChild>
                 <FadeChild delay={200}>
                   <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                    Synced without a server.
+                    Sync without a server.
                   </TitleText>
                 </FadeChild>
               </>
@@ -122,12 +122,13 @@ export function ShoulderSection(props) {
         <Page.Parallax speed={0.2} zIndex={-2}>
           <FullScreen
             transform={{
-              y: '-20%',
+              y: '-25%',
+              scale: useScreenVal(1.2, 0.7, 0.7),
             }}
           >
             <FullScreen
               className="orbits-bg"
-              opacity={0.125}
+              opacity={0.2}
               backgroundImage={`url(${background})`}
               backgroundSize="cover"
               backgroundPosition="center center"

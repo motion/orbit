@@ -25,6 +25,7 @@ function configure() {
   configureUI({
     defaultProps: {
       title: {
+        selectable: true,
         fontFamily: 'GT Eesti',
         className: 'font-smooth',
       },

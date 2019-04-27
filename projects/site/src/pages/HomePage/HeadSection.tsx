@@ -4,18 +4,17 @@ import React, { memo, useEffect, useState } from 'react'
 
 import glow from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
-import appScreen from '../../../public/images/screen.jpg'
 import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
-import { SectionContent } from '../../views/SectionContent'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
-import { GradientDown } from './DataAppKitFeaturesSection'
-import { Join } from './EarlyAccessBetaSection'
+import { GradientDown } from './GradientDown'
+import { Join } from './Join'
+import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
@@ -23,15 +22,15 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Amazing apps in minutes',
-  medium: 'Apps without servers',
-  small: 'Apps without servers',
+  large: 'Build better apps with your team',
+  medium: 'Build better apps with your team',
+  small: 'Build better apps',
 }
 
 let allTexts = {
   large: [
-    `Code internal tools for your team in minutes, without a server.`,
-    `Orbit is a toolkit for building beautiful, flexible apps.`,
+    `Code internal tools and desktop apps that coordinate without a server.`,
+    `Plug in data, apps, and more with a click.`,
   ],
   medium: [
     `Code powerful internal tools without configuration or servers.`,
@@ -58,7 +57,7 @@ const HeadText = memo(() => {
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View justifyContent="space-between" width="85%" maxWidth={960} textAlign="center">
+    <View width={useScreenVal('100%', '90%', '85%')} maxWidth={960} textAlign="center">
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
@@ -138,7 +137,7 @@ const Smaller = gloss({
   textDecoration: 'underline',
   textDecorationColor: '#222',
   transition: 'color ease 350ms',
-  fontSize: '80%',
+  fontSize: 24,
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),
@@ -148,12 +147,13 @@ const Smaller = gloss({
 }))
 
 export function HeadSection(props) {
+  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
 
   return (
     <Fade.FadeProvide>
-      {/* <OuterSpace show={hoverDownload && screen !== 'small'} /> */}
+      <OuterSpace show={screen !== 'small'} />
       <Page zIndex={0} overflow="hidden" {...props}>
         <Page.Content>
           <FullScreen
@@ -180,7 +180,7 @@ export function HeadSection(props) {
                 position="relative"
                 bottom={0}
               >
-                <View
+                {/* <View
                   position="absolute"
                   overflow="hidden"
                   backgroundImage={`url(${appScreen})`}
@@ -193,14 +193,18 @@ export function HeadSection(props) {
                   zIndex={-1}
                   boxShadow={[[0, 0, 100, [0, 0, 0]]]}
                   pointerEvents="auto"
-                />
+                /> */}
                 <FadeChild {...fadeUpProps} delay={500}>
                   <SurfacePassProps elevation={5} fontFamily="GT Eesti">
                     <Theme name="orbitOneDark">
                       <Scale size={1.1}>
                         <Join
-                          boxShadow={[[0, 10, 20, [0, 0, 0.5]]]}
-                          transform={{ y: -23 }}
+                          inputProps={{
+                            minWidth: useScreenVal('auto', 300, 300),
+                          }}
+                          borderRadius={1000}
+                          boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
+                          transform={{ y: -123 }}
                           flexFlow="row"
                           group
                           margin={[0, 'auto']}
@@ -264,29 +268,30 @@ export function HeadSection(props) {
           </FullScreen>
         </Page.Parallax>
 
-        <Page.Parallax speed={0} zIndex={-1}>
+        <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
           <FullScreen zIndex={-100}>
-            <SectionContent position="absolute" flex={1}>
-              <View
-                pointerEvents="none"
-                position="absolute"
-                top="55%"
-                left={0}
-                right={0}
-                overflow="hidden"
-                bottom={60}
-                userSelect="none"
-                opacity={0.4}
-                transform={{
-                  scale: 2,
-                }}
-              >
-                <FadeChild {...fadeUpProps}>
-                  <img src={glow} />
-                </FadeChild>
-                <GradientDown top="50%" zIndex={100} />
-              </View>
-            </SectionContent>
+            <View
+              pointerEvents="none"
+              position="absolute"
+              top="20%"
+              left={0}
+              right={0}
+              overflow="hidden"
+              bottom={0}
+              userSelect="none"
+              opacity={0.247}
+            >
+              <FadeChild {...fadeUpProps}>
+                <Image
+                  src={glow}
+                  transformOrigin="top center"
+                  transform={{
+                    scale: 1.5,
+                  }}
+                />
+              </FadeChild>
+              <GradientDown top="50%" zIndex={100} />
+            </View>
           </FullScreen>
         </Page.Parallax>
 

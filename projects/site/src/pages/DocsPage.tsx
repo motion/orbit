@@ -16,9 +16,8 @@ import {
 import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
-import StickySidebar from 'sticky-sidebar'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
@@ -37,6 +36,7 @@ import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
+import { useStickySidebar } from './useStickySidebar'
 
 const emptyPromise = () => Promise.resolve({ default: null })
 
@@ -113,28 +113,7 @@ const preloadItem = item => {
   }
 }
 
-export function useStickySidebar({ condition = true, id, ...rest }) {
-  useLayoutEffect(() => {
-    if (condition === false) {
-      return
-    }
-    const sidebar = new StickySidebar(id, {
-      topSpacing: 0,
-      bottomSpacing: 0,
-      innerWrapperSelector: '.sidebar__inner',
-      stickyClass: 'is-affixed',
-      minWidth: 0,
-      resizeSensor: true,
-      ...rest,
-    })
-
-    return () => {
-      sidebar.destroy()
-    }
-  }, [screen])
-}
-
-const DocsPage = memo((props: { children?: any }) => {
+export const DocsPage = memo((props: { children?: any }) => {
   const Fade = useFadePage({
     threshold: 0,
   })
@@ -198,6 +177,12 @@ const DocsPage = memo((props: { children?: any }) => {
           defaultSelected={initialIndex}
           overscanCount={500}
           items={docsItems[section]}
+          itemProps={{
+            iconProps: {
+              size: 16,
+              opacity: 0.65,
+            },
+          }}
           getItemProps={preloadItem}
           onSelect={useCallback(rows => {
             if (!rows[0]) {
@@ -426,8 +411,4 @@ const FixedLayout = gloss({
     top: 0,
     zIndex: 100000000,
   },
-})
-
-export const MetaSection = gloss({
-  margin: 0,
 })

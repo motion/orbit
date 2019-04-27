@@ -1,9 +1,9 @@
-import { Avatar, gloss, Row, View } from '@o/ui'
+import { Avatar, gloss, Row, Space, View } from '@o/ui'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
+import { colors } from '../../constants'
 import { TitleText } from '../../views/TitleText'
-import { purpleWave } from '../HomePage/EarlyAccessBetaSection'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
 
@@ -38,14 +38,14 @@ export function BlogPageIndex() {
         >
           <TitleText
             fontWeight={200}
-            color={purpleWave.backgroundColor}
+            color={colors.purple}
             selectable={false}
             textAlign="left"
             size="lg"
           >
             {post.title}
           </TitleText>
-
+          <Space size="sm" />
           <PostMeta post={post} />
         </Post>
       ))}

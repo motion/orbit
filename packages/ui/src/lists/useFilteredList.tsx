@@ -1,5 +1,5 @@
 import { sortBy } from 'lodash'
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 
 import { fuzzyFilter } from '../helpers/fuzzyFilter'
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
@@ -19,12 +19,34 @@ export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProp
     [props.items, props.sortBy],
   )
 
+  // handle search
   const filteredItems = props.search
     ? fuzzyFilter(search, sortedItems, { key: filterKey })
     : sortedItems
 
-  const shouldGroup = props.groupByLetter && filteredItems.length > (props.groupMinimum || 0)
-  const getGroupProps = shouldGroup && groupByFirstLetter(filterKey)
+  const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
+
+  // handle groupByLetter boolean
+  let getGroupProps = shouldGroup && props.groupByLetter && groupByFirstLetter(filterKey)
+
+  // handle groupBy function
+  if (shouldGroup && props.groupBy) {
+    getGroupProps = useCallback((item: any, index: number, items: any[]) => {
+      if (items[index - 1]) {
+        const cur = props.groupBy(items[index - 1])
+        const next = props.groupBy(item)
+        if (next !== cur) {
+          return {
+            separator: next,
+          }
+        }
+      } else {
+        return {
+          separator: props.groupBy(item),
+        }
+      }
+    }, [props.groupBy])
+  }
 
   return {
     results: filteredItems,

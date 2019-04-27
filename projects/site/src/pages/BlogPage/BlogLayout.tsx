@@ -2,7 +2,7 @@ import { Col, ColProps, Space } from '@o/ui'
 import React from 'react'
 
 import { SectionContent } from '../../views/SectionContent'
-import { BlogTitle } from '../BlogPage'
+import { BlogTitle } from '../BlogTitle'
 import { AboveFooter, Footer } from '../HomePage/FooterSection'
 
 export function BlogLayout({ children, ...props }: ColProps) {

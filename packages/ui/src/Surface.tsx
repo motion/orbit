@@ -344,16 +344,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         {icon && iconAfter ? (
           <div
             style={{
+              flexDirection: 'inherit',
               order: 3,
             }}
           >
-            {showElement && <Space size={6} />}
+            {showElement && <Space size={size * 8} />}
             {innerElements}
           </div>
         ) : (
           <>
             {innerElements}
-            {showElement && icon && <Space size={6} />}
+            {showElement && icon && <Space size={size * 8} />}
           </>
         )}
         {glow && !disabled && (
@@ -547,6 +548,7 @@ const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {
   overflow: 'hidden',
   positionInside: {
     height: 'calc(100% - 1px)',
+    width: 'calc(100% - 1px)',
     transform: {
       y: 0.5,
     },

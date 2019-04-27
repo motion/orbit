@@ -228,7 +228,7 @@ export function NeckSection(props) {
                   <PillButton>Build</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>Easiest apps ever.</TitleText>
+                  <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
                 </FadeChild>
                 <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
                   <FadeChild delay={200}>
@@ -359,13 +359,19 @@ export function NeckSection(props) {
                     </animated.div>
                   </FadeChild>
 
-                  <animated.div style={{ ...springSlow, marginTop: -215, height: 300, zIndex: -1 }}>
+                  <animated.div
+                    style={{
+                      ...springSlow,
+                      marginTop: -215,
+                      height: 300,
+                      zIndex: -1,
+                    }}
+                  >
                     <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
                       <View
                         width="100%"
-                        height={280}
-                        minWidth={360}
-                        margin={[0, -10]}
+                        height={260}
+                        minWidth={350}
                         borderRadius={22}
                         background="#000"
                         boxShadow={[[0, 10, 30, [0, 0, 0]]]}
@@ -415,7 +421,7 @@ export function NeckSection(props) {
 
         <Page.Parallax overflow="visible" speed={0} zIndex={0}>
           <FullScreen
-            transform={{ y: -100 }}
+            transform={{ y: -120 }}
             minWidth={1000}
             margin={[0, '-5vw']}
             top={40}
@@ -426,7 +432,7 @@ export function NeckSection(props) {
           </FullScreen>
         </Page.Parallax>
 
-        <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
+        <Page.Parallax speed={0.25} zIndex={-5} overflow="hidden">
           <FullScreen zIndex={0} transform={{ scale: 1.25 }}>
             <FullScreen
               className="northern-lights"

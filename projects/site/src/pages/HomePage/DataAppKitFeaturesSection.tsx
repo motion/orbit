@@ -1,4 +1,4 @@
-import { Button, ButtonProps, FullScreen, gloss, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
@@ -10,56 +10,21 @@ import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
+import { apps } from './apps'
+import { BodyButton } from './BodyButton'
 import { blackWavePattern } from './FooterSection'
+import { GradientDown } from './GradientDown'
+import { linkProps } from './linkProps'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export const GradientDown = gloss(FullScreen).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.background} 65%)`,
-}))
-
 const dly = 200
-
-const apps = [
-  {
-    icon: require('../../../public/logos/slack.svg'),
-    title: 'Slack',
-  },
-  {
-    icon: require('../../../public/logos/github-octocat.svg'),
-    title: 'Github',
-  },
-  {
-    icon: require('../../../public/logos/gmail.svg'),
-    title: 'Gmail',
-  },
-  {
-    icon: require('../../../public/logos/drive.svg'),
-    title: 'Drive',
-  },
-  {
-    icon: require('../../../public/logos/confluence.svg'),
-    title: 'Confluence',
-  },
-  {
-    icon: require('../../../public/logos/jira.svg'),
-    title: 'Jira',
-  },
-  {
-    icon: require('../../../public/logos/sheets.svg'),
-    title: 'Sheets',
-  },
-  {
-    icon: require('../../../public/logos/postgres.svg'),
-    title: 'Postgres',
-  },
-]
 
 export const ChestSection = memo((props: any) => {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
-  const FadeDataApps = useFadePage({ threshold: 0.5 })
+  const FadeDataApps = useFadePage({ threshold: 0 })
   const Fade = useFadePage()
   return (
     <Page {...props}>
@@ -68,11 +33,7 @@ export const ChestSection = memo((props: any) => {
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen
-              ref={FadeDataApps.ref}
-              transform={{ y: '-85%', scale: 0.65 }}
-              transformOrigin="bottom center"
-            >
+            <FullScreen transform={{ y: '-85%', scale: 0.65 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}
@@ -90,24 +51,23 @@ export const ChestSection = memo((props: any) => {
           </Page.Parallax>
         )}
 
-        <Page.Content height={sectionHeight * 2} flex={1}>
+        <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2} flex={1}>
           <SpacedPageContent
             maxHeight={100000}
             margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
             height="auto"
             header={
               <>
-                <FadeChild delay={0}>
-                  <PillButton>Data</PillButton>
-                </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText size="xxl">Import, search, filter, export.</TitleText>
+                  <TitleText textAlign="center" size="xxl">
+                    Import, search, filter, export.
+                  </TitleText>
                 </FadeChild>
                 <TitleTextSub alpha={0.7} size="md">
                   <FadeChild delay={200}>
                     Every app exposes a simple typed API.
-                    <br />
-                    Build on top of an open ecosystem.
+                    {screen !== 'small' && <br />}
+                    &nbsp;Publish apps in the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -115,8 +75,8 @@ export const ChestSection = memo((props: any) => {
           >
             <Row
               className="hide-scrollbars"
-              margin="0 -40px"
-              width="calc(100% + 80px)"
+              margin="0 -10vw"
+              width="100vw"
               height="auto"
               space="md"
               spaceAround
@@ -128,13 +88,15 @@ export const ChestSection = memo((props: any) => {
               ))}
             </Row>
 
-            {/* <Space /> */}
+            <Space />
 
-            {/* <Row space margin={[0, 'auto']}>
-              <BodyButton>Installing an integration</BodyButton>
-
-              <BodyButton>Writing an integration</BodyButton>
-            </Row> */}
+            <FadeChild delay={0}>
+              <Row space margin={[0, 'auto']}>
+                <BodyButton {...linkProps('/apps')} size={2}>
+                  Explore apps
+                </BodyButton>
+              </Row>
+            </FadeChild>
           </SpacedPageContent>
 
           {/* Batteries Included. */}
@@ -143,6 +105,7 @@ export const ChestSection = memo((props: any) => {
 
           <Fade.FadeProvide>
             <SpacedPageContent
+              ref={Fade.ref}
               maxHeight={100000}
               height="auto"
               flex={1}
@@ -167,7 +130,6 @@ export const ChestSection = memo((props: any) => {
             >
               <Space size="lg" />
               <Grid
-                ref={Fade.ref}
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}
                 itemMinWidth={240}
@@ -224,13 +186,13 @@ export const ChestSection = memo((props: any) => {
 
                   <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
                     <SectionP>
-                      <SectionIcon name="widget" />A proper, powerful and flexible list view is no
-                      joke. Neither is a table or form. But that's just the start. Orbit makes them
-                      work together, accepting similar data formats and automatically normalizing.
+                      <SectionIcon name="widget" />A proper, powerful list view is no joke. Neither
+                      are a table or form. Orbit makes them work, and all work together, accepting
+                      similar data formats and normalizing.
                       {screen !== 'small' && (
                         <>
                           <Space />
-                          Plus, Orbit understands how to lay them out when they are used together.
+                          Layouts, templates, combining views and more.
                         </>
                       )}
                     </SectionP>
@@ -243,7 +205,7 @@ export const ChestSection = memo((props: any) => {
               {screen === 'large' && height !== 'short' && (
                 <>
                   <Space size="xxl" />
-                  <BodyButton margin={[0, 'auto']} size="xl">
+                  <BodyButton {...linkProps('/docs')} margin={[0, 'auto']} size="xl">
                     Read the feature overview
                   </BodyButton>
                 </>
@@ -254,48 +216,22 @@ export const ChestSection = memo((props: any) => {
       </FadeDataApps.FadeProvide>
 
       <Page.Background
-        speed={-0.2}
-        zIndex={100}
-        bottom="-110%"
+        speed={0.1}
+        zIndex={-20}
+        bottom="-150%"
         backgroundSize="cover"
         left="-40%"
         right="-40%"
         width="180%"
-        top="0%"
+        top="-10%"
+        backgroundColor="transparent"
         backgroundPosition="top center"
-        opacity={0.5}
+        opacity={1}
         backgroundImage={blackWavePattern}
       />
-
-      {/* <Page.Parallax speed={0.25} zIndex={3}>
-        <FullScreen
-          transform={{
-            y: '-50%',
-          }}
-          className="northern-lights"
-          backgroundImage={`url(${redshift})`}
-          opacity={0.65}
-          backgroundSize="contain"
-          backgroundPosition="center center"
-          backgroundRepeat="no-repeat"
-          bottom="-50%"
-        />
-      </Page.Parallax> */}
     </Page>
   )
 })
-
-export const BodyButton = (props: ButtonProps) => (
-  <Button
-    sizePadding={1.6}
-    sizeRadius={2}
-    cursor="pointer"
-    tagName="a"
-    textDecoration="none"
-    borderWidth={0}
-    {...props}
-  />
-)
 
 const Integration = memo(({ icon, title, index }: any) => (
   <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>

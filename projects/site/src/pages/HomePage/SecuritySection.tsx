@@ -32,7 +32,7 @@ export default function WaistSection(props) {
             />
             <Image
               position="absolute"
-              bottom={90}
+              bottom={0}
               height={290}
               left={0}
               right={0}
@@ -47,7 +47,7 @@ export default function WaistSection(props) {
           margin="auto"
           maxWidth={860}
           transform={{
-            y: '-8%',
+            y: '-6%',
           }}
           header={
             <>
@@ -61,7 +61,7 @@ export default function WaistSection(props) {
           }
         >
           <Row space={useScreenVal(20, 'lg', 'xl')}>
-            <Col flex={2} space="xl">
+            <Col flex={3} space="xl">
               <Pitch size="md">Orbit never sends single bit of data outside your firewall.</Pitch>
 
               <Pitch fontWeight={200} size="sm">
@@ -79,7 +79,11 @@ export default function WaistSection(props) {
               </Pitch>
             </Col>
 
-            {screen !== 'small' && <Image margin="auto" padding={20} src={people} />}
+            {screen !== 'small' && (
+              <Col flex={1} padding={0}>
+                <Image maxWidth={300} margin="auto" src={people} />
+              </Col>
+            )}
           </Row>
         </SpacedPageContent>
       </Page.Content>

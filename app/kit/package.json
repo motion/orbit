@@ -22,7 +22,7 @@
     "@o/use-store": "^2.4.1",
     "@o/utils": "^2.4.1",
     "compromise": "11.11.0",
-    "date-fns": "2.0.0-alpha.16",
+    "date-fns": "2.0.0-alpha.7",
     "fuzzysort": "1.1.4",
     "hash-sum": "1.0.2",
     "immer": "1.7.2",

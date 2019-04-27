@@ -1,7 +1,7 @@
-import { Absolute, Col, Space } from '@o/ui'
+import { Space } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
-import { Link, View } from 'react-navi'
+import { View } from 'react-navi'
 
 import { ContentSection } from '../views/ContentSection'
 import { Header } from '../views/Header'
@@ -11,7 +11,7 @@ import { TitleText } from '../views/TitleText'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { BlogPageIndex, PostMeta } from './BlogPage/BlogPageIndex'
 import { PostEntry, posts } from './BlogPage/posts'
-import { Wavy } from './HomePage/EarlyAccessBetaSection'
+import { BlogTitle } from './BlogTitle'
 
 export default compose(
   withView(() => {
@@ -47,7 +47,7 @@ export default compose(
   }),
 )
 
-function BlogPage(props: { title?: string; children?: any }) {
+export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <MDX>
       <Header slim noBorder />
@@ -76,21 +76,3 @@ function PostPage(props: { post: PostEntry; children?: any }) {
     </>
   )
 }
-
-export const BlogTitle = (props: any) => (
-  <Col position="relative">
-    <SectionContent>
-      <Link href="/blog" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-        <Col padding={[100, 30, 50]} position="relative" cursor="pointer" {...props}>
-          <TitleText selectable={false} textAlign="left" size="xxl" fontWeight={200}>
-            The Orbit Blog
-          </TitleText>
-        </Col>
-      </Link>
-
-      <Absolute bottom={0} left={0} right={0} height={10}>
-        <Wavy position="absolute" top={0} left={0} right={0} bottom={0} />
-      </Absolute>
-    </SectionContent>
-  </Col>
-)

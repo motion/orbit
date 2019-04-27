@@ -54,7 +54,7 @@
     "@typescript-eslint/eslint-plugin": "1.5.0",
     "lerna": "3.13.3",
     "mobx": "5.9.4",
-    "prettier": "1.16.4",
+    "prettier": "1.17.0",
     "sb-promisify": "^2.0.2",
     "verdaccio": "3.10.1",
     "microbundle": "0.10.1",

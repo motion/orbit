@@ -1,10 +1,9 @@
 import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
 import React, { memo, useState } from 'react'
-import { useCurrentRoute } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Navigation, routeTable } from '../Navigation'
+import { LinkState, useLink } from '../pages/HomePage/linkProps'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
 import { defaultConfig, FadeChild, fastConfig, fastStatticConfig, useFadePage } from './FadeIn'
@@ -24,55 +23,12 @@ const LinkText = gloss(View, {
 })
 
 export const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
-let tm = null
-
-const loadedRoutes = {}
-let didAnimateOut = true
-
-const isOnRoute = (path, route) =>
-  path === '/' ? route.url.pathname === path : route.url.pathname.indexOf(path) === 0
 
 export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
-export function Link({
-  children,
-  fontSize = 16,
-  href,
-  width,
-  margin,
-  external,
-  ...props
-}: LinkProps) {
-  const header = HeaderContext.useProps()
-  const route = useCurrentRoute()
-  const isActive = isOnRoute(href, route)
-
+export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
+  const { isActive, ...linkProps } = useLink(href)
   return (
-    <LinkText
-      cursor="pointer"
-      onClick={() => {
-        if (isActive) return
-        clearTimeout(tm)
-        didAnimateOut = true
-        header.setShown(false)
-        tm = setTimeout(() => {
-          Navigation.navigate(href)
-        }, 140)
-      }}
-      fontSize={fontSize}
-      width={width}
-      margin={margin}
-      onMouseEnter={() => {
-        // pre load pages on hover
-        if (loadedRoutes[href]) {
-          return
-        }
-        if (routeTable[href]) {
-          routeTable[href]().then(() => {
-            loadedRoutes[href] = true
-          })
-        }
-      }}
-    >
+    <LinkText cursor="pointer" {...linkProps} fontSize={fontSize} width={width} margin={margin}>
       <SimpleText
         fontSize={fontSize}
         alpha={isActive ? 1 : 0.6}
@@ -83,22 +39,7 @@ export function Link({
         transition="all ease 300ms"
         {...props}
       >
-        {external ? (
-          <a
-            href={`${href}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              window.open(`${href}`, '_blank')
-            }}
-          >
-            {children}
-          </a>
-        ) : (
-          children
-        )}
+        {children}
       </SimpleText>
     </LinkText>
   )
@@ -110,7 +51,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   return (
     <Link width="33%" {...props}>
       <FadeChild
-        off={!didAnimateOut}
+        off={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}
         config={leaving ? fastStatticConfig : fastConfig}
       >
@@ -201,7 +142,7 @@ export const Header = memo(
             <HeaderContain height={50}>
               <LinkSection alignRight>{before}</LinkSection>
               <FadeChild
-                off={!didAnimateOut}
+                off={!LinkState.didAnimateOut}
                 config={shown ? defaultConfig : fastStatticConfig}
                 delay={shown ? 0 : 0}
               >
@@ -248,7 +189,7 @@ export const Header = memo(
             <HeaderContain>
               <LinkSection alignRight>{before}</LinkSection>
               <FadeChild
-                off={!didAnimateOut}
+                off={!LinkState.didAnimateOut}
                 config={shown ? defaultConfig : fastStatticConfig}
                 delay={shown ? 100 : 0}
               >

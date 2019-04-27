@@ -47,7 +47,7 @@ export default compose(
   }),
 )
 
-function BlogPage(props: { title?: string; children?: any }) {
+export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <MDX>
       <Header slim noBorder />

@@ -17,6 +17,10 @@ body {
   min-height: 100vh;
 }
 
+.loading {
+  transition: all ease 300ms !important;
+}
+
 .font-smooth {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -134,7 +134,7 @@ export function useStickySidebar({ condition = true, id, ...rest }) {
   }, [screen])
 }
 
-const DocsPage = memo((props: { children?: any }) => {
+export const DocsPage = memo((props: { children?: any }) => {
   const Fade = useFadePage({
     threshold: 0,
   })

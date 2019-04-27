@@ -2,7 +2,7 @@ import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { useScreenSize } from './hooks/useScreenSize'
@@ -35,16 +35,19 @@ export const usePageTheme = () => {
   ]
 }
 
+const PageLoading = () => {
+  const loadingRoute = useLoadingRoute()
+  return <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
+}
+
 export function Layout(props: any) {
   const forceUpdate = useForceUpdate()
   updateLayout = forceUpdate
-  const loadingRoute = useLoadingRoute()
   const siteStore = useSiteStore()
   const screen = useScreenSize()
   const sidebarWidth = 300
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
-  const Fade = useFadePage()
 
   window['SiteStore'] = siteStore
 
@@ -61,16 +64,6 @@ export function Layout(props: any) {
     )
   }, [])
 
-  const linkProps = {
-    width: '100%',
-    padding: 20,
-    fontSize: 22,
-    textAlign: 'left',
-    onMouseUp: () => {
-      siteStore.toggleSidebar()
-    },
-  }
-
   const maxHeight = siteStore.showSidebar ? window.innerHeight : siteStore.maxHeight
 
   useLayoutEffect(() => {
@@ -80,7 +73,7 @@ export function Layout(props: any) {
   return (
     <ProvideUI themes={themes}>
       <Theme name={theme}>
-        <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={90} />
+        <PageLoading />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
           minHeight="100vh"
@@ -91,51 +84,70 @@ export function Layout(props: any) {
           transform={{
             x: siteStore.showSidebar ? -sidebarWidth : 'none',
           }}
-          background={bg}
         >
           <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
         </View>
-        <Portal prepend style={{ zIndex: 100000000 }}>
-          <Theme name="home">
-            <View
-              ref={Fade.ref}
-              pointerEvents="auto"
-              position="fixed"
-              top={0}
-              right={0}
-              width={sidebarWidth}
-              height="100vh"
-              transition={transition}
-              background={theme => theme.background}
-              transform={{
-                x: siteStore.showSidebar ? 0 : sidebarWidth,
-              }}
-            >
-              <Button
-                position="absolute"
-                top={20}
-                right={20}
-                chromeless
-                icon="cross"
-                iconSize={16}
-                zIndex={1000}
-                cursor="pointer"
-                onClick={siteStore.toggleSidebar}
-              />
-              <Fade.FadeProvide>
-                <HeaderLink href="/" {...linkProps}>
-                  Home
-                </HeaderLink>
-                <LinksLeft {...linkProps} />
-                <LinksRight {...linkProps} />
-              </Fade.FadeProvide>
-            </View>
-          </Theme>
-        </Portal>
+        <LayoutSidebar />
       </Theme>
     </ProvideUI>
   )
 }
+
+const LayoutSidebar = memo(() => {
+  const siteStore = useSiteStore()
+  const sidebarWidth = 300
+  const Fade = useFadePage()
+
+  const linkProps = {
+    width: '100%',
+    padding: 20,
+    fontSize: 22,
+    textAlign: 'left',
+    onMouseUp: () => {
+      siteStore.toggleSidebar()
+    },
+  }
+
+  return (
+    <Portal prepend style={{ zIndex: 100000000 }}>
+      <Theme name="home">
+        <View
+          ref={Fade.ref}
+          pointerEvents="auto"
+          position="fixed"
+          top={0}
+          right={0}
+          width={sidebarWidth}
+          height="100vh"
+          transition={transition}
+          background={bg}
+          transform={{
+            x: siteStore.showSidebar ? 0 : sidebarWidth,
+          }}
+        >
+          <Button
+            position="absolute"
+            top={20}
+            right={20}
+            chromeless
+            icon="cross"
+            iconSize={16}
+            zIndex={1000}
+            cursor="pointer"
+            onClick={siteStore.toggleSidebar}
+          />
+          <Fade.FadeProvide>
+            <HeaderLink href="/" {...linkProps}>
+              Home
+            </HeaderLink>
+            <LinksLeft {...linkProps} />
+            <LinksRight {...linkProps} />
+          </Fade.FadeProvide>
+        </View>
+      </Theme>
+    </Portal>
+  )
+})
 
 const bg = theme => theme.background
 

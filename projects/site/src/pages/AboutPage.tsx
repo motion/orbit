@@ -3,6 +3,7 @@ import { BorderRight, Col, Divider, ListItemSimple, PassProps, Space, Theme, Tit
 import { mount, route } from 'navi'
 import React from 'react'
 
+import { scrollTo } from '../etc/helpers'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
@@ -43,10 +44,30 @@ export function AboutPage() {
                       titleProps={{ fontSize: 18, padding: [10, 20], textAlign: 'right' }}
                       fontFamily="GT Eesti"
                     >
-                      <ListItemSimple title="Mission" />
-                      <ListItemSimple title="Team" />
-                      <ListItemSimple title="Jobs" />
-                      <ListItemSimple title="Contact" />
+                      <ListItemSimple
+                        onClick={() => {
+                          scrollTo('#mission')
+                        }}
+                        title="Mission"
+                      />
+                      <ListItemSimple
+                        onClick={() => {
+                          scrollTo('#team')
+                        }}
+                        title="Team"
+                      />
+                      <ListItemSimple
+                        onClick={() => {
+                          scrollTo('#jobs')
+                        }}
+                        title="Jobs"
+                      />
+                      <ListItemSimple
+                        onClick={() => {
+                          scrollTo('#contact')
+                        }}
+                        title="Contact"
+                      />
                     </PassProps>
                     <BorderRight top={10} opacity={0.5} />
                   </FadeChild>
@@ -54,6 +75,7 @@ export function AboutPage() {
               </Col>
               <FadeChild delay={400} style={{ flex: 1 }}>
                 <Col
+                  id="mission"
                   padding={[0, 90]}
                   space="xxl"
                   spaceAround

@@ -20,7 +20,7 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 const dly = 200
 
-export const ChestSection = memo((props: any) => {
+export default memo(function DataAppKitFeaturesSection(props: any) {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()

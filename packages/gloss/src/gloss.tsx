@@ -210,6 +210,18 @@ export interface GlossView<Props> {
   }
 }
 
+function createGlossView<Props>(GlossView: any, config) {
+  const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
+  const res: GlossView<Props> = memo(forwarded, isEqual) as any
+  res.config = config
+  res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+  res.theme = (...themeFns) => {
+    config.themeFns = themeFns
+    return res
+  }
+  return res
+}
+
 // const x = gloss<{ isActive?: boolean }>()
 // const y = gloss<{ otherProp?: boolean }>(x)
 
@@ -331,10 +343,7 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }
 
-  const ForwardedGlossView = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
-  const ThemedView: GlossView<Props> = memo(ForwardedGlossView, isEqual) as any
-
-  ThemedView.config = {
+  const config = {
     themeFns: null,
     getConfig: () => ({
       id,
@@ -346,23 +355,21 @@ export function gloss<Props = any>(
       parent: isGlossParent ? target : null,
     }),
   }
-  ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
-  ThemedView.withConfig = config => {
-    if (config.displayName) {
-      ForwardedGlossView['displayName'] = config.displayName
-      GlossView['displayName'] = config.displayName
-      ThemedView.displayName = config.displayName
-    }
-    return ThemedView
-  }
-  ThemedView.theme = (...themeFns) => {
-    ThemedView.config.themeFns = themeFns
-    return ThemedView
-  }
+
+  let ThemedView = createGlossView<Props>(GlossView, config)
 
   // inherit default props
   if (isGlossParent) {
     ThemedView.defaultProps = target.defaultProps
+  }
+
+  ThemedView.withConfig = ({ displayName }) => {
+    // re-create it so it picks up displayName
+    if (displayName) {
+      GlossView['displayName'] = displayName
+      ThemedView = createGlossView<Props>(GlossView, config)
+    }
+    return ThemedView
   }
 
   return ThemedView

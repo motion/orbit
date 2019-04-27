@@ -1,18 +1,21 @@
-import { FullScreen } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import { FullScreen, ViewProps } from '@o/ui'
+import React, { useLayoutEffect, useState } from 'react'
 
 import { BrandMark } from '../views/LogoVertical'
 
-const hideProps = {
+const hideProps: ViewProps = {
   opacity: 0,
+  pointerEvents: 'none',
 }
 
 export function LoadingPage() {
   let [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onLoadAllImages().then(() => {
-      setLoading(false)
+      window['requestIdleCallback'](() => {
+        setLoading(false)
+      })
     })
   }, [])
 
@@ -34,9 +37,11 @@ export function LoadingPage() {
 
 function onLoadAllImages() {
   return new Promise(res => {
-    let imgs = Array.from(document.images)
+    let imgs = Array.from(document.images).filter(x => !x.complete)
     let len = imgs.length
     let counter = 0
+
+    if (!len) return res()
 
     for (const img of imgs) {
       img.addEventListener('load', incrementCounter, false)

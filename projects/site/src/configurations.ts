@@ -1,3 +1,5 @@
+import 'requestidlecallback-polyfill'
+
 import { ThemeMaker } from '@o/gloss'
 import { configureHotKeys, configureUI, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'

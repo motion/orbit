@@ -3,8 +3,8 @@ import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-// import { clipboard } from 'electron'
 import React, { memo } from 'react'
+
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -12,6 +12,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
+// import { clipboard } from 'electron'
 export const headerButtonProps = {
   chromeless: true,
   margin: [-1, 1],
@@ -145,7 +146,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const OrbitHeaderContainer = gloss(View, {
+const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
   zIndex: 400,

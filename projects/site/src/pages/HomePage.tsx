@@ -7,7 +7,6 @@ import { Header } from '../views/Header'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
 import { NeckSection } from './HomePage/AllInOnePitchDemoSection'
-import { ChestSection } from './HomePage/DataAppKitFeaturesSection'
 import { ShoulderSection } from './HomePage/DeploySection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
@@ -21,10 +20,15 @@ export const useParallax = () => {
   }
 }
 
+const DataAppKitFeaturesSection = loadOnIntersect(
+  lazy(() => import('./HomePage/DataAppKitFeaturesSection')),
+)
 const FeetSection = loadOnIntersect(lazy(() => import('./HomePage/FooterSection')))
-const LegsSection = loadOnIntersect(lazy(() => import('./HomePage/MissionMottoSection')))
-const WaistSection = loadOnIntersect(lazy(() => import('./HomePage/SecuritySection')))
-const EarlyAccessSection = loadOnIntersect(lazy(() => import('./HomePage/EarlyAccessBetaSection')))
+const MissionMottoSection = loadOnIntersect(lazy(() => import('./HomePage/MissionMottoSection')))
+const SecuritySection = loadOnIntersect(lazy(() => import('./HomePage/SecuritySection')))
+const EarlyAccessBetaSection = loadOnIntersect(
+  lazy(() => import('./HomePage/EarlyAccessBetaSection')),
+)
 
 export function HomePage() {
   const siteStore = useSiteStore()
@@ -45,12 +49,12 @@ export function HomePage() {
           <HeadSection offset={0} />
           <NeckSection offset={1} />
           <ShoulderSection offset={2} />
-          <ChestSection offset={3} />
+          <DataAppKitFeaturesSection offset={3} />
           <Theme name="darkAlt">
-            <EarlyAccessSection offset={5} />
-            <WaistSection offset={6} />
+            <EarlyAccessBetaSection offset={5} />
+            <SecuritySection offset={6} />
           </Theme>
-          <LegsSection offset={7} />
+          <MissionMottoSection offset={7} />
           <Theme name="home">
             <FeetSection offset={8} />
           </Theme>

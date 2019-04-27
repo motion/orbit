@@ -262,7 +262,7 @@ export function gloss<Props = any>(
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: ThemeFn | null = null
 
-  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
+  function GlossView(props: GlossProps<Props>, ref: any) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
@@ -329,9 +329,10 @@ export function gloss<Props = any>(
     }
 
     return createElement(element, finalProps, props.children)
-  }) as unknown) as GlossView<Props>
+  }
 
-  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
+  const ForwardedGlossView = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
+  const ThemedView: GlossView<Props> = memo(ForwardedGlossView, isEqual) as any
 
   ThemedView.config = {
     themeFns: null,
@@ -348,6 +349,8 @@ export function gloss<Props = any>(
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   ThemedView.withConfig = config => {
     if (config.displayName) {
+      ForwardedGlossView['displayName'] = config.displayName
+      GlossView['displayName'] = config.displayName
       ThemedView.displayName = config.displayName
     }
     return ThemedView

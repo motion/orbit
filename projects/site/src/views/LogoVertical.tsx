@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { Space, View, ViewProps } from '@o/ui'
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'

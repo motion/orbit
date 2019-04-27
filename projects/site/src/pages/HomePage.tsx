@@ -10,6 +10,7 @@ import { NeckSection } from './HomePage/AllInOnePitchDemoSection'
 import { ChestSection } from './HomePage/DataAppKitFeaturesSection'
 import { ShoulderSection } from './HomePage/DeploySection'
 import { HeadSection } from './HomePage/HeadSection'
+import { LoadingPage } from './LoadingPage'
 
 const ParallaxContext = createContextualProps<{ value: Parallax }>({ value: null })
 export const useParallax = () => {
@@ -20,10 +21,10 @@ export const useParallax = () => {
   }
 }
 
-const FeetSection = lazyScroll(lazy(() => import('./HomePage/FooterSection')))
-const LegsSection = lazyScroll(lazy(() => import('./HomePage/MissionMottoSection')))
-const WaistSection = lazyScroll(lazy(() => import('./HomePage/SecuritySection')))
-const EarlyAccessSection = lazyScroll(lazy(() => import('./HomePage/EarlyAccessBetaSection')))
+const FeetSection = loadOnIntersect(lazy(() => import('./HomePage/FooterSection')))
+const LegsSection = loadOnIntersect(lazy(() => import('./HomePage/MissionMottoSection')))
+const WaistSection = loadOnIntersect(lazy(() => import('./HomePage/SecuritySection')))
+const EarlyAccessSection = loadOnIntersect(lazy(() => import('./HomePage/EarlyAccessBetaSection')))
 
 export function HomePage() {
   const siteStore = useSiteStore()
@@ -31,6 +32,7 @@ export function HomePage() {
 
   return (
     <ParallaxContext.PassProps value={parallax}>
+      <LoadingPage />
       <Header />
       <main style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
@@ -61,7 +63,7 @@ export function HomePage() {
 HomePage.theme = 'home'
 HomePage.showPeekHeader = true
 
-function lazyScroll(LazyComponent) {
+function loadOnIntersect(LazyComponent) {
   return props => {
     const hasIntersected = useRef(false)
     const ref = useRef(null)

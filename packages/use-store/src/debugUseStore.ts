@@ -1,5 +1,6 @@
 import { CurrentComponent } from '@o/automagical'
 import { throttle } from 'lodash'
+
 import { config } from './configure'
 
 type UseStoreDebugEvent =
@@ -39,7 +40,7 @@ type UseStoreDebugEvent =
       value: Object
     }
 
-let debugFns = new Set()
+let debugFns = new Set<Function>()
 export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
   debugFns.add(cb)
   return () => debugFns.delete(cb)

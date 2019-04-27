@@ -37,7 +37,7 @@ export function setupTrackableStore(
   const name = opts.component.renderName
   const storeName = store.constructor.name
   let paused = true
-  let reactiveKeys = new Set()
+  let reactiveKeys = new Set<string>()
   let deepKeys: string[] = []
 
   const update = () => {

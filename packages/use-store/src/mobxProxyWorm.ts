@@ -8,13 +8,13 @@ export const GET_STORE = Symbol('GET_STORE')
 export type ProxyWorm<A extends Function> = {
   state: ProxyWormState
   store: A
-  track(component: any, debug?: boolean): () => Set<string>
+  track(debug?: boolean): () => Set<string>
 }
 
 type ProxyWormState = {
-  ids: Set<any>
+  ids: Set<number>
   loops: WeakMap<any, any>
-  keys: Map<any, Set<string>>
+  keys: Map<number, Set<string>>
   add: (s: string) => void
   current: number | any
   debug: boolean
@@ -32,10 +32,10 @@ const filterShallowKeys = (set: Set<string>) => {
   return set
 }
 
-const emptySet = new Set()
+const emptySet = new Set<string>()
 
 // helpful for passing down context
-let resetTrack = new Set()
+let resetTrack = new Set<Function>()
 export function resetTracking() {
   ;[...resetTrack].map(x => x())
 }
@@ -55,7 +55,7 @@ export function mobxProxyWorm<A extends Function>(
   const state: ProxyWormState = parentState || {
     debug: false,
     current: -1,
-    ids: new Set(),
+    ids: new Set<number>(),
     loops: new WeakMap(),
     keys: new Map<any, Set<string>>(),
     add: (next: string) => {
@@ -130,7 +130,7 @@ export function mobxProxyWorm<A extends Function>(
       state.current = id
       state.debug = dbg || false
       state.ids.add(id)
-      state.keys.set(id, new Set())
+      state.keys.set(id, new Set<string>())
       return () => {
         // we may call untrack() then dispose() later so only do once
         if (state.ids.has(id)) {

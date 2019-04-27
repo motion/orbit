@@ -16,9 +16,8 @@ import {
 import { useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
-import StickySidebar from 'sticky-sidebar'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
@@ -37,6 +36,7 @@ import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
+import { useStickySidebar } from './useStickySidebar'
 
 const emptyPromise = () => Promise.resolve({ default: null })
 
@@ -111,27 +111,6 @@ const preloadItem = item => {
       }
     },
   }
-}
-
-export function useStickySidebar({ condition = true, id, ...rest }) {
-  useLayoutEffect(() => {
-    if (condition === false) {
-      return
-    }
-    const sidebar = new StickySidebar(id, {
-      topSpacing: 0,
-      bottomSpacing: 0,
-      innerWrapperSelector: '.sidebar__inner',
-      stickyClass: 'is-affixed',
-      minWidth: 0,
-      resizeSensor: true,
-      ...rest,
-    })
-
-    return () => {
-      sidebar.destroy()
-    }
-  }, [screen])
 }
 
 export const DocsPage = memo((props: { children?: any }) => {

@@ -7,8 +7,8 @@ import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
-import { useStickySidebar } from './DocsPage'
 import { linkProps } from './HomePage/linkProps'
+import { useStickySidebar } from './useStickySidebar'
 
 export default mount({
   '/': route({
@@ -34,10 +34,10 @@ export function AboutPage() {
           <Header position="absolute" left={0} right={0} background="transparent" slim />
 
           <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
-            <Row id="main">
-              <FadeChild delay={200}>
-                <Col id="sidebar" width={200} pointerEvents="auto">
-                  <Col position="relative" className="sidebar__inner" flex={1}>
+            <Row id="main" alignItems="flex-start">
+              <Col id="sidebar" width={200} pointerEvents="auto">
+                <Col position="relative" className="sidebar__inner" flex={1}>
+                  <FadeChild delay={200}>
                     <Space size={35} />
                     <PassProps
                       titleProps={{ fontSize: 18, padding: [10, 20], textAlign: 'right' }}
@@ -49,9 +49,9 @@ export function AboutPage() {
                       <ListItemSimple title="Contact" />
                     </PassProps>
                     <BorderRight top={10} opacity={0.5} />
-                  </Col>
+                  </FadeChild>
                 </Col>
-              </FadeChild>
+              </Col>
               <FadeChild delay={400} style={{ flex: 1 }}>
                 <Col
                   padding={[0, 90]}

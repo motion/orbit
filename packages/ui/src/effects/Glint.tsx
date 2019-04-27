@@ -42,7 +42,6 @@ export const Glint = gloss<Props>({
     if (isTop) {
       glintColor = theme.glintColor || theme.color
     } else {
-      console.log('theme.background', theme.background)
       glintColor = theme.backgroundStrong || theme.background.darken(0.1)
     }
   }

@@ -180,15 +180,15 @@ const AppSearch = memo(() => {
 const allApps = [
   {
     title: 'Search',
-    icon: require('@o/kit/public/icons/appicon-search.svg'),
+    icon: require('../assets/appicon-search.svg'),
   },
   {
     title: 'Lists',
-    icon: require('@o/kit/public/icons/appicon-lists.svg'),
+    icon: require('../assets/appicon-lists.svg'),
   },
   {
     title: 'People',
-    icon: require('@o/kit/public/icons/appicon-people.svg'),
+    icon: require('../assets/appicon-people.svg'),
   },
   ...apps,
 ]

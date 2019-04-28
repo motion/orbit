@@ -71,11 +71,22 @@ function loadOnIntersect(LazyComponent) {
   return props => {
     const hasIntersected = useRef(false)
     const ref = useRef(null)
-    const intersect = useIntersectionObserver({ ref, options: { threshold: 0.01 } })
+    const intersect = useIntersectionObserver({ ref, options: { threshold: 0 } })
     const fallback = (
       <Page {...props}>
         <Page.Content>
-          <div style={{ position: 'absolute', top: -300, bottom: 0 }} ref={ref} />
+          <div
+            className="intersect-div"
+            style={{
+              zIndex: 1000000000000,
+              background: 'red',
+              width: 100,
+              position: 'absolute',
+              top: -300,
+              bottom: -300,
+            }}
+            ref={ref}
+          />
         </Page.Content>
       </Page>
     )

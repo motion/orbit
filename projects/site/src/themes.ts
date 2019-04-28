@@ -70,6 +70,7 @@ export const themes = {
   darkAlt: {
     ...KitThemes.dark,
     ...Theme.fromStyles({
+      color: '#fff',
       background: '#2C2B40',
     }),
   },

@@ -23,9 +23,6 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
           </>
         }
       >
-        {/* offset header stripe */}
-        <View height={20} />
-
         <View margin={['auto', 0]} transform={{ y: '-3%' }}>
           <EarlyAccessContent />
         </View>
@@ -75,7 +72,6 @@ export const EarlyAccessContent = () => {
       header={
         <>
           <PillButton>Beta</PillButton>
-          <Space size="sm" />
           <TitleText size="xxl">Early Access.</TitleText>
           <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>Orbit is now in beta.</TitleTextSub>
           <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>

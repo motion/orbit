@@ -309,32 +309,34 @@ export function NeckSection(props) {
                   </animated.div>
                 </Flex>
                 <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                  <Button
-                    alt="flat"
-                    cursor="pointer"
-                    size={2}
-                    iconSize={22}
-                    circular
-                    zIndex={100}
-                    position="absolute"
-                    top={-4}
-                    left={useScreenVal(-20, 10, 10)}
-                    icon="chevron-left"
-                    onClick={prev}
-                  />
-                  <Button
-                    alt="flat"
-                    cursor="pointer"
-                    size={2}
-                    iconSize={22}
-                    circular
-                    zIndex={100}
-                    position="absolute"
-                    top={-4}
-                    right={useScreenVal(-20, 10, 10)}
-                    icon="chevron-right"
-                    onClick={next}
-                  />
+                  <FadeChild>
+                    <Button
+                      alt="flat"
+                      cursor="pointer"
+                      size={2}
+                      iconSize={22}
+                      circular
+                      zIndex={100}
+                      position="absolute"
+                      top={-4}
+                      left={useScreenVal(-20, 10, 10)}
+                      icon="chevron-left"
+                      onClick={prev}
+                    />
+                    <Button
+                      alt="flat"
+                      cursor="pointer"
+                      size={2}
+                      iconSize={22}
+                      circular
+                      zIndex={100}
+                      position="absolute"
+                      top={-4}
+                      right={useScreenVal(-20, 10, 10)}
+                      icon="chevron-right"
+                      onClick={next}
+                    />
+                  </FadeChild>
 
                   <FadeChild config={slowConfigLessBounce} delay={300}>
                     <animated.div style={{ ...springSlowest, margin: 'auto' }}>

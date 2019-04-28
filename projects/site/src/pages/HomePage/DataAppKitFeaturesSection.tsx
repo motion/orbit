@@ -128,7 +128,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                 </>
               }
             >
-              <Space size="lg" />
+              <Space size="sm" />
               <Grid
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}
@@ -173,8 +173,8 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                   <SimpleSection delay={dly * 3} title="Multi-process apps.">
                     <SectionP>
                       <SectionIcon name="shop" />
-                      Apps are written using React and Typescript, and publish like node modules.
-                      Running multiple processes is done through simple naming conventions.
+                      Apps are written using React and Typescript and publish like node modules.
+                      They support many features, like sharing data and APIs.
                       {screen !== 'small' && (
                         <>
                           <Space />
@@ -186,9 +186,9 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
 
                   <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
                     <SectionP>
-                      <SectionIcon name="widget" />A proper, powerful list view is no joke. Neither
-                      are a table or form. Orbit makes them work, and all work together, accepting
-                      similar data formats and normalizing.
+                      <SectionIcon name="widget" />
+                      Orbit is building a desktop-class UI kit, and going further by making many
+                      views work together both in composition and shared prop types.
                       {screen !== 'small' && (
                         <>
                           <Space />

@@ -179,7 +179,7 @@ const slowestConfig = {
   friction: 12,
 }
 
-export function NeckSection(props) {
+export default function NeckSection() {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
   const nextInt = useRef(null)
@@ -224,240 +224,238 @@ export function NeckSection(props) {
 
   return (
     <Fade.FadeProvide>
-      <Page overflow="hidden" zIndex={3} {...props}>
-        <Page.Content ref={Fade.ref} transform={{ y: '2%' }}>
-          <SpacedPageContent
-            header={
-              <>
-                <FadeChild delay={0}>
-                  <PillButton>Build</PillButton>
+      <Page.Content ref={Fade.ref} transform={{ y: '2%' }}>
+        <SpacedPageContent
+          header={
+            <>
+              <FadeChild delay={0}>
+                <PillButton>Build</PillButton>
+              </FadeChild>
+              <FadeChild delay={100}>
+                <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
+              </FadeChild>
+              <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
+                <FadeChild delay={200}>
+                  Create apps that connect data sources in just a few lines of code.
                 </FadeChild>
-                <FadeChild delay={100}>
-                  <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
-                </FadeChild>
-                <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
-                  <FadeChild delay={200}>
-                    Create apps that connect data sources in just a few lines of code.
-                  </FadeChild>
-                </TitleTextSub>
-              </>
-            }
-          >
-            <Col maxWidth="100%" margin={[-10, 'auto', 0, 0]}>
-              {screen !== 'small' && (
-                <Row space>
-                  <SubSection maxWidth="33%">
-                    <FadeChild {...fadeLeftProps} delay={200}>
-                      <PillButtonDark>1. Import</PillButtonDark>
-                      <Space />
-                      <CenterText>
-                        Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline>{' '}
-                        provide data with just a line of code.
-                      </CenterText>
-                    </FadeChild>
-                  </SubSection>
-                  <SubSection flex={2} pad={[true, 'xxl']}>
-                    <FadeChild delay={400}>
-                      <PillButtonDark>2. Display</PillButtonDark>
-                      <Space />
-                      <CenterText maxWidth={400} margin={[0, 'auto']}>
-                        Orbit provides everything you need to build tools fast, with powerful views
-                        like a {elements[cur].title}.
-                      </CenterText>
-                    </FadeChild>
-                  </SubSection>
-                  <SubSection maxWidth="33%">
-                    <FadeChild {...fadeRightProps} delay={200}>
-                      <PillButtonDark>3. Export</PillButtonDark>
-                      <Space />
-                      <CenterText>
-                        With selections + actions, exporting to{' '}
-                        <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
-                      </CenterText>
-                    </FadeChild>
-                  </SubSection>
-                </Row>
-              )}
-
-              <Space />
-
+              </TitleTextSub>
+            </>
+          }
+        >
+          <Col maxWidth="100%" margin={[-10, 'auto', 0, 0]}>
+            {screen !== 'small' && (
               <Row space>
-                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                  <animated.div style={springFast}>
-                    <FadeChild {...fadeLeftProps} delay={300}>
-                      <Image
-                        userSelect="none"
-                        alignSelf="center"
-                        width={100}
-                        height={100}
-                        src={elements[cur].iconBefore}
-                      />
-                    </FadeChild>
-                  </animated.div>
-                  <Space size="xxl" />
-                  <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                    <FadeChild delay={400}>
-                      <Image
-                        userSelect="none"
-                        opacity={0.5}
-                        src={require('../../../public/images/curve-arrow.svg')}
-                        transform={{
-                          scale: 0.8,
-                        }}
-                      />
-                    </FadeChild>
-                  </animated.div>
-                </Flex>
-                <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                  <FadeChild>
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      left={useScreenVal(-20, 10, 10)}
-                      icon="chevron-left"
-                      onClick={prev}
-                    />
-                    <Button
-                      alt="flat"
-                      cursor="pointer"
-                      size={2}
-                      iconSize={22}
-                      circular
-                      zIndex={100}
-                      position="absolute"
-                      top={-4}
-                      right={useScreenVal(-20, 10, 10)}
-                      icon="chevron-right"
-                      onClick={next}
-                    />
+                <SubSection maxWidth="33%">
+                  <FadeChild {...fadeLeftProps} delay={200}>
+                    <PillButtonDark>1. Import</PillButtonDark>
+                    <Space />
+                    <CenterText>
+                      Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
+                      data with just a line of code.
+                    </CenterText>
                   </FadeChild>
-
-                  <FadeChild config={slowConfigLessBounce} delay={300}>
-                    <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                      <TiltSquircle
-                        width={280}
-                        height={280}
-                        background={`linear-gradient(125deg, #78009F, #4C1966)`}
-                        boxShadow="0 20px 50px rgba(0,0,0,0.6)"
-                        padding={30}
-                        cursor="pointer"
-                      >
-                        <TitleText
-                          fontSize={18}
-                          margin={[0, 'auto']}
-                          letterSpacing={2}
-                          alpha={0.4}
-                          textTransform="uppercase"
-                          color="#fff"
-                          cursor="inherit"
-                        >
-                          {`<${elements[cur].title} />`}
-                        </TitleText>
-                        <Space />
-                        <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
-                          {elements[cur].body}
-                        </Paragraph>
-                      </TiltSquircle>
-                    </animated.div>
+                </SubSection>
+                <SubSection flex={2} pad={[true, 'xxl']}>
+                  <FadeChild delay={400}>
+                    <PillButtonDark>2. Display</PillButtonDark>
+                    <Space />
+                    <CenterText maxWidth={400} margin={[0, 'auto']}>
+                      Orbit provides everything you need to build tools fast, with powerful views
+                      like a {elements[cur].title}.
+                    </CenterText>
                   </FadeChild>
-
-                  <animated.div
-                    style={{
-                      ...springSlow,
-                      marginTop: -215,
-                      height: 300,
-                      zIndex: -1,
-                    }}
-                  >
-                    <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
-                      <View
-                        width="100%"
-                        height={260}
-                        minWidth={350}
-                        borderRadius={22}
-                        background="#000"
-                        boxShadow={[[0, 10, 30, [0, 0, 0]]]}
-                        overflow="hidden"
-                      >
-                        <Image
-                          userSelect="none"
-                          src={elements[cur].image}
-                          width="100%"
-                          height="auto"
-                          opacity={0.45}
-                        />
-                      </View>
-                    </FadeChild>
-                  </animated.div>
-                </Flex>
-
-                <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                </SubSection>
+                <SubSection maxWidth="33%">
                   <FadeChild {...fadeRightProps} delay={200}>
-                    <animated.div style={springSlowest}>
-                      <Image
-                        userSelect="none"
-                        alignSelf="center"
-                        width={100}
-                        height={100}
-                        src={elements[cur].iconAfter}
-                      />
-                    </animated.div>
+                    <PillButtonDark>3. Export</PillButtonDark>
+                    <Space />
+                    <CenterText>
+                      With selections + actions, exporting to{' '}
+                      <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
+                    </CenterText>
                   </FadeChild>
-                  <Space size="xxl" />
-                  <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                    <FadeChild delay={400}>
+                </SubSection>
+              </Row>
+            )}
+
+            <Space />
+
+            <Row space>
+              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                <animated.div style={springFast}>
+                  <FadeChild {...fadeLeftProps} delay={300}>
+                    <Image
+                      userSelect="none"
+                      alignSelf="center"
+                      width={100}
+                      height={100}
+                      src={elements[cur].iconBefore}
+                    />
+                  </FadeChild>
+                </animated.div>
+                <Space size="xxl" />
+                <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
+                  <FadeChild delay={400}>
+                    <Image
+                      userSelect="none"
+                      opacity={0.5}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                      transform={{
+                        scale: 0.8,
+                      }}
+                    />
+                  </FadeChild>
+                </animated.div>
+              </Flex>
+              <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
+                <FadeChild>
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    left={useScreenVal(-20, 10, 10)}
+                    icon="chevron-left"
+                    onClick={prev}
+                  />
+                  <Button
+                    alt="flat"
+                    cursor="pointer"
+                    size={2}
+                    iconSize={22}
+                    circular
+                    zIndex={100}
+                    position="absolute"
+                    top={-4}
+                    right={useScreenVal(-20, 10, 10)}
+                    icon="chevron-right"
+                    onClick={next}
+                  />
+                </FadeChild>
+
+                <FadeChild config={slowConfigLessBounce} delay={300}>
+                  <animated.div style={{ ...springSlowest, margin: 'auto' }}>
+                    <TiltSquircle
+                      width={280}
+                      height={280}
+                      background={`linear-gradient(125deg, #78009F, #4C1966)`}
+                      boxShadow="0 20px 50px rgba(0,0,0,0.6)"
+                      padding={30}
+                      cursor="pointer"
+                    >
+                      <TitleText
+                        fontSize={18}
+                        margin={[0, 'auto']}
+                        letterSpacing={2}
+                        alpha={0.4}
+                        textTransform="uppercase"
+                        color="#fff"
+                        cursor="inherit"
+                      >
+                        {`<${elements[cur].title} />`}
+                      </TitleText>
+                      <Space />
+                      <Paragraph cursor="inherit" sizeLineHeight={1.2} size={1.2} alpha={0.8}>
+                        {elements[cur].body}
+                      </Paragraph>
+                    </TiltSquircle>
+                  </animated.div>
+                </FadeChild>
+
+                <animated.div
+                  style={{
+                    ...springSlow,
+                    marginTop: -215,
+                    height: 300,
+                    zIndex: -1,
+                  }}
+                >
+                  <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
+                    <View
+                      width="100%"
+                      height={260}
+                      minWidth={350}
+                      borderRadius={22}
+                      background="#000"
+                      boxShadow={[[0, 10, 30, [0, 0, 0]]]}
+                      overflow="hidden"
+                    >
                       <Image
                         userSelect="none"
-                        opacity={0.5}
-                        transform={{
-                          rotate: '275deg',
-                          scale: 0.8,
-                        }}
-                        src={require('../../../public/images/curve-arrow.svg')}
+                        src={elements[cur].image}
+                        width="100%"
+                        height="auto"
+                        opacity={0.45}
                       />
-                    </FadeChild>
+                    </View>
+                  </FadeChild>
+                </animated.div>
+              </Flex>
+
+              <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
+                <FadeChild {...fadeRightProps} delay={200}>
+                  <animated.div style={springSlowest}>
+                    <Image
+                      userSelect="none"
+                      alignSelf="center"
+                      width={100}
+                      height={100}
+                      src={elements[cur].iconAfter}
+                    />
                   </animated.div>
-                </Flex>
-              </Row>
-            </Col>
-          </SpacedPageContent>
-        </Page.Content>
+                </FadeChild>
+                <Space size="xxl" />
+                <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
+                  <FadeChild delay={400}>
+                    <Image
+                      userSelect="none"
+                      opacity={0.5}
+                      transform={{
+                        rotate: '275deg',
+                        scale: 0.8,
+                      }}
+                      src={require('../../../public/images/curve-arrow.svg')}
+                    />
+                  </FadeChild>
+                </animated.div>
+              </Flex>
+            </Row>
+          </Col>
+        </SpacedPageContent>
+      </Page.Content>
 
-        <Page.Parallax overflow="visible" speed={0} zIndex={0}>
-          <FullScreen
-            transform={{ y: -120 }}
-            minWidth={1000}
-            margin={[0, '-5vw']}
-            top={40}
-            bottom="auto"
-            className="head-line-sep"
-          >
-            <LineSep />
+      <Page.Parallax overflow="visible" speed={0} zIndex={0}>
+        <FullScreen
+          transform={{ y: -120 }}
+          minWidth={1000}
+          margin={[0, '-5vw']}
+          top={40}
+          bottom="auto"
+          className="head-line-sep"
+        >
+          <LineSep />
+        </FullScreen>
+      </Page.Parallax>
+
+      <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
+        <FadeChild delay={800} style={{ width: '100%', height: '100%' }}>
+          <FullScreen zIndex={0}>
+            <FullScreen
+              className="northern-lights"
+              backgroundImage={`url(${northernlights})`}
+              backgroundSize="cover"
+              backgroundPosition="center center"
+              backgroundRepeat="no-repeat"
+              opacity={0.5}
+            />
+            <Spotlight />
           </FullScreen>
-        </Page.Parallax>
-
-        <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-          <FadeChild delay={800} style={{ width: '100%', height: '100%' }}>
-            <FullScreen zIndex={0}>
-              <FullScreen
-                className="northern-lights"
-                backgroundImage={`url(${northernlights})`}
-                backgroundSize="cover"
-                backgroundPosition="center center"
-                backgroundRepeat="no-repeat"
-                opacity={0.5}
-              />
-              <Spotlight />
-            </FullScreen>
-          </FadeChild>
-        </Page.Parallax>
-      </Page>
+        </FadeChild>
+      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

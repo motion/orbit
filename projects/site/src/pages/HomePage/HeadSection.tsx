@@ -11,7 +11,6 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
-import { GradientDown } from './GradientDown'
 import { Join } from './Join'
 import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
@@ -21,7 +20,7 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Easy, powerful apps with your team',
+  large: 'The next generation of apps',
   medium: 'Easy, powerful apps with your team',
   small: 'Build amazing apps',
 }
@@ -154,7 +153,7 @@ const Smaller = gloss({
   },
 }))
 
-export function HeadSection(props) {
+export function HeadSection() {
   const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
@@ -162,33 +161,32 @@ export function HeadSection(props) {
   return (
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
-      <Page zIndex={0} overflow="hidden" {...props}>
-        <Page.Content>
-          <FullScreen
-            right={useScreenHeightVal(40, 0)}
-            left={useScreenHeightVal(40, 0)}
-            opacity={fontsLoaded ? 1 : 0}
-            bottom={50}
-          >
-            <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
-              <HeadText />
-            </Row>
-          </FullScreen>
-        </Page.Content>
+      <Page.Content>
+        <FullScreen
+          right={useScreenHeightVal(40, 0)}
+          left={useScreenHeightVal(40, 0)}
+          opacity={fontsLoaded ? 1 : 0}
+          bottom={50}
+        >
+          <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+            <HeadText />
+          </Row>
+        </FullScreen>
+      </Page.Content>
 
-        <Page.Parallax zIndex={1} speed={0}>
-          <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-            <FadeChild {...fadeUpProps} delay={600}>
-              <View
-                flex={1}
-                width="100%"
-                maxWidth={1000}
-                margin={['auto', 'auto', 0]}
-                height={220}
-                position="relative"
-                bottom={0}
-              >
-                {/* <View
+      <Page.Parallax zIndex={1} speed={0}>
+        <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
+          <FadeChild {...fadeUpProps} delay={600}>
+            <View
+              flex={1}
+              width="100%"
+              maxWidth={1000}
+              margin={['auto', 'auto', 0]}
+              height={220}
+              position="relative"
+              bottom={0}
+            >
+              {/* <View
                   position="absolute"
                   overflow="hidden"
                   backgroundImage={`url(${appScreen})`}
@@ -202,103 +200,97 @@ export function HeadSection(props) {
                   boxShadow={[[0, 0, 100, [0, 0, 0]]]}
                   pointerEvents="auto"
                 /> */}
-                <FadeChild {...fadeUpProps} delay={500}>
-                  <SurfacePassProps elevation={5} fontFamily="GT Eesti">
-                    <Theme name="orbitOneDark">
-                      <Scale size={1.1}>
-                        <Join
-                          inputProps={{
-                            minWidth: useScreenVal('auto', 300, 300),
-                          }}
-                          borderRadius={1000}
-                          boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
-                          transform={{ y: -123 }}
-                          flexFlow="row"
-                          group
-                          margin={[0, 'auto']}
-                        />
-                      </Scale>
-                    </Theme>
-                  </SurfacePassProps>
-                </FadeChild>
-                {/* <DownloadButton
+              <FadeChild {...fadeUpProps} delay={500}>
+                <SurfacePassProps elevation={5} fontFamily="GT Eesti">
+                  <Theme name="orbitOneDark">
+                    <Scale size={1.1}>
+                      <Join
+                        inputProps={{
+                          minWidth: useScreenVal('auto', 300, 300),
+                        }}
+                        borderRadius={1000}
+                        boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
+                        transform={{ y: -123 }}
+                        flexFlow="row"
+                        group
+                        margin={[0, 'auto']}
+                      />
+                    </Scale>
+                  </Theme>
+                </SurfacePassProps>
+              </FadeChild>
+              {/* <DownloadButton
                     onMouseEnter={() => setHoverDownload(true)}
                     onMouseLeave={() => setHoverDownload(false)}
                   /> */}
-              </View>
-            </FadeChild>
+            </View>
+          </FadeChild>
 
-            {false && (
-              <View
-                position="absolute"
-                bottom="12%"
-                left={0}
-                right={0}
-                alignItems="center"
-                justifyContent="center"
-                height={160}
-              >
-                <View
-                  height={160}
-                  margin={[0, 'auto']}
-                  width={200}
-                  position="relative"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Image
-                    position="absolute"
-                    top={0}
-                    transform={{ scale: 0.5 }}
-                    transformOrigin="top center"
-                    src={macbook}
-                  />
-                  <View
-                    className="macbook-shadow"
-                    boxShadow={[[0, 20, 80, 10, '#000']]}
-                    zIndex={-1}
-                    position="absolute"
-                    top={10}
-                    left={0}
-                    right={0}
-                    bottom={10}
-                  />
-                  <RoundButton
-                    aria-label="See how Orbit Works"
-                    primary="#290C3C"
-                    padding={[10, 20]}
-                  >
-                    See how Orbit works
-                  </RoundButton>
-                </View>
-              </View>
-            )}
-          </FullScreen>
-        </Page.Parallax>
-
-        <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
-          <FullScreen zIndex={-100}>
+          {false && (
             <View
-              pointerEvents="none"
               position="absolute"
-              top="15%"
+              bottom="12%"
               left={0}
               right={0}
-              overflow="hidden"
-              bottom={0}
-              userSelect="none"
-              opacity={0.2}
+              alignItems="center"
+              justifyContent="center"
+              height={160}
             >
-              <Image src={glow} />
-              <GradientDown top="50%" zIndex={100} />
+              <View
+                height={160}
+                margin={[0, 'auto']}
+                width={200}
+                position="relative"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  position="absolute"
+                  top={0}
+                  transform={{ scale: 0.5 }}
+                  transformOrigin="top center"
+                  src={macbook}
+                />
+                <View
+                  className="macbook-shadow"
+                  boxShadow={[[0, 20, 80, 10, '#000']]}
+                  zIndex={-1}
+                  position="absolute"
+                  top={10}
+                  left={0}
+                  right={0}
+                  bottom={10}
+                />
+                <RoundButton aria-label="See how Orbit Works" primary="#290C3C" padding={[10, 20]}>
+                  See how Orbit works
+                </RoundButton>
+              </View>
             </View>
-          </FullScreen>
-        </Page.Parallax>
+          )}
+        </FullScreen>
+      </Page.Parallax>
 
-        {/* <Page.Parallax speed={0} zIndex={-2}>
-          <TopBlur opacity={0.7} />
-        </Page.Parallax> */}
-      </Page>
+      <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
+        <FullScreen
+          zIndex={-100}
+          transformOrigin="center center"
+          transform={{ scale: 1, y: '12%' }}
+        >
+          <View
+            pointerEvents="none"
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            overflow="hidden"
+            userSelect="none"
+            opacity={0.25}
+          >
+            <Image src={glow} />
+          </View>
+        </FullScreen>
+      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

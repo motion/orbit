@@ -6,8 +6,8 @@ import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
-import { NeckSection } from './HomePage/AllInOnePitchDemoSection'
-import { ShoulderSection } from './HomePage/DeploySection'
+import AllInOnePitchDemoSection from './HomePage/AllInOnePitchDemoSection'
+import DeploySection from './HomePage/DeploySection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 
@@ -46,18 +46,34 @@ export function HomePage() {
           container={bodyElement}
           pageHeight={siteStore.sectionHeight}
         >
-          <HeadSection offset={0} />
-          <NeckSection offset={1} />
-          <ShoulderSection offset={2} />
-          <DataAppKitFeaturesSection offset={3} />
+          <Page offset={0} zIndex={0}>
+            <HeadSection />
+          </Page>
+          <Page offset={1}>
+            <AllInOnePitchDemoSection />
+          </Page>
+          <Page offset={2}>
+            <DeploySection />
+          </Page>
+          <Page offset={3}>
+            <DataAppKitFeaturesSection />
+          </Page>
           <Theme name="darkAlt">
-            <EarlyAccessBetaSection offset={5} />
-            <SecuritySection offset={6} />
+            <Page offset={5} zIndex={1}>
+              <EarlyAccessBetaSection />
+            </Page>
+            <Page offset={6}>
+              <SecuritySection />
+            </Page>
           </Theme>
-          <MissionMottoSection offset={7} />
-          <Theme name="home">
-            <FeetSection offset={8} />
-          </Theme>
+          <Page offset={7}>
+            <MissionMottoSection />
+          </Page>
+          <Page offset={8}>
+            <Theme name="home">
+              <FeetSection />
+            </Theme>
+          </Page>
         </Parallax>
       </main>
     </ParallaxContext.PassProps>

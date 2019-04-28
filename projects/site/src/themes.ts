@@ -11,8 +11,8 @@ export const themes = {
   ...KitThemes,
 
   orbitOneDark: Theme.fromStyles({
-    background: '#000',
-    backgroundHover: '#000',
+    background: '#111',
+    backgroundHover: '#111',
     borderColor: '#222',
     buttonBackground: buttonBackground,
     buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),

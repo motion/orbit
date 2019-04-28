@@ -13,10 +13,10 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const bottomSeparator = bottomLightSeparator
 
-export default function WaistSection(props) {
+export default function WaistSection() {
   const screen = useScreenSize()
   return (
-    <Page {...props}>
+    <>
       <Page.Content
         outside={
           <>
@@ -89,7 +89,7 @@ export default function WaistSection(props) {
       </Page.Content>
 
       <Page.Background background={theme => theme.background} bottom={150} />
-    </Page>
+    </>
   )
 }
 

@@ -11,9 +11,9 @@ import { Join } from './Join'
 import { Wavy } from './purpleWaveUrl'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export default function EarlyAccessSection({ outside = null, ...props }: any) {
+export default function EarlyAccessSection({ outside = null }: any) {
   return (
-    <Page zIndex={1} {...props}>
+    <>
       <Page.Content
         zIndex={10}
         outside={
@@ -29,7 +29,7 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
       </Page.Content>
 
       <Page.Background background={theme => theme.background} top={80} />
-    </Page>
+    </>
   )
 }
 

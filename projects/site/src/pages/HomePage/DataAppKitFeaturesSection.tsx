@@ -27,7 +27,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
   const FadeDataApps = useFadePage({ threshold: 0 })
   const Fade = useFadePage()
   return (
-    <Page {...props}>
+    <>
       <FadeDataApps.FadeProvide>
         {/* Data, meet app */}
 
@@ -228,7 +228,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
         opacity={1}
         backgroundImage={blackWavePattern}
       />
-    </Page>
+    </>
   )
 })
 

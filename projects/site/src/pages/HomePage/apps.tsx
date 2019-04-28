@@ -1,5 +1,13 @@
 export const apps = [
   {
+    icon: require('../../../public/logos/jira.svg'),
+    title: 'Jira',
+  },
+  {
+    icon: require('../../../public/logos/drive.svg'),
+    title: 'Drive',
+  },
+  {
     icon: require('../../../public/logos/slack.svg'),
     title: 'Slack',
   },
@@ -12,23 +20,19 @@ export const apps = [
     title: 'Gmail',
   },
   {
-    icon: require('../../../public/logos/drive.svg'),
-    title: 'Drive',
-  },
-  {
-    icon: require('../../../public/logos/confluence.svg'),
-    title: 'Confluence',
-  },
-  {
-    icon: require('../../../public/logos/jira.svg'),
-    title: 'Jira',
-  },
-  {
     icon: require('../../../public/logos/sheets.svg'),
     title: 'Sheets',
   },
   {
     icon: require('../../../public/logos/postgres.svg'),
     title: 'Postgres',
+  },
+  {
+    icon: require('../../../public/logos/gdocs.svg'),
+    title: 'GDocs',
+  },
+  {
+    icon: require('../../../public/logos/confluence.svg'),
+    title: 'Confluence',
   },
 ]

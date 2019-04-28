@@ -159,8 +159,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                   <SimpleSection delay={dly * 2} title="Spaces to collaborate.">
                     <SectionP>
                       <SectionIcon name="satellite" />
-                      Anyone on your team can use, edit, and add new apps. This happens
-                      decentralized, so your team can collaborate behind the firewall.
+                      The easiest collaboration story. No credential sharing, everyone in sync.
                       {screen !== 'small' && (
                         <>
                           <Space />

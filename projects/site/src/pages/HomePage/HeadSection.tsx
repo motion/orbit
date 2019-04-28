@@ -10,7 +10,6 @@ import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
-import { TopBlur } from '../../views/TopBlur'
 import { useTextFit } from '../../views/useTextFit'
 import { GradientDown } from './GradientDown'
 import { Join } from './Join'
@@ -296,9 +295,9 @@ export function HeadSection(props) {
           </FullScreen>
         </Page.Parallax>
 
-        <Page.Parallax speed={0} zIndex={-2}>
+        {/* <Page.Parallax speed={0} zIndex={-2}>
           <TopBlur opacity={0.7} />
-        </Page.Parallax>
+        </Page.Parallax> */}
       </Page>
     </Fade.FadeProvide>
   )

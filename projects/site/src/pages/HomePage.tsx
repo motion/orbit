@@ -56,7 +56,7 @@ export function HomePage() {
             <DeploySection />
           </Page>
           <Page offset={3}>
-            <DataAppKitFeaturesSection />
+            <DataAppKitFeaturesSection pages={2} />
           </Page>
           <Theme name="darkAlt">
             <Page offset={5} zIndex={1}>
@@ -88,18 +88,20 @@ function loadOnIntersect(LazyComponent) {
     const hasIntersected = useRef(false)
     const ref = useRef(null)
     const intersect = useIntersectionObserver({ ref, options: { threshold: 0 } })
+    console.log('props.pages', props.pages)
     const fallback = (
       <Page {...props}>
-        <Page.Content>
+        <Page.Content pages={props.pages}>
           <div
             className="intersect-div"
             style={{
               zIndex: 1000000000000,
-              background: 'red',
-              width: 100,
+              // background: 'red',
+              width: 2,
               position: 'absolute',
-              top: -300,
-              bottom: -300,
+              // makes it load "before/after" by this px
+              top: -400,
+              bottom: -400,
             }}
             ref={ref}
           />

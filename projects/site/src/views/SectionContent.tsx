@@ -4,7 +4,11 @@ import React from 'react'
 
 import * as Constants from '../constants'
 
-export type SectionContentProps = ViewProps & { outside?: React.ReactNode; forwardRef?: any }
+export type SectionContentProps = ViewProps & {
+  outside?: React.ReactNode
+  forwardRef?: any
+  pages?: number
+}
 
 export const SectionContent = ({
   outside,

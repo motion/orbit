@@ -14,7 +14,7 @@ import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.8} {...props} />
+const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
 
 export default function ShoulderSection() {
   const Fade = useFadePage()

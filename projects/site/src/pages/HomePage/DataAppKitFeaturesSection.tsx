@@ -1,4 +1,4 @@
-import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { FullScreen, Grid, Image, memoIsEqualDeep, PassProps, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
@@ -60,14 +60,14 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
               <>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xxl">
-                    Import, search, filter, export.
+                    Bring your data together.
                   </TitleText>
                 </FadeChild>
-                <TitleTextSub size="md">
+                <TitleTextSub size="sm">
                   <FadeChild delay={200}>
-                    Every app exposes a simple typed API.
+                    Plug in many integrations, then build on them.
                     {screen !== 'small' && <br />}
-                    &nbsp;Publish apps in the open app store.
+                    &nbsp;Use, extend and publish more in the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -80,11 +80,19 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
               height="auto"
               space="md"
               spaceAround
-              scrollable="x"
               justifyContent="center"
+              transform={{
+                y: '-60%',
+              }}
             >
               {apps.map((app, index) => (
-                <Integration key={app.title} index={index} icon={app.icon} title={app.title} />
+                <Integration
+                  key={app.title}
+                  index={index}
+                  icon={app.icon}
+                  title={app.title}
+                  transform={{ y: `${index * 20}%` }}
+                />
               ))}
             </Row>
 
@@ -232,9 +240,16 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
   )
 })
 
-const Integration = memo(({ icon, title, index }: any) => (
+const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
   <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>
-    <View height={150} width={150} alignItems="center" justifyContent="center">
+    <View
+      userSelect="none"
+      height={150}
+      width={150}
+      alignItems="center"
+      justifyContent="center"
+      {...props}
+    >
       <Image
         src={icon}
         transition="all ease 200ms"
@@ -244,7 +259,9 @@ const Integration = memo(({ icon, title, index }: any) => (
         hoverStyle={{ opacity: 1 }}
       />
       <Space />
-      <Paragraph size="xl">{title}</Paragraph>
+      <Paragraph selectable={false} size="xl">
+        {title}
+      </Paragraph>
     </View>
   </FadeChild>
 ))

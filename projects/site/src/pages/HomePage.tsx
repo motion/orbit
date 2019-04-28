@@ -88,7 +88,6 @@ function loadOnIntersect(LazyComponent) {
     const hasIntersected = useRef(false)
     const ref = useRef(null)
     const intersect = useIntersectionObserver({ ref, options: { threshold: 0 } })
-    console.log('props.pages', props.pages)
     const fallback = (
       <Page {...props}>
         <Page.Content pages={props.pages}>

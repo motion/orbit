@@ -1,8 +1,8 @@
 import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
 
-import glow from '../../../public/images/glow.svg'
+import glowImage from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
 import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
@@ -13,6 +13,7 @@ import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { OuterSpace } from './OuterSpace'
+import { blackWavePattern } from './purpleWaveUrl'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xxl" />
@@ -21,25 +22,25 @@ let lgSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'The next generation of apps',
-  medium: 'Easy, powerful apps with your team',
-  small: 'Build amazing apps',
+  medium: 'The next generation of apps',
+  small: 'Next gen apps',
 }
 
 let allTexts = {
   large: [
-    `Code internal tools and desktop apps that coordinate without a server.`,
-    `Plug in data, apps, and more with a click.`,
+    `Code desktop apps and internal tools that coordinate without a server.`,
+    `Plug in data sources, apps, and more with a click.`,
   ],
   medium: [
-    `Code powerful internal tools without configuration or servers.`,
-    `Vertically integrated UI kit, dev environment & deploy.`,
+    `Code desktop apps and internal tools without a server.`,
+    `Plug in data sources and apps with a click.`,
   ],
   small: [`Code internal tools, no config or servers.`, `UI kit, dev environment & deploy.`],
 }
 
 const subTexts = {
   large: `Five ways Orbit makes common apps easy.`,
-  medium: `Learn how Orbit makes common apps easy.`,
+  medium: `How Orbit makes common apps easy.`,
   small: `Learn how.`,
 }
 
@@ -144,7 +145,8 @@ const Smaller = gloss({
   textDecoration: 'underline',
   textDecorationColor: '#222',
   transition: 'color ease 350ms',
-  fontSize: 24,
+  fontSize: 26,
+  marginTop: 10,
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),
@@ -270,7 +272,25 @@ export function HeadSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax overflow="visible" speed={0} zIndex={-1}>
+      <Page.Background
+        speed={0.1}
+        zIndex={-10}
+        opacity={0.65}
+        bottom="-50%"
+        backgroundSize="cover"
+        left="-40%"
+        right="-40%"
+        width="180%"
+        top="-20%"
+        backgroundPosition="top center"
+        backgroundImage={blackWavePattern}
+        transform={{
+          scaleX: -1,
+          scaleY: -1,
+        }}
+      />
+
+      <Page.Parallax overflow="visible" speed={0} zIndex={-11}>
         <FullScreen
           zIndex={-100}
           transformOrigin="center center"
@@ -285,9 +305,9 @@ export function HeadSection() {
             bottom={0}
             overflow="hidden"
             userSelect="none"
-            opacity={0.25}
+            opacity={0}
           >
-            <Image src={glow} />
+            <Image src={glowImage} />
           </View>
         </FullScreen>
       </Page.Parallax>

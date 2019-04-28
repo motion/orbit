@@ -290,9 +290,7 @@ export function HeadSection(props) {
               userSelect="none"
               opacity={0.2}
             >
-              <FadeChild {...fadeUpProps}>
-                <Image src={glow} />
-              </FadeChild>
+              <Image src={glow} />
               <GradientDown top="50%" zIndex={100} />
             </View>
           </FullScreen>

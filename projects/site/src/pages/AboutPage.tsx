@@ -32,9 +32,9 @@ export function AboutPage() {
     <Fade.FadeProvide>
       <Theme name={AboutPage.theme}>
         <main ref={Fade.ref} style={{ minHeight: 2000 }}>
-          <Header position="absolute" left={0} right={0} background="transparent" slim />
+          <Header noBorder background="transparent" slim />
 
-          <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
+          <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
             <Row id="main" alignItems="flex-start">
               <Col id="sidebar" width={200} pointerEvents="auto">
                 <Col position="relative" className="sidebar__inner" flex={1}>

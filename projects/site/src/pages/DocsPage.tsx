@@ -234,22 +234,24 @@ export const DocsPage = memo((props: { children?: any }) => {
         </Portal>
       )}
 
-      <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
-        <Row id="main" className="main">
-          {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-          <Col
-            ref={Fade.ref}
-            flex={1}
-            overflow="hidden"
-            padding={isSmall ? 0 : [0, 0, 0, 24]}
-            className="content"
-          >
-            <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-          </Col>
-        </Row>
+      <main className="main-contents">
+        <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
+          <Row id="main" className="main">
+            {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+            <Col
+              ref={Fade.ref}
+              flex={1}
+              overflow="hidden"
+              padding={isSmall ? 0 : [0, 0, 0, 24]}
+              className="content"
+            >
+              <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+            </Col>
+          </Row>
 
-        <BlogFooter />
-      </SectionContent>
+          <BlogFooter />
+        </SectionContent>
+      </main>
     </Fade.FadeProvide>
   )
 })

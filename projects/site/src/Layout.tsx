@@ -40,7 +40,7 @@ const PageLoading = () => {
   return <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
 }
 
-export function Layout(props: any) {
+export const Layout = memo((props: any) => {
   const forceUpdate = useForceUpdate()
   updateLayout = forceUpdate
   const siteStore = useSiteStore()
@@ -91,7 +91,7 @@ export function Layout(props: any) {
       </Theme>
     </ProvideUI>
   )
-}
+})
 
 const LayoutSidebar = memo(() => {
   const siteStore = useSiteStore()

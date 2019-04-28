@@ -48,14 +48,16 @@ export const createLink = memoize((href, header = null) => async e => {
   clearTimeout(tm)
   e.preventDefault()
   // if you want fancier transitions
-  // document.body.classList.add('loading')
-  // setTimeout(() => {
-  //   if (loadedRoutes[href]) {
-  //     const next = themes[loadedRoutes[href]].background.toCSS()
-  //     document.body.style.background = next
-  //   }
-  // })
-  const finish = () => Navigation.navigate(href)
+  document.body.classList.add('will-load')
+  setTimeout(() => {
+    document.body.classList.add('loading')
+  })
+  const finish = () => {
+    Navigation.navigate(href).then(() => {
+      document.body.classList.remove('loading')
+      document.body.classList.remove('will-load')
+    })
+  }
   if (header) {
     header.setShown(false)
     tm = setTimeout(finish, 140)

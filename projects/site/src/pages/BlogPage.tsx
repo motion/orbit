@@ -51,7 +51,7 @@ export function BlogPage(props: { title?: string; children?: any }) {
   return (
     <MDX>
       <Header slim noBorder />
-      {props.children}
+      <main className="main-contents">{props.children}</main>
     </MDX>
   )
 }

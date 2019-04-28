@@ -31,7 +31,7 @@ export function AboutPage() {
   return (
     <Fade.FadeProvide>
       <Theme name={AboutPage.theme}>
-        <main ref={Fade.ref} style={{ minHeight: 2000 }}>
+        <main className="main-contents" ref={Fade.ref} style={{ minHeight: 2000 }}>
           <Header noBorder background="transparent" slim />
 
           <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">

@@ -247,7 +247,7 @@ export class Text extends React.PureComponent<TextProps> {
 
     return (
       <TextBlock
-        className={className}
+        className={`ui-text ${className || ''}`}
         tagName={tagName}
         contentEditable={editable}
         selectable={selectable}

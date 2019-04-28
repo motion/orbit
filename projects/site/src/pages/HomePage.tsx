@@ -38,7 +38,7 @@ export function HomePage() {
     <ParallaxContext.PassProps value={parallax}>
       <LoadingPage />
       <Header />
-      <main style={{ position: 'relative', zIndex: 0 }}>
+      <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
           ref={setParallax}
           pages={9}

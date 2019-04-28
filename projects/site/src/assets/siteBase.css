@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
-  background: #f5f7f9;
+  background: #000;
   font-size: 14px;
   line-height: 1.3rem;
   font-weight: 300;
@@ -17,8 +17,13 @@ body {
   min-height: 100vh;
 }
 
-.loading {
-  transition: all ease 300ms !important;
+.will-load .main-contents {
+  opacity: 1;
+  transition: all ease 10ms 100ms !important;
+}
+
+.loading .main-contents {
+  opacity: 0;
 }
 
 .font-smooth {

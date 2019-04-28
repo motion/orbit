@@ -17,7 +17,7 @@ import { PillButtonDark } from '../../views/PillButtonDark'
 import { Spotlight } from '../../views/Spotlight'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
-import { LineSep } from './EarlyAccessBetaSection'
+import { LineSep } from './LineSep'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (

@@ -1,4 +1,3 @@
-import { ButtonProps } from '@o/ui'
 import memoize from 'memoize-weak'
 import { useCurrentRoute } from 'react-navi'
 
@@ -9,8 +8,7 @@ export const LinkState = {
   didAnimateOut: true,
 }
 
-const isOnRoute = (path, route) =>
-  path === '/' ? route.url.pathname === path : route.url.pathname.indexOf(path) === 0
+const isOnRoute = (path, route) => route.url.pathname === path
 
 export const useIsActiveRoute = (href: string) => {
   const route = useCurrentRoute()
@@ -44,16 +42,17 @@ export const useLink = (href: string) => {
 
 let tm = null
 
-export const createLink = memoize((href, header = null) => async e => {
+export const createLink = memoize((href: string, header = null) => async e => {
   clearTimeout(tm)
   e.preventDefault()
   // if you want fancier transitions
   document.body.classList.add('will-load')
-  setTimeout(() => {
+  let tm2 = setTimeout(() => {
     document.body.classList.add('loading')
   })
   const finish = () => {
     Navigation.navigate(href).then(() => {
+      clearTimeout(tm2)
       document.body.classList.remove('loading')
       document.body.classList.remove('will-load')
     })
@@ -66,11 +65,11 @@ export const createLink = memoize((href, header = null) => async e => {
   }
 })
 
-export const linkProps = (href: string, header?, isActive?): ButtonProps => {
+export const linkProps = (href: string, header?, isActive?): any => {
   return {
-    // @ts-ignore
     href,
     tagName: 'a',
+    ...(!!header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
     target: href.indexOf('http') === 0 ? '_blank' : undefined,

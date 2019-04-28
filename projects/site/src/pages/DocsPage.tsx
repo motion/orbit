@@ -99,9 +99,16 @@ export default compose(
   }),
 )
 
-const docsNavigate = debounce(id => {
-  Navigation.navigate(`/docs/${id}`, { replace: true })
-}, 150)
+let last = Date.now()
+let navTm = null
+const docsNavigate = id => {
+  clearTimeout(navTm)
+  if (Date.now() - last < 100) {
+    navTm = setTimeout(docsNavigate, 100)
+  } else {
+    Navigation.navigate(`/docs/${id}`, { replace: true })
+  }
+}
 
 const preloadItem = item => {
   return {
@@ -111,6 +118,18 @@ const preloadItem = item => {
       }
     },
   }
+}
+
+const itemProps = {
+  iconProps: {
+    size: 16,
+    opacity: 0.65,
+  },
+}
+
+const getInitialIndex = () => {
+  const initialPath = window.location.pathname.replace('/docs/', '')
+  return initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
 }
 
 export const DocsPage = memo((props: { children?: any }) => {
@@ -124,8 +143,7 @@ export const DocsPage = memo((props: { children?: any }) => {
   const toggleSection = val => setSection(section === val ? 'all' : val)
   const [search, setSearch] = useState('')
   const inputRef = useRef(null)
-  const initialPath = window.location.pathname.replace('/docs/', '')
-  const initialIndex = initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
+  const initialIndex = useRef(getInitialIndex())
   const [themeName, setThemeName] = usePageTheme()
 
   useStickySidebar({
@@ -141,7 +159,11 @@ export const DocsPage = memo((props: { children?: any }) => {
 
   useEffect(() => {
     let sub = Navigation.subscribe(() => {
-      inputRef.current.focus()
+      clearTimeout(navTm)
+
+      if (document.activeElement !== inputRef.current) {
+        inputRef.current.focus()
+      }
     })
     return () => {
       sub.unsubscribe()
@@ -174,20 +196,16 @@ export const DocsPage = memo((props: { children?: any }) => {
           search={search}
           selectable
           alwaysSelected
-          defaultSelected={initialIndex}
+          defaultSelected={initialIndex.current}
           overscanCount={500}
           items={docsItems[section]}
-          itemProps={{
-            iconProps: {
-              size: 16,
-              opacity: 0.65,
-            },
-          }}
+          itemProps={itemProps}
           getItemProps={preloadItem}
           onSelect={useCallback(rows => {
             if (!rows[0]) {
               console.warn('no row on select!', rows)
             } else {
+              console.log('docsNavigate', rows[0])
               docsNavigate(rows[0].id)
             }
           }, [])}

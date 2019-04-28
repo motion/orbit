@@ -1,7 +1,7 @@
 import { Button, ButtonProps, Col, Icon, Image, Row, Space, TextProps, useTheme, View } from '@o/ui'
 import React from 'react'
 
-import { Link, LinkProps } from '../../views/Header'
+import { Link, LinkProps } from '../../views/LinkProps'
 import { LogoVertical } from '../../views/LogoVertical'
 import { Page } from '../../views/Page'
 import { Text } from '../../views/Text'

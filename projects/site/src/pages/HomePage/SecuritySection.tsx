@@ -8,7 +8,7 @@ import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
-import { LineSep } from './EarlyAccessBetaSection'
+import { LineSep } from './LineSep'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const bottomSeparator = bottomLightSeparator

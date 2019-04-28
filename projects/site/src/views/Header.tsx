@@ -1,17 +1,18 @@
 import { gloss, useTheme } from '@o/gloss'
-import { BorderBottom, Button, createContextualProps, Row, RowProps, SimpleText, SimpleTextProps, View } from '@o/ui'
+import { BorderBottom, Button, createContextualProps, Row, RowProps, View } from '@o/ui'
 import React, { memo, useState } from 'react'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { LinkState, useLink } from '../pages/HomePage/linkProps'
+import { LinkState } from '../pages/HomePage/linkProps'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
 import { defaultConfig, FadeChild, fastConfig, fastStatticConfig, useFadePage } from './FadeIn'
+import { Link } from './LinkProps'
 import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
 
-const LinkText = gloss(View, {
+export const LinkText = gloss(View, {
   userSelect: 'none',
   textAlign: 'center',
   transform: {
@@ -24,33 +25,13 @@ const LinkText = gloss(View, {
 
 export const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
 
-export type LinkProps = SimpleTextProps & { href?: string; external?: boolean }
-export function Link({ children, fontSize = 16, href, width, margin, ...props }: LinkProps) {
-  const { isActive, ...linkProps } = useLink(href)
-  return (
-    <LinkText cursor="pointer" {...linkProps} fontSize={fontSize} width={width} margin={margin}>
-      <SimpleText
-        fontSize={fontSize}
-        alpha={isActive ? 1 : 0.6}
-        fontWeight={300}
-        fontFamily="GT Eesti"
-        hoverStyle={{ alpha: 1 }}
-        activeStyle={{ alpha: isActive ? 1 : 0.7 }}
-        transition="all ease 300ms"
-        {...props}
-      >
-        {children}
-      </SimpleText>
-    </LinkText>
-  )
-}
-
 export const HeaderLink = ({ delay, children, ...props }: any) => {
   const header = HeaderContext.useProps()
   const leaving = header && header.shown === false
   return (
     <Link width="33%" {...props}>
       <FadeChild
+        willAnimateOnHover
         off={!LinkState.didAnimateOut}
         delay={leaving ? 0 : delay}
         config={leaving ? fastStatticConfig : fastConfig}

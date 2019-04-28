@@ -569,3 +569,7 @@ svg .animate-path {
   flex-shrink: initial;
   flex-direction: row;
 }
+
+.hover-will-transform:hover {
+  will-change: transform, opacity;
+}

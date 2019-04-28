@@ -10,6 +10,7 @@ import { SectionContent, SectionContentProps } from './SectionContent'
 const { PassProps, useProps } = createContextualProps({
   offset: 0,
   zIndex: 0,
+  overflow: 'visible',
 })
 
 type PageProps = {
@@ -17,10 +18,11 @@ type PageProps = {
   zIndex?: number
   children: any
   fadeable?: boolean
+  pages?: number
 }
 
 export function Page(props: PageProps) {
-  return <PassProps zIndex={0} {...props} />
+  return <PassProps overflow="visible" zIndex={0} {...props} />
 }
 
 Page.Parallax = ({
@@ -54,7 +56,7 @@ Page.Content = forwardRef((props: SectionContentProps, ref) => {
     <SectionContent
       forwardRef={ref}
       className="page-content"
-      height={siteStore.sectionHeight}
+      height={siteStore.sectionHeight * (props.pages || 1)}
       {...props}
       zIndex={zIndex}
     />

@@ -1,6 +1,6 @@
 import { gloss, useTheme } from '@o/gloss'
 import { Space, View, ViewProps } from '@o/ui'
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
@@ -42,7 +42,7 @@ export const LogoVertical = memo(
       >
         <BrandMark id="orbit-mark" />
         <Space size="lg" />
-        <BrandWords fill={theme.color} width={102} height={23} />
+        <BrandWords fill={theme.color} width={102 * 0.8} height={23 * 0.8} />
       </View>
     )
   },

@@ -11,8 +11,8 @@ export const themes = {
   ...KitThemes,
 
   orbitOneDark: Theme.fromStyles({
-    background: '#000',
-    backgroundHover: '#000',
+    background: '#111',
+    backgroundHover: '#111',
     borderColor: '#222',
     buttonBackground: buttonBackground,
     buttonBackgroundHover: buttonBackground.adjust(c => toColor(c).lighten(0.035)),
@@ -59,6 +59,7 @@ export const themes = {
     ...KitThemes.dark,
     ...Theme.colorize({
       background: '#111',
+      inputColor: '#fff',
       inputBackground: '#222',
       inputBackgroundHover: '#222',
       inputBackgroundActive: '#222',
@@ -70,7 +71,13 @@ export const themes = {
   darkAlt: {
     ...KitThemes.dark,
     ...Theme.fromStyles({
+      color: '#fff',
       background: '#2C2B40',
+      backgroundStrong: toColor('#2C2B40').lighten(0.1),
+      buttonBackground: linearGradient('#2C2B40', toColor('#2C2B40').darken(0.1)),
+      buttonBackgroundHover: linearGradient(toColor('#2C2B40').lighten(0.1), toColor('#2C2B40')),
+      inputBackground: toColor('#2C2B40').darken(0.1),
+      inputBackgroundHover: toColor('#2C2B40').darken(0.1),
     }),
   },
 

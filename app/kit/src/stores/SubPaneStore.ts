@@ -1,9 +1,23 @@
 import { ensure, react, useHook } from '@o/use-store'
-import { on } from '@o/utils'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
+
 import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from '../views/SubPane'
+
+const createMutationObserver = (node, options, cb) => {
+  const observer = new MutationObserver(cb)
+  observer.observe(node, options)
+  return () => observer.disconnect()
+}
+
+const createResizObserver = (node, cb) => {
+  // watch resizes
+  // @ts-ignore
+  const observer = new ResizeObserver(cb)
+  observer.observe(node)
+  return () => observer.disconnect()
+}
 
 export class SubPaneStore {
   props: SubPaneProps
@@ -36,46 +50,48 @@ export class SubPaneStore {
   }
 
   triggerRewatch = 0
+
   watchParentNode = react(
     () => [this.paneNode, this.triggerRewatch],
-    ([node]) => {
+    ([node], { useEffect }) => {
       ensure('hasNode', !!node)
       ensure('not fullHeight', !this.props.fullHeight)
-      if (this.watchParentNode) {
-        this.watchParentNode.forEach(disconnect => disconnect())
-      }
 
-      const scrollO = on(this, node, 'scroll', throttle(this.onPaneScroll, 16 * 3))
-
-      // re-run this watch when we see a mutation
-      const mutationO = this.useMutationObserver(node, { childList: true, subtree: true }, () => {
-        this.triggerRewatch = Math.random()
+      useEffect(() => {
+        const handleScroll = throttle(this.onPaneScroll, 16 * 3)
+        node.addEventListener('scroll', handleScroll, { passive: true })
+        return () => {
+          node.removeEventListener('scroll', handleScroll)
+        }
       })
-      const resizeO = this.useResizeObserver(node, this.handlePaneChange)
+
+      useEffect(() => {
+        return createMutationObserver(node, { childList: true, subtree: true }, () => {
+          this.triggerRewatch = Math.random()
+        })
+      })
+
+      useEffect(() => {
+        return createResizObserver(node, this.handlePaneChange)
+      })
 
       this.handlePaneChange()
-
-      return [scrollO, mutationO, resizeO]
     },
   )
 
   watchInnerNode = react(
     () => this.paneInnerNode,
-    node => {
+    (node, { useEffect }) => {
       ensure('hasNode', !!node)
       ensure('not fullHeight', !this.props.fullHeight)
-      if (this.watchInnerNode) {
-        this.watchInnerNode.forEach(disconnect => disconnect())
-      }
 
-      const resizeO = this.useResizeObserver(node, this.handlePaneChange)
-      const mutationO = this.useMutationObserver(
-        this.paneInnerNode,
-        { attributes: true },
-        this.handlePaneChange,
+      useEffect(() => {
+        return createResizObserver(node, this.handlePaneChange)
+      })
+
+      useEffect(() =>
+        createMutationObserver(this.paneInnerNode, { attributes: true }, this.handlePaneChange),
       )
-
-      return [resizeO, mutationO]
     },
   )
 
@@ -101,24 +117,6 @@ export class SubPaneStore {
       }
     },
   )
-
-  useResizeObserver = (node, cb) => {
-    // watch resizes
-    // @ts-ignore
-    const observer = new ResizeObserver(cb)
-    observer.observe(node)
-    const off = () => observer.disconnect()
-    on(this, { unsubscribe: off })
-    return off
-  }
-
-  useMutationObserver = (node, options, cb) => {
-    const observer = new MutationObserver(cb)
-    observer.observe(node, options)
-    const off = () => observer.disconnect()
-    on(this, { unsubscribe: off })
-    return off
-  }
 
   handlePaneChange = debounce(() => {
     this.updateHeight()

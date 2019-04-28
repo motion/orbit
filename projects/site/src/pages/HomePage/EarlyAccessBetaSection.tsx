@@ -1,19 +1,18 @@
-import sepFilled from '!raw-loader!../../../public/images/line-sep-filled.svg'
-import sep from '!raw-loader!../../../public/images/line-sep.svg'
-import { Space, SVG, useTheme, View, ViewProps } from '@o/ui'
-import React, { memo } from 'react'
+import { Space, View, ViewProps } from '@o/ui'
+import React from 'react'
 
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { Join } from './Join'
+import { LineSep } from './LineSep'
 import { Wavy } from './purpleWaveUrl'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-export default function EarlyAccessSection({ outside = null, ...props }: any) {
+export default function EarlyAccessSection({ outside = null }: any) {
   return (
-    <Page zIndex={1} {...props}>
+    <>
       <Page.Content
         zIndex={10}
         outside={
@@ -23,51 +22,15 @@ export default function EarlyAccessSection({ outside = null, ...props }: any) {
           </>
         }
       >
-        {/* offset header stripe */}
-        <View height={20} />
-
-        <View margin={['auto', 0]} transform={{ y: '-3%' }}>
+        <View margin={['auto', 0]} transform={{ y: '-5%' }}>
           <EarlyAccessContent />
         </View>
       </Page.Content>
 
       <Page.Background background={theme => theme.background} top={80} />
-    </Page>
+    </>
   )
 }
-
-export const LineSep = memo(
-  ({
-    fill = null,
-    noOverlay = false,
-    ...props
-  }: ViewProps & { fill?: any; noOverlay?: boolean }) => {
-    const theme = useTheme()
-    let svg = fill
-      ? sepFilled.replace(
-          'fill="#000000"',
-          `fill="${fill === true ? theme.background.hex() : fill}"`,
-        )
-      : sep
-
-    if (noOverlay) {
-      svg = svg.replace(`fill="url(#linearGradient-1)"`, '')
-    }
-    return (
-      <View
-        color={theme.background}
-        position="absolute"
-        top={0}
-        width="100%"
-        minWidth={1200}
-        height={100}
-        {...props}
-      >
-        <SVG svg={svg} width="100%" />
-      </View>
-    )
-  },
-)
 
 export const EarlyAccessContent = () => {
   return (
@@ -75,7 +38,6 @@ export const EarlyAccessContent = () => {
       header={
         <>
           <PillButton>Beta</PillButton>
-          <Space size="sm" />
           <TitleText size="xxl">Early Access.</TitleText>
           <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>Orbit is now in beta.</TitleTextSub>
           <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>
@@ -96,6 +58,7 @@ export const SignupForm = (props: ViewProps) => (
     borderRadius={12}
     overflow="hidden"
     elevation={3}
+    background={theme => theme.backgroundStrong}
     {...props}
   >
     <Wavy width="100%" height={16} />

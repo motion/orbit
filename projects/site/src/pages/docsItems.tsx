@@ -2,7 +2,7 @@ import React from 'react'
 
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { titleProps: { size: 1, fontWeight: 500 } }
+const titleItem = { titleProps: { size: 1, fontWeight: 600 } }
 
 const guides = [
   {
@@ -29,7 +29,7 @@ const guides = [
   {
     selectable: false,
     hideBorder: true,
-    children: <ListSubTitle marginTop={30}>Examples</ListSubTitle>,
+    children: <ListSubTitle paddingTop={30}>Examples</ListSubTitle>,
   },
   {
     id: 'databaseviewer',
@@ -50,7 +50,7 @@ const uikit = [
     selectable: false,
     hideBorder: true,
     children: (
-      <ListSubTitle marginTop={30} marginBottom={0}>
+      <ListSubTitle paddingTop={30} marginBottom={0}>
         User Interface
       </ListSubTitle>
     ),

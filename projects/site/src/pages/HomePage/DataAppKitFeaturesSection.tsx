@@ -1,4 +1,4 @@
-import { FullScreen, Grid, Image, PassProps, Row, Space, View } from '@o/ui'
+import { FullScreen, Grid, Image, memoIsEqualDeep, PassProps, Row, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
@@ -20,20 +20,20 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 const dly = 200
 
-export const ChestSection = memo((props: any) => {
+export default memo(function DataAppKitFeaturesSection(props: any) {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
   const FadeDataApps = useFadePage({ threshold: 0 })
   const Fade = useFadePage()
   return (
-    <Page {...props}>
+    <>
       <FadeDataApps.FadeProvide>
         {/* Data, meet app */}
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen transform={{ y: '-85%', scale: 0.65 }} transformOrigin="bottom center">
+            <FullScreen transform={{ y: '-80%', scale: 0.65 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}
@@ -54,20 +54,20 @@ export const ChestSection = memo((props: any) => {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2} flex={1}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
+            margin={screen === 'small' ? ['-50%', 0, '10%'] : [0, 0, '6%']}
             height="auto"
             header={
               <>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xxl">
-                    Import, search, filter, export.
+                    One click data sources.
                   </TitleText>
                 </FadeChild>
-                <TitleTextSub alpha={0.7} size="md">
+                <TitleTextSub size="sm">
                   <FadeChild delay={200}>
-                    Every app exposes a simple typed API.
+                    Every app knows how to sync and expose it's API.
                     {screen !== 'small' && <br />}
-                    &nbsp;Publish apps in the open app store.
+                    &nbsp;Use, extend and build with the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -75,16 +75,23 @@ export const ChestSection = memo((props: any) => {
           >
             <Row
               className="hide-scrollbars"
-              margin="0 -10vw"
-              width="100vw"
               height="auto"
               space="md"
               spaceAround
-              scrollable="x"
               justifyContent="center"
+              pointerEvents="none"
+              transform={{
+                y: '-70%',
+              }}
             >
               {apps.map((app, index) => (
-                <Integration key={app.title} index={index} icon={app.icon} title={app.title} />
+                <Integration
+                  key={app.title}
+                  index={index}
+                  icon={app.icon}
+                  title={app.title}
+                  transform={{ y: `${index * 25}%` }}
+                />
               ))}
             </Row>
 
@@ -128,7 +135,7 @@ export const ChestSection = memo((props: any) => {
                 </>
               }
             >
-              <Space size="lg" />
+              <Space size="sm" />
               <Grid
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}
@@ -159,8 +166,7 @@ export const ChestSection = memo((props: any) => {
                   <SimpleSection delay={dly * 2} title="Spaces to collaborate.">
                     <SectionP>
                       <SectionIcon name="satellite" />
-                      Anyone on your team can use, edit, and add new apps. This happens
-                      decentralized, so your team can collaborate behind the firewall.
+                      The easiest collaboration story. No credential sharing, everyone in sync.
                       {screen !== 'small' && (
                         <>
                           <Space />
@@ -173,8 +179,8 @@ export const ChestSection = memo((props: any) => {
                   <SimpleSection delay={dly * 3} title="Multi-process apps.">
                     <SectionP>
                       <SectionIcon name="shop" />
-                      Apps are written using React and Typescript, and publish like node modules.
-                      Running multiple processes is done through simple naming conventions.
+                      Apps are written using React and Typescript and publish like node modules.
+                      They support many features, like sharing data and APIs.
                       {screen !== 'small' && (
                         <>
                           <Space />
@@ -186,9 +192,9 @@ export const ChestSection = memo((props: any) => {
 
                   <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
                     <SectionP>
-                      <SectionIcon name="widget" />A proper, powerful list view is no joke. Neither
-                      are a table or form. Orbit makes them work, and all work together, accepting
-                      similar data formats and normalizing.
+                      <SectionIcon name="widget" />
+                      Orbit is building a desktop-class UI kit, and going further by making many
+                      views work together both in composition and shared prop types.
                       {screen !== 'small' && (
                         <>
                           <Space />
@@ -229,13 +235,20 @@ export const ChestSection = memo((props: any) => {
         opacity={1}
         backgroundImage={blackWavePattern}
       />
-    </Page>
+    </>
   )
 })
 
-const Integration = memo(({ icon, title, index }: any) => (
+const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
   <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>
-    <View height={150} width={150} alignItems="center" justifyContent="center">
+    <View
+      userSelect="none"
+      height={150}
+      width={150}
+      alignItems="center"
+      justifyContent="center"
+      {...props}
+    >
       <Image
         src={icon}
         transition="all ease 200ms"
@@ -245,7 +258,9 @@ const Integration = memo(({ icon, title, index }: any) => (
         hoverStyle={{ opacity: 1 }}
       />
       <Space />
-      <Paragraph size="xl">{title}</Paragraph>
+      <Paragraph selectable={false} size="xl">
+        {title}
+      </Paragraph>
     </View>
   </FadeChild>
 ))

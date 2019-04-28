@@ -1,4 +1,4 @@
-import { always, ensure, react, useStore } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
@@ -101,7 +101,7 @@ export class SelectableStore {
   )
 
   callbackOnSelectProp = react(
-    () => always(this.active),
+    () => JSON.stringify([...this.active]),
     () => {
       ensure('onSelect', !!this.props.onSelect)
       ensure('has rows', !!this.rows.length)

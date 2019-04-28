@@ -22,30 +22,28 @@ export const SubParagraph = (props: TextProps) => (
   />
 )
 
-export default function LegsSection(props) {
+export default function LegsSection() {
   return (
     <Theme name="home">
-      <Page {...props}>
-        <Page.Content>
-          <View height={70} />
-          <AboutSection />
-        </Page.Content>
+      <Page.Content>
+        <View height={70} />
+        <AboutSection />
+      </Page.Content>
 
-        <Page.Parallax speed={0.075} zIndex={-1}>
-          <FullScreen
-            className="earth"
-            backgroundImage={`url(${earth})`}
-            backgroundSize="contain"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-            transform={{
-              scale: 1,
-              x: '6%',
-              y: '-5%',
-            }}
-          />
-        </Page.Parallax>
-      </Page>
+      <Page.Parallax speed={0.075} zIndex={-1}>
+        <FullScreen
+          className="earth"
+          backgroundImage={`url(${earth})`}
+          backgroundSize="contain"
+          backgroundPosition="center center"
+          backgroundRepeat="no-repeat"
+          transform={{
+            scale: 1,
+            x: '6%',
+            y: '-5%',
+          }}
+        />
+      </Page.Parallax>
     </Theme>
   )
 }

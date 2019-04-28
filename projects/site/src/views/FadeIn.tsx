@@ -1,4 +1,4 @@
-import { createContextualProps, FullScreen, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
+import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
@@ -63,6 +63,21 @@ FadeIn.defaultProps = {
 
 const FadeContext = createContextualProps({ shown: undefined, off: false })
 
+type FadeChildProps = UseSpringProps<any> & {
+  delay?: number
+  disable?: boolean
+  willAnimateOnHover?: boolean
+  fullscreen?: boolean
+}
+
+const fullscreenStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+}
+
 export const FadeChild = memo(
   ({
     from,
@@ -71,16 +86,24 @@ export const FadeChild = memo(
     style,
     delay,
     disable,
+    willAnimateOnHover,
+    fullscreen,
     ...springProps
-  }: UseSpringProps<any> & { delay?: number; disable?: boolean }) => {
+  }: FadeChildProps) => {
     const props = FadeContext.useProps()
     const shown = !!useDebounceValue(!disable && props.shown, delay)
     const off = selectDefined(springProps.off, props.off)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
-    const styleFin = style
-      ? { ...(typeof style === 'function' ? style(springStyle) : style), ...springStyle }
-      : springStyle
-    return <animated.div style={styleFin}>{children}</animated.div>
+    const styleFin = {
+      ...(typeof style === 'function' ? style(springStyle) : style),
+      ...springStyle,
+      ...(fullscreen && fullscreenStyle),
+    }
+    return (
+      <animated.div className={willAnimateOnHover ? `hover-will-transform` : null} style={styleFin}>
+        {children}
+      </animated.div>
+    )
   },
 )
 
@@ -107,7 +130,7 @@ export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { chi
   const Fade = useFadePage(props)
   return (
     <Fade.FadeProvide>
-      <FullScreen ref={Fade.ref}>{children}</FullScreen>
+      <Col ref={Fade.ref}>{children}</Col>
     </Fade.FadeProvide>
   )
 })
@@ -165,7 +188,7 @@ export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
 export const fadeRightProps = {
   from: {
     opacity: 0,
-    txys: [60, -20, 40, 0.9],
+    txys: [30, -15, 15, 0.9],
   },
   to: {
     opacity: 1,
@@ -182,7 +205,7 @@ export const fadeRightProps = {
 export const fadeLeftProps = {
   from: {
     opacity: 0,
-    txys: [-60, 20, -40, 0.9],
+    txys: [-30, 15, -15, 0.9],
   },
   to: {
     opacity: 1,

@@ -1,3 +1,11 @@
+Sunday:
+
+- Mobile site completely fixed
+- Fix prod issues w not showing squircle, font on docs, etc
+- Write blog post
+- Apps page show details + improve faq
+- Add faq to about page
+
 ## Next
 
 - Grid persistance, Slack import app

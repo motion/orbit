@@ -1,6 +1,6 @@
 import { unstable_batchedUpdates } from 'react-dom'
 
-const Updates = new Set()
+const Updates = new Set<Function>()
 
 let tm = setImmediate(() => {})
 

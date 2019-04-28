@@ -1,15 +1,14 @@
 import { Avatar, gloss, Row, Space, View } from '@o/ui'
 import React from 'react'
-import { useNavigation } from 'react-navi'
 
 import { colors } from '../../constants'
+import { FadeChild } from '../../views/FadeIn'
 import { TitleText } from '../../views/TitleText'
+import { linkProps } from '../HomePage/linkProps'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
 
 export function BlogPageIndex() {
-  const navigation = useNavigation()
-
   const all = Object.keys(posts)
     .slice(0, 10)
     .map(id => ({
@@ -21,33 +20,27 @@ export function BlogPageIndex() {
   return (
     <BlogLayout space>
       {all.map((post, index) => (
-        <Post
-          pad="xl"
-          key={post.date}
-          tagName="a"
-          {...{ href: `/blog/${all[index].id}` }}
-          textDecoration="none"
-          onClick={e => {
-            e.preventDefault()
-            navigation.navigate(`/blog/${all[index].id}`)
-          }}
-          cursor="pointer"
-          hoverStyle={{
-            background: '#f9f9f9',
-          }}
-        >
-          <TitleText
-            fontWeight={200}
-            color={colors.purple}
-            selectable={false}
-            textAlign="left"
-            size="lg"
+        <FadeChild key={post.date} delay={index * 150}>
+          <Post
+            pad="xl"
+            {...linkProps(`/blog/${all[index].id}`)}
+            hoverStyle={{
+              background: '#f9f9f9',
+            }}
           >
-            {post.title}
-          </TitleText>
-          <Space size="sm" />
-          <PostMeta post={post} />
-        </Post>
+            <TitleText
+              fontWeight={200}
+              color={colors.purple}
+              selectable={false}
+              textAlign="left"
+              size="lg"
+            >
+              {post.title}
+            </TitleText>
+            <Space size="sm" />
+            <PostMeta post={post} />
+          </Post>
+        </FadeChild>
       ))}
     </BlogLayout>
   )

@@ -4,6 +4,7 @@ import React from 'react'
 import { View } from 'react-navi'
 
 import { ContentSection } from '../views/ContentSection'
+import { FadeParent } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
@@ -49,10 +50,12 @@ export default compose(
 
 export function BlogPage(props: { title?: string; children?: any }) {
   return (
-    <MDX>
-      <Header slim noBorder />
-      {props.children}
-    </MDX>
+    <FadeParent>
+      <MDX>
+        <Header slim noBorder />
+        <main className="main-contents">{props.children}</main>
+      </MDX>
+    </FadeParent>
   )
 }
 

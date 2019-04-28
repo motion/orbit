@@ -40,7 +40,7 @@ const PageLoading = () => {
   return <BusyIndicator color="#FE5C58" isBusy={!!loadingRoute} delayMs={50} />
 }
 
-export function Layout(props: any) {
+export const Layout = memo((props: any) => {
   const forceUpdate = useForceUpdate()
   updateLayout = forceUpdate
   const siteStore = useSiteStore()
@@ -91,7 +91,7 @@ export function Layout(props: any) {
       </Theme>
     </ProvideUI>
   )
-}
+})
 
 const LayoutSidebar = memo(() => {
   const siteStore = useSiteStore()
@@ -159,7 +159,7 @@ function NotFound() {
   )
 }
 
-function PeekHeader(props: { isActive?: boolean }) {
+const PeekHeader = memo((props: { isActive?: boolean }) => {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -187,7 +187,7 @@ function PeekHeader(props: { isActive?: boolean }) {
       }
     }, 100)
 
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', onScroll)
@@ -213,4 +213,4 @@ function PeekHeader(props: { isActive?: boolean }) {
       </FullScreen>
     </Theme>
   )
-}
+})

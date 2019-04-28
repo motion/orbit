@@ -166,8 +166,8 @@ export class Parallax extends React.PureComponent<any> {
   scrollerRaf = () => Globals.requestFrame(this.moveItems)
 
   onScroll = () => {
-    const { horizontal } = this.props
     if (!this.busy) {
+      const { horizontal } = this.props
       this.busy = true
       this.scrollerRaf()
       this.current = this.props.container[getScrollType(horizontal)]
@@ -195,8 +195,6 @@ export class Parallax extends React.PureComponent<any> {
 
   updateRaf = throttle(() => {
     Globals.requestFrame(this.update)
-    // Some browsers don't fire on maximize
-    // setTimeout(this.update, 150)
   }, 100)
 
   scrollStop = () => this.controller.stop()
@@ -217,15 +215,15 @@ export class Parallax extends React.PureComponent<any> {
 
   componentDidMount() {
     this.space = this.props.pageHeight
-    window.addEventListener('resize', this.updateRaf, false)
-    this.props.scrollingElement.addEventListener('scroll', this.onScroll, false)
+    window.addEventListener('resize', this.updateRaf, { passive: true })
+    this.props.scrollingElement.addEventListener('scroll', this.onScroll, { passive: true })
     this.update()
     this.setState({ ready: true })
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.updateRaf, false)
-    this.props.scrollingElement.removeEventListener('scroll', this.onScroll, false)
+    window.removeEventListener('resize', this.updateRaf)
+    this.props.scrollingElement.removeEventListener('scroll', this.onScroll)
   }
 
   componentDidUpdate() {

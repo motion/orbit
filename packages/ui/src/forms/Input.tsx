@@ -111,13 +111,23 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
 })
 
 const SimpleInput = gloss(
-  ({ placeholder, tagName = 'input', elementProps, forwardRef, ...props }: SizedSurfaceProps) => (
+  ({
+    placeholder,
+    tagName = 'input',
+    elementProps,
+    forwardRef,
+    name,
+    type,
+    ...props
+  }: SizedSurfaceProps) => (
     <SizedSurface
       elementProps={useMemo(
         () => ({
           ref: forwardRef,
           placeholder,
           tagName,
+          name,
+          type,
           ...elementProps,
         }),
         [forwardRef, placeholder, tagName, elementProps],

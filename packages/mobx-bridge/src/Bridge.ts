@@ -86,7 +86,7 @@ export class BridgeManager {
   started = false
   // to be set once they are imported
   stores = {}
-  messageListeners = new Set()
+  messageListeners = new Set<{ type: string; listener: Function }>()
   lastMessage: LastMessage = null
   receivedInitialState: Object = null
 

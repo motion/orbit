@@ -32,9 +32,8 @@ export function AppsPage() {
         pointerEvents="none"
       />
 
-      <main style={{ minHeight: 1600 }}>
-        <Header position="absolute" left={0} right={0} background="transparent" slim />
-
+      <Header position="absolute" left={0} right={0} background="transparent" slim />
+      <main className="main-contents" style={{ minHeight: 1600 }}>
         <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
           <Col space="xxxl">
             <Title size="xxl" margin={[0, 'auto']}>

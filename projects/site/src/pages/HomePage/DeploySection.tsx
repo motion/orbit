@@ -14,130 +14,132 @@ import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
-const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.8} {...props} />
+const Para = props => <Paragraph sizeLineHeight={1.1} size={1.2} alpha={0.72} {...props} />
 
-export function ShoulderSection(props) {
+export default function ShoulderSection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      <Page {...props}>
-        <Page.Content ref={Fade.ref}>
-          <SpacedPageContent
-            transform={{
-              y: '-11%',
-            }}
-            header={
-              <>
-                <FadeChild delay={0}>
-                  <PillButton>Deploy</PillButton>
-                </FadeChild>
-                <FadeChild delay={200}>
-                  <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                    Sync without a server.
-                  </TitleText>
-                </FadeChild>
-              </>
-            }
-          >
-            <Row space={60} margin={[0, '-180%']}>
-              <Col flex={2} alignItems="flex-end" justifyContent="center">
-                <FadeChild {...fadeLeftProps} delay={250}>
-                  <View
-                    borderRadius={10}
-                    elevation={3}
-                    width={400}
-                    height={350}
-                    backgroundImage={`url(${appScreenshot})`}
-                    backgroundSize="contain"
-                    backgroundPosition="center center"
-                    backgroundRepeat="no-repeat"
-                    position="relative"
-                  >
-                    <Image
-                      position="absolute"
-                      top={0}
-                      right={-70}
-                      zIndex={100}
-                      src={arrow}
-                      transform={{ scale: 0.6 }}
-                    />
-                  </View>
-                </FadeChild>
-              </Col>
-
-              <Col space flex={2} minWidth={300} maxWidth={340}>
-                <FadeChild delay={200}>
-                  <ParagraphIntro>
-                    It's time we had control over our platforms. Orbit is designed to power the next
-                    generation of apps and give users complete control.
-                  </ParagraphIntro>
-                </FadeChild>
-
-                <FadeChild delay={350}>
-                  <Para>
-                    Your team can use Orbit to make apps together fast, without having to trust all
-                    your sensitive internal data to the cloud, or get locked into a proprietary
-                    platform.
-                  </Para>
-                </FadeChild>
-
-                <FadeChild delay={450}>
-                  <Para
-                    tagName="a"
-                    href="ok"
-                    color="#E368E7"
-                    transition="all ease 250ms"
-                    hoverColor={toColor('#E368E7').lighten(0.1)}
-                    fontWeight={500}
-                    textDecorationColor="#444"
-                    textDecoration="underline"
-                    display="inline-block"
-                    pointable
-                    fontSize={16}
-                  >
-                    Two ways we've lost control, and why it matters.
-                  </Para>
-                </FadeChild>
-              </Col>
-
-              <Col flex={2} alignItems="flex-start" justifyContent="center">
-                <FadeChild {...fadeRightProps} delay={400}>
-                  <View
-                    borderRadius={10}
-                    elevation={3}
-                    width={400}
-                    height={350}
-                    backgroundImage={`url(${codeScreenshot})`}
-                    backgroundSize="contain"
-                    backgroundPosition="center center"
-                    backgroundRepeat="no-repeat"
-                    overflow="hidden"
+      <Page.Content ref={Fade.ref}>
+        <SpacedPageContent
+          transform={{
+            y: '-11%',
+          }}
+          header={
+            <>
+              <FadeChild delay={0}>
+                <PillButton>Deploy</PillButton>
+              </FadeChild>
+              <FadeChild delay={200}>
+                <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
+                  In sync without a server.
+                </TitleText>
+              </FadeChild>
+            </>
+          }
+        >
+          <Row space={60} margin={[0, '-180%']}>
+            <Col flex={2} alignItems="flex-end" justifyContent="center">
+              <FadeChild {...fadeLeftProps} delay={250}>
+                <View
+                  borderRadius={10}
+                  elevation={3}
+                  width={400}
+                  height={350}
+                  backgroundImage={`url(${appScreenshot})`}
+                  backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  position="relative"
+                >
+                  <Image
+                    position="absolute"
+                    top={0}
+                    right={-70}
+                    zIndex={100}
+                    src={arrow}
+                    transform={{ scale: 0.6 }}
                   />
-                </FadeChild>
-              </Col>
-            </Row>
-          </SpacedPageContent>
-        </Page.Content>
+                </View>
+              </FadeChild>
+            </Col>
 
-        <Page.Parallax speed={0.2} zIndex={-2}>
+            <Col space flex={2} minWidth={300} maxWidth={340}>
+              <FadeChild delay={200}>
+                <ParagraphIntro>
+                  It's time we had control over our data, and the code that runs it. The first step
+                  is where it runs.
+                </ParagraphIntro>
+              </FadeChild>
+
+              <FadeChild delay={350}>
+                <Para>
+                  Your team can use Orbit to make apps together fast, without having to trust all
+                  your sensitive internal data to the cloud, or get locked into a proprietary
+                  platform.
+                </Para>
+              </FadeChild>
+
+              <FadeChild delay={450}>
+                <Para>Your team can use Orbit to make apps together fast.</Para>
+              </FadeChild>
+
+              <FadeChild delay={550}>
+                <Para
+                  tagName="a"
+                  href="ok"
+                  color="#E368E7"
+                  transition="all ease 250ms"
+                  hoverColor={toColor('#E368E7').lighten(0.1)}
+                  fontWeight={500}
+                  textDecorationColor="#444"
+                  textDecoration="underline"
+                  display="inline-block"
+                  pointable
+                  fontSize={16}
+                >
+                  Two ways we've lost control, and why it matters.
+                </Para>
+              </FadeChild>
+            </Col>
+
+            <Col flex={2} alignItems="flex-start" justifyContent="center">
+              <FadeChild {...fadeRightProps} delay={400}>
+                <View
+                  borderRadius={10}
+                  elevation={3}
+                  width={400}
+                  height={350}
+                  backgroundImage={`url(${codeScreenshot})`}
+                  backgroundSize="contain"
+                  backgroundPosition="center center"
+                  backgroundRepeat="no-repeat"
+                  overflow="hidden"
+                />
+              </FadeChild>
+            </Col>
+          </Row>
+        </SpacedPageContent>
+      </Page.Content>
+
+      <Page.Parallax speed={0.2} zIndex={-2}>
+        <FullScreen
+          transform={{
+            y: '-18%',
+            scale: useScreenVal(1.2, 1, 1),
+          }}
+        >
           <FullScreen
-            transform={{
-              y: '-25%',
-              scale: useScreenVal(1.2, 0.7, 0.7),
-            }}
-          >
-            <FullScreen
-              className="orbits-bg"
-              opacity={0.2}
-              backgroundImage={`url(${background})`}
-              backgroundSize="cover"
-              backgroundPosition="center center"
-              backgroundRepeat="no-repeat"
-            />
-            <Spotlight />
-          </FullScreen>
-        </Page.Parallax>
-      </Page>
+            className="orbits-bg"
+            opacity={0.2}
+            backgroundImage={`url(${background})`}
+            backgroundSize="cover"
+            backgroundPosition="center center"
+            backgroundRepeat="no-repeat"
+          />
+          <Spotlight />
+        </FullScreen>
+      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

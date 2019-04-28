@@ -16398,6 +16398,11 @@ request@~2.40.0:
     tough-cookie ">=0.12.0"
     tunnel-agent "~0.4.0"
 
+requestidlecallback-polyfill@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/requestidlecallback-polyfill/-/requestidlecallback-polyfill-1.0.2.tgz#02eefae286ff86ef04232087dba19f005308b18e"
+  integrity sha512-zzkRzvMe7UdV0M7AIU70vl2fh4rFnNYDL8U0ISwWiOX/5MowBV1ESYCWSQP/KsgJNUOC/AS6X3DApOmxoyE6MA==
+
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -19389,11 +19394,6 @@ vinyl@^2.2.0:
     cloneable-readable "^1.0.0"
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
-
-vivus@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/vivus/-/vivus-0.4.4.tgz#34363eb833d5f6fe0b63a92cfccff14ad099ba44"
-  integrity sha1-NDY+uDPV9v4LY6ks/M/xStCZukQ=
 
 vlq@^0.2.1, vlq@^0.2.2:
   version "0.2.3"

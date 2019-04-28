@@ -2,10 +2,12 @@ import { Space, Theme } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
+import { FadeChild, FadeParent } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
-import { EarlyAccessContent, LineSep } from './HomePage/EarlyAccessBetaSection'
+import { EarlyAccessContent } from './HomePage/EarlyAccessBetaSection'
 import { Footer } from './HomePage/FooterSection'
+import { LineSep } from './HomePage/LineSep'
 
 export default mount({
   '/': route({
@@ -16,17 +18,29 @@ export default mount({
 
 export function BetaPage() {
   return (
-    <Theme name={BetaPage.theme}>
-      <Header slim noBorder background="transparent" />
-      <LineSep opacity={0.2} noOverlay top={30} />
-      <EarlyAccessContent />
-      <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
-        <Footer />
-        <Space size="xl" />
-      </SectionContent>
+    <FadeParent>
+      <Theme name={BetaPage.theme}>
+        <Header slim noBorder background="transparent" />
+        <FadeChild fullscreen style={{ pointerEvents: 'none' }}>
+          <LineSep opacity={0.2} noOverlay top={30} />
+        </FadeChild>
 
-      <LineSep opacity={0.2} noOverlay top="auto" bottom={20} transform={{ scaleX: -1 }} />
-    </Theme>
+        <FadeChild delay={200}>
+          <EarlyAccessContent />
+        </FadeChild>
+
+        <FadeChild delay={400} fullscreen style={{ pointerEvents: 'none' }}>
+          <LineSep opacity={0.2} noOverlay top="auto" bottom={20} transform={{ scaleX: -1 }} />
+        </FadeChild>
+
+        <FadeChild delay={600}>
+          <SectionContent minHeight={450} position="relative" padding={[100, 32]}>
+            <Footer />
+            <Space size="xl" />
+          </SectionContent>
+        </FadeChild>
+      </Theme>
+    </FadeParent>
   )
 }
 

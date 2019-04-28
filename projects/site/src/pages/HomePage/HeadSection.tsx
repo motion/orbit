@@ -22,9 +22,9 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Build better apps with your team',
-  medium: 'Build better apps with your team',
-  small: 'Build better apps',
+  large: 'Easy, powerful apps with your team',
+  medium: 'Easy, powerful apps with your team',
+  small: 'Build amazing apps',
 }
 
 let allTexts = {
@@ -57,7 +57,12 @@ const HeadText = memo(() => {
   const br = useScreenVal(smallSpc, medSpc, lgSpc)
 
   return (
-    <View width={useScreenVal('100%', '90%', '85%')} maxWidth={960} textAlign="center">
+    <View
+      className="head-text-section"
+      width={useScreenVal('92%', '80%', '85%')}
+      maxWidth={960}
+      textAlign="center"
+    >
       <FadeChild disable={!measured}>
         <TitleText
           forwardRef={titleFit.ref}
@@ -76,58 +81,62 @@ const HeadText = memo(() => {
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
-      {screen === 'small' ? (
-        <Paragraph
-          size={1.75}
-          sizeLineHeight={1.4}
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.6}
-        >
-          Create incredibly powerful tools without config or a server, with everything included.
-        </Paragraph>
-      ) : (
-        <Paragraph
-          fontWeight={100}
-          tagName="div"
-          style={{
-            ...pFit.style,
-            height: 'auto',
-          }}
-          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-          height="auto"
-          transformOrigin="top left"
-          margin={[0, 'auto']}
-          textAlign="center"
-          alpha={0.7}
-          whiteSpace="nowrap"
-        >
-          <FadeChild disable={!measured} delay={400}>
-            {texts[0]}
-          </FadeChild>
-          {br}
-          <FadeChild disable={!measured} delay={500}>
-            {texts[1]}
-          </FadeChild>
-          {br}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-            <Smaller>{subTexts[screen]}</Smaller>
-          </FadeChild>
-        </Paragraph>
-      )}
+      <View position="relative" width="90%" margin={[0, 'auto']}>
+        {screen === 'small' ? (
+          <Paragraph
+            size={1.8}
+            sizeLineHeight={1.4}
+            margin={[0, 'auto']}
+            textAlign="center"
+            alpha={0.6}
+            selectable
+            zIndex={100}
+          >
+            Create incredibly powerful tools without config or a server, with everything included.
+          </Paragraph>
+        ) : (
+          <Paragraph
+            fontWeight={100}
+            tagName="div"
+            style={{
+              ...pFit.style,
+              height: 'auto',
+            }}
+            lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+            height="auto"
+            transformOrigin="top left"
+            margin={[0, 'auto']}
+            textAlign="center"
+            alpha={0.7}
+            whiteSpace="nowrap"
+          >
+            <FadeChild disable={!measured} delay={400}>
+              {texts[0]}
+            </FadeChild>
+            {br}
+            <FadeChild disable={!measured} delay={500}>
+              {texts[1]}
+            </FadeChild>
+            {br}
+            <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+              <Smaller>{subTexts[screen]}</Smaller>
+            </FadeChild>
+          </Paragraph>
+        )}
 
-      {/* this is just to measure */}
-      <Paragraph
-        className="measure-p"
-        ref={pFit.ref}
-        opacity={0}
-        fontSize={40}
-        position="absolute"
-        whiteSpace="pre"
-        pointerEvents="none"
-      >
-        {longest}
-      </Paragraph>
+        {/* this is just to measure */}
+        <Paragraph
+          className="measure-p"
+          ref={pFit.ref}
+          opacity={0}
+          fontSize={40}
+          position="absolute"
+          whiteSpace="pre"
+          pointerEvents="none"
+        >
+          {longest}
+        </Paragraph>
+      </View>
     </View>
   )
 })
@@ -168,7 +177,7 @@ export function HeadSection(props) {
           </FullScreen>
         </Page.Content>
 
-        <Page.Parallax zIndex={1} speed={0.01}>
+        <Page.Parallax zIndex={1} speed={0}>
           <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
             <FadeChild {...fadeUpProps} delay={600}>
               <View
@@ -273,22 +282,16 @@ export function HeadSection(props) {
             <View
               pointerEvents="none"
               position="absolute"
-              top="20%"
+              top="15%"
               left={0}
               right={0}
               overflow="hidden"
               bottom={0}
               userSelect="none"
-              opacity={0.247}
+              opacity={0.2}
             >
               <FadeChild {...fadeUpProps}>
-                <Image
-                  src={glow}
-                  transformOrigin="top center"
-                  transform={{
-                    scale: 1.5,
-                  }}
-                />
+                <Image src={glow} />
               </FadeChild>
               <GradientDown top="50%" zIndex={100} />
             </View>

@@ -33,7 +33,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen transform={{ y: '-85%', scale: 0.65 }} transformOrigin="bottom center">
+            <FullScreen transform={{ y: '-80%', scale: 0.65 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}
@@ -54,7 +54,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2} flex={1}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={screen === 'small' ? ['-50%', 0, '10%'] : ['-2%', 0, '6%']}
+            margin={screen === 'small' ? ['-50%', 0, '10%'] : [0, 0, '6%']}
             height="auto"
             header={
               <>
@@ -63,7 +63,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                     Import, search, filter, export.
                   </TitleText>
                 </FadeChild>
-                <TitleTextSub alpha={0.7} size="md">
+                <TitleTextSub size="md">
                   <FadeChild delay={200}>
                     Every app exposes a simple typed API.
                     {screen !== 'small' && <br />}

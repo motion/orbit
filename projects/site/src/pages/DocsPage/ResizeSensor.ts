@@ -218,7 +218,7 @@ export var ResizeSensor = function(element, callback) {
       if (el.attachEvent) {
         el.attachEvent('on' + name, cb)
       } else {
-        el.addEventListener(name, cb)
+        el.addEventListener(name, cb, { passive: true })
       }
     }
 

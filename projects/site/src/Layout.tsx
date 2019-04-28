@@ -159,7 +159,7 @@ function NotFound() {
   )
 }
 
-function PeekHeader(props: { isActive?: boolean }) {
+const PeekHeader = memo((props: { isActive?: boolean }) => {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -187,7 +187,7 @@ function PeekHeader(props: { isActive?: boolean }) {
       }
     }, 100)
 
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', onScroll)
@@ -213,4 +213,4 @@ function PeekHeader(props: { isActive?: boolean }) {
       </FullScreen>
     </Theme>
   )
-}
+})

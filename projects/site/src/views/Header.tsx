@@ -150,7 +150,7 @@ export const Header = memo(
               </FadeChild>
               <LinkSection>{after}</LinkSection>
             </HeaderContain>
-            {theme.background.isLight() && !noBorder ? <BorderBottom opacity={0.5} /> : null}
+            {!noBorder && <BorderBottom opacity={0.5} />}
           </Row>
         </Fade.FadeProvide>
       )

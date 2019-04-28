@@ -1,6 +1,7 @@
 import { Inline } from '@o/gloss'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
+import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
@@ -21,7 +22,7 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
-    <TitleText size="sm" fontWeight={300} alpha={0.5} {...props} />
+    <TitleText size="sm" fontWeight={300} alpha={0.65} {...props} />
   </View>
 ))
 
@@ -42,73 +43,77 @@ const fadeOutTm = 250
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
+const createSlideSpringTo = memoize((config, delay) => {
+  return async (next, cancel) => {
+    cancel()
+    switch (animate) {
+      case 'in':
+        next(curStyle)
+        return
+      case 'next':
+        await sleep(delay)
+        // out
+        await next({
+          to: prevStyle,
+          config: {
+            duration: fadeOutTm,
+          },
+        })
+        // move to other side
+        await next({
+          to: {
+            opacity: 0,
+            transform: `translate3d(40px,0,0)`,
+          },
+          config: {
+            duration: 180,
+          },
+        })
+        await sleep(delay)
+        // in
+        await next({
+          to: curStyle,
+          config,
+        })
+        // maybe put this earlier
+        animate = 'in'
+        return
+      case 'prev':
+        await sleep(delay)
+        // out
+        await next({
+          to: nextStyle,
+          config: {
+            duration: fadeOutTm,
+          },
+        })
+        // move to other side
+        await next({
+          to: {
+            opacity: 0,
+            transform: `translate3d(-40px,0,0)`,
+          },
+          config: {
+            duration: 180,
+          },
+        })
+        await sleep(delay)
+        // in
+        await next({
+          to: curStyle,
+          config,
+        })
+        // maybe put this earlier
+        animate = 'in'
+        return
+    }
+  }
+})
+
 function useSlideSpring(config, delay = 0) {
   return useSpring({
     from: nextStyle,
-    to: async (next, cancel) => {
-      cancel()
-      switch (animate) {
-        case 'in':
-          next(curStyle)
-          return
-        case 'next':
-          await sleep(delay)
-          // out
-          await next({
-            to: prevStyle,
-            config: {
-              duration: fadeOutTm,
-            },
-          })
-          // move to other side
-          await next({
-            to: {
-              opacity: 0,
-              transform: `translate3d(40px,0,0)`,
-            },
-            config: {
-              duration: 180,
-            },
-          })
-          await sleep(delay)
-          // in
-          await next({
-            to: curStyle,
-            config,
-          })
-          // maybe put this earlier
-          animate = 'in'
-          return
-        case 'prev':
-          await sleep(delay)
-          // out
-          await next({
-            to: nextStyle,
-            config: {
-              duration: fadeOutTm,
-            },
-          })
-          // move to other side
-          await next({
-            to: {
-              opacity: 0,
-              transform: `translate3d(-40px,0,0)`,
-            },
-            config: {
-              duration: 180,
-            },
-          })
-          await sleep(delay)
-          // in
-          await next({
-            to: curStyle,
-            config,
-          })
-          // maybe put this earlier
-          animate = 'in'
-          return
-      }
-    },
+    to: createSlideSpringTo(config, delay),
     config,
   })
 }
@@ -156,6 +161,24 @@ const useIntersectedOnce = () => {
   return [ref, val]
 }
 
+const fastConfig = {
+  mass: 0.5,
+  tension: 150,
+  friction: 12,
+}
+
+const slowConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
+
+const slowestConfig = {
+  mass: 0.5,
+  tension: 120,
+  friction: 12,
+}
+
 export function NeckSection(props) {
   const screen = useScreenSize()
   const forceUpdate = useForceUpdate()
@@ -163,27 +186,9 @@ export function NeckSection(props) {
   const [ref, show] = useIntersectedOnce()
 
   const longDelay = 100
-  const springFast = useSlideSpring({
-    mass: 0.5,
-    tension: 150,
-    friction: 12,
-  })
-  const springSlow = useSlideSpring(
-    {
-      mass: 0.5,
-      tension: 120,
-      friction: 12,
-    },
-    longDelay / 2,
-  )
-  const springSlowest = useSlideSpring(
-    {
-      mass: 0.5,
-      tension: 120,
-      friction: 12,
-    },
-    longDelay,
-  )
+  const springFast = useSlideSpring(fastConfig)
+  const springSlow = useSlideSpring(slowConfig, longDelay / 2)
+  const springSlowest = useSlideSpring(slowestConfig, longDelay)
 
   const [cur, setCur] = useState(0)
 
@@ -291,14 +296,16 @@ export function NeckSection(props) {
                   </animated.div>
                   <Space size="xxl" />
                   <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                    <Image
-                      userSelect="none"
-                      opacity={0.5}
-                      src={require('../../../public/images/curve-arrow.svg')}
-                      transform={{
-                        scale: 0.8,
-                      }}
-                    />
+                    <FadeChild delay={400}>
+                      <Image
+                        userSelect="none"
+                        opacity={0.5}
+                        src={require('../../../public/images/curve-arrow.svg')}
+                        transform={{
+                          scale: 0.8,
+                        }}
+                      />
+                    </FadeChild>
                   </animated.div>
                 </Flex>
                 <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
@@ -345,7 +352,6 @@ export function NeckSection(props) {
                           letterSpacing={2}
                           alpha={0.4}
                           textTransform="uppercase"
-                          fontWeight={300}
                           color="#fff"
                           cursor="inherit"
                         >
@@ -403,15 +409,17 @@ export function NeckSection(props) {
                   </FadeChild>
                   <Space size="xxl" />
                   <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                    <Image
-                      userSelect="none"
-                      opacity={0.5}
-                      transform={{
-                        rotate: '275deg',
-                        scale: 0.8,
-                      }}
-                      src={require('../../../public/images/curve-arrow.svg')}
-                    />
+                    <FadeChild delay={400}>
+                      <Image
+                        userSelect="none"
+                        opacity={0.5}
+                        transform={{
+                          rotate: '275deg',
+                          scale: 0.8,
+                        }}
+                        src={require('../../../public/images/curve-arrow.svg')}
+                      />
+                    </FadeChild>
                   </animated.div>
                 </Flex>
               </Row>
@@ -432,18 +440,20 @@ export function NeckSection(props) {
           </FullScreen>
         </Page.Parallax>
 
-        <Page.Parallax speed={0.25} zIndex={-5} overflow="hidden">
-          <FullScreen zIndex={0} transform={{ scale: 1.25 }}>
-            <FullScreen
-              className="northern-lights"
-              backgroundImage={`url(${northernlights})`}
-              backgroundSize="cover"
-              backgroundPosition="center center"
-              backgroundRepeat="no-repeat"
-              opacity={0.6}
-            />
-            <Spotlight />
-          </FullScreen>
+        <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
+          <FadeChild delay={800} style={{ width: '100%', height: '100%' }}>
+            <FullScreen zIndex={0}>
+              <FullScreen
+                className="northern-lights"
+                backgroundImage={`url(${northernlights})`}
+                backgroundSize="cover"
+                backgroundPosition="center center"
+                backgroundRepeat="no-repeat"
+                opacity={0.5}
+              />
+              <Spotlight />
+            </FullScreen>
+          </FadeChild>
         </Page.Parallax>
       </Page>
     </Fade.FadeProvide>

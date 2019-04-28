@@ -167,7 +167,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
   followScrollParent = parentNode => {
     this.parentNode = parentNode
     const scrollParent = getScrollParent(parentNode)
-    on(this, scrollParent, 'scroll', debounce(this.updateScrollParent, 80))
+    scrollParent.addEventListener('scroll', this.updateScrollParentDebounced, { passive: true })
     this.updateScrollParent()
   }
 
@@ -177,7 +177,13 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     })
   }
 
+  updateScrollParentDebounced = debounce(this.updateScrollParent, 80)
+
   componentWillUnmount() {
+    if (this.parentNode) {
+      const scrollParent = getScrollParent(this.parentNode)
+      scrollParent.removeEventListener('scroll', this.updateScrollParentDebounced)
+    }
     this.unmounted = true
   }
 

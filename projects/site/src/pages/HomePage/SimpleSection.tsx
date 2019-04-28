@@ -7,6 +7,12 @@ import { FadeChild, fadeLeftProps, fadeRightProps } from '../../views/FadeIn'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
+const titleFont = {
+  WebkitTextFillColor: 'transparent',
+  background: 'linear-gradient(to right, #B65138, #BE0DBE)',
+  backgroundSize: 300,
+}
+
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
   const screen = useScreenSize()
   const isLeft = isDefined(index) && index % 2 === 0
@@ -23,12 +29,8 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
             style={{
               WebkitBackgroundClip: 'text',
             }}
-            {...{
-              WebkitTextFillColor: 'transparent',
-              background: 'linear-gradient(to right, #B65138, #BE0DBE)',
-              backgroundSize: 300,
-            }}
-            size="sm"
+            {...titleFont}
+            size="md"
             sizeLineHeight={1}
             textAlign="left"
             flex={1}

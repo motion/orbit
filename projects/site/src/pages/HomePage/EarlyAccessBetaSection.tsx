@@ -22,7 +22,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
           </>
         }
       >
-        <View margin={['auto', 0]} transform={{ y: '-3%' }}>
+        <View margin={['auto', 0]} transform={{ y: '-5%' }}>
           <EarlyAccessContent />
         </View>
       </Page.Content>
@@ -58,6 +58,7 @@ export const SignupForm = (props: ViewProps) => (
     borderRadius={12}
     overflow="hidden"
     elevation={3}
+    background={theme => theme.backgroundStrong}
     {...props}
   >
     <Wavy width="100%" height={16} />

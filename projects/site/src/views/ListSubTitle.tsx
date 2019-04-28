@@ -1,7 +1,6 @@
-import { gloss, SubTitle } from '@o/ui'
+import { SubTitle, TextProps } from '@o/ui'
+import React from 'react'
 
-export const ListSubTitle = gloss(SubTitle, {
-  padding: [20, 0, 0],
-  fontWeight: 300,
-  fontSize: 24,
-})
+export const ListSubTitle = (props: TextProps) => (
+  <SubTitle paddingTop={20} fontSize={20} {...props} />
+)

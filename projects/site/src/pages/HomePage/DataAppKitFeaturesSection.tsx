@@ -60,14 +60,14 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
               <>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xxl">
-                    Bring your data together.
+                    One click data sources.
                   </TitleText>
                 </FadeChild>
                 <TitleTextSub size="sm">
                   <FadeChild delay={200}>
-                    Plug in many integrations, then build on them.
+                    Every app knows how to sync and expose it's API.
                     {screen !== 'small' && <br />}
-                    &nbsp;Use, extend and publish more in the open app store.
+                    &nbsp;Use, extend and build with the open app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -75,14 +75,13 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
           >
             <Row
               className="hide-scrollbars"
-              margin="0 -10vw"
-              width="100vw"
               height="auto"
               space="md"
               spaceAround
               justifyContent="center"
+              pointerEvents="none"
               transform={{
-                y: '-60%',
+                y: '-70%',
               }}
             >
               {apps.map((app, index) => (
@@ -91,7 +90,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                   index={index}
                   icon={app.icon}
                   title={app.title}
-                  transform={{ y: `${index * 20}%` }}
+                  transform={{ y: `${index * 25}%` }}
                 />
               ))}
             </Row>

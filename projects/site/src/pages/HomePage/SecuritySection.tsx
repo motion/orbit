@@ -62,17 +62,11 @@ export default function WaistSection() {
         >
           <Row space={useScreenVal(20, 'lg', 'xl')}>
             <Col flex={3} space="xl">
-              <Pitch size="md">Orbit never sends single bit of data outside your firewall.</Pitch>
-
-              <Pitch fontWeight={200} size="sm">
-                <ol>
-                  <li>Install Orbit.app.</li>
-                  <li>Create apps with your team.</li>
-                  <li>That's it.</li>
-                </ol>
+              <Pitch alpha={1} size="md">
+                Orbit never sends single bit of data outside your firewall.
               </Pitch>
 
-              <Pitch fontWeight={200} alpha={0.7} size="xs">
+              <Pitch fontWeight={200} alpha={0.7} size="sm" sizeLineHeight={1.5}>
                 Get incredibly powerful internal tools without setting up infrastructure or having
                 to trust a startup with any of your data -- interface with sensitive internal
                 databases with ease, Orbit gives you complete control.

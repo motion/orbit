@@ -59,6 +59,7 @@ export const themes = {
     ...KitThemes.dark,
     ...Theme.colorize({
       background: '#111',
+      inputColor: '#fff',
       inputBackground: '#222',
       inputBackgroundHover: '#222',
       inputBackgroundActive: '#222',

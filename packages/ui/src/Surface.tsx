@@ -218,7 +218,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
-  const throughProps: ThroughProps = {
+  let throughProps: ThroughProps = {
     height,
     iconPad: typeof iconPad === 'number' ? iconPad : size * 8,
     alignItems,
@@ -240,6 +240,12 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   if (noInnerElement) {
     throughProps.tagName = tagName
+    if (elementProps) {
+      throughProps = {
+        ...throughProps,
+        ...elementProps,
+      }
+    }
   }
 
   const childrenProps: HTMLProps<HTMLDivElement> = {}

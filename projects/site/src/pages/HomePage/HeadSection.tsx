@@ -211,7 +211,7 @@ export function HeadSection() {
                           minWidth: useScreenVal('auto', 300, 300),
                         }}
                         borderRadius={1000}
-                        boxShadow={[[0, 5, 40, [0, 0, 0.15]]]}
+                        boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
                         transform={{ y: -123 }}
                         flexFlow="row"
                         group

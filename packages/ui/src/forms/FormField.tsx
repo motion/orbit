@@ -1,5 +1,6 @@
 import { Col, gloss, Row } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
+
 import { getDataType } from '../helpers/getDataType'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
@@ -94,6 +95,7 @@ export function FormField(props: FormFieldProps) {
     props.name && setName(props.name)
   }, [props.name])
 
+  console.log('PROPS', props)
   switch (type) {
     case DataType.boolean:
       return <CheckBoxField name={name} {...props as any} />

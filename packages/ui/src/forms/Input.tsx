@@ -119,8 +119,11 @@ const SimpleInput = gloss(
     forwardRef,
     name,
     type,
+    value,
+    defaultValue,
     ...props
-  }: SizedSurfaceProps) => {
+  }: SizedSurfaceProps & { value?: any; defaultValue?: any }) => {
+    console.log('wut', value, defaultValue)
     const visible = useVisibility()
     return (
       <SizedSurface
@@ -131,9 +134,11 @@ const SimpleInput = gloss(
             tagName,
             name,
             type,
+            value,
+            defaultValue,
             ...elementProps,
           }),
-          [forwardRef, placeholder, tagName, elementProps],
+          [forwardRef, value, defaultValue, placeholder, tagName, elementProps],
         )}
         type="input"
         maxWidth="100%"

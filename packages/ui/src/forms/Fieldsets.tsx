@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { getRowValues } from '../helpers/getRowValues'
 import { SurfacePassProps } from '../Surface'
 import { DataColumnsShort, GenericDataRow } from '../types'
@@ -23,12 +24,13 @@ export function Fieldsets(props: FieldsetsProps) {
           <Fieldset key={`${row.key}${rowIndex}`}>
             {Object.keys(columns).map((colKey, colIndex) => {
               const value = values[colKey]
+              console.log('got', colKey, values, columns)
               return (
                 <FormField
                   key={`${value.key}${colIndex}`}
                   type={columns[colKey].type}
                   label={columns[colKey].value}
-                  value={value}
+                  defaultValue={value}
                 />
               )
             })}

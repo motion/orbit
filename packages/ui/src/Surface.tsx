@@ -130,9 +130,17 @@ export type SurfaceSpecificProps = {
   /** Force disabled state of surface */
   disabled?: boolean
 
+  /** HTML prop type */
   type?: string
+
+  /** Select a subset theme easily */
   themeSelect?: Gloss.ThemeSelect
+
+  /** Amount to pad icon */
   iconPad?: number
+
+  /** Force ignore grouping */
+  ignoreSegment?: boolean
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
@@ -292,6 +300,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         activeStyle={props.activeStyle}
         focusStyle={props.focusStyle}
         color="inherit"
+        {...perfectCenterStyle(throughProps)}
         {...iconProps}
       >
         {icon && !stringIcon && icon}
@@ -509,6 +518,16 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   return styles
 })
 
+const perfectCenterStyle = props => {
+  if (props.height && props.height % 2 === 1) {
+    return {
+      transform: {
+        y: 0.5,
+      },
+    }
+  }
+}
+
 const Element = gloss<
   CSSPropertySetStrict & ThroughProps & { disabled?: boolean; surfacePadX: number | string }
 >({
@@ -525,16 +544,13 @@ const Element = gloss<
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
-  transform: {
-    y: 0.5,
-  },
   ellipse: {
     display: 'block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(propsToStyles)
+}).theme(propsToStyles, perfectCenterStyle)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize

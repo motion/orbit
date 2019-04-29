@@ -1,6 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import React, { Component } from 'react'
+
 import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
 import { SimpleText } from '../text/SimpleText'
@@ -103,7 +104,6 @@ const BaseContainer = gloss({
 }).theme((props, theme) => ({
   color: props.color || theme.color,
   opacity: props.disabled ? 0.5 : 1,
-  margin: props.depth === 0 ? [7.5, 0] : '0',
 }))
 
 const Added = gloss({
@@ -125,6 +125,7 @@ const ExpandControl = gloss('span', {
   marginLeft: -11,
   marginRight: 5,
   whiteSpace: 'pre',
+  userSelect: 'none',
 })
 
 export const InspectorName = gloss('span', {
@@ -532,12 +533,12 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     let wrapperEnd
     if (isExpanded) {
       if (type === 'object') {
-        wrapperStart = <SimpleText>{'{'}</SimpleText>
-        wrapperEnd = <SimpleText>{'}'}</SimpleText>
+        wrapperStart = <Obj>{'{'}</Obj>
+        wrapperEnd = <Obj>{'}'}</Obj>
       }
       if (type === 'array') {
-        wrapperStart = <SimpleText>{'['}</SimpleText>
-        wrapperEnd = <SimpleText>{']'}</SimpleText>
+        wrapperStart = <Obj>{'['}</Obj>
+        wrapperEnd = <Obj>{']'}</Obj>
       }
     }
 
@@ -584,3 +585,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     )
   }
 }
+
+const Obj = gloss(SimpleText, {
+  userSelect: 'none',
+})

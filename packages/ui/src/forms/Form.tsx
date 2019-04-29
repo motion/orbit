@@ -9,6 +9,7 @@ import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
+import { FormField } from './FormField'
 import { InputType } from './Input'
 
 export type FormProps<A extends FormFieldsObj> = SectionProps &
@@ -26,10 +27,10 @@ export type FormProps<A extends FormFieldsObj> = SectionProps &
   }
 
 type FormValues = { [key in keyof FormFieldsObj]: any }
-export type FormFieldsObj = { [key: string]: FormField }
+export type FormFieldsObj = { [key: string]: FormFieldType }
 export type FormErrors<A> = { [key in keyof A]: string } | string | null | true | undefined | void
 
-type FormField =
+type FormFieldType =
   | {
       name: string
       type?: InputType | string
@@ -46,7 +47,7 @@ type FormField =
     }
 
 type FormActions =
-  | { type: 'changeField'; value: FormField }
+  | { type: 'changeField'; value: FormFieldType }
   | { type: 'removeField'; value: string }
   | { type: 'setErrors'; value: FormErrors<any> }
   | { type: 'setFields'; value: FormFieldsObj }

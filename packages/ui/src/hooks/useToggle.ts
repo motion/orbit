@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+
 import { CollapsableProps } from '../Collapsable'
 
 export type Toggler = {
   val: boolean
-  toggle: () => void
+  toggle: (e?: any) => void
   setState: any
   collapseProps: CollapsableProps
   isCollapsable?: boolean
@@ -30,7 +31,12 @@ export function useToggle(
     onChange(val)
   }, [onChange, val])
 
-  const toggle = () => setState(!val)
+  const toggle = e => {
+    if (e && e.stopPropagation) {
+      e.stopPropagation()
+    }
+    setState(!val)
+  }
 
   return {
     isCollapsable: (props && props.collapsable) || false,

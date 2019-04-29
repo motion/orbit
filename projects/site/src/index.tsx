@@ -1,8 +1,10 @@
-import './configurations'
 import 'react-hot-loader'
 
 import { SiteRoot } from './SiteRoot'
 
+// require forces no tree shaking
+
+require('./configurations')
 require('./assets/font-gteesti/stylesheet.css')
 require('./assets/siteBase.css')
 

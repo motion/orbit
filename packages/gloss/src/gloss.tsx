@@ -368,6 +368,7 @@ export function gloss<Props = any>(
     if (displayName) {
       GlossView['displayName'] = displayName
       ThemedView = createGlossView<Props>(GlossView, config)
+      ThemedView['displayName'] = displayName
     }
     return ThemedView
   }

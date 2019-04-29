@@ -8,6 +8,7 @@ import { isEditing } from '@o/stores'
 import { isRightClick } from '@o/ui'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
+
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -237,8 +238,6 @@ const OrbitNavChrome = gloss({
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
-  // margin: [0, -40],
-  // padding: [0, 40],
   justifyContent: 'space-between',
 })
 

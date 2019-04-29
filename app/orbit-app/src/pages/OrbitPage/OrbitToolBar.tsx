@@ -3,6 +3,7 @@ import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
+
 import { useStoresSimple } from '../../hooks/useStores'
 
 const toolbarHeight = 36
@@ -14,11 +15,11 @@ export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
 )
 
 export const OrbitToolBar = memo((props: AppMainViewProps) => {
-  const { id, appDef } = useContext(AppLoadContext)
+  const { id } = useContext(AppLoadContext)
   const { paneManagerStore } = useStoresSimple()
   const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <OrbitToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
+    <OrbitToolbarChrome>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
         <Toolbar
           border={false}

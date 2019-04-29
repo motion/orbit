@@ -122,6 +122,19 @@ export const OrbitHeader = memo(function OrbitHeader() {
   )
 })
 
+const OrbitHeaderContainer = gloss<any>(View, {
+  position: 'relative',
+  overflow: 'hidden',
+  zIndex: 400,
+}).theme((props, theme) => ({
+  // borderBottom: [1, theme.borderColor],
+  background:
+    // 'rgba(0,50, 200, 0.2)' ||
+    (props.isEditing && theme.headerBackgroundOpaque) ||
+    theme.headerBackground ||
+    theme.background.alpha(a => a * 0.65),
+}))
+
 const HeaderSide = gloss({
   flexFlow: 'row',
   flex: 1,
@@ -144,19 +157,6 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   transition: 'all ease-in 500ms',
 }).theme(({ isActive }, theme) => ({
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
-}))
-
-const OrbitHeaderContainer = gloss<any>(View, {
-  position: 'relative',
-  overflow: 'hidden',
-  zIndex: 400,
-}).theme((props, theme) => ({
-  // borderBottom: [1, theme.borderColor],
-  background:
-    // 'rgba(0,50, 200, 0.2)' ||
-    (props.isEditing && theme.headerBackgroundOpaque) ||
-    theme.headerBackground ||
-    theme.background.alpha(a => a * 0.65),
 }))
 
 const HeaderContain = gloss<{ isActive?: boolean }>({

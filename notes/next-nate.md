@@ -1,18 +1,21 @@
 May
 
-"Nice Looking Multiple Apps"
+"Finish docs and website"
 
 June
 
-"Really plug in apps/data and share between"
+"Multi-apps on desktop and make them feel better"
 
 July
 
-"Really be able to develop an app"
+"Make demo apps work better, esp with adding sources and showing data"
 
 Aug
 
-"Really be able to sync config between"
+hire......... so someone can do "Really be able to develop an app"
+
+me: "Really be able to sync config between"
+
 
 Sep
 

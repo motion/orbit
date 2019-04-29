@@ -40,7 +40,12 @@ export function AboutPage() {
 
           <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
             <Row id="main" alignItems="flex-start">
-              <Col id="sidebar" width={screen === 'small' ? 0 : 200} pointerEvents="auto">
+              <Col
+                id="sidebar"
+                width={200}
+                pointerEvents="auto"
+                {...screen === 'small' && { width: 0, opacity: 0 }}
+              >
                 <Col position="relative" className="sidebar__inner" flex={1}>
                   <FadeChild delay={200}>
                     <Space size={35} />
@@ -80,7 +85,7 @@ export function AboutPage() {
               <FadeChild delay={400} style={{ flex: 1 }}>
                 <Col
                   id="mission"
-                  pad={[0, useScreenVal('sm', 'lg', 'xl')]}
+                  pad={[0, useScreenVal('sm', 'xxl', 100)]}
                   space="xxl"
                   spaceAround
                   flex={1}
@@ -158,7 +163,7 @@ export function AboutPage() {
 }
 
 const BigParagraph = (props: TextProps) => (
-  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5} {...props} />
+  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
 )
 
 const BigTitle = (props: TextProps) => <Title selectable size={3.5} fontWeight={100} {...props} />

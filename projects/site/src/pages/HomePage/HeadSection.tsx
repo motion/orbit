@@ -281,7 +281,7 @@ export function HeadSection() {
         left="-40%"
         right="-40%"
         width="180%"
-        top="-20%"
+        top="-80%"
         backgroundPosition="top center"
         backgroundImage={blackWavePattern}
         transform={{

@@ -441,20 +441,18 @@ export default function NeckSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0} zIndex={-5} overflow="hidden">
-        <FadeChild delay={800} style={{ width: '100%', height: '100%' }}>
-          <FullScreen zIndex={0}>
-            <FullScreen
-              className="northern-lights"
-              backgroundImage={`url(${northernlights})`}
-              backgroundSize="cover"
-              backgroundPosition="center center"
-              backgroundRepeat="no-repeat"
-              opacity={0.5}
-            />
-            <Spotlight />
-          </FullScreen>
-        </FadeChild>
+      <Page.Parallax speed={0.31} zIndex={-5} overflow="hidden">
+        <FullScreen zIndex={0}>
+          <FullScreen
+            className="northern-lights"
+            backgroundImage={`url(${northernlights})`}
+            backgroundSize="cover"
+            backgroundPosition="center center"
+            backgroundRepeat="no-repeat"
+            opacity={1}
+          />
+          <Spotlight />
+        </FullScreen>
       </Page.Parallax>
     </Fade.FadeProvide>
   )

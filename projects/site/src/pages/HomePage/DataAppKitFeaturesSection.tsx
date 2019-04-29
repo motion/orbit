@@ -143,7 +143,7 @@ export default memo(function DataAppKitFeaturesSection() {
                 </>
               }
             >
-              <Space size="sm" />
+              <View flex={1} />
               <Grid
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}

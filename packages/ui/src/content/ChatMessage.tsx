@@ -1,5 +1,6 @@
-import { gloss, Row, Theme } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React, { useContext } from 'react'
+
 import { ButtonPerson } from '../buttons/ButtonPerson'
 import { SizedSurface } from '../SizedSurface'
 import { DateFormat } from '../text/DateFormat'
@@ -77,11 +78,14 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           )}
         </Row>
       )}
-      <Theme name="action">
-        <SizedSurface padding={[6, 10]} noInnerElement sizeRadius={1}>
-          {content}
-        </SizedSurface>
-      </Theme>
+      <SizedSurface
+        background={theme => theme.backgroundStronger}
+        padding={[6, 10]}
+        noInnerElement
+        sizeRadius={1}
+      >
+        {content}
+      </SizedSurface>
     </ChatMessageFrame>
   )
 }

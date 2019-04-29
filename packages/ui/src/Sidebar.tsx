@@ -4,13 +4,14 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { ThemeContext, ThemeObject } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
+
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 import { Omit } from './types'
+
 
 export type SidebarProps = Omit<InteractiveProps, 'position'> & {
   /**
@@ -204,6 +205,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         onResize={this.onResize}
         transition="all ease 120ms"
         opacity={hidden ? 0 : 1}
+        pointerEvents={hidden ? 'none' : 'inherit'}
         position={position}
         background={background || theme.sidebarBackground}
         {...getTransform(

@@ -15,6 +15,7 @@ export function BlogPageIndex() {
       ...posts[id],
       id,
     }))
+    .filter(x => !x.private)
     .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
 
   return (

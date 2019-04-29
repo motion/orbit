@@ -7,6 +7,7 @@ export type PostEntry = {
   author: string
   authorImage: string
   preview?: string
+  private?: boolean
 }
 
 export type PostDirectory = {
@@ -35,5 +36,6 @@ export const posts: PostDirectory = {
     date: '2019-04-25T22:12:03.284Z',
     author: 'Nathan Wienert',
     authorImage: nateImg,
+    private: true,
   },
 }

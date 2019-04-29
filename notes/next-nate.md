@@ -1,8 +1,37 @@
-Sunday:
+May
 
-- Mobile site completely fixed
-- Fix prod issues w not showing squircle, font on docs, etc
-- Write blog post
+"Nice Looking Multiple Apps"
+
+June
+
+"Really plug in apps/data and share between"
+
+July
+
+"Really be able to develop an app"
+
+Aug
+
+"Really be able to sync config between"
+
+Sep
+
+"Have good demo apps"
+
+Oct
+
+"Fix up site and onboarding for launch"
+
+Nov
+
+"Sell it to some early users"
+
+Dec
+
+"Launch"
+
+---
+
 - Apps page show details + improve faq
 - Add faq to about page
 

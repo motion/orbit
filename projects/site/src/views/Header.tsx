@@ -108,10 +108,24 @@ export const Header = memo(
     }
 
     let children
+    const menuElement = size === 'small' && (
+      <Button
+        position="fixed"
+        top={3}
+        right={10}
+        zIndex={1000000000}
+        icon="menu"
+        iconSize={16}
+        size={2}
+        chromeless
+        onClick={siteStore.toggleSidebar}
+      />
+    )
 
     if (slim) {
       children = (
         <Fade.FadeProvide>
+          {menuElement}
           <Row
             ref={Fade.ref}
             pointerEvents="auto"
@@ -138,23 +152,7 @@ export const Header = memo(
     } else {
       children = (
         <Fade.FadeProvide>
-          {size === 'small' && (
-            <Button
-              position="fixed"
-              top={10}
-              right={10}
-              color="#fff"
-              zIndex={1000000000}
-              hoverStyle={{
-                color: '#fff',
-              }}
-              icon="menu"
-              iconSize={16}
-              size={2}
-              chromeless
-              onClick={siteStore.toggleSidebar}
-            />
-          )}
+          {menuElement}
           <Row
             ref={Fade.ref}
             position="absolute"

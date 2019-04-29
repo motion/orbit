@@ -10,9 +10,7 @@ export function BlogLayout({ children, ...props }: ColProps) {
     <>
       <BlogTitle />
       <SectionContent minHeight={500}>
-        <Col pad {...props}>
-          {children}
-        </Col>
+        <Col {...props}>{children}</Col>
       </SectionContent>
 
       <BlogFooter />

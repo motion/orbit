@@ -5,6 +5,7 @@ import { colors } from '../../constants'
 import { FadeChild } from '../../views/FadeIn'
 import { TitleText } from '../../views/TitleText'
 import { linkProps } from '../HomePage/linkProps'
+import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
 
@@ -23,7 +24,7 @@ export function BlogPageIndex() {
       {all.map((post, index) => (
         <FadeChild key={post.date} delay={index * 150}>
           <Post
-            pad="xl"
+            pad={useScreenVal('md', 'xl', 'xl')}
             {...linkProps(`/blog/${all[index].id}`)}
             hoverStyle={{
               background: '#f9f9f9',

@@ -122,8 +122,7 @@ const SimpleInput = gloss(
     value,
     defaultValue,
     ...props
-  }: SizedSurfaceProps & { value?: any; defaultValue?: any }) => {
-    console.log('wut', value, defaultValue)
+  }: SizedSurfaceProps & InputProps) => {
     const visible = useVisibility()
     return (
       <SizedSurface
@@ -151,7 +150,7 @@ const SimpleInput = gloss(
         sizeHeight
         sizeLineHeight
         sizeRadius={0.75}
-        label={props.name}
+        label={name}
         activeStyle={null}
         glint={false}
         borderWidth={1}

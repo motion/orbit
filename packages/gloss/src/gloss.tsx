@@ -4,11 +4,11 @@ import { flatten } from 'lodash'
 import { createElement, forwardRef, memo, useContext, useEffect, useRef } from 'react'
 
 import { Config } from './config'
+import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
-import { ThemeContext } from './theme/ThemeContext'
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 
@@ -134,26 +134,15 @@ function glossify(
   let classNames: string[] | null = null
 
   // sort so we properly order pseudo keys
-  const keys = [...new Set([...Object.keys(staticStyles), ...Object.keys(dynStyles)])]
-  const sortedKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
+  const staticKeys = Object.keys(staticStyles).sort(pseudoSort)
+  const dynKeys = Object.keys(dynStyles).sort(pseudoSort)
 
-  // we'll return the final (non-psuedo/child) styles
-  let styles: CSSPropertySet | null = null
+  const allKeys = [...staticKeys, ...dynKeys]
+  const allStyles = [...staticKeys.map(x => staticStyles[x]), ...dynKeys.map(x => dynStyles[x])]
 
   // add rules
-  for (const key of sortedKeys) {
-    // take base styles
-    let cur = staticStyles[key]
-
-    // add on the dynamic overrides
-    if (dynStyles[key]) {
-      cur = { ...cur, ...dynStyles[key] }
-    }
-
-    // return the final result of the style object
-    if (key === id) {
-      styles = cur
-    }
+  for (const [index, key] of allKeys.entries()) {
+    const cur = allStyles[index]
 
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
     if (!cur) {
@@ -183,7 +172,7 @@ function glossify(
     }
   }
 
-  return { classNames, styles }
+  return classNames
 }
 
 export interface GlossView<Props> {
@@ -270,6 +259,7 @@ export function gloss<Props = any>(
   }
 
   const targetElement = isGlossParent ? targetConfig.targetElement : target
+  const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: ThemeFn | null = null
@@ -277,8 +267,8 @@ export function gloss<Props = any>(
   function GlossView(props: GlossProps<Props>, ref: any) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
-    const { activeTheme } = useContext(ThemeContext)
-    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+    const theme = useTheme()
+    const tag = props.tagName || targetElementName
     const curClassNames = useRef<string[] | null>(null)
 
     // unmount
@@ -291,7 +281,7 @@ export function gloss<Props = any>(
       }
     }, [])
 
-    const { classNames, styles } = glossify(
+    const classNames = glossify(
       id,
       ThemedView.displayName,
       themeFn,
@@ -300,7 +290,7 @@ export function gloss<Props = any>(
       curClassNames.current,
       props,
       tag,
-      activeTheme,
+      theme,
     )
     curClassNames.current = classNames
 
@@ -320,11 +310,6 @@ export function gloss<Props = any>(
 
     for (const key in props) {
       if (ignoreAttrs && ignoreAttrs[key]) {
-        continue
-      }
-      // dont pass down things we used for styles
-      // this could be confusing / configurable
-      if (styles && styles.hasOwnProperty(key)) {
         continue
       }
       if (isDOMElement) {

@@ -1,6 +1,6 @@
 import { gloss, Theme, ThemeContext } from '@o/gloss'
 import { useReaction } from '@o/use-store'
-import { isDefined } from '@o/utils'
+import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
 
@@ -187,7 +187,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = small ? 0.8 : 1
-  let defaultPadding = small ? 'xs' : 'sm'
+  let defaultPad = small ? 'xs' : 'sm'
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
@@ -197,7 +197,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
-    defaultPadding = 'sm'
+    defaultPad = 'sm'
   }
 
   const hasChildren = showChildren && !!children
@@ -252,7 +252,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         themeSelect="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
-        pad={isDefined(padding) ? surfaceProps.pad : defaultPadding}
+        padding={padding}
+        pad={selectDefined(surfaceProps.pad, defaultPad)}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}

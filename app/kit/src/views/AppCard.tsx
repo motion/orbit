@@ -1,6 +1,7 @@
 import { AppBit } from '@o/models'
 import { Button, Card, CardProps, Loading, SpaceGroup, useFocusableItem } from '@o/ui'
 import React, { Suspense, useRef, useState } from 'react'
+
 import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { Omit } from '../types'
 import { AppDefinition } from '../types/AppDefinition'

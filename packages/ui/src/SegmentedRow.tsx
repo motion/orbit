@@ -52,10 +52,12 @@ const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
     }
     if (item.isFirst) {
       return {
-        borderWidth: 0,
-        borderLeftWidth: props.borderWidth,
-        borderTopWidth: props.borderWidth,
-        borderBottomWidth: props.borderWidth,
+        ...(props.borderPosition !== 'inside' && {
+          borderWidth: 0,
+          borderLeftWidth: props.borderWidth,
+          borderTopWidth: props.borderWidth,
+          borderBottomWidth: props.borderWidth,
+        }),
         borderRightRadius: 0,
         borderLeftRadius: radius,
       }
@@ -66,11 +68,13 @@ const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
       }
     } else {
       return {
+        ...(props.borderPosition !== 'inside' && {
+          borderWidth: 0,
+          borderLeftWidth: props.borderWidth,
+          borderTopWidth: props.borderWidth,
+          borderBottomWidth: props.borderWidth,
+        }),
         borderRightRadius: 0,
-        borderWidth: 0,
-        borderLeftWidth: props.borderWidth,
-        borderTopWidth: props.borderWidth,
-        borderBottomWidth: props.borderWidth,
         borderLeftRadius: 0,
       }
     }

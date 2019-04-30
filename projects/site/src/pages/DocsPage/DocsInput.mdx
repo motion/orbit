@@ -27,14 +27,14 @@ import { Input } from '@o/ui'
 
 As any Surface, Input accept all the `<SizedSurface />` properties.
 
-<Example id="Sized" />
+<Example id="Sized" name="Sizing" />
 
 ### Using in a group
 
 One big feature of Surfaces is that they support being used in groups automatically. So putting
 together an Input, with a Button, can look like this:
 
-<Example id="Grouped" />
+<Example id="Grouped" name="Grouping" />
 
 ### Sizing and using in a group
 
@@ -43,4 +43,4 @@ this. First is through `<PassProps />`, which works well with Row/Col, preservin
 properties. The alternate, which only works for surfaces, is to use `<SurfacePassProps>`, which uses
 context to pass props to the next level of surfaces, no matter how deep down they are.
 
-<Example id="GroupedSized" />
+<Example id="GroupedSized" name="Sizing and grouping" />

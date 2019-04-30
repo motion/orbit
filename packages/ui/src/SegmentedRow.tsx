@@ -32,12 +32,10 @@ export function getSegmentedStyle(props: SurfaceProps, item: BreadcrumbInfo) {
   }
 }
 
-const getInnerBorderOffsetStyle = (props: SurfaceProps, item: BreadcrumbInfo) => {
-  if (item && props.borderPosition === 'inside') {
-    if (!item.isFirst) {
-      return {
-        marginLeft: -1,
-      }
+const getInnerBorderOffsetStyle = (_props: SurfaceProps, item: BreadcrumbInfo) => {
+  if (item && !item.isFirst) {
+    return {
+      marginLeft: -1,
     }
   }
 }

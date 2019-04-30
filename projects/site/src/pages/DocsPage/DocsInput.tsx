@@ -31,14 +31,15 @@ export let Grouped = (
 export let GroupedSized = (
   <Col space>
     <Row group>
-      <PassProps size={1.5}>
-        <Input placeholder="Hello world" onChange={e => console.log(e.target.value)} />
+      <PassProps size="xl">
+        <Input placeholder="Hello world" />
         <Button>Submit</Button>
       </PassProps>
     </Row>
     <SurfacePassProps size={1.5} sizeRadius={2}>
       <Row group>
-        <Input placeholder="Hello world" onChange={e => console.log(e.target.value)} />
+        <Button background="transparent" icon="search" />
+        <Input placeholder="Hello world" />
         <Button>Submit</Button>
       </Row>
     </SurfacePassProps>

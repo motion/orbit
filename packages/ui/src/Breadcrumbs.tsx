@@ -22,9 +22,8 @@ class BreadcrumbStore {
 
   orderedChildren = react(
     () => [...this.selectors],
-    async (selectors, { sleep }) => {
+    (selectors) => {
       ensure('selectors', !!selectors.length)
-      await sleep(50)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>
         selectors.find(sel => node.classList.contains(sel)),

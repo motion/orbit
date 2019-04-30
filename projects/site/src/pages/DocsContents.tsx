@@ -66,7 +66,7 @@ export const DocsContents = memo(
       >
         <Space size />
         <Section
-          maxWidth={760}
+          maxWidth={860}
           width="100%"
           margin={[0, 'auto']}
           pad={useScreenVal(

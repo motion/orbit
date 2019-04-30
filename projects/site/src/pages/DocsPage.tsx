@@ -237,7 +237,7 @@ export const DocsPage = memo((props: { children?: any }) => {
 
       {isSmall && (
         <Portal>
-          <FixedLayout isSmall={isSmall}>
+          <FixedLayout isSmall>
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
@@ -286,7 +286,7 @@ const DocsPageSidebar = memo(({ children }) => {
   })
 
   return (
-    <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
+    <Col id="sidebar" width={280} pointerEvents="auto" height={window.innerHeight}>
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[50, 0, 0]} flex={1} position="relative">
           {children}

@@ -58,6 +58,7 @@ export function TabItem(props: ButtonProps) {
       sizeHeight={0.8}
       sizeFont={0.9}
       sizeIcon={1.2}
+      sizePadding={2.4}
       fontWeight={500}
       elevation={0}
       iconAfter={false}

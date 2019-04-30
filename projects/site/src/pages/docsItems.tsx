@@ -249,4 +249,11 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/forms/Input'),
     types: () => import('../../tmp/Input.json'),
   },
+  modal: {
+    page: () => import('./DocsPage/DocsModal.mdx'),
+    examples: () => import('./DocsPage/DocsModal'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsModal'),
+    source: () => import('!raw-loader!@o/ui/src/modals/Modal'),
+    types: () => import('../../tmp/Modal.json'),
+  },
 }

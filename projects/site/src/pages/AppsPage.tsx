@@ -131,12 +131,12 @@ const FAQItem = ({ main, paragraphs, question }) => {
           {question}
         </Title>
 
-        <Title selectable size={3} fontWeight={100}>
+        <Title selectable size={2.5} sizeLineHeight={1.3} fontWeight={100}>
           {main}
         </Title>
 
         {paragraphs.map((p, i) => (
-          <Title key={i} selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+          <Title key={i} selectable size={1.5} alpha={0.6} fontWeight={300} sizeLineHeight={1.25}>
             {p}
           </Title>
         ))}

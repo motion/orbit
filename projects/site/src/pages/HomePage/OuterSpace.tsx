@@ -23,7 +23,7 @@ export function OuterSpace(props) {
         left: 0,
         right: 0,
         height: siteStore.sectionHeight,
-        opacity: show ? 0.4 : 0,
+        opacity: show ? 0.36 : 0,
         zIndex: -1,
         pointerEvents: 'none',
         transition: `all ease-out ${duration}ms`,

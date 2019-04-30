@@ -141,6 +141,12 @@ export type SurfaceSpecificProps = {
 
   /** Force ignore grouping */
   ignoreSegment?: boolean
+
+  /** Override space between sizing between Icon/Element */
+  spaceSize?: Sizes
+
+  /** [Advanced] Add an extra theme to the inner element */
+  elementTheme?: Gloss.ThemeFn
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
@@ -163,6 +169,7 @@ type ThroughProps = Pick<
   | 'ellipse'
   | 'overflow'
   | 'textDecoration'
+  | 'elementTheme'
 > & {
   hasIcon: boolean
   tagName?: string
@@ -191,6 +198,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     className,
     disabled,
     elementProps,
+    elementTheme,
     forwardRef,
     glintBottom,
     glint,
@@ -219,6 +227,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     alt,
     before,
     dangerouslySetInnerHTML,
+    spaceSize,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -250,6 +259,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
     if (elementProps) {
       throughProps = {
+        elementTheme,
         ...throughProps,
         ...elementProps,
       }
@@ -268,7 +278,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   )
 
   const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
-  const paddingStyle = getPadding(props)
   let showElement = false
 
   // because we can't define children at all on tags like input
@@ -369,13 +378,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               order: 3,
             }}
           >
-            {showElement && <Space size={size * 8} />}
+            {showElement && <Space size={selectDefined(spaceSize, size * 8)} />}
             {innerElements}
           </div>
         ) : (
           <>
             {innerElements}
-            {showElement && icon && <Space size={size * 8} />}
+            {showElement && icon && <Space size={selectDefined(spaceSize, size * 8)} />}
           </>
         )}
         {glow && !disabled && (
@@ -391,8 +400,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           <Element
             {...throughProps}
             {...elementProps}
-            surfacePadX={paddingStyle ? getPadX(paddingStyle.padding) : 0}
             disabled={disabled}
+            elementTheme={elementTheme}
           >
             {children}
           </Element>
@@ -538,9 +547,10 @@ const perfectCenterStyle = props => {
   }
 }
 
-const Element = gloss<
-  CSSPropertySetStrict & ThroughProps & { disabled?: boolean; surfacePadX: number | string }
->({
+const applyElementTheme = (props, theme) =>
+  props.elementTheme ? props.elementTheme(props, theme) : null
+
+const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',
@@ -560,7 +570,7 @@ const Element = gloss<
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(propsToStyles, perfectCenterStyle)
+}).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
@@ -579,9 +589,6 @@ const GlintContain = gloss<ColProps>(Col, {
   zIndex: 10,
   overflow: 'hidden',
 })
-
-const getPadX = (padding: any) =>
-  Array.isArray(padding) ? (+padding[1] || 0) + (+padding[3] || 0) : padding
 
 const roundHalf = (x: number) => {
   const oneDec = Math.round((x % 1) * 10) / 10

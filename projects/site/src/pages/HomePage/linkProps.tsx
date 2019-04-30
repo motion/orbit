@@ -45,11 +45,11 @@ let tm = null
 export const createLink = memoize((href: string, header = null) => async e => {
   clearTimeout(tm)
   e.preventDefault()
-  // if you want fancier transitions
-  document.body.classList.add('will-load')
+  // transition out body on slow
   let tm2 = setTimeout(() => {
+    document.body.classList.add('will-load')
     document.body.classList.add('loading')
-  })
+  }, 200)
   const finish = () => {
     Navigation.navigate(href).then(() => {
       clearTimeout(tm2)

@@ -9,68 +9,90 @@ export type ExampleProps = {
   id: string
   name?: string
   children: any
+  willScroll?: boolean
+  onlySource?: boolean
+  chromeless?: boolean
 }
 
-export const Example = memo(({ source, examples, id, name, ...props }: ExampleProps) => {
-  const [showSource, setShowSource] = useState(true)
-  const [hovered, setHovered] = useState(false)
-  const tm = useRef(null)
+export const Example = memo(
+  ({ source, examples, id, name, willScroll, onlySource, chromeless, ...props }: ExampleProps) => {
+    const [showSource, setShowSource] = useState(true)
+    const [hovered, setHovered] = useState(false)
+    const tm = useRef(null)
 
-  if (!source || !id) {
-    return props.children || null
-  }
+    if (!source || !id) {
+      return props.children || null
+    }
 
-  const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
+    const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
-  return (
-    <>
-      <Space size="lg" />
-      <Card
-        elevation={1}
-        pad
-        titlePad="md"
-        space
-        background={theme => theme.backgroundStrong}
-        title={name || id}
-        afterTitle={
-          <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
-        }
-        onClickTitle={() => {
-          setShowSource(!showSource)
-        }}
-      >
+    const contents = (
+      <>
         {showSource && (
           <SubCard>
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
           </SubCard>
         )}
-        <SubCard
-          onMouseEnter={() => {
-            tm.current = setTimeout(() => setHovered(true), 200)
-          }}
-          onMouseLeave={() => {
-            clearTimeout(tm.current)
-            setHovered(false)
-          }}
-        >
-          {exampleElement}
-          <AccidentalScrollPrevent disabled={hovered}>
-            <View
-              position="absolute"
-              bottom={0}
-              right={0}
-              padding={5}
-              background={theme => theme.backgroundStronger}
+
+        {!onlySource && (
+          <SubCard
+            onMouseEnter={() => {
+              tm.current = setTimeout(() => setHovered(true), 200)
+            }}
+            onMouseLeave={() => {
+              clearTimeout(tm.current)
+              setHovered(false)
+            }}
+          >
+            {exampleElement}
+            {willScroll && (
+              <AccidentalScrollPrevent disabled={hovered}>
+                <View
+                  position="absolute"
+                  bottom={0}
+                  right={0}
+                  padding={5}
+                  background={theme => theme.backgroundStronger}
+                >
+                  <SimpleText size={0.8}>Hover to enable</SimpleText>
+                </View>
+              </AccidentalScrollPrevent>
+            )}
+          </SubCard>
+        )}
+      </>
+    )
+
+    return (
+      <>
+        {chromeless ? (
+          <>{contents}</>
+        ) : (
+          <>
+            <Space size="lg" />
+            <Card
+              elevation={1}
+              pad
+              titlePad="md"
+              space
+              background={theme => theme.backgroundStrong}
+              title={name || id}
+              afterTitle={
+                <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+              }
+              onClickTitle={() => {
+                setShowSource(!showSource)
+              }}
             >
-              <SimpleText size={0.8}>Hover to enable</SimpleText>
-            </View>
-          </AccidentalScrollPrevent>
-        </SubCard>
-      </Card>
-      <Space size="xl" />
-    </>
-  )
-})
+              {contents}
+            </Card>
+            <Space size="xl" />
+          </>
+        )}
+      </>
+    )
+  },
+)
 
 const AccidentalScrollPrevent = gloss({
   position: 'absolute',

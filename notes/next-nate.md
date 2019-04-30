@@ -1,37 +1,43 @@
 ---
 
-- Docs/Search
-- Docs/toggle code
-- Docs/sidebar small fixes
-- Docs/Start card links
-- Site/host on now.sh for sub-pages, https, squircle assets, etc
-
-- Popover
-- Modal
-- Tabs
-- Layout
-- Pane
-- GridLayout
-- Toolbar
-- Form
-- Text
-- Flow
-- Select
-- Input
-- Title
-- Message
-- Banner
-
-- Chat
-- Document
-- Markdown
-- Task
-- Thread
-
-
 May
 
-"Finish docs and website"
+"Demos + Finish docs/website"
+
+-
+
+- Website
+  - Apps/Faq
+  - Apps/search/info
+  - Blog/update-two
+  - About/#sublinks
+  - Footer/links
+
+- Docs
+  - Docs/Search
+  - Docs/toggle code
+  - Docs/sidebar small fixes
+  - Docs/Start card links
+  - Site/host on now.sh for sub-pages, https, squircle assets, etc
+  - Layout
+  - Pane
+  - GridLayout
+  - Toolbar
+  - Form
+  - Text
+  - Flow
+  - Select
+  - Input
+  - Title
+  - Message
+  - Banner
+  - Chat
+  - Document
+  - Markdown
+  - Task
+  - Thread
+
+---
 
 June
 

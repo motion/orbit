@@ -1,11 +1,13 @@
 import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
+
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
+import { ColProps } from '../View/Col'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { Pane } from './Pane'
 
-export type LayoutProps = {
+export type LayoutProps = ColProps & {
   type?: 'column' | 'row'
   children?: React.ReactNode
 }
@@ -50,16 +52,16 @@ export function Layout(props: LayoutProps) {
   )
 }
 
-function FlexLayout(props: LayoutProps) {
+function FlexLayout({ children, type, ...colProps }: LayoutProps) {
   const visibility = useVisibility()
   const { ref, ...size } = useParentNodeSize({
     disable: !visibility,
     throttle: 200,
   })
-  const total = Children.count(props.children)
-  const dimension = props.type === 'row' ? 'width' : 'height'
+  const total = Children.count(children)
+  const dimension = type === 'row' ? 'width' : 'height'
   const parentSize = size[dimension]
-  const childElements = Children.map(props.children, (child, index) => {
+  const childElements = Children.map(children, (child, index) => {
     return cloneElement(child as any, {
       index,
       total,
@@ -70,16 +72,28 @@ function FlexLayout(props: LayoutProps) {
   // only flex once we measure
   // const flex = parentSize ? 1 : 'inherit'
 
-  if (props.type === 'row') {
+  if (type === 'row') {
     return (
-      <LayoutRow minHeight={size.height || 'auto'} maxHeight="100vh" overflow="hidden" ref={ref}>
+      <LayoutRow
+        minHeight={size.height || 'auto'}
+        maxHeight="100vh"
+        overflow="hidden"
+        ref={ref}
+        {...colProps}
+      >
         {childElements}
       </LayoutRow>
     )
   }
 
   return (
-    <LayoutCol minHeight={size.height || 'auto'} maxHeight="100vh" overflow="hidden" ref={ref}>
+    <LayoutCol
+      minHeight={size.height || 'auto'}
+      maxHeight="100vh"
+      overflow="hidden"
+      ref={ref}
+      {...colProps}
+    >
       {childElements}
     </LayoutCol>
   )

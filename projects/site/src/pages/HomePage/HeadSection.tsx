@@ -21,21 +21,26 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'The next generation of apps',
-  medium: 'The next generation of apps',
+  large: 'A new generation of apps',
+  medium: 'A new generation of apps',
   small: 'Next gen apps',
 }
 
 let allTexts = {
   large: [
-    `Code desktop apps and internal tools that coordinate without a server.`,
-    `Plug in data sources, apps, and more with a click.`,
+    `A whole new take on your intranet - amazingly easy to code apps.`,
+    `Plug in data sources and apps with a click, no server necessary.`,
   ],
   medium: [
     `Code desktop apps and internal tools without a server.`,
+    `Code desktop apps and internal tools that coordinate without a server.`,
     `Plug in data sources and apps with a click.`,
   ],
-  small: [`Code internal tools, no config or servers.`, `UI kit, dev environment & deploy.`],
+  small: [
+    `Code internal tools, no config or servers.`,
+    `Code desktop apps and internal tools that coordinate without a server.`,
+    `UI kit, dev environment & deploy.`,
+  ],
 }
 
 const subTexts = {
@@ -117,8 +122,16 @@ const HeadText = memo(() => {
               {texts[1]}
             </FadeChild>
             {br}
+            {texts[2] && (
+              <>
+                <FadeChild disable={!measured} delay={600}>
+                  {texts[2]}
+                </FadeChild>
+                {br}
+              </>
+            )}
             <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-              <Smaller {...linkProps('/apps')}>{subTexts[screen]}</Smaller>
+              <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
             </FadeChild>
           </Paragraph>
         )}

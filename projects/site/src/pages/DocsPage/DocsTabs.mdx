@@ -1,0 +1,31 @@
+<IntroText>
+  Tabs are useful when you aren't using a Grid layout, and want to show content that's hidden behind
+  it's own interface.
+</IntroText>
+
+The `<Tabs />` component works together with `<Tab />` to make it really easy to show content inside
+a list of tabs.
+
+To use Tabs:
+
+```tsx
+import { Tabs } from '@o/ui'
+```
+
+<br />
+
+## Examples
+
+### Controlled
+
+You can have Tabs control their contents automatically. In this use case, you just put the content
+for each tab into the actual `<Tab>` children property.
+
+<Example id="Controlled" />
+
+### Uncontrolled
+
+Alternatively, if you want to show your tabs in a different location of the interface from where you
+want to show the actual Tab chrome, you can separate the two and manage it using some state.
+
+<Example id="Uncontrolled" />

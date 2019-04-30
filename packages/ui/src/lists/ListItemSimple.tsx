@@ -8,6 +8,7 @@ import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
+import { useScale } from '../Scale'
 import { Separator, SeparatorProps } from '../Separator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
@@ -15,6 +16,7 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
+import { getPadding } from '../View/PaddedView'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 
@@ -235,6 +237,11 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   )
 
   const iconElement = showIcon && getIcon(props)
+  const scale = useScale()
+  const listItemAdjustedPadding = getListItemPadding({
+    ...props,
+    pad: selectDefined(surfaceProps.pad, pad),
+  }).map(x => x * scale)
 
   return (
     <Theme alt={isSelected ? 'selected' : null}>
@@ -252,8 +259,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         themeSelect="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
-        padding={padding}
-        pad={selectDefined(surfaceProps.pad, pad)}
+        padding={listItemAdjustedPadding}
+        spaceSize={listItemAdjustedPadding[1] / scale}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}
@@ -342,6 +349,15 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   )
 })
 
+// we scale padX more than padY, depending on height of list item
+const getListItemPadding = (props: ListItemSimpleProps) => {
+  const padXScale = getHeightSize(props)
+  const padding = getPadding(props).padding
+  const padX = Array.isArray(padding) ? padding[1] : padding
+  const padY = Array.isArray(padding) ? padding[0] : padding
+  return [padY, padX * padXScale]
+}
+
 const ListItemTitleBar = gloss(View, {
   width: '100%',
   flex: 1,
@@ -380,33 +396,38 @@ const ListItemMainContent = gloss({
   },
 })
 
-function getIcon({
-  icon,
-  iconBefore,
-  small,
-  subTitle,
-  iconProps,
-  iconSize,
-  children,
-}: ListItemSimpleProps) {
-  let size =
-    iconSize ||
-    (iconProps && iconProps.size) ||
-    (iconBefore ? (small || !(subTitle || children) ? 20 : 26) : small ? 12 : 14)
+// basing this on getIconSize is actually nice, it keeps it always in sync with icon
+const getHeightSize = (props: ListItemSimpleProps) => {
+  return Math.round(getIconSize(props) / 14)
+}
+
+const getIconSize = props =>
+  props.iconSize ||
+  (props.iconProps && props.iconProps.size) ||
+  (props.iconBefore
+    ? props.small || !(props.subTitle || props.children)
+      ? 20
+      : 26
+    : props.small
+    ? 12
+    : 14)
+
+function getIcon(props: ListItemSimpleProps) {
+  const size = getIconSize(props)
   const iconPropsFinal = {
-    size: size,
-    ...iconProps,
+    size,
+    ...props.iconProps,
   }
-  if (!iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${small ? 4 : 3}px)` }
+  if (!props.iconBefore) {
+    iconPropsFinal['style'] = { transform: `translateY(${props.small ? 4 : 3}px)` }
   }
-  let element = icon
-  if (React.isValidElement(icon)) {
-    if (icon.type['acceptsIconProps']) {
-      element = React.cloneElement(icon, iconPropsFinal)
+  let element = props.icon
+  if (React.isValidElement(props.icon)) {
+    if (props.icon.type['acceptsIconProps']) {
+      element = React.cloneElement(props.icon, iconPropsFinal)
     }
   } else {
-    element = <Icon name={icon} {...iconPropsFinal} />
+    element = <Icon name={props.icon} {...iconPropsFinal} />
   }
   return element
 }

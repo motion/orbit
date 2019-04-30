@@ -44,7 +44,7 @@ export function AppsPage() {
           </Col>
         </SectionContent>
 
-        <SectionContent minHeight={400} background="#000">
+        <SectionContent id="faq" minHeight={400} background="#000">
           <Col
             pad={useScreenVal(0, [50, '10%'], [100, '20%', 100])}
             space="xxl"

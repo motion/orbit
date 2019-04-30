@@ -105,10 +105,6 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
       ],
     },
   }),
-  '&::selection': {
-    color: theme.color.lighten(0.1),
-    background: theme.backgroundSelection || theme.background.darken(0.2),
-  },
 })
 
 const SimpleInput = gloss(
@@ -138,6 +134,21 @@ const SimpleInput = gloss(
             ...elementProps,
           }),
           [forwardRef, value, defaultValue, placeholder, tagName, elementProps],
+        )}
+        elementTheme={useCallback(
+          (p, theme) => ({
+            // apple selection color
+            '&::selection': {
+              color: theme.color.lighten(0.1),
+              background: theme.backgroundSelection || theme.backgroundStronger,
+            },
+            // autofill keep proper color
+            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+              WebkitTextFillColor: p.color || theme.color,
+              backgroundColor: 'transparent',
+            },
+          }),
+          [],
         )}
         type="input"
         maxWidth="100%"

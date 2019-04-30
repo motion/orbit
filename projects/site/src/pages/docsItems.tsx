@@ -3,7 +3,10 @@ import React from 'react'
 import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { pad: 'md', titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti } }
+const titleItem = {
+  pad: 'md',
+  titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti, className: '' },
+}
 
 const guides = [
   {
@@ -57,9 +60,11 @@ const uikit = [
     ),
   },
 
-  { id: 'layout', title: 'Laying out your interface', ...titleItem },
-  { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
-  { id: 'templates', title: 'Templates', ...titleItem },
+  { id: 'ui-layout', title: 'Laying out your interface', ...titleItem },
+  { id: 'ui-hooks', title: 'Hooks', ...titleItem },
+  { id: 'ui-themes', title: 'Themes', ...titleItem },
+  // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
+  // { id: 'templates', title: 'Templates', ...titleItem },
 
   { id: 'list', title: 'List', icon: 'th-list', group: 'Collections' },
   { id: 'table', title: 'Table', icon: 'th' },
@@ -73,11 +78,12 @@ const uikit = [
     title: 'Surface',
   },
   { id: 'button', icon: 'button', title: 'Button', indent: 1 },
-  { id: 'card', title: 'Cards', icon: 'credit-card', indent: 1 },
+  { id: 'card', title: 'Card', icon: 'credit-card', indent: 1 },
+  { id: 'tag', icon: 'tag', title: 'Tag', indent: 1 },
   { id: 'icon', icon: 'star', title: 'Icons' },
   { id: 'section', title: 'Section', icon: 'application' },
   { id: 'popover', title: 'Popover', icon: 'direction-right' },
-  { id: 'decorations', title: 'Decorations', icon: 'clean' },
+  // { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
 
   { id: 'masterdetail', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
@@ -89,8 +95,8 @@ const uikit = [
   { id: 'timeago', title: 'TimeAgo', icon: 'time' },
 
   { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { id: 'gallerymodal', title: 'GalleryModal', icon: 'multi-select' },
-  { id: 'mediamodal', title: 'MediaModal', icon: 'multi-select' },
+  { id: 'galleryModal', title: 'GalleryModal', icon: 'multi-select' },
+  { id: 'mediaModal', title: 'MediaModal', icon: 'multi-select' },
 
   { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
   { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },
@@ -154,8 +160,15 @@ export const docsViews = {
   buildapp: {
     page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
   },
-  layout: {
-    page: () => import('./DocsPage/DocsLayout.mdx'),
+  'ui-layout': {
+    page: () => import('./DocsPage/DocsUILayout.mdx'),
+  },
+  'ui-hooks': {
+    page: () => import('./DocsPage/DocsUIHooks.mdx'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsUIHooks'),
+  },
+  'ui-themes': {
+    page: () => import('./DocsPage/DocsUIThemes.mdx'),
   },
   icon: {
     page: () => import('./DocsPage/DocsIcon.mdx'),
@@ -238,5 +251,47 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsCalendar'),
     source: () => import('!raw-loader!@o/ui/src/Calendar'),
     types: () => import('../../tmp/Calendar.json'),
+  },
+  input: {
+    page: () => import('./DocsPage/DocsInput.mdx'),
+    examples: () => import('./DocsPage/DocsInput'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsInput'),
+    source: () => import('!raw-loader!@o/ui/src/forms/Input'),
+    types: () => import('../../tmp/Input.json'),
+  },
+  modal: {
+    page: () => import('./DocsPage/DocsModal.mdx'),
+    examples: () => import('./DocsPage/DocsModal'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsModal'),
+    source: () => import('!raw-loader!@o/ui/src/modals/Modal'),
+    types: () => import('../../tmp/Modal.json'),
+  },
+  galleryModal: {
+    page: () => import('./DocsPage/DocsGalleryModal.mdx'),
+    examples: () => import('./DocsPage/DocsGalleryModal'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsGalleryModal'),
+    source: () => import('!raw-loader!@o/ui/src/modals/GalleryModal'),
+    types: () => import('../../tmp/GalleryModal.json'),
+  },
+  tabs: {
+    page: () => import('./DocsPage/DocsTabs.mdx'),
+    examples: () => import('./DocsPage/DocsTabs'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTabs'),
+    source: () => import('!raw-loader!@o/ui/src/Tabs'),
+    types: () => import('../../tmp/Tabs.json'),
+  },
+  tag: {
+    page: () => import('./DocsPage/DocsTag.mdx'),
+    examples: () => import('./DocsPage/DocsTag'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTag'),
+    source: () => import('!raw-loader!@o/ui/src/Tag'),
+    types: () => import('../../tmp/Tag.json'),
+  },
+  layout: {
+    page: () => import('./DocsPage/DocsLayout.mdx'),
+    examples: () => import('./DocsPage/DocsLayout'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsLayout'),
+    source: () => import('!raw-loader!@o/ui/src/layout/Layout'),
+    types: () => import('../../tmp/Layout.json'),
   },
 }

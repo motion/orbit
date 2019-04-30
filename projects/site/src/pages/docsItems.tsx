@@ -60,7 +60,7 @@ const uikit = [
     ),
   },
 
-  { id: 'layout', title: 'Laying out your interface', ...titleItem },
+  { id: 'ui-layout', title: 'Laying out your interface', ...titleItem },
   { id: 'ui-hooks', title: 'Hooks', ...titleItem },
   { id: 'ui-themes', title: 'Themes', ...titleItem },
   // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
@@ -160,8 +160,8 @@ export const docsViews = {
   buildapp: {
     page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
   },
-  layout: {
-    page: () => import('./DocsPage/DocsLayout.mdx'),
+  'ui-layout': {
+    page: () => import('./DocsPage/DocsUILayout.mdx'),
   },
   'ui-hooks': {
     page: () => import('./DocsPage/DocsUIHooks.mdx'),
@@ -286,5 +286,12 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsTag'),
     source: () => import('!raw-loader!@o/ui/src/Tag'),
     types: () => import('../../tmp/Tag.json'),
+  },
+  layout: {
+    page: () => import('./DocsPage/DocsLayout.mdx'),
+    examples: () => import('./DocsPage/DocsLayout'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsLayout'),
+    source: () => import('!raw-loader!@o/ui/src/layout/Layout'),
+    types: () => import('../../tmp/Layout.json'),
   },
 }

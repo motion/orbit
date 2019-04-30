@@ -1,0 +1,108 @@
+<IntroText>
+  The UI Kit gives you powerful primitives for building many layouts. At a high level, you can use a
+  Grid for automatic layouts. The other options are using a Layout, or manually placing with Row and
+  Col.
+</IntroText>
+
+There are many ways to lay out an interface. Common strategies are:
+
+1. Placing all of your items in a Grid.
+2. Having a dashboard-style interface with resizable panes.
+3. Manually laying out rows, columns, and grid-like content.
+
+Orbit provides components for each of these use cases.
+
+## 1. Automatic Grid
+
+If you don't want to mess around with layout, and your app doesn't have strict requirements for how
+it should look, we highly recommend using the `<Grid />` view in the Orbit Kit.
+
+The Grid view does a few things you. First, it shows content in a nice grid, which responds to your
+view size and lets you resize the inner items. It's based on `react-resizable-grid`.
+
+Beyond that, the grid will allow people in your workspace to update it's sizing and configuration
+from the frontend, without having to touch code.
+
+A grid will typically look like something like this:
+
+```tsx
+import { App, Grid, Card } from '@o/kit'
+
+export default () => {
+  return (
+    <App>
+      <Grid>
+        <Card title="My Card">Lorem ipsum dolor sit amet.</Card>
+        <Card title="My Card">Lorem ipsum dolor sit amet.</Card>
+      </Grid>
+    </App>
+  )
+}
+```
+
+[Read more about grids here]().
+
+## 2. Layouts
+
+Apps that need sidebars, bottom sections and content areas will want to use `<Layout />`. Layouts
+give you resizing, flexing, and more. They automatically handle borders and state. An example of a
+Layout would look like this:
+
+```tsx
+import { Layout, Pane, Title } from '@o/kit'
+
+export default () => {
+  return (
+    <Layout type="row">
+      <Pane resizable flex={1.5}>
+        <Layout type="column">
+          <Pane resizable>
+            <Title>Left Pane</Title>
+          </Pane>
+          <Pane space pad scrollable="x" flexDirection="row">
+            <Title>Below Left Pane</Title>
+          </Pane>
+        </Layout>
+      </Pane>
+      <Pane>
+        <Title>Right Pane</Title>
+      </Pane>
+    </Layout>
+  )
+}
+```
+
+[Read more about layouts here](/docs/layout).
+
+## 3. Common layout: Rows, Cols, and Grid
+
+For all other uses, you have the amazingly powerful Row, Col, and Grid. These views allow you to use
+Flexbox, or CSS-Grid, respectively, but they support common spacing, sizing, padding, and scrolling
+props that make it very easy to make beautiful layouts. They handle many common "gotchas" that CSS
+would normally throw at you, like having to account for it's odd margin tendencies.
+
+An example a using this would look like:
+
+```tsx
+import { Row, Col, Grid, Card, Button } from '@o/kit'
+
+export default () => {
+  return (
+    <Col pad="xl" space="xl">
+      <Row space spaceAround>
+        <Button>Hello</Button>
+        <Button>World</Button>
+      </Row>
+
+      <Grid space="md">
+        <Card title="Hello" />
+        <Card title="To" />
+        <Card title="The" />
+        <Card title="World" />
+      </Grid>
+    </Col>
+  )
+}
+```
+
+[Read more about layouts here](/docs/views).

@@ -9,16 +9,16 @@ export let Basic = (
 )
 
 export let Sized = (
-  <>
-    <Input
-      size={2}
-      sizeRadius={3}
-      icon="book"
-      placeholder="Hello world"
-      onChange={e => console.log(e.target.value)}
-      after="hi"
-    />
-  </>
+  <Input
+    size={2}
+    sizeRadius={3}
+    sizePadding={2}
+    borderWidth={2}
+    icon="book"
+    placeholder="Hello world"
+    onChange={e => console.log(e.target.value)}
+    after="hi"
+  />
 )
 
 export let Grouped = (
@@ -36,7 +36,6 @@ export let GroupedSized = (
         <Button>Submit</Button>
       </PassProps>
     </Row>
-
     <SurfacePassProps size={1.5} sizeRadius={2}>
       <Row group>
         <Input placeholder="Hello world" onChange={e => console.log(e.target.value)} />

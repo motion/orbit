@@ -19,14 +19,7 @@ export let Basic = () => {
           </Pane>
           <Pane space pad scrollable="x" flexDirection="row">
             {rows.map(row => (
-              <Card
-                key={row.id}
-                title={`${row.name.first} ${row.name.last}`}
-                subTitle={`${row.username}`}
-                elevation={2}
-                pad
-                scrollable="y"
-              >
+              <Card key={row.id} title={row.name.first} subTitle={row.username} elevation={2} pad>
                 <DefinitionList row={row} />
               </Card>
             ))}

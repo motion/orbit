@@ -67,19 +67,21 @@ export const components = {
       <Space />
     </>
   ),
+
   a: props => {
     return (
       <a
         onClick={e => {
           if (`${props.href}`.indexOf('/') === 0) {
             e.preventDefault()
-            Navigation.go(props.href)
+            Navigation.navigate(props.href)
           }
         }}
         {...props}
       />
     )
   },
+
   ol: props => (
     <>
       <ol {...props} />

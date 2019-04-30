@@ -40,7 +40,6 @@ export let DocsIconSearch = () => {
       limit: 10000,
       keys: ['iconName', 'displayName', 'tags', 'group'],
     })
-    console.log('next', search, next)
     setResults(next.map(x => iconElementsObj[x.iconName]))
   }, [search])
 
@@ -49,7 +48,7 @@ export let DocsIconSearch = () => {
       <SearchInput onChange={e => setSearch(e.target.value)} />
 
       <Col pad>
-        <Grid height={400} scrollable="y" space="xl" itemMinWidth={dim}>
+        <Grid height={630} scrollable="y" space="xl" itemMinWidth={dim}>
           {search ? results : allIconsList}
         </Grid>
       </Col>

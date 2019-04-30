@@ -176,6 +176,17 @@ export const DocsPage = memo((props: { children?: any }) => {
       // console.log('e', e.keyCode)
       switch (e.keyCode) {
         case 84: // t
+          if (
+            document.activeElement.tagName === 'INPUT' ||
+            document.activeElement.tagName === 'TEXTAREA'
+          ) {
+            // dont steal focus, meanie
+            return
+          }
+          if (document.activeElement !== inputRef.current) {
+            // dont focus if already focused
+            return
+          }
           inputRef.current.focus()
           break
       }

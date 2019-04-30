@@ -96,7 +96,7 @@ export function AboutPage() {
                   overflow="hidden"
                   className="content"
                 >
-                  <BigTitle>
+                  <BigTitle size={5}>
                     Making it easy to build beautiful apps that work for the user first.
                   </BigTitle>
 

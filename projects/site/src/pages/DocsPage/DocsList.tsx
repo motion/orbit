@@ -14,11 +14,10 @@ const rows = employees.map(x => ({
   createdAt: x.dob,
   location: x.address.city,
   iconBefore: true,
-  children: x.username,
   after: avatar,
 }))
 
-const simpleRows = employees.map(x => ({
+const simpleRows = employees.slice(0, 30).map(x => ({
   title: x.name.first + ' ' + x.name.last,
   subTitle: x.email,
   icon: 'pane',
@@ -34,7 +33,10 @@ export let Simple = (
 export let SimpleAlt = (
   //
   <List
-    items={simpleRows}
+    items={simpleRows.map(row => ({
+      ...row,
+      children: 'You can add children below the content area.',
+    }))}
     height={300}
     itemProps={{
       titleProps: {

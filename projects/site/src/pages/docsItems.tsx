@@ -242,4 +242,11 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/Calendar'),
     types: () => import('../../tmp/Calendar.json'),
   },
+  input: {
+    page: () => import('./DocsPage/DocsInput.mdx'),
+    examples: () => import('./DocsPage/DocsInput'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsInput'),
+    source: () => import('!raw-loader!@o/ui/src/forms/Input'),
+    types: () => import('../../tmp/Input.json'),
+  },
 }

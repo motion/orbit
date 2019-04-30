@@ -10,8 +10,6 @@ import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 
-const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
-
 export type BaseRules = {
   [key: string]: string | number
 }
@@ -30,114 +28,6 @@ export type ThemeFn<Props = any> = (
   theme: ThemeObject,
   previous?: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
-
-const tracker: StyleTracker = new Map()
-const rulesToClass = new WeakMap()
-const sheet = new StyleSheet(true)
-const gc = new GarbageCollector(sheet, tracker, rulesToClass)
-
-let idCounter = 1
-const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
-
-const whiteSpaceRegex = /[\s]+/g
-
-// takes a style object, adds it to stylesheet, returns classnames
-function addStyles(
-  styles: any,
-  displayName?: string,
-  tagName?: string,
-  prevClassNames?: string[] | null,
-) {
-  const keys = Object.keys(styles).sort(pseudoSort)
-  let classNames: string[] | null = null
-  for (const key of keys) {
-    const cur = styles[key]
-    // they may return falsy, conditional '&:hover': active ? hoverStyle : null
-    if (!cur) continue
-
-    // add the stylesheets and classNames
-    // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
-    // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, cur, key, tagName)
-    classNames = classNames || []
-    classNames.push(className)
-
-    // if this is the first mount render or we didn't previously have this class then add it as new
-    if (!prevClassNames || !prevClassNames.includes(className)) {
-      gc.registerClassUse(className)
-    }
-  }
-  return classNames
-}
-
-function addDynamicStyles(
-  id: string,
-  displayName: string = 'g',
-  conditionalStyles?: any,
-  prevClassNames?: string[] | null,
-  props?: CSSPropertySet,
-  themeFn?: ThemeFn | null,
-  theme?: ThemeObject,
-  tagName?: string,
-) {
-  const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
-  const dynStyles = {}
-
-  // if passed any classes from another styled component
-  // ignore that class and merge in their resolved styles
-  if (props && props.className) {
-    const propClassNames = `${props.className}`.trim().split(whiteSpaceRegex)
-    for (const className of propClassNames) {
-      const classInfo = tracker.get(className)
-      if (classInfo) {
-        dynStyles[classInfo.namespace] = classInfo.style
-      }
-    }
-  }
-
-  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
-  const dynamicStyles = { [id]: {} }
-
-  if (hasConditionalStyles) {
-    for (const key in conditionalStyles) {
-      if (props && props[key] !== true) continue
-      for (const styleKey in conditionalStyles[key]) {
-        const dynKey = styleKey === 'base' ? id : styleKey
-        dynamicStyles[dynKey] = dynamicStyles[dynKey] || {}
-        Object.assign(dynamicStyles[dynKey], conditionalStyles[key][styleKey])
-      }
-    }
-  }
-
-  if (theme && themeFn) {
-    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
-    mergeStyles(id, dynamicStyles, themeFn(props, next))
-  }
-
-  if (hasDynamicStyles) {
-    for (const key in dynamicStyles) {
-      dynStyles[key] = dynamicStyles[key]
-    }
-  }
-
-  let classNames: string[] | null = []
-
-  // add dyn styles
-  const dynamics = addStyles(dynStyles, displayName, tagName, prevClassNames)
-  if (dynamics) classNames = [...classNames, ...dynamics]
-
-  // check what classNames have been removed if this is a secondary render
-  if (prevClassNames) {
-    for (const className of prevClassNames) {
-      // if this previous class isn't in the current classes then deregister it
-      if (!classNames || !classNames.includes(className)) {
-        gc.deregisterClassUse(className)
-      }
-    }
-  }
-
-  return classNames
-}
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
@@ -163,17 +53,15 @@ export interface GlossView<Props> {
   }
 }
 
-function createGlossView<Props>(GlossView: any, config) {
-  const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
-  const res: GlossView<Props> = memo(forwarded, isEqual) as any
-  res.config = config
-  res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
-  res.theme = (...themeFns) => {
-    config.themeFns = themeFns
-    return res
-  }
-  return res
-}
+const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
+const tracker: StyleTracker = new Map()
+const rulesToClass = new WeakMap()
+const sheet = new StyleSheet(true)
+const gc = new GarbageCollector(sheet, tracker, rulesToClass)
+const whiteSpaceRegex = /[\s]+/g
+
+let idCounter = 1
+const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
 export function gloss<Props = any>(
   a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
@@ -303,14 +191,28 @@ export function gloss<Props = any>(
   ThemedView.withConfig = ({ displayName }) => {
     // re-create it so it picks up displayName
     if (displayName) {
+      // this one is picked up by Profiling
       GlossView['displayName'] = displayName
       ThemedView = createGlossView<Props>(GlossView, config)
+      // this one is picked up for use in classNames
       ThemedView['displayName'] = displayName
     }
     return ThemedView
   }
 
   return ThemedView
+}
+
+function createGlossView<Props>(GlossView: any, config) {
+  const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
+  const res: GlossView<Props> = memo(forwarded, isEqual) as any
+  res.config = config
+  res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
+  res.theme = (...themeFns) => {
+    config.themeFns = themeFns
+    return res
+  }
+  return res
 }
 
 // keeps priority of hover/active/focus as expected
@@ -320,7 +222,103 @@ const psuedoScore = (x: string) => {
   const hasActive = x.indexOf('&:active') > -1 ? 3 : 0
   return hasActive + hasHover + hasFocus
 }
+
 const pseudoSort = (a: string, b: string) => (psuedoScore(a) > psuedoScore(b) ? 1 : -1)
+
+// takes a style object, adds it to stylesheet, returns classnames
+function addStyles(
+  styles: any,
+  displayName?: string,
+  tagName?: string,
+  prevClassNames?: string[] | null,
+) {
+  const keys = Object.keys(styles).sort(pseudoSort)
+  let classNames: string[] | null = null
+  for (const key of keys) {
+    const cur = styles[key]
+    // they may return falsy, conditional '&:hover': active ? hoverStyle : null
+    if (!cur) continue
+
+    // add the stylesheets and classNames
+    // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
+    // it would likely help things like when you animate based on mousemove, may be slower in default case
+    const className = addRules(displayName, cur, key, tagName)
+    classNames = classNames || []
+    classNames.push(className)
+
+    // if this is the first mount render or we didn't previously have this class then add it as new
+    if (!prevClassNames || !prevClassNames.includes(className)) {
+      gc.registerClassUse(className)
+    }
+  }
+  return classNames
+}
+
+function addDynamicStyles(
+  id: string,
+  displayName: string = 'g',
+  conditionalStyles?: any,
+  prevClassNames?: string[] | null,
+  props?: CSSPropertySet,
+  themeFn?: ThemeFn | null,
+  theme?: ThemeObject,
+  tagName?: string,
+) {
+  const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
+  const dynStyles = {}
+
+  // if passed any classes from another styled component
+  // ignore that class and merge in their resolved styles
+  if (props && props.className) {
+    const propClassNames = `${props.className}`.trim().split(whiteSpaceRegex)
+    for (const className of propClassNames) {
+      const classInfo = tracker.get(className)
+      if (classInfo) {
+        dynStyles[classInfo.namespace] = classInfo.style
+      }
+    }
+  }
+
+  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
+  const dynamicStyles = { [id]: {} }
+
+  if (hasConditionalStyles) {
+    for (const key in conditionalStyles) {
+      if (props && props[key] !== true) continue
+      for (const styleKey in conditionalStyles[key]) {
+        const dynKey = styleKey === 'base' ? id : styleKey
+        dynamicStyles[dynKey] = dynamicStyles[dynKey] || {}
+        Object.assign(dynamicStyles[dynKey], conditionalStyles[key][styleKey])
+      }
+    }
+  }
+
+  if (theme && themeFn) {
+    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+    mergeStyles(id, dynamicStyles, themeFn(props, next))
+  }
+
+  if (hasDynamicStyles) {
+    for (const key in dynamicStyles) {
+      dynStyles[key] = dynamicStyles[key]
+    }
+  }
+
+  // add dyn styles
+  const classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+
+  // check what classNames have been removed if this is a secondary render
+  if (prevClassNames) {
+    for (const className of prevClassNames) {
+      // if this previous class isn't in the current classes then deregister it
+      if (!classNames || !classNames.includes(className)) {
+        gc.deregisterClassUse(className)
+      }
+    }
+  }
+
+  return classNames
+}
 
 const arrToDict = (obj: Object) => {
   if (Array.isArray(obj)) {

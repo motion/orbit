@@ -1,0 +1,46 @@
+<IntroText>The Input element is for common text inputs from users.</IntroText>
+
+All form elements are usable through the `<FormFields />` or just `<Form />`, making it much easier
+to write simple and common use cases for forms.
+
+An `<Input />` is a simple extension of a `<Surface />`, which handles a few common styling patterns
+for Inputs. Inputs are only meant to handle text, unlike their HTML counterparts, though they do
+support `type` for many textual-type inputs.
+
+Other form fields supported include `<Select />`, `<Checkbox />`, `<Toggle />`, and more.
+
+To use a Input:
+
+```tsx
+import { Input } from '@o/ui'
+```
+
+<br />
+
+## Examples
+
+### Basics
+
+<Example id="Basic" />
+
+### Sizing
+
+As any Surface, Input accept all the `<SizedSurface />` properties.
+
+<Example id="Sized" />
+
+### Using in a group
+
+One big feature of Surfaces is that they support being used in groups automatically. So putting
+together an Input, with a Button, can look like this:
+
+<Example id="Grouped" />
+
+### Sizing and using in a group
+
+You may want to then control the properties of every item in a group. There are a few ways to do
+this. First is through `<PassProps />`, which works well with Row/Col, preserving the space/group
+properties. The alternate, which only works for surfaces, is to use `<SurfacePassProps>`, which uses
+context to pass props to the next level of surfaces, no matter how deep down they are.
+
+<Example id="GroupedSized" />

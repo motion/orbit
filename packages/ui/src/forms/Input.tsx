@@ -96,6 +96,7 @@ export const Input = React.forwardRef(function Input(
 })
 
 const inputSurfaceTheme: ThemeFn = (props, theme) => ({
+  color: 'green',
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
@@ -108,6 +109,9 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   '&::selection': {
     color: theme.color.lighten(0.1),
     background: theme.backgroundSelection || theme.background.darken(0.2),
+  },
+  '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+    color: theme.color,
   },
 })
 

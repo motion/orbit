@@ -32,3 +32,5 @@ export function PassProps({ children, getChildProps, passCondition, ...props }: 
     </>
   )
 }
+
+PassProps.canUnwrap = true

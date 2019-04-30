@@ -22,7 +22,7 @@ ol {
 
 .will-load .main-contents {
   opacity: 1;
-  transition: all ease 10ms 100ms !important;
+  transition: all ease 500ms !important;
 }
 
 .loading .main-contents {

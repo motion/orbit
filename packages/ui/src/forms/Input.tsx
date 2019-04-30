@@ -96,7 +96,6 @@ export const Input = React.forwardRef(function Input(
 })
 
 const inputSurfaceTheme: ThemeFn = (props, theme) => ({
-  color: 'green',
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
@@ -106,13 +105,6 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
       ],
     },
   }),
-  '&::selection': {
-    color: theme.color.lighten(0.1),
-    background: theme.backgroundSelection || theme.background.darken(0.2),
-  },
-  '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-    color: theme.color,
-  },
 })
 
 const SimpleInput = gloss(
@@ -142,6 +134,20 @@ const SimpleInput = gloss(
             ...elementProps,
           }),
           [forwardRef, value, defaultValue, placeholder, tagName, elementProps],
+        )}
+        elementTheme={useCallback(
+          (_props, theme) => ({
+            // apple selection color
+            '&::selection': {
+              color: theme.color.lighten(0.1),
+              background: theme.backgroundSelection || theme.background.darken(0.2),
+            },
+            // autofill keep proper color
+            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+              color: theme.color,
+            },
+          }),
+          [],
         )}
         type="input"
         maxWidth="100%"

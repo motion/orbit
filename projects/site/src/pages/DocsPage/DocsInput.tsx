@@ -3,7 +3,12 @@ import React from 'react'
 
 export let Basic = (
   <Col space>
-    <Input placeholder="Hello world" onChange={e => console.log(e.target.value)} />
+    <Input
+      type="email"
+      name="email"
+      placeholder="Hello world"
+      onChange={e => console.log(e.target.value)}
+    />
     <Input icon="search" />
   </Col>
 )

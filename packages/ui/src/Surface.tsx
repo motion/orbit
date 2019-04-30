@@ -144,6 +144,9 @@ export type SurfaceSpecificProps = {
 
   /** Override space between sizing between Icon/Element */
   spaceSize?: Sizes
+
+  /** [Advanced] Add an extra theme to the inner element */
+  elementTheme?: Gloss.ThemeFn
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
@@ -166,6 +169,7 @@ type ThroughProps = Pick<
   | 'ellipse'
   | 'overflow'
   | 'textDecoration'
+  | 'elementTheme'
 > & {
   hasIcon: boolean
   tagName?: string
@@ -194,6 +198,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     className,
     disabled,
     elementProps,
+    elementTheme,
     forwardRef,
     glintBottom,
     glint,
@@ -254,6 +259,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
     if (elementProps) {
       throughProps = {
+        elementTheme,
         ...throughProps,
         ...elementProps,
       }
@@ -391,7 +397,12 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           />
         )}
         {showElement && (
-          <Element {...throughProps} {...elementProps} disabled={disabled}>
+          <Element
+            {...throughProps}
+            {...elementProps}
+            disabled={disabled}
+            elementTheme={elementTheme}
+          >
             {children}
           </Element>
         )}
@@ -536,6 +547,9 @@ const perfectCenterStyle = props => {
   }
 }
 
+const applyElementTheme = (props, theme) =>
+  props.elementTheme ? props.elementTheme(props, theme) : null
+
 const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
@@ -556,7 +570,7 @@ const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(propsToStyles, perfectCenterStyle)
+}).theme(propsToStyles, perfectCenterStyle, applyElementTheme)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize

@@ -63,7 +63,7 @@ export const components = {
   ),
   ul: props => (
     <>
-      <ul {...props} />
+      <ul className="font-smooth" {...props} />
       <Space />
     </>
   ),
@@ -84,19 +84,32 @@ export const components = {
 
   ol: props => (
     <>
-      <ol {...props} />
+      <ol className="font-smooth" {...props} />
       <Space />
     </>
   ),
   p: props => (
     <>
-      <Paragraph margin={0} fontSize="inherit" lineHeight="inherit" color="inherit" {...props} />
+      <Paragraph
+        className="font-smooth"
+        margin={0}
+        fontSize="inherit"
+        lineHeight="inherit"
+        color="inherit"
+        {...props}
+      />
       <Space />
     </>
   ),
   description: props => (
     <>
-      <Paragraph margin={0} {...props} fontSize="inherit" lineHeight="inherit" />
+      <Paragraph
+        className="font-smooth"
+        margin={0}
+        {...props}
+        fontSize="inherit"
+        lineHeight="inherit"
+      />
       <Space />
     </>
   ),

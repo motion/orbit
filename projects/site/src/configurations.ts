@@ -31,12 +31,12 @@ function configure() {
         selectable: true,
         ...fontProps.GTEesti,
       },
-      text: {
-        style: {
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
-        },
-      },
+      // text: {
+      //   style: {
+      //     WebkitFontSmoothing: 'antialiased',
+      //     MozOsxFontSmoothing: 'grayscale',
+      //   },
+      // },
     },
   })
 

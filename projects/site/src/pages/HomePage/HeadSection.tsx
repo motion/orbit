@@ -35,10 +35,7 @@ let allTexts = {
     `A new take on the intranet - amazingly easy to code apps.`,
     `No servers, plug data sources and apps with a click.`,
   ],
-  small: [
-    `The new intranet, easy to code apps.`,
-    `No servers, data sources & apps in a clack.`,
-  ],
+  small: [`The new intranet, easy to code apps.`, `No servers, data sources & apps in a clack.`],
 }
 
 const subTexts = {
@@ -94,7 +91,8 @@ const HeadText = memo(() => {
             selectable
             zIndex={100}
           >
-            Create incredibly powerful tools without config or a server, with everything included.
+            Create incredibly powerful internal apps without config or a server, with everything
+            included.
           </Paragraph>
         ) : (
           <Paragraph

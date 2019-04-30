@@ -24,15 +24,16 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
 
   return (
     <>
-      <Space size="md" />
+      <Space size="lg" />
       <Card
         elevation={1}
         pad
+        titlePad="md"
         space
         background={theme => theme.backgroundStrong}
         title={name || id}
         afterTitle={
-          <Icon size={20} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+          <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
         }
         onClickTitle={() => {
           setShowSource(!showSource)

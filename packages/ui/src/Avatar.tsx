@@ -1,14 +1,18 @@
 import { gloss } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 
 import { Image } from './Image'
 
 export const Avatar = gloss(Image, {
   display: 'inline-flex',
   borderRadius: 100,
-  width: 64,
-  height: 64,
   userSelect: 'none',
-}).theme(({ size }) => ({
-  width: size,
-  height: size,
+}).theme(({ size, width, height }) => ({
+  width: selectDefined(width, size),
+  height: selectDefined(height, size),
 }))
+
+Avatar.defaultProps = {
+  size: 64,
+  tagName: 'img',
+}

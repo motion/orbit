@@ -1,7 +1,17 @@
-import { useLayoutEffect } from 'react'
+import { useDebounce } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import StickySidebar from 'sticky-sidebar'
 
 export function useStickySidebar({ condition = true, id, ...rest }) {
+  const forceUpdate = useForceUpdate()
+  const forceUpdateSlow = useDebounce(forceUpdate, 100)
+
+  useEffect(() => {
+    window.addEventListener('resize', forceUpdateSlow)
+    return () => window.removeEventListener('resize', forceUpdateSlow)
+  })
+
   useLayoutEffect(() => {
     if (condition === false) {
       return

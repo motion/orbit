@@ -4,9 +4,9 @@
   movement come free.
 </IntroText>
 
-A `<Table />` is the highest level table view in the interface kit, though you can access lower level ones if desired.
-It is virtualized by default, but acts almost entirely like a non-virtualized table.
-It has many features built-in, including:
+A `<Table />` is the highest level table view in the interface kit, though you can access lower
+level ones if desired. It is virtualized by default, but acts almost entirely like a non-virtualized
+table. It has many features built-in, including:
 
 - Sorting, filtering, searching, and grouping through `useFilter()` props
 - Selections and multi-selections through `useSelection()` props
@@ -18,11 +18,11 @@ It has many features built-in, including:
 
 ### Basics
 
-Due to virtualization, tables can render many elements without breaking a sweat. Here, we're rendering
-10,000, but tables can go much higher.
+Due to virtualization, tables can render many elements without breaking a sweat. Here, we're
+rendering 10,000, but tables can go much higher.
 
-Tables will automatically handle arrays, finding the columns and using them as titles. Here, we're filtering down the
-columns a little bit for readability.
+Tables will automatically handle arrays, finding the columns and using them as titles. Here, we're
+filtering down the columns a little bit for readability.
 
 You can click on the table headers to sort, and drag on their edges to resize.
 
@@ -30,14 +30,15 @@ You can click on the table headers to sort, and drag on their edges to resize.
 
 ### Searchable
 
-Adding a searchbox to a table is as easy as a single property, `searchable`. Searchable for now
-just adds a plain `<SearchInput />` above the table.
+Adding a searchbox to a table is as easy as a single property, `searchable`. Searchable for now just
+adds a plain `<SearchInput />` above the table.
 
 <Example id="Searching" name="Searching" />
 
 ### Customizing Columns
 
-Controlling the order and various properties of the columns, including if they are resizable, the value they use for sorting, their default width, and what happens when they change is all possible.
+Controlling the order and various properties of the columns, including if they are resizable, the
+value they use for sorting, their default width, and what happens when they change is all possible.
 This is all managed through the `DataColumn` type:
 
 `TODO: <PropTable name="DataColumn" />`
@@ -46,7 +47,8 @@ This is all managed through the `DataColumn` type:
 
 ### Selections
 
-Using the `selectable` prop you can turn on single or multiple selections. Click and hold to "drag" your selection.
+Using the `selectable` prop you can turn on single or multiple selections. Click and hold to "drag"
+your selection.
 
 Multiple selections are powerful, and add the following shortcuts and useful ways to select:
 
@@ -58,13 +60,15 @@ Multiple selections are powerful, and add the following shortcuts and useful way
 
 ### Filters
 
-Table filters are very flexible. You can filter as many columns as you like, and do inclusive or exclusive filters. See `TableFilter` for more information on the options they accept.
+Table filters are very flexible. You can filter as many columns as you like, and do inclusive or
+exclusive filters. See `TableFilter` for more information on the options they accept.
 
 <Example id="Filters" name="Filtering" />
 
 ### Using as a Section
 
-Orbit aims to make building apps easy, so many of the high level views are wrapped in a `<Section />`. Table is no exception.
-This lets you quickly and easily show a table, elevate it, add a title and subtitle, and make it collapsable.
+Orbit aims to make building apps easy, so many of the high level views are wrapped in a
+`<Section />`. Table is no exception. This lets you quickly and easily show a table, elevate it, add
+a title and subtitle, and make it collapsable.
 
 <Example id="Section" name="Using as Section" />

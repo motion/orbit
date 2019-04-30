@@ -12,15 +12,15 @@ import { TitleText } from '../../views/TitleText'
 import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { apps } from './apps'
 import { BodyButton } from './BodyButton'
-import { blackWavePattern } from './FooterSection'
 import { GradientDown } from './GradientDown'
 import { linkProps } from './linkProps'
+import { blackWavePattern } from './purpleWaveUrl'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 const dly = 200
 
-export default memo(function DataAppKitFeaturesSection(props: any) {
+export default memo(function DataAppKitFeaturesSection() {
   const screen = useScreenSize()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
@@ -84,15 +84,23 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                 y: '-70%',
               }}
             >
-              {apps.map((app, index) => (
-                <Integration
-                  key={app.title}
-                  index={index}
-                  icon={app.icon}
-                  title={app.title}
-                  transform={{ y: `${index * 25}%` }}
-                />
-              ))}
+              {apps.map((app, index) => {
+                let pivot = Math.round(apps.length / 2) - 1
+                let offset = index * 25
+                if (index >= pivot) {
+                  let i = index - pivot
+                  offset = pivot * 25 - i * 25
+                }
+                return (
+                  <Integration
+                    key={app.title}
+                    index={index}
+                    icon={app.icon}
+                    title={app.title}
+                    transform={{ y: `${offset}%` }}
+                  />
+                )
+              })}
             </Row>
 
             <Space />
@@ -135,7 +143,7 @@ export default memo(function DataAppKitFeaturesSection(props: any) {
                 </>
               }
             >
-              <Space size="sm" />
+              <View flex={1} />
               <Grid
                 alignItems="start"
                 space={screen === 'small' ? '40px 15%' : '20% 15%'}
@@ -252,7 +260,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
       <Image
         src={icon}
         transition="all ease 200ms"
-        maxWidth={100}
+        maxWidth={56}
         width="50%"
         height="auto"
         hoverStyle={{ opacity: 1 }}

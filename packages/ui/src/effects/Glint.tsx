@@ -67,3 +67,7 @@ export const Glint = gloss<Props>({
     ...radiusStyle,
   }
 })
+
+Glint.defaultProps = {
+  className: 'ui-glint',
+}

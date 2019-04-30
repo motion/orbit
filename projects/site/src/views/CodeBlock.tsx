@@ -7,7 +7,7 @@ import React, { memo } from 'react'
 
 // import lightTheme from 'prism-react-renderer/themes/nightOwl'
 
-export const CodeBlock = memo(props => {
+export const CodeBlock = memo((props: { children: string; language?: string }) => {
   const theme = useTheme()
   // const language = props.language || 'tsx'
   // console.log('props.language', props.language)

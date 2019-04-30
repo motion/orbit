@@ -1,8 +1,71 @@
-Sunday:
+---
 
-- Mobile site completely fixed
-- Fix prod issues w not showing squircle, font on docs, etc
-- Write blog post
+- Docs/Search
+- Docs/toggle code
+- Docs/sidebar small fixes
+- Docs/Start card links
+- Site/host on now.sh for sub-pages, https, squircle assets, etc
+
+- Popover
+- Modal
+- Tabs
+- Layout
+- Pane
+- GridLayout
+- Toolbar
+- Form
+- Text
+- Flow
+- Select
+- Input
+- Title
+- Message
+- Banner
+
+- Chat
+- Document
+- Markdown
+- Task
+- Thread
+
+
+May
+
+"Finish docs and website"
+
+June
+
+"Multi-apps on desktop and make them feel better"
+
+July
+
+"Make demo apps work better, esp with adding sources and showing data"
+
+Aug
+
+hire......... so someone can do "Really be able to develop an app"
+
+me: "Really be able to sync config between"
+
+
+Sep
+
+"Have good demo apps"
+
+Oct
+
+"Fix up site and onboarding for launch"
+
+Nov
+
+"Sell it to some early users"
+
+Dec
+
+"Launch"
+
+---
+
 - Apps page show details + improve faq
 - Add faq to about page
 

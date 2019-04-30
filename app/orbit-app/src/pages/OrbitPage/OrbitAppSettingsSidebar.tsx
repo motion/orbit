@@ -1,6 +1,7 @@
 import { useTheme } from '@o/gloss'
 import { Sidebar, Title } from '@o/ui'
 import React from 'react'
+
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitAppSettingsSidebar() {
@@ -8,7 +9,7 @@ export function OrbitAppSettingsSidebar() {
   const theme = useTheme()
   return (
     <Sidebar
-      zIndex={10000000}
+      zIndex={10000001}
       width={300}
       position="right"
       floating

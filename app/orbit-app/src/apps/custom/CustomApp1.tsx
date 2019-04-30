@@ -37,7 +37,7 @@ export function CustomApp1() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <Row space spaceAround>
+              <Row space spaceAround pad>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
@@ -53,7 +53,14 @@ export function CustomApp1() {
             </Pane>
             <Pane space pad scrollable="x" flexDirection="row">
               {highlighted.map(row => (
-                <Card key={row.id} title={row.name} subTitle={row.username} elevation={2} pad>
+                <Card
+                  key={row.id}
+                  title={row.name}
+                  subTitle={row.username}
+                  elevation={2}
+                  pad
+                  scrollable="y"
+                >
                   <DefinitionList row={row} />
                 </Card>
               ))}

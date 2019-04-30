@@ -144,7 +144,7 @@ const alternates: ThemeSet = {
   }),
   clear: parent =>
     Theme.fromStyles({
-      glintColor: 'transparent',
+      glintColor: transparent,
       color: parent.color,
       background: parent.background.isDark()
         ? parent.background.lighten(0.1).alpha(0.15)

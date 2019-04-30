@@ -1,15 +1,16 @@
 import { FullScreen } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
 import React, { useCallback, useEffect, useRef } from 'react'
-// @ts-ignore
 import { animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
+
 import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
 import { Interactive, InteractiveProps } from './Interactive'
 import { Omit } from './types'
 import { useVisibility } from './Visibility'
 
+// @ts-ignore
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
   width?: number
   height?: number
@@ -135,7 +136,7 @@ export function FloatingView(props: FloatingViewProps) {
   })
 
   return (
-    <Portal>
+    <Portal prepend>
       <FullScreen>
         <animated.div
           style={{
@@ -144,13 +145,13 @@ export function FloatingView(props: FloatingViewProps) {
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
-            position: 'relative',
+            position: 'fixed',
           }}
         >
           <Interactive
             ref={interactiveRef}
             opacity={isVisible ? 1 : 0}
-            position="absolute"
+            position="fixed"
             disabled={controlledSize}
             zIndex={zIndex + 1}
             {...restProps}

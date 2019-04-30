@@ -64,15 +64,14 @@ export const DocsContents = memo(
           Example: props => <Example examples={examples} source={examplesSource} {...props} />,
         }}
       >
-        <Space size />
         <Section
-          maxWidth={760}
+          maxWidth={860}
           width="100%"
           margin={[0, 'auto']}
           pad={useScreenVal(
             ['xl', 'md', true, 'md'],
             ['xl', 'md', true, 'md'],
-            ['xl', 'lg', true, 'lg'],
+            ['xl', 'xl', true, 'xl'],
           )}
           titleBorder
           space
@@ -94,7 +93,7 @@ export const DocsContents = memo(
                 sizePadding={0}
                 marginRight={30}
                 size="lg"
-                alpha={0.5}
+                alpha={0.65}
                 hoverStyle={{
                   color: colors.purple,
                 }}

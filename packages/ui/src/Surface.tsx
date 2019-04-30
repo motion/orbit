@@ -130,9 +130,17 @@ export type SurfaceSpecificProps = {
   /** Force disabled state of surface */
   disabled?: boolean
 
+  /** HTML prop type */
   type?: string
+
+  /** Select a subset theme easily */
   themeSelect?: Gloss.ThemeSelect
+
+  /** Amount to pad icon */
   iconPad?: number
+
+  /** Force ignore grouping */
+  ignoreSegment?: boolean
 }
 
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
@@ -292,6 +300,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         activeStyle={props.activeStyle}
         focusStyle={props.focusStyle}
         color="inherit"
+        {...perfectCenterStyle(throughProps)}
         {...iconProps}
       >
         {icon && !stringIcon && icon}
@@ -322,9 +331,15 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         )}
         {hasAnyGlint && (
           <GlintContain
-            positionInside={borderPosition === 'inside'}
+            className="ui-glint-contain"
             borderLeftRadius={borderLeftRadius + 1}
             borderRightRadius={borderRightRadius + 1}
+            {...borderPosition === 'inside' && {
+              height: roundHalf(+height - size),
+              transform: {
+                y: roundHalf(size),
+              },
+            }}
           >
             {glint && !props.chromeless && (
               <Glint
@@ -448,6 +463,11 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
+
+  '&:active .ui-glint-contain': {
+    opacity: 0,
+  },
+
   circular: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -468,7 +488,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 
   // borderPosition controls putting borders inside vs outside
   // useful for having nice looking buttons (inside) vs container-like views (outside)
-  if (borderColor && borderWidth && !props.chromeless) {
+  if (borderColor && !props.chromeless) {
     if (props.borderPosition === 'inside') {
       // inside
       boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor]]
@@ -486,7 +506,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   styles = {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
-    color: props.color || theme.color,
     overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
     ...(!props.chromeless && themeStyle),
@@ -509,6 +528,16 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   return styles
 })
 
+const perfectCenterStyle = props => {
+  if (props.height && props.height % 2 === 1) {
+    return {
+      transform: {
+        y: 0.5,
+      },
+    }
+  }
+}
+
 const Element = gloss<
   CSSPropertySetStrict & ThroughProps & { disabled?: boolean; surfacePadX: number | string }
 >({
@@ -525,16 +554,13 @@ const Element = gloss<
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
-  transform: {
-    y: 0.5,
-  },
   ellipse: {
     display: 'block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}).theme(propsToStyles)
+}).theme(propsToStyles, perfectCenterStyle)
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
@@ -543,7 +569,7 @@ const getIconSize = (props: SurfaceProps) => {
   return Math.round(size * 100) / 100
 }
 
-const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {
+const GlintContain = gloss<ColProps>(Col, {
   height: '100%',
   position: 'absolute',
   top: 0,
@@ -552,14 +578,13 @@ const GlintContain = gloss<ColProps & { positionInside?: boolean }>(Col, {
   pointerEvents: 'none',
   zIndex: 10,
   overflow: 'hidden',
-  positionInside: {
-    height: 'calc(100% - 1px)',
-    width: 'calc(100% - 1px)',
-    transform: {
-      y: 0.5,
-    },
-  },
 })
 
 const getPadX = (padding: any) =>
   Array.isArray(padding) ? (+padding[1] || 0) + (+padding[3] || 0) : padding
+
+const roundHalf = (x: number) => {
+  const oneDec = Math.round((x % 1) * 10) / 10
+  const roundedToPointFive = oneDec > 7 ? 1 : oneDec > 2 ? 0.5 : 0
+  return Math.floor(x) + roundedToPointFive
+}

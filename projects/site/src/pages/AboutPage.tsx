@@ -1,14 +1,16 @@
 import { Inline, Row } from '@o/gloss'
-import { BorderRight, Col, Divider, ListItemSimple, PassProps, Space, Theme, Title, View } from '@o/ui'
+import { BorderRight, Col, Divider, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
 import { scrollTo } from '../etc/helpers'
+import { useScreenSize } from '../hooks/useScreenSize'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { linkProps } from './HomePage/linkProps'
+import { useScreenVal } from './HomePage/SpacedPageContent'
 import { useStickySidebar } from './useStickySidebar'
 
 export default mount({
@@ -19,6 +21,8 @@ export default mount({
 })
 
 export function AboutPage() {
+  const screen = useScreenSize()
+
   const Fade = useFadePage({
     threshold: 0,
   })
@@ -31,12 +35,16 @@ export function AboutPage() {
   return (
     <Fade.FadeProvide>
       <Theme name={AboutPage.theme}>
+        <Header noBorder background="transparent" slim />
         <main className="main-contents" ref={Fade.ref} style={{ minHeight: 2000 }}>
-          <Header noBorder background="transparent" slim />
-
           <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
             <Row id="main" alignItems="flex-start">
-              <Col id="sidebar" width={200} pointerEvents="auto">
+              <Col
+                id="sidebar"
+                width={200}
+                pointerEvents="auto"
+                {...screen === 'small' && { width: 0, opacity: 0 }}
+              >
                 <Col position="relative" className="sidebar__inner" flex={1}>
                   <FadeChild delay={200}>
                     <Space size={35} />
@@ -76,50 +84,48 @@ export function AboutPage() {
               <FadeChild delay={400} style={{ flex: 1 }}>
                 <Col
                   id="mission"
-                  padding={[0, 90]}
+                  pad={[0, useScreenVal('sm', 'xxl', 100)]}
                   space="xxl"
                   spaceAround
                   flex={1}
                   overflow="hidden"
                   className="content"
                 >
-                  <Title selectable size={4} fontWeight={100}>
+                  <BigTitle>
                     Making it easy to build beautiful apps that work for the user first.
-                  </Title>
+                  </BigTitle>
 
-                  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                  <BigParagraph>
                     Developers spend too much time re-inventing the wheel, and not enough time
                     building higher level, richer and more powerful platforms.
-                  </Title>
+                  </BigParagraph>
 
-                  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                  <BigParagraph>
                     Developers spend too much time re-inventing the wheel, and not enough time
                     building higher level, richer and more powerful platforms.
-                  </Title>
+                  </BigParagraph>
 
-                  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                  <BigParagraph>
                     Developers spend too much time re-inventing the wheel, and not enough time
                     building higher level, richer and more powerful platforms.
-                  </Title>
+                  </BigParagraph>
 
                   <Space size="xxxl" />
                   <Divider />
                   <Space size="xxxl" />
 
                   <Col space="xxxl" id="team">
-                    <Title selectable size={4} fontWeight={100}>
-                      Passionate about making it easy to build creatively.
-                    </Title>
+                    <BigTitle>Passionate about making it easy to build creatively.</BigTitle>
 
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                    <BigParagraph>
                       Our team is all over the world. We're always looking for great developers who
                       are passionate about making development easier, and who are driven by creating
                       high quality products.
-                    </Title>
+                    </BigParagraph>
 
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                    <BigParagraph>
                       <Inline {...linkProps('mailto:hi@tryorbit.com')}>Get in touch</Inline>.
-                    </Title>
+                    </BigParagraph>
                   </Col>
 
                   <Space size="xxxl" />
@@ -127,21 +133,19 @@ export function AboutPage() {
                   <Space size="xxxl" />
 
                   <Col space="xxxl" id="contact">
-                    <Title selectable size={4} fontWeight={100}>
-                      Get in touch
-                    </Title>
+                    <BigTitle>Get in touch</BigTitle>
 
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                    <BigParagraph>
                       <Inline {...linkProps('mailto:hi@tryorbit.com')}>Email</Inline>
-                    </Title>
+                    </BigParagraph>
 
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                    <BigParagraph>
                       <Inline {...linkProps('https://twitter.com/tryorbit')}>Twitter</Inline>
-                    </Title>
+                    </BigParagraph>
 
-                    <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.5}>
+                    <BigParagraph>
                       <Inline {...linkProps('https://github.com/natew')}>Github</Inline>
-                    </Title>
+                    </BigParagraph>
                   </Col>
                 </Col>
               </FadeChild>
@@ -156,5 +160,11 @@ export function AboutPage() {
     </Fade.FadeProvide>
   )
 }
+
+const BigParagraph = (props: TextProps) => (
+  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
+)
+
+const BigTitle = (props: TextProps) => <Title selectable size={3.5} fontWeight={100} {...props} />
 
 AboutPage.theme = 'dark'

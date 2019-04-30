@@ -15,31 +15,31 @@ export type DefinitionListProps = {
 }
 
 export function DefinitionList(props: DefinitionListProps) {
-  if (isDefined(props.columns)) {
-    const columns = guessColumns(props.columns, props.row)
-    const values = getRowValues(props.row)
-
-    return (
-      <>
-        {Object.keys(columns).map((colKey, index) => {
-          const value = values[colKey]
-          if (!value) {
-            return null
-          }
-          return (
-            <DefinitionItem
-              key={value.key || index}
-              type={columns[colKey].type}
-              label={columns[colKey].value}
-              value={value}
-            />
-          )
-        })}
-      </>
-    )
+  if (isDefined(props.children)) {
+    return <>{props.children}</>
   }
 
-  return <>{props.children}</>
+  const columns = guessColumns(props.columns, props.row)
+  const values = getRowValues(props.row)
+
+  return (
+    <>
+      {Object.keys(columns).map((colKey, index) => {
+        const value = values[colKey]
+        if (!value) {
+          return null
+        }
+        return (
+          <DefinitionItem
+            key={value.key || index}
+            type={columns[colKey].type}
+            label={columns[colKey].value}
+            value={value}
+          />
+        )
+      })}
+    </>
+  )
 }
 
 export type DefinitionItem = {

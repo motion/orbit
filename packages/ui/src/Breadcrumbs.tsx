@@ -1,6 +1,7 @@
 import { ensure, react, unwrapProxy, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
+
 import { MergeContext } from './helpers/MergeContext'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -21,9 +22,8 @@ class BreadcrumbStore {
 
   orderedChildren = react(
     () => [...this.selectors],
-    async (selectors, { sleep }) => {
+    (selectors) => {
       ensure('selectors', !!selectors.length)
-      await sleep(0)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>
         selectors.find(sel => node.classList.contains(sel)),

@@ -4,6 +4,7 @@ import { Context, createContext, FunctionComponent, isValidElement, useState } f
 
 import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
+import { SimpleTextProps } from '../text/SimpleText'
 import { TitleProps } from '../text/Title'
 import { Bit } from './BitLike'
 
@@ -36,6 +37,7 @@ export type ConfigureUIProps = {
   // helpful for custom fonts, etc
   defaultProps: {
     title?: Partial<TitleProps> | null
+    text?: Partial<SimpleTextProps> | null
   }
 }
 

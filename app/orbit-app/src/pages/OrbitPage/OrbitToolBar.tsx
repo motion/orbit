@@ -3,6 +3,7 @@ import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
+
 import { useStoresSimple } from '../../hooks/useStores'
 
 const toolbarHeight = 36

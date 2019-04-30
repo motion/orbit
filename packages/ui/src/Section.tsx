@@ -134,7 +134,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       margin={typeof margin !== 'undefined' ? margin : bordered ? 10 : 0}
       noInnerElement
       flex={flex}
-      background={background}
+      background={background || 'transparent'}
       height={height}
       // todo weird type issue
       width={width as any}

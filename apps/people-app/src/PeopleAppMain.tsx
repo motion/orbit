@@ -1,16 +1,5 @@
-import {
-  AppProps,
-  Bit,
-  BitModel,
-  ensure,
-  loadOne,
-  NLP,
-  observeMany,
-  react,
-  useStore,
-  useStores,
-} from '@o/kit'
-import { gloss, ListItem, RoundButton, Row, Space, SubTitle } from '@o/ui'
+import { AppProps, Bit, BitModel, ensure, loadOne, NLP, observeMany, react, useStore, useStores } from '@o/kit'
+import { Col, gloss, ListItem, RoundButton, Row, Space, SubTitle } from '@o/ui'
 import * as React from 'react'
 
 const getBitTexts = (bits: Bit[]) => {
@@ -99,7 +88,7 @@ export function PeopleAppMain(props: AppProps) {
   }
 
   return (
-    <Frame>
+    <Col scrollable="y">
       <PersonHeader draggable /*  onDragStart={appPageStore ? appPageStore.onDragStart : null} */>
         <CardContent>
           <Avatar src={person.photo} />
@@ -143,43 +132,40 @@ export function PeopleAppMain(props: AppProps) {
           </Map>
         )}
       </PersonHeader>
-      <Content>
-        <ContentInner>
-          <Section>
-            <StrongSubTitle>Topics</StrongSubTitle>
-            <Row flexDirection="row" flexWrap="wrap" padding={[5, 0, 0]}>
-              {topics.map((item, index) => (
-                <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
-                  {item}
-                </RoundButton>
-              ))}
-            </Row>
-          </Section>
 
-          <Section>
-            <StrongSubTitle>Recently</StrongSubTitle>
+      <Col pad space="xl">
+        <Col space>
+          <StrongSubTitle>Topics</StrongSubTitle>
+          <Row flexDirection="row" flexWrap="wrap" padding={[5, 0, 0]}>
+            {topics.map((item, index) => (
+              <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
+                {item}
+              </RoundButton>
+            ))}
+          </Row>
+        </Col>
 
-            <Unpad>
-              {recentBits.map(bit => {
-                return (
-                  <ListItem
-                    oneLine={false}
-                    key={bit.id}
-                    item={bit}
-                    margin={0}
-                    padding={[15, 20]}
-                    onDoubleClick={() => {
-                      console.warn('!TODO fix')
-                      // AppActions.open(bit)
-                    }}
-                  />
-                )
-              })}
-            </Unpad>
-          </Section>
-        </ContentInner>
-      </Content>
-    </Frame>
+        <Col space>
+          <StrongSubTitle>Recently</StrongSubTitle>
+
+          {recentBits.map(bit => {
+            return (
+              <ListItem
+                oneLine={false}
+                key={bit.id}
+                item={bit}
+                margin={0}
+                padding={[15, 20]}
+                onDoubleClick={() => {
+                  console.warn('!TODO fix')
+                  // AppActions.open(bit)
+                }}
+              />
+            )
+          })}
+        </Col>
+      </Col>
+    </Col>
   )
 }
 
@@ -187,29 +173,6 @@ const mapW = 700
 const mapH = 200
 
 const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
-
-const Frame = gloss({
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
-  overflowY: 'auto',
-  position: 'relative',
-})
-
-const Content = gloss({
-  padding: [10, 0],
-  flex: 1,
-  position: 'relative',
-  zIndex: 100,
-})
-
-const Unpad = gloss({
-  margin: [0, -15],
-})
-
-const ContentInner = gloss({
-  padding: [0, 15],
-})
 
 const CardContent = gloss({
   position: 'relative',
@@ -271,6 +234,7 @@ const Name = gloss({
   fontWeight: 800,
   padding: [10, 12],
   background: [255, 255, 255],
+  color: '#000',
 })
 
 const Email = gloss('a', {
@@ -290,10 +254,6 @@ const Avatar = gloss('img', {
   width: 200,
   height: 200,
   borderRadius: 1000,
-})
-
-const Section = gloss({
-  marginBottom: 15,
 })
 
 const Links = gloss({

@@ -2,6 +2,7 @@ import { Base, BaseProps, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 
+import { Config } from '../helpers/configure'
 import { useScale } from '../Scale'
 import { selectableTheme } from './Text'
 
@@ -15,6 +16,7 @@ export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, r
   return (
     <SimpleTextElement
       applyPsuedoColors={isDefined(props.hoverStyle, props.activeStyle, props.focusStyle)}
+      {...Config.defaultProps.text}
       ref={ref}
       size={size * scale}
       {...props}

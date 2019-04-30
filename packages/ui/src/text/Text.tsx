@@ -4,6 +4,7 @@ import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
 
+import { Config } from '../helpers/configure'
 import { ScaleContext } from '../Scale'
 import { getTextSize } from '../Sizes'
 import { Sizes } from '../Space'
@@ -249,6 +250,7 @@ export class Text extends React.PureComponent<TextProps> {
       <TextBlock
         className={`ui-text ${className || ''}`}
         tagName={tagName}
+        {...Config.defaultProps.text}
         contentEditable={editable}
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}

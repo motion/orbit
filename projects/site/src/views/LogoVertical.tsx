@@ -42,7 +42,7 @@ export const LogoVertical = memo(
       >
         <BrandMark id="orbit-mark" />
         <Space size="lg" />
-        <BrandWords fill={theme.color} width={102 * 0.8} height={23 * 0.8} />
+        <BrandWords fill={theme.color} width={102 * 0.85} height={23 * 0.85} />
       </View>
     )
   },

@@ -20,6 +20,7 @@ export type CardProps = SizedSurfaceSpecificProps &
     collapseOnClick?: boolean
     onClickTitle?: Function
     headerProps?: ListItemProps
+    titlePad?: Sizes
   }
 
 export function Card(props: CardProps) {
@@ -52,6 +53,7 @@ export function Card(props: CardProps) {
     headerProps,
     alt,
     onClickTitle,
+    titlePad,
     ...sizedSurfaceProps
   } = rest
   // end
@@ -118,8 +120,7 @@ export function Card(props: CardProps) {
               iconProps={iconProps}
               preview={preview}
               iconBefore={iconBefore}
-              {...padProps}
-              pad={selectDefined(pad, size)}
+              pad={selectDefined(titlePad, 'sm')}
               {...headerProps}
             />
           </Scale>

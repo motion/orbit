@@ -4,13 +4,13 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import { on } from '@o/utils'
 import invariant from 'invariant'
 import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
+
 import { Rect } from './helpers/geometry'
 import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
@@ -19,6 +19,7 @@ import { InteractiveChrome } from './InteractiveChrome'
 import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
 import { View, ViewProps } from './View/View'
+
 
 // TODO make prop
 const SIZE = 5
@@ -604,6 +605,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       minHeight,
       position,
       right,
+      pointerEvents,
       ...props
     } = this.props
     const { resizingSides } = this.state
@@ -624,6 +626,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       maxWidth,
       minHeight,
       zIndex,
+      pointerEvents,
     }
     if (movable === true || top != null || left != null) {
       if (fill === true) {

@@ -1,5 +1,6 @@
 import { Row } from '@o/gloss'
 import React, { Children, useState } from 'react'
+
 import { Button } from './buttons/Button'
 import { Section } from './Section'
 import { Slider } from './Slider'
@@ -63,6 +64,7 @@ const DefaultFlowLayout = ({
       subTitle={step.subTitle || `${index + 1}/${total}`}
       minHeight={300}
       height={height}
+      flex={1}
       belowTitle={
         <SurfacePassProps
           background="transparent"

@@ -103,11 +103,13 @@ let last = Date.now()
 let navTm = null
 const docsNavigate = id => {
   clearTimeout(navTm)
-  if (Date.now() - last < 100) {
-    navTm = setTimeout(docsNavigate, 100)
-  } else {
-    Navigation.navigate(`/docs/${id}`, { replace: true })
-  }
+  const isRecent = Date.now() - last < 100
+  navTm = setTimeout(
+    () => {
+      Navigation.navigate(`/docs/${id}`, { replace: true })
+    },
+    isRecent ? 150 : 50,
+  )
 }
 
 const preloadItem = item => {
@@ -122,7 +124,6 @@ const preloadItem = item => {
 
 const itemProps = {
   iconProps: {
-    size: 16,
     opacity: 0.65,
   },
 }
@@ -237,7 +238,7 @@ export const DocsPage = memo((props: { children?: any }) => {
 
       {isSmall && (
         <Portal>
-          <FixedLayout isSmall={isSmall}>
+          <FixedLayout isSmall>
             <Sidebar
               hidden={!showSidebar}
               zIndex={10000000}
@@ -253,7 +254,7 @@ export const DocsPage = memo((props: { children?: any }) => {
       )}
 
       <main className="main-contents">
-        <SectionContent fontSize={16} lineHeight={26} fontWeight={300} whiteSpace="normal">
+        <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
           <Row id="main" className="main">
             {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
             <Col
@@ -286,9 +287,9 @@ const DocsPageSidebar = memo(({ children }) => {
   })
 
   return (
-    <Col id="sidebar" width={300} pointerEvents="auto" height={window.innerHeight}>
+    <Col id="sidebar" width={280} pointerEvents="auto" height={window.innerHeight}>
       <Col position="relative" className="sidebar__inner" flex={1}>
-        <Col margin={[50, 0, 0]} flex={1} position="relative">
+        <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}
           <BorderRight top={10} opacity={0.5} />
         </Col>

@@ -2,7 +2,6 @@ import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, t
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
-import glowImage from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
 import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
@@ -12,6 +11,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
+import { linkProps } from './linkProps'
 import { OuterSpace } from './OuterSpace'
 import { blackWavePattern } from './purpleWaveUrl'
 import { useScreenVal } from './SpacedPageContent'
@@ -39,9 +39,9 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `Five ways Orbit makes common apps easy.`,
-  medium: `How Orbit makes common apps easy.`,
-  small: `Learn how.`,
+  large: `How Orbit apps work.`,
+  medium: `How Orbit apps work.`,
+  small: `How Orbit apps work.`,
 }
 
 const HeadText = memo(() => {
@@ -118,7 +118,7 @@ const HeadText = memo(() => {
             </FadeChild>
             {br}
             <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-              <Smaller>{subTexts[screen]}</Smaller>
+              <Smaller {...linkProps('/apps')}>{subTexts[screen]}</Smaller>
             </FadeChild>
           </Paragraph>
         )}
@@ -145,8 +145,8 @@ const Smaller = gloss({
   textDecoration: 'underline',
   textDecorationColor: '#222',
   transition: 'color ease 350ms',
-  fontSize: 26,
-  marginTop: 10,
+  fontSize: 30,
+  marginTop: 12,
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),
@@ -273,15 +273,15 @@ export function HeadSection() {
       </Page.Parallax>
 
       <Page.Background
-        speed={0.1}
+        speed={0.15}
         zIndex={-10}
-        opacity={0.65}
+        opacity={0.7}
         bottom="-50%"
         backgroundSize="cover"
         left="-40%"
         right="-40%"
         width="180%"
-        top="-20%"
+        top="-80%"
         backgroundPosition="top center"
         backgroundImage={blackWavePattern}
         transform={{
@@ -289,28 +289,6 @@ export function HeadSection() {
           scaleY: -1,
         }}
       />
-
-      <Page.Parallax overflow="visible" speed={0} zIndex={-11}>
-        <FullScreen
-          zIndex={-100}
-          transformOrigin="center center"
-          transform={{ scale: 1, y: '12%' }}
-        >
-          <View
-            pointerEvents="none"
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            overflow="hidden"
-            userSelect="none"
-            opacity={0}
-          >
-            <Image src={glowImage} />
-          </View>
-        </FullScreen>
-      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

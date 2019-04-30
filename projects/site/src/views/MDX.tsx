@@ -63,36 +63,38 @@ export const components = {
   ),
   ul: props => (
     <>
-      <ul {...props} />
+      <ul className="font-smooth" {...props} />
       <Space />
     </>
   ),
+
   a: props => {
     return (
       <a
         onClick={e => {
           if (`${props.href}`.indexOf('/') === 0) {
             e.preventDefault()
-            Navigation.go(props.href)
+            Navigation.navigate(props.href)
           }
         }}
         {...props}
       />
     )
   },
+
   ol: props => (
     <>
-      <ol {...props} />
+      <ol className="font-smooth" {...props} />
       <Space />
     </>
   ),
   p: props => (
     <>
       <Paragraph
+        className="font-smooth"
         margin={0}
         fontSize="inherit"
         lineHeight="inherit"
-        WebkitFontSmoothing="auto"
         color="inherit"
         {...props}
       />
@@ -101,7 +103,13 @@ export const components = {
   ),
   description: props => (
     <>
-      <Paragraph margin={0} {...props} fontSize="inherit" lineHeight="inherit" />
+      <Paragraph
+        className="font-smooth"
+        margin={0}
+        {...props}
+        fontSize="inherit"
+        lineHeight="inherit"
+      />
       <Space />
     </>
   ),

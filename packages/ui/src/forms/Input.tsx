@@ -5,6 +5,7 @@ import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
 import { getElevation } from '../View/elevate'
+import { useVisibility } from '../Visibility'
 import { FormContext } from './Form'
 
 export type InputType =
@@ -118,37 +119,44 @@ const SimpleInput = gloss(
     forwardRef,
     name,
     type,
+    value,
+    defaultValue,
     ...props
-  }: SizedSurfaceProps) => (
-    <SizedSurface
-      elementProps={useMemo(
-        () => ({
-          ref: forwardRef,
-          placeholder,
-          tagName,
-          name,
-          type,
-          ...elementProps,
-        }),
-        [forwardRef, placeholder, tagName, elementProps],
-      )}
-      type="input"
-      maxWidth="100%"
-      alignItems="center"
-      flexFlow="row"
-      themeSelect="input"
-      pointerEvents="auto"
-      sizeFont={0.9}
-      sizePadding
-      sizeHeight
-      sizeLineHeight
-      sizeRadius={0.75}
-      label={props.name}
-      activeStyle={null}
-      glint={false}
-      borderWidth={1}
-      {...props}
-      className={`ui-input ${props.className || ''}`}
-    />
-  ),
+  }: SizedSurfaceProps & InputProps) => {
+    const visible = useVisibility()
+    return (
+      <SizedSurface
+        elementProps={useMemo(
+          () => ({
+            ref: forwardRef,
+            placeholder,
+            tagName,
+            name,
+            type,
+            value,
+            defaultValue,
+            ...elementProps,
+          }),
+          [forwardRef, value, defaultValue, placeholder, tagName, elementProps],
+        )}
+        type="input"
+        maxWidth="100%"
+        alignItems="center"
+        flexFlow="row"
+        themeSelect="input"
+        pointerEvents={visible ? 'auto' : 'none'}
+        sizeFont={0.9}
+        sizePadding
+        sizeHeight
+        sizeLineHeight
+        sizeRadius={0.75}
+        label={name}
+        activeStyle={null}
+        glint={false}
+        borderWidth={1}
+        {...props}
+        className={`ui-input ${props.className || ''}`}
+      />
+    )
+  },
 ).theme(inputSurfaceTheme)

@@ -1,6 +1,7 @@
 import { FloatingCard, List, useScreenPosition, useShareStore } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
+
 import { orbitStaticApps } from '../../apps/orbitApps'
 import { useStores } from '../../hooks/useStores'
 import { DockButton } from './Dock'
@@ -75,6 +76,7 @@ const findAttr = (attrs, row, avoid = '') => {
 
 function listItemNiceNormalize(rows: any[]) {
   if (!rows.length) return rows
+  if (!rows[0]) return []
   if (rows[0].title) return rows
   return rows.map(rawRow => {
     const row = rawRow.values || rawRow

@@ -1,10 +1,6 @@
 import React, { Suspense } from 'react'
-import {
-  Collapsable,
-  CollapsableProps,
-  splitCollapseProps,
-  useCollapseToggle,
-} from '../Collapsable'
+
+import { Collapsable, CollapsableProps, splitCollapseProps, useCollapseToggle } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
 import { Col, ColProps } from '../View/Col'
@@ -41,7 +37,8 @@ export function Pane(props: PaneProps) {
           title={title}
           after={afterTitle}
           before={beforeTitle}
-          {...toggle.collapseProps}
+          {...collapseProps}
+          useToggle={toggle}
         />
       )}
       <Collapsable useToggle={toggle}>

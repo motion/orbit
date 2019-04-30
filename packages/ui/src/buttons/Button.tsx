@@ -32,6 +32,7 @@ function ButtonInner(props: ButtonProps) {
       flexDirection="row"
       WebkitAppRegion="no-drag"
       outline="0"
+      borderStyle="solid"
       cursor="default"
       sizeFont
       sizePadding

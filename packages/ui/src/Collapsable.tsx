@@ -43,6 +43,9 @@ export const splitCollapseProps = <A extends CollapsableProps>(
 }
 
 export const useCollapseToggle = (props: CollapsableProps) => {
+  if (props.useToggle) {
+    return props.useToggle
+  }
   return useToggle(
     selectDefined(props.defaultCollapsed, props.collapsed, false),
     props.onCollapse,
@@ -68,22 +71,17 @@ export const createCollapsableChildren = (props: CollapsableViewProps) => {
 }
 
 export const CollapseArrow = (props: CollapsableProps) => {
-  const isCollapsable = selectDefined(
-    props.collapsable,
-    props.useToggle ? props.useToggle.collapseProps.collapsable : undefined,
-  )
-  if (!isCollapsable) {
+  const toggle = useCollapseToggle(props)
+  if (!toggle.isCollapsable) {
     return null
   }
-  const val = selectDefined(props.collapsed, props.useToggle && props.useToggle.val)
-  const onClick = selectDefined(props.onCollapse, props.useToggle && props.useToggle.toggle)
   return (
     <Chevron
-      onClick={onClick}
+      onClick={toggle.toggle}
       name="chevron-right"
       size={12}
       transform={{
-        rotate: val ? '0' : '90deg',
+        rotate: toggle.val ? '0' : '90deg',
       }}
     />
   )

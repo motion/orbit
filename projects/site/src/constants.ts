@@ -2,6 +2,13 @@ import { toColor } from '@o/ui'
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
+export const fontProps = {
+  GTEesti: {
+    fontFamily: 'GT Eesti',
+    className: 'font-smooth',
+  },
+}
+
 export const colors = {
   orange: toColor('#F3C95F'),
   red: toColor('#FE5A59'),

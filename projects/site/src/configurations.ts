@@ -6,6 +6,7 @@ import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
 import ResizeObserver from 'resize-observer-polyfill'
 
+import { fontProps } from './constants'
 import { ResizeSensor } from './pages/DocsPage/ResizeSensor'
 import { themes } from './themes'
 
@@ -28,8 +29,7 @@ function configure() {
     defaultProps: {
       title: {
         selectable: true,
-        fontFamily: 'GT Eesti',
-        className: 'font-smooth',
+        ...fontProps.GTEesti,
       },
     },
   })

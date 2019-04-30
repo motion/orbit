@@ -103,11 +103,13 @@ let last = Date.now()
 let navTm = null
 const docsNavigate = id => {
   clearTimeout(navTm)
-  if (Date.now() - last < 100) {
-    navTm = setTimeout(docsNavigate, 100)
-  } else {
-    Navigation.navigate(`/docs/${id}`, { replace: true })
-  }
+  const isRecent = Date.now() - last < 100
+  navTm = setTimeout(
+    () => {
+      Navigation.navigate(`/docs/${id}`, { replace: true })
+    },
+    isRecent ? 150 : 50,
+  )
 }
 
 const preloadItem = item => {

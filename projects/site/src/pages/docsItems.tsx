@@ -1,8 +1,9 @@
 import React from 'react'
 
+import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { titleProps: { size: 1, fontWeight: 600 } }
+const titleItem = { pad: 'md', titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti } }
 
 const guides = [
   {
@@ -55,12 +56,15 @@ const uikit = [
       </ListSubTitle>
     ),
   },
-  { id: 'ui-intro', title: 'User Interface Introduction', ...titleItem },
+
+  { id: 'layout', title: 'Laying out your interface', ...titleItem },
+  { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
+  { id: 'templates', title: 'Templates', ...titleItem },
 
   { id: 'list', title: 'List', icon: 'th-list', group: 'Collections' },
   { id: 'table', title: 'Table', icon: 'th' },
   { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
-  { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
+  // { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
   { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
   {
     group: 'Views',
@@ -149,6 +153,9 @@ export const docsViews = {
   },
   buildapp: {
     page: () => import('./DocsPage/DocsBuildingAnApp.mdx'),
+  },
+  layout: {
+    page: () => import('./DocsPage/DocsLayout.mdx'),
   },
   icon: {
     page: () => import('./DocsPage/DocsIcon.mdx'),

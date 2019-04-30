@@ -1,36 +1,35 @@
-import * as Start from './DocsStart'
-
 <IntroText>
   Orbit includes everything in the application, from development environment to app store to sync
   system.
 </IntroText>
 
-If you have downloaded the Orbit.app and have set up your workspace, you can create a new
-app using the interface. If you are so inclined, you may also use the CLI instructions found below.
+If you have downloaded the Orbit.app and have set up your workspace, you can create a new app using
+the interface. If you are so inclined, you may also use the CLI instructions found below.
 
 ## Using the Interface
 
-You can edit apps through the GUI by hitting the `Edit` option in the menu of
-any app. You can also just work on it through the command line.
+You can edit apps through the GUI by hitting the `Edit` option in the menu of any app. You can also
+just work on it through the command line.
 
-You can run `orbit dev` inside any app folder to edit it. As a helper, you can
-type `orbit dev [package-name]` to edit any app within your current workspace.
+You can run `orbit dev` inside any app folder to edit it. As a helper, you can type
+`orbit dev [package-name]` to edit any app within your current workspace.
 
-Publishing is as simple as pushing to your git repo. Other members of your
-workspace will be prompted to update the app with a notification that shows the
-message you include in your commit message.
+Publishing is as simple as pushing to your git repo. Other members of your workspace will be
+prompted to update the app with a notification that shows the message you include in your commit
+message.
 
 ## Using the CLI
 
-The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps can run in a couple ways:
+The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps can run in a couple
+ways:
 
 1. Individually on their own, in their own window.
 2. Together in a workspace.
 
 ### Orbit App Format
 
-Orbit app is a git repository (it's recommended to name it with `-orbit` suffix)
-which adheres to a set of conventions:
+Orbit app is a git repository (it's recommended to name it with `-orbit` suffix) which adheres to a
+set of conventions:
 
 1. It is a valid npm package (has `package.json` file with valid npm metadata).
 
@@ -40,11 +39,10 @@ which adheres to a set of conventions:
 
 - `"title"` specifies application title
 
-- `"require"` specifies runtime requirements for the app, the following is
-  optional:
+- `"require"` specifies runtime requirements for the app, the following is optional:
 
-  - `"orbit"` specifies the version of Orbit runtime required for this app (`1`
-    is the only valid option for now)
+  - `"orbit"` specifies the version of Orbit runtime required for this app (`1` is the only valid
+    option for now)
 
 - …
 
@@ -65,7 +63,8 @@ The example `package.json` for an app could look like:
 
 ### Installing Orbit Runtime
 
-For now, the orbit cli lives in app/orbit-cli as @o/orbit-cli. Eventually it will be bundled together with the app-kit under one name, the npm package `orbit`.
+For now, the orbit cli lives in app/orbit-cli as @o/orbit-cli. Eventually it will be bundled
+together with the app-kit under one name, the npm package `orbit`.
 
 Orbit runtime is distributed through npm:
 
@@ -83,17 +82,17 @@ You can start an app with the following invocation:
 
 Where:
 
-- `GIT_REPO_URL` is an URL to a git repository with the app source code, this
-  can be a local git repository.
-- `REFSPEC` is an optional part which specifies git reference to use (commit,
-  branch, tag), it's default to `master` if not specified.
+- `GIT_REPO_URL` is an URL to a git repository with the app source code, this can be a local git
+  repository.
+- `REFSPEC` is an optional part which specifies git reference to use (commit, branch, tag), it's
+  default to `master` if not specified.
 
-Orbit will checkout the app's source code into a cache, install all dependencies
-and start an application window and configured processes.
+Orbit will checkout the app's source code into a cache, install all dependencies and start an
+application window and configured processes.
 
-Note that `orbit run` won't install the app - all app's data can be removed any
-time. If you want to continue using the app - you should install it, either
-using `"Install App"` button or using `orbit install` command.
+Note that `orbit run` won't install the app - all app's data can be removed any time. If you want to
+continue using the app - you should install it, either using `"Install App"` button or using
+`orbit install` command.
 
 ### Installing an Orbit App
 
@@ -101,13 +100,12 @@ You can start an install an app with following invocation:
 
     % orbit install [OPTIONS] GIT_REPO_URL[#REFSPEC]
 
-This will install it into your current workspace, which if you are working with
-a team will install it for your entire team to use.
+This will install it into your current workspace, which if you are working with a team will install
+it for your entire team to use.
 
-By default, Orbit creates your apps inside
-`~/orbit-[workspacename]/[package-name]`. Where package-name is the unique name
-in the package.json. You can configure this location in the orbit configuration,
-at `~/.orbit.json`.
+By default, Orbit creates your apps inside `~/orbit-[workspacename]/[package-name]`. Where
+package-name is the unique name in the package.json. You can configure this location in the orbit
+configuration, at `~/.orbit.json`.
 
 ### Listing Orbit Apps
 
@@ -115,8 +113,8 @@ List installed orbit apps:
 
     % orbit ls
 
-List all orbit apps available (this will lists also apps which were run but not
-installed, can be used to install apps which you want to continue to use):
+List all orbit apps available (this will lists also apps which were run but not installed, can be
+used to install apps which you want to continue to use):
 
     % orbit ls --all
 
@@ -126,9 +124,9 @@ Orbit hosts an app store that helps you find new apps. To search them just use:
 
     % orbit search [query]
 
-That will return a list of apps that you can install by their unique github
-repo. Apps that are published in the main orbit repo will reserve their
-package.json name for easier usage. So you can install search and install:
+That will return a list of apps that you can install by their unique github repo. Apps that are
+published in the main orbit repo will reserve their package.json name for easier usage. So you can
+install search and install:
 
 ```
 % orbit search slack

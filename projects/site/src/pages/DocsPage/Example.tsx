@@ -24,7 +24,7 @@ export const Example = memo(({ source, examples, id, name, ...props }: ExamplePr
 
   return (
     <>
-      <Space size="md" />
+      <Space size="lg" />
       <Card
         elevation={1}
         pad

@@ -3,7 +3,10 @@ import React from 'react'
 import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
-const titleItem = { pad: 'md', titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti } }
+const titleItem = {
+  pad: 'md',
+  titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti, className: '' },
+}
 
 const guides = [
   {

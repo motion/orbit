@@ -136,7 +136,7 @@ const SimpleInput = gloss(
           [forwardRef, value, defaultValue, placeholder, tagName, elementProps],
         )}
         elementTheme={useCallback(
-          (_props, theme) => ({
+          (p, theme) => ({
             // apple selection color
             '&::selection': {
               color: theme.color.lighten(0.1),
@@ -144,7 +144,7 @@ const SimpleInput = gloss(
             },
             // autofill keep proper color
             '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              WebkitTextFillColor: theme.color,
+              WebkitTextFillColor: p.color || theme.color,
               backgroundColor: 'transparent',
             },
           }),

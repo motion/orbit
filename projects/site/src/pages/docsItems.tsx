@@ -4,7 +4,7 @@ import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
 const titleItem = {
-  pad: ['sm', 'md'],
+  pad: 'md',
   titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti, className: '' },
 }
 

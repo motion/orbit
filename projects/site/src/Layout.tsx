@@ -1,4 +1,4 @@
-import { Button, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
+import { Button, ErrorBoundary, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { throttle } from 'lodash'
@@ -94,7 +94,9 @@ export const Layout = memo((props: any) => {
             x: siteStore.showSidebar ? -sidebarWidth : 'none',
           }}
         >
-          <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
+          <ErrorBoundary>
+            <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
+          </ErrorBoundary>
         </View>
         <LayoutSidebar />
       </Theme>

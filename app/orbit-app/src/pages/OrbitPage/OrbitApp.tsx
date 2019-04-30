@@ -1,3 +1,5 @@
+import '../../apps/orbitApps'
+
 import {
   AppDefinition,
   AppLoadContext,
@@ -7,10 +9,10 @@ import {
   ProvideStores,
   useIsAppActive,
 } from '@o/kit'
-import { Button, Loading, ProvideVisibility, Section } from '@o/ui'
+import { ErrorBoundary, Loading, ProvideVisibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { Component, memo, Suspense, useCallback, useEffect } from 'react'
-import '../../apps/orbitApps'
+import React, { memo, Suspense, useCallback, useEffect } from 'react'
+
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
 import { OrbitMain } from './OrbitMain'
@@ -94,48 +96,6 @@ export const OrbitAppRenderOfDefinition = ({
       </AppLoadContext.Provider>
     </Suspense>
   )
-}
-
-class ErrorBoundary extends Component<{ name: string }> {
-  state = {
-    error: null,
-  }
-
-  componentDidCatch(error) {
-    console.warn('ErrorBoundary caught error', this.props.name)
-    this.setState({
-      error: {
-        message: error.message,
-        stack: error.stack,
-      },
-    })
-  }
-
-  render() {
-    const { error } = this.state
-    if (error) {
-      return (
-        <Section
-          background="darkorange"
-          color="white"
-          title={error.message || 'Error'}
-          subTitle={this.props.name}
-          flex={1}
-          minWidth={200}
-          minHeight={200}
-          scrollable="y"
-          whiteSpace="pre-line"
-          pad
-        >
-          <Button alt="confirm" onClick={() => this.setState({ error: null })}>
-            Clear
-          </Button>
-          <pre>{error.stack}</pre>
-        </Section>
-      )
-    }
-    return this.props.children
-  }
 }
 
 if (module['hot']) {

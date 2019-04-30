@@ -29,17 +29,15 @@ let allTitles = {
 let allTexts = {
   large: [
     `A whole new take on your intranet - amazingly easy to code apps.`,
-    `Plug in data sources and apps with a click, no server necessary.`,
+    `Plug data sources and apps with a click, no server necessary.`,
   ],
   medium: [
-    `Code desktop apps and internal tools without a server.`,
-    `Code desktop apps and internal tools that coordinate without a server.`,
-    `Plug in data sources and apps with a click.`,
+    `A new take on the intranet - amazingly easy to code apps.`,
+    `No servers, plug data sources and apps with a click.`,
   ],
   small: [
-    `Code internal tools, no config or servers.`,
-    `Code desktop apps and internal tools that coordinate without a server.`,
-    `UI kit, dev environment & deploy.`,
+    `The new intranet, easy to code apps.`,
+    `No servers, data sources & apps in a clack.`,
   ],
 }
 
@@ -63,7 +61,7 @@ const HeadText = memo(() => {
   return (
     <View
       className="head-text-section"
-      width={useScreenVal('92%', '80%', '85%')}
+      width={useScreenVal('92%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
     >

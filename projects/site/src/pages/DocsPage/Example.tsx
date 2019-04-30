@@ -10,10 +10,12 @@ export type ExampleProps = {
   name?: string
   children: any
   willScroll?: boolean
+  onlySource?: boolean
+  chromeless?: boolean
 }
 
 export const Example = memo(
-  ({ source, examples, id, name, willScroll, ...props }: ExampleProps) => {
+  ({ source, examples, id, name, willScroll, onlySource, chromeless, ...props }: ExampleProps) => {
     const [showSource, setShowSource] = useState(true)
     const [hovered, setHovered] = useState(false)
     const tm = useRef(null)
@@ -24,28 +26,15 @@ export const Example = memo(
 
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
-    return (
+    const contents = (
       <>
-        <Space size="lg" />
-        <Card
-          elevation={1}
-          pad
-          titlePad="md"
-          space
-          background={theme => theme.backgroundStrong}
-          title={name || id}
-          afterTitle={
-            <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
-          }
-          onClickTitle={() => {
-            setShowSource(!showSource)
-          }}
-        >
-          {showSource && (
-            <SubCard>
-              <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-            </SubCard>
-          )}
+        {showSource && (
+          <SubCard>
+            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
+          </SubCard>
+        )}
+
+        {!onlySource && (
           <SubCard
             onMouseEnter={() => {
               tm.current = setTimeout(() => setHovered(true), 200)
@@ -70,8 +59,36 @@ export const Example = memo(
               </AccidentalScrollPrevent>
             )}
           </SubCard>
-        </Card>
-        <Space size="xl" />
+        )}
+      </>
+    )
+
+    return (
+      <>
+        {chromeless ? (
+          <>{contents}</>
+        ) : (
+          <>
+            <Space size="lg" />
+            <Card
+              elevation={1}
+              pad
+              titlePad="md"
+              space
+              background={theme => theme.backgroundStrong}
+              title={name || id}
+              afterTitle={
+                <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+              }
+              onClickTitle={() => {
+                setShowSource(!showSource)
+              }}
+            >
+              {contents}
+            </Card>
+            <Space size="xl" />
+          </>
+        )}
       </>
     )
   },

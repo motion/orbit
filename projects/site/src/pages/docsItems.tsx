@@ -4,7 +4,7 @@ import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
 const titleItem = {
-  pad: 'md',
+  pad: ['sm', 'md'],
   titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti, className: '' },
 }
 
@@ -61,6 +61,8 @@ const uikit = [
   },
 
   { id: 'layout', title: 'Laying out your interface', ...titleItem },
+  { id: 'ui-hooks', title: 'Hooks', ...titleItem },
+  { id: 'ui-themes', title: 'Themes', ...titleItem },
   // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
   // { id: 'templates', title: 'Templates', ...titleItem },
 
@@ -77,10 +79,11 @@ const uikit = [
   },
   { id: 'button', icon: 'button', title: 'Button', indent: 1 },
   { id: 'card', title: 'Card', icon: 'credit-card', indent: 1 },
+  { id: 'tag', icon: 'tag', title: 'Tag', indent: 1 },
   { id: 'icon', icon: 'star', title: 'Icons' },
   { id: 'section', title: 'Section', icon: 'application' },
   { id: 'popover', title: 'Popover', icon: 'direction-right' },
-  { id: 'decorations', title: 'Decorations', icon: 'clean' },
+  // { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
 
   { id: 'masterdetail', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
@@ -159,6 +162,13 @@ export const docsViews = {
   },
   layout: {
     page: () => import('./DocsPage/DocsLayout.mdx'),
+  },
+  'ui-hooks': {
+    page: () => import('./DocsPage/DocsUIHooks.mdx'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsUIHooks'),
+  },
+  'ui-themes': {
+    page: () => import('./DocsPage/DocsUIThemes.mdx'),
   },
   icon: {
     page: () => import('./DocsPage/DocsIcon.mdx'),

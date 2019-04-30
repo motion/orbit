@@ -26,6 +26,10 @@ export const SiteRoot = hot(() => {
 
 export let recentHMR = false
 
+export function getRecentHMR() {
+  return recentHMR
+}
+
 if (module['hot']) {
   let tm
   module['hot'].addStatusHandler(() => {

@@ -3,6 +3,8 @@ import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
+import { getRecentHMR } from '../SiteRoot'
+
 export type FadeInProps = UseSpringProps<any> & {
   delay?: number
   intersection?: IntersectionObserverInit['rootMargin']
@@ -146,10 +148,12 @@ export const useSimpleFade = ({
   spring,
   ...rest
 }: UseFadePageProps) => {
+  // disable animations on recent hmr
+  const disable = getRecentHMR() || off
   return useSpring(
     spring || {
-      from: off ? to : from,
-      to: shown || off ? to : from,
+      from: disable ? to : from,
+      to: shown || disable ? to : from,
       config: defaultConfig,
       ...rest,
     },

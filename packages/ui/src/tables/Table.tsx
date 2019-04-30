@@ -12,7 +12,7 @@ import { SearchableTable, SearchableTableProps } from './SearchableTable'
 
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
-  SectionParentProps & {
+  Omit<SectionParentProps, 'children'> & {
     /** Flexibly define which columns to show, how to show them, and attach events to changes. Accepts array of strings, objects, or an object. */
     columns?: DataColumnsShort
 

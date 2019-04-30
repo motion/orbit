@@ -54,9 +54,8 @@ function guessColKey(key: string, firstRow: GenericDataRow | false, index: numbe
   if (!firstRow) {
     return key
   }
-  const rowKeys = Object.keys(firstRow)
-  if (rowKeys.indexOf(key) >= 0) {
+  if (firstRow.values[key]) {
     return key
   }
-  return rowKeys[index]
+  return Object.keys(firstRow.values)[index]
 }

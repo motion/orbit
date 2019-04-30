@@ -6,7 +6,7 @@ import { employees } from './fakeData'
 export let Basic = () => {
   const [rows, setRows] = useState([])
   return (
-    <Layout type="row" height={800}>
+    <Layout type="row" height={800} border={[1, 'red']}>
       <Pane resizable flex={1.5}>
         <Layout type="column">
           <Pane resizable>
@@ -36,7 +36,7 @@ export let Basic = () => {
 
       <Pane>
         <Layout type="column">
-          <Pane resizable>
+          <Pane resizable collapsable title="Pane Title" flex={2}>
             <Center>
               <SubTitle>Resizable Pane</SubTitle>
             </Center>

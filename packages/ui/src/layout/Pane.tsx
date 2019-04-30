@@ -52,6 +52,7 @@ export function Pane(props: PaneProps) {
             padding={padding}
             width="100%"
             height="100%"
+            position="relative"
           >
             {children}
           </Col>

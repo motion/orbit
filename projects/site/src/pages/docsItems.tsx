@@ -61,8 +61,8 @@ const uikit = [
   },
 
   { id: 'layout', title: 'Laying out your interface', ...titleItem },
-  { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
-  { id: 'templates', title: 'Templates', ...titleItem },
+  // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
+  // { id: 'templates', title: 'Templates', ...titleItem },
 
   { id: 'list', title: 'List', icon: 'th-list', group: 'Collections' },
   { id: 'table', title: 'Table', icon: 'th' },
@@ -76,7 +76,7 @@ const uikit = [
     title: 'Surface',
   },
   { id: 'button', icon: 'button', title: 'Button', indent: 1 },
-  { id: 'card', title: 'Cards', icon: 'credit-card', indent: 1 },
+  { id: 'card', title: 'Card', icon: 'credit-card', indent: 1 },
   { id: 'icon', icon: 'star', title: 'Icons' },
   { id: 'section', title: 'Section', icon: 'application' },
   { id: 'popover', title: 'Popover', icon: 'direction-right' },

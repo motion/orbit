@@ -4,13 +4,13 @@ import React from 'react'
 export let Basic = (
   <Popover
     group="demo"
-    open
+    openOnClick
     towards="bottom"
-    elevation={2}
+    elevation={8}
     width={300}
     target={
-      <Button alt="action" size="lg" marginBottom={100}>
-        Hover me
+      <Button alt="action" size="lg">
+        Open on Click
       </Button>
     }
   >
@@ -20,12 +20,17 @@ export let Basic = (
   </Popover>
 )
 
-export let Hover = (
+export let Themed = (
   <Popover
-    openOnHover
+    group="demo"
+    openOnClick
+    towards="bottom"
+    elevation={8}
+    width={300}
+    popoverTheme="tooltip"
     target={
       <Button alt="action" size="lg">
-        Hover me
+        Open on Click
       </Button>
     }
   >

@@ -1,5 +1,20 @@
 A `<Popover />` is very flexible and handles many use cases for showing items as menus or dropdown
-from other items.
+from other items. Some of the abilities popovers have:
+
+- Automatically handles edges nicely, including adjust the pointing arrow it uses.
+- Attaching automatically to a component through `target`, or manually with `top` and `left`.
+- Opening on hover, click, or both with `openOnHover`, `openOnClick`.
+- Preventing hover on children for tooltip-style popovers, using `noHoverOnChildren`.
+- Closing on click or click away with `closeOnClick` and `closeOnClickAway`.
+- Grouping with other popovers so they are never open at the same time with `group`.
+- Controlling the amount of hidden but hoverable padding with `forgiveness`.
+- Controlling the `distance` from the target.
+- Showing with a background `overlay` above content.
+- Controlling the Surface it uses for children, `sizeRadius`, `elevation` etc.
+- Controlling the arrow with `arrowSize` or `noArrow`.
+
+For an example of a Popover in action, you can check out `<Tooltip />` which uses a few properties
+to turn popovers into effective tooltips.
 
 To use a Popover:
 
@@ -9,8 +24,18 @@ import { Popover } from '@o/ui'
 
 <br />
 
-## Examples
+## Examples [Beta]
+
+Popover is currently in Beta. While it handles many very complex use cases, it breaks in other
+simple ones. A truly effective popover is a really hard problem, and we've spent years refining on
+various use cases, but in the course of time other ones have broken. Currently showing a popover
+"above" content breaks fairly consistently. We're planning on revisiting this shortly and fixing
+many bugs.
 
 ### Basics
 
 <Example id="Basic" />
+
+### Using a theme
+
+<Example id="Themed" />

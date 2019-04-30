@@ -64,7 +64,6 @@ export const DocsContents = memo(
           Example: props => <Example examples={examples} source={examplesSource} {...props} />,
         }}
       >
-        <Space size />
         <Section
           maxWidth={860}
           width="100%"
@@ -72,7 +71,7 @@ export const DocsContents = memo(
           pad={useScreenVal(
             ['xl', 'md', true, 'md'],
             ['xl', 'md', true, 'md'],
-            ['xl', 'lg', true, 'lg'],
+            ['xl', 'xl', true, 'xl'],
           )}
           titleBorder
           space

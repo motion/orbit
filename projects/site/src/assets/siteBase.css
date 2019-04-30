@@ -12,9 +12,12 @@ body {
   font-kerning: auto;
   pointer-events: none;
   text-rendering: optimizeLegibility;
-  /* -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
   min-height: 100vh;
+}
+
+ul,
+ol {
+  -webkit-font-smoothing: antialiased;
 }
 
 .will-load .main-contents {

@@ -6,9 +6,6 @@
 - Docs/Start card links
 - Site/host on now.sh for sub-pages, https, squircle assets, etc
 
-- Popover
-- Modal
-- Tabs
 - Layout
 - Pane
 - GridLayout

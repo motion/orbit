@@ -2,7 +2,7 @@ import { Row, Tag } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
-  <Row>
+  <Row space>
     <Tag alt="lightGreen">My Tag</Tag>
     <Tag alt="lightBlue">My Tag</Tag>
     <Tag alt="lightRed">My Tag</Tag>

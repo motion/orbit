@@ -273,4 +273,18 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/modals/GalleryModal'),
     types: () => import('../../tmp/GalleryModal.json'),
   },
+  tabs: {
+    page: () => import('./DocsPage/DocsTabs.mdx'),
+    examples: () => import('./DocsPage/DocsTabs'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTabs'),
+    source: () => import('!raw-loader!@o/ui/src/Tabs'),
+    types: () => import('../../tmp/Tabs.json'),
+  },
+  tag: {
+    page: () => import('./DocsPage/DocsTag.mdx'),
+    examples: () => import('./DocsPage/DocsTag'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTag'),
+    source: () => import('!raw-loader!@o/ui/src/Tag'),
+    types: () => import('../../tmp/Tag.json'),
+  },
 }

@@ -12,6 +12,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
+import { linkProps } from './linkProps'
 import { OuterSpace } from './OuterSpace'
 import { blackWavePattern } from './purpleWaveUrl'
 import { useScreenVal } from './SpacedPageContent'
@@ -39,9 +40,9 @@ let allTexts = {
 }
 
 const subTexts = {
-  large: `Five ways Orbit makes common apps easy.`,
-  medium: `How Orbit makes common apps easy.`,
-  small: `Learn how.`,
+  large: `How Orbit apps work.`,
+  medium: `How Orbit apps work.`,
+  small: `How Orbit apps work.`,
 }
 
 const HeadText = memo(() => {
@@ -118,7 +119,7 @@ const HeadText = memo(() => {
             </FadeChild>
             {br}
             <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-              <Smaller>{subTexts[screen]}</Smaller>
+              <Smaller {...linkProps('/apps')}>{subTexts[screen]}</Smaller>
             </FadeChild>
           </Paragraph>
         )}
@@ -145,8 +146,8 @@ const Smaller = gloss({
   textDecoration: 'underline',
   textDecorationColor: '#222',
   transition: 'color ease 350ms',
-  fontSize: 26,
-  marginTop: 10,
+  fontSize: 30,
+  marginTop: 12,
 }).theme((props, theme) => ({
   ...props,
   color: theme.color.alpha(0.5),

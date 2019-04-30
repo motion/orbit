@@ -8,6 +8,7 @@ import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { apps } from './HomePage/apps'
+import { useScreenVal } from './HomePage/SpacedPageContent'
 import { makeWavePattern } from './makeWavePattern'
 
 export default mount({
@@ -32,7 +33,7 @@ export function AppsPage() {
         pointerEvents="none"
       />
 
-      <Header position="absolute" left={0} right={0} background="transparent" slim />
+      <Header noBorder position="absolute" left={0} right={0} background="transparent" slim />
       <main className="main-contents" style={{ minHeight: 1600 }}>
         <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
           <Col space="xxxl">
@@ -45,7 +46,7 @@ export function AppsPage() {
 
         <SectionContent minHeight={400} background="#000">
           <Col
-            pad={[100, '20%', 100]}
+            pad={useScreenVal(0, [50, '10%'], [100, '20%', 100])}
             space="xxl"
             spaceAround
             flex={1}

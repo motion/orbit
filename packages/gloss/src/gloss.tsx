@@ -70,7 +70,7 @@ function addStyles(
   return classNames
 }
 
-function glossify(
+function addDynamicStyles(
   id: string,
   displayName: string = 'g',
   conditionalStyles?: any,
@@ -229,7 +229,7 @@ export function gloss<Props = any>(
       }
     }, [])
 
-    const dynClassNames = glossify(
+    const dynClassNames = addDynamicStyles(
       id,
       ThemedView.displayName,
       Styles.propStyles,

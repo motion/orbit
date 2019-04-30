@@ -2,7 +2,6 @@ import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, t
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
-import glowImage from '../../../public/images/glow.svg'
 import macbook from '../../../public/images/macbook.png'
 import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
@@ -274,9 +273,9 @@ export function HeadSection() {
       </Page.Parallax>
 
       <Page.Background
-        speed={0.1}
+        speed={0.15}
         zIndex={-10}
-        opacity={0.65}
+        opacity={0.7}
         bottom="-50%"
         backgroundSize="cover"
         left="-40%"
@@ -290,28 +289,6 @@ export function HeadSection() {
           scaleY: -1,
         }}
       />
-
-      <Page.Parallax overflow="visible" speed={0} zIndex={-11}>
-        <FullScreen
-          zIndex={-100}
-          transformOrigin="center center"
-          transform={{ scale: 1, y: '12%' }}
-        >
-          <View
-            pointerEvents="none"
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            overflow="hidden"
-            userSelect="none"
-            opacity={0}
-          >
-            <Image src={glowImage} />
-          </View>
-        </FullScreen>
-      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

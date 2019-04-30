@@ -1,6 +1,7 @@
 import { Inline } from '@o/gloss'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
+import { link } from 'fs'
 import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
@@ -18,6 +19,7 @@ import { Spotlight } from '../../views/Spotlight'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { LineSep } from './LineSep'
+import { linkProps } from './linkProps'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
@@ -127,6 +129,7 @@ const elements = [
     iconAfter: require('../../../public/logos/gmail.svg'),
     afterName: 'Gmail',
     beforeName: 'Slack',
+    link: '/docs/table',
   },
   {
     iconBefore: require('../../../public/logos/postgres.svg'),
@@ -136,6 +139,7 @@ const elements = [
     iconAfter: require('../../../public/logos/jira.svg'),
     afterName: 'Jira',
     beforeName: 'Postgres',
+    link: '/docs/list',
   },
   {
     iconBefore: require('../../../public/logos/medium.svg'),
@@ -145,6 +149,7 @@ const elements = [
     iconAfter: require('../../../public/logos/sheets.svg'),
     afterName: 'GSheets',
     beforeName: 'Crawler',
+    link: '/docs/grid',
   },
 ]
 
@@ -192,21 +197,19 @@ export default function NeckSection() {
 
   const [cur, setCur] = useState(0)
 
-  const next = async (e?) => {
-    if (e) clearInterval(nextInt.current)
-    animate = 'next'
+  const goTo = async index => {
+    clearInterval(nextInt.current)
+    animate = index < cur ? 'prev' : 'next'
     forceUpdate()
     await sleep(fadeOutTm + longDelay)
-    let n = (cur + 1) % elements.length
-    setCur(n)
+    setCur(index)
   }
-  const prev = async (e?) => {
-    if (e) clearInterval(nextInt.current)
-    animate = 'prev'
-    forceUpdate()
-    await sleep(fadeOutTm + longDelay)
+  const next = async () => {
+    goTo((cur + 1) % elements.length)
+  }
+  const prev = async () => {
     let n = cur - 1
-    setCur(n < 0 ? elements.length - 1 : n)
+    goTo(n < 0 ? elements.length - 1 : n)
   }
 
   // autoplay on intersect
@@ -247,7 +250,7 @@ export default function NeckSection() {
               <Row space>
                 <SubSection maxWidth="33%">
                   <FadeChild {...fadeLeftProps} delay={200}>
-                    <PillButtonDark>1. Import</PillButtonDark>
+                    <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
                       Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
@@ -257,7 +260,7 @@ export default function NeckSection() {
                 </SubSection>
                 <SubSection flex={2} pad={[true, 'xxl']}>
                   <FadeChild delay={400}>
-                    <PillButtonDark>2. Display</PillButtonDark>
+                    <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
                       Orbit provides everything you need to build tools fast, with powerful views
@@ -267,7 +270,7 @@ export default function NeckSection() {
                 </SubSection>
                 <SubSection maxWidth="33%">
                   <FadeChild {...fadeRightProps} delay={200}>
-                    <PillButtonDark>3. Export</PillButtonDark>
+                    <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
                       With selections + actions, exporting to{' '}
@@ -337,9 +340,11 @@ export default function NeckSection() {
                   />
                 </FadeChild>
 
-                <FadeChild config={slowConfigLessBounce} delay={300}>
-                  <animated.div style={{ ...springSlowest, margin: 'auto' }}>
+                <animated.div style={{ ...springSlowest, margin: 'auto' }}>
+                  <FadeChild config={slowConfigLessBounce} delay={300}>
                     <TiltSquircle
+                      {...linkProps(elements[cur].link)}
+                      tagName="div"
                       width={280}
                       height={280}
                       background={`linear-gradient(125deg, #78009F, #4C1966)`}
@@ -363,8 +368,8 @@ export default function NeckSection() {
                         {elements[cur].body}
                       </Paragraph>
                     </TiltSquircle>
-                  </animated.div>
-                </FadeChild>
+                  </FadeChild>
+                </animated.div>
 
                 <animated.div
                   style={{
@@ -377,7 +382,7 @@ export default function NeckSection() {
                   <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
                     <View
                       width="100%"
-                      height={260}
+                      height={300}
                       minWidth={350}
                       borderRadius={22}
                       background="#000"
@@ -424,6 +429,12 @@ export default function NeckSection() {
                 </animated.div>
               </Flex>
             </Row>
+
+            <Row margin={[32, 'auto', 0]}>
+              {[0, 1, 2].map(x => (
+                <Dot key={x} active={x === cur} onClick={() => goTo(x)} />
+              ))}
+            </Row>
           </Col>
         </SpacedPageContent>
       </Page.Content>
@@ -457,6 +468,26 @@ export default function NeckSection() {
     </Fade.FadeProvide>
   )
 }
+
+const Dot = gloss({
+  borderRadius: 100,
+  width: 9,
+  height: 9,
+  border: [5, 'transparent'],
+  margin: [0, 10],
+  background: [255, 255, 255, 0.5],
+  opacity: 0.5,
+  cursor: 'pointer',
+  transition: 'all ease 300ms',
+
+  active: {
+    opacity: 1,
+  },
+
+  '&:hover': {
+    opacity: 0.8,
+  },
+})
 
 const CenterText = gloss(
   props => (

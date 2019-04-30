@@ -140,11 +140,12 @@ const SimpleInput = gloss(
             // apple selection color
             '&::selection': {
               color: theme.color.lighten(0.1),
-              background: theme.backgroundSelection || theme.background.darken(0.2),
+              background: theme.backgroundSelection || theme.backgroundStronger,
             },
             // autofill keep proper color
             '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              color: theme.color,
+              WebkitTextFillColor: theme.color,
+              backgroundColor: 'transparent',
             },
           }),
           [],

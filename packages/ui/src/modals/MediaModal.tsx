@@ -1,15 +1,16 @@
 import { Absolute, Row, Theme } from '@o/gloss'
 import React from 'react'
+
 import { Button } from '../buttons/Button'
 import { Space } from '../Space'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { Modal, ModalProps } from './Modal'
 
-export function MediaModal({ title, subTitle, onClose, afterTitle, ...props }: ModalProps) {
+export function MediaModal({ title, subTitle, onClose, afterTitle, open, ...props }: ModalProps) {
   return (
     <Theme name="dark">
-      <Modal chromeless background={theme => theme.background.darken(0.1).alpha(0.8)}>
+      <Modal chromeless background={theme => theme.background.darken(0.1).alpha(0.8)} open={open}>
         <Row padding={[10, 0]} alignItems="center">
           <View alignItems="center">
             <Text fontWeight={600}>{title}</Text>

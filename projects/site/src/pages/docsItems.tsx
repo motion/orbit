@@ -92,8 +92,8 @@ const uikit = [
   { id: 'timeago', title: 'TimeAgo', icon: 'time' },
 
   { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { id: 'gallerymodal', title: 'GalleryModal', icon: 'multi-select' },
-  { id: 'mediamodal', title: 'MediaModal', icon: 'multi-select' },
+  { id: 'galleryModal', title: 'GalleryModal', icon: 'multi-select' },
+  { id: 'mediaModal', title: 'MediaModal', icon: 'multi-select' },
 
   { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
   { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },
@@ -255,5 +255,12 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsModal'),
     source: () => import('!raw-loader!@o/ui/src/modals/Modal'),
     types: () => import('../../tmp/Modal.json'),
+  },
+  galleryModal: {
+    page: () => import('./DocsPage/DocsGalleryModal.mdx'),
+    examples: () => import('./DocsPage/DocsGalleryModal'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsGalleryModal'),
+    source: () => import('!raw-loader!@o/ui/src/modals/GalleryModal'),
+    types: () => import('../../tmp/GalleryModal.json'),
   },
 }

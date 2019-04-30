@@ -1,8 +1,9 @@
 import { Inline, Row } from '@o/gloss'
-import { BorderRight, Col, Divider, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
+import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
+import confettiImage from '../../public/images/confetti.jpg'
 import { scrollTo } from '../etc/helpers'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { FadeChild, useFadePage } from '../views/FadeIn'
@@ -37,6 +38,10 @@ export function AboutPage() {
       <Theme name={AboutPage.theme}>
         <Header noBorder background="transparent" slim />
         <main className="main-contents" ref={Fade.ref} style={{ minHeight: 2000 }}>
+          <SectionContent paddingTop={60}>
+            <Image margin="auto" height={714 * 0.4} width={894 * 0.4} src={confettiImage} />
+          </SectionContent>
+
           <SectionContent flex={1} paddingTop="5%" paddingBottom="5%">
             <Row id="main" alignItems="flex-start">
               <Col

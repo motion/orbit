@@ -506,7 +506,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   styles = {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
-    color: props.color || theme.color,
     overflow: props.overflow || theme.overflow,
     // note: base theme styles go *above* propsToStyles...
     ...(!props.chromeless && themeStyle),

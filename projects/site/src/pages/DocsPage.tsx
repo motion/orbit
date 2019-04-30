@@ -124,7 +124,6 @@ const preloadItem = item => {
 
 const itemProps = {
   iconProps: {
-    size: 16,
     opacity: 0.65,
   },
 }

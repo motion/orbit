@@ -573,3 +573,11 @@ svg .animate-path {
 .hover-will-transform:hover {
   will-change: transform, opacity;
 }
+
+a {
+  color: #fe5a59;
+}
+
+a:hover {
+  color: #fe5a5999;
+}

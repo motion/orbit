@@ -187,7 +187,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = small ? 0.8 : 1
-  let defaultPad = small ? 'xs' : 'sm'
+  let pad = small ? 'xs' : 'sm'
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
@@ -197,7 +197,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
-    defaultPad = 'sm'
+    pad = 'sm'
   }
 
   const hasChildren = showChildren && !!children
@@ -253,7 +253,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         padding={padding}
-        pad={selectDefined(surfaceProps.pad, defaultPad)}
+        pad={selectDefined(surfaceProps.pad, pad)}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}
@@ -275,7 +275,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
                 {title}
               </HighlightText>
-              <Space />
+              {!!(props.afterTitle || afterHeaderElement) && <Space size={pad} />}
               {props.afterTitle}
               {afterHeaderElement}
             </ListItemTitleBar>

@@ -272,7 +272,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   )
 
   const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
-  const paddingStyle = getPadding(props)
   let showElement = false
 
   // because we can't define children at all on tags like input

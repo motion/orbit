@@ -53,7 +53,7 @@ const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
     if (item.isFirst) {
       return {
         ...(props.borderPosition !== 'inside' && {
-          borderWidth: 0,
+          borderRightWidth: 0,
           borderLeftWidth: props.borderWidth,
           borderTopWidth: props.borderWidth,
           borderBottomWidth: props.borderWidth,
@@ -69,7 +69,7 @@ const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
     } else {
       return {
         ...(props.borderPosition !== 'inside' && {
-          borderWidth: 0,
+          borderRightWidth: 0,
           borderLeftWidth: props.borderWidth,
           borderTopWidth: props.borderWidth,
           borderBottomWidth: props.borderWidth,

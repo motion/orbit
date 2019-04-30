@@ -5,6 +5,7 @@ import { throttle } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
+import { scrollTo } from './etc/helpers'
 import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
@@ -54,6 +55,14 @@ export const Layout = memo((props: any) => {
   useEffect(() => {
     siteStore.screenSize = screen
   }, [screen])
+
+  useEffect(() => {
+    if (window.location.hash) {
+      if (document.querySelector(window.location.hash)) {
+        scrollTo(window.location.hash)
+      }
+    }
+  }, [route])
 
   useEffect(() => {
     window.addEventListener(

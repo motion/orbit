@@ -1,4 +1,4 @@
-import { createContextualProps, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { createContextualProps, ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
@@ -21,19 +21,19 @@ export const useParallax = () => {
 }
 
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection')),
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection'))),
 )
 const FeetSection = loadOnIntersect(
-  lazy(() => import(/* webkitPreload: true */ './HomePage/FooterSection')),
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/FooterSection'))),
 )
 const MissionMottoSection = loadOnIntersect(
-  lazy(() => import(/* webkitPreload: true */ './HomePage/MissionMottoSection')),
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/MissionMottoSection'))),
 )
 const SecuritySection = loadOnIntersect(
-  lazy(() => import(/* webkitPreload: true */ './HomePage/SecuritySection')),
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/SecuritySection'))),
 )
 const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection')),
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection'))),
 )
 
 export function HomePage() {
@@ -122,9 +122,30 @@ function loadOnIntersect(LazyComponent) {
     }
 
     return (
-      <Suspense fallback={fallback}>
-        <LazyComponent {...props} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={fallback}>
+          <LazyComponent {...props} />
+        </Suspense>
+      </ErrorBoundary>
     )
   }
+}
+
+function retry<A>(fn, retriesLeft = 5, interval = 1000) {
+  return new Promise<A>((resolve, reject) => {
+    fn()
+      .then(resolve)
+      .catch(error => {
+        setTimeout(() => {
+          if (retriesLeft === 1) {
+            // reject('maximum retries exceeded');
+            reject(error)
+            return
+          }
+
+          // Passing on "reject" is the important part
+          retry(fn, retriesLeft - 1, interval).then(x => resolve(x as A), reject)
+        }, interval)
+      })
+  })
 }

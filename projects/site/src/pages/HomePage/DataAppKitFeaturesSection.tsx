@@ -51,7 +51,7 @@ export default memo(function DataAppKitFeaturesSection() {
           </Page.Parallax>
         )}
 
-        <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2} flex={1}>
+        <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
             margin={screen === 'small' ? ['-33%', 0, '10%'] : [0, 0, '6%']}

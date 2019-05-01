@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space } from '@o/ui'
+import { Col, FullScreen, Image, Row, Space } from '@o/ui'
 import React from 'react'
 
 import bottomLightSeparator from '../../../public/images/bottom-sep.svg'
@@ -20,6 +20,7 @@ export default function WaistSection() {
       <Page.Content
         outside={
           <>
+            <FullScreen zIndex={-1} background={theme => theme.background} bottom={150} />
             <LineSep
               top="-17%"
               height={120}
@@ -29,6 +30,7 @@ export default function WaistSection() {
               minWidth={1200}
               bottom={20}
               transform={{ scaleX: -1 }}
+              zIndex={1}
             />
             <Image
               position="absolute"
@@ -37,6 +39,7 @@ export default function WaistSection() {
               left={0}
               right={0}
               width="100%"
+              minWidth={1000}
               src={bottomSeparator}
             />
           </>
@@ -81,8 +84,6 @@ export default function WaistSection() {
           </Row>
         </SpacedPageContent>
       </Page.Content>
-
-      <Page.Background background={theme => theme.background} bottom={150} />
     </>
   )
 }

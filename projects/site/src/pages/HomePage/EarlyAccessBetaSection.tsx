@@ -1,4 +1,4 @@
-import { Space, View, ViewProps } from '@o/ui'
+import { FullScreen, Space, View, ViewProps } from '@o/ui'
 import React from 'react'
 
 import { Page } from '../../views/Page'
@@ -17,6 +17,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
         zIndex={10}
         outside={
           <>
+            <FullScreen background={theme => theme.background} top={80} />
             <LineSep top={-10} fill />
             {outside}
           </>
@@ -26,8 +27,6 @@ export default function EarlyAccessSection({ outside = null }: any) {
           <EarlyAccessContent />
         </View>
       </Page.Content>
-
-      <Page.Background background={theme => theme.background} top={80} />
     </>
   )
 }

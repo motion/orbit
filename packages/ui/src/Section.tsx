@@ -1,7 +1,7 @@
 import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 
-import { splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
@@ -11,9 +11,8 @@ import { Col, ColProps } from './View/Col'
 
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
-export type SectionSpecificProps = Omit<
-  Partial<TitleRowSpecificProps>,
-  'after' | 'below' | 'margin' | 'unpad' | 'size'
+export type SectionSpecificProps = Partial<
+  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size'>
 > & {
   /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
@@ -102,7 +101,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   const spaceSize = !!space ? selectDefined(size, space) : space
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
-  const toggle = useCollapseToggle(collapseProps)
+  const collapse = useCollapse(collapseProps)
 
   const titleElement = hasTitle && (
     <>
@@ -119,7 +118,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         pad={innerPad || (titleBorder || bordered ? true : null)}
         size={selectDefined(titleSize, size)}
         titleProps={titleProps}
-        useToggle={toggle}
+        useCollapse={collapse}
       />
       {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
     </>
@@ -159,7 +158,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           scrollable={scrollable}
           pad={innerPad}
           beforeSpace={!showTitleAbove && titleElement}
-          useToggle={toggle}
+          useCollapse={collapse}
           {...viewProps}
         >
           {children}

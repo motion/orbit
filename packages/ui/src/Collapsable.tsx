@@ -20,7 +20,7 @@ export type CollapsableProps = {
   onCollapse?: (next: boolean) => any
 
   /** Pass in a `useToggle` that controls collapse state */
-  useToggle?: Toggler
+  useCollapse?: Toggler
 }
 
 export const splitCollapseProps = <A extends CollapsableProps>(
@@ -31,7 +31,7 @@ export const splitCollapseProps = <A extends CollapsableProps>(
     collapsed,
     collapsable,
     onCollapse,
-    useToggle: useToggleOg,
+    useCollapse: useToggleOg,
     ...rest
   } = all
   if (
@@ -39,12 +39,12 @@ export const splitCollapseProps = <A extends CollapsableProps>(
   ) {
     return [null, rest]
   }
-  return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useToggle: useToggleOg }, rest]
+  return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useCollapse: useToggleOg }, rest]
 }
 
-export const useCollapseToggle = (props: CollapsableProps) => {
-  if (props.useToggle) {
-    return props.useToggle
+export const useCollapse = (props: CollapsableProps) => {
+  if (props.useCollapse) {
+    return props.useCollapse
   }
   return useToggle(
     selectDefined(props.defaultCollapsed, props.collapsed, false),
@@ -60,10 +60,10 @@ export const Collapsable = (props: CollapsableViewProps) => {
 }
 
 export const createCollapsableChildren = (props: CollapsableViewProps) => {
-  const innerToggle = useCollapseToggle(props)
-  const toggle = props.useToggle || innerToggle
+  const innerToggle = useCollapse(props)
+  const toggle = props.useCollapse || innerToggle
   // this inherits from useToggle nicely, not the clearest pattern...
-  const isCollapsable = props.useToggle ? toggle.collapseProps.collapsable : props.collapsable
+  const isCollapsable = props.useCollapse ? toggle.collapseProps.collapsable : props.collapsable
   if (isCollapsable === false) {
     return <>{props.children}</>
   }
@@ -71,7 +71,7 @@ export const createCollapsableChildren = (props: CollapsableViewProps) => {
 }
 
 export const CollapseArrow = (props: CollapsableProps) => {
-  const toggle = useCollapseToggle(props)
+  const toggle = useCollapse(props)
   if (!toggle.isCollapsable) {
     return null
   }

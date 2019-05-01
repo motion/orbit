@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 
-import { Collapsable, CollapsableProps, splitCollapseProps, useCollapseToggle } from '../Collapsable'
+import { Collapsable, CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
 import { Col, ColProps } from '../View/Col'
@@ -28,7 +28,7 @@ export function Pane(props: PaneProps) {
       ...sizablePaneProps
     },
   ] = splitCollapseProps(props)
-  const toggle = useCollapseToggle(collapseProps)
+  const toggle = useCollapse(collapseProps)
   const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
     <SizablePane {...sizablePaneProps} collapsed={toggle.val}>
@@ -38,10 +38,10 @@ export function Pane(props: PaneProps) {
           after={afterTitle}
           before={beforeTitle}
           {...collapseProps}
-          useToggle={toggle}
+          useCollapse={toggle}
         />
       )}
-      <Collapsable useToggle={toggle}>
+      <Collapsable useCollapse={toggle}>
         <Suspense fallback={<Loading />}>
           <Col
             space={space}

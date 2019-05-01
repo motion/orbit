@@ -2,7 +2,7 @@ import { gloss } from '@o/gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
 import { BorderBottom } from './Border'
-import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
@@ -62,7 +62,7 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   children?: React.ReactNode
 }
 
-export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
+export type TitleRowProps = Omit<RowProps, 'size' | 'children'> & TitleRowSpecificProps
 
 export const TitleRow = forwardRef(
   (
@@ -86,7 +86,7 @@ export const TitleRow = forwardRef(
     ref,
   ) => {
     const [collapseProps, rowProps] = splitCollapseProps(allProps)
-    const collapse = useCollapseToggle(collapseProps)
+    const collapse = useCollapse(collapseProps)
     const titleElement =
       !!title &&
       (isValidElement(title) ? (
@@ -106,7 +106,7 @@ export const TitleRow = forwardRef(
       >
         {above}
         <Row alignItems="center">
-          {collapse.isCollapsable && <CollapseArrow useToggle={collapse} />}
+          {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
           {before && (
             <>
               {before}

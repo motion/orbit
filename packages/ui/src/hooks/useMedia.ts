@@ -25,40 +25,63 @@ const objectToString = (query: string | MediaQueryObject) => {
     .join(' and ')
 }
 
-type Effect = (effect: EffectCallback, deps?: DependencyList) => void
-const createUseMedia = (effect: Effect) => (...rawQueries: (string | MediaQueryObject)[]) => {
-  const queries = rawQueries.map(objectToString)
-  const [state, setState] = useState(queries.map(query => !!window.matchMedia(query).matches))
+type MediaQueryShort = string | MediaQueryObject
 
-  effect(() => {
-    let mounted = true
-    const mqls = queries.map(query => window.matchMedia(query))
-
-    let last
-    const update = () => {
-      const next = mqls.map(x => !!x.matches)
-      if (!isEqual(next, last)) {
-        setState(next)
-        last = next
-      }
-    }
-
-    const onChange = debounce(() => {
-      if (!mounted) return
-      update()
-    })
-
-    mqls.forEach(mql => mql.addListener(onChange))
-    update()
-
-    return () => {
-      mounted = false
-      mqls.forEach(x => x.removeListener(onChange))
-    }
-  }, [JSON.stringify(rawQueries)])
-
-  return state
+type UseMediaOptions<A> = {
+  onChange?: (val?: A extends any[] ? boolean[] : boolean) => any
 }
+
+// use array if given array
+const normalizeState = (queryState: boolean[], originalQueries: any) => {
+  return Array.isArray(originalQueries) ? queryState : queryState[0]
+}
+
+type EitherEffect = (effect: EffectCallback, deps?: DependencyList) => void
+
+const createUseMedia = (effect: EitherEffect) =>
+  function useMedia<A extends MediaQueryShort | MediaQueryShort[]>(
+    rawQueries: A,
+    options: UseMediaOptions<A>,
+  ): A extends any[] ? boolean[] : boolean {
+    const allQueries = [].concat(rawQueries)
+    const queries = allQueries.map(objectToString)
+    const [state, setState] = useState(
+      normalizeState(queries.map(query => !!window.matchMedia(query).matches), rawQueries),
+    )
+
+    effect(() => {
+      let mounted = true
+      const mqls = queries.map(query => window.matchMedia(query))
+
+      let last
+      const update = () => {
+        const next = normalizeState(mqls.map(x => !!x.matches), rawQueries)
+        if (!isEqual(next, last)) {
+          last = next
+          if (options && options.onChange) {
+            options.onChange(next as any)
+          } else {
+            setState(next)
+          }
+        }
+      }
+
+      const onChange = debounce(() => {
+        if (!mounted) return
+        update()
+      })
+
+      mqls.forEach(mql => mql.addListener(onChange))
+      update()
+
+      return () => {
+        mounted = false
+        mqls.forEach(x => x.removeListener(onChange))
+      }
+    }, [JSON.stringify(rawQueries)])
+
+    return state as any
+  }
 
 export const useMedia = createUseMedia(useEffect)
 export const useMediaLayout = createUseMedia(useLayoutEffect)

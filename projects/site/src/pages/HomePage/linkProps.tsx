@@ -81,4 +81,4 @@ export const linkProps = (href: string, header?, isActive?): any => {
   }
 }
 
-const isExternal = href => href.indexOf('http') === 0
+const isExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

@@ -1,4 +1,4 @@
-import { Col, FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
+import { Col, FullScreen, gloss, Image, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -13,11 +13,10 @@ import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { linkProps } from './linkProps'
 import { OuterSpace } from './OuterSpace'
-import { blackWavePattern } from './purpleWaveUrl'
 import { useScreenVal } from './SpacedPageContent'
 
-let smallSpc = <Space size="xxl" />
-let medSpc = <Space size="xxl" />
+let smallSpc = <Space size="xl" />
+let medSpc = <Space size="xl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
@@ -29,13 +28,16 @@ let allTitles = {
 let allTexts = {
   large: [
     `A whole new take on your intranet - amazingly easy to code,`,
-    `plug in data and apps with a click, no servers necessary.`,
+    `instant data plug-in, open source & no server necessary.`,
   ],
   medium: [
-    `A new take on the intranet - amazingly easy to code,`,
-    `plug in data with a click, no servers necessary.`,
+    `A whole new take on your intranet - easy to code,`,
+    `instant data plug-in, OSS & no server necessary.`,
   ],
-  small: [],
+  small: [
+    `A whole new take on your intranet - easy to code,`,
+    `instant data plug-in, OSS & no server necessary.`,
+  ],
 }
 
 const subTexts = {
@@ -44,7 +46,7 @@ const subTexts = {
   small: `How Orbit apps work.`,
 }
 
-const HeadText = memo(() => {
+const HeadContent = memo(() => {
   const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
@@ -58,25 +60,24 @@ const HeadText = memo(() => {
   return (
     <View
       className="head-text-section"
-      width={useScreenVal('92%', '88%', '85%')}
+      width={useScreenVal('95%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
+      marginTop={200}
     >
-      <FadeChild disable={!measured}>
-        <TitleText
-          forwardRef={titleFit.ref}
-          style={titleFit.style}
-          fontWeight={100}
-          alignSelf="center"
-          // transition="transform ease 160ms"
-          transformOrigin="top center"
-          selectable
-          textAlign="center"
-          whiteSpace="nowrap"
-        >
-          {allTitles[screen]}
-        </TitleText>
-      </FadeChild>
+      <TitleText
+        forwardRef={titleFit.ref}
+        style={titleFit.style}
+        fontWeight={100}
+        alignSelf="center"
+        // transition="transform ease 160ms"
+        transformOrigin="top center"
+        selectable
+        textAlign="center"
+        whiteSpace="nowrap"
+      >
+        <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
+      </TitleText>
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
@@ -91,8 +92,7 @@ const HeadText = memo(() => {
             selectable
             zIndex={100}
           >
-            Create incredibly powerful internal apps without config or a server, with everything
-            included.
+            {texts[0]} {texts[1]}
           </Paragraph>
         ) : (
           <Paragraph
@@ -108,6 +108,7 @@ const HeadText = memo(() => {
             margin={[0, 'auto']}
             textAlign="center"
             alpha={0.7}
+            fontSize={40}
             whiteSpace="nowrap"
           >
             <FadeChild disable={!measured} delay={400}>
@@ -149,6 +150,56 @@ const HeadText = memo(() => {
   )
 })
 
+const HeadJoin = () => (
+  <View
+    flex={1}
+    width="100%"
+    maxWidth={1000}
+    margin={[0, 'auto']}
+    height={220}
+    position="relative"
+    bottom={0}
+    alignItems="center"
+  >
+    <FadeChild {...fadeUpProps} delay={500}>
+      <SurfacePassProps elevation={5} fontFamily="GT Eesti">
+        <Theme name="orbitOneDark">
+          <Scale size={1.1}>
+            <Join
+              inputProps={{
+                minWidth: useScreenVal('auto', 300, 300),
+              }}
+              borderRadius={1000}
+              boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
+              flexFlow="row"
+              group
+              margin={[0, '-2%']}
+            />
+          </Scale>
+        </Theme>
+      </SurfacePassProps>
+    </FadeChild>
+    {/* <View
+        position="absolute"
+        overflow="hidden"
+        backgroundImage={`url(${appScreen})`}
+        backgroundSize="cover"
+        backgroundPosition="center center"
+        backgroundRepeat="no-repeat"
+        borderRadius={10}
+        width="100%"
+        height="100%"
+        zIndex={-1}
+        boxShadow={[[0, 0, 100, [0, 0, 0]]]}
+        pointerEvents="auto"
+      /> */}
+    {/* <DownloadButton
+          onMouseEnter={() => setHoverDownload(true)}
+          onMouseLeave={() => setHoverDownload(false)}
+        /> */}
+  </View>
+)
+
 const Smaller = gloss({
   cursor: 'pointer',
   textDecoration: 'underline',
@@ -172,6 +223,7 @@ export function HeadSection() {
   return (
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
+
       <Page.Content>
         <Col
           right={useScreenHeightVal(40, 0)}
@@ -180,65 +232,18 @@ export function HeadSection() {
           bottom={50}
           margin={['auto', 0]}
         >
-          <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
-            <HeadText />
-          </Row>
+          <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
+            <HeadContent />
+          </Col>
+
+          <Space size="xxl" />
+          <HeadJoin />
         </Col>
       </Page.Content>
 
-      <Page.Parallax zIndex={1} speed={0}>
-        <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-          <FadeChild {...fadeUpProps} delay={600}>
-            <View
-              flex={1}
-              width="100%"
-              maxWidth={1000}
-              margin={['auto', 'auto', 0]}
-              height={220}
-              position="relative"
-              bottom={0}
-            >
-              {/* <View
-                  position="absolute"
-                  overflow="hidden"
-                  backgroundImage={`url(${appScreen})`}
-                  backgroundSize="cover"
-                  backgroundPosition="center center"
-                  backgroundRepeat="no-repeat"
-                  borderRadius={10}
-                  width="100%"
-                  height="100%"
-                  zIndex={-1}
-                  boxShadow={[[0, 0, 100, [0, 0, 0]]]}
-                  pointerEvents="auto"
-                /> */}
-              <FadeChild {...fadeUpProps} delay={500}>
-                <SurfacePassProps elevation={5} fontFamily="GT Eesti">
-                  <Theme name="orbitOneDark">
-                    <Scale size={1.1}>
-                      <Join
-                        inputProps={{
-                          minWidth: useScreenVal('auto', 300, 300),
-                        }}
-                        borderRadius={1000}
-                        boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
-                        transform={{ y: -123 }}
-                        flexFlow="row"
-                        group
-                        margin={[0, 'auto']}
-                      />
-                    </Scale>
-                  </Theme>
-                </SurfacePassProps>
-              </FadeChild>
-              {/* <DownloadButton
-                    onMouseEnter={() => setHoverDownload(true)}
-                    onMouseLeave={() => setHoverDownload(false)}
-                  /> */}
-            </View>
-          </FadeChild>
-
-          {false && (
+      {false && (
+        <Page.Parallax zIndex={1} speed={0}>
+          <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
             <View
               position="absolute"
               bottom="12%"
@@ -278,27 +283,9 @@ export function HeadSection() {
                 </RoundButton>
               </View>
             </View>
-          )}
-        </FullScreen>
-      </Page.Parallax>
-
-      <Page.Background
-        speed={0.15}
-        zIndex={-10}
-        opacity={0.7}
-        bottom="-50%"
-        backgroundSize="cover"
-        left="-40%"
-        right="-40%"
-        width="180%"
-        top="-80%"
-        backgroundPosition="top center"
-        backgroundImage={blackWavePattern}
-        transform={{
-          scaleX: -1,
-          scaleY: -1,
-        }}
-      />
+          </FullScreen>
+        </Page.Parallax>
+      )}
     </Fade.FadeProvide>
   )
 }

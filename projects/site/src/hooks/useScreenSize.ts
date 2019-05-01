@@ -4,7 +4,7 @@ import { widths } from '../constants'
 
 type ScreenSize = 'small' | 'medium' | 'large'
 
-const sizes = {
+export const sizes = {
   tiny: { maxWidth: widths.tiny },
   small: { maxWidth: widths.small },
   medium: { minWidth: widths.medium },
@@ -13,11 +13,11 @@ const sizes = {
 }
 
 export function useIsTiny(): ScreenSize {
-  return useMedia(sizes.tiny)[0]
+  return useMedia(sizes.tiny)
 }
 
 export function useScreenSize(): ScreenSize {
-  const [isSmall, isMedium, isLarge] = useMedia(sizes.small, sizes.medium, sizes.large)
+  const [isSmall, isMedium, isLarge] = useMedia([sizes.small, sizes.medium, sizes.large])
   return isLarge ? 'large' : isMedium ? 'medium' : isSmall ? 'small' : 'small'
 }
 

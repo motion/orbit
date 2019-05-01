@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space } from '@o/ui'
+import { Col, FullScreen, Image, Row, Space } from '@o/ui'
 import React from 'react'
 
 import bottomLightSeparator from '../../../public/images/bottom-sep.svg'
@@ -7,9 +7,8 @@ import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
-import { LineSep } from './LineSep'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { TitleTextSub } from './TitleTextSub'
 
 export const bottomSeparator = bottomLightSeparator
 
@@ -20,23 +19,15 @@ export default function WaistSection() {
       <Page.Content
         outside={
           <>
-            <LineSep
-              top="-17%"
-              height={120}
-              left={0}
-              right={0}
-              width="100%"
-              minWidth={1200}
-              bottom={20}
-              transform={{ scaleX: -1 }}
-            />
+            <FullScreen zIndex={-1} background={theme => theme.background} bottom={150} />
             <Image
               position="absolute"
-              bottom={0}
+              bottom={100}
               height={290}
               left={0}
               right={0}
               width="100%"
+              minWidth={1000}
               src={bottomSeparator}
             />
           </>
@@ -81,8 +72,6 @@ export default function WaistSection() {
           </Row>
         </SpacedPageContent>
       </Page.Content>
-
-      <Page.Background background={theme => theme.background} bottom={150} />
     </>
   )
 }

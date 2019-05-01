@@ -183,20 +183,21 @@ const AppDescription = () => {
   const { activeApp } = AppStoreContext.useStore()
   return (
     <SectionContent background="red" height={0} zIndex={100000}>
-      <Theme name="light">
+      <Theme name="dark">
         <SizedSurface
           margin={[-75, 'auto']}
-          height={150}
-          background="#fff"
+          height={155}
           pad
           size={2}
           sizeRadius={2}
           elevation={100}
           width="50%"
           minWidth={340}
+          hoverStyle={false}
+          activeStyle={false}
         >
-          <Col flex={1} space="xs">
-            <SubTitle alpha={1} fontWeight={600} margin={[0, 'auto']} size="md">
+          <Col flex={1} space="sm">
+            <SubTitle alpha={1} fontWeight={600} margin={[0, 'auto']} size="lg">
               {activeApp.title}
             </SubTitle>
             <Paragraph selectable size={1.25} alpha={0.6} fontWeight={300} sizeLineHeight={1.2}>

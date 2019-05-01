@@ -1,14 +1,15 @@
-import { Space, View, ViewProps } from '@o/ui'
+import { FullScreen, Space, View, ViewProps } from '@o/ui'
 import React from 'react'
 
+import { Link } from '../../views/LinkProps'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { Join } from './Join'
 import { LineSep } from './LineSep'
 import { Wavy } from './purpleWaveUrl'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { TitleTextSub } from './TitleTextSub'
 
 export default function EarlyAccessSection({ outside = null }: any) {
   return (
@@ -17,7 +18,19 @@ export default function EarlyAccessSection({ outside = null }: any) {
         zIndex={10}
         outside={
           <>
+            <FullScreen background={theme => theme.background} top={80} />
             <LineSep top={-10} fill />
+            <LineSep
+              top="auto"
+              bottom={0}
+              height={120}
+              left={0}
+              right={0}
+              width="100%"
+              minWidth={1200}
+              transform={{ scaleX: -1 }}
+              zIndex={1}
+            />
             {outside}
           </>
         }
@@ -26,8 +39,6 @@ export default function EarlyAccessSection({ outside = null }: any) {
           <EarlyAccessContent />
         </View>
       </Page.Content>
-
-      <Page.Background background={theme => theme.background} top={80} />
     </>
   )
 }
@@ -40,7 +51,10 @@ export const EarlyAccessContent = () => {
           <PillButton>Beta</PillButton>
           <TitleText size="xxl">Early Access.</TitleText>
           <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>Orbit is now in beta.</TitleTextSub>
-          <TitleTextSub>Have a unique case for internal tools? Contact us.</TitleTextSub>
+          <TitleTextSub size="xs">
+            Have a unique case for internal tools?{' '}
+            <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
+          </TitleTextSub>
         </>
       }
     >

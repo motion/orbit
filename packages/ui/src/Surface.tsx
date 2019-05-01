@@ -564,6 +564,7 @@ const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
+  textAlign: 'inherit',
   ellipse: {
     display: 'block',
     overflow: 'hidden',

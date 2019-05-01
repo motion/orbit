@@ -71,10 +71,11 @@ export class Join extends React.Component<any> {
             name="EMAIL"
             id="mce-EMAIL"
             placeholder="Email address..."
-            flex={0}
+            flex={1}
             size={2}
             sizeRadius={5}
             sizePadding={1.5}
+            textAlign="center"
             {...inputProps}
           />
 
@@ -83,12 +84,13 @@ export class Join extends React.Component<any> {
             sizeRadius={5}
             sizeFont={0.8}
             sizePadding={2}
-            margin={[0, '20%']}
             type="submit"
             disabled={submitting}
             opacity={submitting ? 0.5 : 1}
             pointerEvents={submitting ? 'none' : 'auto'}
             cursor="pointer"
+            maxWidth={300}
+            alignSelf="center"
           >
             Early access
           </Button>

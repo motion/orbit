@@ -1,12 +1,10 @@
 import { Inline } from '@o/gloss'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
-import { link } from 'fs'
 import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
-import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -15,18 +13,12 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
-import { Spotlight } from '../../views/Spotlight'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { LineSep } from './LineSep'
 import { linkProps } from './linkProps'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
-
-export const TitleTextSub = gloss((props: TextProps) => (
-  <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
-    <TitleText size="sm" fontWeight={300} alpha={0.65} {...props} />
-  </View>
-))
+import { TitleTextSub } from './TitleTextSub'
 
 const nextStyle = {
   opacity: 0,
@@ -227,7 +219,7 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content ref={Fade.ref} transform={{ y: '2%' }}>
+      <Page.Content ref={Fade.ref} transform={{ y: '4%' }}>
         <SpacedPageContent
           header={
             <>
@@ -237,9 +229,9 @@ export default function NeckSection() {
               <FadeChild delay={100}>
                 <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
-              <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
+              <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={200}>
-                  Create apps that connect data sources in just a few lines of code.
+                  Connect apps, data sources, and a custom interface with lines of code.
                 </FadeChild>
               </TitleTextSub>
             </>
@@ -452,17 +444,12 @@ export default function NeckSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0.31} zIndex={-5} overflow="hidden">
-        <FullScreen zIndex={0}>
+      <Page.Parallax speed={0.25} zIndex={-1}>
+        <FullScreen zIndex={0} transform={{ y: '-10%', scale: 2.3 }}>
           <FullScreen
-            className="northern-lights"
-            backgroundImage={`url(${northernlights})`}
-            backgroundSize="cover"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-            opacity={1}
+            opacity={0.3}
+            background="radial-gradient(circle closest-side, #2D0843 20%, #750750, transparent)"
           />
-          <Spotlight />
         </FullScreen>
       </Page.Parallax>
     </Fade.FadeProvide>

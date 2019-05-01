@@ -8,8 +8,8 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
+import { TitleTextSub } from './TitleTextSub'
 
 export const SubParagraph = (props: TextProps) => (
   <Paragraph
@@ -74,23 +74,23 @@ export function AboutSection() {
         <Grid space="10%" itemMinWidth={340} height="70%">
           <Col space="lg">
             <FadeChild delay={dly * 2}>
-              <TitleTextSub textAlign="left" alpha={1} size={1}>
-                Our app platforms are broken. They give us no control, and design apps to be silos
-                that don't work together.
+              <TitleTextSub textAlign="left" alpha={1}>
+                Our app platforms are broken.
               </TitleTextSub>
             </FadeChild>
 
             <FadeChild delay={dly * 3}>
               <SubParagraph>
-                We think we can do better. It starts by enforcing a common way for apps to share
-                data with each other, and building an open platform.
+                We think we can do better - give users and developers control, combined with a
+                incredible user experience.
               </SubParagraph>
             </FadeChild>
 
             <FadeChild delay={dly * 4}>
               <SubParagraph>
-                Then, it requires a commitment to making apps easier to build, with less code and
-                sharp edges. And performance must come by default.
+                It starts by making apps to share data with each other, and creating an open
+                platform. Then, it requires a commitment to making apps easier to build, cross
+                platform, and all on an open platform.
               </SubParagraph>
             </FadeChild>
 
@@ -111,9 +111,7 @@ export function AboutSection() {
                 <SpaceGroup space="md">
                   <Item>Build apps without infrastructure.</Item>
 
-                  <Item>Enable an ecosystem of apps, views and data.</Item>
-
-                  <Item>A truly native-feeling multi-platform app experience.</Item>
+                  <Item>Deliver a truly native-feeling, multi-platform app experience.</Item>
 
                   <Item>Make DX a first-class citizen.</Item>
 

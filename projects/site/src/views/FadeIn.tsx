@@ -1,6 +1,6 @@
 import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import React, { memo, useCallback, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
 import { useIsTiny } from '../hooks/useScreenSize'
@@ -98,7 +98,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 0,
-  threshold = 0.4,
+  threshold = 0.2,
   off,
   ...props
 }: UseFadePageProps = {}) => {
@@ -133,8 +133,12 @@ export const useSimpleFade = ({
   spring,
   ...rest
 }: UseFadePageProps) => {
+  const hasMounted = useRef(false)
+
+  useEffect(() => {}, [])
+
   // disable animations on recent hmr
-  const disable = getRecentHMR() || off
+  const disable = hasMounted.current || getRecentHMR() || off
   return useSpring(
     spring || {
       from: disable ? to : from,

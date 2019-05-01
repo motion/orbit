@@ -216,7 +216,7 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
-  pointerEvents: 'auto',
+  pointerEvents: 'inherit',
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',

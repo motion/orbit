@@ -186,7 +186,7 @@ const AppDescription = () => {
       <Theme name="dark">
         <SizedSurface
           margin={[-75, 'auto']}
-          height={180}
+          height={155}
           pad
           size={2}
           sizeRadius={2}

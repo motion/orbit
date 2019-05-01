@@ -3,10 +3,10 @@
   z-index: 100000;
 }
 
-.react-grid-item.resizing {
-  opacity: 0.6;
-}
+/* .react-grid-item.resizing {
+  /* opacity: 0.6; */
+} */
 
 .react-grid-item.react-grid-placeholder {
-  z-index: 0;
+  opacity: 0.05;
 }

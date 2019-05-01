@@ -3,6 +3,7 @@ import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
 import { ActionMeta } from 'react-select/lib/types'
+
 import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
 import { Omit } from '../types'
@@ -10,6 +11,12 @@ import { View } from '../View/View'
 import { FormContext } from './Form'
 
 const selectStyles = {
+  placeholder: provided => ({
+    ...provided,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  }),
   option: provided => ({
     ...provided,
   }),

@@ -152,6 +152,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
       // openOnHover
       openOnClick
       closeOnEsc
+      closeOnClickAway
       width="90%"
       padding={5}
       elevation={10}

@@ -2,12 +2,11 @@ import { gloss } from '@o/gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
 import { BorderBottom } from './Border'
-import { CollapsableProps, CollapseArrow, splitCollapseProps } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
 import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
-import { SimpleTextProps } from './text/SimpleText'
 import { SubTitle } from './text/SubTitle'
-import { Title } from './text/Title'
+import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
@@ -24,7 +23,7 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   title?: React.ReactNode
 
   /** Additional props for styling the title */
-  titleProps?: Partial<SimpleTextProps>
+  titleProps?: Partial<TitleProps>
 
   /** Add an element before title */
   before?: React.ReactNode
@@ -87,7 +86,7 @@ export const TitleRow = forwardRef(
     ref,
   ) => {
     const [collapseProps, rowProps] = splitCollapseProps(allProps)
-    const { collapsable, onCollapse, collapsed } = collapseProps
+    const collapse = useCollapseToggle(collapseProps)
     const titleElement =
       !!title &&
       (isValidElement(title) ? (
@@ -101,13 +100,13 @@ export const TitleRow = forwardRef(
     return (
       <TitleRowChrome
         background={backgrounded ? theme => theme.backgroundZebra : null}
-        onDoubleClick={onCollapse && (() => onCollapse(!collapsed))}
+        onDoubleClick={collapse.isCollapsable && collapse.toggle}
         ref={ref}
         {...rowProps}
       >
         {above}
         <Row alignItems="center">
-          {collapsable && <CollapseArrow {...collapseProps} />}
+          {collapse.isCollapsable && <CollapseArrow useToggle={collapse} />}
           {before && (
             <>
               {before}

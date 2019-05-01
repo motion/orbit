@@ -119,7 +119,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         pad={innerPad || (titleBorder || bordered ? true : null)}
         size={selectDefined(titleSize, size)}
         titleProps={titleProps}
-        {...collapseProps}
+        useToggle={toggle}
       />
       {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
     </>

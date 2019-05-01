@@ -9,7 +9,7 @@ import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
 
 export type ModalProps = SimpleModalProps & {
-  onClickBackground?: Function
+  onClickBackground?: React.MouseEventHandler<HTMLDivElement>
   backgroundProps?: ViewProps
   children?: React.ReactNode
   chromeless?: boolean

@@ -445,7 +445,7 @@ export default function NeckSection() {
       </Page.Parallax>
 
       <Page.Parallax speed={0.25} zIndex={-1}>
-        <FullScreen zIndex={0} transform={{ y: '-10%', scale: 2.35 }}>
+        <FullScreen zIndex={0} transform={{ y: '-10%', scale: 2.3 }}>
           <FullScreen
             opacity={0.3}
             background="radial-gradient(circle closest-side, #2D0843 20%, #750750, transparent)"

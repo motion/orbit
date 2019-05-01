@@ -21,21 +21,21 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'A new generation of apps',
-  medium: 'A new generation of apps',
-  small: 'Next gen apps',
+  large: 'Dead simple internal apps',
+  medium: 'Dead simple internal apps',
+  small: 'Easy internal apps',
 }
 
 let allTexts = {
   large: [
-    `A whole new take on your intranet - amazingly easy to code apps.`,
-    `Plug data sources and apps with a click, no server necessary.`,
+    `A whole new take on your intranet - amazingly easy to code,`,
+    `plug in data and apps with a click, no servers necessary.`,
   ],
   medium: [
-    `A new take on the intranet - amazingly easy to code apps.`,
-    `No servers, plug data sources and apps with a click.`,
+    `A new take on the intranet - amazingly easy to code,`,
+    `plug in data with a click, no servers necessary.`,
   ],
-  small: [`The new intranet, easy to code apps.`, `No servers, data sources & apps in a clack.`],
+  small: [],
 }
 
 const subTexts = {

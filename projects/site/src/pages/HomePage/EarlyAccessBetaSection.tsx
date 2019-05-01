@@ -19,6 +19,17 @@ export default function EarlyAccessSection({ outside = null }: any) {
           <>
             <FullScreen background={theme => theme.background} top={80} />
             <LineSep top={-10} fill />
+            <LineSep
+              top="auto"
+              bottom={0}
+              height={120}
+              left={0}
+              right={0}
+              width="100%"
+              minWidth={1200}
+              transform={{ scaleX: -1 }}
+              zIndex={1}
+            />
             {outside}
           </>
         }

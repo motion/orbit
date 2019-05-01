@@ -479,7 +479,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       on(this, this.target, 'click', this.handleTargetClick)
       if (closeOnEsc) {
         const parentNode = this.domNode.parentNode as HTMLDivElement
-        const parentPortalNode = parentNode.querySelector('.popover-portal') as HTMLDivElement
+        const parentPortalNode =
+          (parentNode.querySelector('.popover-portal') as HTMLDivElement) ||
+          parentNode.firstElementChild
         on(this, parentPortalNode, 'keyup', e => {
           if (e.keyCode === 27) {
             e.preventDefault()

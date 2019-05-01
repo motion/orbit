@@ -44,6 +44,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <View flex={1} />
           <HeaderButtonPassProps>
             <BackButton />
+            <OrbitHeaderMenu />
           </HeaderButtonPassProps>
         </HeaderSide>
 
@@ -67,10 +68,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
           </View>
 
           <OrbitHeaderInput />
-
-          <HeaderButtonPassProps>
-            <OrbitHeaderMenu />
-          </HeaderButtonPassProps>
 
           {isOnTearablePane && (
             <>

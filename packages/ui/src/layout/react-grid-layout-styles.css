@@ -4,9 +4,9 @@
 }
 
 .react-grid-item.resizing {
-  opacity: 0.9;
+  opacity: 0.6;
 }
 
 .react-grid-item.react-grid-placeholder {
-  z-index: -1;
+  z-index: 0;
 }

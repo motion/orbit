@@ -103,9 +103,7 @@ const slowestConfig = {
 type AnimateTo = (config: any, delay: any) => (next: any, cancel: any) => any
 
 const createSlideSpringTo: AnimateTo = (config, delay) => {
-  return async (next, cancel) => {
-    console.log('strategy', strategy, next)
-    // cancel()
+  return async next => {
     switch (strategy) {
       case 'in':
         await next(curStyle)

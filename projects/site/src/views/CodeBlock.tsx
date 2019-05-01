@@ -5,19 +5,17 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import darkTheme from 'prism-react-renderer/themes/nightOwl'
 import React, { memo } from 'react'
 
-// import lightTheme from 'prism-react-renderer/themes/nightOwl'
+import lightTheme from './lightOwlTheme'
 
 export const CodeBlock = memo((props: { children: string; language?: string }) => {
   const theme = useTheme()
-  // const language = props.language || 'tsx'
-  // console.log('props.language', props.language)
   return (
     <CodeBlockChrome>
       <Highlight
         {...defaultProps}
         code={`${props.children}`.trim()}
         language="jsx"
-        theme={theme.background.isDark() ? darkTheme : darkTheme}
+        theme={theme.background.isDark() ? darkTheme : lightTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <pre className={className} style={style}>
@@ -36,7 +34,7 @@ export const CodeBlock = memo((props: { children: string; language?: string }) =
 })
 
 const CodeBlockChrome = gloss({
-  fontSize: 14,
+  fontSize: 13,
   lineHeight: 18,
 
   '& span': {

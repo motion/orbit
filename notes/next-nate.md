@@ -11,6 +11,7 @@ May
   - Export to file/json/api working
 
 - Website
+  - Join slack + prominent
   - Search/Now
   - Apps/Faq
   - Blog/update-two

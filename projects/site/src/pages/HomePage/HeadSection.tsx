@@ -28,13 +28,16 @@ let allTitles = {
 let allTexts = {
   large: [
     `A whole new take on your intranet - amazingly easy to code,`,
-    `plug in data and apps with a click, no servers necessary.`,
+    `instant data plug-in, open source & no server necessary.`,
   ],
   medium: [
-    `A new take on the intranet - amazingly easy to code,`,
-    `plug in data with a click, no servers necessary.`,
+    `A whole new take on your intranet - easy to code,`,
+    `instant data plug-in, OSS & no server necessary.`,
   ],
-  small: ['ok', 'ok'],
+  small: [
+    `A whole new take on your intranet - easy to code,`,
+    `instant data plug-in, OSS & no server necessary.`,
+  ],
 }
 
 const subTexts = {
@@ -89,8 +92,7 @@ const HeadContent = memo(() => {
             selectable
             zIndex={100}
           >
-            Create incredibly powerful internal apps without config or a server, with everything
-            included.
+            {texts[0]} {texts[1]}
           </Paragraph>
         ) : (
           <Paragraph

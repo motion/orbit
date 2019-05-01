@@ -1,9 +1,25 @@
-import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, Space, Theme, Title, View } from '@o/ui'
-import { useStore } from '@o/use-store'
+import {
+  Col,
+  FullScreen,
+  fuzzyFilter,
+  gloss,
+  Grid,
+  HotKeys,
+  Image,
+  SimpleText,
+  SizedSurface,
+  Space,
+  SubTitle,
+  Theme,
+  Title,
+  View,
+} from '@o/ui'
+import { createStoreContext } from '@o/use-store'
 import { mount, route } from 'navi'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Header } from '../views/Header'
+import { Paragraph } from '../views/Paragraph'
 import { PillButton } from '../views/PillButton'
 import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
@@ -19,110 +35,179 @@ export default mount({
   }),
 })
 
+class AppsStore {
+  filteredApps = allApps
+  active = 0
+
+  get activeApp() {
+    return this.filteredApps[this.active]
+  }
+
+  get results() {
+    return this.filteredApps.map((x, index) => {
+      return (
+        <AppItem
+          key={x.title}
+          isActive={index === this.active}
+          onClick={() => (this.active = index)}
+        >
+          {appElements[allApps.findIndex(app => app.title === x.title)]}
+        </AppItem>
+      )
+    })
+  }
+
+  up() {
+    this.active = Math.max(0, this.active - 1)
+  }
+
+  down() {
+    this.active = Math.min(this.results.length - 1, this.active + 1)
+  }
+}
+
+const AppStoreContext = createStoreContext(AppsStore)
+
 export function AppsPage() {
   return (
-    <Theme name={AppsPage.theme}>
-      <FullScreen
-        position="fixed"
-        backgroundSize="cover"
-        backgroundRepeat="no-repeat"
-        backgroundPosition="bottom center"
-        right={-200}
-        left={-200}
-        opacity={0.5}
-        backgroundImage={makeWavePattern('#333')}
-        pointerEvents="none"
-      />
+    <AppStoreContext.Provider>
+      <Theme name={AppsPage.theme}>
+        <FullScreen
+          position="fixed"
+          backgroundSize="cover"
+          backgroundRepeat="no-repeat"
+          backgroundPosition="bottom center"
+          right={-200}
+          left={-200}
+          opacity={0.5}
+          backgroundImage={makeWavePattern('#333')}
+          pointerEvents="none"
+        />
 
-      <Header noBorder position="absolute" left={0} right={0} background="transparent" slim />
-      <main className="main-contents" style={{ minHeight: 1600 }}>
-        <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
-          <Col space="xxxl">
-            <Title size="xxl" margin={[0, 'auto']}>
-              Discover apps
-            </Title>
-            <AppSearch />
-          </Col>
-        </SectionContent>
+        <Header noBorder position="absolute" left={0} right={0} background="transparent" slim />
+        <main className="main-contents" style={{ minHeight: 1600 }}>
+          <SectionContent flex={1} marginTop={54} paddingTop="5%" paddingBottom="5%">
+            <Col space="xxxl">
+              <Title size="xxl" margin={[0, 'auto']}>
+                Discover apps
+              </Title>
+              <AppSearch />
+            </Col>
+          </SectionContent>
 
-        <SectionContent id="faq" minHeight={400} background="#000">
-          <Col
-            pad={useScreenVal(0, [50, '10%'], [100, '20%', 100])}
-            space="xxl"
-            spaceAround
-            flex={1}
-            overflow="hidden"
-            className="content"
-          >
-            <PillButton>FAQ</PillButton>
+          <AppDescription />
 
-            <Space />
+          <SectionContent id="faq" background="#000">
+            <Space size="xxxl" />
 
-            <FAQItem
-              question="What exactly is an Orbit app?"
-              main="Orbit apps can either provide data, or show data. Any app can then access another apps
+            <Col
+              pad={useScreenVal(0, [50, '10%'], [100, '20%', 100])}
+              space="xxl"
+              spaceAround
+              flex={1}
+              overflow="hidden"
+              className="content"
+            >
+              <PillButton>FAQ</PillButton>
+
+              <Space />
+
+              <FAQItem
+                question="What exactly is an Orbit app?"
+                main="Orbit apps can either provide data, or show data. Any app can then access another apps
               data, with permission."
-              paragraphs={[
-                <>
-                  This is a new way to think about apps: as small services that can talk to each
-                  other.
-                </>,
-                <>
-                  For example, the Slack app has a `getMessagesInRoom()` method on it's API, along
-                  with every other one from the public Slack API.
-                </>,
-              ]}
-            />
+                paragraphs={[
+                  <>
+                    This is a new way to think about apps: as small services that can talk to each
+                    other.
+                  </>,
+                  <>
+                    For example, the Slack app has a `getMessagesInRoom()` method on it's API, along
+                    with every other one from the public Slack API.
+                  </>,
+                ]}
+              />
 
-            <FAQItem
-              question="How do apps communicate?"
-              main="There are two ways: either they sync data in, or expose an API."
-              paragraphs={[
-                <>
-                  The API is used for "one time only" access. Any app can use another API to and
-                  then show the results. When you use `useApp()`, you get back an entire API thats
-                  been converted into a loadable, suspense-style call you can make inline in your
-                  views.
-                </>,
-                <>
-                  Meanwhile, sync functionality is more interesting. Any app can create data at
-                  runtime with the `useAppData` hook. But if they want to sync a larger amount of
-                  data for searching, they can define a sync process and save bits. This puts data
-                  into a local SQLite database.
-                </>,
-              ]}
-            />
+              <FAQItem
+                question="How do apps communicate?"
+                main="There are two ways: either they sync data in, or expose an API."
+                paragraphs={[
+                  <>
+                    The API is used for "one time only" access. Any app can use another API to and
+                    then show the results. When you use `useApp()`, you get back an entire API thats
+                    been converted into a loadable, suspense-style call you can make inline in your
+                    views.
+                  </>,
+                  <>
+                    Meanwhile, sync functionality is more interesting. Any app can create data at
+                    runtime with the `useAppData` hook. But if they want to sync a larger amount of
+                    data for searching, they can define a sync process and save bits. This puts data
+                    into a local SQLite database.
+                  </>,
+                ]}
+              />
 
-            <FAQItem
-              question="How do apps sync without a server?"
-              main="A combination of doing local syncing directly with OAuth services, with a light
+              <FAQItem
+                question="How do apps sync without a server?"
+                main="A combination of doing local syncing directly with OAuth services, with a light
               p2p layer that handles coordinating configuration, auth, and simple appData."
-              paragraphs={[
-                <>
-                  Orbit began as a knowledge unification app, and we realized early on that there
-                  was a fundamental misalignment between syncing large amounst of data and user
-                  experience, trust, privacy, and security.
-                </>,
-                <>
-                  So, we developed a system that puts the user first. It lets you write apps that
-                  run behind your firewall.
-                </>,
-              ]}
-            />
-          </Col>
-        </SectionContent>
+                paragraphs={[
+                  <>
+                    Orbit began as a knowledge unification app, and we realized early on that there
+                    was a fundamental misalignment between syncing large amounst of data and user
+                    experience, trust, privacy, and security.
+                  </>,
+                  <>
+                    So, we developed a system that puts the user first. It lets you write apps that
+                    run behind your firewall.
+                  </>,
+                ]}
+              />
+            </Col>
+          </SectionContent>
 
-        <View flex={1} />
+          <View flex={1} />
 
-        <BlogFooter />
-      </main>
-    </Theme>
+          <BlogFooter />
+        </main>
+      </Theme>
+    </AppStoreContext.Provider>
   )
 }
 
 AppsPage.theme = 'home'
 
 const dim = 180
+
+const AppDescription = () => {
+  const { activeApp } = AppStoreContext.useStore()
+  return (
+    <SectionContent background="red" height={0} zIndex={100000}>
+      <Theme name="light">
+        <SizedSurface
+          margin={[-75, 'auto']}
+          height={150}
+          background="#fff"
+          pad
+          size={2}
+          sizeRadius={2}
+          elevation={100}
+          width="50%"
+          minWidth={340}
+        >
+          <Col flex={1} space="xs">
+            <SubTitle alpha={1} fontWeight={600} margin={[0, 'auto']} size="md">
+              {activeApp.title}
+            </SubTitle>
+            <Paragraph selectable size={1.25} alpha={0.6} fontWeight={300} sizeLineHeight={1.2}>
+              {activeApp.description}
+            </Paragraph>
+          </Col>
+        </SizedSurface>
+      </Theme>
+    </SectionContent>
+  )
+}
 
 const FAQItem = ({ main, paragraphs, question }) => {
   return (
@@ -147,36 +232,13 @@ const FAQItem = ({ main, paragraphs, question }) => {
   )
 }
 
-class AppsStore {
-  filteredApps = allApps
-  active = 0
-
-  get results() {
-    return this.filteredApps.map((x, index) => {
-      return (
-        <AppItem key={x.title} isActive={index === this.active}>
-          {appElements[allApps.findIndex(app => app.title === x.title)]}
-        </AppItem>
-      )
-    })
-  }
-
-  up() {
-    this.active = Math.max(0, this.active - 1)
-  }
-
-  down() {
-    this.active = Math.min(this.results.length - 1, this.active + 1)
-  }
-}
-
 const keyMap = {
   up: 'up',
   down: 'down',
 }
 
 const AppSearch = memo(() => {
-  const store = useStore(AppsStore)
+  const store = AppStoreContext.useStore()
   const onChange = useCallback(e => {
     const search = e.target.value
     store.filteredApps = fuzzyFilter(search, allApps, {
@@ -196,14 +258,27 @@ const AppSearch = memo(() => {
   return (
     <HotKeys keyMap={keyMap} handlers={handlers}>
       <View margin={[0, 'auto']}>
-        <SearchInput width={450} size={2.75} placeholder="Search apps..." onChange={onChange} />
+        <SearchInput
+          width={450}
+          size={2.75}
+          placeholder={`Search all apps...`}
+          onChange={onChange}
+        />
         <Space size="xxxl" />
       </View>
 
       <Col pad>
-        <Grid alignItems="flex-start" height={640} space="xl" itemMinWidth={dim}>
+        <Grid
+          alignItems="flex-start"
+          height={dim * 2 + 60}
+          space="xl"
+          itemMinWidth={dim}
+          overflow="hidden"
+          padding={10}
+        >
           {store.results}
         </Grid>
+        <Space size="lg" />
       </Col>
     </HotKeys>
   )
@@ -212,24 +287,28 @@ const AppSearch = memo(() => {
 const AppItem = gloss({
   width: dim,
   height: dim,
-
-  isActive: {
-    boxShadow: [[0, 0, 10, 'blue']],
-  },
-})
+  borderRadius: 10,
+}).theme(({ isActive }, theme) => ({
+  boxShadow: isActive ? [[0, 0, 0, 2, theme.backgroundStrongest]] : null,
+}))
 
 const allApps = [
   {
     title: 'Search',
     icon: require('../assets/appicon-search.svg'),
+    description:
+      'The Search App comes with Orbit, works with all data apps and lets you search across them all in a unified interface.',
   },
   {
     title: 'Lists',
     icon: require('../assets/appicon-lists.svg'),
+    description:
+      'The Lists App comes with Orbit, it lets you create lists of any content within Orbit, including any data from a Data App.',
   },
   {
     title: 'People',
     icon: require('../assets/appicon-people.svg'),
+    description: `The People App looks for any Bit inside Orbit of type Person, and displays it in a unified app. It's a great company-CRM of your teammates.`,
   },
   ...apps,
 ]
@@ -244,7 +323,7 @@ const appElements = allApps.map(app => (
     height={dim}
     padding={4}
   >
-    <Image width={dim * 0.6} height={dim * 0.6} src={app.icon} />
+    <Image width={dim * 0.55} height={dim * 0.55} src={app.icon} />
     <Space />
     <SimpleText size={0.9}>{app.title}</SimpleText>
   </Col>

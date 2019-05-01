@@ -1,3 +1,5 @@
+import { isEqual } from '@o/fast-compare'
+import { debounce } from 'lodash'
 import React, { DependencyList, EffectCallback } from 'react'
 
 const { useState, useEffect, useLayoutEffect } = React
@@ -24,27 +26,36 @@ const objectToString = (query: string | MediaQueryObject) => {
 }
 
 type Effect = (effect: EffectCallback, deps?: DependencyList) => void
-const createUseMedia = (effect: Effect) => (rawQuery: string | MediaQueryObject) => {
-  const query = objectToString(rawQuery)
-  const initialState = !!window.matchMedia(query).matches
-  const [state, setState] = useState(initialState)
+const createUseMedia = (effect: Effect) => (...rawQueries: (string | MediaQueryObject)[]) => {
+  const queries = rawQueries.map(objectToString)
+  const [state, setState] = useState(queries.map(query => !!window.matchMedia(query).matches))
 
   effect(() => {
     let mounted = true
-    const mql = window.matchMedia(query)
-    const onChange = () => {
-      if (!mounted) return
-      setState(!!mql.matches)
+    const mqls = queries.map(query => window.matchMedia(query))
+
+    let last
+    const update = () => {
+      const next = mqls.map(x => !!x.matches)
+      if (!isEqual(next, last)) {
+        setState(next)
+        last = next
+      }
     }
 
-    mql.addListener(onChange)
-    setState(mql.matches)
+    const onChange = debounce(() => {
+      if (!mounted) return
+      update()
+    })
+
+    mqls.forEach(mql => mql.addListener(onChange))
+    update()
 
     return () => {
       mounted = false
-      mql.removeListener(onChange)
+      mqls.forEach(x => x.removeListener(onChange))
     }
-  }, [query])
+  }, [JSON.stringify(rawQueries)])
 
   return state
 }

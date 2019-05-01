@@ -3,6 +3,7 @@ import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { ParallaxLayerProps } from 'react-spring/renderprops-addons'
 
+import { useIsTiny } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
 import { ParallaxLayer } from './Parallax'
 import { SectionContent, SectionContentProps } from './SectionContent'
@@ -32,6 +33,10 @@ Page.Parallax = ({
   ...props
 }: ParallaxLayerProps & { children: any; zIndex?: number; overflow?: any; style?: Object }) => {
   const parallax = useProps()
+  const isTiny = useIsTiny()
+  if (isTiny) {
+    return null
+  }
   return (
     // @ts-ignore
     <ParallaxLayer
@@ -52,11 +57,14 @@ Page.Content = forwardRef((props: SectionContentProps, ref) => {
   const parallax = useProps()
   const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
   const siteStore = useSiteStore()
+  const isTiny = useIsTiny()
   return (
     <SectionContent
       forwardRef={ref}
       className="page-content"
-      height={siteStore.sectionHeight * (props.pages || 1)}
+      flex={1}
+      height={isTiny ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
+      minHeight={400}
       {...props}
       zIndex={zIndex}
     />

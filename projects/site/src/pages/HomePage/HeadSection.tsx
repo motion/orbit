@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
+import { Col, FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -173,16 +173,17 @@ export function HeadSection() {
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
       <Page.Content>
-        <FullScreen
+        <Col
           right={useScreenHeightVal(40, 0)}
           left={useScreenHeightVal(40, 0)}
           opacity={fontsLoaded ? 1 : 0}
           bottom={50}
+          margin={['auto', 0]}
         >
           <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadText />
           </Row>
-        </FullScreen>
+        </Col>
       </Page.Content>
 
       <Page.Parallax zIndex={1} speed={0}>

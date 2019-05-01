@@ -43,6 +43,9 @@ export const useLink = (href: string) => {
 let tm = null
 
 export const createLink = memoize((href: string, header = null) => async e => {
+  if (isExternal(href)) {
+    return
+  }
   clearTimeout(tm)
   e.preventDefault()
   // transition out body on slow
@@ -72,8 +75,10 @@ export const linkProps = (href: string, header?, isActive?): any => {
     ...(!!header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
-    target: href.indexOf('http') === 0 ? '_blank' : undefined,
+    target: isExternal(href) ? '_blank' : undefined,
     onClick: isActive ? nullLink : createLink(href, header),
     onMouseEnter: createPreloadLink(href),
   }
 }
+
+const isExternal = href => href.indexOf('http') === 0

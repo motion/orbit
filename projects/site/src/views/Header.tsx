@@ -2,7 +2,7 @@ import { gloss, useTheme } from '@o/gloss'
 import { BorderBottom, Button, createContextualProps, Row, RowProps, View } from '@o/ui'
 import React, { memo, useState } from 'react'
 
-import { useScreenSize } from '../hooks/useScreenSize'
+import { useIsTiny, useScreenSize } from '../hooks/useScreenSize'
 import { LinkState } from '../pages/HomePage/linkProps'
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
 import { useSiteStore } from '../SiteStore'
@@ -85,6 +85,7 @@ const LinkRow = gloss({
 
 export const Header = memo(
   ({ slim, noBorder, ...rest }: { slim?: boolean; noBorder?: boolean } & RowProps) => {
+    const isTiny = useIsTiny()
     const size = useScreenSize()
     const theme = useTheme()
     const siteStore = useSiteStore()
@@ -155,7 +156,7 @@ export const Header = memo(
           {menuElement}
           <Row
             ref={Fade.ref}
-            position="absolute"
+            position={isTiny ? 'relative' : 'absolute'}
             top={0}
             left={0}
             right={0}

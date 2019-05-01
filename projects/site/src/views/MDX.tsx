@@ -5,6 +5,7 @@ import React from 'react'
 import componentNames from '../../tmp/componentNames.json'
 import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
+import { linkProps } from '../pages/HomePage/linkProps'
 import { CodeBlock } from './CodeBlock'
 import { IntroText } from './IntroText'
 import { Key } from './Key'
@@ -69,17 +70,7 @@ export const components = {
   ),
 
   a: props => {
-    return (
-      <a
-        onClick={e => {
-          if (`${props.href}`.indexOf('/') === 0) {
-            e.preventDefault()
-            Navigation.navigate(props.href)
-          }
-        }}
-        {...props}
-      />
-    )
+    return <a {...linkProps(props.href)} {...props} />
   },
 
   ol: props => (

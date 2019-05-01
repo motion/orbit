@@ -4,11 +4,16 @@ May
 
 "Demos + Finish docs/website"
 
--
+- Demo Apps
+  - Use CLI to create it
+  - User Manager with real integration
+  - Lists app working
+  - Export to file/json/api working
 
 - Website
+  - Join slack + prominent
+  - Search/Now
   - Apps/Faq
-  - Apps/search/info
   - Blog/update-two
   - About/#sublinks
   - Footer/links

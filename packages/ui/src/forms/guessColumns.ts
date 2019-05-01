@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash'
+import { capitalize, isObject } from 'lodash'
 
 import { getDataType } from '../helpers/getDataType'
 import { DataColumns, DataColumnsShort, GenericDataRow } from '../types'
@@ -54,8 +54,9 @@ function guessColKey(key: string, firstRow: GenericDataRow | false, index: numbe
   if (!firstRow) {
     return key
   }
-  if (firstRow.values[key]) {
+  const values = isObject(firstRow.values) ? firstRow.values : firstRow
+  if (values[key]) {
     return key
   }
-  return Object.keys(firstRow.values)[index]
+  return Object.keys(values)[index]
 }

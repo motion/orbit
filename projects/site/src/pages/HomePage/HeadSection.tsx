@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
+import { Col, FullScreen, gloss, Image, Row, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -21,26 +21,21 @@ let medSpc = <Space size="xxl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'A new generation of apps',
-  medium: 'A new generation of apps',
-  small: 'Next gen apps',
+  large: 'Dead simple internal apps',
+  medium: 'Dead simple internal apps',
+  small: 'Easy internal apps',
 }
 
 let allTexts = {
   large: [
-    `A whole new take on your intranet - amazingly easy to code apps.`,
-    `Plug in data sources and apps with a click, no server necessary.`,
+    `A whole new take on your intranet - amazingly easy to code,`,
+    `plug in data and apps with a click, no servers necessary.`,
   ],
   medium: [
-    `Code desktop apps and internal tools without a server.`,
-    `Code desktop apps and internal tools that coordinate without a server.`,
-    `Plug in data sources and apps with a click.`,
+    `A new take on the intranet - amazingly easy to code,`,
+    `plug in data with a click, no servers necessary.`,
   ],
-  small: [
-    `Code internal tools, no config or servers.`,
-    `Code desktop apps and internal tools that coordinate without a server.`,
-    `UI kit, dev environment & deploy.`,
-  ],
+  small: [],
 }
 
 const subTexts = {
@@ -63,7 +58,7 @@ const HeadText = memo(() => {
   return (
     <View
       className="head-text-section"
-      width={useScreenVal('92%', '80%', '85%')}
+      width={useScreenVal('92%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
     >
@@ -96,7 +91,8 @@ const HeadText = memo(() => {
             selectable
             zIndex={100}
           >
-            Create incredibly powerful tools without config or a server, with everything included.
+            Create incredibly powerful internal apps without config or a server, with everything
+            included.
           </Paragraph>
         ) : (
           <Paragraph
@@ -177,16 +173,17 @@ export function HeadSection() {
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
       <Page.Content>
-        <FullScreen
+        <Col
           right={useScreenHeightVal(40, 0)}
           left={useScreenHeightVal(40, 0)}
           opacity={fontsLoaded ? 1 : 0}
           bottom={50}
+          margin={['auto', 0]}
         >
           <Row ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadText />
           </Row>
-        </FullScreen>
+        </Col>
       </Page.Content>
 
       <Page.Parallax zIndex={1} speed={0}>

@@ -31,4 +31,21 @@ export const Navigation = createBrowserNavigation({
   }),
 })
 
+// google analytics
+
+const gtag = window['gtag']
+const gevent = obj => {
+  console.debug('analytics', window['gid'], obj)
+  gtag('config', window['gid'], obj)
+}
+
+Navigation.subscribe(next => {
+  if (next.type === 'ready') {
+    gevent({
+      page_title: next.title,
+      page_path: next.url.pathname,
+    })
+  }
+})
+
 window['Navigation'] = Navigation

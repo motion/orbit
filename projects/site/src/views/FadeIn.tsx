@@ -3,6 +3,7 @@ import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
+import { useIsTiny } from '../hooks/useScreenSize'
 import { getRecentHMR } from '../SiteRoot'
 
 export type FadeInProps = UseSpringProps<any> & {
@@ -43,26 +44,6 @@ export const fastStatticConfig = {
   duration: 80,
 }
 
-export const FadeIn = memo(
-  ({ delay, intersection, threshold, from, to, children, style, ...springProps }: FadeInProps) => {
-    const { shown, ref } = useDebouncedIntersection({ delay, intersection, threshold })
-    const springStyle = useSimpleFade({ shown, from, to, ...springProps })
-    return (
-      <animated.div ref={ref} style={{ ...style, ...springStyle }}>
-        {children}
-      </animated.div>
-    )
-  },
-)
-
-// @ts-ignore
-FadeIn.defaultProps = {
-  threshold: 0.25,
-}
-
-// const Fade = useFadePage(config)
-//  <Fade.Div key="one"></Fade.Div>
-
 const FadeContext = createContextualProps({ shown: undefined, off: false })
 
 type FadeChildProps = UseSpringProps<any> & {
@@ -92,6 +73,7 @@ export const FadeChild = memo(
     fullscreen,
     ...springProps
   }: FadeChildProps) => {
+    const isTiny = useIsTiny()
     const props = FadeContext.useProps()
     const shown = !!useDebounceValue(!disable && props.shown, delay)
     const off = selectDefined(springProps.off, props.off)
@@ -100,6 +82,9 @@ export const FadeChild = memo(
       ...(typeof style === 'function' ? style(springStyle) : style),
       ...springStyle,
       ...(fullscreen && fullscreenStyle),
+    }
+    if (isTiny) {
+      return <div style={typeof style !== 'function' ? style : null}>{children}</div>
     }
     return (
       <animated.div className={willAnimateOnHover ? `hover-will-transform` : null} style={styleFin}>

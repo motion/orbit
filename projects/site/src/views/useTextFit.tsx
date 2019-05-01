@@ -88,7 +88,6 @@ const updateScale = (last: number, node: HTMLElement, update: Function) => {
   // scale down or up
   const parentScale = pWidth / Math.max(width, 1)
   if (parentScale !== last) {
-    console.log(pWidth, width, parentScale, node)
     update(parentScale)
   }
 }

@@ -1,5 +1,5 @@
 import { gloss, useTheme } from '@o/gloss'
-import { BorderBottom, Button, createContextualProps, Row, RowProps, View } from '@o/ui'
+import { BorderBottom, Button, createContextualProps, Row, RowProps } from '@o/ui'
 import React, { memo, useState } from 'react'
 
 import { useIsTiny, useScreenSize } from '../hooks/useScreenSize'
@@ -12,24 +12,13 @@ import { LogoHorizontal } from './LogoHorizontal'
 import { LogoVertical } from './LogoVertical'
 import { SectionContent } from './SectionContent'
 
-export const LinkText = gloss(View, {
-  userSelect: 'none',
-  textAlign: 'center',
-  transform: {
-    y: 0.5,
-  },
-  '& a': {
-    textDecoration: 'none',
-  },
-})
-
 export const HeaderContext = createContextualProps<{ setShown?: Function; shown?: boolean }>()
 
 export const HeaderLink = ({ delay, children, ...props }: any) => {
   const header = HeaderContext.useProps()
   const leaving = header && header.shown === false
   return (
-    <Link width="33%" {...props}>
+    <Link width="33%" fontWeight={500} fontFamily="GT Eesti" fontSize={16} {...props}>
       <FadeChild
         willAnimateOnHover
         off={!LinkState.didAnimateOut}

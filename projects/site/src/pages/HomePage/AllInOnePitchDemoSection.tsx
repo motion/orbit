@@ -1,7 +1,6 @@
 import { Inline } from '@o/gloss'
-import { Button, Col, FullScreen, gloss, Image, Row, Space, TextProps, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
-import { link } from 'fs'
 import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
@@ -19,12 +18,7 @@ import { TitleText } from '../../views/TitleText'
 import { LineSep } from './LineSep'
 import { linkProps } from './linkProps'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
-
-export const TitleTextSub = gloss((props: TextProps) => (
-  <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
-    <TitleText size="md" fontWeight={300} alpha={0.85} {...props} />
-  </View>
-))
+import { TitleTextSub } from './TitleTextSub'
 
 const nextStyle = {
   opacity: 0,

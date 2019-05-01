@@ -7,8 +7,8 @@ import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
+import { TitleTextSub } from './TitleTextSub'
 
 export const bottomSeparator = bottomLightSeparator
 

@@ -8,8 +8,8 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
-import { TitleTextSub } from './AllInOnePitchDemoSection'
 import { SpacedPageContent } from './SpacedPageContent'
+import { TitleTextSub } from './TitleTextSub'
 
 export const SubParagraph = (props: TextProps) => (
   <Paragraph

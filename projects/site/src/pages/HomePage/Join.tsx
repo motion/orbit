@@ -75,6 +75,7 @@ export class Join extends React.Component<any> {
             size={2}
             sizeRadius={5}
             sizePadding={1.5}
+            textAlign="center"
             {...inputProps}
           />
 
@@ -88,6 +89,8 @@ export class Join extends React.Component<any> {
             opacity={submitting ? 0.5 : 1}
             pointerEvents={submitting ? 'none' : 'auto'}
             cursor="pointer"
+            maxWidth={300}
+            alignSelf="center"
           >
             Early access
           </Button>

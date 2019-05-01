@@ -64,7 +64,7 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
-                <ParagraphIntro size={2.2}>
+                <ParagraphIntro size={2.1}>
                   Control your data, the code that runs it, and where it runs.
                 </ParagraphIntro>
               </FadeChild>
@@ -78,8 +78,8 @@ export default function ShoulderSection() {
 
               <FadeChild delay={450}>
                 <Para size={1.35} sizeLineHeight={1.25}>
-                  Orbit is open source, decentralized, and gives you complete control over the data it syncs.
-                  No proprietary platform and complete control over your code.
+                  Orbit is open source, decentralized, and gives you complete control over the data
+                  it syncs. No proprietary platform, complete control over your tools.
                 </Para>
               </FadeChild>
 

@@ -22,7 +22,7 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
 export const TitleTextSub = gloss((props: TextProps) => (
   <View width="90%" maxWidth={800} minWidth={300} textAlign="center">
-    <TitleText size="sm" fontWeight={300} alpha={0.65} {...props} />
+    <TitleText size="md" fontWeight={300} alpha={0.85} {...props} />
   </View>
 ))
 
@@ -235,9 +235,9 @@ export default function NeckSection() {
               <FadeChild delay={100}>
                 <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
-              <TitleTextSub ref={ref} width="87%" margin="auto" minWidth={320}>
+              <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={200}>
-                  Create apps that connect data sources in just a few lines of code.
+                  Connect apps, data sources, and a custom interface with lines of code.
                 </FadeChild>
               </TitleTextSub>
             </>
@@ -451,9 +451,9 @@ export default function NeckSection() {
       </Page.Parallax>
 
       <Page.Parallax speed={0.25} zIndex={-1}>
-        <FullScreen zIndex={0} transform={{ scale: 2.5 }}>
+        <FullScreen zIndex={0} transform={{ y: '-10%', scale: 2.35 }}>
           <FullScreen
-            opacity={0.25}
+            opacity={0.3}
             background="radial-gradient(circle closest-side, #2D0843 20%, #750750, transparent)"
           />
         </FullScreen>

@@ -34,7 +34,7 @@ let allTexts = {
     `A new take on the intranet - amazingly easy to code,`,
     `plug in data with a click, no servers necessary.`,
   ],
-  small: [''],
+  small: ['ok', 'ok'],
 }
 
 const subTexts = {
@@ -62,21 +62,19 @@ const HeadContent = memo(() => {
       textAlign="center"
       marginTop={200}
     >
-      <FadeChild disable={!measured}>
-        <TitleText
-          forwardRef={titleFit.ref}
-          style={titleFit.style}
-          fontWeight={100}
-          alignSelf="center"
-          // transition="transform ease 160ms"
-          transformOrigin="top center"
-          selectable
-          textAlign="center"
-          whiteSpace="nowrap"
-        >
-          {allTitles[screen]}
-        </TitleText>
-      </FadeChild>
+      <TitleText
+        forwardRef={titleFit.ref}
+        style={titleFit.style}
+        fontWeight={100}
+        alignSelf="center"
+        // transition="transform ease 160ms"
+        transformOrigin="top center"
+        selectable
+        textAlign="center"
+        whiteSpace="nowrap"
+      >
+        <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
+      </TitleText>
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
@@ -108,6 +106,7 @@ const HeadContent = memo(() => {
             margin={[0, 'auto']}
             textAlign="center"
             alpha={0.7}
+            fontSize={40}
             whiteSpace="nowrap"
           >
             <FadeChild disable={!measured} delay={400}>
@@ -131,9 +130,6 @@ const HeadContent = memo(() => {
             </FadeChild>
           </Paragraph>
         )}
-
-        {br}
-        <HeadJoin />
 
         {/* this is just to measure */}
         <Paragraph
@@ -237,6 +233,9 @@ export function HeadSection() {
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
+
+          <Space size="xxl" />
+          <HeadJoin />
         </Col>
       </Page.Content>
 

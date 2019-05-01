@@ -1,5 +1,6 @@
 import { EffectCallback, RefObject, useEffect, useRef } from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
+
 import { ResizeObserverCallback } from '../ResizeObserver'
 import { useGet } from './useGet'
 

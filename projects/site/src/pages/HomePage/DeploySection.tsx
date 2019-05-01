@@ -26,11 +26,11 @@ export default function ShoulderSection() {
           header={
             <>
               <FadeChild delay={0}>
-                <PillButton>Deploy</PillButton>
+                <PillButton>Trust</PillButton>
               </FadeChild>
               <FadeChild delay={200}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                  In sync without a server.
+                  Build with confidence in the platform.
                 </TitleText>
               </FadeChild>
             </>
@@ -64,22 +64,23 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
-                <ParagraphIntro>
-                  It's time we had control over our data, and the code that runs it. The first step
-                  is where it runs.
+                <ParagraphIntro size={2.2}>
+                  Control your data, the code that runs it, and where it runs.
                 </ParagraphIntro>
               </FadeChild>
 
               <FadeChild delay={350}>
-                <Para>
-                  Your team can use Orbit to make apps together fast, without having to trust all
-                  your sensitive internal data to the cloud, or get locked into a proprietary
-                  platform.
+                <Para size={1.35} sizeLineHeight={1.25}>
+                  We're tired of platforms that lock us in, create data silos, and work against our
+                  interest.
                 </Para>
               </FadeChild>
 
               <FadeChild delay={450}>
-                <Para>Your team can use Orbit to make apps together fast.</Para>
+                <Para size={1.35} sizeLineHeight={1.25}>
+                  Orbit is open source, decentralized, and gives you complete control over the data it syncs.
+                  No proprietary platform and complete control over your code.
+                </Para>
               </FadeChild>
 
               <FadeChild delay={550}>
@@ -96,7 +97,7 @@ export default function ShoulderSection() {
                   pointable
                   fontSize={16}
                 >
-                  Two ways we've lost control, and why it matters.
+                  The three ways Orbit gives you control.
                 </Para>
               </FadeChild>
             </Col>

@@ -35,9 +35,9 @@
             <stop stop-color="#FFFFFF" stop-opacity="0.119367074" offset="79.0566934%"></stop>
             <stop stop-color="#FF0000" stop-opacity="0" offset="100%"></stop>
         </radialGradient>
-        <linearGradient x1="50%" y1="0.0659839527%" x2="50%" y2="100%" id="linearGradient-6">
+        <linearGradient x1="50%" y1="0.131924367%" x2="50%" y2="100%" id="linearGradient-6">
             <stop stop-color="#2B2B40" offset="0.0659839527%"></stop>
-            <stop stop-color="#2C2B40" stop-opacity="0.652207168" offset="100%"></stop>
+            <stop stop-color="#2C2B40" stop-opacity="0.871011801" offset="100%"></stop>
         </linearGradient>
         <path d="M0,189.588026 C357.666667,226.529342 615.881866,242.088957 774.645598,236.26687 C1012.7912,227.53374 1251,205.398438 1532,223.554239 C1532,239.148357 1532,164.630277 1532,0 L0,0 L0,189.588026 Z" id="path-7"></path>
     </defs>

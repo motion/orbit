@@ -22,7 +22,7 @@ export default function WaistSection() {
             <FullScreen zIndex={-1} background={theme => theme.background} bottom={150} />
             <Image
               position="absolute"
-              bottom={0}
+              bottom={100}
               height={290}
               left={0}
               right={0}

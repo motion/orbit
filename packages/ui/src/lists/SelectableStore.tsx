@@ -112,9 +112,7 @@ export class SelectableStore {
     () => [this.props.defaultSelected, always(this.rows)],
     async ([index], { when }) => {
       ensure('defined', isDefined(index))
-      console.log('default', index)
       await when(() => !!this.rows.length)
-      console.log('selecting', index)
       this.setActiveIndex(index)
       this.callbackOnSelect()
     },

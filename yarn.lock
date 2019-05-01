@@ -15758,12 +15758,13 @@ react-side-effect@^1.1.0:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
-react-spring@8.0.18:
-  version "8.0.18"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-8.0.18.tgz#f6fa09ab5acdeb37618c0e340d59830171b95c33"
-  integrity sha512-gb1Rtsnez2gxIHtbrbwQsAjE4ir/62m+gI+eT+1E0Uky5L1PbLccbywRIdIpK3W5jiNmU6OlEazVk0tfI8pZrA==
+react-spring@9.0.0-beta.5:
+  version "9.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-9.0.0-beta.5.tgz#569cdbcac4511e8caef71dd3e82f8cf1e7fd1806"
+  integrity sha512-K+2uYWGg6n3NWXlYbeDPsmLqtIXolEYu/aBEHi6Myq9yH7yNxAGwnDLD/ZgCl6JjrdqVOURd+mERsyTWrRXTTA==
   dependencies:
     "@babel/runtime" "^7.3.1"
+    prop-types "^15.5.8"
 
 react-svg-inline@2.1.1, react-svg-inline@^2.1.0:
   version "2.1.1"

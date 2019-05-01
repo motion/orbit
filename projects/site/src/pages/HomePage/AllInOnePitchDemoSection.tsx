@@ -1,7 +1,6 @@
 import { Inline } from '@o/gloss'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
-import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
@@ -32,85 +31,10 @@ const prevStyle = {
   opacity: 0,
   transform: `translate3d(-20px,0,0)`,
 }
-let animate = 'in'
+let strategy = 'in'
 const fadeOutTm = 250
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
-
-const createSlideSpringTo = memoize((config, delay) => {
-  return async (next, cancel) => {
-    cancel()
-    switch (animate) {
-      case 'in':
-        next(curStyle)
-        return
-      case 'next':
-        await sleep(delay)
-        // out
-        await next({
-          to: prevStyle,
-          config: {
-            duration: fadeOutTm,
-          },
-        })
-        // move to other side
-        await next({
-          to: {
-            opacity: 0,
-            transform: `translate3d(40px,0,0)`,
-          },
-          config: {
-            duration: 180,
-          },
-        })
-        await sleep(delay)
-        // in
-        await next({
-          to: curStyle,
-          config,
-        })
-        // maybe put this earlier
-        animate = 'in'
-        return
-      case 'prev':
-        await sleep(delay)
-        // out
-        await next({
-          to: nextStyle,
-          config: {
-            duration: fadeOutTm,
-          },
-        })
-        // move to other side
-        await next({
-          to: {
-            opacity: 0,
-            transform: `translate3d(-40px,0,0)`,
-          },
-          config: {
-            duration: 180,
-          },
-        })
-        await sleep(delay)
-        // in
-        await next({
-          to: curStyle,
-          config,
-        })
-        // maybe put this earlier
-        animate = 'in'
-        return
-    }
-  }
-})
-
-function useSlideSpring(config, delay = 0) {
-  return useSpring({
-    from: nextStyle,
-    to: createSlideSpringTo(config, delay),
-    config,
-  })
-}
 
 const elements = [
   {
@@ -176,13 +100,92 @@ const slowestConfig = {
   friction: 12,
 }
 
+type AnimateTo = (config: any, delay: any) => (next: any, cancel: any) => any
+
+const createSlideSpringTo: AnimateTo = (config, delay) => {
+  return async (next, cancel) => {
+    console.log('strategy', strategy, next)
+    // cancel()
+    switch (strategy) {
+      case 'in':
+        await next(curStyle)
+        return
+      case 'next':
+        console.log('next')
+        // await sleep(delay)
+        // out
+        await next({
+          to: prevStyle,
+          config: {
+            duration: fadeOutTm,
+          },
+        })
+        // move to other side
+        await next({
+          to: {
+            opacity: 0,
+            transform: `translate3d(40px,0,0)`,
+          },
+          config: {
+            duration: 180,
+          },
+        })
+        await sleep(delay)
+        // in
+        await next({
+          to: curStyle,
+          config,
+        })
+        // maybe put this earlier
+        strategy = 'in'
+        return
+      case 'prev':
+        await sleep(delay)
+        // out
+        await next({
+          to: nextStyle,
+          config: {
+            duration: fadeOutTm,
+          },
+        })
+        // move to other side
+        await next({
+          to: {
+            opacity: 0,
+            transform: `translate3d(-40px,0,0)`,
+          },
+          config: {
+            duration: 180,
+          },
+        })
+        await sleep(delay)
+        // in
+        await next({
+          to: curStyle,
+          config,
+        })
+        // maybe put this earlier
+        strategy = 'in'
+        return
+    }
+  }
+}
+
+function useSlideSpring(config, delay = 0) {
+  return useSpring({
+    from: nextStyle,
+    to: createSlideSpringTo(config, delay),
+    config,
+  })
+}
+
 export default function NeckSection() {
   const screen = useScreenSize()
-  const forceUpdate = useForceUpdate()
   const nextInt = useRef(null)
   const [ref, show] = useIntersectedOnce()
 
   const longDelay = 100
+  const forceUpdate = useForceUpdate()
   const springFast = useSlideSpring(fastConfig)
   const springSlow = useSlideSpring(slowConfig, longDelay / 2)
   const springSlowest = useSlideSpring(slowestConfig, longDelay)
@@ -191,7 +194,7 @@ export default function NeckSection() {
 
   const goTo = async index => {
     clearInterval(nextInt.current)
-    animate = index < cur ? 'prev' : 'next'
+    strategy = index < cur ? 'prev' : 'next'
     forceUpdate()
     await sleep(fadeOutTm + longDelay)
     setCur(index)
@@ -313,7 +316,7 @@ export default function NeckSection() {
                     zIndex={100}
                     position="absolute"
                     top={-4}
-                    left={useScreenVal(-20, 10, 10)}
+                    left={5}
                     icon="chevron-left"
                     onClick={prev}
                   />
@@ -326,7 +329,7 @@ export default function NeckSection() {
                     zIndex={100}
                     position="absolute"
                     top={-4}
-                    right={useScreenVal(-20, 10, 10)}
+                    right={5}
                     icon="chevron-right"
                     onClick={next}
                   />

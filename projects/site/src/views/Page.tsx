@@ -62,7 +62,7 @@ Page.Content = forwardRef((props: SectionContentProps, ref) => {
     <SectionContent
       forwardRef={ref}
       className="page-content"
-      flex={1}
+      flex={isTiny ? 1 : 'none'}
       height={isTiny ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
       minHeight={400}
       {...props}

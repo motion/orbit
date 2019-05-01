@@ -1,7 +1,7 @@
 import { gloss, Row } from '@o/gloss'
-import React, { useCallback } from 'react'
+import React from 'react'
 
-import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -21,7 +21,7 @@ export type PaneTitleRowParentProps = Pick<PaneTitleRowProps, 'title'> & {
 
 export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProps) {
   const [collapseProps, textProps] = splitCollapseProps(rest)
-  const toggle = useCollapseToggle(collapseProps)
+  const toggle = useCollapse(collapseProps)
   return (
     <PanelHeader onDoubleClick={toggle.toggle}>
       {before}

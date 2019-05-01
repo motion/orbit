@@ -1,7 +1,8 @@
-import { CardProps, Col, Grid, Icon, TiltCard } from '@o/ui'
+import { Button, CardProps, Col, Grid, Icon, Section, TiltCard } from '@o/ui'
 import React from 'react'
 
 import { themes } from '../../themes'
+import { linkProps } from '../HomePage/linkProps'
 
 const examples = [
   { title: 'Building an App', subTitle: 'Something', colors: themes.lightOrange, icon: 'home' },
@@ -30,14 +31,14 @@ export const LatestUpdates = () => (
     {examples.map(example => (
       <FeatureCard key={example.title} subTitle={example.subTitle} title={example.title}>
         <Col
-          height={200}
+          height={180}
           background={example.colors.background}
           alignItems="center"
           justifyContent="center"
           pad
           flex={1}
         >
-          <Icon color={example.colors.color} size={80} name={example.icon} />
+          <Icon color={example.colors.color} size={40} name={example.icon} />
         </Col>
       </FeatureCard>
     ))}
@@ -49,15 +50,58 @@ export const Tutorials = () => (
     {examples.map(example => (
       <FeatureCard key={example.title} title={example.title}>
         <Col
-          height={200}
+          height={180}
           background={example.colors.background}
           alignItems="center"
           justifyContent="center"
           pad
         >
-          <Icon color={example.colors.color} size={80} name={example.icon} />
+          <Icon color={example.colors.color} size={40} name={example.icon} />
         </Col>
       </FeatureCard>
     ))}
   </Grid>
 )
+
+const interfacelinks = [
+  { href: '/docs/gloss', name: 'Styling' },
+  { href: '/docs/ui', name: 'UI Kit' },
+  { href: '/docs/kit', name: 'App Kit' },
+]
+
+const datalinks = [
+  { href: '/docs/data-app-state', name: 'App State' },
+  { href: '/docs/data-user-state', name: 'User State' },
+  { href: '/docs/data-sync', name: 'Syncing' },
+]
+
+export const HelpfulLinks = () => {
+  return (
+    <Col space="lg">
+      <Section title="User Interface" titleSize="xs" space titleProps={{ fontWeight: 300 }}>
+        <Grid space="xl" itemMinWidth={100}>
+          {interfacelinks.map(link => (
+            <Button alt="bordered" key={link.href} {...linkProps(link.href)}>
+              {link.name}
+            </Button>
+          ))}
+        </Grid>
+      </Section>
+
+      <Section
+        title="Data Management & Syncing"
+        titleSize="xs"
+        space
+        titleProps={{ fontWeight: 300 }}
+      >
+        <Grid space="xl" itemMinWidth={100}>
+          {datalinks.map(link => (
+            <Button alt="bordered" key={link.href} {...linkProps(link.href)}>
+              {link.name}
+            </Button>
+          ))}
+        </Grid>
+      </Section>
+    </Col>
+  )
+}

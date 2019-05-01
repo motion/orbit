@@ -20,7 +20,6 @@ import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
-
 // TODO make prop
 const SIZE = 5
 
@@ -611,23 +610,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const { resizingSides } = this.state
     const cursor = this.state.cursor
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
-    const style = {
-      position: position as any,
-      cursor,
-      left,
-      top,
-      right,
-      bottom: null,
-      transform: null,
-      width: null,
-      height: null,
-      minWidth,
-      maxHeight,
-      maxWidth,
-      minHeight,
-      zIndex,
-      pointerEvents,
-    }
+    const style: any = {}
     if (movable === true || top != null || left != null) {
       if (fill === true) {
         style.left = left || 0
@@ -658,7 +641,26 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
-        <div style={style}>
+        <div
+          style={{
+            position: position as any,
+            cursor,
+            left,
+            top,
+            right,
+            bottom: null,
+            transform: null,
+            width: null,
+            height: null,
+            minWidth,
+            maxHeight,
+            maxWidth,
+            minHeight,
+            zIndex,
+            pointerEvents,
+            ...style,
+          }}
+        >
           <InteractiveContainer
             className={this.props.className}
             hidden={this.props.hidden}

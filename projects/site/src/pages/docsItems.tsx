@@ -4,8 +4,7 @@ import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
 const titleItem = {
-  pad: 'md',
-  titleProps: { size: 1.2, fontWeight: 300, ...fontProps.GTEesti, className: '' },
+  titleProps: { size: 1.1, fontWeight: 300, ...fontProps.GTEesti, className: '' },
 }
 
 const guides = [
@@ -38,13 +37,11 @@ const guides = [
   {
     id: 'databaseviewer',
     title: 'Database Viewer',
-    subTitle: 'Apps, custom queries, mutations.',
     ...titleItem,
   },
   {
     id: 'customermanager',
     title: 'Customer Manager',
-    subTitle: 'Postgres, multiple views.',
     ...titleItem,
   },
 ]
@@ -62,7 +59,7 @@ const uikit = [
 
   { id: 'ui-layout', title: 'Laying out your interface', ...titleItem },
   { id: 'ui-hooks', title: 'Hooks', ...titleItem },
-  { id: 'ui-themes', title: 'Themes', ...titleItem },
+  // { id: 'ui-themes', title: 'Themes', ...titleItem },
   // { id: 'customSurfaces', title: 'Customizing surfaces', ...titleItem },
   // { id: 'templates', title: 'Templates', ...titleItem },
 

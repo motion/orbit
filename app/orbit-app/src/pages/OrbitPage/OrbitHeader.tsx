@@ -2,7 +2,7 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon } from '@o/kit'
 import { isEditing } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useActions } from '../../hooks/useActions'
@@ -21,7 +21,7 @@ export const headerButtonProps = {
   iconSize: 14,
 }
 
-const HeaderButtonTheme = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
+const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
 export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
@@ -42,19 +42,29 @@ export const OrbitHeader = memo(function OrbitHeader() {
       <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
-          <HeaderButtonTheme>
+          <HeaderButtonPassProps>
             <BackButton />
-          </HeaderButtonTheme>
+            <OrbitHeaderMenu />
+          </HeaderButtonPassProps>
         </HeaderSide>
 
         <HeaderContain isActive={false}>
           <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-            <Icon
-              opacity={0.15}
-              color={invertLightness(theme.color, 0.5)}
-              name={`orbit-${icon}`}
-              size={22}
-            />
+            <OrbitNavPopover
+              target={
+                <Icon
+                  opacity={0.65}
+                  hoverStyle={{
+                    opacity: 1,
+                  }}
+                  color={invertLightness(theme.color, 0.5)}
+                  name={`orbit-${icon}`}
+                  size={22}
+                />
+              }
+            >
+              <OrbitNav />
+            </OrbitNavPopover>
           </View>
 
           <OrbitHeaderInput />
@@ -63,7 +73,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             <>
               {!!orbitStore.activeActions && (
                 <ExtraButtonsChrome>
-                  <HeaderButtonTheme>{orbitStore.activeActions || null}</HeaderButtonTheme>
+                  <HeaderButtonPassProps>{orbitStore.activeActions || null}</HeaderButtonPassProps>
                 </ExtraButtonsChrome>
               )}
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
@@ -74,41 +84,54 @@ export const OrbitHeader = memo(function OrbitHeader() {
         </HeaderContain>
 
         <HeaderSide rightSide>
-          <OrbitHeaderMenu />
+          <HeaderButtonPassProps>
+            <View flex={1} />
 
-          <View flex={1} />
+            {isEditing && (
+              <Row>
+                <HeaderButton icon="edit" tooltip="Open in VSCode" />
+                <Space />
+                <HeaderButton alt="action" tooltip="Deploy to space">
+                  Publish
+                </HeaderButton>
+              </Row>
+            )}
 
-          {isEditing && (
-            <Row>
-              <HeaderButton icon="edit" tooltip="Open in VSCode" />
-              <Space />
-              <HeaderButton alt="action" tooltip="Deploy to space">
-                Publish
-              </HeaderButton>
-            </Row>
-          )}
-
-          {!isEditing && <OrbitSpaceSwitch />}
-
-          {isEditing && (
             <Button
-              chromeless
-              opacity={isOnSettings ? 0.8 : 0.4}
-              hoverStyle={{
-                opacity: isOnSettings ? 1 : 0.6,
-              }}
-              icon="cog"
-              iconSize={isEditing ? 10 : 12}
-              onClick={() => {
-                newAppStore.setShowCreateNew(false)
-                if (activePaneType === 'settings') {
-                  paneManagerStore.back()
-                } else {
-                  paneManagerStore.setActivePaneByType('settings')
-                }
-              }}
+              isActive={paneManagerStore.activePane.id === 'data-explorer'}
+              location="data-explorer"
+              icon="layers"
+              tooltip="Data explorer"
             />
-          )}
+            <Button
+              isActive={paneManagerStore.activePane.id === 'apps'}
+              location="apps"
+              icon="layout-grid"
+              tooltip="Manage apps"
+            />
+
+            {!isEditing && <OrbitSpaceSwitch />}
+
+            {isEditing && (
+              <Button
+                chromeless
+                opacity={isOnSettings ? 0.8 : 0.4}
+                hoverStyle={{
+                  opacity: isOnSettings ? 1 : 0.6,
+                }}
+                icon="cog"
+                iconSize={isEditing ? 10 : 12}
+                onClick={() => {
+                  newAppStore.setShowCreateNew(false)
+                  if (activePaneType === 'settings') {
+                    paneManagerStore.back()
+                  } else {
+                    paneManagerStore.setActivePaneByType('settings')
+                  }
+                }}
+              />
+            )}
+          </HeaderButtonPassProps>
         </HeaderSide>
       </HeaderTop>
       {!isEditing && <HeaderFade />}
@@ -117,10 +140,30 @@ export const OrbitHeader = memo(function OrbitHeader() {
         borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
       />
-      <OrbitNav />
     </OrbitHeaderContainer>
   )
 })
+
+const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
+  return (
+    <Popover
+      group="orbit-nav"
+      target={target}
+      // openOnHover
+      openOnClick
+      closeOnEsc
+      closeOnClickAway
+      width="90%"
+      padding={5}
+      elevation={10}
+      sizeRadius
+      background
+      {...rest}
+    >
+      {children}
+    </Popover>
+  )
+}
 
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
@@ -216,9 +259,7 @@ const OpenButton = memo(() => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}
-    >
-      Open
-    </Button>
+    />
   )
 })
 

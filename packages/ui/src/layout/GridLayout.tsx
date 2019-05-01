@@ -1,20 +1,17 @@
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
-import React, {
-  cloneElement,
-  HTMLAttributes,
-  isValidElement,
-  memo,
-  useCallback,
-  useEffect,
-} from 'react'
+import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
+
 import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { SizedSurfaceProps } from '../SizedSurface'
 
 if (isBrowser) {
-  require('react-grid-layout/css/styles.css')
+  // original
+  require('./react-grid-layout.css')
+  // our overrides
+  require('./react-grid-layout-styles.css')
 }
 
 export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject

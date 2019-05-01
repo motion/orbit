@@ -2,7 +2,7 @@ import { Theme, useThemeContext } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
 import React, { useCallback } from 'react'
 
-import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapseToggle } from './Collapsable'
+import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { Scale } from './Scale'
@@ -60,7 +60,7 @@ export function Card(props: CardProps) {
   const { activeThemeName } = useThemeContext()
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
-  const toggle = useCollapseToggle(collapseProps)
+  const toggle = useCollapse(collapseProps)
   const padProps = {
     pad,
     padding,
@@ -88,7 +88,7 @@ export function Card(props: CardProps) {
           {/* Cards are ListItems scaled up 1.1 */}
           <Scale size={1.1}>
             <ListItemSimple
-              before={<CollapseArrow useToggle={toggle} />}
+              before={<CollapseArrow useCollapse={toggle} />}
               className="grid-draggable"
               onClickLocation={onClickLocation}
               onDoubleClick={
@@ -126,7 +126,7 @@ export function Card(props: CardProps) {
           </Scale>
           {/* reset inner contents to be original theme */}
           <Theme name={activeThemeName}>
-            <Collapsable useToggle={toggle}>
+            <Collapsable useCollapse={toggle}>
               <Col
                 scrollable={scrollable}
                 flexDirection={flexDirection}

@@ -1,7 +1,7 @@
 import { createStoreContext } from '@o/use-store'
 
 export class ShortcutStore {
-  shortcutListeners = new Set()
+  shortcutListeners = new Set<Function>()
 
   onShortcut(cb: (a: string) => any) {
     this.shortcutListeners.add(cb)

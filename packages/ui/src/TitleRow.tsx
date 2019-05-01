@@ -2,11 +2,11 @@ import { gloss } from '@o/gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
 import { BorderBottom } from './Border'
-import { CollapsableProps, CollapseArrow, splitCollapseProps } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
-import { Title } from './text/Title'
+import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
@@ -21,6 +21,9 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
 
   /** Set the title text */
   title?: React.ReactNode
+
+  /** Additional props for styling the title */
+  titleProps?: Partial<TitleProps>
 
   /** Add an element before title */
   before?: React.ReactNode
@@ -59,7 +62,7 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
   children?: React.ReactNode
 }
 
-export type TitleRowProps = Omit<RowProps, 'size'> & TitleRowSpecificProps
+export type TitleRowProps = Omit<RowProps, 'size' | 'children'> & TitleRowSpecificProps
 
 export const TitleRow = forwardRef(
   (
@@ -77,18 +80,19 @@ export const TitleRow = forwardRef(
       icon,
       title,
       children,
+      titleProps,
       ...allProps
     }: TitleRowProps,
     ref,
   ) => {
     const [collapseProps, rowProps] = splitCollapseProps(allProps)
-    const { collapsable, onCollapse, collapsed } = collapseProps
+    const collapse = useCollapse(collapseProps)
     const titleElement =
       !!title &&
       (isValidElement(title) ? (
         title
       ) : (
-        <Title size={size} selectable ellipse>
+        <Title size={size} selectable ellipse {...titleProps}>
           {title}
         </Title>
       ))
@@ -96,13 +100,13 @@ export const TitleRow = forwardRef(
     return (
       <TitleRowChrome
         background={backgrounded ? theme => theme.backgroundZebra : null}
-        onDoubleClick={onCollapse && (() => onCollapse(!collapsed))}
+        onDoubleClick={collapse.isCollapsable && collapse.toggle}
         ref={ref}
         {...rowProps}
       >
         {above}
         <Row alignItems="center">
-          {collapsable && <CollapseArrow {...collapseProps} />}
+          {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
           {before && (
             <>
               {before}

@@ -25,6 +25,9 @@ import { VirtualList, VirtualListProps } from './VirtualList'
 export type ListProps = SectionSpecificProps &
   VirtualListProps<Bit | ListItemProps> &
   Partial<UseFilterProps<any>> & {
+    /** Make list expand to parent height */
+    flex?: number
+
     /** Filter by search string */
     search?: string
 

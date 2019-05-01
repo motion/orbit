@@ -2,9 +2,9 @@ import { useActiveApps, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { Button, ListItem, PassProps, Popover } from '@o/ui'
 import React, { memo } from 'react'
+
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
-import { headerButtonProps } from './OrbitHeader'
 
 export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
   const Actions = useActions()
@@ -20,7 +20,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
       width={260}
       background
       elevation={5}
-      target={<Button {...headerButtonProps} circular iconSize={16} icon="verticalDots" />}
+      target={<Button tooltip="App menu" icon="verticalDots" />}
     >
       <PassProps>
         <ListItem

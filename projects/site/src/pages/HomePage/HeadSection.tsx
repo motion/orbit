@@ -20,23 +20,23 @@ let medSpc = <Space size="xl" />
 let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Dead simple internal apps',
+  large: 'Amazing simple internal apps',
   medium: 'Dead simple internal apps',
   small: 'Easy internal apps',
 }
 
 let allTexts = {
   large: [
-    `A whole new take on your intranet - amazingly easy to code,`,
-    `instant data plug-in, open source & no server necessary.`,
+    `A whole new take on the intranet - easy to code and powerful,`,
+    `one-click data apps, open source & no servers at all.`,
   ],
   medium: [
-    `A whole new take on your intranet - easy to code,`,
-    `instant data plug-in, OSS & no server necessary.`,
+    `A whole new take on the intranet - easy to code,`,
+    `one-click data apps, OSS & no servers at all.`,
   ],
   small: [
-    `A whole new take on your intranet - easy to code,`,
-    `instant data plug-in, OSS & no server necessary.`,
+    `A whole new take on the intranet - easy to code,`,
+    `one-click data apps, OSS & no servers at all.`,
   ],
 }
 
@@ -55,7 +55,7 @@ const HeadContent = memo(() => {
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = useScreenVal(smallSpc, medSpc, lgSpc)
+  const br = useScreenVal(smallSpc, medSpc, medSpc)
 
   return (
     <View

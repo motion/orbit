@@ -52,6 +52,7 @@ export function Table(tableProps: TableProps) {
     afterTitle,
     searchable,
     shareable,
+    children: _discardChildren,
     ...props
   } = {
     ...sectionProps,

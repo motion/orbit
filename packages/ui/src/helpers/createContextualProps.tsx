@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react'
+
 import { Omit } from '../types'
 
 export function createContextualProps<A extends any>(defaults?: A) {
@@ -20,6 +21,7 @@ export function createContextualProps<A extends any>(defaults?: A) {
       const final = { ...componentProps }
       for (const key in extra) {
         if (typeof final[key] === 'undefined') {
+          // @ts-ignore
           final[key] = extra[key]
         }
       }

@@ -8,7 +8,7 @@ export const Tag = ({ size = 0.9, ...props }: SizedSurfaceProps) => {
   return (
     <SizedSurface
       sizeRadius={0.9 * sz}
-      sizeFont={1.3 * sz}
+      sizeFont={1.2 * sz}
       sizePadding={0.7 * sz}
       sizeHeight={0.8 * sz}
       sizeLineHeight={0.9 * sz}

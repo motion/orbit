@@ -1,6 +1,7 @@
-import { Col, FullScreen, fuzzyFilter, Grid, Image, SimpleText, Space, Theme, Title, View } from '@o/ui'
+import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, Space, Theme, Title, View } from '@o/ui'
+import { useStore } from '@o/use-store'
 import { mount, route } from 'navi'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Header } from '../views/Header'
 import { PillButton } from '../views/PillButton'
@@ -146,35 +147,75 @@ const FAQItem = ({ main, paragraphs, question }) => {
   )
 }
 
+class AppsStore {
+  filteredApps = allApps
+  active = 0
+
+  get results() {
+    return this.filteredApps.map((x, index) => {
+      return (
+        <AppItem key={x.title} isActive={index === this.active}>
+          {appElements[allApps.findIndex(app => app.title === x.title)]}
+        </AppItem>
+      )
+    })
+  }
+
+  up() {
+    this.active = Math.max(0, this.active - 1)
+  }
+
+  down() {
+    this.active = Math.min(this.results.length - 1, this.active + 1)
+  }
+}
+
+const keyMap = {
+  up: 'up',
+  down: 'down',
+}
+
 const AppSearch = memo(() => {
-  let [results, setResults] = useState(appElements)
+  const store = useStore(AppsStore)
+  const onChange = useCallback(e => {
+    const search = e.target.value
+    store.filteredApps = fuzzyFilter(search, allApps, {
+      limit: 10000,
+      keys: ['title'],
+    })
+  }, [])
+
+  const handlers = useMemo(
+    () => ({
+      up: store.up,
+      down: store.down,
+    }),
+    [],
+  )
 
   return (
-    <>
+    <HotKeys keyMap={keyMap} handlers={handlers}>
       <View margin={[0, 'auto']}>
-        <SearchInput
-          width={450}
-          size={2.75}
-          placeholder="Search apps..."
-          onChange={e => {
-            const search = e.target.value
-            const next = fuzzyFilter(search, allApps, {
-              limit: 10000,
-              keys: ['title'],
-            })
-            setResults(next.map(x => appElements[allApps.findIndex(app => app.title === x.title)]))
-          }}
-        />
+        <SearchInput width={450} size={2.75} placeholder="Search apps..." onChange={onChange} />
         <Space size="xxxl" />
       </View>
 
       <Col pad>
-        <Grid height={640} overflow="hidden" space="xl" itemMinWidth={dim}>
-          {results}
+        <Grid alignItems="flex-start" height={640} space="xl" itemMinWidth={dim}>
+          {store.results}
         </Grid>
       </Col>
-    </>
+    </HotKeys>
   )
+})
+
+const AppItem = gloss({
+  width: dim,
+  height: dim,
+
+  isActive: {
+    boxShadow: [[0, 0, 10, 'blue']],
+  },
 })
 
 const allApps = [

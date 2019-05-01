@@ -17,11 +17,10 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xl" />
-let lgSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Amazing simple internal apps',
-  medium: 'Dead simple internal apps',
+  large: 'Amazing easy internal apps',
+  medium: 'Amazing easy internal apps',
   small: 'Easy internal apps',
 }
 

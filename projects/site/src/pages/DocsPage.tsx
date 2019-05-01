@@ -13,7 +13,7 @@ import {
   Sidebar,
   SurfacePassProps,
 } from '@o/ui'
-import { useForceUpdate, useReaction } from '@o/use-store'
+import { createStoreContext, useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
@@ -133,6 +133,49 @@ const getInitialIndex = () => {
   return initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
 }
 
+class DocsStore {
+  initialIndex = getInitialIndex()
+  search = ''
+  section = 'all'
+
+  setSearch = next => {
+    this.search = next
+    this.initialIndex = 0
+  }
+
+  setSection = next => {
+    this.section = next
+  }
+
+  toggleSection = val => this.setSection(this.section === val ? 'all' : val)
+}
+
+const DocsStoreContext = createStoreContext(DocsStore)
+
+const DocsList = memo(() => {
+  const docsStore = DocsStoreContext.useStore()
+  return (
+    <List
+      search={docsStore.search}
+      selectable
+      alwaysSelected
+      defaultSelected={docsStore.initialIndex}
+      overscanCount={500}
+      items={docsItems[docsStore.section]}
+      itemProps={itemProps}
+      getItemProps={preloadItem}
+      onSelect={useCallback(rows => {
+        if (!rows[0]) {
+          console.warn('no row on select!', rows)
+        } else {
+          console.log('docsNavigate', rows[0])
+          docsNavigate(rows[0].id)
+        }
+      }, [])}
+    />
+  )
+})
+
 export const DocsPage = memo((props: { children?: any }) => {
   const Fade = useFadePage({
     threshold: 0,
@@ -140,11 +183,7 @@ export const DocsPage = memo((props: { children?: any }) => {
   const screen = useScreenSize()
   const siteStore = useSiteStore()
   const [showSidebar, setShowSidebar] = useState(true)
-  const [section, setSection] = useState('all')
-  const toggleSection = val => setSection(section === val ? 'all' : val)
-  const [search, setSearch] = useState('')
   const inputRef = useRef(null)
-  const initialIndex = useRef(getInitialIndex())
   const [themeName, setThemeName] = usePageTheme()
 
   useStickySidebar({
@@ -204,85 +243,67 @@ export const DocsPage = memo((props: { children?: any }) => {
   const sidebarChildren = (
     <React.Fragment key="content">
       <FadeChild style={{ flex: 1 }}>
-        <List
-          search={search}
-          selectable
-          alwaysSelected
-          defaultSelected={initialIndex.current}
-          overscanCount={500}
-          items={docsItems[section]}
-          itemProps={itemProps}
-          getItemProps={preloadItem}
-          onSelect={useCallback(rows => {
-            if (!rows[0]) {
-              console.warn('no row on select!', rows)
-            } else {
-              console.log('docsNavigate', rows[0])
-              docsNavigate(rows[0].id)
-            }
-          }, [])}
-        />
+        <DocsList />
       </FadeChild>
     </React.Fragment>
   )
 
   return (
-    <Fade.FadeProvide>
-      <DocsPageHeader
-        {...{
-          setSearch,
-          isSmall,
-          inputRef,
-          toggleSection,
-          section,
-          setTheme: setThemeName,
-          theme: themeName,
-          setShowSidebar,
-          siteStore,
-          showSidebar,
-        }}
-      />
+    <DocsStoreContext.Provider>
+      <Fade.FadeProvide>
+        <DocsPageHeader
+          {...{
+            isSmall,
+            inputRef,
+            setTheme: setThemeName,
+            theme: themeName,
+            setShowSidebar,
+            siteStore,
+            showSidebar,
+          }}
+        />
 
-      <Portal prepend>
-        <Header slim noBorder />
-      </Portal>
-
-      {isSmall && (
-        <Portal>
-          <FixedLayout isSmall>
-            <Sidebar
-              hidden={!showSidebar}
-              zIndex={10000000}
-              elevation={25}
-              width={280}
-              pointerEvents="auto"
-              background={theme => theme.background}
-            >
-              {sidebarChildren}
-            </Sidebar>
-          </FixedLayout>
+        <Portal prepend>
+          <Header slim noBorder />
         </Portal>
-      )}
 
-      <main className="main-contents">
-        <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
-          <Row id="main" className="main">
-            {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-            <Col
-              ref={Fade.ref}
-              flex={1}
-              overflow="hidden"
-              padding={isSmall ? 0 : [0, 0, 0, 24]}
-              className="content"
-            >
-              <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
-            </Col>
-          </Row>
+        {isSmall && (
+          <Portal>
+            <FixedLayout isSmall>
+              <Sidebar
+                hidden={!showSidebar}
+                zIndex={10000000}
+                elevation={25}
+                width={280}
+                pointerEvents="auto"
+                background={theme => theme.background}
+              >
+                {sidebarChildren}
+              </Sidebar>
+            </FixedLayout>
+          </Portal>
+        )}
 
-          <BlogFooter />
-        </SectionContent>
-      </main>
-    </Fade.FadeProvide>
+        <main className="main-contents">
+          <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
+            <Row id="main" className="main">
+              {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
+              <Col
+                ref={Fade.ref}
+                flex={1}
+                overflow="hidden"
+                padding={isSmall ? 0 : [0, 0, 0, 24]}
+                className="content"
+              >
+                <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+              </Col>
+            </Row>
+
+            <BlogFooter />
+          </SectionContent>
+        </main>
+      </Fade.FadeProvide>
+    </DocsStoreContext.Provider>
   )
 })
 
@@ -310,18 +331,8 @@ const DocsPageSidebar = memo(({ children }) => {
 })
 
 const DocsPageHeader = memo(
-  ({
-    setSearch,
-    isSmall,
-    inputRef,
-    toggleSection,
-    section,
-    setTheme,
-    theme,
-    setShowSidebar,
-    siteStore,
-    showSidebar,
-  }: any) => {
+  ({ isSmall, inputRef, setTheme, theme, setShowSidebar, siteStore, showSidebar }: any) => {
+    const docsStore = DocsStoreContext.useStore()
     return (
       <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
         <ListShortcuts>
@@ -338,7 +349,7 @@ const DocsPageHeader = memo(
             >
               <SearchInput
                 ref={inputRef}
-                onChange={e => setSearch(e.target.value)}
+                onChange={e => docsStore.setSearch(e.target.value)}
                 maxWidth="calc(55% - 20px)"
                 flex={1}
                 size="xl"
@@ -370,20 +381,20 @@ const DocsPageHeader = memo(
                     <ListItem
                       index={2}
                       title="Docs"
-                      alt={section === 'docs' ? 'selected' : null}
-                      onClick={() => toggleSection('docs')}
+                      alt={docsStore.section === 'docs' ? 'selected' : null}
+                      onClick={() => docsStore.toggleSection('docs')}
                     />
                     <ListItem
                       index={2}
                       title="APIs"
-                      alt={section === 'apis' ? 'selected' : null}
-                      onClick={() => toggleSection('apis')}
+                      alt={docsStore.section === 'apis' ? 'selected' : null}
+                      onClick={() => docsStore.toggleSection('apis')}
                     />
                     <ListItem
                       index={2}
                       title="Kit"
-                      alt={section === 'kit' ? 'selected' : null}
-                      onClick={() => toggleSection('kit')}
+                      alt={docsStore.section === 'kit' ? 'selected' : null}
+                      onClick={() => docsStore.toggleSection('kit')}
                     />
                   </>
                 </Popover>

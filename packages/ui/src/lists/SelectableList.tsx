@@ -1,11 +1,6 @@
 import React, { forwardRef, useEffect, useRef } from 'react'
-import {
-  FixedSizeList,
-  FixedSizeListProps,
-  ListProps,
-  VariableSizeList,
-  VariableSizeListProps,
-} from 'react-window'
+import { FixedSizeList, FixedSizeListProps, ListProps, VariableSizeList, VariableSizeListProps } from 'react-window'
+
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
 import { SelectableProps, useSelectableStore } from './SelectableStore'
 
@@ -20,12 +15,12 @@ export function useSelectableProps(props: SelectableListProps, ref) {
   const listRef = props.listRef || ref || internalRef
 
   useEffect(() => {
-    selectableStore.setListRef(listRef.current)
+    selectableStore && selectableStore.setListRef(listRef.current)
   }, [listRef])
 
   useEffect(() => {
     if (Array.isArray(props.itemData)) {
-      selectableStore.setRows(props.itemData)
+      selectableStore && selectableStore.setRows(props.itemData)
     }
   }, [props.itemData])
 

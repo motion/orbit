@@ -1,4 +1,4 @@
-import { ensure, react, useStore } from '@o/use-store'
+import { always, ensure, react, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
@@ -49,13 +49,9 @@ export function omitSelectableProps(props: any) {
 
 // will grab the parent store if its provided, otherwise create its own
 export function useSelectableStore(props: SelectableProps, options = { react: false }) {
-  const propStore = props.selectableStore
-  const newStore = useStore(
-    propStore ? false : SelectableStore,
-    pickSelectableProps(props),
-    options,
-  )
-  return propStore || newStore
+  const inactive = !!props.selectableStore || !props.selectable
+  const newStore = useStore(inactive ? false : SelectableStore, pickSelectableProps(props), options)
+  return props.selectableStore || newStore
 }
 
 export class SelectableStore {
@@ -63,7 +59,7 @@ export class SelectableStore {
 
   dragStartIndex?: number = null
   rows = []
-  active = new Set()
+  active = new Set<string>()
   lastEnter = -1
   listRef: DynamicListControlled = null
   private keyToIndex = {}
@@ -113,10 +109,12 @@ export class SelectableStore {
   )
 
   defaultSelectedProp = react(
-    () => this.props.defaultSelected,
-    async (index, { when }) => {
+    () => [this.props.defaultSelected, always(this.rows)],
+    async ([index], { when }) => {
       ensure('defined', isDefined(index))
+      console.log('default', index)
       await when(() => !!this.rows.length)
+      console.log('selecting', index)
       this.setActiveIndex(index)
       this.callbackOnSelect()
     },
@@ -292,6 +290,7 @@ export class SelectableStore {
       console.warn('rows not valid array!', next)
       return
     }
+    this.keyToIndex = {}
     this.rows = next
   }
 

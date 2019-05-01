@@ -85,6 +85,7 @@ export const Layout = memo((props: any) => {
         <PageLoading />
         <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
         <View
+          className={`theme-${theme}`}
           minHeight="100vh"
           minWidth="100vw"
           maxHeight={maxHeight}

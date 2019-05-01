@@ -224,13 +224,20 @@ select:-webkit-autofill:focus {
 }
 
 ::selection {
-  background: rgba(40, 60, 120, 0.8);
-  color: #fff;
+  background: rgba(230, 255, 255, 0.8);
+  color: #333;
   text-shadow: none;
 }
 
 *::selection {
-  background: rgba(40, 60, 120, 0.8);
+  background: #f8ffcf;
+  color: #333;
+  text-shadow: none;
+}
+
+.theme-home *::selection,
+.theme-dark *::selection {
+  background: rgba(100, 100, 100, 0.18);
   color: #fff;
   text-shadow: none;
 }

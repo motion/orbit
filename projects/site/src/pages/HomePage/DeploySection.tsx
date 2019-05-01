@@ -30,7 +30,7 @@ export default function ShoulderSection() {
               </FadeChild>
               <FadeChild delay={200}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                  Build with confidence in the platform.
+                  You control everything.
                 </TitleText>
               </FadeChild>
             </>
@@ -64,8 +64,9 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
-                <ParagraphIntro size={2.1}>
-                  Control your data, the code that runs it, and where it runs.
+                <ParagraphIntro size={1.5}>
+                  From idea to deploy you control the data, the code that runs it, and where it
+                  runs.
                 </ParagraphIntro>
               </FadeChild>
 
@@ -97,7 +98,7 @@ export default function ShoulderSection() {
                   pointable
                   fontSize={16}
                 >
-                  The three ways Orbit gives you control.
+                  Read how Orbit gives you control.
                 </Para>
               </FadeChild>
             </Col>

@@ -63,12 +63,12 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xxl">
-                    Apps that work together.
+                    An ecosystem of apps.
                   </TitleText>
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
-                    Every app knows how to sync and expose it's API.
+                    Every app has an API and syncs data privately on your computer.
                     {screen !== 'small' && <br />}
                     &nbsp;Use, extend and build with the app store.
                   </FadeChild>
@@ -140,7 +140,9 @@ export default memo(function DataAppKitFeaturesSection() {
                   </FadeChild>
                   <TitleTextSub>
                     <FadeChild delay={200}>
-                      Internal tools share patterns. Orbit makes building those types of apps easy.
+                      Internal tools share patterns.
+                      <br />
+                      Orbit makes building those types of apps easy.
                     </FadeChild>
                   </TitleTextSub>
                 </>

@@ -259,9 +259,7 @@ const OpenButton = memo(() => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}
-    >
-      Open
-    </Button>
+    />
   )
 })
 

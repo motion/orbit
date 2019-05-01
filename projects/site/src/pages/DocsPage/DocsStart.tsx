@@ -81,7 +81,13 @@ export const HelpfulLinks = () => {
       <Section title="User Interface" titleSize="xs" space titleProps={{ fontWeight: 300 }}>
         <Grid space="xl" itemMinWidth={100}>
           {interfacelinks.map(link => (
-            <Button alt="bordered" key={link.href} {...linkProps(link.href)}>
+            <Button
+              alt="bordered"
+              size={1.2}
+              sizeHeight={2}
+              key={link.href}
+              {...linkProps(link.href)}
+            >
               {link.name}
             </Button>
           ))}
@@ -96,7 +102,13 @@ export const HelpfulLinks = () => {
       >
         <Grid space="xl" itemMinWidth={100}>
           {datalinks.map(link => (
-            <Button alt="bordered" key={link.href} {...linkProps(link.href)}>
+            <Button
+              alt="bordered"
+              size={1.2}
+              sizeHeight={2}
+              key={link.href}
+              {...linkProps(link.href)}
+            >
               {link.name}
             </Button>
           ))}

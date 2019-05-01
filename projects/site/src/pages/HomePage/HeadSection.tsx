@@ -13,7 +13,6 @@ import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { linkProps } from './linkProps'
 import { OuterSpace } from './OuterSpace'
-import { blackWavePattern } from './purpleWaveUrl'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
@@ -61,7 +60,7 @@ const HeadContent = memo(() => {
       width={useScreenVal('95%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
-      marginTop={150}
+      marginTop={200}
     >
       <FadeChild disable={!measured}>
         <TitleText
@@ -286,24 +285,6 @@ export function HeadSection() {
           </FullScreen>
         </Page.Parallax>
       )}
-
-      <Page.Background
-        speed={0.15}
-        zIndex={-10}
-        opacity={0.8}
-        bottom="-50%"
-        backgroundSize="cover"
-        left="-40%"
-        right="-40%"
-        width="180%"
-        top="-80%"
-        backgroundPosition="top center"
-        backgroundImage={blackWavePattern}
-        transform={{
-          scaleX: -1,
-          scaleY: -1,
-        }}
-      />
     </Fade.FadeProvide>
   )
 }

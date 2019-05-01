@@ -30,10 +30,11 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
               WebkitBackgroundClip: 'text',
             }}
             {...titleFont}
-            size="md"
+            size={1.75}
             sizeLineHeight={1}
             textAlign="left"
             flex={1}
+            fontWeight={200}
           >
             {title}
           </TitleText>
@@ -50,7 +51,7 @@ const SectionChrome = gloss(Col, {
 })
 
 export const SectionP = gloss(
-  props => <Paragraph tagName="div" size={1.25} alpha={0.65} sizeLineHeight={1.15} {...props} />,
+  props => <Paragraph tagName="div" size={1.3} alpha={0.75} sizeLineHeight={1.25} {...props} />,
   {
     display: 'block',
     float: 'left',
@@ -61,7 +62,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={52} {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={40} color="#333" {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,
@@ -76,7 +77,7 @@ const Badge = gloss(View, {
   // top: -50,
   transform: {
     x: 'calc(-100% - 15px)',
-    y: -20,
+    y: -18,
   },
   width: 55,
   height: 55,
@@ -85,7 +86,7 @@ const Badge = gloss(View, {
   justifyContent: 'center',
   fontSize: 20,
 }).theme((_, theme) => ({
-  color: theme.color,
+  color: theme.color.alpha(0.5),
   // border: [1, theme.color.alpha(0.1)],
 }))
 

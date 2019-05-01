@@ -6,7 +6,6 @@ import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
-import northernlights from '../../../public/images/northern-lights.svg'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -15,7 +14,6 @@ import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
 import { PillButtonDark } from '../../views/PillButtonDark'
-import { Spotlight } from '../../views/Spotlight'
 import { TiltSquircle } from '../../views/Squircle'
 import { TitleText } from '../../views/TitleText'
 import { LineSep } from './LineSep'
@@ -227,7 +225,7 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content ref={Fade.ref} transform={{ y: '2%' }}>
+      <Page.Content ref={Fade.ref} transform={{ y: '4%' }}>
         <SpacedPageContent
           header={
             <>
@@ -452,17 +450,12 @@ export default function NeckSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0.31} zIndex={-5} overflow="hidden">
-        <FullScreen zIndex={0}>
+      <Page.Parallax speed={0.25} zIndex={-1}>
+        <FullScreen zIndex={0} transform={{ scale: 2.5 }}>
           <FullScreen
-            className="northern-lights"
-            backgroundImage={`url(${northernlights})`}
-            backgroundSize="cover"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-            opacity={1}
+            opacity={0.25}
+            background="radial-gradient(circle closest-side, #2D0843 20%, #750750, transparent)"
           />
-          <Spotlight />
         </FullScreen>
       </Page.Parallax>
     </Fade.FadeProvide>

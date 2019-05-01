@@ -1,16 +1,14 @@
-import { Col, FullScreen, Image, Row, toColor, View } from '@o/ui'
+import { Col, Image, Row, toColor, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
-import background from '../../../public/images/orbits-bg.jpg'
 import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { ParagraphIntro } from '../../views/ParagraphIntro'
 import { PillButton } from '../../views/PillButton'
-import { Spotlight } from '../../views/Spotlight'
 import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 
@@ -23,7 +21,7 @@ export default function ShoulderSection() {
       <Page.Content ref={Fade.ref}>
         <SpacedPageContent
           transform={{
-            y: '-11%',
+            y: '-10%',
           }}
           header={
             <>
@@ -121,25 +119,6 @@ export default function ShoulderSection() {
           </Row>
         </SpacedPageContent>
       </Page.Content>
-
-      <Page.Parallax speed={0.2} zIndex={-2}>
-        <FullScreen
-          transform={{
-            y: '-18%',
-            scale: useScreenVal(1.2, 1, 1),
-          }}
-        >
-          <FullScreen
-            className="orbits-bg"
-            opacity={0.2}
-            backgroundImage={`url(${background})`}
-            backgroundSize="cover"
-            backgroundPosition="center center"
-            backgroundRepeat="no-repeat"
-          />
-          <Spotlight />
-        </FullScreen>
-      </Page.Parallax>
     </Fade.FadeProvide>
   )
 }

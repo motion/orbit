@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useSiteStore } from '../../SiteStore'
 
-const duration = 4000
+const duration = 3000
 
 export function OuterSpace(props) {
   const siteStore = useSiteStore()
@@ -11,7 +11,7 @@ export function OuterSpace(props) {
   useEffect(() => {
     let tm = setTimeout(() => {
       setShow(true)
-    }, 1500)
+    }, 500)
     return () => clearTimeout(tm)
   }, [])
 
@@ -23,7 +23,7 @@ export function OuterSpace(props) {
         left: 0,
         right: 0,
         height: siteStore.sectionHeight,
-        opacity: show ? 0.36 : 0,
+        opacity: show ? 0.28 : 0,
         zIndex: -1,
         pointerEvents: 'none',
         transition: `all ease-out ${duration}ms`,

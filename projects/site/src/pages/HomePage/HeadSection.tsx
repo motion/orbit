@@ -58,7 +58,7 @@ const HeadContent = memo(() => {
   return (
     <View
       className="head-text-section"
-      width={useScreenVal('92%', '88%', '85%')}
+      width={useScreenVal('95%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
       marginTop={150}
@@ -158,10 +158,11 @@ const HeadJoin = () => (
     flex={1}
     width="100%"
     maxWidth={1000}
-    margin={['auto', 'auto', 0]}
+    margin={[0, 'auto']}
     height={220}
     position="relative"
     bottom={0}
+    alignItems="center"
   >
     <FadeChild {...fadeUpProps} delay={500}>
       <SurfacePassProps elevation={5} fontFamily="GT Eesti">
@@ -175,7 +176,7 @@ const HeadJoin = () => (
               boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
               flexFlow="row"
               group
-              margin={[0, 'auto']}
+              margin={[0, '-2%']}
             />
           </Scale>
         </Theme>
@@ -226,7 +227,7 @@ export function HeadSection() {
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
 
-      <Page.Content flex={1}>
+      <Page.Content>
         <Col
           right={useScreenHeightVal(40, 0)}
           left={useScreenHeightVal(40, 0)}

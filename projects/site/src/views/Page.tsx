@@ -58,13 +58,18 @@ Page.Content = forwardRef((props: SectionContentProps, ref) => {
   const zIndex = parallax.zIndex + +(props.zIndex || 0) + 2
   const siteStore = useSiteStore()
   const isTiny = useIsTiny()
+  console.log('isTiny', isTiny)
   return (
     <SectionContent
       forwardRef={ref}
       className="page-content"
-      flex={isTiny ? 1 : 'none'}
-      height={isTiny ? 'auto' : siteStore.sectionHeight * (props.pages || 1)}
-      minHeight={400}
+      height={siteStore.sectionHeight * (props.pages || 1)}
+      flex="none"
+      {...isTiny && {
+        flex: 1,
+        height: 'auto',
+        minHeight: 400,
+      }}
       {...props}
       zIndex={zIndex}
     />

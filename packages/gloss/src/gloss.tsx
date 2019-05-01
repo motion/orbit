@@ -101,6 +101,7 @@ export function gloss<Props = any>(
   function GlossView(props: GlossProps<Props>, ref: any) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
+
     // compile static styles once, on first run to avoid extra work
     staticClasses =
       staticClasses || addStyles(Styles.styles, ThemedView.displayName, targetElementName)
@@ -127,11 +128,13 @@ export function gloss<Props = any>(
       theme,
       targetElementName,
     )
+
     const classNames = staticClasses
       ? dynClassNames
         ? [...staticClasses, ...dynClassNames]
         : staticClasses
       : dynClassNames
+
     dynClasses.current = dynClassNames
 
     // if this is a plain view we can use tagName, otherwise just pass it down

@@ -18,17 +18,18 @@ export const SectionContent = ({
   padding,
   height,
   flex,
+  minHeight,
   forwardRef,
   ...props
 }: SectionContentProps) => {
   return (
     <Section
-      width="100%"
       zIndex={zIndex}
       background={background}
       padding={padding}
       height={height}
       flex={flex}
+      minHeight={minHeight}
       ref={forwardRef}
     >
       {outside}
@@ -51,6 +52,7 @@ export const SectionContent = ({
 }
 
 const Section = gloss(View, {
+  width: '100%',
   position: 'relative',
   alignItems: 'center',
 })

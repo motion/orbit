@@ -1,0 +1,12 @@
+.react-grid-item {
+  position: relative;
+  z-index: 100000;
+}
+
+.react-grid-item.resizing {
+  opacity: 0.9;
+}
+
+.react-grid-item.react-grid-placeholder {
+  z-index: -1;
+}

@@ -1,4 +1,4 @@
-import { createContextualProps, Theme, useIntersectionObserver } from '@o/ui'
+import { createContextualProps, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
@@ -21,13 +21,19 @@ export const useParallax = () => {
 }
 
 const DataAppKitFeaturesSection = loadOnIntersect(
-  lazy(() => import('./HomePage/DataAppKitFeaturesSection')),
+  lazy(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection')),
 )
-const FeetSection = loadOnIntersect(lazy(() => import('./HomePage/FooterSection')))
-const MissionMottoSection = loadOnIntersect(lazy(() => import('./HomePage/MissionMottoSection')))
-const SecuritySection = loadOnIntersect(lazy(() => import('./HomePage/SecuritySection')))
+const FeetSection = loadOnIntersect(
+  lazy(() => import(/* webkitPreload: true */ './HomePage/FooterSection')),
+)
+const MissionMottoSection = loadOnIntersect(
+  lazy(() => import(/* webkitPreload: true */ './HomePage/MissionMottoSection')),
+)
+const SecuritySection = loadOnIntersect(
+  lazy(() => import(/* webkitPreload: true */ './HomePage/SecuritySection')),
+)
 const EarlyAccessBetaSection = loadOnIntersect(
-  lazy(() => import('./HomePage/EarlyAccessBetaSection')),
+  lazy(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection')),
 )
 
 export function HomePage() {
@@ -104,6 +110,7 @@ function loadOnIntersect(LazyComponent) {
             }}
             ref={ref}
           />
+          <Loading />
         </Page.Content>
       </Page>
     )

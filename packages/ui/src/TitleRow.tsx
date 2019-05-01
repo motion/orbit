@@ -5,6 +5,7 @@ import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps } from './Collapsable'
 import { Icon } from './Icon'
 import { Sizes, Space } from './Space'
+import { SimpleTextProps } from './text/SimpleText'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
 import { Omit } from './types'
@@ -21,6 +22,9 @@ export type TitleRowSpecificProps = Partial<CollapsableProps> & {
 
   /** Set the title text */
   title?: React.ReactNode
+
+  /** Additional props for styling the title */
+  titleProps?: Partial<SimpleTextProps>
 
   /** Add an element before title */
   before?: React.ReactNode
@@ -77,6 +81,7 @@ export const TitleRow = forwardRef(
       icon,
       title,
       children,
+      titleProps,
       ...allProps
     }: TitleRowProps,
     ref,
@@ -88,7 +93,7 @@ export const TitleRow = forwardRef(
       (isValidElement(title) ? (
         title
       ) : (
-        <Title size={size} selectable ellipse>
+        <Title size={size} selectable ellipse {...titleProps}>
           {title}
         </Title>
       ))

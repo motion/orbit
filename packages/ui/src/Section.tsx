@@ -95,6 +95,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     size,
     fixedTitle,
     elevation,
+    titleProps,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -117,6 +118,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         icon={icon}
         pad={innerPad || (titleBorder || bordered ? true : null)}
         size={selectDefined(titleSize, size)}
+        titleProps={titleProps}
         {...collapseProps}
       />
       {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}

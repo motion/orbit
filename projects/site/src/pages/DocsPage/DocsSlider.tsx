@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 export let Basic = () => {
   const [frame, setFrame] = useState(0)
   return (
-    <Col height={700} space>
+    <Col height={600} space>
       <Row group>
         <Button flex={1} onClick={() => setFrame(frame - 1)}>
           Prev
@@ -15,17 +15,17 @@ export let Basic = () => {
       </Row>
       <Slider curFrame={frame}>
         <Slider.Pane>
-          <Center>
+          <Center background="#ffcccc">
             <SubTitle>Pane 1</SubTitle>
           </Center>
         </Slider.Pane>
         <Slider.Pane>
-          <Center>
+          <Center background="#ccffff">
             <SubTitle>Pane 2</SubTitle>
           </Center>
         </Slider.Pane>
         <Slider.Pane>
-          <Center>
+          <Center background="#ffccff">
             <SubTitle>Pane 3</SubTitle>
           </Center>
         </Slider.Pane>

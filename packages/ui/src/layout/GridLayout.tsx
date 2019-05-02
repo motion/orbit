@@ -73,9 +73,7 @@ class GridStore {
   props: GridLayoutProps
 
   items: GridItems = {}
-  layouts = {
-    lg: null,
-  }
+  layouts = null
   breakpoints = { lg: 1400, md: 1000, sm: 800, xs: 500, xxs: 0 }
   width = window.innerWidth
 
@@ -117,6 +115,11 @@ class GridStore {
       // always re-calc from large and reset
       this.layouts = {
         lg: calculateLayout(items, this.props.cols['lg']),
+        // this would calc all layouts more nicely, but then when you change something it doesn't change all of them
+        // so we'd need to re-calc them all when you resize/change, if we wanted that, wed need a better calculateLayout
+        // md: calculateLayout(items, this.props.cols['md']),
+        // sm: calculateLayout(items, this.props.cols['sm']),
+        // xs: calculateLayout(items, this.props.cols['xs']),
       }
     },
   )
@@ -179,7 +182,7 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
     .filter(Boolean)
 
   let children = null
-  if (!gridStore.layouts.lg) {
+  if (!gridStore.layouts) {
     children = <div style={{ display: 'none' }}>{items}</div>
   } else {
     children = (

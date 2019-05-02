@@ -473,7 +473,7 @@ export default compose(
       const [_, _2, examples, examplesSource] = await loadDocsPage(view)
       return {
         view: (
-          <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} />
+          <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} sourceBelow />
         ),
       }
     }),

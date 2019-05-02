@@ -1,4 +1,4 @@
-import { Button, Card, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
+import { Button, Card, Col, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
 
@@ -15,6 +15,7 @@ export type ExampleProps = {
   onlySource?: boolean
   chromeless?: boolean
   parentId?: string
+  sourceBelow?: boolean
 }
 
 export const Example = memo(
@@ -27,6 +28,7 @@ export const Example = memo(
     willScroll,
     onlySource,
     chromeless,
+    sourceBelow,
     ...props
   }: ExampleProps) => {
     // const route = useCurrentRoute()
@@ -41,7 +43,7 @@ export const Example = memo(
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
     const contents = (
-      <>
+      <Col space flexDirection={sourceBelow ? 'column-reverse' : 'column'}>
         {showSource && (
           <SubCard>
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
@@ -74,7 +76,7 @@ export const Example = memo(
             )}
           </SubCard>
         )}
-      </>
+      </Col>
     )
 
     return (
@@ -88,7 +90,6 @@ export const Example = memo(
               elevation={1}
               pad
               titlePad="sm"
-              space
               background={theme => theme.backgroundStrong}
               title={name || capitalize(id)}
               afterTitle={

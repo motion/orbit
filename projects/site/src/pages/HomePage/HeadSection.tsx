@@ -26,16 +26,16 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `A whole new take on the intranet: easy to code and powerful,`,
-    `one-click data apps, open source & no servers at all.`,
+    `A whole new take on the intranet: easy to code yet powerful,`,
+    `one-click data apps, open source & no server at all.`,
   ],
   medium: [
-    `A whole new take on the intranet: easy to code and powerful,`,
-    `one-click data apps, OSS & no servers at all.`,
+    `A whole new take on the intranet: easy to code yet powerful,`,
+    `one-click data apps, OSS & no server at all.`,
   ],
   small: [
     `A whole new take on the intranet: easy to code,`,
-    `one-click data apps, OSS & no servers at all.`,
+    `one-click data apps, OSS & no server at all.`,
   ],
 }
 

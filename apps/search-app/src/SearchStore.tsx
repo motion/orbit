@@ -16,7 +16,13 @@ import {
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
+
 // import { useActions } from '../../actions/Actions'
+
+const itemProps = {
+  iconBefore: true,
+  iconSize: 42,
+}
 
 type SearchResults = {
   results: ListItemProps[]
@@ -70,7 +76,7 @@ export class SearchStore {
     return {
       title: this.stores.spaceStore.activeSpace.name,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-      iconBefore: true,
+      ...itemProps,
       identifier: 'apps',
     }
   }
@@ -79,7 +85,7 @@ export class SearchStore {
     return {
       key: `${app.id}`,
       title: app.name,
-      iconBefore: true,
+      ...itemProps,
       icon: <AppIcon app={app} />,
       group: 'Apps',
       extraData: {
@@ -136,14 +142,14 @@ export class SearchStore {
 
     // TODO recent history
     return fuzzyFilter(query, [
-      {
-        key: 'app-home',
-        title: `${this.stores.spaceStore.activeSpace.name} Home`,
-        subTitle: `10 apps`,
-        icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-        iconBefore: true,
-        subType: 'home',
-      },
+      // {
+      //   key: 'app-home',
+      //   title: `${this.stores.spaceStore.activeSpace.name} Home`,
+      //   subTitle: `10 apps`,
+      //   icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
+      //   ...itemProps,
+      //   subType: 'home',
+      // },
       ...this.getApps(query, all),
     ])
   }
@@ -159,12 +165,14 @@ export class SearchStore {
       this.stores.appStore.app,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query, app], { when, setValue }): Promise<SearchResults> => {
+    async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
 
       if (this.stores.paneManagerStore) {
         await when(() => this.stores.paneManagerStore.activePane.type === 'search')
       }
+
+      await sleep(120)
 
       // quick goto
       if (query[0] === '/') {
@@ -237,7 +245,10 @@ export class SearchStore {
           return false
         }
         // todo fix type
-        results = [...results, ...nextResults.map(item => ({ item, group: 'Search Results' }))]
+        results = [
+          ...results,
+          ...nextResults.map(item => ({ item, group: 'Search Results', ...itemProps })),
+        ]
         setValue({
           results,
           query,

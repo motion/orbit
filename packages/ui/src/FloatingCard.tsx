@@ -1,9 +1,9 @@
 import { useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { useState } from 'react'
+
 import { Card, CardProps } from './Card'
 import { FloatingView, FloatingViewProps } from './FloatingView'
-import { ProvideVisibility } from './Visibility'
 
 type FloatingCardProps = CardProps &
   Pick<
@@ -38,11 +38,6 @@ export function FloatingCard({
 }: FloatingCardProps) {
   const theme = useTheme()
   const [collapsed, setCollapsed] = useState(false)
-  const isInvisible =
-    visible === false ||
-    cardProps.opacity === 0 ||
-    cardProps.visibility === 'hidden' ||
-    cardProps.display === 'none'
   const visibilityProps: any = {
     pointerEvents: selectDefined(pointerEvents, visible ? 'auto' : 'none'),
     opacity: visible ? 1 : 0,
@@ -51,34 +46,33 @@ export function FloatingCard({
     },
   }
   return (
-    <ProvideVisibility visible={!isInvisible}>
-      <FloatingView
-        disabled={collapsed}
-        resizable
-        top={top}
-        left={left}
-        width={width}
-        height={collapsed ? 75 : height}
-        disableDrag={disableDrag}
-        defaultTop={defaultTop}
-        defaultLeft={defaultLeft}
-        defaultWidth={defaultWidth}
-        defaultHeight={defaultHeight}
-        zIndex={+zIndex}
-        pointerEvents={visibilityProps.pointerEvents}
-      >
-        <Card
-          background={theme.floatingBackground || theme.cardBackground || theme.background}
-          elevation={2}
-          flex={1}
-          margin={5}
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          transition="all ease 200ms"
-          {...visibilityProps}
-          {...cardProps}
-        />
-      </FloatingView>
-    </ProvideVisibility>
+    <FloatingView
+      disabled={collapsed}
+      resizable
+      top={top}
+      left={left}
+      width={width}
+      height={collapsed ? 75 : height}
+      disableDrag={disableDrag}
+      defaultTop={defaultTop}
+      defaultLeft={defaultLeft}
+      defaultWidth={defaultWidth}
+      defaultHeight={defaultHeight}
+      zIndex={+zIndex}
+      pointerEvents={visibilityProps.pointerEvents}
+      visible={visible}
+    >
+      <Card
+        background={theme.floatingBackground || theme.cardBackground || theme.background}
+        elevation={2}
+        flex={1}
+        margin={5}
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        transition="all ease 200ms"
+        {...visibilityProps}
+        {...cardProps}
+      />
+    </FloatingView>
   )
 }

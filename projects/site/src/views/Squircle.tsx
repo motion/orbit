@@ -5,7 +5,7 @@ import { animated, useSpring } from 'react-spring'
 // @ts-ignore
 if (CSS.paintWorklet) {
   // @ts-ignore
-  CSS.paintWorklet.addModule('/public/smooth-corners.js')
+  CSS.paintWorklet.addModule('/smooth-corners.js')
 }
 
 const calc = (x, y) => [-(y - window.innerHeight / 2) / 40, (x - window.innerWidth / 2) / 40, 1.05]

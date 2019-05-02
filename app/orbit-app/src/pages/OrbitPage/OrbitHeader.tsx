@@ -3,7 +3,7 @@ import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import React, { memo } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -18,7 +18,7 @@ export const headerButtonProps = {
   margin: [-1, 1],
   opacity: 0.75,
   hoverStyle: { opacity: 1 },
-  iconSize: 12,
+  iconSize: 14,
 }
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
@@ -31,6 +31,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
+  const [hoveringIcon, setHoveringIcon] = useState(false)
+  const onEnterIcon = useCallback(() => setHoveringIcon(true), [])
+  const onLeaveIcon = useCallback(() => setHoveringIcon(false), [])
 
   return (
     <OrbitHeaderContainer
@@ -55,13 +58,22 @@ export const OrbitHeader = memo(function OrbitHeader() {
               open={paneManagerStore.isOnHome ? true : undefined}
               target={
                 <Icon
+                  onMouseEnter={onEnterIcon}
+                  onMouseLeave={onLeaveIcon}
                   opacity={0.65}
                   hoverStyle={{
                     opacity: 1,
                   }}
                   color={invertLightness(theme.color, 0.5)}
-                  name={`orbit-${icon}`}
+                  name={hoveringIcon ? 'orbit-home' : `orbit-${icon}`}
                   size={22}
+                  onClick={e => {
+                    console.log('go to ', hoveringIcon, paneManagerStore.homePane.id)
+                    if (hoveringIcon) {
+                      e.stopPropagation()
+                      paneManagerStore.setActivePane(paneManagerStore.homePane.id)
+                    }
+                  }}
                 />
               }
             >
@@ -151,9 +163,9 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
     <Popover
       group="orbit-nav"
       target={target}
-      openOnClick
+      // openOnClick
       openOnHover
-      closeOnClick
+      // closeOnClick
       width={window.innerWidth * 0.8}
       padding={3}
       elevation={2}

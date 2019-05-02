@@ -1,14 +1,24 @@
 import { command } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import * as KIT from '@o/kit'
-import { AppDefinition, LocationStore, PaneManagerStore, ProvideStores, QueryStore, showConfirmDialog, SpaceStore, ThemeStore } from '@o/kit'
+import {
+  AppDefinition,
+  LocationStore,
+  PaneManagerStore,
+  ProvideStores,
+  QueryStore,
+  showConfirmDialog,
+  SpaceStore,
+  ThemeStore,
+  themes,
+} from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import * as UI from '@o/ui'
 import { Loading, ProvideFocus, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import * as ReactDOM from 'react-dom'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitApps } from '../../apps/orbitApps'
@@ -33,6 +43,7 @@ import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
+import { IS_ELECTRON } from '../../constants'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -43,6 +54,13 @@ window['OrbitUI'] = (window as any).OrbitUI = UI
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
   const locationStore = useStore(LocationStore)
+
+  useLayoutEffect(() => {
+    if (!IS_ELECTRON) {
+      document.body.style.background = themes[themeStore.themeColor].background.toCSS()
+    }
+  }, [themeStore.themeColor])
+
   return (
     <ProvideStores stores={{ locationStore, themeStore }}>
       <Theme name={themeStore.themeColor}>

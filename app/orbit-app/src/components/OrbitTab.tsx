@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { Absolute, gloss, linearGradient, Row, useTheme } from '@o/gloss'
+import { gloss, linearGradient, Row, useTheme } from '@o/gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
@@ -16,7 +16,7 @@ import {
 } from '@o/ui'
 import * as React from 'react'
 
-export const tabHeight = 28
+export const tabHeight = 26
 const inactiveOpacity = 0.45
 const borderSize = 8
 
@@ -61,7 +61,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
   const iconSize = iconSizeProp || (thicc ? 12 : 11)
-  const theme = useTheme()
   const link = useLocationLink(location)
 
   const button = (
@@ -76,24 +75,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       {...props}
     >
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
-        {isActive && (
-          <>
-            {/* extra glint on dark background */}
-            {theme.background.isDark() && (
-              <Absolute
-                borderTopRadius={borderSize}
-                height={100}
-                top={0}
-                left={0}
-                right={0}
-                overflow="hidden"
-                boxShadow={[['inset', 0, 1, theme.glintColor || theme.background.alpha(0.5)]]}
-                transform={{ y: -0.5 }}
-              />
-            )}
-          </>
-        )}
-
         <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
@@ -194,7 +175,6 @@ const NavButtonChrome = gloss<TabProps>(View, {
   alignItems: 'center',
   borderRadius: borderSize,
   height: tabHeight,
-  margin: [0, 2],
 }).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
   const glowStyle = {
@@ -208,13 +188,13 @@ const NavButtonChrome = gloss<TabProps>(View, {
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
-    boxShadow: isActive
-      ? [
-          [0, 0, 6, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
-          // ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.6)],
-          // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
-        ]
-      : null,
+    // boxShadow: isActive
+    //   ? [
+    //       [0, 0, 6, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
+    //       // ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.6)],
+    //       // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
+    //     ]
+    //   : null,
     '&:hover': glowStyle,
     '& .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.4 !important',

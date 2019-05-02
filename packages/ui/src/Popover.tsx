@@ -15,6 +15,7 @@ import { SizedSurface } from './SizedSurface'
 import { SurfacePassPropsReset, SurfaceProps } from './Surface'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
+import { View } from './View/View'
 
 export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   /** Custom theme for just the popover content */
@@ -983,6 +984,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       noPortal,
       popoverTheme,
       zIndex,
+      transform,
       ...restProps
     } = this.props
     const {
@@ -1036,7 +1038,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           top={top}
           noHoverOnChildren={noHoverOnChildren}
         >
-          <PopoverInner>
+          <PopoverInner transform={transform}>
             {!noArrow && (
               <ArrowContain
                 style={{
@@ -1185,7 +1187,7 @@ const PopoverWrap = gloss({
   }
 })
 
-const PopoverInner = gloss({
+const PopoverInner = gloss(View, {
   flex: 1,
   position: 'relative',
 })

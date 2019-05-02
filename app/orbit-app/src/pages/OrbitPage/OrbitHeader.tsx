@@ -40,8 +40,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
 
-      <OrbitNav />
-
       <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
@@ -54,6 +52,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
         <HeaderContain isActive={false}>
           <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
             <OrbitNavPopover
+              open={paneManagerStore.isOnHome ? true : undefined}
               target={
                 <Icon
                   opacity={0.65}
@@ -152,15 +151,15 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
     <Popover
       group="orbit-nav"
       target={target}
-      // openOnHover
       openOnClick
-      closeOnEsc
-      closeOnClickAway
-      width="90%"
-      padding={5}
+      openOnHover
+      width={window.innerWidth * 0.8}
+      padding={3}
       elevation={10}
+      distance={8}
       sizeRadius
-      background
+      background={theme => theme.backgroundStronger}
+      adjust={[100, 0]}
       {...rest}
     >
       {children}

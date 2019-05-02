@@ -20,10 +20,9 @@ const isOnSettings = (pane?: PaneManagerPane) =>
 
 export const OrbitNav = memo(
   forwardRef((_, ref) => {
-    const { spaceStore, paneManagerStore, newAppStore } = useStores()
+    const { paneManagerStore, newAppStore } = useStores()
     const Actions = useActions()
     const { showCreateNew } = newAppStore
-    const activeSpaceName = spaceStore.activeSpace.name
     const activeAppsSorted: AppBit[] = [...useActiveAppsSorted()]
     const { activePaneId } = paneManagerStore
     const [space] = useActiveSpace()
@@ -205,7 +204,7 @@ export const OrbitNav = memo(
 
 const OrbitNavClip = gloss({
   flex: 1,
-  padding: [23, 40],
+  padding: [20, 40],
   margin: [-20, 0],
 })
 

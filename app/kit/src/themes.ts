@@ -319,7 +319,7 @@ const dark = {
     tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [0, 0, 0, 0.1],
-    tabInactiveHover: [0, 0, 0, 0.1],
+    tabInactiveHover: [255,255,255, 0.05],
     glintColor: [255, 255, 255, 0.135],
     inputBackground: transparent,
     inputBackgroundHover: transparent,

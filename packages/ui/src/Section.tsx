@@ -3,6 +3,7 @@ import React, { forwardRef, isValidElement } from 'react'
 
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
+import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
@@ -16,6 +17,9 @@ export type SectionSpecificProps = Partial<
 > & {
   /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
+
+  /** Allow scaling just the TitleRow element */
+  titleScale?: number
 
   /** Size the section: title, padding, border radius */
   size?: Sizes
@@ -95,6 +99,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     fixedTitle,
     elevation,
     titleProps,
+    backgrounded,
+    titleScale,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -109,10 +115,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleElement = isValidElement(title) ? (
       title
     ) : (
-      <>
+      <Scale size={titleScale}>
         <TitleRow
           bordered={bordered || titleBorder}
-          backgrounded={bordered}
+          backgrounded={selectDefined(backgrounded, bordered)}
           title={title}
           subTitle={subTitle}
           after={afterTitle}
@@ -126,7 +132,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           useCollapse={collapse}
         />
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
-      </>
+      </Scale>
     )
   }
 

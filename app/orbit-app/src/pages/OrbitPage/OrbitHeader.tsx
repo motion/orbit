@@ -156,7 +156,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
       closeOnClick
       width={window.innerWidth * 0.8}
       padding={3}
-      elevation={10}
+      elevation={2}
       distance={8}
       sizeRadius
       background={theme => theme.backgroundStronger}

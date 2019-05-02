@@ -3,10 +3,8 @@ import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
-const orbitColor = toColor('#3E7FD5')
-
-export const colors = {
-  orange: '#DC6104',
+export const colors = Theme.colorize({
+  orange: '#E97902',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
   blue: '#3E7FD5',
@@ -21,7 +19,7 @@ export const colors = {
   yellow: '#E2EB53',
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
-}
+})
 
 const transparent = [0, 0, 0, 0]
 
@@ -75,16 +73,16 @@ const colorThemes: ThemeSet = {
   orange: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
-    background: '#DC6104',
+    background: colors.orange,
   }),
   yellow: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
-    background: '#C9C825',
+    background: colors.yellow,
   }),
   blue: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    background: orbitColor,
+    background: colors.blue,
     color: '#fff',
   }),
   transparent: Theme.colorize({
@@ -195,8 +193,8 @@ const light = {
     backgroundStronger: lightBackground.darken(0.05),
     backgroundStrongest: lightBackground.darken(0.075),
     backgroundZebra: '#f6f7f9aa',
-    backgroundHighlightActive: orbitColor.lighten(0.1),
-    backgroundHighlight: orbitColor,
+    backgroundHighlightActive: colors.blue.lighten(0.1),
+    backgroundHighlight: colors.blue,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
@@ -285,8 +283,8 @@ const dark = {
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
-    backgroundHighlightActive: orbitColor.lighten(0.2),
-    backgroundHighlight: orbitColor,
+    backgroundHighlightActive: colors.blue.lighten(0.2),
+    backgroundHighlight: colors.blue,
     color: darkColor,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
@@ -319,7 +317,7 @@ const dark = {
     tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [0, 0, 0, 0.1],
-    tabInactiveHover: [255,255,255, 0.05],
+    tabInactiveHover: [255, 255, 255, 0.05],
     glintColor: [255, 255, 255, 0.135],
     inputBackground: transparent,
     inputBackgroundHover: transparent,

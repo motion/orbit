@@ -160,7 +160,11 @@ export function FloatingView(props: FloatingViewProps) {
             onResize={onResize}
             onResizeEnd={commit}
           >
-            <FullScreen {...bindGesture()} pointerEvents="inherit">
+            <FullScreen
+              className="ui-floating-view-content"
+              {...bindGesture()}
+              pointerEvents="inherit"
+            >
               {children}
             </FullScreen>
           </Interactive>

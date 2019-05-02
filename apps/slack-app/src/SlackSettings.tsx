@@ -3,6 +3,7 @@ import { DataType, Table, View } from '@o/ui'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+
 import { SlackLoader } from './SlackLoader'
 
 export function SlackSettings() {
@@ -24,6 +25,18 @@ export function SlackSettings() {
       setChannels(orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc']))
     })
   }, [app && app.token])
+
+  const rows = (channels || []).map(channel => {
+    return {
+      name: channel.name,
+      topic: channel.topic ? channel.topic.value : '',
+      members: channel.num_members,
+      createdAt: new Date(channel.created * 1000),
+      active: whitelist.getWhitelisted(channel.id),
+    }
+  })
+
+  console.log('rows', rows)
 
   return (
     <>
@@ -50,15 +63,7 @@ export function SlackSettings() {
           }}
           selectable="multi"
           onSelect={x => setHighlightedRows(x)}
-          rows={(channels || []).map(channel => {
-            return {
-              name: channel.name,
-              topic: channel.topic ? channel.topic.value : '',
-              members: channel.num_members,
-              createdAt: new Date(channel.created * 1000),
-              active: whitelist.getWhitelisted(channel.id),
-            }
-          })}
+          rows={rows}
         />
       </View>
     </>

@@ -1,11 +1,14 @@
 import { AppMainView, AppProps, removeApp, useAppBit } from '@o/kit'
 import { Button, FormField, Section, SubSection, Title } from '@o/ui'
 import React from 'react'
+
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMain(props: AppProps) {
   const [app] = useAppBit(+props.subId)
+
+  console.log('got app', app)
 
   if (!app) {
     return null
@@ -18,6 +21,7 @@ export function AppsMain(props: AppProps) {
     } else {
       return (
         <Section
+          backgrounded
           titleBorder
           padInner
           icon="cog"

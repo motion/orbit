@@ -379,7 +379,7 @@ const shouldShowPopover = (props: PopoverProps, state: State) => {
   return false
 }
 
-export class Popover extends React.PureComponent<PopoverProps, State> {
+export class Popover extends React.Component<PopoverProps, State> {
   static acceptsHovered = 'open'
   static defaultProps = defaultProps
 

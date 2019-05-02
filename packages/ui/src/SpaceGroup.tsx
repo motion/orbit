@@ -11,24 +11,34 @@ export type SpaceGroupProps = {
   afterSpace?: React.ReactNode
 }
 
-const addChild = (all, child) => {
-  if (child && child.props.children === 'Examples') {
-    debugger
-  }
-  const last = all[all.length - 1]
-  if (last && last.type && last.type.isSpace) {
-    if (child && child.type && child.type.isSpace) {
-      return
-    }
-  }
-  all.push(child)
-}
-
 const childrenToArr = (x: React.ReactNode): JSX.Element[] =>
   React.Children.toArray(x).filter(y => y !== null && y !== false) as any
 
 export function SpaceGroup(props: SpaceGroupProps) {
   return createSpacedChildren(props)
+}
+
+function getChildrenForSpacing(childs: React.ReactNode) {
+  let children = []
+  // Allows special cases for unwrapping/forwarding spacing
+  // Allow nested unwraps, for example see <PassProps />
+  for (const child of React.Children.toArray(childs)) {
+    if (!isValidElement(child)) {
+      children.push(child)
+      continue
+    }
+    const type = child.type
+    if (type === React.Fragment || (type && type['canUnwrap'])) {
+      if (!child.props.children) {
+        continue
+      }
+      const next = childrenToArr(child.props.children)
+      children = [...children, ...next]
+    } else {
+      children.push(child)
+    }
+  }
+  return children
 }
 
 export function createSpacedChildren({
@@ -42,27 +52,8 @@ export function createSpacedChildren({
   if (!children) {
     return null
   }
-  let childs = childrenToArr(children)
-  let total = childs.length
-
-  // Allows special cases for unwrapping/forwarding spacing
-  // Allow nested unwraps, for example see <PassProps />
-  while (true) {
-    if (total === 1) {
-      const child = childs[0]
-      const type = child.type
-      // unwrap fragments and children with `canUnwrap`!
-      if (type === React.Fragment || (type && type.canUnwrap)) {
-        if (!child.props.children) {
-          return null
-        }
-        childs = childrenToArr(child.props.children)
-        total = childs.length
-        continue
-      }
-    }
-    break
-  }
+  const childs = getChildrenForSpacing(children)
+  const total = childs.length
 
   if ((!space && !spaceAround) || (!spaceAround && total <= 1)) {
     return (

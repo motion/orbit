@@ -70,6 +70,7 @@ export function Card(props: CardProps) {
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
         <SizedSurface
+          className="ui-card-surface"
           borderWidth={1}
           overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
           {...sizedSurfaceProps}

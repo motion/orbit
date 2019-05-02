@@ -9,10 +9,10 @@ export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false
 
 type ThemeProps = {
   theme?: string | SimpleStyleObject
-  name?: string
   themeSelect?: ThemeSelect
-  children: any
   alt?: string
+  name?: string
+  children: any
 }
 
 const themeContexts = new WeakMap()

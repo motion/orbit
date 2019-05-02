@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, isValidElement } from 'react'
 
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
@@ -103,26 +103,32 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)
 
-  const titleElement = hasTitle && (
-    <>
-      <TitleRow
-        bordered={bordered || titleBorder}
-        backgrounded={bordered}
-        title={title}
-        subTitle={subTitle}
-        after={afterTitle}
-        above={above}
-        before={beforeTitle}
-        below={belowTitle}
-        icon={icon}
-        pad={innerPad || (titleBorder || bordered ? true : null)}
-        size={selectDefined(titleSize, size)}
-        titleProps={titleProps}
-        useCollapse={collapse}
-      />
-      {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
-    </>
-  )
+  let titleElement: JSX.Element = null
+
+  if (hasTitle) {
+    titleElement = isValidElement(title) ? (
+      title
+    ) : (
+      <>
+        <TitleRow
+          bordered={bordered || titleBorder}
+          backgrounded={bordered}
+          title={title}
+          subTitle={subTitle}
+          after={afterTitle}
+          above={above}
+          before={beforeTitle}
+          below={belowTitle}
+          icon={icon}
+          pad={innerPad || (titleBorder || bordered ? true : null)}
+          size={selectDefined(titleSize, size)}
+          titleProps={titleProps}
+          useCollapse={collapse}
+        />
+        {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
+      </>
+    )
+  }
 
   return (
     <SizedSurface
@@ -132,7 +138,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       sizeRadius={bordered ? 1 : 0}
       elevation={selectDefined(elevation, bordered ? 1 : 0)}
       borderWidth={bordered ? 1 : 0}
-      margin={typeof margin !== 'undefined' ? margin : bordered ? 10 : 0}
+      margin={margin}
       noInnerElement
       flex={flex}
       background={background || 'transparent'}

@@ -4,18 +4,18 @@
   Col.
 </IntroText>
 
-There are many ways to lay out an interface. Common strategies are:
+There are three main strategies:
 
-1. Placing all of your items in a Grid.
-2. Having a dashboard-style interface with resizable panes.
-3. Manually laying out rows, columns, and grid-like content.
+1. Placing all of your items in a [GridLayout](/docs/layout-grid).
+2. Having a dashboard-style interface with resizable panes using [Layout](/docs/layout).
+3. Manually laying out with [grid](/docs/grid), or [row and column](/docs/layout).
 
 Orbit provides components for each of these use cases.
 
-## 1. Automatic Grid
+## 1. Smart Grid
 
 If you don't want to mess around with layout, and your app doesn't have strict requirements for how
-it should look, we highly recommend using the `<Grid />` view in the Orbit Kit.
+it should look, we highly recommend using the `<GridLayout />` view in the Orbit Kit.
 
 The Grid view does a few things you. First, it shows content in a nice grid, which responds to your
 view size and lets you resize the inner items. It's based on `react-resizable-grid`.
@@ -74,7 +74,7 @@ export default () => {
 
 [Read more about layouts here](/docs/layout).
 
-## 3. Common layout: Rows, Cols, and Grid
+## 3. Row, Col, and Grid
 
 For all other uses, you have the amazingly powerful Row, Col, and Grid. These views allow you to use
 Flexbox, or CSS-Grid, respectively, but they support common spacing, sizing, padding, and scrolling

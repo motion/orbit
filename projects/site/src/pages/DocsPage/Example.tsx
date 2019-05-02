@@ -1,21 +1,34 @@
-import { Card, gloss, Icon, SimpleText, Space, View } from '@o/ui'
+import { Button, Card, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
 import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
+import { useCurrentRoute } from 'react-navi'
 
 import { CodeBlock } from '../../views/CodeBlock'
+import { linkProps } from '../HomePage/linkProps'
 
 export type ExampleProps = {
   source: string
   examples: any
   id: string
   name?: string
-  children: any
+  children?: any
   willScroll?: boolean
   onlySource?: boolean
   chromeless?: boolean
 }
 
 export const Example = memo(
-  ({ source, examples, id, name, willScroll, onlySource, chromeless, ...props }: ExampleProps) => {
+  ({
+    source,
+    examples,
+    parentId,
+    id,
+    name,
+    willScroll,
+    onlySource,
+    chromeless,
+    ...props
+  }: ExampleProps) => {
+    const route = useCurrentRoute()
     const [showSource, setShowSource] = useState(true)
     const [hovered, setHovered] = useState(false)
     const tm = useRef(null)
@@ -78,7 +91,25 @@ export const Example = memo(
               background={theme => theme.backgroundStrong}
               title={name || id}
               afterTitle={
-                <Icon size={16} name="code" color={showSource ? '#B65138' : [150, 150, 150, 0.5]} />
+                <Row space alignItems="center">
+                  {parentId && (
+                    <Button
+                      chromeless
+                      size={0.5}
+                      sizePadding={0}
+                      iconSize={12}
+                      icon="share"
+                      color={[150, 150, 150, 0.5]}
+                      tooltip="Open in own window"
+                      {...linkProps(`/docs/isolate/${parentId}/${id}`, { isExternal: true })}
+                    />
+                  )}
+                  <Icon
+                    size={16}
+                    name="code"
+                    color={showSource ? '#B65138' : [150, 150, 150, 0.5]}
+                  />
+                </Row>
               }
               onClickTitle={() => {
                 setShowSource(!showSource)

@@ -59,7 +59,9 @@ export const DocsContents = memo(
     return (
       <MDX
         components={{
-          Example: props => <Example examples={examples} source={examplesSource} {...props} />,
+          Example: props => (
+            <Example parentId={id} examples={examples} source={examplesSource} {...props} />
+          ),
         }}
       >
         <Section

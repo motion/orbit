@@ -35,15 +35,15 @@ export const useLink = (href: string) => {
   const header = HeaderContext.useProps()
   const isActive = useIsActiveRoute(href)
   return {
-    ...linkProps(href, header, isActive),
+    ...linkProps(href, { header, isActive }),
     isActive,
   }
 }
 
 let tm = null
 
-export const createLink = memoize((href: string, header = null) => async e => {
-  if (isExternal(href)) {
+export const createLink = memoize((href: string, header = null, isExternal = false) => async e => {
+  if (isExternal || isExternal(href)) {
     return
   }
   clearTimeout(tm)
@@ -68,15 +68,18 @@ export const createLink = memoize((href: string, header = null) => async e => {
   }
 })
 
-export const linkProps = (href: string, header?, isActive?): any => {
+export const linkProps = (
+  href: string,
+  { header, isActive }: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
+): any => {
   return {
     href,
     tagName: 'a',
     ...(!!header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
-    target: isExternal(href) ? '_blank' : undefined,
-    onClick: isActive ? nullLink : createLink(href, header),
+    target: isExternal || isExternal(href) ? '_blank' : undefined,
+    onClick: isActive ? nullLink : createLink(href, header, isExternal),
     onMouseEnter: createPreloadLink(href),
   }
 }

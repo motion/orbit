@@ -5,7 +5,7 @@ import { employees } from './fakeData'
 
 const data = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
 
-export let Simple = (
+export let simple = (
   <Table
     overscanCount={100}
     height={300}
@@ -14,7 +14,7 @@ export let Simple = (
   />
 )
 
-export let Columns = (
+export let columns = (
   <Table
     height={250}
     columns={[
@@ -36,7 +36,7 @@ export let Columns = (
   />
 )
 
-export let Selections = () => {
+export let selections = () => {
   const [rows, setRows] = useState([])
   return (
     <>
@@ -53,7 +53,7 @@ export let Selections = () => {
   )
 }
 
-export let Filters = (
+export let filters = (
   <Table
     height={250}
     filters={[
@@ -67,12 +67,12 @@ export let Filters = (
   />
 )
 
-export let Searching = (
+export let searching = (
   //
   <Table searchable height={250} rows={employees} />
 )
 
-export let Section = (
+export let section = (
   <Table
     title="My List"
     subTitle="Subtitle for my section"

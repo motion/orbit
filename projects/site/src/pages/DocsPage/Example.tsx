@@ -69,11 +69,11 @@ export const Example = memo(
           <>{contents}</>
         ) : (
           <>
-            <Space size="lg" />
+            <Space />
             <Card
               elevation={1}
-              pad
-              titlePad="md"
+              pad="sm"
+              titlePad="sm"
               space
               background={theme => theme.backgroundStrong}
               title={name || id}

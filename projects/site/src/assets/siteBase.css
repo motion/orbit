@@ -591,3 +591,7 @@ main a {
 main a:hover {
   color: #fe5a5999;
 }
+
+.token-line {
+  display: block;
+}

@@ -1,0 +1,17 @@
+Use `<DateFormat />` to output nicely formatted dates. The `nice` property will pass it to
+`<TimeAgo />` and make it relative, updating it as time passes.
+
+By default it will display "close" dates without the year or month, but you can override it's
+formatting using the `options` property. See
+[toLocaleDateString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString)
+for options.
+
+To use DateFormat:
+
+```tsx
+import { DateFormat } from '@o/ui'
+```
+
+## Examples
+
+<Example chromeless id="Basic" />

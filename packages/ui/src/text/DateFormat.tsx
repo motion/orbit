@@ -1,6 +1,21 @@
 import { differenceInCalendarDays, differenceInCalendarYears } from 'date-fns'
 import * as React from 'react'
+
 import { TimeAgo } from './TimeAgo'
+
+export type DateFormatProps = {
+  /** Date object to format */
+  date?: Date
+
+  /** Defaults to en-US */
+  locale?: string | string[]
+
+  /** Switch to <TimeAgo /> for relative formating */
+  nice?: boolean
+
+  /** Date formatting options */
+  options?: Intl.DateTimeFormatOptions
+}
 
 const defaultOptions = {
   weekday: 'short',
@@ -8,11 +23,16 @@ const defaultOptions = {
   day: 'numeric',
 }
 
-export function DateFormat({ date = new Date(), locale = 'en-US', options = null, nice = false }) {
+export function DateFormat({
+  date = new Date(),
+  locale = 'en-US',
+  options = null,
+  nice = false,
+}: DateFormatProps) {
   if (nice) {
     return <TimeAgo>{date}</TimeAgo>
   }
-  let finalOptions = {
+  let finalOptions: Intl.DateTimeFormatOptions = {
     ...defaultOptions,
     ...options,
   }

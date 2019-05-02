@@ -1,5 +1,5 @@
 import { Contents, gloss } from '@o/gloss'
-import { createStoreContext, react, shallow, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, useStore } from '@o/use-store'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 
@@ -39,18 +39,47 @@ const defaultProps: Partial<GridLayoutProps> = {
   },
 }
 
+type GridItems = { [key: string]: GridItemProps }
+
+// attempts to position things nicely
+function calculateLayout(items: GridItems, cols: number) {
+  const layout = []
+  let lastX = 0
+  let lastY = 0
+  for (const [idx, key] of Object.keys(items).entries()) {
+    const item = items[key]
+    const w = item.w || 1
+    let x = lastX + idx === 0 ? 0 : w + lastX
+    const shouldWrap = x + w > cols
+    if (shouldWrap) {
+      x = 0
+    }
+    const y = x + w > cols ? lastY + 1 : lastY
+    const next = {
+      x,
+      y,
+      w: w || 2,
+      h: item.h || 1,
+      i: key,
+    }
+    lastY = y
+    lastX = x
+    layout.push(next)
+  }
+  return layout
+}
+
 class GridStore {
   props: GridLayoutProps
 
-  items: { [key: string]: GridItemProps } = shallow({})
-  layout = 'lg'
+  items: GridItems = {}
   layouts = {
     lg: null,
   }
   breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
   width = window.innerWidth
 
-  setItems = (items: { [key: string]: GridItemProps }) => {
+  setItems = (items: GridItems) => {
     for (const key in items) {
       this.items[key] = items[key]
     }
@@ -83,46 +112,25 @@ class GridStore {
   updateLayout = react(
     () => this.items,
     async (items, { sleep }) => {
-      await sleep(100)
-      const cols = this.props.cols[this.layout]
-      if (!cols) {
-        console.warn('no cols defined for layout', this.layout, this.props.cols)
-        return
+      ensure('items', !!Object.keys(items).length)
+      await sleep(50)
+      // always re-calc from large and reset
+      this.layouts = {
+        lg: calculateLayout(items, this.props.cols['lg']),
       }
-      const layout = []
-      let lastX = 0
-      let lastY = 0
-      for (const [idx, key] of Object.keys(items).entries()) {
-        const item = items[key]
-        let x = lastX + idx === 0 ? 0 : item.w + lastX
-        const shouldWrap = x + item.w > cols
-        if (shouldWrap) {
-          x = 0
-        }
-        const y = x + item.w > cols ? lastY + 1 : lastY
-        const next = {
-          x,
-          y,
-          w: item.w || 2,
-          h: item.h || 1,
-          i: key,
-          // static: Math.random() < 0.05,
-        }
-        lastY = y
-        lastX = x
-        layout.push(next)
-      }
-      console.log('setting layout', cols, layout)
-      this.setLayout(layout)
     },
   )
 
   mountItem(id: string, props: GridItemProps) {
-    this.items[id] = props
+    this.items = {
+      ...this.items,
+      [id]: props,
+    }
   }
 
   unmountItem(id: string) {
     delete this.items[id]
+    this.items = { ...this.items }
   }
 }
 

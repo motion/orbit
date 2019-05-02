@@ -155,7 +155,7 @@ const InlineCode = gloss({
   fontFamily: ` 'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
   borderRadius: 3,
   padding: [0, 2],
-  margin: [0, 0],
+  margin: 0,
   lineHeight: '1.4rem',
   fontWeight: 500,
 }).theme((_, theme) =>

@@ -1,4 +1,6 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
+import { ThemeProvide } from '@o/gloss'
+import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import React, { memo } from 'react'
 
@@ -58,124 +60,126 @@ export const DocsContents = memo(
     )
 
     return (
-      <MDX
-        components={{
-          Example: props => (
-            <Example parentId={id} examples={examples} source={examplesSource} {...props} />
-          ),
-        }}
-      >
-        <Section
-          maxWidth={800}
-          width="100%"
-          margin={[0, 'auto']}
-          pad={useScreenVal(
-            ['xl', 'md', true, 'md'],
-            ['xl', 'md', true, 'md'],
-            ['xl', 'xl', true, 'xl'],
-          )}
-          titleBorder
-          space
-          title={
-            <FadeChild>
-              <Title size={(title || '').length > 22 ? 4 : 5}>{title || 'No title'}</Title>
-            </FadeChild>
-          }
-          belowTitle={
-            <FadeChild>
-              <SurfacePassProps
-                chromeless
-                cursor="pointer"
-                tagName="a"
-                textDecoration="none"
-                borderWidth={0}
-                glint={false}
-                sizeRadius={0}
-                sizePadding={0}
-                marginRight={30}
-                size="lg"
-                alpha={0.65}
-                hoverStyle={{
-                  color: colors.purple,
-                }}
-              >
-                <Row>
-                  {!!source && (
-                    <Button
-                      iconSize={16}
-                      icon="code"
-                      onClick={e => {
-                        e.stopPropagation()
-                        scrollTo('#component-source')
-                      }}
-                    >
-                      View Source
-                    </Button>
-                  )}
-                  {!!types && (
-                    <Button
-                      iconSize={16}
-                      icon="t"
-                      onClick={e => {
-                        e.stopPropagation()
-                        scrollTo('#component-props')
-                      }}
-                    >
-                      View Props
-                    </Button>
-                  )}
-                </Row>
-              </SurfacePassProps>
-            </FadeChild>
-          }
-          afterTitle={
-            <>
-              {beta && <Tag alt="lightRed">Beta</Tag>}
-              {!!source && (
-                <Button
-                  tooltip="Source in Github"
-                  size="lg"
-                  {...linkProps(`https://github.com/motion/orbit`)}
-                  icon={<Icon size={16} svg={GithubIcon} />}
-                  onClick={e => e.stopPropagation()}
-                />
-              )}
-            </>
-          }
+      <ThemeProvide themes={themes}>
+        <MDX
+          components={{
+            Example: props => (
+              <Example parentId={id} examples={examples} source={examplesSource} {...props} />
+            ),
+          }}
         >
-          <FadeChild delay={100}>{children}</FadeChild>
-
-          <Space size="xxl" />
-
-          {nextPrevious}
-
-          {!!(types || source) && (
-            <>
-              <Space size="xxl" />
-
-              <MetaSection>
-                {!!types && (
-                  <Section size="sm" titleBorder title="Props" id="component-props">
-                    <PropsTable props={types.props} />
-                  </Section>
-                )}
-
-                <Space size="xl" />
-
+          <Section
+            maxWidth={800}
+            width="100%"
+            margin={[0, 'auto']}
+            pad={useScreenVal(
+              ['xl', 'md', true, 'md'],
+              ['xl', 'md', true, 'md'],
+              ['xl', 'xl', true, 'xl'],
+            )}
+            titleBorder
+            space
+            title={
+              <FadeChild>
+                <Title size={(title || '').length > 22 ? 4 : 5}>{title || 'No title'}</Title>
+              </FadeChild>
+            }
+            belowTitle={
+              <FadeChild>
+                <SurfacePassProps
+                  chromeless
+                  cursor="pointer"
+                  tagName="a"
+                  textDecoration="none"
+                  borderWidth={0}
+                  glint={false}
+                  sizeRadius={0}
+                  sizePadding={0}
+                  marginRight={30}
+                  size="lg"
+                  alpha={0.65}
+                  hoverStyle={{
+                    color: colors.purple,
+                  }}
+                >
+                  <Row>
+                    {!!source && (
+                      <Button
+                        iconSize={16}
+                        icon="code"
+                        onClick={e => {
+                          e.stopPropagation()
+                          scrollTo('#component-source')
+                        }}
+                      >
+                        View Source
+                      </Button>
+                    )}
+                    {!!types && (
+                      <Button
+                        iconSize={16}
+                        icon="t"
+                        onClick={e => {
+                          e.stopPropagation()
+                          scrollTo('#component-props')
+                        }}
+                      >
+                        View Props
+                      </Button>
+                    )}
+                  </Row>
+                </SurfacePassProps>
+              </FadeChild>
+            }
+            afterTitle={
+              <>
+                {beta && <Tag alt="lightRed">Beta</Tag>}
                 {!!source && (
-                  <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
-                    <CodeBlock className="language-typescript">{source}</CodeBlock>
-                  </Section>
+                  <Button
+                    tooltip="Source in Github"
+                    size="lg"
+                    {...linkProps(`https://github.com/motion/orbit`)}
+                    icon={<Icon size={16} svg={GithubIcon} />}
+                    onClick={e => e.stopPropagation()}
+                  />
                 )}
-              </MetaSection>
+              </>
+            }
+          >
+            <FadeChild delay={100}>{children}</FadeChild>
 
-              <Space size="xxl" />
+            <Space size="xxl" />
 
-              {nextPrevious}
-            </>
-          )}
-        </Section>
-      </MDX>
+            {nextPrevious}
+
+            {!!(types || source) && (
+              <>
+                <Space size="xxl" />
+
+                <MetaSection>
+                  {!!types && (
+                    <Section size="sm" titleBorder title="Props" id="component-props">
+                      <PropsTable props={types.props} />
+                    </Section>
+                  )}
+
+                  <Space size="xl" />
+
+                  {!!source && (
+                    <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
+                      <CodeBlock className="language-typescript">{source}</CodeBlock>
+                    </Section>
+                  )}
+                </MetaSection>
+
+                <Space size="xxl" />
+
+                {nextPrevious}
+              </>
+            )}
+          </Section>
+        </MDX>
+      </ThemeProvide>
     )
   },
 )

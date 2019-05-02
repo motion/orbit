@@ -1,4 +1,4 @@
-import { Button, Row, SubSection, SurfacePassProps } from '@o/ui'
+import { Button, Col, RoundButton, Row, SubSection, SurfacePassProps } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
@@ -12,23 +12,41 @@ export let Basic = (
 )
 
 export let Alternates = (
-  <Row space flexWrap="wrap">
-    {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
-      <Button key={alt} alt={alt} icon="cog" iconAfter>
-        Alt {alt}
-      </Button>
-    ))}
-  </Row>
+  <Col space>
+    <Row space flexWrap="wrap">
+      {['error', 'warn', 'confirm', 'bordered', 'selected', 'flat', 'clear'].map(alt => (
+        <Button key={alt} alt={alt} icon="cog" iconAfter>
+          Alt {alt}
+        </Button>
+      ))}
+    </Row>
+    <Row space flexWrap="wrap">
+      {['error', 'warn', 'confirm'].map(alt => (
+        <RoundButton key={alt} alt={alt} icon="cog" size={2}>
+          Alt {alt}
+        </RoundButton>
+      ))}
+    </Row>
+  </Col>
 )
 
 export let Sizing = (
-  <Row space flexWrap="wrap">
-    {['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 1, 2, 3].map(size => (
-      <Button key={size} size={size} icon="cog" iconAfter>
-        Size {size}
-      </Button>
-    ))}
-  </Row>
+  <Col space>
+    <Row space flexWrap="wrap">
+      {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
+        <Button key={size} size={size} icon="cog" iconAfter>
+          Size {size}
+        </Button>
+      ))}
+    </Row>
+    <Row space flexWrap="wrap">
+      {[1, 2, 3, 4].map(size => (
+        <Button key={size} size={size} icon="cog" iconAfter>
+          Size {size}
+        </Button>
+      ))}
+    </Row>
+  </Col>
 )
 
 export let Elevation = (

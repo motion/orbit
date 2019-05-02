@@ -1,7 +1,6 @@
 import { Button, Card, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
-import { useCurrentRoute } from 'react-navi'
 
 import { CodeBlock } from '../../views/CodeBlock'
 import { linkProps } from '../HomePage/linkProps'
@@ -30,7 +29,7 @@ export const Example = memo(
     chromeless,
     ...props
   }: ExampleProps) => {
-    const route = useCurrentRoute()
+    // const route = useCurrentRoute()
     const [showSource, setShowSource] = useState(true)
     const [hovered, setHovered] = useState(false)
     const tm = useRef(null)
@@ -87,7 +86,7 @@ export const Example = memo(
             <Space />
             <Card
               elevation={1}
-              pad="sm"
+              pad
               titlePad="sm"
               space
               background={theme => theme.backgroundStrong}
@@ -144,7 +143,6 @@ const AccidentalScrollPrevent = gloss({
 })
 
 const SubCard = gloss(View, {
-  margin: 5,
   borderRadius: 5,
   position: 'relative',
 })

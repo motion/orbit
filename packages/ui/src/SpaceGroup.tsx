@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, isValidElement } from 'react'
 
 import { Sizes, Space } from './Space'
 
@@ -11,8 +11,41 @@ export type SpaceGroupProps = {
   afterSpace?: React.ReactNode
 }
 
-const childrenToArr = (x: React.ReactNode): JSX.Element[] =>
-  React.Children.map(x, _ => _).filter(y => y !== null && y !== false) as any
+const addChild = (all, child) => {
+  if (child && child.props.children === 'Examples') {
+    debugger
+  }
+  const last = all[all.length - 1]
+  if (last && last.type && last.type.isSpace) {
+    if (child && child.type && child.type.isSpace) {
+      return
+    }
+  }
+  all.push(child)
+}
+
+const childrenToArr = (x: React.ReactNode): JSX.Element[] => {
+  let final = []
+  for (const child of React.Children.toArray(x)) {
+    if (child === null || child === false) continue
+    if (isValidElement(child)) {
+      if (child.type === React.Fragment || child.type['canUnwrap']) {
+        if (!child.props.children) {
+          continue
+        }
+        const next = childrenToArr(child.props.children)
+        for (const subChild of next) {
+          addChild(final, subChild)
+        }
+        continue
+      }
+    }
+    addChild(final, child)
+  }
+  console.log('final', final)
+  return final
+}
+// React.Children.map(x, _ => _).filter(y => y !== null && y !== false) as any
 
 export function SpaceGroup(props: SpaceGroupProps) {
   return createSpacedChildren(props)
@@ -65,12 +98,16 @@ export function createSpacedChildren({
     <>
       {beforeSpace}
       {spaceAround && spaceElement}
-      {childs.map((child, index) => (
-        <Fragment key={index}>
-          {child}
-          {index !== total - 1 && spaceElement}
-        </Fragment>
-      ))}
+      {childs.map((child, index) =>
+        child && child.type && child.type.isSpace ? (
+          child
+        ) : (
+          <Fragment key={index}>
+            {child}
+            {index !== total - 1 && spaceElement}
+          </Fragment>
+        ),
+      )}
       {spaceAround && spaceElement}
       {afterSpace}
     </>

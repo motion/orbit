@@ -76,7 +76,7 @@ class GridStore {
   layouts = {
     lg: null,
   }
-  breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
+  breakpoints = { lg: 1400, md: 1000, sm: 800, xs: 500, xxs: 0 }
   width = window.innerWidth
 
   setItems = (items: GridItems) => {

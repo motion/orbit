@@ -99,7 +99,7 @@ const ScrollableInner = gloss<ColProps & { isWrapped?: boolean }>(Col, {
     return {
       marginBottom: -space,
       '& > *': {
-        marginBottom: space,
+        marginBottom: `${space}px !important`,
       },
     }
   }

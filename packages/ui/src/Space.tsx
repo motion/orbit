@@ -2,6 +2,9 @@ import { Base, gloss } from '@o/gloss'
 
 import { useScale } from './Scale'
 
+// we need just a touch of css
+require('./Space.css')
+
 export type Sizes =
   | 'xs'
   | 'sm'
@@ -50,6 +53,13 @@ export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
     ...props,
   }
 })
+
+Space.defaultProps = {
+  className: 'ui-space',
+}
+
+// @ts-ignore
+Space.isSpace = true
 
 Space.ignoreAttrs = {
   ...Base.ignoreAttrs,

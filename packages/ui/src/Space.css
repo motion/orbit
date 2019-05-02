@@ -1,0 +1,4 @@
+/* until we find something for this */
+.ui-space + .ui-space {
+  display: none;
+}

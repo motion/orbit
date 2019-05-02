@@ -125,6 +125,7 @@ const defaultProps = {
   adjust: [0, 0],
   delay: 16,
   group: 'global',
+  zIndex: 100000000000,
 }
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps

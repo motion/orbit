@@ -303,4 +303,11 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/text/TimeAgo'),
     types: () => import('../../tmp/TimeAgo.json'),
   },
+  sidebar: {
+    page: () => import('./DocsPage/DocsSidebar.mdx'),
+    examples: () => import('./DocsPage/DocsSidebar'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSidebar'),
+    source: () => import('!raw-loader!@o/ui/src/Sidebar'),
+    types: () => import('../../tmp/Sidebar.json'),
+  },
 }

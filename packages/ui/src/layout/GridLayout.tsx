@@ -1,4 +1,4 @@
-import { Col, gloss } from '@o/gloss'
+import { Contents, gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
@@ -6,7 +6,10 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
+import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { SizedSurfaceProps } from '../SizedSurface'
+
+const ResponsiveGridLayout = WidthProvider(Responsive)
 
 if (isBrowser) {
   // original
@@ -31,12 +34,10 @@ const defaultProps: Partial<GridLayoutProps> = {
     xxs: 1,
     xs: 1,
     sm: 2,
-    md: 4,
-    lg: 6,
+    md: 3,
+    lg: 4,
   },
 }
-
-const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 class GridStore {
   props: GridLayoutProps
@@ -46,6 +47,8 @@ class GridStore {
   layouts = {
     lg: null,
   }
+  breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
+  width = window.innerWidth
 
   setItems = (items: { [key: string]: GridItemProps }) => {
     for (const key in items) {
@@ -53,9 +56,27 @@ class GridStore {
     }
   }
 
-  setLayout = (layout: any[]) => {
+  setWidth = (next: number) => {
+    this.width = next
+  }
+
+  get currentLayout() {
+    return Object.keys(this.breakpoints).reduce((a, key) => {
+      const val = this.breakpoints[key]
+      if (this.width > val && val > this.breakpoints[a]) {
+        return key
+      }
+      return a
+    }, 'xxs')
+  }
+
+  setLayout = (layout: any[], width?: number) => {
+    if (width) {
+      this.width = width
+    }
     this.layouts = {
-      lg: layout,
+      ...this.layouts,
+      [this.currentLayout]: layout,
     }
   }
 
@@ -70,19 +91,28 @@ class GridStore {
       }
       const layout = []
       let lastX = 0
+      let lastY = 0
       for (const [idx, key] of Object.keys(items).entries()) {
         const item = items[key]
+        let x = lastX + idx === 0 ? 0 : item.w + lastX
+        const shouldWrap = x + item.w > cols
+        if (shouldWrap) {
+          x = 0
+        }
+        const y = x + item.w > cols ? lastY + 1 : lastY
         const next = {
-          x: lastX + item.w,
-          y: idx * item.h,
+          x,
+          y,
           w: item.w || 2,
           h: item.h || 1,
           i: key,
           // static: Math.random() < 0.05,
         }
-        lastX = next.x
+        lastY = y
+        lastX = x
         layout.push(next)
       }
+      console.log('setting layout', cols, layout)
       this.setLayout(layout)
     },
   )
@@ -111,8 +141,10 @@ export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps)
 })
 
 export function GridLayoutChildren(props: GridLayoutPropsControlled) {
+  const { width, ref } = useParentNodeSize()
   const gridStore = useStore(GridStore, props)
   const childArr = Array.isArray(props.children) ? props.children : [props.children]
+
   const items = childArr
     .map((child, index) => {
       if (!isValidElement(child)) {
@@ -137,24 +169,31 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
       )
     })
     .filter(Boolean)
+
   let children = null
   if (!gridStore.layouts.lg) {
     children = <div style={{ display: 'none' }}>{items}</div>
   } else {
     children = (
-      <ResponsiveReactGridLayout
-        onLayoutChange={gridStore.setLayout}
-        compactType="vertical"
+      <ResponsiveGridLayout
+        onLayoutChange={next => gridStore.setLayout(next, width)}
         layouts={gridStore.layouts}
+        breakpoints={gridStore.breakpoints}
+        width={width}
+        compactType="vertical"
         measureBeforeMount={false}
         draggableHandle=".grid-draggable"
         cols={props.cols}
       >
         {items}
-      </ResponsiveReactGridLayout>
+      </ResponsiveGridLayout>
     )
   }
-  return <SimpleProvider value={gridStore}>{children}</SimpleProvider>
+  return (
+    <Contents ref={ref}>
+      <SimpleProvider value={gridStore}>{children}</SimpleProvider>
+    </Contents>
+  )
 }
 
 const getSizes = items => {
@@ -180,7 +219,7 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
   }
 
   return (
-    <ResponsiveReactGridLayout
+    <Responsive
       onLayoutChange={gridStore.setLayout}
       compactType="vertical"
       layouts={gridStore.layouts}
@@ -188,7 +227,7 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
       cols={props.cols}
     >
       {items}
-    </ResponsiveReactGridLayout>
+    </Responsive>
   )
 }
 
@@ -218,8 +257,7 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
   )
 }
 
-const GridItemChrome = gloss(Col, {
-  // overflow: 'hidden',
+const GridItemChrome = gloss({
   flex: 1,
 })
 

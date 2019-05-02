@@ -1,4 +1,5 @@
 import { Button, Card, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
+import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
 import { useCurrentRoute } from 'react-navi'
 
@@ -14,6 +15,7 @@ export type ExampleProps = {
   willScroll?: boolean
   onlySource?: boolean
   chromeless?: boolean
+  parentId?: string
 }
 
 export const Example = memo(
@@ -89,7 +91,7 @@ export const Example = memo(
               titlePad="sm"
               space
               background={theme => theme.backgroundStrong}
-              title={name || id}
+              title={name || capitalize(id)}
               afterTitle={
                 <Row space alignItems="center">
                   {parentId && (

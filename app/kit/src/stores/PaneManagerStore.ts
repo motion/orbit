@@ -42,8 +42,8 @@ export class PaneManagerStore {
   }
 
   get isOnHome() {
-    const searchPane = this.panes.find(x => x.type === 'search')[0]
-    return searchPane && this.activePane.id === searchPane
+    const searchPane = this.panes.find(x => x.type === 'search')
+    return searchPane && this.activePane.id === searchPane.id
   }
 
   activePaneLowPriority = react(() => this.activePane, _ => _, { delay: 1, log: false })

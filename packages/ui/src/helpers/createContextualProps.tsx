@@ -4,14 +4,15 @@ import { Omit } from '../types'
 
 export function createContextualProps<A extends any>(defaults?: A) {
   const Context = createContext<Partial<A>>(null)
+  const PassProps = ({ children, ...rest }: Omit<A, 'children'> & { children?: any }) => {
+    const memoVal = useMemo(() => {
+      return { ...defaults, ...rest }
+    }, [rest])
+    return <Context.Provider value={memoVal}>{children}</Context.Provider>
+  }
   return {
     Context,
-    PassProps({ children, ...rest }: Omit<A, 'children'> & { children?: any }) {
-      const memoVal = useMemo(() => {
-        return { ...defaults, ...rest }
-      }, [rest])
-      return <Context.Provider value={memoVal}>{children}</Context.Provider>
-    },
+    PassProps,
     useProps<B extends Partial<A>>(componentProps?: B): B & A {
       const extra = useContext(Context)
       if (!extra) {

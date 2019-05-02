@@ -1,3 +1,7 @@
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica', sans-serif;
   margin: 0;
@@ -590,4 +594,8 @@ main a {
 
 main a:hover {
   color: #fe5a5999;
+}
+
+.token-line {
+  display: block;
 }

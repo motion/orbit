@@ -1,5 +1,5 @@
 import { MDXProvider } from '@mdx-js/react'
-import { gloss, Paragraph, Space } from '@o/ui'
+import { gloss, Paragraph, Space, Tag } from '@o/ui'
 import React from 'react'
 
 import componentNames from '../../tmp/componentNames.json'
@@ -13,6 +13,7 @@ import { TitleText } from './TitleText'
 
 export const components = {
   // custom
+  Tag,
   Example,
   Key,
 
@@ -59,7 +60,6 @@ export const components = {
   li: props => (
     <>
       <li style={{ marginLeft: 26 }} {...props} />
-      <Space size="xs" />
     </>
   ),
   ul: props => (

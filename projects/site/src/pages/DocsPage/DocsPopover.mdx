@@ -22,15 +22,19 @@ To use a Popover:
 import { Popover } from '@o/ui'
 ```
 
-## Examples [Beta]
+## Examples
 
 Popover is currently in Beta. While it handles many very complex use cases, it breaks in other
 simple ones. A truly effective popover is a really hard problem, and we've spent years refining on
 various use cases, but in the course of time other ones have broken. Currently showing a popover
-"above" content breaks fairly consistently. We're planning on revisiting this shortly and fixing
-many bugs.
+"above" content breaks fairly consistently. You'd think that would work. But at the same time, far
+more complex cases like handling mouse movement with various edge padding across multiple elements
+works 🤷‍♀️. We're planning on revisiting this very soon and fixing many bugs.
 
-### Basics
+### Base
+
+We'll be this popover for the rest of the docs, referred to as `<BasicPopover />`. Popovers are
+fairly low level, so re-using them is common.
 
 <Example id="Basic" />
 

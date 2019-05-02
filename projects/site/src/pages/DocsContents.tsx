@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { Button, Col, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title, TitleRow } from '@o/ui'
+import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import React, { memo } from 'react'
 
 import { colors } from '../constants'
@@ -8,13 +8,14 @@ import { Navigation } from '../Navigation'
 import { CodeBlock } from '../views/CodeBlock'
 import { FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
-import { Paragraph } from '../views/Paragraph'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
+import { linkProps } from './HomePage/linkProps'
 import { useScreenVal } from './HomePage/SpacedPageContent'
+import { PropsTable } from './PropsTable'
 
 export const DocsContents = memo(
-  ({ id, title, examples, examplesSource, source, children, types }: any) => {
+  ({ id, title, examples, examplesSource, source, children, types, beta }: any) => {
     const thisIndex = docsItems.all.findIndex(x => x['id'] === id)
     const nextItem = docsItems.all[thisIndex + 1]
     const prevItem = docsItems.all[thisIndex - 1]
@@ -128,21 +129,18 @@ export const DocsContents = memo(
             </FadeChild>
           }
           afterTitle={
-            <SurfacePassProps size="lg" cursor="pointer">
-              <Row space="sm">
-                {!!source && (
-                  <Button
-                    tooltip="Source in Github"
-                    size="lg"
-                    tagName="a"
-                    cursor="pointer"
-                    {...{ href: 'http://github.com', target: '_blank' }}
-                    icon={<Icon size={16} svg={GithubIcon} />}
-                    onClick={e => e.stopPropagation()}
-                  />
-                )}
-              </Row>
-            </SurfacePassProps>
+            <>
+              {beta && <Tag alt="lightRed">Beta</Tag>}
+              {!!source && (
+                <Button
+                  tooltip="Source in Github"
+                  size="lg"
+                  {...linkProps(`https://github.com/motion/orbit`)}
+                  icon={<Icon size={16} svg={GithubIcon} />}
+                  onClick={e => e.stopPropagation()}
+                />
+              )}
+            </>
           }
         >
           <FadeChild delay={100}>{children}</FadeChild>
@@ -181,53 +179,6 @@ export const DocsContents = memo(
     )
   },
 )
-
-function PropsTable(props: { props: Object }) {
-  const propRows = Object.keys(props.props)
-    .reduce((acc, key) => {
-      const { type, description, defaultValue, required, ...row } = props.props[key]
-      acc.push({
-        ...row,
-        description,
-        type: type.name.trim(),
-        'Default Value': defaultValue === null ? '' : defaultValue,
-        required,
-      })
-      return acc
-    }, [])
-    .sort((a, b) => {
-      if (a.required && !b.required) {
-        return -1
-      }
-      // if (a.description && !b.description) {
-      //   return -1
-      // }
-      return a.type.localeCompare(b.type)
-    })
-  // overscan all for searchability
-  return (
-    <Col space>
-      {propRows.map(row => (
-        <Col space key={row.name}>
-          <TitleRow pad bordered borderSize={2}>
-            <Row space alignItems="center">
-              <Tag alt="lightBlue">{row.name}</Tag>
-              <Tag alt="lightGreen" size={0.75}>
-                {row.type}
-              </Tag>
-              {row.required && (
-                <Tag alt="lightRed" size={0.75}>
-                  Required
-                </Tag>
-              )}
-            </Row>
-          </TitleRow>
-          {!!row.description && <Paragraph>{row.description}</Paragraph>}
-        </Col>
-      ))}
-    </Col>
-  )
-}
 
 const MetaSection = gloss({
   margin: 0,

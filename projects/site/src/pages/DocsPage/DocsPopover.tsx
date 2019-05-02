@@ -21,21 +21,34 @@ export let Basic = (
 )
 
 export let Themed = (
-  <Popover
-    group="demo"
-    openOnClick
-    towards="bottom"
-    elevation={8}
-    width={300}
-    popoverTheme="tooltip"
-    target={
-      <Button alt="action" size="lg">
-        Open on Click
-      </Button>
-    }
-  >
-    <ListItem icon="home">Home</ListItem>
-    <ListItem icon="home">Home</ListItem>
-    <ListItem icon="home">Home</ListItem>
-  </Popover>
+  //
+  <BasicPopover popoverTheme="tooltip" />
 )
+
+const baseChildren = (
+  <>
+    <ListItem icon="home">Home</ListItem>
+    <ListItem icon="home">Home</ListItem>
+    <ListItem icon="home">Home</ListItem>
+  </>
+)
+
+function BasicPopover({ children = baseChildren, ...props }) {
+  return (
+    <Popover
+      group="demo"
+      openOnClick
+      towards="bottom"
+      elevation={8}
+      width={300}
+      target={
+        <Button alt="action" size="lg">
+          Open on Click
+        </Button>
+      }
+      {...props}
+    >
+      {children}
+    </Popover>
+  )
+}

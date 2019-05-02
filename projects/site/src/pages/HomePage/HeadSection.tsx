@@ -80,7 +80,7 @@ const HeadContent = memo(() => {
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
-      <View position="relative" width={useScreenVal('90%', '80%', '70%')} margin={[0, 'auto']}>
+      <View position="relative" width={useScreenVal('90%', '85%', '80%')} margin={[0, 'auto']}>
         {screen === 'small' ? (
           <Paragraph
             size={1.8}

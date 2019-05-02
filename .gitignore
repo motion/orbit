@@ -23,6 +23,7 @@ kubeconfig
 *.pyc
 .rts2_cache_cjs
 tsconfig.tsbuildinfo
+.firebase
 
 common/temp/**
 

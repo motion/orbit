@@ -414,7 +414,7 @@ const FixedLayout = gloss({
 
 export default compose(
   withView(async req => {
-    if (req.pathname.indexOf('/isolate') >= 0) {
+    if (window.location.pathname.indexOf('/isolate') >= 0) {
       return <View />
     }
     return (

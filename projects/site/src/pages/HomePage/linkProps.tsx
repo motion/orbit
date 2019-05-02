@@ -70,16 +70,16 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
 
 export const linkProps = (
   href: string,
-  { header, isActive }: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
+  opts: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
 ): any => {
   return {
     href,
     tagName: 'a',
-    ...(!!header && { className: 'will-transform' }),
+    ...(!!opts.header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
     target: isExternal || isExternal(href) ? '_blank' : undefined,
-    onClick: isActive ? nullLink : createLink(href, header, isExternal),
+    onClick: opts.isActive ? nullLink : createLink(href, opts.header, opts.isExternal),
     onMouseEnter: createPreloadLink(href),
   }
 }

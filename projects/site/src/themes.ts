@@ -1,4 +1,4 @@
-import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
+import { linearGradient, ThemeMaker, ThemeObject, toColor } from '@o/gloss'
 import { themes as KitThemes } from '@o/kit'
 
 import { colors } from './constants'
@@ -6,6 +6,47 @@ import { colors } from './constants'
 const Theme = new ThemeMaker()
 
 const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
+
+const selectedTheme = KitThemes.light.alternates.selected as ThemeObject
+const transparent = 'transparent'
+
+const selectedMinimal = {
+  fontWeight: 800,
+  ...Theme.colorize({
+    color: selectedTheme.background,
+    background: transparent,
+    backgroundHover: transparent,
+    backgroundActive: transparent,
+  }),
+}
+
+const light = {
+  ...KitThemes.light,
+  alternates: {
+    ...KitThemes.light.alternates,
+    selected: selectedMinimal,
+  },
+  ...Theme.colorize({
+    color: '#000',
+  }),
+}
+
+const dark = {
+  ...KitThemes.dark,
+  alternates: {
+    ...KitThemes.dark.alternates,
+    selected: selectedMinimal,
+  },
+  ...Theme.colorize({
+    background: '#111',
+    inputColor: '#fff',
+    inputBackground: '#222',
+    inputBackgroundHover: '#222',
+    inputBackgroundActive: '#222',
+    listItemBackgroundHover: 'rgba(255,255,255,0.075)',
+    popoverBackground: '#111',
+  }),
+}
 
 export const themes = {
   ...KitThemes,
@@ -34,42 +75,11 @@ export const themes = {
     color: colors.red,
   }),
 
-  light: {
-    ...KitThemes.light,
-
-    alternates: {
-      ...KitThemes.light.alternates,
-
-      // selected: Theme.colorize({
-      //   ...KitThemes.light.alternates.selected,
-      //   color: '#000',
-      //   background: '#f2f2f2',
-      //   backgroundHover: '#f2f2f2',
-      //   backgroundActive: '#f2f2f2',
-      //   borderColor: 'transparent',
-      // }),
-    },
-
-    ...Theme.colorize({
-      color: '#000',
-    }),
-  },
-
-  dark: {
-    ...KitThemes.dark,
-    ...Theme.colorize({
-      background: '#111',
-      inputColor: '#fff',
-      inputBackground: '#222',
-      inputBackgroundHover: '#222',
-      inputBackgroundActive: '#222',
-      listItemBackgroundHover: 'rgba(255,255,255,0.075)',
-      popoverBackground: '#111',
-    }),
-  },
+  light,
+  dark,
 
   darkAlt: {
-    ...KitThemes.dark,
+    ...dark,
     ...Theme.fromStyles({
       color: '#fff',
       background: '#2C2B40',
@@ -82,7 +92,7 @@ export const themes = {
   },
 
   home: {
-    ...KitThemes.dark,
+    ...dark,
     ...Theme.colorize({
       background: '#000',
       inputBackground: '#111',

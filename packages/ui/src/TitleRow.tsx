@@ -100,7 +100,7 @@ export const TitleRow = forwardRef(
     return (
       <TitleRowChrome
         background={backgrounded ? theme => theme.backgroundZebra : null}
-        onDoubleClick={collapse.isCollapsable && collapse.toggle}
+        onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
         ref={ref}
         {...rowProps}
       >

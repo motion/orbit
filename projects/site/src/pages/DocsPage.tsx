@@ -15,13 +15,14 @@ import {
 } from '@o/ui'
 import { createStoreContext, useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
-import { mount, route } from 'navi'
+import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { NotFoundBoundary } from 'react-navi'
+import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
 import { Navigation } from '../Navigation'
+import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
@@ -57,7 +58,11 @@ const docsNavigate = id => {
   const isRecent = Date.now() - last < 100
   navTm = setTimeout(
     () => {
-      Navigation.navigate(`/docs/${id}`, { replace: true })
+      const next = `/docs/${id}`
+      if (window.location.pathname === next) {
+        return
+      }
+      Navigation.navigate(next, { replace: true })
     },
     isRecent ? 150 : 50,
   )
@@ -407,33 +412,42 @@ const FixedLayout = gloss({
   },
 })
 
-export default mount({
-  '/': route({
-    title: 'Orbit Documentation',
-    view: (
+export default compose(
+  withView(async req => {
+    if (req.pathname.indexOf('/isolate') >= 0) {
+      return <View />
+    }
+    return (
       <DocsPage>
+        <View disableScrolling={recentHMR} />
+      </DocsPage>
+    )
+  }),
+
+  mount({
+    '/': route({
+      title: 'Orbit Documentation',
+      view: (
         <DocsContents title="Introduction">
           <DocsStart />
         </DocsContents>
-      </DocsPage>
-    ),
-  }),
-  '/:id': route(async req => {
-    let id = req.params.id
-    const view = docsViews[id]
+      ),
+    }),
+    '/:id': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
 
-    if (!view) {
-      return {
-        view: () => <div>not found</div>,
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
       }
-    }
 
-    const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
-    const item = docsItems.all.find(x => x['id'] === id)
+      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
+      const item = docsItems.all.find(x => x['id'] === id)
 
-    return {
-      view: (
-        <DocsPage>
+      return {
+        view: (
           <DocsContents
             id={id}
             title={item ? item['title'] : ''}
@@ -444,23 +458,23 @@ export default mount({
           >
             <ChildView />
           </DocsContents>
-        </DocsPage>
-      ),
-    }
-  }),
-  '/:id/isolate/:subid': route(async req => {
-    let id = req.params.id
-    const view = docsViews[id]
-    if (!view) {
-      return {
-        view: () => <div>not found</div>,
+        ),
       }
-    }
-    const [_, _2, examples, examplesSource] = await loadDocsPage(view)
-    return {
-      view: (
-        <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} />
-      ),
-    }
+    }),
+    '/:id/isolate/:subid': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
+      const [_, _2, examples, examplesSource] = await loadDocsPage(view)
+      return {
+        view: (
+          <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} />
+        ),
+      }
+    }),
   }),
-})
+)

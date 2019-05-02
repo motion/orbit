@@ -45,7 +45,7 @@ export type ListItemProps = ListItemSimpleProps &
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
-  const { item, itemViewProps, people, hidePeople, ...rest } = props
+  const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
   const selectableStore = useSelectableStore(props)
   const visStore = useVisibilityStore()
 
@@ -103,7 +103,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   }
 
   return (
-    <Theme alt={props.alt}>
+    <Theme alt={alt}>
       <ListItemSimple
         ref={ref}
         {...itemProps}

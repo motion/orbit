@@ -18,7 +18,7 @@ export const headerButtonProps = {
   margin: [-1, 1],
   opacity: 0.75,
   hoverStyle: { opacity: 1 },
-  iconSize: 14,
+  iconSize: 12,
 }
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
@@ -39,6 +39,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
+
+      <OrbitNav />
+
       <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
@@ -256,6 +259,9 @@ const OpenButton = memo(() => {
       icon="chevron-right"
       alt="action"
       iconSize={18}
+      sizeRadius={1.6}
+      borderWidth={1.5}
+      glint={false}
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}

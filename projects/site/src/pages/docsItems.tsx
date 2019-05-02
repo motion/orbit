@@ -100,7 +100,6 @@ const uikit = [
   { id: 'slider', title: 'Slider', icon: 'double-caret-horizontal' },
   { id: 'tabs', title: 'Tabs', icon: 'add-row-top' },
   { id: 'layout', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
-  { id: 'pane', title: 'Pane', icon: 'column-layout', indent: 1 },
   { id: 'gridlayout', title: 'GridLayout', icon: 'grid-view', indent: 1 },
   { id: 'masonrylayout', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
   { id: 'flowlayout', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
@@ -316,5 +315,12 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsSlider'),
     source: () => import('!raw-loader!@o/ui/src/Slider'),
     types: () => import('../../tmp/Slider.json'),
+  },
+  gridlayout: {
+    page: () => import('./DocsPage/DocsGridLayout.mdx'),
+    examples: () => import('./DocsPage/DocsGridLayout'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsGridLayout'),
+    source: () => import('!raw-loader!@o/ui/src/layout/GridLayout'),
+    types: () => import('../../tmp/GridLayout.json'),
   },
 }

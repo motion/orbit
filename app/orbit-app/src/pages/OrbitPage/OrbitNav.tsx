@@ -1,6 +1,6 @@
 import { save } from '@o/bridge'
 import { gloss, Row, RowProps } from '@o/gloss'
-import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
+import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
 import { useAppSortHandler } from '@o/kit-internal'
 import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
@@ -51,26 +51,26 @@ export const OrbitNav = memo(
           if (!app) {
             return null
           }
-          const isLast = index === activeAppsSorted.length
           const isActive = !showCreateNew && `${paneId}` === activePaneId
           const next = activeAppsSorted[index + 1]
-          const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
+          // const isLast = index === activeAppsSorted.length
+          // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
           const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
           return {
             app,
             width: tabWidth,
-            separator: !isActive && !isLast && !nextIsActive,
             tabDisplay: app.tabDisplay,
-            label: isPinned
-              ? ''
-              : app.identifier === 'search' && index === 0
-              ? activeSpaceName
-              : app.name,
-            stretch: !isPinned,
-            thicc: isPinned,
+            // separator: !isActive && !isLast && !nextIsActive,
+            // label: isPinned
+            //   ? ''
+            //   : app.identifier === 'search' && index === 0
+            //   ? activeSpaceName
+            //   : app.name,
+            // stretch: !isPinned,
+            thicc: true, //isPinned,
             isActive,
-            icon: `orbit-${app.identifier}`,
-            iconSize: isPinned ? 16 : 12,
+            icon: <AppIcon app={app} />,
+            iconSize: 20,
             getContext() {
               return [
                 {
@@ -205,14 +205,8 @@ export const OrbitNav = memo(
 
 const OrbitNavClip = gloss({
   flex: 1,
-  // zIndex: 10000000000,
-  overflow: 'hidden',
-  pointerEvents: 'none',
-  padding: [20, 40, 0],
-  margin: [-20, 0, 0],
-  transform: {
-    y: 0.5,
-  },
+  padding: [23, 40],
+  margin: [-20, 0],
 })
 
 const OrbitNavChrome = gloss({
@@ -222,6 +216,7 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   alignItems: 'flex-end',
   justifyContent: 'space-between',
+  margin: [0, 'auto'],
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

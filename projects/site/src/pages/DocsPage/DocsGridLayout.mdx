@@ -1,0 +1,20 @@
+The `<GridLayout />` is a smart layout component for laying out an application. It's recommended for
+many types of simple internal apps from dashboards to flows, because it handles large amounts of
+views well, and including helpful features like sorting and resizing.
+
+The difference between a `<GridLayout />` and a `<Grid />` is the amount of work they do for you.
+The Grid component is a simple CSS Grid layout, with a couple properties to help make them easier to
+design. Meanwhile, `<GridLayout />` doesn't accept _any_ CSS Grid properties, it handles the content
+itself, but is more powerful in terms of laying out content and allowing resizing.
+
+To use a GridLayout:
+
+```tsx
+import { GridLayout } from '@o/ui'
+```
+
+## Examples
+
+### Basics
+
+<Example id="Basic" />

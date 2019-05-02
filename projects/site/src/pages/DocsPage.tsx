@@ -448,7 +448,7 @@ export default mount({
       ),
     }
   }),
-  '/isolate/:id/:subid': route(async req => {
+  '/:id/isolate/:subid': route(async req => {
     let id = req.params.id
     const view = docsViews[id]
     if (!view) {

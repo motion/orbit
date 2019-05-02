@@ -1,6 +1,6 @@
-import { Button, Card, Col, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
+import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
+import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 import { linkProps } from '../HomePage/linkProps'
@@ -81,7 +81,7 @@ export const Example = memo(
     )
 
     return (
-      <>
+      <Suspense fallback={<Loading />}>
         {chromeless ? (
           <>{contents}</>
         ) : (
@@ -123,7 +123,7 @@ export const Example = memo(
             <Space size="xl" />
           </>
         )}
-      </>
+      </Suspense>
     )
   },
 )

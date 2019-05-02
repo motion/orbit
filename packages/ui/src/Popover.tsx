@@ -12,7 +12,7 @@ import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
-import { SurfaceProps } from './Surface'
+import { SurfacePassPropsReset, SurfaceProps } from './Surface'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
 
@@ -996,7 +996,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       direction,
     } = this.state
     const { isMeasuring, showPopover } = this
-    const backgroundProp = !background || background === true ? null : { background }
+    const backgroundProp = !background
+      ? null
+      : { background: background === true ? themeBg : background }
     const hasMeasuredOnce = !!this.state.popoverBounds
 
     let popoverContent = (
@@ -1056,24 +1058,26 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               </ArrowContain>
             )}
             <BreadcrumbReset>
-              <SizedSurface
-                className="popover-inner-surface"
-                themeSelect="popover"
-                sizeRadius
-                flex={1}
-                hoverStyle={null}
-                activeStyle={null}
-                overflow="hidden"
-                elevation={elevation}
-                noInnerElement
-                opacity={1}
-                {...restProps}
-                {...backgroundProp}
-              >
-                {typeof children === 'function'
-                  ? (children as PopoverChildrenFn)(showPopover)
-                  : children}
-              </SizedSurface>
+              <SurfacePassPropsReset>
+                <SizedSurface
+                  className="popover-inner-surface"
+                  themeSelect="popover"
+                  sizeRadius
+                  flex={1}
+                  hoverStyle={null}
+                  activeStyle={null}
+                  overflow="hidden"
+                  elevation={elevation}
+                  noInnerElement
+                  opacity={1}
+                  {...restProps}
+                  {...backgroundProp}
+                >
+                  {typeof children === 'function'
+                    ? (children as PopoverChildrenFn)(showPopover)
+                    : children}
+                </SizedSurface>
+              </SurfacePassPropsReset>
             </BreadcrumbReset>
           </PopoverInner>
         </PopoverWrap>
@@ -1096,7 +1100,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal className="ui-popover" style={{ ...style, zIndex }}>
+        <Portal className="ui-popover" style={{ zIndex, position: 'fixed', ...style }}>
           <span
             className="popover-portal"
             style={{
@@ -1111,6 +1115,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     )
   }
 }
+
+const themeBg = theme => theme.background
 
 const PopoverContainer = gloss({
   position: 'absolute',

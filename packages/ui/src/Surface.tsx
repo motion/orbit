@@ -153,6 +153,7 @@ export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()
+export const SurfacePassPropsReset = Context.Reset
 export const SurfacePassProps = Context.PassProps
 export const useSurfaceProps = Context.useProps
 

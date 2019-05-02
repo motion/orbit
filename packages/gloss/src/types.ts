@@ -7,6 +7,7 @@ export type GlossOptions = {
   isColor?: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }
   preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
+  preProcessStyles?: ((styles: Object) => Object) | undefined
 }
 
 type GlossViewConfig = {

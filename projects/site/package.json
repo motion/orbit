@@ -12,6 +12,7 @@
     "publish:site": "rm -r dist || true && yarn build:docs:ui && yarn build && ./firebase-fix.sh && yarn deploy"
   },
   "dependencies": {
+    "cssprefix": "2.0.16",
     "@babel/runtime": "7.4.3",
     "requestidlecallback-polyfill": "1.0.2",
     "@kennethormandy/react-fittext": "0.5.1",

@@ -3,7 +3,7 @@ import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useStore } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import React, { memo, useCallback, useState } from 'react'
+import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -29,37 +29,40 @@ class HomeButtonStore {
   onLeave = () => (this.hovering = false)
 }
 
-const HomeButton = memo(props => {
-  const theme = useTheme()
-  const { newAppStore, paneManagerStore } = useStores()
-  const { activePane } = paneManagerStore
-  const activePaneType = activePane.type
-  const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
-  const store = useStore(HomeButtonStore)
-  const onClick = useCallback(e => {
-    console.log('go to ', store.hovering, paneManagerStore.homePane.id)
-    if (store.hovering) {
-      e.stopPropagation()
-      paneManagerStore.setActivePane(paneManagerStore.homePane.id)
-    }
-  }, [])
+const HomeButton = memo(
+  forwardRef((props, ref) => {
+    const theme = useTheme()
+    const { newAppStore, paneManagerStore } = useStores()
+    const { activePane } = paneManagerStore
+    const activePaneType = activePane.type
+    const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
+    const store = useStore(HomeButtonStore)
+    const onClick = useCallback(e => {
+      console.log('go to ', store.hovering, paneManagerStore.homePane.id)
+      if (store.hovering) {
+        e.stopPropagation()
+        paneManagerStore.setActivePane(paneManagerStore.homePane.id)
+      }
+    }, [])
 
-  return (
-    <Icon
-      onMouseEnter={store.onEnter}
-      onMouseLeave={store.onLeave}
-      opacity={0.65}
-      hoverStyle={{
-        opacity: 1,
-      }}
-      color={invertLightness(theme.color, 0.5)}
-      name={store.hovering ? 'orbit-home' : `orbit-${icon}`}
-      size={22}
-      onClick={onClick}
-      {...props}
-    />
-  )
-})
+    return (
+      <Icon
+        ref={ref}
+        onMouseEnter={store.onEnter}
+        onMouseLeave={store.onLeave}
+        opacity={0.65}
+        hoverStyle={{
+          opacity: 1,
+        }}
+        color={invertLightness(theme.color, 0.5)}
+        name={store.hovering ? 'orbit-home' : `orbit-${icon}`}
+        size={22}
+        onClick={onClick}
+        {...props}
+      />
+    )
+  }),
+)
 
 export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()

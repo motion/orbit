@@ -5779,6 +5779,11 @@ cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0", cssom@^0.3.4:
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.3.6.tgz#f85206cee04efa841f3c5982a74ba96ab20d65ad"
   integrity sha512-DtUeseGk9/GBW0hl0vVPpU22iHL6YB5BUX7ml1hB+GMpo0NX5G4voX3kdWiMSEguFtcW3Vh3djqNF4aIe6ne0A==
 
+cssprefix@2.0.16:
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/cssprefix/-/cssprefix-2.0.16.tgz#0c3cfea46e4fe0505b0fab81824665d0a23c17ce"
+  integrity sha1-DDz+pG5P4FBbD6uBgkZl0KI8F84=
+
 "cssstyle@>= 0.2.37 < 0.3.0":
   version "0.2.37"
   resolved "https://registry.yarnpkg.com/cssstyle/-/cssstyle-0.2.37.tgz#541097234cb2513c83ceed3acddc27ff27987d54"

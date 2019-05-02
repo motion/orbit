@@ -107,6 +107,8 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
   }),
 })
 
+const isWebkit = 'webkitLineBreak' in document.documentElement.style
+
 const SimpleInput = gloss(
   ({
     placeholder,
@@ -143,10 +145,12 @@ const SimpleInput = gloss(
               background: theme.backgroundSelection || theme.backgroundStronger,
             },
             // autofill keep proper color
-            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              WebkitTextFillColor: p.color || theme.color,
-              backgroundColor: 'transparent',
-            },
+            ...(isWebkit && {
+              '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+                WebkitTextFillColor: p.color || theme.color,
+                backgroundColor: 'transparent',
+              },
+            }),
           }),
           [],
         )}

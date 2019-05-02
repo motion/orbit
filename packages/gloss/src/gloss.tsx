@@ -463,7 +463,14 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
     return cachedClass
   }
   const declarations: string[] = []
-  const style = css(rules)
+  let style = css(rules)
+
+  if (Config.preProcessStyles) {
+    console.log('before', style)
+    style = Config.preProcessStyles(style)
+    console.log('after', style)
+  }
+
   // generate css declarations based on the style object
   for (const key in style) {
     const val = style[key]

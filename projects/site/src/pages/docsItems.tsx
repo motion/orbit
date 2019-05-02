@@ -88,7 +88,7 @@ const uikit = [
   { id: 'message', title: 'Message', icon: 'chat' },
 
   { id: 'calendar', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
-  { id: 'dateformat', title: 'DateFormat', icon: 'event' },
+  { id: 'date-format', title: 'DateFormat', icon: 'event' },
   { id: 'timeago', title: 'TimeAgo', icon: 'time' },
 
   { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select' },
@@ -288,5 +288,33 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsLayout'),
     source: () => import('!raw-loader!@o/ui/src/layout/Layout'),
     types: () => import('../../tmp/Layout.json'),
+  },
+  'date-format': {
+    page: () => import('./DocsPage/DocsDateFormat.mdx'),
+    examples: () => import('./DocsPage/DocsDateFormat'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsDateFormat'),
+    source: () => import('!raw-loader!@o/ui/src/text/DateFormat'),
+    types: () => import('../../tmp/DateFormat.json'),
+  },
+  timeago: {
+    page: () => import('./DocsPage/DocsTimeAgo.mdx'),
+    examples: () => import('./DocsPage/DocsTimeAgo'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsTimeAgo'),
+    source: () => import('!raw-loader!@o/ui/src/text/TimeAgo'),
+    types: () => import('../../tmp/TimeAgo.json'),
+  },
+  sidebar: {
+    page: () => import('./DocsPage/DocsSidebar.mdx'),
+    examples: () => import('./DocsPage/DocsSidebar'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSidebar'),
+    source: () => import('!raw-loader!@o/ui/src/Sidebar'),
+    types: () => import('../../tmp/Sidebar.json'),
+  },
+  slider: {
+    page: () => import('./DocsPage/DocsSlider.mdx'),
+    examples: () => import('./DocsPage/DocsSlider'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSlider'),
+    source: () => import('!raw-loader!@o/ui/src/Slider'),
+    types: () => import('../../tmp/Slider.json'),
   },
 }

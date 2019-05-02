@@ -285,7 +285,7 @@ export const DocsPage = memo((props: { children?: any }) => {
         )}
 
         <main className="main-contents">
-          <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
+          <SectionContent fontSize={16} lineHeight={28} fontWeight={400} whiteSpace="normal">
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
               <Col

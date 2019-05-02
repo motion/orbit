@@ -1,7 +1,7 @@
 import { differenceInSeconds, formatRelative } from 'date-fns'
 import React from 'react'
 
-type TimeAgoProps = {
+export type TimeAgoProps = {
   date?: number | Date
   children?: number | Date
   postfix?: string
@@ -82,6 +82,8 @@ export class TimeAgo extends React.Component<TimeAgoProps> {
           .replace(/\//g, '·')
           .replace(' PM', 'pm')
           .replace(' AM', 'am')
+          .replace(' p.m.', 'pm')
+          .replace(' a.m.', 'am')
           .replace('yesterday', 'yday')
       )
     }

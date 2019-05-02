@@ -21,8 +21,6 @@ export const DocsContents = memo(
 
     const nextPrevious = (
       <>
-        <Title size="md">Continue reading docs</Title>
-        <Space />
         <SurfacePassProps
           alt="bordered"
           size={2}

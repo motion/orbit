@@ -1,22 +1,41 @@
 import { gloss } from '@o/gloss'
 import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
+
 import { useParentNodeSize } from './hooks/useParentNodeSize'
+import { SliderPane } from './SliderPane'
 import { View } from './View/View'
 import { useVisibility } from './Visibility'
 
 export type SliderProps = {
+  /** Index of Slider pane to show */
   curFrame: number
+
+  /** Place <Slider.Pane /> inside here */
   children?: React.ReactNode
+
+  /** Padding to add inside frame */
   framePad?: number
+
+  /** Vertical padding inside frame */
   verticalPad?: number
+
+  /** Measure and ensure height of slider stays equal to tallest child */
   fixHeightToTallest?: boolean
+
+  /** Measure and ensure height of slider stays equal to parent node */
   fixHeightToParent?: boolean
+
+  /** Define an animation for transitioning */
   transition?: string
+
+  /** Define a height */
   height?: string
+
+  /** Define a width */
   width?: string
 }
 
-export const Slider = memo(function Slider(props: SliderProps) {
+export const Slider = memo((props: SliderProps) => {
   const {
     curFrame = 0,
     children,
@@ -78,6 +97,9 @@ export const Slider = memo(function Slider(props: SliderProps) {
     </SliderContainer>
   )
 })
+
+// @ts-ignore
+Slider.Pane = SliderPane
 
 const SliderContainer = gloss(View, {
   flex: 1,

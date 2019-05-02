@@ -310,4 +310,11 @@ export const docsViews = {
     source: () => import('!raw-loader!@o/ui/src/Sidebar'),
     types: () => import('../../tmp/Sidebar.json'),
   },
+  slider: {
+    page: () => import('./DocsPage/DocsSlider.mdx'),
+    examples: () => import('./DocsPage/DocsSlider'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsSlider'),
+    source: () => import('!raw-loader!@o/ui/src/Slider'),
+    types: () => import('../../tmp/Slider.json'),
+  },
 }

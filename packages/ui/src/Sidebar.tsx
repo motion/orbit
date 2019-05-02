@@ -12,69 +12,47 @@ import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 import { Omit } from './types'
 
-
 export type SidebarProps = Omit<InteractiveProps, 'position'> & {
-  /**
-   * Toggle sidebar visibility.
-   */
+  /** Toggle sidebar visibility. */
   hidden?: boolean
 
-  /**
-   * Position sidebar absolutely.
-   */
+  /** Position sidebar absolutely. */
   floating?: boolean
 
-  /**
-   * Don't render border element.
-   */
+  /** Don't render border element. */
   noBorder?: boolean
 
-  /**
-   * Position of the sidebar.
-   */
+  /** Position of the sidebar. */
   position: 'left' | 'top' | 'right' | 'bottom'
 
-  /**
-   * Default width of the sidebar.  Only used for left/right sidebars.
-   */
+  /** Default width of the sidebar.  Only used for left/right sidebars. */
   width?: number
-  /**
-   * Minimum sidebar width. Only used for left/right sidebars.
-   */
+
+  /** Minimum sidebar width. Only used for left/right sidebars. */
   minWidth?: number
-  /**
-   * Maximum sidebar width. Only used for left/right sidebars.
-   */
+
+  /** Maximum sidebar width. Only used for left/right sidebars. */
   maxWidth?: number
 
-  /**
-   * Default height of the sidebar.
-   */
+  /** Default height of the sidebar. */
   height?: number
-  /**
-   * Minimum sidebar height. Only used for top/bottom sidebars.
-   */
+
+  /** Minimum sidebar height. Only used for top/bottom sidebars. */
   minHeight?: number
-  /**
-   * Maximum sidebar height. Only used for top/bottom sidebars.
-   */
+
+  /** Maximum sidebar height. Only used for top/bottom sidebars. */
   maxHeight?: number
 
-  /**
-   * Background color.
-   */
+  /** Background color. */
   background?: string
-  /**
-   * Callback when the sidebar size ahs changed.
-   */
+
+  /** Callback when the sidebar size ahs changed. */
   onResize?: (width: number, height?: number, desiredWidth?: number) => void
-  /**
-   * Contents of the sidebar.
-   */
+
+  /** Contents of the sidebar. */
   children?: React.ReactNode
-  /**
-   * Class name to customise styling.
-   */
+
+  /** Class name to customise styling. */
   className?: string
 }
 

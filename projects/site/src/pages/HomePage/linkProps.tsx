@@ -43,7 +43,7 @@ export const useLink = (href: string) => {
 let tm = null
 
 export const createLink = memoize((href: string, header = null, isExternal = false) => async e => {
-  if (isExternal || isExternal(href)) {
+  if (isExternal || checkExternal(href)) {
     return
   }
   clearTimeout(tm)
@@ -78,10 +78,10 @@ export const linkProps = (
     ...(!!opts.header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
-    target: isExternal || isExternal(href) ? '_blank' : undefined,
+    target: opts.isExternal || checkExternal(href) ? '_blank' : undefined,
     onClick: opts.isActive ? nullLink : createLink(href, opts.header, opts.isExternal),
     onMouseEnter: createPreloadLink(href),
   }
 }
 
-const isExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0
+const checkExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

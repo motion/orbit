@@ -219,7 +219,7 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
 }
 
 const GridItemChrome = gloss(Col, {
-  overflow: 'hidden',
+  // overflow: 'hidden',
   flex: 1,
 })
 

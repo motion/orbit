@@ -104,6 +104,7 @@ export function gloss<Props = any>(
     // compile static styles once, on first run to avoid extra work
     staticClasses =
       staticClasses || addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+
     const theme = useTheme()
     const dynClasses = useRef<string[] | null>(null)
 
@@ -466,9 +467,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   let style = css(rules)
 
   if (Config.preProcessStyles) {
-    console.log('before', style)
     style = Config.preProcessStyles(style)
-    console.log('after', style)
   }
 
   // generate css declarations based on the style object
@@ -479,7 +478,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   const className = `g${stringHash(cssString)}`
-  // for media queries
+
   // this is the first time we've found this className
   if (!tracker.has(className)) {
     // build up the correct selector, explode on commas to allow multiple selectors
@@ -492,13 +491,16 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
       selector,
       style,
     })
+
     if (namespace[0] === '@') {
       sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
     } else {
       sheet.insert(className, `${selector} {\n${cssString}\n}`)
     }
+
     rulesToClass.set(rules, className)
   }
+
   return className
 }
 

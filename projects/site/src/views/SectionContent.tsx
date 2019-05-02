@@ -10,6 +10,15 @@ export type SectionContentProps = ViewProps & {
   pages?: number
 }
 
+const style = {
+  position: 'relative',
+  flex: 1,
+  flexDirection: 'inherit',
+  flexWrap: 'inherit',
+  alignItems: 'inherit',
+  justifyContent: 'inherit',
+}
+
 export const SectionContent = ({
   outside,
   children,
@@ -34,18 +43,7 @@ export const SectionContent = ({
     >
       {outside}
       <SectionContentChrome flex={flex} {...props}>
-        <div
-          style={{
-            position: 'relative',
-            flex: 1,
-            flexDirection: 'inherit',
-            flexWrap: 'inherit',
-            alignItems: 'inherit',
-            justifyContent: 'inherit',
-          }}
-        >
-          {children}
-        </div>
+        <div style={style as any}>{children}</div>
       </SectionContentChrome>
     </Section>
   )

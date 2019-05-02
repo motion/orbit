@@ -101,14 +101,14 @@ export const OrbitHeader = memo(function OrbitHeader() {
             )}
 
             <Button
-              isActive={paneManagerStore.activePane.id === 'data-explorer'}
-              location="data-explorer"
+              active={paneManagerStore.activePane.id === 'data-explorer'}
+              onClick={() => paneManagerStore.setActivePane('data-explorer')}
               icon="layers"
               tooltip="Data explorer"
             />
             <Button
-              isActive={paneManagerStore.activePane.id === 'apps'}
-              location="apps"
+              active={paneManagerStore.activePane.id === 'apps'}
+              onClick={() => paneManagerStore.setActivePane('apps')}
               icon="layout-grid"
               tooltip="Manage apps"
             />

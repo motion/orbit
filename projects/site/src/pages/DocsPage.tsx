@@ -34,6 +34,7 @@ import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
+import { Example } from './DocsPage/Example'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
@@ -50,55 +51,6 @@ const loadDocsPage = async view => {
   ])
 }
 
-export default compose(
-  withView(async () => {
-    return (
-      <DocsPage>
-        <View disableScrolling={recentHMR} />
-      </DocsPage>
-    )
-  }),
-
-  mount({
-    '/': route({
-      title: 'Orbit Documentation',
-      view: (
-        <DocsContents title="Introduction">
-          <DocsStart />
-        </DocsContents>
-      ),
-    }),
-    '/:id': route(async req => {
-      let id = req.params.id
-      const view = docsViews[id]
-
-      if (!view) {
-        return {
-          view: () => <div>not found</div>,
-        }
-      }
-
-      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
-      const item = docsItems.all.find(x => x['id'] === id)
-
-      return {
-        view: (
-          <DocsContents
-            id={id}
-            title={item ? item['title'] : ''}
-            source={source}
-            types={types}
-            examples={examples}
-            examplesSource={examplesSource}
-          >
-            <ChildView />
-          </DocsContents>
-        ),
-      }
-    }),
-  }),
-)
-
 let last = Date.now()
 let navTm = null
 const docsNavigate = id => {
@@ -106,7 +58,11 @@ const docsNavigate = id => {
   const isRecent = Date.now() - last < 100
   navTm = setTimeout(
     () => {
-      Navigation.navigate(`/docs/${id}`, { replace: true })
+      const next = `/docs/${id}`
+      if (window.location.pathname === next) {
+        return
+      }
+      Navigation.navigate(next, { replace: true })
     },
     isRecent ? 150 : 50,
   )
@@ -455,3 +411,70 @@ const FixedLayout = gloss({
     zIndex: 100000000,
   },
 })
+
+export default compose(
+  withView(async req => {
+    if (window.location.pathname.indexOf('/isolate') >= 0) {
+      return <View />
+    }
+    return (
+      <DocsPage>
+        <View disableScrolling={recentHMR} />
+      </DocsPage>
+    )
+  }),
+
+  mount({
+    '/': route({
+      title: 'Orbit Documentation',
+      view: (
+        <DocsContents title="Introduction">
+          <DocsStart />
+        </DocsContents>
+      ),
+    }),
+    '/:id': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
+
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
+
+      const [ChildView, source, examples, examplesSource, types] = await loadDocsPage(view)
+      const item = docsItems.all.find(x => x['id'] === id)
+
+      return {
+        view: (
+          <DocsContents
+            id={id}
+            title={item ? item['title'] : ''}
+            source={source}
+            types={types}
+            examples={examples}
+            examplesSource={examplesSource}
+          >
+            <ChildView />
+          </DocsContents>
+        ),
+      }
+    }),
+    '/:id/isolate/:subid': route(async req => {
+      let id = req.params.id
+      const view = docsViews[id]
+      if (!view) {
+        return {
+          view: () => <div>not found</div>,
+        }
+      }
+      const [_, _2, examples, examplesSource] = await loadDocsPage(view)
+      return {
+        view: (
+          <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} />
+        ),
+      }
+    }),
+  }),
+)

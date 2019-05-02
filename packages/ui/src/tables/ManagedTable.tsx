@@ -24,7 +24,6 @@ import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
 import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnAddFilter, TableRows } from './types'
 
-
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 const clipboard = Electron.clipboard
@@ -348,6 +347,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
+    const store = this.selectableStore
     return (
       <TableRow
         key={sortedRows[index].key}
@@ -355,8 +355,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         columnSizes={columnSizes}
         columnKeys={columnKeys}
         columns={columns}
-        onMouseDown={e => this.selectableStore.setRowMouseDown(index, e)}
-        onMouseEnter={() => this.selectableStore.onHoverRow(index)}
+        onMouseDown={e => store && store.setRowMouseDown(index, e)}
+        onMouseEnter={() => store && store.onHoverRow(index)}
         multiline={multiline}
         rowLineHeight={rowLineHeight}
         row={sortedRows[index]}
@@ -364,7 +364,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         style={style}
         onAddFilter={onAddFilter}
         zebra={zebra}
-        selectableStore={this.selectableStore}
+        selectableStore={store}
       />
     )
   }

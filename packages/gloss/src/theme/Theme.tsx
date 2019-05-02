@@ -1,5 +1,6 @@
 import { ThemeObject } from '@o/css'
 import React, { useContext, useMemo } from 'react'
+
 import { Config } from '../config'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 import { SimpleStyleObject } from './ThemeMaker'
@@ -22,11 +23,14 @@ export const Theme = (props: ThemeProps) => {
   const prev = useContext(ThemeContext)
 
   if (prev.allThemes[nextName]) {
+    if (prev.allThemes[nextName] === prev.activeTheme) {
+      return children
+    }
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
   const nextTheme = Config.preProcessTheme(props, prev.activeTheme)
-  let nextThemeObj = themeContexts.get(nextTheme)
+  let nextThemeObj: ThemeContextType = themeContexts.get(nextTheme)
 
   if (!nextThemeObj) {
     nextThemeObj = createThemeFromObject(props, prev, nextTheme)
@@ -40,7 +44,11 @@ export const Theme = (props: ThemeProps) => {
   return <ThemeContext.Provider value={nextThemeObj}>{children}</ThemeContext.Provider>
 }
 
-function createThemeFromObject(props: ThemeProps, prev: ThemeContextType, next: ThemeObject) {
+function createThemeFromObject(
+  props: ThemeProps,
+  prev: ThemeContextType,
+  next: ThemeObject,
+): ThemeContextType {
   const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}`
   return {
     ...prev,

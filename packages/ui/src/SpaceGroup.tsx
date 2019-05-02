@@ -11,7 +11,8 @@ export type SpaceGroupProps = {
   afterSpace?: React.ReactNode
 }
 
-const childrenToArr = (x: React.ReactNode): JSX.Element[] => React.Children.map(x, _ => _) as any
+const childrenToArr = (x: React.ReactNode): JSX.Element[] =>
+  React.Children.map(x, _ => _).filter(y => y !== null && y !== false) as any
 
 export function SpaceGroup(props: SpaceGroupProps) {
   return createSpacedChildren(props)

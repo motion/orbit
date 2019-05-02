@@ -62,7 +62,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             clearTimeout(mouseDownTm)
             if (finishSelect) {
               finishSelect = false
-              selectableStore.setRowActive(index, e)
+              selectableStore && selectableStore.setRowActive(index, e)
             }
             if (itemProps.onMouseUp) {
               itemProps.onMouseUp(e)
@@ -72,7 +72,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             clearTimeout(mouseDownTm)
             // add delay when sortable
             const setRowActive = () => {
-              selectableStore.setRowMouseDown(index, e)
+              selectableStore && selectableStore.setRowMouseDown(index, e)
               finishSelect = false
             }
             if (props.sortable) {
@@ -86,7 +86,7 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             }
           }, [])}
           onMouseEnter={useCallback(e => {
-            selectableStore.onHoverRow(index)
+            selectableStore && selectableStore.onHoverRow(index)
             if (itemProps.onMouseEnter) {
               itemProps.onMouseEnter(e)
             }

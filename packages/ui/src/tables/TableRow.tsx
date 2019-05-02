@@ -4,11 +4,11 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { Color } from '@o/color'
 import { gloss, Row, ThemeObject } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import React, { memo } from 'react'
+
 import { DataValue } from '../DataValue'
 import { CheckBox } from '../forms/CheckBox'
 import { getRowValues } from '../helpers/getRowValues'
@@ -18,6 +18,7 @@ import FilterRow from './FilterRow'
 import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
+
 
 type TableRowProps = {
   color?: Color
@@ -54,7 +55,9 @@ export const TableRow = memo(function TableRow({
   rowKey,
   ...props
 }: TableRowProps) {
-  const isHighlighted = useReaction(() => selectableStore.active.has(rowKey) || false)
+  const isHighlighted = useReaction(
+    () => (selectableStore && selectableStore.active.has(rowKey)) || false,
+  )
 
   if (!columnKeys.length) {
     console.warn('No columns')

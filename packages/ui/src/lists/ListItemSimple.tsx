@@ -1,8 +1,8 @@
-import { gloss, Theme, ThemeContext } from '@o/gloss'
+import { gloss, Theme, ThemeContext, useTheme } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
@@ -180,6 +180,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     hideBorder,
     ...surfaceProps
   } = props
+  const theme = useTheme()
   const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
   const showSubtitle = !!subTitle && !props.hideSubtitle
@@ -279,7 +280,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                   <Space size="sm" />
                 </>
               )}
-              <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
+              <HighlightText flex={1} ellipse fontWeight={theme.fontWeight || 400} {...titleProps}>
                 {title}
               </HighlightText>
               {!!(props.afterTitle || afterHeaderElement) && <Space size={pad} />}

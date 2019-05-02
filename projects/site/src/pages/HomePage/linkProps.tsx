@@ -35,15 +35,15 @@ export const useLink = (href: string) => {
   const header = HeaderContext.useProps()
   const isActive = useIsActiveRoute(href)
   return {
-    ...linkProps(href, header, isActive),
+    ...linkProps(href, { header, isActive }),
     isActive,
   }
 }
 
 let tm = null
 
-export const createLink = memoize((href: string, header = null) => async e => {
-  if (isExternal(href)) {
+export const createLink = memoize((href: string, header = null, isExternal = false) => async e => {
+  if (isExternal || checkExternal(href)) {
     return
   }
   clearTimeout(tm)
@@ -68,17 +68,20 @@ export const createLink = memoize((href: string, header = null) => async e => {
   }
 })
 
-export const linkProps = (href: string, header?, isActive?): any => {
+export const linkProps = (
+  href: string,
+  opts: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
+): any => {
   return {
     href,
     tagName: 'a',
-    ...(!!header && { className: 'will-transform' }),
+    ...(!!opts.header && { className: 'will-transform' }),
     textDecoration: 'none',
     cursor: 'pointer',
-    target: isExternal(href) ? '_blank' : undefined,
-    onClick: isActive ? nullLink : createLink(href, header),
+    target: opts.isExternal || checkExternal(href) ? '_blank' : undefined,
+    onClick: opts.isActive ? nullLink : createLink(href, opts.header, opts.isExternal),
     onMouseEnter: createPreloadLink(href),
   }
 }
 
-const isExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0
+const checkExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

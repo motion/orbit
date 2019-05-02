@@ -57,8 +57,8 @@ function createAlternateTheme(
   }
 
   // alternates can take parent theme as argument and return their theme:
-  const a = theme.alternates[alt]
-  const altTheme = typeof a === 'function' ? a(theme) : a
+  const next = theme.alternates[alt]
+  const altTheme = typeof next === 'function' ? next(theme) : next
 
   return {
     ...(shouldFallback ? pick(theme, 'background', 'borderColor', 'color') : null),

@@ -4,7 +4,7 @@ import React, { forwardRef, isValidElement } from 'react'
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Icon } from './Icon'
-import { Sizes, Space } from './Space'
+import { Sizes } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
@@ -105,19 +105,11 @@ export const TitleRow = forwardRef(
         {...rowProps}
       >
         {above}
-        <Row alignItems="center">
+        <Row alignItems="center" space="sm">
           {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
-          {before && (
-            <>
-              {before}
-              <Space />
-            </>
-          )}
+          {before}
           {typeof icon === 'string' ? (
-            <>
-              <Icon alignSelf="center" name={icon} size={20} />
-              <Space />
-            </>
+            <Icon alignSelf="center" name={icon} size={20} />
           ) : (
             icon || null
           )}
@@ -132,7 +124,9 @@ export const TitleRow = forwardRef(
               </>
             )}
           </View>
-          {after}
+          <Row alignItems="center" space="sm">
+            {after}
+          </Row>
         </Row>
         {below}
         {bordered && (

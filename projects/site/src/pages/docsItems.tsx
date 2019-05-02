@@ -79,7 +79,7 @@ const uikit = [
   { id: 'tag', icon: 'tag', title: 'Tag', indent: 1 },
   { id: 'icon', icon: 'star', title: 'Icons' },
   { id: 'section', title: 'Section', icon: 'application' },
-  { id: 'popover', title: 'Popover', icon: 'direction-right' },
+  { id: 'popover', title: 'Popover', icon: 'direction-right', beta: true },
   // { id: 'decorations', title: 'Decorations', icon: 'clean' },
   { id: 'progress', title: 'Progress', icon: 'circle' },
 
@@ -91,9 +91,9 @@ const uikit = [
   { id: 'date-format', title: 'DateFormat', icon: 'event' },
   { id: 'timeago', title: 'TimeAgo', icon: 'time' },
 
-  { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select' },
-  { id: 'galleryModal', title: 'GalleryModal', icon: 'multi-select' },
-  { id: 'mediaModal', title: 'MediaModal', icon: 'multi-select' },
+  { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select', beta: true },
+  { id: 'galleryModal', title: 'GalleryModal', icon: 'multi-select', beta: true },
+  { id: 'mediaModal', title: 'MediaModal', icon: 'multi-select', beta: true },
 
   { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
   { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },

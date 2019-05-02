@@ -1,3 +1,4 @@
+import { gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
@@ -6,6 +7,7 @@ import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { SizedSurfaceProps } from '../SizedSurface'
+import { Col } from '../View/Col'
 
 if (isBrowser) {
   // original
@@ -211,11 +213,16 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
   const onMouseDown = useCallback(e => isRightClick(e) && e.stopProgation(), [])
 
   return (
-    <div onMouseDown={onMouseDown} {...viewProps}>
+    <GridItemChrome onMouseDown={onMouseDown} {...viewProps}>
       {forwardSurfaceProps(children, { flex: 1 })}
-    </div>
+    </GridItemChrome>
   )
 }
+
+const GridItemChrome = gloss(Col, {
+  overflow: 'hidden',
+  flex: 1,
+})
 
 GridItem.isGridItem = true
 

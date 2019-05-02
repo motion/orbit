@@ -1,4 +1,5 @@
 .react-grid-item {
+  display: flex;
   position: relative;
   z-index: 100000;
 }

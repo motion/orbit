@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon } from '@o/kit'
+import { Icon, useStore } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { memo, useCallback, useState } from 'react'
@@ -23,17 +23,51 @@ export const headerButtonProps = {
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
-export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+class HomeButtonStore {
+  hovering = false
+  onEnter = () => (this.hovering = true)
+  onLeave = () => (this.hovering = false)
+}
+
+const HomeButton = memo(props => {
+  const theme = useTheme()
+  const { newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
+  const store = useStore(HomeButtonStore)
+  const onClick = useCallback(e => {
+    console.log('go to ', store.hovering, paneManagerStore.homePane.id)
+    if (store.hovering) {
+      e.stopPropagation()
+      paneManagerStore.setActivePane(paneManagerStore.homePane.id)
+    }
+  }, [])
+
+  return (
+    <Icon
+      onMouseEnter={store.onEnter}
+      onMouseLeave={store.onLeave}
+      opacity={0.65}
+      hoverStyle={{
+        opacity: 1,
+      }}
+      color={invertLightness(theme.color, 0.5)}
+      name={store.hovering ? 'orbit-home' : `orbit-${icon}`}
+      size={22}
+      onClick={onClick}
+      {...props}
+    />
+  )
+})
+
+export const OrbitHeader = memo(() => {
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+  const { activePane } = paneManagerStore
+  const activePaneType = activePane.type
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
-  const [hoveringIcon, setHoveringIcon] = useState(false)
-  const onEnterIcon = useCallback(() => setHoveringIcon(true), [])
-  const onLeaveIcon = useCallback(() => setHoveringIcon(false), [])
 
   return (
     <OrbitHeaderContainer
@@ -56,26 +90,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
             <OrbitNavPopover
               open={paneManagerStore.isOnHome ? true : undefined}
-              target={
-                <Icon
-                  onMouseEnter={onEnterIcon}
-                  onMouseLeave={onLeaveIcon}
-                  opacity={0.65}
-                  hoverStyle={{
-                    opacity: 1,
-                  }}
-                  color={invertLightness(theme.color, 0.5)}
-                  name={hoveringIcon ? 'orbit-home' : `orbit-${icon}`}
-                  size={22}
-                  onClick={e => {
-                    console.log('go to ', hoveringIcon, paneManagerStore.homePane.id)
-                    if (hoveringIcon) {
-                      e.stopPropagation()
-                      paneManagerStore.setActivePane(paneManagerStore.homePane.id)
-                    }
-                  }}
-                />
-              }
+              target={<HomeButton />}
             >
               <OrbitNav />
             </OrbitNavPopover>

@@ -1048,11 +1048,7 @@ export class Popover extends React.Component<PopoverProps, State> {
                 }}
               >
                 <Arrow
-                  background={
-                    typeof background === 'string' && background !== 'transparent'
-                      ? background
-                      : null
-                  }
+                  {...backgroundProp}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   {...getElevation({ elevation })}

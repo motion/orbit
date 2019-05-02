@@ -1,5 +1,6 @@
 import { Contents, gloss, ThemeContext } from '@o/gloss'
 import React, { useContext } from 'react'
+
 import { View, ViewProps } from './View/View'
 
 export type ArrowProps = ViewProps & {
@@ -16,6 +17,7 @@ export function Arrow({
   background,
   ...props
 }: ArrowProps) {
+  console.log('background', background)
   const theme = useContext(ThemeContext).activeTheme
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)

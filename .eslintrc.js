@@ -34,6 +34,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_[.*]' }],
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'react/no-unescaped-entities': 'off',
     'linebreak-style': ['error', 'unix'],
     semi: ['error', 'never'],

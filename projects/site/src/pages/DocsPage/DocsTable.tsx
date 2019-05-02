@@ -6,12 +6,7 @@ import { employees } from './fakeData'
 const data = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
 
 export let simple = (
-  <Table
-    overscanCount={100}
-    height={300}
-    columns={['username', 'password', 'ssn', 'dob']}
-    rows={data}
-  />
+  <Table height={300} columns={['username', 'password', 'ssn', 'dob']} rows={data} />
 )
 
 export let columns = (

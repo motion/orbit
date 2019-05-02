@@ -1,13 +1,12 @@
 import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, HTMLAttributes, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
-import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 
 export type BaseRules = {
@@ -143,9 +142,10 @@ export function gloss<Props = any>(
     const isDOMElement = typeof element === 'string'
 
     // set up final props with filtering for various attributes
-    const finalProps = {
+    const finalProps: any = {
       className: props.className || '',
-    } as any
+      'data-is': ThemedView.displayName,
+    }
 
     if (ref) {
       finalProps.ref = ref
@@ -471,7 +471,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   }
   const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = displayName + '__' + hash(namespace + cssString)
+  const className = `g${stringHash(cssString)}`
   // for media queries
   // this is the first time we've found this className
   if (!tracker.has(className)) {
@@ -493,4 +493,19 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
     rulesToClass.set(rules, className)
   }
   return className
+}
+
+// thx darksky: https://git.io/v9kWO
+export function stringHash(str: string): number {
+  let res = 5381
+  let i = str.length
+
+  while (i) {
+    res = (res * 33) ^ str.charCodeAt(--i)
+  }
+
+  /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
+   * integers. Since we want the results to be always positive, convert the
+   * signed int to an unsigned by doing an unsigned bitshift. */
+  return res >>> 0
 }

@@ -8,6 +8,7 @@
   opacity: 0.1;
 }
 
-.react-grid-item.react-draggable-dragging {
+.react-grid-item.react-draggable-dragging,
+.react-grid-item.resizing {
   z-index: 300000000000;
 }

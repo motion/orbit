@@ -103,7 +103,7 @@ export const Example = memo(
                       icon="share"
                       color={[150, 150, 150, 0.5]}
                       tooltip="Open in own window"
-                      {...linkProps(`/docs/isolate/${parentId}/${id}`, { isExternal: true })}
+                      {...linkProps(`/docs/${parentId}/isolate/${id}`, { isExternal: true })}
                     />
                   )}
                   <Icon

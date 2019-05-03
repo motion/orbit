@@ -1,5 +1,5 @@
 import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
-import { Button, Calendar, Col, FloatingCard, List, Popover, useWindowSize, View } from '@o/ui'
+import { Button, Calendar, Col, FloatingCard, List, Popover, View } from '@o/ui'
 import React from 'react'
 
 import { ManageApps } from './ManageApps'
@@ -35,8 +35,10 @@ function SearchApp(props: AppProps) {
       <FloatingCard
         defaultWidth={width}
         defaultHeight={height}
-        usePosition={() => useWindowSize({ adjust: ([x, y]) => [x - width - 20, y - height - 20] })}
+        attach="bottom right"
+        edgePad={[20, 20]}
         visible
+        pad
       >
         {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}
       </FloatingCard>

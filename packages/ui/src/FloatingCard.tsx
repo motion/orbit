@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 import { Card, CardProps } from './Card'
 import { FloatingView, FloatingViewProps } from './FloatingView'
+import { useVisibility } from './Visibility'
 
 type FloatingCardProps = CardProps &
   Pick<
@@ -17,6 +18,8 @@ type FloatingCardProps = CardProps &
     | 'width'
     | 'height'
     | 'usePosition'
+    | 'attach'
+    | 'edgePad'
   > & {
     visible?: boolean
   }
@@ -33,14 +36,17 @@ export function FloatingCard({
   width,
   height,
   zIndex = 10000000,
-  pointerEvents = 'inherit',
+  pointerEvents = 'auto',
   visible,
+  attach,
+  edgePad,
   ...cardProps
 }: FloatingCardProps) {
+  const isVisible = useVisibility()
   const theme = useTheme()
   const [collapsed, setCollapsed] = useState(false)
   const visibilityProps: any = {
-    pointerEvents: visible ? pointerEvents : 'none',
+    pointerEvents: isVisible && visible ? pointerEvents : 'none',
     opacity: visible ? 1 : 0,
     transform: {
       y: visible ? 0 : 10,
@@ -62,12 +68,13 @@ export function FloatingCard({
       zIndex={+zIndex}
       pointerEvents={visibilityProps.pointerEvents}
       usePosition={usePosition}
+      attach={attach}
+      edgePad={edgePad}
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}
         elevation={2}
         flex={1}
-        margin={5}
         collapsed={collapsed}
         onCollapse={setCollapsed}
         transition="all ease 200ms"

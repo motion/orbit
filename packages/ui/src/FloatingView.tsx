@@ -1,11 +1,13 @@
 import { FullScreen } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
+import memoize from 'memoize-weak'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
 
 import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
+import { useWindowSize } from './hooks/useWindowSize'
 import { Interactive, InteractiveProps } from './Interactive'
 import { Omit } from './types'
 import { useVisibility } from './Visibility'
@@ -20,11 +22,28 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'he
   defaultWidth?: number
   defaultHeight?: number
   zIndex?: number
-  usePosition: () => [number, number]
+  edgePad?: [number, number]
+  attach?: 'bottom right' | 'bottom left' | 'top left' | 'top right'
+  usePosition?: (width: number, height: number) => [number, number]
+}
+
+const useWindowAttachments = {
+  'bottom right': memoize((px: number, py: number) => (width: number, height: number) =>
+    useWindowSize({ adjust: ([x, y]) => [x - width - px, y - height - py] }),
+  ),
+  'bottom left': memoize((px: number, py: number) => (_, height: number) =>
+    useWindowSize({ adjust: ([x, y]) => [x + px, y - height - py] }),
+  ),
+  'top left': memoize((px: number, py: number) => (_, _2) =>
+    useWindowSize({ adjust: ([x, y]) => [x + px, y + py] }),
+  ),
+  'top right': memoize((px: number, py: number) => (width: number, _) =>
+    useWindowSize({ adjust: ([x, y]) => [x - width - px, y + py] }),
+  ),
 }
 
 export function FloatingView(props: FloatingViewProps) {
-  const {
+  let {
     defaultWidth = 100,
     defaultHeight = 100,
     defaultLeft = 0,
@@ -34,22 +53,35 @@ export function FloatingView(props: FloatingViewProps) {
     zIndex = 1200000,
     pointerEvents = 'auto',
     usePosition,
+    attach,
+    edgePad = [0, 0],
     ...restProps
   } = props
-  const usePos = usePosition ? usePosition() : undefined
-  const x = usePos ? usePos[0] : defaultLeft
-  const y = usePos ? usePos[1] : defaultTop
+
+  console.log('using position ok', props)
+
+  if (attach) {
+    usePosition = useWindowAttachments[attach](...edgePad)
+  }
 
   const controlledSize = typeof props.height !== 'undefined'
   const controlledPosition = typeof props.top !== 'undefined'
   const isVisible = useVisibility()
   const getProps = useGet(props)
-  const [{ xy, width, height }, set] = useSpring(() => ({
+
+  const width = selectDefined(props.width, defaultWidth)
+  const height = selectDefined(props.height, defaultHeight)
+
+  const usePos = usePosition ? usePosition(width, height) : undefined
+  const x = usePos ? usePos[0] : defaultLeft
+  const y = usePos ? usePos[1] : defaultTop
+
+  const [spring, set] = useSpring(() => ({
     xy: [selectDefined(props.left, x), selectDefined(props.top, y)],
-    width: selectDefined(props.width, defaultWidth),
-    height: selectDefined(props.height, defaultHeight),
+    width,
+    height,
   }))
-  const curDim = useGet({ xy, width, height })
+  const curDim = useGet(spring)
   const prevDim = useRef({ height: 0, width: 0 })
 
   // sync props
@@ -57,7 +89,7 @@ export function FloatingView(props: FloatingViewProps) {
   const syncDimensionProp = (dim: 'width' | 'height' | 'xy', val: any) => {
     const prev = prevDim.current
     const cur = curDim()[dim].getValue()
-    if (Array.isArray(val) ? val.every(x => isDefined(x)) : isDefined(val)) {
+    if (Array.isArray(val) ? val.every(z => isDefined(z)) : isDefined(val)) {
       if (val !== cur) {
         prev[dim] = cur
         set({ [dim]: val })
@@ -77,9 +109,9 @@ export function FloatingView(props: FloatingViewProps) {
   // component logic
 
   const pos = {
-    xy: xy.getValue(),
-    width: width.getValue(),
-    height: height.getValue(),
+    xy: spring.xy.getValue(),
+    width: spring.width.getValue(),
+    height: spring.height.getValue(),
   }
   const curPos = useRef(pos)
   const lastDrop = useRef(pos)
@@ -126,10 +158,8 @@ export function FloatingView(props: FloatingViewProps) {
     if (controlledPosition || disableDrag) {
       return
     }
-    const [x, y] = lastDrop.current.xy
-    const nextxy = [delta[0] + x, delta[1] + y]
-    // const velocity = clamp(next.velocity, 1, 8)
-    // { config: { mass: velocity, tension: 500 * velocity, friction: 50 } }
+    const xy = lastDrop.current.xy
+    const nextxy = [delta[0] + xy[0], delta[1] + xy[1]]
     if (down) {
       update({ xy: nextxy })
     } else {
@@ -146,7 +176,7 @@ export function FloatingView(props: FloatingViewProps) {
             zIndex,
             width,
             height,
-            transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
+            transform: spring.xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
             position: 'fixed',
           }}
         >

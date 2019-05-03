@@ -160,6 +160,7 @@ const HeadJoin = () => (
             <Join
               inputProps={{
                 minWidth: useScreenVal('auto', 300, 300),
+                textAlign: 'left',
               }}
               borderRadius={1000}
               boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}

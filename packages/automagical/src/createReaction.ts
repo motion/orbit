@@ -1,4 +1,5 @@
 import * as Mobx from 'mobx'
+
 import { automagicConfig } from './automagical'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, log, logGroup } from './helpers'
@@ -37,12 +38,13 @@ export function createReaction(
     }
   }
 
-  const { delayValue, deferFirstRun, ...options } = getReactionOptions(userOptions)
+  const { delayValue, deferFirstRun, delay, ...options } = getReactionOptions(userOptions)
   let mobxOptions = options as Mobx.IReactionOptions
   // we run immediately by default
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
   mobxOptions.name = config.name
+  mobxOptions.delay = delay
 
   let id = deferFirstRun ? 1 : 0
   let preventLog = options.log === false

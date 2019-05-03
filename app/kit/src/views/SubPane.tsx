@@ -3,6 +3,7 @@ import * as UI from '@o/ui'
 import { useStore } from '@o/use-store'
 import { throttle } from 'lodash'
 import React, { memo, useEffect } from 'react'
+
 import { SubPaneStore } from '../stores/SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {
@@ -47,7 +48,11 @@ export const SubPane = memo(function SubPane(props: Props) {
   })
 
   return (
-    <SubPaneFrame isActive={isActive} zIndex={zIndex}>
+    <SubPaneFrame
+      className={`subpane-${isActive ? 'active' : 'inactive'}`}
+      isActive={isActive}
+      zIndex={zIndex}
+    >
       {typeof before === 'function' ? before(isActive) : before}
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner ref={subPaneStore.innerPaneRef}>

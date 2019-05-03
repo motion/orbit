@@ -7,6 +7,7 @@ import {
   AppViewsContext,
   getAppDefinition,
   ProvideStores,
+  sleep,
   useIsAppActive,
 } from '@o/kit'
 import { ErrorBoundary, Loading, ProvideVisibility } from '@o/ui'
@@ -78,15 +79,48 @@ export const OrbitAppRenderOfDefinition = ({
   const appProps = useReaction(() => orbitStore.activeConfig[id] || {})
 
   return (
-    <Suspense fallback={<Loading />}>
-      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
-          <ErrorBoundary name={identifier}>
-            {(hasShownOnce && <App {...appProps} />) || <Loading />}
-          </ErrorBoundary>
-        </AppViewsContext.Provider>
-      </AppLoadContext.Provider>
-    </Suspense>
+    <AppLoadContext.Provider value={{ id, identifier, appDef }}>
+      <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
+        <ErrorBoundary name={identifier}>
+          <Suspense fallback={<Loading />}>
+            {hasShownOnce && (
+              <FadeIn>
+                <App {...appProps} />
+              </FadeIn>
+            )}
+          </Suspense>
+        </ErrorBoundary>
+      </AppViewsContext.Provider>
+    </AppLoadContext.Provider>
+  )
+}
+
+const onIdle = () => new Promise(res => window['requestIdleCallback'](res))
+
+const FadeIn = (props: any) => {
+  const [shown, setShown] = useState(false)
+
+  useEffect(() => {
+    Promise.race([sleep(100), onIdle()]).then(() => setShown(true))
+  }, [])
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: shown ? 1 : 0,
+        transform: `translateY(${shown ? 0 : -10}px)`,
+        transition: 'all ease 200ms',
+        width: '100%',
+        height: '100%',
+      }}
+    >
+      {props.children}
+    </div>
   )
 }
 

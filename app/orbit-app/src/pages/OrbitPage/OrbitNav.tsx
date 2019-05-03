@@ -51,7 +51,7 @@ export const OrbitNav = memo(
             return null
           }
           const isActive = !showCreateNew && `${paneId}` === activePaneId
-          const next = activeAppsSorted[index + 1]
+          // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
           const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'

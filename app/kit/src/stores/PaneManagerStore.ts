@@ -37,9 +37,15 @@ export class PaneManagerStore {
     this.panes = panes
   }
 
-  get activePane(): PaneManagerPane {
+  get activePaneFast(): PaneManagerPane {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
+
+  activePane = react(() => this.activePaneFast, {
+    delay: 16,
+    log: false,
+    defaultValue: this.activePaneFast,
+  })
 
   get homePane() {
     return this.panes.find(x => x.type === 'search')
@@ -49,8 +55,6 @@ export class PaneManagerStore {
     const searchPane = this.panes.find(x => x.type === 'search')
     return searchPane && this.activePane.id === searchPane.id
   }
-
-  activePaneLowPriority = react(() => this.activePane, _ => _, { delay: 1, log: false })
 
   get activePaneId() {
     return (this.activePane && this.activePane.id) || ''

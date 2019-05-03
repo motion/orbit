@@ -3,6 +3,7 @@ import { gloss } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
 import { ChatMessages, Divider, Row, Section, Tab, Tabs, View } from '@o/ui'
 import * as React from 'react'
+
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
 
@@ -71,7 +72,7 @@ export function BitConversation(props: AppBitMainProps) {
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[-40, 0, 20]}>
-        <Tabs centered sizeRadius={2} onActive={i => setActivePane(+i)} active={`${activePane}`}>
+        <Tabs centered sizeRadius={2} onChange={i => setActivePane(+i)} active={`${activePane}`}>
           <Tab id="0" label="Conversation" />
           <Tab id="2" label="Afterwards" />
         </Tabs>

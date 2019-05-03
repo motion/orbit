@@ -11,16 +11,18 @@ type ValidCSSPropertyMap = { [key in CSSPropertyKey]: boolean }
 const allCSSAttr = {}
 // add standard ones
 if (typeof document !== 'undefined') {
-  for (const key of Object.keys(document.body.style)) {
+  for (const key in document.body.style) {
     allCSSAttr[key] = true
   }
 }
+
 const cssSpecialAttr = {
   borderLeftRadius: true,
   borderRightRadius: true,
   borderBottomRadius: true,
   borderTopRadius: true,
 }
+
 export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
   ...allCSSAttr,
   ...cssSpecialAttr,

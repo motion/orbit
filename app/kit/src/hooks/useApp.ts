@@ -1,5 +1,5 @@
 import { AppBit } from '@o/models'
-import sum from 'hash-sum'
+
 import { AppDefinition } from '../types/AppDefinition'
 import { useAppBit } from './useAppBit'
 
@@ -40,13 +40,17 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
     {
       get(_, method) {
         return (...args: any[]) => {
-          const key = sum({ app, method, args })
+          const key = stringHash(JSON.stringify({ app, method, args }))
 
           if (!ApiCache[key]) {
             const rawRead = definition.api(app)[method](...args)
             const read = rawRead
               .then(val => {
                 ApiCache[key].response = val
+              })
+              .catch(err => {
+                console.error('Error in useApp call', err)
+                ApiCache[key].response = null
               })
               .then(() => {
                 // // clear cache
@@ -74,4 +78,14 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
       },
     },
   )
+}
+
+function stringHash(str: string): number {
+  // thx darksky: https://git.io/v9kWO
+  let res = 5381
+  let i = str.length
+  while (i) {
+    res = (res * 33) ^ str.charCodeAt(--i)
+  }
+  return res >>> 0
 }

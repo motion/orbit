@@ -2,9 +2,9 @@ import { colorToString } from '.'
 import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossOptions } from './types'
 
-type Required<T> = T extends object ? { [P in keyof T]-?: NonNullable<T[P]> } : T
+// type Required<T> = T extends object ? { [P in keyof T]-?: NonNullable<T[P]> } : T
 
-export const Config: Required<GlossOptions> = {
+export const Config: GlossOptions = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   pseudoAbbreviations: {

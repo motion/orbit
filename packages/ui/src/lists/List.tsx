@@ -85,6 +85,7 @@ export const List = memo((allProps: ListProps) => {
     afterTitle,
     backgrounded,
     elevation,
+    titleScale = 0.85,
     ...listProps
   } = allListProps
   // const { getShareMenuItemProps } = useShareMenu()
@@ -234,6 +235,7 @@ export const List = memo((allProps: ListProps) => {
       titleBorder={titleBorder}
       backgrounded={backgrounded}
       elevation={elevation}
+      titleScale={titleScale}
       {...collapseProps}
     >
       {children}

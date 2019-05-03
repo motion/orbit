@@ -1,6 +1,7 @@
 import {
   Absolute,
   BorderRight,
+  Button,
   Col,
   gloss,
   List,
@@ -35,6 +36,7 @@ import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
+import { linkProps } from './HomePage/linkProps'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
@@ -415,7 +417,11 @@ const FixedLayout = gloss({
 export default compose(
   withView(async req => {
     if (window.location.pathname.indexOf('/isolate') >= 0) {
-      return <View />
+      return (
+        <DocsChromeSimple>
+          <View />
+        </DocsChromeSimple>
+      )
     }
     return (
       <DocsPage>
@@ -473,9 +479,36 @@ export default compose(
       const [_, _2, examples, examplesSource] = await loadDocsPage(view)
       return {
         view: (
-          <Example chromeless examples={examples} source={examplesSource} id={req.params.subid} />
+          <Example
+            chromeless
+            examples={examples}
+            source={examplesSource}
+            id={req.params.subid}
+            sourceBelow
+          />
         ),
       }
     }),
   }),
 )
+
+const DocsChromeSimple = ({ children }) => {
+  return (
+    <>
+      <Header slim noBorder />
+      <Row pad>
+        <Button
+          {...linkProps(
+            window.location.pathname
+              .split('/')
+              .slice(0, 3)
+              .join('/'),
+          )}
+        >
+          Back to Docs
+        </Button>
+      </Row>
+      {children}
+    </>
+  )
+}

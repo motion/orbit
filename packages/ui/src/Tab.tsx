@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 
 import { Button, ButtonProps } from './buttons/Button'
 
@@ -10,9 +10,9 @@ import { Button, ButtonProps } from './buttons/Button'
  */
 export function Tab(_: {
   /**
-   * ID is used for onActive/Active of <Tabs />
+   * ID is used for onActive/Active of <Tabs /> (may also use `key`, thought that may be removed)
    */
-  id: string
+  id?: string
   /**
    * Label of this tab to show in the tab list.
    */
@@ -40,7 +40,7 @@ export function Tab(_: {
    * Children shows inside the tab content
    * Use a function to render the view only when tab is active
    */
-  children?: React.ReactNode | (() => React.ReactNode)
+  children?: React.ReactNode | FunctionComponent
   /**
    * Icon for tab
    */

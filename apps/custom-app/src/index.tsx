@@ -1,25 +1,45 @@
 import { App, AppCard, createApp } from '@o/kit'
-import Slack from '@o/slack-app'
-import { GridLayout, Table } from '@o/ui'
-import React from 'react'
+import Slack, { SlackConversation } from '@o/slack-app'
+import { GridLayout, Tab, Table, Tabs } from '@o/ui'
+import React, { useState } from 'react'
 
 function CustomApp() {
+  const [app, setApp] = useState(null)
+  const [rooms, setRooms] = useState([])
+
   return (
     <App>
       <GridLayout>
-        <AppCard key="slack" title="Slack Messages" appType={Slack}>
+        <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
           {({ api }) => {
             const res = api.channelsList()
+            console.log(res, res && res.channels)
             return (
               <Table
                 // columns={['id', 'members']}
                 shareable
                 // focusable
                 selectable="multi"
-                rows={(res && res.channels) || {}}
+                rows={(res && res.channels) || []}
+                onSelect={setRooms}
               />
             )
           }}
+        </AppCard>
+        <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
+          {({ api }) => (
+            <Tabs>
+              {rooms.map(room => (
+                <Tab key={room.id} label={room.name}>
+                  {() => {
+                    const res = api.channelsHistory({ channel: room.id })
+                    console.log('res', res)
+                    return <SlackConversation messages={res.messages || []} />
+                  }}
+                </Tab>
+              ))}
+            </Tabs>
+          )}
         </AppCard>
       </GridLayout>
     </App>

@@ -1,6 +1,7 @@
 import { isEditing } from '@o/stores'
 import { Tab, Tabs } from '@o/ui'
 import React, { useCallback } from 'react'
+
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitSettingsToolbar() {
@@ -16,7 +17,7 @@ export function OrbitSettingsToolbar() {
   }
 
   return (
-    <Tabs tabWidth={180} centered sizeRadius={3} active={activePaneKey} onActive={onActive}>
+    <Tabs tabWidth={180} centered sizeRadius={3} active={activePaneKey} onChange={onActive}>
       <Tab id="spaces" icon="layer" label="Spaces" />
       <Tab id="settings" icon="cog" label="Settings" />
     </Tabs>

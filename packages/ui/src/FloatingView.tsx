@@ -140,8 +140,8 @@ export function FloatingView(props: FloatingViewProps) {
       <FullScreen>
         <animated.div
           style={{
-            pointerEvents: isVisible ? pointerEvents : 'none',
-            zIndex: zIndex,
+            pointerEvents: (isVisible ? pointerEvents : 'none') as any,
+            zIndex,
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
@@ -160,7 +160,11 @@ export function FloatingView(props: FloatingViewProps) {
             onResize={onResize}
             onResizeEnd={commit}
           >
-            <FullScreen {...bindGesture()} pointerEvents="inherit">
+            <FullScreen
+              className="ui-floating-view-content"
+              {...bindGesture()}
+              pointerEvents="inherit"
+            >
               {children}
             </FullScreen>
           </Interactive>

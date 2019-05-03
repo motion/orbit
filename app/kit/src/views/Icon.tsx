@@ -1,56 +1,59 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
-import React, { memo } from 'react'
+import React, { memo, forwardRef } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 
-export const Icon = memo((props: IconProps & { svg?: string }) => {
-  const { name, color, size = 32, style, opacity, ...restProps } = props
-  const theme = useTheme()
-  const finalColor = color || theme.color ? theme.color.toString() : '#fff'
+export const Icon = memo(
+  forwardRef(function Icon(props: IconProps & { svg?: string }, ref) {
+    const { name, color, size = 32, style, opacity, ...restProps } = props
+    const theme = useTheme()
+    const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
-  // image based source icons
-  const sourceIcon = useAppIcon(props)
-  if (sourceIcon) {
-    const sizeProps = {
-      width: size,
-      height: size,
+    // image based source icons
+    const sourceIcon = useAppIcon(props)
+    if (sourceIcon) {
+      const sizeProps = {
+        width: size,
+        height: size,
+      }
+      return (
+        <View
+          ref={ref}
+          className={`icon ${props.className || ''}`}
+          display="inline-block"
+          textAlign="center"
+          justifyContent="center"
+          style={style}
+          opacity={opacity}
+          {...(sourceIcon ? adjust[name] : adjust.icon)}
+          {...sizeProps}
+          {...props}
+        >
+          {sourceIcon}
+        </View>
+      )
     }
+
+    if (appIcons[name]) {
+      return <AppIconInner {...props} />
+    }
+
     return (
-      <View
-        className={`icon ${props.className || ''}`}
-        display="inline-block"
-        textAlign="center"
-        justifyContent="center"
+      <UI.PlainIcon
+        name={name}
+        color={finalColor}
+        size={size}
         style={style}
         opacity={opacity}
-        {...(sourceIcon ? adjust[name] : adjust.icon)}
-        {...sizeProps}
-        {...props}
-      >
-        {sourceIcon}
-      </View>
+        {...restProps}
+        svg={props.svg || icons[name]}
+      />
     )
-  }
-
-  if (appIcons[name]) {
-    return <AppIconInner {...props} />
-  }
-
-  return (
-    <UI.PlainIcon
-      name={name}
-      color={finalColor}
-      size={size}
-      style={style}
-      opacity={opacity}
-      {...restProps}
-      svg={props.svg || icons[name]}
-    />
-  )
-})
+  }),
+)
 
 // @ts-ignore
 Icon.acceptsIconProps = true

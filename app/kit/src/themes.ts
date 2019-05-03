@@ -3,10 +3,8 @@ import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
-const orbitColor = toColor('#3E7FD5')
-
-export const colors = {
-  orange: '#DC6104',
+export const colors = Theme.colorize({
+  orange: '#E97902',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
   blue: '#3E7FD5',
@@ -21,7 +19,7 @@ export const colors = {
   yellow: '#E2EB53',
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
-}
+})
 
 const transparent = [0, 0, 0, 0]
 
@@ -75,16 +73,16 @@ const colorThemes: ThemeSet = {
   orange: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
-    background: '#DC6104',
+    background: colors.orange,
   }),
   yellow: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
-    background: '#C9C825',
+    background: colors.yellow,
   }),
   blue: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    background: orbitColor,
+    background: colors.blue,
     color: '#fff',
   }),
   transparent: Theme.colorize({
@@ -195,8 +193,8 @@ const light = {
     backgroundStronger: lightBackground.darken(0.05),
     backgroundStrongest: lightBackground.darken(0.075),
     backgroundZebra: '#f6f7f9aa',
-    backgroundHighlightActive: orbitColor.lighten(0.1),
-    backgroundHighlight: orbitColor,
+    backgroundHighlightActive: colors.blue.lighten(0.1),
+    backgroundHighlight: colors.blue,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
@@ -215,10 +213,11 @@ const light = {
     headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.95]),
     sidebarBackground: '#f5f7f9',
     sidebarBackgroundTransparent: [255, 255, 255, 0.8],
-    tabBackgroundTop: lightBackground.alpha(0.65),
+    tabBackgroundTop: lightBackground,
     tabBackgroundBottom: lightBackground,
+    tabBackgroundHover: [0, 0, 0, 0.1],
+    tabInactiveHover: [0, 0, 0, 0.1],
     tabBorderColor: [205, 205, 205],
-    tabInactiveHover: [10, 10, 10, 0.035],
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: '#eee',
     listItemBackgroundHover: [100, 100, 100, 0.024],
@@ -284,8 +283,8 @@ const dark = {
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
-    backgroundHighlightActive: orbitColor.lighten(0.2),
-    backgroundHighlight: orbitColor,
+    backgroundHighlightActive: colors.blue.lighten(0.2),
+    backgroundHighlight: colors.blue,
     color: darkColor,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
@@ -314,11 +313,11 @@ const dark = {
     buttonGlintColorBottom: [0, 0, 0, 0.3],
     colorBlur: '#bbb',
     colorActive: '#fff',
-    tabBackgroundTop: darkBackground.alpha(0.65),
+    tabBackgroundTop: darkBackground,
     tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
-    tabBackgroundHover: [255, 255, 255, 0.015],
-    tabInactiveHover: [0, 0, 0, 0.1],
+    tabBackgroundHover: [0, 0, 0, 0.1],
+    tabInactiveHover: [255, 255, 255, 0.05],
     glintColor: [255, 255, 255, 0.135],
     inputBackground: transparent,
     inputBackgroundHover: transparent,

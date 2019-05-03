@@ -9,6 +9,7 @@ import {
 } from '@o/kit'
 import { List } from '@o/ui'
 import * as React from 'react'
+
 import { getAppListItem } from './getAppListItem'
 
 function getDescription(def: AppDefinition) {
@@ -35,6 +36,10 @@ export function AppsIndex() {
     <List
       title="Manage Apps"
       subTitle="Use search to find new apps."
+      itemProps={{
+        iconBefore: true,
+        iconSize: 36,
+      }}
       items={[
         ...clientApps.map(getAppListItem).map(x => ({ ...x, group: 'App Settings' })),
         ...syncApps.map(getAppListItem).map(x => ({
@@ -47,8 +52,6 @@ export function AppsIndex() {
           group: 'Install App',
           title: def.name,
           icon: def.id,
-          iconBefore: true,
-          small: true,
           subTitle: getDescription(def) || 'No Description',
           after: sourceIcon,
           extraData: {

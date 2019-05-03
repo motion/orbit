@@ -9,10 +9,10 @@ export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false
 
 type ThemeProps = {
   theme?: string | SimpleStyleObject
-  name?: string
   themeSelect?: ThemeSelect
-  children: any
   alt?: string
+  name?: string
+  children: any
 }
 
 const themeContexts = new WeakMap()
@@ -29,7 +29,9 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
-  const nextTheme = Config.preProcessTheme(props, prev.activeTheme)
+  const nextTheme = Config.preProcessTheme
+    ? Config.preProcessTheme(props, prev.activeTheme)
+    : prev.activeTheme
   let nextThemeObj: ThemeContextType = themeContexts.get(nextTheme)
 
   if (!nextThemeObj) {

@@ -4,6 +4,14 @@ May
 
 "Demos + Finish docs/website"
 
+2 - Grid Layout + Docs
+3 - Example-Workspace with apps that run + Docs
+    - see about router + code splitting for orbit, would make initial loads faster
+4 - Split out example apps in workspace
+5 - Polish apps, Share data between apps
+6 - CLI development
+7 -
+
 - Demo Apps
   - Use CLI to create it
   - User Manager with real integration

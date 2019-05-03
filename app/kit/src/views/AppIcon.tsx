@@ -1,6 +1,7 @@
 import { AppBit } from '@o/models'
 import { IconProps, SVG, toColor, View } from '@o/ui'
 import React from 'react'
+
 import { appIcons } from './icons'
 
 export type AppIconProps = Partial<IconProps> & { app: AppBit; removeStroke?: boolean }
@@ -16,12 +17,13 @@ export function AppIconInner({
 }: Partial<AppIconProps>) {
   // const theme = useTheme() props.color || theme.iconColor ||
   const fill = toColor('#fff').hex()
+  let name = props.name
 
-  if (!appIcons[props.name]) {
-    return null
+  if (!appIcons[name]) {
+    name = name.indexOf('full') > 0 ? 'orbit-custom-full' : 'orbit-custom'
   }
 
-  let iconSrc = `${appIcons[props.name]}`
+  let iconSrc = `${appIcons[name]}`
 
   // hacky customize the background color
   // warning: not having a string here literally causes a node level error....

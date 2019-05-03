@@ -7,7 +7,7 @@ import { ThemeContext } from '../theme/ThemeContext'
 
 export function useTheme(props?: { themeSelect?: ThemeSelect; alt?: string }) {
   const theme = useContext(ThemeContext).activeTheme
-  if (props) {
+  if (props && Config.preProcessTheme) {
     return Config.preProcessTheme(props, theme)
   }
   return theme

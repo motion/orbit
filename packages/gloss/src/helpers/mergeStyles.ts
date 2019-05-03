@@ -28,7 +28,9 @@ export function mergeStyles(previous?: Object | null, next?: Object | null) {
       if (!previous[key]) {
         previous[key] = next[key]
       } else {
-        Object.assign(previous[key], next[key])
+        for (const skey in next) {
+          previous[skey] = next[skey]
+        }
       }
     }
   }

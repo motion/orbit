@@ -24,7 +24,7 @@ export function LoadingPage() {
       transition="all ease 300ms"
       opacity={1}
       background={theme => theme.background}
-      zIndex={Number.MAX_SAFE_INTEGER}
+      zIndex={10000000}
       position="fixed"
       alignItems="center"
       justifyContent="center"

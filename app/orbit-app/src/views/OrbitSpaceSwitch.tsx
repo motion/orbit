@@ -5,10 +5,11 @@ import { App } from '@o/stores'
 import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
-// @ts-ignore
+
 import avatar from '../../public/images/nate.jpg'
 import { useStoresSimple } from '../hooks/useStores'
 
+// @ts-ignore
 class SpaceSwitchStore {
   stores = useHook(useStoresSimple)
   popoverContentRef = React.createRef<HTMLDivElement>()
@@ -88,7 +89,8 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
       )}
       <Popover
         ref={store.spaceSwitcherRef}
-        openOnClick
+        delay={1000}
+        openOnHover
         closeOnClickAway
         closeOnClick
         popoverTheme="light"
@@ -98,7 +100,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         elevation={7}
         onChangeVisibility={store.setOpen}
         target={
-          <View position="relative" margin={[0, 6, 0, 18]}>
+          <View position="relative" margin={[0, 6, 0, 18]} onClick={accountLink}>
             <Avatar className="undraggable" src={avatar} width={20} height={20} />
             <OrbitOrb
               position="absolute"

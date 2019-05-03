@@ -1,4 +1,6 @@
+import { isDefined } from '@o/utils'
 import React from 'react'
+
 import { createContextualProps } from './helpers/createContextualProps'
 
 const scaleContext = {
@@ -10,6 +12,11 @@ const { Reset, PassProps, Context, useProps } = createContextualProps(scaleConte
 // will nest scaling so you can propogate it
 export const Scale = (props: typeof scaleContext & { children: any }) => {
   const scale = useScale()
+
+  if (!isDefined(props.size)) {
+    return props.children
+  }
+
   return <PassProps size={scale * props.size}>{props.children}</PassProps>
 }
 

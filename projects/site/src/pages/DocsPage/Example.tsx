@@ -1,6 +1,6 @@
-import { Button, Card, gloss, Icon, Row, SimpleText, Space, View } from '@o/ui'
+import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { createElement, isValidElement, memo, useRef, useState } from 'react'
+import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
 import { linkProps } from '../HomePage/linkProps'
@@ -15,6 +15,7 @@ export type ExampleProps = {
   onlySource?: boolean
   chromeless?: boolean
   parentId?: string
+  sourceBelow?: boolean
 }
 
 export const Example = memo(
@@ -27,6 +28,7 @@ export const Example = memo(
     willScroll,
     onlySource,
     chromeless,
+    sourceBelow,
     ...props
   }: ExampleProps) => {
     // const route = useCurrentRoute()
@@ -41,7 +43,7 @@ export const Example = memo(
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
     const contents = (
-      <>
+      <Col space flexDirection={sourceBelow ? 'column-reverse' : 'column'}>
         {showSource && (
           <SubCard>
             <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
@@ -50,6 +52,7 @@ export const Example = memo(
 
         {!onlySource && (
           <SubCard
+            minHeight={20}
             onMouseEnter={() => {
               tm.current = setTimeout(() => setHovered(true), 200)
             }}
@@ -74,11 +77,11 @@ export const Example = memo(
             )}
           </SubCard>
         )}
-      </>
+      </Col>
     )
 
     return (
-      <>
+      <Suspense fallback={<Loading />}>
         {chromeless ? (
           <>{contents}</>
         ) : (
@@ -88,7 +91,6 @@ export const Example = memo(
               elevation={1}
               pad
               titlePad="sm"
-              space
               background={theme => theme.backgroundStrong}
               title={name || capitalize(id)}
               afterTitle={
@@ -121,7 +123,7 @@ export const Example = memo(
             <Space size="xl" />
           </>
         )}
-      </>
+      </Suspense>
     )
   },
 )

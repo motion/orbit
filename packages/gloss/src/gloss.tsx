@@ -1,13 +1,21 @@
 import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, HTMLAttributes, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
+
+export const baseIgnoreAttrs = {
+  ...validCSSAttr,
+  width: true,
+  height: true,
+  size: true,
+  src: false,
+}
 
 export type BaseRules = {
   [key: string]: string | number
@@ -28,7 +36,27 @@ export type ThemeFn<Props = any> = (
   previous?: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
 
-export interface GlossView<Props> {
+export type GlossViewOptions<Props> = {
+  displayName?: string
+  ignoreAttrs?: { [key: string]: boolean }
+  defaultProps?: Partial<Props>
+}
+
+type GlossInternalConfig = {
+  id: string
+  displayName: string
+  targetElement: any
+  styles: any
+  propStyles: Object
+  parent: any
+}
+
+type GlossInternals<Props> = {
+  themeFns: ThemeFn<Props>[] | null
+  getConfig: () => GlossInternalConfig
+}
+
+export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
   (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
   propTypes?: React.ValidationMap<Props>
@@ -36,20 +64,10 @@ export interface GlossView<Props> {
   defaultProps?: Partial<Props>
   displayName?: string
   // extra:
-  ignoreAttrs?: Object
+  ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: { displayName?: string }) => any
-  config: {
-    getConfig: () => {
-      id: string
-      displayName: string
-      targetElement: any
-      styles: any
-      propStyles: Object
-      parent: any
-    }
-    themeFns: ThemeFn<Props>[] | null
-  }
+  withConfig: (config: GlossViewOptions<Props>) => GlossView<Props>
+  internal: GlossInternals<Props>
 }
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
@@ -68,29 +86,24 @@ export function gloss<Props = any>(
 ): GlossView<GlossProps<Props>> {
   let target: any = a || 'div'
   let rawStyles = b
-  let targetConfig
   let ignoreAttrs: Object
+  const hasGlossyChild = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  const targetConfig: GlossInternalConfig = hasGlossyChild ? target.internal.getConfig() : null
 
-  // TODO this can be done on first render to lazy load
-  // update ignore attributes
   setTimeout(() => {
-    const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-    const attrArr = ThemedView.ignoreAttrs || targetAttrs
-    ignoreAttrs = arrToDict(attrArr)
+    if (!ignoreAttrs) {
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyChild && target.ignoreAttrs) || baseIgnoreAttrs
+    }
   }, 0)
 
-  const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  if (isGlossParent) {
-    targetConfig = target.config.getConfig()
-  }
-
   // shorthand: view({ ... })
-  if (typeof a !== 'string' && typeof target === 'object' && !b && !isGlossParent) {
+  if (typeof a !== 'string' && typeof target === 'object' && !b && !hasGlossyChild) {
     target = 'div'
     rawStyles = a
   }
 
-  const targetElement = isGlossParent ? targetConfig.targetElement : target
+  const targetElement = hasGlossyChild ? targetConfig.targetElement : target
   const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
@@ -104,6 +117,7 @@ export function gloss<Props = any>(
     // compile static styles once, on first run to avoid extra work
     staticClasses =
       staticClasses || addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+
     const theme = useTheme()
     const dynClasses = useRef<string[] | null>(null)
 
@@ -171,35 +185,47 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }
 
-  const config = {
+  const internal: GlossInternals<Props> = {
     themeFns: null,
     getConfig: () => ({
       id,
       displayName: ThemedView.displayName || '',
       targetElement,
-      ignoreAttrs,
       styles: { ...Styles.styles },
       propStyles: { ...Styles.propStyles },
-      parent: isGlossParent ? target : null,
+      parent: hasGlossyChild ? target : null,
     }),
   }
 
-  let ThemedView = createGlossView<Props>(GlossView, config)
+  let ThemedView = createGlossView<Props>(GlossView, internal)
 
   // inherit default props
-  if (isGlossParent) {
+  if (hasGlossyChild) {
     ThemedView.defaultProps = target.defaultProps
   }
 
-  ThemedView.withConfig = ({ displayName }) => {
+  ThemedView.withConfig = opts => {
     // re-create it so it picks up displayName
-    if (displayName) {
+    if (opts.displayName) {
       // this one is picked up by Profiling
-      GlossView['displayName'] = displayName
-      ThemedView = createGlossView<Props>(GlossView, config)
+      GlossView['displayName'] = opts.displayName
+      ThemedView = createGlossView<Props>(GlossView, internal)
       // this one is picked up for use in classNames
-      ThemedView['displayName'] = displayName
+      ThemedView['displayName'] = opts.displayName
     }
+
+    if (opts.ignoreAttrs) {
+      // TODO could have option to override or merge
+      ignoreAttrs = {
+        ...baseIgnoreAttrs,
+        ...opts.ignoreAttrs,
+      }
+    }
+
+    if (opts.defaultProps) {
+      ThemedView.defaultProps = opts.defaultProps
+    }
+
     return ThemedView
   }
 
@@ -209,7 +235,7 @@ export function gloss<Props = any>(
 function createGlossView<Props>(GlossView: any, config) {
   const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
   const res: GlossView<Props> = memo(forwarded, isEqual) as any
-  res.config = config
+  res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {
     config.themeFns = themeFns
@@ -323,16 +349,6 @@ function addDynamicStyles(
   return classNames
 }
 
-const arrToDict = (obj: Object) => {
-  if (Array.isArray(obj)) {
-    return obj.reduce((acc, cur) => {
-      acc[cur] = true
-      return acc
-    }, {})
-  }
-  return obj
-}
-
 function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) {
   const propStyles = {}
   for (const key in nextStyles) {
@@ -380,7 +396,7 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
   const propStyles = mergeStyles(baseId, styles, rawStyles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const parentConfig = target.config.getConfig()
+    const parentConfig = target.internal.getConfig()
     const parentPropStyles = parentConfig.propStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
@@ -427,7 +443,7 @@ function compileTheme(viewOG: GlossView<any>) {
 
   // get themes in order from most important (current) to least important (grandparent)
   while (cur) {
-    const conf = cur.config
+    const conf = cur.internal
     if (conf.themeFns) {
       all.push(conf.themeFns)
     }
@@ -463,7 +479,12 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
     return cachedClass
   }
   const declarations: string[] = []
-  const style = css(rules)
+  let style = css(rules)
+
+  if (Config.preProcessStyles) {
+    style = Config.preProcessStyles(style)
+  }
+
   // generate css declarations based on the style object
   for (const key in style) {
     const val = style[key]
@@ -472,7 +493,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   const className = `g${stringHash(cssString)}`
-  // for media queries
+
   // this is the first time we've found this className
   if (!tracker.has(className)) {
     // build up the correct selector, explode on commas to allow multiple selectors
@@ -485,18 +506,21 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
       selector,
       style,
     })
+
     if (namespace[0] === '@') {
       sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
     } else {
       sheet.insert(className, `${selector} {\n${cssString}\n}`)
     }
+
     rulesToClass.set(rules, className)
   }
+
   return className
 }
 
 // thx darksky: https://git.io/v9kWO
-export function stringHash(str: string): number {
+function stringHash(str: string): number {
   let res = 5381
   let i = str.length
 

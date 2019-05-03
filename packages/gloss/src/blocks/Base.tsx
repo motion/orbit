@@ -1,6 +1,6 @@
-import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
+import { CSSPropertySetStrict } from '@o/css'
 
-import { gloss, GlossProps } from '../gloss'
+import { baseIgnoreAttrs, gloss, GlossProps } from '../gloss'
 import { AlphaColorProps, alphaColorTheme, propStyleTheme, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
 import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
 
@@ -58,10 +58,4 @@ export const Base = gloss<BaseProps>().theme(
 )
 
 // ignore all valid css props, except src for images
-Base.ignoreAttrs = {
-  ...validCSSAttr,
-  width: true,
-  height: true,
-  size: true,
-  src: false,
-}
+Base.ignoreAttrs = baseIgnoreAttrs

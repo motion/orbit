@@ -1,6 +1,7 @@
 import { gloss, ThemeFn } from '@o/gloss'
 import React, { useCallback, useContext, useMemo } from 'react'
 
+import { isWebkit } from '../constants'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
@@ -143,10 +144,12 @@ const SimpleInput = gloss(
               background: theme.backgroundSelection || theme.backgroundStronger,
             },
             // autofill keep proper color
-            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
-              WebkitTextFillColor: p.color || theme.color,
-              backgroundColor: 'transparent',
-            },
+            ...(isWebkit && {
+              '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus': {
+                WebkitTextFillColor: p.color || theme.color,
+                backgroundColor: 'transparent',
+              },
+            }),
           }),
           [],
         )}

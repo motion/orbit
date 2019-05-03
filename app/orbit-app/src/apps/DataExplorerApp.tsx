@@ -7,23 +7,10 @@ import {
   useAppState,
   useAppWithDefinition,
 } from '@o/kit'
-import {
-  Button,
-  Divider,
-  Form,
-  FormField,
-  List,
-  Section,
-  SubTitle,
-  Tab,
-  Table,
-  Tabs,
-  TextArea,
-  Title,
-  View,
-} from '@o/ui'
+import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
 import { remove } from 'lodash'
 import React from 'react'
+
 import { getAppListItem } from './apps/getAppListItem'
 
 function DataExplorerIndex() {
@@ -51,6 +38,8 @@ function DataExplorerMain({ subId }: AppProps) {
 
   return (
     <Section
+      pad="xl"
+      backgrounded
       title={app.appName}
       subTitle={app.name}
       titleBorder

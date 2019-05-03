@@ -26,6 +26,7 @@ export function OrbitFloatingShareCard({
   const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
   const showMenu = hovered || hoveredMenu
   const showButton = !isStaticApp && !!numItems
+
   return (
     <>
       <DockButton

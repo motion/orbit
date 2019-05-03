@@ -9,10 +9,11 @@ import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
+import { Omit } from '../types'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
-export type FormProps<A extends FormFieldsObj> = SectionProps &
+export type FormProps<A extends FormFieldsObj> = Omit<SectionProps, 'children'> &
   Pick<HTMLProps<HTMLFormElement>, 'action' | 'method' | 'target' | 'name'> & {
     submitButton?: string | boolean
     fields?: A

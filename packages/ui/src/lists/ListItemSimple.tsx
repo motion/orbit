@@ -2,7 +2,7 @@ import { gloss, Theme, ThemeContext, useTheme } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useContext } from 'react'
+import React from 'react'
 
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
@@ -134,6 +134,9 @@ export type ListItemSpecificProps = ListItemHide & {
 
   /** Text to show in prefixed separator */
   separator?: React.ReactNode
+
+  /** For use with automatic separator generation, when using `<List />` */
+  group?: string
 }
 
 export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps

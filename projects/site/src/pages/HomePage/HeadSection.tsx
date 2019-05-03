@@ -19,23 +19,23 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xl" />
 
 let allTitles = {
-  large: 'Amazing easy internal apps',
+  large: 'Amazingly easy internal apps',
   medium: 'Amazing easy internal apps',
   small: 'Easy internal apps',
 }
 
 let allTexts = {
   large: [
-    `A whole new take on the intranet - easy to code and powerful,`,
-    `one-click data apps, open source & no servers at all.`,
+    `A whole new take on the intranet: easy to code yet powerful,`,
+    `one-click data apps, open source & no server at all.`,
   ],
   medium: [
-    `A whole new take on the intranet - easy to code,`,
-    `one-click data apps, OSS & no servers at all.`,
+    `A whole new take on the intranet: easy to code yet powerful,`,
+    `one-click data apps, OSS & no server at all.`,
   ],
   small: [
-    `A whole new take on the intranet - easy to code,`,
-    `one-click data apps, OSS & no servers at all.`,
+    `A whole new take on the intranet: easy to code,`,
+    `one-click data apps, OSS & no server at all.`,
   ],
 }
 
@@ -80,7 +80,7 @@ const HeadContent = memo(() => {
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
-      <View position="relative" width="90%" margin={[0, 'auto']}>
+      <View position="relative" width={useScreenVal('90%', '85%', '80%')} margin={[0, 'auto']}>
         {screen === 'small' ? (
           <Paragraph
             size={1.8}

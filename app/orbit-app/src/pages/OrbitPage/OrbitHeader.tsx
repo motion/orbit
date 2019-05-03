@@ -1,9 +1,9 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon } from '@o/kit'
+import { Icon, useStore } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import React, { memo } from 'react'
+import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -23,11 +23,51 @@ export const headerButtonProps = {
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
-export const OrbitHeader = memo(function OrbitHeader() {
+class HomeButtonStore {
+  hovering = false
+  onEnter = () => (this.hovering = true)
+  onLeave = () => (this.hovering = false)
+}
+
+const HomeButton = memo(
+  forwardRef((props, ref) => {
+    const theme = useTheme()
+    const { newAppStore, paneManagerStore } = useStores()
+    const { activePane } = paneManagerStore
+    const activePaneType = activePane.type
+    const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
+    const store = useStore(HomeButtonStore)
+    const onClick = useCallback(e => {
+      console.log('go to ', store.hovering, paneManagerStore.homePane.id)
+      if (store.hovering) {
+        e.stopPropagation()
+        paneManagerStore.setActivePane(paneManagerStore.homePane.id)
+      }
+    }, [])
+
+    return (
+      <Icon
+        ref={ref}
+        onMouseEnter={store.onEnter}
+        onMouseLeave={store.onLeave}
+        opacity={0.65}
+        hoverStyle={{
+          opacity: 1,
+        }}
+        color={invertLightness(theme.color, 0.5)}
+        name={store.hovering ? 'orbit-home' : `orbit-${icon}`}
+        size={22}
+        onClick={onClick}
+        {...props}
+      />
+    )
+  }),
+)
+
+export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
-  const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
@@ -39,6 +79,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
+
       <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
@@ -51,17 +92,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
         <HeaderContain isActive={false}>
           <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
             <OrbitNavPopover
-              target={
-                <Icon
-                  opacity={0.65}
-                  hoverStyle={{
-                    opacity: 1,
-                  }}
-                  color={invertLightness(theme.color, 0.5)}
-                  name={`orbit-${icon}`}
-                  size={22}
-                />
-              }
+              open={paneManagerStore.isOnHome ? true : undefined}
+              target={<HomeButton />}
             >
               <OrbitNav />
             </OrbitNavPopover>
@@ -98,14 +130,14 @@ export const OrbitHeader = memo(function OrbitHeader() {
             )}
 
             <Button
-              isActive={paneManagerStore.activePane.id === 'data-explorer'}
-              location="data-explorer"
+              active={paneManagerStore.activePane.id === 'data-explorer'}
+              onClick={() => paneManagerStore.setActivePane('data-explorer')}
               icon="layers"
               tooltip="Data explorer"
             />
             <Button
-              isActive={paneManagerStore.activePane.id === 'apps'}
-              location="apps"
+              active={paneManagerStore.activePane.id === 'apps'}
+              onClick={() => paneManagerStore.setActivePane('apps')}
               icon="layout-grid"
               tooltip="Manage apps"
             />
@@ -149,15 +181,16 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
     <Popover
       group="orbit-nav"
       target={target}
-      // openOnHover
-      openOnClick
-      closeOnEsc
-      closeOnClickAway
-      width="90%"
-      padding={5}
-      elevation={10}
+      // openOnClick
+      openOnHover
+      // closeOnClick
+      width={window.innerWidth * 0.8}
+      padding={3}
+      elevation={2}
+      distance={8}
       sizeRadius
-      background
+      background={theme => theme.backgroundStronger}
+      adjust={[100, 0]}
       {...rest}
     >
       {children}
@@ -256,6 +289,9 @@ const OpenButton = memo(() => {
       icon="chevron-right"
       alt="action"
       iconSize={18}
+      sizeRadius={1.6}
+      borderWidth={1.5}
+      glint={false}
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}

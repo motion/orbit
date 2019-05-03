@@ -42,6 +42,8 @@ const useWindowAttachments = {
   ),
 }
 
+const instantConf = { config: { duration: 0 } }
+
 export function FloatingView(props: FloatingViewProps) {
   let {
     defaultWidth = 100,
@@ -58,8 +60,6 @@ export function FloatingView(props: FloatingViewProps) {
     ...restProps
   } = props
 
-  console.log('using position ok', props)
-
   if (attach) {
     usePosition = useWindowAttachments[attach](...edgePad)
   }
@@ -73,11 +73,11 @@ export function FloatingView(props: FloatingViewProps) {
   const height = selectDefined(props.height, defaultHeight)
 
   const usePos = usePosition ? usePosition(width, height) : undefined
-  const x = usePos ? usePos[0] : defaultLeft
-  const y = usePos ? usePos[1] : defaultTop
+  const x = selectDefined(props.left, usePos ? usePos[0] : defaultLeft)
+  const y = selectDefined(props.top, usePos ? usePos[1] : defaultTop)
 
   const [spring, set] = useSpring(() => ({
-    xy: [selectDefined(props.left, x), selectDefined(props.top, y)],
+    xy: [x, y],
     width,
     height,
   }))
@@ -92,19 +92,16 @@ export function FloatingView(props: FloatingViewProps) {
     if (Array.isArray(val) ? val.every(z => isDefined(z)) : isDefined(val)) {
       if (val !== cur) {
         prev[dim] = cur
-        set({ [dim]: val })
+        update({ [dim]: val })
       }
     } else if (prev[dim]) {
       set({ [dim]: prev[dim] })
     }
   }
 
-  useEffect(() => syncDimensionProp('xy', [props.left, props.top]), [props.left, props.top])
   useEffect(() => syncDimensionProp('xy', [x, y]), [x, y])
-  useEffect(() => syncDimensionProp('width', props.width), [props.width])
-  useEffect(() => syncDimensionProp('height', props.height), [props.height])
-  useEffect(() => syncDimensionProp('width', props.defaultWidth), [props.defaultWidth])
-  useEffect(() => syncDimensionProp('height', props.defaultHeight), [props.defaultHeight])
+  useEffect(() => syncDimensionProp('width', width), [width])
+  useEffect(() => syncDimensionProp('height', height), [height])
 
   // component logic
 
@@ -116,17 +113,17 @@ export function FloatingView(props: FloatingViewProps) {
   const curPos = useRef(pos)
   const lastDrop = useRef(pos)
   const interactiveRef = useRef(null)
+  const commitTm = useRef(null)
 
-  const update = useCallback((next: Partial<typeof pos>, config: Object = { duration: 0 }) => {
+  const update = useCallback((next: Partial<typeof pos> & any) => {
     curPos.current = { ...curPos.current, ...next }
-    set({
-      ...next,
-      config,
-    })
+    set(next)
+    clearTimeout(commitTm.current)
+    commitTm.current = setTimeout(commit, 100)
   }, [])
 
-  const commit = useCallback(() => {
-    lastDrop.current = curPos.current
+  const commit = useCallback((next = null) => {
+    lastDrop.current = { ...curPos.current, ...next }
   }, [])
 
   const onResize = useCallback((w, h, desW, desH, sides) => {
@@ -136,20 +133,20 @@ export function FloatingView(props: FloatingViewProps) {
     }
     const at = curPos.current
     if (sides.right) {
-      update({ width: w })
+      update({ width: w, ...instantConf })
     }
     if (sides.bottom) {
-      update({ height: h })
+      update({ height: h, ...instantConf })
     }
     if (sides.top) {
       const diff = h - at.height
       const top = at.xy[1] - diff
-      update({ xy: [at.xy[0], top], height: at.height + diff })
+      update({ xy: [at.xy[0], top], height: at.height + diff, ...instantConf })
     }
     if (sides.left) {
       const diff = w - at.width
       const left = at.xy[0] - diff
-      update({ xy: [left, at.xy[1]], width: at.width + diff })
+      update({ xy: [left, at.xy[1]], width: at.width + diff, ...instantConf })
     }
   }, [])
 
@@ -161,9 +158,7 @@ export function FloatingView(props: FloatingViewProps) {
     const xy = lastDrop.current.xy
     const nextxy = [delta[0] + xy[0], delta[1] + xy[1]]
     if (down) {
-      update({ xy: nextxy })
-    } else {
-      commit()
+      update({ xy: nextxy, ...instantConf })
     }
   })
 
@@ -174,9 +169,9 @@ export function FloatingView(props: FloatingViewProps) {
           style={{
             pointerEvents: (isVisible ? pointerEvents : 'none') as any,
             zIndex,
-            width,
-            height,
-            transform: spring.xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
+            width: spring.width,
+            height: spring.height,
+            transform: spring.xy.interpolate((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
             position: 'fixed',
           }}
         >

@@ -8,8 +8,6 @@ import { AppsMainNew } from './AppsMainNew'
 export function AppsMain(props: AppProps) {
   const [app] = useAppBit(+props.subId)
 
-  console.log('got app', app)
-
   if (!app) {
     return null
   }

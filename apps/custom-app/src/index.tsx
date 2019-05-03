@@ -13,6 +13,7 @@ function CustomApp() {
         <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
           {({ api }) => {
             const res = api.channelsList()
+            console.log(res && res.channels)
             return (
               <Table
                 // columns={['id', 'members']}

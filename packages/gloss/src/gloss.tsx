@@ -42,6 +42,20 @@ export type GlossViewOptions<Props> = {
   defaultProps?: Partial<Props>
 }
 
+type GlossInternalConfig = {
+  id: string
+  displayName: string
+  targetElement: any
+  styles: any
+  propStyles: Object
+  parent: any
+}
+
+type GlossInternals<Props> = {
+  themeFns: ThemeFn<Props>[] | null
+  getConfig: () => GlossInternalConfig
+}
+
 export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
   (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
@@ -53,17 +67,7 @@ export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
   withConfig: (config: GlossViewOptions<Props>) => GlossView<Props>
-  internal: {
-    themeFns: ThemeFn<Props>[] | null
-    getConfig: () => {
-      id: string
-      displayName: string
-      targetElement: any
-      styles: any
-      propStyles: Object
-      parent: any
-    }
-  }
+  internal: GlossInternals<Props>
 }
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
@@ -82,30 +86,24 @@ export function gloss<Props = any>(
 ): GlossView<GlossProps<Props>> {
   let target: any = a || 'div'
   let rawStyles = b
-  let targetConfig
   let ignoreAttrs: Object
+  const hasGlossyChild = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  const targetConfig: GlossInternalConfig = hasGlossyChild ? target.internal.getConfig() : null
 
   setTimeout(() => {
     if (!ignoreAttrs) {
-      const attrs = ThemedView.ignoreAttrs || (targetConfig ? targetConfig.ignoreAttrs : null)
-      if (attrs) {
-        ignoreAttrs = attrs
-      }
+      ignoreAttrs =
+        ThemedView.ignoreAttrs || (hasGlossyChild && target.ignoreAttrs) || baseIgnoreAttrs
     }
   }, 0)
 
-  const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  if (isGlossParent) {
-    targetConfig = target.internal.getConfig()
-  }
-
   // shorthand: view({ ... })
-  if (typeof a !== 'string' && typeof target === 'object' && !b && !isGlossParent) {
+  if (typeof a !== 'string' && typeof target === 'object' && !b && !hasGlossyChild) {
     target = 'div'
     rawStyles = a
   }
 
-  const targetElement = isGlossParent ? targetConfig.targetElement : target
+  const targetElement = hasGlossyChild ? targetConfig.targetElement : target
   const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
@@ -187,23 +185,22 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }
 
-  const internal = {
+  const internal: GlossInternals<Props> = {
     themeFns: null,
     getConfig: () => ({
       id,
       displayName: ThemedView.displayName || '',
       targetElement,
-      ignoreAttrs,
       styles: { ...Styles.styles },
       propStyles: { ...Styles.propStyles },
-      parent: isGlossParent ? target : null,
+      parent: hasGlossyChild ? target : null,
     }),
   }
 
   let ThemedView = createGlossView<Props>(GlossView, internal)
 
   // inherit default props
-  if (isGlossParent) {
+  if (hasGlossyChild) {
     ThemedView.defaultProps = target.defaultProps
   }
 

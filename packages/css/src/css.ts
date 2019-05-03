@@ -121,7 +121,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
     if (respond) {
       continue
     }
-    console.warn(
+    console.debug(
       `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${key}: ${JSON.stringify(
         value,
       )}, in styles: ${JSON.stringify(styles)}`,

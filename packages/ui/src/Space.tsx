@@ -49,12 +49,12 @@ export function getSpaceSize(space: Sizes) {
 }
 
 export const Space = gloss<SpaceProps>()
-  .theme((props: SpaceProps) => {
-    const size = getSpaceSize(props.size) * useScale()
+  .theme(({ size, ...rest }: SpaceProps) => {
+    const dim = getSpaceSize(size) * useScale()
     return {
-      width: size,
-      height: size,
-      ...props,
+      width: dim,
+      height: dim,
+      ...rest,
     }
   })
   .withConfig({

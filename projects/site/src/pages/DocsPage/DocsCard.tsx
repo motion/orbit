@@ -46,7 +46,9 @@ export let Floating = () => {
         alt="warn"
         location="warn"
         elevation={4}
-      />
+      >
+        Hello World
+      </FloatingCard>
     </>
   )
 }

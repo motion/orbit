@@ -141,7 +141,7 @@ export function FloatingView(props: FloatingViewProps) {
         <animated.div
           style={{
             pointerEvents: (isVisible ? pointerEvents : 'none') as any,
-            zIndex: zIndex,
+            zIndex,
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),

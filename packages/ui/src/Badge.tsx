@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { Button, ButtonProps } from './buttons/Button'
 import { getSize } from './Sizes'
 import { Sizes } from './Space'
@@ -13,6 +14,7 @@ export function Badge({ children, size, ...props }: BadgeProps) {
   const bSize = getSize(size)
   return (
     <Button
+      tagName="div"
       fontWeight={600}
       background="red"
       color="white"

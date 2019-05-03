@@ -122,9 +122,10 @@ export function FloatingView(props: FloatingViewProps) {
   const interactiveRef = useRef(null)
   const commitTm = useRef(null)
 
-  const update = useCallback((next: Partial<typeof pos> & any) => {
+  const update = useCallback((next: Partial<typeof pos> & any, preventCommit = false) => {
     curPos.current = { ...curPos.current, ...next }
     set(next)
+    if (preventCommit) return
     clearTimeout(commitTm.current)
     commitTm.current = setTimeout(commit, 50)
   }, [])
@@ -132,7 +133,9 @@ export function FloatingView(props: FloatingViewProps) {
   const commit = useCallback((next = null) => {
     lastDrop.current = { ...curPos.current, ...next }
     curDim.current = lastDrop.current
-    forceUpdate()
+    if (next) {
+      forceUpdate()
+    }
   }, [])
 
   const onResize = useCallback((w, h, desW, desH, sides) => {
@@ -167,7 +170,9 @@ export function FloatingView(props: FloatingViewProps) {
     const xy = lastDrop.current.xy
     const nextxy = [delta[0] + xy[0], delta[1] + xy[1]]
     if (down) {
-      update({ xy: nextxy, ...instantConf })
+      update({ xy: nextxy, ...instantConf }, true)
+    } else {
+      commit()
     }
   })
 

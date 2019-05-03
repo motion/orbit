@@ -1,4 +1,4 @@
-import { Base, gloss } from '@o/gloss'
+import { gloss } from '@o/gloss'
 
 import { useScale } from './Scale'
 

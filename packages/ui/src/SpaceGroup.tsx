@@ -29,10 +29,11 @@ function getChildrenForSpacing(childs: React.ReactNode) {
     }
     const type = child.type
     if (type === React.Fragment || (type && type['canUnwrap'])) {
-      if (!child.props.children) {
+      const subChildren = child.props['children']
+      if (!subChildren) {
         continue
       }
-      const next = childrenToArr(child.props.children)
+      const next = childrenToArr(subChildren)
       children = [...children, ...next]
     } else {
       children.push(child)

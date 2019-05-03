@@ -140,7 +140,7 @@ export function FloatingView(props: FloatingViewProps) {
       <FullScreen>
         <animated.div
           style={{
-            pointerEvents: isVisible ? pointerEvents : 'none',
+            pointerEvents: (isVisible ? pointerEvents : 'none') as any,
             zIndex: zIndex,
             width,
             height,

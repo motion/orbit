@@ -16,7 +16,7 @@ export function useWindowSize(opts: { throttle?: number; adjust?: (x: Size) => S
   const setSizeThrottle = useThrottleFn(setSize, { amount: selectDefined(opts.throttle, 100) })
 
   useEffect(() => {
-    const update = x => setSizeThrottle(adjust(x))
+    const update = () => setSizeThrottle(adjust(windowSize()))
     window.addEventListener('resize', update)
     return () => {
       window.removeEventListener('resize', update)

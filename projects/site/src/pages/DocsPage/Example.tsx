@@ -151,7 +151,7 @@ const SubCard = gloss(View, {
 
 function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
-  const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
+  const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(`let ${id}`) > -1)
   const allLines = keyBlock.split('\n')
   const lines =
     allLines[0].indexOf(') => {') > -1
@@ -161,6 +161,9 @@ function parseSource(source: string, id: string) {
         indent(allLines.slice(1, allLines.length - 2))
   // remove empty comment line which forces spacing
   const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
+
+  console.log(id, next, keyBlock)
+
   return next.join('\n')
 }
 

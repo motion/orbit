@@ -334,10 +334,6 @@ function addDynamicStyles(
   // add dyn styles
   const classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
 
-  if (props.debug) {
-    console.log('debug', dynStyles, displayName, classNames, tagName, prevClassNames)
-  }
-
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {
     for (const className of prevClassNames) {

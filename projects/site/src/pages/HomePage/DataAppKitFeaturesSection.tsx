@@ -2,7 +2,7 @@ import { FullScreen, Grid, Image, memoIsEqualDeep, PassProps, Row, Space, View }
 import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
-import { useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
+import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -22,6 +22,7 @@ const dly = 200
 
 export default memo(function DataAppKitFeaturesSection() {
   const screen = useScreenSize()
+  const isTiny = useIsTiny()
   const height = useScreenHeight()
   const { sectionHeight } = useSiteStore()
   const FadeDataApps = useFadePage({ threshold: 0 })
@@ -54,7 +55,7 @@ export default memo(function DataAppKitFeaturesSection() {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={screen === 'small' ? ['-33%', 0, '10%'] : [0, 0, '3%']}
+            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : [0, 0, '3%']}
             height="auto"
             header={
               <>
@@ -68,7 +69,7 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
-                    Every app has an API and syncs data privately on your computer.
+                    Plug in typed apps with a click.
                     {screen !== 'small' && <br />}
                     &nbsp;Use, extend and build with the app store.
                   </FadeChild>
@@ -152,8 +153,8 @@ export default memo(function DataAppKitFeaturesSection() {
             <View flex={1} />
             <Grid
               alignItems="start"
-              space={screen === 'small' ? '40px 15%' : '20% 15%'}
-              itemMinWidth={240}
+              space={screen === 'small' ? '0 15%' : '20% 15%'}
+              itemMinWidth={260}
               maxWidth={800}
               margin="auto"
             >

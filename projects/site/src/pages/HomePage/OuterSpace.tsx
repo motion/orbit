@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useIsTiny } from '../../hooks/useScreenSize'
 import { useSiteStore } from '../../SiteStore'
 
 const duration = 3000
@@ -22,7 +23,7 @@ export function OuterSpace(props) {
         top: 0,
         left: 0,
         right: 0,
-        height: siteStore.sectionHeight,
+        height: useIsTiny() ? '200vh' : siteStore.sectionHeight,
         opacity: show ? 0.28 : 0,
         zIndex: -1,
         pointerEvents: 'none',

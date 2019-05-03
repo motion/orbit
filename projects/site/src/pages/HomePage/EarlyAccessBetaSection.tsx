@@ -1,6 +1,7 @@
-import { FullScreen, Space, View, ViewProps } from '@o/ui'
+import { FullScreen, View, ViewProps } from '@o/ui'
 import React from 'react'
 
+import { useIsTiny } from '../../hooks/useScreenSize'
 import { Link } from '../../views/LinkProps'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -12,6 +13,7 @@ import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
 export default function EarlyAccessSection({ outside = null }: any) {
+  const isTiny = useIsTiny()
   return (
     <>
       <Page.Content
@@ -19,7 +21,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
         outside={
           <>
             <FullScreen background={theme => theme.background} top={80} />
-            <LineSep top={-10} fill />
+            <LineSep top={-20} fill />
             <LineSep
               top="auto"
               bottom={0}
@@ -35,7 +37,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
           </>
         }
       >
-        <View margin={['auto', 0]} transform={{ y: '-5%' }}>
+        <View margin={['auto', 0]} padding={[20, 0]} transform={{ y: isTiny ? 0 : '-5%' }}>
           <EarlyAccessContent />
         </View>
       </Page.Content>
@@ -52,8 +54,7 @@ export const EarlyAccessContent = () => {
           <TitleText size="xxl">Early Access.</TitleText>
           <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>Orbit is now in beta.</TitleTextSub>
           <TitleTextSub size="xs">
-            Have a unique case for internal tools?{' '}
-            <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
+            Have a unique use case? <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
           </TitleTextSub>
         </>
       }
@@ -81,11 +82,10 @@ export const SignupForm = (props: ViewProps) => (
         header={
           <>
             <TitleTextSmallCaps alpha={1}>Beta Signup</TitleTextSmallCaps>
-            <Space size="sm" />
             <TitleTextSub size="xs">We're rolling out to teams now.</TitleTextSub>
           </>
         }
-        space="lg"
+        space="md"
       />
     </View>
 

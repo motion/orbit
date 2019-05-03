@@ -383,6 +383,7 @@ export default function NeckSection() {
                       overflow="hidden"
                     >
                       <Image
+                        className="carousel-image"
                         userSelect="none"
                         src={elements[cur].image}
                         width="100%"

@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Divider, Row, Section, Tab, Tabs, View } from '@o/ui'
+import { ChatMessages, Row, Section, Tab, Tabs, View } from '@o/ui'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppDefinition'
@@ -15,13 +15,10 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
     <>
       {bits.map(bit => {
         return (
-          <React.Fragment key={bit.id}>
-            <ChatMessages
-              key={bit.id}
-              messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
-            />
-            <Divider pad />
-          </React.Fragment>
+          <ChatMessages
+            key={bit.id}
+            messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
+          />
         )
       })}
     </>
@@ -79,14 +76,14 @@ export function BitConversation(props: AppBitMainProps) {
       </Row>
 
       <Pane isShown={activePane === 0}>
-        <Section flex={1} pad scrollable="y">
+        <Section flex={1} pad scrollable="y" space>
           <ConvoGroup bits={prevConvos.reverse()} />
           {!!props.item && <ChatMessages messages={props.item.data.messages} />}
         </Section>
       </Pane>
 
       <Pane isShown={activePane === 2}>
-        <Section flex={1} pad scrollable="y">
+        <Section flex={1} pad scrollable="y" space>
           <ConvoGroup bits={nextConvos} />
         </Section>
       </Pane>

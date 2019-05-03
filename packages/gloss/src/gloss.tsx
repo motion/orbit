@@ -11,9 +11,9 @@ import { StyleSheet } from './stylesheet/sheet'
 
 export const baseIgnoreAttrs = {
   ...validCSSAttr,
-  width: true,
-  height: true,
-  size: true,
+  width: false,
+  height: false,
+  size: false,
   src: false,
 }
 
@@ -156,7 +156,7 @@ export function gloss<Props = any>(
     const isDOMElement = typeof element === 'string'
 
     // set up final props with filtering for various attributes
-    const finalProps: any = {
+    let finalProps: any = {
       className: props.className || '',
       'data-is': ThemedView.displayName,
     }
@@ -165,16 +165,23 @@ export function gloss<Props = any>(
       finalProps.ref = ref
     }
 
-    for (const key in props) {
-      if (ignoreAttrs && ignoreAttrs[key]) {
-        continue
-      }
-      if (isDOMElement) {
-        if (validProp(key)) {
+    if (isDOMElement) {
+      for (const key in props) {
+        if (ignoreAttrs && ignoreAttrs[key]) {
+          continue
+        }
+        if (isDOMElement) {
+          if (validProp(key)) {
+            finalProps[key] = props[key]
+          }
+        } else {
           finalProps[key] = props[key]
         }
-      } else {
-        finalProps[key] = props[key]
+      }
+    } else {
+      finalProps = {
+        ...props,
+        ...finalProps,
       }
     }
 
@@ -286,20 +293,20 @@ function addStyles(
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
-  conditionalStyles?: any,
-  prevClassNames?: string[] | null,
-  props?: CSSPropertySet,
+  conditionalStyles: any,
+  prevClassNames: string[] | null,
+  props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
   tagName?: string,
 ) {
   const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
-  const dynStyles = {}
+  const dynStyles = { [id]: {} }
 
   // if passed any classes from another styled component
   // ignore that class and merge in their resolved styles
-  if (props && props.className) {
-    const propClassNames = `${props.className}`.trim().split(whiteSpaceRegex)
+  if (props.className) {
+    const propClassNames = props.className.trim().split(whiteSpaceRegex)
     for (const className of propClassNames) {
       const classInfo = tracker.get(className)
       if (classInfo) {
@@ -308,29 +315,20 @@ function addDynamicStyles(
     }
   }
 
-  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
-  const dynamicStyles = { [id]: {} }
-
   if (hasConditionalStyles) {
     for (const key in conditionalStyles) {
-      if (props && props[key] !== true) continue
+      if (props[key] !== true) continue
       for (const styleKey in conditionalStyles[key]) {
         const dynKey = styleKey === 'base' ? id : styleKey
-        dynamicStyles[dynKey] = dynamicStyles[dynKey] || {}
-        Object.assign(dynamicStyles[dynKey], conditionalStyles[key][styleKey])
+        dynStyles[dynKey] = dynStyles[dynKey] || {}
+        Object.assign(dynStyles[dynKey], conditionalStyles[key][styleKey])
       }
     }
   }
 
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
-    mergeStyles(id, dynamicStyles, themeFn(props, next))
-  }
-
-  if (hasDynamicStyles) {
-    for (const key in dynamicStyles) {
-      dynStyles[key] = dynamicStyles[key]
-    }
+    mergeStyles(id, dynStyles, themeFn(props, next))
   }
 
   // add dyn styles
@@ -388,7 +386,7 @@ function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet
   return propStyles
 }
 
-// gets parentrens styles and merges them into a big object
+// get all parent styles and merge them into a big object
 function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | null) {
   const styles = {
     [baseId]: {},

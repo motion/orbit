@@ -2,7 +2,7 @@ import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
 import { toColor, useTheme } from '@o/gloss'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
-import React, { createContext, useContext } from 'react'
+import React, { createContext, memo, useContext } from 'react'
 
 import { Config } from './helpers/configure'
 import { useScale } from './Scale'
@@ -36,13 +36,14 @@ const findName = (name: string) => {
 }
 
 // lets users wrap around icons
-export function Icon(rawProps: IconProps) {
+export const Icon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
   return <ResolvedIcon themeSelect="icon" {...props} />
-}
+})
 
+// @ts-ignore
 Icon.acceptsIconProps = true
 
 const SIZE_STANDARD = 16
@@ -62,6 +63,10 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
     } catch {
       console.debug('bad color')
     }
+  }
+
+  if (isNaN(size)) {
+    debugger
   }
 
   if (isDefined(props.svg)) {
@@ -116,6 +121,10 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
 }
 
 PlainIcon.acceptsIconProps = true
+
+PlainIcon.defaultProps = {
+  size: 16,
+}
 
 function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | null {
   const svgPathsRecord = pathsSize === SIZE_STANDARD ? IconSvgPaths16 : IconSvgPaths20

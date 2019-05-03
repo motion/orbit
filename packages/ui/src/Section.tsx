@@ -53,6 +53,9 @@ export type SectionSpecificProps = Partial<
 
   /** Prevent the title from scrolling when using scrollable property */
   fixedTitle?: boolean
+
+  /** Override the <TitleRow /> entirely */
+  titleElement?: React.ReactNode
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
@@ -101,6 +104,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleProps,
     backgrounded,
     titleScale,
+    titleElement,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -109,12 +113,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)
 
-  let titleElement: JSX.Element = null
+  let titleEl: React.ReactNode = titleElement || null
 
-  if (hasTitle) {
-    titleElement = isValidElement(title) ? (
-      title
-    ) : (
+  if (!titleElement && hasTitle) {
+    titleEl = (
       <Scale size={titleScale}>
         <TitleRow
           bordered={bordered || titleBorder}
@@ -158,7 +160,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       pad={!showTitleAbove ? pad : false}
       size={size}
     >
-      {showTitleAbove && titleElement}
+      {showTitleAbove && titleEl}
       <Reset>
         <Col
           maxHeight={maxInnerHeight}
@@ -169,7 +171,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           flexDirection={flexDirection}
           scrollable={scrollable}
           pad={innerPad}
-          beforeSpace={!showTitleAbove && titleElement}
+          beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
           {...viewProps}
         >

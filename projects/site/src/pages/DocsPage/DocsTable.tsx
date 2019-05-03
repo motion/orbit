@@ -6,7 +6,12 @@ import { employees } from './fakeData'
 const data = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
 
 export let simple = (
-  <Table height={300} columns={['username', 'password', 'ssn', 'dob']} rows={data} />
+  <Table
+    selectable="multi"
+    height={300}
+    columns={[{ key: 'username', value: 'Username', flex: 2 }, 'password', 'ssn', 'dob']}
+    rows={data}
+  />
 )
 
 export let columns = (

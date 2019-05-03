@@ -12,7 +12,9 @@ import {
 } from '@o/ui'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 
-export type MasterDetailProps = SearchableListProps & {
+import { Omit } from '../types'
+
+export type MasterDetailProps = Omit<SearchableListProps, 'children'> & {
   children?: React.ReactNode | ((selected: ListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
   masterProps?: PaneProps | SidebarProps
@@ -31,12 +33,16 @@ export function MasterDetail({
   const isSmall = useMedia({ maxWidth: 700 })
   const [selected, setSelected] = useState(null)
 
-  const contents =
-    typeof children === 'function'
-      ? selected === null
-        ? placeholder || null
-        : children(selected)
-      : children
+  let contents: React.ReactNode = null
+  if (typeof children === 'function') {
+    if (selected === null) {
+      contents = placeholder || null
+    } else {
+      contents = children(selected)
+    }
+  } else {
+    contents = children
+  }
 
   const onSelect = useCallback(
     rows => {

@@ -5,19 +5,19 @@
  * @format
  */
 import { CSSPropertySet, gloss } from '@o/gloss'
-import { debounce, isEqual } from 'lodash'
+import { isDefined } from '@o/utils'
+import { debounce, isEqual, throttle } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
 
 import { ContextMenu } from '../ContextMenu'
 import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
-import { weakMapId } from '../helpers/weakMapId'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
-import { DataColumns, GenericDataRow } from '../types'
+import { DataColumns, DataType, GenericDataRow } from '../types'
 import { View } from '../View/View'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
@@ -124,7 +124,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   state: ManagedTableState = {
     columnOrder: [],
-    columnSizes: this.props.columnSizes || {},
+    columnSizes: this.props.columnSizes,
     sortOrder: this.props.defaultSortOrder,
     sortedRows: null,
     shouldScrollToBottom: Boolean(this.props.stickyBottom),
@@ -135,33 +135,22 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { prevProps } = state
     let nextState: Partial<ManagedTableState> = {}
 
-    // force refresh the virtual list on columns change
-    // maybe not the best pattern...
-    const forceRefresh = () => {
-      if (state.sortedRows) {
-        nextState.sortedRows = [...state.sortedRows]
-      }
-    }
-
     // if columnSizes has changed
     if (props.columnSizes !== prevProps.columnSizes) {
       nextState.columnSizes = props.columnSizes
-      forceRefresh()
     }
 
-    if (!isEqual(props.columns, state.prevProps.columns)) {
-      forceRefresh()
+    if (!props.columnSizes && !state.columnSizes) {
+      nextState.columnSizes = calculateColumnSizes(props.columns)
     }
 
     // if columnOrder has changed
     if (props.columnOrder !== prevProps.columnOrder) {
       nextState.columnOrder = props.columnOrder
-      forceRefresh()
     } else if (!props.columnOrder) {
       const columnOrder = Object.keys(props.columns).map(key => ({ key, visible: true }))
       if (!isEqual(columnOrder, state.columnOrder)) {
         nextState.columnOrder = columnOrder
-        forceRefresh()
       }
     }
 
@@ -209,7 +198,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   selectableStoreRef = createRef<SelectableStore>()
 
   get selectableStore() {
-    return this.selectableStoreRef.current
+    return (
+      (this.props.selectableStoreRef && this.props.selectableStoreRef.current) ||
+      this.selectableStoreRef.current
+    )
   }
 
   componentDidMount() {
@@ -220,7 +212,13 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     document.removeEventListener('keydown', this.onKeyDown)
   }
 
+  updateList = throttle(() => {
+    this.listRef.current.resetAfterIndex(0, true)
+  }, 30)
+
   componentDidUpdate(prevProps: ManagedTableProps) {
+    this.updateList()
+
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
       console.warn('may need to recalc height')
@@ -243,6 +241,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   onKeyDown = (e: KeyboardEvent) => {
+    if (!this.selectableStore) {
+      return
+    }
     if (this.selectableStore.active.size === 0) {
       return
     }
@@ -275,7 +276,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   onColumnResize = (columnSizes: TableColumnSizes) => {
-    this.setState({ columnSizes, sortedRows: [...this.state.sortedRows] })
+    this.setState({ columnSizes })
   }
 
   scrollToBottom() {
@@ -288,6 +289,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   lastIndex = -1
 
   buildContextMenuItems = () => {
+    if (!this.selectableStore) {
+      return
+    }
     const { active } = this.selectableStore
     if (active.size === 0) {
       return []
@@ -392,7 +396,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       rows,
       placeholder,
       containerRef,
-      overscanCount,
+      overscanCount = 6,
       ...viewProps
     } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
@@ -427,7 +431,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
           <SelectableVariableList
-            key={weakMapId(this.state.sortedRows)}
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
             itemData={this.state.sortedRows}
@@ -456,3 +459,30 @@ function ManagedTableNormalized(props: ManagedTableProps) {
 export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {
   maxWait: 100,
 })
+
+// this will:
+//    1. if no flex provided, assume that strings should flex double anything else
+//    2. if any flex provided, default rest to flex 1
+//    3. calculate the percentage width based on flexes
+function calculateColumnSizes(columns: DataColumns): TableColumnSizes {
+  const values = Object.keys(columns).map(k => columns[k])
+  const isUncontrolled = values.every(x => !isDefined(x.flex))
+  const flexes = values.map(val => {
+    if (isUncontrolled) {
+      return !val.type || val.type === DataType.string ? 2 : 1
+    } else {
+      return val.flex || 1
+    }
+  })
+  const totalFlex = flexes.reduce((a, b) => a + b, 0)
+  const sizes = {}
+  for (const [index, key] of Object.keys(columns).entries()) {
+    if (index === values.length - 1) {
+      continue
+    }
+    const flex = columns[key].flex || 1
+    sizes[key] = `${(flex / totalFlex) * 100}%`
+  }
+  console.log('ok', values, flexes, totalFlex, sizes)
+  return sizes
+}

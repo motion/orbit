@@ -1,10 +1,11 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import React from 'react'
+
 import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import { SettingsAppIndex } from './SettingsAppIndex'
 import { SettingsAppMain } from './SettingsAppMain'
 
-export const SettingsApp: AppDefinition = {
+export default createApp({
   id: 'settings',
   name: 'Settings',
   icon: '',
@@ -13,4 +14,4 @@ export const SettingsApp: AppDefinition = {
       <SettingsAppMain {...props} />
     </App>
   ),
-}
+})

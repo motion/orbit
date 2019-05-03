@@ -1,6 +1,7 @@
 import { AppBit, Bit, ItemType } from '@o/models'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
+
 import { AppProps } from './AppProps'
 
 export type AppElements = {
@@ -46,3 +47,5 @@ export type AppSettingsProps<T extends AppBit> = {
   appProps?: AppProps
   app: T
 }
+
+export type LazyAppDefinition = () => Promise<{ default: AppDefinition }>

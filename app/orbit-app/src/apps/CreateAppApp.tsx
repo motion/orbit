@@ -1,6 +1,7 @@
 import { App, AppIcon, createApp } from '@o/kit'
 import { Button, List, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
+
 import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'
 
@@ -134,7 +135,7 @@ function CreateAppMain() {
   )
 }
 
-export const CreateApp = createApp({
+export default createApp({
   id: 'createApp',
   name: 'Create App',
   icon: '',

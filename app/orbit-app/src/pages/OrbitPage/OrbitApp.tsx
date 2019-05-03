@@ -11,7 +11,7 @@ import {
 } from '@o/kit'
 import { ErrorBoundary, Loading, ProvideVisibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { memo, Suspense, useCallback, useEffect } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -29,51 +29,43 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     identifier,
     isActive: useCallback(getIsActive, []),
   })
+  const [hasShownOnce, setHasShownOnce] = useState(false)
+
+  useEffect(() => {
+    if (isActive && !hasShownOnce) {
+      setHasShownOnce(true)
+    }
+  }, [isActive, hasShownOnce])
 
   return (
     <ProvideStores stores={{ appStore }}>
       <ProvideVisibility visible={isActive}>
-        <OrbitAppRender id={id} identifier={identifier} />
+        <OrbitAppRender id={id} identifier={identifier} hasShownOnce={hasShownOnce} />
       </ProvideVisibility>
     </ProvideStores>
   )
 }
 
-const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
+type AppRenderProps = { id: string; identifier: string; hasShownOnce?: boolean }
+
+const OrbitAppRender = memo((props: AppRenderProps) => {
   // handle url changes
   useAppLocationEffect()
-  const appDef = getAppDefinition(identifier)
-
+  // get definition
+  const appDef = getAppDefinition(props.identifier)
   if (appDef.app == null) {
-    console.debug('no app', id, identifier)
+    console.debug('no app', props)
     return null
   }
-
-  return <OrbitAppRenderOfDefinition appDef={appDef} id={id} identifier={identifier} />
+  return <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
 })
-
-function OrbitActions(props: { children?: any }) {
-  const stores = useStoresSimple()
-  const isActive = useIsAppActive()
-
-  useEffect(() => {
-    if (isActive) {
-      stores.orbitStore.setActiveActions(props.children || null)
-    } else {
-      stores.orbitStore.setActiveActions(null)
-    }
-  }, [isActive, props.children])
-
-  return null
-}
 
 export const OrbitAppRenderOfDefinition = ({
   id,
   identifier,
   appDef,
-}: {
-  id: string
-  identifier: string
+  hasShownOnce,
+}: AppRenderProps & {
   appDef: AppDefinition
 }) => {
   const { app: App } = appDef
@@ -90,12 +82,25 @@ export const OrbitAppRenderOfDefinition = ({
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary name={identifier}>
-            <App {...appProps} />
+            {(hasShownOnce && <App {...appProps} />) || <Loading />}
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>
     </Suspense>
   )
+}
+
+function OrbitActions(props: { children?: any }) {
+  const stores = useStoresSimple()
+  const isActive = useIsAppActive()
+  useEffect(() => {
+    if (isActive) {
+      stores.orbitStore.setActiveActions(props.children || null)
+    } else {
+      stores.orbitStore.setActiveActions(null)
+    }
+  }, [isActive, props.children])
+  return null
 }
 
 if (module['hot']) {

@@ -1,8 +1,9 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import * as React from 'react'
+
 import { BitAppMain } from './BitAppMain'
 
-export const BitApp: AppDefinition = {
+export default createApp({
   id: 'bit',
   name: 'Bit',
   icon: '',
@@ -11,4 +12,4 @@ export const BitApp: AppDefinition = {
       <BitAppMain {...props} />
     </App>
   ),
-}
+})

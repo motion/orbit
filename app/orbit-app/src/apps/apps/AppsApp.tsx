@@ -1,9 +1,10 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import React from 'react'
+
 import { AppsIndex } from './AppsIndex'
 import { AppsMain } from './AppsMain'
 
-export const AppsApp: AppDefinition = {
+export default createApp({
   id: 'apps',
   name: 'Apps',
   icon: '',
@@ -12,4 +13,4 @@ export const AppsApp: AppDefinition = {
       <AppsMain {...props} />
     </App>
   ),
-}
+})

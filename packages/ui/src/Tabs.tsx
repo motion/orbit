@@ -1,10 +1,5 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { gloss, Row } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import React, { Children, cloneElement, Suspense } from 'react'
 
 import { colors } from './helpers/colors'
@@ -16,6 +11,12 @@ import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 export type TabsProps = Omit<ViewProps, 'order'> & {
   // tab height
   height?: number
@@ -61,7 +62,7 @@ function TabsControlled({
   TabComponent = TabItem,
   tabProps,
   tabPropsActive,
-  onChange: onActive,
+  onChange: onChange,
   height = 26,
   borderRadius,
   onSort,
@@ -108,8 +109,8 @@ function TabsControlled({
         continue
       }
       const { closable, label, icon, onClose, width } = comp.props
-      const compChildren = comp.props.children
-      let id = comp.props.id || comp.key && comp.key.replace('.$', '')
+      const Children = comp.props.children
+      let id = getKey(comp)
       if (typeof id !== 'string') {
         id = `${index}`
       }
@@ -118,12 +119,13 @@ function TabsControlled({
       }
       const isActive: boolean = active === id
 
+      const childrenElement =
+        typeof Children === 'function' ? isActive ? <Children /> : null : Children
+
       if (isActive || persist === true || comp.props.persist === true) {
         tabContents.push(
           <TabContent key={id} hidden={!isActive}>
-            <Suspense fallback={<Loading />}>
-              {typeof compChildren === 'function' && isActive ? compChildren() : compChildren}
-            </Suspense>
+            <Suspense fallback={<Loading />}>{childrenElement}</Suspense>
           </TabContent>,
         )
       }
@@ -143,10 +145,10 @@ function TabsControlled({
           {...isActive && tabPropsActive}
           active={isActive}
           onClick={
-            !isActive && onActive
+            !isActive && onChange
               ? (event: MouseEvent) => {
                   if (event.target !== closeButton) {
-                    onActive(id)
+                    onChange(id)
                   }
                 }
               : undefined
@@ -159,10 +161,10 @@ function TabsControlled({
             <CloseButton
               ref={ref => (closeButton = ref)}
               onClick={() => {
-                if (isActive && onActive) {
+                if (isActive && onChange) {
                   const idx = keys.indexOf(id)
                   const newActive = keys[idx + 1] || keys[idx - 1] || null
-                  onActive(newActive)
+                  onChange(newActive)
                 }
                 onClose()
               }}
@@ -233,11 +235,17 @@ const TabContainer = gloss(View, {
   overflow: 'hidden',
 })
 
-export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {
+const getKey = comp => comp.props.id || (comp.key && comp.key.replace('.$', ''))
+
+export function Tabs(props: TabsProps & { defaultActive?: string }) {
+  const defaultActive = selectDefined(
+    props.defaultActive,
+    getKey(Children.toArray(props.children)[0]),
+  )
   const controlledProps = useUncontrolled(
     { defaultActive, ...props },
     {
-      active: 'onActive',
+      active: 'onChange',
     },
   )
   return <TabsControlled {...controlledProps} />

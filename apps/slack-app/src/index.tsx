@@ -1,8 +1,12 @@
 import 'slack'
+
 import { createApi, createApp } from '@o/kit'
+
+import { SlackApi } from './api.node'
 import { slackIcon } from './slackIcon'
 import { SlackSettings } from './SlackSettings'
-import { SlackApi } from './api.node'
+
+export * from './SlackConversation'
 
 export default createApp({
   id: 'slack',

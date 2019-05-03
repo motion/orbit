@@ -643,6 +643,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
         <div
+          className={this.props.className}
           style={{
             position: position as any,
             cursor,
@@ -663,7 +664,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
           }}
         >
           <InteractiveContainer
-            className={this.props.className}
             hidden={this.props.hidden}
             ref={this.ref}
             {...listenerProps}

@@ -14,7 +14,6 @@ import { DataColumns, DataType } from '../types'
 import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
-
 const TableHeaderArrow = gloss({
   display: 'block',
   float: 'right',
@@ -33,11 +32,10 @@ const TableHeadColumnText = gloss({
 })
 
 const TableHeaderColumnInteractive = gloss(Interactive, {
-  display: 'inline-block',
+  flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  width: '100%',
 }).theme((_, theme) => ({
   '&:hover': {
     background: theme.backgroundHover.alpha(x => x * 0.5),

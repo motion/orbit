@@ -137,14 +137,14 @@ export class SlackLoader {
     channelId: string,
     oldestMessageId?: string,
   ): Promise<{ messages: SlackMessage[]; lastMessageTz: string }> {
-    const loadRecursively = async (oldestMessageId?: string, latestMessageId?: string) => {
+    const loadRecursively = async (oldestId?: string, latestMessageId?: string) => {
       await sleep(THROTTLING.messages)
 
       const options = {
         token: this.app.token,
         channel: channelId,
         count: 1000,
-        oldest: oldestMessageId,
+        oldest: oldestId,
         latest: latestMessageId,
       }
       this.log.verbose('request to channels.history', options)
@@ -154,7 +154,7 @@ export class SlackLoader {
       if (response.has_more === true) {
         const latest = response.messages[0].ts
         const oldest = response.messages[response.messages.length - 1].ts
-        if (oldestMessageId) {
+        if (oldestId) {
           const nextPageMessages = await loadRecursively(latest, undefined) // variable order isn't a typo!
           return [...nextPageMessages, ...response.messages]
         } else {

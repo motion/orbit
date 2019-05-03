@@ -1,5 +1,4 @@
 import { AppBit } from '@o/models'
-import { isDefined } from '@o/utils'
 
 import { AppDefinition } from '../types/AppDefinition'
 import { useAppBit } from './useAppBit'
@@ -68,11 +67,13 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
             throw ApiCache[key].read
           }
 
-          if (!isDefined(ApiCache[key].response)) {
+          if (!ApiCache[key].response) {
             throw ApiCache[key].read
           }
 
-          return ApiCache[key].response
+          if (ApiCache[key].response) {
+            return ApiCache[key].response
+          }
         }
       },
     },

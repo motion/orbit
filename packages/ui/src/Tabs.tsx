@@ -235,7 +235,7 @@ const TabContainer = gloss(View, {
   overflow: 'hidden',
 })
 
-const getKey = comp => comp.props.id || (comp.key && comp.key.replace('.$', ''))
+const getKey = comp => (comp ? comp.props.id || (comp.key && comp.key.replace('.$', '')) : null)
 
 export function Tabs(props: TabsProps & { defaultActive?: string }) {
   const defaultActive = selectDefined(

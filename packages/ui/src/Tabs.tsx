@@ -1,5 +1,4 @@
 import { gloss, Row } from '@o/gloss'
-import { selectDefined } from '@o/utils'
 import React, { Children, cloneElement, Suspense } from 'react'
 
 import { colors } from './helpers/colors'
@@ -238,11 +237,14 @@ const TabContainer = gloss(View, {
 
 const getKey = comp => (comp ? comp.props.id || (comp.key && comp.key.replace('.$', '')) : null)
 
-export function Tabs(props: TabsProps & { defaultActive?: string }) {
-  const defaultActive = selectDefined(
-    props.defaultActive,
-    getKey(Children.toArray(props.children)[0]),
-  )
+export function Tabs(props: TabsProps & { defaultActive?: string | boolean }) {
+  const firstId = getKey(Children.toArray(props.children)[0])
+  const defaultActive =
+    typeof props.defaultActive === 'string'
+      ? props.defaultActive
+      : props.defaultActive === false
+      ? undefined
+      : firstId
   const controlledProps = useUncontrolled(
     { defaultActive, ...props },
     {

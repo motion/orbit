@@ -1,4 +1,5 @@
 import { FullScreen } from '@o/gloss'
+import { useForceUpdate } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import memoize from 'memoize-weak'
 import React, { useCallback, useEffect, useRef } from 'react'
@@ -68,11 +69,16 @@ export function FloatingView(props: FloatingViewProps) {
   const controlledPosition = typeof props.top !== 'undefined'
   const isVisible = useVisibility()
   const getProps = useGet(props)
+  const forceUpdate = useForceUpdate()
 
+  // these go stale when uncontrolled, just used initially
   const width = selectDefined(props.width, defaultWidth)
   const height = selectDefined(props.height, defaultHeight)
+  // this will be updated with internal dim
+  const curDim = useRef({ width, height })
 
-  const usePos = usePosition ? usePosition(width, height) : undefined
+  const usePos = usePosition ? usePosition(curDim.current.width, curDim.current.height) : undefined
+
   const x = selectDefined(props.left, usePos ? usePos[0] : defaultLeft)
   const y = selectDefined(props.top, usePos ? usePos[1] : defaultTop)
 
@@ -81,14 +87,15 @@ export function FloatingView(props: FloatingViewProps) {
     width,
     height,
   }))
-  const curDim = useGet(spring)
+
+  const curSpring = useGet(spring)
   const prevDim = useRef({ height: 0, width: 0 })
 
   // sync props
 
   const syncDimensionProp = (dim: 'width' | 'height' | 'xy', val: any) => {
     const prev = prevDim.current
-    const cur = curDim()[dim].getValue()
+    const cur = curSpring()[dim].getValue()
     if (Array.isArray(val) ? val.every(z => isDefined(z)) : isDefined(val)) {
       if (val !== cur) {
         prev[dim] = cur
@@ -124,6 +131,8 @@ export function FloatingView(props: FloatingViewProps) {
 
   const commit = useCallback((next = null) => {
     lastDrop.current = { ...curPos.current, ...next }
+    curDim.current = lastDrop.current
+    forceUpdate()
   }, [])
 
   const onResize = useCallback((w, h, desW, desH, sides) => {

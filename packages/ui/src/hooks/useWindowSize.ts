@@ -21,7 +21,7 @@ export function useWindowSize(opts: { throttle?: number; adjust?: (x: Size) => S
     return () => {
       window.removeEventListener('resize', update)
     }
-  }, [])
+  }, [adjust])
 
   return size
 }

@@ -1,8 +1,9 @@
 import { FullScreen } from '@o/gloss'
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { isRightClick } from './helpers/isRightClick'
-import { useScreenPosition } from './hooks/useScreenPosition'
+import { usePosition } from './hooks/usePosition'
 import { getResizeCursor, ResizableSides } from './Interactive'
 import { Omit } from './types'
 import { ViewProps } from './View/View'
@@ -20,7 +21,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
   const measure = useCallback(() => setMeasureKey(Math.random()), [])
   const isVisible = useVisibility()
 
-  useScreenPosition({
+  usePosition({
     ref: parent || parentRef,
     preventMeasure: isVisible === false,
     debounce: 200,

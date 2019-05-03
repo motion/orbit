@@ -1,4 +1,4 @@
-import { Button, Card, Col, FloatingCard, Row } from '@o/ui'
+import { Button, Card, Col, FloatingCard, Row, useWindowSize } from '@o/ui'
 import React, { useState } from 'react'
 
 const ExampleCard = ({ children = 'Hello world content', ...props }) => (
@@ -43,6 +43,7 @@ export let Floating = () => {
         subTitle="Sub Title"
         width={300}
         height={200}
+        usePosition={() => useWindowSize({ adjust: ([x, y]) => [x - 300, y - 200] })}
         alt="warn"
         location="warn"
         elevation={4}

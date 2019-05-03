@@ -1,5 +1,6 @@
 import React, { HTMLAttributes, RefObject, useEffect, useState } from 'react'
-import { getRect, Rect, useScreenPosition } from '../hooks/useScreenPosition'
+
+import { getRect, Rect, usePosition } from '../hooks/usePosition'
 import { Portal } from './portal'
 
 // puts an item on top of render stack, but pinned to another items location
@@ -27,7 +28,7 @@ export function FloatingChrome(
     />
   )
 
-  useScreenPosition({
+  usePosition({
     ref: target,
     onChange: x => x.visible && setPos(x.rect),
   })

@@ -10,7 +10,6 @@ import { Interactive, InteractiveProps } from './Interactive'
 import { Omit } from './types'
 import { useVisibility } from './Visibility'
 
-// @ts-ignore
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
   width?: number
   height?: number
@@ -21,6 +20,7 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'he
   defaultWidth?: number
   defaultHeight?: number
   zIndex?: number
+  usePosition: () => [number, number]
 }
 
 export function FloatingView(props: FloatingViewProps) {
@@ -33,14 +33,19 @@ export function FloatingView(props: FloatingViewProps) {
     disableDrag,
     zIndex = 1200000,
     pointerEvents = 'auto',
+    usePosition,
     ...restProps
   } = props
+  const usePos = usePosition ? usePosition() : undefined
+  const x = usePos ? usePos[0] : defaultLeft
+  const y = usePos ? usePos[1] : defaultTop
+
   const controlledSize = typeof props.height !== 'undefined'
   const controlledPosition = typeof props.top !== 'undefined'
   const isVisible = useVisibility()
   const getProps = useGet(props)
   const [{ xy, width, height }, set] = useSpring(() => ({
-    xy: [selectDefined(props.left, defaultLeft), selectDefined(props.top, defaultTop)],
+    xy: [selectDefined(props.left, x), selectDefined(props.top, y)],
     width: selectDefined(props.width, defaultWidth),
     height: selectDefined(props.height, defaultHeight),
   }))
@@ -62,11 +67,8 @@ export function FloatingView(props: FloatingViewProps) {
     }
   }
 
-  useEffect(() => syncDimensionProp('xy', [props.left, props.top]), [props.top, props.left])
-  useEffect(() => syncDimensionProp('xy', [props.defaultLeft, props.defaultTop]), [
-    props.defaultTop,
-    props.defaultLeft,
-  ])
+  useEffect(() => syncDimensionProp('xy', [props.left, props.top]), [props.left, props.top])
+  useEffect(() => syncDimensionProp('xy', [x, y]), [x, y])
   useEffect(() => syncDimensionProp('width', props.width), [props.width])
   useEffect(() => syncDimensionProp('height', props.height), [props.height])
   useEffect(() => syncDimensionProp('width', props.defaultWidth), [props.defaultWidth])

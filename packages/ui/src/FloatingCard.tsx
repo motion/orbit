@@ -16,11 +16,13 @@ type FloatingCardProps = CardProps &
     | 'left'
     | 'width'
     | 'height'
+    | 'usePosition'
   > & {
     visible?: boolean
   }
 
 export function FloatingCard({
+  usePosition,
   defaultTop = 0,
   defaultLeft = 0,
   disableDrag,
@@ -59,6 +61,7 @@ export function FloatingCard({
       defaultHeight={defaultHeight}
       zIndex={+zIndex}
       pointerEvents={visibilityProps.pointerEvents}
+      usePosition={usePosition}
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}

@@ -1,4 +1,4 @@
-import { Base, BaseProps, gloss } from '@o/gloss'
+import { alphaColorTheme, Base, BaseProps, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 
@@ -38,4 +38,4 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-})
+}).theme(alphaColorTheme)

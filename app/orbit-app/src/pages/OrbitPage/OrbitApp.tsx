@@ -117,6 +117,7 @@ const FadeIn = (props: any) => {
         transition: 'all ease 200ms',
         width: '100%',
         height: '100%',
+        pointerEvents: 'none',
       }}
     >
       {props.children}

@@ -3,6 +3,7 @@ import { Button, List, Paragraph, Space, SubTitle, Title, View } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {
+  console.log('RENDER PEOPLE APP INDEX')
   return (
     <List
       shareable

@@ -41,7 +41,7 @@ type EitherEffect = (effect: EffectCallback, deps?: DependencyList) => void
 const createUseMedia = (effect: EitherEffect) =>
   function useMedia<A extends MediaQueryShort | MediaQueryShort[]>(
     rawQueries: A,
-    options: UseMediaOptions<A>,
+    options?: UseMediaOptions<A>,
   ): A extends any[] ? boolean[] : boolean {
     const allQueries = [].concat(rawQueries)
     const queries = allQueries.map(objectToString)

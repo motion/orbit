@@ -10,7 +10,7 @@ import { useVisibility } from '../Visibility'
 import { FormContext } from './Form'
 
 export type InputType =
-  | 'input'
+  | 'text'
   | 'checkbox'
   | 'submit'
   | 'textarea'
@@ -34,7 +34,7 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   }
 
 export const Input = React.forwardRef(function Input(
-  { onEnter, type = 'input', ...props }: InputProps,
+  { onEnter, type = 'text', ...props }: InputProps,
   ref,
 ) {
   const context = useContext(FormContext)
@@ -57,41 +57,37 @@ export const Input = React.forwardRef(function Input(
     [context, type, props.name],
   )
 
-  const onKeyDown = useCallback(
-    e => {
-      if (e.keyCode === 13) {
-        if (onEnter) {
-          onEnter(e)
-        }
-      }
-      if (props.onKeyDown) {
-        props.onKeyDown(e)
-      }
-    },
-    [props.onKeyDown, onEnter],
-  )
-
-  const onChange = useCallback(
-    e => {
-      updateFormContext(e.target.value)
-
-      if (props.onChange) {
-        props.onChange(e)
-      }
-      return () => {
-        context.dispatch({ type: 'removeField', value: props.name })
-      }
-    },
-    [props.name, props.onChange, context],
-  )
-
   return (
     <SimpleInput
       forwardRef={ref}
       {...props}
       type={type}
-      onKeyDown={onKeyDown}
-      onChange={onChange}
+      onKeyDown={useCallback(
+        e => {
+          if (e.keyCode === 13) {
+            if (onEnter) {
+              onEnter(e)
+            }
+          }
+          if (props.onKeyDown) {
+            props.onKeyDown(e)
+          }
+        },
+        [props.onKeyDown, onEnter],
+      )}
+      onChange={useCallback(
+        e => {
+          updateFormContext(e.target.value)
+
+          if (props.onChange) {
+            props.onChange(e)
+          }
+          return () => {
+            context.dispatch({ type: 'removeField', value: props.name })
+          }
+        },
+        [props.name, props.onChange, context],
+      )}
     />
   )
 })

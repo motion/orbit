@@ -38,7 +38,7 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
   whiteSpace: 'nowrap',
 }).theme((_, theme) => ({
   '&:hover': {
-    background: theme.backgroundHover.alpha(x => x * 0.5),
+    background: theme.backgroundHover.alpha(x => x * 0.25),
   },
   '&:active': {
     background: theme.backgroundHover,
@@ -236,8 +236,9 @@ export class TableHead extends React.PureComponent<
   }
 
   static getDerivedStateFromProps(props) {
+    const columnSizes = props.columnSizes || calculateColumnSizes(props.columns)
     return {
-      columnSizes: props.columnSizes || calculateColumnSizes(props.columns),
+      columnSizes,
     }
   }
 

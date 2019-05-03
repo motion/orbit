@@ -30,8 +30,7 @@ export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): Table
     } else if (aVal instanceof Date && bVal instanceof Date) {
       return aVal.getTime() - bVal.getTime()
     } else {
-      console.error('Unsure how to sort this', sortOrder.key, aVal, bVal)
-      return -1
+      return aVal > bVal ? -1 : 1
     }
   })
 

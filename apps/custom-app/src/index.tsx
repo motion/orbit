@@ -13,12 +13,9 @@ function CustomApp() {
         <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
           {({ api }) => {
             const res = api.channelsList()
-            console.log(res, res && res.channels)
             return (
               <Table
-                // columns={['id', 'members']}
                 shareable
-                // focusable
                 selectable="multi"
                 rows={(res && res.channels) || []}
                 onSelect={setRooms}
@@ -33,7 +30,6 @@ function CustomApp() {
                 <Tab key={room.id} label={room.name}>
                   {() => {
                     const res = api.channelsHistory({ channel: room.id })
-                    console.log('res', res)
                     return <SlackConversation messages={res.messages || []} />
                   }}
                 </Tab>
@@ -52,6 +48,9 @@ export default createApp({
   icon: '',
   app: CustomApp,
 })
+
+// columns={['id', 'members']}
+// focusable
 
 // todo: remove it
 // load sample repositories (testing api)

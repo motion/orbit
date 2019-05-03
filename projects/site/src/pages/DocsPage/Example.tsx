@@ -161,9 +161,6 @@ function parseSource(source: string, id: string) {
         indent(allLines.slice(1, allLines.length - 2))
   // remove empty comment line which forces spacing
   const next = lines[0].trim() === '//' ? lines.slice(1, lines.length) : lines
-
-  console.log(id, next, keyBlock)
-
   return next.join('\n')
 }
 

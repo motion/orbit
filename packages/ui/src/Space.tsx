@@ -1,9 +1,12 @@
 import { gloss } from '@o/gloss'
 
+import { isBrowser } from './constants'
 import { useScale } from './Scale'
 
 // we need just a touch of css
-require('./Space.css')
+if (isBrowser) {
+  require('./Space.css')
+}
 
 export type Sizes =
   | 'xs'

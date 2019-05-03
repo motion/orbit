@@ -86,7 +86,7 @@ const applyPsuedoTheme = (props, theme, previous, useTheme = false) => {
 
     // cache sub-keys like backgroundHover colorHover
     if (!SubThemeKeys[postfix]) {
-      SubThemeKeys[postfix] = themeKeys.map(([k]) => [`${k}${postfix}`, k])
+      SubThemeKeys[postfix] = themeKeys.map(([k]) => [`${k}${postfix}`, k] as [string, string])
     }
     const subThemeKeys = SubThemeKeys[postfix]
 

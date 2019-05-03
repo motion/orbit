@@ -1,13 +1,7 @@
-import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
+import { CSSPropertySetStrict } from '@o/css'
 
-import { gloss, GlossProps } from '../gloss'
-import {
-  AlphaColorProps,
-  alphaColorTheme,
-  propStyleTheme,
-  PseudoStyleProps,
-  psuedoStylePropsTheme,
-} from '../themes'
+import { baseIgnoreAttrs, gloss, GlossProps } from '../gloss'
+import { AlphaColorProps, alphaColorTheme, propStyleTheme, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
 import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
@@ -62,14 +56,6 @@ export const Base = gloss<BaseProps>().theme(
   // <Base alpha={0.5} /> for text opacity
   alphaColorTheme,
 )
-
-export const baseIgnoreAttrs = {
-  ...validCSSAttr,
-  width: true,
-  height: true,
-  size: true,
-  src: false,
-}
 
 // ignore all valid css props, except src for images
 Base.ignoreAttrs = baseIgnoreAttrs

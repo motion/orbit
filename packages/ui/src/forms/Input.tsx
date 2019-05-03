@@ -1,6 +1,7 @@
 import { gloss, ThemeFn } from '@o/gloss'
 import React, { useCallback, useContext, useMemo } from 'react'
 
+import { isWebkit } from '../constants'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
@@ -106,8 +107,6 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
     },
   }),
 })
-
-const isWebkit = 'webkitLineBreak' in document.documentElement.style
 
 const SimpleInput = gloss(
   ({

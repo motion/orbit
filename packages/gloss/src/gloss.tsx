@@ -8,7 +8,14 @@ import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
-import { baseIgnoreAttrs } from './blocks/Base'
+
+export const baseIgnoreAttrs = {
+  ...validCSSAttr,
+  width: true,
+  height: true,
+  size: true,
+  src: false,
+}
 
 export type BaseRules = {
   [key: string]: string | number

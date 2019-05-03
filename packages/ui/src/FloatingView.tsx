@@ -126,7 +126,7 @@ export function FloatingView(props: FloatingViewProps) {
     curPos.current = { ...curPos.current, ...next }
     set(next)
     clearTimeout(commitTm.current)
-    commitTm.current = setTimeout(commit, 100)
+    commitTm.current = setTimeout(commit, 50)
   }, [])
 
   const commit = useCallback((next = null) => {

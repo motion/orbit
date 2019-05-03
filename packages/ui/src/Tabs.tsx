@@ -9,6 +9,7 @@ import { Loading } from './progress/Loading'
 import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
+import { Col } from './View/Col'
 import { View, ViewProps } from './View/View'
 
 /**
@@ -93,24 +94,24 @@ function TabsControlled({
     borderRadius,
   }
 
-  function add(comps) {
-    for (const [index, comp] of [].concat(comps || []).entries()) {
-      if (Array.isArray(comp)) {
-        add(comp)
+  function add(allTabs) {
+    for (const [index, tab] of [].concat(allTabs || []).entries()) {
+      if (Array.isArray(tab)) {
+        add(tab)
         continue
       }
-      if (!comp) {
+      if (!tab) {
         continue
       }
       // for some reason had to check constructor instead
-      if (comp.type.constructor !== Tab.constructor) {
+      if (tab.type.constructor !== Tab.constructor) {
         // if element isn't a tab then just push it into the tab list
-        tabSiblings.push(comp)
+        tabSiblings.push(tab)
         continue
       }
-      const { closable, label, icon, onClose, width } = comp.props
-      const Children = comp.props.children
-      let id = getKey(comp)
+      const { closable, label, icon, onClose, width, ...rest } = tab.props
+      const TabChildren = tab.props.children
+      let id = getKey(tab)
       if (typeof id !== 'string') {
         id = `${index}`
       }
@@ -120,18 +121,18 @@ function TabsControlled({
       const isActive: boolean = active === id
 
       const childrenElement =
-        typeof Children === 'function' ? isActive ? <Children /> : null : Children
+        typeof TabChildren === 'function' ? isActive ? <TabChildren /> : null : TabChildren
 
-      if (isActive || persist === true || comp.props.persist === true) {
+      if (isActive || persist === true || tab.props.persist === true) {
         tabContents.push(
-          <TabContent key={id} hidden={!isActive}>
+          <TabContent key={id} hidden={!isActive} {...rest}>
             <Suspense fallback={<Loading />}>{childrenElement}</Suspense>
           </TabContent>,
         )
       }
 
       // this tab has been hidden from the tab bar but can still be selected if it's key is active
-      if (comp.props.hidden) {
+      if (tab.props.hidden) {
         continue
       }
       let closeButton
@@ -284,7 +285,7 @@ const OrderableContainer = gloss({
   display: 'inline-block',
 })
 
-const TabContent = gloss({
+const TabContent = gloss(Col, {
   overflow: 'auto',
   width: '100%',
   flex: 1,

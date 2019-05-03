@@ -27,7 +27,7 @@ function CustomApp() {
           {({ api }) => (
             <Tabs>
               {rooms.map(room => (
-                <Tab key={room.id} label={room.name}>
+                <Tab key={room.id} label={room.name} pad>
                   {() => {
                     const res = api.channelsHistory({ channel: room.id })
                     return <SlackConversation messages={res.messages || []} />

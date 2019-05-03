@@ -62,7 +62,7 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
   }
   if (header) {
     header.setShown(false)
-    tm = setTimeout(finish, 140)
+    tm = setTimeout(finish, 90)
   } else {
     finish()
   }

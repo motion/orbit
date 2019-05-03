@@ -4,7 +4,6 @@ import React, { forwardRef } from 'react'
 
 import { Config } from '../helpers/configure'
 import { useScale } from '../Scale'
-import { selectableTheme } from './Text'
 
 export type SimpleTextProps = BaseProps & {
   ellipse?: boolean
@@ -39,4 +38,4 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-}).theme(selectableTheme)
+})

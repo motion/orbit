@@ -1,3 +1,8 @@
+.react-grid-layout {
+  /* lets you always have space at the bottom to drag taller */
+  margin-bottom: 200px;
+}
+
 .react-grid-item {
   display: flex;
   position: relative;

@@ -90,9 +90,11 @@ const Chevron = gloss({
     border: 0,
     backgroundColor: 'transparent',
   },
+}).withConfig({
+  ignoreAttrs: {
+    focused: true,
+  },
 })
-
-Chevron.ignoreAttrs = ['focused']
 
 type Props = {
   filter: TableFilter

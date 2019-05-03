@@ -45,23 +45,20 @@ export function getSpaceSize(space: Sizes) {
   return spaceSizes[space] || space || 0
 }
 
-export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
-  const spacing = getSpaceSize(props.size) * useScale()
-  return {
-    width: spacing,
-    height: spacing,
-    ...props,
-  }
-})
-
-Space.defaultProps = {
-  className: 'ui-space',
-}
+export const Space = gloss<SpaceProps>()
+  .theme((props: SpaceProps) => {
+    const size = getSpaceSize(props.size) * useScale()
+    return {
+      width: size,
+      height: size,
+      ...props,
+    }
+  })
+  .withConfig({
+    defaultProps: {
+      className: 'ui-space',
+    },
+  })
 
 // @ts-ignore
 Space.isSpace = true
-
-Space.ignoreAttrs = {
-  ...Base.ignoreAttrs,
-  size: true,
-}

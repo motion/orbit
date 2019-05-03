@@ -1,13 +1,16 @@
 import { App, AppCard, createApp } from '@o/kit'
 import Slack from '@o/slack-app'
-import { GridLayout, Table } from '@o/ui'
-import React from 'react'
+import { GridLayout, Tab, Table, Tabs } from '@o/ui'
+import React, { useState } from 'react'
 
 function CustomApp() {
+  const [app, setApp] = useState(null)
+  const [rooms, setRooms] = useState([])
+
   return (
     <App>
       <GridLayout>
-        <AppCard key="slack" title="Slack Messages" appType={Slack}>
+        <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
           {({ api }) => {
             const res = api.channelsList()
             return (
@@ -17,7 +20,26 @@ function CustomApp() {
                 // focusable
                 selectable="multi"
                 rows={(res && res.channels) || {}}
+                onSelect={setRooms}
               />
+            )
+          }}
+        </AppCard>
+        <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
+          {({ api }) => {
+            const [active, setActive] = useState(null)
+            console.log('active', active)
+            const res = active && api.channelsHistory({ channel: active.channel })
+
+            return (
+              <>
+                <Tabs onChange={x => setActive(x)}>
+                  {rooms.map(room => (
+                    <Tab key={room.id} label={room.name || 'pok'} />
+                  ))}
+                </Tabs>
+                {JSON.stringify(res || {})}
+              </>
             )
           }}
         </AppCard>

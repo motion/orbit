@@ -1,32 +1,44 @@
 import { AppBit } from '@o/models'
 import { Button, Card, CardProps, Loading, SpaceGroup, useFocusableItem } from '@o/ui'
-import React, { Suspense, useRef, useState } from 'react'
+import { isDefined } from '@o/utils'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 
 import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { Omit } from '../types'
 import { AppDefinition } from '../types/AppDefinition'
 import { SelectApp } from './SelectApp'
 
-type AppCardProps<Def extends AppDefinition> = Omit<CardProps, 'children'> & {
+type AppCardProps<Def extends AppDefinition> = Omit<CardProps, 'children' | 'onChange'> & {
   children: (props: { api: UnPromisifiedObject<ReturnType<Def['api']>> }) => React.ReactNode
+  app?: AppBit
   appType: Def
+  onChange?: (app: AppBit) => any
 }
 
 export function AppCard<A extends AppDefinition>({
   appType,
   children,
+  onChange,
+  app,
   ...cardProps
 }: AppCardProps<A>) {
-  const [app, setApp] = useState<AppBit>(null)
+  const [internalApp, setApp] = useState<AppBit>(null)
   const isFocused = useFocusableItem(useRef(`appcard-${Math.random()}`).current)
+
+  useEffect(() => {
+    onChange && onChange(internalApp)
+  }, [internalApp])
+
   return (
     <Card
       key="slack"
       afterTitle={
-        <SpaceGroup space="sm">
-          <SelectApp appType={appType} onSelect={setApp} />
-          <Button chromeless icon="cross" />
-        </SpaceGroup>
+        !isDefined(app) && (
+          <SpaceGroup space="sm">
+            <SelectApp appType={appType} onSelect={setApp} />
+            <Button chromeless icon="cross" />
+          </SpaceGroup>
+        )
       }
       title="Slack Messages"
       flex={1}
@@ -35,7 +47,7 @@ export function AppCard<A extends AppDefinition>({
       {...cardProps}
     >
       <Suspense fallback={<Loading />}>
-        <AppCardInner appType={appType} app={app}>
+        <AppCardInner appType={appType} app={app || internalApp}>
           {children}
         </AppCardInner>
       </Suspense>

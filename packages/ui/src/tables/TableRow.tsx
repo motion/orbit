@@ -19,7 +19,6 @@ import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
-
 type TableRowProps = {
   color?: Color
   even?: boolean
@@ -189,6 +188,7 @@ const TableBodyColumnContainer = gloss({
   padding: [0, 8],
   userSelect: 'none',
   maxWidth: '100%',
+  justifyContent: 'center',
 }).theme(props => ({
   flexShrink: props.width === 'flex' ? 1 : 0,
   whiteSpace: props.multiline ? 'normal' : 'nowrap',

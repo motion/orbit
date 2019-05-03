@@ -29,7 +29,9 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
-  const nextTheme = Config.preProcessTheme(props, prev.activeTheme)
+  const nextTheme = Config.preProcessTheme
+    ? Config.preProcessTheme(props, prev.activeTheme)
+    : prev.activeTheme
   let nextThemeObj: ThemeContextType = themeContexts.get(nextTheme)
 
   if (!nextThemeObj) {

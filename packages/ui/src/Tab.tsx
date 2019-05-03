@@ -10,9 +10,9 @@ import { Button, ButtonProps } from './buttons/Button'
  */
 export function Tab(_: {
   /**
-   * ID is used for onActive/Active of <Tabs />
+   * ID is used for onActive/Active of <Tabs /> (may also use `key`, thought that may be removed)
    */
-  id: string
+  id?: string
   /**
    * Label of this tab to show in the tab list.
    */

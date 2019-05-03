@@ -4,9 +4,9 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
+
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
@@ -20,7 +20,7 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // tab height
   height?: number
   // Callback for when the active tab has changed.
-  onActive?: (key: string | void) => void
+  onChange?: (key: string | void) => void
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
@@ -61,7 +61,7 @@ function TabsControlled({
   TabComponent = TabItem,
   tabProps,
   tabPropsActive,
-  onActive,
+  onChange: onActive,
   height = 26,
   borderRadius,
   onSort,
@@ -109,7 +109,7 @@ function TabsControlled({
       }
       const { closable, label, icon, onClose, width } = comp.props
       const compChildren = comp.props.children
-      let id = comp.props.id
+      let id = comp.props.id || comp.key && comp.key.replace('.$', '')
       if (typeof id !== 'string') {
         id = `${index}`
       }

@@ -1,13 +1,14 @@
 import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, HTMLAttributes, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
+import { baseIgnoreAttrs } from './blocks/Base'
 
 export type BaseRules = {
   [key: string]: string | number
@@ -28,7 +29,13 @@ export type ThemeFn<Props = any> = (
   previous?: CSSPropertySetResolved | null,
 ) => CSSPropertySetResolved | null | undefined
 
-export interface GlossView<Props> {
+export type GlossViewOptions<Props> = {
+  displayName?: string
+  ignoreAttrs?: { [key: string]: boolean }
+  defaultProps?: Partial<Props>
+}
+
+export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
   (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
   propTypes?: React.ValidationMap<Props>
@@ -36,10 +43,11 @@ export interface GlossView<Props> {
   defaultProps?: Partial<Props>
   displayName?: string
   // extra:
-  ignoreAttrs?: Object
+  ignoreAttrs?: { [key: string]: boolean }
   theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: { displayName?: string }) => any
-  config: {
+  withConfig: (config: GlossViewOptions<Props>) => GlossView<Props>
+  internal: {
+    themeFns: ThemeFn<Props>[] | null
     getConfig: () => {
       id: string
       displayName: string
@@ -48,7 +56,6 @@ export interface GlossView<Props> {
       propStyles: Object
       parent: any
     }
-    themeFns: ThemeFn<Props>[] | null
   }
 }
 
@@ -71,17 +78,18 @@ export function gloss<Props = any>(
   let targetConfig
   let ignoreAttrs: Object
 
-  // TODO this can be done on first render to lazy load
-  // update ignore attributes
   setTimeout(() => {
-    const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
-    const attrArr = ThemedView.ignoreAttrs || targetAttrs
-    ignoreAttrs = arrToDict(attrArr)
+    if (!ignoreAttrs) {
+      const attrs = ThemedView.ignoreAttrs || (targetConfig ? targetConfig.ignoreAttrs : null)
+      if (attrs) {
+        ignoreAttrs = attrs
+      }
+    }
   }, 0)
 
   const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isGlossParent) {
-    targetConfig = target.config.getConfig()
+    targetConfig = target.internal.getConfig()
   }
 
   // shorthand: view({ ... })
@@ -172,7 +180,7 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }
 
-  const config = {
+  const internal = {
     themeFns: null,
     getConfig: () => ({
       id,
@@ -185,22 +193,35 @@ export function gloss<Props = any>(
     }),
   }
 
-  let ThemedView = createGlossView<Props>(GlossView, config)
+  let ThemedView = createGlossView<Props>(GlossView, internal)
 
   // inherit default props
   if (isGlossParent) {
     ThemedView.defaultProps = target.defaultProps
   }
 
-  ThemedView.withConfig = ({ displayName }) => {
+  ThemedView.withConfig = opts => {
     // re-create it so it picks up displayName
-    if (displayName) {
+    if (opts.displayName) {
       // this one is picked up by Profiling
-      GlossView['displayName'] = displayName
-      ThemedView = createGlossView<Props>(GlossView, config)
+      GlossView['displayName'] = opts.displayName
+      ThemedView = createGlossView<Props>(GlossView, internal)
       // this one is picked up for use in classNames
-      ThemedView['displayName'] = displayName
+      ThemedView['displayName'] = opts.displayName
     }
+
+    if (opts.ignoreAttrs) {
+      // TODO could have option to override or merge
+      ignoreAttrs = {
+        ...baseIgnoreAttrs,
+        ...opts.ignoreAttrs,
+      }
+    }
+
+    if (opts.defaultProps) {
+      ThemedView.defaultProps = opts.defaultProps
+    }
+
     return ThemedView
   }
 
@@ -210,7 +231,7 @@ export function gloss<Props = any>(
 function createGlossView<Props>(GlossView: any, config) {
   const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
   const res: GlossView<Props> = memo(forwarded, isEqual) as any
-  res.config = config
+  res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {
     config.themeFns = themeFns
@@ -324,16 +345,6 @@ function addDynamicStyles(
   return classNames
 }
 
-const arrToDict = (obj: Object) => {
-  if (Array.isArray(obj)) {
-    return obj.reduce((acc, cur) => {
-      acc[cur] = true
-      return acc
-    }, {})
-  }
-  return obj
-}
-
 function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) {
   const propStyles = {}
   for (const key in nextStyles) {
@@ -381,7 +392,7 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
   const propStyles = mergeStyles(baseId, styles, rawStyles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const parentConfig = target.config.getConfig()
+    const parentConfig = target.internal.getConfig()
     const parentPropStyles = parentConfig.propStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
@@ -428,7 +439,7 @@ function compileTheme(viewOG: GlossView<any>) {
 
   // get themes in order from most important (current) to least important (grandparent)
   while (cur) {
-    const conf = cur.config
+    const conf = cur.internal
     if (conf.themeFns) {
       all.push(conf.themeFns)
     }
@@ -505,7 +516,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
 }
 
 // thx darksky: https://git.io/v9kWO
-export function stringHash(str: string): number {
+function stringHash(str: string): number {
   let res = 5381
   let i = str.length
 

@@ -108,7 +108,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
-  const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
+  const innerPad = selectDefined(padInner, !!(hasTitle || bordered || titleElement) ? pad : null)
   const spaceSize = !!space ? selectDefined(size, space) : space
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)

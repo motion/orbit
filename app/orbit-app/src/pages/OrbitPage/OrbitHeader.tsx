@@ -22,6 +22,7 @@ import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
+import { debounce } from 'lodash'
 
 // import { clipboard } from 'electron'
 export const headerButtonProps = {
@@ -197,11 +198,11 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const getVisible = useGet(visible)
 
   useEffect(() => {
-    const onClick = () => {
+    const onClick = debounce(() => {
       if (getVisible()) {
         setVisible(false)
       }
-    }
+    }, 150)
     window.addEventListener('click', onClick)
     return () => {
       window.removeEventListener('click', onClick)
@@ -247,17 +248,22 @@ const OrbitNavHiddenBar = props => {
   return (
     <OrbitNavHiddenBarChrome {...props}>
       <OrbitNavHiddenBarInner isVisible={props.isVisible}>
-        {apps.map(app => (
-          <div
-            key={app.id}
-            style={{
-              background: app.colors[0],
-              width: `${100 / apps.length}%`,
-              height: '100%',
-              opacity: activePaneId === `${app.id}` ? 1 : 0.5,
-            }}
-          />
-        ))}
+        {apps.map(app => {
+          const isActive = activePaneId === `${app.id}`
+          return (
+            <div
+              key={app.id}
+              style={{
+                background: app.colors[0],
+                width: `${100 / apps.length}%`,
+                height: '100%',
+                opacity: isActive ? 1 : 0.2,
+                transform: `translateY(${isActive ? 0 : 2}px)`,
+                transition: 'all ease 400ms'
+              }}
+            />
+          )
+        })}
       </OrbitNavHiddenBarInner>
     </OrbitNavHiddenBarChrome>
   )

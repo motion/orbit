@@ -56,7 +56,10 @@ function lightLog(val: any) {
 function logMobxEvent(event) {
   switch (event.type) {
     case 'action':
-      console.groupCollapsed(`%c  ${event.name}(${event.arguments.join(', ')})`, 'color:orange;')
+      console.groupCollapsed(
+        `%c  ${event.name}(${event.arguments.map(lightLog).join(', ')})`,
+        'color:orange;',
+      )
       console.log(event)
       console.groupEnd()
       break

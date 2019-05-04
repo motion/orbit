@@ -4,8 +4,9 @@ import { looksLike } from './looksLike'
 
 export function handleGlossReferences(parentNode, name, references, file, babel) {
   const { types: t, template } = babel
+  // extra safe because babel or webpack or something can leave behind old ones of these
   const buildBuiltInWithConfig = template(`
-  typeof IDENTIFIER !== 'undefined' && IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
+  typeof IDENTIFIER !== 'undefined' && IDENTIFIER.withConfig && IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
   `)
 
   references.forEach(reference => {

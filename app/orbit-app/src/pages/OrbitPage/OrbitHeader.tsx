@@ -13,7 +13,7 @@ import {
   SurfacePassProps,
   View,
 } from '@o/ui'
-import React, { forwardRef, memo, useCallback } from 'react'
+import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -192,27 +192,57 @@ export const OrbitHeader = memo(() => {
 })
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
+  const [visible, setVisible] = useState(rest.open)
+
   return (
-    <Popover
-      group="orbit-nav"
-      target={target}
-      // openOnClick
-      openOnHover
-      // closeOnClick
-      width={window.innerWidth * 0.8}
-      padding={2}
-      elevation={2}
-      arrowSize={10}
-      distance={8}
-      sizeRadius
-      background={theme => theme.backgroundStrongest}
-      adjust={[80, 0]}
-      {...rest}
-    >
-      {children}
-    </Popover>
+    <>
+      <OrbitNavHiddenBar isVisible={visible} />
+      <Popover
+        group="orbit-nav"
+        target={target}
+        // openOnClick
+        openOnHover
+        onChangeVisibility={setVisible}
+        // closeOnClick
+        width={window.innerWidth * 0.8}
+        padding={2}
+        elevation={2}
+        arrowSize={10}
+        distance={8}
+        sizeRadius
+        background={theme => theme.backgroundStrongest}
+        adjust={[80, 0]}
+        {...rest}
+      >
+        {children}
+      </Popover>
+    </>
   )
 }
+
+const OrbitNavHiddenBar = props => (
+  <OrbitNavHiddenBarChrome {...props}>
+    <OrbitNavHiddenBarInner {...props} />
+  </OrbitNavHiddenBarChrome>
+)
+
+const OrbitNavHiddenBarChrome = gloss({
+  position: 'absolute',
+  bottom: 5,
+  left: '15%',
+  right: '15%',
+  borderRadius: 4,
+  padding: 5,
+}).theme((_, theme) => ({
+  background: theme.background,
+}))
+
+const OrbitNavHiddenBarInner = gloss({
+  height: 4,
+  width: '100%',
+}).theme((_, theme) => ({
+  background: 'red' || theme.backgroundStronger,
+}))
 
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',

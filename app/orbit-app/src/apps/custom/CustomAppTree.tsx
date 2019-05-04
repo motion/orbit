@@ -110,7 +110,7 @@ export function CustomAppTree() {
         />
       </Pane>
       <Pane flex={3} collapsable title="Inspect" resizable>
-        <Table searchable selectable rows={rows.slice(0, 1000)} />
+        <Table searchable selectable rows={rows} />
       </Pane>
       <Pane title="Sidebar">
         <Layout type="column">

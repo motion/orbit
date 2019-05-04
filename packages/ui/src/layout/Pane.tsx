@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, isValidElement, cloneElement } from 'react'
 
 import { Collapsable, CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
@@ -41,23 +41,25 @@ export function Pane(props: PaneProps) {
           useCollapse={toggle}
         />
       )}
-      <Collapsable useCollapse={toggle}>
-        <Suspense fallback={<Loading />}>
-          <Col
-            space={space}
-            spaceAround={spaceAround}
-            flexDirection={flexDirection}
-            scrollable={scrollable}
-            pad={pad}
-            padding={padding}
-            width="100%"
-            height="100%"
-            position="relative"
-          >
-            {children}
-          </Col>
-        </Suspense>
-      </Collapsable>
+      <Suspense fallback={<Loading />}>
+        <Col
+          space={space}
+          spaceAround={spaceAround}
+          flexDirection={flexDirection}
+          scrollable={scrollable}
+          pad={pad}
+          padding={padding}
+          width="100%"
+          height="100%"
+          position="relative"
+          useCollapse={toggle}
+        >
+          {/* enforce 100% max height for pane contents... */}
+          {isValidElement(children)
+            ? cloneElement(children as any, { maxHeight: children.props['maxHeight'] || '100%' })
+            : children}
+        </Col>
+      </Suspense>
     </SizablePane>
   )
 }

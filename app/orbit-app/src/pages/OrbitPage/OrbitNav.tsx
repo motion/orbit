@@ -203,7 +203,6 @@ export const OrbitNav = memo(
 )
 
 const OrbitNavClip = gloss({
-  flex: 1,
   padding: [20, 40],
   margin: [-20, 0],
 })

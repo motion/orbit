@@ -86,12 +86,6 @@ export const OrbitHeader = memo(() => {
 
   return (
     <>
-      <OrbitNavPopover
-        alwaysVisible={paneManagerStore.isOnHome ? true : false}
-        target="#home-button"
-      >
-        <OrbitNav />
-      </OrbitNavPopover>
       <OrbitHeaderContainer
         isEditing={isTorn}
         className="draggable"
@@ -110,7 +104,12 @@ export const OrbitHeader = memo(() => {
 
           <HeaderContain isActive={false}>
             <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-              <HomeButton id="home-button" />
+              <OrbitNavPopover
+                alwaysVisible={paneManagerStore.isOnHome ? true : false}
+                target={<HomeButton id="home-button" />}
+              >
+                <OrbitNav />
+              </OrbitNavPopover>
             </View>
 
             <OrbitHeaderInput />

@@ -274,6 +274,7 @@ export class SearchStore {
       }
     },
     {
+      log: false,
       defaultValue: { results: [], query: '', finished: false },
     },
   )

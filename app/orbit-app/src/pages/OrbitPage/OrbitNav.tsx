@@ -66,7 +66,7 @@ export const OrbitNav = memo(
             //   ? activeSpaceName
             //   : app.name,
             // stretch: !isPinned,
-            thicc: true, //isPinned,
+            thicc: isPinned,
             isActive,
             icon: <AppIcon app={app} />,
             iconSize: 20,
@@ -209,6 +209,7 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  maxWidth: '100%',
   pointerEvents: 'inherit',
   height: tabHeight,
   flexFlow: 'row',

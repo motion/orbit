@@ -70,6 +70,9 @@ export type PopoverProps = Omit<SurfaceProps, 'background' | 'style'> & {
   closeOnClick?: boolean
   closeOnEsc?: boolean
 
+  /** Callback when hover event happens, even if controlled */
+  onHover?: (isHovered: boolean) => any
+
   /** Which direction it shows towards */
 
   /** Default determine direction automatically */
@@ -78,8 +81,6 @@ export type PopoverProps = Omit<SurfaceProps, 'background' | 'style'> & {
   /** Popover can aim to be centered or left aligned on the target */
   alignPopover?: 'left' | 'center'
   padding?: number[] | number
-  onMouseEnter?: Function
-  onMouseLeave?: Function
   onClose?: Function
   openAnimation?: string
   closeAnimation?: string
@@ -533,6 +534,22 @@ export class Popover extends React.Component<PopoverProps, State> {
         this.props.onDidOpen()
       }
     }
+    // unhovered
+    if (this.props.onHover) {
+      if (
+        (prevState.targetHovered || prevState.menuHovered) &&
+        (!this.state.targetHovered && !this.state.menuHovered)
+      ) {
+        this.props.onHover(false)
+      }
+      if (
+        !prevState.targetHovered &&
+        !prevState.menuHovered &&
+        (this.state.targetHovered || this.state.menuHovered)
+      ) {
+        this.props.onHover(true)
+      }
+    }
   }
 
   setPosition = (afterMeasure = () => void 0) => {
@@ -851,7 +868,7 @@ export class Popover extends React.Component<PopoverProps, State> {
 
   // hover helpers
   hoverStateSet(name: string, next: boolean) {
-    const { openOnHover, onMouseEnter } = this.props
+    const { openOnHover } = this.props
     const setter = () => {
       const val = next ? Date.now() : 0
       if (name === 'target') {
@@ -863,9 +880,6 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (next) {
       if (openOnHover) {
         setter()
-      }
-      if (onMouseEnter) {
-        onMouseEnter(null)
       }
     } else {
       if (openOnHover) {

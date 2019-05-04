@@ -7,8 +7,9 @@ import { setConfig } from 'react-hot-loader'
 
 window['enableLog'] = false
 
-// why-did-you-render with ?debug
-if (process.env.NODE_ENV !== 'production' && window.location.search.indexOf('debug') > 0) {
+// why-did-you-render
+// https://github.com/welldone-software/why-did-you-render
+if (process.env.NODE_ENV !== 'production') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render').default
   whyDidYouRender(React)
 }

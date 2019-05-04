@@ -196,13 +196,15 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 
   return (
     <>
-      <OrbitNavHiddenBar isVisible={visible} />
+      <OrbitNavHiddenBar isVisible={visible} onClick={() => setVisible(!visible)} />
       <Popover
         group="orbit-nav"
         target={target}
         // openOnClick
         openOnHover
+        onHover={x => setVisible(x)}
         onChangeVisibility={setVisible}
+        open={visible}
         // closeOnClick
         width={window.innerWidth * 0.8}
         padding={2}
@@ -222,26 +224,29 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 
 const OrbitNavHiddenBar = props => (
   <OrbitNavHiddenBarChrome {...props}>
-    <OrbitNavHiddenBarInner {...props} />
+    <OrbitNavHiddenBarInner isVisible={props.isVisible} />
   </OrbitNavHiddenBarChrome>
 )
 
 const OrbitNavHiddenBarChrome = gloss({
   position: 'absolute',
-  bottom: 5,
-  left: '15%',
-  right: '15%',
-  borderRadius: 4,
+  bottom: 2,
+  left: '19%',
+  right: '19%',
+  borderRadius: 10,
   padding: 5,
 }).theme((_, theme) => ({
-  background: theme.background,
+  '&:hover': {
+    background: theme.background.alpha(0.25),
+  },
 }))
 
 const OrbitNavHiddenBarInner = gloss({
   height: 4,
+  borderRadius: 2,
   width: '100%',
 }).theme((_, theme) => ({
-  background: 'red' || theme.backgroundStronger,
+  background: theme.backgroundStrongest,
 }))
 
 const OrbitHeaderContainer = gloss<any>(View, {
@@ -331,7 +336,7 @@ const OpenButton = memo(() => {
       alt="action"
       iconSize={18}
       sizeRadius={1.6}
-      borderWidth={1.5}
+      borderWidth={0}
       glint={false}
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"

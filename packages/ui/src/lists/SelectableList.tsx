@@ -9,14 +9,15 @@ export type SelectableListProps = SelectableProps &
     listRef?: any
   }
 
-export function useSelectableProps(props: SelectableListProps, ref) {
+export function useSelectableProps(props: SelectableListProps, extraRef: any) {
   const selectableStore = useSelectableStore(props)
   const internalRef = useRef<DynamicListControlled>(null)
-  const listRef = props.listRef || ref || internalRef
+  const listRef = props.listRef || internalRef
 
   useEffect(() => {
     selectableStore && selectableStore.setListRef(listRef.current)
-  }, [listRef])
+    extraRef && extraRef(listRef.current)
+  }, [listRef, selectableStore])
 
   useEffect(() => {
     if (Array.isArray(props.itemData)) {

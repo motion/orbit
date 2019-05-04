@@ -1,6 +1,6 @@
-import * as firebase from 'firebase'
 import { loadOne, save } from '@o/bridge'
 import { UserModel } from '@o/models'
+import * as firebase from 'firebase/app'
 
 export const finishAuthorization = async (path: string) => {
   console.log('finishAuthorization path', path)

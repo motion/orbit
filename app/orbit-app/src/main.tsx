@@ -4,7 +4,7 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
 import * as React from 'react'
 import { unstable_Profiler as Profiler } from 'react'
 import { render } from 'react-dom'
@@ -12,6 +12,9 @@ import { render } from 'react-dom'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
+// order important
+require('firebase/auth')
+require('firebase/firestore')
 
 // @ts-ignore
 if (IS_ELECTRON) {

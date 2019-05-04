@@ -1,8 +1,9 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import React from 'react'
+
 import { MessageViewMain } from './views/MessageViewMain'
 
-export const MessageApp: AppDefinition = {
+export default createApp({
   id: 'message',
   name: 'Message',
   icon: '',
@@ -11,4 +12,4 @@ export const MessageApp: AppDefinition = {
       <MessageViewMain {...props} />
     </App>
   ),
-}
+})

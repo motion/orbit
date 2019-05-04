@@ -1,14 +1,10 @@
 import React, { FunctionComponent } from 'react'
 
 import { Button, ButtonProps } from './buttons/Button'
+import { Omit } from './types'
+import { ColProps } from './View/Col'
 
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
-export function Tab(_: {
+export type TabProps = Omit<ColProps, 'children'> & {
   /**
    * ID is used for onActive/Active of <Tabs /> (may also use `key`, thought that may be removed)
    */
@@ -45,7 +41,15 @@ export function Tab(_: {
    * Icon for tab
    */
   icon?: React.ReactNode
-}) {
+}
+
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
+export function Tab(_: TabProps) {
   console.error("don't render me", _)
   return null
 }

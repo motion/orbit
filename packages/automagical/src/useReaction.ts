@@ -1,6 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { CompositeDisposable } from 'event-kit'
 import { useEffect, useRef, useState } from 'react'
+
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'
@@ -37,7 +38,7 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
   // 1 argument
   // autorun
   if (!b) {
-    return setupReact(a, null, {}, null)
+    return setupReact(a, null, null, null)
   }
 
   // 4 arguments
@@ -60,11 +61,11 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
     }
     // reaction
     if (bIsReaction) {
-      return setupReact(a, b, {}, null)
+      return setupReact(a, b, null, null)
     }
     // autorun + mountArgs
     if (Array.isArray(b)) {
-      return setupReact(a, null, {}, b)
+      return setupReact(a, null, null, b)
     }
   }
 
@@ -74,7 +75,7 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
   if (!!c) {
     if (Array.isArray(c)) {
       if (bIsReaction) {
-        return setupReact(a, b, {}, c)
+        return setupReact(a, b, null, c)
       }
       // autorun + options + mountArgs
       if (bIsOptions) {
@@ -93,7 +94,7 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
 export function setupReact(
   reaction: any,
   derive: Function | null,
-  opts: ReactionOptions,
+  opts: ReactionOptions | null,
   mountArgs: any[] | null,
 ) {
   const component = useCurrentComponent()
@@ -124,7 +125,9 @@ export function setupReact(
             return
           }
           state.current = next
-          forceUpdate(Math.random())
+          if (!firstMount.current) {
+            forceUpdate(Math.random())
+          }
         },
         getValue: () => state.current,
       },

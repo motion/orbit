@@ -1,8 +1,9 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import React from 'react'
+
 import { OnboardMain } from './OnboardMain'
 
-export const OnboardApp: AppDefinition = {
+export default createApp({
   id: 'onboard',
   icon: '',
   name: 'Onboard',
@@ -11,4 +12,4 @@ export const OnboardApp: AppDefinition = {
       <OnboardMain />
     </App>
   ),
-}
+})

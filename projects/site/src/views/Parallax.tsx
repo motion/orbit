@@ -81,7 +81,7 @@ export class ParallaxLayer extends React.PureComponent<any> {
 
   renderLayer = () => {
     const { style, children, offset, speed, factor, className, ...props } = this.props
-    const horizontal = this.parent.props.horizontal
+    const horizontal = this.parent && this.parent.props.horizontal
 
     const translate3d = this.controller.interpolations.translate.interpolate(x =>
       horizontal ? `translate3d(${x}px,0,0)` : `translate3d(0,${x}px,0)`,
@@ -242,7 +242,13 @@ export class Parallax extends React.PureComponent<any> {
       children,
       horizontal,
       showAbsolute,
+      disable,
     } = this.props
+
+    if (disable) {
+      return children
+    }
+
     return (
       <>
         <El

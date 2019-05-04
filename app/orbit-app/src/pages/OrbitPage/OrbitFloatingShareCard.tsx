@@ -1,4 +1,4 @@
-import { FloatingCard, List, useScreenPosition, useShareStore } from '@o/ui'
+import { FloatingCard, List, usePosition, useShareable } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
 
@@ -17,10 +17,10 @@ export function OrbitFloatingShareCard({
   index: number
 }) {
   const { paneManagerStore } = useStores()
-  const currentSelection = useShareStore().selected
+  const currentSelection = useShareable()
   const numItems = (currentSelection && currentSelection.length) || 0
   const buttonRef = useRef(null)
-  const nodePosition = useScreenPosition({ ref: buttonRef, debounce: 500 })
+  const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)

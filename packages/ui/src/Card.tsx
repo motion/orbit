@@ -1,6 +1,6 @@
 import { Theme, useThemeContext } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
-import React, { useCallback } from 'react'
+import React, { forwardRef, useCallback } from 'react'
 
 import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { ListItemProps } from './lists/ListItem'
@@ -23,7 +23,7 @@ export type CardProps = SizedSurfaceSpecificProps &
     titlePad?: Sizes
   }
 
-export function Card(props: CardProps) {
+export const Card = forwardRef(function Card(props: CardProps, ref) {
   const [collapseProps, rest] = splitCollapseProps(props)
   const {
     padding,
@@ -70,6 +70,7 @@ export function Card(props: CardProps) {
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
         <SizedSurface
+          ref={ref}
           className="ui-card-surface"
           borderWidth={1}
           overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
@@ -107,7 +108,7 @@ export function Card(props: CardProps) {
               titleFlex={titleFlex}
               subTitleProps={subTitleProps}
               titleProps={{
-                fontWeight: 600,
+                fontWeight: 400,
                 ...titleProps,
               }}
               hoverStyle={hasTitleClick ? true : false}
@@ -147,8 +148,9 @@ export function Card(props: CardProps) {
       </Scale>
     </Theme>
   )
-}
+})
 
+// @ts-ignore
 Card.accepts = {
   surfaceProps: true,
 }

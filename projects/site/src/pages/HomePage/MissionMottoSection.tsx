@@ -65,9 +65,10 @@ export function AboutSection() {
             </FadeChild>
             <Space size="sm" />
             <FadeChild delay={dly * 1}>
-              <TitleText size="xl">A better deal for apps.</TitleText>
+              <TitleText textAlign="center" size="xl">
+                A better deal for apps.
+              </TitleText>
             </FadeChild>
-            <Space />
           </>
         }
       >

@@ -11,8 +11,8 @@ export const SpacedPageContent = forwardRef(
         ref={ref}
         width="100%"
         margin={width === 'small' ? 0 : ['auto', 0]}
-        height="80vh"
-        maxHeight={900}
+        // minHeight="80vh"
+        // maxHeight={900}
         space={useScreenHeightVal('xl', 'xxl')}
         {...props}
       >

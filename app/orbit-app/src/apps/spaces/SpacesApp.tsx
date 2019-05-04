@@ -1,10 +1,11 @@
-import { App, AppDefinition } from '@o/kit'
+import { App, createApp } from '@o/kit'
 import React from 'react'
+
 import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import SpacesAppIndex from './SpacesAppIndex'
 import SpacesAppMain from './SpacesAppMain'
 
-export const SpacesApp: AppDefinition = {
+export default createApp({
   id: 'spaces',
   name: 'Spaces',
   icon: '',
@@ -13,4 +14,4 @@ export const SpacesApp: AppDefinition = {
       <SpacesAppMain {...props} />
     </App>
   ),
-}
+})

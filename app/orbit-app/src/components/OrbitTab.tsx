@@ -8,7 +8,6 @@ import {
   IconProps,
   memoIsEqualDeep,
   MenuTemplate,
-  SimpleText,
   Tooltip,
   useContextMenu,
   View,
@@ -17,7 +16,6 @@ import {
 import * as React from 'react'
 
 export const tabHeight = 26
-const inactiveOpacity = 0.45
 const borderSize = 8
 
 export type TabProps = ViewProps & {
@@ -29,7 +27,6 @@ export type TabProps = ViewProps & {
   stretch?: boolean
   sidePad?: number
   tooltip?: string
-  textProps?: any
   thicc?: boolean
   icon?: string | React.ReactNode
   iconSize?: number
@@ -49,13 +46,12 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   tooltip,
   label,
   isActive = false,
-  // separator = false,
-  textProps,
   thicc,
   className = '',
   getContext,
   after,
   location,
+  app,
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
@@ -75,36 +71,23 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       {...props}
     >
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
-          {!React.isValidElement(icon) && !!icon && (
-            <OrbitTabIcon
-              isActive={isActive}
-              name={`${icon}`}
-              marginRight={!!label ? sidePad * 0.7 : 0}
-              thicc={thicc}
-              size={iconSize}
-              iconAdjustOpacity={iconAdjustOpacity}
-              {...iconProps}
-            />
-          )}
-          {React.isValidElement(icon) &&
-            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
-          {!!label && (
-            <SimpleText
-              ellipse
-              className="tab-label"
-              display="flex"
-              flex={1}
-              opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={300}
-              fontSize={12}
-              {...textProps}
-              transition={isActive ? 'none' : tabTransition}
-            >
-              {label}
-            </SimpleText>
-          )}
-        </Row>
+        <Tooltip label={app ? app.name : undefined}>
+          <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+            {React.isValidElement(icon) ? (
+              React.cloneElement(icon, { size: iconSize, ...iconProps } as any)
+            ) : (
+              <OrbitTabIcon
+                isActive={isActive}
+                name={`${icon}`}
+                marginRight={!!label ? sidePad * 0.7 : 0}
+                thicc={thicc}
+                size={iconSize}
+                iconAdjustOpacity={iconAdjustOpacity}
+                {...iconProps}
+              />
+            )}
+          </Row>
+        </Tooltip>
 
         {after}
       </NavButtonChromeInner>
@@ -175,6 +158,7 @@ const NavButtonChrome = gloss<TabProps>(View, {
   alignItems: 'center',
   borderRadius: borderSize,
   height: tabHeight,
+  marginRight: 2,
 }).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
   const glowStyle = {

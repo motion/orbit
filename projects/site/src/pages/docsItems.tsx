@@ -68,6 +68,16 @@ const uikit = [
   { id: 'tree', title: 'Tree', icon: 'diagram-tree' },
   // { id: 'treeList', title: 'TreeList', icon: 'chevron-right' },
   { id: 'definitionList', title: 'DefinitionList', icon: 'list-columns' },
+
+  { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
+  { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },
+  { id: 'slider', title: 'Slider', icon: 'double-caret-horizontal' },
+  { id: 'tabs', title: 'Tabs', icon: 'add-row-top' },
+  { id: 'layout', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
+  { id: 'gridlayout', title: 'GridLayout', icon: 'grid-view', indent: 1 },
+  { id: 'masonrylayout', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
+  { id: 'flowlayout', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
+
   {
     group: 'Views',
     id: 'surface',
@@ -94,15 +104,6 @@ const uikit = [
   { id: 'modal', title: 'Modal', group: 'Modals', icon: 'multi-select', beta: true },
   { id: 'galleryModal', title: 'GalleryModal', icon: 'multi-select', beta: true },
   { id: 'mediaModal', title: 'MediaModal', icon: 'multi-select', beta: true },
-
-  { id: 'basics', title: 'Basics', icon: 'control', group: 'Layout' },
-  { id: 'sidebar', title: 'Sidebar', icon: 'panel-stats' },
-  { id: 'slider', title: 'Slider', icon: 'double-caret-horizontal' },
-  { id: 'tabs', title: 'Tabs', icon: 'add-row-top' },
-  { id: 'layout', title: 'Layout', icon: 'page-layout', subTitle: 'Layouts for placing content' },
-  { id: 'gridlayout', title: 'GridLayout', icon: 'grid-view', indent: 1 },
-  { id: 'masonrylayout', title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
-  { id: 'flowlayout', title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
 
   { id: 'statusbar', title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
   { id: 'toolbar', title: 'Toolbar', icon: 'bottom' },

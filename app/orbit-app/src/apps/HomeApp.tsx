@@ -6,7 +6,7 @@ function HomeMain() {
   return <Title>hi</Title>
 }
 
-export const HomeApp = createApp({
+export default createApp({
   id: 'onboard',
   icon: '',
   name: 'Onboard',

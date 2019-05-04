@@ -1,9 +1,9 @@
-import { useScreenPosition } from '@o/ui'
+import { usePosition } from '@o/ui'
 import React, { useRef } from 'react'
 
 export let Basic = () => {
   const ref = useRef(null)
-  const position = useScreenPosition({
+  const position = usePosition({
     ref,
   })
 

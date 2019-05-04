@@ -1,9 +1,7 @@
-import { Col, FullScreen, gloss, Image, Scale, Space, SurfacePassProps, Theme, toColor, View, ViewProps } from '@o/ui'
+import { Col, gloss, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
-import macbook from '../../../public/images/macbook.png'
-import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -33,10 +31,7 @@ let allTexts = {
     `A whole new take on the intranet: easy to code yet powerful,`,
     `one-click data apps, OSS & no server at all.`,
   ],
-  small: [
-    `A whole new take on the intranet: easy to code,`,
-    `one-click data apps, OSS & no server at all.`,
-  ],
+  small: [`A whole new take on the intranet: easy to code,`, `one-click data, OSS & no servers.`],
 }
 
 const subTexts = {
@@ -62,7 +57,6 @@ const HeadContent = memo(() => {
       width={useScreenVal('95%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
-      marginTop={200}
     >
       <TitleText
         forwardRef={titleFit.ref}
@@ -155,7 +149,6 @@ const HeadJoin = () => (
     width="100%"
     maxWidth={1000}
     margin={[0, 'auto']}
-    height={220}
     position="relative"
     bottom={0}
     alignItems="center"
@@ -167,6 +160,7 @@ const HeadJoin = () => (
             <Join
               inputProps={{
                 minWidth: useScreenVal('auto', 300, 300),
+                textAlign: 'left',
               }}
               borderRadius={1000}
               boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
@@ -239,75 +233,75 @@ export function HeadSection() {
           <HeadJoin />
         </Col>
       </Page.Content>
-
-      {false && (
-        <Page.Parallax zIndex={1} speed={0}>
-          <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
-            <View
-              position="absolute"
-              bottom="12%"
-              left={0}
-              right={0}
-              alignItems="center"
-              justifyContent="center"
-              height={160}
-            >
-              <View
-                height={160}
-                margin={[0, 'auto']}
-                width={200}
-                position="relative"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Image
-                  position="absolute"
-                  top={0}
-                  transform={{ scale: 0.5 }}
-                  transformOrigin="top center"
-                  src={macbook}
-                />
-                <View
-                  className="macbook-shadow"
-                  boxShadow={[[0, 20, 80, 10, '#000']]}
-                  zIndex={-1}
-                  position="absolute"
-                  top={10}
-                  left={0}
-                  right={0}
-                  bottom={10}
-                />
-                <RoundButton aria-label="See how Orbit Works" primary="#290C3C" padding={[10, 20]}>
-                  See how Orbit works
-                </RoundButton>
-              </View>
-            </View>
-          </FullScreen>
-        </Page.Parallax>
-      )}
     </Fade.FadeProvide>
   )
 }
 
-const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
-  <View
-    tagName="a"
-    flexFlow="row"
-    position="relative"
-    alignItems="center"
-    justifyContent="center"
-    border={[2, primary]}
-    borderRadius={100}
-    background="#080412"
-    backgroundSize="105% 200%"
-    transition="all ease 300ms"
-    hoverStyle={{
-      border: [2, toColor(primary).lighten(0.3)],
-    }}
-    textDecoration="none"
-    {...props}
-  />
-)
+// {false && (
+//   <Page.Parallax zIndex={1} speed={0}>
+//     <FullScreen userSelect="none" top="auto" transform={{ y: 50 }} zIndex={1000}>
+//       <View
+//         position="absolute"
+//         bottom="12%"
+//         left={0}
+//         right={0}
+//         alignItems="center"
+//         justifyContent="center"
+//         height={160}
+//       >
+//         <View
+//           height={160}
+//           margin={[0, 'auto']}
+//           width={200}
+//           position="relative"
+//           alignItems="center"
+//           justifyContent="center"
+//         >
+//           <Image
+//             position="absolute"
+//             top={0}
+//             transform={{ scale: 0.5 }}
+//             transformOrigin="top center"
+//             src={macbook}
+//           />
+//           <View
+//             className="macbook-shadow"
+//             boxShadow={[[0, 20, 80, 10, '#000']]}
+//             zIndex={-1}
+//             position="absolute"
+//             top={10}
+//             left={0}
+//             right={0}
+//             bottom={10}
+//           />
+//           <RoundButton aria-label="See how Orbit Works" primary="#290C3C" padding={[10, 20]}>
+//             See how Orbit works
+//           </RoundButton>
+//         </View>
+//       </View>
+//     </FullScreen>
+//   </Page.Parallax>
+// )}
+
+// const RoundButton = ({ primary = colors.red, ...props }: ViewProps & { primary?: any }) => (
+//   <View
+//     tagName="a"
+//     flexFlow="row"
+//     position="relative"
+//     alignItems="center"
+//     justifyContent="center"
+//     border={[2, primary]}
+//     borderRadius={100}
+//     background="#080412"
+//     backgroundSize="105% 200%"
+//     transition="all ease 300ms"
+//     hoverStyle={{
+//       border: [2, toColor(primary).lighten(0.3)],
+//     }}
+//     textDecoration="none"
+//     {...props}
+//   />
+// )
 
 // const DownloadButton = props => {
 //   const parallax = useParallax()

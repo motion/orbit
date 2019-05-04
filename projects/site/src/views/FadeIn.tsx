@@ -41,7 +41,7 @@ export const fastConfig = {
 }
 
 export const fastStatticConfig = {
-  duration: 80,
+  duration: 30,
 }
 
 const FadeContext = createContextualProps({ shown: undefined, off: false })

@@ -2,6 +2,7 @@ import { createContextualProps, ErrorBoundary, Loading, Theme, useIntersectionOb
 import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
+import { useIsTiny } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
 import { Header } from '../views/Header'
 import { Page } from '../views/Page'
@@ -46,6 +47,7 @@ export function HomePage() {
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
+          disable={useIsTiny()}
           ref={setParallax}
           pages={9}
           scrollingElement={window}

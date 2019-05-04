@@ -1,65 +1,18 @@
+import './helpers/installDevelopmentHelpers'
+
 import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
-import { ContextMenuProvider, ProvideUI } from '@o/ui'
-import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
-import { createBrowserApp } from '@react-navigation/web'
+import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Router, View } from 'react-navi'
+
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import './helpers/installDevelopmentHelpers'
-import ChromePage from './pages/ChromePage/ChromePage'
-import { OrbitPage } from './pages/OrbitPage/OrbitPage'
+import { Navigation } from './OrbitNavigation'
 
-// pages
-
-function AsyncPage({ page, fallback = <div>Loading...</div>, ...props }) {
-  const Page = React.lazy(page)
-  return (
-    <React.Suspense fallback={fallback}>
-      <Page {...props} />
-    </React.Suspense>
-  )
-}
-
-function getOrbitBrowser() {
-  // cache for HMR
-  if (window['orbitBrowser']) {
-    return window['orbitBrowser']
-  }
-
-  const Orbit = ({ descriptors, navigation }) => {
-    const activeKey = navigation.state.routes[navigation.state.index].key
-    const descriptor = descriptors[activeKey]
-    return <SceneView component={descriptor.getComponent()} navigation={descriptor.navigation} />
-  }
-
-  const navigator = createNavigator(
-    Orbit,
-    SwitchRouter({
-      // HMR wont work here if you do the import method
-      // for now just importing this directly...
-      // in development mode we could have a switch here to always import all
-      Home: OrbitPage,
-      App: props => <AsyncPage page={() => import('./pages/AppPage/AppPage')} {...props} />,
-      Chrome: ChromePage,
-      // Chrome: props => (
-      //   <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
-      // ),
-      // Cosal: props => <AsyncPage page={() => import('./pages/CosalPage/CosalPage')} {...props} />,
-    }),
-    {},
-  )
-
-  const OrbitBrowser = createBrowserApp(navigator)
-  window['orbitBrowser'] = OrbitBrowser
-  return OrbitBrowser
-}
-
-function OrbitRootInner() {
-  const OrbitBrowser = getOrbitBrowser()
-
+export const OrbitRoot = hot(() => {
   // capture un-captured links
   // if you don't then clicking a link will cause electron to go there
   // this is a good safeguard
@@ -86,10 +39,14 @@ function OrbitRootInner() {
       }}
     >
       <ProvideUI themes={themes}>
-        <OrbitBrowser />
+        <ErrorBoundary name="Root">
+          <Router navigation={Navigation}>
+            <React.Suspense fallback={null}>
+              <View hashScrollBehavior="smooth" />
+            </React.Suspense>
+          </Router>
+        </ErrorBoundary>
       </ProvideUI>
     </ContextMenuProvider>
   )
-}
-
-export const OrbitRoot = hot(OrbitRootInner)
+})

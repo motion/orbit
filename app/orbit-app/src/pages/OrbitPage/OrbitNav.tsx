@@ -51,7 +51,7 @@ export const OrbitNav = memo(
             return null
           }
           const isActive = !showCreateNew && `${paneId}` === activePaneId
-          const next = activeAppsSorted[index + 1]
+          // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
           const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
@@ -66,7 +66,7 @@ export const OrbitNav = memo(
             //   ? activeSpaceName
             //   : app.name,
             // stretch: !isPinned,
-            thicc: true, //isPinned,
+            thicc: isPinned,
             isActive,
             icon: <AppIcon app={app} />,
             iconSize: 20,
@@ -209,6 +209,7 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  maxWidth: '100%',
   pointerEvents: 'inherit',
   height: tabHeight,
   flexFlow: 'row',

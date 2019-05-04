@@ -8,6 +8,7 @@ import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { SizedSurfaceProps } from '../SizedSurface'
+import { Omit } from '../types'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
@@ -20,6 +21,11 @@ if (isBrowser) {
 
 export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
 
+type GridItemDimensions = {
+  w?: number | 'auto'
+  h?: number | 'auto'
+}
+
 type Base = { cols?: Object }
 type GridLayoutPropsObject = Base & {
   items: any[]
@@ -27,6 +33,7 @@ type GridLayoutPropsObject = Base & {
 }
 type GridLayoutPropsControlled = Base & {
   children?: React.ReactNode
+  height?: number
 }
 
 const defaultProps: Partial<GridLayoutProps> = {
@@ -41,14 +48,32 @@ const defaultProps: Partial<GridLayoutProps> = {
 
 type GridItems = { [key: string]: GridItemProps }
 
+const autoSize = (item: GridItemProps, cols: number, items: GridItems) => {
+  const total = Object.keys(items).length
+  console.log('total', total, items)
+  let defaultSize = 1
+  if (total === 1) {
+    defaultSize = cols
+  } else if (total <= cols / 2) {
+    const n = cols / total
+    defaultSize = Math.floor(n % 1 === 0 ? n : n)
+  } else {
+    defaultSize = cols >= 4 ? 2 : 1
+  }
+  const w = item.w === 'auto' ? defaultSize : item.w
+  const h = item.h === 'auto' ? defaultSize : item.h
+  return { w, h }
+}
+
 // attempts to position things nicely
 function calculateLayout(items: GridItems, cols: number) {
   const layout = []
+
   let lastX = 0
   let lastY = 0
   for (const [idx, key] of Object.keys(items).entries()) {
     const item = items[key]
-    const w = item.w || 1
+    const { w, h } = autoSize(item, cols, items)
     let x = lastX + idx === 0 ? 0 : w + lastX
     const shouldWrap = x + w > cols
     if (shouldWrap) {
@@ -58,8 +83,8 @@ function calculateLayout(items: GridItems, cols: number) {
     const next = {
       x,
       y,
-      w: w || 2,
-      h: item.h || 1,
+      w,
+      h,
       i: key,
     }
     lastY = y
@@ -124,15 +149,15 @@ class GridStore {
     },
   )
 
-  mountItem(id: string, props: GridItemProps) {
+  mountItem(props: GridItemProps) {
     this.items = {
       ...this.items,
-      [id]: props,
+      [props.id]: props,
     }
   }
 
-  unmountItem(id: string) {
-    delete this.items[id]
+  unmountItem(props: GridItemProps) {
+    delete this.items[props.id]
     this.items = { ...this.items }
   }
 }
@@ -183,7 +208,7 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
 
   let children = null
   if (!gridStore.layouts) {
-    children = <div style={{ display: 'none' }}>{items}</div>
+    children = <div style={{ display: 'none', height: props.height }}>{items}</div>
   } else {
     children = (
       <ResponsiveGridLayout
@@ -191,6 +216,7 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
         layouts={gridStore.layouts}
         breakpoints={gridStore.breakpoints}
         width={width}
+        height={props.height}
         compactType="vertical"
         measureBeforeMount={false}
         draggableHandle=".grid-draggable"
@@ -242,30 +268,34 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
   )
 }
 
-export type GridItemProps = HTMLAttributes<HTMLDivElement> & {
-  w?: number
-  h?: number
-}
+export type GridItemProps = Omit<HTMLAttributes<HTMLDivElement>, 'id'> &
+  GridItemDimensions & {
+    id: string
+  }
 
 // warning: performance is sensitive here
 
-export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemProps) {
+export function GridItem(props: GridItemProps) {
   const store = useGridStore()
   useEffect(() => {
-    const props = { h, w }
-    store.mountItem(id, props)
+    store.mountItem(props)
     return () => {
-      store.unmountItem(id)
+      store.unmountItem(props)
     }
-  }, [h, w])
+  }, [props.h, props.w, props.id])
 
   const onMouseDown = useCallback(e => isRightClick(e) && e.stopProgation(), [])
 
   return (
-    <GridItemChrome onMouseDown={onMouseDown} {...viewProps}>
-      {forwardSurfaceProps(children, { flex: 1 })}
+    <GridItemChrome onMouseDown={onMouseDown} {...props}>
+      {forwardSurfaceProps(props.children, { flex: 1 })}
     </GridItemChrome>
   )
+}
+
+GridItem.defaultProps = {
+  w: 'auto',
+  h: 'auto',
 }
 
 const GridItemChrome = gloss({

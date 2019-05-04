@@ -1,6 +1,8 @@
 import { isEqual } from '@o/fast-compare'
 import { useReaction } from '@o/use-store'
 import { useRef } from 'react'
+
+import { QueryStore } from '../stores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
 import { useStoresSimple } from './useStores'
 
@@ -13,26 +15,33 @@ export type SearchState = {
   activeDateFilters: QueryFilterStore['activeDateFilters']
 }
 
+const getSearchState = ({ queryFilters }: QueryStore): SearchState => {
+  return {
+    filters: queryFilters,
+    query: queryFilters.activeQuery,
+    dateState: queryFilters.dateState,
+    toggleFilterActive: queryFilters.toggleFilterActive,
+    activeFilters: queryFilters.activeFilters,
+    activeDateFilters: queryFilters.activeDateFilters,
+  }
+}
+
 export function useSearchState(cb?: (state: SearchState) => any) {
   const { appStore, queryStore } = useStoresSimple()
-  const { queryFilters } = queryStore
   const last = useRef(null)
-  return useReaction(() => {
-    const next = {
-      filters: queryFilters,
-      query: queryFilters.activeQuery,
-      dateState: queryFilters.dateState,
-      toggleFilterActive: queryFilters.toggleFilterActive,
-      activeFilters: queryFilters.activeFilters,
-      activeDateFilters: queryFilters.activeDateFilters,
-    }
-    if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
-      last.current = next
-      if (cb) {
-        cb(next)
-      } else {
-        return next
+
+  // TODO Michel mrwest debug this https://github.com/mobxjs/mobx/issues/1911
+  return (
+    useReaction(() => {
+      const next = getSearchState(queryStore)
+      if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
+        last.current = next
+        if (cb) {
+          cb(next)
+        } else {
+          return next
+        }
       }
-    }
-  })
+    }) || getSearchState(queryStore)
+  )
 }

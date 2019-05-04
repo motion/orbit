@@ -1,4 +1,5 @@
 import * as Mobx from 'mobx'
+
 import { automagicConfig } from './automagical'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, log, logGroup } from './helpers'
@@ -37,12 +38,15 @@ export function createReaction(
     }
   }
 
-  const { delayValue, deferFirstRun, ...options } = getReactionOptions(userOptions)
+  const { delayValue, deferFirstRun, delay, ...options } = getReactionOptions(userOptions)
   let mobxOptions = options as Mobx.IReactionOptions
   // we run immediately by default
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
   mobxOptions.name = config.name
+  if (typeof delay === 'number') {
+    mobxOptions.delay = delay
+  }
 
   let id = deferFirstRun ? 1 : 0
   let preventLog = options.log === false
@@ -219,6 +223,30 @@ export function createReaction(
     useEffect,
   }
 
+  const updateAsyncValue = (start: number, reactValArg: any, isValid: boolean, val: any) => {
+    let changed: any
+    if (isValid) {
+      // more verbose logging in dev
+      changed = update(val)
+    } else {
+      throw SHARED_REJECTION_ERROR
+    }
+    if (process.env.NODE_ENV === 'development') {
+      // async updates log with an indicator of their delay time and if they cancelled
+      if (log && !preventLog) {
+        const timedLog = `..${Date.now() - start}ms`
+        const delayValLog = delayValue ? ` [delayValue]` : ''
+        logGroup({
+          name: config.nameFull,
+          result: val,
+          changed,
+          timings: `   [${timedLog}]${delayValLog} ${isValid ? '✅' : '🚫'}`,
+          reactionArgs: isReaction ? reactValArg : null,
+        })
+      }
+    }
+  }
+
   function setupReactionFn(reactionFn: Function) {
     return function magicReaction(reactValArg: any) {
       reset()
@@ -229,31 +257,8 @@ export function createReaction(
       let result: any
 
       // async update helpers
-      const updateAsyncValue = (val: any) => {
-        const isValid = curID === reactionID
-        let changed: any
-        if (isValid) {
-          // more verbose logging in dev
-          changed = update(val)
-        } else {
-          throw SHARED_REJECTION_ERROR
-        }
-        if (process.env.NODE_ENV === 'development') {
-          // async updates log with an indicator of their delay time and if they cancelled
-          if (log && !preventLog) {
-            const timedLog = `..${Date.now() - start}ms`
-            const delayValLog = delayValue ? ` [delayValue]` : ''
-            logGroup({
-              name: config.nameFull,
-              result: val,
-              changed,
-              timings: `   [${timedLog}]${delayValLog} ${isValid ? '✅' : '🚫'}`,
-              reactionArgs: isReaction ? reactValArg : null,
-            })
-          }
-        }
-      }
-      reactionHelpers.setValue = updateAsyncValue
+      const updateAsync = val => updateAsyncValue(start, reactValArg, curID === reactionID, val)
+      reactionHelpers.setValue = updateAsync
 
       // to allow cancels
       try {
@@ -285,7 +290,7 @@ export function createReaction(
               return
             }
             if (typeof val !== 'undefined') {
-              updateAsyncValue(val)
+              updateAsync(val)
             }
           })
           .catch(err => {

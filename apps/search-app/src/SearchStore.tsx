@@ -19,11 +19,6 @@ import React from 'react'
 
 // import { useActions } from '../../actions/Actions'
 
-const itemProps = {
-  iconBefore: true,
-  iconSize: 42,
-}
-
 type SearchResults = {
   results: ListItemProps[]
   finished?: boolean
@@ -76,7 +71,6 @@ export class SearchStore {
     return {
       title: this.stores.spaceStore.activeSpace.name,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-      ...itemProps,
       identifier: 'apps',
     }
   }
@@ -85,7 +79,6 @@ export class SearchStore {
     return {
       key: `${app.id}`,
       title: app.name,
-      ...itemProps,
       icon: <AppIcon app={app} />,
       group: 'Apps',
       extraData: {
@@ -147,7 +140,6 @@ export class SearchStore {
       //   title: `${this.stores.spaceStore.activeSpace.name} Home`,
       //   subTitle: `10 apps`,
       //   icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-      //   ...itemProps,
       //   subType: 'home',
       // },
       ...this.getApps(query, all),
@@ -245,10 +237,7 @@ export class SearchStore {
           return false
         }
         // todo fix type
-        results = [
-          ...results,
-          ...nextResults.map(item => ({ item, group: 'Search Results', ...itemProps })),
-        ]
+        results = [...results, ...nextResults.map(item => ({ item, group: 'Search Results' }))]
         setValue({
           results,
           query,
@@ -285,6 +274,7 @@ export class SearchStore {
       }
     },
     {
+      log: false,
       defaultValue: { results: [], query: '', finished: false },
     },
   )

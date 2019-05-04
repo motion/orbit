@@ -170,6 +170,10 @@ export function gloss<Props = any>(
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
+        // TODO: need to figure out this use case: when a valid prop attr, but invalid val
+        if (key === 'size' && props[key] === true) {
+          continue
+        }
         if (isDOMElement) {
           if (validProp(key)) {
             finalProps[key] = props[key]
@@ -301,7 +305,7 @@ function addDynamicStyles(
   tagName?: string,
 ) {
   const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
-  const dynStyles = { [id]: {} }
+  const dynStyles = {}
 
   // if passed any classes from another styled component
   // ignore that class and merge in their resolved styles
@@ -318,16 +322,17 @@ function addDynamicStyles(
   if (hasConditionalStyles) {
     for (const key in conditionalStyles) {
       if (props[key] !== true) continue
-      for (const styleKey in conditionalStyles[key]) {
-        const dynKey = styleKey === 'base' ? id : styleKey
-        dynStyles[dynKey] = dynStyles[dynKey] || {}
-        Object.assign(dynStyles[dynKey], conditionalStyles[key][styleKey])
+      for (const subKey in conditionalStyles[key]) {
+        const ns = subKey === 'base' ? id : subKey
+        dynStyles[ns] = dynStyles[ns] || {}
+        mergeStyles(ns, dynStyles, conditionalStyles[key][subKey])
       }
     }
   }
 
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+    dynStyles[id] = dynStyles[id] || {}
     mergeStyles(id, dynStyles, themeFn(props, next))
   }
 

@@ -151,7 +151,7 @@ const SubCard = gloss(View, {
 
 function parseSource(source: string, id: string) {
   const blocks = source.split(/\nexport /g)
-  const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(id) > -1)
+  const keyBlock = blocks.find(x => x.split('\n')[0].indexOf(`let ${id}`) > -1)
   const allLines = keyBlock.split('\n')
   const lines =
     allLines[0].indexOf(') => {') > -1

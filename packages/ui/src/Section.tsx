@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import React, { forwardRef, isValidElement } from 'react'
+import React, { forwardRef } from 'react'
 
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'

@@ -21,7 +21,7 @@ export default function ShoulderSection() {
       <Page.Content ref={Fade.ref}>
         <SpacedPageContent
           transform={{
-            y: '-10%',
+            y: useScreenVal(0, '-10%', '-10%'),
           }}
           header={
             <>

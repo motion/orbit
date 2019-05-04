@@ -115,8 +115,6 @@ export const OrbitAppRenderOfDefinition = ({
   const globalShareStore = useShareStore()
   const activeItemStore = useStore(AppSelectionStore)
 
-  console.log('activeItemStore', activeItemStore.selected)
-
   return (
     <ProvideShare
       onChange={(location, items) => {

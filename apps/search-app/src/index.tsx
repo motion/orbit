@@ -32,6 +32,7 @@ function SearchApp(props: AppProps) {
       <Col flex={1} pad={['xxl', 'xxxl']}>
         <Scale size={1.2}>
           <List
+            alwaysSelected
             shareable
             selectable
             itemProps={{

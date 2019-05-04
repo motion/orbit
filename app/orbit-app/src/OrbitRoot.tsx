@@ -40,7 +40,10 @@ export const OrbitRoot = hot(() => {
     >
       <ProvideUI themes={themes}>
         <ErrorBoundary name="Root">
-          <Router navigation={Navigation}>
+          <Router
+            key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
+            navigation={Navigation}
+          >
             <React.Suspense fallback={null}>
               <View hashScrollBehavior="smooth" />
             </React.Suspense>

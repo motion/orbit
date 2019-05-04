@@ -1,7 +1,8 @@
+import './installGlobals'
+
 import { debugUseStore, IS_STORE } from '@o/use-store'
 import { spy } from 'mobx'
 import { setConfig } from 'react-hot-loader'
-import './installGlobals'
 
 window['enableLog'] = false
 
@@ -68,6 +69,9 @@ function logMobxEvent(event) {
         break
       }
       if (event.name.indexOf('track(') === 0) {
+        break
+      }
+      if (event.name.indexOf('magicReaction') === 0) {
         break
       }
       console.log(`%c ${event.name}`, 'color:blue;')

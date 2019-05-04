@@ -13,7 +13,7 @@ import {
   useHook,
   useStoresSimple,
 } from '@o/kit'
-import { fuzzyFilter, ListItemProps } from '@o/ui'
+import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
 
@@ -75,11 +75,16 @@ export class SearchStore {
     }
   }
 
-  appToResult = (app: AppBit): ListItemProps => {
+  appToResult = (app: AppBit, index: number): ListItemProps => {
     return {
       key: `${app.id}`,
       title: app.name,
       icon: <AppIcon app={app} />,
+      after: (
+        <SimpleText alpha={0.5} size={1.5}>
+          ⌘ + {index + 2}
+        </SimpleText>
+      ),
       group: 'Apps',
       extraData: {
         icon: `orbit-${app.identifier}-full`,
@@ -116,15 +121,18 @@ export class SearchStore {
     return appStore && appStore.app && appStore.app.tabDisplay === 'permanent'
   }
 
-  getApps(query: string, all = false): ListItemProps[] {
-    const apps = [
+  get allApps() {
+    return [
       ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
       ...this.staticApps(),
-    ]
-    if (query) {
-      return apps.map(x => this.appToResult(x))
+    ].map(this.appToResult)
+  }
+
+  getApps(query: string, all = false): ListItemProps[] {
+    if (query || all) {
+      return this.allApps
     }
-    return [...apps.slice(0, all ? Infinity : 8)].map(x => this.appToResult(x))
+    return this.allApps.slice(0, 8)
   }
 
   getQuickResults(query: string, all = false) {

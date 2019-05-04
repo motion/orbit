@@ -1,4 +1,5 @@
 import Observable from 'zen-observable'
+
 import { ReactionRejectionError } from './constants'
 import { createReaction } from './createReaction'
 import { MagicalObject, ReactionHelpers, ReactionOptions } from './types'
@@ -33,7 +34,10 @@ export function react<A extends ReactVal, B>(
 
 // single reaction "autorun" style
 // react(() => 1, { ...opts })
-export function react<A extends ReactVal>(a: () => A, b?: ReactionOptions): UnwrapObservable<A>
+export function react<A extends ReactVal>(
+  a: (helpers: ReactionHelpers) => A,
+  b?: ReactionOptions,
+): UnwrapObservable<A>
 
 export function react(a: any, b?: any, c?: any) {
   const startReaction = (obj: any, method: string) => {

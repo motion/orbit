@@ -17,7 +17,8 @@ export const Tag = ({ size = 0.9, ...props }: SizedSurfaceProps) => {
       flexDirection="row"
       borderWidth={0}
       justifyContent="center"
-      display="inline-block"
+      alignItems="center"
+      display="inline-flex"
       hoverStyle={!!props.onClick}
       activeStyle={!!props.onClick}
       {...props}

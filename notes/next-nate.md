@@ -1,5 +1,41 @@
 ---
 
+orbit-cli
+
+no package.json, your orbit workspace has one, it handles it in the background for you. no tsconfig, no other config.
+
+no node_modules either, because we can hint the editor to find it.
+
+that means you can do one-file apps.
+
+just touch myapp.tsx
+
+```
+export default app({
+  id: 'myapp',
+  app: () => {
+    return (
+        <div />
+    )
+  }
+})
+```
+
+```
+view Main {
+  x = 0
+  y = 1
+  inc = () => x++
+  z = x + y
+  abc = x >> x + 1
+
+  <div onClick={inc} />
+}
+```
+
+
+---
+
 May
 
 "Demos + Finish docs/website"

@@ -64,30 +64,6 @@ export class SelectableStore {
   listRef: DynamicListControlled = null
   private keyToIndex = {}
 
-  private setActive(next: string[]) {
-    // update keyToIndex
-    for (const rowKey of next) {
-      this.keyToIndex[rowKey] =
-        this.keyToIndex[rowKey] || this.rows.findIndex(r => key(r) === rowKey)
-    }
-
-    // check for disabled rows
-    const nextFiltered = next.filter(k => {
-      const row = this.rows[this.keyToIndex[k]]
-      if (row && row.selectable === false) {
-        return false
-      }
-      return true
-    })
-
-    // if we filtered out everything, avoid doing anything
-    if (next.length > 0 && nextFiltered.length === 0) {
-      return
-    }
-
-    this.active = new Set(nextFiltered)
-  }
-
   callbackRefProp = react(
     () => this.props.selectableStoreRef,
     ref => {
@@ -96,16 +72,25 @@ export class SelectableStore {
     },
   )
 
+  ensureAlwaysSelected = react(
+    () => [this.active.size, this.rows.length, this.props.alwaysSelected],
+    ([activeLen, rowsLen]) => {
+      if (this.props.alwaysSelected && rowsLen && activeLen === 0) {
+        this.selectFirstValid()
+      }
+    },
+  )
+
   onSelection = react(
     () => [...this.active],
     activeRows => {
-      if (this.props.alwaysSelected && activeRows.length === 0) {
-        this.selectFirstValid()
-      }
       ensure('onSelect', !!this.props.onSelect)
       ensure('has rows', !!this.rows.length)
+      ensure('wont unselect', !this.props.alwaysSelected || activeRows.length > 0)
       this.callbackOnSelect()
-      this.scrollToIndex(this.keyToIndex[[...this.active][0]])
+      if (activeRows.length) {
+        this.scrollToIndex(this.keyToIndex[[...this.active][0]])
+      }
     },
     {
       deferFirstRun: true,
@@ -124,13 +109,54 @@ export class SelectableStore {
 
   callbackOnSelect = () => {
     const { rows, indices } = this.selectedState
-    console.log('callback on select', rows)
     this.props.onSelect(rows, indices)
+  }
+
+  private removeUnselectable = (keys: string[]) => {
+    return keys.filter(k => {
+      const row = this.rows[this.keyToIndex[k]]
+      if (row && row.selectable === false) {
+        return false
+      }
+      return true
+    })
+  }
+
+  private setActive(next: string[]) {
+    // dont let it unselect
+    if (this.props.alwaysSelected && next.length === 0) {
+      return
+    }
+
+    // update keyToIndex
+    for (const rowKey of next) {
+      if (!this.keyToIndex[rowKey]) {
+        const idx = this.rows.findIndex(r => key(r) === rowKey)
+        if (idx >= 0) {
+          console.log('setting it to', rowKey, idx)
+          this.keyToIndex[rowKey] = idx
+        }
+      }
+    }
+
+    // check for disabled rows
+    const nextFiltered = this.removeUnselectable(next)
+
+    // if we filtered out everything, avoid doing anything
+    if (next.length > 0 && nextFiltered.length === 0) {
+      return
+    }
+
+    this.active = new Set(nextFiltered)
   }
 
   selectFirstValid() {
     const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
-    this.setActive([this.getIndexKey(firstValidIndex)])
+    if (firstValidIndex === -1) {
+      console.warn('no selecatble row!', this.rows)
+      return
+    }
+    this.setActiveIndex(firstValidIndex)
   }
 
   get selectedState() {
@@ -171,10 +197,12 @@ export class SelectableStore {
       active.clear()
     }
 
-    active.add(this.getIndexKey(next))
+    if (isDefined(found)) {
+      active.add(this.getIndexKey(next))
+    }
     this.setActive([...active])
 
-    return next
+    return found
   }
 
   moveToId = (rowKey: string) => {
@@ -296,7 +324,8 @@ export class SelectableStore {
 
   private scrollToIndex(index: number) {
     if (!this.listRef) return
-    if (index === -1) return
+    if (index < 0) return
+    if (!isDefined(index)) return
     this.listRef.scrollToItem(index)
   }
 

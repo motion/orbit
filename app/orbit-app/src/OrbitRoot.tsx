@@ -4,7 +4,7 @@ import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
 import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
 
@@ -16,7 +16,7 @@ export const OrbitRoot = hot(() => {
   // capture un-captured links
   // if you don't then clicking a link will cause electron to go there
   // this is a good safeguard
-  React.useEffect(() => {
+  useEffect(() => {
     const onClickLink = event => {
       if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
         event.preventDefault()
@@ -29,8 +29,6 @@ export const OrbitRoot = hot(() => {
       document.removeEventListener('click', onClickLink)
     }
   })
-
-  console.log('Navigation', Navigation)
 
   return (
     <ContextMenuProvider

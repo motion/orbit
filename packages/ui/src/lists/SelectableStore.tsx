@@ -89,7 +89,8 @@ export class SelectableStore {
       ensure('wont unselect', !this.props.alwaysSelected || activeRows.length > 0)
       this.callbackOnSelect()
       if (activeRows.length) {
-        this.scrollToIndex(this.keyToIndex[[...this.active][0]])
+        const index = this.keyToIndex[[...this.active][0]]
+        this.scrollToIndex(index)
       }
     },
     {
@@ -326,6 +327,7 @@ export class SelectableStore {
     if (!this.listRef) return
     if (index < 0) return
     if (!isDefined(index)) return
+    console.log('scroll to', index)
     this.listRef.scrollToItem(index)
   }
 

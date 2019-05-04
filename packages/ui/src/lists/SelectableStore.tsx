@@ -96,12 +96,16 @@ export class SelectableStore {
     },
   )
 
-  callbackOnSelectProp = react(
-    () => JSON.stringify([...this.active]),
-    () => {
+  onSelection = react(
+    () => [...this.active],
+    activeRows => {
+      if (this.props.alwaysSelected && activeRows.length === 0) {
+        this.selectFirstValid()
+      }
       ensure('onSelect', !!this.props.onSelect)
       ensure('has rows', !!this.rows.length)
       this.callbackOnSelect()
+      this.scrollToIndex(this.keyToIndex[[...this.active][0]])
     },
     {
       deferFirstRun: true,
@@ -120,7 +124,13 @@ export class SelectableStore {
 
   callbackOnSelect = () => {
     const { rows, indices } = this.selectedState
+    console.log('callback on select', rows)
     this.props.onSelect(rows, indices)
+  }
+
+  selectFirstValid() {
+    const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
+    this.setActive([this.getIndexKey(firstValidIndex)])
   }
 
   get selectedState() {
@@ -133,17 +143,6 @@ export class SelectableStore {
     }
     return { rows, indices }
   }
-
-  enforceAlwaysSelected = react(
-    () => [this.props.alwaysSelected, this.active.size === 0, this.rows.length > 0],
-    ([alwaysSelected, noSelection, hasRows]) => {
-      ensure('alwaysSelected', alwaysSelected)
-      ensure('noSelection', noSelection)
-      ensure('hasRows', hasRows)
-      const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
-      this.setActive([this.getIndexKey(firstValidIndex)])
-    },
-  )
 
   move = (direction: Direction, modifiers: Modifiers = { shift: false }) => {
     const { rows, active } = this
@@ -274,8 +273,7 @@ export class SelectableStore {
     }
     const direction = e.keyCode === 38 ? Direction.up : e.keyCode === 40 ? Direction.down : null
     if (direction) {
-      const newIndex = this.move(direction, { shift: e.shiftKey })
-      this.scrollToIndex(newIndex)
+      this.move(direction, { shift: e.shiftKey })
     }
   }
 

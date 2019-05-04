@@ -1,7 +1,7 @@
 import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
 import { Button, Input, Message, Section, SegmentedRow, Space as UISpace } from '@o/ui'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
 import React, { useEffect, useState } from 'react'
 
 export default function SettingsAppAccount() {

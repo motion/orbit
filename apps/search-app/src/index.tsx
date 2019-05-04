@@ -29,7 +29,7 @@ function SearchApp(props: AppProps) {
 
   return (
     <App actions={<SearchActions />}>
-      <Col flex={1} pad="xxl">
+      <Col flex={1} pad={['xxl', 'xxxl']}>
         <Scale size={1.2}>
           <List
             shareable

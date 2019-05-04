@@ -94,6 +94,7 @@ export const List = memo((allProps: ListProps) => {
 
   const onSelectInner = useCallback(
     (selectedRows, selectedIndices) => {
+      console.log('on select', selectedRows)
       if (shareable) {
         shareStore.setSelected(shareable, selectedRows)
       }

@@ -19682,10 +19682,9 @@ webpack-dev-server@*:
     webpack-log "^2.0.0"
     yargs "12.0.2"
 
-webpack-dev-server@3.3.1:
+"webpack-dev-server@github:webpack/webpack-dev-server#b098bcbe8a229e2f13151171b00bb0dc085dbd67":
   version "3.3.1"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-3.3.1.tgz#7046e49ded5c1255a82c5d942bcdda552b72a62d"
-  integrity sha512-jY09LikOyGZrxVTXK0mgIq9y2IhCoJ05848dKZqX1gAGLU1YDqgpOT71+W53JH/wI4v6ky4hm+KvSyW14JEs5A==
+  resolved "https://codeload.github.com/webpack/webpack-dev-server/tar.gz/b098bcbe8a229e2f13151171b00bb0dc085dbd67"
   dependencies:
     ansi-html "0.0.7"
     bonjour "^3.5.0"

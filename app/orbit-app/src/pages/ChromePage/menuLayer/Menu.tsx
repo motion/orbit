@@ -3,8 +3,9 @@ import { App, Desktop, Electron } from '@o/stores'
 import { MergeContext, View } from '@o/ui'
 import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
-import * as React from 'react'
 import { createRef } from 'react'
+import * as React from 'react'
+
 import { AppActions } from '../../../actions/appActions/AppActions'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
@@ -533,7 +534,6 @@ export function Menu() {
 // TODO theres a context for this right?
 // const itemProps = {
 //   oneLine: false,
-//   onSelectItem: false,
 //   hideSubtitle: true,
 // }
 

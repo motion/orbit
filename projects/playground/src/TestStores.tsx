@@ -1,4 +1,4 @@
-import { Button, SegmentedRow, useScreenPosition } from '@o/ui'
+import { Button, SegmentedRow, usePosition } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
@@ -34,7 +34,7 @@ export function TestStores() {
   const store = useStore(TestStore, { x: 1 })
   const ref = useRef<HTMLDivElement>()
 
-  useScreenPosition({
+  usePosition({
     ref,
     onChange: pos => {
       console.log('pos', pos, 'ref', ref)

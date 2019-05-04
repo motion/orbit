@@ -17,14 +17,14 @@ export function getRect(o: any) {
   return { width: o.width, height: o.height, left: o.left, top: o.top }
 }
 
-type UseScreenPositionProps = {
+type UsePositionProps = {
   ref: RefObject<HTMLElement>
   onChange?: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
   preventMeasure?: boolean
   debounce?: number
 }
 
-export function usePosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
+export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   const [pos, setPos] = useState(null)
   const { ref, preventMeasure, debounce = 100 } = props
   const onChange = useGet(props.onChange || setPos)

@@ -30,7 +30,7 @@ function SearchApp(props: AppProps) {
   return (
     <App actions={<SearchActions />}>
       <Col flex={1} pad="xxl">
-        <List shareable selectable items={searchStore.results} />
+        <List shareable={props.identifier} selectable items={searchStore.results} />
       </Col>
       <FloatingCard
         defaultWidth={width}

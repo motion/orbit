@@ -1,11 +1,10 @@
 import { Bit } from '@o/models'
-import { isDefined, mergeDefined } from '@o/utils'
-import React, { createContext, memo, useCallback, useContext, useEffect, useMemo } from 'react'
+import { isDefined } from '@o/utils'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
-import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
@@ -41,13 +40,10 @@ export type ListProps = SectionSpecificProps &
     placeholder?: React.ReactNode
 
     /** On selection, automatically update Share with selection */
-    shareable?: boolean
+    shareable?: boolean | string
 
     // flex?: CSSPropertySet['flex']
   }
-
-// TODO use creaetPropsContext
-export const ListPropsContext = createContext(null as Partial<ListProps>)
 
 export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
   if (!props) {
@@ -59,14 +55,9 @@ export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any
   return props
 }
 
-// extra props if we need to hook into select events
-type ListExtraProps = {
-  onSelectItem?: HandleOrbitSelect
-  onOpenItem?: HandleOrbitSelect
-}
-const listContextProps = createContextualProps<ListExtraProps>()
-export const PassExtraListProps = listContextProps.PassProps
-const useListExtraProps = listContextProps.useProps
+const Context = createContextualProps<ListProps>()
+export const ListPassProps = Context.PassProps
+export const useListProps = Context.useProps
 
 export type HandleOrbitSelect = (index: number, extraData: any) => any
 
@@ -74,6 +65,7 @@ const nullFn = () => null
 
 export const List = memo((allProps: ListProps) => {
   const [collapseProps, allListProps] = splitCollapseProps(allProps)
+  const props = useListProps(allListProps)
   const {
     flex = 1,
     titleBorder = true,
@@ -87,46 +79,31 @@ export const List = memo((allProps: ListProps) => {
     elevation,
     titleScale = 0.85,
     ...listProps
-  } = allListProps
-  // const { getShareMenuItemProps } = useShareMenu()
-  const extraProps = useContext(ListPropsContext)
-  const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
+  } = props
   const getProps = useGet(props)
-  const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
+  const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = listProps
+  items // ignore var
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
-  const { onOpenItem, onSelectItem } = useListExtraProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const visibility = useVisibility()
   const getVisibility = useGet(visibility)
-  const filtered = useFilter({
-    search: props.search,
-    searchable: props.searchable,
-    items: items || [],
-    sortBy: props.sortBy,
-    filterKey: props.filterKey,
-    removePrefix: props.removePrefix,
-    groupByLetter: props.groupByLetter,
-    groupMinimum: props.groupMinimum,
-  })
+  const filtered = useFilter(props)
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
 
   const onSelectInner = useCallback(
     (selectedRows, selectedIndices) => {
+      console.log('shareable', shareable)
       if (shareable) {
-        shareStore.setSelected(selectedRows)
-      }
-      if (onSelectItem) {
-        const appProps = Config.propsToItem(toListItemProps(selectedRows[0]))
-        onSelectItem(selectedIndices[0], appProps)
+        shareStore.setSelected(shareable, selectedRows)
       }
       const onSelect = getProps().onSelect
       if (onSelect) {
-        onSelect(selectedRows)
+        onSelect(selectedRows, selectedIndices)
       }
     },
-    [shareable, onSelectItem],
+    [shareable],
   )
 
   // wrap select with extra functionality
@@ -176,15 +153,12 @@ export const List = memo((allProps: ListProps) => {
 
   const onOpenInner = useCallback(
     index => {
-      const appProps = Config.propsToItem(toListItemProps(getItems()[index]))
+      const appProps = toListItemProps(getItems()[index])
       if (onOpen) {
         onOpen(index, appProps)
       }
-      if (onOpenItem) {
-        onOpenItem(index, appProps)
-      }
     },
-    [onOpen, onOpenItem],
+    [onOpen],
   )
 
   const noQuery = typeof search === 'undefined' || search.length === 0

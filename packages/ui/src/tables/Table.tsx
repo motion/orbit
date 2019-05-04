@@ -69,7 +69,7 @@ export function Table(tableProps: TableProps) {
   const onSelect = useCallback(
     (selectedRows, indices) => {
       if (shareable) {
-        shareStore.selected = selectedRows
+        shareStore.setSelected(shareable, selectedRows)
       }
       if (props.onSelect) {
         props.onSelect(selectedRows.map(row => row.values), indices)

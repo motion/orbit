@@ -1,7 +1,7 @@
 import { Col } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
-import { BorderTop, ListPropsContext, MergeContext, PassExtraListProps, Sidebar } from '@o/ui'
-import React, { memo, useCallback, useContext, useEffect } from 'react'
+import { BorderTop, ListPassProps, Sidebar } from '@o/ui'
+import React, { memo, useContext, useEffect } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
@@ -9,13 +9,7 @@ import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitSidebar = memo((props: AppMainViewProps) => {
   const { identifier, id } = useContext(AppLoadContext)
-  const { orbitStore, appStore } = useStores()
-  const onSelectItem = useCallback(
-    (index, appProps) => {
-      orbitStore.setSelectItem(id, index, appProps)
-    },
-    [orbitStore],
-  )
+  const { appStore } = useStores()
 
   useEffect(() => {
     return () => {
@@ -40,17 +34,15 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
         <Col flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
-          <MergeContext
-            Context={ListPropsContext}
-            value={{
-              selectable: true,
-              searchable: true,
-              alwaysSelected: true,
-              itemProps: { iconBefore: true, iconSize: 26 },
-            }}
+          <ListPassProps
+            shareable={identifier}
+            selectable
+            searchable
+            alwaysSelected
+            itemProps={{ iconBefore: true, iconSize: 26 }}
           >
-            <PassExtraListProps onSelectItem={onSelectItem}>{props.children}</PassExtraListProps>
-          </MergeContext>
+            {props.children}
+          </ListPassProps>
         </Col>
         {props.hasStatusbar && statusbarPadElement}
       </Sidebar>

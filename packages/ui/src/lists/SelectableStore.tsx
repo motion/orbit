@@ -124,6 +124,8 @@ export class SelectableStore {
   }
 
   private setActive(next: string[]) {
+    console.log('setting active', next)
+
     // dont let it unselect
     if (this.props.alwaysSelected && next.length === 0) {
       return

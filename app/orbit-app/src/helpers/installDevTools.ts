@@ -2,9 +2,16 @@ import './installGlobals'
 
 import { debugUseStore, IS_STORE } from '@o/use-store'
 import { spy } from 'mobx'
+import React from 'react'
 import { setConfig } from 'react-hot-loader'
 
 window['enableLog'] = false
+
+// why-did-you-render with ?debug
+if (process.env.NODE_ENV !== 'production' && window.location.search.indexOf('debug') > 0) {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render').default
+  whyDidYouRender(React)
+}
 
 let spyOff = null
 function debug(level?: number) {

@@ -20,7 +20,6 @@ export function FloatingChrome(
       style={{
         position: 'absolute',
         zIndex,
-        background: 'red',
         ...pos,
         ...style,
       }}

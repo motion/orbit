@@ -13,9 +13,10 @@ export const getReactionName = (obj: MagicalObject) => {
 
 const defaultOpts: ReactionOptions = {
   equals: isEqual,
+  log: false,
 }
 
-export function getReactionOptions(userOptions?: ReactionOptions) {
+export function getReactionOptions(userOptions?: ReactionOptions | null) {
   if (userOptions instanceof Object) {
     return { ...defaultOpts, ...userOptions }
   }

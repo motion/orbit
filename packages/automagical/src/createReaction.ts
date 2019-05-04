@@ -24,7 +24,7 @@ type ReactionConfig = {
 export function createReaction(
   reaction: any,
   derive: Function | null,
-  userOptions: ReactionOptions,
+  userOptions: ReactionOptions | null,
   config: ReactionConfig,
 ) {
   const isReaction = !!derive
@@ -49,7 +49,7 @@ export function createReaction(
   }
 
   let id = deferFirstRun ? 1 : 0
-  let preventLog = options.log === false
+  const shouldLog = () => options.log !== false || +(localStorage.getItem('enableLog') || 0) > 0
   let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null
@@ -233,7 +233,7 @@ export function createReaction(
     }
     if (process.env.NODE_ENV === 'development') {
       // async updates log with an indicator of their delay time and if they cancelled
-      if (log && !preventLog) {
+      if (shouldLog()) {
         const timedLog = `..${Date.now() - start}ms`
         const delayValLog = delayValue ? ` [delayValue]` : ''
         logGroup({
@@ -249,6 +249,7 @@ export function createReaction(
 
   function setupReactionFn(reactionFn: Function) {
     return function magicReaction(reactValArg: any) {
+      console.log('running reaction2')
       reset()
       const start = Date.now()
       id = id + 1
@@ -283,8 +284,10 @@ export function createReaction(
         result
           .then(val => {
             if (curID !== reactionID) {
-              if (!IS_PROD && !preventLog) {
-                log.verbose(`${config.name} 🚫`)
+              if (process.env.NODE_ENV !== 'production') {
+                if (shouldLog()) {
+                  log.verbose(`${config.name} 🚫`)
+                }
               }
               // cancelled before finishing
               return
@@ -309,14 +312,16 @@ export function createReaction(
 
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
-        if (!IS_PROD && !preventLog) {
-          if (changed) {
-            logGroup({
-              name: config.nameFull,
-              result,
-              changed,
-              reactionArgs: reactValArg,
-            })
+        if (process.env.NODE_ENV !== 'production') {
+          if (shouldLog()) {
+            if (changed) {
+              logGroup({
+                name: config.nameFull,
+                result,
+                changed,
+                reactionArgs: reactValArg,
+              })
+            }
           }
         }
       }

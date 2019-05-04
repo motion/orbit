@@ -46,7 +46,7 @@ function SearchApp(props: AppProps) {
             selectable
             itemProps={{
               iconBefore: true,
-              iconSize: 45,
+              iconSize: 42,
             }}
             items={searchStore.results}
           />

@@ -30,6 +30,8 @@ export const OrbitRoot = hot(() => {
     }
   })
 
+  console.log('Navigation', Navigation)
+
   return (
     <ContextMenuProvider
       onContextMenu={items => {
@@ -40,10 +42,7 @@ export const OrbitRoot = hot(() => {
     >
       <ProvideUI themes={themes}>
         <ErrorBoundary name="Root">
-          <Router
-            key={process.env.NODE_ENV === 'development' ? Math.random() : 0}
-            navigation={Navigation}
-          >
+          <Router navigation={Navigation}>
             <React.Suspense fallback={null}>
               <View hashScrollBehavior="smooth" />
             </React.Suspense>

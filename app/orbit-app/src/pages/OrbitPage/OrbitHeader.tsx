@@ -13,8 +13,7 @@ import {
   SurfacePassProps,
   View,
 } from '@o/ui'
-import React, { forwardRef, memo, useCallback, useState } from 'react'
-import { useSpring, config } from 'react-spring'
+import React, { forwardRef, memo, useCallback } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -26,7 +25,7 @@ import { OrbitNav } from './OrbitNav'
 // import { clipboard } from 'electron'
 export const headerButtonProps = {
   chromeless: true,
-  margin: [-1, 1],
+  margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1 },
   iconSize: 14,
@@ -105,7 +104,7 @@ export const OrbitHeader = memo(() => {
           <HeaderContain isActive={false}>
             <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
               <OrbitNavPopover
-                open={paneManagerStore.isOnHome ? true : undefined}
+                // open={paneManagerStore.isOnHome ? true : undefined}
                 target={<HomeButton id="home-button" />}
               >
                 <OrbitNav />
@@ -118,7 +117,7 @@ export const OrbitHeader = memo(() => {
               <>
                 {!!orbitStore.activeActions && (
                   <ExtraButtonsChrome>
-                    <HeaderButtonPassProps>
+                    <HeaderButtonPassProps iconSize={16}>
                       {orbitStore.activeActions || null}
                     </HeaderButtonPassProps>
                   </ExtraButtonsChrome>
@@ -286,11 +285,7 @@ const ExtraButtonsChrome = gloss({
   paddingLeft: 12,
   marginRight: -10,
   borderLeftRadius: 12,
-}).theme((_, theme) => ({
-  borderLeft: [1, theme.background.alpha(0.5)],
-  borderBottom: [1, theme.background.alpha(0.5)],
-  borderTop: [1, theme.background.alpha(0.5)],
-}))
+})
 
 const OpenButton = memo(() => {
   const Actions = useActions()

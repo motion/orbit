@@ -69,7 +69,7 @@ export const OrbitNav = memo(
             thicc: isPinned,
             isActive,
             icon: <AppIcon app={app} />,
-            iconSize: 20,
+            iconSize: 24,
             getContext() {
               return [
                 {

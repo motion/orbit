@@ -16,7 +16,7 @@ import {
 } from '@o/ui'
 import * as React from 'react'
 
-export const tabHeight = 24
+export const tabHeight = 28
 const inactiveOpacity = 0.45
 const borderSize = 8
 
@@ -58,7 +58,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
-  const iconSize = iconSizeProp || (thicc ? 12 : 11)
+  const iconSize = iconSizeProp || 16
   const link = useLocationLink(location)
 
   const button = (

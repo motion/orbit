@@ -38,20 +38,18 @@ function SearchApp(props: AppProps) {
 
   return (
     <App actions={<SearchActions />}>
-      <Col flex={1} pad={['xxl', 'xxxl']}>
-        <Scale size={1.2}>
-          <List
-            alwaysSelected
-            shareable
-            selectable
-            itemProps={{
-              iconBefore: true,
-              iconSize: 42,
-            }}
-            items={searchStore.results}
-          />
-        </Scale>
-      </Col>
+      <Scale size={1.2}>
+        <List
+          alwaysSelected
+          shareable
+          selectable
+          itemProps={{
+            iconBefore: true,
+            iconSize: 42,
+          }}
+          items={searchStore.results}
+        />
+      </Scale>
       <FloatingCard
         defaultWidth={width}
         defaultHeight={height}

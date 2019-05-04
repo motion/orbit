@@ -200,14 +200,14 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
       <Popover
         group="orbit-nav"
         target={target}
-        // openOnClick
+        openOnClick
         openOnHover
         onHover={x => setVisible(x)}
         onChangeVisibility={setVisible}
         open={visible}
         // closeOnClick
         width={window.innerWidth * 0.8}
-        padding={2}
+        padding={4}
         elevation={2}
         arrowSize={10}
         distance={8}
@@ -230,23 +230,22 @@ const OrbitNavHiddenBar = props => (
 
 const OrbitNavHiddenBarChrome = gloss({
   position: 'absolute',
-  bottom: 2,
-  left: '19%',
-  right: '19%',
-  borderRadius: 10,
-  padding: 5,
+  bottom: -6,
+  left: 0,
+  right: 0,
+  padding: 6,
 }).theme((_, theme) => ({
   '&:hover': {
-    background: theme.background.alpha(0.25),
+    background: [255, 255, 255, 0.05],
   },
 }))
 
 const OrbitNavHiddenBarInner = gloss({
-  height: 4,
-  borderRadius: 2,
+  height: 3,
+  borderRadius: 3,
   width: '100%',
 }).theme((_, theme) => ({
-  background: theme.backgroundStrongest,
+  background: theme.backgroundStrongest.alpha(0.5),
 }))
 
 const OrbitHeaderContainer = gloss<any>(View, {
@@ -264,13 +263,13 @@ const OrbitHeaderContainer = gloss<any>(View, {
 
 const HeaderSide = gloss({
   flexFlow: 'row',
-  flex: 1,
+  width: '15%',
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  padding: [0, 0, 0, 10],
+  // padding: [0, 0, 0, 20],
   rightSide: {
-    padding: [0, 10, 0, 0],
+    padding: [0, 20, 0, 0],
     justifyContent: 'flex-end',
   },
 })

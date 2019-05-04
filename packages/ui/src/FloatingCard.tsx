@@ -40,6 +40,7 @@ export function FloatingCard({
   visible,
   attach,
   edgePad,
+  elevation = 2,
   ...cardProps
 }: FloatingCardProps) {
   const isVisible = useVisibility()
@@ -73,7 +74,7 @@ export function FloatingCard({
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}
-        elevation={2}
+        elevation={elevation}
         flex={1}
         collapsed={collapsed}
         onCollapse={setCollapsed}

@@ -105,7 +105,7 @@ export const OrbitHeader = memo(() => {
           <HeaderContain isActive={false}>
             <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
               <OrbitNavPopover
-                alwaysVisible={paneManagerStore.isOnHome ? true : false}
+                open={paneManagerStore.isOnHome ? true : undefined}
                 target={<HomeButton id="home-button" />}
               >
                 <OrbitNav />
@@ -192,34 +192,13 @@ export const OrbitHeader = memo(() => {
   )
 })
 
-const navStyles = {
-  inactive: [{ y: -5, z: 4 }, { y: 0, z: 2 }],
-  active: [{ y: -5, z: 4 }, { y: 0, z: 4 }],
-}
-
-const OrbitNavPopover = ({
-  children,
-  target,
-  alwaysVisible,
-  ...rest
-}: PopoverProps & { alwaysVisible?: boolean }) => {
-  const [hovered, setHovered] = useState(false)
-  const visible = alwaysVisible || hovered
-
-  const spring = useSpring({
-    from: { y: 0, z: 10 },
-    to: navStyles[visible ? 'active' : 'inactive'],
-    config: { duration: 100 },
-  })
-
+const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   return (
     <Popover
-      noPortal
       group="orbit-nav"
       target={target}
-      open
       // openOnClick
-      // openOnHover
+      openOnHover
       // closeOnClick
       width={window.innerWidth * 0.8}
       padding={2}
@@ -229,12 +208,6 @@ const OrbitNavPopover = ({
       sizeRadius
       background={theme => theme.backgroundStrongest}
       adjust={[80, 0]}
-      style={{
-        transform: spring.y.interpolate(y => `translateY(${y}px)`),
-        zIndex: spring.z,
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       {...rest}
     >
       {children}

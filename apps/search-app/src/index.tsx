@@ -1,4 +1,13 @@
-import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
+import {
+  App,
+  AppFilterButton,
+  AppMainView,
+  AppProps,
+  createApp,
+  useSearchState,
+  useStore,
+  useStores,
+} from '@o/kit'
 import { Button, Calendar, Col, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
@@ -24,8 +33,8 @@ function SearchApp(props: AppProps) {
     searchStore.setSearchState(state)
   })
 
-  const width = 300
-  const height = 280
+  const width = 500
+  const height = 350
 
   return (
     <App actions={<SearchActions />}>
@@ -48,8 +57,8 @@ function SearchApp(props: AppProps) {
         defaultHeight={height}
         attach="bottom right"
         edgePad={[20, 20]}
+        elevation={20}
         visible
-        pad
       >
         {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}
       </FloatingCard>

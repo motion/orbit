@@ -69,10 +69,10 @@ export function BitConversation(props: AppBitMainProps) {
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[-40, 0, 20]}>
-        <Tabs centered sizeRadius={2} onChange={i => setActivePane(+i)} active={`${activePane}`}>
+        {/* <Tabs centered sizeRadius={2} onChange={i => setActivePane(+i)} active={`${activePane}`}>
           <Tab id="0" label="Conversation" />
           <Tab id="2" label="Afterwards" />
-        </Tabs>
+        </Tabs> */}
       </Row>
 
       <Pane isShown={activePane === 0}>

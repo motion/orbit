@@ -1,5 +1,5 @@
 import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
-import { Button, Calendar, Col, FloatingCard, List, Popover, View } from '@o/ui'
+import { Button, Calendar, Col, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
 import { ManageApps } from './ManageApps'
@@ -30,7 +30,17 @@ function SearchApp(props: AppProps) {
   return (
     <App actions={<SearchActions />}>
       <Col flex={1} pad="xxl">
-        <List shareable selectable items={searchStore.results} />
+        <Scale size={1.2}>
+          <List
+            shareable
+            selectable
+            itemProps={{
+              iconBefore: true,
+              iconSize: 45,
+            }}
+            items={searchStore.results}
+          />
+        </Scale>
       </Col>
       <FloatingCard
         defaultWidth={width}

@@ -27,7 +27,6 @@ export type TabProps = ViewProps & {
   stretch?: boolean
   sidePad?: number
   tooltip?: string
-  textProps?: any
   thicc?: boolean
   icon?: string | React.ReactNode
   iconSize?: number
@@ -47,8 +46,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   tooltip,
   label,
   isActive = false,
-  // separator = false,
-  textProps,
   thicc,
   className = '',
   getContext,
@@ -74,7 +71,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       {...props}
     >
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
-        <Tooltip label={app.name}>
+        <Tooltip label={app ? app.name : undefined}>
           <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
             {React.isValidElement(icon) ? (
               React.cloneElement(icon, { size: iconSize, ...iconProps } as any)

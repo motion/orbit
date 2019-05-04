@@ -1,6 +1,5 @@
 import '../../apps/orbitApps'
 
-import { isEqual } from '@o/fast-compare'
 import {
   AppDefinition,
   AppLoadContext,
@@ -14,8 +13,8 @@ import {
   sleep,
   useIsAppActive,
 } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore } from '@o/ui'
-import { ensure, react, useReaction, useStore, useStoreSimple } from '@o/use-store'
+import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
+import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
@@ -65,39 +64,6 @@ const OrbitAppRender = memo((props: AppRenderProps) => {
   return <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
 })
 
-// stores the main selection of the app
-// so we can show the main view when selecting things in the index view
-class AppSelectionStore {
-  lastSelectAt = Date.now()
-  nextItem: AppProps = null
-  selected: AppProps = null
-
-  setSelectItem(next: AppProps) {
-    // fast if not already set
-    if (!this.selected) {
-      this.selected = next
-      return
-    }
-    if (!isEqual(next, this.nextItem)) {
-      this.nextItem = next
-    }
-  }
-
-  updateSelected = react(
-    () => this.nextItem,
-    async (appProps, _) => {
-      // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
-      const last = this.lastSelectAt
-      this.lastSelectAt = Date.now()
-      if (Date.now() - last < 60) {
-        await _.sleep(60)
-      }
-      ensure('app config', !!appProps)
-      this.selected = appProps
-    },
-  )
-}
-
 export const OrbitAppRenderOfDefinition = ({
   id,
   identifier,
@@ -113,27 +79,28 @@ export const OrbitAppRenderOfDefinition = ({
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
   const globalShareStore = useShareStore()
-  const activeItemStore = useStore(AppSelectionStore)
+  const [activeItem, setActiveItem] = useState(null)
+  const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
+
+  const onChangeShare = useCallback((location, items) => {
+    console.log('on change', location, items)
+    if (location === 'main') {
+      setActiveItemThrottled(getAppProps(items[0]))
+    }
+    if (location === 'main') {
+      globalShareStore.setSelected(`app-${id}`, items)
+    }
+  }, [])
 
   return (
-    <ProvideShare
-      onChange={(location, items) => {
-        console.log('on change', location, items)
-        if (location === 'main') {
-          activeItemStore.setSelectItem(getAppProps(items[0]))
-        }
-        if (location === 'main') {
-          globalShareStore.setSelected(`app-${id}`, items)
-        }
-      }}
-    >
+    <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary name={identifier}>
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  <App identifier={identifier} id={id} {...activeItemStore.selected} />
+                  <App identifier={identifier} id={id} {...activeItem} />
                 </FadeIn>
               )}
             </Suspense>

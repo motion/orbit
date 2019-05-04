@@ -47,8 +47,8 @@ const instantConf = { config: { duration: 0 } }
 
 export function FloatingView(props: FloatingViewProps) {
   let {
-    defaultWidth = 100,
-    defaultHeight = 100,
+    defaultWidth = 200,
+    defaultHeight = 200,
     defaultLeft = 0,
     defaultTop = 0,
     children,

@@ -121,7 +121,7 @@ export const OrbitAppRenderOfDefinition = ({
     <ProvideShare
       onChange={(location, items) => {
         console.log('on change', location, items)
-        if (location === identifier) {
+        if (location === 'main') {
           activeItemStore.setSelectItem(getAppProps(items[0]))
         }
         if (location === 'main') {

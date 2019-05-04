@@ -175,6 +175,7 @@ const NavButtonChrome = gloss<TabProps>(View, {
   alignItems: 'center',
   borderRadius: borderSize,
   height: tabHeight,
+  marginRight: 2,
 }).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
   const glowStyle = {

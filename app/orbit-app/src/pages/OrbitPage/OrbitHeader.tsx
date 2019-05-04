@@ -2,8 +2,19 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useStore } from '@o/kit'
 import { isEditing } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import React, { forwardRef, memo, useCallback, useState } from 'react'
+import { useSpring, config } from 'react-spring'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -30,7 +41,7 @@ class HomeButtonStore {
 }
 
 const HomeButton = memo(
-  forwardRef((props, ref) => {
+  forwardRef((props: any, ref) => {
     const theme = useTheme()
     const { newAppStore, paneManagerStore } = useStores()
     const { activePane } = paneManagerStore
@@ -66,6 +77,7 @@ const HomeButton = memo(
 
 export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+  const { isTorn } = orbitStore
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const theme = useTheme()
@@ -73,124 +85,157 @@ export const OrbitHeader = memo(() => {
   const isOnTearablePane = activePaneType !== activePane.id
 
   return (
-    <OrbitHeaderContainer
-      isEditing={isEditing}
-      className="draggable"
-      onMouseUp={headerStore.handleMouseUp}
-    >
-      <OrbitHeaderEditingBg isActive={isEditing} />
+    <>
+      <OrbitNavPopover
+        alwaysVisible={paneManagerStore.isOnHome ? true : false}
+        target="#home-button"
+      >
+        <OrbitNav />
+      </OrbitNavPopover>
+      <OrbitHeaderContainer
+        isEditing={isTorn}
+        className="draggable"
+        onMouseUp={headerStore.handleMouseUp}
+      >
+        <OrbitHeaderEditingBg isActive={isTorn} />
 
-      <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
-        <HeaderSide>
-          <View flex={1} />
-          <HeaderButtonPassProps>
-            <BackButton />
-            <OrbitHeaderMenu />
-          </HeaderButtonPassProps>
-        </HeaderSide>
-
-        <HeaderContain isActive={false}>
-          <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-            <OrbitNavPopover
-              open={paneManagerStore.isOnHome ? true : undefined}
-              target={<HomeButton />}
-            >
-              <OrbitNav />
-            </OrbitNavPopover>
-          </View>
-
-          <OrbitHeaderInput />
-
-          {isOnTearablePane && (
-            <>
-              {!!orbitStore.activeActions && (
-                <ExtraButtonsChrome>
-                  <HeaderButtonPassProps>{orbitStore.activeActions || null}</HeaderButtonPassProps>
-                </ExtraButtonsChrome>
-              )}
-              <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                {!isEditing && <OpenButton />}
-              </SurfacePassProps>
-            </>
-          )}
-        </HeaderContain>
-
-        <HeaderSide rightSide>
-          <HeaderButtonPassProps>
+        <HeaderTop height={isTorn ? 46 : 64} padding={isTorn ? [3, 10] : [5, 10]}>
+          <HeaderSide>
             <View flex={1} />
+            <HeaderButtonPassProps>
+              <BackButton />
+              <OrbitHeaderMenu />
+            </HeaderButtonPassProps>
+          </HeaderSide>
 
-            {isEditing && (
-              <Row>
-                <HeaderButton icon="edit" tooltip="Open in VSCode" />
-                <Space />
-                <HeaderButton alt="action" tooltip="Deploy to space">
-                  Publish
-                </HeaderButton>
-              </Row>
+          <HeaderContain isActive={false}>
+            <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+              <HomeButton id="home-button" />
+            </View>
+
+            <OrbitHeaderInput />
+
+            {isOnTearablePane && (
+              <>
+                {!!orbitStore.activeActions && (
+                  <ExtraButtonsChrome>
+                    <HeaderButtonPassProps>
+                      {orbitStore.activeActions || null}
+                    </HeaderButtonPassProps>
+                  </ExtraButtonsChrome>
+                )}
+                <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
+                  {!isEditing && <OpenButton />}
+                </SurfacePassProps>
+              </>
             )}
+          </HeaderContain>
 
-            <Button
-              active={paneManagerStore.activePane.id === 'data-explorer'}
-              onClick={() => paneManagerStore.setActivePane('data-explorer')}
-              icon="layers"
-              tooltip="Data explorer"
-            />
-            <Button
-              active={paneManagerStore.activePane.id === 'apps'}
-              onClick={() => paneManagerStore.setActivePane('apps')}
-              icon="layout-grid"
-              tooltip="Manage apps"
-            />
+          <HeaderSide rightSide>
+            <HeaderButtonPassProps>
+              <View flex={1} />
 
-            {!isEditing && <OrbitSpaceSwitch />}
+              {isEditing && (
+                <Row>
+                  <HeaderButton icon="edit" tooltip="Open in VSCode" />
+                  <Space />
+                  <HeaderButton alt="action" tooltip="Deploy to space">
+                    Publish
+                  </HeaderButton>
+                </Row>
+              )}
 
-            {isEditing && (
               <Button
-                chromeless
-                opacity={isOnSettings ? 0.8 : 0.4}
-                hoverStyle={{
-                  opacity: isOnSettings ? 1 : 0.6,
-                }}
-                icon="cog"
-                iconSize={isEditing ? 10 : 12}
-                onClick={() => {
-                  newAppStore.setShowCreateNew(false)
-                  if (activePaneType === 'settings') {
-                    paneManagerStore.back()
-                  } else {
-                    paneManagerStore.setActivePaneByType('settings')
-                  }
-                }}
+                active={paneManagerStore.activePane.id === 'data-explorer'}
+                onClick={() => paneManagerStore.setActivePane('data-explorer')}
+                icon="layers"
+                tooltip="Data explorer"
               />
-            )}
-          </HeaderButtonPassProps>
-        </HeaderSide>
-      </HeaderTop>
-      {!isEditing && <HeaderFade />}
-      {/* this stays slightly below the active tab and looks nice */}
-      <BorderBottom
-        borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
-        zIndex={0}
-      />
-    </OrbitHeaderContainer>
+              <Button
+                active={paneManagerStore.activePane.id === 'apps'}
+                onClick={() => paneManagerStore.setActivePane('apps')}
+                icon="layout-grid"
+                tooltip="Manage apps"
+              />
+
+              {!isEditing && <OrbitSpaceSwitch />}
+
+              {isEditing && (
+                <Button
+                  chromeless
+                  opacity={isOnSettings ? 0.8 : 0.4}
+                  hoverStyle={{
+                    opacity: isOnSettings ? 1 : 0.6,
+                  }}
+                  icon="cog"
+                  iconSize={isEditing ? 10 : 12}
+                  onClick={() => {
+                    newAppStore.setShowCreateNew(false)
+                    if (activePaneType === 'settings') {
+                      paneManagerStore.back()
+                    } else {
+                      paneManagerStore.setActivePaneByType('settings')
+                    }
+                  }}
+                />
+              )}
+            </HeaderButtonPassProps>
+          </HeaderSide>
+        </HeaderTop>
+        {!isEditing && <HeaderFade />}
+        {/* this stays slightly below the active tab and looks nice */}
+        <BorderBottom
+          borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
+          zIndex={0}
+        />
+      </OrbitHeaderContainer>
+    </>
   )
 })
 
-const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
+const navStyles = {
+  inactive: [{ y: -5, z: 4 }, { y: 0, z: 2 }],
+  active: [{ y: -5, z: 4 }, { y: 0, z: 4 }],
+}
+
+const OrbitNavPopover = ({
+  children,
+  target,
+  alwaysVisible,
+  ...rest
+}: PopoverProps & { alwaysVisible?: boolean }) => {
+  const [hovered, setHovered] = useState(false)
+  const visible = alwaysVisible || hovered
+
+  const spring = useSpring({
+    from: { y: 0, z: 10 },
+    to: navStyles[visible ? 'active' : 'inactive'],
+    config: { duration: 100 },
+  })
+
   return (
     <Popover
+      noPortal
       group="orbit-nav"
       target={target}
+      open
       // openOnClick
-      openOnHover
+      // openOnHover
       // closeOnClick
       width={window.innerWidth * 0.8}
-      padding={3}
+      padding={2}
       elevation={2}
+      arrowSize={10}
       distance={8}
       sizeRadius
       background={theme => theme.backgroundStrongest}
       adjust={[80, 0]}
+      style={{
+        transform: spring.y.interpolate(y => `translateY(${y}px)`),
+        zIndex: spring.z,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       {...rest}
     >
       {children}
@@ -201,7 +246,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
-  zIndex: 400,
+  zIndex: 0,
 }).theme((props, theme) => ({
   // borderBottom: [1, theme.borderColor],
   background:
@@ -242,7 +287,7 @@ const HeaderContain = gloss<{ isActive?: boolean }>({
   width: 'calc(100% - 300px)',
   maxWidth: 800,
   minWidth: 400,
-  padding: [1, 5],
+  padding: [0, 5],
   borderRadius: 100,
 }).theme(({ isActive }, theme) => ({
   background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
@@ -286,7 +331,6 @@ const OpenButton = memo(() => {
 
   return (
     <Button
-      icon="chevron-right"
       alt="action"
       iconSize={18}
       sizeRadius={1.6}
@@ -295,7 +339,9 @@ const OpenButton = memo(() => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}
-    />
+    >
+      Open
+    </Button>
   )
 })
 

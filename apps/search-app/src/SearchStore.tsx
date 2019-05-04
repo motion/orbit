@@ -258,21 +258,15 @@ export class SearchStore {
       results = this.getQuickResults(activeQuery)
       setValue({ results, query, finished: false })
 
-      try {
-        await loadMore({
-          take: 10,
-        })
-        await loadMore({
-          take: 10,
-        })
-        await loadMore({
-          take: 100,
-        })
-      } catch (err) {
-        if (err !== false) {
-          console.error(err)
-        }
-      }
+      await loadMore({
+        take: 10,
+      })
+      await loadMore({
+        take: 10,
+      })
+      await loadMore({
+        take: 100,
+      })
 
       // finished
       return {

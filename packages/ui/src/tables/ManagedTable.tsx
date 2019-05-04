@@ -480,9 +480,8 @@ function calculateColumnSizes(columns: DataColumns): TableColumnSizes {
     if (index === values.length - 1) {
       continue
     }
-    const flex = columns[key].flex || 1
+    const flex = flexes[index] || 1
     sizes[key] = `${(flex / totalFlex) * 100}%`
   }
-  console.log('ok', values, flexes, totalFlex, sizes)
   return sizes
 }

@@ -273,7 +273,6 @@ class ColorEditor extends Component<{
   }
 
   render() {
-    console.log('hi')
     let colorInfo
     try {
       colorInfo = toColor(this.props.value).rgbaObject()

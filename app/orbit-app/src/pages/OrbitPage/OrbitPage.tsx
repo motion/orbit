@@ -249,7 +249,7 @@ const InnerChrome = gloss<{ torn?: boolean } & UI.ViewProps>(UI.View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',
-  zIndex: 1,
+  zIndex: 3,
 }).theme(({ torn }) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
 }))

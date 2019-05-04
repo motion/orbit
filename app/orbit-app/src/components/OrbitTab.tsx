@@ -8,6 +8,7 @@ import {
   IconProps,
   memoIsEqualDeep,
   MenuTemplate,
+  SimpleText,
   Tooltip,
   useContextMenu,
   View,
@@ -15,7 +16,8 @@ import {
 } from '@o/ui'
 import * as React from 'react'
 
-export const tabHeight = 26
+export const tabHeight = 24
+const inactiveOpacity = 0.45
 const borderSize = 8
 
 export type TabProps = ViewProps & {
@@ -85,6 +87,20 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
                 iconAdjustOpacity={iconAdjustOpacity}
                 {...iconProps}
               />
+            )}
+            {!!label && (
+              <SimpleText
+                ellipse
+                className="tab-label"
+                display="flex"
+                flex={1}
+                opacity={isActive ? 1 : inactiveOpacity}
+                fontWeight={300}
+                fontSize={12}
+                transition={isActive ? 'none' : tabTransition}
+              >
+                {label}
+              </SimpleText>
             )}
           </Row>
         </Tooltip>

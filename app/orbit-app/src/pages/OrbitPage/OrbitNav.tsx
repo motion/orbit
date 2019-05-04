@@ -19,7 +19,7 @@ const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 export const OrbitNav = memo(
-  forwardRef((_, ref) => {
+  forwardRef((_: any, ref) => {
     const { paneManagerStore, newAppStore } = useStores()
     const Actions = useActions()
     const { showCreateNew } = newAppStore

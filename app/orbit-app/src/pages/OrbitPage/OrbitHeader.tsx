@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useStore } from '@o/kit'
+import { Icon, useStore, useActiveAppsSorted } from '@o/kit'
 import { isEditing } from '@o/stores'
 import {
   BorderBottom,
@@ -12,8 +12,9 @@ import {
   Space,
   SurfacePassProps,
   View,
+  useGet,
 } from '@o/ui'
-import React, { forwardRef, memo, useCallback, useState } from 'react'
+import React, { forwardRef, memo, useCallback, useState, useEffect } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -193,6 +194,19 @@ export const OrbitHeader = memo(() => {
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const [visible, setVisible] = useState(rest.open)
+  const getVisible = useGet(visible)
+
+  useEffect(() => {
+    const onClick = () => {
+      if (getVisible()) {
+        setVisible(false)
+      }
+    }
+    window.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('click', onClick)
+    }
+  }, [])
 
   return (
     <>
@@ -222,11 +236,32 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   )
 }
 
-const OrbitNavHiddenBar = props => (
-  <OrbitNavHiddenBarChrome {...props}>
-    <OrbitNavHiddenBarInner isVisible={props.isVisible} />
-  </OrbitNavHiddenBarChrome>
-)
+const OrbitNavHiddenBar = props => {
+  const apps = useActiveAppsSorted().slice(0, 20)
+  const { paneManagerStore } = useStores()
+  const { activePaneId } = paneManagerStore
+
+  if (!apps.length) {
+    return null
+  }
+  return (
+    <OrbitNavHiddenBarChrome {...props}>
+      <OrbitNavHiddenBarInner isVisible={props.isVisible}>
+        {apps.map(app => (
+          <div
+            key={app.id}
+            style={{
+              background: app.colors[0],
+              width: `${100 / apps.length}%`,
+              height: '100%',
+              opacity: activePaneId === `${app.id}` ? 1 : 0.5,
+            }}
+          />
+        ))}
+      </OrbitNavHiddenBarInner>
+    </OrbitNavHiddenBarChrome>
+  )
+}
 
 const OrbitNavHiddenBarChrome = gloss({
   position: 'absolute',
@@ -241,8 +276,10 @@ const OrbitNavHiddenBarChrome = gloss({
 }))
 
 const OrbitNavHiddenBarInner = gloss({
+  flexFlow: 'row',
   height: 3,
   borderRadius: 3,
+  padding: [0, '20%'],
   width: '100%',
 }).theme((_, theme) => ({
   background: theme.backgroundStrongest.alpha(0.5),

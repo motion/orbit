@@ -14,24 +14,27 @@ import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
-let medSpc = <Space size="xl" />
+let medSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'Amazingly easy internal apps',
-  medium: 'Amazing easy internal apps',
+  medium: 'Amazing, easy internal apps',
   small: 'Easy internal apps',
 }
 
 let allTexts = {
   large: [
-    `A whole new take on the intranet: easy to code yet powerful,`,
-    `one-click data apps, open source & no server at all.`,
+    `Create apps together with the decentralized intranet app platform.`,
+    `Plug data into rich views with just lines of code, no servers needed.`,
   ],
   medium: [
-    `A whole new take on the intranet: easy to code yet powerful,`,
-    `one-click data apps, OSS & no server at all.`,
+    `Create apps together with a decentralized intranet app platform.`,
+    `Plug data into rich views with little code, no server needed.`,
   ],
-  small: [`A whole new take on the intranet: easy to code,`, `one-click data, OSS & no servers.`],
+  small: [
+    `The decentralized intranet app platform.`,
+    `Plug data into views with little code, no server needed.`,
+  ],
 }
 
 const subTexts = {
@@ -216,6 +219,8 @@ export function HeadSection() {
   return (
     <Fade.FadeProvide>
       <OuterSpace show={screen !== 'small'} />
+
+      {/* <Page.Background background="linear-gradient(#000, #222)" /> */}
 
       <Page.Content>
         <Col

@@ -1,4 +1,4 @@
-import { Col, Image, Row, toColor, View } from '@o/ui'
+import { Col, FullScreen, Image, Row, toColor, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
@@ -18,6 +18,30 @@ export default function ShoulderSection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
+      <Page.Parallax speed={0.5} zIndex={-1}>
+        <FullScreen
+          opacity={0.2}
+          transform={{ y: '-10%', scale: 1.4 }}
+          background="radial-gradient(circle closest-side, #5C005D 20%, #4A00A8, transparent)"
+        />
+      </Page.Parallax>
+
+      <Page.Parallax speed={0.5} zIndex={-1}>
+        <FullScreen
+          opacity={0.35}
+          transform={{ y: '95%', x: '-40%', scale: 2 }}
+          background="radial-gradient(circle closest-side, #781A51 20%, #770C59, transparent)"
+        />
+      </Page.Parallax>
+
+      <Page.Parallax speed={-0.25} zIndex={-1}>
+        <FullScreen
+          opacity={0.3}
+          transform={{ y: 1000, x: '55%', scale: 2.5 }}
+          background="radial-gradient(circle closest-side, #003769 20%, #235867, transparent)"
+        />
+      </Page.Parallax>
+
       <Page.Content ref={Fade.ref}>
         <SpacedPageContent
           transform={{

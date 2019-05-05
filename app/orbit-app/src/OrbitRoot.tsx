@@ -9,7 +9,7 @@ import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import { Stores } from './orbitState/stores'
+import { Stores } from './om/stores'
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 export const OrbitRoot = hot(() => {

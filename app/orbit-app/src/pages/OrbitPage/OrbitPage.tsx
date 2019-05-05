@@ -35,7 +35,7 @@ import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { IS_ELECTRON } from '../../constants'
-import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../orbitState/stores'
+import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React

@@ -19,7 +19,7 @@ import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
-import { usePaneManagerStore } from '../../orbitState/stores'
+import { usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'

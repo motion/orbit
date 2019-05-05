@@ -1,6 +1,7 @@
 import { useActiveSpace } from '@o/kit'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { usePaneManagerStore } from '../orbitState/stores'
+
+import { usePaneManagerStore } from '../om/stores'
 
 export function useAppSortHandler() {
   const paneManagerStore = usePaneManagerStore()

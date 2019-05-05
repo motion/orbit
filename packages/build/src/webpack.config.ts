@@ -190,7 +190,7 @@ async function makeConfig() {
         chunks: false,
         source: false,
         errors: true,
-        errorDetails: true,
+        errorDetails: false,
         warnings: false,
         colors: true,
       },

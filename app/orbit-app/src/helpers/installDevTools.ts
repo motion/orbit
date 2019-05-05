@@ -5,7 +5,7 @@ import { spy } from 'mobx'
 import React from 'react'
 import { setConfig } from 'react-hot-loader'
 
-import { Stores } from '../orbitState/stores'
+import { Stores } from '../om/stores'
 
 window['enableLog'] = false
 

@@ -4,10 +4,10 @@ import { namespaced } from 'overmind/config'
 
 import * as router from './router'
 
-export const orbitState = createOvermind(
+export const om = createOvermind(
   namespaced({
     router,
   }),
 )
 
-export const useOrbitState = createHook(orbitState)
+export const useOrbitState = createHook(om)

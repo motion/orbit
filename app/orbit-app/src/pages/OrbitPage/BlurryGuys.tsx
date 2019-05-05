@@ -37,7 +37,7 @@ class BlurryStore {
 
 const colors = ['rebeccapurple', 'green', 'orange']
 
-const Blur = gloss(View, {
+const Blur = gloss<any>(View, {
   width: 200,
   height: 200,
   margin: [-100, 0, 0, -100],

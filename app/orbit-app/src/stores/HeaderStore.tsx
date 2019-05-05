@@ -2,7 +2,7 @@ import { App } from '@o/stores'
 import { ensure, react } from '@o/use-store'
 import { createRef } from 'react'
 
-import { queryStore } from '../orbitState/stores'
+import { queryStore } from '../om/stores'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)

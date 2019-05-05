@@ -201,7 +201,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         arrowSize={10}
         distance={8}
         sizeRadius
-        background={theme => theme.backgroundStrongest}
+        background={(theme => theme.backgroundStrongest) as any}
         adjust={[80, 0]}
         {...rest}
       >

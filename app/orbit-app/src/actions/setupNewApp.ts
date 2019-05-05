@@ -1,5 +1,6 @@
 import { sleep } from '@o/utils'
-import { AllStores } from '../contexts/StoreContext'
+
+import { AllStores } from '../StoreContext'
 
 export function setupNewApp({ newAppStore, paneManagerStore }: AllStores) {
   return async () => {

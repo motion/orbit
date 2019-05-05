@@ -1,7 +1,8 @@
 import { isEditing } from '@o/stores'
 import { once } from 'lodash'
-import { AllStores } from '../contexts/StoreContext'
+
 import { defaultPanes } from '../effects/paneManagerStoreUpdatePanes'
+import { AllStores } from '../StoreContext'
 
 export function setInitialPaneIndex({ paneManagerStore }: AllStores) {
   return once(() => {

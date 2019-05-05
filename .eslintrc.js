@@ -49,7 +49,7 @@ module.exports = {
     'react/jsx-uses-react': 'error',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
-    'no-shadow': 'error',
+    'no-shadow': 'off',
     // '@typescript-eslint/tslint/config': [
     //   'warn',
     //   {

@@ -1,6 +1,7 @@
 import { save } from '@o/bridge'
 import { AppModel } from '@o/models'
-import { AllStores } from '../contexts/StoreContext'
+
+import { AllStores } from '../StoreContext'
 
 export function createCustomApp(stores: AllStores) {
   return (identifier: string) => {

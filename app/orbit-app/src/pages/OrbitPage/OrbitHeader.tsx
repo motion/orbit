@@ -12,9 +12,8 @@ import {
   Space,
   SurfacePassProps,
   View,
-  useGet,
 } from '@o/ui'
-import React, { forwardRef, memo, useCallback, useState, useEffect } from 'react'
+import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -22,7 +21,6 @@ import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
-import { debounce } from 'lodash'
 
 // import { clipboard } from 'electron'
 export const headerButtonProps = {
@@ -195,20 +193,6 @@ export const OrbitHeader = memo(() => {
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const [visible, setVisible] = useState(rest.open)
-  const getVisible = useGet(visible)
-
-  useEffect(() => {
-    const onClick = debounce(() => {
-      if (getVisible()) {
-        setVisible(false)
-      }
-    }, 150)
-    window.addEventListener('click', onClick)
-    return () => {
-      window.removeEventListener('click', onClick)
-    }
-  }, [])
-
   return (
     <>
       <OrbitNavHiddenBar isVisible={visible} onClick={() => setVisible(!visible)} />
@@ -257,9 +241,9 @@ const OrbitNavHiddenBar = props => {
                 background: app.colors[0],
                 width: `${100 / apps.length}%`,
                 height: '100%',
-                opacity: isActive ? 1 : 0.2,
+                // opacity: isActive ? 1 : 0.2,
                 transform: `translateY(${isActive ? 0 : 2}px)`,
-                transition: 'all ease 400ms'
+                transition: 'all ease 400ms',
               }}
             />
           )

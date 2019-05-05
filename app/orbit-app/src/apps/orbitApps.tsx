@@ -12,7 +12,7 @@ import SearchApp from '@o/search-app'
 import SlackApp from '@o/slack-app'
 import WebsiteApp from '@o/website-app'
 
-import { StoreContext } from '../contexts'
+import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './bit/BitApp'
 import CreateApp from './CreateAppApp'

@@ -1,4 +1,4 @@
-import { AllStores } from '../contexts/StoreContext'
+import { AllStores } from '../StoreContext'
 
 export function previousTab({ newAppStore, paneManagerStore }: AllStores) {
   return async () => {

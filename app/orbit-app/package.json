@@ -14,6 +14,9 @@
     "test-electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
+    "overmind-devtools": "18.1.0",
+    "overmind-react": "18.1.0",
+    "overmind": "17.1.0",
     "@welldone-software/why-did-you-render": "3.0.9",
     "@babel/runtime": "7.4.3",
     "@o/bridge": "^2.4.1",
@@ -67,9 +70,7 @@
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",
     "mobx-react": "5.4.3",
-    "mobx-utils": "5.0.2",
-    "overmind": "15.1.2",
-    "overmind-react": "16.1.2",
+    "mobx-utils": "5.4.0",
     "pluralize": "^7.0.0",
     "randomcolor": "0.5.3",
     "re-resizable": "4.9.3",

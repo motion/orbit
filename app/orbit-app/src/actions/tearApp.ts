@@ -2,7 +2,8 @@ import { command } from '@o/bridge'
 import { TearAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { last } from 'lodash'
-import { AllStores } from '../contexts/StoreContext'
+
+import { AllStores } from '../StoreContext'
 
 export function tearApp(stores: AllStores) {
   return () => {

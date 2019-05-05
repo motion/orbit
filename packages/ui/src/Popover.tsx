@@ -130,7 +130,7 @@ const defaultProps = {
   arrowSize: 14,
   forgiveness: 14,
   towards: 'auto',
-  transition: 'opacity ease-in 60ms, transform ease-out 100ms',
+  transition: 'all ease 100ms',
   openAnimation: 'slide 300ms',
   closeAnimation: 'bounce 300ms',
   adjust: [0, 0],

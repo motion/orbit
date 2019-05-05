@@ -1,9 +1,11 @@
 import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
+
 import { AppActions } from '../../actions/appActions/AppActions'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -37,11 +39,12 @@ export default memo(function MainShortcutHandler(props: {
 }) {
   const { queryStore, paneManagerStore } = useStores()
   const shortcutStore = useShortcutStore()
+  const { actions } = useOm()
   const Actions = useActions()
 
   const handlers = useMemo(() => {
     let res: any = {
-      COMMAND_NEW: Actions.setupNewApp,
+      COMMAND_NEW: actions.router.showSetupAppPage,
       COMMAND_OPEN: () => {
         console.log('tear app', Actions.tearApp)
         Actions.tearApp()

@@ -18,7 +18,7 @@ import React, {
 } from 'react'
 import * as ReactDOM from 'react-dom'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { getApps, orbitApps } from '../../apps/orbitApps'
+import { getApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'

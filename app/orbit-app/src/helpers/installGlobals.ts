@@ -19,7 +19,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { AppActions } from '../actions/appActions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
-import { om } from '../om'
+import { om } from '../om/om'
 import { log } from './log'
 
 // dont import app level stuff in here

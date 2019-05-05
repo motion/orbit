@@ -13,7 +13,7 @@ const descriptions = {
   custom2: 'Internal development test app',
 }
 
-function CreateAppMain() {
+function SetupAppMain() {
   const Actions = useActions()
   const items = defaultApps.map(app => ({
     title: app.name,
@@ -136,12 +136,12 @@ function CreateAppMain() {
 }
 
 export default createApp({
-  id: 'createApp',
-  name: 'Create App',
+  id: 'setupApp',
+  name: 'Setup App',
   icon: '',
   app: () => (
     <App>
-      <CreateAppMain />
+      <SetupAppMain />
     </App>
   ),
 })

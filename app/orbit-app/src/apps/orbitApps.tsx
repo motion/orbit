@@ -17,13 +17,13 @@ import { createElement } from 'react'
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './bit/BitApp'
-import CreateApp from './CreateAppApp'
 import CustomApp2 from './custom/CustomApp'
 import DataExplorerApp from './DataExplorerApp'
 import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './onboard/OnboardApp'
 import SettingsApp from './settings/SettingsApp'
+import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
 
 // "available" apps to install/use
@@ -54,7 +54,7 @@ export const orbitStaticApps: AppDefinition[] = [
   AppsApp,
   BitApp,
   OnboardApp,
-  CreateApp,
+  SetupAppApp,
   MessageApp,
   HomeApp,
   createApp({

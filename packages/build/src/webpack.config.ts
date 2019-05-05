@@ -180,7 +180,7 @@ async function makeConfig() {
         : 'static/js/[name].chunk.js',
     },
     devServer: {
-      clientLogLevel: 'info',
+      clientLogLevel: 'error',
       stats: {
         hash: false,
         reasons: false,

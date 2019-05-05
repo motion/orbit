@@ -43,7 +43,7 @@ export const defaultPanes: PaneManagerPane[] = [
   settingsPane,
   { id: 'apps', name: 'Apps', type: 'apps' },
   { id: 'data-explorer', name: 'Data Explorer', type: 'data-explorer' },
-  { id: 'createApp', name: 'New app', type: 'createApp' },
+  { id: 'setupApp', name: 'New app', type: 'setupApp' },
   { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 

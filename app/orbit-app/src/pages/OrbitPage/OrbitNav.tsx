@@ -13,15 +13,17 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useActions } from '../../hooks/useActions'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
-    const { orbitStore, paneManagerStore, newAppStore } = useStores()
+    const { orbitStore, paneManagerStore } = useStores()
     const Actions = useActions()
-    const { showCreateNew } = newAppStore
+    const { state, actions } = useOm()
+    const isOnSetupApp = state.router.isOnSetupApp
     const activeAppsSorted = useActiveAppsSorted()
     const { activePaneId } = paneManagerStore
     const [space] = useActiveSpace()
@@ -44,12 +46,12 @@ export const OrbitNav = memo(
 
     const items = [-1, ...space.paneSort]
       .map(
-        (paneId, index): TabProps => {
+        (paneId): TabProps => {
           const app = activeAppsSorted.find(x => x.id === paneId)
           if (!app) {
             return null
           }
-          const isActive = !showCreateNew && `${paneId}` === activePaneId
+          const isActive = !isOnSetupApp && `${paneId}` === activePaneId
           // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
@@ -94,8 +96,7 @@ export const OrbitNav = memo(
               ]
             },
             onClick: () => {
-              newAppStore.setShowCreateNew(false)
-              paneManagerStore.setActivePane(`${app.id}`)
+              actions.router.showAppPage(`${app.id}`)
             },
           }
         },
@@ -105,8 +106,8 @@ export const OrbitNav = memo(
     const pinWidth = 52
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
-    const showCreateNewWidth = showCreateNew ? tabWidth : 46
-    const extraButtonsWidth = showCreateNewWidth
+    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 46
+    const extraButtonsWidth = isOnSetupAppWidth
 
     const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
     const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
@@ -114,7 +115,7 @@ export const OrbitNav = memo(
 
     const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
-    const epad = showCreateNew ? 0 : 3
+    const epad = isOnSetupApp ? 0 : 3
 
     return (
       <OrbitNavClip ref={ref}>
@@ -128,6 +129,14 @@ export const OrbitNav = memo(
             flex={1}
             opacity={onSettings ? 0.5 : 1}
           >
+            <OrbitTab
+              tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
+              thicc
+              icon={isOnSetupApp ? 'remove' : 'add'}
+              iconAdjustOpacity={-0.2}
+              onClick={actions.router.toggleSetupAppPage}
+            />
+
             {permanentItems.map(props => (
               <OrbitTab key={props.app.id} {...props} />
             ))}
@@ -166,7 +175,7 @@ export const OrbitNav = memo(
               overflowY="hidden"
             />
 
-            {showCreateNew && (
+            {isOnSetupApp && (
               <OrbitTab
                 width={tabWidth}
                 stretch
@@ -182,16 +191,6 @@ export const OrbitNav = memo(
                     )}
                   />
                 }
-              />
-            )}
-
-            {!showCreateNew && (
-              <OrbitTab
-                tooltip={showCreateNew ? 'Cancel' : 'Add'}
-                thicc
-                icon={showCreateNew ? 'remove' : 'add'}
-                iconAdjustOpacity={-0.2}
-                onClick={Actions.setupNewApp}
               />
             )}
           </Row>

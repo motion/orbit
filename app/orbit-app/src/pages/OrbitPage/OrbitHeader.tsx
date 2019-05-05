@@ -7,6 +7,7 @@ import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
@@ -35,7 +36,7 @@ const HomeButton = memo(
     const { newAppStore, paneManagerStore } = useStores()
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
-    const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
+    const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
     const store = useStore(HomeButtonStore)
     const onClick = useCallback(e => {
       console.log('go to ', store.hovering, paneManagerStore.homePane.id)
@@ -68,6 +69,7 @@ export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { isTorn } = orbitStore
   const { activePane } = paneManagerStore
+  const { state } = useOm()
   const activePaneType = activePane.type
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
@@ -94,7 +96,7 @@ export const OrbitHeader = memo(() => {
           <HeaderContain isActive={false}>
             <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
               <OrbitNavPopover
-                // open={paneManagerStore.isOnHome ? true : undefined}
+                open={state.router.isOnSetupApp ? true : undefined}
                 target={<HomeButton id="home-button" />}
               >
                 <OrbitNav />

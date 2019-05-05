@@ -7,7 +7,7 @@ export const colors = Theme.colorize({
   orange: '#E97902',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
-  blue: '#3E7FD5',
+  blue: 'rgb(116, 162, 230)',
   darkBlue: '#0E3D7B',
   lightBlue: '#CBDFFA',
   red: '#c80000',

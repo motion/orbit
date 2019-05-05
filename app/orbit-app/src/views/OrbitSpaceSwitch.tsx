@@ -58,7 +58,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
-  const accountLink = useLocationLink('settings?id=settings&itemId=account')
+  const accountLink = useLocationLink('/app/settings?id=settings&itemId=account')
 
   if (!activeSpace) {
     return null

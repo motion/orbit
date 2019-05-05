@@ -111,7 +111,7 @@ export default memo(function MainShortcutHandler(props: {
       ...res,
       ...props.handlers,
     }
-  }, [Actions, paneManagerStore, queryStore])
+  }, [paneManagerStore, queryStore])
 
   return (
     <GlobalHotKeys keyMap={rootShortcuts} style={hotKeyStyle} handlers={handlers}>

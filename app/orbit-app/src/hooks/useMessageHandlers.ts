@@ -1,13 +1,14 @@
 import { Mediator } from '@o/bridge'
+import { useLocationLink } from '@o/kit'
 import { App } from '@o/stores'
 import { useEffect } from 'react'
+
 import { AppActions } from '../actions/AppActions'
 import { useStores } from './useStores'
-import { useLocationLink } from '@o/kit'
 
 export function useMessageHandlers() {
   const { paneManagerStore } = useStores()
-  const accountLink = useLocationLink('settings?id=settings&itemId=account')
+  const props = useLocationLink('/app/settings?id=settings&itemId=account')
 
   useEffect(() => {
     const subscription = Mediator.onData().subscribe(async ({ name, value }) => {
@@ -28,7 +29,7 @@ export function useMessageHandlers() {
           return
         case 'APP_URL_OPENED':
           await AppActions.finishAuthorization(value)
-          accountLink()
+          props.onClick()
           return
       }
     })

@@ -94,7 +94,7 @@ export const List = memo((allProps: ListProps) => {
   const selection = useRef<[any[], number[]]>([[], []])
 
   const onSelectInner: SelectableProps['onSelect'] = useCallback(
-    (selectedRows, selectedIndices) => {
+    (selectedRows: any[], selectedIndices: number[]) => {
       selection.current = [selectedRows, selectedIndices]
 
       if (shareable) {
@@ -180,7 +180,6 @@ export const List = memo((allProps: ListProps) => {
           {...restProps}
           getItemProps={getItemPropsInner}
           onOpen={onOpenInner}
-          onSelect={onSelectInner}
           selectableStore={selectableStore}
         />
       )}

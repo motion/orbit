@@ -33,7 +33,7 @@ function PeopleAppIndex() {
           <View alignItems="center" justifyContent="center" flex={1}>
             <SubTitle>No items.</SubTitle>
             <Space />
-            <Button onClick={useLocationLink('search')} size={1.2}>
+            <Button {...useLocationLink('/app/search')} size={1.2}>
               Search all
             </Button>
           </View>

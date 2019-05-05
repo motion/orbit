@@ -67,7 +67,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       } undraggable ${className || ''}`}
       isActive={isActive}
       thicc={thicc}
-      onClick={link}
+      {...link}
       {...contextMenuProps}
       {...props}
     >

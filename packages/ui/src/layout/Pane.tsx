@@ -1,6 +1,6 @@
-import React, { Suspense, isValidElement, cloneElement } from 'react'
+import React, { cloneElement, isValidElement, Suspense } from 'react'
 
-import { Collapsable, CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
+import { CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
 import { Col, ColProps } from '../View/Col'

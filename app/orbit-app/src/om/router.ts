@@ -56,7 +56,7 @@ export const state: RouterState = {
   isOnSetupApp: state => state.currentPage === 'app' && state.appId === 'setupApp',
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
-  urlString: state => `app://${state.curPage.path}`,
+  urlString: state => (state.curPage ? `//${state.curPage.path}` : ''),
 }
 
 // actions

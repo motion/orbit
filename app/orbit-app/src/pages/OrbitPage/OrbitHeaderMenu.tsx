@@ -10,7 +10,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
   const { effects, state } = useOm()
   const { paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
-  const appSettingsLink = useLocationLink(`apps?itemId=${activePane.id}`)
+  const props = useLocationLink(`/app/apps?itemId=${activePane.id}`)
 
   return (
     <Popover
@@ -36,7 +36,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
           {...{
             title: 'App Settings',
             icon: 'cog',
-            onClick: appSettingsLink,
+            ...props,
           }}
         />
       </PassProps>

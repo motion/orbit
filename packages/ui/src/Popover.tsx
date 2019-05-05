@@ -665,6 +665,10 @@ export class Popover extends React.Component<PopoverProps, State> {
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
       if (this.state.isPinnedOpen) {
+        if (this.state.targetHovered && this.props.openOnHover) {
+          // avoid closing when clicking while hovering + openOnHover
+          return
+        }
         this.forceClose()
       } else {
         this.setState({ isPinnedOpen: Date.now() })

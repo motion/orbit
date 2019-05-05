@@ -2,37 +2,11 @@
 
 orbit-cli
 
-no package.json, your orbit workspace has one, it handles it in the background for you. no tsconfig, no other config.
-
-no node_modules either, because we can hint the editor to find it.
-
-that means you can do one-file apps.
-
-just touch myapp.tsx
-
-```
-export default app({
-  id: 'myapp',
-  app: () => {
-    return (
-        <div />
-    )
-  }
-})
-```
-
-```
-view Main {
-  x = 0
-  y = 1
-  inc = () => x++
-  z = x + y
-  abc = x >> x + 1
-
-  <div onClick={inc} />
-}
-```
-
+we automatically run it from orbit-app, to handle commands
+avoid all config, just package.json
+put apps in your workspace by default
+~/o/workspace/apps
+that way we can put a lot of config above it, can even run ts above it
 
 ---
 
@@ -251,3 +225,17 @@ Week 4: Get a nice website with mobile + start on docs
 ---
 
 large rows filter/search in browser (https://github.com/nextapps-de/flexsearch)
+
+---
+
+```
+view Main {
+  x = 0
+  y = 1
+  inc = () => x++
+  z = x + y
+  abc = x >> x + 1
+
+  <div onClick={inc} />
+}
+```

@@ -2,8 +2,7 @@ import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
-import { AppActions } from '../../actions/appActions/AppActions'
-import { useActions } from '../../hooks/useActions'
+import { AppActions } from '../../actions/AppActions'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 
@@ -39,16 +38,12 @@ export default memo(function MainShortcutHandler(props: {
 }) {
   const { queryStore, paneManagerStore } = useStores()
   const shortcutStore = useShortcutStore()
-  const { actions } = useOm()
-  const Actions = useActions()
+  const { actions, effects } = useOm()
 
   const handlers = useMemo(() => {
     let res: any = {
       COMMAND_NEW: actions.router.showSetupAppPage,
-      COMMAND_OPEN: () => {
-        console.log('tear app', Actions.tearApp)
-        Actions.tearApp()
-      },
+      COMMAND_OPEN: effects.openCurrentApp,
       SWITCH_SPACE: () => {
         paneManagerStore.setActivePaneByType('spaces')
       },

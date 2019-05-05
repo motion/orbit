@@ -1,6 +1,5 @@
 import { SelectableStore } from '@o/ui'
 import { AppStore } from './AppStore'
-import { LocationStore } from './LocationStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { QueryStore } from './QueryStore'
 import { SpaceStore } from './SpaceStore'
@@ -14,13 +13,11 @@ export type KitStores = {
   queryStore?: QueryStore
   selectableStore?: SelectableStore
   themeStore?: ThemeStore
-  locationStore?: LocationStore
   spaceStore?: SpaceStore
 }
 
 export { SelectableStore } from '@o/ui'
 export { AppStore } from './AppStore'
-export { LocationStore } from './LocationStore'
 export { NLPStore } from './NLPStore/NLPStore'
 export { PaneManagerStore } from './PaneManagerStore'
 export { QueryFilterStore } from './QueryFilterStore'

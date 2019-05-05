@@ -6,7 +6,7 @@ import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
 
-import { AppActions } from '../../../actions/appActions/AppActions'
+import { AppActions } from '../../../actions/AppActions'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'

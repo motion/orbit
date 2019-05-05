@@ -1,5 +1,5 @@
-import { getTargetPosition } from '../../../helpers/getTargetPosition'
-import { peekPosition } from '../../../helpers/peekPosition'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
+import { peekPosition } from '../../helpers/peekPosition'
 import { setAppState } from '../setAppState'
 import { PeekTarget } from './types'
 

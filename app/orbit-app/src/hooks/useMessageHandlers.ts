@@ -1,7 +1,7 @@
 import { Mediator } from '@o/bridge'
 import { App } from '@o/stores'
 import { useEffect } from 'react'
-import { AppActions } from '../actions/appActions/AppActions'
+import { AppActions } from '../actions/AppActions'
 import { useStores } from './useStores'
 import { useLocationLink } from '@o/kit'
 

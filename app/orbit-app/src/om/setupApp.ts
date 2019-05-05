@@ -1,6 +1,7 @@
-import { getAppDefinition } from '@o/kit'
-import { AppBit } from '@o/models'
+import { getAppDefinition, save } from '@o/kit'
+import { AppBit, AppModel } from '@o/models'
 import { Action } from 'overmind'
+import { spaceStore } from './stores'
 
 export const defaultApps: AppBit[] = [
   {
@@ -100,8 +101,25 @@ const reset: Action = ({ state }) => {
   state.setupApp.app = defaultApps[0]
 }
 
+const create: Action<string> = async (om, identifier) => {
+  await om.effects.setupApp.createCustomApp(identifier)
+  om.actions.setupApp.reset()
+}
+
 export const actions = {
   update,
   setApp,
   reset,
+  create,
+}
+
+export const effects = {
+  async createCustomApp(identifier: string) {
+    await save(AppModel, {
+      name: 'My Custom App',
+      spaceId: spaceStore.activeSpace.id,
+      identifier: identifier || `custom`,
+      colors: ['green', 'darkgreen'],
+    })
+  },
 }

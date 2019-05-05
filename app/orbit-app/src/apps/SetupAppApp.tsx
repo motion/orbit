@@ -1,9 +1,9 @@
-import { App, AppIcon, createApp } from '@o/kit'
+import { App, AppIcon, createApp, AppBit } from '@o/kit'
 import { Button, List, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
-import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'
+import { useOm } from '../om/om'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -14,7 +14,7 @@ const descriptions = {
 }
 
 function SetupAppMain() {
-  const Actions = useActions()
+  const { actions } = useOm()
   const items = defaultApps.map(app => ({
     title: app.name,
     identifier: app.identifier,
@@ -25,7 +25,7 @@ function SetupAppMain() {
       size: 44,
     },
   }))
-  const [selected, setSelected] = useState<typeof items[0]>(null)
+  const [selected, setSelected] = useState<AppBit>(null)
   const [pane, setPane] = useState(0)
 
   const toolbars = [
@@ -47,7 +47,7 @@ function SetupAppMain() {
         <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
           <Text fontWeight={600}>Add app to space</Text>
           <Text ellipse alpha={0.6} size={1.25}>
-            {selected.title}
+            {selected.name}
           </Text>
         </View>
       )}
@@ -56,7 +56,7 @@ function SetupAppMain() {
         size={1.4}
         alt="confirm"
         onClick={() => {
-          Actions.createCustomApp(selected.identifier)
+          // Actions.createCustomApp(selected.identifier)
         }}
         icon="chevron-right"
         tooltip="Create new custom app"
@@ -83,7 +83,7 @@ function SetupAppMain() {
         size={1.4}
         alt="confirm"
         onClick={() => {
-          Actions.createCustomApp(selected.identifier)
+          actions.setupApp.create(selected.identifier)
         }}
         icon="chevron-right"
       >

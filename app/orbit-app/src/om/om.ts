@@ -1,14 +1,26 @@
 import { createOvermind, IConfig } from 'overmind'
 import { createHook } from 'overmind-react'
-import { namespaced } from 'overmind/config'
+import { merge, namespaced } from 'overmind/config'
 
+import * as actions from './actions'
+import { onInitialize } from './onInitialize'
+import * as effects from './effects'
 import * as router from './router'
 import * as setupApp from './setupApp'
+import { state } from './state'
 
-const config = namespaced({
-  router,
-  setupApp,
-})
+const config = merge(
+  {
+    onInitialize,
+    state,
+    actions,
+    effects,
+  },
+  namespaced({
+    router,
+    setupApp,
+  }),
+)
 
 export const om = createOvermind(config)
 

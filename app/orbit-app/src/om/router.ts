@@ -1,10 +1,11 @@
-import { Action, Derive, OnInitialize } from 'overmind'
+import { Action, Derive } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
 import { paneManagerStore } from './stores'
+import { defaultPanes } from '../effects/paneManagerStoreUpdatePanes'
 
-const urls = {
+export const urls = {
   home: '/',
   app: '/app/:id',
 }
@@ -14,12 +15,14 @@ type Params = { [key: string]: string }
 
 type HistoryItem = { name: RouteName; path: string }
 
-type State = {
+export type RouterState = {
   history: HistoryItem[]
   currentPage: string
   appId: string
-  isOnSetupApp: Derive<State, boolean>
-  lastPage: Derive<State, HistoryItem>
+  urlString: Derive<RouterState, string>
+  isOnSetupApp: Derive<RouterState, boolean>
+  lastPage: Derive<RouterState, HistoryItem>
+  curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
 
@@ -43,20 +46,17 @@ const getItem = (name: RouteName, p?: Params) => ({
 
 // init
 
-export const onInitialize: OnInitialize = ({ actions, effects }) => {
-  effects.router.routeListen(urls.home, actions, actions.router.showHomePage)
-  effects.router.routeListen(urls.app, actions, ({ id }) => actions.router.showAppPage(id))
-}
-
 // state
 
-export const state: State = {
+export const state: RouterState = {
   history: [],
   currentPage: 'home',
   appId: 'search',
-  isOnSetupApp: state => state.currentPage === 'app' && state.appId === 'setupApp',
-  lastPage: state => state.history[state.history.length - 1],
   ignoreNextPush: false,
+  isOnSetupApp: state => state.currentPage === 'app' && state.appId === 'setupApp',
+  lastPage: state => state.history[state.history.length - 2],
+  curPage: state => state.history[state.history.length - 1],
+  urlString: state => `app://${state.curPage.path}`,
 }
 
 // actions
@@ -96,6 +96,17 @@ const ignoreNextPush: Action = om => {
   om.state.router.ignoreNextPush = true
 }
 
+const back: Action = om => {
+  if (om.state.router.history.length > 1) {
+    om.actions.router.showPage(om.state.router.lastPage)
+  }
+}
+
+const start: Action = om => {
+  paneManagerStore.setPaneIndex(defaultPanes.length)
+  om.effects.router.start()
+}
+
 export const actions = {
   showPage,
   showAppPage,
@@ -103,6 +114,8 @@ export const actions = {
   showSetupAppPage,
   toggleSetupAppPage,
   ignoreNextPush,
+  back,
+  start,
 }
 
 // effects

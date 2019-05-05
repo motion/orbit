@@ -1,11 +1,20 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useActiveAppsSorted, useStore } from '@o/kit'
+import { Icon, useActiveAppsSorted } from '@o/kit'
 import { isEditing } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import React, { forwardRef, memo, useCallback, useState } from 'react'
 
-import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -24,20 +33,16 @@ export const headerButtonProps = {
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
-class HomeButtonStore {
-  hovering = false
-  onEnter = () => (this.hovering = true)
-  onLeave = () => (this.hovering = false)
-}
-
 const HomeButton = memo(
   forwardRef((props: any, ref) => {
+    const [hovered, setHovered] = useState(false)
+    const { state } = useOm()
+
     const theme = useTheme()
     const { newAppStore, paneManagerStore } = useStores()
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-    const store = useStore(HomeButtonStore)
     const onClick = useCallback(e => {
       console.log('go to ', store.hovering, paneManagerStore.homePane.id)
       if (store.hovering) {
@@ -49,14 +54,14 @@ const HomeButton = memo(
     return (
       <Icon
         ref={ref}
-        onMouseEnter={store.onEnter}
-        onMouseLeave={store.onLeave}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         opacity={0.65}
         hoverStyle={{
           opacity: 1,
         }}
         color={invertLightness(theme.color, 0.5)}
-        name={store.hovering ? 'orbit-home' : `orbit-${icon}`}
+        name={hovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
         size={22}
         onClick={onClick}
         {...props}
@@ -184,18 +189,21 @@ export const OrbitHeader = memo(() => {
 })
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
-  const [visible, setVisible] = useState(rest.open)
+  const { state, actions } = useOm()
   return (
     <>
-      <OrbitNavHiddenBar isVisible={visible} onClick={() => setVisible(!visible)} />
+      <OrbitNavHiddenBar
+        isVisible={state.navVisible}
+        onClick={() => actions.setNavVisible(!state.navVisible)}
+      />
       <Popover
         group="orbit-nav"
         target={target}
         openOnClick
         openOnHover
-        onHover={x => setVisible(x)}
-        onChangeVisibility={setVisible}
-        open={visible}
+        onHover={actions.setNavVisible}
+        onChangeVisibility={actions.setNavVisible}
+        open={state.navVisible}
         // closeOnClick
         width={window.innerWidth * 0.8}
         padding={4}
@@ -341,9 +349,7 @@ const ExtraButtonsChrome = gloss({
 })
 
 const OpenButton = memo(() => {
-  const Actions = useActions()
-  // const [_isHovered, setHovered] = useState(false)
-  // const tm = useRef(null)
+  const { effects } = useOm()
 
   if (isEditing) {
     return null
@@ -358,7 +364,7 @@ const OpenButton = memo(() => {
       glint={false}
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
-      onClick={Actions.tearApp}
+      onClick={effects.openCurrentApp}
     >
       Open
     </Button>
@@ -366,16 +372,14 @@ const OpenButton = memo(() => {
 })
 
 const BackButton = memo(() => {
-  const { locationStore } = useStoresSimple()
+  const { state, actions } = useOm()
   return (
     <Button
       circular
       icon="chevron-left"
-      opacity={locationStore.history.length ? 0.5 : 0.4}
+      opacity={state.router.history.length ? 0.5 : 0.4}
       iconSize={22}
-      onClick={() => {
-        locationStore.back()
-      }}
+      onClick={actions.router.back}
     />
   )
 })

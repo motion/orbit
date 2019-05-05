@@ -5,7 +5,6 @@ import { AppBit } from '@o/models'
 import {
   Button,
   ButtonProps,
-  IconProps,
   memoIsEqualDeep,
   MenuTemplate,
   SimpleText,

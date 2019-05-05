@@ -10,7 +10,6 @@ import React, { forwardRef, memo } from 'react'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
-import { useActions } from '../../hooks/useActions'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -21,7 +20,6 @@ const isOnSettings = (pane?: PaneManagerPane) =>
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
     const { orbitStore, paneManagerStore } = useStores()
-    const Actions = useActions()
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
     const activeAppsSorted = useActiveAppsSorted()
@@ -187,7 +185,7 @@ export const OrbitNav = memo(
                     icon="cross"
                     onClick={flow(
                       preventDefault,
-                      Actions.previousTab,
+                      actions.router.back,
                     )}
                   />
                 }

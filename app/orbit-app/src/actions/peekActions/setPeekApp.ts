@@ -1,7 +1,7 @@
 import { AppProps } from '@o/kit'
 import invariant from 'invariant'
-import { getTargetPosition } from '../../../helpers/getTargetPosition'
-import { peekPosition, Position } from '../../../helpers/peekPosition'
+import { getTargetPosition } from '../../helpers/getTargetPosition'
+import { peekPosition, Position } from '../../helpers/peekPosition'
 import { setAppState } from '../setAppState'
 
 type PeekApp = {

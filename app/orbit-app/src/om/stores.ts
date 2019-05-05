@@ -1,4 +1,4 @@
-import { LocationStore, PaneManagerStore, QueryStore, SpaceStore, ThemeStore } from '@o/kit'
+import { PaneManagerStore, QueryStore, SpaceStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
 import { loadingPane } from '../effects/paneManagerStoreUpdatePanes'
@@ -9,9 +9,6 @@ import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 
 export const themeStore = createUsableStore(ThemeStore)
 export const useThemeStore = themeStore.useStore
-
-export const locationStore = createUsableStore(LocationStore)
-export const useLocationStore = locationStore.useStore
 
 export const orbitStore = createUsableStore(OrbitStore)
 export const useOrbitStore = orbitStore.useStore
@@ -39,7 +36,6 @@ export const useSpaceStore = spaceStore.useStore
 
 export const Stores = {
   themeStore,
-  locationStore,
   orbitStore,
   headerStore,
   queryStore,

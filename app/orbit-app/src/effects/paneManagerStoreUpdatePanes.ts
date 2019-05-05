@@ -4,11 +4,11 @@ import { AppBit } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import { ensure, useReaction } from '@o/use-store'
 
-import { useActions } from '../hooks/useActions'
 import { useStoresSimple } from '../hooks/useStores'
+import { useOm } from '../om/om'
 
 export function usePaneManagerUpdatePanes() {
-  const Actions = useActions()
+  const { actions } = useOm()
   const { paneManagerStore, spaceStore } = useStoresSimple()
 
   useReaction(() => spaceStore.apps, function managePanes(apps) {
@@ -18,7 +18,7 @@ export function usePaneManagerUpdatePanes() {
       paneManagerStore.setPanes(panes)
     }
     paneManagerStore.setPaneIndex(paneIndex)
-    Actions.setInitialPaneIndex()
+    actions.router.start()
   })
 }
 

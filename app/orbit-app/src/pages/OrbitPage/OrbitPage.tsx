@@ -17,7 +17,6 @@ import React, {
   useCallback,
 } from 'react'
 import * as ReactDOM from 'react-dom'
-import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
@@ -25,7 +24,6 @@ import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
-import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { AppWrapper } from '../../views'
 import { Dock } from './Dock'
@@ -36,6 +34,7 @@ import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { IS_ELECTRON } from '../../constants'
 import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { useOm } from '../../om/om'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -55,31 +54,29 @@ export const OrbitPage = memo(() => {
   return (
     <Theme name={themeStore.themeColor}>
       <AppWrapper className={`theme-${themeStore.themeColor} app-parent-bounds`}>
-        <ActionsContext.Provider value={defaultActions}>
-          <ProvideFocus>
-            <OrbitPageInner />
-            {/* Inside provide stores to capture all our relevant stores */}
-            <OrbitEffects />
-          </ProvideFocus>
-        </ActionsContext.Provider>
+        <ProvideFocus>
+          <OrbitPageInner />
+          {/* Inside provide stores to capture all our relevant stores */}
+          <OrbitEffects />
+        </ProvideFocus>
       </AppWrapper>
     </Theme>
   )
 })
 
-function OrbitEffects() {
+const OrbitEffects = memo(() => {
   usePaneManagerEffects()
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
   useEnsureApps()
   return null
-}
+})
 
 const OrbitPageInner = memo(function OrbitPageInner() {
-  const Actions = useActions()
   const orbitStore = useOrbitStore()
   const paneManagerStore = usePaneManagerStore()
+  const { actions } = useOm()
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -106,7 +103,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         // prevent on command+w
         if (shouldCloseTab) {
           e.returnValue = false
-          Actions.previousTab()
+          actions.router.back()
           return
         }
         if (shouldCloseApp) {

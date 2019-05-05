@@ -1,5 +1,5 @@
 import { App } from '@o/stores'
-import { PEEK_ID } from '../../constants'
+import { PEEK_ID } from '../constants'
 
 export const closeApp = (id = PEEK_ID) => {
   if (id === null) {

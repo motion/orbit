@@ -19,7 +19,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { AppActions } from '../actions/appActions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
-import { orbitState } from '../orbitState'
+import { om } from '../om'
 import { log } from './log'
 
 // dont import app level stuff in here
@@ -50,7 +50,7 @@ const toJS = obj => {
 }
 
 // the heavy hitters
-window['orbitState'] = orbitState
+window['om'] = om
 window['css'] = css
 window['ReconnectingWebSocket'] = ReconnectingWebSocket
 window['Mediator'] = Mediator

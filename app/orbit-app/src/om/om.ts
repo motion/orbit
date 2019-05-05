@@ -23,13 +23,8 @@ const config = merge(
 )
 
 export const om = createOvermind(config)
-
 export const useOm = createHook(om)
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
-}
-
-if (module['hot']) {
-  module['hot'].accept()
 }

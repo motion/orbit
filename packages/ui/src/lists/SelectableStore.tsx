@@ -124,8 +124,6 @@ export class SelectableStore {
   }
 
   private setActive(next: string[]) {
-    console.log('setting active', next)
-
     // dont let it unselect
     if (this.props.alwaysSelected && next.length === 0) {
       return
@@ -136,7 +134,6 @@ export class SelectableStore {
       if (!this.keyToIndex[rowKey]) {
         const idx = this.rows.findIndex(r => key(r) === rowKey)
         if (idx >= 0) {
-          console.log('setting it to', rowKey, idx)
           this.keyToIndex[rowKey] = idx
         }
       }
@@ -329,8 +326,13 @@ export class SelectableStore {
     if (!this.listRef) return
     if (index < 0) return
     if (!isDefined(index)) return
-    console.log('scroll to', index)
-    this.listRef.scrollToItem(index)
+    if (index === 0) {
+      // bugfix: alwaysselected would call scroll super early and react-window has a bug
+      // where it would scroll down below 0px. perhaps due to not being measured yet right?
+      this.listRef.scrollTo(0)
+    } else {
+      this.listRef.scrollToItem(index)
+    }
   }
 
   private selectInRange = (fromKey: string, toKey: string): string[] => {

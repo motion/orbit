@@ -81,7 +81,6 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
-    console.log('on change', location, items)
     if (location === 'main') {
       setActiveItemThrottled(getAppProps(items[0]))
     }
@@ -155,7 +154,11 @@ const FadeIn = (props: any) => {
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
-    Promise.race([sleep(100), onIdle()]).then(() => setShown(true))
+    let off = false
+    Promise.race([sleep(100), onIdle()]).then(() => !off && setShown(true))
+    return () => {
+      off = true
+    }
   }, [])
 
   return (

@@ -82,11 +82,6 @@ export function getPanes(paneManagerStore: PaneManagerStore, apps: AppBit[]) {
       ? paneManagerStore.panes.findIndex(pane => pane.id === prevPane.id)
       : 0
     paneIndex = prevIndex === -1 ? 0 : prevIndex
-    console.warn(
-      'removing pane you are currently on! moving to a different one',
-      prevIndex,
-      paneIndex,
-    )
   }
   return {
     panes,

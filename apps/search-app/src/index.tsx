@@ -1,14 +1,5 @@
-import {
-  App,
-  AppFilterButton,
-  AppMainView,
-  AppProps,
-  createApp,
-  useSearchState,
-  useStore,
-  useStores,
-} from '@o/kit'
-import { Button, Calendar, Col, FloatingCard, List, Popover, Scale, View } from '@o/ui'
+import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
+import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
 import { SearchAppSettings } from './SearchAppSettings'
@@ -54,7 +45,7 @@ function SearchApp(props: AppProps) {
         defaultHeight={height}
         attach="bottom right"
         edgePad={[20, 20]}
-        elevation={20}
+        elevation={6}
         visible
       >
         <AppMainView {...props} />

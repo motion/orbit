@@ -143,23 +143,29 @@ export function FloatingView(props: FloatingViewProps) {
     if (cb) {
       cb(w, h, desW, desH, sides)
     }
-    const at = curPos.current
+    const cur = curPos.current
+    let { width, height } = cur
+    let left = cur.xy[0]
+    let top = cur.xy[1]
+
     if (sides.right) {
-      update({ width: w, ...instantConf })
+      width = w
     }
     if (sides.bottom) {
-      update({ height: h, ...instantConf })
+      height = h
     }
     if (sides.top) {
-      const diff = h - at.height
-      const top = at.xy[1] - diff
-      update({ xy: [at.xy[0], top], height: at.height + diff, ...instantConf })
+      const diff = h - cur.height
+      top = cur.xy[1] - diff
+      height = cur.height + diff
     }
     if (sides.left) {
-      const diff = w - at.width
-      const left = at.xy[0] - diff
-      update({ xy: [left, at.xy[1]], width: at.width + diff, ...instantConf })
+      const diff = w - cur.width
+      left = cur.xy[0] - diff
+      width = cur.width + diff
     }
+
+    update({ width, height, xy: [left, top], ...instantConf })
   }, [])
 
   const bindGesture = useGesture(next => {

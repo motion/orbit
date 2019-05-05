@@ -9,6 +9,7 @@ import * as router from './router'
 import * as setupApp from './setupApp'
 import { state } from './state'
 
+// avoid hmr until bugfixed
 const config = merge(
   {
     onInitialize,
@@ -22,7 +23,7 @@ const config = merge(
   }),
 )
 
-export const om = createOvermind(config)
+export const om = window['om'] || createOvermind(config)
 export const useOm = createHook(om)
 
 declare module 'overmind' {

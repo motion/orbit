@@ -205,7 +205,7 @@ async function makeConfig() {
     //   cheap-source-map (no line numbers...)
     //   cheap-module-eval-source-map (seems alright in both...)
     //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-    devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool: isProd ? 'source-map' : 'eval',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields: isProd

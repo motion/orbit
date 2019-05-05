@@ -17,7 +17,6 @@ import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility,
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
-import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
 import { usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
@@ -54,8 +53,6 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 type AppRenderProps = { id: string; identifier: string; hasShownOnce?: boolean }
 
 const OrbitAppRender = memo((props: AppRenderProps) => {
-  // handle url changes
-  useAppLocationEffect()
   // get definition
   const appDef = getAppDefinition(props.identifier)
   if (appDef.app == null) {

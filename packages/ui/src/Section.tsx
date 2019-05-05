@@ -104,7 +104,9 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleProps,
     backgrounded,
     titleScale,
+    borderRadius,
     titleElement,
+    overflow,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -156,7 +158,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxHeight={maxHeight}
       maxWidth={maxWidth}
       minHeight={minHeight}
-      overflow={isDefined(scrollable, maxHeight) ? 'hidden' : undefined}
+      borderRadius={borderRadius}
+      overflow={selectDefined(
+        overflow,
+        isDefined(scrollable, maxHeight, bordered, borderRadius) ? 'hidden' : undefined,
+      )}
       pad={!showTitleAbove ? pad : false}
       size={size}
     >

@@ -65,7 +65,7 @@
 		"url-loader": "^1.0.1",
 		"webpack": "4.30.0",
 		"webpack-bundle-analyzer": "3.3.2",
-		"webpack-cli": "3.3.0",
+		"webpack-cli": "3.3.2",
 		"webpack-dev-server": "github:webpack/webpack-dev-server#b098bcbe8a229e2f13151171b00bb0dc085dbd67",
 		"webpack-notifier": "1.7.0",
 		"workerize-loader": "1.0.4"

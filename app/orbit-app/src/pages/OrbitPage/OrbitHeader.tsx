@@ -2,20 +2,10 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveAppsSorted } from '@o/kit'
 import { isEditing } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { forwardRef, memo, useCallback, useState } from 'react'
 
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
@@ -207,7 +197,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         // closeOnClick
         width={window.innerWidth * 0.8}
         padding={4}
-        elevation={2}
+        elevation={10}
         arrowSize={10}
         distance={8}
         sizeRadius

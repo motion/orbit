@@ -3,8 +3,8 @@ import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
 import * as actions from './actions'
-import { onInitialize } from './onInitialize'
 import * as effects from './effects'
+import { onInitialize } from './onInitialize'
 import * as router from './router'
 import * as setupApp from './setupApp'
 import { state } from './state'
@@ -28,4 +28,8 @@ export const useOm = createHook(om)
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}
+}
+
+if (module['hot']) {
+  module['hot'].accept()
 }

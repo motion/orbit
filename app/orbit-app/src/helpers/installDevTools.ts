@@ -2,7 +2,6 @@ import './installGlobals'
 
 import { debugUseStore, IS_STORE } from '@o/use-store'
 import { spy } from 'mobx'
-import React from 'react'
 import { setConfig } from 'react-hot-loader'
 
 import { Stores } from '../om/stores'
@@ -11,10 +10,10 @@ window['enableLog'] = false
 
 // why-did-you-render
 // https://github.com/welldone-software/why-did-you-render
-if (process.env.NODE_ENV !== 'production') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render').default
-  whyDidYouRender(React)
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   const whyDidYouRender = require('@welldone-software/why-did-you-render').default
+//   whyDidYouRender(require('React'))
+// }
 
 let spyOff = null
 function debug(level?: number) {

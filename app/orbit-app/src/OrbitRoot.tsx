@@ -50,3 +50,11 @@ export const OrbitRoot = hot(() => {
     </ProvideStores>
   )
 })
+
+if (process.env.NODE_ENV === 'development' && module['hot']) {
+  module['hot'].addStatusHandler(status => {
+    if (status === 'apply') {
+      console.log('[HMR] finished')
+    }
+  })
+}

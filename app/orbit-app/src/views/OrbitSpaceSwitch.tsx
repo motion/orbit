@@ -100,7 +100,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         elevation={7}
         onChangeVisibility={store.setOpen}
         target={
-          <View position="relative" margin={[0, 6, 0, 18]} onClick={accountLink}>
+          <View position="relative" margin={[0, 6, 0, 18]} {...accountLink}>
             <Avatar className="undraggable" src={avatar} width={20} height={20} />
             <OrbitOrb
               position="absolute"
@@ -126,7 +126,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
               iconBefore
               title={user.name}
               subTitle="Active"
-              onClick={accountLink}
+              {...accountLink}
             />
           ) : (
             <div>No spaces</div>

@@ -12,14 +12,14 @@ export function AppsMainAddApp(props: { identifier: string }) {
     <Section
       pad="xl"
       space
-      title={
+      titleElement={
         <TitleRow
           backgrounded
           pad="xl"
           space
           icon={props.identifier}
           title={def.name}
-          afterTitle={
+          after={
             <>
               {!hasSetup && def.sync && (
                 <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>

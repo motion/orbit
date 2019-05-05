@@ -1,10 +1,11 @@
 import { invertLightness } from '@o/color'
-import { gloss, linearGradient, Row, useTheme } from '@o/gloss'
+import { gloss, Row, useTheme } from '@o/gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
   Button,
   ButtonProps,
+  IconProps,
   memoIsEqualDeep,
   MenuTemplate,
   SimpleText,
@@ -24,7 +25,7 @@ export type TabProps = ViewProps & {
   tabDisplay?: string
   separator?: boolean
   isActive?: boolean
-  label?: string
+  label?: React.ReactNode
   stretch?: boolean
   sidePad?: number
   tooltip?: string
@@ -114,7 +115,9 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   return button
 })
 
-function OrbitTabIcon(props: IconProps & TabProps) {
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+function OrbitTabIcon(props: Omit<IconProps, 'label'> & TabProps) {
   const theme = useTheme()
   let opacity = props.isActive ? 1 : props.thicc ? 0.5 : 0.3
   opacity += props.iconAdjustOpacity || 0
@@ -125,8 +128,6 @@ function OrbitTabIcon(props: IconProps & TabProps) {
       className={`tab-icon-${props.thicc ? 'pinned' : 'unpinned'} tab-icon-${
         props.isActive ? 'active' : 'inactive'
       }`}
-      // transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
-      // marginLeft={-(props.size + +props.marginRight)}
       {...props}
     />
   )
@@ -175,26 +176,21 @@ const NavButtonChrome = gloss<TabProps>(View, {
   height: tabHeight,
   marginRight: 2,
 }).theme(({ width, isActive, stretch }, theme) => {
-  const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
-  const glowStyle = {
-    background: isActive ? background : theme.tabInactiveHover,
-    transition: isActive ? 'none' : tabTransition,
-  }
+  const { tabBackgroundHover, tabBackgroundActive, tabBackgroundSelected } = theme
+  const background = isActive ? tabBackgroundSelected : 'transparent'
+  const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover
+  const backgroundActive = isActive ? tabBackgroundSelected : tabBackgroundActive
   return {
-    zIndex: isActive ? 1000000000 : 0,
     width: stretch ? width || 150 : 'auto',
-    background: isActive ? background : 'transparent',
-    // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
-    // border: [1, isActive ? theme.borderColor : 'transparent'],
-    // borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
-    // boxShadow: isActive
-    //   ? [
-    //       [0, 0, 6, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
-    //       // ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.6)],
-    //       // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
-    //     ]
-    //   : null,
-    '&:hover': glowStyle,
+    background,
+    '&:hover': {
+      background: backgroundHover,
+      transition: isActive ? 'none' : tabTransition,
+    },
+    '&:active': {
+      background: backgroundActive,
+      transition: isActive ? 'none' : tabTransition,
+    },
     '& .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.4 !important',
       transition: isActive ? 'none' : tabTransition,
@@ -208,20 +204,5 @@ const NavButtonChrome = gloss<TabProps>(View, {
     '&:hover .tab-label': {
       opacity: 1,
     },
-    '&:active': glowStyle,
   }
 })
-
-// const Separator = gloss({
-//   position: 'absolute',
-//   top: 0,
-//   right: 0,
-//   bottom: 0,
-//   transform: {
-//     x: 0.5,
-//     y: -1.5,
-//   },
-//   width: 1,
-// }).theme((_, theme) => ({
-//   background: `linear-gradient(transparent, ${theme.borderColor.alpha(alpha => alpha * 0.65)})`,
-// }))

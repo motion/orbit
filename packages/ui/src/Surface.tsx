@@ -21,7 +21,7 @@ import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { getPadding } from './View/PaddedView'
-import { ViewProps } from './View/View'
+import { getMargin, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -489,6 +489,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const padStyle = getPadding(props)
+  const marginStyle = getMargin(props)
 
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || []
@@ -533,6 +534,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
         },
     ...styles,
     ...padStyle,
+    ...marginStyle,
   }
 
   return styles

@@ -11,7 +11,6 @@ import {
 import { Button, Calendar, Col, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
-import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
 
@@ -58,7 +57,7 @@ function SearchApp(props: AppProps) {
         elevation={20}
         visible
       >
-        {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}
+        <AppMainView {...props} />
       </FloatingCard>
     </App>
   )

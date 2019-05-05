@@ -5,6 +5,8 @@ import { spy } from 'mobx'
 import React from 'react'
 import { setConfig } from 'react-hot-loader'
 
+import { Stores } from '../orbitState/stores'
+
 window['enableLog'] = false
 
 // why-did-you-render
@@ -117,8 +119,10 @@ debugUseStore(event => {
   }
 })
 
+window['Stores'] = Stores
+
 function globalizeStores(stores: Record<string, any>) {
-  window['Stores'] = stores
+  window['Stores'] = { ...window['Stores'], ...stores }
   // if we can, put store right on window
   for (const key in stores) {
     if (window[key]) {

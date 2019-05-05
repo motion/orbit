@@ -1,16 +1,16 @@
 import './helpers/installDevelopmentHelpers'
 
 import { command } from '@o/bridge'
-import { themes } from '@o/kit'
+import { ProvideStores, themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
 import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
 import React, { useEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
-import { Router, View } from 'react-navi'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import { Navigation } from './OrbitNavigation'
+import { Stores } from './orbitState/stores'
+import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 export const OrbitRoot = hot(() => {
   // capture un-captured links
@@ -31,22 +31,22 @@ export const OrbitRoot = hot(() => {
   })
 
   return (
-    <ContextMenuProvider
-      onContextMenu={items => {
-        if (IS_ELECTRON) {
-          ContextMenu.update({ prepend: items })
-        }
-      }}
-    >
-      <ProvideUI themes={themes}>
-        <ErrorBoundary name="Root">
-          <Router navigation={Navigation}>
+    <ProvideStores stores={Stores}>
+      <ContextMenuProvider
+        onContextMenu={items => {
+          if (IS_ELECTRON) {
+            ContextMenu.update({ prepend: items })
+          }
+        }}
+      >
+        <ProvideUI themes={themes}>
+          <ErrorBoundary name="Root">
             <React.Suspense fallback={null}>
-              <View hashScrollBehavior="smooth" />
+              <OrbitPage />
             </React.Suspense>
-          </Router>
-        </ErrorBoundary>
-      </ProvideUI>
-    </ContextMenuProvider>
+          </ErrorBoundary>
+        </ProvideUI>
+      </ContextMenuProvider>
+    </ProvideStores>
   )
 })

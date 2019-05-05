@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Row, Section, Tab, Tabs, View } from '@o/ui'
+import { ChatMessages, Row, Section, View } from '@o/ui'
 import * as React from 'react'
 
 import { AppBitMainProps } from '../types/AppDefinition'

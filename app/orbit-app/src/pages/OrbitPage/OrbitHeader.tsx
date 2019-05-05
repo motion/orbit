@@ -1,18 +1,8 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useStore, useActiveAppsSorted } from '@o/kit'
+import { Icon, useActiveAppsSorted, useStore } from '@o/kit'
 import { isEditing } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { forwardRef, memo, useCallback, useState } from 'react'
 
 import { useActions } from '../../hooks/useActions'

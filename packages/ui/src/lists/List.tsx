@@ -1,6 +1,6 @@
 import { Bit } from '@o/models'
 import { isDefined } from '@o/utils'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
@@ -18,7 +18,7 @@ import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
 import { ListItemSimpleProps } from './ListItemSimple'
-import { Direction, useSelectableStore } from './SelectableStore'
+import { Direction, SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type ListProps = SectionSpecificProps &
@@ -31,10 +31,10 @@ export type ListProps = SectionSpecificProps &
     search?: string
 
     /** Callback on selection change with an array of rows */
-    onSelect?: HandleOrbitSelect
+    onSelect?: (rows: any[], indices: number[]) => any
 
     /** Callback on double-click or keyboard enter, with array of rows */
-    onOpen?: HandleOrbitSelect
+    onOpen?: (rows: any[], indices: number[]) => any
 
     /** Item to show when list has no elements passed in */
     placeholder?: React.ReactNode
@@ -91,10 +91,12 @@ export const List = memo((allProps: ListProps) => {
   const filtered = useFilter(props)
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
+  const selection = useRef<[any[], number[]]>([[], []])
 
-  const onSelectInner = useCallback(
+  const onSelectInner: SelectableProps['onSelect'] = useCallback(
     (selectedRows, selectedIndices) => {
-      console.log('on select', selectedRows)
+      selection.current = [selectedRows, selectedIndices]
+
       if (shareable) {
         shareStore.setSelected(shareable, selectedRows)
       }
@@ -120,16 +122,10 @@ export const List = memo((allProps: ListProps) => {
       }
       switch (shortcut) {
         case 'open':
-          console.log('todo open', selectableStore.active)
-          // const item = getItems()[]
-          // if (item && item.onOpen) {
-          //   console.log('TODO open')
-          //   // item.onOpen(selStore.activeIndex, null)
-          // }
-          // if (onOpen) {
-          //   console.log('TODO open')
-          //   // onOpen(selStore.activeIndex, null)
-          // }
+          console.log('onOpen', onOpen)
+          if (onOpen) {
+            onOpen(...selection.current)
+          }
           break
         case 'up':
           selectableStore && selectableStore.move(Direction.up)

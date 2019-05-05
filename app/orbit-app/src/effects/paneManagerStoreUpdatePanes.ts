@@ -3,6 +3,7 @@ import { PaneManagerPane, PaneManagerStore } from '@o/kit'
 import { AppBit } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import { ensure, useReaction } from '@o/use-store'
+
 import { useActions } from '../hooks/useActions'
 import { useStoresSimple } from '../hooks/useStores'
 
@@ -25,6 +26,14 @@ export const settingsPane = {
   id: 'settings',
   name: 'Settings',
   type: 'settings',
+  isHidden: true,
+  keyable: true,
+}
+
+export const loadingPane = {
+  id: 'loading',
+  name: 'Loading',
+  type: 'loading',
   isHidden: true,
   keyable: true,
 }

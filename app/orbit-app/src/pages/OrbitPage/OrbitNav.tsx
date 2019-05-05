@@ -1,8 +1,7 @@
 import { save } from '@o/bridge'
 import { gloss, Row, RowProps } from '@o/gloss'
 import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
-import { useAppSortHandler } from '@o/kit-internal'
-import { AppBit, AppModel } from '@o/models'
+import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
 import { flow } from 'lodash'
@@ -12,6 +11,7 @@ import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActions } from '../../hooks/useActions'
+import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 
 const isOnSettings = (pane?: PaneManagerPane) =>

@@ -14,6 +14,8 @@
     "test-electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
+    "page": "1.11.4",
+    "query-string": "6.5.0",
     "overmind-devtools": "18.1.0",
     "overmind-react": "18.1.0",
     "overmind": "17.1.0",
@@ -52,8 +54,6 @@
     "@o/use-store": "^2.4.1",
     "@o/utils": "^2.4.1",
     "@o/website-app": "^2.4.1",
-    "navi": "0.12.4",
-    "react-navi": "0.12.4",
     "date-fns": "2.0.0-alpha.7",
     "electron-context-menu": "0.11.0",
     "emoji-mart": "2.9.2",

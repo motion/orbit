@@ -1,6 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { useReaction } from '@o/use-store'
 import { fromEntries } from '@o/utils'
+
 import { useStoresSimple } from '../hooks/useStores'
 
 type URLSource = 'link' | 'internal'

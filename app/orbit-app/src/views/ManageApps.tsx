@@ -1,6 +1,6 @@
 import { Absolute, gloss } from '@o/gloss'
 import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStoresSimple } from '@o/kit'
-import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
+import { getAppContextItems } from '@o/kit-internal'
 import {
   Button,
   Section,
@@ -13,6 +13,7 @@ import {
   ViewProps,
 } from '@o/ui'
 import React, { useCallback } from 'react'
+import { useAppSortHandler } from '../hooks/useAppSortHandler'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode

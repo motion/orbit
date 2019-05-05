@@ -8,3 +8,15 @@ export function ensure(message: string, condition: boolean): condition is true {
   }
   return true
 }
+
+export function ensureBlock(cb: Function) {
+  try {
+    cb()
+  } catch (err) {
+    if (err instanceof ReactionRejectionError) {
+      return
+    } else {
+      throw err
+    }
+  }
+}

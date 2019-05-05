@@ -1,4 +1,10 @@
-import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
+import {
+  AutomagicStore,
+  CurrentComponent,
+  decorate,
+  updateProps,
+  useCurrentComponent,
+} from '@o/automagical'
 import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -27,6 +33,27 @@ export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'
+
+export interface UseStore<A extends ReactiveStore<any> | any> {
+  (Store: { new (): A } | A | false, props?: InferProps<A>, options?: UseStoreOptions): A
+}
+
+export interface UseStoreCurried<A extends ReactiveStore<any> | any> {
+  (options?: UseStoreOptions): A
+}
+
+export type UsableStore<T, Props> = T & AutomagicStore<Props> & { useStore: UseStoreCurried<T> }
+type InferProps<T> = T extends { props: infer R } ? R : undefined
+
+export function createUsableStore<T, Props extends InferProps<T>>(
+  OGStore: { new (...args: any[]): T },
+  initialProps?: Props,
+): UsableStore<T, Props> {
+  const Store = decorate(OGStore, initialProps)
+  const store = (new Store() as any) as UsableStore<T, Props>
+  store.useStore = options => useStore(store, undefined, options)
+  return store
+}
 
 export const unwrapProxy = (store: any) => {
   return store ? store[GET_STORE] || store : store
@@ -163,16 +190,12 @@ function useReactiveStore<A extends any>(
 
 // allows us to use instantiated or non-instantiated stores
 // sets up tracking so the component auto re-renders
-export function useStore<A extends ReactiveStore<any> | any>(
-  Store: { new (): A } | A | false,
-  props?: A extends { props: infer R } ? R : undefined,
-  options?: UseStoreOptions,
-): A {
+export const useStore: UseStore<any> = (Store, props?, options?) => {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
   const construct = Store && Store['constructor'].name !== 'Function'
-  let store: A | null = null
+  let store: any = null
 
   if (construct) {
     if (options && options.react === false) {
@@ -186,10 +209,10 @@ export function useStore<A extends ReactiveStore<any> | any>(
     }
 
     lastStore.current = Store
-    store = (Store as unknown) as A
+    store = Store
     store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
   } else {
-    const res = useReactiveStore(Store as new () => A, props)
+    const res = useReactiveStore(Store, props)
     store = res && res.store
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, {
@@ -209,7 +232,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
     }
   }, [store, construct])
 
-  return store as A
+  return store
 }
 
 // no tracking

@@ -14,20 +14,21 @@ import {
   useIsAppActive,
 } from '@o/kit'
 import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
-import { useReaction, useStoreSimple } from '@o/use-store'
+import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
+import { usePaneManagerStore } from '../../orbitState/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
-  const { paneManagerStore } = useStoresSimple()
-  const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
-  const isActive = useReaction(getIsActive)
+  const paneManagerStore = usePaneManagerStore()
+  const getIsActive = () => paneManagerStore.activePane.id === id
+  const isActive = getIsActive()
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,

@@ -4,13 +4,15 @@ import DriveApp from '@o/drive-app'
 import GithubApp from '@o/github-app'
 import GmailApp from '@o/gmail-app'
 import JiraApp from '@o/jira-app'
-import { AppDefinition, configureKit } from '@o/kit'
+import { AppDefinition, configureKit, createApp } from '@o/kit'
 import ListsApp from '@o/lists-app'
 import PeopleApp from '@o/people-app'
 import PostgresApp from '@o/postgres-app'
 import SearchApp from '@o/search-app'
 import SlackApp from '@o/slack-app'
+import { Loading } from '@o/ui'
 import WebsiteApp from '@o/website-app'
+import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
@@ -55,6 +57,12 @@ export const orbitStaticApps: AppDefinition[] = [
   CreateApp,
   MessageApp,
   HomeApp,
+  createApp({
+    name: 'Loading...',
+    icon: '',
+    id: 'loading',
+    app: () => createElement(Loading),
+  }),
 ]
 
 export const orbitApps: AppDefinition[] = [...orbitStaticApps, ...apps]

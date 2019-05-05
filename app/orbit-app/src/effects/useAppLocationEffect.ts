@@ -1,24 +1,22 @@
-import { ensure, useReaction } from '@o/use-store'
-import { useStoresSimple } from '../hooks/useStores'
+import { useEffect } from 'react'
 
 export function useAppLocationEffect() {
-  const { appStore, selectableStore, locationStore, paneManagerStore } = useStoresSimple()
+  // const { appStore, selectableStore, paneManagerStore } = useStoresSimple()
 
-  useReaction(
-    () => locationStore.url,
-    location => {
-      ensure('location', !!location)
-      ensure('external url', location.source === 'link')
-      ensure('matches type', appStore.identifier === location.basename)
-
-      if (appStore.id === location.query.id) {
-        paneManagerStore.setActivePane(location.basename)
-        selectableStore.moveToId(location.query.itemId)
-      }
-
-      if (!location.query.id) {
-        paneManagerStore.setActivePaneByType(location.basename)
-      }
-    },
-  )
+  useEffect(() => {
+    // Navigation.subscribe(route => {
+    //   ensureBlock(() => {
+    //     ensure('location', !!location)
+    //     ensure('external url', location.source === 'link')
+    //     ensure('matches type', appStore.identifier === location.basename)
+    //     if (appStore.id === location.query.id) {
+    //       paneManagerStore.setActivePane(location.basename)
+    //       selectableStore.moveToId(location.query.itemId)
+    //     }
+    //     if (!location.query.id) {
+    //       paneManagerStore.setActivePaneByType(location.basename)
+    //     }
+    //   })
+    // })
+  }, [])
 }

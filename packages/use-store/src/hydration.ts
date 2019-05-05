@@ -2,11 +2,11 @@ import { AutomagicStore } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 
 export type HydrationState = {
-  decorations: AutomagicStore['__automagic']['decorations']
+  decorations: AutomagicStore<any>['__automagic']['decorations']
   values: Object
 }
 
-export function dehydrate(store: AutomagicStore): HydrationState {
+export function dehydrate(store: AutomagicStore<any>): HydrationState {
   const { decorations } = store.__automagic
   return {
     decorations,
@@ -20,7 +20,7 @@ export function dehydrate(store: AutomagicStore): HydrationState {
 }
 
 export function hydrate(
-  store: AutomagicStore,
+  store: AutomagicStore<any>,
   previousInitialState: HydrationState,
   previousState: HydrationState | null,
 ) {

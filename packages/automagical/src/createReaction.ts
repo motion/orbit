@@ -6,7 +6,6 @@ import { getReactionOptions, log, logGroup } from './helpers'
 import { SHARED_REJECTION_ERROR } from './react'
 import { EffectCallback, ReactionHelpers, ReactionOptions } from './types'
 
-const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
 type Subscription = { unsubscribe: Function }
@@ -249,7 +248,6 @@ export function createReaction(
 
   function setupReactionFn(reactionFn: Function) {
     return function magicReaction(reactValArg: any) {
-      console.log('running reaction2')
       reset()
       const start = Date.now()
       id = id + 1

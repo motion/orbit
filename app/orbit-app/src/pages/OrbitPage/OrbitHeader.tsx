@@ -54,6 +54,10 @@ const HomeButton = memo(
   }),
 )
 
+const activeStyle = {
+  opacity: 1,
+}
+
 export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { isTorn } = orbitStore
@@ -125,13 +129,13 @@ export const OrbitHeader = memo(() => {
               )}
 
               <Button
-                active={paneManagerStore.activePane.id === 'data-explorer'}
+                {...paneManagerStore.activePane.id === 'data-explorer' && activeStyle}
                 {...useLocationLink('/app/data-explorer')}
                 icon="layers"
                 tooltip="Data explorer"
               />
               <Button
-                active={paneManagerStore.activePane.id === 'apps'}
+                {...paneManagerStore.activePane.id === 'apps' && activeStyle}
                 {...useLocationLink('/app/apps')}
                 icon="layout-grid"
                 tooltip="Manage apps"

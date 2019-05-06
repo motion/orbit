@@ -2,9 +2,9 @@ import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
-import { AppActions } from '../../actions/AppActions'
-import { useStores } from '../../hooks/useStores'
-import { useOm } from '../../om/om'
+import { AppActions } from '../actions/AppActions'
+import { useStores } from '../hooks/useStores'
+import { useOm } from '../om/om'
 
 // TODO these would be easier to search if they all prefixed with something
 

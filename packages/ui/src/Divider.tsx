@@ -1,5 +1,6 @@
 import { gloss } from '@o/gloss'
 import * as React from 'react'
+
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
@@ -15,7 +16,7 @@ export const BarInner = gloss(View, {
   background: theme.borderColor.alpha(a => a * 0.35),
 }))
 
-export type DividerProps = RowProps
+export type DividerProps = Partial<RowProps>
 
 export function Divider({ background = null, height = 1, ...props }: DividerProps) {
   return (

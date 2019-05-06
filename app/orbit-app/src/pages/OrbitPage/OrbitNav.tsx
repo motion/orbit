@@ -7,12 +7,12 @@ import { isRightClick } from '@o/ui'
 import { flow } from 'lodash'
 import React, { forwardRef, memo } from 'react'
 
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'

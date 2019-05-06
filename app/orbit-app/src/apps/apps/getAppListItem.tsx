@@ -1,6 +1,7 @@
 import { AppWithDefinition } from '@o/kit'
 import React from 'react'
-import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+
+import { OrbitAppInfo } from '../../views/OrbitAppInfo'
 
 export function getAppListItem(app: AppWithDefinition) {
   const title = app.app ? app.app.name : app.definition.name

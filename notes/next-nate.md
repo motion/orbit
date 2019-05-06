@@ -1,3 +1,9 @@
+make gloss work with shadow-root; not too hard:
+  1. <ThemeConfig rootElement={shadowRootRef} />
+  2. GlossView(props)
+     1. => glossify(styles, context.rootElement)
+     2. => sheet.addStyles(rootElement)
+
 ---
 
 orbit-cli
@@ -7,6 +13,7 @@ avoid all config, just package.json
 put apps in your workspace by default
 ~/o/workspace/apps
 that way we can put a lot of config above it, can even run ts above it
+
 
 ---
 

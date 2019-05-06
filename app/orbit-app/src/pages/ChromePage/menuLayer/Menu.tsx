@@ -7,7 +7,7 @@ import * as React from 'react'
 import { createRef } from 'react'
 
 import { AppActions } from '../../../actions/AppActions'
-import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
+import MainShortcutHandler from '../../../views/MainShortcutHandler'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 import { StoreContext } from '../../../StoreContext'

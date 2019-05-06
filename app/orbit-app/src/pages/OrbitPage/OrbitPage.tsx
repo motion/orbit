@@ -51,9 +51,14 @@ export const OrbitPage = memo(() => {
     }
   }, [themeStore.themeColor])
 
+  const { theme } = themeStore
+
   return (
     <Theme name={themeStore.themeColor}>
-      <AppWrapper className={`theme-${themeStore.themeColor} app-parent-bounds`}>
+      <AppWrapper
+        className={`theme-${themeStore.themeColor} app-parent-bounds`}
+        color={theme.color}
+      >
         <ProvideFocus>
           <OrbitPageInner />
           {/* Inside provide stores to capture all our relevant stores */}

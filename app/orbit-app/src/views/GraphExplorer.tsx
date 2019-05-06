@@ -6,7 +6,10 @@ import { buildClientSchema, getIntrospectionQuery } from 'graphql'
 import React, { useEffect, useRef, useState } from 'react'
 import ShadowDOM from 'react-shadow'
 
+import { useThemeStore } from '../om/stores'
+
 export function GraphExplorer() {
+  const { theme } = useThemeStore()
   const graphiql = useRef(null)
   const [state, setState] = useState({ schema: null, query: null })
   const { schema, query } = state
@@ -38,7 +41,13 @@ export function GraphExplorer() {
       <ShadowDOM>
         <div>
           <div
-            style={{ display: 'flex', flexFlow: 'row', flex: 1, overflow: 'hidden' }}
+            style={{
+              display: 'flex',
+              flexFlow: 'row',
+              flex: 1,
+              overflow: 'hidden',
+              color: theme.color.toString(),
+            }}
             ref={shadowRoot}
           >
             <GraphiQLExplorer
@@ -95,6 +104,7 @@ export function GraphExplorer() {
 
                 .graphiql-container {
                   height: auto;
+                  color: inherit;
                 }
 
                 .editorWrap {
@@ -146,12 +156,22 @@ export function GraphExplorer() {
                   border-left: 1px solid rgba(150,150,150,0.1);
                   border-bottom: none;
                   background: none;
+                  color: inherit;
                 }
 
                 .graphiql-container .variable-editor-title {
                   background: none;
                   border-bottom: none;
                   border-top: 1px solid rgba(150,150,150,0.1);
+                }
+
+                .graphiql-container .result-window .CodeMirror-gutters {
+                  background: transparent;
+                  border-color: rgba(150,150,150,0.1);
+                }
+
+                .graphiql-container .resultWrap {
+                  border-left: none;
                 }
 
                 .result-window .CodeMirror {
@@ -175,8 +195,16 @@ export function GraphExplorer() {
                 }
 
                 .graphiql-container .result-window .CodeMirror-foldgutter {
-                  width: 1px;
-                  padding-left: 0;
+                  width: 3px;
+                  padding-left: 2;
+                }
+
+                .CodeMirror {
+                  background: transparent;
+                }
+
+                .CodeMirror-gutters {
+                  background: rgba(150,150,150,0.1);
                 }
 
                 .CodeMirror-foldgutter {

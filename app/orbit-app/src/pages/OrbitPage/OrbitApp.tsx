@@ -13,7 +13,15 @@ import {
   sleep,
   useIsAppActive,
 } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
+import {
+  ErrorBoundary,
+  ListItemProps,
+  Loading,
+  ProvideShare,
+  ProvideVisibility,
+  useShareStore,
+  useThrottleFn,
+} from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -170,7 +178,7 @@ const FadeIn = (props: any) => {
         right: 0,
         bottom: 0,
         opacity: shown ? 1 : 0,
-        transform: `translateY(${shown ? 0 : -10}px)`,
+        transform: `translateX(${shown ? 0 : -10}px)`,
         transition: 'all ease 200ms',
         width: '100%',
         height: '100%',

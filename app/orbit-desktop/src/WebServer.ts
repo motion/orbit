@@ -9,6 +9,8 @@ import { graphqlExpress } from 'graphql-server-express'
 import SlackApp from '@o/slack-app'
 import { getRepository } from 'typeorm'
 import { AppEntity } from '@o/models'
+import { mergeSchemas } from 'graphql-tools'
+import { nestSchema } from '@o/graphql-nest-schema'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
@@ -61,12 +63,22 @@ export class WebServer {
         },
       })
 
-      const schema = await SlackApp.graph(app)
+      const slackSchema = await SlackApp.graph(app)
+      console.log('slackSchema', slackSchema)
+
+      const schema = await nestSchema({
+        typeName: 'Slack',
+        fieldName: 'slack',
+        schema: slackSchema,
+      })
+
+      console.log('nested schema', schema)
+
       this.server.use(
         '/graphql',
         bodyParser.json(),
         graphqlExpress({
-          schema,
+          schema: mergeSchemas({ schemas: [schema] }),
         }),
       )
 

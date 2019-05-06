@@ -132,7 +132,7 @@ function DataExplorerApp() {
             dangerouslySetInnerHTML={{
               __html: `
                 :host > span {
-                  width: 100%:
+                  width: 100%;
                   height: 100%;
                   max-width: 100%;
                   max-height: 100%;
@@ -162,6 +162,10 @@ function DataExplorerApp() {
 
                 .CodeMirror-hints {
                   transform: translate3d(${-explorerLeft}px,-${explorerTop}px,0);
+                }
+
+                .graphiql-explorer-root {
+                  min-width: 200px;
                 }
               `,
             }}

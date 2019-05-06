@@ -28,7 +28,6 @@ import {
   users,
 } from 'slack'
 
-@ObjectType()
 export class SlackApi {
   static isClass = true
 

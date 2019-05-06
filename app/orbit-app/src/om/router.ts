@@ -42,7 +42,7 @@ const getPath = (name: string, p?: Params) => {
 
 const getItem = (name: RouteName, params?: Params): HistoryItem => ({
   name,
-  path: getPath(name, p),
+  path: getPath(name, params),
   params,
 })
 

@@ -44,12 +44,10 @@ const HomeButton = memo(
         color={invertLightness(theme.color, 0.5)}
         name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
         size={22}
-        onClick={useCallback(e => {
-          if (state.navVisible) {
-            e.stopPropagation()
-            actions.router.showHomePage()
-          }
-        }, [])}
+        onMouseUp={e => {
+          e.stopPropagation()
+          actions.router.showHomePage()
+        }}
         {...props}
       />
     )

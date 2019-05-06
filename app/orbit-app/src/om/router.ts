@@ -143,6 +143,7 @@ export const effects = {
   },
 
   setHomePane() {
+    console.log('show home')
     paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   },
 }

@@ -52,7 +52,7 @@ function DataExplorerMain({ subId }: AppProps) {
 
   return (
     <Section
-      pad="xl"
+      pad
       backgrounded
       title={app.appName}
       subTitle={app.name}

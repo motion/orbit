@@ -7,7 +7,21 @@ import {
   useAppState,
   useAppWithDefinition,
 } from '@o/kit'
-import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
+import {
+  Button,
+  Divider,
+  Form,
+  FormField,
+  List,
+  Section,
+  SubTitle,
+  Tab,
+  Table,
+  Tabs,
+  TextArea,
+  Title,
+  View,
+} from '@o/ui'
 import { remove } from 'lodash'
 import React from 'react'
 

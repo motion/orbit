@@ -82,6 +82,7 @@ import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
+import { GraphServer } from './GraphServer'
 
 const log = new Logger('desktop')
 
@@ -94,6 +95,7 @@ export class OrbitDesktopRoot {
   private config = getGlobalConfig()
   private screen: Screen
   private authServer: AuthServer
+  private graphServer: GraphServer
   private onboardManager: OnboardManager
   private disposed = false
   private webServer: WebServer
@@ -144,10 +146,15 @@ export class OrbitDesktopRoot {
     await this.webServer.start()
 
     this.authServer = new AuthServer()
-    await this.authServer.start()
-
+    this.graphServer = new GraphServer()
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
+
+    await Promise.all([
+      this.cosalManager.start(),
+      this.authServer.start(),
+      this.graphServer.start(),
+    ])
+
     this.cosal = this.cosalManager.cosal
 
     // depends on cosal

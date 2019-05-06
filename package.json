@@ -20,7 +20,9 @@
     "@types/node": "11.13.2",
     "@types/ws": "5.1.2",
     "unist-util-visit-parents": "2.0.1",
-    "date-fns": "2.0.0-alpha.7"
+    "date-fns": "2.0.0-alpha.7",
+    "express-graphql": "0.8.0",
+    "graphql": "14.2.1"
   },
   "devDependencies": {
     "typescript": "3.3.4000",

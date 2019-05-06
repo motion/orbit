@@ -1,17 +1,12 @@
 import { ApolloServer } from 'apollo-server'
-import { importSchema } from 'graphql-import'
-import { parse } from 'graphql'
-import { join } from 'path'
 import { getRepository } from 'typeorm'
 import { AppEntity } from '@o/models'
+import SlackApp from '@o/slack-app'
 
 export class GraphServer {
   server: ApolloServer
 
   async start() {
-    const base = join(require.resolve('@o/slack-app'), '..', '..')
-    const conf = join(base, 'slack.graphql')
-
     const app = await getRepository(AppEntity).findOne({
       where: {
         identifier: 'slack',
@@ -23,16 +18,8 @@ export class GraphServer {
       },
     })
 
-    console.log('app', app)
-
     this.server = new ApolloServer({
-      typeDefs: parse(importSchema(conf)),
-      context: ({ req }) => {
-        console.log('req', req)
-        return {
-          slackToken: app.token,
-        }
-      },
+      schema: await SlackApp.graph(app),
     })
 
     await this.server.listen({

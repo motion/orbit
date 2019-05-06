@@ -1,25 +1,20 @@
 import { ORBIT_WIDTH } from '@o/constants'
 import { QueryStore } from '@o/kit'
 import { App } from '@o/stores'
-import { react, useHook } from '@o/use-store'
-import { useStoresSimple } from '../hooks/useStores'
+import { react } from '@o/use-store'
+
+import { themeStore } from '../om/stores'
 
 export class OrbitWindowStore {
-  stores = useHook(useStoresSimple)
-
   props: {
     queryStore: QueryStore
   }
 
-  get themeStore() {
-    return this.stores.themeStore
-  }
-
   syncBackgroundToVibrancy = react(
-    () => this.themeStore.vibrancy === 'none',
+    () => themeStore.vibrancy === 'none',
     disabled => {
       if (disabled) {
-        const bg = this.themeStore.themeColor === 'dark' ? '#111' : '#fff'
+        const bg = themeStore.themeColor === 'dark' ? '#111' : '#fff'
         document.body.style.background = bg
       } else {
         document.body.style.background = 'transparent'

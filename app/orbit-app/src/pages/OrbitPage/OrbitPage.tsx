@@ -1,49 +1,41 @@
+import { Stores } from '../../om/stores'
 import { command } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import * as KIT from '@o/kit'
-import {
-  AppDefinition,
-  LocationStore,
-  PaneManagerStore,
-  ProvideStores,
-  QueryStore,
-  showConfirmDialog,
-  SpaceStore,
-  ThemeStore,
-  themes,
-} from '@o/kit'
+import { AppDefinition, showConfirmDialog, themes, ProvideStores } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import * as UI from '@o/ui'
-import { Loading, ProvideFocus, Theme } from '@o/ui'
-import { useStore, useStoreSimple } from '@o/use-store'
+import { Loading, ProvideFocus, Theme, ListPassProps } from '@o/ui'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
+import React, {
+  memo,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+  useCallback,
+} from 'react'
 import * as ReactDOM from 'react-dom'
-import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { getApps, orbitApps } from '../../apps/orbitApps'
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
+import { getApps } from '../../apps/orbitApps'
+import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
-import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
-import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
-import { useStores } from '../../hooks/useStores'
-import { HeaderStore } from '../../stores/HeaderStore'
-import { NewAppStore } from '../../stores/NewAppStore'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
-import { Dock, DockButton } from './Dock'
+import { Dock } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
-import { OrbitStore } from './OrbitStore'
 import { IS_ELECTRON } from '../../constants'
+import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { useOm } from '../../om/om'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -52,8 +44,7 @@ window['OrbitKit'] = (window as any).OrbitUI = KIT
 window['OrbitUI'] = (window as any).OrbitUI = UI
 
 export const OrbitPage = memo(() => {
-  const themeStore = useStore(ThemeStore)
-  const locationStore = useStore(LocationStore)
+  const themeStore = useThemeStore()
 
   useLayoutEffect(() => {
     if (!IS_ELECTRON) {
@@ -61,37 +52,40 @@ export const OrbitPage = memo(() => {
     }
   }, [themeStore.themeColor])
 
+  const { theme } = themeStore
+
   return (
-    <ProvideStores stores={{ locationStore, themeStore }}>
+    <ProvideStores stores={Stores}>
       <Theme name={themeStore.themeColor}>
-        <AppWrapper className={`theme-${themeStore.themeColor} app-parent-bounds`}>
-          <ActionsContext.Provider value={defaultActions}>
-            <OrbitPageProvideStores>
-              <OrbitPageInner />
-              {/* Inside provide stores to capture all our relevant stores */}
-              <OrbitEffects />
-            </OrbitPageProvideStores>
-          </ActionsContext.Provider>
+        <AppWrapper
+          className={`theme-${themeStore.themeColor} app-parent-bounds`}
+          color={theme.color}
+        >
+          <ProvideFocus>
+            <OrbitPageInner />
+            {/* Inside provide stores to capture all our relevant stores */}
+            <OrbitEffects />
+          </ProvideFocus>
         </AppWrapper>
       </Theme>
     </ProvideStores>
   )
 })
 
-function OrbitEffects() {
+const OrbitEffects = memo(() => {
   usePaneManagerEffects()
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
   useEnsureApps()
   return null
-}
+})
 
 const OrbitPageInner = memo(function OrbitPageInner() {
-  const Actions = useActions()
-  const { paneManagerStore } = useStores()
-  const orbitStore = useStore(OrbitStore)
-  const headerStore = useStoreSimple(HeaderStore)
+  const orbitStore = useOrbitStore()
+  const paneManagerStore = usePaneManagerStore()
+  const { actions } = useOm()
+
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
@@ -117,7 +111,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         // prevent on command+w
         if (shouldCloseTab) {
           e.returnValue = false
-          Actions.previousTab()
+          actions.router.back()
           return
         }
         if (shouldCloseApp) {
@@ -147,16 +141,11 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
-  const activeApps = paneManagerStore.panes.map(pane => ({
+  const allApps = paneManagerStore.panes.map(pane => ({
     id: pane.id,
     identifier: pane.type,
   }))
-  const staticApps = orbitApps.map(app => ({
-    id: app.id,
-    identifier: app.id,
-  }))
 
-  const allApps = [...activeApps, ...staticApps]
   const appsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
 
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
@@ -177,29 +166,37 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
   }
 
+  const onOpen = useCallback(rows => {
+    console.log('open', rows)
+    if (rows.length) {
+      if (rows[0].extraData) {
+        // navigate to rows[0].extraData
+        console.log(rows[0].extraData)
+      }
+    }
+  }, [])
+
   // want to isolate an app?
   // console.log(contentArea)
   // console.warn('debugging')
   // contentArea = contentArea.filter(x => x.props.id === '6')
 
   return (
-    <ProvideStores stores={{ orbitStore, headerStore }}>
-      <MainShortcutHandler handlers={handlers}>
-        <OrbitHeader />
+    <MainShortcutHandler handlers={handlers}>
+      <OrbitHeader />
 
-        <Dock>
-          {/* <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
-          <OrbitFloatingShareCard index={0} />
-        </Dock>
+      <Dock>
+        {/* <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
+        <OrbitFloatingShareCard index={0} />
+      </Dock>
 
-        <InnerChrome torn={orbitStore.isTorn}>
-          <OrbitContentArea>
-            {contentArea}
-            <OrbitAppSettingsSidebar />
-          </OrbitContentArea>
-        </InnerChrome>
-      </MainShortcutHandler>
-    </ProvideStores>
+      <InnerChrome torn={orbitStore.isTorn}>
+        <OrbitContentArea>
+          <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
+          <OrbitAppSettingsSidebar />
+        </OrbitContentArea>
+      </InnerChrome>
+    </MainShortcutHandler>
   )
 })
 
@@ -218,38 +215,11 @@ const OrbitContentArea = gloss({
   background: theme.sidebarBackgroundTransparent || theme.sidebarBackground,
 }))
 
-function OrbitPageProvideStores(props: any) {
-  const queryStore = useStoreSimple(QueryStore)
-  const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
-  const newAppStore = useStoreSimple(NewAppStore)
-
-  const paneManagerStore = useStoreSimple(PaneManagerStore, {
-    defaultPanes: isEditing ? [settingsPane] : defaultPanes,
-    defaultIndex: 0,
-  })
-
-  const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })
-
-  const stores = {
-    orbitWindowStore,
-    spaceStore,
-    queryStore,
-    paneManagerStore,
-    newAppStore,
-  }
-
-  return (
-    <ProvideFocus>
-      <ProvideStores stores={stores}>{props.children}</ProvideStores>
-    </ProvideFocus>
-  )
-}
-
 const InnerChrome = gloss<{ torn?: boolean } & UI.ViewProps>(UI.View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',
-  zIndex: 1,
+  zIndex: 3,
 }).theme(({ torn }) => ({
   boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
 }))

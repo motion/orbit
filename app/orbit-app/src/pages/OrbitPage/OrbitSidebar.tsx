@@ -35,7 +35,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         <Col flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <ListPassProps
-            shareable={identifier}
+            shareable
             selectable
             searchable
             alwaysSelected

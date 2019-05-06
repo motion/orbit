@@ -15,6 +15,9 @@
     "@o/ui": "^2.4.1",
     "autolinker": "^1.7.1",
     "lodash": "4.17.11",
-    "slack": "^11.0.1"
+    "slack": "^11.0.1",
+    "@o/swagger-to-graphql": "1.4.10",
+    "express-graphql": "0.8.0",
+    "graphql": "14.2.1"
   }
 }

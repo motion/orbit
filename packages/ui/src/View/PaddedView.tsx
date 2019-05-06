@@ -3,19 +3,18 @@ import { isDefined } from '@o/utils'
 
 import { getSpaceSize, Sizes } from '../Space'
 
+export type SizesObject = {
+  top?: Sizes
+  left?: Sizes
+  bottom?: Sizes
+  right?: Sizes
+  x?: Sizes
+  y?: Sizes
+}
+
 // Padded
 export type PadProps = {
-  pad?:
-    | Sizes
-    | Sizes[]
-    | {
-        top?: Sizes
-        left?: Sizes
-        bottom?: Sizes
-        right?: Sizes
-        x?: Sizes
-        y?: Sizes
-      }
+  pad?: Sizes | Sizes[] | SizesObject
 }
 
 export const getPadding = (
@@ -28,30 +27,28 @@ export const getPadding = (
       padding: props.padding,
     }
   }
-  if (typeof props.pad !== 'undefined') {
-    if (!props.pad) {
+  if (props.pad) {
+    return { padding: getSizableValue(props.pad) }
+  }
+}
+
+export const getSizableValue = (value: Sizes | SizesObject | Sizes[] | null | undefined) => {
+  if (typeof value !== 'undefined') {
+    if (!value) {
       return
     }
-    if (Array.isArray(props.pad)) {
-      return {
-        padding: props.pad.map(x => getSpaceSize(x)),
-      }
+    if (Array.isArray(value)) {
+      return value.map(x => getSpaceSize(x))
     }
-    if (typeof props.pad === 'object') {
-      const { top, left, right, bottom, x, y } = props.pad
+    if (typeof value === 'object') {
+      const { top, left, right, bottom, x, y } = value
       if (isDefined(x) || isDefined(y)) {
-        return {
-          padding: [x, y, x, y].map(val => getSpaceSize(val)),
-        }
+        return [x, y, x, y].map(val => getSpaceSize(val))
       }
-      return {
-        padding: [top, right, bottom, left].map(side => getSpaceSize(side || 0)),
-      }
+      return [top, right, bottom, left].map(side => getSpaceSize(side || 0))
     }
-    if (typeof props.pad === 'number' || typeof props.pad === 'string' || props.pad === true) {
-      return {
-        padding: getSpaceSize(props.pad),
-      }
+    if (typeof value === 'number' || typeof value === 'string' || value === true) {
+      return getSpaceSize(value)
     }
   }
 }

@@ -264,7 +264,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         padding={listItemAdjustedPadding}
-        spaceSize={listItemAdjustedPadding[1] / scale}
+        spaceSize={pad}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}

@@ -2,8 +2,8 @@ import { configureKit, customItems, Icon, useAppState, useUserState } from '@o/k
 import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
-import { StoreContext } from './contexts'
-import { getAppProps } from './helpers/getAppProps'
+
+import { StoreContext } from './StoreContext'
 
 function configure() {
   // stuff here will be re-run every save in development
@@ -31,7 +31,6 @@ function configure() {
     StoreContext,
     useAppState,
     useUserState,
-    propsToItem: getAppProps,
   })
 
   configureUseStore({

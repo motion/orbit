@@ -22,6 +22,7 @@ module.exports = {
   rules: {
     indent: 'off',
     'no-param-reassign': 'off',
+    '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-parameter-properties': 'off',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/ban-types': 'off',
@@ -49,7 +50,7 @@ module.exports = {
     'react/jsx-uses-react': 'error',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
-    'no-shadow': 'error',
+    'no-shadow': 'off',
     // '@typescript-eslint/tslint/config': [
     //   'warn',
     //   {

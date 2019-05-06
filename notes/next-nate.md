@@ -1,3 +1,20 @@
+make gloss work with shadow-root; not too hard:
+  1. <ThemeConfig rootElement={shadowRootRef} />
+  2. GlossView(props)
+     1. => glossify(styles, context.rootElement)
+     2. => sheet.addStyles(rootElement)
+
+---
+
+orbit-cli
+
+we automatically run it from orbit-app, to handle commands
+avoid all config, just package.json
+put apps in your workspace by default
+~/o/workspace/apps
+that way we can put a lot of config above it, can even run ts above it
+
+
 ---
 
 May
@@ -215,3 +232,17 @@ Week 4: Get a nice website with mobile + start on docs
 ---
 
 large rows filter/search in browser (https://github.com/nextapps-de/flexsearch)
+
+---
+
+```
+view Main {
+  x = 0
+  y = 1
+  inc = () => x++
+  z = x + y
+  abc = x >> x + 1
+
+  <div onClick={inc} />
+}
+```

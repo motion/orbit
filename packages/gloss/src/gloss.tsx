@@ -170,6 +170,9 @@ export function gloss<Props = any>(
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
+        if (Styles.propStyles[key]) {
+          continue
+        }
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
         if (key === 'size' && props[key] === true) {
           continue
@@ -183,9 +186,11 @@ export function gloss<Props = any>(
         }
       }
     } else {
-      finalProps = {
-        ...props,
-        ...finalProps,
+      for (const key in props) {
+        if (Styles.propStyles[key]) {
+          continue
+        }
+        finalProps[key] = props[key]
       }
     }
 

@@ -1,9 +1,19 @@
+import './installGlobals'
+
 import { debugUseStore, IS_STORE } from '@o/use-store'
 import { spy } from 'mobx'
 import { setConfig } from 'react-hot-loader'
-import './installGlobals'
+
+import { Stores } from '../om/stores'
 
 window['enableLog'] = false
+
+// why-did-you-render
+// https://github.com/welldone-software/why-did-you-render
+// if (process.env.NODE_ENV !== 'production') {
+//   const whyDidYouRender = require('@welldone-software/why-did-you-render').default
+//   whyDidYouRender(require('React'))
+// }
 
 let spyOff = null
 function debug(level?: number) {
@@ -48,7 +58,10 @@ function lightLog(val: any) {
 function logMobxEvent(event) {
   switch (event.type) {
     case 'action':
-      console.groupCollapsed(`%c  ${event.name}(${event.arguments.join(', ')})`, 'color:orange;')
+      console.groupCollapsed(
+        `%c  ${event.name}(${event.arguments.map(lightLog).join(', ')})`,
+        'color:orange;',
+      )
       console.log(event)
       console.groupEnd()
       break
@@ -68,6 +81,9 @@ function logMobxEvent(event) {
         break
       }
       if (event.name.indexOf('track(') === 0) {
+        break
+      }
+      if (event.name.indexOf('magicReaction') === 0) {
         break
       }
       console.log(`%c ${event.name}`, 'color:blue;')
@@ -102,8 +118,10 @@ debugUseStore(event => {
   }
 })
 
+window['Stores'] = Stores
+
 function globalizeStores(stores: Record<string, any>) {
-  window['Stores'] = stores
+  window['Stores'] = { ...window['Stores'], ...stores }
   // if we can, put store right on window
   for (const key in stores) {
     if (window[key]) {

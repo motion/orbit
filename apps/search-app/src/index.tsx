@@ -1,8 +1,7 @@
 import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
-import { Button, Calendar, Col, FloatingCard, List, Popover, Scale, View } from '@o/ui'
+import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
-import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
 
@@ -24,33 +23,32 @@ function SearchApp(props: AppProps) {
     searchStore.setSearchState(state)
   })
 
-  const width = 300
-  const height = 280
+  const width = 500
+  const height = 350
 
   return (
     <App actions={<SearchActions />}>
-      <Col flex={1} pad={['xxl', 'xxxl']}>
-        <Scale size={1.2}>
-          <List
-            shareable
-            selectable
-            itemProps={{
-              iconBefore: true,
-              iconSize: 45,
-            }}
-            items={searchStore.results}
-          />
-        </Scale>
-      </Col>
+      <Scale size={1.2}>
+        <List
+          alwaysSelected
+          shareable
+          selectable
+          itemProps={{
+            iconBefore: true,
+            iconSize: 42,
+          }}
+          items={searchStore.results}
+        />
+      </Scale>
       <FloatingCard
         defaultWidth={width}
         defaultHeight={height}
         attach="bottom right"
         edgePad={[20, 20]}
+        elevation={6}
         visible
-        pad
       >
-        {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}
+        <AppMainView {...props} />
       </FloatingCard>
     </App>
   )

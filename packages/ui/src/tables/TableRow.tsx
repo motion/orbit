@@ -54,9 +54,9 @@ export const TableRow = memo(function TableRow({
   rowKey,
   ...props
 }: TableRowProps) {
-  const isHighlighted = useReaction(
-    () => (selectableStore && selectableStore.active.has(rowKey)) || false,
-  )
+  const isHighlighted = useReaction(() => {
+    return (selectableStore && selectableStore.active.has(rowKey)) || false
+  })
 
   if (!columnKeys.length) {
     console.warn('No columns')

@@ -1,12 +1,12 @@
 import { AppIcon } from '@o/kit'
 import { Input, Popover, Row, Space, View } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
-import { useStores } from '../../hooks/useStores'
+
+import { useOm } from '../../om/om'
 import { ColorPicker } from '../../views/ColorPicker'
 
 export function AppsMainNew() {
-  const { newAppStore } = useStores()
-  const { app } = newAppStore
+  const { state, actions } = useOm()
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -37,9 +37,9 @@ export function AppsMainNew() {
         >
           <ColorPicker
             onChangeColor={colors => {
-              newAppStore.update({ colors })
+              actions.setupApp.update({ colors })
             }}
-            activeColor={app.colors[0]}
+            activeColor={state.setupApp.app.colors[0]}
           />
         </Popover>
 
@@ -50,12 +50,12 @@ export function AppsMainNew() {
           size={1.5}
           placeholder="Name..."
           margin={['auto', 0]}
-          value={app.name}
+          value={state.setupApp.app.name}
           onFocus={e => {
             e.target.select()
           }}
           onChange={e => {
-            newAppStore.update({ name: e.target.value })
+            actions.setupApp.update({ name: e.target.value })
           }}
         />
       </Row>

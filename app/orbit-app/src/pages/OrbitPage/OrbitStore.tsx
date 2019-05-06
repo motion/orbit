@@ -1,10 +1,4 @@
-import { useHook } from '@o/use-store'
-
-import { useStoresSimple } from '../../hooks/useStores'
-
 export class OrbitStore {
-  stores = useHook(useStoresSimple)
-
   isEditing = false
   activeActions = null
   showAppSettings = false

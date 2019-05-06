@@ -27,10 +27,6 @@ export type ConfigureUIProps = {
     [key: string]: CustomItemDescription
   }
 
-  // can be used for generically mapping an item in a table/list, back into something you prefer onSelect
-  // TODO do the reverse (itemToProps)
-  propsToItem: (props: any) => any
-
   // (INTERNAL) use your own store context
   StoreContext: Context<any>
 
@@ -60,8 +56,6 @@ export let Config: ConfigureUIProps = {
   useIcon: null,
   defaultProps: {},
   customItems: {},
-
-  propsToItem: x => x,
 
   // used to configure how the UI persists non-temporal state
   useUserState: useState,

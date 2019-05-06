@@ -189,7 +189,7 @@ async function makeConfig() {
         assets: false,
         chunks: false,
         source: false,
-        errors: false,
+        errors: true,
         errorDetails: false,
         warnings: false,
         colors: true,
@@ -207,7 +207,7 @@ async function makeConfig() {
     //   cheap-module-source-map (works well in electron, no line numbers in browser...)
     devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields: isProd
         ? ['ts:main', 'module', 'browser', 'main']
         : ['ts:main', 'module', 'browser', 'main'],

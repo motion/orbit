@@ -29,7 +29,9 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
   })
 
   const isHoveringResize =
-    !!resizingSides && Object.keys(resizingSides).reduce((a, b) => a || resizingSides[b], false)
+    isVisible &&
+    !!resizingSides &&
+    Object.keys(resizingSides).reduce((a, b) => a || resizingSides[b], false)
 
   // re-measure when hovering over a side starts
   useEffect(measure, [isHoveringResize])
@@ -42,6 +44,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
       onMouseEnter={measure}
     >
       <FloatingChrome
+        className="interactive-floating-chrome"
         measureKey={measureKey}
         target={parentRef}
         {...rest}
@@ -49,10 +52,8 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
         onClick={useCallback(e => e.stopPropagation(), [])}
         onMouseDown={useCallback(
           e => {
-            console.log('mouse down')
             if (isRightClick(e)) return
             if (isHoveringResize) {
-              console.warn('no more bad click')
               e.preventDefault()
               e.stopPropagation()
             }
@@ -63,7 +64,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
         style={useMemo(
           () => ({
             cursor: resizingSides ? getResizeCursor(resizingSides) : 'inherit',
-            pointerEvents: (isHoveringResize ? 'all' : 'none') as any,
+            pointerEvents: (isHoveringResize ? 'auto' : 'none') as any,
             opacity: isHoveringResize ? 1 : 0,
           }),
           [isHoveringResize, resizingSides],

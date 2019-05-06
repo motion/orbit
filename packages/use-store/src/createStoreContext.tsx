@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react'
+
 import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
 
 // Just unwraps the store so it doesn't keep tracking observables on accident
@@ -6,23 +7,21 @@ import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
 
 type InferProps<A> = A extends { props: infer B } ? B : {}
 
-export function createStoreContext<Instance, Props extends InferProps<Instance>>(constructor: {
-  new (): Instance
-}) {
+export function createStoreContext<Instance>(constructor: { new (): Instance }) {
   const Context = createContext<Instance | null>(null)
   return {
     Context,
     SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
     },
-    Provider: ({ children, ...props }: Props & { children: any }) => {
+    Provider: ({ children, ...props }: InferProps<Instance> & { children: any }) => {
       const store = useStore(constructor, props as any, { react: false })
       return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>
     },
-    useCreateStore(props?: Props) {
+    useCreateStore(props?: InferProps<Instance>) {
       return useStore(constructor, props as any)
     },
-    useStore(props?: Props, options?: UseStoreOptions): Instance {
+    useStore(props?: InferProps<Instance>, options?: UseStoreOptions): Instance {
       const value = useContext(Context)
       const store = useStore(value, props as any, options)
       if (!store) {

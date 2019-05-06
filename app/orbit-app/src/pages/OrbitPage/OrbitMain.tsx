@@ -23,7 +23,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         isEditing={isEditing}
         transparent={appDef.config && appDef.config.transparentBackground}
       >
-        <View flex={1} position="relative">
+        <View className="app-container" flex={1} position="relative" maxHeight="100%">
           {props.hasSidebar && <BorderLeft opacity={0.5} />}
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           {props.children}

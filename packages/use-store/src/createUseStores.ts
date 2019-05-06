@@ -1,5 +1,6 @@
 import { useCurrentComponent } from '@o/automagical'
-import { useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+
 import { setupTrackableStore } from './setupTrackableStore'
 import { useForceUpdate } from './useStore'
 
@@ -8,9 +9,9 @@ import { useForceUpdate } from './useStore'
 
 export type UseStoresOptions<A> = { optional?: (keyof A)[]; debug?: boolean }
 
-export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
+export function createUseStores<A extends Object>(getStores: () => A) {
   return function useStores(options?: UseStoresOptions<A>): A {
-    const stores = useContext(StoreContext)
+    const stores = getStores()
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const render = useForceUpdate()
     const component = useCurrentComponent()

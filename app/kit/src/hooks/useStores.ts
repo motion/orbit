@@ -13,7 +13,7 @@ type GuaranteedUIStores = { [P in keyof KitStores]-?: KitStores[P] }
 
 export function useStores<A extends Object>(options?: UseStoresOptions<A>): GuaranteedUIStores {
   if (!useStoresResolved) {
-    useStoresResolved = createUseStores(config.StoreContext as React.Context<GuaranteedUIStores>)
+    useStoresResolved = createUseStores(() => useContext(config.StoreContext))
   }
   return useStoresResolved(options)
 }

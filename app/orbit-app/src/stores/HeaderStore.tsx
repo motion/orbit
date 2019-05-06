@@ -1,7 +1,8 @@
 import { App } from '@o/stores'
-import { ensure, react, useHook } from '@o/use-store'
+import { ensure, react } from '@o/use-store'
 import { createRef } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
+
+import { queryStore } from '../om/stores'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -11,13 +12,12 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  stores = useHook(useStoresSimple)
   mouseUpAt = 0
   inputRef = createRef<HTMLDivElement>()
   iconHovered = false
 
   get highlightWords() {
-    const { activeMarks } = this.stores.queryStore.queryFilters
+    const { activeMarks } = queryStore.queryFilters
     if (!activeMarks) {
       return null
     }
@@ -29,7 +29,7 @@ export class HeaderStore {
     if (!this.inputRef.current) {
       return
     }
-    this.stores.queryStore.onChangeQuery(this.inputRef.current.innerText)
+    queryStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
@@ -56,7 +56,7 @@ export class HeaderStore {
   )
 
   focusInputOnClearQuery = react(
-    () => this.stores.queryStore.hasQuery,
+    () => queryStore.hasQuery,
     query => {
       ensure('no query', !query)
       this.focus()

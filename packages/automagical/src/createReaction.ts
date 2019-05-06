@@ -6,7 +6,6 @@ import { getReactionOptions, log, logGroup } from './helpers'
 import { SHARED_REJECTION_ERROR } from './react'
 import { EffectCallback, ReactionHelpers, ReactionOptions } from './types'
 
-const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
 type Subscription = { unsubscribe: Function }
@@ -24,7 +23,7 @@ type ReactionConfig = {
 export function createReaction(
   reaction: any,
   derive: Function | null,
-  userOptions: ReactionOptions,
+  userOptions: ReactionOptions | null,
   config: ReactionConfig,
 ) {
   const isReaction = !!derive
@@ -38,6 +37,10 @@ export function createReaction(
     }
   }
 
+  const localSettingLog = () => {
+    return +((typeof localStorage !== 'undefined' && localStorage.getItem('enableLog')) || 0)
+  }
+
   const { delayValue, deferFirstRun, delay, ...options } = getReactionOptions(userOptions)
   let mobxOptions = options as Mobx.IReactionOptions
   // we run immediately by default
@@ -49,7 +52,7 @@ export function createReaction(
   }
 
   let id = deferFirstRun ? 1 : 0
-  let preventLog = options.log === false
+  const shouldLog = () => options.log !== false || localSettingLog() > 0
   let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null
@@ -233,7 +236,7 @@ export function createReaction(
     }
     if (process.env.NODE_ENV === 'development') {
       // async updates log with an indicator of their delay time and if they cancelled
-      if (log && !preventLog) {
+      if (shouldLog()) {
         const timedLog = `..${Date.now() - start}ms`
         const delayValLog = delayValue ? ` [delayValue]` : ''
         logGroup({
@@ -283,8 +286,10 @@ export function createReaction(
         result
           .then(val => {
             if (curID !== reactionID) {
-              if (!IS_PROD && !preventLog) {
-                log.verbose(`${config.name} 🚫`)
+              if (process.env.NODE_ENV !== 'production') {
+                if (shouldLog()) {
+                  log.verbose(`${config.name} 🚫`)
+                }
               }
               // cancelled before finishing
               return
@@ -309,14 +314,16 @@ export function createReaction(
 
       // only log after first run, we could have a way to log this still
       if (reactionID > 1) {
-        if (!IS_PROD && !preventLog) {
-          if (changed) {
-            logGroup({
-              name: config.nameFull,
-              result,
-              changed,
-              reactionArgs: reactValArg,
-            })
+        if (process.env.NODE_ENV !== 'production') {
+          if (shouldLog()) {
+            if (changed) {
+              logGroup({
+                name: config.nameFull,
+                result,
+                changed,
+                reactionArgs: reactValArg,
+              })
+            }
           }
         }
       }

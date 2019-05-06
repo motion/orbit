@@ -5,10 +5,10 @@ import { on } from '@o/utils'
 import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
+import { animated, AnimatedProps } from 'react-spring'
 
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
-import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
@@ -17,7 +17,11 @@ import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { View } from './View/View'
 
-export type PopoverProps = Omit<SurfaceProps, 'background'> & {
+const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
+
+type AnimatedDivProps = AnimatedProps<React.HTMLAttributes<HTMLDivElement>>
+
+export type PopoverProps = Omit<SurfaceProps, 'background' | 'style'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
@@ -66,6 +70,9 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   closeOnClick?: boolean
   closeOnEsc?: boolean
 
+  /** Callback when hover event happens, even if controlled */
+  onHover?: (isHovered: boolean) => any
+
   /** Which direction it shows towards */
 
   /** Default determine direction automatically */
@@ -74,8 +81,6 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   /** Popover can aim to be centered or left aligned on the target */
   alignPopover?: 'left' | 'center'
   padding?: number[] | number
-  onMouseEnter?: Function
-  onMouseLeave?: Function
   onClose?: Function
   openAnimation?: string
   closeAnimation?: string
@@ -103,7 +108,6 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   background?: true | ColorLike
   passActive?: boolean
   popoverProps?: Object
-  style?: Object
   elevation?: number
   ignoreSegment?: boolean
   onChangeVisibility?: (visibility: boolean) => any
@@ -112,6 +116,12 @@ export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   /** Helps you see forgiveness zone */
   showForgiveness?: boolean
   popoverRef?: Function
+
+  /** Portal styling */
+  portalStyle?: Object
+
+  /** Allows spring animations passed into style */
+  style?: AnimatedDivProps['style']
 }
 
 const defaultProps = {
@@ -120,7 +130,7 @@ const defaultProps = {
   arrowSize: 14,
   forgiveness: 14,
   towards: 'auto',
-  transition: 'opacity ease-in 60ms, transform ease-out 100ms',
+  transition: 'all ease 100ms',
   openAnimation: 'slide 300ms',
   closeAnimation: 'bounce 300ms',
   adjust: [0, 0],
@@ -524,6 +534,22 @@ export class Popover extends React.Component<PopoverProps, State> {
         this.props.onDidOpen()
       }
     }
+    // unhovered
+    if (this.props.onHover) {
+      if (
+        (prevState.targetHovered || prevState.menuHovered) &&
+        (!this.state.targetHovered && !this.state.menuHovered)
+      ) {
+        this.props.onHover(false)
+      }
+      if (
+        !prevState.targetHovered &&
+        !prevState.menuHovered &&
+        (this.state.targetHovered || this.state.menuHovered)
+      ) {
+        this.props.onHover(true)
+      }
+    }
   }
 
   setPosition = (afterMeasure = () => void 0) => {
@@ -639,6 +665,10 @@ export class Popover extends React.Component<PopoverProps, State> {
     this.targetClickOff = on(this, this.target, 'click', e => {
       e.stopPropagation()
       if (this.state.isPinnedOpen) {
+        if (this.state.targetHovered && this.props.openOnHover) {
+          // avoid closing when clicking while hovering + openOnHover
+          return
+        }
         this.forceClose()
       } else {
         this.setState({ isPinnedOpen: Date.now() })
@@ -842,7 +872,7 @@ export class Popover extends React.Component<PopoverProps, State> {
 
   // hover helpers
   hoverStateSet(name: string, next: boolean) {
-    const { openOnHover, onMouseEnter } = this.props
+    const { openOnHover } = this.props
     const setter = () => {
       const val = next ? Date.now() : 0
       if (name === 'target') {
@@ -854,9 +884,6 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (next) {
       if (openOnHover) {
         setter()
-      }
-      if (onMouseEnter) {
-        onMouseEnter(null)
       }
     } else {
       if (openOnHover) {
@@ -899,23 +926,25 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   controlledTarget = target => {
+    if (!target) {
+      return null
+    }
+    if (!React.isValidElement(target)) {
+      return target
+    }
     const targetProps = {
       ref: this.targetRef,
       active: false,
-      className: `${target.props.className} popover-target`,
+      className: `${target.props['className'] || ''} popover-target`,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover
     }
-    const { acceptsHovered } = target.type
+    const acceptsHovered = acceptsProps(target, 'hover')
     if (acceptsHovered) {
-      targetProps[acceptsHovered === true ? 'hovered' : acceptsHovered] = this.showPopover
+      targetProps[acceptsHovered === true ? 'hover' : acceptsHovered] = this.showPopover
     }
-    return (
-      <MergeUIContext value={{ hovered: this.showPopover }}>
-        {React.cloneElement(target, targetProps)}
-      </MergeUIContext>
-    )
+    return React.cloneElement(target, targetProps)
   }
 
   closeOthersWithinGroup() {
@@ -985,6 +1014,7 @@ export class Popover extends React.Component<PopoverProps, State> {
       popoverTheme,
       zIndex,
       transform,
+      portalStyle,
       ...restProps
     } = this.props
     const {
@@ -1007,8 +1037,8 @@ export class Popover extends React.Component<PopoverProps, State> {
       <PopoverContainer
         data-towards={direction}
         isOpen={showPopover}
-        isClosing={closing}
         isTouchable={!noHoverOnChildren && showPopover}
+        style={style}
       >
         {!!overlay && (
           <Overlay
@@ -1089,7 +1119,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (noPortal) {
       return (
         <>
-          {target}
+          {React.isValidElement(target) && this.controlledTarget(target)}
           {popoverContent}
         </>
       )
@@ -1098,7 +1128,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     return (
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
-        <Portal className="ui-popover" style={{ zIndex, position: 'fixed', ...style }}>
+        <Portal className="ui-popover" style={{ zIndex, position: 'fixed', ...portalStyle }}>
           <span
             className="popover-portal"
             style={{
@@ -1116,24 +1146,32 @@ export class Popover extends React.Component<PopoverProps, State> {
 
 const themeBg = theme => theme.background
 
-const PopoverContainer = gloss({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 5000,
-  pointerEvents: 'none',
-  '& > *': {
-    pointerEvents: 'none !important',
-  },
-  isOpen: {
-    opacity: 1,
-  },
-  isTouchable: {
+const PopoverContainer = gloss<AnimatedDivProps & { isOpen?: boolean; isTouchable?: boolean }>(
+  animated.div,
+  {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 5000,
+    pointerEvents: 'none',
     '& > *': {
-      pointerEvents: 'all !important',
+      pointerEvents: 'none !important',
     },
+    isOpen: {
+      opacity: 1,
+    },
+    isTouchable: {
+      '& > *': {
+        pointerEvents: 'all !important',
+      },
+    },
+  },
+).withConfig({
+  ignoreAttrs: {
+    isOpen: true,
+    isTouchable: true,
   },
 })
 

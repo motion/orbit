@@ -158,7 +158,7 @@ export class AuthServer {
         `/auth/${name}/callback`,
         Passport.authenticate(name, options, null),
         (req, res) => {
-          const values: OauthValues = req.user || req['currentUser']
+          const values: OauthValues = req['user'] || req['currentUser']
           finishAuth(name, values)
           res.send(`
 <html>

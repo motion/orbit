@@ -1,6 +1,8 @@
 import { CompositeDisposable } from 'event-kit'
 import * as Mobx from 'mobx'
 
+import { updateProps } from './updateProps'
+
 // export @react decorator
 export { cancel } from './cancel'
 export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './constants'
@@ -27,28 +29,6 @@ export function configureAutomagical(opts: { isSubscribable?: (val: any) => bool
 }
 
 const Getters = new WeakMap()
-
-// decorates the prototype
-function decoratePrototype(obj: any) {
-  const getterDesc = {}
-  const decor = {}
-  const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
-  for (const key in descriptors) {
-    if (IGNORE[key] || key[0] === '_') continue
-    const descriptor = descriptors[key]
-    if (descriptor && !!descriptor.get) {
-      getterDesc[key] = descriptor
-    }
-    if (typeof descriptor.value === 'function') {
-      // only make `set` prefixed functions into actions
-      if (key.indexOf('set') === 0) {
-        decor[key] = Mobx.action
-      }
-    }
-  }
-  Mobx.decorate(obj, decor)
-  return getterDesc
-}
 
 function constructWithProps(Store: any, args: any[], props?: Object) {
   if (!props) {
@@ -77,19 +57,41 @@ type AutomagicDecription = {
   decorations: { [key: string]: 'action' | 'ref' | 'reaction' }
 }
 
-export type AutomagicStore = {
+export type AutomagicStore<Props> = {
+  setProps: (props: Partial<Props>) => any
   dispose: Function
   __automagic: AutomagicDecription
 }
 
-export function decorate<T>(
+// decorates the prototype
+function decoratePrototype(obj: any) {
+  const getterDesc = {}
+  const decor = {}
+  const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
+  for (const key in descriptors) {
+    if (IGNORE[key] || key[0] === '_') continue
+    const descriptor = descriptors[key]
+    if (descriptor && !!descriptor.get) {
+      getterDesc[key] = descriptor
+    }
+    if (typeof descriptor.value === 'function') {
+      // only make `set` prefixed functions into actions
+      if (key.indexOf('set') === 0) {
+        decor[key] = Mobx.action
+      }
+    }
+  }
+  Mobx.decorate(obj, decor)
+  return getterDesc
+}
+
+export function decorate<T, Props extends Object>(
   obj: {
     new (...args: any[]): T
   },
-  props?: Object,
-): { new (...args: any[]): T & AutomagicStore } {
+  props?: Props,
+): { new (...args: any[]): T & AutomagicStore<Props> } {
   if (!obj) {
-    console.trace('what')
     throw new Error('No store passed')
   }
   if (!Getters.get(obj)) {
@@ -112,6 +114,15 @@ export function decorate<T>(
       const reactions = {}
       const getters = {}
       const decorations = {}
+
+      Object.defineProperty(instance, 'setProps', {
+        enumerable: false,
+        value: function setProps(next: Object) {
+          if (next) {
+            updateProps(instance, next)
+          }
+        },
+      })
 
       const ogDispose = instance.dispose && instance.dispose.bind(instance)
       Object.defineProperty(instance, 'dispose', {

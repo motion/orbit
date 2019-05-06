@@ -1,8 +1,7 @@
 import { Theme, useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
-import React, { forwardRef, useContext } from 'react'
+import React, { forwardRef } from 'react'
 
-import { UIContext } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
 
@@ -54,22 +53,17 @@ function ButtonInner(props: ButtonProps) {
 export const Button = forwardRef((buttonProps: ButtonProps, ref) => {
   const props = useSurfaceProps(buttonProps)
   const { alt, theme, themeSelect, ...rest } = props
-  const uiContext = useContext(UIContext)
-
-  let element = null
-  if (props.ignoreHover !== false && typeof uiContext.hovered === 'boolean') {
-    element = <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...rest} />
-  } else {
-    element = <ButtonInner forwardRef={ref} {...rest} />
-  }
-
   return (
     <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
-      {element}
+      <ButtonInner forwardRef={ref} {...rest} />
     </Theme>
   )
 })
 
 Button.defaultProps = {
   themeSelect: 'button',
+}
+
+Button['acceptsProps'] = {
+  hover: true,
 }

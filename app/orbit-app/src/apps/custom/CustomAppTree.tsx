@@ -8,7 +8,7 @@ const treeData = {
     id: 0,
     name: 'Root Item',
     expanded: true,
-    children: [1, 2],
+    children: [1, 2, 5, 6, 7, 8, 9, 10],
   },
   1: {
     id: 1,
@@ -31,6 +31,42 @@ const treeData = {
   4: {
     id: 4,
     name: 'test two',
+    expanded: false,
+    children: [],
+  },
+  5: {
+    id: 5,
+    name: 'lorem ipsum dolor',
+    expanded: false,
+    children: [],
+  },
+  6: {
+    id: 6,
+    name: 'ipsum dolor',
+    expanded: false,
+    children: [],
+  },
+  7: {
+    id: 7,
+    name: 'lorem ',
+    expanded: false,
+    children: [],
+  },
+  8: {
+    id: 8,
+    name: ' ipsum ',
+    expanded: false,
+    children: [],
+  },
+  9: {
+    id: 9,
+    name: 'loremdolor',
+    expanded: false,
+    children: [],
+  },
+  10: {
+    id: 10,
+    name: 'ipsu dolor',
     expanded: false,
     children: [],
   },

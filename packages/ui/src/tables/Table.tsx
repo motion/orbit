@@ -52,6 +52,7 @@ export function Table(tableProps: TableProps) {
     afterTitle,
     searchable,
     shareable,
+    maxHeight,
     children: _discardChildren,
     ...props
   } = {
@@ -89,6 +90,7 @@ export function Table(tableProps: TableProps) {
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
       padding={0}
+      maxHeight={maxHeight}
     >
       <SearchableTable
         containerRef={ref}

@@ -2,7 +2,8 @@ import { SpaceStore } from '@o/kit'
 import { FullScreen, Theme } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
-import { StoreContext } from '../../contexts'
+
+import { StoreContext } from '../../StoreContext'
 import { AppWrapper } from '../../views'
 import Menu from './menuLayer/Menu'
 

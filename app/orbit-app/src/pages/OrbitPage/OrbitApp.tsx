@@ -13,21 +13,29 @@ import {
   sleep,
   useIsAppActive,
 } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
-import { useReaction, useStoreSimple } from '@o/use-store'
+import {
+  ErrorBoundary,
+  ListItemProps,
+  Loading,
+  ProvideShare,
+  ProvideVisibility,
+  useShareStore,
+  useThrottleFn,
+} from '@o/ui'
+import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
-import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
+import { usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
-  const { paneManagerStore } = useStoresSimple()
-  const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
-  const isActive = useReaction(getIsActive)
+  const paneManagerStore = usePaneManagerStore()
+  const getIsActive = () => paneManagerStore.activePane.id === id
+  const isActive = getIsActive()
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,
@@ -53,8 +61,6 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 type AppRenderProps = { id: string; identifier: string; hasShownOnce?: boolean }
 
 const OrbitAppRender = memo((props: AppRenderProps) => {
-  // handle url changes
-  useAppLocationEffect()
   // get definition
   const appDef = getAppDefinition(props.identifier)
   if (appDef.app == null) {
@@ -83,7 +89,6 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
-    console.log('on change', location, items)
     if (location === 'main') {
       setActiveItemThrottled(getAppProps(items[0]))
     }
@@ -157,7 +162,11 @@ const FadeIn = (props: any) => {
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
-    Promise.race([sleep(100), onIdle()]).then(() => setShown(true))
+    let off = false
+    Promise.race([sleep(100), onIdle()]).then(() => !off && setShown(true))
+    return () => {
+      off = true
+    }
   }, [])
 
   return (
@@ -169,7 +178,7 @@ const FadeIn = (props: any) => {
         right: 0,
         bottom: 0,
         opacity: shown ? 1 : 0,
-        transform: `translateY(${shown ? 0 : -10}px)`,
+        transform: `translateX(${shown ? 0 : -10}px)`,
         transition: 'all ease 200ms',
         width: '100%',
         height: '100%',
@@ -192,8 +201,4 @@ function OrbitActions(props: { children?: any }) {
     }
   }, [isActive, props.children])
   return null
-}
-
-if (module['hot']) {
-  module['hot'].accept()
 }

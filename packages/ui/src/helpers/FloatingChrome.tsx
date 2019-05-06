@@ -13,14 +13,13 @@ export function FloatingChrome(
     measureKey?: number
   } & HTMLAttributes<HTMLDivElement>,
 ) {
-  const { target, style, measureKey, zIndex, ...rest } = props
+  const { target, style, measureKey, zIndex = 150000000, ...rest } = props
   const [pos, setPos] = useState<Rect | null>(null)
   const element = (
     <div
       style={{
         position: 'absolute',
-        pointerEvents: 'auto',
-        zIndex: zIndex || 1500000,
+        zIndex,
         ...pos,
         ...style,
       }}
@@ -39,7 +38,7 @@ export function FloatingChrome(
   }, [target, measureKey])
 
   return (
-    <Portal>
+    <Portal style={{ zIndex }}>
       <div style={fullScreen as any}>{element}</div>
     </Portal>
   )

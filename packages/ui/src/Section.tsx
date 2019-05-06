@@ -104,11 +104,13 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleProps,
     backgrounded,
     titleScale,
+    borderRadius,
     titleElement,
+    overflow,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
-  const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
+  const innerPad = selectDefined(padInner, !!(hasTitle || bordered || titleElement) ? pad : null)
   const spaceSize = !!space ? selectDefined(size, space) : space
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)
@@ -156,7 +158,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxHeight={maxHeight}
       maxWidth={maxWidth}
       minHeight={minHeight}
-      overflow={isDefined(scrollable, maxHeight) ? 'hidden' : undefined}
+      borderRadius={borderRadius}
+      overflow={selectDefined(
+        overflow,
+        isDefined(scrollable, maxHeight, bordered, borderRadius) ? 'hidden' : undefined,
+      )}
       pad={!showTitleAbove ? pad : false}
       size={size}
     >
@@ -173,6 +179,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           pad={innerPad}
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
+          overflow="hidden"
           {...viewProps}
         >
           {children}

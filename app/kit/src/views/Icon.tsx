@@ -22,7 +22,6 @@ export const Icon = memo(
       return (
         <View
           ref={ref}
-          className={`icon ${props.className || ''}`}
           display="inline-block"
           textAlign="center"
           justifyContent="center"
@@ -31,6 +30,7 @@ export const Icon = memo(
           {...(sourceIcon ? adjust[name] : adjust.icon)}
           {...sizeProps}
           {...props}
+          className={`ui-icon ${props.className || ''}`}
         >
           {sourceIcon}
         </View>

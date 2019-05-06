@@ -39,6 +39,7 @@ export type AppDefinition = {
   // TODO @umed this is where we can put syncer stuff
   sync?: {} // todo: it can be boolean at max
   api?: (app: AppBit) => any
+  graph?: (app: AppBit) => any
 }
 
 export type AppBitMainProps = { item: Bit }

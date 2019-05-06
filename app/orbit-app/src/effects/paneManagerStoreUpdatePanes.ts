@@ -3,22 +3,27 @@ import { PaneManagerPane, PaneManagerStore } from '@o/kit'
 import { AppBit } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import { ensure, useReaction } from '@o/use-store'
-import { useActions } from '../hooks/useActions'
+
 import { useStoresSimple } from '../hooks/useStores'
+import { useOm } from '../om/om'
 
 export function usePaneManagerUpdatePanes() {
-  const Actions = useActions()
+  const { actions } = useOm()
   const { paneManagerStore, spaceStore } = useStoresSimple()
 
-  useReaction(() => spaceStore.apps, function managePanes(apps) {
-    ensure('apps', !!apps.length)
-    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-    }
-    paneManagerStore.setPaneIndex(paneIndex)
-    Actions.setInitialPaneIndex()
-  })
+  useReaction(
+    () => spaceStore.apps,
+    function managePanes(apps) {
+      ensure('apps', !!apps.length)
+      const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+      if (!isEqual(panes, paneManagerStore.panes)) {
+        paneManagerStore.setPanes(panes)
+      }
+      paneManagerStore.setPaneIndex(paneIndex)
+      actions.router.start()
+    },
+    [paneManagerStore, spaceStore],
+  )
 }
 
 export const settingsPane = {
@@ -29,12 +34,20 @@ export const settingsPane = {
   keyable: true,
 }
 
+export const loadingPane = {
+  id: 'loading',
+  name: 'Loading',
+  type: 'loading',
+  isHidden: true,
+  keyable: true,
+}
+
 export const defaultPanes: PaneManagerPane[] = [
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
   { id: 'apps', name: 'Apps', type: 'apps' },
   { id: 'data-explorer', name: 'Data Explorer', type: 'data-explorer' },
-  { id: 'createApp', name: 'New app', type: 'createApp' },
+  { id: 'setupApp', name: 'New app', type: 'setupApp' },
   { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 
@@ -73,11 +86,6 @@ export function getPanes(paneManagerStore: PaneManagerStore, apps: AppBit[]) {
       ? paneManagerStore.panes.findIndex(pane => pane.id === prevPane.id)
       : 0
     paneIndex = prevIndex === -1 ? 0 : prevIndex
-    console.warn(
-      'removing pane you are currently on! moving to a different one',
-      prevIndex,
-      paneIndex,
-    )
   }
   return {
     panes,

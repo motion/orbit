@@ -5,6 +5,7 @@ import { App } from '@o/stores'
 import { Button, CheckBoxField, Divider, FormField, Input, Section, Space } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
+
 import { sleep } from '../../helpers'
 import { showNotification } from '../../helpers/electron/showNotification'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
@@ -79,7 +80,7 @@ export function SettingsAppGeneral(_props: AppProps) {
   }
 
   return (
-    <Section bordered pad title="General Settings">
+    <Section bordered margin pad title="General Settings">
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}

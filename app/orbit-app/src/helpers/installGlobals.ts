@@ -16,10 +16,9 @@ import * as Mobx from 'mobx'
 import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import { AppActions } from '../actions/appActions/AppActions'
+import { AppActions } from '../actions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
-import { Navigation } from '../OrbitNavigation'
 import { log } from './log'
 
 // dont import app level stuff in here
@@ -50,7 +49,6 @@ const toJS = obj => {
 }
 
 // the heavy hitters
-window['Navigation'] = Navigation
 window['css'] = css
 window['ReconnectingWebSocket'] = ReconnectingWebSocket
 window['Mediator'] = Mediator

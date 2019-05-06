@@ -5,6 +5,12 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
+import { graphqlExpress } from 'graphql-server-express'
+import SlackApp from '@o/slack-app'
+import { getRepository } from 'typeorm'
+import { AppEntity } from '@o/models'
+import { mergeSchemas } from 'graphql-tools'
+import { nestSchema } from '@o/graphql-nest-schema'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
@@ -12,44 +18,73 @@ const Config = getGlobalConfig()
 export class WebServer {
   cache = {}
   login = null
-  app: express.Application
+  server: express.Application
 
   constructor() {
-    const app = express()
-    app.set('port', Config.ports.server)
-
-    this.app = app
-
-    app.use(this.cors())
+    this.server = express()
+    this.server.set('port', Config.ports.server)
+    this.server.use(this.cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
-    app.disable('etag')
+    this.server.disable('etag')
 
     // ROUTES
-    this.app.use(bodyParser.json({ limit: '2048mb' }))
-    this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
-    this.app.get('/hello', (_, res) => res.send('hello world'))
+    this.server.use(bodyParser.json({ limit: '2048mb' }))
+    this.server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+    this.server.get('/hello', (_, res) => res.send('hello world'))
 
     // assets
-    this.app.use('/assets', express.static(Path.join(Config.paths.desktopRoot, 'assets')))
+    this.server.use('/assets', express.static(Path.join(Config.paths.desktopRoot, 'assets')))
 
     // config
-    this.app.get('/config', (_, res) => {
+    this.server.get('/config', (_, res) => {
       const config = getGlobalConfig()
       log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
       res.json(config)
     })
-
-    this.setupOrbitApp()
   }
 
   start() {
     return new Promise(async res => {
       log.info('start()')
-      // kill old processes
+
       log.verbose(`Killing old server on ${Config.ports.server}...`)
       await killPort(Config.ports.server)
-      this.app.listen(Config.ports.server, () => {
+
+      // graphql
+      const app = await getRepository(AppEntity).findOne({
+        where: {
+          identifier: 'slack',
+          token: {
+            $not: {
+              $equal: '',
+            },
+          },
+        },
+      })
+
+      const slackSchema = await SlackApp.graph(app)
+      console.log('slackSchema', slackSchema)
+
+      const schema = await nestSchema({
+        typeName: 'Slack',
+        fieldName: 'slack',
+        schema: slackSchema,
+      })
+
+      console.log('nested schema', schema)
+
+      this.server.use(
+        '/graphql',
+        bodyParser.json(),
+        graphqlExpress({
+          schema: mergeSchemas({ schemas: [schema] }),
+        }),
+      )
+
+      this.setupOrbitApp()
+
+      this.server.listen(Config.ports.server, () => {
         res()
         log.info('Server listening', Config.ports.server)
       })
@@ -75,7 +110,7 @@ export class WebServer {
       const router = {
         [`http://localhost:${Config.ports.server}`]: webpackUrl,
       }
-      this.app.use(
+      this.server.use(
         '/',
         proxy({
           target: webpackUrl,
@@ -90,8 +125,8 @@ export class WebServer {
     // serve static in production
     if (process.env.NODE_ENV !== 'development') {
       log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)
-      this.app.use(express.static(Config.paths.appStatic))
-      this.app.use((_, res) => res.sendFile(Path.join(Config.paths.appStatic, 'index.html')))
+      this.server.use(express.static(Config.paths.appStatic))
+      this.server.use((_, res) => res.sendFile(Path.join(Config.paths.appStatic, 'index.html')))
     }
   }
 }

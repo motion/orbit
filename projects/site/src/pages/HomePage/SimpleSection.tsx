@@ -8,8 +8,8 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
 const titleFont = {
-  WebkitTextFillColor: 'transparent',
-  background: 'linear-gradient(to right, #B65138, #BE0DBE)',
+  // WebkitTextFillColor: 'transparent',
+  // background: 'linear-gradient(to right, #B65138, #BE0DBE)',
   backgroundSize: 300,
 }
 
@@ -62,7 +62,7 @@ const SectionBody = gloss({
   display: 'block',
 })
 
-export const SectionIcon = gloss(props => <Icon size={40} color="#333" {...props} />, {
+export const SectionIcon = gloss(props => <Icon size={32} {...props} />, {
   float: 'right',
   margin: [18, 0, 40, 40],
   // opacity: 0.2,

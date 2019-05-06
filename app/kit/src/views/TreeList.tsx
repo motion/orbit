@@ -1,6 +1,6 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import { Button, HandleOrbitSelect, List, ListItemProps, TreeItem, useGet, VirtualListProps } from '@o/ui'
+import { Button, List, ListItemProps, ListProps, TreeItem, useGet } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
@@ -12,14 +12,12 @@ import { HighlightActiveQuery } from './HighlightActiveQuery'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<VirtualListProps<any>, 'items' | 'getItemProps'> & {
+export type TreeListProps = Omit<ListProps, 'items' | 'getItemProps'> & {
   // we should make this either require use or items
   items?: TreeItems
   use?: UseTreeList
   rootItemID?: number
   getItemProps?: (item: TreeItem) => Promise<ListItemProps>
-  onSelect?: HandleOrbitSelect
-  onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
   query?: string
 }

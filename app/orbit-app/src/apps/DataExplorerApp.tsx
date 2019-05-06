@@ -11,7 +11,19 @@ import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, 
 import { remove } from 'lodash'
 import React from 'react'
 
+import { GraphExplorer } from '../views/GraphExplorer'
 import { getAppListItem } from './apps/getAppListItem'
+
+export default createApp({
+  id: 'data-explorer',
+  name: 'Data Explorer',
+  icon: '',
+  app: props => (
+    <App index={<DataExplorerIndex />}>
+      <DataExplorerMain {...props} />
+    </App>
+  ),
+})
 
 function DataExplorerIndex() {
   const syncApps = useActiveSyncAppsWithDefinition()
@@ -21,7 +33,15 @@ function DataExplorerIndex() {
         titleBorder
         title="Data Explorer"
         subTitle="Explore installed data apps"
-        items={syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apsp' }))}
+        items={[
+          {
+            subId: 'explorer-graph',
+            title: 'Graph',
+            icon: 'Graph',
+            subTitle: 'Explore all GraphQL app APIs',
+          },
+          ...syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' })),
+        ]}
       />
     </>
   )
@@ -31,6 +51,10 @@ function DataExplorerMain({ subId }: AppProps) {
   const [app] = useAppWithDefinition((subId && +subId) || false)
   const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
+  if (subId === 'explorer-graph') {
+    return <GraphExplorer />
+  }
+
   // TODO suspense
   if (!app) {
     return <Title>no app, subid {typeof subId}</Title>
@@ -38,7 +62,7 @@ function DataExplorerMain({ subId }: AppProps) {
 
   return (
     <Section
-      pad="xl"
+      pad
       backgrounded
       title={app.appName}
       subTitle={app.name}
@@ -99,14 +123,3 @@ function DataExplorerMain({ subId }: AppProps) {
     </Section>
   )
 }
-
-export default createApp({
-  id: 'data-explorer',
-  name: 'Data Explorer',
-  icon: '',
-  app: props => (
-    <App index={<DataExplorerIndex />}>
-      <DataExplorerMain {...props} />
-    </App>
-  ),
-})

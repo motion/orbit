@@ -1,11 +1,10 @@
-import { isEqual } from '@o/fast-compare'
 import { CompositeDisposable } from 'event-kit'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, RefObject, MutableRefObject } from 'react'
 
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'
-import { useCurrentComponent } from './useCurrentComponent'
+import { useCurrentComponent, CurrentComponent } from './useCurrentComponent'
 
 type MountArgs = any[]
 
@@ -90,6 +89,37 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
   }
 }
 
+const createComponentReaction = (
+  reaction: any,
+  derive: Function | null,
+  opts: ReactionOptions | null,
+  component: CurrentComponent,
+  subscriptions: RefObject<CompositeDisposable | null>,
+  state: MutableRefObject<any>,
+  firstMount: RefObject<boolean>,
+  forceUpdate: Function,
+) => {
+  createReaction(reaction, derive, opts, {
+    name: component.renderName,
+    nameFull: component.renderName,
+    addSubscription(dispose) {
+      if (subscriptions.current) {
+        subscriptions.current.add({ dispose })
+      }
+    },
+    setValue(next: any) {
+      if (next === undefined || next === state.current) {
+        return
+      }
+      state.current = next
+      if (!firstMount.current) {
+        forceUpdate(Math.random())
+      }
+    },
+    getValue: () => state.current,
+  })
+}
+
 // watches values in an autorun, and resolves their results
 export function setupReact(
   reaction: any,
@@ -102,36 +132,24 @@ export function setupReact(
   const forceUpdate = useState(0)[1]
   const subscriptions = useRef<CompositeDisposable | null>(null)
   const firstMount = useRef(true)
+  const runReaction = () =>
+    createComponentReaction(
+      reaction,
+      derive,
+      opts,
+      component,
+      subscriptions,
+      state,
+      firstMount,
+      forceUpdate,
+    )
 
   // use ref / start synchronously so we can use them without a bunch of re-renders,
   // sometimes... sometimes not :( see: https://github.com/mobxjs/mobx/issues/1911
   if (!subscriptions.current) {
     subscriptions.current = new CompositeDisposable()
     // first run, create immediately
-    createReaction(
-      reaction,
-      derive,
-      { log: false, ...opts },
-      {
-        name: component.renderName,
-        nameFull: component.renderName,
-        addSubscription(dispose) {
-          if (subscriptions.current) {
-            subscriptions.current.add({ dispose })
-          }
-        },
-        setValue(next: any) {
-          if (next === undefined || next === state.current) {
-            return
-          }
-          state.current = next
-          if (!firstMount.current) {
-            forceUpdate(Math.random())
-          }
-        },
-        getValue: () => state.current,
-      },
-    )
+    runReaction()
   }
 
   useEffect(() => {
@@ -139,38 +157,14 @@ export function setupReact(
       firstMount.current = false
     } else {
       // we have new mountArgs after first run, update
-
       // remove old reaction
       if (subscriptions.current) {
         subscriptions.current.dispose()
       }
       subscriptions.current = new CompositeDisposable()
-
       // create new one
-      createReaction(
-        reaction,
-        derive,
-        { log: false, ...opts },
-        {
-          name: component.renderName,
-          nameFull: component.renderName,
-          addSubscription(dispose) {
-            if (subscriptions.current) {
-              subscriptions.current.add({ dispose })
-            }
-          },
-          setValue(next: any) {
-            if (next === undefined || isEqual(next, state.current)) {
-              return
-            }
-            state.current = next
-            forceUpdate(Math.random())
-          },
-          getValue: () => state.current,
-        },
-      )
+      runReaction()
     }
-
     return () => {
       subscriptions.current && subscriptions.current.dispose()
     }

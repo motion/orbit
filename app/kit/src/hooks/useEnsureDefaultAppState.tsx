@@ -1,8 +1,9 @@
 import { isEqual } from '@o/fast-compare'
 import { useEffect } from 'react'
+
 import { useAppBit } from './useAppBit'
 
-export function useEnsureDefaultAppState<A>(uid: string, ensure: A) {
+export function useEnsureDefaultAppState<A>(uid: string | false, ensure: A) {
   const [state, update] = useAppBit()
   useEffect(() => {
     if (!uid) return

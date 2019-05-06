@@ -37,6 +37,10 @@ export function createReaction(
     }
   }
 
+  const localSettingLog = () => {
+    return +((typeof localStorage !== 'undefined' && localStorage.getItem('enableLog')) || 0)
+  }
+
   const { delayValue, deferFirstRun, delay, ...options } = getReactionOptions(userOptions)
   let mobxOptions = options as Mobx.IReactionOptions
   // we run immediately by default
@@ -48,7 +52,7 @@ export function createReaction(
   }
 
   let id = deferFirstRun ? 1 : 0
-  const shouldLog = () => options.log !== false || +(localStorage.getItem('enableLog') || 0) > 0
+  const shouldLog = () => options.log !== false || localSettingLog() > 0
   let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null

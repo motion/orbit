@@ -28,133 +28,15 @@ import React, { useEffect, useState, useRef } from 'react'
 import ShadowDOM from 'react-shadow'
 
 import { getAppListItem } from './apps/getAppListItem'
+import { IS_ELECTRON } from '../constants'
 
-import { getIntrospectionQuery, buildClientSchema } from 'graphql'
-import GraphiQLExplorer from 'graphiql-explorer'
-import GraphiQL from 'graphiql'
-
-import graphqlStyle from '!raw-loader!graphiql/graphiql.css'
-
-function fetcher(params: Object) {
-  return fetch('http://localhost:4000', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
-  })
-    .then(function(response) {
-      return response.text()
-    })
-    .then(function(responseBody) {
-      try {
-        return JSON.parse(responseBody)
-      } catch (e) {
-        return responseBody
-      }
-    })
+const viewProps = {
+  style: { height: '100%' },
+  src: 'http://localhost:3001/altair',
 }
 
 function DataExplorerApp() {
-  const graphiql = useRef(null)
-  const [state, setState] = useState({ schema: null, query: null })
-  const { schema, query } = state
-
-  useEffect(() => {
-    fetcher({
-      query: getIntrospectionQuery(),
-    }).then(result => {
-      setState({ schema: buildClientSchema(result.data), query })
-    })
-  }, [])
-
-  return (
-    <App>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `.resolved { flex: 1; overflow: hidden; }`,
-        }}
-      />
-      <ShadowDOM>
-        <div>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: graphqlStyle,
-            }}
-          />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-                :host > span {
-                  width: 100%:
-                  height: 100%;
-                  max-width: 100%;
-                  max-height: 100%;
-                  overflow: hidden;
-                  display: flex;
-                  flex-direction: row;
-                }
-
-                .graphiql-container {
-                  height: auto;
-                }
-
-                .editorWrap {
-                  height: 100%;
-                }
-
-                .history-contents {
-                  overflow-y: auto;
-                  flex: 1;
-                  display: flex;
-                  height: 100%;
-                }
-
-                .historyPaneWrap {
-                  flex: 1;
-                }
-              `,
-            }}
-          />
-
-          <GraphiQLExplorer
-            schema={schema}
-            query={query}
-            onEdit={query => setState({ ...state, query })}
-            explorerIsOpen
-            // explorerIsOpen={this.state.explorerIsOpen}
-            // onToggleExplorer={this._handleToggleExplorer}
-          />
-          <GraphiQL
-            ref={graphiql}
-            fetcher={fetcher}
-            schema={schema}
-            query={query}
-            onEditQuery={query => setState({ ...state, query })}
-          >
-            <GraphiQL.Toolbar>
-              <GraphiQL.Button
-                onClick={() => graphiql.current.handlePrettifyQuery()}
-                label="Prettify"
-                title="Prettify Query (Shift-Ctrl-P)"
-              />
-              <GraphiQL.Button
-                onClick={() => graphiql.current.handleToggleHistory()}
-                label="History"
-                title="Show History"
-              />
-              <GraphiQL.Button
-                // onClick={this._handleToggleExplorer}
-                label="Explorer"
-                title="Toggle Explorer"
-              />
-            </GraphiQL.Toolbar>
-          </GraphiQL>
-        </div>
-      </ShadowDOM>
-    </App>
-  )
+  return <App>{IS_ELECTRON ? <webview {...viewProps} /> : <iframe {...viewProps} />}</App>
 }
 
 export default createApp({
@@ -255,3 +137,86 @@ export default createApp({
 //     </Section>
 //   )
 // }
+
+// <style
+//         dangerouslySetInnerHTML={{
+//           __html: `.resolved { flex: 1; overflow: hidden; }`,
+//         }}
+//       />
+//       <ShadowDOM>
+//         <div>
+//           <style
+//             dangerouslySetInnerHTML={{
+//               __html: graphqlStyle,
+//             }}
+//           />
+//           <style
+//             dangerouslySetInnerHTML={{
+//               __html: `
+//                 :host > span {
+//                   width: 100%:
+//                   height: 100%;
+//                   max-width: 100%;
+//                   max-height: 100%;
+//                   overflow: hidden;
+//                   display: flex;
+//                   flex-direction: row;
+//                 }
+//
+//                 .graphiql-container {
+//                   height: auto;
+//                 }
+//
+//                 .editorWrap {
+//                   height: 100%;
+//                 }
+//
+//                 .history-contents {
+//                   overflow-y: auto;
+//                   flex: 1;
+//                   display: flex;
+//                   height: 100%;
+//                 }
+//
+//                 .historyPaneWrap {
+//                   flex: 1;
+//                 }
+//               `,
+//             }}
+//           />
+//
+//           <GraphiQLExplorer
+//             schema={schema}
+//             query={query}
+//             onEdit={query => setState({ ...state, query })}
+//             explorerIsOpen
+//             // explorerIsOpen={this.state.explorerIsOpen}
+//             // onToggleExplorer={this._handleToggleExplorer}
+//           />
+//           <GraphiQL
+//             ref={graphiql}
+//             fetcher={fetcher}
+//             schema={schema}
+//             query={query}
+//             onEditQuery={query => setState({ ...state, query })}
+//           >
+//             <GraphiQL.Toolbar>
+//               <GraphiQL.Button
+//                 onClick={() => graphiql.current.handlePrettifyQuery()}
+//                 label="Prettify"
+//                 title="Prettify Query (Shift-Ctrl-P)"
+//               />
+//               <GraphiQL.Button
+//                 onClick={() => graphiql.current.handleToggleHistory()}
+//                 label="History"
+//                 title="Show History"
+//               />
+//               <GraphiQL.Button
+//                 // onClick={this._handleToggleExplorer}
+//                 label="Explorer"
+//                 title="Toggle Explorer"
+//               />
+//             </GraphiQL.Toolbar>
+//           </GraphiQL>
+//         </div>
+//       </ShadowDOM>

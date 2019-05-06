@@ -41,8 +41,6 @@ export class WebServer {
       log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
       res.json(config)
     })
-
-    this.setupOrbitApp()
   }
 
   start() {
@@ -53,14 +51,6 @@ export class WebServer {
       await killPort(Config.ports.server)
 
       // graphql
-      const schema = await SlackApp.graph(app)
-      this.server.use(
-        '/graphql',
-        bodyParser.json(),
-        graphqlExpress({
-          schema,
-        }),
-      )
       const app = await getRepository(AppEntity).findOne({
         where: {
           identifier: 'slack',
@@ -71,6 +61,15 @@ export class WebServer {
           },
         },
       })
+      const schema = await SlackApp.graph(app)
+      console.log('schema', schema)
+      this.server.use(
+        '/graphql',
+        bodyParser.json(),
+        graphqlExpress({
+          schema,
+        }),
+      )
       this.server.use(
         '/altair',
         altairExpress({
@@ -79,6 +78,8 @@ export class WebServer {
           // initialQuery: `{ getData { id name surname } }`,
         }),
       )
+
+      this.setupOrbitApp()
 
       this.server.listen(Config.ports.server, () => {
         res()

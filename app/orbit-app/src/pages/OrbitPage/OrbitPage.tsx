@@ -1,7 +1,8 @@
+import { Stores } from '../../om/stores'
 import { command } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import * as KIT from '@o/kit'
-import { AppDefinition, showConfirmDialog, themes } from '@o/kit'
+import { AppDefinition, showConfirmDialog, themes, ProvideStores } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import * as UI from '@o/ui'
@@ -54,18 +55,20 @@ export const OrbitPage = memo(() => {
   const { theme } = themeStore
 
   return (
-    <Theme name={themeStore.themeColor}>
-      <AppWrapper
-        className={`theme-${themeStore.themeColor} app-parent-bounds`}
-        color={theme.color}
-      >
-        <ProvideFocus>
-          <OrbitPageInner />
-          {/* Inside provide stores to capture all our relevant stores */}
-          <OrbitEffects />
-        </ProvideFocus>
-      </AppWrapper>
-    </Theme>
+    <ProvideStores stores={Stores}>
+      <Theme name={themeStore.themeColor}>
+        <AppWrapper
+          className={`theme-${themeStore.themeColor} app-parent-bounds`}
+          color={theme.color}
+        >
+          <ProvideFocus>
+            <OrbitPageInner />
+            {/* Inside provide stores to capture all our relevant stores */}
+            <OrbitEffects />
+          </ProvideFocus>
+        </AppWrapper>
+      </Theme>
+    </ProvideStores>
   )
 })
 

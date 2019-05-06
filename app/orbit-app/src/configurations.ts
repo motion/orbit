@@ -3,7 +3,6 @@ import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 
-import { getAppProps } from './helpers/getAppProps'
 import { StoreContext } from './StoreContext'
 
 function configure() {
@@ -32,7 +31,6 @@ function configure() {
     StoreContext,
     useAppState,
     useUserState,
-    propsToItem: getAppProps,
   })
 
   configureUseStore({

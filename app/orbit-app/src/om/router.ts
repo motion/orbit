@@ -17,7 +17,7 @@ type HistoryItem = { name: RouteName; path: string }
 
 export type RouterState = {
   history: HistoryItem[]
-  currentPage: string
+  pageName: string
   appId: string
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
@@ -50,19 +50,19 @@ const getItem = (name: RouteName, p?: Params) => ({
 
 export const state: RouterState = {
   history: [],
-  currentPage: 'home',
+  pageName: 'home',
   appId: 'search',
   ignoreNextPush: false,
-  isOnSetupApp: state => state.currentPage === 'app' && state.appId === 'setupApp',
+  isOnSetupApp: state => state.pageName === 'app' && state.appId === 'setupApp',
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
-  urlString: state => (state.curPage ? `//${state.curPage.path}` : ''),
+  urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
 }
 
 // actions
 
 const showPage: Action<HistoryItem> = (om, item) => {
-  om.state.router.currentPage = item.name
+  om.state.router.pageName = item.name
   om.state.router.history = [...om.state.router.history, item]
   if (!om.state.router.ignoreNextPush) {
     om.effects.router.open(item.path)
@@ -72,6 +72,7 @@ const showPage: Action<HistoryItem> = (om, item) => {
 
 const showHomePage: Action = om => {
   showPage(om, getItem('home'))
+  om.effects.router.setHomePane()
 }
 
 const showAppPage: Action<string> = (om, id) => {
@@ -137,20 +138,11 @@ export const effects = {
     page.show(url)
   },
 
-  setPane(appId) {
+  setPane(appId: string) {
     paneManagerStore.setActivePane(appId)
-    //   ensureBlock(() => {
-    //     ensure('location', !!location)
-    //     ensure('external url', location.source === 'link')
-    //     ensure('matches type', appStore.identifier === location.basename)
-    //     if (appStore.id === location.query.id) {
-    //       paneManagerStore.setActivePane(location.basename)
-    //       selectableStore.moveToId(location.query.itemId)
-    //     }
-    //     if (!location.query.id) {
-    //       paneManagerStore.setActivePaneByType(location.basename)
-    //     }
-    //   })
-    // })
+  },
+
+  setHomePane() {
+    paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   },
 }

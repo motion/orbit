@@ -3,7 +3,7 @@ import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveAppsSorted } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import React, { forwardRef, memo, useCallback, useState } from 'react'
+import React, { forwardRef, memo, useCallback } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -25,35 +25,31 @@ const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButton
 
 const HomeButton = memo(
   forwardRef((props: any, ref) => {
-    const [hovered, setHovered] = useState(false)
-    const { state } = useOm()
-
+    const { state, actions } = useOm()
     const theme = useTheme()
     const { newAppStore, paneManagerStore } = useStores()
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-    const onClick = useCallback(e => {
-      console.log('go to ', store.hovering, paneManagerStore.homePane.id)
-      if (store.hovering) {
-        e.stopPropagation()
-        paneManagerStore.setActivePane(paneManagerStore.homePane.id)
-      }
-    }, [])
 
     return (
       <Icon
         ref={ref}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseEnter={() => actions.setNavHovered(true)}
+        onMouseLeave={() => actions.setNavHovered(false)}
         opacity={0.65}
         hoverStyle={{
           opacity: 1,
         }}
         color={invertLightness(theme.color, 0.5)}
-        name={hovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
+        name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
         size={22}
-        onClick={onClick}
+        onClick={useCallback(e => {
+          if (state.navVisible) {
+            e.stopPropagation()
+            actions.router.showHomePage()
+          }
+        }, [])}
         {...props}
       />
     )
@@ -228,7 +224,7 @@ const OrbitNavHiddenBar = props => {
             <div
               key={app.id}
               style={{
-                background: app.colors[0],
+                background: app.colors ? app.colors[0] : 'black',
                 width: `${100 / apps.length}%`,
                 height: '100%',
                 // opacity: isActive ? 1 : 0.2,

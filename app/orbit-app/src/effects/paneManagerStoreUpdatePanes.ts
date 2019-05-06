@@ -11,15 +11,19 @@ export function usePaneManagerUpdatePanes() {
   const { actions } = useOm()
   const { paneManagerStore, spaceStore } = useStoresSimple()
 
-  useReaction(() => spaceStore.apps, function managePanes(apps) {
-    ensure('apps', !!apps.length)
-    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-    }
-    paneManagerStore.setPaneIndex(paneIndex)
-    actions.router.start()
-  })
+  useReaction(
+    () => spaceStore.apps,
+    function managePanes(apps) {
+      ensure('apps', !!apps.length)
+      const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+      if (!isEqual(panes, paneManagerStore.panes)) {
+        paneManagerStore.setPanes(panes)
+      }
+      paneManagerStore.setPaneIndex(paneIndex)
+      actions.router.start()
+    },
+    [paneManagerStore, spaceStore],
+  )
 }
 
 export const settingsPane = {

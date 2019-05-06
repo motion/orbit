@@ -23,8 +23,12 @@ const config = merge(
   }),
 )
 
-export const om = window['om'] || createOvermind(config)
+export const om = createOvermind(config, {
+  logProxies: true,
+})
 export const useOm = createHook(om)
+
+// window['om'] = om
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}

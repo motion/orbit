@@ -1,7 +1,7 @@
 import './helpers/installDevelopmentHelpers'
 
 import { command } from '@o/bridge'
-import { ProvideStores, themes } from '@o/kit'
+import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
 import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
 import React, { useEffect } from 'react'
@@ -9,7 +9,6 @@ import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
-import { Stores } from './om/stores'
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 export const OrbitRoot = hot(() => {
@@ -31,23 +30,21 @@ export const OrbitRoot = hot(() => {
   })
 
   return (
-    <ProvideStores stores={Stores}>
-      <ContextMenuProvider
-        onContextMenu={items => {
-          if (IS_ELECTRON) {
-            ContextMenu.update({ prepend: items })
-          }
-        }}
-      >
-        <ProvideUI themes={themes}>
-          <ErrorBoundary name="Root">
-            <React.Suspense fallback={null}>
-              <OrbitPage />
-            </React.Suspense>
-          </ErrorBoundary>
-        </ProvideUI>
-      </ContextMenuProvider>
-    </ProvideStores>
+    <ContextMenuProvider
+      onContextMenu={items => {
+        if (IS_ELECTRON) {
+          ContextMenu.update({ prepend: items })
+        }
+      }}
+    >
+      <ProvideUI themes={themes}>
+        <ErrorBoundary name="Root">
+          <React.Suspense fallback={null}>
+            <OrbitPage />
+          </React.Suspense>
+        </ErrorBoundary>
+      </ProvideUI>
+    </ContextMenuProvider>
   )
 })
 

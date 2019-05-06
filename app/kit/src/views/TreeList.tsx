@@ -167,33 +167,6 @@ export function TreeList(props: TreeListProps) {
     return null
   }
 
-  // const activeIndex = useRef(-1)
-  // useEffect(
-  //   () => {
-  //     if (stores.shortcutStore) {
-  //       return stores.shortcutStore.onShortcut(shortcut => {
-  //         switch (shortcut) {
-  //           case 'left':
-  //             store.back()
-  //             return
-  //           case 'right':
-  //             store.handleOpen(activeIndex.current)
-  //             break
-  //         }
-  //       })
-  //     }
-  //   },
-  //   [stores],
-  // )
-
-  // onSelect={index => {
-  //   console.log('ON SELECT', index)
-  //   listStore.selectedIndex = index
-  // }}
-  // depth={listStore.depth}
-  // onSortEnd={ => {
-  // }}
-
   return (
     <HighlightActiveQuery query={query}>
       <List onSortEnd={handleSortEnd} {...rest} items={loadedItems} />

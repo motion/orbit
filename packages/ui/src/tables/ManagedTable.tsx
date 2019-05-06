@@ -18,7 +18,7 @@ import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, DataType, GenericDataRow } from '../types'
-import { View } from '../View/View'
+import { Col } from '../View/Col'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
@@ -105,7 +105,7 @@ type ManagedTableState = {
   prevProps: Partial<ManagedTableProps>
 }
 
-const Container = gloss(View, {
+const Container = gloss(Col, {
   minHeight: 'min-content',
 })
 

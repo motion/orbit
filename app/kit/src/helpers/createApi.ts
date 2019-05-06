@@ -1,8 +1,21 @@
 import { command } from '@o/bridge'
 import { AppBit, CallAppBitApiMethodCommand } from '@o/models'
 
-export function createApi<T>(): T {
-  //  extends (app: AppBit) => any
+export interface FunctionalAPI<X> {
+  (appBit: AppBit): X
+  isClass?: undefined
+}
+
+export interface ClassAPI<X> {
+  new (app: AppBit): X
+  isClass: boolean
+}
+
+type APIReturn<X> = X extends ClassAPI<infer A> ? A : X extends FunctionalAPI<infer A> ? A : never
+
+export function createApi<T extends FunctionalAPI<any> | ClassAPI<any>>(): (
+  app: AppBit,
+) => APIReturn<T> {
   const fn = (app: AppBit) =>
     new Proxy(
       {},
@@ -19,5 +32,6 @@ export function createApi<T>(): T {
         },
       },
     )
+
   return fn as any
 }

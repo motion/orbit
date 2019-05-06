@@ -5,6 +5,7 @@ import { throttle } from 'lodash'
 import React, { memo, useEffect } from 'react'
 
 import { SubPaneStore } from '../stores/SubPaneStore'
+import { Col, ColProps } from '@o/ui'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: any
@@ -85,7 +86,7 @@ export const SubPane = memo(function SubPane(props: Props) {
 // we cant animate out as of yet because we are changing the height
 // so it would show overflowing content as the main pane got smaller
 // changing opacity here will be instant so avoid that bug
-const SubPaneFrame = gloss<{ isActive?: boolean } & UI.FullScreenProps>(UI.FullScreen, {
+const SubPaneFrame = gloss<UI.FullScreenProps & { isActive?: boolean }>(UI.FullScreen, {
   pointerEvents: 'none',
   opacity: 0,
   isActive: {
@@ -93,7 +94,7 @@ const SubPaneFrame = gloss<{ isActive?: boolean } & UI.FullScreenProps>(UI.FullS
   },
 })
 
-const Pane = gloss<{ isActive?: boolean; isLeft?: boolean } & UI.ViewProps>(UI.View, {
+const Pane = gloss<ColProps & { isActive?: boolean; isLeft?: boolean }>(Col, {
   position: 'absolute',
   top: 0,
   right: 0,

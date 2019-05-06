@@ -9,7 +9,6 @@ import { graphqlExpress } from 'graphql-server-express'
 import SlackApp from '@o/slack-app'
 import { getRepository } from 'typeorm'
 import { AppEntity } from '@o/models'
-import { altairExpress } from 'altair-express-middleware'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
@@ -61,21 +60,13 @@ export class WebServer {
           },
         },
       })
+
       const schema = await SlackApp.graph(app)
-      console.log('schema', schema)
       this.server.use(
         '/graphql',
         bodyParser.json(),
         graphqlExpress({
           schema,
-        }),
-      )
-      this.server.use(
-        '/altair',
-        altairExpress({
-          endpointURL: '/graphql',
-          // subscriptionsEndpoint: `ws://localhost:4000/subscriptions`,
-          // initialQuery: `{ getData { id name surname } }`,
         }),
       )
 

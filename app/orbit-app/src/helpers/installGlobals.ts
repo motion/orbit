@@ -13,6 +13,7 @@ import { App, Desktop, Electron } from '@o/stores'
 import { PopoverState } from '@o/ui'
 import * as dateFns from 'date-fns'
 import * as Mobx from 'mobx'
+import page from 'page'
 import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
@@ -48,7 +49,7 @@ const toJS = obj => {
   return next
 }
 
-// the heavy hitters
+window['page'] = page
 window['css'] = css
 window['ReconnectingWebSocket'] = ReconnectingWebSocket
 window['Mediator'] = Mediator

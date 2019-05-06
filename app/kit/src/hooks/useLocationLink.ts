@@ -1,3 +1,5 @@
+import { config } from '../configureKit'
+
 export function useLocationLink(path: string | false, stopPropagation = false) {
   if (!path) {
     return null
@@ -8,7 +10,7 @@ export function useLocationLink(path: string | false, stopPropagation = false) {
         e.stopPropagation()
         e.preventDefault()
       }
-      window.history.pushState(null, '', path)
+      config.handleLink(path)
     },
   }
 }

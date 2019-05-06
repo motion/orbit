@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useActiveAppsSorted } from '@o/kit'
+import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { forwardRef, memo, useCallback } from 'react'
@@ -126,13 +126,13 @@ export const OrbitHeader = memo(() => {
 
               <Button
                 active={paneManagerStore.activePane.id === 'data-explorer'}
-                onClick={() => paneManagerStore.setActivePane('data-explorer')}
+                {...useLocationLink('/app/data-explorer')}
                 icon="layers"
                 tooltip="Data explorer"
               />
               <Button
                 active={paneManagerStore.activePane.id === 'apps'}
-                onClick={() => paneManagerStore.setActivePane('apps')}
+                {...useLocationLink('/app/apps')}
                 icon="layout-grid"
                 tooltip="Manage apps"
               />

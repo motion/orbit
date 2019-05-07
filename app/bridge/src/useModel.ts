@@ -11,15 +11,20 @@ export type UseModelOptions = {
 }
 
 const PromiseCache: {
-  [key: string]: { read: Promise<any>; resolve: Function; current: any }
+  [key: string]: {
+    read: Promise<any>
+    resolve: Function
+    current: any
+  }
 } = {}
+
 const getKey = (a, b, c) => `${a}${b}${c}`
 
-const defaultValues = {
-  one: null,
-  many: [],
-  count: 0,
-}
+// const defaultValues = {
+//   one: null,
+//   many: [],
+//   count: 0,
+// }
 
 const runUseQuery = (model: any, type: string, query: Object, observe: boolean, update: any) => {
   if (observe) {
@@ -42,6 +47,10 @@ const runUseQuery = (model: any, type: string, query: Object, observe: boolean, 
   throw new Error('unreachable')
 }
 
+const dispose = sub => {
+  sub.current && sub.current.unsubscribe()
+}
+
 function use<ModelType, Args>(
   type: 'one' | 'many' | 'count',
   model: Model<ModelType, Args, any>,
@@ -51,23 +60,23 @@ function use<ModelType, Args>(
   const queryKey = JSON.stringify(query)
   const observeEnabled = options.observe === undefined || options.observe === true
   const forceUpdate = useState(0)[1]
-  const valueRef = useRef(options.defaultValue || defaultValues[type])
+  const valueRef = useRef(options.defaultValue)
   const subscription = useRef<any>(null)
-
-  const dispose = () => {
-    subscription.current && subscription.current.unsubscribe()
-  }
+  const yallReadyKnow = useRef(false)
 
   // unmount
-  useEffect(() => dispose, [])
+  useEffect(() => dispose(subscription), [])
 
   // on new query: subscribe, update
   useEffect(() => {
     if (query === false) return
-    // only do subscriptinos here...
+    if (yallReadyKnow.current) {
+      yallReadyKnow.current = false
+      return
+    }
 
     // unsubscribe from previous subscription
-    dispose()
+    dispose(subscription)
 
     let cancelled = false
     const update = next => {
@@ -101,10 +110,16 @@ function use<ModelType, Args>(
     if (!cache) {
       let resolve
       const promise = new Promise(res => {
+        yallReadyKnow.current = true
         subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+          console.log('got', key, next, PromiseCache)
           if (isDefined(next)) {
             cache.current = next
             valueRef.current = next
+            // clear cache
+            setTimeout(() => {
+              delete PromiseCache[key]
+            }, 100)
             res()
           }
         })
@@ -117,12 +132,11 @@ function use<ModelType, Args>(
     }
 
     if (isDefined(cache.current)) {
-      valueRef.current = cache.resolve
+      valueRef.current = cache.current
     } else {
+      console.log('throwing', key)
       throw cache.read
     }
-
-    // TODO clear cache logic
   }
 
   if (type === 'one' || type === 'many') {

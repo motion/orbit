@@ -24,6 +24,8 @@ export function PeopleAppMain(props: AppProps) {
     },
   })
 
+  console.log('person', props, person)
+
   const [recentBits] = useBits({
     where: {
       people: {

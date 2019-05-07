@@ -27,9 +27,6 @@ function cachedObservable(
     } else {
       cached.isActive = true
 
-      // send default value immediately
-      sub.next(cached.rawValue)
-
       const subs = options.transports.map(transport => {
         return transport.observe(name, args).subscribe(
           response => {

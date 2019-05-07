@@ -96,7 +96,7 @@ type UseTreeList = {
   actions: ReturnType<typeof getActions>
 }
 
-const defaultUserState = {
+const defaultUserState: TreeUserState = {
   curId: 0,
 }
 

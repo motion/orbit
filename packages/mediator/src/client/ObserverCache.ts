@@ -3,7 +3,6 @@ export type ObserverCacheArgs = {
   model: string
   type: ObserverCacheType
   query: Object
-  defaultValue: any
 }
 
 export type ObserverCacheEntry = {
@@ -38,7 +37,7 @@ export const ObserverCache = {
         // store this so its quick to check for updates
         denormalizedValues: {},
         // store this so we keep the sort order
-        rawValue: args.defaultValue,
+        rawValue: undefined,
         // we only update denormalized values
         get value() {
           if (!entry.rawValue) return entry.rawValue

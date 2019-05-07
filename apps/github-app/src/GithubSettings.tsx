@@ -7,9 +7,6 @@ import { GithubLoader } from './GithubLoader'
 
 export function GithubSettings() {
   const app = useApp()
-  if (!app) {
-    debugger
-  }
   const [repos, setRepos] = useAppState(`${app.id}-repositories`)
   const whitelist = useWhiteList(useAppState(`${app.id}-whitelist`), {
     getAll() {

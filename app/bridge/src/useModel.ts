@@ -10,14 +10,16 @@ export type UseModelOptions = {
   observe?: boolean
 }
 
+const PromiseCache: {
+  [key: string]: { read: Promise<any>; resolve: Function; current: any }
+} = {}
+const getKey = (a, b, c) => `${a}${b}${c}`
+
 const defaultValues = {
   one: null,
   many: [],
   count: 0,
 }
-
-const PromiseCache: { [key: string]: { read: Promise<any>; resolve: Function } } = {}
-const getKey = (a, b, c) => `${a}${b}${c}`
 
 const runUseQuery = (model: any, type: string, query: Object, observe: boolean, update: any) => {
   if (observe) {
@@ -37,6 +39,7 @@ const runUseQuery = (model: any, type: string, query: Object, observe: boolean, 
       loadCount(model, { args: query }).then(update)
     }
   }
+  throw new Error('unreachable')
 }
 
 function use<ModelType, Args>(
@@ -49,9 +52,7 @@ function use<ModelType, Args>(
   const observeEnabled = options.observe === undefined || options.observe === true
   const forceUpdate = useState(0)[1]
   const valueRef = useRef(options.defaultValue || defaultValues[type])
-  const value = valueRef.current
   const subscription = useRef<any>(null)
-  // const id = useRef(Math.random())
 
   const dispose = () => {
     subscription.current && subscription.current.unsubscribe()
@@ -63,6 +64,7 @@ function use<ModelType, Args>(
   // on new query: subscribe, update
   useEffect(() => {
     if (query === false) return
+    // only do subscriptinos here...
 
     // unsubscribe from previous subscription
     dispose()
@@ -71,7 +73,7 @@ function use<ModelType, Args>(
     const update = next => {
       if (cancelled) return
       if (next === valueRef.current) return
-      if (valueRef.current === options.defaultValue && next === null) return
+      if (next === undefined) return
       valueRef.current = next
       forceUpdate(Math.random())
     }
@@ -94,29 +96,40 @@ function use<ModelType, Args>(
 
   if (query !== false && !isDefined(valueRef.current)) {
     const key = getKey(model.name, type, queryKey)
-    let cache =
-      PromiseCache[key] ||
-      (() => {
-        let resolve
-        const promise = new Promise(res => {
-          subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+    let cache = PromiseCache[key]
+
+    if (!cache) {
+      let resolve
+      const promise = new Promise(res => {
+        subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+          if (isDefined(next)) {
+            cache.current = next
             valueRef.current = next
             res()
-          })
+          }
         })
-        return {
-          read: promise,
-          resolve,
-        }
-      })()
-    throw cache.read
+      })
+      cache = PromiseCache[key] = {
+        read: promise,
+        resolve,
+        current: undefined,
+      }
+    }
+
+    if (isDefined(cache.current)) {
+      valueRef.current = cache.resolve
+    } else {
+      throw cache.read
+    }
+
+    // TODO clear cache logic
   }
 
   if (type === 'one' || type === 'many') {
-    return [value, valueUpdater]
+    return [valueRef.current, valueUpdater]
   }
 
-  return value
+  return valueRef.current
 }
 
 export function useModel<ModelType, Args>(

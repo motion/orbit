@@ -2,15 +2,19 @@ import { AppBit, AppDefinition, AppModel, save, selectDefined, useActiveSpace, u
 import { Form } from '@o/ui'
 import React from 'react'
 
-export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
-  const [activeSpace] = useActiveSpace()
-  const [existingApp] = useAppBit(selectDefined(id, false))
-  const app: AppBit = existingApp || {
+export function createNewApp(def: AppDefinition): AppBit {
+  return {
     target: 'app',
     identifier: def.id,
     itemType: def.itemType,
     data: {},
   }
+}
+
+export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
+  const [activeSpace] = useActiveSpace()
+  const [existingApp] = useAppBit(selectDefined(id, false))
+  const app: AppBit = existingApp || createNewApp(def)
 
   return (
     <Form

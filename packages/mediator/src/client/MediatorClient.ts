@@ -1,11 +1,12 @@
 import Observable from 'zen-observable'
+
 import { Command, Model, TransportRequestType } from '../common'
+import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
 import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
-import { log } from '../common/logger'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -313,7 +314,6 @@ export class MediatorClient {
       model: modelName,
       query: args,
       type: 'one',
-      defaultValue: null,
     })
     return new Observable(
       cachedObservable(
@@ -354,7 +354,6 @@ export class MediatorClient {
       model: modelName,
       query: args,
       type: 'many',
-      defaultValue: [],
     })
     return new Observable(
       cachedObservable(

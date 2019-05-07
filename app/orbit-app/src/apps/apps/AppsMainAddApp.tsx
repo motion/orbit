@@ -52,7 +52,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
             authorized users in this space.
           </Message>
           <Section bordered pad title="Setup">
-            <AppSetupForm id={-1} def={def} />
+            <AppSetupForm def={def} />
           </Section>
           <Space />
         </Section>

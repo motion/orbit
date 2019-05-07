@@ -1,10 +1,16 @@
-import { AppDefinition, AppModel, save, useActiveSpace, useAppBit } from '@o/kit'
+import { AppBit, AppDefinition, AppModel, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
 import { Form } from '@o/ui'
 import React from 'react'
 
-export function AppSetupForm(props: { id: number; def: AppDefinition }) {
+export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
   const [activeSpace] = useActiveSpace()
-  const [app] = useAppBit(props.id)
+  const [existingApp] = useAppBit(selectDefined(id, false))
+  const app: AppBit = existingApp || {
+    target: 'app',
+    identifier: def.id,
+    itemType: def.itemType,
+    data: {},
+  }
 
   return (
     <Form
@@ -13,9 +19,9 @@ export function AppSetupForm(props: { id: number; def: AppDefinition }) {
         app.data.setup = values
 
         // pass back for validation
-        if (props.def.setupValidate) {
+        if (def.setupValidate) {
           try {
-            props.def.setupValidate(app, values)
+            def.setupValidate(app, values)
           } catch (err) {
             return err
               ? err.message || err

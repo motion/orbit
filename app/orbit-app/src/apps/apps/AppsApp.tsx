@@ -13,9 +13,10 @@ import {
   useAppDefinitions,
   useAppWithDefinition,
 } from '@o/kit'
-import { Button, Form, FormField, List, Section, SubSection } from '@o/ui'
+import { Button, FormField, List, Section, SubSection } from '@o/ui'
 import React from 'react'
 
+import { AppSetupForm } from './AppSetupForm'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 import { getAppListItem } from './getAppListItem'
@@ -125,10 +126,10 @@ export function AppsMain(props: AppProps) {
         </Section>
       )}
 
-      {definition.instanceSettings && (
+      {definition.setup && (
         <Section>
           <SubSection title="App Settings">
-            <Form />
+            <AppSetupForm id={app ? app.id : undefined} def={definition} />
           </SubSection>
         </Section>
       )}

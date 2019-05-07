@@ -1,9 +1,10 @@
 import { Model } from '@o/mediator'
 import { assign } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
 
-type UseModelOptions = {
+export type UseModelOptions = {
   defaultValue?: any
   observe?: boolean
 }

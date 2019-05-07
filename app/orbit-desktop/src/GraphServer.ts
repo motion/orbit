@@ -43,9 +43,8 @@ export class GraphServer {
 
     // graphql
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
-      console.log('got req', !!this.graphMiddleware, req.params.workspaceId)
-
       const middleware = this.graphMiddleware[req.params.workspaceId]
+      console.log('got req', !!middleware, req.params.workspaceId)
 
       if (middleware) {
         return middleware(req, res, next)
@@ -83,13 +82,6 @@ export class GraphServer {
           subs.push(this.watchAppsForSchemaSetup(space.id))
         }
       })
-  }
-
-  private async setupGraph(schemas: any[]) {
-    log.info('Setting up graph with', schemas.length)
-    this.graphMiddleware = graphqlExpress({
-      schema: mergeSchemas({ schemas }),
-    })
   }
 
   private watchAppsForSchemaSetup(spaceId: number) {
@@ -135,7 +127,9 @@ export class GraphServer {
           schemas.push(schema)
         }
 
-        this.setupGraph(schemas)
+        this.graphMiddleware[spaceId] = graphqlExpress({
+          schema: mergeSchemas({ schemas }),
+        })
       })
   }
 }

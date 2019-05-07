@@ -123,6 +123,8 @@ export function GraphExplorer() {
 
                 .historyPaneWrap {
                   flex: 1;
+                  min-width: 100px;
+                  padding: 5px;
                 }
 
                 .CodeMirror-hints {

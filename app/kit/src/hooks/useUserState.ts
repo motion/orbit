@@ -9,7 +9,9 @@ import { ScopedAppState } from './useAppState'
 // if you want to store data just for the individual user,
 //   (like positional state, where they are in the UI), use this
 
-export function useUserState<A>(uid: string, defaultState?: A): ScopedAppState<A> {
+export type ScopedUserState<A> = ScopedAppState<A>
+
+export function useUserState<A>(uid: string, defaultState?: A): ScopedUserState<A> {
   useEnsureDefaultUserState<A>(uid, defaultState)
   const [state, update] = useModel(UserModel, {})
   const updateFn = useCallback(cb => {

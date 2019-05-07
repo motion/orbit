@@ -1,4 +1,5 @@
 import { ImmutableUpdateFn } from '@o/bridge'
+import { selectDefined } from '@o/utils'
 import { useCallback } from 'react'
 
 import { useAppBit } from './useAppBit'
@@ -26,5 +27,5 @@ export function useAppState<A>(uid: string | false, defaultState?: A): ScopedApp
   }
 
   // scopes state down
-  return [(state && state.data[uid]) || defaultState, updateFn]
+  return [selectDefined(state && state.data[uid], defaultState), updateFn]
 }

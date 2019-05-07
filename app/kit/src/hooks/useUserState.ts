@@ -1,5 +1,6 @@
 import { useModel } from '@o/bridge'
 import { UserModel } from '@o/models'
+import { selectDefined } from '@o/utils'
 import { useCallback, useEffect } from 'react'
 
 import { ScopedAppState } from './useAppState'
@@ -13,7 +14,8 @@ export type ScopedUserState<A> = ScopedAppState<A>
 
 export function useUserState<A>(uid: string, defaultState?: A): ScopedUserState<A> {
   useEnsureDefaultUserState<A>(uid, defaultState)
-  const [state, update] = useModel(UserModel, {})
+  const [state, update] = useModel(UserModel)
+
   const updateFn = useCallback(cb => {
     if (!state || !uid) {
       console.error('State not loaded / not found yet, or no uid!')
@@ -25,11 +27,11 @@ export function useUserState<A>(uid: string, defaultState?: A): ScopedUserState<
   }, [])
 
   // scopes user down
-  return [state ? state.appState[uid] : defaultState, updateFn]
+  return [selectDefined(state && state.appState[uid], defaultState), updateFn]
 }
 
 export function useEnsureDefaultUserState<A>(uid: string, ensure: A) {
-  const [user, update] = useModel(UserModel, {})
+  const [user, update] = useModel(UserModel)
 
   useEffect(() => {
     if (!user) return

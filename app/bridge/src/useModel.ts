@@ -1,6 +1,7 @@
 import { Model } from '@o/mediator'
 import { isDefined } from '@o/utils'
 import produce from 'immer'
+import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
@@ -104,10 +105,18 @@ function use<ModelType, Args>(
 
   const valueUpdater: ImmutableUpdateFn<any> = useCallback(
     updaterFn => {
-      // we can't use merge here since lodash's merge doesn't merge arrays properly
-      // in the case if we would need merge again - we need to write it custom with arrays in mind
-      const next = produce(valueRef.current, updaterFn)
-      save(model, next as any)
+      const finish = (val: any) => {
+        const next = produce(val, updaterFn)
+        save(model, next as any)
+      }
+
+      // note, if we use a select this would fail because we wouldn't have all the values to save
+      // so if we have a select, we're going to fetch the full object first, then mutate, then save
+      if (query && query['select']) {
+        loadOne(model, { args: omit(query as any, 'select') }).then(finish)
+      } else {
+        finish(valueRef.current)
+      }
     },
     [queryKey],
   )

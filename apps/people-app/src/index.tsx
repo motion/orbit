@@ -14,6 +14,7 @@ import {
 import {
   Avatar,
   Button,
+  Center,
   Col,
   gloss,
   List,
@@ -76,26 +77,38 @@ function PeopleAppIndex() {
 }
 
 export function PeopleAppMain(props: AppProps) {
-  const { queryStore } = useStores()
+  if (props.identifier === 'people') {
+    return (
+      <Center>
+        <SubTitle>No person selected</SubTitle>
+      </Center>
+    )
+  }
+  return <PersonMedia id={+props.id} />
+}
 
+function PersonMedia({ id }: { id: number }) {
+  const { queryStore } = useStores()
   const [person] = useBit({
     where: {
       type: 'person',
-      id: +props.id,
+      id,
     },
   })
 
-  const [recentBits] = useBits({
-    where: {
-      people: {
-        email: person.email,
+  const [recentBits] = useBits(
+    !!person && {
+      where: {
+        people: {
+          email: person.email,
+        },
       },
+      order: {
+        bitUpdatedAt: 'DESC',
+      },
+      take: 10,
     },
-    order: {
-      bitUpdatedAt: 'DESC',
-    },
-    take: 10,
-  })
+  )
 
   const query = getBitTexts(recentBits)
   const topics = useNLPTopics({

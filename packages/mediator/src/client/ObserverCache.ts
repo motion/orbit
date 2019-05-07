@@ -96,7 +96,6 @@ export const ObserverCache = {
         } else {
           if (entry.value.id === id) {
             const next = selectModel(entry, value)
-            console.log('compare', entry.value, next)
             if (!isEqual(entry.value, next)) {
               toUpdate.add(entry)
               entry.value = next

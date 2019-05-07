@@ -13,6 +13,7 @@ function CustomApp() {
         <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
           {({ api }) => {
             const res = api.channelsList()
+            console.log('re render table')
             return (
               <Table
                 shareable

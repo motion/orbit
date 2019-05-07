@@ -67,7 +67,7 @@ function DataExplorerMain({ subId }: AppProps) {
       title={app.name}
       subTitle={definition.name}
       titleBorder
-      icon={app.icon}
+      icon={definition.icon}
       afterTitle={
         <Button
           alt="confirm"

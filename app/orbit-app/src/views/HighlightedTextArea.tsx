@@ -1,6 +1,6 @@
-import { CSSPropertySet, gloss } from '@o/gloss';
-import * as UI from '@o/ui';
-import * as React from 'react';
+import { CSSPropertySet, gloss } from '@o/gloss'
+import * as UI from '@o/ui'
+import * as React from 'react'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
 
@@ -20,28 +20,34 @@ const Block = gloss(UI.Block, {
   whiteSpace: 'pre',
 })
 
-const SelectableBlock = gloss(Block).theme((_, theme) => ({
-  '&::selection': {
-    color: theme.color.lighten(0.1),
-    background: theme.background.darken(0.1),
-  },
-  '&::placeholder': {
-    color: theme.color.alpha(0.6),
-  },
-}))
+type TextArea = React.HTMLProps<HTMLTextAreaElement>
+
+const SelectableBlock = gloss<UI.BlockProps & Pick<TextArea, 'value' | 'rows'>>(Block).theme(
+  (_, theme) => ({
+    '&::selection': {
+      color: theme.color.lighten(0.1),
+      background: theme.background.darken(0.1),
+    },
+    '&::placeholder': {
+      color: theme.color.alpha(0.6),
+    },
+  }),
+)
 
 type Color = string
+
+type Div = React.HTMLAttributes<HTMLDivElement>
 
 type Props = CSSPropertySet & {
   openMark?: string
   closeMark?: string
   value?: string
   highlight?: (a?: string) => number[][] | RegExp | { [index: number]: Color }
-  onChange?: Function
-  onFocus?: Function
-  onBlur?: Function
-  onKeyDown?: Function
-  onClick?: Function
+  onChange?: Div['onChange']
+  onFocus?: Div['onFocus']
+  onBlur?: Div['onBlur']
+  onKeyDown?: Div['onKeyDown']
+  onClick?: Div['onClick']
   forwardRef?: React.Ref<any>
   placeholder?: string
 }
@@ -159,7 +165,7 @@ export class HighlightedTextArea extends React.Component<Props> {
   }
 
   render() {
-    const { onChange, highlight, value, forwardRef, ...props } = this.props
+    const { onChange: _, highlight: _2, value: _3, forwardRef, ...props } = this.props
     return (
       <TextAreaOuter height={props.lineHeight || '100%'}>
         {/* prevent dragging on text */}

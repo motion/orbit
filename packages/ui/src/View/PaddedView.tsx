@@ -1,7 +1,8 @@
-import { Base, BaseProps, gloss } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 
 import { getSpaceSize, Sizes } from '../Space'
+import { View, ViewProps } from './View'
 
 export type SizesObject = {
   top?: Sizes
@@ -54,7 +55,7 @@ export const getSizableValue = (value: Sizes | SizesObject | Sizes[] | null | un
 }
 
 // plain padded view
-export const PaddedView = gloss<BaseProps & PadProps>(Base, {
+export const PaddedView = gloss<ViewProps & PadProps>(View, {
   width: '100%',
   flexDirection: 'inherit',
   flexWrap: 'inherit',

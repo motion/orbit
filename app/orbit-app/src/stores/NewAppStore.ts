@@ -81,10 +81,6 @@ export class NewAppStore {
       return
     }
 
-    if (def.appData) {
-      data = def.appData
-    }
-
     this.app = {
       ...this.app,
       // update if not changed

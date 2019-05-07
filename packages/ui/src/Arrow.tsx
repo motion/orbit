@@ -1,9 +1,9 @@
-import { Contents, gloss, ThemeContext } from '@o/gloss'
+import { Contents, ContentsProps, gloss, ThemeContext } from '@o/gloss'
 import React, { useContext } from 'react'
 
-import { View, ViewProps } from './View/View'
+import { View } from './View/View'
 
-export type ArrowProps = ViewProps & {
+export type ArrowProps = ContentsProps & {
   size: number
   towards?: 'top' | 'right' | 'bottom' | 'left'
 }

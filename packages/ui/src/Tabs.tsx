@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 
 import { colors } from './helpers/colors'
@@ -9,6 +9,7 @@ import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
 import { Col } from './View/Col'
+import { Row } from './View/Row'
 import { View, ViewProps } from './View/View'
 
 /**

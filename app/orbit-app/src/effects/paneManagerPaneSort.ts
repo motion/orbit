@@ -46,7 +46,9 @@ export function usePaneManagerPaneSort() {
     }
     const paneSort = sortPanes(space, activeApps)
     if (!isEqual(paneSort, space.paneSort)) {
-      updateSpace({ paneSort })
+      updateSpace(next => {
+        next.paneSort = paneSort
+      })
     }
   }, [space, activeApps])
 }

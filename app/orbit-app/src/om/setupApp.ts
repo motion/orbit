@@ -1,6 +1,7 @@
 import { getAppDefinition, save } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { Action } from 'overmind'
+
 import { spaceStore } from './stores'
 
 export const defaultApps: AppBit[] = [
@@ -80,10 +81,6 @@ const setApp: Action<string> = ({ state }, identifier) => {
   if (!def) {
     console.warn('no wapp?')
     return
-  }
-
-  if (def.appData) {
-    data = def.appData
   }
 
   state.setupApp.app = {

@@ -68,10 +68,9 @@ export default function SettingsAppAccount() {
 
       // update settings and last synced date in the database
       // todo: we probably also need to update active space too
-      updateUser({
-        ...user,
-        settings,
-        lastTimeSync: new Date().getTime(),
+      updateUser(next => {
+        next.settings = settings
+        next.lastTimeSync = new Date().getTime()
       })
 
       setIsSyncing(false)
@@ -90,11 +89,10 @@ export default function SettingsAppAccount() {
       .signOut()
       .then(() => {
         setStatusMessage('Good bye!')
-        updateUser({
-          ...user,
-          email: null,
-          cloudId: null,
-          lastTimeSync: null,
+        updateUser(next => {
+          next.email = null
+          next.cloudId = null
+          next.lastTimeSync = null
         })
       })
       .catch(err => {
@@ -112,7 +110,9 @@ export default function SettingsAppAccount() {
       })
       .then(async () => {
         // update email in the database
-        updateUser({ ...user, email })
+        updateUser(next => {
+          next.email = email
+        })
       })
       .catch(error => {
         setStatusMessage('Error: ' + error.message)

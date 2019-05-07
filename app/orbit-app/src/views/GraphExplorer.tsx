@@ -1,3 +1,4 @@
+// @ts-ignore
 import graphqlStyle from '!raw-loader!@o/graphiql/graphiql.css'
 import GraphiQL from '@o/graphiql'
 import { getGlobalConfig } from '@o/kit'

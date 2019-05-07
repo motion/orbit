@@ -11,8 +11,8 @@ import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
-import { SizedSurface } from './SizedSurface'
-import { SurfacePassPropsReset, SurfaceProps } from './Surface'
+import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { SurfacePassPropsReset } from './Surface'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { View } from './View/View'
@@ -21,7 +21,7 @@ const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
 
 type AnimatedDivProps = AnimatedProps<React.HTMLAttributes<HTMLDivElement>>
 
-export type PopoverProps = Omit<SurfaceProps, 'background' | 'style'> & {
+export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 

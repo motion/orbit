@@ -1,11 +1,11 @@
-import { AppIcon } from '@o/kit'
+import { AppBit, AppIcon } from '@o/kit'
 import { Input, Popover, Row, Space, View } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { ColorPicker } from '../../views/ColorPicker'
 
-export function AppsMainNew() {
+export function AppsMainNew({ app }: { app: AppBit }) {
   const { state, actions } = useOm()
   const inputRef = useRef(null)
 

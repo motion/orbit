@@ -1,15 +1,13 @@
 import { AppBit, Bit } from '@o/kit'
 import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
+
 import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
 
 /**
  * Creates bits out of jira models.
  */
 export class JiraBitFactory {
-
-  constructor(private app: AppBit,
-              private utils: SyncerUtils) {
-  }
+  constructor(private app: AppBit, private utils: SyncerUtils) {}
 
   /**
    * Builds a bit from the given jira issue.
@@ -53,10 +51,10 @@ export class JiraBitFactory {
       location: {
         id: issue.fields.project.id,
         name: issue.fields.project.name,
-        webLink: appData.values.credentials.domain + '/browse/' + issue.fields.project.key,
+        webLink: appData.setup.domain + '/browse/' + issue.fields.project.key,
         desktopLink: '',
       },
-      webLink: appData.values.credentials.domain + '/browse/' + issue.key,
+      webLink: appData.setup.domain + '/browse/' + issue.key,
       people,
       bitCreatedAt,
       bitUpdatedAt,
@@ -75,5 +73,4 @@ export class JiraBitFactory {
       photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
     })
   }
-
 }

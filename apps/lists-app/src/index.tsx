@@ -199,10 +199,6 @@ export default createApp({
   icon: '',
   app: ListApp,
   api: () => API,
-  appData: {
-    rootItemID: 0,
-    items: {},
-  },
 })
 
 export function ListAppStatusBar() {

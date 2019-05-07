@@ -29,7 +29,19 @@ export type FormProps<A extends FormFieldsObj> = Omit<SectionProps, 'children'> 
 
 type FormValues = { [key in keyof FormFieldsObj]: any }
 export type FormFieldsObj = { [key: string]: FormFieldType }
-export type FormErrors<A> = { [key in keyof A]: string } | string | null | true | undefined | void
+
+/**
+ * Used to describe if any errors exist on the form.
+ * If falsy, no problem, if truthful, shows an error.
+ * Maps to fields.
+ * */
+export type FormErrors<A> =
+  | { [key in keyof A]: string }
+  | string
+  | null
+  | boolean
+  | undefined
+  | void
 
 type FormFieldType =
   | {

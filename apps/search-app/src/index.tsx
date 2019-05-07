@@ -2,7 +2,6 @@ import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState,
 import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
-import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
 
 export default createApp({
@@ -10,8 +9,13 @@ export default createApp({
   name: 'Search',
   icon: '',
   app: SearchApp,
-  settings: SearchAppSettings,
-  config: {
+  setup: {
+    date: {
+      name: 'Date',
+      type: 'date',
+    },
+  },
+  viewConfig: {
     transparentBackground: true,
   },
 })

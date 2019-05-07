@@ -1,6 +1,7 @@
 import { observeMany, observeOne } from '@o/bridge'
 import { AppModel, SpaceModel, UserModel } from '@o/models'
 import { ensure, react } from '@o/use-store'
+
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { PaneManagerStore } from './PaneManagerStore'
 
@@ -37,7 +38,7 @@ export class SpaceStore {
 
   apps = react(
     () => [this.appsUnsorted, this.activeSpace.paneSort || []],
-    ([apps, paneSort]) => sortApps(apps, paneSort),
+    ([apps, paneSort]) => sortApps(apps || [], paneSort),
     {
       defaultValue: [],
     },

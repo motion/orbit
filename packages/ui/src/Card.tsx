@@ -2,7 +2,7 @@ import { Theme, useThemeContext } from '@o/gloss'
 import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef, useCallback } from 'react'
 
-import { Collapsable, CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { Scale } from './Scale'
@@ -91,7 +91,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
           <Scale size={1.1}>
             <ListItemSimple
               before={<CollapseArrow useCollapse={toggle} />}
-              className="grid-draggable"
+              className="ui-card-header grid-draggable"
               onClickLocation={onClickLocation}
               onDoubleClick={
                 (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
@@ -128,21 +128,22 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
           </Scale>
           {/* reset inner contents to be original theme */}
           <Theme name={activeThemeName}>
-            <Collapsable useCollapse={toggle}>
-              <Col
-                scrollable={scrollable}
-                flexDirection={flexDirection}
-                space={!!space && getSpaceSize(space) * getSize(size)}
-                pad={pad}
-                padding={padding}
-                flex={1}
-                maxHeight={maxHeight}
-                {...resetColors}
-                {...padProps}
-              >
-                {showChildren && children}
-              </Col>
-            </Collapsable>
+            <Col
+              className="ui-card-inner"
+              scrollable={scrollable}
+              flexDirection={flexDirection}
+              space={!!space && getSpaceSize(space) * getSize(size)}
+              pad={pad}
+              padding={padding}
+              flex={1}
+              maxHeight={maxHeight}
+              overflow="hidden"
+              useCollapse={toggle}
+              {...resetColors}
+              {...padProps}
+            >
+              {showChildren && children}
+            </Col>
           </Theme>
         </SizedSurface>
       </Scale>

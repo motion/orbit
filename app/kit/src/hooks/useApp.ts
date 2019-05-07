@@ -54,9 +54,9 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
               })
               .then(() => {
                 // // clear cache
-                // setTimeout(() => {
-                //   delete ApiCache[key]
-                // }, 100)
+                setTimeout(() => {
+                  delete ApiCache[key]
+                }, 100)
               })
 
             ApiCache[key] = {

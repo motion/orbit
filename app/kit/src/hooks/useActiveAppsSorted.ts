@@ -1,4 +1,5 @@
 import { AppBit } from '@o/models'
+
 import { useActiveApps } from './useActiveApps'
 import { useActiveSpace } from './useActiveSpace'
 
@@ -12,6 +13,7 @@ export function useActiveAppsSorted() {
   // console.log('got a new value', space, activeApps)
 
   if (!activeApps || !space) {
+    console.warn('should be unreachable', activeApps, space)
     return []
   }
 

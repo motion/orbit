@@ -1,15 +1,13 @@
 import { AppBit, Bit } from '@o/kit'
 import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
+
 import { ConfluenceAppData, ConfluenceBitData, ConfluenceContent, ConfluenceUser } from './ConfluenceModels'
 
 /**
  * Creates bits out of confluence models.
  */
 export class ConfluenceBitFactory {
-
-  constructor(private app: AppBit,
-              private utils: SyncerUtils) {
-  }
+  constructor(private app: AppBit, private utils: SyncerUtils) {}
 
   /**
    * Builds a document bit from the given confluence content.
@@ -41,7 +39,7 @@ export class ConfluenceBitFactory {
     })
 
     const data: ConfluenceBitData = {
-      content: cleanHtml
+      content: cleanHtml,
     }
 
     return this.utils.createBit({
@@ -54,10 +52,10 @@ export class ConfluenceBitFactory {
       location: {
         id: content.space.id,
         name: content.space.name,
-        webLink: appData.values.credentials.domain + '/wiki' + content.space._links.webui,
+        webLink: appData.setup.domain + '/wiki' + content.space._links.webui,
         desktopLink: '',
       },
-      webLink: appData.values.credentials.domain + '/wiki' + content._links.webui,
+      webLink: appData.setup.domain + '/wiki' + content._links.webui,
       people,
       bitCreatedAt,
       bitUpdatedAt,
@@ -75,8 +73,7 @@ export class ConfluenceBitFactory {
       originalId: user.accountId,
       title: user.displayName,
       email: user.details.personal.email,
-      photo: appData.values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),
+      photo: appData.setup.domain + user.profilePicture.path.replace('s=48', 's=512'),
     })
   }
-
 }

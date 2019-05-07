@@ -1,4 +1,5 @@
 import { AppBit, Bit, ItemType } from '@o/models'
+import { FormErrors, FormFieldsObj } from '@o/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 
@@ -13,33 +14,50 @@ export type AppElements = {
   actions?: React.ReactElement<any>
 }
 
-export type AppViews = {
-  index?: FunctionComponent<AppProps> | false | null
-  main?: FunctionComponent<AppProps> | false | null
-  toolBar?: FunctionComponent<AppProps> | false | null
-  statusBar?: FunctionComponent<AppProps> | false | null
-  settings?: FunctionComponent<AppProps> | false | null
-  setup?: FunctionComponent<AppProps> | false | null
-}
-
-export type AppDefinition = {
+export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any> = {
+  /** Unique identifier for app bundle */
   id: string
+
+  /** Name of app in app store */
   name: string
+
+  /** SVG icon string of app */
   icon: string
+
+  /** Optional light icon SVG */
   iconLight?: string
-  context?: React.Context<any>
+
+  /** Automatic display item contents by ItemType */
   itemType?: ItemType
-  app?: FunctionComponent<AppProps>
-  settings?: FunctionComponent<AppProps>
-  setup?: FunctionComponent<AppProps>
-  config?: {
+
+  /** Main view of app */
+  app?: FunctionComponent<AppProps<AppData>>
+
+  /** Settings view of app */
+  settings?: FunctionComponent<AppProps<AppData>>
+
+  /** Define fields for use in setting up app or storing credentials */
+  setup?: SetupFields
+
+  /** Validate setup fields */
+  setupValidate?: (
+    app: AppBit<AppData>,
+    values: Partial<AppData>,
+  ) => FormErrors<FormErrors<SetupFields>> | Promise<FormErrors<SetupFields>>
+
+  /** Define a syncer [TODO] allow oauth config here */
+  sync?: boolean
+
+  /** Define a public node API for app */
+  api?: (app: AppBit<AppData>) => any
+
+  /** Define a GraphQL API for app */
+  graph?: (app: AppBit<AppData>) => any
+
+  /** Extra configuration for apps */
+  viewConfig?: {
     transparentBackground?: boolean
   }
-  appData?: Object
-  // TODO @umed this is where we can put syncer stuff
-  sync?: {} // todo: it can be boolean at max
-  api?: (app: AppBit) => any
-  graph?: (app: AppBit) => any
 }
 
 export type AppBitMainProps = { item: Bit }

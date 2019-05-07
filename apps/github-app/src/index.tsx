@@ -1,4 +1,5 @@
 import { createApi, createApp } from '@o/kit'
+
 import { GithubApi } from './api.node'
 import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
@@ -12,5 +13,5 @@ export default createApp({
   itemType: 'task',
   settings: GithubSettings,
   api: createApi<typeof GithubApi>(),
-  sync: {},
+  sync: true,
 })

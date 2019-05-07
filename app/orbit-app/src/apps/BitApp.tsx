@@ -1,9 +1,51 @@
+import { useModel } from '@o/bridge'
 import { gloss, Row } from '@o/gloss'
-import { Bit } from '@o/models'
-import { Button, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
+import { App, AppProps, createApp, HighlightedSearchable, ItemView } from '@o/kit'
+import { Bit, BitModel } from '@o/models'
+import { Button, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
 import * as React from 'react'
 
-// import { AppActions } from '../../../actions/appActions/AppActions'
+export default createApp({
+  id: 'bit',
+  name: 'Bit',
+  icon: '',
+  app: props => (
+    <App>
+      <BitAppMain {...props} />
+    </App>
+  ),
+})
+
+const defaultItemProps = {
+  itemProps: {
+    padding: [1, 8],
+    '&:hover': {
+      background: [0, 0, 0, 0.02],
+    },
+  },
+}
+
+export function BitAppMain(props: AppProps) {
+  const [bit] = useModel(BitModel, {
+    where: { id: +props.id },
+    relations: ['people'],
+  })
+  if (!bit) {
+    return null
+  }
+  return (
+    <ItemPropsProvider value={defaultItemProps}>
+      <HighlightedSearchable>
+        {({ searchBar }) => (
+          <>
+            <BitTitleBar bit={bit} searchBar={searchBar} />
+            <ItemView item={bit} />
+          </>
+        )}
+      </HighlightedSearchable>
+    </ItemPropsProvider>
+  )
+}
 
 export class BitTitleBar extends React.Component<{
   searchBar: any

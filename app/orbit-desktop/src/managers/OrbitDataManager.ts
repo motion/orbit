@@ -91,7 +91,9 @@ export class OrbitDataManager {
 
     const persist = debounce(async () => {
       await ensureDir(join(dataSpacesDir, space.name))
-      writeJSON(join(dataSpacesDir, space.name, 'orbit-data.json'), state)
+      writeJSON(join(dataSpacesDir, space.name, 'orbit-data.json'), state, {
+        spaces: 2,
+      })
     }, 300)
 
     addObserveOne(this.subscriptions, SpaceEntity, { where: { id: space.id } }, space => {

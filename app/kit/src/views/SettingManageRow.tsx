@@ -1,6 +1,7 @@
 import { AppBit } from '@o/models'
 import { Row, Text, View } from '@o/ui'
 import * as React from 'react'
+
 import { WhiteList } from '../hooks/useWhiteList'
 import { ManageSmartSync } from './ManageSmartSync'
 import { ManageSyncStatus } from './ManageSyncStatus'
@@ -20,7 +21,11 @@ export function SettingManageRow(props: { app: AppBit; whitelist: WhiteList }) {
         <Text>Sync active.</Text>
       )}
       <View flex={1} />
-      {props.app && <ManageSyncStatus app={props.app} />}
+      {props.app && (
+        <React.Suspense fallback={null}>
+          <ManageSyncStatus app={props.app} />
+        </React.Suspense>
+      )}
     </Row>
   )
 }

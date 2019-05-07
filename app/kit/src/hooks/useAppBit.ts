@@ -1,5 +1,6 @@
 import { useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
+
 import { useStoresSimple } from './useStores'
 
 export function useAppBit(appId?: number | false): [AppBit, ((next: Partial<AppBit>) => any)] {

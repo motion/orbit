@@ -19,7 +19,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   const { paneManagerStore } = useStoresSimple()
   const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <OrbitToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
+    <OrbitToolbarChrome transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
         <Toolbar
           border={false}

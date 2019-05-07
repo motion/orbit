@@ -1,8 +1,9 @@
-import { AppView, getAppDefinition } from '@o/kit'
+import { getAppDefinition } from '@o/kit'
 import { Button, ButtonProps, Message, Paragraph, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import React from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
+import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const def = getAppDefinition(props.identifier)
@@ -51,7 +52,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
             authorized users in this space.
           </Message>
           <Section bordered pad title="Setup">
-            <AppView identifier={props.identifier} viewType="setup" />
+            <AppSetupForm def={def} />
           </Section>
           <Space />
         </Section>

@@ -3,13 +3,11 @@ export type ObserverCacheArgs = {
   model: string
   type: ObserverCacheType
   query: Object
-  defaultValue: any
 }
 
 export type ObserverCacheEntry = {
   args: ObserverCacheArgs
   subscriptions: Set<ZenObservable.SubscriptionObserver<any>>
-  rawValue: any
   value: any
   denormalizedValues: {}
   update: (value: any) => void
@@ -23,12 +21,13 @@ export const ObserverCache = {
   entries: new Map<string, ObserverCacheEntry>(),
 
   getKey({ model, type, query }: ObserverCacheArgs) {
-    return JSON.stringify(`${model}${type}${JSON.stringify(query)}`)
+    return `${model}${type}${JSON.stringify(query)}`
   },
 
   get(args: ObserverCacheArgs) {
     const key = ObserverCache.getKey(args)
     let entry = ObserverCache.entries.get(key)
+
     // create empty entry if not
     if (!entry) {
       entry = {
@@ -38,37 +37,11 @@ export const ObserverCache = {
         // store this so its quick to check for updates
         denormalizedValues: {},
         // store this so we keep the sort order
-        rawValue: args.defaultValue,
+        value: undefined,
         // we only update denormalized values
-        get value() {
-          if (!entry.rawValue) return entry.rawValue
-          if (entry.args.type === 'one') {
-            return entry.rawValue
-          } else {
-            return entry.rawValue.map(i => entry.denormalizedValues[i.id])
-          }
-        },
-        set value(next) {
-          if (entry.args.type === 'one') {
-            if (!next) {
-              entry.rawValue = null
-              entry.denormalizedValues = {}
-            } else {
-              entry.rawValue = next
-              entry.denormalizedValues = { [next.id]: next }
-            }
-          } else {
-            if (!next) return
-            entry.rawValue = next
-            entry.denormalizedValues = {}
-            for (const val of next) {
-              entry.denormalizedValues[val.id] = val
-            }
-          }
-        },
         update: value => {
           // weird perf opt but works for our cases....
-          if (value && Object.keys(value).length < 40) {
+          if (value && typeof value === 'object' && Object.keys(value).length < 30) {
             const isEqual = JSON.stringify(value) === JSON.stringify(entry.value)
             if (isEqual) return
           }
@@ -88,16 +61,18 @@ export const ObserverCache = {
 
     for (const value of values) {
       const { id } = value
+
       for (const entry of ObserverCache.entries.values()) {
         if (entry.args.model !== model) continue
-        // fast lookup here
-        if (entry.denormalizedValues[id]) {
-          toUpdate.add(entry)
-          // update in caches
-          if (entry.args.type === 'one') {
-            entry.value = value
-          } else {
+        if (entry.args.type === 'many') {
+          if (entry.denormalizedValues[id]) {
+            toUpdate.add(entry)
             entry.denormalizedValues[id] = value
+          }
+        } else {
+          if (entry.value[id]) {
+            toUpdate.add(entry)
+            entry.value = value
           }
         }
       }
@@ -105,6 +80,10 @@ export const ObserverCache = {
 
     for (const entry of [...toUpdate]) {
       for (const sub of [...entry.subscriptions]) {
+        // re-calculate value now (doing this on save is better than on every render)
+        if (entry.args.type === 'many') {
+          entry.value = entry.value.map(i => entry.denormalizedValues[i.id])
+        }
         sub.next(entry.value)
       }
     }

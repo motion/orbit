@@ -48,7 +48,7 @@ function DataExplorerIndex() {
 }
 
 function DataExplorerMain({ subId }: AppProps) {
-  const [app] = useAppWithDefinition((subId && +subId) || false)
+  const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   if (subId === 'explorer-graph') {
@@ -64,8 +64,8 @@ function DataExplorerMain({ subId }: AppProps) {
     <Section
       pad
       backgrounded
-      title={app.appName}
-      subTitle={app.name}
+      title={app.name}
+      subTitle={definition.name}
       titleBorder
       icon={app.icon}
       afterTitle={

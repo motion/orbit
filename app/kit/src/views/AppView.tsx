@@ -1,9 +1,10 @@
 import { isEqual } from '@o/fast-compare'
 import { Contents } from '@o/gloss'
-import { ItemPropsProviderSmall, memoIsEqualDeep } from '@o/ui'
+import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { createContext, forwardRef, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
+
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
@@ -94,7 +95,9 @@ export const AppView = memoIsEqualDeep(
     const element = (
       <AppViewContext.Provider value={props}>
         <Contents ref={rootRef}>
-          <View {...props} {...appProps} />
+          <Suspense fallback={<Loading />}>
+            <View {...props} {...appProps} />
+          </Suspense>
         </Contents>
       </AppViewContext.Provider>
     )

@@ -1,4 +1,5 @@
 import { Model } from '@o/mediator'
+import { isDefined, selectDefined } from '@o/utils'
 import { assign } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -9,10 +10,45 @@ export type UseModelOptions = {
   observe?: boolean
 }
 
+const PromiseCache: {
+  [key: string]: {
+    read: Promise<any>
+    resolve: Function
+    current: any
+  }
+} = {}
+
+const getKey = (a, b, c) => `${a}${b}${c}`
+
 const defaultValues = {
   one: null,
   many: [],
   count: 0,
+}
+
+const runUseQuery = (model: any, type: string, query: Object, observe: boolean, update: any) => {
+  if (observe) {
+    if (type === 'one') {
+      return observeOne(model, { args: query }).subscribe(update)
+    } else if (type === 'many') {
+      return observeMany(model, { args: query }).subscribe(update)
+    } else if (type === 'count') {
+      return observeCount(model, { args: query }).subscribe(update)
+    }
+  } else {
+    if (type === 'one') {
+      loadOne(model, { args: query }).then(update)
+    } else if (type === 'many') {
+      loadMany(model, { args: query }).then(update)
+    } else if (type === 'count') {
+      loadCount(model, { args: query }).then(update)
+    }
+  }
+  throw new Error('unreachable')
+}
+
+const dispose = sub => {
+  sub.current && sub.current.unsubscribe()
 }
 
 function use<ModelType, Args>(
@@ -24,56 +60,34 @@ function use<ModelType, Args>(
   const queryKey = JSON.stringify(query)
   const observeEnabled = options.observe === undefined || options.observe === true
   const forceUpdate = useState(0)[1]
-  const valueRef = useRef(options.defaultValue || defaultValues[type])
-  const value = valueRef.current
+  const valueRef = useRef(options.defaultValue)
   const subscription = useRef<any>(null)
-  const curQuery = useRef({})
-  // const id = useRef(Math.random())
-
-  const dispose = () => {
-    subscription.current && subscription.current.unsubscribe()
-  }
+  const yallReadyKnow = useRef(false)
 
   // unmount
-  useEffect(() => dispose, [])
+  useEffect(() => dispose(subscription), [])
 
   // on new query: subscribe, update
   useEffect(() => {
     if (query === false) return
-
-    const isQueryChanged = JSON.stringify(curQuery.current) !== queryKey
-    if (isQueryChanged === false) return
-    curQuery.current = query
+    if (yallReadyKnow.current) {
+      yallReadyKnow.current = false
+      return
+    }
 
     // unsubscribe from previous subscription
-    dispose()
+    dispose(subscription)
 
     let cancelled = false
     const update = next => {
       if (cancelled) return
       if (next === valueRef.current) return
-      if (valueRef.current === options.defaultValue && next === null) return
+      if (next === undefined) return
       valueRef.current = next
       forceUpdate(Math.random())
     }
 
-    if (observeEnabled) {
-      if (type === 'one') {
-        subscription.current = observeOne(model, { args: query }).subscribe(update)
-      } else if (type === 'many') {
-        subscription.current = observeMany(model, { args: query }).subscribe(update)
-      } else if (type === 'count') {
-        subscription.current = observeCount(model, { args: query }).subscribe(update)
-      }
-    } else {
-      if (type === 'one') {
-        loadOne(model, { args: query }).then(update)
-      } else if (type === 'many') {
-        loadMany(model, { args: query }).then(update)
-      } else if (type === 'count') {
-        loadCount(model, { args: query }).then(update)
-      }
-    }
+    subscription.current = runUseQuery(model, type, query, observeEnabled, update)
 
     return () => {
       cancelled = true
@@ -89,11 +103,44 @@ function use<ModelType, Args>(
     [queryKey],
   )
 
-  if (type === 'one' || type === 'many') {
-    return [value, valueUpdater]
+  if (query !== false && !isDefined(valueRef.current)) {
+    const key = getKey(model.name, type, queryKey)
+    let cache = PromiseCache[key]
+
+    if (!cache) {
+      let resolve
+      const promise = new Promise(res => {
+        yallReadyKnow.current = true
+        subscription.current = runUseQuery(model, type, query, observeEnabled, nextRaw => {
+          const next = selectDefined(nextRaw, defaultValues[type])
+          cache.current = next
+          valueRef.current = next
+          // clear cache
+          setTimeout(() => {
+            delete PromiseCache[key]
+          }, 100)
+          res()
+        })
+      })
+      cache = PromiseCache[key] = {
+        read: promise,
+        resolve,
+        current: undefined,
+      }
+    }
+
+    if (isDefined(cache.current)) {
+      valueRef.current = cache.current
+    } else {
+      throw cache.read
+    }
   }
 
-  return value
+  if (type === 'one' || type === 'many') {
+    return [valueRef.current, valueUpdater]
+  }
+
+  return valueRef.current
 }
 
 export function useModel<ModelType, Args>(

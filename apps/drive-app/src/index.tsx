@@ -1,7 +1,8 @@
 import { createApi, createApp } from '@o/kit'
+
+import { DriveApi } from './api.node'
 import { driveIcon } from './driveIcon'
 import { DriveSettings } from './DriveSettings'
-import { DriveApi } from './api.node'
 
 export default createApp({
   id: 'drive',
@@ -9,6 +10,6 @@ export default createApp({
   icon: driveIcon,
   itemType: 'task',
   settings: DriveSettings,
-  sync: {},
+  sync: true,
   api: createApi<typeof DriveApi>(),
 })

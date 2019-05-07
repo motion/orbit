@@ -1,11 +1,12 @@
 import Observable from 'zen-observable'
+
 import { Command, Model, TransportRequestType } from '../common'
+import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
 import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
-import { log } from '../common/logger'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -25,9 +26,6 @@ function cachedObservable(
       sub.next(cached.value)
     } else {
       cached.isActive = true
-
-      // send default value immediately
-      sub.next(cached.rawValue)
 
       const subs = options.transports.map(transport => {
         return transport.observe(name, args).subscribe(
@@ -313,7 +311,6 @@ export class MediatorClient {
       model: modelName,
       query: args,
       type: 'one',
-      defaultValue: null,
     })
     return new Observable(
       cachedObservable(
@@ -354,7 +351,6 @@ export class MediatorClient {
       model: modelName,
       query: args,
       type: 'many',
-      defaultValue: [],
     })
     return new Observable(
       cachedObservable(

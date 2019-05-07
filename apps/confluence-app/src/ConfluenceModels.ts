@@ -13,17 +13,16 @@ export interface ConfluenceBitData {
  * Confluence application data.
  */
 export interface ConfluenceAppData {
-  values: {
-
+  setup: {
     /**
      * Login credentials.
      */
-    credentials: {
-      domain: string
-      username: string
-      password: string
-    }
+    domain: string
+    username: string
+    password: string
+  }
 
+  values: {
     /**
      * Last pages sync metadata.
      */
@@ -34,7 +33,6 @@ export interface ConfluenceAppData {
      */
     blogLastSync: ConfluenceLastSyncInfo
   }
-  data: {}
 }
 
 /**
@@ -42,7 +40,6 @@ export interface ConfluenceAppData {
  * Used to implement partial syncing.
  */
 export interface ConfluenceLastSyncInfo {
-
   /**
    * Updated date of the last synced content.
    * We don't need to query confluence content from the api older than this date for sync.
@@ -183,4 +180,3 @@ export type ConfluenceComment = {
     createdBy: ConfluenceUser
   }
 }
-

@@ -1,15 +1,27 @@
 import { command, loadOne, save } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import { useAppDefinitions } from '@o/kit'
+import { App, createApp, useAppDefinitions } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Icon, ListItem, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
 import { react, useHook, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
-import * as React from 'react'
-import { addAppClickHandler } from '../../helpers/addAppClickHandler'
-import { useStoresSimple } from '../../hooks/useStores'
-import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
-import { BottomControls } from '../../views/BottomControls'
+import React from 'react'
+
+import { addAppClickHandler } from '../helpers/addAppClickHandler'
+import { useStoresSimple } from '../hooks/useStores'
+import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
+import { BottomControls } from '../views/BottomControls'
+
+export default createApp({
+  id: 'onboard',
+  icon: '',
+  name: 'Onboard',
+  app: () => (
+    <App>
+      <OnboardMain />
+    </App>
+  ),
+})
 
 const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']

@@ -105,8 +105,9 @@ type ManagedTableState = {
   prevProps: Partial<ManagedTableProps>
 }
 
-const Container = gloss(Col, {
+const TableContainer = gloss(Col, {
   minHeight: 'min-content',
+  overflow: 'hidden',
 })
 
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
@@ -408,7 +409,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       null
 
     return (
-      <Container
+      <TableContainer
         minHeight={minHeight}
         minWidth={minWidth}
         margin={viewProps.margin}
@@ -447,7 +448,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             {this.renderRow}
           </SelectableVariableList>
         </ContextMenu>
-      </Container>
+      </TableContainer>
     )
   }
 }

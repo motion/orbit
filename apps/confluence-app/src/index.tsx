@@ -1,15 +1,42 @@
 import { createApi, createApp } from '@o/kit'
-import { ConfluenceApi } from './api.node'
-import { AtlassianSettingLogin } from './AtlassianSettingLogin'
-import { confluenceIcon } from './confluenceIcon'
 
-export default createApp({
+import { ConfluenceApi } from './api.node'
+import { confluenceIcon } from './confluenceIcon'
+import { ConfluenceLoader } from './ConfluenceLoader'
+import { ConfluenceAppData } from './ConfluenceModels'
+
+export default createApp<ConfluenceAppData>({
   id: 'confluence',
   name: 'Confluence',
   icon: confluenceIcon,
   itemType: 'markdown',
-  settings: AtlassianSettingLogin,
-  setup: AtlassianSettingLogin,
-  sync: {},
+  sync: true,
   api: createApi<typeof ConfluenceApi>(),
+  setupValidate: async app => {
+    const loader = new ConfluenceLoader(app)
+    await loader.test()
+    app.name = extractTeamNameFromDomain(app.data.setup.domain)
+  },
+  setup: {
+    domain: {
+      name: 'Domain',
+      required: true,
+    },
+    username: {
+      name: 'Username',
+      required: true,
+    },
+    password: {
+      name: 'Password',
+      required: true,
+    },
+  },
 })
+
+const extractTeamNameFromDomain = (domain: string) => {
+  return domain
+    .replace('http://', '')
+    .replace('https://', '')
+    .replace('.atlassian.net/', '')
+    .replace('.atlassian.net', '')
+}

@@ -1,8 +1,10 @@
+import { selectDefined } from '@o/utils'
 import React, { useCallback, useMemo } from 'react'
 
 import { guessColumns } from '../forms/guessColumns'
 import { normalizeRow } from '../forms/normalizeRow'
 import { useNodeSize } from '../hooks/useNodeSize'
+import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { Section, SectionParentProps, SectionSpecificProps, useSectionProps } from '../Section'
 import { useShareStore } from '../Share'
 import { TitleRowSpecificProps } from '../TitleRow'
@@ -66,6 +68,7 @@ export function Table(tableProps: TableProps) {
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
     [props.columns, rows],
   )
+  const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 200 })
 
   const onSelect = useCallback(
     (selectedRows, indices) => {
@@ -90,7 +93,11 @@ export function Table(tableProps: TableProps) {
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
       padding={0}
-      maxHeight={maxHeight}
+      maxHeight={selectDefined(
+        maxHeight,
+        parentNodeSize.height === 0 ? undefined : parentNodeSize.height,
+      )}
+      ref={parentNodeSize.ref}
     >
       <SearchableTable
         containerRef={ref}

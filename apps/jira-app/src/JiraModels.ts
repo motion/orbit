@@ -78,13 +78,12 @@ export type JiraIssue = {
  * Jira application data.
  */
 export interface JiraAppData {
-  data: {}
+  setup: {
+    domain: string
+    username: string
+    password: string
+  }
   values: {
-    credentials: {
-      domain: string
-      username: string
-      password: string
-    }
     lastSync: JiraLastSyncInfo
   }
 }

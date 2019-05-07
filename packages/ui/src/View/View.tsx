@@ -3,7 +3,7 @@ import { Base, BaseProps, gloss } from '@o/gloss'
 import { Sizes } from '../Space'
 import { Omit } from '../types'
 import { ElevatableProps, getElevation } from './elevate'
-import { getPadding, getSizableValue, PadProps, SizesObject } from './PaddedView'
+import { getPadding, getSizableValue, PadProps, SizesObject } from './pad'
 
 export type ViewProps = Omit<BaseProps, 'margin'> &
   ElevatableProps &

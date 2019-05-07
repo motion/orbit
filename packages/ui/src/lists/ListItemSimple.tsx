@@ -16,7 +16,7 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
-import { getPadding } from '../View/PaddedView'
+import { getPadding } from '../View/pad'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 

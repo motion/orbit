@@ -20,7 +20,7 @@ import { Sizes, Space } from './Space'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
-import { getPadding } from './View/PaddedView'
+import { getPadding } from './View/pad'
 import { getMargin, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons

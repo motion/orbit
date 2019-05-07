@@ -94,6 +94,7 @@ export const ObserverCache = {
             }
           }
         } else {
+          if (!entry.value) continue // does this cause cache problems?
           if (entry.value.id === id) {
             const next = selectModel(entry, value)
             if (!isEqual(entry.value, next)) {

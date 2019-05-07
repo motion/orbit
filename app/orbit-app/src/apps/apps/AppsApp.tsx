@@ -8,8 +8,8 @@ import {
   removeApp,
   useActiveApps,
   useActiveAppsWithDefinition,
+  useActiveDataAppsWithDefinition,
   useActiveSpace,
-  useActiveSyncAppsWithDefinition,
   useAppDefinitions,
   useAppWithDefinition,
 } from '@o/kit'
@@ -44,9 +44,9 @@ const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
 export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
-  const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync || !!x.setup)
-  const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
-  const syncApps = useActiveSyncAppsWithDefinition()
+  const installableApps = useAppDefinitions().filter(x => !!x.sync || !!x.setup)
+  const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
+  const dataApps = useActiveDataAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -64,13 +64,13 @@ export function AppsIndex() {
         ...clientApps
           .map(getAppListItem)
           .map(x => ({ ...x, group: 'App Settings', subType: 'settings' })),
-        ...syncApps.map(getAppListItem).map(x => ({
+        ...dataApps.map(getAppListItem).map(x => ({
           ...x,
           group: 'Source Settings',
           subType: 'settings',
           after: sourceIcon,
         })),
-        ...allSourceDefinitions.map(def => ({
+        ...installableApps.map(def => ({
           key: `install-${def.id}`,
           group: 'Install App',
           title: def.name,

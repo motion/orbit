@@ -3,7 +3,7 @@ import {
   AppProps,
   createApp,
   Templates,
-  useActiveSyncAppsWithDefinition,
+  useActiveDataAppsWithDefinition,
   useAppState,
   useAppWithDefinition,
 } from '@o/kit'
@@ -26,7 +26,7 @@ export default createApp({
 })
 
 function DataExplorerIndex() {
-  const syncApps = useActiveSyncAppsWithDefinition()
+  const syncApps = useActiveDataAppsWithDefinition()
   return (
     <>
       <List

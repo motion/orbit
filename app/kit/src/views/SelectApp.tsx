@@ -1,7 +1,8 @@
 import { AppBit } from '@o/models'
 import { Select, SelectProps } from '@o/ui'
 import React from 'react'
-import { useActiveSyncApps } from '../hooks/useActiveSyncApps'
+
+import { useActiveDataApps } from '../hooks/useActiveDataApps'
 import { Omit } from '../types'
 import { AppDefinition } from '../types/AppDefinition'
 
@@ -11,7 +12,7 @@ export type SelectAppProps = Omit<SelectProps, 'onChange' | 'type'> & {
 }
 
 export function SelectApp({ type, appType, onSelect, ...selectProps }: SelectAppProps) {
-  let apps = useActiveSyncApps(type)
+  let apps = useActiveDataApps(type)
   if (appType) {
     apps = apps.filter(x => x.identifier === appType.id)
   }

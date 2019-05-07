@@ -3,7 +3,6 @@ import { SpaceModel, UserModel } from '@o/models'
 
 export function useActiveSpace(query?) {
   const [user] = useModel(UserModel)
-  console.log('user', user)
   return useModel(
     SpaceModel,
     user && {

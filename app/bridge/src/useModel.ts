@@ -109,7 +109,6 @@ function use<ModelType, Args>(
           resolve,
         }
       })()
-    console.log('cache', cache)
     throw cache.read
   }
 

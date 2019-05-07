@@ -16,7 +16,6 @@ export default createApp<ConfluenceAppData>({
     const loader = new ConfluenceLoader(app)
     await loader.test()
     app.name = extractTeamNameFromDomain(app.data.setup.domain)
-    return true
   },
   setup: {
     domain: {

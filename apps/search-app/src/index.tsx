@@ -10,7 +10,7 @@ export default createApp({
   name: 'Search',
   icon: '',
   app: SearchApp,
-  settings: SearchAppSettings,
+  instanceSettings: SearchAppSettings,
   viewConfig: {
     transparentBackground: true,
   },

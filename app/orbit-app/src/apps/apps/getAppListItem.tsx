@@ -12,7 +12,6 @@ export function getAppListItem(app: AppWithDefinition) {
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
     viewType: 'settings' as 'settings',
-    subType: app.definition.sync ? 'sync' : 'app',
     subId: `${app.app.id}`,
     identifier: app.app.identifier,
   }

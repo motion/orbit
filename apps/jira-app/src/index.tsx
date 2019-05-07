@@ -16,7 +16,6 @@ export default createApp<JiraAppData>({
     const loader = new JiraLoader(app)
     await loader.test()
     app.name = extractTeamNameFromDomain(app.data.setup.domain)
-    return true
   },
   setup: {
     domain: {

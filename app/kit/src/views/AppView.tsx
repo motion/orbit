@@ -4,6 +4,7 @@ import { ItemPropsProviderSmall, memoIsEqualDeep } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { createContext, forwardRef, useContext, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
+
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'

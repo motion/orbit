@@ -22,9 +22,11 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   context?: React.Context<any>
   itemType?: ItemType
   app?: FunctionComponent<AppProps<AppData>>
+  instanceSettings?: FormFieldsObj
   setup?: SetupFields
   setupValidate?: (
     app: AppBit<AppData>,
+    values: Partial<AppData>,
   ) => FormErrors<FormErrors<SetupFields>> | Promise<FormErrors<SetupFields>>
   settings?: FunctionComponent<AppProps<AppData>>
   sync?: boolean

@@ -31,6 +31,8 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
+  console.log('ok', form.getValue('search'), form.getFilters(['active', 'type']))
+
   return (
     <Form use={form}>
       <Layout type="row">

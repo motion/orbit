@@ -46,7 +46,7 @@ export function Layout(props: LayoutProps) {
   ])
 
   return (
-    <View flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
+    <View className="ui-layout" flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
       <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
     </View>
   )
@@ -76,7 +76,7 @@ function FlexLayout({ children, type, ...colProps }: LayoutProps) {
     return (
       <LayoutRow
         minHeight={size.height || 'auto'}
-        maxHeight="100vh"
+        maxHeight="100%"
         overflow="hidden"
         ref={ref}
         {...colProps}
@@ -89,7 +89,7 @@ function FlexLayout({ children, type, ...colProps }: LayoutProps) {
   return (
     <LayoutCol
       minHeight={size.height || 'auto'}
-      maxHeight="100vh"
+      maxHeight="100%"
       overflow="hidden"
       ref={ref}
       {...colProps}

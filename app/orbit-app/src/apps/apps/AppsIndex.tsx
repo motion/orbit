@@ -24,7 +24,7 @@ const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
 export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
-  const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
+  const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync || !!x.setup)
   const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
   const syncApps = useActiveSyncAppsWithDefinition()
 

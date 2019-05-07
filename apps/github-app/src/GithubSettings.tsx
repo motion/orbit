@@ -2,12 +2,13 @@ import { SettingManageRow, useApp, useAppState, useWhiteList } from '@o/kit'
 import { DataType, Table, View } from '@o/ui'
 import * as React from 'react'
 import { useEffect } from 'react'
+
 import { GithubLoader } from './GithubLoader'
 
 export function GithubSettings() {
   const app = useApp()
-  const [repos, setRepos] = useAppState('repositories')
-  const whitelist = useWhiteList(useAppState('whitelist'), {
+  const [repos, setRepos] = useAppState(`${app.id}-repositories`)
+  const whitelist = useWhiteList(useAppState(`${app.id}-whitelist`), {
     getAll() {
       return (repos || []).map(repo => repo.nameWithOwner)
     },

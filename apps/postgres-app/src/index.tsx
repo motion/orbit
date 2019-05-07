@@ -12,7 +12,6 @@ export default createApp({
   itemType: 'document',
   settings: PostgresSettings,
   setup: PostgresSettings,
-  sync: {},
   api: createApi<typeof PostgresApi>(),
   graph,
 })

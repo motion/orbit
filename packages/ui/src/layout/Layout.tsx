@@ -1,6 +1,7 @@
 import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
 
+import { useNodeSize } from '../hooks/useNodeSize'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { ColProps } from '../View/Col'
 import { View } from '../View/View'
@@ -37,6 +38,7 @@ export function Layout(props: LayoutProps) {
       throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
     }
   })
+  const visibility = useVisibility()
   const total = Children.count(props.children)
   const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
   const memoValue = useMemo(() => ({ type: props.type, total, flexes }), [
@@ -44,9 +46,22 @@ export function Layout(props: LayoutProps) {
     total,
     JSON.stringify(flexes),
   ])
+  const { ref, height, width } = useNodeSize({
+    disable: !visibility,
+    throttle: 200,
+  })
 
   return (
-    <View className="ui-layout" flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
+    <View
+      ref={ref}
+      className="ui-layout"
+      flex={1}
+      overflow="hidden"
+      height="100%"
+      width="100%"
+      maxHeight={height}
+      maxWidth={width}
+    >
       <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
     </View>
   )

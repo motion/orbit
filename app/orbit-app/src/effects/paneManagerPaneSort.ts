@@ -36,7 +36,9 @@ export function sortPanes(space: Space, apps: AppBit[]) {
 
 export function usePaneManagerPaneSort() {
   const activeApps = useActiveClientApps()
-  const [space, updateSpace] = useActiveSpace()
+  const [space, updateSpace] = useActiveSpace({
+    select: ['paneSort'],
+  })
 
   useEffect(() => {
     if (!space || !activeApps.length) {

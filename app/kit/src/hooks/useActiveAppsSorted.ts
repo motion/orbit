@@ -1,21 +1,15 @@
 import { AppBit } from '@o/models'
+import memoWeak from 'memoize-weak'
 
 import { useActiveApps } from './useActiveApps'
-import { useActiveSpace } from './useActiveSpace'
+import { useActivePaneSort } from './useActiveSpace'
 
-export function sortApps(apps: AppBit[], sort: number[]) {
+export const sortApps = memoWeak((apps: AppBit[], sort: number[]) => {
   return sort.map(id => apps.find(x => x.id === id)).filter(Boolean)
-}
+})
 
 export function useActiveAppsSorted() {
   const activeApps = useActiveApps()
-  const [space] = useActiveSpace()
-  // console.log('got a new value', space, activeApps)
-
-  if (!activeApps || !space) {
-    console.warn('should be unreachable', activeApps, space)
-    return []
-  }
-
-  return sortApps(activeApps, space.paneSort)
+  const paneSort = useActivePaneSort()
+  return sortApps(activeApps, paneSort)
 }

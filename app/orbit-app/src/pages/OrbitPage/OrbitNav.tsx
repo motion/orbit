@@ -1,6 +1,6 @@
 import { save } from '@o/bridge'
 import { gloss, Row, RowProps } from '@o/gloss'
-import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
+import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActivePaneSort } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
@@ -24,14 +24,14 @@ export const OrbitNav = memo(
     const isOnSetupApp = state.router.isOnSetupApp
     const activeAppsSorted = useActiveAppsSorted()
     const { activePaneId } = paneManagerStore
-    const [space] = useActiveSpace()
+    const paneSort = useActivePaneSort()
     const handleSortEnd = useAppSortHandler()
 
     if (orbitStore.isEditing) {
       return null
     }
 
-    if (!activeAppsSorted.length || !space || !space.paneSort) {
+    if (!activeAppsSorted.length || !paneSort) {
       return (
         <OrbitNavClip>
           <OrbitNavChrome />
@@ -42,7 +42,7 @@ export const OrbitNav = memo(
     const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
     const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
 
-    const items = [-1, ...space.paneSort]
+    const items = [-1, ...paneSort]
       .map(
         (paneId): TabProps => {
           const app = activeAppsSorted.find(x => x.id === paneId)

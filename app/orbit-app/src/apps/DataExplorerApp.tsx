@@ -49,7 +49,7 @@ function DataExplorerIndex() {
 
 function DataExplorerMain({ subId }: AppProps) {
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
-  const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
+  const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   if (subId === 'explorer-graph') {
     return <GraphExplorer />
@@ -71,7 +71,7 @@ function DataExplorerMain({ subId }: AppProps) {
       afterTitle={
         <Button
           alt="confirm"
-          onClick={() => setQueries([{ id: Math.random(), name: 'My Query' }, ...queries])}
+          onClick={() => updateQueries(cur => [{ id: Math.random(), name: 'My Query' }, ...cur])}
         >
           Add query
         </Button>
@@ -86,7 +86,7 @@ function DataExplorerMain({ subId }: AppProps) {
             <>
               <Button
                 icon="cross"
-                onClick={() => setQueries(remove(queries, x => x.id !== query.id))}
+                onClick={() => updateQueries(cur => remove(cur, x => x.id !== query.id))}
               />
             </>
           }

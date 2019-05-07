@@ -357,7 +357,7 @@ export class MediatorClient {
         'observeMany',
         {
           model: modelName,
-          args: args,
+          args,
           resolvers: qm instanceof Query ? qm.args : options.resolvers,
         },
         this.options,

@@ -1,9 +1,12 @@
 import { Model } from '@o/mediator'
 import { isDefined, selectDefined } from '@o/utils'
-import { assign } from 'lodash'
+import produce from 'immer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
+
+// enforce immutable style updates otherwise you hit insane cache issus
+export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
 
 export type UseModelOptions = {
   defaultValue?: any
@@ -94,11 +97,12 @@ function use<ModelType, Args>(
     }
   }, [queryKey, observeEnabled])
 
-  const valueUpdater = useCallback(
-    next => {
+  const valueUpdater: ImmutableUpdateFn<any> = useCallback(
+    updaterFn => {
       // we can't use merge here since lodash's merge doesn't merge arrays properly
       // in the case if we would need merge again - we need to write it custom with arrays in mind
-      save(model, assign({}, valueRef.current, next))
+      const next = produce(valueRef.current, updaterFn)
+      save(model, next as any)
     },
     [queryKey],
   )
@@ -109,17 +113,23 @@ function use<ModelType, Args>(
 
     if (!cache) {
       let resolve
+      let resolved = false
       const promise = new Promise(res => {
         yallReadyKnow.current = true
         subscription.current = runUseQuery(model, type, query, observeEnabled, nextRaw => {
           const next = selectDefined(nextRaw, defaultValues[type])
-          cache.current = next
-          valueRef.current = next
-          // clear cache
-          setTimeout(() => {
-            delete PromiseCache[key]
-          }, 100)
-          res()
+          if (!resolved) {
+            valueRef.current = next
+            cache.current = next
+            setTimeout(() => {
+              delete PromiseCache[key]
+            }, 50)
+            res()
+          } else {
+            console.log('got second one', next)
+            valueRef.current = next
+            forceUpdate(Math.random())
+          }
         })
       })
       cache = PromiseCache[key] = {
@@ -147,7 +157,7 @@ export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: UseModelOptions = {},
-): [ModelType | null, ((next: Partial<ModelType>) => any)] {
+): [ModelType | null, ImmutableUpdateFn<ModelType>] {
   return use('one', model, query, options)
 }
 
@@ -155,7 +165,7 @@ export function useModels<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: UseModelOptions = {},
-): [ModelType[], ((next: Partial<ModelType>[]) => any)] {
+): [ModelType[], ImmutableUpdateFn<ModelType[]>] {
   return use('many', model, query, options)
 }
 

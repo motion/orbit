@@ -2,6 +2,7 @@ import { observeMany, observeOne } from '@o/bridge'
 import { AppModel, SpaceModel, UserModel } from '@o/models'
 import { ensure, react } from '@o/use-store'
 
+import { appSelectAllButDataAndTimestamps } from '../hooks/useActiveApps'
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { PaneManagerStore } from './PaneManagerStore'
 
@@ -29,7 +30,9 @@ export class SpaceStore {
     () => this.activeSpace,
     space => {
       ensure('space', !!space)
-      return observeMany(AppModel, { args: { where: { spaceId: space.id } } })
+      return observeMany(AppModel, {
+        args: { where: { spaceId: space.id }, select: appSelectAllButDataAndTimestamps },
+      })
     },
     {
       defaultValue: [],

@@ -113,6 +113,10 @@ const SimpleInput = gloss(
     name,
     type,
     value,
+    onChange,
+    onKeyDown,
+    onKeyUp,
+    onKeyPress,
     defaultValue,
     ...props
   }: SizedSurfaceProps & InputProps) => {
@@ -128,6 +132,10 @@ const SimpleInput = gloss(
             type,
             value,
             defaultValue,
+            onChange,
+            onKeyDown,
+            onKeyUp,
+            onKeyPress,
             ...elementProps,
           }),
           [forwardRef, value, defaultValue, placeholder, tagName, elementProps],

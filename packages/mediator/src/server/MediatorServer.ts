@@ -1,9 +1,10 @@
-import { Command, Model, TransportRequest } from '../common'
-import { ServerTransport } from './ServerTransport'
-import { ResolveInterface } from './ResolveInterface'
 import { MediatorClient, Subscription } from '..'
+import { Command, Model, TransportRequest } from '../common'
 import { log } from '../common/logger'
+import { ResolveInterface } from './ResolveInterface'
+import { ServerTransport } from './ServerTransport'
 
+// import { isEqual } from '@o/fast-compare'
 export interface MediatorServerOptions {
   transport: ServerTransport
   fallbackClient?: MediatorClient
@@ -202,7 +203,6 @@ export class MediatorServer {
       }
 
       // additionally resolve properties
-
       // send result back over transport based on returned value
       if (
         data.type === 'observeOne' ||
@@ -219,49 +219,6 @@ export class MediatorServer {
       } else {
         onSuccess(result)
       }
-
-      // if (command) {
-      //   throw new Error(
-      //     `No "${data.type}" resolver for the given ${command.name} command was found`,
-      //   )
-      // } else {
-      //   throw new Error(`No "${data.type}" resolver for the given ${model.name} model was found`)
-      // }
     }
-
-    // if (this.options.fallbackClient) {
-    //   if (data.type === 'observeOne') {
-    //     this.subscriptions.push({
-    //       id: data.id,
-    //       subscription: this.options.fallbackClient
-    //         .observeOne(model, { args: data.args })
-    //         .subscribe(onSuccess, onError)
-    //     })
-    //
-    //   } else if (data.type === 'observeMany') {
-    //     this.subscriptions.push({
-    //       id: data.id,
-    //       subscription: this.options.fallbackClient
-    //         .observeMany(model, { args: data.args })
-    //         .subscribe(onSuccess, onError)
-    //     })
-    //
-    //   } else if (data.type === 'observeManyAndCount') {
-    //     this.subscriptions.push({
-    //       id: data.id,
-    //       subscription: this.options.fallbackClient
-    //         .observeManyAndCount(model, { args: data.args })
-    //         .subscribe(onSuccess, onError)
-    //     })
-    //
-    //   } else if (data.type === 'observeCount') {
-    //     this.subscriptions.push({
-    //       id: data.id,
-    //       subscription: this.options.fallbackClient
-    //         .observeCount(model, { args: data.args })
-    //         .subscribe(onSuccess, onError)
-    //     })
-    //   }
-    // }
   }
 }

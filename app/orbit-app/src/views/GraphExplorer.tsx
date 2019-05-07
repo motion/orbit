@@ -105,9 +105,17 @@ export function GraphExplorer() {
                   flex-direction: row;
                 }
 
+                 * {
+                  box-sizing: border-box;
+                  outline: 0;
+                }
+
                 .graphiql-container {
+                  width: auto;
                   height: auto;
                   color: inherit;
+                  display: flex;
+                  flex: 3;
                 }
 
                 .editorWrap {
@@ -122,6 +130,7 @@ export function GraphExplorer() {
                 }
 
                 .historyPaneWrap {
+                  display: flex;
                   flex: 1;
                   min-width: 100px;
                   padding: 5px;

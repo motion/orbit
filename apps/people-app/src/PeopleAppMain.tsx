@@ -1,27 +1,5 @@
-import {
-  AppProps,
-  Bit,
-  BitModel,
-  ensure,
-  loadOne,
-  NLP,
-  observeMany,
-  react,
-  useStore,
-  useStores,
-} from '@o/kit'
-import {
-  Col,
-  gloss,
-  ListItem,
-  RoundButton,
-  Row,
-  Space,
-  SubTitle,
-  TitleRow,
-  Avatar,
-  Section,
-} from '@o/ui'
+import { AppProps, Bit, useBit, useBits, useNLPTopics, useStores } from '@o/kit'
+import { Avatar, Col, gloss, ListItem, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import * as React from 'react'
 
 const getBitTexts = (bits: Bit[]) => {
@@ -36,74 +14,33 @@ const getBitTexts = (bits: Bit[]) => {
     .join(' ')
 }
 
-class PeopleAppStore {
-  props: AppProps
-
-  person = react(
-    () => this.props.id,
-    id => {
-      return loadOne(BitModel, {
-        args: {
-          where: {
-            type: 'person',
-            id: +id,
-          },
-          // relations: ['people'], // todo(nate): check why do we need it here
-        },
-      })
-    },
-  )
-
-  recentBits = react(
-    () => this.person,
-    person => {
-      ensure('person', !!person)
-      return observeMany(BitModel, {
-        args: {
-          where: {
-            people: {
-              email: person.email,
-            },
-            // todo(nate): below has been changed please check it
-            // people: {
-            //   personBit: {
-            //     email: person.email,
-            //   },
-            // },
-          },
-          order: {
-            bitUpdatedAt: 'DESC',
-          },
-          take: 10,
-        },
-      })
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
-  topics = react(
-    () => this.recentBits,
-    async bits => {
-      ensure('bits', !!bits.length)
-      const query = getBitTexts(bits)
-      return await NLP.getTopics({
-        query,
-        count: 10,
-      })
-    },
-    {
-      defaultValue: [],
-    },
-  )
-}
-
-const PersonHeader = gloss()
-
 export function PeopleAppMain(props: AppProps) {
   const { queryStore } = useStores()
-  const { person, topics, recentBits } = useStore(PeopleAppStore, props)
+
+  const [person] = useBit({
+    where: {
+      type: 'person',
+      id: +props.id,
+    },
+  })
+
+  const [recentBits] = useBits({
+    where: {
+      people: {
+        email: person.email,
+      },
+    },
+    order: {
+      bitUpdatedAt: 'DESC',
+    },
+    take: 10,
+  })
+
+  const query = getBitTexts(recentBits)
+  const topics = useNLPTopics({
+    query,
+    count: 10,
+  })
 
   if (!person) {
     return null
@@ -173,19 +110,6 @@ export function PeopleAppMain(props: AppProps) {
 }
 
 const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
-
-const CardContent = gloss({
-  position: 'relative',
-  zIndex: 3,
-  height: 180,
-})
-
-const Info = gloss({
-  display: 'block',
-  position: 'absolute',
-  top: 30,
-  left: 170,
-})
 
 const Email = gloss('a', {
   display: 'inline-block',

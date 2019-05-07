@@ -13,15 +13,7 @@ import {
   sleep,
   useIsAppActive,
 } from '@o/kit'
-import {
-  ErrorBoundary,
-  ListItemProps,
-  Loading,
-  ProvideShare,
-  ProvideVisibility,
-  useShareStore,
-  useThrottleFn,
-} from '@o/ui'
+import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -202,3 +194,7 @@ function OrbitActions(props: { children?: any }) {
   }, [isActive, props.children])
   return null
 }
+
+// if (module['hot']) {
+//   module['hot'].accept()
+// }

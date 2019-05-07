@@ -1,4 +1,4 @@
-import { App, AppProps, createApp, LocationLink, useBits, useLocationLink } from '@o/kit'
+import { App, AppProps, createApp, LocationLink, useBitSearch, useLocationLink } from '@o/kit'
 import { Button, List, Paragraph, Space, SubTitle, Title, View } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -17,7 +17,7 @@ function PeopleAppIndex() {
     <List
       shareable
       selectable="multi"
-      items={useBits({ type: 'person' })}
+      items={useBitSearch({ type: 'person' })}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}
       groupByLetter

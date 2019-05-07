@@ -50,8 +50,6 @@ export const Layout = memo((props: any) => {
   const route = useCurrentRoute()
   const [theme] = usePageTheme()
 
-  window['SiteStore'] = siteStore
-
   useEffect(() => {
     siteStore.screenSize = screen
   }, [screen])

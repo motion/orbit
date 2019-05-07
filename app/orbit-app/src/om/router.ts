@@ -8,12 +8,13 @@ import { paneManagerStore } from './stores'
 export const urls = {
   home: '/',
   app: '/app/:id',
+  appSub: '/app/:id/:subId',
 }
 
 type RouteName = keyof typeof urls
 type Params = { [key: string]: string }
 
-type HistoryItem = { name: RouteName; path: string }
+type HistoryItem = { name: RouteName; path: string; params?: Params }
 
 export type RouterState = {
   history: HistoryItem[]
@@ -39,9 +40,10 @@ const getPath = (name: string, p?: Params) => {
         .slice(1)
 }
 
-const getItem = (name: RouteName, p?: Params) => ({
+const getItem = (name: RouteName, params?: Params): HistoryItem => ({
   name,
-  path: getPath(name, p),
+  path: getPath(name, params),
+  params,
 })
 
 // init
@@ -75,14 +77,14 @@ const showHomePage: Action = om => {
   om.effects.router.setHomePane()
 }
 
-const showAppPage: Action<string> = (om, id) => {
-  showPage(om, getItem('app', { id }))
-  om.state.router.appId = id
-  om.effects.router.setPane(id)
+const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
+  showPage(om, getItem('app', params))
+  om.state.router.appId = params.id
+  om.effects.router.setPane(params.id)
 }
 
 const showSetupAppPage: Action = om => {
-  showAppPage(om, 'setupApp')
+  showAppPage(om, { id: 'setupApp' })
 }
 
 const toggleSetupAppPage: Action = om => {
@@ -99,7 +101,7 @@ const ignoreNextPush: Action = om => {
 
 const back: Action = om => {
   if (om.state.router.history.length > 1) {
-    om.actions.router.showPage(om.state.router.lastPage)
+    showPage(om, om.state.router.lastPage)
   }
 }
 
@@ -122,8 +124,15 @@ export const actions = {
 // effects
 
 export const effects = {
+  routeListenNotFound() {
+    page('*', ctx => {
+      console.log('Not found!', ctx)
+    })
+  },
+
   routeListen(route, actions, pageAction) {
     page(route, ({ params, querystring }) => {
+      console.log('got a route', route)
       actions.router.ignoreNextPush()
       pageAction({
         ...params,
@@ -132,7 +141,9 @@ export const effects = {
     })
   },
 
-  start: () => page.start(),
+  start: () => {
+    page.start()
+  },
 
   open(url: string) {
     page.show(url)
@@ -143,7 +154,6 @@ export const effects = {
   },
 
   setHomePane() {
-    console.log('show home')
     paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   },
 }

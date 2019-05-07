@@ -31,6 +31,8 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
+  console.log('ok', form.getValue('search'), form.getFilters(['active', 'type']))
+
   return (
     <Form use={form}>
       <Layout type="row">
@@ -86,12 +88,12 @@ function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
   return (
     <Layout type="column">
-      <Pane>
+      <Pane pad>
         <Section scrollable="y" bordered title={props.row.name}>
           <Fieldsets rows={[props.row]} />
         </Section>
       </Pane>
-      <Pane>
+      <Pane pad>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
             <Table
@@ -104,7 +106,7 @@ function PersonInfo(props: { row: any }) {
           )}
         </Fetch>
       </Pane>
-      <Pane>
+      <Pane pad>
         {!!album && (
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
             {photos => (

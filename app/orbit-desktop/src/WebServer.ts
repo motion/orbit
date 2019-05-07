@@ -5,15 +5,21 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
-import { graphqlExpress } from 'graphql-server-express'
-import SlackApp from '@o/slack-app'
-import { getRepository } from 'typeorm'
-import { AppEntity } from '@o/models'
-import { mergeSchemas } from 'graphql-tools'
-import { nestSchema } from '@o/graphql-nest-schema'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
+
+export function cors() {
+  const HEADER_ALLOWED =
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+  return (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+    next()
+  }
+}
 
 export class WebServer {
   cache = {}
@@ -23,7 +29,7 @@ export class WebServer {
   constructor() {
     this.server = express()
     this.server.set('port', Config.ports.server)
-    this.server.use(this.cors())
+    this.server.use(cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
@@ -51,37 +57,6 @@ export class WebServer {
       log.verbose(`Killing old server on ${Config.ports.server}...`)
       await killPort(Config.ports.server)
 
-      // graphql
-      const app = await getRepository(AppEntity).findOne({
-        where: {
-          identifier: 'slack',
-          token: {
-            $not: {
-              $equal: '',
-            },
-          },
-        },
-      })
-
-      const slackSchema = await SlackApp.graph(app)
-      console.log('slackSchema', slackSchema)
-
-      const schema = await nestSchema({
-        typeName: 'Slack',
-        fieldName: 'slack',
-        schema: slackSchema,
-      })
-
-      console.log('nested schema', schema)
-
-      this.server.use(
-        '/graphql',
-        bodyParser.json(),
-        graphqlExpress({
-          schema: mergeSchemas({ schemas: [schema] }),
-        }),
-      )
-
       this.setupOrbitApp()
 
       this.server.listen(Config.ports.server, () => {
@@ -89,18 +64,6 @@ export class WebServer {
         log.info('Server listening', Config.ports.server)
       })
     })
-  }
-
-  private cors() {
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
-    return (req, res, next) => {
-      res.header('Access-Control-Allow-Origin', req.headers.origin)
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
-      next()
-    }
   }
 
   private setupOrbitApp() {

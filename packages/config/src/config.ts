@@ -20,6 +20,7 @@ export type GlobalConfig = {
   }
   version: string
   ports: {
+    graphServer: number
     server: number
     bridge: number
     swift: number

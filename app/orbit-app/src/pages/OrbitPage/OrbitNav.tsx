@@ -94,7 +94,7 @@ export const OrbitNav = memo(
               ]
             },
             onClick: () => {
-              actions.router.showAppPage(`${app.id}`)
+              actions.router.showAppPage({ id: `${app.id}` })
             },
           }
         },

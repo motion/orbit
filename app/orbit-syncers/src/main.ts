@@ -1,6 +1,9 @@
-;(global as any).window = global
 import { once } from 'lodash'
-import { syncersRoot } from './OrbitSyncersRoot'
+
+const root = global as any
+root.window = global
+
+const { syncersRoot } = require('./OrbitSyncersRoot')
 
 process.on('unhandledRejection', (error: any) => {
   console.log('unhandledRejection', error.stack)

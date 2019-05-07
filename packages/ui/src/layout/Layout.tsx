@@ -37,6 +37,7 @@ export function Layout(props: LayoutProps) {
       throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
     }
   })
+  const visibility = useVisibility()
   const total = Children.count(props.children)
   const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
   const memoValue = useMemo(() => ({ type: props.type, total, flexes }), [
@@ -44,9 +45,22 @@ export function Layout(props: LayoutProps) {
     total,
     JSON.stringify(flexes),
   ])
+  const { ref, height, width } = useParentNodeSize({
+    disable: !visibility,
+    throttle: 200,
+  })
 
   return (
-    <View flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
+    <View
+      ref={ref}
+      className="ui-layout"
+      flex={1}
+      overflow="hidden"
+      height="100%"
+      width="100%"
+      maxHeight={height === 0 ? 'auto' : height}
+      maxWidth={width === 0 ? 'auto' : width}
+    >
       <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
     </View>
   )
@@ -76,7 +90,7 @@ function FlexLayout({ children, type, ...colProps }: LayoutProps) {
     return (
       <LayoutRow
         minHeight={size.height || 'auto'}
-        maxHeight="100vh"
+        maxHeight="100%"
         overflow="hidden"
         ref={ref}
         {...colProps}
@@ -89,7 +103,7 @@ function FlexLayout({ children, type, ...colProps }: LayoutProps) {
   return (
     <LayoutCol
       minHeight={size.height || 'auto'}
-      maxHeight="100vh"
+      maxHeight="100%"
       overflow="hidden"
       ref={ref}
       {...colProps}

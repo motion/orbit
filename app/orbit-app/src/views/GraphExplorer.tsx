@@ -1,5 +1,6 @@
 import graphqlStyle from '!raw-loader!@o/graphiql/graphiql.css'
 import GraphiQL from '@o/graphiql'
+import { getGlobalConfig } from '@o/kit'
 import { useNode } from '@o/ui'
 import GraphiQLExplorer from 'graphiql-explorer'
 import { buildClientSchema, getIntrospectionQuery } from 'graphql'
@@ -236,7 +237,7 @@ export function GraphExplorer() {
 }
 
 function fetcher(params: Object) {
-  return fetch('http://localhost:3001/graphql', {
+  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

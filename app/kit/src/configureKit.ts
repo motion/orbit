@@ -5,11 +5,13 @@ import { AppDefinition } from './types/AppDefinition'
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
+  handleLink?: (url: string) => void
   getApps: () => AppDefinition[]
 }
 
 export let config: ConfigureOpts = window['__orbitKitConfig'] || {
   StoreContext: createContext(null),
+  handleLink: path => window.history.pushState(null, '', path),
   getApps: null,
 }
 

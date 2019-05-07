@@ -2,6 +2,7 @@ import { configureKit, customItems, Icon, useAppState, useUserState } from '@o/k
 import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
+import page from 'page'
 
 import { StoreContext } from './StoreContext'
 
@@ -12,6 +13,9 @@ function configure() {
   configureKit({
     StoreContext,
     getApps: require('./apps/orbitApps').getApps,
+    handleLink: path => {
+      page.show(path)
+    },
   })
 
   const hasConfigured = window['hasConfigured']

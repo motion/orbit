@@ -51,7 +51,7 @@ const getActions = (
 ) => {
   const Actions = {
     addFolder(name?: string) {
-      const [_, update] = treeState()
+      const update = treeState()[1]
       update(next => {
         const id = Math.random()
         next.items[Actions.curId()].children.push(id)
@@ -60,7 +60,7 @@ const getActions = (
       stores.queryStore.clearQuery()
     },
     sort(oldIndex: number, newIndex: number) {
-      const [_, update] = treeState()
+      const update = treeState()[1]
       update(next => {
         const item = next.items[Actions.curId()]
         item.children = arrayMove(item.children, oldIndex, newIndex)

@@ -1,5 +1,7 @@
 import { createApi, createApp } from '@o/kit'
+
 import { PostgresApi } from './api.node'
+import { graph } from './graph.node.ts'
 import { postgresIcon } from './postgresIcon'
 import { PostgresSettings } from './PostgresSettings'
 
@@ -12,4 +14,5 @@ export default createApp({
   setup: PostgresSettings,
   sync: {},
   api: createApi<typeof PostgresApi>(),
+  graph,
 })

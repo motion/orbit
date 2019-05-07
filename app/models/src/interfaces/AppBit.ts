@@ -1,7 +1,7 @@
 import { ItemType } from './ItemType'
 import { Space } from './SpaceInterface'
 
-export interface AppBit {
+export interface AppBit<Data = any> {
   target: 'app'
 
   id?: number
@@ -40,5 +40,5 @@ export interface AppBit {
 
   token?: string
 
-  data?: any
+  data?: Data
 }

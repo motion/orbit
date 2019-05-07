@@ -6,8 +6,10 @@ import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 
-import avatar from '../../public/images/nate.jpg'
 import { useStoresSimple } from '../hooks/useStores'
+
+// @ts-ignore
+const avatar = require('../../public/images/nate.jpg')
 
 // @ts-ignore
 class SpaceSwitchStore {

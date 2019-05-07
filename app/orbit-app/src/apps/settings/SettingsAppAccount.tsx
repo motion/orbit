@@ -1,6 +1,6 @@
 import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
-import { Button, Input, Message, Section, SegmentedRow, Space as UISpace } from '@o/ui'
+import { Button, Input, Message, Row, Scale, Section } from '@o/ui'
 import * as firebase from 'firebase/app'
 import React, { useEffect, useState } from 'react'
 
@@ -128,8 +128,8 @@ export default function SettingsAppAccount() {
   }, [user ? user.cloudId : null])
 
   return (
-    <Section margin bordered title="My Account" sizePadding={2}>
-      <Message>{statusMessage}</Message>
+    <Section pad="xl" margin="xl" bordered title="My Account" space>
+      {!!statusMessage && <Message>{statusMessage}</Message>}
 
       {user && user.email && user.cloudId && (
         <div>
@@ -151,22 +151,18 @@ export default function SettingsAppAccount() {
       )}
 
       {user && !user.cloudId && (
-        <div>
+        <>
           <Message>
             Orbit syncs your configuration including which spaces you are a member of, and your
             personal preferences, so you can use Orbit on different computers.
           </Message>
 
           {user.email && (
-            <div>
-              <Message>Email with login link has been sent. Please check your email.</Message>
-            </div>
+            <Message>Email with login link has been sent. Please check your email.</Message>
           )}
 
-          <UISpace />
-
-          <Section pad>
-            <SegmentedRow size={1.5}>
+          <Scale size={1.2}>
+            <Row group>
               <Input
                 type="email"
                 flex={1}
@@ -177,9 +173,9 @@ export default function SettingsAppAccount() {
               <Button alt="action" onClick={sendEmail}>
                 Send Login Link
               </Button>
-            </SegmentedRow>
-          </Section>
-        </div>
+            </Row>
+          </Scale>
+        </>
       )}
     </Section>
   )

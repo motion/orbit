@@ -1,19 +1,10 @@
 import { OrbitOrb, useAppDefinitions, useAppsForSpace } from '@o/kit'
 import { Space } from '@o/models'
-import {
-  Col,
-  InputField,
-  ListItem,
-  Paragraph,
-  Row,
-  Section,
-  SimpleFormField,
-  Space as UISpace,
-  SubSection,
-} from '@o/ui'
+import { Col, InputField, ListItem, Paragraph, Row, Section, SimpleFormField, Space as UISpace, SubSection } from '@o/ui'
 import { pick } from 'lodash'
 import randomColor from 'randomcolor'
 import * as React from 'react'
+
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { getApps } from '../orbitApps'
@@ -39,7 +30,7 @@ export function SpaceEdit({ space }: { space: Space }) {
   const [colors, setColors] = React.useState(space.colors || defaultColors)
 
   return (
-    <Section titleBorder pad title={space.name}>
+    <Section titleBorder pad="xl" title={space.name}>
       <SubSection title="General">
         <Paragraph>Customize your space appearance.</Paragraph>
 

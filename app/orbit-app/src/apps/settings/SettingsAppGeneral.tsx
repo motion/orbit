@@ -80,7 +80,7 @@ export function SettingsAppGeneral(_props: AppProps) {
   }
 
   return (
-    <Section bordered margin pad title="General Settings">
+    <Section bordered margin="xl" pad="xl" title="General Settings">
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}

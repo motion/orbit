@@ -1,4 +1,7 @@
+import { isEqual } from '@o/fast-compare'
 import { AppBit } from '@o/models'
+import { useForceUpdate } from '@o/use-store'
+import { useEffect, useRef } from 'react'
 
 import { AppDefinition } from '../types/AppDefinition'
 import { useAppBit } from './useAppBit'
@@ -26,6 +29,35 @@ export function useApp<A extends AppDefinition>(
   app: AppBit,
 ): UnPromisifiedObject<ReturnType<A['api']>>
 export function useApp(definition?: AppDefinition, app?: AppBit) {
+  const shouldCheckUpdate = useRef(null)
+  const forceUpdate = useForceUpdate()
+
+  useEffect(() => {
+    if (!shouldCheckUpdate.current) return
+    let cancel = false
+
+    const { key, app, method, args } = shouldCheckUpdate.current
+
+    // check for any updated val
+    definition
+      .api(app)
+      [method](...args)
+      .then(val => {
+        if (cancel) return
+        if (!isEqual(ApiCache[key].response, val)) {
+          ApiCache[key].response = val
+          forceUpdate()
+        }
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
+    return () => {
+      cancel = true
+    }
+  }, [shouldCheckUpdate])
+
   if (!definition) {
     return useAppBit()[0]
   }
@@ -42,7 +74,9 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
         return (...args: any[]) => {
           const key = stringHash(JSON.stringify({ app, method, args }))
 
-          if (!ApiCache[key]) {
+          if (ApiCache[key]) {
+            shouldCheckUpdate.current = { app, method, args, key }
+          } else {
             const rawRead = definition.api(app)[method](...args)
             const read = rawRead
               .then(val => {
@@ -52,14 +86,9 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
                 console.error('Error in useApp call', err)
                 ApiCache[key].response = null
               })
-              .then(() => {
-                // // clear cache
-                setTimeout(() => {
-                  delete ApiCache[key]
-                }, 100)
-              })
 
             ApiCache[key] = {
+              at: Date.now(),
               read,
               response: null,
             }

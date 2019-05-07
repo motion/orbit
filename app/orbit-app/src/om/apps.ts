@@ -2,7 +2,7 @@ import { appSelectAllButDataAndTimestamps, observeMany } from '@o/kit'
 import { AppBit, AppModel, Space } from '@o/models'
 import { Action, Derive } from 'overmind'
 
-type AppsState = {
+export type AppsState = {
   apps: AppBit[]
   activeSpace: Space
   activeApps: Derive<AppsState, AppBit[]>

@@ -2,16 +2,16 @@ import { observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
-type StateState = {
+export type SpacesState = {
   spaces: Space[]
   activeUser: User
-  activeSpace: Derive<StateState, Space>
+  activeSpace: Derive<SpacesState, Space>
 }
 
 const getActiveSpace = state =>
   (state.activeUser && state.spaces.find(x => x.id === state.activeUser.activeSpace)) || null
 
-export const state: StateState = {
+export const state: SpacesState = {
   spaces: [],
   activeUser: null,
   activeSpace: getActiveSpace,

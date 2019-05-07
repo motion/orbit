@@ -25,6 +25,10 @@ class SpaceSwitchStore {
     }
   }
 
+  down() {}
+
+  up() {}
+
   spaceOpener = react(
     () => App.state.showSpaceSwitcher,
     () => {

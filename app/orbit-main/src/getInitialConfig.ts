@@ -1,14 +1,15 @@
 import { GlobalConfig } from '@o/config'
 import { app } from 'electron'
-import * as Path from 'path'
-import { findContiguousPorts } from './helpers/findContiguousPorts'
 import execa = require('execa')
+import * as Path from 'path'
+
+import { findContiguousPorts } from './helpers/findContiguousPorts'
 
 export async function getInitialConfig({ appEntry }: { appEntry: string }): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
 
   // find a bunch of ports for us to use
-  const ports = await findContiguousPorts(14, isProd ? 3333 : 3001)
+  const ports = await findContiguousPorts(20, isProd ? 3333 : 3001)
 
   // for electron we use ports dynamically - each new app window consumes a port from this pool
   // todo: probably 14 is small number, we need to specify optimal number of ports we are going to use
@@ -25,6 +26,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
   const [
+    graphServer,
     server,
     bridge,
     swift,
@@ -58,6 +60,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
     },
     version: process.env.ORBIT_VERSION,
     ports: {
+      graphServer,
       server,
       bridge,
       swift,

@@ -18,7 +18,6 @@
     { "path": "../../apps/gmail-app" },
     { "path": "../../apps/postgres-app" },
     { "path": "../../apps/website-app" },
-    { "path": "../../packages/debug-apps" },
     { "path": "../../packages/config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/mediator" },

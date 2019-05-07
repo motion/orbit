@@ -5,6 +5,7 @@ import { debounce } from 'lodash'
 import { homedir } from 'os'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
+
 import { ensureHomeDir } from './OrbitDataManager/helpers'
 
 // this manages the user configuration and data
@@ -39,18 +40,14 @@ export class OrbitDataManager {
     }
 
     // start watching and persisting changes
-    this.observeDatabase()
+    this.observeUserSettings()
+    this.observeSpaces()
   }
 
   dispose() {
     for (const subscription of [...this.subscriptions]) {
       subscription.unsubscribe()
     }
-  }
-
-  async observeDatabase() {
-    this.observeUserSettings()
-    this.observeSpaces()
   }
 
   observeUserSettings() {
@@ -106,17 +103,6 @@ export class OrbitDataManager {
       state.apps = apps
       persist()
     })
-
-    // TODO @umed
-    // addObserveMany(
-    //   this.subscriptions,
-    //   SourceEntity,
-    //   { where: { space: { $in: space } } },
-    //   sources => {
-    //     state.sources = sources
-    //     persist()
-    //   },
-    // )
 
     return subscribers
   }

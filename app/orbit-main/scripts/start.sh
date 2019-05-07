@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker-compose up -d
+
 cd $(dirname $0)/..
 FLAGS=$@
 

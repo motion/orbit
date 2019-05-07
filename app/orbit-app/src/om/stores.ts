@@ -1,11 +1,11 @@
 import { PaneManagerStore, QueryStore, SpaceStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
-import { loadingPane } from '../effects/paneManagerStoreUpdatePanes'
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
 import { HeaderStore } from '../stores/HeaderStore'
 import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
+import { loadingPane } from './spaces/paneManagerEffects'
 
 export const themeStore = createUsableStore(ThemeStore)
 export const useThemeStore = themeStore.useStore

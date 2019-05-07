@@ -20,6 +20,7 @@ export class PaneManagerStore {
     defaultIndex?: number
   }
 
+  next = null
   paneIndex = this.props.defaultIndex || 0
   panes = [...this.props.defaultPanes]
 
@@ -93,27 +94,43 @@ export class PaneManagerStore {
         console.debug('Not in keyable range')
         return
       }
-      throw e
+      console.error(`Error moving ${e.message}`)
     }
   }
 
-  private setPaneBy<A extends keyof PaneManagerPane>(attr: A, val: PaneManagerPane[A]) {
-    const index = this.panes.findIndex(pane => pane[attr] === val)
-    if (index === -1) {
-      // debugger
+  private setNextPane<A extends keyof PaneManagerPane>(attr: A, val: PaneManagerPane[A]) {
+    this.next = { attr, val }
+  }
+
+  setPaneWhenReady = react(
+    () => [this.next, this.panes],
+    async ([next]) => {
+      ensure('this.next', !!next)
+      ensure('has pane', this.getPaneAtIndex(next) >= 0)
+      this.setPane(next)
+    },
+  )
+
+  private getPaneAtIndex = ({ attr, val }) => this.panes.findIndex(pane => pane[attr] === val)
+
+  private setPane = ({ attr, val }) => {
+    const index = this.getPaneAtIndex({ attr, val })
+    try {
+      this.setPaneIndex(index)
+    } catch (err) {
+      console.error(`Pane error, ${attr} ${val} ${err.message}`)
     }
-    this.setPaneIndex(index)
   }
 
   // set pane functions
-  setActivePane = (id: string) => this.setPaneBy('id', id)
-  setActivePaneByName = (name: string) => this.setPaneBy('name', name)
-  setActivePaneByType = (type: string) => this.setPaneBy('type', type)
+  setActivePane = (id: string) => this.setNextPane('id', id)
+  setActivePaneByName = (name: string) => this.setNextPane('name', name)
+  setActivePaneByType = (type: string) => this.setNextPane('type', type)
   activePaneSetter = memoize((id: string) => () => this.setActivePane(id))
   activePaneByNameSetter = memoize((name: string) => () => this.setActivePaneByName(name))
   activePaneByTypeSetter = memoize((type: string) => () => this.setActivePaneByType(type))
 
-  setPaneByKeyableIndex(index: number) {
+  setNextPaneKeyableIndex(index: number) {
     this.setActivePane(this.panes.filter(x => x.keyable && !x.isHidden)[index].id)
   }
 
@@ -129,9 +146,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.trace(`no 09 pane found at index ${index}! this.props.panes`, this.panes)
-      // debugger
-      return
+      throw new Error(`Invalid pane index ${index}`)
     }
     if (index !== this.paneIndex) {
       this.paneIndex = index

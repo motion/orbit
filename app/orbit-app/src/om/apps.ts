@@ -19,8 +19,8 @@ const setApps: Action<AppBit[]> = (om, apps) => {
   om.state.apps.apps = apps
 }
 
-const setActiveSpace: Action<Space> = (om, space) => {
-  om.state.apps.activeSpace = space
+const setActiveSpace: Action = om => {
+  om.state.apps.activeSpace = om.state.spaces.activeSpace
 }
 
 export const actions = {

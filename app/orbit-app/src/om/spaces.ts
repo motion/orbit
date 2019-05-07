@@ -2,6 +2,8 @@ import { observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
+import { updatePaneManagerPanes, updatePaneSort } from './spaces/paneManagerEffects'
+
 export type SpacesState = {
   spaces: Space[]
   activeUser: User
@@ -19,7 +21,9 @@ export const state: SpacesState = {
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
   om.state.spaces.spaces = spaces
-  om.actions.apps.setActiveSpace(getActiveSpace(om.state.spaces))
+  om.actions.apps.setActiveSpace()
+  om.effects.spaces.updatePaneManagerPanes(om)
+  om.effects.spaces.updatePaneSort(om)
 }
 
 const setUser: Action<User> = (om, user) => {
@@ -37,4 +41,7 @@ export const effects = {
       om.actions.spaces.setSpaces(spaces)
     })
   },
+
+  updatePaneManagerPanes,
+  updatePaneSort,
 }

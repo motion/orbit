@@ -1,5 +1,4 @@
 import { AppWithDefinition } from '@o/kit'
-import { Loading } from '@o/ui'
 import React, { Suspense } from 'react'
 
 import { OrbitAppInfo } from '../../views/OrbitAppInfo'
@@ -10,7 +9,7 @@ export function getAppListItem(app: AppWithDefinition) {
     key: app.app ? app.app.id : app.definition.id,
     title,
     subTitle: app.definition.sync ? (
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={null}>
         <OrbitAppInfo {...app} />
       </Suspense>
     ) : null,

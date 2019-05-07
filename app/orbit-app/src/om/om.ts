@@ -1,4 +1,4 @@
-import { createOvermind, IConfig } from 'overmind'
+import { createOvermind, IConfig, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
@@ -23,12 +23,14 @@ const config = merge(
   }),
 )
 
-export const om = createOvermind(config, {
-  logProxies: true,
-})
+export const om: Overmind<typeof config> =
+  window['om'] ||
+  createOvermind(config, {
+    logProxies: true,
+  })
 export const useOm = createHook(om)
 
-// window['om'] = om
+window['om'] = om
 
 declare module 'overmind' {
   interface Config extends IConfig<typeof config> {}

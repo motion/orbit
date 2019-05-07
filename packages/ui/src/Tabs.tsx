@@ -202,7 +202,7 @@ function TabsControlled({
     <TabContainer>
       <Row
         maxWidth="100%"
-        margin={centered ? 'auto' : 'inherit'}
+        margin={centered ? [0, 'auto'] : 'inherit'}
         justifyContent={centered ? 'center' : 'inherit'}
         {...rest}
       >

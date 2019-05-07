@@ -1,7 +1,6 @@
 import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
 
-import { useNodeSize } from '../hooks/useNodeSize'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { ColProps } from '../View/Col'
 import { View } from '../View/View'
@@ -46,7 +45,7 @@ export function Layout(props: LayoutProps) {
     total,
     JSON.stringify(flexes),
   ])
-  const { ref, height, width } = useNodeSize({
+  const { ref, height, width } = useParentNodeSize({
     disable: !visibility,
     throttle: 200,
   })
@@ -59,8 +58,8 @@ export function Layout(props: LayoutProps) {
       overflow="hidden"
       height="100%"
       width="100%"
-      maxHeight={height}
-      maxWidth={width}
+      maxHeight={height === 0 ? 'auto' : height}
+      maxWidth={width === 0 ? 'auto' : width}
     >
       <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
     </View>

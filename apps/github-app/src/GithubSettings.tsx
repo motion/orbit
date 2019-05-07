@@ -7,8 +7,8 @@ import { GithubLoader } from './GithubLoader'
 
 export function GithubSettings() {
   const app = useApp()
-  const [repos, setRepos] = useAppState(`${app.id}-repositories`)
-  const whitelist = useWhiteList(useAppState(`${app.id}-whitelist`), {
+  const [repos, setRepos] = useAppState(`github-repositories`)
+  const whitelist = useWhiteList(useAppState(`github-whitelist`), {
     getAll() {
       return (repos || []).map(repo => repo.nameWithOwner)
     },

@@ -114,19 +114,21 @@ export function AppsMain(props: AppProps) {
         )
       }
     >
-      <Section>
-        <FormField label="Name and Icon">
-          <AppsMainNew />
-        </FormField>
-      </Section>
+      {!!definition.app && (
+        <Section>
+          <FormField label="Name and Icon">
+            <AppsMainNew app={app} />
+          </FormField>
+        </Section>
+      )}
 
-      {definition.settings && (
+      {!!definition.settings && (
         <Section title="Settings">
           <AppMainView {...props} viewType="settings" />
         </Section>
       )}
 
-      {definition.setup && (
+      {!!definition.setup && (
         <Section>
           <SubSection title="App Settings">
             <AppSetupForm id={app ? app.id : undefined} def={definition} />
@@ -134,10 +136,12 @@ export function AppsMain(props: AppProps) {
         </Section>
       )}
 
-      <Section bordered title="Preview" minHeight={200}>
-        preview
-        {/* <PreviewApp app={app} /> */}
-      </Section>
+      {!!definition.app && (
+        <Section bordered title="Preview" minHeight={200}>
+          preview
+          {/* <PreviewApp app={app} /> */}
+        </Section>
+      )}
     </Section>
   )
 }

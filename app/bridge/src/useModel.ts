@@ -1,4 +1,5 @@
 import { Model } from '@o/mediator'
+import { isDefined } from '@o/utils'
 import { assign } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -15,6 +16,29 @@ const defaultValues = {
   count: 0,
 }
 
+const PromiseCache: { [key: string]: { read: Promise<any>; resolve: Function } } = {}
+const getKey = (a, b, c) => `${a}${b}${c}`
+
+const runUseQuery = (model: any, type: string, query: Object, observe: boolean, update: any) => {
+  if (observe) {
+    if (type === 'one') {
+      return observeOne(model, { args: query }).subscribe(update)
+    } else if (type === 'many') {
+      return observeMany(model, { args: query }).subscribe(update)
+    } else if (type === 'count') {
+      return observeCount(model, { args: query }).subscribe(update)
+    }
+  } else {
+    if (type === 'one') {
+      loadOne(model, { args: query }).then(update)
+    } else if (type === 'many') {
+      loadMany(model, { args: query }).then(update)
+    } else if (type === 'count') {
+      loadCount(model, { args: query }).then(update)
+    }
+  }
+}
+
 function use<ModelType, Args>(
   type: 'one' | 'many' | 'count',
   model: Model<ModelType, Args, any>,
@@ -27,7 +51,6 @@ function use<ModelType, Args>(
   const valueRef = useRef(options.defaultValue || defaultValues[type])
   const value = valueRef.current
   const subscription = useRef<any>(null)
-  const curQuery = useRef({})
   // const id = useRef(Math.random())
 
   const dispose = () => {
@@ -41,10 +64,6 @@ function use<ModelType, Args>(
   useEffect(() => {
     if (query === false) return
 
-    const isQueryChanged = JSON.stringify(curQuery.current) !== queryKey
-    if (isQueryChanged === false) return
-    curQuery.current = query
-
     // unsubscribe from previous subscription
     dispose()
 
@@ -57,23 +76,7 @@ function use<ModelType, Args>(
       forceUpdate(Math.random())
     }
 
-    if (observeEnabled) {
-      if (type === 'one') {
-        subscription.current = observeOne(model, { args: query }).subscribe(update)
-      } else if (type === 'many') {
-        subscription.current = observeMany(model, { args: query }).subscribe(update)
-      } else if (type === 'count') {
-        subscription.current = observeCount(model, { args: query }).subscribe(update)
-      }
-    } else {
-      if (type === 'one') {
-        loadOne(model, { args: query }).then(update)
-      } else if (type === 'many') {
-        loadMany(model, { args: query }).then(update)
-      } else if (type === 'count') {
-        loadCount(model, { args: query }).then(update)
-      }
-    }
+    subscription.current = runUseQuery(model, type, query, observeEnabled, update)
 
     return () => {
       cancelled = true
@@ -88,6 +91,27 @@ function use<ModelType, Args>(
     },
     [queryKey],
   )
+
+  if (query !== false && !isDefined(valueRef.current)) {
+    const key = getKey(model.name, type, queryKey)
+    let cache =
+      PromiseCache[key] ||
+      (() => {
+        let resolve
+        const promise = new Promise(res => {
+          subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+            valueRef.current = next
+            res()
+          })
+        })
+        return {
+          read: promise,
+          resolve,
+        }
+      })()
+    console.log('cache', cache)
+    throw cache.read
+  }
 
   if (type === 'one' || type === 'many') {
     return [value, valueUpdater]

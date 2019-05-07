@@ -12,4 +12,6 @@ export const onInitialize: OnInitialize = om => {
   effects.spaces.observeSpaces(om)
 
   effects.apps.observeApps(om)
+
+  effects.user.observeUser(om)
 }

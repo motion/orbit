@@ -3,15 +3,20 @@ import { AppBit, AppModel, Space } from '@o/models'
 import { Action, Derive } from 'overmind'
 
 type AppsState = {
-  appsBySpace: { [key: number]: AppBit[] }
+  apps: AppBit[]
   activeSpace: Space
   activeApps: Derive<AppsState, AppBit[]>
 }
 
 export const state: AppsState = {
+  apps: [],
   activeSpace: null,
-  appsBySpace: {},
-  activeApps: state => (state.activeSpace && state.appsBySpace[state.activeSpace.id]) || null,
+  activeApps: state =>
+    (state.activeSpace && state.apps.filter(x => x.spaceId === state.activeSpace.id)) || [],
+}
+
+const setApps: Action<AppBit[]> = (om, apps) => {
+  om.state.apps.apps = apps
 }
 
 const setActiveSpace: Action<Space> = (om, space) => {
@@ -19,6 +24,7 @@ const setActiveSpace: Action<Space> = (om, space) => {
 }
 
 export const actions = {
+  setApps,
   setActiveSpace,
 }
 

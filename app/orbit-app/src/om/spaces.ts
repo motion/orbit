@@ -8,18 +8,18 @@ type StateState = {
   activeSpace: Derive<StateState, Space>
 }
 
+const getActiveSpace = state =>
+  (state.activeUser && state.spaces.find(x => x.id === state.activeUser.activeSpace)) || null
+
 export const state: StateState = {
   spaces: [],
   activeUser: null,
-  activeSpace: state =>
-    (state.activeUser && state.spaces.find(x => x.id === state.activeUser.activeSpace)) || null,
+  activeSpace: getActiveSpace,
 }
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
   om.state.spaces.spaces = spaces
-  const activeSpace = om.state.spaces.activeSpace
-  console.log('did derive update yet?', activeSpace)
-  om.actions.apps.setActiveSpace(activeSpace)
+  om.actions.apps.setActiveSpace(getActiveSpace(om.state.spaces))
 }
 
 const setUser: Action<User> = (om, user) => {

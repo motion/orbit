@@ -9,6 +9,18 @@ import * as Path from 'path'
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
 
+export function cors() {
+  const HEADER_ALLOWED =
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+  return (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+    next()
+  }
+}
+
 export class WebServer {
   cache = {}
   login = null
@@ -17,7 +29,7 @@ export class WebServer {
   constructor() {
     this.server = express()
     this.server.set('port', Config.ports.server)
-    this.server.use(this.cors())
+    this.server.use(cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
@@ -52,18 +64,6 @@ export class WebServer {
         log.info('Server listening', Config.ports.server)
       })
     })
-  }
-
-  private cors() {
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
-    return (req, res, next) => {
-      res.header('Access-Control-Allow-Origin', req.headers.origin)
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
-      next()
-    }
   }
 
   private setupOrbitApp() {

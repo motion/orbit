@@ -15971,7 +15971,7 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.5, postcss@^7.0.6:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postgraphile-core@4.4.0:
+postgraphile-core@4.4.0, postgraphile-core@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/postgraphile-core/-/postgraphile-core-4.4.0.tgz#21cee6161c4326c5c1a53a59bcf342adeb08975f"
   integrity sha512-P7cDdN83y0naVyaI3IGwPPMf9ebFVQ4e5PVNg8BWJHTuE2OVtoHBYHdudAXBonbMClfmVil9sxi/sP63wOCIFQ==

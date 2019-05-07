@@ -26,7 +26,6 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
   const [
-    graphServer,
     server,
     bridge,
     swift,
@@ -37,6 +36,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
     ocrBridge,
     auth,
     authProxy,
+    graphServer,
     ...apps
   ] = ports
 

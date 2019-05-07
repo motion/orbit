@@ -14,6 +14,9 @@
     "@o/ui": "^2.4.1",
     "pg": "^7.8.1",
     "typeorm": "^0.3.0-alpha.22",
-    "postgraphile": "4.4.0"
+    "postgraphile": "4.4.0",
+    "postgraphile-core": "^4.4.0",
+    "graphql": "^14.2.1",
+    "apollo-link": "^1.2.11"
   }
 }

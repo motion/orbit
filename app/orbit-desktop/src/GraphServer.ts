@@ -8,7 +8,7 @@ import SlackApp from '@o/slack-app'
 import bodyParser from 'body-parser'
 import express from 'express'
 import { graphqlExpress } from 'graphql-server-express'
-import { mergeSchemas } from 'graphql-tools'
+import { makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { getRepository } from 'typeorm'
 
@@ -29,6 +29,7 @@ export class GraphServer {
   constructor() {
     this.server = express()
     this.server.set('port', port)
+    this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))
     this.server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
@@ -36,14 +37,15 @@ export class GraphServer {
   }
 
   start() {
-    this.getAppSchemas()
+    this.watchAppsForSchemaSetup()
 
     log.info('start()')
 
     // graphql
     this.server.use('/graphql', bodyParser.json(), (req, res, next) => {
+      console.log('got req', !!this.graphMiddleware)
       if (this.graphMiddleware) {
-        this.graphMiddleware(req, res, next)
+        return this.graphMiddleware(req, res, next)
       } else {
         res.json({
           bad: 'is-bad-yea',
@@ -52,23 +54,24 @@ export class GraphServer {
     })
 
     return new Promise(async res => {
-      log.verbose(`Killing old server on ${Config.ports.server}...`)
+      log.verbose(`Killing old server on ${port}...`)
       await killPort(port)
 
       this.server.listen(port, () => {
         res()
-        log.info('Server listening', Config.ports.server)
+        log.info('Server listening', port)
       })
     })
   }
 
-  private async setupGraph(schemas: any) {
+  private async setupGraph(schemas: any[]) {
+    log.info('Setting up graph with', schemas.length)
     this.graphMiddleware = graphqlExpress({
       schema: mergeSchemas({ schemas }),
     })
   }
 
-  private async getAppSchemas() {
+  private async watchAppsForSchemaSetup() {
     await getRepository(AppEntity)
       .observe()
       .subscribe(async _ => {
@@ -77,12 +80,8 @@ export class GraphServer {
 
         for (const app of apps) {
           const appDef = allApps[app.identifier]
-          if (!appDef) {
-            continue
-          }
-          if (!appDef.graph) {
-            continue
-          }
+          if (!appDef) continue
+          if (!appDef.graph) continue
           // TODO hardcoding this, should be generic
           if (!(app.token || app.data['credentials'])) {
             continue
@@ -90,13 +89,27 @@ export class GraphServer {
 
           const appSchema = await allApps[app.identifier].graph(app)
 
-          const schema = await nestSchema({
-            typeName: app.name,
-            fieldName: app.identifier,
-            schema: appSchema,
+          let schema = appSchema.schema || appSchema
+
+          if (appSchema.link) {
+            schema = makeRemoteExecutableSchema({
+              schema,
+              link: appSchema.link,
+            })
+          }
+
+          const whiteSpaceRegex = /[\s]+/g
+
+          schema = await nestSchema({
+            typeName: app.name
+              .split(whiteSpaceRegex)
+              .map(x => x.replace(/[^a-zA-Z]/g, ''))
+              .join('_'),
+            fieldName: app.identifier.replace('-', '_'),
+            schema,
           })
 
-          schema.push(schema)
+          schemas.push(schema)
         }
 
         this.setupGraph(schemas)

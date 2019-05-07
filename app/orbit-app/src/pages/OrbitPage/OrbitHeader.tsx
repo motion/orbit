@@ -193,7 +193,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onChangeVisibility={actions.setNavVisible}
         open={state.navVisible}
         // closeOnClick
-        width={window.innerWidth * 0.8}
+        maxWidth="80vw"
         padding={4}
         elevation={10}
         arrowSize={10}

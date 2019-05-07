@@ -12,10 +12,13 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
+import { newAppStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
+
+const pinWidth = 52
 
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
@@ -40,7 +43,7 @@ export const OrbitNav = memo(
     }
 
     const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
-    const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
+    const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 150 : 120
 
     const items = [-1, ...paneSort]
       .map(
@@ -101,19 +104,20 @@ export const OrbitNav = memo(
       )
       .filter(Boolean)
 
-    const pinWidth = 52
-
     const onSettings = isOnSettings(paneManagerStore.activePane)
-    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 46
+    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 0
     const extraButtonsWidth = isOnSetupAppWidth
 
     const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
     const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
     const plainItems = items.filter(x => x.tabDisplay === 'plain')
 
-    const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
+    const pinnedItemsWidth =
+      pinWidth * (pinnedItems.length + permanentItems.length + (isOnSetupApp ? 1 : 0))
 
     const epad = isOnSetupApp ? 0 : 3
+
+    console.log(pinnedItemsWidth, extraButtonsWidth, epad)
 
     return (
       <OrbitNavClip ref={ref}>
@@ -177,7 +181,8 @@ export const OrbitNav = memo(
               <OrbitTab
                 width={tabWidth}
                 stretch
-                iconSize={12}
+                iconSize={18}
+                icon={<AppIcon app={newAppStore.app} />}
                 isActive
                 label={'New app'}
                 after={

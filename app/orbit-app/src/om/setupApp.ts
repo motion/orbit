@@ -60,7 +60,7 @@ const update: Action<Partial<AppBit>> = ({ state }, app) => {
 const setApp: Action<string> = ({ state }, identifier) => {
   const app = state.setupApp.app
   const nextApp = defaultApps.find(x => x.identifier === identifier)
-  console.log('next app', nextApp)
+
   if (!nextApp) {
     console.warn('no app', nextApp)
     return
@@ -99,7 +99,8 @@ const reset: Action = ({ state }) => {
 }
 
 const create: Action<string> = async (om, identifier) => {
-  await om.effects.setupApp.createCustomApp(identifier)
+  const { id } = await om.effects.setupApp.createCustomApp(identifier)
+  om.actions.router.showAppPage({ id: `${id}` })
   om.actions.setupApp.reset()
 }
 
@@ -112,7 +113,7 @@ export const actions = {
 
 export const effects = {
   async createCustomApp(identifier: string) {
-    await save(AppModel, {
+    return await save(AppModel, {
       name: 'My Custom App',
       spaceId: spaceStore.activeSpace.id,
       identifier: identifier || `custom`,

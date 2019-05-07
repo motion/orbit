@@ -3,7 +3,7 @@ import { Icon, OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLi
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
 import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
-import { ensure, react, useHook, useStore } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 
 import { useStoresSimple } from '../hooks/useStores'
@@ -11,9 +11,7 @@ import { useStoresSimple } from '../hooks/useStores'
 // @ts-ignore
 const avatar = require('../../public/images/nate.jpg')
 
-// @ts-ignore
 class SpaceSwitchStore {
-  stores = useHook(useStoresSimple)
   popoverContentRef = React.createRef<HTMLDivElement>()
   selectedIndex = 0
   open = false
@@ -25,20 +23,6 @@ class SpaceSwitchStore {
     if (this.popoverContentRef.current) {
       this.popoverContentRef.current.focus()
     }
-  }
-
-  get spaces() {
-    return this.stores.spaceStore.spaces
-  }
-
-  down = e => {
-    e.stopPropagation()
-    this.selectedIndex = Math.min(this.selectedIndex + 1, this.spaces.length - 1)
-  }
-
-  up = e => {
-    e.stopPropagation()
-    this.selectedIndex = Math.max(this.selectedIndex - 1, 0)
   }
 
   spaceOpener = react(

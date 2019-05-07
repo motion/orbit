@@ -1,23 +1,21 @@
 #!/usr/bin/env node
+import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { AppDevOpenCommand } from '@o/models'
+import { randomString } from '@o/utils'
+import bonjour from 'bonjour'
+import getPort from 'get-port'
+import * as Path from 'path'
+import ReconnectingWebSocket from 'reconnecting-websocket'
+import Webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
+import WebSocket from 'ws'
+import Yargs from 'yargs'
+
+import makeWebpackConfig from './webpack.config'
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
 const packageJson = require('../package.json')
-
-import bonjour from 'bonjour'
-import * as Path from 'path'
-import getPort from 'get-port'
-import Yargs from 'yargs'
-import Webpack from 'webpack'
-import WebpackDevServer from 'webpack-dev-server'
-import WebSocket from 'ws'
-import ReconnectingWebSocket from 'reconnecting-websocket'
-
-import { AppDevOpenCommand } from '@o/models'
-import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import { randomString } from '@o/utils'
-
-import makeWebpackConfig from './webpack.config'
 
 let cwd = process.cwd()
 let version = packageJson.version
@@ -129,6 +127,7 @@ class OrbitCLI {
     await orbitDesktop.command(AppDevOpenCommand, {
       bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,
       path: this.options.projectRoot,
+      // @ts-ignore
       appId: this.options.projectRoot,
     })
     return

@@ -3,6 +3,8 @@
   "version": "2.4.1",
   "private": true,
   "dependencies": {
+    "@o/kit": "*",
+    "@o/ui": "*",
     "@o/custom-app": "^2.4.1",
     "@o/jira-app": "^2.4.1",
     "@o/lists-app": "^2.4.1",

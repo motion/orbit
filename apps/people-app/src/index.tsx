@@ -85,19 +85,19 @@ export function PeopleAppMain(props: AppProps) {
     },
   })
 
-  const [recentBits] = useBits(
-    person && {
-      where: {
-        people: {
-          email: person.email,
-        },
+  const [recentBits] = useBits({
+    where: {
+      people: {
+        email: person.email,
       },
-      order: {
-        bitUpdatedAt: 'DESC',
-      },
-      take: 10,
     },
-  )
+    order: {
+      bitUpdatedAt: 'DESC',
+    },
+    take: 10,
+  })
+
+  console.log('recentBits', recentBits)
 
   const query = getBitTexts(recentBits)
   const topics = useNLPTopics({

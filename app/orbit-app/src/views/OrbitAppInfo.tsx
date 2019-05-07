@@ -12,9 +12,7 @@ const bitsCountCache = {}
 export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
   const appId = app ? app.id : false
   const { bitsCount } = useAppSyncState(app)
-  console.log('bitsco', bitsCount)
   const allJobs = useJobs(appId)
-  console.log('jobs', allJobs)
   const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
 
   if (!appId) {

@@ -1,5 +1,5 @@
 import { Model } from '@o/mediator'
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { assign } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -20,11 +20,11 @@ const PromiseCache: {
 
 const getKey = (a, b, c) => `${a}${b}${c}`
 
-// const defaultValues = {
-//   one: null,
-//   many: [],
-//   count: 0,
-// }
+const defaultValues = {
+  one: null,
+  many: [],
+  count: 0,
+}
 
 const runUseQuery = (model: any, type: string, query: Object, observe: boolean, update: any) => {
   if (observe) {
@@ -111,17 +111,15 @@ function use<ModelType, Args>(
       let resolve
       const promise = new Promise(res => {
         yallReadyKnow.current = true
-        subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
-          console.log('got', key, next, PromiseCache)
-          if (isDefined(next)) {
-            cache.current = next
-            valueRef.current = next
-            // clear cache
-            setTimeout(() => {
-              delete PromiseCache[key]
-            }, 100)
-            res()
-          }
+        subscription.current = runUseQuery(model, type, query, observeEnabled, nextRaw => {
+          const next = selectDefined(nextRaw, defaultValues[type])
+          cache.current = next
+          valueRef.current = next
+          // clear cache
+          setTimeout(() => {
+            delete PromiseCache[key]
+          }, 100)
+          res()
         })
       })
       cache = PromiseCache[key] = {
@@ -134,7 +132,6 @@ function use<ModelType, Args>(
     if (isDefined(cache.current)) {
       valueRef.current = cache.current
     } else {
-      console.log('throwing', key)
       throw cache.read
     }
   }

@@ -30,6 +30,7 @@ function cachedObservable(
       const subs = options.transports.map(transport => {
         return transport.observe(name, args).subscribe(
           response => {
+            console.log('res', response)
             if (response.notFound !== true) {
               cached.update(response.result)
             }

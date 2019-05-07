@@ -3,9 +3,14 @@ import { isDefined } from '@o/utils'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
 
+import { isBrowser } from '../constants'
 import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
+
+if (isBrowser) {
+  require('./SelectableStore.css')
+}
 
 const key = (item: any) => Config.getItemKey(item)
 
@@ -256,6 +261,8 @@ export class SelectableStore {
   }
 
   setRowMouseDown(index: number, e?: React.MouseEvent) {
+    document.body.classList.add('selectable-mouse-down')
+
     if ((e && e.button !== 0) || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
@@ -361,6 +368,7 @@ export class SelectableStore {
   }
 
   private onStopDragSelecting = () => {
+    document.body.classList.remove('selectable-mouse-down')
     this.dragStartIndex = null
     document.removeEventListener('mouseup', this.onStopDragSelecting)
   }

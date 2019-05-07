@@ -82,8 +82,6 @@ export function Table(tableProps: TableProps) {
     [props.rows, props.onSelect, shareable],
   )
 
-  console.log('rneder')
-
   return (
     <Section
       background="transparent"

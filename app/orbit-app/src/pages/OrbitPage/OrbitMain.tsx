@@ -3,6 +3,7 @@ import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderLeft, BorderTop, View } from '@o/ui'
 import React, { memo, useContext } from 'react'
+
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
@@ -21,7 +22,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
       <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       <OrbitMainContainer
         isEditing={isEditing}
-        transparent={appDef.config && appDef.config.transparentBackground}
+        transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}
       >
         <View className="app-container" flex={1} position="relative" maxHeight="100%">
           {props.hasSidebar && <BorderLeft opacity={0.5} />}

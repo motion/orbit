@@ -1,13 +1,13 @@
 import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit'
-import { JiraQueries } from './JiraQueries'
+
 import { JiraAppData, JiraComment, JiraIssue, JiraUser } from './JiraModels'
+import { JiraQueries } from './JiraQueries'
 
 /**
  * Defines a loading throttling.
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before users load.
    */
@@ -21,8 +21,7 @@ const THROTTLING = {
   /**
    * Delay before issue comments load.
    */
-  comments: 100
-  
+  comments: 100,
 }
 
 /**
@@ -38,14 +37,14 @@ export class JiraLoader {
     this.log = log || new Logger('service:jira:loader:' + app.id)
 
     const appData: JiraAppData = this.app.data
-    const { username, password } = this.app.data.values.credentials
+    const { username, password } = this.app.data.setup
     const credentials = Buffer.from(`${username}:${password}`).toString('base64')
 
     this.loader = new ServiceLoader(this.app, this.log, {
-      baseUrl: appData.values.credentials.domain,
+      baseUrl: appData.setup.domain,
       headers: {
-        Authorization: `Basic ${credentials}`
-      }
+        Authorization: `Basic ${credentials}`,
+      },
     })
   }
 
@@ -83,7 +82,7 @@ export class JiraLoader {
 
     // we don't need some jira users, like system or bot users
     // so we are filtering them out
-    this.log.info('filter out users we don\'t need')
+    this.log.info("filter out users we don't need")
     const filteredUsers = users.filter(user => {
       const email = user.emailAddress || ''
       const ignoredEmail = '@connect.atlassian.com'

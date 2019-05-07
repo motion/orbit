@@ -1,19 +1,13 @@
 import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit'
+
+import { ConfluenceAppData, ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceModels'
 import { ConfluenceQueries } from './ConfluenceQueries'
-import {
-  ConfluenceAppData,
-  ConfluenceComment,
-  ConfluenceContent,
-  ConfluenceGroup,
-  ConfluenceUser,
-} from './ConfluenceModels'
 
 /**
  * Defines a loading throttling.
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before users load.
    */
@@ -27,8 +21,7 @@ const THROTTLING = {
   /**
    * Delay before issue comments load.
    */
-  comments: 100
-
+  comments: 100,
 }
 
 /**
@@ -44,14 +37,14 @@ export class ConfluenceLoader {
     this.log = log || new Logger('service:confluence:loader:' + app.id)
 
     const appData: ConfluenceAppData = this.app.data
-    const { username, password } = this.app.data.values.credentials
+    const { username, password } = this.app.data.setup
     const credentials = Buffer.from(`${username}:${password}`).toString('base64')
 
     this.loader = new ServiceLoader(this.app, this.log, {
-      baseUrl: appData.values.credentials.domain,
+      baseUrl: appData.setup.domain,
       headers: {
-        Authorization: `Basic ${credentials}`
-      }
+        Authorization: `Basic ${credentials}`,
+      },
     })
   }
 
@@ -121,10 +114,7 @@ export class ConfluenceLoader {
       // since we can only load max 100 pages per request, we check if we have more pages to load
       // then execute recursive call to load next 100 pages. Do it until we reach the end (total)
       if (hasNextPage) {
-        await loadRecursively(
-          cursor + maxResults,
-          loadedCount + response.results.length,
-        )
+        await loadRecursively(cursor + maxResults, loadedCount + response.results.length)
       }
     }
 
@@ -183,7 +173,7 @@ export class ConfluenceLoader {
 
     // we don't need some confluence users, like system or bot users
     // so we are filtering them out
-    this.log.info('filter out users we don\'t need')
+    this.log.info("filter out users we don't need")
     const filteredUsers = users.filter(member => {
       const email = member.details.personal.email || ''
       const ignoredEmail = '@connect.atlassian.com'

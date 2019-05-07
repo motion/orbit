@@ -1,10 +1,10 @@
-export type AppProps = {
+export type AppProps<A = any> = {
   identifier?: string
   id?: string
   subId?: string
   title?: string
   subTitle?: string
-  data?: any
+  data?: A
   icon?: string
   iconLight?: string
   subType?: string

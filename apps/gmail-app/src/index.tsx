@@ -1,7 +1,8 @@
 import { createApi, createApp } from '@o/kit'
+
+import { GmailApi } from './api.node'
 import { gmailIcon } from './gmailIcon'
 import { GmailSettings } from './GmailSettings'
-import { GmailApi } from './api.node'
 
 export default createApp({
   id: 'gmail',
@@ -9,6 +10,6 @@ export default createApp({
   icon: gmailIcon,
   itemType: 'thread',
   settings: GmailSettings,
-  sync: {},
+  sync: true,
   api: createApi<typeof GmailApi>(),
 })

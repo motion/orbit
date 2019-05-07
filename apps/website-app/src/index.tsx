@@ -1,14 +1,17 @@
 import { createApp } from '@o/kit'
-import WebsiteSetupPane from './WebsiteSetupPane'
 
 export default createApp({
   id: 'website',
   name: 'Website',
   icon: websiteIcon(),
   itemType: 'task',
-  settings: WebsiteSetupPane,
-  setup: WebsiteSetupPane,
-  sync: {},
+  setup: {
+    url: {
+      name: 'URL',
+      required: true,
+    },
+  },
+  sync: true,
 })
 
 function websiteIcon() {

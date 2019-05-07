@@ -1,4 +1,5 @@
 import { AppBit, Bit, ItemType } from '@o/models'
+import { FormErrors, FormFieldsObj } from '@o/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 
@@ -13,33 +14,25 @@ export type AppElements = {
   actions?: React.ReactElement<any>
 }
 
-export type AppViews = {
-  index?: FunctionComponent<AppProps> | false | null
-  main?: FunctionComponent<AppProps> | false | null
-  toolBar?: FunctionComponent<AppProps> | false | null
-  statusBar?: FunctionComponent<AppProps> | false | null
-  settings?: FunctionComponent<AppProps> | false | null
-  setup?: FunctionComponent<AppProps> | false | null
-}
-
-export type AppDefinition = {
+export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any> = {
   id: string
   name: string
   icon: string
   iconLight?: string
   context?: React.Context<any>
   itemType?: ItemType
-  app?: FunctionComponent<AppProps>
-  settings?: FunctionComponent<AppProps>
-  setup?: FunctionComponent<AppProps>
-  config?: {
+  app?: FunctionComponent<AppProps<AppData>>
+  setup?: SetupFields
+  setupValidate?: (
+    app: AppBit<AppData>,
+  ) => FormErrors<FormErrors<SetupFields>> | Promise<FormErrors<SetupFields>>
+  settings?: FunctionComponent<AppProps<AppData>>
+  sync?: boolean
+  api?: (app: AppBit<AppData>) => any
+  graph?: (app: AppBit<AppData>) => any
+  viewConfig?: {
     transparentBackground?: boolean
   }
-  appData?: Object
-  // TODO @umed this is where we can put syncer stuff
-  sync?: {} // todo: it can be boolean at max
-  api?: (app: AppBit) => any
-  graph?: (app: AppBit) => any
 }
 
 export type AppBitMainProps = { item: Bit }

@@ -4,6 +4,7 @@ import * as UI from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'
 import quadtree from 'simple-quadtree'
+
 import { wordKey } from '../../helpers'
 import OCRLine from './OcrLine'
 import OCRWord from './OcrWord'

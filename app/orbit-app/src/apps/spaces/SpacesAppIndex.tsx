@@ -5,7 +5,7 @@ import { Button, List } from '@o/ui'
 import * as React from 'react'
 
 export default function SpacesAppIndex() {
-  const [user = {}, setUser] = useActiveUser()
+  const [user, updateUser] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
   const [allSpaces] = useModels(SpaceModel, {})
 
@@ -22,7 +22,9 @@ export default function SpacesAppIndex() {
             <Button chromeless circular icon="tick" iconSize={12} />
           ),
           onOpen: () => {
-            setUser({ activeSpace: space.id })
+            updateUser(user => {
+              user.activeSpace = space.id
+            })
           },
         })),
         {

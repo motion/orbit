@@ -1,7 +1,7 @@
 // @ts-ignore
 import graphqlStyle from '!raw-loader!@o/graphiql/graphiql.css'
 import GraphiQL from '@o/graphiql'
-import { getGlobalConfig } from '@o/kit'
+import { getGlobalConfig, useActiveSpace } from '@o/kit'
 import { useNode } from '@o/ui'
 import GraphiQLExplorer from 'graphiql-explorer'
 import { buildClientSchema, getIntrospectionQuery } from 'graphql'
@@ -11,6 +11,7 @@ import ShadowDOM from 'react-shadow'
 import { useThemeStore } from '../om/stores'
 
 export function GraphExplorer() {
+  const [space] = useActiveSpace()
   const { theme } = useThemeStore()
   const graphiql = useRef(null)
   const [state, setState] = useState({ schema: null, query: null })
@@ -25,12 +26,12 @@ export function GraphExplorer() {
     codeMirrorTop + ((parentRoot.current && parentRoot.current.getBoundingClientRect().y) || 0)
 
   useEffect(() => {
-    fetcher({
+    fetcher(space.id, {
       query: getIntrospectionQuery(),
     }).then(result => {
       setState({ schema: buildClientSchema(result.data), query })
     })
-  }, [])
+  }, [space])
 
   return (
     <>
@@ -237,8 +238,8 @@ export function GraphExplorer() {
   )
 }
 
-function fetcher(params: Object) {
-  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql`, {
+function fetcher(spaceId: number, params: Object) {
+  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql/${spaceId}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

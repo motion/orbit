@@ -64,15 +64,15 @@ export const ObserverCache = {
 
       for (const entry of ObserverCache.entries.values()) {
         if (entry.args.model !== model) continue
-        if (entry.args.type === 'one') {
-          if (entry.value[id]) {
-            toUpdate.add(entry)
-            entry.value = value
-          }
-        } else {
+        if (entry.args.type === 'many') {
           if (entry.denormalizedValues[id]) {
             toUpdate.add(entry)
             entry.denormalizedValues[id] = value
+          }
+        } else {
+          if (entry.value[id]) {
+            toUpdate.add(entry)
+            entry.value = value
           }
         }
       }

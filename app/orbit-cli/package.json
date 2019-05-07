@@ -3,15 +3,15 @@
   "version": "2.4.1",
   "main": "./_/main.js",
   "private": true,
-  "bin": "./_/main.js",
+  "bin": {
+    "orbit": "./_/main.js"
+  },
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/telemetry": "*",
-    "@o/kit": "^2.4.1",
-    "@o/ui": "^2.4.1",
     "fs-exists-cached": "1.0.0",
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",

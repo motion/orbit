@@ -12,8 +12,8 @@ export default createApp({
   setup: {
     date: {
       name: 'Date',
-      type: 'Date',
-    }
+      type: 'date',
+    },
   },
   viewConfig: {
     transparentBackground: true,

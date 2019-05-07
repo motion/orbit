@@ -97,8 +97,6 @@ export function PeopleAppMain(props: AppProps) {
     take: 10,
   })
 
-  console.log('recentBits', recentBits)
-
   const query = getBitTexts(recentBits)
   const topics = useNLPTopics({
     query,

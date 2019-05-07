@@ -59,7 +59,9 @@ export function SettingsAppGeneral(_props: AppProps) {
   const updateSettings = settings => {
     const next = { ...user.settings, ...settings }
     App.setState({ userSettings: next })
-    updateUser({ settings: next })
+    updateUser(user => {
+      user.settings = next
+    })
   }
 
   const handleClearAllData = async () => {

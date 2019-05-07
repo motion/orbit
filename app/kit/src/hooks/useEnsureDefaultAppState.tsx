@@ -11,9 +11,11 @@ export function useEnsureDefaultAppState<A>(uid: string | false, ensure: A) {
     if (state.data[uid]) return
     if (typeof ensure === 'undefined') return
     if (isEqual(state.data[uid], ensure)) return
-    // ensure default
-    state.data[uid] = ensure
-    console.log('updating app default state', ensure, uid, update)
-    update(state)
+
+    update(next => {
+      // ensure default
+      next.data[uid] = ensure
+      console.log('updating app default state', ensure, uid, update)
+    })
   }, [state, uid])
 }

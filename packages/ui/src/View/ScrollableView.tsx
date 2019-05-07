@@ -5,7 +5,8 @@ import React, { forwardRef } from 'react'
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
 import { ColProps } from './Col'
-import { getPadding, PaddedView } from './PaddedView'
+import { getPadding } from './pad'
+import { PaddedView } from './PaddedView'
 import { ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection

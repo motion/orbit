@@ -1,6 +1,7 @@
 import { Popover } from '@o/ui'
 import * as React from 'react'
-import { animated, interpolate, useSpring } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
+
 import { MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 
@@ -24,7 +25,7 @@ export function MenuChrome(props: { children: any }) {
   const left = menuCenter - MENU_WIDTH / 2
   const { open, repositioning } = openState
   const config = repositioning ? noAnimationConfig : springyConfig
-  const { x, y, opacity } = useSpring({
+  const { /* x, y,  */ opacity } = useSpring({
     x: left,
     y: open ? 0 : -5,
     opacity: open ? 1 : 0,
@@ -41,7 +42,7 @@ export function MenuChrome(props: { children: any }) {
           zIndex: 100000,
           borderRadius: 12,
           top: pad,
-          transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
+          // transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
           opacity,
           width: MENU_WIDTH,
           pointerEvents: 'all',
@@ -52,7 +53,7 @@ export function MenuChrome(props: { children: any }) {
       <animated.div
         style={{
           position: 'absolute',
-          transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
+          // transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
           opacity,
         }}
       >

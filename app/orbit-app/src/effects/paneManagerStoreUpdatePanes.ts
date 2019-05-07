@@ -7,6 +7,7 @@ import { ensure, useReaction } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { useOm } from '../om/om'
 
+// TODO move to om
 export function usePaneManagerUpdatePanes() {
   const { actions } = useOm()
   const { paneManagerStore, spaceStore } = useStoresSimple()

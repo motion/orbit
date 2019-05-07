@@ -11,7 +11,7 @@ export function SlackSettings() {
   const app = useApp()
   const [channels, setChannels] = useAppState('channels')
   const [, setHighlightedRows] = useState([])
-  const whitelist = useWhiteList(useAppState('whitelist'), {
+  const whitelist = useWhiteList(`${app.id}-whitelist`, {
     getAll: () => (channels || []).map(channel => channel.id),
   })
 

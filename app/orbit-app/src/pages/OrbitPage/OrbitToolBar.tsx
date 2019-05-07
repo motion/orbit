@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row, RowProps } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
@@ -35,7 +35,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitToolbarChrome = gloss(Row, {
+const OrbitToolbarChrome = gloss<RowProps & { transparent?: boolean }>(Row, {
   position: 'absolute',
   top: 0,
   left: 0,

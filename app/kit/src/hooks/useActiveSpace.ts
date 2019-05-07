@@ -1,8 +1,26 @@
 import { useModel } from '@o/bridge'
 import { SpaceModel, UserModel } from '@o/models'
 
-export function useActiveSpace() {
+export function useActiveSpace(query?) {
   const [user] = useModel(UserModel, {})
-  const args = user && { where: { id: user.activeSpace } }
-  return useModel(SpaceModel, args)
+  return useModel(
+    SpaceModel,
+    user && {
+      where: { id: user.activeSpace },
+      select: ['id', 'name', 'colors'],
+      ...query,
+    },
+  )
+}
+
+// if you want sorting too
+export function useActivePaneSort() {
+  const [user] = useModel(UserModel, {})
+  const [space] = useModel(
+    SpaceModel,
+    user && {
+      where: { id: user.activeSpace },
+    },
+  )
+  return space.paneSort
 }

@@ -51,18 +51,20 @@ const getActions = (
 ) => {
   const Actions = {
     addFolder(name?: string) {
-      const [state, update] = treeState()
-      const id = Math.random()
-      Actions.curItem().children.push(id)
-      state.items[id] = { id, name, type: 'folder', children: [] }
+      const update = treeState()[1]
+      update(next => {
+        const id = Math.random()
+        next.items[Actions.curId()].children.push(id)
+        next.items[id] = { id, name, type: 'folder', children: [] }
+      })
       stores.queryStore.clearQuery()
-      update(state)
     },
     sort(oldIndex: number, newIndex: number) {
-      const [state, update] = treeState()
-      const item = Actions.curItem()
-      item.children = arrayMove(item.children, oldIndex, newIndex)
-      update(state)
+      const update = treeState()[1]
+      update(next => {
+        const item = next.items[Actions.curId()]
+        item.children = arrayMove(item.children, oldIndex, newIndex)
+      })
     },
     curId() {
       return userState()[0].curId || 0

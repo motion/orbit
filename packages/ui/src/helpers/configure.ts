@@ -8,6 +8,8 @@ import { SimpleTextProps } from '../text/SimpleText'
 import { TitleProps } from '../text/Title'
 import { Bit } from './BitLike'
 
+export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
+
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces
   useIcon: any
@@ -16,10 +18,10 @@ export type ConfigureUIProps = {
   getItemKey: (item: any) => string
 
   // set a custom persistence function for appState
-  useAppState: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+  useAppState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
 
   // set a custom persistence function for userState
-  useUserState: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+  useUserState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
 
   // you can control how list items and bits render
   customItems: {

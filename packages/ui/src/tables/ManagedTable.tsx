@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { CSSPropertySet, gloss } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import { debounce, isEqual, throttle } from 'lodash'
 import React, { createRef } from 'react'
@@ -16,6 +16,7 @@ import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
+import { SectionProps } from '../Section'
 import { Text } from '../text/Text'
 import { DataColumns, DataType, GenericDataRow } from '../types'
 import { Col } from '../View/Col'
@@ -31,10 +32,10 @@ const clipboard = Electron.clipboard
 export type ManagedTableProps = SelectableProps &
   Pick<FilterableProps, 'filter' | 'filterValue'> & {
     containerRef?: any
-    overflow?: CSSPropertySet['overflow']
-    flex?: CSSPropertySet['flex']
-    margin?: CSSPropertySet['margin']
-    padding?: CSSPropertySet['padding']
+    overflow?: SectionProps['overflow']
+    flex?: SectionProps['flex']
+    margin?: SectionProps['margin']
+    padding?: SectionProps['padding']
     width?: number
     height?: number
 

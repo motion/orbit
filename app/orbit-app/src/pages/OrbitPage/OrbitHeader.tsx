@@ -3,7 +3,7 @@ import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import React, { forwardRef, memo, useCallback } from 'react'
+import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -247,7 +247,7 @@ const OrbitNavHiddenBarChrome = gloss({
   left: 0,
   right: 0,
   padding: 6,
-}).theme((_, theme) => ({
+}).theme(() => ({
   '&:hover': {
     background: [255, 255, 255, 0.05],
   },

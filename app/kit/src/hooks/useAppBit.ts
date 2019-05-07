@@ -1,11 +1,14 @@
-import { useModel } from '@o/bridge'
+import { ImmutableUpdateFn, useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 
 import { useStoresSimple } from './useStores'
 
-export function useAppBit(appId?: number | false): [AppBit, ((next: Partial<AppBit>) => any)] {
+export function useAppBit(
+  appId?: number | false,
+  extraConditions?,
+): [AppBit, ImmutableUpdateFn<AppBit>] {
   const { appStore } = useStoresSimple()
-  let conditions = null
+  let conditions = extraConditions || null
 
   if (appId || +appStore.id === +appStore.id) {
     // use id for non-static apps

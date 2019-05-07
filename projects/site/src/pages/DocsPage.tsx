@@ -70,12 +70,23 @@ const docsNavigate = id => {
   )
 }
 
+let tms = {}
+
+const loadDocPage = (id: string) => {
+  tms[id] = setTimeout(() => {
+    if (docsViews[id]) {
+      loadDocsPage(docsViews[id])
+    }
+  }, 50)
+}
+
 const preloadItem = item => {
   return {
     onMouseEnter() {
-      if (docsViews[item.id]) {
-        loadDocsPage(docsViews[item.id])
-      }
+      loadDocPage(item.id)
+    },
+    onMouseLeave() {
+      clearTimeout(tms[item.id])
     },
   }
 }

@@ -1,8 +1,9 @@
-import { Col, gloss, Row } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
 
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
-import { ColProps } from '../View/Col'
+import { Col, ColProps } from '../View/Col'
+import { Row } from '../View/Row'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { Pane } from './Pane'

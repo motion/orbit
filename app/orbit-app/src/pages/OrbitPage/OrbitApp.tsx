@@ -99,8 +99,11 @@ export const OrbitAppRenderOfDefinition = ({
 
   let RenderApp = appDef.app
 
-  // @ts-ignore
-  if (!RenderApp.isApp) {
+  const appChildEl = RenderApp({})
+  const isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
+
+  // automatically wrap with <App />, if they don't
+  if (!isAppWrapped) {
     const AppView = appDef.app
     RenderApp = props => (
       <App>

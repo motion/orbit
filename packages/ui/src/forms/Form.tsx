@@ -63,7 +63,7 @@ class FormStore {
   props: FormStoreProps
   globalError: string = ''
   values: FormFieldsObj = shallow({})
-  errors: FormErrors<any> = {}
+  errors: FormErrors<any> = null
   mountKey = 0
 
   setErrors(value: FormErrors<any>) {

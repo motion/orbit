@@ -42,7 +42,7 @@ const defaultProps: Partial<GridLayoutProps> = {
     xs: 1,
     sm: 2,
     md: 4,
-    lg: 5,
+    lg: 6,
   },
 }
 
@@ -50,7 +50,6 @@ type GridItems = { [key: string]: GridItemProps }
 
 const autoSize = (item: GridItemProps, cols: number, items: GridItems) => {
   const total = Object.keys(items).length
-  console.log('total', total, items)
   let defaultSize = 1
   if (total === 1) {
     defaultSize = cols
@@ -138,13 +137,14 @@ class GridStore {
       ensure('items', !!Object.keys(items).length)
       await sleep(50)
       // always re-calc from large and reset
+      console.log(calculateLayout(items, this.props.cols['lg']))
       this.layouts = {
         lg: calculateLayout(items, this.props.cols['lg']),
         // this would calc all layouts more nicely, but then when you change something it doesn't change all of them
         // so we'd need to re-calc them all when you resize/change, if we wanted that, wed need a better calculateLayout
-        // md: calculateLayout(items, this.props.cols['md']),
-        // sm: calculateLayout(items, this.props.cols['sm']),
-        // xs: calculateLayout(items, this.props.cols['xs']),
+        md: calculateLayout(items, this.props.cols['md']),
+        sm: calculateLayout(items, this.props.cols['sm']),
+        xs: calculateLayout(items, this.props.cols['xs']),
       }
     },
   )

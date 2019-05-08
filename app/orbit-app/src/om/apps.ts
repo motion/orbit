@@ -20,10 +20,8 @@ export const state: AppsState = {
 }
 
 const setApps: Action<AppBit[]> = (om, apps) => {
-  console.log('apps', apps)
   om.state.apps.apps = apps
   om.effects.apps.updatePaneManagerPanes(apps)
-  console.log(paneManagerStore.panes)
   om.effects.apps.setHomePane()
 }
 
@@ -48,7 +46,6 @@ export const effects = {
   },
 
   setHomePane: once(() => {
-    console.log('go to home', paneManagerStore.homePane.id)
     paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   }),
 

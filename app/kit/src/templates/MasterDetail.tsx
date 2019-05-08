@@ -1,9 +1,10 @@
 import {
   Layout,
+  List,
   ListItemProps,
+  ListProps,
   Pane,
   PaneProps,
-  SearchableList,
   SearchableListProps,
   Sidebar,
   SidebarProps,
@@ -44,10 +45,10 @@ export function MasterDetail({
     contents = children
   }
 
-  const onSelect = useCallback(
-    rows => {
+  const onSelect: ListProps['onSelect'] = useCallback(
+    (rows, indices) => {
       if (listProps.onSelect) {
-        listProps.onSelect(rows[0])
+        listProps.onSelect(rows, indices)
         return
       }
       if (rows.length) {
@@ -62,13 +63,7 @@ export function MasterDetail({
   ])
 
   const master = (
-    <SearchableList
-      key="master"
-      selectable
-      {...listProps}
-      onSelect={onSelect}
-      itemProps={itemProps}
-    />
+    <List key="master" selectable {...listProps} onSelect={onSelect} itemProps={itemProps} />
   )
 
   const detail = <Fragment key="detail">{contents}</Fragment>

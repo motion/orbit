@@ -53,7 +53,6 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
     return [pane, settingsPane]
   } else {
     const appPanes = apps.filter(x => !!getAppDefinition(x.identifier).app).map(appToPane)
-    console.log('appPanes', apps, appPanes)
     return [...defaultPanes, ...appPanes]
   }
 }

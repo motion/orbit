@@ -2,6 +2,7 @@ import {
   App,
   AppProps,
   createApp,
+  hasGraph,
   Templates,
   useActiveDataAppsWithDefinition,
   useAppState,
@@ -26,24 +27,22 @@ export default createApp({
 })
 
 function DataExplorerIndex() {
-  const syncApps = useActiveDataAppsWithDefinition()
+  const dataApps = useActiveDataAppsWithDefinition()
   return (
-    <>
-      <List
-        titleBorder
-        title="Data Explorer"
-        subTitle="Explore installed data apps"
-        items={[
-          {
-            subId: 'explorer-graph',
-            title: 'Graph',
-            icon: 'Graph',
-            subTitle: 'Explore all GraphQL app APIs',
-          },
-          ...syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' })),
-        ]}
-      />
-    </>
+    <List
+      titleBorder
+      title="Data Explorer"
+      subTitle="Explore installed data apps"
+      items={[
+        dataApps.some(x => hasGraph(x.definition)) && {
+          subId: 'explorer-graph',
+          title: 'Graph',
+          icon: 'Graph',
+          subTitle: 'Explore all GraphQL app APIs',
+        },
+        ...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' })),
+      ].filter(Boolean)}
+    />
   )
 }
 

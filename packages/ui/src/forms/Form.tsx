@@ -1,13 +1,11 @@
-import produce from 'immer'
+import { createStoreContext, shallow, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
-import React, { createContext, Dispatch, forwardRef, HTMLProps, useCallback, useContext, useEffect, useReducer } from 'react'
+import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
 import { Button } from '../buttons/Button'
-import { MergeContext } from '../helpers/MergeContext'
-import { useGet } from '../hooks/useGet'
 import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
-import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
+import { TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
 import { Omit } from '../types'
 import { FormField } from './FormField'
@@ -23,7 +21,7 @@ export type FormProps<A extends FormFieldsObj> = Omit<SectionProps, 'children'> 
       values: FormValues,
     ) => FormErrors<A> | Promise<FormErrors<A>>
     children?: React.ReactNode
-    use?: UseForm
+    useForm?: FormStore
     size?: number
   }
 
@@ -59,60 +57,83 @@ type FormFieldType =
       validate?: (val: any) => string
     }
 
-type FormActions =
-  | { type: 'changeField'; value: FormFieldType }
-  | { type: 'removeField'; value: string }
-  | { type: 'setErrors'; value: FormErrors<any> }
-  | { type: 'setFields'; value: FormFieldsObj }
+export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
-type FormState = {
-  errors: FormErrors<any>
-  values: FormFieldsObj
-  globalError?: string
-}
+class FormStore {
+  props: FormStoreProps
+  globalError: string = ''
+  values: FormFieldsObj = shallow({})
+  errors: FormErrors<any> = null
+  mountKey = 0
 
-type FormContext = FormState & { dispatch: Dispatch<FormActions> } | null
+  setErrors(value: FormErrors<any>) {
+    this.globalError = null
+    if (value === true) {
+      this.errors = null
+    } else if (typeof value === 'string') {
+      this.globalError = value
+    } else if (value && Object.keys(value).length) {
+      this.errors = value
+    } else {
+      this.errors = null
+    }
+  }
 
-export const FormContext = createContext<FormContext>(null)
+  setFields(value: FormFieldsObj) {
+    this.values = value
+  }
 
-function fieldsReducer(state: FormState, action: FormActions) {
-  switch (action.type) {
-    case 'setErrors':
-      return produce(state, next => {
-        next.globalError = null
-        if (action.value === true) {
-          next.errors = null
-        } else if (typeof action.value === 'string') {
-          next.globalError = action.value
-        } else if (action.value && Object.keys(action.value).length) {
-          next.errors = action.value
-        } else {
-          next.errors = null
-        }
-      })
-    case 'setFields':
-      return produce(state, next => {
-        next.values = action.value
-      })
-    case 'changeField':
-      if (state.values) {
-        // dont trigger update on every keystroke
-        // return produce(state, next => {
-        // })
-        state.values[action.value.name] = action.value
-      }
-      return state
-    case 'removeField':
-      return produce(state, next => {
-        delete next.values[action.value]
-      })
+  changeField(next: FormFieldType) {
+    // mount
+    if (this.values[next.name] === undefined) {
+      this.mountKey++
+    }
+    if (this.values) {
+      this.values[next.name] = next
+    }
+  }
+
+  removeField(name: string) {
+    delete this.values[name]
+  }
+
+  getValue(name: string) {
+    if (!this.values[name]) {
+      this.values[name] = { value: null, name }
+    }
+    return this.values[name].value
+  }
+
+  getFilters(names: string[]) {
+    // re-read on new mounts
+    this.mountKey
+    const fields = Object.keys(this.values)
+      .filter(x => names.some(y => y === x))
+      .map(key => this.values[key])
+    const selectFields = flatten(
+      fields
+        .filter(x => x.type === 'select')
+        // can have multiple values
+        .map(x =>
+          Array.isArray(x.value)
+            ? x.value.map(y => createIncludeFilter(x.name, y.value))
+            : x.value
+            ? createIncludeFilter(x.name, x.value.value)
+            : null,
+        ),
+    ).filter(Boolean)
+    return selectFields
   }
 }
+
+const FormContext = createStoreContext(FormStore)
+export const useForm = FormContext.useCreateStore
+export const useFormContext = FormContext.useStore
 
 export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(function Form(
   {
     children,
-    use,
+    useForm: parentUseForm,
     onSubmit,
     errors,
     fields,
@@ -125,26 +146,13 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   },
   ref,
 ) {
-  const [state, dispatch] = useReducer(fieldsReducer, { values: fields, errors: errors || null })
-  const getState = useGet(state)
+  const formStore = parentUseForm ? useStore(parentUseForm) : useForm({ fields, errors })
 
   if (fields && children) {
     throw new Error(
       `Can't pass both fields and children, Form accepts one or the other. See docs: `,
     )
   }
-
-  useEffect(() => {
-    if (!!errors) {
-      dispatch({ type: 'setErrors', value: errors })
-    }
-  }, [errors])
-
-  useEffect(() => {
-    if (typeof fields !== 'undefined') {
-      dispatch({ type: 'setFields', value: fields })
-    }
-  }, [fields])
 
   let elements = children
 
@@ -154,13 +162,12 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 
   const onSubmitInner = useCallback(
     async e => {
-      const curState = getState()
       e.preventDefault()
       if (onSubmit) {
         // first do any field validation
         let fieldErrors = {}
-        for (const key in curState.values) {
-          const field = curState.values[key]
+        for (const key in formStore.values) {
+          const field = formStore.values[key]
           if (field.required && !field.value) {
             fieldErrors[name] = 'is required.'
             continue
@@ -174,22 +181,20 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
           }
         }
         if (Object.keys(fieldErrors).length) {
-          dispatch({ type: 'setErrors', value: fieldErrors })
+          formStore.setErrors(fieldErrors)
           return
         }
 
         // then submit and check validation
-        let nextErrors = onSubmit(e, curState.values)
+        let nextErrors = onSubmit(e, formStore.values)
         if (nextErrors instanceof Promise) {
           nextErrors = await nextErrors
         }
-        dispatch({ type: 'setErrors', value: nextErrors })
+        formStore.setErrors(nextErrors)
       }
     },
-    [getState, onSubmit],
+    [onSubmit],
   )
-
-  const contextValue = use ? use.context : { dispatch, ...state }
 
   return (
     <form
@@ -198,15 +203,15 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
       onSubmit={onSubmitInner}
       {...{ action, method, target, name }}
     >
-      <MergeContext Context={FormContext} value={contextValue}>
+      <FormContext.SimpleProvider value={formStore}>
         <Section background="transparent" flex={1} {...sectionProps}>
-          {state.globalError && (
+          {formStore.globalError && (
             <>
-              <Message alt="error">{state.globalError}</Message>
+              <Message alt="error">{formStore.globalError}</Message>
               <Space />
             </>
           )}
-          {state.errors && (
+          {formStore.errors && (
             <>
               <Message alt="warn">Form has errors, please check.</Message>
               <Space />
@@ -226,7 +231,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
             </>
           )}
         </Section>
-      </MergeContext>
+      </FormContext.SimpleProvider>
     </form>
   )
 })
@@ -247,16 +252,10 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
   })
 }
 
-function getFormValue(context: FormContext, name: string) {
-  if (context.values[name]) {
-    return context.values[name].value
-  }
-}
-
 export function useFormError(name: string) {
-  const context = useContext(FormContext)
-  if (!context) return null
-  return context.errors && context.errors[name]
+  const formStore = useFormContext()
+  if (!formStore) return null
+  return formStore.errors && formStore.errors[name]
 }
 
 function createIncludeFilter(label: string, value: any): TableFilterIncludeExclude {
@@ -264,46 +263,5 @@ function createIncludeFilter(label: string, value: any): TableFilterIncludeExclu
     value,
     type: 'include',
     key: label,
-  }
-}
-
-function getFormFilters(context: FormContext, names: string[]): TableFilter[] {
-  const fields = Object.keys(context.values)
-    .filter(x => names.some(y => y === x))
-    .map(key => context.values[key])
-  const selectFields = flatten(
-    fields
-      .filter(x => x.type === 'select')
-      // can have multiple values
-      .map(x =>
-        Array.isArray(x.value)
-          ? x.value.map(y => createIncludeFilter(x.name, y.value))
-          : x.value
-          ? createIncludeFilter(x.name, x.value.value)
-          : null,
-      ),
-  ).filter(Boolean)
-  return selectFields
-}
-
-export function useFormFilters(names: string[]): TableFilter[] {
-  const context = useContext(FormContext)
-  if (!context) return null
-  return getFormFilters(context, names)
-}
-
-export type UseForm = {
-  context: FormContext
-  getValue: (name: string) => any
-  getFilters: (names: string[]) => TableFilter[]
-}
-
-export function useForm(): UseForm {
-  const [state, dispatch] = useReducer(fieldsReducer, { values: {}, errors: null })
-  const context = { ...state, dispatch }
-  return {
-    context,
-    getValue: a => getFormValue(context, a),
-    getFilters: b => getFormFilters(context, b),
   }
 }

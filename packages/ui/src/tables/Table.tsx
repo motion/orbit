@@ -63,13 +63,13 @@ export function Table(tableProps: TableProps) {
     ...tableProps,
   }
   const isVisible = useVisibility()
-  const { height, ref } = useNodeSize({ throttle: 200, disable: !isVisible })
+  const { height, ref } = useNodeSize({ throttle: 150, disable: !isVisible })
   const rows = useMemo(() => (props.rows ? props.rows.map(normalizeRow) : null), [props.rows])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
     [props.columns, rows],
   )
-  const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 200 })
+  const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 150 })
 
   const onSelect = useCallback(
     (selectedRows, indices) => {

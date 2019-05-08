@@ -118,6 +118,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   let titleEl: React.ReactNode = titleElement || null
 
   if (!titleElement && hasTitle) {
+    const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
+
     titleEl = (
       <Scale size={titleScale}>
         <TitleRow
@@ -134,6 +136,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           size={selectDefined(titleSize, size)}
           titleProps={titleProps}
           useCollapse={collapse}
+          {...adjustPadProps}
         />
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>

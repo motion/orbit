@@ -203,7 +203,7 @@ const light = {
     colorHighlightActive: '#fff',
     buttonBackground: lightButtonBg,
     buttonBackgroundActive: linearGradient('#eee', '#e9e9e9'),
-    buttonBackgroundFocus: lightButtonBg,
+    // buttonBackgroundFocus: lightButtonBg,
     buttonBackgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
     buttonGlintColorBottom: [0, 0, 0, 0.08],
     borderColor: [230, 230, 230],

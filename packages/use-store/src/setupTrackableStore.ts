@@ -1,7 +1,7 @@
 import { useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
-import { Lambda, observe, Reaction, transaction } from 'mobx'
+import { Lambda, observable, observe, reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 
 import { debugEmit } from './debugUseStore'
@@ -15,7 +15,10 @@ type TrackableStoreOptions = {
   shouldUpdate?: boolean
 }
 
-const DedupedWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
+const ProxyWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
+if (typeof window !== 'undefined') {
+  window['ProxyWorms'] = ProxyWorms
+}
 
 type StoreLike = Function & {
   dispose: Function
@@ -39,6 +42,7 @@ export function setupTrackableStore(
   let paused = true
   let reactiveKeys = new Set<string>()
   let deepKeys: string[] = []
+  const updateDeepKey = observable.box(0)
 
   const update = () => {
     if (paused) return
@@ -59,19 +63,18 @@ export function setupTrackableStore(
   const observers: Lambda[] = []
 
   // this lets us handle deep objects
-  const reaction = new Reaction(`track(${name})`, () => {
-    reaction.track(() => {
-      if (paused) return
-      if (!deepKeys.length) return
-      transaction(() => {
-        deepKeys.forEach(key => {
-          get(store, key)
-        })
-      })
-      if (debug()) console.log('update', name, storeName, deepKeys, '[deepKeys]')
+  const deepKeysObserver = reaction(
+    () => {
+      updateDeepKey.get()
+      if (!deepKeys.length || paused) return 0
+      for (const key of deepKeys) get(store, key)
+      return Math.random()
+    },
+    () => {
+      if (!deepKeys.length || paused) return
       queueUpdate(update)
-    })
-  })
+    },
+  )
 
   // mobx doesn't like it if we observe a non-decorated store
   // which can happen if a store is only getters
@@ -104,10 +107,10 @@ export function setupTrackableStore(
 
   function getOrCreateProxyWorm(): ProxyWorm<StoreLike> {
     // dedupe stores so we properly track/untrack as we go down to children
-    let config = DedupedWorms.get(unwrapped)
+    let config = ProxyWorms.get(unwrapped)
     if (!config) {
       config = mobxProxyWorm(store)
-      DedupedWorms.set(store, config)
+      ProxyWorms.set(store, config)
     }
     return config
   }
@@ -131,11 +134,11 @@ export function setupTrackableStore(
       const nextDeepKeys = [...reactiveKeys].filter(x => x.indexOf('.') > 0)
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
-        reaction.schedule()
-        if (debug()) console.log('schedule reaction')
+        if (debug()) console.log('schedule new reaction now...')
+        updateDeepKey.set(Math.random())
       }
       if (debug()) {
-        console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
+        console.log('untrack()', name, storeName, reactiveKeys)
       }
     },
     dispose() {
@@ -143,7 +146,7 @@ export function setupTrackableStore(
       disposed = true
       if (done) done()
       removeUpdate(update)
-      reaction.dispose()
+      deepKeysObserver()
       for (const off of observers) {
         off()
       }

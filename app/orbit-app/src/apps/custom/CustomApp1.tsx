@@ -31,10 +31,8 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
-  console.log('ok', form.getValue('search'), form.getFilters(['active', 'type']))
-
   return (
-    <Form use={form}>
+    <Form useForm={form}>
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">
@@ -93,7 +91,7 @@ function PersonInfo(props: { row: any }) {
           <Fieldsets rows={[props.row]} />
         </Section>
       </Pane>
-      <Pane pad>
+      <Pane pad resizable>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
             <Table
@@ -106,7 +104,7 @@ function PersonInfo(props: { row: any }) {
           )}
         </Fetch>
       </Pane>
-      <Pane pad>
+      <Pane pad resizable>
         {!!album && (
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
             {photos => (

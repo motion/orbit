@@ -21,13 +21,9 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
     useCreateStore(props?: InferProps<Instance>) {
       return useStore(constructor, props as any)
     },
-    useStore(props?: InferProps<Instance>, options?: UseStoreOptions): Instance {
+    useStore(props?: InferProps<Instance>, options?: UseStoreOptions): Instance | null {
       const value = useContext(Context)
       const store = useStore(value, props as any, options)
-      if (!store) {
-        console.error('More Information', props, constructor)
-        throw new Error(`No store provided, use createStoreContext().Provider to provide.`)
-      }
       return store
     },
   }

@@ -25,9 +25,7 @@ import {
   Section,
   Space,
   SubTitle,
-  Title,
   TitleRow,
-  View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -56,21 +54,17 @@ function PeopleAppIndex() {
       groupByLetter
       groupMinimum={12}
       placeholder={
-        <View flex={1} padding={20}>
-          <Title>Directory Empty</Title>
+        <Section pad space flex={1} title="Directory empty">
           <Paragraph>
             To see your contacts, add an app that syncs people from your{' '}
-            <LocationLink url="apps">workspace settings</LocationLink>.
+            <LocationLink url="/apps/apps">workspace settings</LocationLink>.
           </Paragraph>
-
-          <View alignItems="center" justifyContent="center" flex={1}>
-            <SubTitle>No items.</SubTitle>
-            <Space />
-            <Button {...useLocationLink('/app/search')} size={1.2}>
+          <Center>
+            <Button {...useLocationLink('/')} size={1.2}>
               Search all
             </Button>
-          </View>
-        </View>
+          </Center>
+        </Section>
       }
     />
   )

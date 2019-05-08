@@ -459,9 +459,7 @@ function ManagedTableNormalized(props: ManagedTableProps) {
   return <ManagedTableInner {...props} rows={props.rows.map(normalizeRow)} />
 }
 
-export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {
-  maxWait: 100,
-})
+export const ManagedTable = debounceRender(ManagedTableNormalized, 100)
 
 // this will:
 //    1. if no flex provided, assume that strings should flex double anything else

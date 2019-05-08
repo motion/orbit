@@ -14,6 +14,7 @@ function configure() {
     StoreContext,
     getApps: require('./apps/orbitApps').getApps,
     handleLink: path => {
+      console.log('link', path)
       page.show(path)
     },
   })

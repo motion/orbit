@@ -1,5 +1,5 @@
 import { gloss, ThemeFn } from '@o/gloss'
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { isWebkit } from '../constants'
 import { useThrottleFn } from '../hooks/useThrottleFn'
@@ -7,7 +7,7 @@ import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
 import { getElevation } from '../View/elevate'
 import { useVisibility } from '../Visibility'
-import { FormContext } from './Form'
+import { useFormContext } from './Form'
 
 export type InputType =
   | 'text'
@@ -37,24 +37,21 @@ export const Input = React.forwardRef(function Input(
   { onEnter, type = 'text', ...props }: InputProps,
   ref,
 ) {
-  const context = useContext(FormContext)
+  const formStore = useFormContext()
 
   // update form context every so often, avoid too many re-renders
   const updateFormContext = useThrottleFn(
     (value: string) => {
-      if (context) {
-        context.dispatch({
-          type: 'changeField',
-          value: {
-            name: props.name,
-            value,
-            type,
-          },
+      if (formStore) {
+        formStore.changeField({
+          name: props.name,
+          value,
+          type,
         })
       }
     },
     { amount: 200 },
-    [context, type, props.name],
+    [formStore, type, props.name],
   )
 
   return (
@@ -83,10 +80,10 @@ export const Input = React.forwardRef(function Input(
             props.onChange(e)
           }
           return () => {
-            context.dispatch({ type: 'removeField', value: props.name })
+            formStore.removeField(props.name)
           }
         },
-        [props.name, props.onChange, context],
+        [props.name, props.onChange, formStore],
       )}
     />
   )

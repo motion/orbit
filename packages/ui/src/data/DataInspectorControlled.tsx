@@ -98,10 +98,10 @@ const { clipboard } = Electron
 type ElectronMenuItemOptions = any
 
 const BaseContainer = gloss({
-  lineHeight: '1.15rem',
   paddingLeft: 10,
   userSelect: 'text',
   fontFamily: ` 'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
+  lineHeight: 14,
   fontSize: 13,
 }).theme((props, theme) => ({
   color: props.color || theme.color,

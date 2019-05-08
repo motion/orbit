@@ -2,7 +2,7 @@ import memoize from 'memoize-weak'
 import { useCurrentRoute } from 'react-navi'
 
 import { Navigation, routeTable } from '../../Navigation'
-import { HeaderContext } from '../../views/Header'
+import { HeaderContext } from '../../views/HeaderContext'
 
 export const LinkState = {
   didAnimateOut: true,

@@ -12,10 +12,6 @@ const extraArgs = argsIndex >= 0 ? process.argv.slice(argsIndex + 1) : []
 const cmd = `${root}/node_modules/.bin/webpack-dev-server`
 let args = ['--config', configPath, ...extraArgs]
 
-if (process.env.NODE_ENV !== 'production') {
-  args.push('--hot')
-}
-
 console.log(`Running ${cmd} ${args.join(' ')}`)
 
 const proc = execa(cmd, args, {

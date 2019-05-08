@@ -4,13 +4,13 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { attachTheme } from '@o/gloss'
 import { on } from '@o/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
+
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
 import { FilterIncludeExclude, TableFilter } from './types'
+
 
 type State = {
   filters: TableFilter[]
@@ -61,7 +61,6 @@ export const SearchableContext = React.createContext({
   plugin: null,
 })
 
-@attachTheme
 export class Searchable extends React.PureComponent<Props, State> {
   static defaultProps = {
     placeholder: 'Search...',

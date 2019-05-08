@@ -16,7 +16,7 @@ import {
 } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { mount, route } from 'navi'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 
 import { Header } from '../views/Header'
 import { Paragraph } from '../views/Paragraph'

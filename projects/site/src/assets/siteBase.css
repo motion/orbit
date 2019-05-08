@@ -38,7 +38,8 @@ ol {
   -moz-osx-font-smoothing: grayscale;
 }
 
-script {
+script,
+body script {
   display: none;
 }
 

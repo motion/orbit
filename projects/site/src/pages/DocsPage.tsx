@@ -1,19 +1,4 @@
-import {
-  Absolute,
-  BorderRight,
-  Button,
-  Col,
-  gloss,
-  List,
-  ListItem,
-  ListShortcuts,
-  Popover,
-  Portal,
-  RoundButton,
-  Row,
-  Sidebar,
-  SurfacePassProps,
-} from '@o/ui'
+import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar } from '@o/ui'
 import { createStoreContext, useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -27,69 +12,17 @@ import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { Header } from '../views/Header'
-import { Key } from '../views/Key'
-import { ListSubTitle } from '../views/ListSubTitle'
-import { SearchInput } from '../views/SearchInput'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
 import { docsItems, docsViews } from './docsItems'
 import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
+import { DocsPageHeader } from './DocsPageHeader'
+import { docsNavigate, loadDocsPage, navTm, preloadItem } from './docsPageHelpers'
 import { linkProps } from './HomePage/linkProps'
-import { useScreenVal } from './HomePage/SpacedPageContent'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
-
-const emptyPromise = () => Promise.resolve({ default: null })
-
-const loadDocsPage = async view => {
-  return await Promise.all([
-    view.page().then(x => x.default),
-    (view.source || emptyPromise)().then(x => x.default),
-    (view.examples || emptyPromise)(),
-    (view.examplesSource || emptyPromise)().then(x => x.default),
-    (view.types || emptyPromise)().then(x => x.default),
-  ])
-}
-
-let last = Date.now()
-let navTm = null
-const docsNavigate = id => {
-  clearTimeout(navTm)
-  const isRecent = Date.now() - last < 100
-  navTm = setTimeout(
-    () => {
-      const next = `/docs/${id}`
-      if (window.location.pathname === next) {
-        return
-      }
-      Navigation.navigate(next, { replace: true })
-    },
-    isRecent ? 150 : 50,
-  )
-}
-
-let tms = {}
-
-const loadDocPage = (id: string) => {
-  tms[id] = setTimeout(() => {
-    if (docsViews[id]) {
-      loadDocsPage(docsViews[id])
-    }
-  }, 50)
-}
-
-const preloadItem = item => {
-  return {
-    onMouseEnter() {
-      loadDocPage(item.id)
-    },
-    onMouseLeave() {
-      clearTimeout(tms[item.id])
-    },
-  }
-}
 
 const itemProps = {
   iconProps: {
@@ -119,7 +52,7 @@ class DocsStore {
   toggleSection = val => this.setSection(this.section === val ? 'all' : val)
 }
 
-const DocsStoreContext = createStoreContext(DocsStore)
+export const DocsStoreContext = createStoreContext(DocsStore)
 
 const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
@@ -145,7 +78,7 @@ const DocsList = memo(() => {
   )
 })
 
-export const DocsPage = memo((props: { children?: any }) => {
+const DocsPage = memo((props: { children?: any }) => {
   const Fade = useFadePage({
     threshold: 0,
   })
@@ -276,7 +209,7 @@ export const DocsPage = memo((props: { children?: any }) => {
   )
 })
 
-const DocsPageSidebar = memo(({ children }) => {
+const DocsPageSidebar = memo(({ children }: any) => {
   const forceUpdate = useForceUpdate()
 
   useEffect(() => {
@@ -299,116 +232,7 @@ const DocsPageSidebar = memo(({ children }) => {
   )
 })
 
-const DocsPageHeader = memo(
-  ({ isSmall, inputRef, setTheme, theme, setShowSidebar, siteStore, showSidebar }: any) => {
-    const docsStore = DocsStoreContext.useStore()
-    return (
-      <Portal prepend style={{ position: 'sticky', top: 10, zIndex: 10000000 }}>
-        <ListShortcuts>
-          <FadeChild style={{ flex: 1 }}>
-            <Row
-              position="relative"
-              margin={[0, 'auto', 0, 'auto']}
-              pointerEvents="auto"
-              pad={['sm', 0]}
-              width={useScreenVal('100%', '90%', '90%')}
-              maxWidth={980}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <SearchInput
-                ref={inputRef}
-                onChange={e => docsStore.setSearch(e.target.value)}
-                maxWidth="calc(55% - 20px)"
-                flex={1}
-                size="xl"
-                placeholder={isSmall ? 'Search...' : 'Search the docs...'}
-                after={!isSmall && <Key tooltip="Shortcut: t">t</Key>}
-              />
-
-              <Absolute
-                top={0}
-                width="18%"
-                left={0}
-                bottom={0}
-                alignItems="flex-end"
-                justifyContent="center"
-              >
-                <Popover
-                  background
-                  width={300}
-                  openOnClick
-                  closeOnClickAway
-                  elevation={100}
-                  zIndex={1000000000000000}
-                  target={<RoundButton icon="filter">{isSmall ? '' : 'Filter'}</RoundButton>}
-                >
-                  <>
-                    <ListItem selectable={false}>
-                      <ListSubTitle marginTop={6}>Sections</ListSubTitle>
-                    </ListItem>
-                    <ListItem
-                      index={2}
-                      title="Docs"
-                      alt={docsStore.section === 'docs' ? 'selected' : null}
-                      onClick={() => docsStore.toggleSection('docs')}
-                    />
-                    <ListItem
-                      index={2}
-                      title="APIs"
-                      alt={docsStore.section === 'apis' ? 'selected' : null}
-                      onClick={() => docsStore.toggleSection('apis')}
-                    />
-                    <ListItem
-                      index={2}
-                      title="Kit"
-                      alt={docsStore.section === 'kit' ? 'selected' : null}
-                      onClick={() => docsStore.toggleSection('kit')}
-                    />
-                  </>
-                </Popover>
-              </Absolute>
-
-              <Absolute
-                width="18%"
-                top={0}
-                right={0}
-                bottom={0}
-                alignItems="center"
-                justifyContent="flex-start"
-                flexFlow="row"
-              >
-                <SurfacePassProps size={1} iconSize={12}>
-                  <Row group>
-                    <RoundButton
-                      icon="moon"
-                      tooltip="Toggle dark mode"
-                      onClick={() => setTheme(theme === 'home' ? 'light' : 'home')}
-                    />
-                    <RoundButton
-                      icon="code"
-                      iconSize={16}
-                      tooltip="Toggle all code collapsed"
-                      onClick={siteStore.toggleCodeCollapsed}
-                    />
-                    {isSmall && (
-                      <RoundButton
-                        icon={showSidebar ? 'arrowleft' : 'arrowright'}
-                        tooltip="Toggle menu"
-                        onClick={() => setShowSidebar(!showSidebar)}
-                      />
-                    )}
-                  </Row>
-                </SurfacePassProps>
-              </Absolute>
-            </Row>
-          </FadeChild>
-        </ListShortcuts>
-      </Portal>
-    )
-  },
-)
-
+// @ts-ignore
 DocsPage.theme = 'home'
 
 const FixedLayout = gloss({
@@ -426,7 +250,7 @@ const FixedLayout = gloss({
 })
 
 export default compose(
-  withView(async req => {
+  withView(async () => {
     if (window.location.pathname.indexOf('/isolate') >= 0) {
       return (
         <DocsChromeSimple>
@@ -503,7 +327,7 @@ export default compose(
   }),
 )
 
-const DocsChromeSimple = ({ children }) => {
+function DocsChromeSimple({ children }) {
   return (
     <>
       <Header slim noBorder />

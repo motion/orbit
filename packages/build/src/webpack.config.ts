@@ -1,11 +1,9 @@
 import * as LernaProject from '@lerna/project'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
-import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
@@ -22,6 +20,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
+// const { PrepackPlugin } = require('prepack-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -45,13 +45,27 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
-if (getFlag('--prod')) {
+const flags = {
+  prod: getFlag('--prod'),
+  disableHMR: getFlag('--disable-hmr'),
+  entry: getFlag('--entry'),
+  target: getFlag('--target'),
+  devtool: getFlag('--devtool'),
+}
+
+if (flags.prod) {
   process.env.NODE_ENV = 'production'
 }
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
+const entry = process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts'
+
+//   eval-source-map (causes errors to not show stack trace in react development...)
+//   cheap-source-map (no line numbers...)
+//   cheap-module-eval-source-map (seems alright in both...)
+//   cheap-module-source-map (works well in electron, no line numbers in browser...)
+const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-module-eval-source-map'
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
@@ -64,7 +78,7 @@ const buildNodeModules = [
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
 
-const target = getFlag('--target') || 'electron-renderer'
+const target = flags.target || 'electron-renderer'
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
@@ -76,7 +90,12 @@ const defines = {
 
 console.log(
   'webpack info',
-  JSON.stringify({ entry, outputPath, target, isProd, tsConfig, defines }, null, 2),
+  (process.env.NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
+  JSON.stringify(
+    { buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
+    null,
+    2,
+  ),
 )
 
 const optimization = {
@@ -141,7 +160,6 @@ const alias = {
 
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
-  babelrc: false,
   // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
   // im presuming because it cached the output and gloss-displaynames needs a redo somehow
   cacheDirectory: false,
@@ -195,17 +213,12 @@ async function makeConfig() {
         colors: true,
       },
       historyApiFallback: true,
-      hot: !isProd,
+      hot: !flags.disableHMR && !isProd,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    // for a faster dev mode you can do:
-    //   eval-source-map (causes errors to not show stack trace in react development...)
-    //   cheap-source-map (no line numbers...)
-    //   cheap-module-eval-source-map (seems alright in both...)
-    //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-    devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool,
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields: isProd
@@ -252,7 +265,7 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
-            !isProd && 'react-hot-loader/webpack',
+            !isProd && !flags.disableHMR && 'react-hot-loader/webpack',
           ].filter(Boolean),
         },
         {
@@ -297,12 +310,15 @@ async function makeConfig() {
         {
           test: /\.mdx?$/,
           use: [
-            'babel-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                plugins: [],
+                presets: ['@babel/env', '@babel/preset-react'],
+              },
+            },
             {
               loader: '@mdx-js/loader',
-              // options: {
-              //   rehypePlugins: [RehypePrism],
-              // },
             },
           ],
         },
@@ -387,16 +403,17 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      !process.env['ANALYZE_BUNDLE'] &&
-        isProd &&
-        new PrepackPlugin({
-          reactEnabled: true,
-          compatibility: 'node-react',
-          // avoid worker modules
-          test: /^(?!.*worker\.[tj]sx?)$/i,
-        }),
+      // !process.env['ANALYZE_BUNDLE'] &&
+      //   isProd &&
+      //   new PrepackPlugin({
+      //     reactEnabled: true,
+      //     compatibility: 'node-react',
+      //     // avoid worker modules
+      //     test: /^(?!.*worker\.[tj]sx?)$/i,
+      //   }),
     ].filter(Boolean),
   }
+
   return config
 }
 

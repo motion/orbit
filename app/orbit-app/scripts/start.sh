@@ -17,9 +17,6 @@ npx kill-port 3999
 export PROCESS_NAME="app"
 export STACK_FILTER="orbit-app"
 
-npx mcro-build --entry ./src/main --port 3999 $FLAGS &
-overmind-devtools &
-
-wait
+npx mcro-build --entry ./src/main --port 3999 $FLAGS
 
 echo "bye orbit-app"

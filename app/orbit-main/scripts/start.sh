@@ -9,6 +9,11 @@ FLAGS=$@
 # FLAGS
 #
 
+if [[ "$FLAGS" =~ "--no-overmind" ]]; then
+else
+  overmind-devtools &
+fi
+
 # disable menu by default
 if [[ "$FLAGS" =~ "--yes-menu" ]]; then
   echo "ENABLE MENU"

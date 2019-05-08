@@ -35,7 +35,7 @@ export const useShare = <A extends any[]>(location?: string): [A, (next: A) => v
 export const useSetShare = (location?: string): ((next: any[]) => void) => {
   const store = useShareStore(null, { react: false })
   const update = useCallback(next => store.setSelected(location || 'main', next), [store, location])
-  return [value, update]
+  return update
 }
 
 export const useCreateShareStore = context.useCreateStore

@@ -1,13 +1,3 @@
 {
-  "presets": [
-    [
-      "@o/babel-preset-motion",
-      {
-        "env": {
-          "modules": false
-        },
-        "disable": []
-      }
-    ]
-  ]
+  "presets": ["@o/babel-preset-motion"]
 }

@@ -52,6 +52,8 @@
     "sticky-sidebar": "3.3.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
     "@babel/core": "^7.4.3",
     "@now/node": "0.6.0",
     "@now/static-build": "0.5.2"

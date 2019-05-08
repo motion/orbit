@@ -88,6 +88,8 @@
     "react-shadow": "16.3.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
     "@babel/core": "7.2.0",
     "@o/babel-preset-motion": "^2.4.1",
     "@o/build": "^2.4.1",

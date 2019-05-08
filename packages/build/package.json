@@ -22,6 +22,7 @@
 		"tsconfig-paths-webpack-plugin": "3.2.0"
 	},
 	"dependencies": {
+		"@o/babel-preset-motion": "*",
 		"ignore-not-found-export-webpack-plugin": "1.0.0",
 		"@babel/core": "7.4.4",
 		"@hot-loader/react-dom": "16.8.6",

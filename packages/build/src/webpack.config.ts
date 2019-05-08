@@ -90,9 +90,12 @@ const defines = {
 
 console.log(
   'webpack info',
-  'NO_OPTIMIZE = ',
-  process.env.NO_OPTIMIZE,
-  JSON.stringify({ entry, outputPath, target, isProd, tsConfig, defines }, null, 2),
+  (process.env.NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
+  JSON.stringify(
+    { buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
+    null,
+    2,
+  ),
 )
 
 const optimization = {
@@ -157,7 +160,6 @@ const alias = {
 
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
-  babelrc: false,
   // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
   // im presuming because it cached the output and gloss-displaynames needs a redo somehow
   cacheDirectory: false,
@@ -308,7 +310,13 @@ async function makeConfig() {
         {
           test: /\.mdx?$/,
           use: [
-            'babel-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                plugins: [],
+                presets: ['@babel/env', '@babel/preset-react'],
+              },
+            },
             {
               loader: '@mdx-js/loader',
             },
@@ -405,6 +413,7 @@ async function makeConfig() {
       //   }),
     ].filter(Boolean),
   }
+
   return config
 }
 

@@ -24,14 +24,15 @@ export function GraphExplorer() {
     (shadowRoot.current && shadowRoot.current.querySelector('.query-editor').offsetTop) || 0
   const explorerTop =
     codeMirrorTop + ((parentRoot.current && parentRoot.current.getBoundingClientRect().y) || 0)
+  const fetcher = spaceFetcher.bind(null, space.id)
 
   useEffect(() => {
-    fetcher(space.id, {
+    fetcher({
       query: getIntrospectionQuery(),
     }).then(result => {
       setState({ schema: buildClientSchema(result.data), query })
     })
-  }, [space])
+  }, [])
 
   return (
     <>
@@ -249,7 +250,7 @@ export function GraphExplorer() {
   )
 }
 
-function fetcher(spaceId: number, params: Object) {
+function spaceFetcher(spaceId: number, params: Object) {
   return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql/${spaceId}`, {
     method: 'POST',
     headers: {

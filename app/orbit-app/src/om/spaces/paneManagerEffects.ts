@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { AppBit, PaneManagerPane, save } from '@o/kit'
+import { AppBit, getAppDefinition, PaneManagerPane, save } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import { keyBy, sortBy } from 'lodash'
@@ -22,10 +22,10 @@ export const updatePaneSort: Action = async om => {
 export const updatePaneManagerPanes: Action = om => {
   const { panes, paneIndex } = getPanes(om.state.apps.activeApps)
   if (!isEqual(panes, paneManagerStore.panes)) {
+    console.log('setting panes', panes)
     paneManagerStore.setPanes(panes)
   }
   paneManagerStore.setPaneIndex(paneIndex)
-  om.actions.router.start()
 }
 
 export const loadingPane = {
@@ -63,7 +63,8 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
     }
     return [pane, settingsPane]
   } else {
-    const appPanes = apps.map(appToPane)
+    const appPanes = apps.filter(x => !!getAppDefinition(x.identifier).app).map(appToPane)
+    console.log('appPanes', apps, appPanes)
     return [...defaultPanes, ...appPanes]
   }
 }

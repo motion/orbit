@@ -20,8 +20,8 @@ const setApps: Action<AppBit[]> = (om, apps) => {
   om.effects.spaces.updatePaneManagerPanes(om)
 }
 
-const setActiveSpace: Action = om => {
-  om.state.apps.activeSpace = { ...om.state.spaces.activeSpace }
+const setActiveSpace: Action<Space> = (om, space) => {
+  om.state.apps.activeSpace = space
 }
 
 export const actions = {
@@ -30,7 +30,7 @@ export const actions = {
 }
 
 export const effects = {
-  observeApps(om) {
+  start(om) {
     observeMany(AppModel, {
       args: {
         select: appSelectAllButDataAndTimestamps,

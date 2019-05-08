@@ -8,10 +8,11 @@ export const onInitialize: OnInitialize = om => {
   effects.router.routeListen(urls.app, actions, actions.router.showAppPage)
   effects.router.routeListen(urls.appSub, actions, actions.router.showAppPage)
   effects.router.routeListenNotFound()
+  effects.router.start()
 
-  effects.spaces.observeSpaces(om)
+  effects.spaces.start(om)
 
-  effects.apps.observeApps(om)
+  effects.apps.start(om)
 
-  effects.user.observeUser(om)
+  effects.user.start(om)
 }

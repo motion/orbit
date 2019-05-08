@@ -20,7 +20,7 @@ export const actions = {
 }
 
 export const effects = {
-  observeUser(om) {
+  start(om) {
     observeOne(UserModel, { args: {} }).subscribe(user => {
       om.actions.user.setUser(user)
     })

@@ -1,6 +1,6 @@
 import { save } from '@o/bridge'
 import { gloss, Row, RowProps } from '@o/gloss'
-import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActivePaneSort } from '@o/kit'
+import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
@@ -25,16 +25,18 @@ export const OrbitNav = memo(
     const { orbitStore, paneManagerStore } = useStores()
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
-    const activeAppsSorted = useActiveAppsSorted()
-    const { activePaneId } = paneManagerStore
-    const paneSort = useActivePaneSort()
+    const { panes, activePaneId } = paneManagerStore
+    // in case they get in a weird state, filter
+    const activeAppsSorted = useActiveAppsSorted().filter(x =>
+      panes.some(pane => pane.id === `${x.id}`),
+    )
     const handleSortEnd = useAppSortHandler()
 
     if (orbitStore.isEditing) {
       return null
     }
 
-    if (!activeAppsSorted.length || !paneSort) {
+    if (!activeAppsSorted.length || !activeAppsSorted.length) {
       return (
         <OrbitNavClip>
           <OrbitNavChrome />
@@ -45,14 +47,10 @@ export const OrbitNav = memo(
     const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
     const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 150 : 120
 
-    const items = [-1, ...paneSort]
+    const items = activeAppsSorted
       .map(
-        (paneId): TabProps => {
-          const app = activeAppsSorted.find(x => x.id === paneId)
-          if (!app) {
-            return null
-          }
-          const isActive = !isOnSetupApp && `${paneId}` === activePaneId
+        (app): TabProps => {
+          const isActive = !isOnSetupApp && `${app.id}` === activePaneId
           // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`

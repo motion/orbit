@@ -2,7 +2,6 @@ import { Action, Derive } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
-import { defaultPanes } from './spaces/paneManagerEffects'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -105,11 +104,6 @@ const back: Action = om => {
   }
 }
 
-const start: Action = om => {
-  paneManagerStore.setPaneIndex(defaultPanes.length - 1)
-  om.effects.router.start()
-}
-
 export const actions = {
   showPage,
   showAppPage,
@@ -118,7 +112,6 @@ export const actions = {
   toggleSetupAppPage,
   ignoreNextPush,
   back,
-  start,
 }
 
 // effects

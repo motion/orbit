@@ -4,7 +4,7 @@ import memoWeak from 'memoize-weak'
 import { useActiveApps } from './useActiveApps'
 import { useActivePaneSort } from './useActiveSpace'
 
-export const sortApps = memoWeak((apps: AppBit[], sort: number[]) => {
+export const sortApps: (apps: AppBit[], sort: number[]) => AppBit[] = memoWeak((apps, sort) => {
   return sort.map(id => apps.find(x => x.id === id)).filter(Boolean)
 })
 

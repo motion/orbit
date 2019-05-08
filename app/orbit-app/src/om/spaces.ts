@@ -2,6 +2,7 @@ import { observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
+import { deepClone } from '../helpers'
 import { updatePaneManagerPanes, updatePaneSort } from './spaces/paneManagerEffects'
 
 export type SpacesState = {
@@ -21,7 +22,9 @@ export const state: SpacesState = {
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
   om.state.spaces.spaces = spaces
-  om.actions.apps.setActiveSpace()
+  om.actions.apps.setActiveSpace(
+    deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser })),
+  )
   om.effects.spaces.updatePaneManagerPanes(om)
   om.effects.spaces.updatePaneSort(om)
 }
@@ -36,7 +39,7 @@ export const actions = {
 }
 
 export const effects = {
-  observeSpaces(om) {
+  start(om) {
     observeMany(SpaceModel, { args: {} }).subscribe(spaces => {
       om.actions.spaces.setSpaces(spaces)
     })

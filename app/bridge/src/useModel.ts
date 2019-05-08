@@ -143,10 +143,6 @@ function use<ModelType, Args>(
                 delete PromiseCache[key]
               }, 50)
               res()
-            } else {
-              debugger
-              valueRef.current = next
-              forceUpdate(Math.random())
             }
           })
         })

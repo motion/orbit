@@ -6,9 +6,8 @@ import { keyBy, sortBy } from 'lodash'
 
 import { paneManagerStore } from '../stores'
 
-export const updatePaneSort = async (apps: AppBit[]) => {
-  const space = om.state.spaces.activeSpace
-  if (!space) return
+export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
+  if (!space || !apps.length) return
   const paneSort = sortPanes(space, apps)
   if (!isEqual(paneSort, space.paneSort)) {
     await save(SpaceModel, {

@@ -23,11 +23,10 @@ export const state: SpacesState = {
 const setSpaces: Action<Space[]> = (om, spaces) => {
   if (!spaces) return
   om.state.spaces.spaces = spaces
-  om.actions.apps.setActiveSpace(
-    deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser })),
-  )
+  const activeSpace = deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser }))
+  om.actions.apps.setActiveSpace(activeSpace)
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
-  om.effects.spaces.updatePaneSort(om.state.apps.activeApps)
+  om.effects.spaces.updatePaneSort(activeSpace, om.state.apps.activeApps)
 }
 
 const setUser: Action<User> = (om, user) => {

@@ -22,6 +22,7 @@ export const state: AppsState = {
 const setApps: Action<AppBit[]> = (om, apps) => {
   om.state.apps.apps = apps
   om.effects.apps.updatePaneManagerPanes(apps)
+  om.effects.spaces.updatePaneSort(om.state.spaces.activeSpace, om.state.apps.activeApps)
 }
 
 const setActiveSpace: Action<Space> = (om, space) => {

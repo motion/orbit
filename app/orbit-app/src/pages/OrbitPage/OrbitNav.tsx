@@ -12,7 +12,7 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
-import { newAppStore } from '../../om/stores'
+import { newAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
@@ -22,7 +22,8 @@ const pinWidth = 52
 
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
-    const { orbitStore, paneManagerStore } = useStores()
+    const paneManagerStore = usePaneManagerStore()
+    const { orbitStore } = useStores()
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
     const { panes, activePaneId } = paneManagerStore

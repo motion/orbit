@@ -64,6 +64,7 @@ class FormStore {
   globalError: string = ''
   values: FormFieldsObj = shallow({})
   errors: FormErrors<any> = {}
+  mountKey = 0
 
   setErrors(value: FormErrors<any>) {
     this.globalError = null
@@ -82,9 +83,13 @@ class FormStore {
     this.values = value
   }
 
-  changeField({ name, value }: FormFieldType) {
+  changeField(next: FormFieldType) {
+    // mount
+    if (this.values[next.name] === undefined) {
+      this.mountKey++
+    }
     if (this.values) {
-      this.values[name] = value
+      this.values[next.name] = next
     }
   }
 
@@ -94,13 +99,14 @@ class FormStore {
 
   getValue(name: string) {
     if (!this.values[name]) {
-      return undefined
-      // this.values[name] = { value: null, name }
+      this.values[name] = { value: null, name }
     }
     return this.values[name].value
   }
 
   getFilters(names: string[]) {
+    // re-read on new mounts
+    this.mountKey
     const fields = Object.keys(this.values)
       .filter(x => names.some(y => y === x))
       .map(key => this.values[key])

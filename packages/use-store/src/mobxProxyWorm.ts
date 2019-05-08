@@ -60,7 +60,7 @@ export function mobxProxyWorm<A extends Function>(
     keys: new Map<any, Set<string>>(),
     add: (next: string) => {
       if (state.current !== -1) {
-        if (state.debug) console.log('add key', next)
+        // if (state.debug) console.log('add key', next)
         const curState = state.keys.get(state.current)
         if (curState) {
           curState.add(next)

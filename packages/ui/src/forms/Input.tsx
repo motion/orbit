@@ -1,5 +1,5 @@
 import { gloss, ThemeFn } from '@o/gloss'
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import { isWebkit } from '../constants'
 import { useThrottleFn } from '../hooks/useThrottleFn'

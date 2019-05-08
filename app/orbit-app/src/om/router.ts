@@ -1,4 +1,4 @@
-import { Action, Derive, run, Operator, mutate, pipe, debounce } from 'overmind'
+import { Action, Derive, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 

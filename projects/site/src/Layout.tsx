@@ -11,7 +11,8 @@ import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { BusyIndicator } from './views/BusyIndicator'
 import { useFadePage } from './views/FadeIn'
-import { Header, HeaderLink, LinksLeft, LinksRight } from './views/Header'
+import { Header } from './views/Header'
+import { HeaderLink, LinksLeft, LinksRight } from './views/HeaderLink'
 
 const transition = 'transform ease 300ms'
 

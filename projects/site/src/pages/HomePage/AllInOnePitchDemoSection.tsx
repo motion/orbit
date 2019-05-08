@@ -448,7 +448,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.3} zIndex={-1}>
         <FullScreen
-          opacity={0.3}
+          opacity={0.23}
           transform={{ y: '-10%', scale: 3 }}
           background="radial-gradient(circle closest-side, #4299A2 20%, #750750, transparent)"
         />
@@ -494,7 +494,7 @@ const CenterText = gloss(
   },
 )
 
-export const Flex = gloss(View, {
+const Flex = gloss(View, {
   position: 'relative',
   flex: 1,
 })

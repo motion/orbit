@@ -1,13 +1,10 @@
+import './assets/font-gteesti/stylesheet.css'
+import './assets/siteBase.css'
 import 'react-hot-loader'
 
 import { SiteRoot } from './SiteRoot'
 
-// require forces no tree shaking
-
 require('./configurations')
-require('./assets/font-gteesti/stylesheet.css')
-require('./assets/siteBase.css')
-
 const React = require('react')
 const ReactDOM = require('react-dom')
 

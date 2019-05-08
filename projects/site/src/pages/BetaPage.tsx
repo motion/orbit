@@ -5,8 +5,8 @@ import React from 'react'
 import { FadeChild, FadeParent } from '../views/FadeIn'
 import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
-import { EarlyAccessContent } from './HomePage/EarlyAccessBetaSection'
-import { Footer } from './HomePage/FooterSection'
+import { EarlyAccessContent } from './HomePage/EarlyAccessContent'
+import { Footer } from './HomePage/Footer'
 import { LineSep } from './HomePage/LineSep'
 
 export default mount({

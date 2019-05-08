@@ -17,13 +17,13 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
+      plug('@o/gloss-displaynames', opts.glossDisplayNameConfig || {}),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
         useESModules: true,
       }),
-      plug('@o/gloss-displaynames', opts.glossDisplayNameConfig || {}),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),
@@ -58,11 +58,13 @@ module.exports = function(_, givenOpts) {
       ].filter(Boolean),
   }
 
-  console.log(`
-Babel config
-  disabled: ${disable.join(' ')}
-  used:     ${names.join(' ')}
-`)
+  if (!isDev) {
+    console.log(`
+  Babel config
+    disabled: ${disable.join(' ')}
+    used:     ${names.join(' ')}
+  `)
+  }
 
   return config
 }

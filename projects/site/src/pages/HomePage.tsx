@@ -44,7 +44,12 @@ export function HomePage() {
   return (
     <ParallaxContext.PassProps value={parallax}>
       <LoadingPage />
-      <Header />
+      <Header
+        aby={() => {
+          // fix for bad optimization react-constant-elements
+          '123'
+        }}
+      />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
           disable={useIsTiny()}

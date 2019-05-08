@@ -3,7 +3,8 @@ import React from 'react'
 
 import { SectionContent } from '../../views/SectionContent'
 import { BlogTitle } from '../BlogTitle'
-import { AboveFooter, Footer } from '../HomePage/FooterSection'
+import { AboveFooter } from '../HomePage/AboveFooter'
+import { Footer } from '../HomePage/Footer'
 
 export function BlogLayout({ children, ...props }: ColProps) {
   return (

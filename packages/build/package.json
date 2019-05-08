@@ -23,7 +23,7 @@
 	},
 	"dependencies": {
 		"ignore-not-found-export-webpack-plugin": "1.0.0",
-		"@babel/core": "7.4.3",
+		"@babel/core": "7.4.4",
 		"@hot-loader/react-dom": "16.8.6",
 		"webpack-deep-scope-plugin": "1.6.0",
 		"html-critical-webpack-plugin": "2.1.0",

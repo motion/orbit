@@ -3,7 +3,7 @@ import React, { Fragment, isValidElement } from 'react'
 import { Sizes, Space } from './Space'
 
 export type SpaceGroupProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   space?: Sizes
   spaceAround?: boolean
   separator?: React.ReactNode

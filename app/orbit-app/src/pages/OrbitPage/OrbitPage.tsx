@@ -165,18 +165,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }
 
   const onOpen = useCallback(rows => {
-    console.log('open', rows)
     if (rows.length) {
       if (rows[0].extraData) {
         actions.router.showAppPage({ id: rows[0].extraData.id })
       }
     }
   }, [])
-
-  // want to isolate an app?
-  // console.log(contentArea)
-  // console.warn('debugging')
-  // contentArea = contentArea.filter(x => x.props.id === '6')
 
   return (
     <MainShortcutHandler handlers={handlers}>

@@ -48,15 +48,6 @@ export class PaneManagerStore {
     defaultValue: this.activePaneFast,
   })
 
-  get homePane() {
-    return this.panes.find(x => x.type === 'search')
-  }
-
-  get isOnHome() {
-    const searchPane = this.panes.find(x => x.type === 'search')
-    return searchPane && this.activePane.id === searchPane.id
-  }
-
   get activePaneId() {
     return (this.activePane && this.activePane.id) || ''
   }

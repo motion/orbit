@@ -73,6 +73,7 @@ const showPage: Action<HistoryItem> = (om, item) => {
 
 const showHomePage: Action = om => {
   showPage(om, getItem('home'))
+  om.effects.router.setPane(`${om.state.apps.apps.find(x => x.identifier === 'search').id}`)
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {

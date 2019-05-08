@@ -8,7 +8,22 @@ import {
   useAppState,
   useAppWithDefinition,
 } from '@o/kit'
-import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
+import {
+  Button,
+  Divider,
+  Form,
+  FormField,
+  List,
+  Section,
+  SubTitle,
+  Tab,
+  Table,
+  Tabs,
+  TextArea,
+  Title,
+  View,
+  useSetShare,
+} from '@o/ui'
 import { remove } from 'lodash'
 import React from 'react'
 
@@ -49,6 +64,7 @@ function DataExplorerIndex() {
 function DataExplorerMain({ subId }: AppProps) {
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
+  const setShare = useSetShare()
 
   if (subId === 'explorer-graph') {
     return <GraphExplorer />

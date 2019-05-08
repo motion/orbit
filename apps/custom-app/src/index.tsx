@@ -1,11 +1,175 @@
 import { App, AppCard, createApp } from '@o/kit'
 import Slack, { SlackConversation } from '@o/slack-app'
-import { GridLayout, Tab, Table, Tabs } from '@o/ui'
+import { DataInspector, GridLayout, Tab, Table, Tabs } from '@o/ui'
 import React, { useState } from 'react'
 
 function CustomApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
+
+  return (
+    <>
+      <DataInspector
+        data={{
+          data: {
+            slack: {
+              ChannelsListGet: {
+                channels: [
+                  {
+                    name: '10x',
+                  },
+                  {
+                    name: 'airbnb',
+                  },
+                  {
+                    name: 'announcements',
+                  },
+                  {
+                    name: 'app-split',
+                  },
+                  {
+                    name: 'ayasdi',
+                  },
+                  {
+                    name: 'beta',
+                  },
+                  {
+                    name: 'bookmarks',
+                  },
+                  {
+                    name: 'books',
+                  },
+                  {
+                    name: 'brand',
+                  },
+                  {
+                    name: 'branding',
+                  },
+                  {
+                    name: 'chat-test',
+                  },
+                  {
+                    name: 'companies',
+                  },
+                  {
+                    name: 'competition',
+                  },
+                  {
+                    name: 'coo',
+                  },
+                  {
+                    name: 'currently',
+                  },
+                  {
+                    name: 'datasets',
+                  },
+                  {
+                    name: 'demo-vidya',
+                  },
+                  {
+                    name: 'docs',
+                  },
+                  {
+                    name: 'errors',
+                  },
+                  {
+                    name: 'exploration',
+                  },
+                  {
+                    name: 'general',
+                  },
+                  {
+                    name: 'hires',
+                  },
+                  {
+                    name: 'ideas',
+                  },
+                  {
+                    name: 'integrations',
+                  },
+                  {
+                    name: 'knownbugs',
+                  },
+                  {
+                    name: 'libraries',
+                  },
+                  {
+                    name: 'littlebigdetails',
+                  },
+                  {
+                    name: 'meetwith',
+                  },
+                  {
+                    name: 'obiq-offboarding',
+                  },
+                  {
+                    name: 'onboardiq',
+                  },
+                  {
+                    name: 'plan',
+                  },
+                  {
+                    name: 'releases',
+                  },
+                  {
+                    name: 'science',
+                  },
+                  {
+                    name: 'scientists',
+                  },
+                  {
+                    name: 'search-peformance',
+                  },
+                  {
+                    name: 'secrets',
+                  },
+                  {
+                    name: 'showoff',
+                  },
+                  {
+                    name: 'sketchy-charges',
+                  },
+                  {
+                    name: 'status',
+                  },
+                  {
+                    name: 'steel-debugging',
+                  },
+                  {
+                    name: 'syncers-performance',
+                  },
+                  {
+                    name: 'tech',
+                  },
+                  {
+                    name: 'tester',
+                  },
+                  {
+                    name: 'travel',
+                  },
+                  {
+                    name: 'treats',
+                  },
+                  {
+                    name: 'ui-ux',
+                  },
+                  {
+                    name: 'users',
+                  },
+                  {
+                    name: 'watercooler',
+                  },
+                  {
+                    name: 'whenaiworks',
+                  },
+                ],
+              },
+            },
+          },
+        }}
+      />
+    </>
+  )
 
   return (
     <App>

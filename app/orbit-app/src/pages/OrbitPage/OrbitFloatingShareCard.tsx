@@ -1,4 +1,4 @@
-import { FloatingCard, List, usePosition, useShareable } from '@o/ui'
+import { FloatingCard, List, usePosition, useShare } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
 
@@ -17,8 +17,8 @@ export function OrbitFloatingShareCard({
   index: number
 }) {
   const { paneManagerStore } = useStores()
-  const currentSelection = useShareable()
-  const numItems = (currentSelection && currentSelection.length) || 0
+  const [selection] = useShare()
+  const numItems = (selection && selection.length) || 0
   const buttonRef = useRef(null)
   const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
   const [hovered, setHovered] = useState(false)
@@ -57,7 +57,7 @@ export function OrbitFloatingShareCard({
           <List
             selectable="multi"
             itemProps={{ small: true }}
-            items={currentSelection ? listItemNiceNormalize(currentSelection) : null}
+            items={selection ? listItemNiceNormalize(selection) : null}
           />
         </FloatingCard>
       )}

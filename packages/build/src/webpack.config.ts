@@ -20,7 +20,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
-const PrepackPlugin = require('prepack-webpack-plugin')
+// const { PrepackPlugin } = require('prepack-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
 const cwd = process.cwd()
@@ -395,14 +395,14 @@ async function makeConfig() {
 
       isProd && new DuplicatePackageCheckerPlugin(),
 
-      !process.env['ANALYZE_BUNDLE'] &&
-        isProd &&
-        new PrepackPlugin({
-          reactEnabled: true,
-          compatibility: 'node-react',
-          // avoid worker modules
-          test: /^(?!.*worker\.[tj]sx?)$/i,
-        }),
+      // !process.env['ANALYZE_BUNDLE'] &&
+      //   isProd &&
+      //   new PrepackPlugin({
+      //     reactEnabled: true,
+      //     compatibility: 'node-react',
+      //     // avoid worker modules
+      //     test: /^(?!.*worker\.[tj]sx?)$/i,
+      //   }),
     ].filter(Boolean),
   }
   return config

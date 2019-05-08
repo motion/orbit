@@ -1,4 +1,4 @@
-import { createStoreContext, deep, useStore } from '@o/use-store'
+import { createStoreContext, shallow, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -62,7 +62,7 @@ export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 class FormStore {
   props: FormStoreProps
   globalError: string = ''
-  values: FormFieldsObj = deep({})
+  values: FormFieldsObj = shallow({})
   errors: FormErrors<any> = {}
 
   setErrors(value: FormErrors<any>) {
@@ -93,6 +93,7 @@ class FormStore {
   }
 
   getValue = (name: string) => {
+    if (!this.values[name]) return undefined
     return this.values[name].value
   }
 

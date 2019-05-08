@@ -8,7 +8,7 @@ import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
 import { Omit } from '../types'
 import { View } from '../View/View'
-import { FormContext } from './Form'
+import { useFormContext } from './Form'
 
 const selectStyles = {
   placeholder: provided => ({
@@ -92,7 +92,7 @@ export type SelectProps =
 export function Select({ minWidth, ...props }: SelectProps) {
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
-  const context = useContext(FormContext)
+  const formStore = useFormContext()
 
   const onChange = useCallback(
     (items, action) => {
@@ -100,20 +100,17 @@ export function Select({ minWidth, ...props }: SelectProps) {
         props.onChange(items, action)
       }
       if (!props.name) return
-      if (!context) return
-      context.dispatch({
-        type: 'changeField',
-        value: {
-          name: props.name,
-          value: items,
-          type: 'select',
-        },
+      if (!formStore) return
+      formStore.changeField({
+        name: props.name,
+        value: items,
+        type: 'select',
       })
       return () => {
-        context.dispatch({ type: 'removeField', value: props.name })
+        formStore.removeField(props.name)
       }
     },
-    [props.name, props.onChange, context],
+    [props.name, props.onChange, formStore],
   )
 
   return (

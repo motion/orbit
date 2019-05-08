@@ -1,4 +1,4 @@
-import { Action, Derive } from 'overmind'
+import { Action, Derive, run, Operator, mutate, pipe, debounce } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -60,37 +60,46 @@ export const state: RouterState = {
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
 }
 
-// actions
-
-const showPage: Action<HistoryItem> = (om, item) => {
-  om.state.router.pageName = item.name
-  om.state.router.history = [...om.state.router.history, item]
-  if (!om.state.router.ignoreNextPush) {
-    om.effects.router.open(item.path)
-  }
-  om.state.router.ignoreNextPush = false
-}
+const showPage: Operator<HistoryItem> = pipe(
+  mutate((om, item) => {
+    om.state.router.pageName = item.name
+    om.state.router.history = [...om.state.router.history, item]
+  }),
+  run((om, item) => {
+    if (!om.state.router.ignoreNextPush) {
+      om.effects.router.open(item.path)
+    }
+  }),
+  mutate(om => {
+    om.state.router.ignoreNextPush = false
+  }),
+  debounce(250),
+  mutate(om => {
+    om.state.navVisible = false
+  }),
+)
 
 const showHomePage: Action = om => {
-  showPage(om, getItem('home'))
+  om.actions.router.showPage(getItem('home'))
   om.effects.router.setPane(`${om.state.apps.apps.find(x => x.identifier === 'search').id}`)
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
-  showPage(om, getItem('app', params))
+  om.actions.router.showPage(getItem('app', params))
   om.state.router.appId = params.id
   om.effects.router.setPane(params.id)
 }
 
 const showSetupAppPage: Action = om => {
-  showAppPage(om, { id: 'setupApp' })
+  om.actions.router.showAppPage({ id: 'setupApp' })
 }
 
 const toggleSetupAppPage: Action = om => {
   if (om.state.router.isOnSetupApp) {
-    showPage(om, om.state.router.lastPage)
+    console.log('TODO')
+    // om.actions.router.showAppPage(om.state.router.lastPage)
   } else {
-    showSetupAppPage(om)
+    om.actions.router.showSetupAppPage()
   }
 }
 
@@ -139,6 +148,7 @@ export const effects = {
   },
 
   open(url: string) {
+    console.log('show', url)
     page.show(url)
   },
 

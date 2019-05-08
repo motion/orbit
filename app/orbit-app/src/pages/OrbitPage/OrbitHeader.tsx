@@ -2,7 +2,17 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -62,7 +72,6 @@ export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { isTorn } = orbitStore
   const { activePane } = paneManagerStore
-  const { state } = useOm()
   const activePaneType = activePane.type
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
@@ -88,10 +97,7 @@ export const OrbitHeader = memo(() => {
 
           <HeaderContain isActive={false}>
             <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-              <OrbitNavPopover
-                open={state.router.isOnSetupApp ? true : undefined}
-                target={<HomeButton id="home-button" />}
-              >
+              <OrbitNavPopover target={<HomeButton id="home-button" />}>
                 <OrbitNav />
               </OrbitNavPopover>
             </View>
@@ -191,8 +197,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         openOnHover
         onHover={actions.setNavVisible}
         onChangeVisibility={actions.setNavVisible}
-        open={state.navVisible}
-        // closeOnClick
+        open={state.router.isOnSetupApp ? true : state.navVisible}
         maxWidth="80vw"
         padding={4}
         elevation={10}

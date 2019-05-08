@@ -1,4 +1,5 @@
 import { createStoreContext, shallow } from '@o/use-store'
+import { useCallback } from 'react'
 
 class ShareStore {
   props: {
@@ -24,8 +25,17 @@ const context = createStoreContext(ShareStore)
 
 export const useShareStore = context.useStore
 
-export const useShareable = (location?: string) => {
-  return useShareStore().clipboards[location || 'main']
+export const useShare = <A extends any[]>(location?: string): [A, (next: A) => void] => {
+  const store = useShareStore()
+  const value = store.clipboards[location || 'main']
+  const update = useCallback(next => store.setSelected(location || 'main', next), [store, location])
+  return [value, update]
+}
+
+export const useSetShare = (location?: string): ((next: any[]) => void) => {
+  const store = useShareStore(null, { react: false })
+  const update = useCallback(next => store.setSelected(location || 'main', next), [store, location])
+  return update
 }
 
 export const useCreateShareStore = context.useCreateStore

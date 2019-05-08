@@ -20,7 +20,6 @@ import React, {
 import * as ReactDOM from 'react-dom'
 import { getApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
-import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
@@ -73,7 +72,6 @@ export const OrbitPage = memo(() => {
 })
 
 const OrbitEffects = memo(() => {
-  usePaneManagerEffects()
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
@@ -167,19 +165,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }
 
   const onOpen = useCallback(rows => {
-    console.log('open', rows)
     if (rows.length) {
       if (rows[0].extraData) {
-        // navigate to rows[0].extraData
-        console.log(rows[0].extraData)
+        actions.router.showAppPage({ id: rows[0].extraData.id })
       }
     }
   }, [])
-
-  // want to isolate an app?
-  // console.log(contentArea)
-  // console.warn('debugging')
-  // contentArea = contentArea.filter(x => x.props.id === '6')
 
   return (
     <MainShortcutHandler handlers={handlers}>

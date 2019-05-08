@@ -1,7 +1,7 @@
 // @ts-ignore
 import graphqlStyle from '!raw-loader!@o/graphiql/graphiql.css'
 import GraphiQL from '@o/graphiql'
-import { getGlobalConfig } from '@o/kit'
+import { getGlobalConfig, useActiveSpace } from '@o/kit'
 import { useNode } from '@o/ui'
 import GraphiQLExplorer from 'graphiql-explorer'
 import { buildClientSchema, getIntrospectionQuery } from 'graphql'
@@ -11,6 +11,7 @@ import ShadowDOM from 'react-shadow'
 import { useThemeStore } from '../om/stores'
 
 export function GraphExplorer() {
+  const [space] = useActiveSpace()
   const { theme } = useThemeStore()
   const graphiql = useRef(null)
   const [state, setState] = useState({ schema: null, query: null })
@@ -23,6 +24,7 @@ export function GraphExplorer() {
     (shadowRoot.current && shadowRoot.current.querySelector('.query-editor').offsetTop) || 0
   const explorerTop =
     codeMirrorTop + ((parentRoot.current && parentRoot.current.getBoundingClientRect().y) || 0)
+  const fetcher = spaceFetcher.bind(null, space.id)
 
   useEffect(() => {
     fetcher({
@@ -104,9 +106,17 @@ export function GraphExplorer() {
                   flex-direction: row;
                 }
 
+                 * {
+                  box-sizing: border-box;
+                  outline: 0;
+                }
+
                 .graphiql-container {
+                  width: auto;
                   height: auto;
                   color: inherit;
+                  display: flex;
+                  flex: 3;
                 }
 
                 .editorWrap {
@@ -121,7 +131,10 @@ export function GraphExplorer() {
                 }
 
                 .historyPaneWrap {
+                  display: flex;
                   flex: 1;
+                  min-width: 100px;
+                  padding: 5px;
                 }
 
                 .CodeMirror-hints {
@@ -237,8 +250,8 @@ export function GraphExplorer() {
   )
 }
 
-function fetcher(params: Object) {
-  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql`, {
+function spaceFetcher(spaceId: number, params: Object) {
+  return fetch(`http://localhost:${getGlobalConfig().ports.graphServer}/graphql/${spaceId}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

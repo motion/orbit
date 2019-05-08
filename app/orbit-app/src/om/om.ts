@@ -3,11 +3,14 @@ import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
 import * as actions from './actions'
+import * as apps from './apps'
 import * as effects from './effects'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
 import * as setupApp from './setupApp'
+import * as spaces from './spaces'
 import { state } from './state'
+import * as user from './user'
 
 // avoid hmr until bugfixed
 const config = merge(
@@ -20,6 +23,9 @@ const config = merge(
   namespaced({
     router,
     setupApp,
+    apps,
+    spaces,
+    user,
   }),
 )
 
@@ -28,6 +34,7 @@ export const om: Overmind<typeof config> =
   createOvermind(config, {
     logProxies: true,
   })
+
 export const useOm = createHook(om)
 
 window['om'] = om

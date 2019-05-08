@@ -50,7 +50,6 @@
     "@o/website-app": "^2.4.1",
     "page": "1.11.4",
     "query-string": "6.5.0",
-    "overmind-devtools": "18.1.0",
     "overmind-react": "18.1.0",
     "overmind": "17.1.0",
     "@welldone-software/why-did-you-render": "3.0.9",

@@ -73,16 +73,18 @@ const getActions = (
       return treeState()[0].items[this.curId()]
     },
     selectFolder(id: number) {
-      const [state, update] = userState()
-      state.curId = id
-      update(state)
+      const update = userState()[1]
+      update(next => {
+        next.curId = id
+      })
     },
     back() {
-      const [state, update] = userState()
-      if (state.depth > 0) {
-        state.depth--
-        update(state)
-      }
+      const update = userState()[1]
+      update(next => {
+        if (next.depth > 0) {
+          next.depth--
+        }
+      })
     },
   }
   return Actions
@@ -94,7 +96,7 @@ type UseTreeList = {
   actions: ReturnType<typeof getActions>
 }
 
-const defaultUserState = {
+const defaultUserState: TreeUserState = {
   curId: 0,
 }
 

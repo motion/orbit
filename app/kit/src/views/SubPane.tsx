@@ -1,13 +1,13 @@
-import { CSSPropertySetStrict, gloss } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import * as UI from '@o/ui'
 import { useStore } from '@o/use-store'
 import { throttle } from 'lodash'
 import React, { memo, useEffect } from 'react'
 
 import { SubPaneStore } from '../stores/SubPaneStore'
-import { Col, ColProps } from '@o/ui'
+import { Col, ColProps, PaneProps } from '@o/ui'
 
-export type SubPaneProps = CSSPropertySetStrict & {
+export type SubPaneProps = PaneProps & {
   id: any
   fullHeight?: boolean
   style?: Object

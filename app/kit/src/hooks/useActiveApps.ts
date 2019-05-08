@@ -9,13 +9,10 @@ export function useActiveApps(type?: string): AppBit[] {
   if (type) {
     where['type'] = type
   }
-  console.log('activeSpace', activeSpace, where)
   const [apps] = useModels(AppModel, {
     where,
     select: appSelectAllButDataAndTimestamps,
   })
-
-  console.log('got apps', apps)
 
   return apps.filter(x => x.tabDisplay !== 'hidden')
 }

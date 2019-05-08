@@ -18,6 +18,15 @@ export type ObserverCacheEntry = {
   key: string
   onDispose?: Function
   isActive?: boolean
+  // for debugging
+  component?: any
+}
+
+const currentComponent = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return require('react').__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner
+      .current
+  }
 }
 
 const selectModel = (entry: ObserverCacheEntry, value: any) => {
@@ -41,6 +50,7 @@ export const ObserverCache = {
       entry = {
         key,
         args,
+        component: currentComponent(),
         subscriptions: new Set(),
         // store this so its quick to check for updates
         denormalizedValues: {},
@@ -53,7 +63,6 @@ export const ObserverCache = {
           if (value && typeof value === 'object' && Object.keys(value).length < 50) {
             if (isEqual(value, entry.value)) return
           }
-          console.log('not equal, update', value)
           entry.value = value
           for (const sub of entry.subscriptions) {
             sub.next(value)
@@ -68,8 +77,6 @@ export const ObserverCache = {
   // this is an update from client side
   updateModels(model: string, values: any[]) {
     const toUpdate = new Set<ObserverCacheEntry>()
-
-    console.log('UPDATE', model, values, ObserverCache.entries)
 
     for (const value of values) {
       const { id } = value
@@ -87,9 +94,9 @@ export const ObserverCache = {
             }
           }
         } else {
+          if (!entry.value) continue // does this cause cache problems?
           if (entry.value.id === id) {
             const next = selectModel(entry, value)
-            console.log('compare', entry.value, next)
             if (!isEqual(entry.value, next)) {
               toUpdate.add(entry)
               entry.value = next
@@ -97,10 +104,6 @@ export const ObserverCache = {
           }
         }
       }
-    }
-
-    if ([...toUpdate].length) {
-      console.log('GO', [...toUpdate])
     }
 
     for (const entry of [...toUpdate]) {

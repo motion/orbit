@@ -1,10 +1,9 @@
-import { Block, gloss } from '@o/gloss'
-import { ViewProps } from '@o/ui'
+import { Block, BlockProps, gloss } from '@o/gloss'
 import React from 'react'
 
 import { useLocationLink } from '../hooks/useLocationLink'
 
-export function LocationLink({ url, ...rest }: { url: string } & ViewProps) {
+export function LocationLink({ url, ...rest }: { url: string } & BlockProps) {
   return <LinkChrome {...useLocationLink(url)} {...rest} />
 }
 

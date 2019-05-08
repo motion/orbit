@@ -2,7 +2,6 @@ import { Action, Derive } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
-import { defaultPanes } from '../effects/paneManagerStoreUpdatePanes'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -74,7 +73,7 @@ const showPage: Action<HistoryItem> = (om, item) => {
 
 const showHomePage: Action = om => {
   showPage(om, getItem('home'))
-  om.effects.router.setHomePane()
+  om.effects.router.setPane(`${om.state.apps.apps.find(x => x.identifier === 'search').id}`)
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
@@ -105,11 +104,6 @@ const back: Action = om => {
   }
 }
 
-const start: Action = om => {
-  paneManagerStore.setPaneIndex(defaultPanes.length)
-  om.effects.router.start()
-}
-
 export const actions = {
   showPage,
   showAppPage,
@@ -118,7 +112,6 @@ export const actions = {
   toggleSetupAppPage,
   ignoreNextPush,
   back,
-  start,
 }
 
 // effects
@@ -151,9 +144,5 @@ export const effects = {
 
   setPane(appId: string) {
     paneManagerStore.setActivePane(appId)
-  },
-
-  setHomePane() {
-    paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   },
 }

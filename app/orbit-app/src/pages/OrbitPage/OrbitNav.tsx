@@ -1,6 +1,6 @@
 import { save } from '@o/bridge'
 import { gloss, Row, RowProps } from '@o/gloss'
-import { AppIcon, PaneManagerPane, useActiveAppsSorted, useActivePaneSort } from '@o/kit'
+import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
@@ -12,26 +12,32 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
+import { newAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
+const pinWidth = 52
+
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
-    const { orbitStore, paneManagerStore } = useStores()
+    const paneManagerStore = usePaneManagerStore()
+    const { orbitStore } = useStores()
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
-    const activeAppsSorted = useActiveAppsSorted()
-    const { activePaneId } = paneManagerStore
-    const paneSort = useActivePaneSort()
+    const { panes, activePaneId } = paneManagerStore
+    // in case they get in a weird state, filter
+    const activeAppsSorted = useActiveAppsSorted().filter(x =>
+      panes.some(pane => pane.id === `${x.id}`),
+    )
     const handleSortEnd = useAppSortHandler()
 
     if (orbitStore.isEditing) {
       return null
     }
 
-    if (!activeAppsSorted.length || !paneSort) {
+    if (!activeAppsSorted.length || !activeAppsSorted.length) {
       return (
         <OrbitNavClip>
           <OrbitNavChrome />
@@ -40,16 +46,12 @@ export const OrbitNav = memo(
     }
 
     const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
-    const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
+    const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 150 : 120
 
-    const items = [-1, ...paneSort]
+    const items = activeAppsSorted
       .map(
-        (paneId): TabProps => {
-          const app = activeAppsSorted.find(x => x.id === paneId)
-          if (!app) {
-            return null
-          }
-          const isActive = !isOnSetupApp && `${paneId}` === activePaneId
+        (app): TabProps => {
+          const isActive = !isOnSetupApp && `${app.id}` === activePaneId
           // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
@@ -101,19 +103,20 @@ export const OrbitNav = memo(
       )
       .filter(Boolean)
 
-    const pinWidth = 52
-
     const onSettings = isOnSettings(paneManagerStore.activePane)
-    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 46
+    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 0
     const extraButtonsWidth = isOnSetupAppWidth
 
     const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
     const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
     const plainItems = items.filter(x => x.tabDisplay === 'plain')
 
-    const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
+    const pinnedItemsWidth =
+      pinWidth * (pinnedItems.length + permanentItems.length + (isOnSetupApp ? 1 : 0))
 
     const epad = isOnSetupApp ? 0 : 3
+
+    console.log(pinnedItemsWidth, extraButtonsWidth, epad)
 
     return (
       <OrbitNavClip ref={ref}>
@@ -177,7 +180,8 @@ export const OrbitNav = memo(
               <OrbitTab
                 width={tabWidth}
                 stretch
-                iconSize={12}
+                iconSize={18}
+                icon={<AppIcon app={newAppStore.app} />}
                 isActive
                 label={'New app'}
                 after={

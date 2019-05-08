@@ -55,6 +55,7 @@ export function Table(tableProps: TableProps) {
     searchable,
     shareable,
     maxHeight,
+    maxWidth,
     children: _discardChildren,
     ...props
   } = {
@@ -96,6 +97,10 @@ export function Table(tableProps: TableProps) {
       maxHeight={selectDefined(
         maxHeight,
         parentNodeSize.height === 0 ? undefined : parentNodeSize.height,
+      )}
+      maxWidth={selectDefined(
+        maxWidth,
+        parentNodeSize.width === 0 ? undefined : parentNodeSize.width,
       )}
       ref={parentNodeSize.ref}
     >

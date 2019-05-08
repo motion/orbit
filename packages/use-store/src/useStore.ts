@@ -1,4 +1,10 @@
-import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
+import {
+  AutomagicStore,
+  CurrentComponent,
+  decorate,
+  updateProps,
+  useCurrentComponent,
+} from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -203,7 +209,12 @@ function useReactiveStore<A extends any>(
 
 // allows us to use instantiated or non-instantiated stores
 // sets up tracking so the component auto re-renders
-export const useStore: UseStore<any> = (Store, props?, options?) => {
+
+export function useStore<A extends ReactiveStore<any> | any>(
+  Store: { new (): A } | A | false,
+  props?: InferProps<A>,
+  options?: UseStoreOptions,
+): A {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
@@ -211,10 +222,6 @@ export const useStore: UseStore<any> = (Store, props?, options?) => {
   let store: any = null
 
   if (construct) {
-    if (options && options.react === false) {
-      throw new Error(`Doesn't make sense to not react to an instatiated store.`)
-    }
-
     // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
     const shouldUpdate = lastStore.current !== Store
     if (shouldUpdate && lastStore.current) {
@@ -225,7 +232,7 @@ export const useStore: UseStore<any> = (Store, props?, options?) => {
     store = Store
     store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
   } else {
-    const res = useReactiveStore(Store, props)
+    const res = useReactiveStore(Store as any, props)
     store = res && res.store
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, {

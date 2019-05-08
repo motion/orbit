@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { gloss, Row, useTheme } from '@o/gloss'
+import { gloss, useTheme } from '@o/gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
@@ -8,6 +8,7 @@ import {
   IconProps,
   memoIsEqualDeep,
   MenuTemplate,
+  Row,
   SimpleText,
   Tooltip,
   useContextMenu,
@@ -74,7 +75,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
     >
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
         <Tooltip label={app ? app.name : undefined}>
-          <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+          <Row space="sm" alignItems="center">
             {React.isValidElement(icon) ? (
               React.cloneElement(icon, { size: iconSize, ...iconProps } as any)
             ) : (
@@ -89,23 +90,24 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               />
             )}
             {!!label && (
-              <SimpleText
-                ellipse
-                className="tab-label"
-                display="flex"
-                flex={1}
-                opacity={isActive ? 1 : inactiveOpacity}
-                fontWeight={300}
-                fontSize={12}
-                transition={isActive ? 'none' : tabTransition}
-              >
-                {label}
-              </SimpleText>
+              <View flex={1}>
+                <SimpleText
+                  ellipse
+                  className="tab-label"
+                  display="inline-flex"
+                  opacity={isActive ? 1 : inactiveOpacity}
+                  fontWeight={300}
+                  fontSize={12}
+                  transition={isActive ? 'none' : tabTransition}
+                >
+                  {label}
+                </SimpleText>
+              </View>
             )}
+
+            {after}
           </Row>
         </Tooltip>
-
-        {after}
       </NavButtonChromeInner>
     </NavButtonChrome>
   )
@@ -137,19 +139,12 @@ export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
       glint={false}
-      top={tabHeight / 2 - 18 / 2}
-      right={8}
       circular
       borderWidth={0}
       width={18}
       height={18}
       icon="arrow-down"
       iconSize={10}
-      opacity={0.4}
-      position="absolute"
-      hoverStyle={{
-        opacity: 0.8,
-      }}
       {...props}
     />
   )

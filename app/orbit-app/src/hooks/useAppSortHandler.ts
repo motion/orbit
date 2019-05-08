@@ -23,7 +23,9 @@ export function useAppSortHandler() {
     paneSort = [...new Set(paneSort)]
 
     // update
-    updateSpace({ paneSort })
+    updateSpace(space => {
+      space.paneSort = paneSort
+    })
   }
 
   return handleSortEnd

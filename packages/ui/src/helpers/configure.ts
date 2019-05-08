@@ -70,7 +70,7 @@ export let Config: ConfigureUIProps = {
       return `${Math.random()}`
     }
     const item = x.item || x
-    const key = item.id || item.email || item.key
+    const key = item.id || item.key || item.identifier || item.email
     if (key) {
       return `${key}`
     }

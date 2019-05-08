@@ -2,7 +2,7 @@ import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { AppDefinition } from '@o/kit'
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity } from '@o/models'
+import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
 import PostgresApp from '@o/postgres-app'
 import SlackApp from '@o/slack-app'
 import bodyParser from 'body-parser'
@@ -24,7 +24,7 @@ const port = Config.ports.graphServer
 
 export class GraphServer {
   server: express.Application
-  graphMiddleware: any
+  graphMiddleware = {}
 
   constructor() {
     this.server = express()
@@ -37,15 +37,17 @@ export class GraphServer {
   }
 
   start() {
-    this.watchAppsForSchemaSetup()
+    this.watchWorkspacesForGraphs()
 
     log.info('start()')
 
     // graphql
-    this.server.use('/graphql', bodyParser.json(), (req, res, next) => {
-      console.log('got req', !!this.graphMiddleware)
-      if (this.graphMiddleware) {
-        return this.graphMiddleware(req, res, next)
+    this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
+      const middleware = this.graphMiddleware[req.params.workspaceId]
+      console.log('got req', !!middleware, req.params.workspaceId)
+
+      if (middleware) {
+        return middleware(req, res, next)
       } else {
         res.json({
           bad: 'is-bad-yea',
@@ -64,16 +66,29 @@ export class GraphServer {
     })
   }
 
-  private async setupGraph(schemas: any[]) {
-    log.info('Setting up graph with', schemas.length)
-    this.graphMiddleware = graphqlExpress({
-      schema: mergeSchemas({ schemas }),
-    })
+  private watchWorkspacesForGraphs() {
+    let subs: ZenObservable.Subscription[] = []
+
+    getRepository(SpaceEntity)
+      .observe()
+      .subscribe(async _ => {
+        for (const sub of subs) {
+          sub.unsubscribe()
+        }
+
+        let spaces: Space[] = _ as any
+
+        for (const space of spaces) {
+          subs.push(this.watchAppsForSchemaSetup(space.id))
+        }
+      })
   }
 
-  private async watchAppsForSchemaSetup() {
-    await getRepository(AppEntity)
-      .observe()
+  private watchAppsForSchemaSetup(spaceId: number) {
+    return getRepository(AppEntity)
+      .observe({
+        spaceId,
+      })
       .subscribe(async _ => {
         let apps: AppBit[] = _ as any
         let schemas = []
@@ -112,7 +127,9 @@ export class GraphServer {
           schemas.push(schema)
         }
 
-        this.setupGraph(schemas)
+        this.graphMiddleware[spaceId] = graphqlExpress({
+          schema: mergeSchemas({ schemas }),
+        })
       })
   }
 }

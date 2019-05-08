@@ -43,6 +43,7 @@ export type ManagedTableProps = SelectableProps &
     minHeight?: number
 
     maxHeight?: number
+    maxWidth?: number
 
     /**
      * Column definitions.

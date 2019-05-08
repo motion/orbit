@@ -59,7 +59,9 @@ export function SettingsAppGeneral(_props: AppProps) {
   const updateSettings = settings => {
     const next = { ...user.settings, ...settings }
     App.setState({ userSettings: next })
-    updateUser({ settings: next })
+    updateUser(user => {
+      user.settings = next
+    })
   }
 
   const handleClearAllData = async () => {
@@ -80,20 +82,35 @@ export function SettingsAppGeneral(_props: AppProps) {
   }
 
   return (
-    <Section bordered margin pad title="General Settings">
+    <Section bordered margin="xl" pad="xl" title="General Settings">
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}
-        onChange={autoLaunch => updateSettings({ autoLaunch })}
+        onChange={autoLaunch =>
+          updateSettings(x => {
+            x.autoLaunch = autoLaunch
+          })
+        }
       />
       <CheckBoxField
         label="Auto Update"
         checked={settings.autoUpdate}
-        onChange={autoUpdate => updateSettings({ autoUpdate })}
+        onChange={autoUpdate =>
+          updateSettings(x => {
+            x.autoUpdate = autoUpdate
+          })
+        }
       />
 
       <FormField label="Theme">
-        <select value={settings.theme} onChange={e => updateSettings({ theme: e.target.value })}>
+        <select
+          value={settings.theme}
+          onChange={e =>
+            updateSettings(x => {
+              x.theme = e.target.value
+            })
+          }
+        >
           {['automatic', 'light', 'dark'].map(theme => (
             <option key={theme} value={theme}>
               {capitalize(theme)}
@@ -105,7 +122,11 @@ export function SettingsAppGeneral(_props: AppProps) {
       <FormField label="Vibrancy">
         <select
           value={settings.vibrancy}
-          onChange={e => updateSettings({ vibrancy: e.target.value })}
+          onChange={e =>
+            updateSettings(x => {
+              x.vibrancy = e.target.value
+            })
+          }
         >
           {[
             { key: 'some', name: 'Less Transparent' },
@@ -123,7 +144,9 @@ export function SettingsAppGeneral(_props: AppProps) {
         <ShortcutCapture
           defaultValue={electronToNiceChars(settings.openShortcut)}
           onUpdate={val => {
-            updateSettings({ openShortcut: niceCharsToElectronChars(val) })
+            updateSettings(x => {
+              x.openShortcut = niceCharsToElectronChars(val)
+            })
           }}
           modifierChars={eventCharsToNiceChars}
           element={<Input onFocus={focusShortcut} onBlur={blurShortcut} />}

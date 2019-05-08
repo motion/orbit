@@ -87,6 +87,7 @@ export class SearchStore {
       ),
       group: 'Apps',
       extraData: {
+        id: `${app.id}`,
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,

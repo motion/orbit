@@ -14,15 +14,17 @@ import { useShortcutStore } from '../Shortcut'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
+import { Omit } from '../types'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
-import { ListItemSimpleProps } from './ListItemSimple'
+import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
 import { Direction, SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type ListProps = SectionSpecificProps &
-  VirtualListProps<Bit | ListItemProps> &
+  /** Override the onOpen/onSelect */
+  Omit<VirtualListProps<Bit | ListItemProps>, 'onOpen' | 'onSelect'> &
   Partial<UseFilterProps<any>> & {
     /** Make list expand to parent height */
     flex?: number
@@ -81,7 +83,16 @@ export const List = memo((allProps: ListProps) => {
     ...listProps
   } = props
   const getProps = useGet(props)
-  const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = listProps
+  const {
+    items,
+    onOpen,
+    placeholder,
+    getItemProps,
+    search,
+    shareable,
+    onSelect: _ignoreOnSelect,
+    ...restProps
+  } = listProps
   items // ignore var
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
@@ -147,11 +158,10 @@ export const List = memo((allProps: ListProps) => {
     return itemProps
   }, [])
 
-  const onOpenInner = useCallback(
+  const onOpenInner: HandleSelection = useCallback(
     index => {
-      const appProps = toListItemProps(getItems()[index])
       if (onOpen) {
-        onOpen(index, appProps)
+        onOpen([getItems()[index]], [index])
       }
     },
     [onOpen],

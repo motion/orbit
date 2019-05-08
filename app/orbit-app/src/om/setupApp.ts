@@ -2,8 +2,6 @@ import { getAppDefinition, save } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { Action } from 'overmind'
 
-import { spaceStore } from './stores'
-
 export const defaultApps: AppBit[] = [
   {
     target: 'app',
@@ -60,7 +58,7 @@ const update: Action<Partial<AppBit>> = ({ state }, app) => {
 const setApp: Action<string> = ({ state }, identifier) => {
   const app = state.setupApp.app
   const nextApp = defaultApps.find(x => x.identifier === identifier)
-  console.log('next app', nextApp)
+
   if (!nextApp) {
     console.warn('no app', nextApp)
     return
@@ -99,7 +97,8 @@ const reset: Action = ({ state }) => {
 }
 
 const create: Action<string> = async (om, identifier) => {
-  await om.effects.setupApp.createCustomApp(identifier)
+  const { id } = await om.effects.setupApp.saveAppBit(om.state.spaces.activeSpace, identifier)
+  om.actions.router.showAppPage({ id: `${id}` })
   om.actions.setupApp.reset()
 }
 
@@ -111,10 +110,10 @@ export const actions = {
 }
 
 export const effects = {
-  async createCustomApp(identifier: string) {
-    await save(AppModel, {
+  async saveAppBit(activeSpace, identifier: string) {
+    return await save(AppModel, {
       name: 'My Custom App',
-      spaceId: spaceStore.activeSpace.id,
+      spaceId: activeSpace.id,
       identifier: identifier || `custom`,
       colors: ['green', 'darkgreen'],
     })

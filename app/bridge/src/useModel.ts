@@ -1,6 +1,7 @@
 import { Model } from '@o/mediator'
-import { isDefined, selectDefined } from '@o/utils'
+import { isDefined } from '@o/utils'
 import produce from 'immer'
+import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
@@ -54,16 +55,21 @@ const dispose = sub => {
   sub.current && sub.current.unsubscribe()
 }
 
+// allow undefined for stuff like useBits() but dont allow useBits(null) useBits(false)
+const shouldQuery = (x: any) => {
+  return x !== false && x !== null
+}
+
 function use<ModelType, Args>(
   type: 'one' | 'many' | 'count',
   model: Model<ModelType, Args, any>,
-  query: Args | false,
-  options: UseModelOptions = {},
+  query?: Args | false,
+  options?: UseModelOptions,
 ): any {
   const queryKey = JSON.stringify(query)
-  const observeEnabled = options.observe === undefined || options.observe === true
+  const observeEnabled = !options || (options.observe === undefined || options.observe === true)
   const forceUpdate = useState(0)[1]
-  const valueRef = useRef(options.defaultValue)
+  const valueRef = useRef(options ? options.defaultValue : undefined)
   const subscription = useRef<any>(null)
   const yallReadyKnow = useRef(false)
 
@@ -72,7 +78,7 @@ function use<ModelType, Args>(
 
   // on new query: subscribe, update
   useEffect(() => {
-    if (query === false) return
+    if (!shouldQuery(query)) return
     if (yallReadyKnow.current) {
       yallReadyKnow.current = false
       return
@@ -99,50 +105,59 @@ function use<ModelType, Args>(
 
   const valueUpdater: ImmutableUpdateFn<any> = useCallback(
     updaterFn => {
-      // we can't use merge here since lodash's merge doesn't merge arrays properly
-      // in the case if we would need merge again - we need to write it custom with arrays in mind
-      const next = produce(valueRef.current, updaterFn)
-      save(model, next as any)
+      const finish = (val: any) => {
+        const next = produce(val, updaterFn)
+        save(model, next as any)
+      }
+
+      // note, if we use a select this would fail because we wouldn't have all the values to save
+      // so if we have a select, we're going to fetch the full object first, then mutate, then save
+      if (query && query['select']) {
+        loadOne(model, { args: omit(query as any, 'select') }).then(finish)
+      } else {
+        finish(valueRef.current)
+      }
     },
     [queryKey],
   )
 
-  if (query !== false && !isDefined(valueRef.current)) {
+  if (!isDefined(valueRef.current)) {
     const key = getKey(model.name, type, queryKey)
     let cache = PromiseCache[key]
 
-    if (!cache) {
-      let resolve
-      let resolved = false
-      const promise = new Promise(res => {
-        yallReadyKnow.current = true
-        subscription.current = runUseQuery(model, type, query, observeEnabled, nextRaw => {
-          const next = selectDefined(nextRaw, defaultValues[type])
-          if (!resolved) {
-            valueRef.current = next
-            cache.current = next
-            setTimeout(() => {
-              delete PromiseCache[key]
-            }, 50)
-            res()
-          } else {
-            console.log('got second one', next)
-            valueRef.current = next
-            forceUpdate(Math.random())
-          }
-        })
-      })
-      cache = PromiseCache[key] = {
-        read: promise,
-        resolve,
-        current: undefined,
-      }
-    }
-
-    if (isDefined(cache.current)) {
-      valueRef.current = cache.current
+    if (!shouldQuery(query)) {
+      valueRef.current = defaultValues[type]
     } else {
-      throw cache.read
+      if (!cache) {
+        let resolve
+        let resolved = false
+        const promise = new Promise(res => {
+          yallReadyKnow.current = true
+          subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+            // TODO why is this coming back undefined
+            if (!isDefined(next)) return
+            if (!resolved) {
+              valueRef.current = next
+              cache.current = next
+              setTimeout(() => {
+                delete PromiseCache[key]
+              }, 50)
+              res()
+            }
+          })
+        })
+        cache = PromiseCache[key] = {
+          read: promise,
+          resolve,
+          current: undefined,
+        }
+      }
+
+      if (isDefined(cache.current)) {
+        valueRef.current = cache.current
+      } else {
+        throw cache.read
+      }
     }
   }
 
@@ -155,24 +170,24 @@ function use<ModelType, Args>(
 
 export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args | false,
-  options: UseModelOptions = {},
+  query?: Args | false,
+  options?: UseModelOptions,
 ): [ModelType | null, ImmutableUpdateFn<ModelType>] {
   return use('one', model, query, options)
 }
 
 export function useModels<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args | false,
-  options: UseModelOptions = {},
+  query?: Args | false,
+  options?: UseModelOptions,
 ): [ModelType[], ImmutableUpdateFn<ModelType[]>] {
   return use('many', model, query, options)
 }
 
 export function useModelCount<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args | false,
-  options: UseModelOptions = {},
+  query?: Args | false,
+  options?: UseModelOptions,
 ): number {
   return use('count', model, query, options)
 }

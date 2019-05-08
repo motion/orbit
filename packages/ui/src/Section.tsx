@@ -118,7 +118,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   let titleEl: React.ReactNode = titleElement || null
 
   if (!titleElement && hasTitle) {
-    const adjustPadProps = !titleBorder && !backgrounded && { paddingBottom: 0 }
+    const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
 
     titleEl = (
       <Scale size={titleScale}>

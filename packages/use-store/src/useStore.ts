@@ -57,11 +57,10 @@ export function createUsableStore<T, Props extends InferProps<T>>(
       console.log('HMR store props', OGStore.name)
       // havent changed props, hot update them to new ones
       existing.props = initialProps
-    } else {
-      console.log('HMR leave store as is')
     }
     return existing
   }
+  console.log('create store', OGStore)
 
   const Store = decorate(OGStore, initialProps)
   const store = (new Store() as any) as UsableStore<T, Props>

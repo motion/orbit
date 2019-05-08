@@ -1,10 +1,4 @@
-import {
-  AutomagicStore,
-  CurrentComponent,
-  decorate,
-  updateProps,
-  useCurrentComponent,
-} from '@o/automagical'
+import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -46,19 +40,19 @@ export interface UseStoreCurried<A extends ReactiveStore<any> | any> {
 export type UsableStore<T, Props> = T & AutomagicStore<Props> & { useStore: UseStoreCurried<T> }
 type InferProps<T> = T extends { props: infer R } ? R : undefined
 
-const StoreCache = new WeakMap()
-const StoreCacheInitialProps = new WeakMap()
+const StoreCache = {}
+const StoreCacheInitialProps = {}
 
 export function createUsableStore<T, Props extends InferProps<T>>(
   OGStore: { new (...args: any[]): T },
   initialProps?: Props,
 ): UsableStore<T, Props> {
   // HMR, dont reset store
-  // assumes you only use one global store for each class
-  console.log(OGStore, StoreCache)
-  if (StoreCache.has(OGStore)) {
-    const existing = StoreCache.get(OGStore)
-    const oldInitialProps = StoreCacheInitialProps.get(OGStore)
+  // assumes you only use one name per store, for now, we could make it fancy
+  const hmrKey = OGStore.toString()
+  const existing = StoreCache[hmrKey]
+  if (existing) {
+    const oldInitialProps = StoreCacheInitialProps[hmrKey]
     if (isEqual(existing.props, oldInitialProps) && !isEqual(oldInitialProps, initialProps)) {
       console.log('HMR store props', OGStore.name)
       // havent changed props, hot update them to new ones
@@ -72,8 +66,8 @@ export function createUsableStore<T, Props extends InferProps<T>>(
   const Store = decorate(OGStore, initialProps)
   const store = (new Store() as any) as UsableStore<T, Props>
   store.useStore = options => useStore(store, undefined, options)
-  StoreCache.set(OGStore, store)
-  StoreCacheInitialProps.set(OGStore, initialProps)
+  StoreCache[hmrKey] = store
+  StoreCacheInitialProps[hmrKey] = initialProps
   return store
 }
 

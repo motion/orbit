@@ -1,6 +1,6 @@
 import { IS_STORE } from '@o/automagical'
 import { EQUALITY_KEY } from '@o/fast-compare'
-import { isAction, isObservableObject, isObservableProp } from 'mobx'
+import { isObservableObject, isObservableProp } from 'mobx'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -60,7 +60,7 @@ export function mobxProxyWorm<A extends Function>(
     keys: new Map<any, Set<string>>(),
     add: (next: string) => {
       if (state.current !== -1) {
-        if (state.debug) console.log('add key', next, state.current)
+        if (state.debug) console.log('add key', next)
         const curState = state.keys.get(state.current)
         if (curState) {
           curState.add(next)
@@ -89,7 +89,6 @@ export function mobxProxyWorm<A extends Function>(
         return val
       }
       const isFunction = typeof val === 'function'
-      if (isFunction && isAction(val)) return val
       if (key.indexOf('isMobX') === 0) return val
       if (key[0] === '_') return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`

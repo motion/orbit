@@ -1,3 +1,4 @@
+import { useStoreDebug } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -24,14 +25,13 @@ const active = ['active', 'inactive']
 
 export function CustomApp1() {
   const [highlighted, setHighlighted] = useState([])
+  useStoreDebug()
   const form = useForm()
   const users = useFetch(`${endpoint}/users`).map((row, i) => ({
     ...row,
     type: type[i % (type.length - 1)],
     active: active[i % 2],
   }))
-
-  console.log(form)
 
   return (
     <Form useForm={form}>

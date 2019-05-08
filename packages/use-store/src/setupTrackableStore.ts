@@ -15,7 +15,10 @@ type TrackableStoreOptions = {
   shouldUpdate?: boolean
 }
 
-const DedupedWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
+const ProxyWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
+if (typeof window !== 'undefined') {
+  window['ProxyWorms'] = ProxyWorms
+}
 
 type StoreLike = Function & {
   dispose: Function
@@ -104,10 +107,10 @@ export function setupTrackableStore(
 
   function getOrCreateProxyWorm(): ProxyWorm<StoreLike> {
     // dedupe stores so we properly track/untrack as we go down to children
-    let config = DedupedWorms.get(unwrapped)
+    let config = ProxyWorms.get(unwrapped)
     if (!config) {
       config = mobxProxyWorm(store)
-      DedupedWorms.set(store, config)
+      ProxyWorms.set(store, config)
     }
     return config
   }
@@ -132,7 +135,6 @@ export function setupTrackableStore(
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
         reaction.schedule()
-        if (debug()) console.log('schedule reaction')
       }
       if (debug()) {
         console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')

@@ -92,12 +92,15 @@ class FormStore {
     delete this.values[name]
   }
 
-  getValue = (name: string) => {
-    if (!this.values[name]) return undefined
+  getValue(name: string) {
+    if (!this.values[name]) {
+      return undefined
+      // this.values[name] = { value: null, name }
+    }
     return this.values[name].value
   }
 
-  getFilters = (names: string[]) => {
+  getFilters(names: string[]) {
     const fields = Object.keys(this.values)
       .filter(x => names.some(y => y === x))
       .map(key => this.values[key])

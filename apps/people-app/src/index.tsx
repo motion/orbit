@@ -25,9 +25,7 @@ import {
   Section,
   Space,
   SubTitle,
-  Title,
   TitleRow,
-  View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
 

@@ -57,10 +57,6 @@ export class PaneManagerStore {
     log: false,
   })
 
-  // didMount() {
-  //   on(this, autoTrack(this, ['paneIndex']))
-  // }
-
   back = () => {
     if (this.lastActivePane) {
       this.setActivePane(this.lastActivePane.id)

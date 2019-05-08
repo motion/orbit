@@ -73,10 +73,10 @@ const showPage: Operator<HistoryItem> = pipe(
   mutate(om => {
     om.state.router.ignoreNextPush = false
   }),
-  debounce(250),
-  mutate(om => {
-    om.state.navVisible = false
-  }),
+  // debounce(250),
+  // mutate(om => {
+  //   om.state.navVisible = false
+  // }),
 )
 
 const showHomePage: Action = om => {

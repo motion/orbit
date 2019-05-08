@@ -31,10 +31,10 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
-  console.log('ok', form.getValue('search'), form.getFilters(['active', 'type']))
+  console.log(form)
 
   return (
-    <Form use={form}>
+    <Form useForm={form}>
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">

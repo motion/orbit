@@ -55,6 +55,7 @@ export function createUsableStore<T, Props extends InferProps<T>>(
 ): UsableStore<T, Props> {
   // HMR, dont reset store
   // assumes you only use one global store for each class
+  console.log(OGStore, StoreCache)
   if (StoreCache.has(OGStore)) {
     const existing = StoreCache.get(OGStore)
     const oldInitialProps = StoreCacheInitialProps.get(OGStore)
@@ -62,6 +63,8 @@ export function createUsableStore<T, Props extends InferProps<T>>(
       console.log('HMR store props', OGStore.name)
       // havent changed props, hot update them to new ones
       existing.props = initialProps
+    } else {
+      console.log('HMR leave store as is')
     }
     return existing
   }

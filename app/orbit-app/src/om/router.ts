@@ -73,7 +73,6 @@ const showPage: Action<HistoryItem> = (om, item) => {
 
 const showHomePage: Action = om => {
   showPage(om, getItem('home'))
-  om.effects.router.setHomePane()
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
@@ -144,9 +143,5 @@ export const effects = {
 
   setPane(appId: string) {
     paneManagerStore.setActivePane(appId)
-  },
-
-  setHomePane() {
-    paneManagerStore.setActivePane(paneManagerStore.homePane.id)
   },
 }

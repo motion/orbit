@@ -5,7 +5,6 @@ import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
 import { HeaderStore } from '../stores/HeaderStore'
 import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
-import { loadingPane } from './spaces/paneManagerEffects'
 
 export const themeStore = createUsableStore(ThemeStore)
 export const useThemeStore = themeStore.useStore
@@ -24,6 +23,14 @@ export const useOrbitWindowStore = orbitWindowStore.useStore
 
 export const newAppStore = createUsableStore(NewAppStore)
 export const useNewAppStore = newAppStore.useStore
+
+const loadingPane = {
+  id: 'loading',
+  name: 'Loading',
+  type: 'loading',
+  isHidden: true,
+  keyable: true,
+}
 
 export const paneManagerStore = createUsableStore(PaneManagerStore, {
   defaultIndex: 0,
@@ -44,13 +51,3 @@ export const Stores = {
   paneManagerStore,
   spaceStore,
 }
-
-// createReaction(
-//   () => OrbitStore.isEditing,
-//   isEditing => {
-//     paneManagerStore.setProps({
-//       defaultPanes: isEditing ? [settingsPane] : defaultPanes,
-//       defaultIndex: 0,
-//     })
-//   },
-// )

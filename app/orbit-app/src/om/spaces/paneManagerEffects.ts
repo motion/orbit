@@ -3,14 +3,13 @@ import { AppBit, getAppDefinition, PaneManagerPane, save } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
 import { keyBy, sortBy } from 'lodash'
-import { Action } from 'overmind'
 
 import { paneManagerStore } from '../stores'
 
-export const updatePaneSort: Action = async om => {
+export const updatePaneSort = async (apps: AppBit[]) => {
   const space = om.state.spaces.activeSpace
   if (!space) return
-  const paneSort = sortPanes(space, om.state.apps.activeApps)
+  const paneSort = sortPanes(space, apps)
   if (!isEqual(paneSort, space.paneSort)) {
     await save(SpaceModel, {
       ...space,
@@ -19,21 +18,11 @@ export const updatePaneSort: Action = async om => {
   }
 }
 
-export const updatePaneManagerPanes: Action = om => {
-  const { panes, paneIndex } = getPanes(om.state.apps.activeApps)
-  if (!isEqual(panes, paneManagerStore.panes)) {
-    console.log('setting panes', panes)
-    paneManagerStore.setPanes(panes)
-  }
+export const updatePaneManagerPanes = (apps: AppBit[]) => {
+  const { panes, paneIndex } = getPanes(apps)
+  console.log('setting panes', panes)
+  paneManagerStore.setPanes(panes)
   paneManagerStore.setPaneIndex(paneIndex)
-}
-
-export const loadingPane = {
-  id: 'loading',
-  name: 'Loading',
-  type: 'loading',
-  isHidden: true,
-  keyable: true,
 }
 
 function getPanes(apps: AppBit[]) {

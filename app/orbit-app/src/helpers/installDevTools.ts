@@ -119,18 +119,25 @@ debugUseStore(event => {
 })
 
 window['Stores'] = Stores
+for (const key in Stores) {
+  defineStoreOnWindow(key, Stores[key])
+}
+
+function defineStoreOnWindow(key, store) {
+  if (window[key]) {
+    if (Array.isArray(window[key]) && !window[key][0][IS_STORE]) return
+    if (!window[key][IS_STORE]) return
+    window[key] = store
+  } else {
+    window[key] = store
+  }
+}
 
 function globalizeStores(stores: Record<string, any>) {
   window['Stores'] = { ...window['Stores'], ...stores }
   // if we can, put store right on window
   for (const key in stores) {
-    if (window[key]) {
-      if (Array.isArray(window[key]) && !window[key][0][IS_STORE]) return
-      if (!window[key][IS_STORE]) return
-      window[key] = stores[key]
-    } else {
-      window[key] = stores[key]
-    }
+    defineStoreOnWindow(key, stores[key])
   }
 }
 

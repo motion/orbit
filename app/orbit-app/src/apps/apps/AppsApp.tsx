@@ -48,6 +48,8 @@ export function AppsIndex() {
   const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
 
+  window['dataApps'] = dataApps
+
   if (!activeSpace || !activeApps.length) {
     return null
   }

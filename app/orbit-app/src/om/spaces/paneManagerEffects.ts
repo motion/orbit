@@ -20,7 +20,8 @@ export const updatePaneSort = async (apps: AppBit[]) => {
 
 export const updatePaneManagerPanes = (apps: AppBit[]) => {
   const { panes, paneIndex } = getPanes(apps)
-  console.log('setting panes', panes)
+  console.log('setting panes', paneIndex, panes)
+  debugger
   paneManagerStore.setPanes(panes)
   paneManagerStore.setPaneIndex(paneIndex)
 }

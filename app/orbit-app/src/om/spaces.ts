@@ -1,4 +1,4 @@
-import { observeMany } from '@o/kit'
+import { observeMany, loadMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
@@ -21,6 +21,7 @@ export const state: SpacesState = {
 }
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
+  if (!spaces) return
   om.state.spaces.spaces = spaces
   om.actions.apps.setActiveSpace(
     deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser })),
@@ -39,8 +40,10 @@ export const actions = {
 }
 
 export const effects = {
-  start(om) {
-    observeMany(SpaceModel, { args: {} }).subscribe(spaces => {
+  async start(om) {
+    const args = { args: {} }
+    om.actions.spaces.setSpaces(await loadMany(SpaceModel, args))
+    observeMany(SpaceModel, args).subscribe(spaces => {
       om.actions.spaces.setSpaces(spaces)
     })
   },

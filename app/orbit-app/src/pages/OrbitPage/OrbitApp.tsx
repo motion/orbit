@@ -12,8 +12,17 @@ import {
   ProvideStores,
   sleep,
   useIsAppActive,
+  App,
 } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useShareStore, useThrottleFn } from '@o/ui'
+import {
+  ErrorBoundary,
+  ListItemProps,
+  Loading,
+  ProvideShare,
+  ProvideVisibility,
+  useShareStore,
+  useThrottleFn,
+} from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -70,7 +79,6 @@ export const OrbitAppRenderOfDefinition = ({
 }: AppRenderProps & {
   appDef: AppDefinition
 }) => {
-  const { app: App } = appDef
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
   const Main = OrbitMain
@@ -89,6 +97,18 @@ export const OrbitAppRenderOfDefinition = ({
     }
   }, [])
 
+  let RenderApp = appDef.app
+
+  // @ts-ignore
+  if (!RenderApp.isApp) {
+    const AppView = appDef.app
+    RenderApp = props => (
+      <App>
+        <AppView {...props} />
+      </App>
+    )
+  }
+
   return (
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
@@ -97,7 +117,7 @@ export const OrbitAppRenderOfDefinition = ({
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  <App identifier={identifier} id={id} {...activeItem} />
+                  <RenderApp identifier={identifier} id={id} {...activeItem} />
                 </FadeIn>
               )}
             </Suspense>

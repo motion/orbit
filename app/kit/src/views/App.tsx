@@ -51,3 +51,5 @@ export function App(props: AppElements) {
     </>
   )
 }
+
+App.isApp = true

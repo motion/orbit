@@ -5,7 +5,7 @@ import React, { forwardRef, HTMLProps, useCallback } from 'react'
 import { Button } from '../buttons/Button'
 import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
-import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
+import { TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
 import { Omit } from '../types'
 import { FormField } from './FormField'
@@ -90,6 +90,29 @@ class FormStore {
 
   removeField(name: string) {
     delete this.values[name]
+  }
+
+  getValue = (name: string) => {
+    return this.values[name].value
+  }
+
+  getFilters = (names: string[]) => {
+    const fields = Object.keys(this.values)
+      .filter(x => names.some(y => y === x))
+      .map(key => this.values[key])
+    const selectFields = flatten(
+      fields
+        .filter(x => x.type === 'select')
+        // can have multiple values
+        .map(x =>
+          Array.isArray(x.value)
+            ? x.value.map(y => createIncludeFilter(x.name, y.value))
+            : x.value
+            ? createIncludeFilter(x.name, x.value.value)
+            : null,
+        ),
+    ).filter(Boolean)
+    return selectFields
   }
 }
 
@@ -231,29 +254,4 @@ function createIncludeFilter(label: string, value: any): TableFilterIncludeExclu
     type: 'include',
     key: label,
   }
-}
-
-function getFormFilters(formStore: FormStore, names: string[]): TableFilter[] {
-  const fields = Object.keys(formStore.values)
-    .filter(x => names.some(y => y === x))
-    .map(key => formStore.values[key])
-  const selectFields = flatten(
-    fields
-      .filter(x => x.type === 'select')
-      // can have multiple values
-      .map(x =>
-        Array.isArray(x.value)
-          ? x.value.map(y => createIncludeFilter(x.name, y.value))
-          : x.value
-          ? createIncludeFilter(x.name, x.value.value)
-          : null,
-      ),
-  ).filter(Boolean)
-  return selectFields
-}
-
-export function useFormFilters(names: string[]): TableFilter[] {
-  const formStore = useFormContext()
-  if (!formStore) return null
-  return getFormFilters(formStore, names)
 }

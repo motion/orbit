@@ -91,7 +91,7 @@ function PersonInfo(props: { row: any }) {
           <Fieldsets rows={[props.row]} />
         </Section>
       </Pane>
-      <Pane pad>
+      <Pane pad resizable>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
             <Table
@@ -104,7 +104,7 @@ function PersonInfo(props: { row: any }) {
           )}
         </Fetch>
       </Pane>
-      <Pane pad>
+      <Pane pad resizable>
         {!!album && (
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
             {photos => (

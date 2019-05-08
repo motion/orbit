@@ -23,15 +23,6 @@ export const LayoutContext = createContext<{
   type: 'row',
 })
 
-function getLayout(props: LayoutProps) {
-  switch (props.type) {
-    case 'row':
-    case 'column':
-    default:
-      return <FlexLayout {...props} />
-  }
-}
-
 export function Layout(props: LayoutProps) {
   Children.map(props.children, child => {
     if (!isValidElement(child) || child.type !== Pane) {
@@ -62,7 +53,9 @@ export function Layout(props: LayoutProps) {
       maxHeight={height === 0 ? 'auto' : height}
       maxWidth={width === 0 ? 'auto' : width}
     >
-      <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
+      <LayoutContext.Provider value={memoValue}>
+        <FlexLayout {...props} />
+      </LayoutContext.Provider>
     </View>
   )
 }

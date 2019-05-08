@@ -13,13 +13,16 @@ const ReactDOM = require('react-dom')
 
 export function render() {
   const RootNode = document.querySelector('#app')
-  ReactDOM.render(<SiteRoot />, RootNode)
-  // concurrent
-  // ReactDOM.unstable_createRoot(RootNode).render(
-  //   // <React.unstable_ConcurrentMode>
-  //   <SiteRoot />,
-  //   // </React.unstable_ConcurrentMode>,
-  // )
+
+  if (window.location.search.indexOf('react.concurrent') > 0) {
+    ReactDOM.unstable_createRoot(RootNode).render(
+      <React.unstable_ConcurrentMode>
+        <SiteRoot />,
+      </React.unstable_ConcurrentMode>,
+    )
+  } else {
+    ReactDOM.render(<SiteRoot />, RootNode)
+  }
 }
 
 render()

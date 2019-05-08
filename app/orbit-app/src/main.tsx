@@ -5,9 +5,6 @@ import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 import * as firebase from 'firebase/app'
-import * as React from 'react'
-import { unstable_Profiler as Profiler } from 'react'
-import { render } from 'react-dom'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
@@ -91,23 +88,36 @@ async function main() {
   startApp()
 }
 
+const React = require('react')
+const ReactDOM = require('react-dom')
+
 // render app
 async function startApp(forceRefresh = false) {
+  const RootNode = document.querySelector('#app')
+
   if (forceRefresh) {
-    render(<div />, document.querySelector('#app'))
+    ReactDOM.render(<div />, RootNode)
   }
+
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
 
-  if (location.search === '?profile') {
-    render(
-      <Profiler id="Application" onRender={console.log.bind(console)}>
-        <OrbitRoot />
-      </Profiler>,
-      document.querySelector('#app'),
+  let elements = <OrbitRoot />
+
+  if (location.search.indexOf('react.profile') > 0) {
+    elements = (
+      <React.unstable_Profiler id="Application" onRender={console.log.bind(console)}>
+        {elements}
+      </React.unstable_Profiler>
+    )
+  }
+
+  if (window.location.search.indexOf('react.concurrent') > 0) {
+    ReactDOM.unstable_createRoot(RootNode).render(
+      <React.unstable_ConcurrentMode>{elements},</React.unstable_ConcurrentMode>,
     )
   } else {
-    render(<OrbitRoot />, document.querySelector('#app'))
+    ReactDOM.render(elements, RootNode)
   }
 }
 

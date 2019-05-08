@@ -2,16 +2,15 @@
   "name": "@o/orbit-app",
   "version": "2.4.1",
   "private": true,
-  "sideEffects": false,
   "main": "./index.js",
   "scripts": {
     "start": "./scripts/start.sh",
-    "start-prod": "./scripts/start.sh --prod",
-    "start-pundle": "PUNDLE=true ./scripts/start.sh",
-    "serve-prod": "static-server -p 3999 -n dist/index.html dist",
-    "build-app": "NODE_ENV=production mcro-build --entry ./src/main --build",
+    "start:prod": "./scripts/start.sh --prod",
+    "start:pundle": "PUNDLE=true ./scripts/start.sh",
+    "serve:prod": "static-server -p 3999 -n dist/index.html dist",
+    "build:app": "NODE_ENV=production mcro-build --entry ./src/main --build",
     "deploy": "./scripts/deploy.sh",
-    "test-electron": "electron ./scripts/test-electron.js"
+    "test:electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
     "@o/graphiql": "^0.13.3",
@@ -93,7 +92,8 @@
     "@o/babel-preset-motion": "^2.4.1",
     "@o/build": "^2.4.1",
     "@types/jest": "24.0.11",
-    "scheduler": "0.13.5"
+    "scheduler": "0.13.5",
+    "static-server": "2.2.1"
   },
   "peerDependencies": {
     "electron": "*",

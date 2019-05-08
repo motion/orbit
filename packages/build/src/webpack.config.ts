@@ -45,13 +45,27 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
-if (getFlag('--prod')) {
+const flags = {
+  prod: getFlag('--prod'),
+  disableHMR: getFlag('--disable-hmr'),
+  entry: getFlag('--entry'),
+  target: getFlag('--target'),
+  devtool: getFlag('--devtool'),
+}
+
+if (flags.prod) {
   process.env.NODE_ENV = 'production'
 }
 
 const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
-const entry = process.env.ENTRY || getFlag('--entry') || readPackage('main') || './src/index.ts'
+const entry = process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts'
+
+//   eval-source-map (causes errors to not show stack trace in react development...)
+//   cheap-source-map (no line numbers...)
+//   cheap-module-eval-source-map (seems alright in both...)
+//   cheap-module-source-map (works well in electron, no line numbers in browser...)
+const devtool = flags.devtool || isProd ? 'source-map' : 'cheap-module-eval-source-map'
 
 // const appSrc = Path.join(entry, '..')
 const tsConfig = Path.join(cwd, 'tsconfig.json')
@@ -64,7 +78,7 @@ const buildNodeModules = [
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
 
-const target = getFlag('--target') || 'electron-renderer'
+const target = flags.target || 'electron-renderer'
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
@@ -195,17 +209,12 @@ async function makeConfig() {
         colors: true,
       },
       historyApiFallback: true,
-      hot: !isProd,
+      hot: !flags.disableHMR && !isProd,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    // for a faster dev mode you can do:
-    //   eval-source-map (causes errors to not show stack trace in react development...)
-    //   cheap-source-map (no line numbers...)
-    //   cheap-module-eval-source-map (seems alright in both...)
-    //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-    devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool,
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields: isProd
@@ -252,7 +261,7 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
-            !isProd && 'react-hot-loader/webpack',
+            !isProd && !flags.disableHMR && 'react-hot-loader/webpack',
           ].filter(Boolean),
         },
         {
@@ -300,9 +309,6 @@ async function makeConfig() {
             'babel-loader',
             {
               loader: '@mdx-js/loader',
-              // options: {
-              //   rehypePlugins: [RehypePrism],
-              // },
             },
           ],
         },

@@ -38,13 +38,12 @@ export default function WaistSection() {
           margin="auto"
           maxWidth={860}
           transform={{
-            y: '-6%',
+            y: '-7%',
           }}
           header={
             <>
               <PillButton>Security</PillButton>
-              <Space size="sm" />
-              <TitleText textAlign="center" size="lg" maxWidth={400}>
+              <TitleText textAlign="center" maxWidth={400}>
                 Tell Security they can firewall Orbit completely.
               </TitleText>
               <Space />

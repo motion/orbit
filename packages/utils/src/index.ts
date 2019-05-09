@@ -3,6 +3,10 @@ import stringHash from 'string-hash'
 export * from './highlightText'
 export * from './on'
 
+export function idFn<A>(a: A) {
+  return a
+}
+
 export function isDefined(...args: any) {
   for (const arg of args) {
     if (typeof arg !== 'undefined') {

@@ -151,9 +151,8 @@ export const List = memo((allProps: ListProps) => {
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
-    const itemExtraProps = getItemPropsGet()(a, b, c)
+    const itemExtraProps = getItemPropsGet()(normalized, b, c)
     const filterExtraProps = filteredGetItemProps(a, b, c)
-    // const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
     const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps }
     return itemProps
   }, [])

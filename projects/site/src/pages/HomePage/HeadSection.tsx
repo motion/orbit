@@ -17,29 +17,29 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Amazingly easy internal apps',
-  medium: 'Amazing, easy internal apps',
-  small: 'Easy internal apps',
+  large: 'Powerful apps in minutes',
+  medium: 'Powerful apps in minutes',
+  small: 'Powerful apps in minutes',
 }
 
 let allTexts = {
   large: [
-    `Create apps together with the decentralized intranet app platform.`,
-    `Plug data into rich views with just lines of code, no servers needed.`,
+    `Plug data into incredibly rich views with no infrastacture at all.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
   medium: [
-    `Create apps together with a decentralized intranet app platform.`,
-    `Plug data into rich views with little code, no server needed.`,
+    `Plug data into incredibly rich views with no infrastacture at all.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
   small: [
-    `The decentralized intranet app platform.`,
-    `Plug data into views with little code, no server needed.`,
+    `Plug data into incredibly rich views with no infrastacture at all.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
 }
 
 const subTexts = {
-  large: `How Orbit apps work.`,
-  medium: `How Orbit apps work.`,
+  large: `How Orbit gives you control.`,
+  medium: `How Orbit gives you control.`,
   small: `How Orbit apps work.`,
 }
 
@@ -53,6 +53,10 @@ const HeadContent = memo(() => {
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
   const br = useScreenVal(smallSpc, medSpc, medSpc)
+
+  const textsWidth = useScreenVal('95%', '100%', '90%')
+
+  const isSmall = screen === 'small'
 
   return (
     <View
@@ -77,57 +81,64 @@ const HeadContent = memo(() => {
 
       <Space size={useScreenVal('md', 'lg', 'xl')} />
 
-      <View position="relative" width={useScreenVal('90%', '85%', '80%')} margin={[0, 'auto']}>
-        {screen === 'small' ? (
-          <Paragraph
-            size={1.8}
-            sizeLineHeight={1.4}
-            margin={[0, 'auto']}
-            textAlign="center"
-            alpha={0.6}
-            selectable
-            zIndex={100}
-          >
-            {texts[0]} {texts[1]}
-          </Paragraph>
-        ) : (
-          <Paragraph
-            fontWeight={100}
-            tagName="div"
-            style={{
-              ...pFit.style,
-              height: 'auto',
-            }}
-            lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
-            height="auto"
-            transformOrigin="top left"
-            margin={[0, 'auto']}
-            textAlign="center"
-            alpha={0.7}
-            fontSize={40}
-            whiteSpace="nowrap"
-          >
-            <FadeChild disable={!measured} delay={400}>
-              {texts[0]}
-            </FadeChild>
-            {br}
-            <FadeChild disable={!measured} delay={500}>
-              {texts[1]}
-            </FadeChild>
-            {br}
-            {texts[2] && (
-              <>
-                <FadeChild disable={!measured} delay={600}>
-                  {texts[2]}
-                </FadeChild>
-                {br}
-              </>
-            )}
-            <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
-              <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
-            </FadeChild>
-          </Paragraph>
-        )}
+      {isSmall && (
+        <Paragraph
+          size={1.8}
+          sizeLineHeight={1.4}
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.6}
+          selectable
+          zIndex={100}
+        >
+          {texts[0]} {texts[1]}
+        </Paragraph>
+      )}
+
+      <View
+        maxHeight={isSmall ? 0 : 'auto'}
+        overflow="hidden"
+        position="relative"
+        flex={1}
+        width={textsWidth}
+        margin={[0, 'auto']}
+      >
+        <Paragraph
+          fontWeight={100}
+          tagName="div"
+          style={{
+            ...pFit.style,
+            height: 'auto',
+          }}
+          lineHeight={pFit.isMeasured ? `${pFit.height}px` : `40px`}
+          height="auto"
+          transformOrigin="top left"
+          margin={[0, 'auto']}
+          textAlign="center"
+          alpha={0.7}
+          fontSize={40}
+          whiteSpace="nowrap"
+        >
+          <FadeChild disable={!measured} delay={400}>
+            {texts[0]}
+          </FadeChild>
+          {br}
+          <FadeChild disable={!measured} delay={500}>
+            {texts[1]}
+          </FadeChild>
+          {br}
+          {texts[2] && (
+            <>
+              <FadeChild disable={!measured} delay={600}>
+                {texts[2]}
+              </FadeChild>
+              {br}
+            </>
+          )}
+          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+            <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
+          </FadeChild>
+        </Paragraph>
 
         {/* this is just to measure */}
         <Paragraph
@@ -230,6 +241,7 @@ export function HeadSection() {
           bottom={50}
           margin={['auto', 0]}
         >
+          <Space size="lg" />
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>

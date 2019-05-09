@@ -1,3 +1,5 @@
+- oleksy has some ml referrals
+
 make gloss work with shadow-root; not too hard:
   1. <ThemeConfig rootElement={shadowRootRef} />
   2. GlossView(props)

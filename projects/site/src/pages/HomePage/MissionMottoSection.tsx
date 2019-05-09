@@ -76,22 +76,22 @@ export function AboutSection() {
           <Col space="lg">
             <FadeChild delay={dly * 2}>
               <TitleTextSub textAlign="left" alpha={1}>
-                Our app platforms are broken.
+                It's too hard to build apps.
               </TitleTextSub>
             </FadeChild>
 
             <FadeChild delay={dly * 3}>
               <SubParagraph>
-                We think we can do better - give users and developers control, combined with a
-                incredible user experience.
+                We want to give developers more control, and users a better experience out of the
+                box.
               </SubParagraph>
             </FadeChild>
 
             <FadeChild delay={dly * 4}>
               <SubParagraph>
                 It starts by making apps to share data with each other, and creating an open
-                platform. Then, it requires a commitment to making apps easier to build, cross
-                platform, and all on an open platform.
+                platform. And a commitment to making apps easier to realize our ideas on a
+                sustainable platform.
               </SubParagraph>
             </FadeChild>
 

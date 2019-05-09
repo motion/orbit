@@ -286,10 +286,6 @@ function addStyles(
   const keys = Object.keys(styles).sort(pseudoSort)
   let classNames: string[] | null = null
   for (const key of keys) {
-    if (key === '&:before') {
-      debugger
-    }
-
     const cur = styles[key]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
     if (!cur) continue

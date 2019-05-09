@@ -1,4 +1,4 @@
-import { toCSSString } from '@o/css'
+import { cssString } from '@o/css'
 import { Component } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -17,7 +17,7 @@ export class Portal extends Component<Props> {
     this.popup = document.createElement('div') as HTMLDivElement
     document.body[this.props.prepend ? 'prepend' : 'appendChild'](this.popup)
     if (this.props.style) {
-      this.popup.setAttribute('style', toCSSString(this.props.style))
+      this.popup.setAttribute('style', cssString(this.props.style))
     }
     if (this.props.className) {
       this.popup.setAttribute('className', this.props.className)

@@ -82,8 +82,8 @@ export function AboutSection() {
 
             <FadeChild delay={dly * 3}>
               <SubParagraph>
-                We think we can do better - give developers control, and users an incredible user
-                experience by default.
+                We want to give developers more control, and users a better experience out of the
+                box.
               </SubParagraph>
             </FadeChild>
 

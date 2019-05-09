@@ -1,12 +1,6 @@
 import { toColorString } from '@o/color'
 
-import {
-  COLOR_KEYS,
-  FALSE_VALUES,
-  psuedoKeys,
-  SHORTHANDS,
-  unitlessNumberProperties,
-} from './constants'
+import { COLOR_KEYS, FALSE_VALUES, SHORTHANDS, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 
@@ -31,33 +25,28 @@ const emptyObject = Object.freeze({})
 // since this is super perf sensitive, lets not pass so much around
 let curCSSFn
 let curOpts
-let curShouldSnake
-
-// some duplicated code between these two... we need you js macros!
 
 export function cssString(styles: Object, opts?: CSSOptions): string {
   if (!styles) return ''
   curCSSFn = css
   curOpts = opts
-  curShouldSnake = !opts || opts.snakeCase !== false
+  const shouldSnake = !opts || opts.snakeCase !== false
   let toReturn = ''
   for (let key in styles) {
-    if (curShouldSnake) {
-      key = CAMEL_TO_SNAKE[key] || key
-    }
     let value = cssValue(key, styles[key])
     // shorthands
     if (value) {
       if (SHORTHANDS[key]) {
         for (let k of SHORTHANDS[key]) {
-          k = curShouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
           toReturn += `${k}:${px(value)};`
         }
       } else {
-        toReturn += `${key}:${value};`
+        toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
       }
     }
   }
+  console.log(styles, toReturn)
   return toReturn
 }
 
@@ -65,22 +54,19 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   if (!styles) return emptyObject
   curCSSFn = css
   curOpts = opts
-  curShouldSnake = !opts || opts.snakeCase !== false
+  const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
   for (let key in styles) {
-    if (curShouldSnake) {
-      key = CAMEL_TO_SNAKE[key] || key
-    }
     let value = cssValue(key, styles[key])
     // shorthands
     if (value) {
       if (SHORTHANDS[key]) {
         for (let k of SHORTHANDS[key]) {
-          k = curShouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
           toReturn[k] = px(value)
         }
       } else {
-        toReturn[key] = value
+        toReturn[(shouldSnake && CAMEL_TO_SNAKE[key]) || key] = value
       }
     }
   }
@@ -113,13 +99,12 @@ function cssValue(key: string, value: any) {
       return processArray(key, value)
     }
   } else if (
+    // recurse into psuedo or media query
     firstChar === '&' ||
     firstChar === '@' ||
     key === 'from' ||
-    key === 'to' ||
-    psuedoKeys[key]
+    key === 'to'
   ) {
-    // recurse into psuedo or media query
     return curCSSFn(value, curOpts)
   } else if (valueType === 'object') {
     if (value.toCSS) {

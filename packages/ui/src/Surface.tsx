@@ -522,7 +522,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   }
 
   const padStyle = getPadding(props)
-  console.log('padStyle', padStyle)
 
   styles = {
     boxShadow,
@@ -546,10 +545,15 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     ...marginStyle,
     // we use spacers for padding so we can actually set width: 0; see:
     padding: 0,
-    '&:before': /* padStyle &&  */ {
+    '&:before': padStyle && {
       display: 'block',
-      content: ' ',
-      width: '100px' || padStyle.padding[1],
+      content: '" "',
+      width: padStyle.padding[1],
+    },
+    '&:after': padStyle && {
+      display: 'block',
+      content: '" "',
+      width: 10 || selectDefined(padStyle.padding[3], padStyle.padding[1]),
     },
   }
 

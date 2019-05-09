@@ -19,7 +19,8 @@ export type StyleTracker = Map<
     namespace: string
     rules: BaseRules
     selector: string
-    style: Object
+    style: string
+    className: string
   }
 >
 

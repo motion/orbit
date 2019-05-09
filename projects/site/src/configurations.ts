@@ -25,26 +25,12 @@ function configure() {
   window['ResizeObserver'] = ResizeObserver
   window['ResizeSensor'] = ResizeSensor
 
-  // const isWebkit = 'webkitLineBreak' in document.documentElement.style
-
-  // configureGloss({
-  //   preProcessStyles: isWebkit ? undefined : (styles) => {
-  //     for (const key in )
-  //   },
-  // })
-
   configureUI({
     defaultProps: {
       title: {
         selectable: true,
         ...fontProps.GTEesti,
       },
-      // text: {
-      //   style: {
-      //     WebkitFontSmoothing: 'antialiased',
-      //     MozOsxFontSmoothing: 'grayscale',
-      //   },
-      // },
     },
   })
 

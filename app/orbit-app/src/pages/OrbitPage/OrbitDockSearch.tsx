@@ -9,7 +9,7 @@ class OrbitSearch {
   toggleOpen = () => (this.open = !this.open)
 }
 
-export function OrbitSearchModal() {
+export function OrbitDockSearch() {
   const store = useStore(OrbitSearch)
   const acceptsSearch = useAcceptsSearch()
 

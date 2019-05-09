@@ -1,4 +1,10 @@
-import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
+import {
+  cssString,
+  CSSPropertySet,
+  CSSPropertySetResolved,
+  ThemeObject,
+  validCSSAttr,
+} from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
 import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
@@ -280,6 +286,10 @@ function addStyles(
   const keys = Object.keys(styles).sort(pseudoSort)
   let classNames: string[] | null = null
   for (const key of keys) {
+    if (key === '&:before') {
+      debugger
+    }
+
     const cur = styles[key]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
     if (!cur) continue
@@ -311,15 +321,17 @@ function addDynamicStyles(
 ) {
   const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
   const dynStyles = {}
+  let parentClassNames
 
-  // if passed any classes from another styled component
-  // ignore that class and merge in their resolved styles
+  // if passed any classes from a parent gloss view
+  // merge in their classname and track it
   if (props.className) {
     const propClassNames = props.className.trim().split(whiteSpaceRegex)
     for (const className of propClassNames) {
       const classInfo = tracker.get(className)
       if (classInfo) {
-        dynStyles[classInfo.namespace] = classInfo.style
+        parentClassNames = parentClassNames || []
+        parentClassNames.push(classInfo.className)
       }
     }
   }
@@ -342,7 +354,14 @@ function addDynamicStyles(
   }
 
   // add dyn styles
-  const classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+  let classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+
+  // merge parent and current classnames
+  if (classNames && parentClassNames) {
+    classNames = [...parentClassNames, ...classNames]
+  } else if (parentClassNames) {
+    classNames = parentClassNames
+  }
 
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {
@@ -361,36 +380,15 @@ function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet
   const propStyles = {}
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (!baseStyles[id]) {
-      console.error('no baseStyles for id', id, baseStyles, 'nextStyles', nextStyles)
-      continue
-    }
     if (typeof baseStyles[id][key] !== 'undefined') {
       continue
     }
-    // valid attribute
     if (key[0] === '&' || key[0] === '@') {
+      // valid sub-attribute
       baseStyles[key] = nextStyles[key]
     } else if (validCSSAttr[key]) {
+      // valid regular attr
       baseStyles[id][key] = nextStyles[key]
-    } else {
-      // were defining a boolean prop style
-      //   looks like: <Component tall />
-      //   via: view({ color: 'red', tall: { height: '100%' } })
-      const prop = key
-      const styleObj = nextStyles[key]
-      if (typeof styleObj === 'object') {
-        propStyles[prop] = {
-          base: {},
-        }
-        for (const subKey in styleObj) {
-          if (subKey[0] === '&' || subKey[0] === '@') {
-            propStyles[prop][subKey] = styleObj[subKey]
-          } else {
-            propStyles[prop].base[subKey] = styleObj[subKey]
-          }
-        }
-      }
     }
   }
   return propStyles
@@ -431,17 +429,6 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
     styles,
     propStyles,
   }
-}
-
-function getSelector(className: string, namespace: string, tagName: string = '') {
-  if (namespace[0] === '@') {
-    return tagName + '.' + className
-  }
-  const classSelect = `.${className}`
-  if (namespace.indexOf('&') !== -1) {
-    return namespace.replace(/&/g, classSelect)
-  }
-  return classSelect
 }
 
 // compile theme from parents
@@ -486,21 +473,11 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   if (cachedClass) {
     return cachedClass
   }
-  const declarations: string[] = []
-  let style = css(rules)
 
-  if (Config.preProcessStyles) {
-    style = Config.preProcessStyles(style)
-  }
+  const style = cssString(rules)
 
-  // generate css declarations based on the style object
-  for (const key in style) {
-    const val = style[key]
-    declarations.push(`  ${key}: ${val};`)
-  }
-  const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = `g${stringHash(cssString)}`
+  const className = `g${stringHash(style)}`
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {
@@ -513,12 +490,13 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
       rules,
       selector,
       style,
+      className,
     })
 
     if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
+      sheet.insert(namespace, `${namespace} {\n${selector} {\n${style}\n}\n}`)
     } else {
-      sheet.insert(className, `${selector} {\n${cssString}\n}`)
+      sheet.insert(className, `${selector} {\n${style}\n}`)
     }
 
     rulesToClass.set(rules, className)
@@ -527,15 +505,24 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   return className
 }
 
+function getSelector(className: string, namespace: string, tagName: string = '') {
+  if (namespace[0] === '@') {
+    return tagName + '.' + className
+  }
+  const classSelect = `.${className}`
+  if (namespace.indexOf('&') !== -1) {
+    return namespace.replace(/&/g, classSelect)
+  }
+  return classSelect
+}
+
 // thx darksky: https://git.io/v9kWO
 function stringHash(str: string): number {
   let res = 5381
   let i = str.length
-
   while (i) {
     res = (res * 33) ^ str.charCodeAt(--i)
   }
-
   /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
    * integers. Since we want the results to be always positive, convert the
    * signed int to an unsigned by doing an unsigned bitshift. */

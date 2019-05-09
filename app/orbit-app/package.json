@@ -87,7 +87,8 @@
     "graphql": "14.2.1",
     "react-shadow": "16.3.2",
     "react-pose": "4.0.8",
-    "react-flip-toolkit": "6.5.9"
+    "react-flip-toolkit": "6.5.9",
+    "animejs": "3.0.1"
   },
   "devDependencies": {
     "@babel/preset-env": "*",

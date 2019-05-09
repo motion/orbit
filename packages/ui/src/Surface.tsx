@@ -1,5 +1,13 @@
 import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
-import Gloss, { Col, ColProps, forwardTheme, gloss, propsToStyles, psuedoStyleTheme, useTheme } from '@o/gloss'
+import Gloss, {
+  Col,
+  ColProps,
+  forwardTheme,
+  gloss,
+  propsToStyles,
+  psuedoStyleTheme,
+  useTheme,
+} from '@o/gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
@@ -488,7 +496,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
-  const padStyle = getPadding(props)
   const marginStyle = getMargin(props)
 
   let styles: CSSPropertySet = {}
@@ -514,6 +521,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     boxShadow = [...boxShadow, getElevation(props).boxShadow]
   }
 
+  const padStyle = getPadding(props)
+  console.log('padStyle', padStyle)
+
   styles = {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
@@ -533,8 +543,14 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
           ...propStyles['&:hover'],
         },
     ...styles,
-    ...padStyle,
     ...marginStyle,
+    // we use spacers for padding so we can actually set width: 0; see:
+    padding: 0,
+    '&:before': /* padStyle &&  */ {
+      display: 'block',
+      content: ' ',
+      width: '100px' || padStyle.padding[1],
+    },
   }
 
   return styles

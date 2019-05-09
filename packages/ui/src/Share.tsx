@@ -1,5 +1,6 @@
 import { createStoreContext, shallow } from '@o/use-store'
 import { useCallback } from 'react'
+import { filterCleanObject } from './helpers/filterCleanObject'
 
 class ShareStore {
   props: {
@@ -15,10 +16,11 @@ class ShareStore {
     main: [],
   })
 
-  setSelected(location: string | boolean, next: any[]) {
+  setSelected(location: string | boolean, raw: any[]) {
     if (typeof location === 'boolean') {
       location = 'main'
     }
+    const next = filterCleanObject(raw)
     this.clipboards[location] = next
     if (this.props.onChange) {
       this.props.onChange(location, next)

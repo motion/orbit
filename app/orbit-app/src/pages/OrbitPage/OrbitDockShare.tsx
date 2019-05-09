@@ -13,7 +13,7 @@ const useIsOnStaticApp = () => {
   return isStaticApp
 }
 
-export function OrbitFloatingShareCard({
+export function OrbitDockShare({
   width = 250,
   height = 350,
 }: {

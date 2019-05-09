@@ -555,6 +555,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
       content: '" "',
       width: padStyle.padding[1],
     },
+    background: 'green',
   }
 
   return styles

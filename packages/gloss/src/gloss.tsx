@@ -107,9 +107,11 @@ export function gloss<Props = any>(
   if (
     typeof a !== 'string' &&
     typeof target === 'object' &&
-    !isValidElement(target) &&
     !b &&
-    !hasGlossyChild
+    !hasGlossyChild &&
+    !isValidElement(target) &&
+    // if you pass an element wrapped in forwardRef() it needs to be filtered somehow..
+    !target['$$typeof']
   ) {
     target = 'div'
     rawStyles = a
@@ -312,6 +314,17 @@ function addStyles(
   return classNames
 }
 
+function mergePropStyles(baseId: string, base: Object, propStyles: Object, props: Object) {
+  for (const key in propStyles) {
+    if (props[key] !== true) continue
+    for (const sKey in propStyles[key]) {
+      const ns = sKey === 'base' ? baseId : sKey
+      base[ns] = base[ns] || {}
+      mergeStyles(ns, base, propStyles[key][sKey])
+    }
+  }
+}
+
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
@@ -322,7 +335,6 @@ function addDynamicStyles(
   theme?: ThemeObject,
   tagName?: string,
 ) {
-  const hasPropStyles = propStyles && !!Object.keys(propStyles).length
   const dynStyles = {}
   let parentClassNames
 
@@ -331,40 +343,36 @@ function addDynamicStyles(
   if (props.className) {
     const propClassNames = props.className.trim().split(whiteSpaceRegex)
     for (const className of propClassNames) {
-      const classInfo = tracker.get(className)
-      if (classInfo) {
+      const info = tracker.get(className)
+      if (info) {
         parentClassNames = parentClassNames || []
-        parentClassNames.push(classInfo.className)
+        parentClassNames.push(info.className)
       }
     }
   }
 
-  if (hasPropStyles) {
-    for (const key in propStyles) {
-      if (props[key] !== true) continue
-      for (const sKey in propStyles[key]) {
-        const ns = sKey === 'base' ? id : sKey
-        dynStyles[ns] = dynStyles[ns] || {}
-        mergeStyles(ns, dynStyles, propStyles[key][sKey])
-      }
-    }
+  if (propStyles) {
+    mergePropStyles(id, dynStyles, propStyles, props)
   }
 
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles[id] = dynStyles[id] || {}
-    mergeStyles(id, dynStyles, themeFn(props, next))
+    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
+    if (themePropStyles) {
+      mergePropStyles(id, dynStyles, themePropStyles, props)
+    }
   }
 
   // add dyn styles
   let classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
 
   // merge parent and current classnames
-  if (classNames && parentClassNames) {
-    classNames = [...parentClassNames, ...classNames]
-  } else if (parentClassNames && !classNames) {
-    classNames = parentClassNames
+  if (parentClassNames) {
+    classNames = [...parentClassNames, ...(classNames || [])]
   }
+
+  if (classNames && classNames.some(x => x === null)) debugger
 
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {
@@ -381,6 +389,13 @@ function addDynamicStyles(
 
 const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 
+//
+// this... THIS...
+//  ... this is a tricky function
+//  because its used on initial mount AND during renders
+//  which is actually useful, yes, because you want the logic the same
+//  BUT its also used nested! See themeFn => mergePropStyles
+//
 function mergeStyles(
   id: string,
   baseStyles: Object,
@@ -389,41 +404,47 @@ function mergeStyles(
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (baseStyles[id][key] !== undefined) {
+    if (!baseStyles[id]) {
+      console.error('no baseStyles for id', id, baseStyles, 'nextStyles', nextStyles)
       continue
     }
-    if (isSubStyle(key)) {
-      // valid sub-attribute
-      baseStyles[key] = nextStyles[key]
-    } else if (validCSSAttr[key]) {
+    if (validCSSAttr[key]) {
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
+    } else if (isSubStyle(key)) {
+      // valid sub-attribute
+      baseStyles[key] = nextStyles[key]
     } else {
-      let all = nextStyles[key]
-      if (!all) return
-
+      let subStyles = nextStyles[key]
+      // catch invalid/falsy
+      if (!subStyles || typeof subStyles !== 'object') {
+        continue
+      }
       // propStyles
       //   definition: gloss({ isTall: { height: '100%' } })
       //   usage: <Component isTall />
 
       propStyles = {}
 
-      // they can nest (media queries/psuedoes), split it out
-      //   eg: gloss({ isTall: { '&:before': ... } })
-      for (const sKey in all) {
-        if (sKey === '0') debugger
-        console.log('sKey', sKey)
+      // they can nest (media queries/psuedoes), split it out, eg:
+      //  gloss({
+      //    isTall: {
+      //      '&:before': {}
+      //    }
+      //  })
+      for (const sKey in subStyles) {
+        // key = isTall
+        // sKey = &:before
         if (isSubStyle(sKey)) {
           // keep all sub-styles on their key
-          propStyles[sKey] = all[sKey]
+          propStyles[key] = propStyles[key] || {}
+          propStyles[key][sKey] = subStyles[sKey]
         } else {
           // we put base styles here, see 'base' check above
           propStyles.base = propStyles.base || {}
-          propStyles.base[sKey] = all[sKey]
+          propStyles.base[sKey] = subStyles[sKey]
         }
       }
-
-      console.log('retuirning', propStyles)
     }
   }
   return propStyles
@@ -436,6 +457,7 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
     [baseId]: {},
   }
   let propStyles = mergeStyles(baseId, styles, rawStyles)
+  console.log('get all', propStyles, styles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
     const parentConfig = target.internal.getConfig()

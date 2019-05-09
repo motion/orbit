@@ -123,15 +123,13 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): U
   }
 }
 
-const itemArrowRight = <Button circular chromeless iconSize={14} icon="chevron-right" />
-
 async function loadListItem(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {
         title: item.name,
         subTitle: `${item.children.length} items`,
-        after: itemArrowRight,
+        after: <Button circular chromeless iconSize={14} icon="chevron-right" />,
         subId: `${item.id}`,
         subType: 'folder',
       }
@@ -154,7 +152,6 @@ export function TreeList(props: TreeListProps) {
     Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
       !cancel && setLoadedItems(res)
     })
-
     return () => {
       cancel = true
     }

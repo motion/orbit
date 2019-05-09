@@ -13,7 +13,6 @@ type ProvideStoresProps = {
 
 export function ProvideStores(props: ProvideStoresProps) {
   const next = mapValues(props.stores, unwrapProxy)
-  console.log('passsing to', config.StoreContext, next)
   return (
     <MergeContext Context={config.StoreContext} value={next}>
       {props.children}

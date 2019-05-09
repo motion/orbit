@@ -448,9 +448,9 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.3} zIndex={-1}>
         <FullScreen
-          opacity={0.23}
-          transform={{ y: '-10%', scale: 3 }}
-          background="radial-gradient(circle closest-side, #4299A2 20%, #750750, transparent)"
+          opacity={0.3}
+          transform={{ y: '-6%', scale: 2.6 }}
+          background="radial-gradient(circle closest-side, #4299A277 20%, #750750, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

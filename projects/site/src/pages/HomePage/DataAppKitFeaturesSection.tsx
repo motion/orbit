@@ -55,7 +55,7 @@ export default memo(function DataAppKitFeaturesSection() {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : [0, 0, '3%']}
+            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : ['-4%', 0, '6%']}
             height="auto"
             header={
               <>
@@ -63,13 +63,13 @@ export default memo(function DataAppKitFeaturesSection() {
                   <PillButton>Apps</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText textAlign="center" size="xxl">
-                    An ecosystem of apps.
+                  <TitleText textAlign="center" size="xxxl">
+                    Build together.
                   </TitleText>
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
-                    Plug in typed apps with a click.
+                    Collaborate with your team, add apps with a click.
                     {screen !== 'small' && <br />}
                     &nbsp;Use, extend and build with the app store.
                   </FadeChild>

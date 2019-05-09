@@ -19,15 +19,7 @@ export function LineSep({
     svg = svg.replace(`fill="url(#linearGradient-1)"`, '')
   }
   return (
-    <View
-      color={theme.background}
-      position="absolute"
-      top={0}
-      width="100%"
-      minWidth={1200}
-      height={100}
-      {...props}
-    >
+    <View color={theme.background} position="absolute" top={0} width="100%" height={100} {...props}>
       <SVG svg={svg} width="100%" />
     </View>
   )

@@ -54,7 +54,7 @@ export default function ShoulderSection() {
               </FadeChild>
               <FadeChild delay={200}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                  You control everything.
+                  You control it all.
                 </TitleText>
               </FadeChild>
             </>
@@ -89,7 +89,7 @@ export default function ShoulderSection() {
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
                 <ParagraphIntro size={1.5}>
-                  From idea to deploy you control the data, the code that runs it, and where it
+                  From idea to deploy. You control the data, the code that runs it, and where it
                   runs.
                 </ParagraphIntro>
               </FadeChild>

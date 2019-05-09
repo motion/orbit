@@ -17,23 +17,23 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Stunning apps in seconds',
-  medium: 'Stunning apps in seconds',
-  small: 'Stunning apps in seconds',
+  large: 'Powerful apps in minutes',
+  medium: 'Powerful apps in minutes',
+  small: 'Powerful apps in minutes',
 }
 
 let allTexts = {
   large: [
     `Plug data into incredibly rich views with no infrastacture at all.`,
-    `It's a new way to build smart, powerful apps.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
   medium: [
     `Plug data into incredibly rich views with no infrastacture at all.`,
-    `It's a new way to build smart, powerful apps.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
   small: [
-    `The decentralized intranet app platform.`,
-    `Plug data into views with little code, no server needed.`,
+    `Plug data into incredibly rich views with no infrastacture at all.`,
+    `It's a new way to build smart, amazing apps.`,
   ],
 }
 

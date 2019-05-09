@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { TreeItems } from './TreeItems'

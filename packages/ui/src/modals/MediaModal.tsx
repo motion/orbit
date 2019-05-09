@@ -1,4 +1,4 @@
-import { Absolute, Row, Theme } from '@o/gloss'
+import { Absolute, Row, Theme } from 'gloss'
 import React from 'react'
 
 import { Button } from '../buttons/Button'

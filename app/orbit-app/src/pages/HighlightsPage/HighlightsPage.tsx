@@ -1,4 +1,4 @@
-// import { gloss } from '@o/gloss'
+// import { gloss } from 'gloss'
 // import { Desktop } from '@o/stores'
 // import * as UI from '@o/ui'
 // import { react, useStore } from '@o/use-store'

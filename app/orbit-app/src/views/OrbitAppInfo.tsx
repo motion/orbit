@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row } from 'gloss'
 import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@o/kit'
 import { Space, Text, View } from '@o/ui'
 import pluralize from 'pluralize'

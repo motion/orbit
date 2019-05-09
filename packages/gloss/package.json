@@ -1,5 +1,5 @@
 {
-  "name": "@o/gloss",
+  "name": "gloss",
   "version": "2.4.1",
   "description": "Higher order component for nicer component styles",
   "main": "_/index.js",

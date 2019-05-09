@@ -1,4 +1,4 @@
-import { gloss, ThemeFn } from '@o/gloss'
+import { gloss, ThemeFn } from 'gloss'
 import React, { useCallback, useMemo } from 'react'
 
 import { isWebkit } from '../constants'

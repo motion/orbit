@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { ClearButton, Icon } from '@o/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'

@@ -1,4 +1,4 @@
-import { linearGradient } from '@o/gloss'
+import { linearGradient } from 'gloss'
 import { View } from '@o/ui'
 import React, { forwardRef } from 'react'
 

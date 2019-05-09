@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row } from 'gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
 import { SurfacePassProps } from '../Surface'

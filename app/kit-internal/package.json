@@ -12,7 +12,7 @@
   "dependencies": {
     "@o/bridge": "^2.4.1",
     "@o/fast-compare": "^2.4.1",
-    "@o/gloss": "^2.4.1",
+    "gloss": "^2.4.1",
     "@o/kit": "^2.4.1",
     "@o/models": "^2.4.1",
     "@o/react-sortable-hoc": "1.6.5",

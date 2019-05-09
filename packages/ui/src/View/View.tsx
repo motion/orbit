@@ -1,4 +1,4 @@
-import { Base, BaseProps, gloss } from '@o/gloss'
+import { Base, BaseProps, gloss } from 'gloss'
 
 import { Sizes } from '../Space'
 import { Omit } from '../types'

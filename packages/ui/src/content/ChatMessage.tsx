@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row } from 'gloss'
 import React, { useContext } from 'react'
 
 import { ButtonPerson } from '../buttons/ButtonPerson'

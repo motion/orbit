@@ -1,4 +1,4 @@
-import { Theme, useThemeContext } from '@o/gloss'
+import { Theme, useThemeContext } from 'gloss'
 import { isDefined, selectDefined } from '@o/utils'
 import React, { forwardRef, useCallback } from 'react'
 

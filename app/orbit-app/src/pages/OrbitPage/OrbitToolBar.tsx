@@ -1,4 +1,4 @@
-import { gloss, Row, RowProps } from '@o/gloss'
+import { gloss, Row, RowProps } from 'gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'

@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React from 'react'
 
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'

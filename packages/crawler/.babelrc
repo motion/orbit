@@ -5,7 +5,7 @@
         [
           "@o/babel-preset-motion",
           {
-            "disable": ["@o/gloss/transform", "react-hot-loader/babel"]
+            "disable": ["gloss/transform", "react-hot-loader/babel"]
           }
         ]
       ]

@@ -1,4 +1,4 @@
-import { Base } from '@o/gloss'
+import { Base } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'

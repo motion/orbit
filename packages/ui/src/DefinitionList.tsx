@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row } from 'gloss'
 import { isDefined } from '@o/utils'
 import React from 'react'
 

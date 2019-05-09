@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { FullScreen, gloss, useTheme } from '@o/gloss'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
 import {

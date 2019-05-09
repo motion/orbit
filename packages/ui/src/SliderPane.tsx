@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { useRef } from 'react'
 
 import { useNodeSize } from './hooks/useNodeSize'

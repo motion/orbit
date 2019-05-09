@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 
 export const Unpad = gloss({
   margin: [0, -12],

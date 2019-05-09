@@ -1,5 +1,5 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, ThemeFn } from '@o/gloss'
+import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, ThemeFn } from 'gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'

@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { Row, toColor, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 

@@ -1,4 +1,4 @@
-import { Col, gloss } from '@o/gloss'
+import { Col, gloss } from 'gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 

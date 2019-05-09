@@ -1,4 +1,4 @@
-import { Inline, Row } from '@o/gloss'
+import { Inline, Row } from 'gloss'
 import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'

@@ -1,4 +1,4 @@
-import { Block, Row, ThemeContext } from '@o/gloss'
+import { Block, Row, ThemeContext } from 'gloss'
 import { flow } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from './helpers/preventDefault'

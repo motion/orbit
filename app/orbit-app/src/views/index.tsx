@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as UI from '@o/ui'
 import { Row } from '@o/ui'
 

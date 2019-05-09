@@ -1,6 +1,6 @@
 import { Stores } from '../../om/stores'
 import { command } from '@o/bridge'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { AppDefinition, showConfirmDialog, themes, ProvideStores } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'

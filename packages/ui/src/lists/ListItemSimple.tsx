@@ -1,4 +1,4 @@
-import { gloss, Theme, ThemeContext, useTheme } from '@o/gloss'
+import { gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import { useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'

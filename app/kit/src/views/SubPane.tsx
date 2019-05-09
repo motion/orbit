@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as UI from '@o/ui'
 import { useStore } from '@o/use-store'
 import { throttle } from 'lodash'

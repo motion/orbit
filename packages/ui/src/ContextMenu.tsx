@@ -1,4 +1,4 @@
-import { Contents, ContentsProps } from '@o/gloss'
+import { Contents, ContentsProps } from 'gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 

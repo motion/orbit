@@ -1,5 +1,5 @@
 {
-  "name": "@o/gloss-displaynames",
+  "name": "gloss-displaynames",
   "version": "2.4.1",
   "main": "_/index.js",
   "sideEffects": false,

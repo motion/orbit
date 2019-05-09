@@ -1,4 +1,4 @@
-import { ThemeObject, useTheme } from '@o/gloss'
+import { ThemeObject, useTheme } from 'gloss'
 import React from 'react'
 import Switch, { ReactSwitchProps } from 'react-switch'
 import { useToggle } from '../hooks/useToggle'

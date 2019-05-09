@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as React from 'react'
 import CosalSaliency from './CosalSaliency'
 import CosalSearch from './CosalSearch'

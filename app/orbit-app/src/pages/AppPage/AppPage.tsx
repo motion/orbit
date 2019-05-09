@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { AppView, Icon, QueryStore, SpaceStore } from '@o/kit'
 import * as UI from '@o/ui'
 import { Col, Row, SelectableStore, Sidebar, Space, Text } from '@o/ui'

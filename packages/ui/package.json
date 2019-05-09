@@ -15,7 +15,7 @@
     "@o/color": "^2.4.1",
     "@o/css": "^2.4.1",
     "@o/fast-compare": "^2.4.1",
-    "@o/gloss": "^2.4.1",
+    "gloss": "^2.4.1",
     "@o/react-sortable-hoc": "*",
     "@o/use-store": "^2.4.1",
     "intersection-observer": "0.5.1",

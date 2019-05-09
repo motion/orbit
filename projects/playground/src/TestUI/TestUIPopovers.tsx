@@ -1,4 +1,4 @@
-import { Col } from '@o/gloss'
+import { Col } from 'gloss'
 import { Button, Popover, Row } from '@o/ui'
 import * as React from 'react'
 

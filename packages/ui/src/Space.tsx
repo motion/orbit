@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 
 import { isBrowser } from './constants'
 import { useScale } from './Scale'

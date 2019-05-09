@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { ClearButton } from '../buttons/ClearButton'

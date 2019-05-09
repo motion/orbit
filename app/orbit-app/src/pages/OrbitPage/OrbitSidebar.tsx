@@ -1,4 +1,4 @@
-import { Col } from '@o/gloss'
+import { Col } from 'gloss'
 import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
 import { BorderTop, ListPassProps, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'

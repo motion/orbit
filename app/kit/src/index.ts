@@ -5,7 +5,7 @@ export const Templates = TemplatesImport
 export * from '@o/bridge'
 export * from '@o/config'
 export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
-export { colorToString, toColor } from '@o/gloss'
+export { colorToString, toColor } from 'gloss'
 export * from '@o/logger'
 export * from '@o/mediator'
 export {

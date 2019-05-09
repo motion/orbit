@@ -1,5 +1,5 @@
 import { save } from '@o/bridge'
-import { gloss, Row, RowProps } from '@o/gloss'
+import { gloss, Row, RowProps } from 'gloss'
 import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'

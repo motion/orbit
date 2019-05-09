@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { selectDefined } from '@o/utils'
 import React from 'react'
 

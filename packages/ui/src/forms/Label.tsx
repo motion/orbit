@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { HTMLProps } from 'react'
 import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 

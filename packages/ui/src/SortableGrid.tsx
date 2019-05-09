@@ -1,4 +1,4 @@
-import { Grid } from '@o/gloss'
+import { Grid } from 'gloss'
 import {
   SortableContainer,
   SortableContainerProps,

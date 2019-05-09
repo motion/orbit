@@ -5,7 +5,7 @@
  * @format
  */
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { on } from '@o/utils'
 import invariant from 'invariant'
 import { pick } from 'lodash'

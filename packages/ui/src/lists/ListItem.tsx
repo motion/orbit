@@ -1,4 +1,4 @@
-import { gloss, Theme } from '@o/gloss'
+import { gloss, Theme } from 'gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef, useCallback } from 'react'
 

@@ -5,7 +5,7 @@ export default function glossViewDisplayNames(babel) {
   const referenceState = {}
 
   return {
-    name: '@o/gloss-displaynames',
+    name: 'gloss-displaynames',
     visitor: {
       ImportDeclaration(path, state) {
         const fileName = path.hub.file.opts.filename
@@ -17,7 +17,7 @@ export default function glossViewDisplayNames(babel) {
 
         // options
         const matchNames: string[] = state.opts.matchNames || ['gloss']
-        const matchImports: string[] = state.opts.matchImports || ['@o/gloss']
+        const matchImports: string[] = state.opts.matchImports || ['gloss']
 
         if (matchImports.indexOf(path.node.source.value) === -1) {
           return

@@ -1,4 +1,4 @@
-import { FullScreen } from '@o/gloss'
+import { FullScreen } from 'gloss'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import memoize from 'memoize-weak'

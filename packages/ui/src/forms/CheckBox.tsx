@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 
 export const CheckBox = gloss('input', {
   margin: 'auto',

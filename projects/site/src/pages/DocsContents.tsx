@@ -1,5 +1,5 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { ThemeProvide } from '@o/gloss'
+import { ThemeProvide } from 'gloss'
 import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
 import React, { memo } from 'react'

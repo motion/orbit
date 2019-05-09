@@ -1,4 +1,4 @@
-import { FullScreen, gloss } from '@o/gloss'
+import { FullScreen, gloss } from 'gloss'
 import { View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { now } from 'mobx-utils'

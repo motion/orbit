@@ -1,5 +1,5 @@
 {
-  "name": "@o/gloss-webpack",
+  "name": "gloss-webpack",
   "version": "2.4.1",
   "main": "_/index.js",
   "sideEffects": false,

@@ -7,7 +7,7 @@ import Gloss, {
   propsToStyles,
   psuedoStyleTheme,
   useTheme,
-} from '@o/gloss'
+} from 'gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'

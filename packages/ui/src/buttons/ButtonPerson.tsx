@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row } from 'gloss'
 import * as React from 'react'
 import { Image } from '../Image'
 import { Text } from '../text/Text'

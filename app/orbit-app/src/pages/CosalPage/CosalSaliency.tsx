@@ -1,5 +1,5 @@
 import { loadMany } from '@o/bridge'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { CosalSaliencyModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'

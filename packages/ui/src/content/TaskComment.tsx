@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row } from 'gloss'
 import * as React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButton } from '../buttons/RoundButton'

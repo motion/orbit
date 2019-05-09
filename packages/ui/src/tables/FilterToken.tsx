@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row, RowProps } from '@o/gloss'
+import { gloss, Row, RowProps } from 'gloss'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'

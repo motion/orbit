@@ -1,6 +1,6 @@
 import 'requestidlecallback-polyfill'
 
-import { ThemeMaker } from '@o/gloss'
+import { ThemeMaker } from 'gloss'
 import { configureHotKeys, configureUI, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'

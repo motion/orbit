@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { memo, useCallback, useContext, useEffect, useState } from 'react'
 
 import { BorderLeft, BorderTop } from '../Border'

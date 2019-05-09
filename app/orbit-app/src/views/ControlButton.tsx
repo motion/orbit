@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as UI from '@o/ui'
 import * as React from 'react'
 import controlX from '../../public/images/control-x.png'

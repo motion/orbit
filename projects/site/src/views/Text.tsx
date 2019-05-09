@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { SimpleText } from '@o/ui'
 
 export const Text = gloss(SimpleText, {

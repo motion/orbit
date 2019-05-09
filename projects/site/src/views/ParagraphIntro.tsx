@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { TextProps } from '@o/ui'
 import React from 'react'
 import { Paragraph } from './Paragraph'

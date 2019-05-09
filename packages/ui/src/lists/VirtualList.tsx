@@ -48,6 +48,9 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
         ...(getItemProps && getItemProps(item, index, items)),
       }
       let finishSelect = false
+      if (item.after) {
+        debugger
+      }
       return (
         <VirtualListItem
           forwardRef={ref}

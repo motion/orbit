@@ -6,8 +6,8 @@
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
-    "@babel/core": "7.2.0",
-    "@babel/runtime": "7.4.3",
+    "@babel/core": "^7.4.4",
+    "@babel/runtime": "^7.4.4",
     "@o/babel-preset-motion": "^2.4.1",
     "@o/gloss": "^2.4.1",
     "@o/kit": "^2.4.1",

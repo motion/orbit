@@ -12,7 +12,7 @@
     "debug": "electron --require ndb-inspect ./_/main.js"
   },
   "dependencies": {
-    "@babel/runtime": "7.4.3",
+    "@babel/runtime": "^7.4.4",
     "@o/config": "^2.4.1",
     "@o/logger": "^2.4.1",
     "@o/orbit-app": "^2.4.1",

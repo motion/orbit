@@ -1,6 +1,6 @@
 import { createStoreContext, useStore } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 import { ObservableSet } from 'mobx'
 
@@ -19,33 +19,10 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 export const Dock = memo((props: any) => {
   const dockStore = useStore(DockStore)
-  const [now, setNow] = useState()
-
   return (
     <DockStoreContext.SimpleProvider value={dockStore}>
-      <Button onClick={() => setNow(!now)}>toggle</Button>
-      <Flipper flipKey={`${now}` || dockStore.key}>
-        <Row position="fixed" bottom={20} right={20} zIndex={100000000} {...props}>
-          <Flipped flipId={'1'}>
-            <Button
-              background={now ? 'green' : 'red'}
-              opacity={now ? 0 : 1}
-              width={now ? 0 : 'auto'}
-            >
-              hihi
-            </Button>
-          </Flipped>
-          <Button>hihi</Button>
-          <Flipped flipId={'2'}>
-            <Button
-              background={now ? 'green' : 'red'}
-              opacity={now ? 0 : 1}
-              width={now ? 0 : 'auto'}
-            >
-              hihi
-            </Button>
-          </Flipped>
-        </Row>
+      <Flipper flipKey={dockStore.key}>
+        <Row position="fixed" bottom={20} right={20} zIndex={100000000} {...props} />
       </Flipper>
     </DockStoreContext.SimpleProvider>
   )
@@ -64,20 +41,17 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
   const dockStore = DockStoreContext.useStore()
 
   if (visible) {
-    console.log('add', id)
     dockStore.add(id)
   } else {
     dockStore.remove(id)
   }
-
-  console.log('finish render', dockStore.key, id, visible)
 
   if (!visible) {
     return null
   }
 
   return (
-    <Flipped onAppear={onElementAppear} onExit={onExit} flipId={id}>
+    <Flipped flipId={id}>
       {props => (
         <Button
           circular
@@ -95,7 +69,7 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
             y: visible ? 0 : 150,
           }}
           {...buttonProps}
-          {...log(props)}
+          {...props}
         />
       )}
     </Flipped>

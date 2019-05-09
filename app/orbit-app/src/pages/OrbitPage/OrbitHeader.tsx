@@ -145,7 +145,6 @@ export const OrbitHeader = memo(() => {
                 {...useLocationLink('/app/apps')}
                 icon="layout-grid"
                 tooltip="Manage apps"
-                tooltipProps={{ open: true }}
               />
 
               {!isEditing && <OrbitSpaceSwitch />}
@@ -208,7 +207,6 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         background={(theme => theme.backgroundStrongest) as any}
         adjust={[80, 0]}
         {...rest}
-        open
       >
         {children}
       </Popover>

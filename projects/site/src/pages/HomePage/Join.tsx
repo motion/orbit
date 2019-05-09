@@ -75,7 +75,6 @@ export class Join extends React.Component<any> {
             size={2}
             sizeRadius={5}
             sizePadding={1.5}
-            textAlign="center"
             {...inputProps}
           />
 

@@ -29,6 +29,8 @@ const config = merge(
   }),
 )
 
+export type Om = Overmind<typeof config>
+
 export const om: Overmind<typeof config> =
   window['om'] ||
   createOvermind(config, {

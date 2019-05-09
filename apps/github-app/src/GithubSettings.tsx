@@ -19,7 +19,7 @@ export function GithubSettings() {
     if (!app) return
     const loader = new GithubLoader(app)
     loader.loadUserRepositories().then(next => {
-      setRepos(next)
+      setRepos(() => next)
     })
   }, [app && app.token])
 

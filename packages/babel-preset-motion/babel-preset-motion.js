@@ -48,10 +48,10 @@ module.exports = function(_, givenOpts) {
           loose: true,
           modules: false,
           targets: {
-            chrome: '73',
+            chrome: '74',
             esmodules: true,
           },
-          exclude: ['transform-regenerator'],
+          exclude: ['transform-regenerator', 'transform-async-to-generator'],
           ...opts.env,
         }),
         plug('@babel/preset-typescript'),

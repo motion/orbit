@@ -32,7 +32,7 @@
     "@o/stores": "^2.4.1",
     "@o/use-store": "^2.4.1",
     "@o/utils": "^2.4.1",
-    "@babel/runtime": "7.4.3",
+    "@babel/runtime": "^7.4.4",
     "abortcontroller-polyfill": "1.1.9",
     "altair": "^1.0.0",
     "apollo-fetch": "^0.7.0",

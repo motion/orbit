@@ -8,18 +8,18 @@ import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
 
+export type SimpleModalProps = SectionProps &
+  SizedSurfaceProps & {
+    open?: boolean
+    onClose?: () => any
+  }
+
 export type ModalProps = SimpleModalProps & {
   onClickBackground?: React.MouseEventHandler<HTMLDivElement>
   backgroundProps?: ViewProps
   children?: React.ReactNode
   chromeless?: boolean
 }
-
-export type SimpleModalProps = SectionProps &
-  SizedSurfaceProps & {
-    open?: boolean
-    onClose?: () => any
-  }
 
 export function Modal({
   backgroundProps,

@@ -4,6 +4,11 @@ import { useCallback } from 'react'
 class ShareStore {
   props: {
     onChange?: (location: string, items: any[]) => any
+    id?: string
+  }
+
+  get id() {
+    return this.props.id
   }
 
   clipboards = shallow({

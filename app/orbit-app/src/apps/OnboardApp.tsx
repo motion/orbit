@@ -3,12 +3,12 @@ import { gloss } from '@o/gloss'
 import { App, createApp, useAppDefinitions } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Icon, ListItem, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
-import { react, useHook, useStore } from '@o/use-store'
+import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
 import React from 'react'
 
 import { addAppClickHandler } from '../helpers/addAppClickHandler'
-import { useStoresSimple } from '../hooks/useStores'
+import { paneManagerStore } from '../om/stores'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
 
@@ -27,7 +27,6 @@ const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
-  stores = useHook(useStoresSimple)
   acceptedMessage = ''
   accepted = null
   curFrame = 0
@@ -65,7 +64,7 @@ class OnboardStore {
     },
     1: () => {},
     2: async () => {
-      this.stores.paneManagerStore.setActivePaneByType('home')
+      paneManagerStore.setActivePaneByType('home')
       // save setting
       const user = await loadOne(UserModel, {})
       save(UserModel, {

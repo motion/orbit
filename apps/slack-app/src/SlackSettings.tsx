@@ -22,7 +22,7 @@ export function SlackSettings() {
     const loader = new SlackLoader(app)
     loader.loadChannels().then(freshApiChannels => {
       console.log('loaded channels')
-      setChannels(orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc']))
+      setChannels(() => orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc']))
     })
   }, [app && app.token])
 

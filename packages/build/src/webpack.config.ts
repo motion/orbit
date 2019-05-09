@@ -16,7 +16,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 // const Critters = require('critters-webpack-plugin')
 // const PreloadWebpackPlugin = require('preload-webpack-plugin')
-// const WebpackNotifierPlugin = require('webpack-notifier')
+const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 // const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
@@ -329,6 +329,8 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
+      new WebpackNotifierPlugin({ excludeWarnings: true }),
+
       new webpack.DefinePlugin(defines),
 
       new webpack.IgnorePlugin(/electron-log/),

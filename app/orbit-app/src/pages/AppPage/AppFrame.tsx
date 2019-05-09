@@ -1,14 +1,15 @@
 import { gloss } from '@o/gloss'
 import { App } from '@o/stores'
 import * as UI from '@o/ui'
-import { ensure, react, useHook, useStore } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import { on } from '@o/utils'
 import { debounce } from 'lodash'
 import Resizable, { ResizeCallback } from 're-resizable'
 import * as React from 'react'
+
 import { AppActions } from '../../actions/AppActions'
 import * as Constants from '../../constants'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import AppFrameArrow from './AppFrameArrow'
 import { AppPageStore } from './AppPageStore'
 
@@ -48,7 +49,7 @@ const arrToObj = size => {
 const initialAppState = App.getAppState(Constants.PEEK_ID)
 
 export class AppFrameStore {
-  stores = useHook(useStoresSimple)
+  // stores = useHook(useStoresSimple)
 
   // frame position and size
   ogSize = arrToObj(initialAppState.size)
@@ -81,7 +82,8 @@ export class AppFrameStore {
   }
 
   get framePosition() {
-    const { willShow, willStayShown, willHide } = this.stores.appPageStore
+    const { willShow, willStayShown, willHide } = null as any
+    // const { willShow, willStayShown, willHide } = this.stores.appPageStore
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
     let x = this.position[0]

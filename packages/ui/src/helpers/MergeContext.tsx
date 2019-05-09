@@ -17,15 +17,12 @@ export function MergeContext<A>({ Context, value, children }: MergeContextProps<
     key.current = key.current + 1
     cur.current = value
   }
-  const memoValue = useMemo(
-    () => {
-      if (context && typeof context === 'object' && context.constructor.name === 'Object') {
-        return { ...context, ...value }
-      } else {
-        return value
-      }
-    },
-    [key.current],
-  )
+  const memoValue = useMemo(() => {
+    if (context && typeof context === 'object' && context.constructor.name === 'Object') {
+      return { ...context, ...value }
+    } else {
+      return value
+    }
+  }, [key.current])
   return <Context.Provider value={memoValue as A}>{children}</Context.Provider>
 }

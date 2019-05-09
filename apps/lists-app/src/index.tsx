@@ -1,63 +1,73 @@
-import {
-  App,
-  AppBit,
-  AppMainView,
-  AppModel,
-  AppProps,
-  Bit,
-  createApp,
-  ensure,
-  getTargetValue,
-  Icon,
-  save,
-  searchBits,
-  TreeList,
-  useReaction,
-  useTreeList,
-} from '@o/kit'
-import {
-  Breadcrumbs,
-  Button,
-  ButtonProps,
-  List,
-  ListItemProps,
-  Pane,
-  preventDefault,
-  SearchableTopBar,
-  StatusBarText,
-  Text,
-  TitleRow,
-  TitleRowProps,
-  useBreadcrumb,
-  useToggle,
-  View,
-} from '@o/ui'
+import { App, AppBit, AppMainView, AppModel, AppProps, Bit, createApp, getTargetValue, Icon, save, TreeList, useBitSearch, useTreeList } from '@o/kit'
+import { Breadcrumbs, Button, ButtonProps, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, Text, TitleRow, useBreadcrumb, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useEffect, useState } from 'react'
 
 import { ListsAppBit } from './types'
 
+export default createApp({
+  id: 'lists',
+  name: 'Lists',
+  icon: '',
+  app: ListApp,
+  api: () => API,
+})
+
+const API = {
+  receive(
+    app: AppBit,
+    parentID: number,
+    child: Bit | { id?: number; name?: string; icon?: string; target: 'folder' },
+  ) {
+    console.log('creating new', app, parentID, child)
+
+    const listApp = app as ListsAppBit
+    const item = listApp.data.items[parentID]
+    if (!item || (item.type !== 'folder' && item.type !== 'root')) {
+      return console.error('NO VALID THING', item, parentID, listApp)
+    }
+
+    const id = child.id || Math.random()
+    item.children.push(id)
+
+    // add to hash
+    if (child.target === 'bit') {
+      listApp.data.items[id] = {
+        id,
+        type: 'bit',
+        name: child.title,
+      }
+    } else if (child.target === 'folder') {
+      listApp.data.items[id] = {
+        id,
+        children: [],
+        type: 'folder',
+        name: child.name,
+        icon: child.icon,
+      }
+    }
+
+    save(AppModel, app)
+  },
+}
+
+function ListApp(props: AppProps) {
+  return (
+    <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
+      <ListsAppMain {...props} />
+    </App>
+  )
+}
+
 export function ListsAppIndex() {
   const treeList = useTreeList('list')
   const [addQuery, setAddQuery] = useState('')
   const hideSearch = useToggle(true)
-
-  const searchResults = useReaction(
-    async (_, { sleep }) => {
-      ensure('query', !!addQuery)
-      await sleep(100)
-      const results = await searchBits({ query: addQuery, take: 20 })
-      return results.map(item => ({
-        ...item,
-        after: <Button margin={['auto', 0, 'auto', 10]} icon="plus" />,
-      }))
-    },
-    {
-      defaultValue: [],
-    },
-    [addQuery],
-  )
+  const results = useBitSearch({ query: addQuery, take: 20 }).map(item => ({
+    ...item,
+    after: <Button margin={['auto', 0, 'auto', 10]} icon="plus" />,
+  }))
 
   return (
     <>
@@ -100,30 +110,26 @@ export function ListsAppIndex() {
         collapsable
         collapsed={hideSearch.val}
         onCollapse={hideSearch.toggle}
-        title={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+        title={results ? `Search Results (${results.length})` : 'Search Results'}
         maxHeight={600}
         // background
       >
-        <List search={addQuery} items={searchResults || []} />
+        <List search={addQuery} items={results || []} />
       </Pane>
     </>
   )
 }
 
-export function ListsAppMain(props: AppProps) {
+function ListsAppMain(props: AppProps) {
   if (props.subType === 'folder') {
     return <ListsAppMainFolder {...props} />
   }
   return (
     <>
-      <ListAppTitle title={props.title || 'hi'} />
+      <TitleRow bordered sizePadding={2} margin={0} title={props.title} />
       <AppMainView {...props} />
     </>
   )
-}
-
-function ListAppTitle(props: TitleRowProps) {
-  return <TitleRow bordered sizePadding={2} margin={0} {...props} />
 }
 
 function ListsAppMainFolder(props: AppProps) {
@@ -147,61 +153,7 @@ function ListsAppMainFolder(props: AppProps) {
   return <List title={props.title} items={children} />
 }
 
-function ListApp(props: AppProps) {
-  return (
-    <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
-      <ListsAppMain {...props} />
-    </App>
-  )
-}
-
-export const API = {
-  receive(
-    app: AppBit,
-    parentID: number,
-    child: Bit | { id?: number; name?: string; icon?: string; target: 'folder' },
-  ) {
-    console.log('creating new', app, parentID, child)
-
-    const listApp = app as ListsAppBit
-    const item = listApp.data.items[parentID]
-    if (!item || (item.type !== 'folder' && item.type !== 'root')) {
-      return console.error('NO VALID THING', item, parentID, listApp)
-    }
-
-    const id = child.id || Math.random()
-    item.children.push(id)
-
-    // add to hash
-    if (child.target === 'bit') {
-      listApp.data.items[id] = {
-        id,
-        type: 'bit',
-        name: child.title,
-      }
-    } else if (child.target === 'folder') {
-      listApp.data.items[id] = {
-        id,
-        children: [],
-        type: 'folder',
-        name: child.name,
-        icon: child.icon,
-      }
-    }
-
-    save(AppModel, app)
-  },
-}
-
-export default createApp({
-  id: 'lists',
-  name: 'Lists',
-  icon: '',
-  app: ListApp,
-  api: () => API,
-})
-
-export function ListAppStatusBar() {
+function ListAppStatusBar() {
   const numItems = 0
 
   return (

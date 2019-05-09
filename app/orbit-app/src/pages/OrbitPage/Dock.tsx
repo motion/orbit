@@ -17,7 +17,6 @@ export function DockButton({ index, ...buttonProps }: ButtonProps & { index: num
   return (
     <Button
       circular
-      icon="list"
       size="xxl"
       iconSize={16}
       elevation={4}

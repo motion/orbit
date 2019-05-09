@@ -60,7 +60,6 @@ export function createUsableStore<T, Props extends InferProps<T>>(
     }
     return existing
   }
-  console.log('create store', OGStore)
 
   const Store = decorate(OGStore, initialProps)
   const store = (new Store() as any) as UsableStore<T, Props>
@@ -102,11 +101,26 @@ export function disposeStore(store: any, component?: CurrentComponent) {
   store.dispose()
 }
 
-let currentHooks: any[] = []
+let captureHooks: any = null
 
-export function useHook<A extends (...args: any[]) => any>(cb: A): ReturnType<A> {
-  currentHooks.push(cb)
-  return cb()
+type Fn = (...args: any[]) => any
+type ObjectFns = { [key: string]: Fn }
+
+type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
+
+export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
+  const getValues = () => {
+    let res: any = {}
+    for (const key in hooks) {
+      res[key] = hooks[key]()
+    }
+    return res
+  }
+  captureHooks = observable({
+    ...getValues(),
+    __getHooksValues: getValues,
+  })
+  return captureHooks
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {
@@ -114,7 +128,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
-  currentHooks = []
+  captureHooks = null
   const store = new AutomagicStore()
 
   if (config.onMount) {
@@ -131,7 +145,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
 
   return {
     store,
-    hooks: currentHooks,
+    hooks: captureHooks,
     hasProps: !!props,
   }
 }
@@ -181,11 +195,13 @@ function useReactiveStore<A extends any>(
       hydrate(state.current.store, previousInitialState, previousState)
     }
   } else {
-    // ensure we dont have different number of hooks by re-running them
-    if (state.current.hooks) {
-      // TODO this wont actually update them :/
-      for (const hook of state.current.hooks) {
-        hook()
+    // re-run hooks
+    const hooks = state.current.hooks
+    if (hooks) {
+      let next = hooks['__getHooksValues']()
+      for (const key in hooks) {
+        if (key === '__getHooksValues') continue
+        hooks[key] = next[key]
       }
     }
   }

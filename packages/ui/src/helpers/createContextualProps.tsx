@@ -22,7 +22,6 @@ export function createContextualProps<A extends any>(defaults?: A) {
       const final = { ...componentProps }
       for (const key in extra) {
         if (typeof final[key] === 'undefined') {
-          // @ts-ignore
           final[key] = extra[key]
         }
       }

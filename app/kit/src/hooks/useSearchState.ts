@@ -1,4 +1,5 @@
 import { isEqual } from '@o/fast-compare'
+import { useVisibilityStore } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import { useRef } from 'react'
 
@@ -27,14 +28,15 @@ const getSearchState = ({ queryFilters }: QueryStore): SearchState => {
 }
 
 export function useSearchState(cb?: (state: SearchState) => any) {
-  const { appStore, queryStore } = useStoresSimple()
+  const { queryStore } = useStoresSimple()
   const last = useRef(null)
+  const visibilityStore = useVisibilityStore()
 
   // TODO Michel mrwest debug this https://github.com/mobxjs/mobx/issues/1911
   return (
     useReaction(() => {
       const next = getSearchState(queryStore)
-      if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
+      if (!last.current || (visibilityStore.visible && !isEqual(last.current, next))) {
         last.current = next
         if (cb) {
           cb(next)

@@ -35,7 +35,7 @@ export function cssString(styles: Object, opts?: CSSOptions): string {
   for (let key in styles) {
     let value = cssValue(key, styles[key])
     // shorthands
-    if (value) {
+    if (value !== undefined) {
       if (SHORTHANDS[key]) {
         for (let k of SHORTHANDS[key]) {
           k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
@@ -46,7 +46,6 @@ export function cssString(styles: Object, opts?: CSSOptions): string {
       }
     }
   }
-  console.log(styles, toReturn)
   return toReturn
 }
 
@@ -59,7 +58,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   for (let key in styles) {
     let value = cssValue(key, styles[key])
     // shorthands
-    if (value) {
+    if (value !== undefined) {
       if (SHORTHANDS[key]) {
         for (let k of SHORTHANDS[key]) {
           k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k

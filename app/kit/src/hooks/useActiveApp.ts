@@ -1,25 +1,19 @@
 import { AppBit } from '@o/models'
-import { useReaction } from '@o/use-store'
-import { useState } from 'react'
+
+import { config } from '../configureKit'
+import { AppDefinition } from '../types/AppDefinition'
 import { useActiveApps } from './useActiveApps'
 import { useStores } from './useStores'
-
-// this is more of an internal thing, should probably move out of kit
-// because they shouldn't have access to "current showing app"
 
 export function useActiveApp(): AppBit {
   const { paneManagerStore } = useStores()
   const activeApps = useActiveApps()
-  const [state, setState] = useState({ id: -1, app: null as AppBit })
+  return activeApps.find(x => `${x.id}` === paneManagerStore.activePane.id)
+}
 
-  useReaction(() => {
-    const app = activeApps.find(x => `${x.id}` === paneManagerStore.activePane.id)
-    if (!app) return
-    if (app.id !== state.id) {
-      console.log('waht', app)
-      setState({ id: app.id, app })
-    }
-  })
+// because defs can be loaded statically, they use a different source
 
-  return state.app
+export function useActiveAppDefinition(): AppDefinition {
+  const app = useActiveApp() || { identifier: 'loading' }
+  return config.getApps().find(x => x.id === app.identifier)
 }

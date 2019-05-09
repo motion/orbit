@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<{ name: string }> {
     const { error } = this.state
     if (error) {
       if (process.env.NODE_ENV === 'development') {
-        return <ErrorMessage error={error} name={this.props.name} />
+        return <ErrorMessage setError={this.setState.bind(this)} error={error} name={this.props.name} />
       } else {
         // more subtle in prod
         return (
@@ -43,7 +43,7 @@ export class ErrorBoundary extends Component<{ name: string }> {
   }
 }
 
-function ErrorMessage({ error, name }) {
+function ErrorMessage({ error, name, setError }) {
   const { ref } = useNode({ map: x => x.parentElement })
   return (
     <>
@@ -58,9 +58,10 @@ function ErrorMessage({ error, name }) {
           minHeight={200}
           scrollable="y"
           whiteSpace="pre-line"
+          pointerEvents="auto"
           pad
         >
-          <Button alt="confirm" onClick={() => this.setState({ error: null })}>
+          <Button alt="confirm" onClick={() => setError({ error: null })}>
             Clear
           </Button>
           <pre>{error.stack}</pre>

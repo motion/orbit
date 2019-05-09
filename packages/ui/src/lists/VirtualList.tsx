@@ -60,17 +60,17 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
 
       const onMouseUp = selectDefined(
         dynamicProps ? dynamicProps.onMouseUp : undefined,
-        itemProps.onMouseUp,
+        itemProps ? itemProps.onMouseUp : undefined,
         idFn,
       )
       const onMouseDown = selectDefined(
         dynamicProps ? dynamicProps.onMouseDown : undefined,
-        itemProps.onMouseDown,
+        itemProps ? itemProps.onMouseDown : undefined,
         idFn,
       )
       const onMouseEnter = selectDefined(
         dynamicProps ? dynamicProps.onMouseEnter : undefined,
-        itemProps.onMouseEnter,
+        itemProps ? itemProps.onMouseEnter : undefined,
         idFn,
       )
 

@@ -13,7 +13,9 @@ export function createContextualProps<A extends any>(defaults?: A) {
   return {
     Context,
     PassProps,
-    useProps<B extends Partial<A>>(componentProps?: B): B & A {
+    useProps<B extends Partial<A> | undefined>(
+      componentProps?: B,
+    ): B extends undefined ? A : B & A {
       const extra = useContext(Context)
       if (!extra) {
         return componentProps as any

@@ -57,6 +57,7 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   /** Extra configuration for apps */
   viewConfig?: {
     transparentBackground?: boolean
+    acceptsSearch?: boolean
   }
 }
 

@@ -14,6 +14,9 @@ export default createApp({
   icon: 'person',
   itemType: 'person',
   app: PeopleApp,
+  viewConfig: {
+    acceptsSearch: true,
+  },
 })
 
 function PeopleAppIndex() {

@@ -1,12 +1,10 @@
 import { Stores } from '../../om/stores'
 import { command } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import * as KIT from '@o/kit'
 import { AppDefinition, showConfirmDialog, themes, ProvideStores } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
-import * as UI from '@o/ui'
-import { Loading, ProvideFocus, Theme, ListPassProps } from '@o/ui'
+import { Loading, ProvideFocus, Theme, ListPassProps, ViewProps, View } from '@o/ui'
 import { keyBy } from 'lodash'
 import React, {
   memo,
@@ -26,22 +24,20 @@ import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { AppWrapper } from '../../views'
-import { Dock, DockButton } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
-import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { IS_ELECTRON } from '../../constants'
 import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { useOm } from '../../om/om'
-import { OrbitSearchModal } from './OrbitSearchModal'
+import { OrbitDock } from './OrbitDock'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
 window['ReactDOM'] = (window as any).ReactDOM = ReactDOM
-window['OrbitKit'] = (window as any).OrbitUI = KIT
-window['OrbitUI'] = (window as any).OrbitUI = UI
+window['OrbitKit'] = (window as any).OrbitUI = require('@o/kit')
+window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
@@ -176,13 +172,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   return (
     <MainShortcutHandler handlers={handlers}>
       <OrbitHeader />
-
-      <Dock>
-        {/* <DockButton icon="clip" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
-        <OrbitSearchModal index={1} />
-        <OrbitFloatingShareCard index={2} />
-      </Dock>
-
+      <OrbitDock />
       <InnerChrome torn={orbitStore.isTorn}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
@@ -208,7 +198,7 @@ const OrbitContentArea = gloss({
   background: theme.sidebarBackgroundTransparent || theme.sidebarBackground,
 }))
 
-const InnerChrome = gloss<{ torn?: boolean } & UI.ViewProps>(UI.View, {
+const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',

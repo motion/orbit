@@ -12,6 +12,9 @@ export default createApp({
   icon: '',
   app: ListApp,
   api: () => API,
+  viewConfig: {
+    acceptsSearch: true,
+  },
 })
 
 const API = {

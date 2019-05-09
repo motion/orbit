@@ -1,4 +1,5 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
+import { idFn, selectDefined } from '@o/utils'
 import { omit } from 'lodash'
 import React, { forwardRef, RefObject, useCallback } from 'react'
 
@@ -17,16 +18,24 @@ export type VirtualListProps<A> = SelectableProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
-    itemProps?: Partial<A>
+
+    /** Additional props */
+    itemProps?: Partial<ListItemProps>
+
+    /** Custom view for children */
     ItemView?: GenericComponent<A>
+
+    /** Enable drag to sort */
     sortable?: boolean
+
+    /** react-window list ref */
     listRef?: RefObject<DynamicListControlled>
 
     /** Filter by search string */
     items: A[]
 
     /** Dynamically add extra props to each item */
-    getItemProps?: (item: A, index: number, items: A[]) => ListItemProps | null | false
+    getItemProps?: (item: ListItemProps, index: number, items: A[]) => ListItemProps | null | false
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
@@ -43,11 +52,28 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
       const item = items[index]
       let mouseDownTm = null
-      const itemProps: ListItemProps = {
-        ...props.itemProps,
-        ...(getItemProps && getItemProps(item, index, items)),
-      }
+
+      const itemProps = props.itemProps
+      const dynamicProps = getItemProps && getItemProps(item, index, items)
+
       let finishSelect = false
+
+      const onMouseUp = selectDefined(
+        dynamicProps ? dynamicProps.onMouseUp : undefined,
+        itemProps.onMouseUp,
+        idFn,
+      )
+      const onMouseDown = selectDefined(
+        dynamicProps ? dynamicProps.onMouseDown : undefined,
+        itemProps.onMouseDown,
+        idFn,
+      )
+      const onMouseEnter = selectDefined(
+        dynamicProps ? dynamicProps.onMouseEnter : undefined,
+        itemProps.onMouseEnter,
+        idFn,
+      )
+
       return (
         <VirtualListItem
           forwardRef={ref}
@@ -57,16 +83,18 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
           onDoubleClick={useCallback(e => onOpen(index, e), [])}
           disabled={!sortable}
           {...getSeparatorProps(items, item, index)}
+          // base props
           {...itemProps}
+          {...item}
+          {...dynamicProps}
+          // our overrides that fallback
           onMouseUp={useCallback(e => {
             clearTimeout(mouseDownTm)
             if (finishSelect) {
               finishSelect = false
               selectableStore && selectableStore.setRowActive(index, e)
             }
-            if (itemProps.onMouseUp) {
-              itemProps.onMouseUp(e)
-            }
+            onMouseUp(e)
           }, [])}
           onMouseDown={useCallback(e => {
             clearTimeout(mouseDownTm)
@@ -81,18 +109,14 @@ export function VirtualList(virtualProps: VirtualListProps<any>) {
             } else {
               setRowActive()
             }
-            if (itemProps.onMouseDown) {
-              itemProps.onMouseDown(e)
-            }
+            onMouseDown(e)
           }, [])}
           onMouseEnter={useCallback(e => {
             selectableStore && selectableStore.onHoverRow(index)
-            if (itemProps.onMouseEnter) {
-              itemProps.onMouseEnter(e)
-            }
+            onMouseEnter(e)
           }, [])}
+          // cant override
           selectableStore={selectableStore}
-          {...item}
           index={index}
           realIndex={index}
           style={style}

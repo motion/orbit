@@ -1,11 +1,12 @@
 import { gloss } from '@o/gloss'
 import React, { useRef } from 'react'
+
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
-import { View, ViewProps } from './View/View'
+import { Col, ColProps } from './View/Col'
 import { useVisibility } from './Visibility'
 
-type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
+type SliderPaneProps = ColProps &
   Partial<SliderProps> & {
     index?: number
     width?: number
@@ -54,7 +55,7 @@ export function SliderPane({
   )
 }
 
-const SliderPaneChrome = gloss<ViewProps & { isActive?: boolean }>(View, {
+const SliderPaneChrome = gloss<ColProps & { isActive?: boolean }>(Col, {
   position: 'absolute',
   top: 0,
   left: 0,

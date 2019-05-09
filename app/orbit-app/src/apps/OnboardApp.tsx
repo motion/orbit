@@ -1,16 +1,16 @@
 import { command, loadOne, save } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import { App, createApp, useAppDefinitions } from '@o/kit'
+import { App, createApp, useActiveDataAppsWithDefinition } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
-import { Button, Icon, ListItem, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
+import { Button, Icon, List, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
 import React from 'react'
 
-import { addAppClickHandler } from '../helpers/addAppClickHandler'
 import { paneManagerStore } from '../om/stores'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
+import { useInstallableItems } from './apps/AppsApp'
 
 export default createApp({
   id: 'onboard',
@@ -103,7 +103,8 @@ export function OnboardMain() {
   // if (atlassian) {
   //   finalSources = ['jira', 'confluence', ...finalSources]
   // }
-  const allDefs = useAppDefinitions().filter(x => !!x.sync)
+  const allDataApps = useActiveDataAppsWithDefinition()
+  const isInstalled = (id: string) => allDataApps.some(x => x.definition.id === id)
 
   return (
     <>
@@ -184,31 +185,22 @@ export function OnboardMain() {
           <Space />
           <Space />
         </SliderPane> */}
-        <SliderPane>
-          <Title>Set up a few apps</Title>
-
-          <Space />
-
-          <Unpad>
-            {allDefs.map(def => {
-              return (
-                <ListItem
-                  key={def.id}
-                  title={def.name}
-                  icon={def.icon}
-                  onClick={true ? null : addAppClickHandler(def)}
-                  after={
-                    <AddButton size={0.9} disabled={true}>
-                      {true ? <Icon size={16} name="check" color="green" /> : 'Add'}
-                    </AddButton>
-                  }
-                />
-              )
+        <SliderPane space>
+          <Title>Add a few data apps</Title>
+          <List
+            itemProps={{
+              iconBefore: true,
+              iconSize: 36,
+            }}
+            items={useInstallableItems()}
+            getItemProps={item => ({
+              after: (
+                <AddButton size={0.9} disabled={isInstalled(item.subId)}>
+                  {isInstalled(item.subId) ? <Icon size={16} name="tick" color="green" /> : 'Add'}
+                </AddButton>
+              ),
             })}
-          </Unpad>
-
-          <Space />
-          <Space />
+          />
         </SliderPane>
         <SliderPane>
           <Centered>

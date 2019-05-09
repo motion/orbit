@@ -1,19 +1,5 @@
-import {
-  App,
-  AppDefinition,
-  AppMainView,
-  AppProps,
-  createApp,
-  Icon,
-  removeApp,
-  useActiveApps,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useActiveSpace,
-  useAppDefinitions,
-  useAppWithDefinition,
-} from '@o/kit'
-import { Button, FormField, List, Section, SubSection } from '@o/ui'
+import { App, AppDefinition, AppMainView, AppProps, createApp, Icon, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React from 'react'
 
 import { AppSetupForm } from './AppSetupForm'
@@ -41,19 +27,25 @@ function getDescription(def: AppDefinition) {
 
 const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
 
+export function useInstallableItems(): ListItemProps[] {
+  return useAppDefinitions()
+    .filter(x => !!x.sync || !!x.setup)
+    .map(def => ({
+      key: `install-${def.id}`,
+      group: 'Install App',
+      title: def.name,
+      icon: def.id,
+      subTitle: getDescription(def) || 'No Description',
+      after: sourceIcon,
+      identifier: 'apps',
+      subType: 'add-app',
+      subId: def.id,
+    }))
+}
+
 export function AppsIndex() {
-  const [activeSpace] = useActiveSpace()
-  const activeApps = useActiveApps()
-  const installableApps = useAppDefinitions().filter(x => !!x.sync || !!x.setup)
   const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
-
-  window['dataApps'] = dataApps
-
-  if (!activeSpace || !activeApps.length) {
-    return null
-  }
-
   return (
     <List
       title="Manage Apps"
@@ -72,19 +64,7 @@ export function AppsIndex() {
           subType: 'settings',
           after: sourceIcon,
         })),
-        ...installableApps.map(def => ({
-          key: `install-${def.id}`,
-          group: 'Install App',
-          title: def.name,
-          icon: def.id,
-          subTitle: getDescription(def) || 'No Description',
-          after: sourceIcon,
-          extraData: {
-            identifier: 'apps',
-            subType: 'add-app',
-            subId: def.id,
-          },
-        })),
+        ...useInstallableItems(),
       ]}
     />
   )

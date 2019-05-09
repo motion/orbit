@@ -34,7 +34,7 @@ export function OrbitFloatingShareCard({
   return (
     <>
       <DockButton
-        icon="list"
+        icon="clip"
         index={index}
         forwardRef={buttonRef}
         badge={numClipboards}

@@ -178,9 +178,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       <OrbitHeader />
 
       <Dock>
-        <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} />
-        <OrbitFloatingShareCard index={2} />
+        {/* <DockButton icon="clip" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
         <OrbitSearchModal index={1} />
+        <OrbitFloatingShareCard index={2} />
       </Dock>
 
       <InnerChrome torn={orbitStore.isTorn}>

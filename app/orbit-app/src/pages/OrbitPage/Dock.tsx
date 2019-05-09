@@ -1,6 +1,6 @@
 import { createStoreContext, useStore } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
-import React, { memo, useLayoutEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 import { ObservableSet } from 'mobx'
 
@@ -9,7 +9,6 @@ class DockStore {
   add = x => this.items.add(x)
   remove = x => this.items.delete(x)
   get key() {
-    console.log('ok')
     return [...this.items].join('')
   }
 }
@@ -21,8 +20,6 @@ export const DockStoreContext = createStoreContext(DockStore)
 export const Dock = memo((props: any) => {
   const dockStore = useStore(DockStore)
   const [now, setNow] = useState()
-
-  console.log('render', dockStore.key)
 
   return (
     <DockStoreContext.SimpleProvider value={dockStore}>

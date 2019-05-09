@@ -116,8 +116,6 @@ export const OrbitNav = memo(
 
     const epad = isOnSetupApp ? 0 : 3
 
-    console.log(pinnedItemsWidth, extraButtonsWidth, epad)
-
     return (
       <OrbitNavClip ref={ref}>
         <OrbitNavChrome>

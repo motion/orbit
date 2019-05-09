@@ -106,7 +106,8 @@ export function gloss<Props = any>(
   // shorthand: gloss({ ... })
   if (
     typeof a !== 'string' &&
-    typeof target === 'object' &&
+    target.constructor &&
+    target.constructor.name === 'Object' &&
     !b &&
     !hasGlossyChild &&
     !isValidElement(target) &&
@@ -314,13 +315,13 @@ function addStyles(
   return classNames
 }
 
-function mergePropStyles(baseId: string, base: Object, propStyles: Object, props: Object) {
+function mergePropStyles(baseId: string, styles: Object, propStyles: Object, props: Object) {
   for (const key in propStyles) {
     if (props[key] !== true) continue
     for (const sKey in propStyles[key]) {
       const ns = sKey === 'base' ? baseId : sKey
-      base[ns] = base[ns] || {}
-      mergeStyles(ns, base, propStyles[key][sKey])
+      styles[ns] = styles[ns] || {}
+      mergeStyles(ns, styles, propStyles[key][sKey])
     }
   }
 }
@@ -360,6 +361,7 @@ function addDynamicStyles(
     dynStyles[id] = dynStyles[id] || {}
     const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
     if (themePropStyles) {
+      console.log('themePropStyles', themePropStyles)
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }
   }
@@ -404,8 +406,7 @@ function mergeStyles(
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (!baseStyles[id]) {
-      console.error('no baseStyles for id', id, baseStyles, 'nextStyles', nextStyles)
+    if (baseStyles[id][key] !== undefined) {
       continue
     }
     if (validCSSAttr[key]) {
@@ -424,7 +425,8 @@ function mergeStyles(
       //   definition: gloss({ isTall: { height: '100%' } })
       //   usage: <Component isTall />
 
-      propStyles = {}
+      propStyles = propStyles || {}
+      propStyles[key] = {}
 
       // they can nest (media queries/psuedoes), split it out, eg:
       //  gloss({
@@ -441,8 +443,8 @@ function mergeStyles(
           propStyles[key][sKey] = subStyles[sKey]
         } else {
           // we put base styles here, see 'base' check above
-          propStyles.base = propStyles.base || {}
-          propStyles.base[sKey] = subStyles[sKey]
+          propStyles[key].base = propStyles[key].base || {}
+          propStyles[key].base[sKey] = subStyles[sKey]
         }
       }
     }

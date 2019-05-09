@@ -521,8 +521,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     boxShadow = [...boxShadow, getElevation(props).boxShadow]
   }
 
-  const padStyle = getPadding(props)
-
   styles = {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
@@ -543,18 +541,27 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
         },
     ...styles,
     ...marginStyle,
+    ...getPadding(props),
+
+    // this was an attempt to do smarter padding, but it fails in a case
+    // it would allow you to set widht: 0 on surfaces just like youd expect
     // we use spacers for padding so we can actually set width: 0; see:
-    padding: 0,
-    '&:after': padStyle && {
-      display: 'block',
-      content: '" "',
-      width: selectDefined(padStyle.padding[3], padStyle.padding[1]),
-    },
-    '&:before': padStyle && {
-      display: 'block',
-      content: '" "',
-      width: padStyle.padding[1],
-    },
+    // paddingTop: padStyle && padStyle[0],
+    // paddingBottom: padStyle && selectDefined(padStyle[3], padStyle[0]),
+    // paddingLeft: 0,
+    // paddingRight: 0,
+    // // using before/after lets you naturally set width without box-sizing forcing padding to stay
+    // // which is a weird quirk of css and wouldnt be necessary on native
+    // '&:before': padStyle && {
+    //   display: 'block',
+    //   content: '" "',
+    //   width: padStyle.padding[1],
+    // },
+    // '&:after': padStyle && {
+    //   display: 'block',
+    //   content: '" "',
+    //   width: 8 || selectDefined(padStyle.padding[3], padStyle.padding[1]),
+    // },
   }
 
   return styles

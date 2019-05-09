@@ -1,6 +1,6 @@
 {
   "name": "@o/github-app",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,9 +9,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.4.1",
-    "@o/sync-kit": "^2.4.1",
-    "@o/ui": "^2.4.1",
+    "@o/kit": "^2.5.0",
+    "@o/sync-kit": "^2.5.0",
+    "@o/ui": "^2.5.0",
     "@octokit/rest": "^16.21.0",
     "lodash": "4.17.11"
   }

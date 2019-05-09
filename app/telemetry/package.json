@@ -1,6 +1,6 @@
 {
   "name": "@o/telemetry",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "main": "./_/index.js",
   "sideEffects": false,
   "scripts": {
@@ -8,6 +8,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "*"
+    "@o/config": "^2.5.0"
   }
 }

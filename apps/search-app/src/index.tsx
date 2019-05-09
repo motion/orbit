@@ -34,7 +34,6 @@ export default createApp({
 function SearchApp(props: AppProps) {
   const space = useActiveSpace()[0]
   const apps = useActiveApps()
-  console.log(space, apps)
   const searchStore = useStore(SearchStore, { space, apps })
 
   useSearchState(state => {

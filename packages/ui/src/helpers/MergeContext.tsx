@@ -24,6 +24,5 @@ export function MergeContext<A>({ Context, value, children }: MergeContextProps<
       return value
     }
   }, [key.current])
-  console.log('merging', value, memoValue)
   return <Context.Provider value={memoValue as A}>{children}</Context.Provider>
 }

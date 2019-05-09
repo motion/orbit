@@ -101,7 +101,7 @@ export function disposeStore(store: any, component?: CurrentComponent) {
   store.dispose()
 }
 
-let captureHooks = null
+let captureHooks: any = null
 
 type Fn = (...args: any[]) => any
 type ObjectFns = { [key: string]: Fn }
@@ -116,10 +116,11 @@ export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
     }
     return res
   }
-  return observable({
+  captureHooks = observable({
     ...getValues(),
     __getHooksValues: getValues,
   })
+  return captureHooks
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {

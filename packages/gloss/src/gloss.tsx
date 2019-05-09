@@ -457,7 +457,6 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
     [baseId]: {},
   }
   let propStyles = mergeStyles(baseId, styles, rawStyles)
-  console.log('get all', propStyles, styles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
     const parentConfig = target.internal.getConfig()

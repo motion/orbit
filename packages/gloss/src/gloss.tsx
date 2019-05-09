@@ -113,6 +113,7 @@ export function gloss<Props = any>(
   const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
+  const propStyles = Styles.propStyles
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
 
@@ -140,7 +141,7 @@ export function gloss<Props = any>(
     const dynClassNames = addDynamicStyles(
       id,
       ThemedView.displayName,
-      Styles.propStyles,
+      propStyles,
       dynClasses.current,
       props,
       themeFn,
@@ -176,7 +177,7 @@ export function gloss<Props = any>(
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
-        if (Styles.propStyles[key]) {
+        if (propStyles && propStyles[key]) {
           continue
         }
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
@@ -193,7 +194,7 @@ export function gloss<Props = any>(
       }
     } else {
       for (const key in props) {
-        if (Styles.propStyles[key]) {
+        if (propStyles && propStyles[key]) {
           continue
         }
         finalProps[key] = props[key]
@@ -308,14 +309,14 @@ function addStyles(
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
-  conditionalStyles: any,
+  propStyles: Object | undefined,
   prevClassNames: string[] | null,
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
   tagName?: string,
 ) {
-  const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
+  const hasPropStyles = propStyles && !!Object.keys(propStyles).length
   const dynStyles = {}
   let parentClassNames
 
@@ -332,13 +333,13 @@ function addDynamicStyles(
     }
   }
 
-  if (hasConditionalStyles) {
-    for (const key in conditionalStyles) {
+  if (hasPropStyles) {
+    for (const key in propStyles) {
       if (props[key] !== true) continue
-      for (const subKey in conditionalStyles[key]) {
+      for (const subKey in propStyles[key]) {
         const ns = subKey === 'base' ? id : subKey
         dynStyles[ns] = dynStyles[ns] || {}
-        mergeStyles(ns, dynStyles, conditionalStyles[key][subKey])
+        mergeStyles(ns, dynStyles, propStyles[key][subKey])
       }
     }
   }
@@ -355,7 +356,7 @@ function addDynamicStyles(
   // merge parent and current classnames
   if (classNames && parentClassNames) {
     classNames = [...parentClassNames, ...classNames]
-  } else if (parentClassNames) {
+  } else if (parentClassNames && !classNames) {
     classNames = parentClassNames
   }
 
@@ -372,8 +373,12 @@ function addDynamicStyles(
   return classNames
 }
 
-function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) {
-  const propStyles = {}
+function mergeStyles(
+  id: string,
+  baseStyles: Object,
+  nextStyles?: CSSPropertySet | null,
+): Object | undefined {
+  let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
     if (typeof baseStyles[id][key] !== 'undefined') {
@@ -385,6 +390,9 @@ function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet
     } else if (validCSSAttr[key]) {
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
+    } else {
+      propStyles = propStyles || {}
+      propStyles[key] = nextStyles[key]
     }
   }
   return propStyles
@@ -395,13 +403,14 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
   const styles = {
     [baseId]: {},
   }
-  const propStyles = mergeStyles(baseId, styles, rawStyles)
+  let propStyles = mergeStyles(baseId, styles, rawStyles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
     const parentConfig = target.internal.getConfig()
     const parentPropStyles = parentConfig.propStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
+        propStyles = propStyles || {}
         propStyles[key] = propStyles[key] || {}
         propStyles[key] = {
           ...parentPropStyles[key],
@@ -474,8 +483,6 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
 
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
   const className = `g${stringHash(style)}`
-
-  console.log('now', className, style)
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {

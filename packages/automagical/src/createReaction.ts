@@ -332,6 +332,7 @@ export function createReaction(
 
   if (isReaction) {
     if (derive) {
+      console.log('reaction', reaction)
       stopReaction = Mobx.reaction(reaction, setupReactionFn(derive), mobxOptions)
     }
   } else {

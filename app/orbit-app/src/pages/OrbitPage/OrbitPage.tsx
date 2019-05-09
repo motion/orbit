@@ -26,7 +26,7 @@ import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { AppWrapper } from '../../views'
-import { Dock } from './Dock'
+import { Dock, DockButton } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
@@ -35,6 +35,7 @@ import { OrbitHeader } from './OrbitHeader'
 import { IS_ELECTRON } from '../../constants'
 import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { useOm } from '../../om/om'
+import { OrbitSearchModal } from './OrbitSearchModal'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -177,8 +178,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       <OrbitHeader />
 
       <Dock>
-        {/* <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
-        <OrbitFloatingShareCard index={0} />
+        <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} />
+        <OrbitFloatingShareCard index={2} />
+        <OrbitSearchModal index={1} />
       </Dock>
 
       <InnerChrome torn={orbitStore.isTorn}>

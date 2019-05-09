@@ -1,6 +1,7 @@
 import '../../apps/orbitApps'
 
 import {
+  App,
   AppDefinition,
   AppLoadContext,
   AppProps,
@@ -11,22 +12,13 @@ import {
   getAppDefinitions,
   ProvideStores,
   sleep,
-  useIsAppActive,
-  App,
 } from '@o/kit'
-import {
-  ErrorBoundary,
-  ListItemProps,
-  Loading,
-  ProvideShare,
-  ProvideVisibility,
-  useShareStore,
-  useThrottleFn,
-} from '@o/ui'
+import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 import { usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
@@ -35,12 +27,10 @@ import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
   const paneManagerStore = usePaneManagerStore()
-  const getIsActive = () => paneManagerStore.activePane.id === id
-  const isActive = getIsActive()
+  const isActive = paneManagerStore.activePane.id === id
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,
-    isActive: useCallback(getIsActive, []),
   })
   const [hasShownOnce, setHasShownOnce] = useState(false)
 
@@ -79,12 +69,12 @@ export const OrbitAppRenderOfDefinition = ({
 }: AppRenderProps & {
   appDef: AppDefinition
 }) => {
+  const om = useOm()
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
-  const globalShareStore = useShareStore()
   const [activeItem, setActiveItem] = useState(null)
   const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
 
@@ -93,7 +83,7 @@ export const OrbitAppRenderOfDefinition = ({
       setActiveItemThrottled(getAppProps(items[0]))
     }
     if (location === 'main') {
-      globalShareStore.setSelected(`app-${id}`, items)
+      om.actions.setShare({ key: `app-${id}`, value: items })
     }
   }, [])
 
@@ -207,7 +197,7 @@ const FadeIn = (props: any) => {
 
 function OrbitActions(props: { children?: any }) {
   const stores = useStoresSimple()
-  const isActive = useIsAppActive()
+  const isActive = useVisibility()
   useEffect(() => {
     if (isActive) {
       stores.orbitStore.setActiveActions(props.children || null)

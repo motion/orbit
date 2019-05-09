@@ -10,14 +10,14 @@ import {
   SearchQuery,
   SearchState,
   SpaceIcon,
-  useHook,
+  useActiveApp,
+  useHooks,
   useStoresSimple,
 } from '@o/kit'
+import { Space } from '@o/models'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
-
-// import { useActions } from '../../actions/Actions'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -26,8 +26,25 @@ type SearchResults = {
 }
 
 export class SearchStore {
-  stores = useHook(useStoresSimple)
+  props: {
+    apps: AppBit[]
+    space: Space
+  }
+
+  hooks = useHooks({
+    stores: useStoresSimple,
+    activeApp: useActiveApp,
+  })
+
   searchState: SearchState | null = null
+
+  get stores() {
+    return this.hooks.stores
+  }
+
+  get activeApp() {
+    return this.hooks.activeApp
+  }
 
   setSearchState(next: SearchState) {
     this.searchState = next
@@ -69,8 +86,8 @@ export class SearchStore {
 
   get homeItem() {
     return {
-      title: this.stores.spaceStore.activeSpace.name,
-      icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
+      title: this.props.space.name,
+      icon: <SpaceIcon space={this.props.space} />,
       identifier: 'apps',
     }
   }
@@ -118,15 +135,13 @@ export class SearchStore {
   }
 
   get isHome() {
-    const { appStore } = this.stores
-    return appStore && appStore.app && appStore.app.tabDisplay === 'permanent'
+    return this.activeApp && this.activeApp.tabDisplay === 'permanent'
   }
 
   get allApps() {
-    return [
-      ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
-      ...this.staticApps(),
-    ].map(this.appToResult)
+    return [...this.props.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps()].map(
+      this.appToResult,
+    )
   }
 
   getApps(query: string, all = false): ListItemProps[] {
@@ -160,12 +175,15 @@ export class SearchStore {
   }
 
   state = react(
-    () => [
-      this.stores.spaceStore.activeSpace.id,
-      this.activeQuery,
-      this.stores.appStore.app,
-      this.stores.spaceStore.apps.map(x => x.id).join(' '),
-    ],
+    () => {
+      debugger
+      return [
+        this.props.space.id,
+        this.activeQuery,
+        this.stores.appStore.app,
+        this.props.apps.map(x => x.id).join(' '),
+      ]
+    },
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
 

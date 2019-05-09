@@ -2,16 +2,18 @@ import { MergeContext } from '@o/ui'
 import { unwrapProxy } from '@o/use-store'
 import { mapValues } from 'lodash'
 import React from 'react'
+
 import { config } from '../configureKit'
 import { KitStores } from '../stores'
 
 type ProvideStoresProps = {
-  stores: Object
+  stores: Partial<KitStores>
   children: React.ReactNode
 }
 
 export function ProvideStores(props: ProvideStoresProps) {
-  const next = mapValues(props.stores, unwrapProxy) as KitStores
+  const next = mapValues(props.stores, unwrapProxy)
+  console.log('passsing to', config.StoreContext, next)
   return (
     <MergeContext Context={config.StoreContext} value={next}>
       {props.children}

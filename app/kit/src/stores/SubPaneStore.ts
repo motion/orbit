@@ -1,4 +1,4 @@
-import { ensure, react, useHook } from '@o/use-store'
+import { ensure, react, useHooks } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
 
@@ -22,7 +22,7 @@ const createResizObserver = (node, cb) => {
 export class SubPaneStore {
   props: SubPaneProps
 
-  stores = useHook(useStoresSimple)
+  stores = useHooks({ stores: useStoresSimple }).stores
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
   aboveContentHeight = 0

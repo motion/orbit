@@ -1,9 +1,10 @@
-import { FloatingCard, List, usePosition, useShare } from '@o/ui'
+import { FloatingCard, List, Tabs, usePosition } from '@o/ui'
 import pluralize from 'pluralize'
-import React, { useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 
 import { orbitStaticApps } from '../../apps/orbitApps'
 import { useStores } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 import { DockButton } from './Dock'
 
 export function OrbitFloatingShareCard({
@@ -17,22 +18,26 @@ export function OrbitFloatingShareCard({
   index: number
 }) {
   const { paneManagerStore } = useStores()
-  const [selection] = useShare()
-  const numItems = (selection && selection.length) || 0
+  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
+  const showButton = !isStaticApp
+
+  const om = useOm()
+  const numClipboards = Object.keys(om.state.share).length
+
   const buttonRef = useRef(null)
   const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
+
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
   const showMenu = hovered || hoveredMenu
-  const showButton = !isStaticApp && !!numItems
 
   return (
     <>
       <DockButton
+        icon="list"
         index={index}
         forwardRef={buttonRef}
-        badge={numItems}
+        badge={numClipboards}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         opacity={showButton ? 1 : 0}
@@ -43,7 +48,7 @@ export function OrbitFloatingShareCard({
       {nodePosition && nodePosition.rect && (
         <FloatingCard
           title="Selected"
-          subTitle={`Share ${numItems} ${pluralize('item', numItems)}`}
+          subTitle={`Share ${numClipboards} ${pluralize('item', numClipboards)}`}
           defaultWidth={width}
           defaultHeight={height}
           defaultTop={nodePosition.rect.top - height + 20}
@@ -54,16 +59,29 @@ export function OrbitFloatingShareCard({
           onMouseEnter={() => setHoveredMenu(true)}
           onMouseLeave={() => setHoveredMenu(false)}
         >
-          <List
-            selectable="multi"
-            itemProps={{ small: true }}
-            items={selection ? listItemNiceNormalize(selection) : null}
-          />
+          <Tabs>
+            {Object.keys(om.state.share).map(id => {
+              return <Clipboard key={id} id={id} />
+            })}
+          </Tabs>
         </FloatingCard>
       )}
     </>
   )
 }
+
+const Clipboard = memo(({ id }: { id: string }) => {
+  const om = useOm()
+  const items = om.state.share[id]
+
+  return (
+    <List
+      selectable="multi"
+      itemProps={{ small: true }}
+      items={items ? listItemNiceNormalize(items) : null}
+    />
+  )
+})
 
 const subTitleAttrs = ['subTitle', 'subtitle', 'email', 'address', 'phone', 'type', 'account']
 const titleAttrs = ['title', 'name', 'email', ...subTitleAttrs]

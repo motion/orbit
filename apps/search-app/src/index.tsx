@@ -1,4 +1,15 @@
-import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
+import {
+  App,
+  AppFilterButton,
+  AppMainView,
+  AppProps,
+  createApp,
+  useActiveApps,
+  useActiveSpace,
+  useSearchState,
+  useStore,
+  useStores,
+} from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
@@ -21,7 +32,10 @@ export default createApp({
 })
 
 function SearchApp(props: AppProps) {
-  const searchStore = useStore(SearchStore)
+  const space = useActiveSpace()[0]
+  const apps = useActiveApps()
+  console.log(space, apps)
+  const searchStore = useStore(SearchStore, { space, apps })
 
   useSearchState(state => {
     searchStore.setSearchState(state)

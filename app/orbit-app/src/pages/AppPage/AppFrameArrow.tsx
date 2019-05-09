@@ -1,9 +1,9 @@
 import { App } from '@o/stores'
 import * as UI from '@o/ui'
-import { ensure, react, useHook, useStore } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import * as React from 'react'
+
 import * as Constants from '../../constants'
-import { useStoresSimple } from '../../hooks/useStores'
 
 type Props = {
   borderShadow: any
@@ -15,9 +15,8 @@ const peekOnRight = false
 
 class AppArrowStore {
   props: Props
-  stores = useHook(useStoresSimple)
-
-  hide = react(() => this.stores.appPageStore.isTorn, _ => _)
+  // stores = useHook(useStoresSimple)
+  // hide = react(() => this.stores.appPageStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,

@@ -11,18 +11,20 @@ export const setNavHovered: Action<boolean> = ({ state }, x) => {
 }
 
 export const setShare: Action<{ key: string; value: any }> = ({ state }, { key, value }) => {
-  filterReactElementObj(value)
-  console.log('setting', value)
-  state.share[key] = value
+  state.share[key] = filterReactElementObj(value)
 }
 
 const filterReactElementObj = obj => {
+  let res = {}
   for (const key in obj) {
     if (isValidElement(obj)) {
-      obj[key] = null
+      continue
     }
     if (obj[key] && isObject(obj[key])) {
-      filterReactElementObj(obj[key])
+      res[key] = filterReactElementObj(obj[key])
+    } else {
+      res[key] = obj[key]
     }
   }
+  return res
 }

@@ -1,32 +1,5 @@
-import {
-  App,
-  AppProps,
-  Bit,
-  createApp,
-  LocationLink,
-  useBit,
-  useBits,
-  useBitSearch,
-  useLocationLink,
-  useNLPTopics,
-  useStores,
-} from '@o/kit'
-import {
-  Avatar,
-  Button,
-  Center,
-  Col,
-  gloss,
-  List,
-  ListItem,
-  Paragraph,
-  RoundButton,
-  Row,
-  Section,
-  Space,
-  SubTitle,
-  TitleRow,
-} from '@o/ui'
+import { App, AppProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
 const PeopleApp = props => (

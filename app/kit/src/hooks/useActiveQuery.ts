@@ -4,7 +4,7 @@ import { ensure, useReaction } from '@o/use-store'
 
 import { useStoresSimple } from './useStores'
 
-export function useActiveQuery(opts?: ReactionOptions) {
+export function useActiveQuery(opts?: ReactionOptions): string {
   const { queryStore } = useStoresSimple()
   const visibleStore = useVisibilityStore()
   return (

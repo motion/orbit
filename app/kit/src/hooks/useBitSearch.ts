@@ -10,12 +10,13 @@ type UseBitsProps = FindOptions<Bit> & {
   type?: BitContentType
   searchable?: boolean
   query?: string
+  delay?: number
 }
 
-export function useBitSearch({ type, ...args }: UseBitsProps = {}) {
+export function useBitSearch({ type, delay = 100, ...args }: UseBitsProps = {}) {
   const listProps = useListProps()
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
-  const activeQuery = useActiveQuery({ delay: 100 })
+  const activeQuery = useActiveQuery({ delay })
   const query = searchable ? activeQuery : args.query
 
   const state = useSearchState()
@@ -48,7 +49,10 @@ export function useBitSearch({ type, ...args }: UseBitsProps = {}) {
     })
   }
 
-  const finalArgs = { ...args, take, where }
+  const finalArgs = { ...args, take }
+  if (where.length) {
+    finalArgs.where = where
+  }
 
   return useModels(BitModel, finalArgs)[0]
 }

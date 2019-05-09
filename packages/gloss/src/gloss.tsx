@@ -7,7 +7,7 @@ import {
 } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, memo, useEffect, useRef, isValidElement } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
@@ -103,8 +103,14 @@ export function gloss<Props = any>(
     }
   }, 0)
 
-  // shorthand: view({ ... })
-  if (typeof a !== 'string' && typeof target === 'object' && !b && !hasGlossyChild) {
+  // shorthand: gloss({ ... })
+  if (
+    typeof a !== 'string' &&
+    typeof target === 'object' &&
+    !isValidElement(target) &&
+    !b &&
+    !hasGlossyChild
+  ) {
     target = 'div'
     rawStyles = a
   }
@@ -336,10 +342,10 @@ function addDynamicStyles(
   if (hasPropStyles) {
     for (const key in propStyles) {
       if (props[key] !== true) continue
-      for (const subKey in propStyles[key]) {
-        const ns = subKey === 'base' ? id : subKey
+      for (const sKey in propStyles[key]) {
+        const ns = sKey === 'base' ? id : sKey
         dynStyles[ns] = dynStyles[ns] || {}
-        mergeStyles(ns, dynStyles, propStyles[key][subKey])
+        mergeStyles(ns, dynStyles, propStyles[key][sKey])
       }
     }
   }
@@ -373,6 +379,8 @@ function addDynamicStyles(
   return classNames
 }
 
+const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
+
 function mergeStyles(
   id: string,
   baseStyles: Object,
@@ -381,23 +389,47 @@ function mergeStyles(
   let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (typeof baseStyles[id][key] !== 'undefined') {
+    if (baseStyles[id][key] !== undefined) {
       continue
     }
-    if (key[0] === '&' || key[0] === '@') {
+    if (isSubStyle(key)) {
       // valid sub-attribute
       baseStyles[key] = nextStyles[key]
     } else if (validCSSAttr[key]) {
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
     } else {
-      propStyles = propStyles || {}
-      propStyles[key] = nextStyles[key]
+      let all = nextStyles[key]
+      if (!all) return
+
+      // propStyles
+      //   definition: gloss({ isTall: { height: '100%' } })
+      //   usage: <Component isTall />
+
+      propStyles = {}
+
+      // they can nest (media queries/psuedoes), split it out
+      //   eg: gloss({ isTall: { '&:before': ... } })
+      for (const sKey in all) {
+        if (sKey === '0') debugger
+        console.log('sKey', sKey)
+        if (isSubStyle(sKey)) {
+          // keep all sub-styles on their key
+          propStyles[sKey] = all[sKey]
+        } else {
+          // we put base styles here, see 'base' check above
+          propStyles.base = propStyles.base || {}
+          propStyles.base[sKey] = all[sKey]
+        }
+      }
+
+      console.log('retuirning', propStyles)
     }
   }
   return propStyles
 }
 
+// happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
 function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | null) {
   const styles = {

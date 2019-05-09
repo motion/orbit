@@ -1,4 +1,4 @@
-import { App, AppDefinition, AppMainView, AppProps, createApp, Icon, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { App, AppDefinition, AppMainView, AppProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React from 'react'
 
@@ -27,20 +27,22 @@ function getDescription(def: AppDefinition) {
 
 const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
 
-export function useInstallableItems(): ListItemProps[] {
-  return useAppDefinitions()
-    .filter(x => !!x.sync || !!x.setup)
-    .map(def => ({
-      key: `install-${def.id}`,
-      group: 'Install App',
-      title: def.name,
-      icon: def.id,
-      subTitle: getDescription(def) || 'No Description',
-      after: sourceIcon,
-      identifier: 'apps',
-      subType: 'add-app',
-      subId: def.id,
-    }))
+export function useDataAppDefinitions() {
+  return useAppDefinitions().filter(x => isDataDefinition(x))
+}
+
+export const appDefToItem = (def: AppDefinition): ListItemProps => {
+  return {
+    key: `install-${def.id}`,
+    group: 'Install App',
+    title: def.name,
+    icon: def.id,
+    subTitle: getDescription(def) || 'No Description',
+    after: sourceIcon,
+    identifier: 'apps',
+    subType: 'add-app',
+    subId: def.id,
+  }
 }
 
 export function AppsIndex() {
@@ -64,7 +66,7 @@ export function AppsIndex() {
           subType: 'settings',
           after: sourceIcon,
         })),
-        ...useInstallableItems(),
+        ...useDataAppDefinitions().map(appDefToItem),
       ]}
     />
   )

@@ -7,10 +7,11 @@ import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
 import React from 'react'
 
+import { addAppClickHandler } from '../helpers/addAppClickHandler'
 import { paneManagerStore } from '../om/stores'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
-import { useInstallableItems } from './apps/AppsApp'
+import { appDefToItem, useDataAppDefinitions } from './apps/AppsApp'
 
 export default createApp({
   id: 'onboard',
@@ -91,20 +92,9 @@ class OnboardStore {
 
 export function OnboardMain() {
   const store = useStore(OnboardStore)
-
-  // for smart finding sources...
-  // const { foundSources } = Desktop.state.onboardState
-  // if (!foundSources) {
-  //   console.log('no found sources...')
-  //   return null
-  // }
-  // const { atlassian, ...rest } = foundSources
-  // let finalSources = Object.keys(rest)
-  // if (atlassian) {
-  //   finalSources = ['jira', 'confluence', ...finalSources]
-  // }
-  const allDataApps = useActiveDataAppsWithDefinition()
-  const isInstalled = (id: string) => allDataApps.some(x => x.definition.id === id)
+  const dataDefs = useDataAppDefinitions()
+  const active = useActiveDataAppsWithDefinition()
+  const isInstalled = (id: string) => active.some(x => x.definition.id === id)
 
   return (
     <>
@@ -132,10 +122,6 @@ export function OnboardMain() {
                 Orbit will set up a local proxy now to enable private sync and the access quick URLs
                 you can access in your browser.
               </Text>
-              <Space />
-              <Space />
-              <Space />
-              <Space />
             </Centered>
           )}
           {store.accepted === false && (
@@ -192,11 +178,16 @@ export function OnboardMain() {
               iconBefore: true,
               iconSize: 36,
             }}
-            items={useInstallableItems()}
-            getItemProps={item => ({
+            items={dataDefs.map(appDefToItem)}
+            getItemProps={(_, i) => ({
+              onClick: addAppClickHandler(dataDefs[i]),
               after: (
-                <AddButton size={0.9} disabled={isInstalled(item.subId)}>
-                  {isInstalled(item.subId) ? <Icon size={16} name="tick" color="green" /> : 'Add'}
+                <AddButton size={0.9} disabled={isInstalled(dataDefs[i].id)}>
+                  {isInstalled(dataDefs[i].id) ? (
+                    <Icon size={16} name="tick" color="green" />
+                  ) : (
+                    'Add'
+                  )}
                 </AddButton>
               ),
             })}

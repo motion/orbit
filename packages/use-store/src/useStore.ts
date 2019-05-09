@@ -98,6 +98,9 @@ export function disposeStore(store: any, component?: CurrentComponent) {
       component,
     })
   }
+  if (!store.dispose) {
+    debugger
+  }
   store.dispose()
 }
 

@@ -5,7 +5,6 @@ import { processArray, processObject, px } from './helpers'
 
 // exports
 
-export * from '@o/color'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
 export { CSSPropertySet, CSSPropertySetResolved, CSSPropertySetStrict } from './cssPropertySet'

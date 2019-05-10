@@ -1,6 +1,5 @@
-import { Color, toColor } from '@o/color'
-import { LinearGradient, ThemeObject } from '@o/css'
-import { SimpleStyleObject } from 'gloss'
+import { Color, LinearGradient, toColor } from '@o/color'
+import { SimpleStyleObject, ThemeObject } from 'gloss'
 
 const darken = (color, amt) => {
   return color.darken(amt(color))

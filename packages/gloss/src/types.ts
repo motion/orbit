@@ -3,8 +3,8 @@ import { ColorLike, ThemeObject } from '@o/css'
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
 export type GlossOptions = {
-  toColor?: Function
-  isColor?: Function
+  toColor: Function
+  isColor: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }
   preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
 }

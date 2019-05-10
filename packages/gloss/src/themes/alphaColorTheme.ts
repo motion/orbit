@@ -1,6 +1,6 @@
-import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 
+import { Config } from '../config'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { PseudoStyleProps } from './psuedoStyleTheme'
@@ -23,7 +23,7 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
 
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
-      next.color = `${toColor(color).alpha(alpha)}`
+      next.color = `${Config.toColor(color).alpha(alpha)}`
     } else {
       next.color = color
     }

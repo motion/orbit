@@ -100,3 +100,14 @@ export function configureUI(opts: Partial<ConfigureUIProps>) {
     toColor: toColor,
   })
 }
+
+if (typeof module !== 'undefined' && module.hot) {
+  module.hot.accept(() => {
+    if (module.hot) {
+      Config = module.hot.data || Config
+    }
+  })
+  module.hot.dispose(_ => {
+    _.data = Config
+  })
+}

@@ -18,7 +18,7 @@ function CustomApp() {
               <Table
                 shareable
                 selectable="multi"
-                rows={(res && res.channels) || []}
+                items={(res && res.channels) || []}
                 onSelect={x => setRooms(x)}
               />
             )

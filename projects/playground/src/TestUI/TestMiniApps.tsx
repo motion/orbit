@@ -1,23 +1,5 @@
-import { List, shallow, Table, Templates, useStore } from '@o/kit'
-import {
-  Card,
-  DefinitionList,
-  FloatingCard,
-  Flow,
-  FlowStep,
-  Form,
-  GridItem,
-  GridLayout,
-  Layout,
-  Loading,
-  Pane,
-  Row,
-  SearchInput,
-  Select,
-  Title,
-  useFetch,
-  useForm,
-} from '@o/ui'
+import { shallow, Templates, useStore } from '@o/kit'
+import { Card, DefinitionList, FloatingCard, Flow, FlowStep, Form, GridItem, GridLayout, Layout, List, Loading, Pane, Row, SearchInput, Select, Table, Title, useFetch, useForm } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 class Store {
@@ -43,10 +25,10 @@ export function CustomApp2() {
         title="Step 1"
         subTitle="Select your thing"
         validateFinished={data =>
-          data.rows.length > 0
+          data.items.length > 0
             ? true
             : {
-                rows: 'Need to select rows.',
+                items: 'Need to select items.',
               }
         }
       >
@@ -57,8 +39,8 @@ export function CustomApp2() {
                 <Table
                   searchable
                   selectable="multi"
-                  onSelect={rows => setData({ selected: rows })}
-                  rows={[
+                  onSelect={items => setData({ selected: items })}
+                  items={[
                     {
                       title: 'Hello world Hello world Hello world Hello world Hello world',
                       date: new Date(Date.now()),
@@ -184,8 +166,8 @@ export function CustomApp1() {
               </Row>
               <Table
                 selectable="multi"
-                onSelect={rows => setHighlighted(rows)}
-                rows={users}
+                onSelect={items => setHighlighted(items)}
+                items={users}
                 searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}
               />

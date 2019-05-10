@@ -8,17 +8,17 @@ const sortedBodyCache: WeakMap<
   }
 > = new WeakMap()
 
-export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): TableRows {
+export function getSortedRows(maybeSortOrder: SortOrder, items: TableRows): TableRows {
   if (!maybeSortOrder) {
-    return rows
+    return items
   }
   const sortOrder: SortOrder = maybeSortOrder
-  const cached = sortedBodyCache.get(rows)
+  const cached = sortedBodyCache.get(items)
   if (cached && cached.sortOrder === sortOrder) {
     return cached.rows
   }
 
-  let sortedRows = rows.sort((a, b) => {
+  let sortedRows = items.sort((a, b) => {
     const [aVal, bVal] = norm(a.values[sortOrder.key], b.values[sortOrder.key])
 
     if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
@@ -38,7 +38,7 @@ export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): Table
     sortedRows = sortedRows.reverse()
   }
 
-  sortedBodyCache.set(rows, {
+  sortedBodyCache.set(items, {
     rows: sortedRows,
     sortOrder,
   })

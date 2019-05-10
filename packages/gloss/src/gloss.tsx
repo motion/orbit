@@ -1,5 +1,4 @@
 import { CSSPropertySet, CSSPropertySetResolved, cssString, ThemeObject, validCSSAttr } from '@o/css'
-import { isEqual } from '@o/fast-compare'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -259,7 +258,7 @@ export function gloss<Props = any>(
 
 function createGlossView<Props>(GlossView: any, config) {
   const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
-  const res: GlossView<Props> = memo(forwarded, isEqual) as any
+  const res: GlossView<Props> = memo(forwarded) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {

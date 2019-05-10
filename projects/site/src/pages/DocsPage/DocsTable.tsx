@@ -10,7 +10,7 @@ export let simple = (
     selectable="multi"
     height={300}
     columns={[{ key: 'username', value: 'Username', flex: 2 }, 'password', 'ssn', 'dob']}
-    rows={data}
+    items={data}
   />
 )
 
@@ -32,19 +32,19 @@ export let columns = (
       'ssn',
       'dob',
     ]}
-    rows={employees}
+    items={employees}
   />
 )
 
 export let selections = () => {
-  const [rows, setRows] = useState([])
+  const [items, setItems] = useState([])
   return (
     <>
-      <Table height={250} selectable="multi" onSelect={setRows} rows={employees} />
+      <Table height={250} selectable="multi" onSelect={setItems} items={employees} />
       <List
         title="Selected"
         height={200}
-        items={rows.map(employee => ({
+        items={items.map(employee => ({
           title: employee.username,
           subTitle: employee.ssn,
         }))}
@@ -63,13 +63,13 @@ export let filters = (
         key: 'username',
       },
     ]}
-    rows={employees}
+    items={employees}
   />
 )
 
 export let searching = (
   //
-  <Table searchable height={250} rows={employees} />
+  <Table searchable height={250} items={employees} />
 )
 
 export let section = (
@@ -85,7 +85,7 @@ export let section = (
     }
     bordered
     backgrounded
-    rows={employees}
+    items={employees}
     height={250}
   />
 )

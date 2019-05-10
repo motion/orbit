@@ -7,6 +7,7 @@
 import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import { debounce, isEqual, throttle } from 'lodash'
+import memoize from 'memoize-weak'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
 
@@ -52,7 +53,7 @@ export type ManagedTableProps = SelectableProps &
     /**
      * Row data
      */
-    rows?: GenericDataRow[]
+    items?: GenericDataRow[]
     /**
      * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
      * are truncated.
@@ -91,7 +92,7 @@ export type ManagedTableProps = SelectableProps &
     sortOrder?: SortOrder
     onSortOrder?: (next: SortOrder) => any
     onCreatePaste?: Function
-    placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
+    placeholder?: React.ReactNode | ((items: ManagedTableProps['items']) => React.ReactNode)
 
     // some props from virutal list, TODO make them all
     overscanCount?: number
@@ -117,8 +118,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     zebra: true,
     selectable: false,
     rowLineHeight: 24,
-    placeholder: rows =>
-      !rows ? (
+    placeholder: items =>
+      !items ? (
         <div style={{ margin: 'auto' }}>
           <Text size={1.2}>Loading...</Text>
         </div>
@@ -157,7 +158,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       }
     }
 
-    if (!prevProps.rows || prevProps.rows.length > props.rows.length) {
+    if (!prevProps.items || prevProps.items.length > props.items.length) {
       nextState.shouldRecalculateHeight = true
     }
 
@@ -165,16 +166,16 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       !isEqual(prevProps.filter, props.filter) ||
       !isEqual(prevProps.filterValue, props.filterValue) ||
       !isEqual(prevProps.sortOrder, props.sortOrder) ||
-      !prevProps.rows ||
-      prevProps.rows.length !== props.rows.length ||
+      !prevProps.items ||
+      prevProps.items.length !== props.items.length ||
       // TODO
       // rough check, we should enforce changing key but need to figure out
-      (props.rows.length && !isEqual(prevProps.rows[0], props.rows[0]))
+      (props.items.length && !isEqual(prevProps.items[0], props.items[0]))
     ) {
-      // need to reorder or refilter the rows
+      // need to reorder or refilter the items
       nextState.sortedRows = getSortedRows(
         props.sortOrder,
-        filterRows(props.rows, props.filterValue, props.filter),
+        filterRows(props.items, props.filterValue, props.filter),
       )
     }
 
@@ -231,7 +232,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       })
     }
     if (
-      this.props.rows.length !== prevProps.rows.length &&
+      this.props.items.length !== prevProps.items.length &&
       this.state.shouldScrollToBottom &&
       this.selectableStore.active.size < 2
     ) {
@@ -264,7 +265,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   onSort = (sortOrder: SortOrder) => {
     const sortedRows = getSortedRows(
       sortOrder,
-      filterRows(this.props.rows, this.props.filterValue, this.props.filter),
+      filterRows(this.props.items, this.props.filterValue, this.props.filter),
     )
     this.setState({ sortOrder, sortedRows })
     if (this.props.onSortOrder) {
@@ -301,7 +302,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
     return [
       {
-        label: active.size > 1 ? `Copy ${active.size} rows` : 'Copy row',
+        label: active.size > 1 ? `Copy ${active.size} items` : 'Copy row',
         click: this.onCopy,
       },
       {
@@ -350,7 +351,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }, 100)
 
-  renderRow = ({ index, style }) => {
+  renderRow = memoize(({ index, style }) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
@@ -374,7 +375,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         selectableStore={store}
       />
     )
-  }
+  })
 
   getItemKey = (index: number) => {
     const { sortedRows } = this.state
@@ -396,7 +397,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       height,
       minHeight,
       minWidth,
-      rows,
+      items,
       placeholder,
       containerRef,
       overscanCount = 6,
@@ -405,9 +406,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     const placeholderElement =
-      !rows ||
+      !items ||
       (!sortedRows.length &&
-        (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
+        (typeof placeholder === 'function' ? placeholder(items) : placeholder)) ||
       null
 
     return (
@@ -456,7 +457,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 }
 
 function ManagedTableNormalized(props: ManagedTableProps) {
-  return <ManagedTableInner {...props} rows={props.rows.map(normalizeRow)} />
+  return <ManagedTableInner {...props} items={props.items.map(normalizeRow)} />
 }
 
 export const ManagedTable = debounceRender(ManagedTableNormalized, 100)

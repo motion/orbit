@@ -10,7 +10,7 @@ export function SlackSettings() {
   // setup state
   const app = useApp()
   const [channels, setChannels] = useAppState('channels')
-  const [, setHighlightedRows] = useState([])
+  const [, setHighlightedItems] = useState([])
   const whitelist = useWhiteList(`${app.id}-whitelist`, {
     getAll: () => (channels || []).map(channel => channel.id),
   })
@@ -26,7 +26,7 @@ export function SlackSettings() {
     })
   }, [app && app.token])
 
-  const rows = (channels || []).map(channel => {
+  const items = (channels || []).map(channel => {
     return {
       name: channel.name,
       topic: channel.topic ? channel.topic.value : '',
@@ -36,7 +36,7 @@ export function SlackSettings() {
     }
   })
 
-  console.log('rows', rows)
+  console.log('items', items)
 
   return (
     <>
@@ -62,8 +62,8 @@ export function SlackSettings() {
             },
           }}
           selectable="multi"
-          onSelect={x => setHighlightedRows(x)}
-          rows={rows}
+          onSelect={x => setHighlightedItems(x)}
+          items={items}
         />
       </View>
     </>

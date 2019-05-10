@@ -13,7 +13,7 @@ export let Basic = () => {
             <Table
               columns={['username', 'dob', 'ssn']}
               selectable="multi"
-              rows={employees}
+              items={employees}
               onSelect={x => setRows(x)}
             />
           </Pane>

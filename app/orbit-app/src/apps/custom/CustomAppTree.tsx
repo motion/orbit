@@ -73,7 +73,7 @@ const treeData = {
 }
 
 const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
-const rows = [...new Array(10000)].map((_, index) => ({
+const items = [...new Array(10000)].map((_, index) => ({
   key: `${index}`,
   category: rowTypes[index % 20],
   values: {
@@ -110,7 +110,7 @@ export function CustomAppTree() {
         />
       </Pane>
       <Pane flex={3} collapsable title="Inspect" resizable>
-        <Table searchable selectable rows={rows} />
+        <Table searchable selectable items={items} />
       </Pane>
       <Pane title="Sidebar">
         <Layout type="column">

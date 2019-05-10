@@ -1,13 +1,7 @@
-import {
-  cssString,
-  CSSPropertySet,
-  CSSPropertySetResolved,
-  ThemeObject,
-  validCSSAttr,
-} from '@o/css'
+import { CSSPropertySet, CSSPropertySetResolved, cssString, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, memo, useEffect, useRef, isValidElement } from 'react'
+import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
@@ -361,7 +355,6 @@ function addDynamicStyles(
     dynStyles[id] = dynStyles[id] || {}
     const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
     if (themePropStyles) {
-      console.log('themePropStyles', themePropStyles)
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }
   }
@@ -373,8 +366,6 @@ function addDynamicStyles(
   if (parentClassNames) {
     classNames = [...parentClassNames, ...(classNames || [])]
   }
-
-  if (classNames && classNames.some(x => x === null)) debugger
 
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {

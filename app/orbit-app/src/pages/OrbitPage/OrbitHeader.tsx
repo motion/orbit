@@ -1,23 +1,14 @@
 import { invertLightness } from '@o/color'
-import { FullScreen, gloss, useTheme } from 'gloss'
 import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
+import { useIsOnStaticApp } from './OrbitDockShare'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
@@ -69,13 +60,13 @@ const activeStyle = {
 }
 
 export const OrbitHeader = memo(() => {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+  const om = useOm()
+  const { orbitStore, headerStore } = useStores()
   const { isTorn } = orbitStore
-  const { activePane } = paneManagerStore
-  const activePaneType = activePane.type
   const theme = useTheme()
-  const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
-  const isOnTearablePane = activePaneType !== activePane.id
+  const appId = om.state.router.appId
+  const isOnSettings = appId === 'settings' || appId === 'spaces'
+  const isOnTearablePane = !useIsOnStaticApp()
 
   return (
     <>
@@ -135,13 +126,13 @@ export const OrbitHeader = memo(() => {
               )}
 
               <Button
-                {...paneManagerStore.activePane.id === 'data-explorer' && activeStyle}
+                {...om.state.router.appId === 'data-explorer' && activeStyle}
                 {...useLocationLink('/app/data-explorer')}
                 icon="layers"
                 tooltip="Data explorer"
               />
               <Button
-                {...paneManagerStore.activePane.id === 'apps' && activeStyle}
+                {...om.state.router.appId === 'apps' && activeStyle}
                 {...useLocationLink('/app/apps')}
                 icon="layout-grid"
                 tooltip="Manage apps"
@@ -159,11 +150,10 @@ export const OrbitHeader = memo(() => {
                   icon="cog"
                   iconSize={isEditing ? 10 : 12}
                   onClick={() => {
-                    newAppStore.setShowCreateNew(false)
                     if (activePaneType === 'settings') {
-                      paneManagerStore.back()
+                      om.actions.router.back()
                     } else {
-                      paneManagerStore.setActivePaneByType('settings')
+                      om.actions.router.showAppPage({ id: 'settings' })
                     }
                   }}
                 />
@@ -217,7 +207,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 const OrbitNavHiddenBar = props => {
   const apps = useActiveAppsSorted().slice(0, 20)
   const { paneManagerStore } = useStores()
-  const { activePaneId } = paneManagerStore
+  const { paneId } = paneManagerStore
 
   if (!apps.length) {
     return null
@@ -226,7 +216,7 @@ const OrbitNavHiddenBar = props => {
     <OrbitNavHiddenBarChrome {...props}>
       <OrbitNavHiddenBarInner isVisible={props.isVisible}>
         {apps.map(app => {
-          const isActive = activePaneId === `${app.id}`
+          const isActive = paneId === `${app.id}`
           return (
             <div
               key={app.id}

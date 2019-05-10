@@ -1,21 +1,29 @@
 import { AppBit } from '@o/kit'
 import { createHttpLink } from 'apollo-link-http'
-import { introspectSchema, makeRemoteExecutableSchema } from 'graphql-tools'
+import { introspectSchema } from 'graphql-tools'
 
 export async function graph(app: AppBit) {
-  const { url, headers = {}, fetchOptions = {} } = app.data.credentials
+  return sourceNodes(app.data.credentials)
+}
 
-  const link = createHttpLink({
-    uri: url,
-    fetch,
-    headers,
-    fetchOptions,
-  })
+export async function sourceNodes({ createLink, createSchema, ...options }) {
+  const link = createLink
+    ? createLink(options)
+    : createHttpLink({
+        uri: options.url,
+        fetch,
+        headers: options.headers || {},
+        fetchOptions: options.fetchOptions || {},
+      })
 
-  const introspectionSchema = await introspectSchema(link)
-
-  return makeRemoteExecutableSchema({
-    schema: introspectionSchema,
+  let schema
+  if (createSchema) {
+    schema = await createSchema(options)
+  } else {
+    schema = await introspectSchema(link)
+  }
+  return {
+    schema,
     link,
-  })
+  }
 }

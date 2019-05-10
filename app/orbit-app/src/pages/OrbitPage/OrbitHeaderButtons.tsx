@@ -2,6 +2,7 @@ import { gloss } from 'gloss'
 import { ClearButton, Icon } from '@o/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
+import { useOm } from '../../om/om';
 
 const Section = gloss('section', {
   flexFlow: 'row',
@@ -29,7 +30,9 @@ const Interactive = gloss({
 })
 
 export default function OrbitHeaderButtons() {
-  const { paneManagerStore, queryStore } = useStores()
+  const om = useOm()
+  const appId = om.state.router.appId
+  const { queryStore } = useStores()
 
   const clearSearch = () => {
     queryStore.clearQuery()
@@ -37,14 +40,14 @@ export default function OrbitHeaderButtons() {
 
   return (
     <>
-      <Section invisible={paneManagerStore.activePane.type === 'onboard'}>
+      <Section invisible={appId === 'onboard'}>
         <Interactive
-          enabled={paneManagerStore.activePane.type === 'settings' || queryStore.hasQuery}
+          enabled={appId === 'settings' || queryStore.hasQuery}
         >
           <ClearButton
             onClick={
-              paneManagerStore.activePane.type === 'settings'
-                ? paneManagerStore.setActivePaneToPrevious
+              appId === 'settings'
+                ? om.actions.router.back
                 : clearSearch
             }
           >

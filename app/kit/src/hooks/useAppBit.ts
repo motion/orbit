@@ -8,6 +8,10 @@ export function useAppBit(
   extraConditions?,
 ): [AppBit, ImmutableUpdateFn<AppBit>] {
   const { appStore } = useStoresSimple()
+  if (!appStore) {
+    console.warn('no app store?')
+    return [null, null]
+  }
   let conditions = extraConditions || null
 
   if (appId || +appStore.id === +appStore.id) {

@@ -5,8 +5,8 @@
  * @format
  */
 import { Color } from '@o/color'
-import { gloss, Row, ThemeObject } from 'gloss'
 import { useReaction } from '@o/use-store'
+import { gloss, Row, ThemeObject } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -41,6 +41,10 @@ type TableRowProps = {
   rowKey?: any
 }
 
+const reactionOpts = {
+  name: 'TableRow.isHighlighted',
+}
+
 export const TableRow = memo(function TableRow({
   index,
   highlighted,
@@ -56,7 +60,7 @@ export const TableRow = memo(function TableRow({
 }: TableRowProps) {
   const isHighlighted = useReaction(() => {
     return (selectableStore && selectableStore.active.has(rowKey)) || false
-  })
+  }, reactionOpts)
 
   if (!columnKeys.length) {
     console.warn('No columns')

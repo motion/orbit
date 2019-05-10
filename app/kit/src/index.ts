@@ -18,6 +18,7 @@ export {
   SearchQuery,
   User,
 } from '@o/models'
+export { Actions } from './Actions'
 export * from '@o/use-store'
 export * from '@o/utils'
 export * from './AppLoadContext'
@@ -92,3 +93,5 @@ export * from './views/TreeList'
 export * from './hooks/useLocationLink'
 export * from './hooks/useBits'
 export * from './hooks/useNLP'
+export * from './hooks/useAppDefinition'
+export * from './hooks/useIsActive'

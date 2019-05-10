@@ -28,7 +28,7 @@ export function CustomApp2() {
                   searchable
                   selectable="multi"
                   onSelect={rows => setData({ selected: rows })}
-                  rows={[
+                  items={[
                     {
                       title: 'Hello world Hello world Hello world Hello world Hello world',
                       date: new Date(Date.now()),

@@ -119,7 +119,7 @@ export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
     }
     return res
   }
-  captureHooks = observable({
+  captureHooks = shallow({
     ...getValues(),
     __getHooksValues: getValues,
   })
@@ -204,7 +204,9 @@ function useReactiveStore<A extends any>(
       let next = hooks['__getHooksValues']()
       for (const key in hooks) {
         if (key === '__getHooksValues') continue
-        hooks[key] = next[key]
+        if (next[key] !== hooks[key]) {
+          hooks[key] = next[key]
+        }
       }
     }
   }

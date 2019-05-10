@@ -1,4 +1,3 @@
-import { useStores } from '@o/kit'
 import { FloatingCard, List, Tabs, usePosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
@@ -7,10 +6,13 @@ import { orbitStaticApps } from '../../apps/orbitApps'
 import { useOm } from '../../om/om'
 import { DockButton } from './Dock'
 
-const useIsOnStaticApp = () => {
-  const { paneManagerStore } = useStores()
-  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
-  return isStaticApp
+export const isStaticApp = (identifier: string) => {
+  return !!orbitStaticApps.find(x => x.id === identifier)
+}
+
+export const useIsOnStaticApp = () => {
+  const om = useOm()
+  return isStaticApp(om.state.router.appId)
 }
 
 export function OrbitDockShare({
@@ -30,7 +32,6 @@ export function OrbitDockShare({
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = hovered || hoveredMenu
-
   const isStatic = useIsOnStaticApp()
 
   return (

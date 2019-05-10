@@ -8,7 +8,7 @@ export class AppStore {
     identifier: string
   }
 
-  stores = useHooks({ stores: useStoresSimple }).stores
+  hooks = useHooks({ stores: useStoresSimple })
 
   sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
   lastSidebarWidth = react(() => this.sidebarWidth, {
@@ -22,7 +22,7 @@ export class AppStore {
   }
 
   get showSidebar() {
-    return this.stores.themeStore.showSidebar
+    return this.hooks.stores.themeStore.showSidebar
   }
 
   get identifier() {

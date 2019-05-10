@@ -6,8 +6,6 @@ import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 
-import { useStoresSimple } from '../hooks/useStores'
-
 // @ts-ignore
 const avatar = require('../../public/images/nate.jpg')
 
@@ -42,13 +40,13 @@ class SpaceSwitchStore {
 }
 
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
-  const stores = useStoresSimple()
   const store = useStore(SpaceSwitchStore)
   const [user] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
   const accountLink = useLocationLink('/app/settings/account')
+  const settingsLink = useLocationLink('/app/settings')
 
   if (!activeSpace) {
     return null
@@ -154,10 +152,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             subTitle="Shortcuts, theme"
             icon="cog"
             iconBefore
-            onClick={() => {
-              stores.newAppStore.setShowCreateNew(false)
-              stores.paneManagerStore.setActivePaneByType('settings')
-            }}
+            {...settingsLink}
           />
         </Col>
       </Popover>

@@ -54,7 +54,7 @@ export function DriveSettings({ subId }: AppProps) {
           },
         }}
         selectable="multi"
-        rows={folders.map((file, index) => ({
+        items={folders.map((file, index) => ({
           key: `${index}`,
           name: file.name,
           active: false,

@@ -1,5 +1,6 @@
 import { useModels } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
+import { useMemo } from 'react'
 
 import { useActiveSpace } from './useActiveSpace'
 
@@ -14,7 +15,7 @@ export function useActiveApps(type?: string): AppBit[] {
     select: appSelectAllButDataAndTimestamps,
   })
 
-  return apps.filter(x => x.tabDisplay !== 'hidden')
+  return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 
 export const appSelectAllButData: (keyof AppBit)[] = [

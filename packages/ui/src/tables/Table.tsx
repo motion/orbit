@@ -64,23 +64,23 @@ export function Table(tableProps: TableProps) {
   }
   const isVisible = useVisibility()
   const { height, ref } = useNodeSize({ throttle: 150, disable: !isVisible })
-  const rows = useMemo(() => (props.rows ? props.rows.map(normalizeRow) : null), [props.rows])
+  const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
-    () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
-    [props.columns, rows],
+    () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),
+    [props.columns, items],
   )
   const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 150 })
 
   const onSelect = useCallback(
-    (selectedRows, indices) => {
+    (selectedItems, indices) => {
       if (shareable) {
-        shareStore.setSelected(shareable, selectedRows)
+        shareStore.setSelected(shareable, selectedItems)
       }
       if (props.onSelect) {
-        props.onSelect(selectedRows.map(row => row.values), indices)
+        props.onSelect(selectedItems.map(row => row.values), indices)
       }
     },
-    [props.rows, props.onSelect, shareable],
+    [props.items, props.onSelect, shareable],
   )
 
   return (
@@ -114,7 +114,7 @@ export function Table(tableProps: TableProps) {
         flex={flex}
         {...props}
         columns={columns}
-        rows={rows}
+        items={items}
         onSelect={onSelect}
       />
     </Section>

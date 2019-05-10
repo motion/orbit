@@ -1,29 +1,5 @@
-import {
-  App,
-  AppProps,
-  createApp,
-  hasGraph,
-  Templates,
-  useActiveDataAppsWithDefinition,
-  useAppState,
-  useAppWithDefinition,
-} from '@o/kit'
-import {
-  Button,
-  Divider,
-  Form,
-  FormField,
-  List,
-  Section,
-  SubTitle,
-  Tab,
-  Table,
-  Tabs,
-  TextArea,
-  Title,
-  View,
-  useSetShare,
-} from '@o/ui'
+import { App, AppProps, createApp, hasGraph, Templates, useActiveDataAppsWithDefinition, useAppState, useAppWithDefinition } from '@o/kit'
+import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, useSetShare, View } from '@o/ui'
 import { remove } from 'lodash'
 import React from 'react'
 
@@ -127,7 +103,7 @@ function DataExplorerMain({ subId }: AppProps) {
                     <TextArea minHeight={200} />
                   </Tab>
                   <Tab id="1" label="Table">
-                    <Table rows={[{ title: 'example', something: 'else' }]} />
+                    <Table items={[{ title: 'example', something: 'else' }]} />
                   </Tab>
                 </Tabs>
               </>

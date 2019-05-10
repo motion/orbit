@@ -1,7 +1,7 @@
-import { gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import { useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
+import { gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import React from 'react'
 
 import { BorderBottom } from '../Border'
@@ -437,10 +437,18 @@ function getIcon(props: ListItemSimpleProps) {
 }
 
 export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'index'>) {
-  return useReaction(() => {
-    if (typeof props.isSelected === 'function') {
-      return props.isSelected(props.index)
-    }
-    return !!props.isSelected
-  }, [props.isSelected])
+  return useReaction(
+    () => {
+      if (typeof props.isSelected === 'function') {
+        return props.isSelected(props.index)
+      }
+      return !!props.isSelected
+    },
+    opts,
+    [props.isSelected],
+  )
+}
+
+const opts = {
+  name: 'useIsSelected',
 }

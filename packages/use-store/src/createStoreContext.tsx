@@ -18,8 +18,8 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
       const store = useStore(constructor, props as any, { react: false })
       return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>
     },
-    useCreateStore(props?: InferProps<Instance>) {
-      return useStore(constructor, props as any)
+    useCreateStore(props?: InferProps<Instance>, opts?: UseStoreOptions) {
+      return useStore(constructor, props as any, opts)
     },
     useStore(props?: InferProps<Instance>, options?: UseStoreOptions): Instance | null {
       const value = useContext(Context)

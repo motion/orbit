@@ -1,19 +1,11 @@
-import { Absolute, gloss } from 'gloss'
-import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStoresSimple } from '@o/kit'
+import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import {
-  Button,
-  Section,
-  SegmentedRow,
-  SelectableGrid,
-  Text,
-  useContextMenu,
-  useGet,
-  View,
-  ViewProps,
-} from '@o/ui'
+import { Button, Section, SegmentedRow, SelectableGrid, Text, useContextMenu, useGet, View, ViewProps } from '@o/ui'
+import { Absolute, gloss } from 'gloss'
 import React, { useCallback } from 'react'
+
 import { useAppSortHandler } from '../hooks/useAppSortHandler'
+import { useOm } from '../om/om'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode
@@ -102,7 +94,7 @@ const AppIconContainer = gloss({
 }))
 
 export function ManageApps() {
-  const { paneManagerStore } = useStoresSimple()
+  const om = useOm()
   const activeApps = useActiveAppsSorted()
   const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
@@ -124,7 +116,7 @@ export function ManageApps() {
             group: 'Installed Apps',
             disabled: x.tabDisplay !== 'plain',
             onDoubleClick: () => {
-              paneManagerStore.setActivePane(`${x.id}`)
+              om.actions.router.showAppPage({ id: `${x.id}` })
             },
           })),
         ]}

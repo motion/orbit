@@ -1,23 +1,25 @@
 import { isEditing } from '@o/stores'
 import { Tab, Tabs } from '@o/ui'
-import React, { useCallback } from 'react'
+import React from 'react'
 
-import { useStores } from '../../hooks/useStores'
+import { useOm } from '../../om/om'
 
 export function OrbitSettingsToolbar() {
-  const { paneManagerStore } = useStores()
-  const activePaneKey = paneManagerStore.activePane.type
-
-  const onActive = useCallback(key => {
-    paneManagerStore.setActivePane(key)
-  }, [])
+  const om = useOm()
+  const appId = om.state.router.appId
 
   if (isEditing) {
     return null
   }
 
   return (
-    <Tabs tabWidth={180} centered sizeRadius={3} active={activePaneKey} onChange={onActive}>
+    <Tabs
+      tabWidth={180}
+      centered
+      sizeRadius={3}
+      active={appId}
+      onChange={id => om.actions.router.showAppPage({ id })}
+    >
       <Tab id="spaces" icon="layer" label="Spaces" />
       <Tab id="settings" icon="cog" label="Settings" />
     </Tabs>

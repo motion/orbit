@@ -25,7 +25,7 @@ export function useMessageHandlers() {
           return
         case 'TOGGLE_SETTINGS':
           AppActions.setOrbitDocked(true)
-          paneManagerStore.setActivePaneByType('settings')
+          paneManagerStore.setPane('settings')
           return
         case 'APP_URL_OPENED':
           await AppActions.finishAuthorization(value)

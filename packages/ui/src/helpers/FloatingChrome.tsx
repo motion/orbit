@@ -1,11 +1,11 @@
-import React, { HTMLAttributes, RefObject, useEffect, useState } from 'react'
+import React, { HTMLAttributes, memo, RefObject, useEffect, useState } from 'react'
 
 import { getRect, Rect, usePosition } from '../hooks/usePosition'
 import { Portal } from './portal'
 
 // puts an item on top of render stack, but pinned to another items location
 
-export function FloatingChrome(
+export const FloatingChrome = memo(function FloatingChrome(
   props: {
     zIndex?: number
     target: RefObject<HTMLElement>
@@ -42,7 +42,7 @@ export function FloatingChrome(
       <div style={fullScreen as any}>{element}</div>
     </Portal>
   )
-}
+})
 
 const fullScreen = {
   position: 'absolute',

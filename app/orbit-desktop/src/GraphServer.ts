@@ -133,9 +133,6 @@ export class GraphServer {
           try {
             const appSchema = await appDef.graph(app)
 
-            if (app.identifier !== 'github') continue
-            console.log('Loading graph app', appDef.id, app.id)
-
             let schema = appSchema.schema || appSchema
 
             if (appSchema.link) {

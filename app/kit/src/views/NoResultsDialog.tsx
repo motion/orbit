@@ -1,5 +1,6 @@
 import { Button, Space, SubTitle, View } from '@o/ui'
 import * as React from 'react'
+
 import { useStores } from '../'
 
 type Props = {
@@ -13,7 +14,7 @@ export function NoResultsDialog(props: Props) {
       <View alignItems="center" justifyContent="center" padding={25} flex={1}>
         <SubTitle>Nothing loaded in {props.subName}.</SubTitle>
         <Space />
-        <Button onClick={() => paneManagerStore.setActivePaneByType('search')} size={1.2}>
+        <Button onClick={() => paneManagerStore.setPane('search')} size={1.2}>
           Search Everything
         </Button>
       </View>

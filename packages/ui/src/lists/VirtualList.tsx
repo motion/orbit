@@ -1,11 +1,11 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { idFn, selectDefined } from '@o/utils'
-import { omit } from 'lodash'
-import memoize from 'memoize-weak'
-import React, { forwardRef, RefObject, useCallback } from 'react'
+import memoize from 'memoize-one'
+import React, { forwardRef, memo, RefObject, useCallback } from 'react'
 
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
+import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { ListItemProps } from './ListItem'
@@ -14,7 +14,7 @@ import { SelectableDynamicList } from './SelectableList'
 import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
 import { VirtualListItem } from './VirtualListItem'
 
-export type VirtualListProps<A> = SelectableProps &
+export type VirtualListProps<A = any> = SelectableProps &
   SortableContainerProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
@@ -41,21 +41,16 @@ export type VirtualListProps<A> = SelectableProps &
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 
-const { useProps } = createContextualProps<Partial<VirtualListProps<any>>>()
+const { useProps } = createContextualProps<Partial<VirtualListProps>>()
 
-const getRow = memoize(
-  (
-    props: VirtualListProps<any>,
-    index: number,
-    style: Object,
-    selectableStore: SelectableStore,
-    ref: any,
-  ) => {
-    const { getItemProps, items, ItemView, sortable, onSelect, onOpen, pressDelay } = props
+const ListRow = memo(
+  forwardRef((props: any, ref) => {
+    const { data, index, style } = props
+    const { selectableStore, items, listProps } = data
+    const { getItemProps, ItemView, sortable, onSelect, onOpen, pressDelay, itemProps } = listProps
     const item = items[index]
     let mouseDownTm = null
 
-    const itemProps = props.itemProps
     const dynamicProps = getItemProps && getItemProps(item, index, items)
 
     let finishSelect = false
@@ -99,13 +94,14 @@ const getRow = memoize(
           onMouseUp(e)
         }, [])}
         onMouseDown={useCallback(e => {
+          e.persist()
           clearTimeout(mouseDownTm)
           // add delay when sortable
           const setRowActive = () => {
             selectableStore && selectableStore.setRowMouseDown(index, e)
             finishSelect = false
           }
-          if (props.sortable) {
+          if (sortable) {
             finishSelect = true
             mouseDownTm = setTimeout(setRowActive, pressDelay)
           } else {
@@ -124,32 +120,50 @@ const getRow = memoize(
         style={style}
       />
     )
+  }),
+  rowItemCompare,
+)
+
+const createItemData = memoize(
+  (items: any[], selectableStore: SelectableStore, listProps: VirtualListProps) => {
+    return {
+      items,
+      listProps,
+      selectableStore,
+    }
   },
 )
 
-export function VirtualList(virtualProps: VirtualListProps<any>) {
-  const { pressDelay = 150, ...props } = useProps(virtualProps)
+export function VirtualList(virtualProps: VirtualListProps) {
+  const props = useProps(virtualProps)
+  const { onSortStart, onSortEnd } = props
   const selectableStore = useSelectableStore(props)
-  const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
-
-  const Row = useCallback(
-    forwardRef<any, any>(function GetItem({ index, style }, ref) {
-      return getRow(props, index, style, selectableStore, ref)
-    }),
-    [props, selectableStore],
-  )
 
   return (
     <SortableList
       selectableStore={selectableStore}
       itemCount={props.items.length}
-      itemData={props.items}
+      itemData={createItemData(props.items, selectableStore, props)}
       shouldCancelStart={isRightClick}
       lockAxis="y"
-      pressDelay={pressDelay}
-      {...dynamicListProps}
+      {...props}
+      pressDelay={selectDefined(props.pressDelay, 0)}
+      onSortStart={useCallback(
+        (sort, event) => {
+          selectableStore.setSorting(true)
+          onSortStart && onSortStart(sort, event)
+        },
+        [onSortStart],
+      )}
+      onSortEnd={useCallback(
+        (sort, event) => {
+          selectableStore.setSorting(false)
+          onSortEnd && onSortEnd(sort, event)
+        },
+        [onSortStart],
+      )}
     >
-      {Row as any}
+      {ListRow as any}
     </SortableList>
   )
 }

@@ -18,28 +18,7 @@ export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
 }
 
 export const updatePaneManagerPanes = (apps: AppBit[]) => {
-  const { panes, paneIndex } = getPanes(apps)
-  paneManagerStore.setPanes(panes)
-  paneManagerStore.setPaneIndex(paneIndex)
-}
-
-function getPanes(apps: AppBit[]) {
-  let paneIndex = 0
-  const currentPaneId = paneManagerStore.activePane.id
-  const panes = getAppsPanes(apps)
-  paneIndex = panes.findIndex(pane => pane.id === currentPaneId)
-  // move left one tab if were removing current tab
-  if (paneIndex === -1) {
-    const prevPane = paneManagerStore.panes[paneManagerStore.paneIndex - 1]
-    const prevIndex = prevPane
-      ? paneManagerStore.panes.findIndex(pane => pane.id === prevPane.id)
-      : 0
-    paneIndex = prevIndex === -1 ? 0 : prevIndex
-  }
-  return {
-    panes,
-    paneIndex,
-  }
+  paneManagerStore.setPanes(getAppsPanes(apps))
 }
 
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {

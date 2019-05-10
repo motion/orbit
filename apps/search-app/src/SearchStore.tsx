@@ -1,20 +1,4 @@
-import {
-  AppBit,
-  AppIcon,
-  ensure,
-  getUser,
-  MarkType,
-  react,
-  saveUser,
-  searchBits,
-  SearchQuery,
-  SearchState,
-  SpaceIcon,
-  useActiveApp,
-  useHooks,
-  useStoresSimple,
-} from '@o/kit'
-import { Space } from '@o/models'
+import { AppBit, AppIcon, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -26,14 +10,12 @@ type SearchResults = {
 }
 
 export class SearchStore {
-  props: {
-    apps: AppBit[]
-    space: Space
-  }
-
   hooks = useHooks({
     stores: useStoresSimple,
-    activeApp: useActiveApp,
+    activeQuery: useActiveQuery,
+    apps: useActiveApps,
+    app: () => useAppBit()[0],
+    space: () => useActiveSpace()[0],
   })
 
   searchState: SearchState | null = null
@@ -42,15 +24,11 @@ export class SearchStore {
     return this.hooks.stores
   }
 
-  get activeApp() {
-    return this.hooks.activeApp
-  }
-
   setSearchState(next: SearchState) {
     this.searchState = next
   }
 
-  get activeQuery() {
+  get searchedQuery() {
     return this.searchState ? this.searchState.query : ''
   }
 
@@ -58,7 +36,7 @@ export class SearchStore {
   curFindOptions = null
 
   updateSearchHistoryOnSearch = react(
-    () => this.activeQuery,
+    () => this.searchedQuery,
     async (query, _) => {
       ensure('has query', !!query)
       await _.sleep(2000)
@@ -75,19 +53,19 @@ export class SearchStore {
   )
 
   get isChanging() {
-    return this.searchState && this.searchState.query !== this.activeQuery
+    return this.searchState && this.searchState.query !== this.searchedQuery
   }
 
   hasQuery = () => {
-    return !!this.activeQuery
+    return !!this.searchedQuery
   }
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
   get homeItem() {
     return {
-      title: this.props.space.name,
-      icon: <SpaceIcon space={this.props.space} />,
+      title: this.hooks.space.name,
+      icon: <SpaceIcon space={this.hooks.space} />,
       identifier: 'apps',
     }
   }
@@ -110,10 +88,6 @@ export class SearchStore {
         title: `Open ${app.name}`,
         subTitle: 'Command: ⮐',
       },
-      onOpen: () => {
-        this.stores.queryStore.clearQuery()
-        this.stores.paneManagerStore.setActivePane(`${app.id}`)
-      },
     }
   }
 
@@ -135,11 +109,11 @@ export class SearchStore {
   }
 
   get isHome() {
-    return this.activeApp && this.activeApp.tabDisplay === 'permanent'
+    return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
   }
 
   get allApps() {
-    return [...this.props.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps()].map(
+    return [...this.hooks.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps()].map(
       this.appToResult,
     )
   }
@@ -176,10 +150,10 @@ export class SearchStore {
 
   state = react(
     () => [
-      this.props.space.id,
-      this.activeQuery,
-      this.activeApp,
-      this.props.apps.map(x => x.id).join(' '),
+      this.hooks.space.id,
+      this.hooks.activeQuery,
+      this.hooks.app,
+      this.hooks.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)

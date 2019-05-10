@@ -50,7 +50,7 @@ export function GithubSettings() {
             key: 'lastCommit',
             direction: 'up',
           }}
-          rows={(repos || []).map(repository => {
+          items={(repos || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             return {
               org: orgName,

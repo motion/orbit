@@ -52,7 +52,6 @@
     "yurnalist": "^1.0.5"
   },
   "devDependencies": {
-    "@types/fs-extra": "*",
     "@types/yargs": "^12.0.10",
     "typescript": "*"
   }

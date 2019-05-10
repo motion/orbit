@@ -44,9 +44,7 @@ export default memo(function MainShortcutHandler(props: {
     let res: any = {
       COMMAND_NEW: actions.router.showSetupAppPage,
       COMMAND_OPEN: effects.openCurrentApp,
-      SWITCH_SPACE: () => {
-        paneManagerStore.setActivePaneByType('spaces')
-      },
+      SWITCH_SPACE: () => actions.router.showAppPage({ id: 'spaces' }),
       OPEN: () => {
         if (document.activeElement && document.activeElement.classList.contains('ui-input')) {
           // TODO this could be done in a more standard, nice way

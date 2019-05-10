@@ -1,4 +1,4 @@
-const { transformSchema, RenameRootFields } = require(`graphql-tools`)
+const { transformSchema, RenameRootFields, RenameTypes } = require(`graphql-tools`)
 const invariant = require(`invariant`)
 
 const { NamespaceUnderFieldTransform } = require(`./transforms`)
@@ -20,6 +20,7 @@ exports.nestSchema = async function nestSchema(options) {
   }
 
   return transformSchema(schema, [
+    new RenameTypes(name => `${typeName}_${name}`),
     new RenameRootFields((operation, name) => {
       if (operation === 'Mutation' || operation === 'Subscription') {
         return `${typeName}_${name}`

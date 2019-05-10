@@ -29,6 +29,7 @@ class NamespaceUnderFieldTransform {
           true,
         ),
     })
+
     newQuery = new GraphQLObjectType({
       name: query.name,
       fields: {
@@ -44,7 +45,9 @@ class NamespaceUnderFieldTransform {
         },
       },
     })
+
     const typeMap = schema.getTypeMap()
+
     const allTypes = Object.keys(typeMap)
       .filter(name => name !== query.name)
       .map(key => typeMap[key])

@@ -1,9 +1,12 @@
-import { isEqual } from '@o/fast-compare'
 import { transaction } from 'mobx'
 
 // updateProps
 // granular set so reactions can be efficient
 export function updateProps(store: any, nextProps: Object) {
+  // a little work avoidance
+  if (store.__lastProps === nextProps) return
+  store.__lastProps = nextProps
+
   const nextPropsKeys = Object.keys(nextProps)
   const curPropKeys = Object.keys(store.props)
 
@@ -13,9 +16,7 @@ export function updateProps(store: any, nextProps: Object) {
       const a = store.props[prop]
       const b = nextProps[prop]
       if (a === b) continue
-      if (!isEqual(a, b)) {
-        store.props[prop] = b
-      }
+      store.props[prop] = b
     }
 
     // removes

@@ -1,21 +1,4 @@
-import {
-  Card,
-  DefinitionList,
-  Fetch,
-  Fieldsets,
-  Form,
-  Layout,
-  Pane,
-  Row,
-  SearchInput,
-  Section,
-  Select,
-  Tab,
-  Table,
-  Tabs,
-  useFetch,
-  useForm,
-} from '@o/ui'
+import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, SearchInput, Section, Select, Tab, Table, Tabs, useFetch, useForm } from '@o/ui'
 import React, { useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
@@ -45,8 +28,8 @@ export function CustomApp1() {
               <Table
                 selectable="multi"
                 shareable
-                onSelect={rows => setHighlighted(rows)}
-                rows={users}
+                onSelect={items => setHighlighted(items)}
+                items={users}
                 searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}
               />
@@ -88,7 +71,7 @@ function PersonInfo(props: { row: any }) {
     <Layout type="column">
       <Pane pad>
         <Section scrollable="y" bordered title={props.row.name}>
-          <Fieldsets rows={[props.row]} />
+          <Fieldsets items={[props.row]} />
         </Section>
       </Pane>
       <Pane pad resizable>
@@ -98,8 +81,8 @@ function PersonInfo(props: { row: any }) {
               selectable
               bordered
               title="Albums"
-              rows={albums}
-              onSelect={rows => setAlbum(rows[0])}
+              items={albums}
+              onSelect={items => setAlbum(items[0])}
             />
           )}
         </Fetch>
@@ -113,7 +96,7 @@ function PersonInfo(props: { row: any }) {
                 selectable="multi"
                 searchable
                 title={`${album.id} Album ${album.title} Pictures`}
-                rows={photos}
+                items={photos}
               />
             )}
           </Fetch>

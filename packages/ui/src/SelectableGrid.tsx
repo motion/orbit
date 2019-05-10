@@ -1,5 +1,6 @@
 import { useStore } from '@o/use-store'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback } from 'react'
+
 import { SelectableProps, SelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
 
@@ -9,28 +10,21 @@ type SelectableGridProps<A> = SortableGridProps<A> &
     selectableStore?: SelectableStore
   }
 
-export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
+export function SelectableGrid(props: SelectableGridProps<any>) {
   const selectableStore = props.selectableStore || useStore(SelectableStore, props)
-  const itemsKey = JSON.stringify(items.map(i => i.id))
 
-  useEffect(() => {
-    selectableStore.setRows(items)
-  }, [items])
-
-  const itemViews = useMemo(() => {
-    return items.map((item, index) => {
-      // this is complex so we can do single updates on selection move
-      return function GridItem() {
-        const store = useStore(selectableStore)
-        return props.getItem(item, {
-          isSelected: store.isActiveIndex(index),
-          select: () => {
-            selectableStore.setRowMouseDown(index)
-          },
-        })
-      }
-    })
-  }, [itemsKey])
+  const itemViews = props.items.map((item, index) => {
+    // this is complex so we can do single updates on selection move
+    return function GridItem() {
+      const store = useStore(selectableStore)
+      return props.getItem(item, {
+        isSelected: store.isActiveIndex(index),
+        select: () => {
+          selectableStore.setRowMouseDown(index)
+        },
+      })
+    }
+  })
 
   const getItem = useCallback(
     (_, index) => {
@@ -40,5 +34,5 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
     [itemViews],
   )
 
-  return <SortableGrid items={items} {...props} getItem={getItem} />
+  return <SortableGrid {...props} getItem={getItem} />
 }

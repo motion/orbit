@@ -6,6 +6,7 @@ import { DockButton } from './Dock'
 
 class OrbitSearch {
   open = false
+  setOpen = x => (this.open = x)
   toggleOpen = () => (this.open = !this.open)
 }
 
@@ -16,8 +17,14 @@ export function OrbitDockSearch() {
   return (
     <>
       <DockButton id="search" visible={acceptsSearch} onClick={store.toggleOpen} icon="search" />
-      <Modal width="50%" height="50%" open={store.open}>
-        <Input size={1.2} placeholder="Search everything..." />
+      <Modal
+        width="50%"
+        height="50%"
+        open={store.open}
+        onChangeOpen={store.setOpen}
+        onClickBackground={store.toggleOpen}
+      >
+        <Input borderWidth={0} size={2} placeholder="Search everything..." />
         <ProvideVisibility visible={store.open}>
           <AppMainView identifier="search" />
         </ProvideVisibility>

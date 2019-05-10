@@ -1,5 +1,6 @@
 import { gloss } from 'gloss'
 import React from 'react'
+import { GlobalHotKeys } from 'react-hotkeys'
 
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
@@ -11,7 +12,8 @@ import { View, ViewProps } from '../View/View'
 export type SimpleModalProps = SectionProps &
   SizedSurfaceProps & {
     open?: boolean
-    onClose?: () => any
+    onChangeOpen?: (next: boolean) => any
+    closable?: boolean
   }
 
 export type ModalProps = SimpleModalProps & {
@@ -19,6 +21,10 @@ export type ModalProps = SimpleModalProps & {
   backgroundProps?: ViewProps
   children?: React.ReactNode
   chromeless?: boolean
+}
+
+const modalKeyMap = {
+  esc: 'close',
 }
 
 export function Modal({
@@ -42,6 +48,12 @@ export function Modal({
         pointerEvents: 'none',
       }}
     >
+      {props.open && (
+        <GlobalHotKeys
+          keyMap={modalKeyMap}
+          handlers={{ close: props.onChangeOpen.bind(null, false) }}
+        />
+      )}
       <ModalBackground
         onClick={onClickBackground}
         open={props.open}
@@ -64,7 +76,8 @@ function SimpleModal({
   children,
   open,
   afterTitle,
-  onClose,
+  onChangeOpen,
+  closable,
   ...props
 }: SimpleModalProps) {
   return (
@@ -87,7 +100,9 @@ function SimpleModal({
         afterTitle={
           <>
             {afterTitle || null}
-            {!!onClose && <Button chromeless icon="cross" size={1.5} onClick={() => onClose()} />}
+            {!!closable && (
+              <Button chromeless icon="cross" size={1.5} onClick={() => onChangeOpen(false)} />
+            )}
           </>
         }
         scrollable={scrollable}

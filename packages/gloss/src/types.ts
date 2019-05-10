@@ -33,8 +33,6 @@ export type ColorObject = { r: NoS; g: NoS; b: NoS; a?: NoS }
 export type ColorClassLike = { toCSS: Function } | { css: Function } | { alpha: Function }
 export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
 
-type ColorObject = { [a: string]: ColorLike }
-
 export type SimpleStyleObject = {
   color?: ColorLike
   background?: ColorLike

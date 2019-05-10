@@ -1,7 +1,7 @@
-import { gloss, Row, RowProps } from 'gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
+import { gloss, Row, RowProps } from 'gloss'
 import React, { memo, useContext } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
@@ -14,10 +14,14 @@ export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
   />
 )
 
+const opts = {
+  name: 'OrbitToolBar.isActive',
+}
+
 export const OrbitToolBar = memo((props: AppMainViewProps) => {
   const { id, appDef } = useContext(AppLoadContext)
   const { paneManagerStore } = useStoresSimple()
-  const isActive = useReaction(() => paneManagerStore.activePane.id === id)
+  const isActive = useReaction(() => paneManagerStore.activePane.id === id, opts)
   return (
     <OrbitToolbarChrome transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>

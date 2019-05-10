@@ -55,7 +55,7 @@ function lightLog(val: any) {
   if (type === 'object') {
     try {
       const str = JSON.stringify(val)
-      if (str.length < 100) {
+      if (str.length < 200) {
         return `(${str})`
       }
     } catch {}

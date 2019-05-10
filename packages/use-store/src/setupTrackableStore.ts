@@ -31,8 +31,8 @@ export function setupTrackableStore(
     component: {},
   },
 ) {
-  const debug = () => {
-    if (typeof window !== 'undefined' && window['enableLog'] > 1) {
+  const debug = (level: number = 1) => {
+    if (typeof window !== 'undefined' && window['enableLog'] > level) {
       return true
     }
     return opts.debug || (opts.component && opts.component.__debug)
@@ -137,7 +137,7 @@ export function setupTrackableStore(
         if (debug()) console.log('schedule new reaction now...')
         updateDeepKey.set(Math.random())
       }
-      if (debug()) {
+      if (debug(2)) {
         console.log('untrack()', name, storeName, reactiveKeys)
       }
     },

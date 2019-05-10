@@ -1,10 +1,10 @@
 import { CompositeDisposable } from 'event-kit'
-import { useEffect, useRef, useState, RefObject, MutableRefObject } from 'react'
+import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react'
 
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'
-import { useCurrentComponent, CurrentComponent } from './useCurrentComponent'
+import { CurrentComponent, useCurrentComponent } from './useCurrentComponent'
 
 type MountArgs = any[]
 
@@ -99,9 +99,10 @@ const createComponentReaction = (
   firstMount: RefObject<boolean>,
   forceUpdate: Function,
 ) => {
+  const name = (opts && opts.name) || component.renderName
   createReaction(reaction, derive, opts, {
-    name: component.renderName,
-    nameFull: component.renderName,
+    name,
+    nameFull: name,
     addSubscription(dispose) {
       if (subscriptions.current) {
         subscriptions.current.add({ dispose })

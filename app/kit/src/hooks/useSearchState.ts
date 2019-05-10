@@ -44,6 +44,10 @@ export function useSearchState(cb?: (state: SearchState) => any) {
           return next
         }
       }
-    }) || getSearchState(queryStore)
+    }, opts) || getSearchState(queryStore)
   )
+}
+
+const opts = {
+  name: 'useSearchState'
 }

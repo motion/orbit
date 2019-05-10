@@ -5,15 +5,15 @@ export function useDebounce(fn: Function, amount: number) {
 
   useEffect(() => {
     clearTimeout(tm.current)
-    return () => {
-      clearTimeout(tm.current)
-    }
+    return () => clearTimeout(tm.current)
   }, [fn, amount])
 
   return useCallback(
     (...args) => {
       clearTimeout(tm.current)
-      tm.current = setTimeout(() => fn(...args), amount)
+      tm.current = setTimeout(() => {
+        return fn(...args)
+      }, amount)
     },
     [fn, amount],
   )

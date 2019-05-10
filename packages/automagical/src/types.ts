@@ -26,6 +26,7 @@ export type ReactionOptions = {
   isIf?: boolean
   defaultValue?: any
   deferFirstRun?: boolean
+  name?: string
 }
 
 export interface MagicalObject {

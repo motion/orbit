@@ -1,12 +1,9 @@
-import { ensure, react, unwrapProxy, useReaction, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, useReaction } from '@o/use-store'
 import { ObservableSet } from 'mobx'
-import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 
-import { MergeContext } from './helpers/MergeContext'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
-
-const Context = createContext<BreadcrumbStore | null>(null)
 
 export type BreadcrumbsProps = {
   separator?: ReactNode
@@ -22,7 +19,7 @@ class BreadcrumbStore {
 
   orderedChildren = react(
     () => [...this.selectors],
-    (selectors) => {
+    selectors => {
       ensure('selectors', !!selectors.length)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>
@@ -44,13 +41,11 @@ class BreadcrumbStore {
   }
 }
 
+const BContext = createStoreContext(BreadcrumbStore)
+
 export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
-  const store = useStore(BreadcrumbStore, { separator }, { react: false })
-  return (
-    <MergeContext Context={Context} value={unwrapProxy(store)}>
-      {children}
-    </MergeContext>
-  )
+  const store = BContext.useCreateStore({ separator }, { react: false })
+  return <BContext.SimpleProvider value={store}>{children}</BContext.SimpleProvider>
 }
 
 export function Breadcrumb({
@@ -81,7 +76,7 @@ export function Breadcrumb({
 
 // recommended to use below each breadcrumb to avoid accidental nesting
 export function BreadcrumbReset(props: { children: any }) {
-  return <Context.Provider value={null}>{props.children}</Context.Provider>
+  return <BContext.SimpleProvider value={null}>{props.children}</BContext.SimpleProvider>
 }
 
 export type BreadcrumbInfo = {
@@ -92,27 +87,32 @@ export type BreadcrumbInfo = {
   selector: string
 }
 
+const opts = {
+  name: 'Breadcrumbs',
+}
+
 export function useBreadcrumb(): BreadcrumbInfo | null {
   const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
-  const context = useContext(Context)
+  const crumbs = BContext.useStore()
 
   useEffect(() => {
-    if (!context) return
-    context.mount(selector)
+    if (!crumbs) return
+    crumbs.mount(selector)
     return () => {
-      context.unmount(selector)
+      crumbs.unmount(selector)
     }
   }, [])
 
-  const index = useReaction(() =>
-    context ? context.orderedChildren.findIndex(x => x === selector) : -1,
-  )
+  const index = useReaction(() => {
+    ensure('crumbs', !!crumbs)
+    return crumbs.orderedChildren.findIndex(x => x === selector)
+  }, opts)
 
-  if (!context) {
+  if (!crumbs) {
     return null
   }
 
-  const total = context.orderedChildren.length
+  const total = crumbs.orderedChildren.length
   const isLast = index === total - 1
   const isFirst = index === 0
 

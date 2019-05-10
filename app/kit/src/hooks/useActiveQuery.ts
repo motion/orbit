@@ -12,6 +12,10 @@ export function useActiveQuery(opts?: ReactionOptions): string {
       ensure('visible', visibleStore.visible)
       ensure('queryStore', !!queryStore)
       return queryStore.query
-    }, opts) || ''
+    }, opts || defaultOpts) || ''
   )
+}
+
+const defaultOpts = {
+  name: 'useActiveQuery',
 }

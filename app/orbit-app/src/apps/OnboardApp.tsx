@@ -1,10 +1,10 @@
 import { command, loadOne, save } from '@o/bridge'
-import { gloss } from 'gloss'
 import { App, createApp, useActiveDataAppsWithDefinition } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Icon, List, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
+import { gloss } from 'gloss'
 import React from 'react'
 
 import { addAppClickHandler } from '../helpers/addAppClickHandler'

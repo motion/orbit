@@ -34,7 +34,7 @@ module.exports = function(_, givenOpts) {
       ...(((!isDev || process.env['OPTIMIZE_REACT']) && [
         plug('babel-plugin-transform-react-remove-prop-types'),
         plug('@babel/plugin-transform-react-inline-elements'),
-        plug('@babel/plugin-transform-react-constant-elements'),
+        false && plug('@babel/plugin-transform-react-constant-elements'),
       ]) ||
         []),
     ].filter(Boolean),

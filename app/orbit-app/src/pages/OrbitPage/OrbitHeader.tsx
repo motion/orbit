@@ -1,18 +1,8 @@
 import { invertLightness } from '@o/color'
-import { FullScreen, gloss, useTheme } from 'gloss'
 import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'

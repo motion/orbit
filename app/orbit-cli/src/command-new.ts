@@ -97,7 +97,8 @@ const ignored = path => !/^\.(git|hg)$/.test(sysPath.basename(path))
 const copy = async (starterPath: string, rootPath: string) => {
   // Chmod with 755.
   // 493 = parseInt('755', 8)
-  await fs.mkdirp(rootPath, { mode: 493 })
+  // @ts-ignore
+  await fs.ensureDir(rootPath, { mode: 493 })
 
   if (!existsSync(starterPath)) {
     throw new Error(`starter ${starterPath} doesn't exist`)

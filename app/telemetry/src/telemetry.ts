@@ -21,11 +21,11 @@ export class Telemetry {
   defaultTags = {}
   osInfo // lazy
   trackingEnabled // lazy
-  componentVersion
+  componentVersion: any
   sessionId = uuid()
   constructor() {
     try {
-      this.componentVersion from `../package.json`).version
+      this.componentVersion = require(`../package.json`).version
       this.installedOrbitVersion = this.getOrbitVersion()
       this.orbitCliVersion = this.getOrbitCliVersion()
     } catch (e) {
@@ -34,7 +34,7 @@ export class Telemetry {
   }
 
   getOrbitVersion() {
-    const packageInfo from join(process.cwd(), `node_modules`, `orbit`, `package.json`))
+    const packageInfo = require(join(process.cwd(), `node_modules`, `orbit`, `package.json`))
     try {
       return packageInfo.version
     } catch (e) {
@@ -53,7 +53,7 @@ export class Telemetry {
           .join(sep),
         `package.json`,
       )
-      const { version } from jsonfile).version
+      const { version } = require(jsonfile).version
       return version
     } catch (e) {
       // ignore

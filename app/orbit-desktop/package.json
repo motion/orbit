@@ -91,7 +91,6 @@
   },
   "devDependencies": {
     "@o/build": "^2.5.6",
-    "@types/fs-extra": "5.0.4",
     "@types/zen-observable": "0.8.0",
     "nodemon": "1.18.3",
     "touch": "^3.1.0"

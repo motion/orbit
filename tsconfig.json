@@ -9,6 +9,10 @@
     { "path": "./app/orbit-main" },
     { "path": "./app/orbit-repl" },
 
+    // apps
+    { "path": "./apps" },
+    { "path": "./app/example-workspace" },
+
     // dev time needs
     { "path": "./packages/build" },
     { "path": "./packages/wait-for-fonts" }

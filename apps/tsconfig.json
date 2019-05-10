@@ -10,6 +10,7 @@
     { "path": "./custom-tree-app" },
     { "path": "./drive-app" },
     { "path": "./github-app" },
+    { "path": "./graphql-source-app" },
     { "path": "./gmail-app" },
     { "path": "./jira-app" },
     { "path": "./lists-app" },

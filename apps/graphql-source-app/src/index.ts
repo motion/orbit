@@ -1,7 +1,7 @@
 import { createApp } from '@o/kit'
 
 import { graph } from './graph.node'
-import { graphQLIcon } from './graphqlIcon.ts'
+import { graphQLIcon } from './graphQLIcon'
 
 export default createApp({
   id: 'graphQL',
@@ -16,6 +16,10 @@ export default createApp({
     },
     headers: {
       name: 'Headers',
+      type: 'object',
+    },
+    fetchOptions: {
+      name: 'Fetch Options',
       type: 'object',
     },
   },

@@ -17,17 +17,19 @@ export function createContextualProps<A extends any>(defaults?: A) {
       componentProps?: B,
     ): B extends undefined ? A : B & A {
       const extra = useContext(Context)
-      if (!extra) {
-        return componentProps as any
-      }
-      // merge just undefined componentProps from extra
-      const final = { ...componentProps }
-      for (const key in extra) {
-        if (typeof final[key] === 'undefined') {
-          final[key] = extra[key]
+      return useMemo(() => {
+        if (!extra) {
+          return componentProps as any
         }
-      }
-      return final as any
+        // merge just undefined componentProps from extra
+        const final = { ...componentProps }
+        for (const key in extra) {
+          if (typeof final[key] === 'undefined') {
+            final[key] = extra[key]
+          }
+        }
+        return final as any
+      }, [extra, componentProps])
     },
     Reset({ children }: { children: any }) {
       const extraProps = useContext(Context)

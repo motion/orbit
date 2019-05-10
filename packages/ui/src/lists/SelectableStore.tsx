@@ -67,6 +67,7 @@ export class SelectableStore {
   active = new Set<string>()
   lastEnter = -1
   listRef: DynamicListControlled = null
+  isSorting = false
   private keyToIndex = {}
 
   callbackRefProp = react(
@@ -286,6 +287,10 @@ export class SelectableStore {
   }
 
   onHoverRow(index: number) {
+    if (this.isSorting) {
+      console.debug('Preventing selection while sorting')
+      return
+    }
     const row = this.rows[index]
     const rowKey = key(row)
     if (!this.props.selectable) {
@@ -320,6 +325,10 @@ export class SelectableStore {
 
   clearSelected = () => {
     this.setActive([])
+  }
+
+  setSorting = (val: boolean) => {
+    this.isSorting = val
   }
 
   setRows(next: GenericDataRow[]) {

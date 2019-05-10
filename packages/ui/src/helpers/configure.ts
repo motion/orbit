@@ -1,4 +1,6 @@
+import { isColorLike, toColor, toColorString } from '@o/color'
 import { fromEntries } from '@o/utils'
+import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
 
@@ -88,4 +90,13 @@ export function configureUI(opts: Partial<ConfigureUIProps>) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
   Object.assign(Config, opts)
+
+  configureCSS({
+    isColor: isColorLike,
+    toColor: toColorString,
+  })
+
+  configureGloss({
+    toColor: toColor,
+  })
 }

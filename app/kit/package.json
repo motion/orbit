@@ -10,6 +10,7 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
+    "@o/color": "2.5.0",
     "@o/bridge": "^2.5.0",
     "@o/config": "^2.5.0",
     "@o/fast-compare": "^2.5.0",
@@ -20,6 +21,7 @@
     "@o/ui": "^2.5.1",
     "@o/use-store": "^2.5.0",
     "@o/utils": "^2.5.0",
+    "gloss-theme": "2.5.1",
     "compromise": "^11.11.0",
     "date-fns": "2.0.0-alpha.7",
     "fuzzysort": "^1.1.4",

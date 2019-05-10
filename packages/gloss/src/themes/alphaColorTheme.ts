@@ -1,5 +1,6 @@
 import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
+
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { PseudoStyleProps } from './psuedoStyleTheme'
@@ -29,42 +30,15 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   }
 
   if (props.applyPsuedoColors) {
-    mergePsuedoColors(
-      '&:focus',
-      'focusStyle',
-      'colorFocus',
-      'alphaFocus',
-      next,
-      color,
-      props,
-      theme,
-    )
-    mergePsuedoColors(
-      '&:hover',
-      'hoverStyle',
-      'colorHover',
-      'alphaHover',
-      next,
-      color,
-      props,
-      theme,
-    )
-    mergePsuedoColors(
-      '&:active',
-      'activeStyle',
-      'colorActive',
-      'alphaActive',
-      next,
-      color,
-      props,
-      theme,
-    )
+    merge('&:focus', 'focusStyle', 'colorFocus', 'alphaFocus', next, color, props, theme)
+    merge('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
+    merge('&:active', 'activeStyle', 'colorActive', 'alphaActive', next, color, props, theme)
   }
 
   return mergeStyles(previous, next)
 }
 
-function mergePsuedoColors(
+function merge(
   key: string,
   styleKey: string,
   colorKey: string,

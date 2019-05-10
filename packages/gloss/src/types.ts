@@ -1,4 +1,4 @@
-import { ThemeObject } from '@o/css'
+import { ColorLike, ThemeObject } from '@o/css'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
@@ -23,4 +23,15 @@ export interface GlossView<T> {
   withConfig?: (a: GlossViewConfig) => T
   defaultProps?: Object
   tagName?: string
+}
+
+// helpful for themes
+
+type ColorObject = { [a: string]: ColorLike }
+
+export type SimpleStyleObject = {
+  color?: ColorLike
+  background?: ColorLike
+  borderColor?: ColorLike
+  [a: string]: ColorLike | ColorObject | any
 }

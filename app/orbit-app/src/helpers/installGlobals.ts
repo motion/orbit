@@ -4,14 +4,15 @@
 // ⚠️ ️
 // ⚠️ ️
 import { Mediator } from '@o/bridge'
+import { toColor } from '@o/color'
 import { getGlobalConfig } from '@o/config'
-import { css, toColor } from 'gloss'
 import { themes } from '@o/kit'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import { PopoverState } from '@o/ui'
 import * as dateFns from 'date-fns'
+import { css } from 'gloss'
 import * as Mobx from 'mobx'
 import page from 'page'
 import * as React from 'react'

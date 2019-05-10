@@ -4,7 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { gloss, linearGradient, Row } from 'gloss'
+import { linearGradient } from '@o/color'
+import { gloss, Row } from 'gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 

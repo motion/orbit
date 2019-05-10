@@ -54,7 +54,7 @@ function merge(
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
-        color: `${toColor(color).alpha(alpha)}`,
+        color: `${Config.toColor(color).alpha(alpha)}`,
       }
     } else if (parentColor !== color) {
       next[key] = {

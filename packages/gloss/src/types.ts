@@ -1,4 +1,4 @@
-import { ColorLike, ThemeObject } from '@o/css'
+import { ThemeObject } from '@o/css'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
@@ -26,6 +26,12 @@ export interface GlossView<T> {
 }
 
 // helpful for themes
+
+export type NoS = number | string
+export type ColorArray = NoS[]
+export type ColorObject = { r: NoS; g: NoS; b: NoS; a?: NoS }
+export type ColorClassLike = { toCSS: Function } | { css: Function } | { alpha: Function }
+export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
 
 type ColorObject = { [a: string]: ColorLike }
 

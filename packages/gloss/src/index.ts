@@ -1,5 +1,4 @@
 export {
-  Color,
   configureCSS,
   css,
   CSSPropertySet,

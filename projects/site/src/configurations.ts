@@ -1,6 +1,5 @@
 import 'requestidlecallback-polyfill'
 
-import { ThemeMaker } from 'gloss'
 import { configureHotKeys, configureUI, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
@@ -13,7 +12,6 @@ import { themes } from './themes'
 if (process.env.NODE_ENV === 'development') {
   window['Themes'] = themes
   window['toColor'] = toColor
-  window['ThemeMaker'] = new ThemeMaker()
 }
 
 function configure() {

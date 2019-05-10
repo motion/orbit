@@ -1,5 +1,6 @@
-import { toColor } from '@o/color'
 import { CSSPropertySet } from '@o/css'
+
+import { Config } from '../config'
 import { ThemeFn } from '../gloss'
 import { mergeStyles } from '../helpers/mergeStyles'
 import { PseudoStyleProps } from './psuedoStyleTheme'
@@ -22,49 +23,22 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
 
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
-      next.color = `${toColor(color).alpha(alpha)}`
+      next.color = `${Config.toColor(color).alpha(alpha)}`
     } else {
       next.color = color
     }
   }
 
   if (props.applyPsuedoColors) {
-    mergePsuedoColors(
-      '&:focus',
-      'focusStyle',
-      'colorFocus',
-      'alphaFocus',
-      next,
-      color,
-      props,
-      theme,
-    )
-    mergePsuedoColors(
-      '&:hover',
-      'hoverStyle',
-      'colorHover',
-      'alphaHover',
-      next,
-      color,
-      props,
-      theme,
-    )
-    mergePsuedoColors(
-      '&:active',
-      'activeStyle',
-      'colorActive',
-      'alphaActive',
-      next,
-      color,
-      props,
-      theme,
-    )
+    merge('&:focus', 'focusStyle', 'colorFocus', 'alphaFocus', next, color, props, theme)
+    merge('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
+    merge('&:active', 'activeStyle', 'colorActive', 'alphaActive', next, color, props, theme)
   }
 
   return mergeStyles(previous, next)
 }
 
-function mergePsuedoColors(
+function merge(
   key: string,
   styleKey: string,
   colorKey: string,
@@ -80,7 +54,7 @@ function mergePsuedoColors(
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
-        color: `${toColor(color).alpha(alpha)}`,
+        color: `${Config.toColor(color).alpha(alpha)}`,
       }
     } else if (parentColor !== color) {
       next[key] = {

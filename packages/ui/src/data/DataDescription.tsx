@@ -1,6 +1,8 @@
-import { gloss, toColor } from 'gloss'
+import { toColor } from '@o/color'
+import { gloss } from 'gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
+
 import { Input, InputProps } from '../forms/Input'
 import { colors } from '../helpers/colors'
 import { Link } from '../Link'

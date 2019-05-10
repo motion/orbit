@@ -5,8 +5,6 @@
  * @format
  */
 
-const invariant = require('invariant')
-
 function makeStyleTag(): HTMLStyleElement | null {
   if (typeof document === 'undefined') {
     return null
@@ -14,7 +12,7 @@ function makeStyleTag(): HTMLStyleElement | null {
   const tag = document.createElement('style')
   tag.type = 'text/css'
   tag.appendChild(document.createTextNode(''))
-  invariant(document.head, 'expected head')
+  if (!document.head) throw 'expected head'
   document.head.appendChild(tag)
   return tag
 }
@@ -63,7 +61,6 @@ export class StyleSheet {
     }
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
-      invariant(sheet, 'expected sheet')
       sheet.deleteRule(index)
     } else {
       tag.removeChild(tag.childNodes[index + 1])
@@ -77,7 +74,6 @@ export class StyleSheet {
     }
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
-      invariant(sheet, 'expected sheet')
       sheet.insertRule(rule, sheet.cssRules.length)
     } else {
       tag.appendChild(document.createTextNode(rule))

@@ -3,8 +3,8 @@ import { ThemeObject } from '@o/css'
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
 export type GlossOptions = {
-  toColor?: Function
-  isColor?: Function
+  toColor: Function
+  isColor: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }
   preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
 }
@@ -23,4 +23,19 @@ export interface GlossView<T> {
   withConfig?: (a: GlossViewConfig) => T
   defaultProps?: Object
   tagName?: string
+}
+
+// helpful for themes
+
+export type NoS = number | string
+export type ColorArray = NoS[]
+export type ColorObject = { r: NoS; g: NoS; b: NoS; a?: NoS }
+export type ColorClassLike = { toCSS: Function } | { css: Function } | { alpha: Function }
+export type ColorLike = string | ColorClassLike | ColorArray | ColorObject
+
+export type SimpleStyleObject = {
+  color?: ColorLike
+  background?: ColorLike
+  borderColor?: ColorLike
+  [a: string]: ColorLike | ColorObject | any
 }

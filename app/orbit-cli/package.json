@@ -1,6 +1,6 @@
 {
   "name": "@o/orbit-cli",
-  "version": "2.5.0",
+  "version": "2.5.2",
   "main": "./_/main.js",
   "private": true,
   "bin": {
@@ -13,7 +13,7 @@
   "dependencies": {
     "@babel/code-frame": "^7.0.0",
     "@hot-loader/react-dom": "*",
-    "@o/telemetry": "^2.5.0",
+    "@o/telemetry": "^2.5.2",
     "babel-loader": "*",
     "bonjour": "*",
     "cache-loader": "*",

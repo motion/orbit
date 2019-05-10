@@ -1,6 +1,5 @@
 import { CSSPropertySet, CSSPropertySetResolved, cssString, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { flatten } from 'lodash'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -497,9 +496,10 @@ function compileTheme(viewOG: GlossView<any>) {
     cur = conf.getConfig().parent
   }
 
-  // then flatten and reverse, so its a flat list of themes from least to most important
+  // reverse, then flatten, so its a flat list of themes from least to most important
   // makes it easier to apply them in order
-  const themes = flatten(all.reverse()).filter(Boolean)
+  all.reverse()
+  const themes = all.flat().filter(Boolean)
 
   if (!themes.length) {
     return null

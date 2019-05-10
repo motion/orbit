@@ -4,9 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import invariant from 'invariant'
 import { StyleSheet } from './sheet'
+
 
 type BaseRules = {
   [key: string]: string | number
@@ -104,7 +103,7 @@ export class GarbageCollector {
     this.haltGarbage()
     for (const name of this.classRemovalQueue) {
       const trackerInfo = this.tracker.get(name)
-      invariant(!!trackerInfo, 'trying to remove unknown class')
+      if (!trackerInfo) throw 'trying to remove unknown class'
       if (trackerInfo) {
         const { rules } = trackerInfo
         this.rulesToClass.delete(rules)

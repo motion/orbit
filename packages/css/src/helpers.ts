@@ -1,4 +1,4 @@
-import { ColorArray, isColorLike, toColorString } from '@o/color'
+import { Config } from './config'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
 
@@ -17,7 +17,7 @@ const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
-export function expandCSSArray(given: number | (number | string)[]): ColorArray {
+export function expandCSSArray(given: number | (number | string)[]): (number | string)[] {
   if (typeof given === 'number') {
     return [given, given, given, given]
   }
@@ -37,25 +37,25 @@ export function expandCSSArray(given: number | (number | string)[]): ColorArray 
 }
 
 const objectToCSS = {
-  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColorString(color)}`,
+  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${Config.toColor(color)}`,
   boxShadow: v =>
     v.inset || v.x || v.y || v.blur || v.spread || v.color
       ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
           v.spread,
-        )} ${toColorString(v.color)}`
-      : toColorString(v),
+        )} ${Config.toColor(v.color)}`
+      : Config.toColor(v),
   background: v =>
-    isColorLike(v)
-      ? toColorString(v)
-      : `${toColorString(v.color)} ${v.image || ''} ${(v.position
+    Config.isColor(v)
+      ? Config.toColor(v)
+      : `${Config.toColor(v.color)} ${v.image || ''} ${(v.position
           ? v.position.join(' ')
           : v.position) || ''} ${v.repeat || ''}`,
 }
 
 function processArrayItem(key: string, val: any, level: number = 0) {
   // recurse
-  if (isColorLike(val)) {
-    return toColorString(val)
+  if (Config.isColor(val)) {
+    return Config.toColor(val)
   }
   if (Array.isArray(val)) {
     return processArray(key, val, level + 1)
@@ -65,8 +65,8 @@ function processArrayItem(key: string, val: any, level: number = 0) {
 
 export function processArray(key: string, value: (number | string)[], level: number = 0): string {
   if (key === 'background') {
-    if (isColorLike(value)) {
-      return toColorString(value)
+    if (Config.isColor(value)) {
+      return Config.toColor(value)
     }
   }
   // solid default option for borders
@@ -121,8 +121,8 @@ export function processObject(key: string, object: any): string {
     if (object.radialGradient) {
       return gradients.radialGradient(key, object.radialGradient)
     }
-    if (isColorLike(object)) {
-      return toColorString(object)
+    if (Config.isColor(object)) {
+      return Config.toColor(object)
     }
   }
   const toReturn: string[] = []

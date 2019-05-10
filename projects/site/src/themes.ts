@@ -1,9 +1,9 @@
-import { linearGradient, ThemeMaker, ThemeObject, toColor } from 'gloss'
 import { themes as KitThemes } from '@o/kit'
+import { linearGradient, toColor } from '@o/ui'
+import { ThemeObject } from 'gloss'
+import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors } from './constants'
-
-const Theme = new ThemeMaker()
 
 const buttonBackground = linearGradient(colors.purple.lighten(0.035), colors.purple)
 
@@ -12,7 +12,7 @@ const transparent = 'transparent'
 
 const selectedMinimal = {
   fontWeight: 800,
-  ...Theme.colorize({
+  ...colorize({
     color: selectedTheme.background,
     background: transparent,
     backgroundHover: transparent,
@@ -26,7 +26,7 @@ const light = {
     ...KitThemes.light.alternates,
     selected: selectedMinimal,
   },
-  ...Theme.colorize({
+  ...colorize({
     color: '#000',
   }),
 }
@@ -37,7 +37,7 @@ const dark = {
     ...KitThemes.dark.alternates,
     selected: selectedMinimal,
   },
-  ...Theme.colorize({
+  ...colorize({
     background: '#111',
     inputColor: '#fff',
     inputBackground: '#222',
@@ -51,7 +51,7 @@ const dark = {
 export const themes = {
   ...KitThemes,
 
-  orbitOneDark: Theme.fromStyles({
+  orbitOneDark: fromStyles({
     background: '#111',
     backgroundHover: '#111',
     borderColor: '#222',
@@ -60,17 +60,17 @@ export const themes = {
     color: '#fff',
   }),
 
-  orbitOne: Theme.fromStyles({
+  orbitOne: fromStyles({
     background: '#fff',
     color: colors.purple,
   }),
 
-  orbitTwo: Theme.fromStyles({
+  orbitTwo: fromStyles({
     background: colors.red,
     color: colors.purple,
   }),
 
-  orbitThree: Theme.fromStyles({
+  orbitThree: fromStyles({
     background: colors.purple,
     color: colors.red,
   }),
@@ -80,7 +80,7 @@ export const themes = {
 
   darkAlt: {
     ...dark,
-    ...Theme.fromStyles({
+    ...fromStyles({
       color: '#fff',
       background: '#2C2B40',
       backgroundStrong: toColor('#2C2B40').lighten(0.1),
@@ -93,7 +93,7 @@ export const themes = {
 
   home: {
     ...dark,
-    ...Theme.colorize({
+    ...colorize({
       background: '#000',
       inputBackground: '#111',
       inputBackgroundHover: '#111',

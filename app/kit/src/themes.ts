@@ -1,9 +1,8 @@
+import { linearGradient, toColor } from '@o/color'
 import { ThemeSet } from '@o/css'
-import { linearGradient, ThemeMaker, toColor } from 'gloss'
+import { colorize, fromStyles } from 'gloss-theme'
 
-const Theme = new ThemeMaker()
-
-export const colors = Theme.colorize({
+export const colors = colorize({
   orange: '#E97902',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
@@ -24,39 +23,39 @@ export const colors = Theme.colorize({
 const transparent = [0, 0, 0, 0]
 
 const colorThemes: ThemeSet = {
-  lightRed: Theme.fromStyles({
+  lightRed: fromStyles({
     glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkRed,
     background: colors.lightRed,
     iconColor: colors.darkRed,
   }),
-  lightGreen: Theme.fromStyles({
+  lightGreen: fromStyles({
     glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkGreen,
     iconColor: colors.darkGreen,
     background: colors.lightGreen,
   }),
-  lightYellow: Theme.fromStyles({
+  lightYellow: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkYellow,
     iconColor: colors.darkYellow,
     background: colors.lightYellow,
   }),
-  lightBlue: Theme.fromStyles({
+  lightBlue: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkBlue,
     iconColor: colors.darkBlue,
     background: colors.lightBlue,
   }),
-  lightOrange: Theme.fromStyles({
+  lightOrange: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkOrange,
     iconColor: colors.darkOrange,
     background: colors.lightOrange,
   }),
-  red: Theme.fromStyles({
+  red: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
     iconColor: '#fff',
@@ -64,28 +63,28 @@ const colorThemes: ThemeSet = {
     backgroundHover: colors.red,
     backgroundActive: colors.red,
   }),
-  green: Theme.fromStyles({
+  green: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     iconColor: '#fff',
     background: '#449878',
     color: '#fff',
   }),
-  orange: Theme.fromStyles({
+  orange: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
     background: colors.orange,
   }),
-  yellow: Theme.fromStyles({
+  yellow: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
     background: colors.yellow,
   }),
-  blue: Theme.fromStyles({
+  blue: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     background: colors.blue,
     color: '#fff',
   }),
-  transparent: Theme.colorize({
+  transparent: colorize({
     background: transparent,
     backgroundHover: transparent,
     backgroundActive: transparent,
@@ -116,7 +115,7 @@ const alternates: ThemeSet = {
     borderWidth: 2,
     ...colorThemes.transparent,
   },
-  titlebar: Theme.fromStyles({
+  titlebar: fromStyles({
     tabBackgroundActive: '#E8E8E8',
     tabBackground: '#dfdfdf',
     tabBackgroundHover: '#bfbfbf',
@@ -141,7 +140,7 @@ const alternates: ThemeSet = {
     buttonBackgroundActiveHighlight: '#ededed',
   }),
   clear: parent =>
-    Theme.fromStyles({
+    fromStyles({
       glintColor: transparent,
       color: parent.color,
       background: parent.background.isDark()
@@ -162,7 +161,7 @@ const alternates: ThemeSet = {
       backgroundActive: background.alpha(1),
       glintColor: transparent,
       glintColorBottom: transparent,
-      ...Theme.colorize({
+      ...colorize({
         borderColor: transparent,
         borderWidth: 0,
       }),
@@ -170,7 +169,7 @@ const alternates: ThemeSet = {
   },
 }
 
-const base = Theme.colorize({
+const base = colorize({
   borderSelected: '#90b1e4ee',
   white: '#fff',
   highlightColor: '#fff',
@@ -186,7 +185,7 @@ const light = {
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-  ...Theme.fromStyles({
+  ...fromStyles({
     glintColor: [255, 255, 255, 0.85],
     background: lightBackground,
     backgroundStrong: lightBackground.darken(0.025),
@@ -240,7 +239,7 @@ const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes translucent
   if (key.indexOf('light') === 0) {
-    acc[key] = Theme.fromStyles({
+    acc[key] = fromStyles({
       background: alternates[key].background.alpha(0.25),
       borderColor: alternates[key].borderColor.alpha(0.3),
       color: '#fff',
@@ -258,7 +257,7 @@ const darkAlternates: ThemeSet = {
   success: darkAltLight.lightGreen,
   bordered: {
     ...alternates.bordered,
-    ...Theme.colorize({
+    ...colorize({
       background: transparent,
       backgroundHover: transparent,
       backgroundActive: transparent,
@@ -273,7 +272,7 @@ const dark = {
   ...base,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-  ...Theme.fromStyles({
+  ...fromStyles({
     backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
     backgroundStrongest: darkBackground.lighten(0.45),
     backgroundStronger: darkBackground.lighten(0.3),
@@ -337,7 +336,7 @@ const dark = {
 
 export const themes = {
   ...alternates,
-  tooltip: Theme.fromStyles({
+  tooltip: fromStyles({
     background: 'rgba(20,20,20,0.94)',
     backgroundHover: 'rgba(28,28,28,0.94)',
     color: '#fff',

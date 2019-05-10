@@ -1,11 +1,8 @@
-export { toColor } from '@o/color'
 export {
-  Color,
   configureCSS,
   css,
   CSSPropertySet,
   CSSPropertySetStrict,
-  linearGradient,
   psuedoKeys,
   ThemeObject,
   validCSSAttr,
@@ -31,10 +28,9 @@ export { preProcessTheme } from './helpers/preProcessTheme'
 export { selectThemeSubset } from './helpers/selectThemeSubset'
 export { useTheme, useThemeContext } from './helpers/useTheme'
 export { attachTheme } from './theme/attachTheme'
-export { forwardTheme } from './theme/forwardTheme'
 export { Theme, ThemeSelect } from './theme/Theme'
 export { ThemeContext, ThemeContextType } from './theme/ThemeContext'
-export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
 export * from './themes'
 export { propStyleTheme as propsToStyles } from './themes/propStyleTheme'
+export { SimpleStyleObject } from './types'

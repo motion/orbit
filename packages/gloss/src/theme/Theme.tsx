@@ -2,8 +2,8 @@ import { ThemeObject } from '@o/css'
 import React, { useContext, useMemo } from 'react'
 
 import { Config } from '../config'
+import { SimpleStyleObject } from '../types'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
-import { SimpleStyleObject } from './ThemeMaker'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 

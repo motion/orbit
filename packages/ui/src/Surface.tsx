@@ -1,14 +1,6 @@
 import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
-import Gloss, {
-  Col,
-  ColProps,
-  forwardTheme,
-  gloss,
-  propsToStyles,
-  psuedoStyleTheme,
-  useTheme,
-} from 'gloss'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
+import Gloss, { Col, ColProps, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -467,7 +459,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     </IconPropsContext.Provider>
   )
 
-  return <Context.Reset>{forwardTheme({ children: element, theme: props.theme })}</Context.Reset>
+  return <Context.Reset>{element}</Context.Reset>
 })
 
 const chromelessStyle = {

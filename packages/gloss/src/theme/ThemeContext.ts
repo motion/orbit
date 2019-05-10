@@ -1,4 +1,4 @@
-import { ThemeObject, toColor } from '@o/css'
+import { ThemeObject } from '@o/css'
 import * as React from 'react'
 
 export type ThemeContextType = {
@@ -10,11 +10,7 @@ export type ThemeContextType = {
 const themeContext: ThemeContextType = {
   allThemes: {},
   activeThemeName: '',
-  activeTheme: {
-    background: toColor('#fff'),
-    color: toColor('#000'),
-    borderColor: toColor('#eee'),
-  },
+  activeTheme: {} as any,
 }
 
 export const ThemeContext = React.createContext(themeContext)

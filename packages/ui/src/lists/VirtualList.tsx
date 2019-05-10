@@ -1,7 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { idFn, selectDefined } from '@o/utils'
-import { omit } from 'lodash'
 import memoize from 'memoize-one'
 import React, { forwardRef, memo, RefObject, useCallback } from 'react'
 
@@ -121,6 +120,8 @@ const ListRow = memo(
       />
     )
   }),
+  // for some reason with dynamiclist, react-window sends new objects with same values
+  // so we just stringify compare the style
   ({ style: a, ...restA }, { style: b, ...restB }) => {
     return isEqual(restA, restB) && JSON.stringify(a) === JSON.stringify(b)
   },
@@ -128,7 +129,6 @@ const ListRow = memo(
 
 const createItemData = memoize(
   (items: any[], selectableStore: SelectableStore, listProps: VirtualListProps) => {
-    console.log('got new data', items, selectableStore, listProps)
     return {
       items,
       listProps,
@@ -141,7 +141,6 @@ export function VirtualList(virtualProps: VirtualListProps) {
   const props = useProps(virtualProps)
   const { onSortStart, onSortEnd } = props
   const selectableStore = useSelectableStore(props)
-  const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
 
   return (
     <SortableList
@@ -150,6 +149,7 @@ export function VirtualList(virtualProps: VirtualListProps) {
       itemData={createItemData(props.items, selectableStore, props)}
       shouldCancelStart={isRightClick}
       lockAxis="y"
+      {...props}
       pressDelay={selectDefined(props.pressDelay, 0)}
       onSortStart={useCallback(
         (sort, event) => {
@@ -165,7 +165,6 @@ export function VirtualList(virtualProps: VirtualListProps) {
         },
         [onSortStart],
       )}
-      {...dynamicListProps}
     >
       {ListRow as any}
     </SortableList>

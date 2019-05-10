@@ -4,6 +4,10 @@ import { transaction } from 'mobx'
 // updateProps
 // granular set so reactions can be efficient
 export function updateProps(store: any, nextProps: Object) {
+  // a little work avoidance
+  if (store.__lastProps === nextProps) return
+  store.__lastProps = nextProps
+
   const nextPropsKeys = Object.keys(nextProps)
   const curPropKeys = Object.keys(store.props)
 

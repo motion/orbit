@@ -4,8 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { gloss } from 'gloss'
 import { isDefined } from '@o/utils'
+import { gloss } from 'gloss'
 import { debounce, isEqual, throttle } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
@@ -15,7 +15,7 @@ import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableVariableList } from '../lists/SelectableList'
-import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
+import { SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { SectionProps } from '../Section'
 import { Text } from '../text/Text'
 import { DataColumns, DataType, GenericDataRow } from '../types'
@@ -441,7 +441,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
             selectableStoreRef={this.selectableStoreRef}
-            {...pickSelectableProps(this.props)}
+            {...this.props}
             width="100%"
             // for now just hardcoded TableHead height
             height={height - 23}

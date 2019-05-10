@@ -1,11 +1,9 @@
 import { always, ensure, react, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
-import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
 
 import { isBrowser } from '../constants'
 import { Config } from '../helpers/configure'
-import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
 
 if (isBrowser) {
@@ -28,6 +26,7 @@ export type SelectableProps = {
   alwaysSelected?: boolean
   defaultSelected?: number
   selectable?: 'multi' | boolean
+  items?: any[]
 }
 
 export const selectablePropKeys = [
@@ -44,18 +43,10 @@ type Modifiers = {
   option?: boolean
 }
 
-export function pickSelectableProps(props: any) {
-  return pick(props, ...selectablePropKeys)
-}
-
-export function omitSelectableProps(props: any) {
-  return omit(props, ...selectablePropKeys)
-}
-
 // will grab the parent store if its provided, otherwise create its own
 export function useSelectableStore(props: SelectableProps, options = { react: false }) {
   const inactive = !!props.selectableStore || !props.selectable
-  const newStore = useStore(inactive ? false : SelectableStore, pickSelectableProps(props), options)
+  const newStore = useStore(inactive ? false : SelectableStore, props, options)
   return props.selectableStore || newStore
 }
 
@@ -63,12 +54,22 @@ export class SelectableStore {
   props: SelectableProps
 
   dragStartIndex?: number = null
-  rows = []
   active = new Set<string>()
   lastEnter = -1
   listRef: DynamicListControlled = null
   isSorting = false
   private keyToIndex = {}
+
+  get rows() {
+    return this.props.items
+  }
+
+  resetKeyToIndex = react(
+    () => always(this.props.items),
+    () => {
+      this.keyToIndex = {}
+    },
+  )
 
   callbackRefProp = react(
     () => this.props.selectableStoreRef,
@@ -329,15 +330,6 @@ export class SelectableStore {
 
   setSorting = (val: boolean) => {
     this.isSorting = val
-  }
-
-  setRows(next: GenericDataRow[]) {
-    if (!Array.isArray(next)) {
-      console.warn('rows not valid array!', next)
-      return
-    }
-    this.keyToIndex = {}
-    this.rows = next
   }
 
   private getIndexKey(index: number) {

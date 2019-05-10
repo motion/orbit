@@ -15,9 +15,7 @@ export async function graph(app: AppBit<PostgresAppData>) {
     password: c.password,
     port: +c.port,
   })
-
   const schema = await createSchema(pool, 'public', {})
-
   return {
     link: new PostGraphileLink({ pool, schema }),
     schema,
@@ -33,8 +31,13 @@ async function createSchema(pool, schema: string | string[], options: PostGraphi
     extendedErrors: ['hint', 'detail', 'errcode'],
     legacyRelations: 'omit',
     ...options,
-    skipPlugins: [...skipPlugins, ...(options.skipPlugins || [])],
-    prependPlugins: [...prependPlugins, ...(options.prependPlugins || [])],
+    skipPlugins: [
+      graphileBuild.QueryPlugin,
+      graphileBuild.MutationPlugin,
+      graphileBuild.SubscriptionPlugin,
+      ...(options.skipPlugins || []),
+    ],
+    prependPlugins: [RenamedQueryPlugin, ...(options.prependPlugins || [])],
   })
 }
 
@@ -95,14 +98,6 @@ function requireFrom(modules, moduleName) {
 }
 
 const graphileBuild = requireFrom(['postgraphile', 'postgraphile-core'], 'graphile-build')
-
-const skipPlugins = [
-  graphileBuild.QueryPlugin,
-  graphileBuild.MutationPlugin,
-  graphileBuild.SubscriptionPlugin,
-]
-
-const prependPlugins = [RenamedQueryPlugin]
 
 function RenamedQueryPlugin(builder) {
   builder.hook('build', build =>

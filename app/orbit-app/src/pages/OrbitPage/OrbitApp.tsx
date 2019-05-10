@@ -1,18 +1,6 @@
 import '../../apps/orbitApps'
 
-import {
-  App,
-  AppDefinition,
-  AppLoadContext,
-  AppProps,
-  AppStore,
-  AppViewsContext,
-  Bit,
-  getAppDefinition,
-  getAppDefinitions,
-  ProvideStores,
-  sleep,
-} from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
 import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'

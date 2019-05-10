@@ -8,6 +8,7 @@ import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
+import { ProvideVisibility } from '../Visibility'
 
 export type SimpleModalProps = SectionProps &
   SizedSurfaceProps & {
@@ -81,37 +82,39 @@ function SimpleModal({
   ...props
 }: SimpleModalProps) {
   return (
-    <ModalSizedSurface
-      sizeRadius={1}
-      hoverStyle={null}
-      activeStyle={null}
-      overflow="hidden"
-      elevation={10}
-      noInnerElement
-      minWidth={200}
-      minHeight={200}
-      open={open}
-      onClick={e => e.stopPropagation()}
-      {...props}
-    >
-      <Section
-        title={title}
-        subTitle={subTitle}
-        afterTitle={
-          <>
-            {afterTitle || null}
-            {!!closable && (
-              <Button chromeless icon="cross" size={1.5} onClick={() => onChangeOpen(false)} />
-            )}
-          </>
-        }
-        scrollable={scrollable}
-        above={above}
-        pad={pad}
+    <ProvideVisibility visible={!!open}>
+      <ModalSizedSurface
+        sizeRadius={1}
+        hoverStyle={null}
+        activeStyle={null}
+        overflow="hidden"
+        elevation={10}
+        noInnerElement
+        minWidth={200}
+        minHeight={200}
+        open={open}
+        onClick={e => e.stopPropagation()}
+        {...props}
       >
-        {children}
-      </Section>
-    </ModalSizedSurface>
+        <Section
+          title={title}
+          subTitle={subTitle}
+          afterTitle={
+            <>
+              {afterTitle || null}
+              {!!closable && (
+                <Button chromeless icon="cross" size={1.5} onClick={() => onChangeOpen(false)} />
+              )}
+            </>
+          }
+          scrollable={scrollable}
+          above={above}
+          pad={pad}
+        >
+          {children}
+        </Section>
+      </ModalSizedSurface>
+    </ProvideVisibility>
   )
 }
 

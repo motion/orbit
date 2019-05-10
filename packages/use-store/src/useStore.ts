@@ -171,7 +171,6 @@ function useReactiveStore<A extends any>(
     hooks: null,
     hasProps: null,
   })
-  console.log('state', state)
   let store = state.current.store
   const hasChangedSource = store && !isSourceEqual(store, Store)
 

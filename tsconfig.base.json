@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "module": "CommonJS",
+    "removeComments": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

@@ -99,6 +99,7 @@ const getRow = memoize(
           onMouseUp(e)
         }, [])}
         onMouseDown={useCallback(e => {
+          e.persist()
           clearTimeout(mouseDownTm)
           // add delay when sortable
           const setRowActive = () => {

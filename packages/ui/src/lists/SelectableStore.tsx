@@ -78,11 +78,14 @@ export class SelectableStore {
   )
 
   ensureAlwaysSelected = react(
-    () => [this.active.size, this.rows.length, this.props.alwaysSelected],
-    ([activeLen, rowsLen]) => {
-      if (this.props.alwaysSelected && rowsLen && activeLen === 0) {
-        this.selectFirstValid()
-      }
+    () => [this.rows.length, always(this.active), this.props.alwaysSelected],
+    ([rowsLen]) => {
+      console.log('check')
+      ensure('this.props.alwaysSelected', this.props.alwaysSelected)
+      ensure('rowsLen', rowsLen > 0)
+      ensure('activeLen', this.active.size < 1)
+      console.log('set')
+      this.selectFirstValid()
     },
   )
 
@@ -177,6 +180,9 @@ export class SelectableStore {
 
   move = (direction: Direction, modifiers: Modifiers = { shift: false }) => {
     const { rows, active } = this
+
+    let next = [...active]
+
     if (active.size === 0) {
       return
     }
@@ -184,28 +190,28 @@ export class SelectableStore {
       return
     }
 
-    const lastKey = Array.from(active).pop()
+    const lastKey = [...active].pop()
     const lastIndex = this.keyToIndex[lastKey]
 
     const step = direction === Direction.up ? -1 : 1
-    let next: number = lastIndex
+    let nextIndex: number = lastIndex
     let found: number
 
     while (typeof found === 'undefined') {
-      next += step
-      if (!rows[next]) break
-      if (rows[next].selectable === false) continue
-      found = next
+      nextIndex += step
+      if (!rows[nextIndex]) break
+      if (rows[nextIndex].selectable === false) continue
+      found = nextIndex
     }
 
     if (modifiers.shift === false) {
-      active.clear()
+      next = []
     }
 
     if (isDefined(found)) {
-      active.add(this.getIndexKey(next))
+      next.push(this.getIndexKey(nextIndex))
     }
-    this.setActive([...active])
+    this.setActive(next)
 
     return found
   }

@@ -133,7 +133,7 @@ export class GraphServer {
           try {
             const appSchema = await appDef.graph(app)
 
-            console.log('Loading graph ap', appDef.id, app.id)
+            console.log('Loading graph app', appDef.id, app.id)
 
             let schema = appSchema.schema || appSchema
 
@@ -149,7 +149,7 @@ export class GraphServer {
               .split(whiteSpaceRegex)
               .map(x => x.replace(/[^a-zA-Z]/g, ''))
               .join('_')
-            const fieldName = app.identifier.replace('-', '')
+            const fieldName = app.identifier.replace('-', '_')
 
             schema = await nestSchema({
               typeName,

@@ -1,6 +1,6 @@
 import { themes as KitThemes } from '@o/kit'
-import { toColor } from '@o/ui'
-import { linearGradient, ThemeObject } from 'gloss'
+import { linearGradient, toColor } from '@o/ui'
+import { ThemeObject } from 'gloss'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { colors } from './constants'

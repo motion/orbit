@@ -342,6 +342,7 @@ function addDynamicStyles(
       if (info) {
         parentClassNames = parentClassNames || []
         parentClassNames.push(info.className)
+        gc.registerClassUse(info.className)
       }
     }
   }

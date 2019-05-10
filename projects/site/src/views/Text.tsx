@@ -1,5 +1,5 @@
-import { gloss } from 'gloss'
 import { SimpleText } from '@o/ui'
+import { gloss } from 'gloss'
 
 export const Text = gloss(SimpleText, {
   fontFamily: 'GT Eesti',

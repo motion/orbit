@@ -13,8 +13,5 @@
     "watch": "tsc --watch --preserveWatchOutput",
     "test": "node ./_/test.js"
   },
-  "dependencies": {
-    "@o/color": "^2.5.2"
-  },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

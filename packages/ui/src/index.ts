@@ -1,7 +1,14 @@
 // until next hotkeys patches types
+import { isColorLike, toColorString } from '@o/css'
+import { configureCSS } from 'gloss'
 import * as HotKeys from 'react-hotkeys'
 
 export const configureHotKeys = HotKeys['configure']
+
+configureCSS({
+  isColor: isColorLike,
+  toColor: toColorString,
+})
 
 export { default as allIcons } from './icons'
 

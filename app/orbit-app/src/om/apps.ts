@@ -1,10 +1,8 @@
-import { appSelectAllButDataAndTimestamps, observeMany, loadMany } from '@o/kit'
+import { appSelectAllButDataAndTimestamps, loadMany, observeMany } from '@o/kit'
 import { AppBit, AppModel, Space } from '@o/models'
-import { once } from 'lodash'
 import { Action, Derive } from 'overmind'
 
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
-import { paneManagerStore } from './stores'
 
 export type AppsState = {
   apps: AppBit[]
@@ -47,10 +45,6 @@ export const effects = {
       om.actions.apps.setApps(apps)
     })
   },
-
-  setHomePane: once(() => {
-    paneManagerStore.setActivePane(paneManagerStore.homePane.id)
-  }),
 
   updatePaneManagerPanes,
 }

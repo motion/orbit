@@ -64,6 +64,8 @@ async function main() {
 
   console.timeEnd('splash')
 
+  // if you want to show a loading screen, do it above here
+
   await fetchInitialConfig()
 
   require('./configurations')
@@ -72,20 +74,27 @@ async function main() {
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
-  let x = Date.now()
+  // start cross-process stores
+  console.time('loadStores')
   const { App } = require('@o/stores')
   await App.start()
-  if (Date.now() - x > 300) console.log('long start....', Date.now() - x)
+  console.timeEnd('loadStores')
 
-  // setup some development helpers
-  if (process.env.NODE_ENV === 'development') {
-    window['rerender'] = () => {
-      startApp(true)
-    }
-  }
+  // start om first so it inits before showing
+  console.time('loadOm')
+  const { om } = require('./om/om')
+  await om.initialized
+  console.timeEnd('loadOm')
 
   // now run app..
+  console.time('startApp')
   startApp()
+  console.timeEnd('startApp')
+}
+
+// helper for force-rerender
+window['rerender'] = () => {
+  startApp(true)
 }
 
 const React = require('react')

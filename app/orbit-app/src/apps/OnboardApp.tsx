@@ -8,7 +8,7 @@ import { gloss } from 'gloss'
 import React from 'react'
 
 import { addAppClickHandler } from '../helpers/addAppClickHandler'
-import { paneManagerStore } from '../om/stores'
+import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
 import { appDefToItem, useDataAppDefinitions } from './apps/AppsApp'
@@ -24,7 +24,6 @@ export default createApp({
   ),
 })
 
-const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
@@ -65,7 +64,7 @@ class OnboardStore {
     },
     1: () => {},
     2: async () => {
-      paneManagerStore.setActivePaneByType('home')
+      om.actions.router.showHomePage()
       // save setting
       const user = await loadOne(UserModel, {})
       save(UserModel, {
@@ -240,10 +239,6 @@ const Centered = gloss({
   alignItems: 'center',
   justifyContent: 'center',
   textAlign: 'center',
-})
-
-const Unpad = gloss({
-  margin: [0, -framePad],
 })
 
 const AddButton = ({ disabled, ...props }) =>

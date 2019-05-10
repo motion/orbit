@@ -73,15 +73,11 @@ const showPage: Operator<HistoryItem> = pipe(
   mutate(om => {
     om.state.router.ignoreNextPush = false
   }),
-  // debounce(250),
-  // mutate(om => {
-  //   om.state.navVisible = false
-  // }),
 )
 
 const showHomePage: Action = om => {
   om.actions.router.showPage(getItem('home'))
-  om.effects.router.setPane(`${om.state.apps.apps.find(x => x.identifier === 'search').id}`)
+  om.state.router.appId = `${om.state.apps.apps.find(x => x.identifier === 'search').id}`
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
@@ -96,8 +92,7 @@ const showSetupAppPage: Action = om => {
 
 const toggleSetupAppPage: Action = om => {
   if (om.state.router.isOnSetupApp) {
-    console.log('TODO')
-    // om.actions.router.showAppPage(om.state.router.lastPage)
+    om.actions.router.back()
   } else {
     om.actions.router.showSetupAppPage()
   }
@@ -134,7 +129,6 @@ export const effects = {
 
   routeListen(route, actions, pageAction) {
     page(route, ({ params, querystring }) => {
-      console.log('got a route', route)
       actions.router.ignoreNextPush()
       pageAction({
         ...params,
@@ -148,7 +142,6 @@ export const effects = {
   },
 
   open(url: string) {
-    console.log('show', url)
     page.show(url)
   },
 

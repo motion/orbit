@@ -46,11 +46,19 @@ if (localStorage.getItem('enableLog')) {
 
 function lightLog(val: any) {
   const type = typeof val
-  if (type === 'number' || type === 'boolean') {
+  if (!type || type === 'number' || type === 'boolean') {
     return `${val}`
   }
   if (type === 'string' && val.length < 50) {
     return `"${val}"`
+  }
+  if (type === 'object') {
+    try {
+      const str = JSON.stringify(val)
+      if (str.length < 100) {
+        return `(${str})`
+      }
+    } catch {}
   }
   return `(type: ${type})`
 }
@@ -86,7 +94,9 @@ function logMobxEvent(event) {
       if (event.name.indexOf('magicReaction') === 0) {
         break
       }
-      console.log(`%c ${event.name}`, 'color:blue;')
+      if (window['enableLog'] > 1) {
+        console.log(`%c ${event.name}`, 'color:blue;')
+      }
       break
   }
 }
@@ -110,7 +120,7 @@ debugUseStore(event => {
     case 'unmount':
     case 'mount':
       if (!event.component) return
-      if (window['enableLog']) {
+      if (window['enableLog'] > 1) {
         console.log(event.component.renderName, event)
       }
       addEvent(event.component, event)

@@ -33,7 +33,7 @@ const loadingPane = {
 }
 
 export const paneManagerStore = createUsableStore(PaneManagerStore, {
-  defaultIndex: 0,
+  defaultPaneId: 'loading',
   defaultPanes: [loadingPane],
 })
 export const usePaneManagerStore = paneManagerStore.useStore

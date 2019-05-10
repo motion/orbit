@@ -156,7 +156,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             iconBefore
             onClick={() => {
               stores.newAppStore.setShowCreateNew(false)
-              stores.paneManagerStore.setActivePaneByType('settings')
+              stores.paneManagerStore.setActivePane('settings')
             }}
           />
         </Col>

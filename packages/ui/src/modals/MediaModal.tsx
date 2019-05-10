@@ -7,7 +7,15 @@ import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { Modal, ModalProps } from './Modal'
 
-export function MediaModal({ title, subTitle, onClose, afterTitle, open, ...props }: ModalProps) {
+export function MediaModal({
+  title,
+  subTitle,
+  onChangeOpen,
+  closable,
+  afterTitle,
+  open,
+  ...props
+}: ModalProps) {
   return (
     <Theme name="dark">
       <Modal chromeless background={theme => theme.background.darken(0.1).alpha(0.8)} open={open}>
@@ -22,10 +30,12 @@ export function MediaModal({ title, subTitle, onClose, afterTitle, open, ...prop
             )}
           </View>
 
-          {!!(afterTitle || onClose) && (
+          {!!(afterTitle || closable) && (
             <Absolute top={10} right={10}>
               {afterTitle || null}
-              {onClose && <Button chromeless icon="cross" size={1.5} onClick={() => onClose()} />}
+              {closable && (
+                <Button chromeless icon="cross" size={1.5} onClick={() => onChangeOpen(false)} />
+              )}
             </Absolute>
           )}
         </Row>

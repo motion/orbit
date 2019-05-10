@@ -45,7 +45,7 @@ export default memo(function MainShortcutHandler(props: {
       COMMAND_NEW: actions.router.showSetupAppPage,
       COMMAND_OPEN: effects.openCurrentApp,
       SWITCH_SPACE: () => {
-        paneManagerStore.setActivePaneByType('spaces')
+        paneManagerStore.setActivePane('spaces')
       },
       OPEN: () => {
         if (document.activeElement && document.activeElement.classList.contains('ui-input')) {

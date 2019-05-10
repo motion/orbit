@@ -1,9 +1,9 @@
 import { save } from '@o/bridge'
-import { gloss, Row, RowProps } from 'gloss'
 import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
+import { gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
 import React, { forwardRef, memo } from 'react'
 
@@ -26,7 +26,7 @@ export const OrbitNav = memo(
     const { orbitStore } = useStores()
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
-    const { panes, activePaneId } = paneManagerStore
+    const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
     const activeAppsSorted = useActiveAppsSorted().filter(x =>
       panes.some(pane => pane.id === `${x.id}`),
@@ -51,7 +51,7 @@ export const OrbitNav = memo(
     const items = activeAppsSorted
       .map(
         (app): TabProps => {
-          const isActive = !isOnSetupApp && `${app.id}` === activePaneId
+          const isActive = !isOnSetupApp && `${app.id}` === paneId
           // const next = activeAppsSorted[index + 1]
           // const isLast = index === activeAppsSorted.length
           // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`

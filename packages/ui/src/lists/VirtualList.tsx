@@ -44,7 +44,8 @@ const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 const { useProps } = createContextualProps<Partial<VirtualListProps>>()
 
 const ListRow = memo(
-  forwardRef(({ data, index, style }: any, ref) => {
+  forwardRef((props: any, ref) => {
+    const { data, index, style } = props
     const { selectableStore, items, listProps } = data
     const { getItemProps, ItemView, sortable, onSelect, onOpen, pressDelay, itemProps } = listProps
     const item = items[index]
@@ -123,7 +124,8 @@ const ListRow = memo(
   // for some reason with dynamiclist, react-window sends new objects with same values
   // so we just stringify compare the style
   ({ style: a, ...restA }, { style: b, ...restB }) => {
-    return isEqual(restA, restB) && JSON.stringify(a) === JSON.stringify(b)
+    const samesies = isEqual(restA, restB) && JSON.stringify(a) === JSON.stringify(b)
+    return samesies
   },
 )
 

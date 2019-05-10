@@ -3,14 +3,14 @@ import { App, Desktop, Electron } from '@o/stores'
 import { MergeContext, View } from '@o/ui'
 import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
-import * as React from 'react'
 import { createRef } from 'react'
+import * as React from 'react'
 
 import { AppActions } from '../../../actions/AppActions'
-import MainShortcutHandler from '../../../views/MainShortcutHandler'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 import { StoreContext } from '../../../StoreContext'
+import MainShortcutHandler from '../../../views/MainShortcutHandler'
 import { AppSearchable } from '../../AppPage/AppSearchable'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
@@ -455,9 +455,7 @@ export function Menu() {
 
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultPanes: [], //menuApps,
-    onPaneChange: () => {
-      AppActions.clearPeek()
-    },
+    defaultPaneId: '',
   })
 
   const menuStore = useStore(MenuStore, {
@@ -466,7 +464,7 @@ export function Menu() {
     onMenuHover: index => {
       const app = menuApps.find(x => x.index === index)
       if (app) {
-        paneManagerStore.setActivePane(`${app.id}`)
+        paneManagerStore.setPane(`${app.id}`)
       }
     },
   })

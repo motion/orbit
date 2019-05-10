@@ -1,5 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { Logger } from '@o/logger'
+
 import { MagicalObject, ReactionOptions } from './types'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
@@ -49,7 +50,7 @@ let seenNames = new Set()
 export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) => {
   const hasChanges = !!changed
   if (hasChanges) {
-    const shortName = name.slice(0, 8)
+    const shortName = `${name}`.slice(0, 8)
     seenNames.add(shortName)
     const color = COLOR_WHEEL[[...seenNames].indexOf(shortName) % COLOR_WHEEL.length]
     const logArgs: string[] = [].concat(...name.split('(').map(x => x.split('.')))

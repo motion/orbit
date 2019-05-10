@@ -146,6 +146,6 @@ export const effects = {
   },
 
   setPane(appId: string) {
-    paneManagerStore.setActivePane(appId)
+    paneManagerStore.setPane(appId)
   },
 }

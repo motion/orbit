@@ -3,19 +3,46 @@ import { nestSchema } from '@o/graphql-nest-schema'
 import { AppDefinition } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
-import PostgresApp from '@o/postgres-app'
-import SlackApp from '@o/slack-app'
 import bodyParser from 'body-parser'
 import express from 'express'
+import { readJSON } from 'fs-extra'
 import { graphqlExpress } from 'graphql-server-express'
 import { makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
+import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-// TODO make generic
-const allApps: { [key: string]: AppDefinition } = {
-  slack: SlackApp,
-  postgres: PostgresApp,
+async function getWorkspaceAppPaths(workspace: string) {
+  const workspaceRoot = join(require.resolve(workspace), '..')
+  const packageJSON = join(workspaceRoot, 'package.json')
+  const packages = (await readJSON(packageJSON)).dependencies
+  return Object.keys(packages).map(pkgName => {
+    let cur = workspaceRoot
+    let path
+    while (!path && path !== '/') {
+      try {
+        path = require.resolve(join(cur, 'node_modules', pkgName))
+        // found "compiled out" path so lets make sure we go up to name
+        const baseName = pkgName.replace(/@[a-zA-Z0-9_\-\.]+\//, '') // remove any namespace
+        const packageRootIndex = path.split('/').findIndex(x => x === baseName) // find root index
+        const packageRoot = path
+          .split('/')
+          .slice(0, packageRootIndex + 1)
+          .join('/')
+        path = packageRoot
+      } catch {
+        cur = join(cur, '..')
+      }
+    }
+    return path
+  })
+}
+
+async function getWorkspaceAppDefinitions(workspace: string): Promise<AppDefinition[]> {
+  const paths = await getWorkspaceAppPaths(workspace)
+  return paths.map(name => {
+    return require(name).default
+  })
 }
 
 const log = new Logger('graphServer')
@@ -87,44 +114,54 @@ export class GraphServer {
   private watchAppsForSchemaSetup(spaceId: number) {
     return getRepository(AppEntity)
       .observe({
-        spaceId,
+        where: {
+          spaceId,
+        },
       })
       .subscribe(async _ => {
-        let apps: AppBit[] = _ as any
+        const apps: AppBit[] = _ as any
         let schemas = []
 
+        const appDefs = await getWorkspaceAppDefinitions('@o/example-workspace')
+
         for (const app of apps) {
-          const appDef = allApps[app.identifier]
+          const appDef = appDefs.find(def => def.id === app.identifier)
+
           if (!appDef) continue
           if (!appDef.graph) continue
-          // TODO hardcoding this, should be generic
-          if (!(app.token || app.data['credentials'])) {
-            continue
-          }
 
-          const appSchema = await allApps[app.identifier].graph(app)
+          try {
+            const appSchema = await appDef.graph(app)
 
-          let schema = appSchema.schema || appSchema
+            if (app.identifier !== 'github') continue
+            console.log('Loading graph app', appDef.id, app.id)
 
-          if (appSchema.link) {
-            schema = makeRemoteExecutableSchema({
-              schema,
-              link: appSchema.link,
-            })
-          }
+            let schema = appSchema.schema || appSchema
 
-          const whiteSpaceRegex = /[\s]+/g
+            if (appSchema.link) {
+              schema = makeRemoteExecutableSchema({
+                schema,
+                link: appSchema.link,
+              })
+            }
 
-          schema = await nestSchema({
-            typeName: app.name
+            const whiteSpaceRegex = /[\s]+/g
+            const typeName = app.name
               .split(whiteSpaceRegex)
               .map(x => x.replace(/[^a-zA-Z]/g, ''))
-              .join('_'),
-            fieldName: app.identifier.replace('-', '_'),
-            schema,
-          })
+              .join('_')
+            const fieldName = app.identifier.replace('-', '_')
 
-          schemas.push(schema)
+            schema = await nestSchema({
+              typeName,
+              fieldName,
+              schema,
+            })
+
+            schemas.push(schema)
+          } catch (err) {
+            console.error(`\n\n Error loading graph ${err}`)
+          }
         }
 
         this.graphMiddleware[spaceId] = graphqlExpress({

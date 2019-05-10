@@ -4,6 +4,7 @@ import { GithubApi } from './api.node'
 import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
 import { GithubSettings } from './GithubSettings'
+import { graph } from './graph.node'
 
 export default createApp({
   id: 'github',
@@ -14,4 +15,5 @@ export default createApp({
   settings: GithubSettings,
   api: createApi<typeof GithubApi>(),
   sync: true,
+  graph,
 })

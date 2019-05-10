@@ -13,7 +13,7 @@ export function getAppListItem(app: AppWithDefinition) {
         <OrbitAppInfo {...app} />
       </Suspense>
     ) : null,
-    icon: isDataDefinition(app) ? app.definition.id : `orbit-${app.definition.id}-full`,
+    icon: isDataDefinition(app.definition) ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
     viewType: 'settings' as 'settings',
     subId: `${app.app.id}`,

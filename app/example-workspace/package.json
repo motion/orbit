@@ -9,6 +9,9 @@
     "@o/lists-app": "^2.5.6",
     "@o/people-app": "^2.5.6",
     "@o/search-app": "^2.5.6",
-    "@o/slack-app": "^2.5.6"
+    "@o/slack-app": "^2.5.6",
+    "@o/github-app": "^2.5.6",
+    "@o/postgres-app": "^2.5.6",
+    "@o/graphql-source-app": "^2.5.6"
   }
 }

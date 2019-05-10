@@ -24,7 +24,7 @@ export function OuterSpace(props) {
         left: 0,
         right: 0,
         height: useIsTiny() ? '200vh' : siteStore.sectionHeight,
-        opacity: show ? 0.28 : 0,
+        opacity: show ? 0.2 : 0,
         zIndex: -1,
         pointerEvents: 'none',
         transition: `all ease-out ${duration}ms`,

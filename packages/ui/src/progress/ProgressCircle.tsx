@@ -1,4 +1,4 @@
-import { Color } from 'gloss'
+import { Color } from '@o/color'
 import * as React from 'react'
 
 export type ProgressCircleProps = {

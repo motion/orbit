@@ -1,5 +1,5 @@
 {
-  "name": "@o/github-app",
+  "name": "@o/graphql-source-app",
   "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
@@ -9,11 +9,6 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.6",
-    "@o/sync-kit": "^2.5.2",
-    "@o/ui": "^2.5.6",
-    "@octokit/rest": "^16.21.0",
-    "lodash": "4.17.11",
     "apollo-link": "^1.2.11",
     "graphql-tools": "^4.0.4"
   }

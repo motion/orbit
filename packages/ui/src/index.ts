@@ -10,7 +10,6 @@ configureCSS({
   toColor: toColorString,
 })
 
-console.log('cofig', toColor)
 configureGloss({
   toColor: toColor,
 })

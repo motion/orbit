@@ -1,6 +1,6 @@
-import { Color } from '@o/css'
-import { gloss } from 'gloss'
+import { Color } from '@o/color'
 import { on } from '@o/utils'
+import { gloss } from 'gloss'
 import { debounce } from 'lodash'
 import throttle from 'raf-throttle'
 import * as React from 'react'

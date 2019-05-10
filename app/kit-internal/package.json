@@ -1,6 +1,6 @@
 {
   "name": "@o/kit-internal",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "sideEffects": false,
@@ -12,14 +12,14 @@
   "dependencies": {
     "@o/bridge": "^2.5.2",
     "@o/fast-compare": "^2.5.2",
-    "@o/kit": "^2.5.5",
+    "@o/kit": "^2.5.6",
     "@o/models": "^2.5.2",
     "@o/react-sortable-hoc": "1.6.5",
     "@o/stores": "^2.5.2",
-    "@o/ui": "^2.5.5",
+    "@o/ui": "^2.5.6",
     "@o/use-store": "^2.5.2",
     "@o/utils": "^2.5.2",
-    "gloss": "^2.5.5",
+    "gloss": "^2.5.6",
     "immer": "1.7.2"
   },
   "peerDependencies": {

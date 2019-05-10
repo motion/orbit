@@ -1,6 +1,6 @@
 {
   "name": "@o/people-app",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,7 +9,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.5",
-    "@o/ui": "^2.5.5"
+    "@o/kit": "^2.5.6",
+    "@o/ui": "^2.5.6"
   }
 }

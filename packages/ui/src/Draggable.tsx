@@ -1,4 +1,4 @@
-import { FullScreen, FullScreenProps } from '@o/gloss'
+import { FullScreen, FullScreenProps } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { useGet } from './hooks/useGet'
 import { Omit } from './types'

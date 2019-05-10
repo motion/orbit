@@ -1,5 +1,5 @@
 import { MAC_TOPBAR_HEIGHT } from '@o/constants'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { App } from '@o/stores'
 import * as React from 'react'
 

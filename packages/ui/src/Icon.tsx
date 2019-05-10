@@ -1,5 +1,5 @@
 import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
-import { toColor, useTheme } from '@o/gloss'
+import { toColor, useTheme } from 'gloss'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import React, { createContext, memo, useContext } from 'react'

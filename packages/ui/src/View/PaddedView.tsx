@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 
 import { getPadding, PadProps } from './pad'
 import { View, ViewProps } from './View'

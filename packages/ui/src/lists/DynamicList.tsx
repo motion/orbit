@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { forwardRef, RefObject } from 'react'
 // @ts-ignore
 import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-window'

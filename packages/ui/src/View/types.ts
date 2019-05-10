@@ -1,4 +1,4 @@
-import { CommonHTMLProps, CSSPropertySet } from '@o/gloss'
+import { CommonHTMLProps, CSSPropertySet } from 'gloss'
 
 import { CommonViewProps } from './CommonViewProps'
 

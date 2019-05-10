@@ -1,26 +1,26 @@
+import { useStores } from '@o/kit'
 import { FloatingCard, List, Tabs, usePosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
 
 import { orbitStaticApps } from '../../apps/orbitApps'
-import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { DockButton } from './Dock'
 
-export function OrbitFloatingShareCard({
+const useIsOnStaticApp = () => {
+  const { paneManagerStore } = useStores()
+  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
+  return isStaticApp
+}
+
+export function OrbitDockShare({
   width = 250,
   height = 350,
-  index,
 }: {
   width?: number
   height?: number
   pad?: number
-  index: number
 }) {
-  const { paneManagerStore } = useStores()
-  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
-  const showButton = !isStaticApp
-
   const om = useOm()
   const numClipboards = Object.keys(om.state.share).length
 
@@ -31,19 +31,18 @@ export function OrbitFloatingShareCard({
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = hovered || hoveredMenu
 
+  const isStatic = useIsOnStaticApp()
+
   return (
     <>
       <DockButton
+        id="share"
+        visible={!isStatic}
         icon="clip"
-        index={index}
         forwardRef={buttonRef}
         badge={numClipboards}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        opacity={showButton ? 1 : 0}
-        transform={{
-          y: showButton ? 0 : 150,
-        }}
       />
       {nodePosition && nodePosition.rect && (
         <FloatingCard

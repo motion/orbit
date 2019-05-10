@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { Component } from 'react'
 
 import { ContextMenu } from '../ContextMenu'

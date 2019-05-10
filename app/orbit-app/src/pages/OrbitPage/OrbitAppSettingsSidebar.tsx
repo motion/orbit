@@ -1,4 +1,4 @@
-import { useTheme } from '@o/gloss'
+import { useTheme } from 'gloss'
 import { Sidebar, Title } from '@o/ui'
 import React from 'react'
 

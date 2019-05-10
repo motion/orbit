@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { ThemeContext, ThemeObject } from '@o/gloss'
+import { ThemeContext, ThemeObject } from 'gloss'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
 

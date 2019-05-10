@@ -1,34 +1,77 @@
+import { createStoreContext, useStore } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
+import { Flipped, Flipper } from 'react-flip-toolkit'
+import { ObservableSet } from 'mobx'
 
-export function Dock(props: { children: any }) {
-  return (
-    <Row position="absolute" bottom={0} right={0} space>
-      {props.children}
-    </Row>
-  )
+class DockStore {
+  items = new ObservableSet<string>()
+  add = x => this.items.add(x)
+  remove = x => this.items.delete(x)
+  get key() {
+    return [...this.items].join('')
+  }
 }
 
-const width = 40
-const innerSpace = 20
-const outerSpace = 20
+export const DockStoreContext = createStoreContext(DockStore)
 
-export function DockButton({ index, ...buttonProps }: ButtonProps & { index: number }) {
+// Dock
+
+export const Dock = memo((props: any) => {
+  const dockStore = useStore(DockStore)
   return (
-    <Button
-      circular
-      size="xxl"
-      iconSize={16}
-      elevation={4}
-      badgeProps={{
-        background: '#333',
-      }}
-      position="fixed"
-      bottom={outerSpace}
-      right={outerSpace + innerSpace * index + width * index}
-      zIndex={100000000}
-      transition="all ease 150ms"
-      {...buttonProps}
-    />
+    <DockStoreContext.SimpleProvider value={dockStore}>
+      <Flipper flipKey={dockStore.key}>
+        <Row position="fixed" bottom={20} right={20} zIndex={100000000} {...props} />
+      </Flipper>
+    </DockStoreContext.SimpleProvider>
+  )
+})
+
+// DockButton
+
+type DockButtonProps = ButtonProps & {
+  visible?: boolean
+  id: string
+}
+
+const dur = 200
+
+export function DockButton({ visible = true, id, ...buttonProps }: DockButtonProps) {
+  const dockStore = DockStoreContext.useStore()
+
+  if (visible) {
+    dockStore.add(id)
+  } else {
+    dockStore.remove(id)
+  }
+
+  if (!visible) {
+    return null
+  }
+
+  return (
+    <Flipped flipId={id}>
+      {props => (
+        <Button
+          circular
+          size="xxl"
+          iconSize={16}
+          elevation={4}
+          marginLeft={20}
+          badgeProps={{
+            background: '#333',
+          }}
+          zIndex={100000000}
+          transition={`all ease ${dur}ms`}
+          opacity={visible ? 1 : 0}
+          transform={{
+            y: visible ? 0 : 150,
+          }}
+          {...buttonProps}
+          {...props}
+        />
+      )}
+    </Flipped>
   )
 }

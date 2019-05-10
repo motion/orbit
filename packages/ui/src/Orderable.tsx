@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { isEqual } from 'lodash'
 import * as React from 'react'
 import { Rect } from './helpers/geometry'

@@ -1,4 +1,4 @@
-import { Block, BlockProps, gloss } from '@o/gloss'
+import { Block, BlockProps, gloss } from 'gloss'
 import React from 'react'
 
 import { useLocationLink } from '../hooks/useLocationLink'

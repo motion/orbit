@@ -1,5 +1,5 @@
 import { ThemeSet } from '@o/css'
-import { ThemeProvide } from '@o/gloss'
+import { ThemeProvide } from 'gloss'
 import React, { memo, useMemo } from 'react'
 import { ProvideFocus } from './Focus'
 import { ProvideShare } from './Share'

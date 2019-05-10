@@ -1,4 +1,4 @@
-import { gloss, useTheme } from '@o/gloss'
+import { gloss, useTheme } from 'gloss'
 import { Space, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'

@@ -1,4 +1,4 @@
-import { gloss, InlineFlex } from '@o/gloss'
+import { gloss, InlineFlex } from 'gloss'
 
 export const LinkText = gloss(InlineFlex, {
   userSelect: 'none',

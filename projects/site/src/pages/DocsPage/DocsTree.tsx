@@ -1,4 +1,4 @@
-import { Col } from '@o/gloss'
+import { Col } from 'gloss'
 import { Tree } from '@o/ui'
 import produce from 'immer'
 import React, { useState } from 'react'

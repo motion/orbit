@@ -1,4 +1,4 @@
-import { Absolute, AbsoluteProps, CSSPropertySet, gloss } from '@o/gloss'
+import { Absolute, AbsoluteProps, CSSPropertySet, gloss } from 'gloss'
 
 const Border = gloss<
   AbsoluteProps & {

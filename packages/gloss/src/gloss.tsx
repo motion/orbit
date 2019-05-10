@@ -1,7 +1,7 @@
-import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetResolved, cssString, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { flatten } from 'lodash'
-import { createElement, forwardRef, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'
@@ -97,8 +97,17 @@ export function gloss<Props = any>(
     }
   }, 0)
 
-  // shorthand: view({ ... })
-  if (typeof a !== 'string' && typeof target === 'object' && !b && !hasGlossyChild) {
+  // shorthand: gloss({ ... })
+  if (
+    typeof a !== 'string' &&
+    target.constructor &&
+    target.constructor.name === 'Object' &&
+    !b &&
+    !hasGlossyChild &&
+    !isValidElement(target) &&
+    // if you pass an element wrapped in forwardRef() it needs to be filtered somehow..
+    !target['$$typeof']
+  ) {
     target = 'div'
     rawStyles = a
   }
@@ -107,6 +116,7 @@ export function gloss<Props = any>(
   const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
+  const propStyles = Styles.propStyles
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
 
@@ -134,7 +144,7 @@ export function gloss<Props = any>(
     const dynClassNames = addDynamicStyles(
       id,
       ThemedView.displayName,
-      Styles.propStyles,
+      propStyles,
       dynClasses.current,
       props,
       themeFn,
@@ -170,7 +180,7 @@ export function gloss<Props = any>(
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
-        if (Styles.propStyles[key]) {
+        if (propStyles && propStyles[key]) {
           continue
         }
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
@@ -187,7 +197,7 @@ export function gloss<Props = any>(
       }
     } else {
       for (const key in props) {
-        if (Styles.propStyles[key]) {
+        if (propStyles && propStyles[key]) {
           continue
         }
         finalProps[key] = props[key]
@@ -299,50 +309,64 @@ function addStyles(
   return classNames
 }
 
+function mergePropStyles(baseId: string, styles: Object, propStyles: Object, props: Object) {
+  for (const key in propStyles) {
+    if (props[key] !== true) continue
+    for (const sKey in propStyles[key]) {
+      const ns = sKey === 'base' ? baseId : sKey
+      styles[ns] = styles[ns] || {}
+      mergeStyles(ns, styles, propStyles[key][sKey])
+    }
+  }
+}
+
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
-  conditionalStyles: any,
+  propStyles: Object | undefined,
   prevClassNames: string[] | null,
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
   tagName?: string,
 ) {
-  const hasConditionalStyles = conditionalStyles && !!Object.keys(conditionalStyles).length
   const dynStyles = {}
+  let parentClassNames
 
-  // if passed any classes from another styled component
-  // ignore that class and merge in their resolved styles
+  // if passed any classes from a parent gloss view
+  // merge in their classname and track it
   if (props.className) {
     const propClassNames = props.className.trim().split(whiteSpaceRegex)
     for (const className of propClassNames) {
-      const classInfo = tracker.get(className)
-      if (classInfo) {
-        dynStyles[classInfo.namespace] = classInfo.style
+      const info = tracker.get(className)
+      if (info) {
+        parentClassNames = parentClassNames || []
+        parentClassNames.push(info.className)
+        gc.registerClassUse(info.className)
       }
     }
   }
 
-  if (hasConditionalStyles) {
-    for (const key in conditionalStyles) {
-      if (props[key] !== true) continue
-      for (const subKey in conditionalStyles[key]) {
-        const ns = subKey === 'base' ? id : subKey
-        dynStyles[ns] = dynStyles[ns] || {}
-        mergeStyles(ns, dynStyles, conditionalStyles[key][subKey])
-      }
-    }
+  if (propStyles) {
+    mergePropStyles(id, dynStyles, propStyles, props)
   }
 
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles[id] = dynStyles[id] || {}
-    mergeStyles(id, dynStyles, themeFn(props, next))
+    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
+    if (themePropStyles) {
+      mergePropStyles(id, dynStyles, themePropStyles, props)
+    }
   }
 
   // add dyn styles
-  const classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+  let classNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+
+  // merge parent and current classnames
+  if (parentClassNames) {
+    classNames = [...parentClassNames, ...(classNames || [])]
+  }
 
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {
@@ -357,38 +381,62 @@ function addDynamicStyles(
   return classNames
 }
 
-function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) {
-  const propStyles = {}
+const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
+
+//
+// this... THIS...
+//  ... this is a tricky function
+//  because its used on initial mount AND during renders
+//  which is actually useful, yes, because you want the logic the same
+//  BUT its also used nested! See themeFn => mergePropStyles
+//
+function mergeStyles(
+  id: string,
+  baseStyles: Object,
+  nextStyles?: CSSPropertySet | null,
+): Object | undefined {
+  let propStyles
   for (const key in nextStyles) {
     // dont overwrite as we go down
-    if (!baseStyles[id]) {
-      console.error('no baseStyles for id', id, baseStyles, 'nextStyles', nextStyles)
+    if (baseStyles[id][key] !== undefined) {
       continue
     }
-    if (typeof baseStyles[id][key] !== 'undefined') {
-      continue
-    }
-    // valid attribute
-    if (key[0] === '&' || key[0] === '@') {
-      baseStyles[key] = nextStyles[key]
-    } else if (validCSSAttr[key]) {
+    if (validCSSAttr[key]) {
+      // valid regular attr
       baseStyles[id][key] = nextStyles[key]
+    } else if (isSubStyle(key)) {
+      // valid sub-attribute
+      baseStyles[key] = nextStyles[key]
     } else {
-      // were defining a boolean prop style
-      //   looks like: <Component tall />
-      //   via: view({ color: 'red', tall: { height: '100%' } })
-      const prop = key
-      const styleObj = nextStyles[key]
-      if (typeof styleObj === 'object') {
-        propStyles[prop] = {
-          base: {},
-        }
-        for (const subKey in styleObj) {
-          if (subKey[0] === '&' || subKey[0] === '@') {
-            propStyles[prop][subKey] = styleObj[subKey]
-          } else {
-            propStyles[prop].base[subKey] = styleObj[subKey]
-          }
+      let subStyles = nextStyles[key]
+      // catch invalid/falsy
+      if (!subStyles || typeof subStyles !== 'object') {
+        continue
+      }
+      // propStyles
+      //   definition: gloss({ isTall: { height: '100%' } })
+      //   usage: <Component isTall />
+
+      propStyles = propStyles || {}
+      propStyles[key] = {}
+
+      // they can nest (media queries/psuedoes), split it out, eg:
+      //  gloss({
+      //    isTall: {
+      //      '&:before': {}
+      //    }
+      //  })
+      for (const sKey in subStyles) {
+        // key = isTall
+        // sKey = &:before
+        if (isSubStyle(sKey)) {
+          // keep all sub-styles on their key
+          propStyles[key] = propStyles[key] || {}
+          propStyles[key][sKey] = subStyles[sKey]
+        } else {
+          // we put base styles here, see 'base' check above
+          propStyles[key].base = propStyles[key].base || {}
+          propStyles[key].base[sKey] = subStyles[sKey]
         }
       }
     }
@@ -396,18 +444,20 @@ function mergeStyles(id: string, baseStyles: Object, nextStyles?: CSSPropertySet
   return propStyles
 }
 
+// happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
 function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | null) {
   const styles = {
     [baseId]: {},
   }
-  const propStyles = mergeStyles(baseId, styles, rawStyles)
+  let propStyles = mergeStyles(baseId, styles, rawStyles)
   // merge parent styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
     const parentConfig = target.internal.getConfig()
     const parentPropStyles = parentConfig.propStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
+        propStyles = propStyles || {}
         propStyles[key] = propStyles[key] || {}
         propStyles[key] = {
           ...parentPropStyles[key],
@@ -431,17 +481,6 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
     styles,
     propStyles,
   }
-}
-
-function getSelector(className: string, namespace: string, tagName: string = '') {
-  if (namespace[0] === '@') {
-    return tagName + '.' + className
-  }
-  const classSelect = `.${className}`
-  if (namespace.indexOf('&') !== -1) {
-    return namespace.replace(/&/g, classSelect)
-  }
-  return classSelect
 }
 
 // compile theme from parents
@@ -486,21 +525,11 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   if (cachedClass) {
     return cachedClass
   }
-  const declarations: string[] = []
-  let style = css(rules)
 
-  if (Config.preProcessStyles) {
-    style = Config.preProcessStyles(style)
-  }
+  const style = cssString(rules)
 
-  // generate css declarations based on the style object
-  for (const key in style) {
-    const val = style[key]
-    declarations.push(`  ${key}: ${val};`)
-  }
-  const cssString = declarations.join('\n')
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = `g${stringHash(cssString)}`
+  const className = `g${stringHash(style)}`
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {
@@ -513,12 +542,13 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
       rules,
       selector,
       style,
+      className,
     })
 
     if (namespace[0] === '@') {
-      sheet.insert(namespace, `${namespace} {\n${selector} {\n${cssString}\n}\n}`)
+      sheet.insert(namespace, `${namespace} {\n${selector} {\n${style}\n}\n}`)
     } else {
-      sheet.insert(className, `${selector} {\n${cssString}\n}`)
+      sheet.insert(className, `${selector} {\n${style}\n}`)
     }
 
     rulesToClass.set(rules, className)
@@ -527,17 +557,24 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   return className
 }
 
+function getSelector(className: string, namespace: string, tagName: string = '') {
+  if (namespace[0] === '@') {
+    return tagName + '.' + className
+  }
+  const classSelect = `.${className}`
+  if (namespace.indexOf('&') !== -1) {
+    return namespace.replace(/&/g, classSelect)
+  }
+  return classSelect
+}
+
 // thx darksky: https://git.io/v9kWO
 function stringHash(str: string): number {
   let res = 5381
-  let i = str.length
-
-  while (i) {
-    res = (res * 33) ^ str.charCodeAt(--i)
+  let i = 0
+  let len = str.length
+  while (i < len) {
+    res = (res * 33) ^ str.charCodeAt(i++)
   }
-
-  /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
-   * integers. Since we want the results to be always positive, convert the
-   * signed int to an unsigned by doing an unsigned bitshift. */
   return res >>> 0
 }

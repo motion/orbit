@@ -1,6 +1,6 @@
 {
   "name": "@o/vectorious",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",
   "sideEffects": false,

@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { gloss, useTheme } from '@o/gloss'
+import { gloss, useTheme } from 'gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {

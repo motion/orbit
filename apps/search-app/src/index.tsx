@@ -1,15 +1,4 @@
-import {
-  App,
-  AppFilterButton,
-  AppMainView,
-  AppProps,
-  createApp,
-  useActiveApps,
-  useActiveSpace,
-  useSearchState,
-  useStore,
-  useStores,
-} from '@o/kit'
+import { App, AppFilterButton, AppMainView, AppProps, createApp, useActiveApps, useActiveSpace, useSearchState, useStore, useStores } from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 

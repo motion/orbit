@@ -1,5 +1,5 @@
 import { MAC_TOPBAR_HEIGHT } from '@o/constants'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as React from 'react'
 import { LINE_Y_ADJ } from './helpers'
 

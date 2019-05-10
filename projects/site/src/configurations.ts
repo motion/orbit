@@ -1,6 +1,6 @@
 import 'requestidlecallback-polyfill'
 
-import { ThemeMaker } from '@o/gloss'
+import { ThemeMaker } from 'gloss'
 import { configureHotKeys, configureUI, toColor } from '@o/ui'
 import { configureUseStore, debugUseStore, IS_STORE } from '@o/use-store'
 import { setConfig } from 'react-hot-loader'
@@ -25,26 +25,12 @@ function configure() {
   window['ResizeObserver'] = ResizeObserver
   window['ResizeSensor'] = ResizeSensor
 
-  // const isWebkit = 'webkitLineBreak' in document.documentElement.style
-
-  // configureGloss({
-  //   preProcessStyles: isWebkit ? undefined : (styles) => {
-  //     for (const key in )
-  //   },
-  // })
-
   configureUI({
     defaultProps: {
       title: {
         selectable: true,
         ...fontProps.GTEesti,
       },
-      // text: {
-      //   style: {
-      //     WebkitFontSmoothing: 'antialiased',
-      //     MozOsxFontSmoothing: 'grayscale',
-      //   },
-      // },
     },
   })
 

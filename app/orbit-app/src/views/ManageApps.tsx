@@ -1,4 +1,4 @@
-import { Absolute, gloss } from '@o/gloss'
+import { Absolute, gloss } from 'gloss'
 import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStoresSimple } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
 import {

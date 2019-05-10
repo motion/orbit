@@ -1,4 +1,4 @@
-import { Inline } from '@o/gloss'
+import { Inline } from 'gloss'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import React, { useEffect, useRef, useState } from 'react'

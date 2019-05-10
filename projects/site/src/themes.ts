@@ -1,4 +1,4 @@
-import { linearGradient, ThemeMaker, ThemeObject, toColor } from '@o/gloss'
+import { linearGradient, ThemeMaker, ThemeObject, toColor } from 'gloss'
 import { themes as KitThemes } from '@o/kit'
 
 import { colors } from './constants'

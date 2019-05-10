@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row } from 'gloss'
 import React, { Children, useState } from 'react'
 
 import { Button } from './buttons/Button'

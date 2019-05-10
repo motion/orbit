@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { PureComponent } from 'react'
 import { DataDescription } from './DataDescription'
 import { DataValueExtractor, InspectorName } from './DataInspectorControlled'

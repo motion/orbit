@@ -1,5 +1,5 @@
 import { Color } from '@o/css'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { on } from '@o/utils'
 import { debounce } from 'lodash'
 import throttle from 'raf-throttle'

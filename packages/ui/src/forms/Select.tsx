@@ -1,4 +1,4 @@
-import { ThemeContext } from '@o/gloss'
+import { ThemeContext } from 'gloss'
 import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'

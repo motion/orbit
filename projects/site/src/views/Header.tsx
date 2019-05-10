@@ -1,4 +1,4 @@
-import { gloss, useTheme } from '@o/gloss'
+import { gloss, useTheme } from 'gloss'
 import { BorderBottom, Button, Row, RowProps } from '@o/ui'
 import React, { useState } from 'react'
 

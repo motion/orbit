@@ -1,4 +1,4 @@
-import { alphaColorTheme, Base, BaseProps, gloss } from '@o/gloss'
+import { alphaColorTheme, Base, BaseProps, gloss } from 'gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 

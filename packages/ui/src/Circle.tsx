@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 
 export const Circle = gloss<{ size: number; background: any }>({
   position: 'relative',

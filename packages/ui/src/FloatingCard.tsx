@@ -1,4 +1,4 @@
-import { useTheme } from '@o/gloss'
+import { useTheme } from 'gloss'
 import React, { useState } from 'react'
 
 import { Card, CardProps } from './Card'

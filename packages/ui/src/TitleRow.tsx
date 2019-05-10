@@ -1,4 +1,4 @@
-import { gloss, linearGradient } from '@o/gloss'
+import { gloss, linearGradient } from 'gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
 import { BorderBottom } from './Border'

@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { on } from '@o/utils'
 import React, { Children, cloneElement, isValidElement } from 'react'
 

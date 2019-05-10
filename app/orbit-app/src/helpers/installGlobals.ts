@@ -5,7 +5,7 @@
 // ⚠️ ️
 import { Mediator } from '@o/bridge'
 import { getGlobalConfig } from '@o/config'
-import { css, toColor } from '@o/gloss'
+import { css, toColor } from 'gloss'
 import { themes } from '@o/kit'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'

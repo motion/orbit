@@ -1,5 +1,5 @@
-import { Theme, ThemeSelect } from '@o/gloss'
-import { SimpleStyleObject } from '@o/gloss/_/theme/ThemeMaker'
+import { Theme, ThemeSelect } from 'gloss'
+import { SimpleStyleObject } from 'gloss/_/theme/ThemeMaker'
 import React from 'react'
 
 export type ThemeableProps = {

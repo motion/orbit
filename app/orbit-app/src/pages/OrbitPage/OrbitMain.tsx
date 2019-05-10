@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderLeft, BorderTop, Loading, View } from '@o/ui'

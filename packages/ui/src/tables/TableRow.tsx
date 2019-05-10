@@ -5,7 +5,7 @@
  * @format
  */
 import { Color } from '@o/color'
-import { gloss, Row, ThemeObject } from '@o/gloss'
+import { gloss, Row, ThemeObject } from 'gloss'
 import { useReaction } from '@o/use-store'
 import React, { memo } from 'react'
 

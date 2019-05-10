@@ -182,7 +182,6 @@ export class SearchStore {
       this.props.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
-      console.log('got app', app)
       ensure('app', !!app)
 
       if (this.stores.paneManagerStore) {

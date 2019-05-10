@@ -51,7 +51,7 @@ export function fromEntries(iterable: any[]): { [key: string]: any } {
 
 export function selectDefined(...args: any[]) {
   for (const arg of args) {
-    if (typeof arg !== 'undefined') {
+    if (arg !== undefined) {
       return arg
     }
   }

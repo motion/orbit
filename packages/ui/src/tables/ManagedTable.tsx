@@ -4,7 +4,7 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import { isDefined } from '@o/utils'
 import { debounce, isEqual, throttle } from 'lodash'
 import React, { createRef } from 'react'

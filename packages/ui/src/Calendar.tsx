@@ -1,4 +1,4 @@
-import { Contents } from '@o/gloss'
+import { Contents } from 'gloss'
 import React from 'react'
 import { DateRangePicker } from 'react-date-range'
 

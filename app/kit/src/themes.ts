@@ -1,5 +1,5 @@
 import { ThemeSet } from '@o/css'
-import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
+import { linearGradient, ThemeMaker, toColor } from 'gloss'
 
 const Theme = new ThemeMaker()
 

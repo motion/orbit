@@ -1,5 +1,5 @@
 import { save } from '@o/bridge'
-import { gloss, Row, RowProps } from '@o/gloss'
+import { gloss, Row, RowProps } from 'gloss'
 import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
@@ -115,8 +115,6 @@ export const OrbitNav = memo(
       pinWidth * (pinnedItems.length + permanentItems.length + (isOnSetupApp ? 1 : 0))
 
     const epad = isOnSetupApp ? 0 : 3
-
-    console.log(pinnedItemsWidth, extraButtonsWidth, epad)
 
     return (
       <OrbitNavClip ref={ref}>

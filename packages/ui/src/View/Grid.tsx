@@ -1,5 +1,5 @@
 import { px } from '@o/css'
-import { Base } from '@o/gloss'
+import { Base } from 'gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { getSpaceSize, Sizes } from '../Space'

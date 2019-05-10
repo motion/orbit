@@ -1,4 +1,4 @@
-import { useTheme } from '@o/gloss'
+import { useTheme } from 'gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
 import React, { memo, forwardRef } from 'react'

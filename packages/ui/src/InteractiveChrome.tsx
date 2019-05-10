@@ -1,4 +1,4 @@
-import { FullScreen } from '@o/gloss'
+import { FullScreen } from 'gloss'
 import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { FloatingChrome } from './helpers/FloatingChrome'

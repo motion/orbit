@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/css'
 import { isEqual } from '@o/fast-compare'
-import { gloss, Theme } from '@o/gloss'
+import { gloss, Theme } from 'gloss'
 import { on } from '@o/utils'
 import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'

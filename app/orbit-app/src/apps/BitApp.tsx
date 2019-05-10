@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row } from 'gloss'
 import { App, AppProps, createApp, HighlightedSearchable, ItemView } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
 import { Button, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'

@@ -1,4 +1,4 @@
-import { Contents, gloss } from '@o/gloss'
+import { Contents, gloss } from 'gloss'
 import { createStoreContext, ensure, react, useStore } from '@o/use-store'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'

@@ -17,7 +17,7 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
-      plug('@o/gloss-displaynames', opts.glossDisplayNameConfig || {}),
+      plug('gloss-displaynames', opts.glossDisplayNameConfig || {}),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {

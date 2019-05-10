@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { Contents } from '@o/gloss'
+import { Contents } from 'gloss'
 import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'

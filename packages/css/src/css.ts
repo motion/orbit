@@ -1,6 +1,6 @@
 import { toColorString } from '@o/color'
 
-import { COLOR_KEYS, FALSE_VALUES, psuedoKeys, SHORTHANDS, unitlessNumberProperties } from './constants'
+import { COLOR_KEYS, FALSE_VALUES, SHORTHANDS, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 
@@ -20,113 +20,104 @@ export type CSSOptions = {
   snakeCase?: boolean
 }
 
-export function toCSSString(styles: Object, opts?: CSSOptions): string {
-  const obj = css(styles, opts)
-  let s = ''
-  for (const key in obj) {
-    s += `${key}: ${obj[key]};`
+const emptyObject = Object.freeze({})
+
+// since this is super perf sensitive, lets not pass so much around
+let curCSSFn
+let curOpts
+
+export function cssString(styles: Object, opts?: CSSOptions): string {
+  if (!styles) return ''
+  curCSSFn = css
+  curOpts = opts
+  const shouldSnake = !opts || opts.snakeCase !== false
+  let toReturn = ''
+  for (let key in styles) {
+    let value = cssValue(key, styles[key])
+    // shorthands
+    if (value !== undefined) {
+      if (SHORTHANDS[key]) {
+        for (let k of SHORTHANDS[key]) {
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          toReturn += `${k}:${px(value)};`
+        }
+      } else {
+        toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
+      }
+    }
   }
-  return s
+  return toReturn
 }
 
 export function css(styles: Object, opts?: CSSOptions): Object {
-  const toReturn: any = {}
+  if (!styles) return emptyObject
+  curCSSFn = css
+  curOpts = opts
   const shouldSnake = !opts || opts.snakeCase !== false
-  if (!styles || typeof styles !== 'object') {
-    return toReturn
-  }
-
+  const toReturn = {}
   for (let key in styles) {
-    let value = styles[key]
-    let valueType = typeof value
-    // get real values
-    if (value === false) {
-      value === FALSE_VALUES[key]
-      valueType = typeof value
-    }
-
-    // remove nullish
-    if (value === undefined || value === null || value === false) {
-      continue
-    }
-
-    let finalKey = key
-    // convert camel to snake
-    if (shouldSnake) {
-      finalKey = CAMEL_TO_SNAKE[key] || key
-    }
-    let respond
-    const firstChar = key[0]
-    if (valueType === 'string' || valueType === 'number') {
-      if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
-        value += 'px'
-      }
-      toReturn[finalKey] = value
-      respond = true
-    } else if (COLOR_KEYS.has(key)) {
-      toReturn[finalKey] = toColorString(value)
-      respond = true
-    } else if (Array.isArray(value)) {
-      if (key === 'fontFamily') {
-        toReturn[finalKey] = value.map(x => (x.indexOf(' ') ? `"${x}"` : x)).join(', ')
-      } else if (key === 'position') {
-        const isSpecific = value.length === 5
-        let index = 0
-        if (isSpecific) {
-          toReturn.position = value[0]
-          index++
-        } else {
-          toReturn.position = 'absolute'
-        }
-        toReturn.top = px(value[index++])
-        toReturn.right = px(value[index++])
-        toReturn.bottom = px(value[index++])
-        toReturn.left = px(value[index++])
-      } else {
-        toReturn[finalKey] = processArray(key, value)
-      }
-      respond = true
-    } else if (
-      firstChar === '&' ||
-      firstChar === '@' ||
-      key === 'from' ||
-      key === 'to' ||
-      psuedoKeys[key]
-    ) {
-      // recurse into psuedo or media query
-      toReturn[finalKey] = css(value, opts)
-      respond = true
-    } else if (valueType === 'object') {
-      if (value.toCSS) {
-        toReturn[finalKey] = value.toCSS()
-        continue
-      }
-      // not react element
-      if (value['$$typeof'] === Symbol.for('react.element')) {
-        continue
-      }
-      toReturn[finalKey] = processObject(key, value)
-      respond = true
-    } else if (key === 'isolate') {
-      toReturn[key] = value
-      respond = true
-    }
+    let value = cssValue(key, styles[key])
     // shorthands
-    if (SHORTHANDS[key]) {
-      for (let k of SHORTHANDS[key]) {
-        k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
-        toReturn[k] = px(value)
+    if (value !== undefined) {
+      if (SHORTHANDS[key]) {
+        for (let k of SHORTHANDS[key]) {
+          k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
+          toReturn[k] = px(value)
+        }
+      } else {
+        toReturn[(shouldSnake && CAMEL_TO_SNAKE[key]) || key] = value
       }
     }
-    if (respond) {
-      continue
-    }
-    console.debug(
-      `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${key}: ${JSON.stringify(
-        value,
-      )}, in styles: ${JSON.stringify(styles)}`,
-    )
   }
-
   return toReturn
+}
+
+function cssValue(key: string, value: any) {
+  let valueType = typeof value
+  // get real values
+  if (value === false) {
+    value === FALSE_VALUES[key]
+    valueType = typeof value
+  }
+  // remove nullish
+  if (value === undefined || value === null || value === false) {
+    return
+  }
+  const firstChar = key[0]
+  if (valueType === 'string' || valueType === 'number') {
+    if (valueType === 'number' && !unitlessNumberProperties.has(key)) {
+      value += 'px'
+    }
+    return value
+  } else if (COLOR_KEYS.has(key)) {
+    return toColorString(value)
+  } else if (Array.isArray(value)) {
+    if (key === 'fontFamily') {
+      return value.map(x => (x.indexOf(' ') ? `"${x}"` : x)).join(', ')
+    } else {
+      return processArray(key, value)
+    }
+  } else if (
+    // recurse into psuedo or media query
+    firstChar === '&' ||
+    firstChar === '@' ||
+    key === 'from' ||
+    key === 'to'
+  ) {
+    return curCSSFn(value, curOpts)
+  } else if (valueType === 'object') {
+    if (value.toCSS) {
+      return value.toCSS()
+    }
+    // not react element
+    if (process.env.NODE_ENV === 'development') {
+      if (value['$$typeof'] === Symbol.for('react.element')) {
+        throw new Error('You passed a react element to a style')
+      }
+    }
+    return processObject(key, value)
+  } else if (key === 'isolate') {
+    return value
+  }
+  console.debug(`Invalid style value for ${key}: ${JSON.stringify(value)}`)
 }

@@ -26,6 +26,13 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
 
+const LoadingApp = createApp({
+  name: 'Loading...',
+  icon: '',
+  id: 'loading',
+  app: () => createElement(Loading),
+})
+
 // "available" apps to install/use
 // eventually can be in a dynamic app store service
 
@@ -57,12 +64,7 @@ export const orbitStaticApps: AppDefinition[] = [
   SetupAppApp,
   MessageApp,
   HomeApp,
-  createApp({
-    name: 'Loading...',
-    icon: '',
-    id: 'loading',
-    app: () => createElement(Loading),
-  }),
+  LoadingApp,
 ]
 
 export const orbitApps: AppDefinition[] = [...orbitStaticApps, ...apps]

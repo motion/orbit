@@ -1,4 +1,4 @@
-import { Col, gloss } from '@o/gloss'
+import { Col, gloss } from 'gloss'
 import * as React from 'react'
 import { FixedSizeList } from 'react-window'
 import { TreeItem, TreeItemID, TreeProps } from './Tree'

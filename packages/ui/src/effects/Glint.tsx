@@ -1,5 +1,5 @@
 import { ColorLike } from '@o/css'
-import { gloss, ThemeSelect } from '@o/gloss'
+import { gloss, ThemeSelect } from 'gloss'
 import { isDefined } from '@o/utils'
 
 const isUndef = x => typeof x === 'undefined'

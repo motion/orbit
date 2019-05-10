@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
 
 import { useParentNodeSize } from './hooks/useParentNodeSize'

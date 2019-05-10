@@ -1,5 +1,5 @@
 import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
-import { gloss, useTheme } from '@o/gloss'
+import { gloss, useTheme } from 'gloss'
 import { SVG, View, ViewProps } from '@o/ui'
 import React, { memo, useRef } from 'react'
 

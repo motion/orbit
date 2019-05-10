@@ -1,4 +1,4 @@
-import { Contents, ContentsProps, gloss, ThemeContext } from '@o/gloss'
+import { Contents, ContentsProps, gloss, ThemeContext } from 'gloss'
 import React, { useContext } from 'react'
 
 import { View } from './View/View'

@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'

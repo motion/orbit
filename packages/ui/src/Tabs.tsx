@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss } from 'gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 
 import { colors } from './helpers/colors'

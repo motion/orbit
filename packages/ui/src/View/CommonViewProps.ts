@@ -1,4 +1,4 @@
-import { ColProps } from '@o/gloss'
+import { ColProps } from 'gloss'
 
 export type CommonViewProps = Pick<
   ColProps,

@@ -1,6 +1,6 @@
 {
   "name": "@o/site",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "private": true,
   "main": "./src/index.tsx",
   "scripts": {
@@ -17,10 +17,10 @@
     "@kennethormandy/react-fittext": "0.5.1",
     "@mdx-js/react": "1.0.2",
     "@mdx-js/tag": "0.20.3",
-    "@o/babel-preset-motion": "^2.5.4",
-    "@o/kit": "^2.5.4",
+    "@o/babel-preset-motion": "^2.5.5",
+    "@o/kit": "^2.5.5",
     "@o/react-textfit": "^2.5.2",
-    "@o/ui": "^2.5.4",
+    "@o/ui": "^2.5.5",
     "@o/use-store": "^2.5.2",
     "@o/wait-for-fonts": "^2.5.2",
     "intersection-observer": "0.5.1",

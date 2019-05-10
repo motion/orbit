@@ -1,6 +1,6 @@
 {
   "name": "orbit",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "private": true,
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@o/fast-compare": "^2.5.2",
-    "@o/kit": "^2.5.4",
+    "@o/kit": "^2.5.5",
     "@o/sync-kit": "^2.5.2"
   }
 }

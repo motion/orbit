@@ -1,6 +1,6 @@
 {
   "name": "@o/website-app",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,9 +9,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.3",
+    "@o/kit": "^2.5.4",
     "@o/sync-kit": "^2.5.2",
-    "@o/ui": "^2.5.3",
+    "@o/ui": "^2.5.4",
     "get-urls": "^8.0.0",
     "immer": "1.7.2",
     "lodash": "4.17.11",

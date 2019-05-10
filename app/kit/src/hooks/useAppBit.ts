@@ -7,6 +7,7 @@ export function useAppBit(
   appId?: number | false,
   extraConditions?,
 ): [AppBit, ImmutableUpdateFn<AppBit>] {
+  console.log('got', useStoresSimple())
   const { appStore } = useStoresSimple()
   let conditions = extraConditions || null
 

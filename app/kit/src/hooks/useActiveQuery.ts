@@ -10,7 +10,7 @@ export function useActiveQuery(opts?: ReactionOptions): string {
   return (
     useReaction(() => {
       ensure('visible', visibleStore.visible)
-      ensure('appStore', !!queryStore)
+      ensure('queryStore', !!queryStore)
       return queryStore.query
     }, opts) || ''
   )

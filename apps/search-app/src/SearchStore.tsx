@@ -1,19 +1,4 @@
-import {
-  AppBit,
-  AppIcon,
-  ensure,
-  getUser,
-  MarkType,
-  react,
-  saveUser,
-  searchBits,
-  SearchQuery,
-  SearchState,
-  SpaceIcon,
-  useActiveApp,
-  useHooks,
-  useStoresSimple,
-} from '@o/kit'
+import { AppBit, AppIcon, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApp, useHooks, useStoresSimple } from '@o/kit'
 import { Space } from '@o/models'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
@@ -109,10 +94,6 @@ export class SearchStore {
         identifier: 'message',
         title: `Open ${app.name}`,
         subTitle: 'Command: ⮐',
-      },
-      onOpen: () => {
-        this.stores.queryStore.clearQuery()
-        this.stores.paneManagerStore.setActivePane(`${app.id}`)
       },
     }
   }

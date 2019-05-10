@@ -4,14 +4,11 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { isColorLike } from '@o/css'
+import { isColorLike } from '@o/color'
 import React, { PureComponent } from 'react'
-import {
-  DataInspectorControlled,
-  DataInspectorExpanded,
-  DataValueExtractor,
-} from './DataInspectorControlled'
+
+import { DataInspectorControlled, DataInspectorExpanded, DataValueExtractor } from './DataInspectorControlled'
+
 
 type DataInspectorProps = {
   /**

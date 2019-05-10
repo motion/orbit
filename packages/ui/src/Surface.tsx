@@ -1,4 +1,5 @@
-import { ColorLike, CSSPropertySet, CSSPropertySetStrict } from '@o/css'
+import { ColorLike } from '@o/color'
+import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import Gloss, { Col, ColProps, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import { isObject } from 'lodash'

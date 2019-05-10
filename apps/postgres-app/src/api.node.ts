@@ -1,5 +1,6 @@
 import { AppBit } from '@o/kit'
 import { createConnection } from 'typeorm'
+
 import { PostgresAppData } from './PostgresModels'
 
 const connect = (appData: PostgresAppData) => {
@@ -21,7 +22,6 @@ export const PostgresApi = (app: AppBit) => {
       const appData: PostgresAppData = app.data
       const connection = await connect(appData)
       const result = await connection.query(query, parameters)
-      console.log('SQL result', result)
       await connection.close()
       return result
     },

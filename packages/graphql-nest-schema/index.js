@@ -3,7 +3,7 @@ const invariant = require(`invariant`)
 
 const { NamespaceUnderFieldTransform } = require(`./transforms`)
 
-exports.nestSchema = async options => {
+export async function nestSchema(options) {
   const { typeName, fieldName, schema } = options
 
   invariant(

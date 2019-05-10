@@ -1,4 +1,4 @@
-import { ColorLike } from '@o/css'
+import { ColorLike } from '@o/color'
 import { gloss } from 'gloss'
 import React from 'react'
 

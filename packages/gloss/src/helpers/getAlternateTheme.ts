@@ -1,5 +1,4 @@
 import { ThemeObject } from '@o/css'
-import { pick } from 'lodash'
 
 // this lets you do simple subsets using syntax:
 // <Button alt="action" />
@@ -61,7 +60,13 @@ function createAlternateTheme(
   const altTheme = typeof next === 'function' ? next(theme) : next
 
   return {
-    ...(shouldFallback ? pick(theme, 'background', 'borderColor', 'color') : null),
+    ...(shouldFallback
+      ? {
+          background: theme.background,
+          borderColor: theme.borderColor,
+          color: theme.color,
+        }
+      : null),
     // todo why types mad
     background: altTheme.background as any,
     color: altTheme.color as any,

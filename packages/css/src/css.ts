@@ -1,5 +1,4 @@
-import { toColorString } from '@o/color'
-
+import { Config } from './config'
 import { COLOR_KEYS, FALSE_VALUES, SHORTHANDS, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
@@ -90,7 +89,7 @@ function cssValue(key: string, value: any) {
     }
     return value
   } else if (COLOR_KEYS.has(key)) {
-    return toColorString(value)
+    return Config.isColor(value) ? Config.toColor(value) : value
   } else if (Array.isArray(value)) {
     if (key === 'fontFamily') {
       return value.map(x => (x.indexOf(' ') ? `"${x}"` : x)).join(', ')

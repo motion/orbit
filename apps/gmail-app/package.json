@@ -1,6 +1,6 @@
 {
   "name": "@o/gmail-app",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,9 +9,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.1",
-    "@o/sync-kit": "^2.5.0",
-    "@o/ui": "^2.5.1",
+    "@o/kit": "^2.5.2",
+    "@o/sync-kit": "^2.5.2",
+    "@o/ui": "^2.5.2",
     "dompurify": "^1.0.7",
     "email-addresses": "^3.0.1",
     "googleapis": "^39.0.0",

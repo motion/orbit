@@ -1,6 +1,6 @@
 {
   "name": "@o/stores",
-  "version": "2.5.0",
+  "version": "2.5.2",
   "private": true,
   "main": "_/index.js",
   "scripts": {
@@ -8,11 +8,11 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.5.0",
-    "@o/constants": "^2.5.0",
-    "@o/mobx-bridge": "^2.5.0",
-    "@o/models": "^2.5.0",
-    "@o/use-store": "^2.5.0",
+    "@o/config": "^2.5.2",
+    "@o/constants": "^2.5.2",
+    "@o/mobx-bridge": "^2.5.2",
+    "@o/models": "^2.5.2",
+    "@o/use-store": "^2.5.2",
     "global": "^4.3.2",
     "lodash": "4.17.11"
   },

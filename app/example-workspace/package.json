@@ -1,14 +1,14 @@
 {
   "name": "@o/example-workspace",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "main": "index.ts",
   "private": true,
   "dependencies": {
-    "@o/custom-app": "^2.5.1",
-    "@o/jira-app": "^2.5.1",
-    "@o/lists-app": "^2.5.1",
-    "@o/people-app": "^2.5.1",
-    "@o/search-app": "^2.5.1",
-    "@o/slack-app": "^2.5.1"
+    "@o/custom-app": "^2.5.2",
+    "@o/jira-app": "^2.5.2",
+    "@o/lists-app": "^2.5.2",
+    "@o/people-app": "^2.5.2",
+    "@o/search-app": "^2.5.2",
+    "@o/slack-app": "^2.5.2"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@o/use-store",
-  "version": "2.5.0",
+  "version": "2.5.2",
   "description": "",
   "main": "_/useStore.js",
   "sideEffects": false,
@@ -11,8 +11,8 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/automagical": "^2.5.0",
-    "@o/fast-compare": "^2.5.0"
+    "@o/automagical": "^2.5.2",
+    "@o/fast-compare": "^2.5.2"
   },
   "peerDependencies": {
     "react": "16.8.3"

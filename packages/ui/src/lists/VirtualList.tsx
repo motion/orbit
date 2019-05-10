@@ -1,4 +1,3 @@
-import { isEqual } from '@o/fast-compare'
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { idFn, selectDefined } from '@o/utils'
 import memoize from 'memoize-one'
@@ -6,6 +5,7 @@ import React, { forwardRef, memo, RefObject, useCallback } from 'react'
 
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
+import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { ListItemProps } from './ListItem'
@@ -121,12 +121,7 @@ const ListRow = memo(
       />
     )
   }),
-  // for some reason with dynamiclist, react-window sends new objects with same values
-  // so we just stringify compare the style
-  ({ style: a, ...restA }, { style: b, ...restB }) => {
-    const samesies = isEqual(restA, restB) && JSON.stringify(a) === JSON.stringify(b)
-    return samesies
-  },
+  rowItemCompare,
 )
 
 const createItemData = memoize(

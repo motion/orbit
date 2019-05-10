@@ -351,7 +351,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }, 100)
 
-  renderRow = memoize(({ index, style }) => {
+  renderRowInner = memoize((index, style) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
@@ -376,6 +376,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       />
     )
   })
+
+  cache = {}
+
+  renderRow = (index, style) => {
+    // because for some reason react window changes style object
+    const key = JSON.stringify(style)
+    const cache = this.cache[key]
+    if (!cache) {
+      this.cache[key] = style
+    }
+    return this.renderRowInner(index, style)
+  }
 
   getItemKey = (index: number) => {
     const { sortedRows } = this.state
@@ -448,7 +460,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             height={height - 23}
             overscanCount={overscanCount}
           >
-            {this.renderRow}
+            {({ index, style }) => this.renderRow(index, style)}
           </SelectableVariableList>
         </ContextMenu>
       </TableContainer>

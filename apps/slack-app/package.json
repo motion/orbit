@@ -1,6 +1,6 @@
 {
   "name": "@o/slack-app",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,11 +9,11 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.2",
-    "@o/postgres-app": "^2.5.2",
+    "@o/kit": "^2.5.3",
+    "@o/postgres-app": "^2.5.3",
     "@o/swagger-to-graphql": "1.4.10",
     "@o/sync-kit": "^2.5.2",
-    "@o/ui": "^2.5.2",
+    "@o/ui": "^2.5.3",
     "autolinker": "^1.7.1",
     "express-graphql": "0.8.0",
     "graphql": "14.2.1",

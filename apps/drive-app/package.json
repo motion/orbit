@@ -1,6 +1,6 @@
 {
   "name": "@o/drive-app",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "private": true,
@@ -9,9 +9,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/kit": "^2.5.0",
+    "@o/kit": "^2.5.1",
     "@o/sync-kit": "^2.5.0",
-    "@o/ui": "^2.5.0",
+    "@o/ui": "^2.5.1",
     "lodash": "4.17.11"
   }
 }

@@ -20,11 +20,13 @@ export default createApp({
 })
 
 function PeopleAppIndex() {
+  const people = useBitSearch({ type: 'person', where: { title: { $not: { $equal: '' } } } })
+  console.log('people', people)
   return (
     <List
       shareable
       selectable="multi"
-      items={useBitSearch({ type: 'person' })}
+      items={people}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}
       groupByLetter

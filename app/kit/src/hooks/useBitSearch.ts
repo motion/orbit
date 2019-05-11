@@ -1,6 +1,7 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitContentType, BitModel } from '@o/models'
 import { useListProps } from '@o/ui'
+import { isDefined } from '@o/utils'
 import { FindOptions } from 'typeorm'
 
 import { useActiveQuery } from './useActiveQuery'
@@ -13,45 +14,48 @@ type UseBitsProps = FindOptions<Bit> & {
   delay?: number
 }
 
-export function useBitSearch({ type, delay = 100, ...args }: UseBitsProps = {}) {
+export function useBitSearch({ type, delay = 100, where, ...args }: UseBitsProps = {}) {
   const listProps = useListProps()
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
   const activeQuery = useActiveQuery({ delay })
   const query = searchable ? activeQuery : args.query
 
   const state = useSearchState()
-  let where = []
+  const { appFilters } = state.filters
+  let whereFinal = []
   let take = typeof args.take === 'undefined' ? 5000 : args.take
 
-  if (type) {
-    const { appFilters } = state.filters
-    if (appFilters.length) {
-      for (const filter of appFilters) {
-        if (filter.active) {
-          where.push({
-            type: 'person',
-            appIdentifier: filter.app,
-          })
-        }
+  // TODO exclusive/inclusive
+  if (appFilters && appFilters.length) {
+    for (const filter of appFilters) {
+      if (filter.active) {
+        whereFinal.push({
+          ...where,
+          type,
+          appIdentifier: filter.app,
+        })
       }
-    }
-    if (!where.length) {
-      where.push({ type: 'person' })
     }
   }
 
-  if (typeof query !== 'undefined' && query) {
-    where = where.map(condition => {
+  if (isDefined(query)) {
+    whereFinal = whereFinal.map(condition => {
       return {
+        ...where,
         ...condition,
         title: { $like: `%${query}%` },
       }
     })
   }
 
-  const finalArgs = { ...args, take }
-  if (where.length) {
-    finalArgs.where = where
+  if (isDefined(where)) {
+    whereFinal.push(where)
+  }
+
+  const finalArgs = {
+    ...args,
+    where: whereFinal,
+    take,
   }
 
   return useModels(BitModel, finalArgs)[0]

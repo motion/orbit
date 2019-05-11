@@ -1,26 +1,13 @@
 import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit'
+
+import { GithubComment, GithubCommentsResponse, GithubIssue, GithubIssueQueryResult, GithubOrganization, GithubOrganizationsQueryResult, GithubPeopleQueryResult, GithubPerson, GithubPullRequestQueryResult, GithubRepository, GithubRepositoryQueryResult, GithubUserRepositoriesQueryResult } from './GithubModels'
 import { GithubQueries } from './GithubQueries'
-import {
-  GithubComment,
-  GithubCommentsResponse,
-  GithubIssue,
-  GithubIssueQueryResult,
-  GithubOrganization,
-  GithubOrganizationsQueryResult,
-  GithubPeopleQueryResult,
-  GithubPerson,
-  GithubPullRequestQueryResult,
-  GithubRepository,
-  GithubRepositoryQueryResult,
-  GithubUserRepositoriesQueryResult,
-} from './GithubModels'
 
 /**
  * Defines a loading throttling.
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before organizations list load.
    */
@@ -49,8 +36,7 @@ const THROTTLING = {
   /**
    * Delay before file users load.
    */
-  users: 100
-
+  users: 100,
 }
 
 /**
@@ -86,7 +72,7 @@ export class GithubLoader {
       baseUrl: 'https://api.github.com/graphql',
       headers: {
         Authorization: `Bearer ${this.app.token}`,
-      }
+      },
     })
   }
 
@@ -177,7 +163,12 @@ export class GithubLoader {
       for (let i = 0; i < issues.length; i++) {
         try {
           const isLast = i === issues.length - 1 && hasNextPage === false
-          const result = await handler(issues[i], lastEdgeCursor, loadedCount + issues.length, isLast)
+          const result = await handler(
+            issues[i],
+            lastEdgeCursor,
+            loadedCount + issues.length,
+            isLast,
+          )
 
           // if callback returned true we don't continue syncing
           if (result === false) {
@@ -240,7 +231,7 @@ export class GithubLoader {
         : undefined
       this.log.verbose(
         `${pullRequests.length} pull request were loaded (${loadedCount +
-        pullRequests.length} of ${totalCount})`,
+          pullRequests.length} of ${totalCount})`,
         results,
       )
 

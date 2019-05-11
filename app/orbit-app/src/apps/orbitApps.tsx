@@ -3,6 +3,7 @@ import CustomApp from '@o/custom-app'
 import DriveApp from '@o/drive-app'
 import GithubApp from '@o/github-app'
 import GmailApp from '@o/gmail-app'
+import GraphApp from '@o/graphql-source-app'
 import JiraApp from '@o/jira-app'
 import { AppDefinition, configureKit, createApp } from '@o/kit'
 import ListsApp from '@o/lists-app'
@@ -50,6 +51,7 @@ const apps: AppDefinition[] = [
   PostgresApp,
   CustomApp2,
   CustomApp,
+  GraphApp,
 ]
 
 // apps we use internally in orbit

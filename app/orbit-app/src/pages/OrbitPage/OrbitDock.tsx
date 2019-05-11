@@ -1,14 +1,14 @@
 import React, { memo } from 'react'
 
 import { Dock } from './Dock'
-import { OrbitDockShare } from './OrbitDockShare'
 import { OrbitDockSearch } from './OrbitDockSearch'
+import { OrbitDockShare } from './OrbitDockShare'
 
 export const OrbitDock = memo(() => {
   return (
     <Dock className="orbit-dock">
-      <OrbitDockSearch />
       <OrbitDockShare />
+      <OrbitDockSearch />
     </Dock>
   )
 })

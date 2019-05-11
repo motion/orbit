@@ -5,26 +5,27 @@ import { Action, Derive } from 'overmind'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
 
 export type AppsState = {
-  apps: AppBit[]
+  allApps: AppBit[]
   activeSpace: Space
   activeApps: Derive<AppsState, AppBit[]>
 }
 
 export const state: AppsState = {
-  apps: [],
+  allApps: [],
   activeSpace: null,
   activeApps: state =>
-    (state.activeSpace && state.apps.filter(x => x.spaceId === state.activeSpace.id)) || [],
+    (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || [],
 }
 
 const setApps: Action<AppBit[]> = (om, apps) => {
-  om.state.apps.apps = apps
-  om.effects.apps.updatePaneManagerPanes(apps)
+  om.state.apps.allApps = apps
   om.effects.spaces.updatePaneSort(om.state.spaces.activeSpace, om.state.apps.activeApps)
+  om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
 }
 
 const setActiveSpace: Action<Space> = (om, space) => {
   om.state.apps.activeSpace = space
+  om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
 }
 
 export const actions = {

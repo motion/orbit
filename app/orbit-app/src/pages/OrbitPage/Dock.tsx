@@ -1,15 +1,15 @@
-import { createStoreContext, useStore } from '@o/kit'
+import { createStoreContext, selectDefined, useStore } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
-import React, { memo } from 'react'
+import React, { memo, useLayoutEffect, useState } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
-import { ObservableSet } from 'mobx'
 
 class DockStore {
-  items = new ObservableSet<string>()
-  add = x => this.items.add(x)
-  remove = x => this.items.delete(x)
-  get key() {
-    return [...this.items].join('')
+  key = 0
+  items = {}
+  next = {}
+  rerender = () => {
+    this.items = { ...this.next }
+    this.key = Math.random()
   }
 }
 
@@ -35,43 +35,33 @@ type DockButtonProps = ButtonProps & {
   id: string
 }
 
-const dur = 200
-
 export function DockButton({ visible = true, id, ...buttonProps }: DockButtonProps) {
   const dockStore = DockStoreContext.useStore()
+  const show = selectDefined(dockStore.items[id], visible)
 
-  if (visible) {
-    dockStore.add(id)
-  } else {
-    dockStore.remove(id)
-  }
-
-  if (!visible) {
-    return null
-  }
+  useLayoutEffect(() => {
+    dockStore.next[id] = visible
+    dockStore.rerender()
+  }, [visible])
 
   return (
     <Flipped flipId={id}>
-      {props => (
-        <Button
-          circular
-          size="xxl"
-          iconSize={16}
-          elevation={4}
-          marginLeft={20}
-          badgeProps={{
-            background: '#333',
-          }}
-          zIndex={100000000}
-          transition={`all ease ${dur}ms`}
-          opacity={visible ? 1 : 0}
-          transform={{
-            y: visible ? 0 : 150,
-          }}
-          {...buttonProps}
-          {...props}
-        />
-      )}
+      <Button
+        size="xxl"
+        width={50}
+        height={50}
+        marginLeft={15}
+        {...!show && { marginRight: -(50 + 15), opacity: 0 }}
+        circular
+        iconSize={16}
+        elevation={4}
+        badgeProps={{
+          background: '#333',
+        }}
+        zIndex={100000000}
+        opacity={1}
+        {...buttonProps}
+      />
     </Flipped>
   )
 }

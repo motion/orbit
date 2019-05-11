@@ -77,7 +77,8 @@ const showPage: Operator<HistoryItem> = pipe(
 
 const showHomePage: Action = om => {
   om.actions.router.showPage(getItem('home'))
-  om.state.router.appId = `${om.state.apps.apps.find(x => x.identifier === 'search').id}`
+  om.state.router.appId = `${om.state.apps.activeApps.find(x => x.identifier === 'search').id}`
+  om.effects.router.setPane(om.state.router.appId)
 }
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {

@@ -24,12 +24,6 @@ import { linkProps } from './HomePage/linkProps'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
 
-const itemProps = {
-  iconProps: {
-    opacity: 0.65,
-  },
-}
-
 const getInitialIndex = () => {
   const initialPath = window.location.pathname.replace('/docs/', '')
   return initialPath ? docsItems.all.findIndex(x => x['id'] === initialPath) : 1
@@ -53,6 +47,13 @@ class DocsStore {
 }
 
 export const DocsStoreContext = createStoreContext(DocsStore)
+
+const itemProps = {
+  hideBorder: true,
+  iconProps: {
+    opacity: 0.65,
+  },
+}
 
 const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()

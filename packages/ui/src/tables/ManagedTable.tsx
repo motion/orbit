@@ -449,12 +449,12 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           <SelectableVariableList
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            itemData={this.state.sortedRows}
             listRef={this.listRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
             selectableStoreRef={this.selectableStoreRef}
             {...this.props}
+            items={this.state.sortedRows}
             width="100%"
             // for now just hardcoded TableHead height
             height={height - 23}

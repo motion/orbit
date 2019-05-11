@@ -17,7 +17,7 @@ type TreeItems = { [key: number]: TreeItem }
 export type TreeListProps = Omit<ListProps, 'items' | 'getItemProps'> & {
   // we should make this either require use or items
   items?: TreeItems
-  use?: UseTreeList
+  use?: TreeListStore
   rootItemID?: number
   getItemProps?: (item: TreeItem) => Promise<ListItemProps>
   placeholder?: React.ReactNode
@@ -25,11 +25,12 @@ export type TreeListProps = Omit<ListProps, 'items' | 'getItemProps'> & {
 }
 
 type TreeStateStatic = Pick<TreeListProps, 'items' | 'rootItemID'>
-type TreeUserState = { depth?: number; curId?: number }
+type TreeUserState = { depth?: number[]; curId?: number }
 
 // derived state can go here
 type TreeState = TreeStateStatic & {
   currentItem: TreeItem
+  depth: TreeItem[]
 }
 
 const defaultState: TreeStateStatic = {
@@ -81,8 +82,8 @@ const getActions = (
     back() {
       const update = userState()[1]
       update(next => {
-        if (next.depth > 0) {
-          next.depth--
+        if (next.depth.length > 0) {
+          next.depth.pop()
         }
       })
     },
@@ -90,7 +91,7 @@ const getActions = (
   return Actions
 }
 
-type UseTreeList = {
+export type TreeListStore = {
   state: TreeState
   userState: TreeUserState
   actions: ReturnType<typeof getActions>
@@ -98,15 +99,17 @@ type UseTreeList = {
 
 const defaultUserState: TreeUserState = {
   curId: 0,
+  depth: [0],
 }
 
 const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeState => ({
   ...state,
   currentItem: state.items[userState.curId],
+  depth: userState.depth.map(id => state.items[id]),
 })
 
 // persists to app state
-export function useTreeList(subSelect: string | false, props?: TreeListProps): UseTreeList {
+export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
     subSelect,

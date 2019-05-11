@@ -264,10 +264,10 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         padding={listItemAdjustedPadding}
-        spaceSize={pad}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}
+        spaceSize={listItemAdjustedPadding[1]}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
         after={!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
@@ -347,12 +347,21 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
           )}
           {childrenElement}
         </ListItemMainContent>
-        {after}
+        {!!after && (
+          <>
+            <Space />
+            {after}
+          </>
+        )}
       </SizedSurface>
     </Theme>
   )
 })
 
+// basing this on getIconSize is actually nice, it keeps it always in sync with icon
+const getHeightSize = (props: ListItemSimpleProps) => {
+  return Math.round(getIconSize(props) / 24)
+}
 // we scale padX more than padY, depending on height of list item
 const getListItemPadding = (props: ListItemSimpleProps) => {
   const padXScale = getHeightSize(props)
@@ -399,11 +408,6 @@ const ListItemMainContent = gloss({
     alignItems: 'center',
   },
 })
-
-// basing this on getIconSize is actually nice, it keeps it always in sync with icon
-const getHeightSize = (props: ListItemSimpleProps) => {
-  return Math.round(getIconSize(props) / 14)
-}
 
 const getIconSize = props =>
   props.iconSize ||

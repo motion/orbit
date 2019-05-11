@@ -132,10 +132,8 @@ export function gloss<Props = any>(
     // unmount
     useEffect(() => {
       return () => {
-        const names = dynClasses.current
-        if (names) {
-          names.forEach(gc.deregisterClassUse)
-        }
+        const x = dynClasses.current
+        if (x) x.forEach(gc.deregisterClassUse)
       }
     }, [])
 

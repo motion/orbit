@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 
 import { guessColumns } from '../forms/guessColumns'
 import { normalizeRow } from '../forms/normalizeRow'
+import { useGet } from '../hooks/useGet'
 import { useNodeSize } from '../hooks/useNodeSize'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { Section, SectionParentProps, SectionSpecificProps, useSectionProps } from '../Section'
@@ -71,16 +72,17 @@ export function Table(tableProps: TableProps) {
   )
   const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 150 })
 
+  const getOnSelect = useGet(props.onSelect)
   const onSelect = useCallback(
     (selectedItems, indices) => {
       if (shareable) {
         shareStore.setSelected(shareable, selectedItems)
       }
-      if (props.onSelect) {
-        props.onSelect(selectedItems.map(row => row.values), indices)
+      if (getOnSelect()) {
+        getOnSelect()(selectedItems.map(row => row.values), indices)
       }
     },
-    [props.items, props.onSelect, shareable],
+    [props.items, shareable],
   )
 
   return (

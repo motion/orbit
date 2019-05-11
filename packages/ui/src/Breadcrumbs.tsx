@@ -1,7 +1,7 @@
 import { createStoreContext, ensure, react, useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { ObservableSet } from 'mobx'
-import React, { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { ReactNode, useLayoutEffect, useRef } from 'react'
 
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'

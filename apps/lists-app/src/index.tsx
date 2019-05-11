@@ -1,5 +1,5 @@
-import { App, AppBit, AppMainView, AppModel, AppProps, Bit, createApp, getTargetValue, Icon, save, TreeList, useBitSearch, useTreeList } from '@o/kit'
-import { Breadcrumbs, Button, ButtonProps, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, Text, TitleRow, useBreadcrumb, useToggle, View } from '@o/ui'
+import { App, AppBit, AppMainView, AppModel, AppProps, Bit, createApp, getTargetValue, save, TreeList, useBitSearch, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, Button, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, TitleRow, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useEffect, useState } from 'react'
@@ -17,43 +17,7 @@ export default createApp({
   },
 })
 
-const API = {
-  receive(
-    app: AppBit,
-    parentID: number,
-    child: Bit | { id?: number; name?: string; icon?: string; target: 'folder' },
-  ) {
-    console.log('creating new', app, parentID, child)
-
-    const listApp = app as ListsAppBit
-    const item = listApp.data.items[parentID]
-    if (!item || (item.type !== 'folder' && item.type !== 'root')) {
-      return console.error('NO VALID THING', item, parentID, listApp)
-    }
-
-    const id = child.id || Math.random()
-    item.children.push(id)
-
-    // add to hash
-    if (child.target === 'bit') {
-      listApp.data.items[id] = {
-        id,
-        type: 'bit',
-        name: child.title,
-      }
-    } else if (child.target === 'folder') {
-      listApp.data.items[id] = {
-        id,
-        children: [],
-        type: 'folder',
-        name: child.name,
-        icon: child.icon,
-      }
-    }
-
-    save(AppModel, app)
-  },
-}
+const id = 'my-tree-list'
 
 function ListApp(props: AppProps) {
   return (
@@ -64,7 +28,7 @@ function ListApp(props: AppProps) {
 }
 
 export function ListsAppIndex() {
-  const treeList = useTreeList('list')
+  const treeList = useTreeList(id)
   const [addQuery, setAddQuery] = useState('')
   const hideSearch = useToggle(true)
   const results = useBitSearch({ query: addQuery, take: 20 }).map(item => ({
@@ -99,7 +63,6 @@ export function ListsAppIndex() {
           </>
         }
       />
-
       <View flex={1}>
         <TreeList
           use={treeList}
@@ -107,7 +70,6 @@ export function ListsAppIndex() {
           // actions={['delete']}
         />
       </View>
-
       <Pane
         elevation={1}
         collapsable
@@ -136,7 +98,7 @@ function ListsAppMain(props: AppProps) {
 }
 
 function ListsAppMainFolder(props: AppProps) {
-  const treeList = useTreeList('list')
+  const treeList = useTreeList(id)
   const selectedItem = treeList.state.items[+props.subId]
   const [children, setChildren] = useState<ListItemProps[]>([])
 
@@ -148,6 +110,7 @@ function ListsAppMainFolder(props: AppProps) {
           // return loadListItem(list.data.items[id])
         }),
       ).then(items => {
+        console.log('loaded items', selectedItem.children, items)
         setChildren(items)
       })
     }
@@ -157,23 +120,19 @@ function ListsAppMainFolder(props: AppProps) {
 }
 
 function ListAppStatusBar() {
-  const numItems = 0
-
+  const treeList = useTreeList(id)
+  const numItems = treeList.state.currentItem.children
+    ? treeList.state.currentItem.children.length
+    : 0
   return (
     <>
-      <ListAppBreadcrumbs
-        items={[
-          {
-            id: 0,
-            name: <Icon name="home" size={12} opacity={0.5} />,
-          },
-          // ...listStore.history
-          //   .slice(1)
-          //   .filter(Boolean)
-          //   .map(id => listStore.items[id]),
-          // listStore.selectedItem,
-        ].filter(Boolean)}
-      />
+      <Breadcrumbs>
+        {treeList.state.depth.map(item => (
+          <Breadcrumb size={0.9} alpha={0.68} fontWeight={500} key={item.id}>
+            {item.name}
+          </Breadcrumb>
+        ))}
+      </Breadcrumbs>
       <View flex={1} />
       <StatusBarText>
         {numItems} {pluralize('item', numItems)}
@@ -182,29 +141,38 @@ function ListAppStatusBar() {
   )
 }
 
-function ListCrumb(props: ButtonProps) {
-  const { isLast } = useBreadcrumb()
+const API = {
+  receive(
+    app: AppBit,
+    parentID: number,
+    child: Bit | { id?: number; name?: string; icon?: string; target: 'folder' },
+  ) {
+    const listApp = app as ListsAppBit
+    const item = listApp.data.items[parentID]
+    if (!item || (item.type !== 'folder' && item.type !== 'root')) {
+      return console.error('NO VALID THING', item, parentID, listApp)
+    }
 
-  return (
-    <>
-      <Button {...props} />
-      {!isLast ? (
-        <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
-          {' · '}
-        </Text>
-      ) : null}
-    </>
-  )
-}
+    const id = child.id || Math.random()
+    item.children.push(id)
 
-function ListAppBreadcrumbs(props: { items: { id: any; name: React.ReactNode }[] }) {
-  return (
-    <View flex={1}>
-      <Breadcrumbs>
-        {props.items.map((item, index) => (
-          <ListCrumb key={`${item.id}${index}`}>{item.name}</ListCrumb>
-        ))}
-      </Breadcrumbs>
-    </View>
-  )
+    // add to hash
+    if (child.target === 'bit') {
+      listApp.data.items[id] = {
+        id,
+        type: 'bit',
+        name: child.title,
+      }
+    } else if (child.target === 'folder') {
+      listApp.data.items[id] = {
+        id,
+        children: [],
+        type: 'folder',
+        name: child.name,
+        icon: child.icon,
+      }
+    }
+
+    save(AppModel, app)
+  },
 }

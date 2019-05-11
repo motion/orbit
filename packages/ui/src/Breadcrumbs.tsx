@@ -1,6 +1,7 @@
 import { createStoreContext, ensure, react, useReaction } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import { ObservableSet } from 'mobx'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -19,13 +20,20 @@ class BreadcrumbStore {
 
   orderedChildren = react(
     () => [...this.selectors],
-    selectors => {
+    async (selectors, { sleep }) => {
+      // sleep prevents cascading updates on mounts...
+      await sleep(30)
       ensure('selectors', !!selectors.length)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
-      const orderedSelectors = nodes.map(node =>
-        selectors.find(sel => node.classList.contains(sel)),
-      )
-      return orderedSelectors
+      if (nodes.length) {
+        const orderedSelectors = nodes.map(node =>
+          selectors.find(sel => node.classList.contains(sel)),
+        )
+        return orderedSelectors
+      } else {
+        // fall back in case to still show something
+        return [...selectors]
+      }
     },
     {
       defaultValue: [],
@@ -59,14 +67,13 @@ export function Breadcrumb({
     return children(crumb)
   }
 
-  // wait for all items to be mounted to render them
-  if (crumb && crumb.total === 0) {
-    return null
-  }
-
   return (
     <BreadcrumbReset>
-      <Text {...props} className={`${(crumb && crumb.selector) || ''} ${props.className || ''}`}>
+      <Text
+        {...props}
+        opacity={crumb && crumb.total === 0 ? 0 : selectDefined(props.opacity, 1)}
+        className={`${(crumb && crumb.selector) || ''} ${props.className || ''}`}
+      >
         {children}
       </Text>
       {crumb && crumb.isLast ? '' : separator}
@@ -93,26 +100,26 @@ const opts = {
 
 export function useBreadcrumb(): BreadcrumbInfo | null {
   const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
-  const crumbs = BContext.useStore()
+  const crumbStore = BContext.useStore()
 
-  useEffect(() => {
-    if (!crumbs) return
-    crumbs.mount(selector)
+  useLayoutEffect(() => {
+    if (!crumbStore) return
+    crumbStore.mount(selector)
     return () => {
-      crumbs.unmount(selector)
+      crumbStore.unmount(selector)
     }
   }, [])
 
   const index = useReaction(() => {
-    ensure('crumbs', !!crumbs)
-    return crumbs.orderedChildren.findIndex(x => x === selector)
+    ensure('crumbs', !!crumbStore)
+    return crumbStore.orderedChildren.findIndex(x => x === selector)
   }, opts)
 
-  if (!crumbs) {
+  if (!crumbStore) {
     return null
   }
 
-  const total = crumbs.orderedChildren.length
+  const total = crumbStore.selectors.size
   const isLast = index === total - 1
   const isFirst = index === 0
 

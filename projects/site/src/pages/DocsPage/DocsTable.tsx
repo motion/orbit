@@ -1,9 +1,12 @@
-import { Button, List, Table } from '@o/ui'
+import { Button, List, Scale, Table } from '@o/ui'
+import { pick } from 'lodash'
 import React, { useState } from 'react'
 
-import { employees } from './fakeData'
+import { employees as allEmployees } from './fakeData'
 
-const data = [...new Array(10000)].map((_, i) => employees[i % (employees.length - 1)])
+const cols = ['username', 'password', 'ssn', 'dob', 'email', 'department']
+const employees = allEmployees.map(x => pick(x, cols))
+const data = [...new Array(1000)].map((_, i) => employees[i % (employees.length - 1)])
 
 export let simple = (
   <Table
@@ -88,4 +91,18 @@ export let section = (
     items={employees}
     height={250}
   />
+)
+
+export let scale = (
+  <Scale size={1.5}>
+    <Table
+      title="My List"
+      subTitle="Subtitle for my section"
+      collapsable
+      searchable
+      bordered
+      items={employees}
+      height={250}
+    />
+  </Scale>
 )

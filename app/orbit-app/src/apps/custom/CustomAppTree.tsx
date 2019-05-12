@@ -1,4 +1,4 @@
-import { DataInspector, Layout, Pane, Paragraph, SubTitle, Table, Title, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Title, Tree } from '@o/ui'
 import faker from 'faker'
 import produce from 'immer'
 import React, { useState } from 'react'
@@ -110,7 +110,9 @@ export function CustomAppTree() {
         />
       </Pane>
       <Pane flex={3} collapsable title="Inspect" resizable>
-        <Table searchable selectable items={items} />
+        <Scale size={2}>
+          <Table searchable selectable items={items} />
+        </Scale>
       </Pane>
       <Pane title="Sidebar">
         <Layout type="column">

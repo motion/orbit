@@ -6,12 +6,14 @@ import { normalizeRow } from '../forms/normalizeRow'
 import { useGet } from '../hooks/useGet'
 import { useNodeSize } from '../hooks/useNodeSize'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
+import { useScale } from '../Scale'
 import { Section, SectionParentProps, SectionSpecificProps, useSectionProps } from '../Section'
 import { useShareStore } from '../Share'
 import { TitleRowSpecificProps } from '../TitleRow'
 import { DataColumnsShort, Omit } from '../types'
 import { useVisibility } from '../Visibility'
 import { SearchableTable, SearchableTableProps } from './SearchableTable'
+import { DEFAULT_ROW_HEIGHT } from './types'
 
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
@@ -58,12 +60,15 @@ export function Table(tableProps: TableProps) {
     maxHeight,
     maxWidth,
     children: _discardChildren,
+    rowLineHeight = DEFAULT_ROW_HEIGHT,
     ...props
   } = {
     ...sectionProps,
     ...tableProps,
   }
   const isVisible = useVisibility()
+  const scale = useScale()
+  const rowHeight = rowLineHeight * scale
   const { height, ref } = useNodeSize({ throttle: 150, disable: !isVisible })
   const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
@@ -118,6 +123,7 @@ export function Table(tableProps: TableProps) {
         columns={columns}
         items={items}
         onSelect={onSelect}
+        rowLineHeight={rowHeight}
       />
     </Section>
   )

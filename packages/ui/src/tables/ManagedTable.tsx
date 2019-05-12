@@ -443,6 +443,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           sortOrder={this.state.sortOrder}
           columnSizes={columnSizes}
           onSort={this.onSort}
+          height={this.props.rowLineHeight}
         />
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
@@ -457,7 +458,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             items={this.state.sortedRows}
             width="100%"
             // for now just hardcoded TableHead height
-            height={height - 23}
+            height={height - this.props.rowLineHeight}
             overscanCount={overscanCount}
           >
             {({ index, style }) => this.renderRow(index, style)}

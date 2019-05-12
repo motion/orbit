@@ -13,6 +13,7 @@ import { DataValue } from '../DataValue'
 import { CheckBox } from '../forms/CheckBox'
 import { getRowValues } from '../helpers/getRowValues'
 import { SelectableStore } from '../lists/SelectableStore'
+import { useScale } from '../Scale'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
 import { guesses, guessTheme } from './guessTheme'
@@ -56,8 +57,10 @@ export const TableRow = memo(function TableRow({
   onAddFilter,
   selectableStore,
   rowKey,
+  rowLineHeight = DEFAULT_ROW_HEIGHT,
   ...props
 }: TableRowProps) {
+  const lineHeight = rowLineHeight * useScale()
   const isHighlighted = useReaction(() => {
     return (selectableStore && selectableStore.active.has(rowKey)) || false
   }, reactionOpts)
@@ -72,6 +75,7 @@ export const TableRow = memo(function TableRow({
       even={index % 2 === 0}
       highlightOnHover={row.highlightOnHover}
       data-key={row.key}
+      rowLineHeight={lineHeight}
       {...row.style}
       {...props}
     >
@@ -180,7 +184,7 @@ const TableBodyRowContainer = gloss<TableRowProps>(Row, {
     background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
   },
   height: props.multiline ? 'auto' : props.rowLineHeight,
-  lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
+  lineHeight: `${String(props.rowLineHeight)}px`,
   flexShrink: 0,
   // '&:hover': {
   //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundZebra : 'none',

@@ -5,7 +5,7 @@ import { useScale } from './Scale'
 import { getSize } from './Sizes'
 import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
 
-const LINE_HEIGHT = 29
+export const LINE_HEIGHT = 30
 
 export type SizedSurfaceSpecificProps = SurfaceSpecificProps & {
   /** Controlled height, relative adjusted to size */

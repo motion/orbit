@@ -1,6 +1,7 @@
 import { SimpleText, SimpleTextProps } from '@o/ui'
 import React from 'react'
 
+import { fontProps } from '../constants'
 import { useLink } from '../pages/HomePage/linkProps'
 import { LinkText } from './LinkText'
 
@@ -19,6 +20,7 @@ export function Link({ children, fontSize, href, width, margin, ...props }: Link
         hoverStyle={{ alpha: 1 }}
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"
+        {...fontProps.Nunito}
         {...props}
       >
         {children}

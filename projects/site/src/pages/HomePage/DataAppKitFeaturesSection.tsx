@@ -140,7 +140,7 @@ export default memo(function DataAppKitFeaturesSection() {
                       Batteries Included.
                     </TitleText>
                   </FadeChild>
-                  <TitleTextSub size={0.9}>
+                  <TitleTextSub>
                     <FadeChild delay={200}>
                       Internal tools share patterns.
                       <br />
@@ -181,7 +181,7 @@ export default memo(function DataAppKitFeaturesSection() {
                 <SimpleSection delay={dly * 2} title="Spaces to collaborate.">
                   <SectionP>
                     <SectionIcon name="satellite" />
-                    The easiest collaboration story. No credential sharing, everyone in sync.
+                    The easiest collaboration story. No servers to setup or credentials to share.
                     {screen !== 'small' && (
                       <>
                         <Space />
@@ -191,15 +191,15 @@ export default memo(function DataAppKitFeaturesSection() {
                   </SectionP>
                 </SimpleSection>
 
-                <SimpleSection delay={dly * 3} title="Multi-process apps.">
+                <SimpleSection delay={dly * 3} title="Stunning, easy apps.">
                   <SectionP>
-                    <SectionIcon name="shop" />
-                    Apps are written using React and Typescript and publish like node modules. They
-                    support many features, like sharing data and APIs.
+                    <SectionIcon name="shop" />A new platform designed from the ground up to make
+                    common apps easy to build, using modern TypeScript and an incredible build
+                    system designed for developer friendliness.
                     {screen !== 'small' && (
                       <>
                         <Space />
-                        When you're ready, publish it in seconds on the app store.
+                        Publish in seconds on the app store.
                       </>
                     )}
                   </SectionP>

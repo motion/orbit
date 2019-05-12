@@ -4,6 +4,7 @@ import React from 'react'
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
 import arrow from '../../../public/images/callout-arrow.svg'
 import codeScreenshot from '../../../public/images/code-screenshot.jpg'
+import { fontProps } from '../../constants'
 import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -88,7 +89,7 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
-                <ParagraphIntro size={1.7}>
+                <ParagraphIntro {...fontProps.GTEesti} sizeLineHeight={1.1} size={1.5}>
                   From idea to deploy - you control the data, the code that runs it, and where it
                   runs.
                 </ParagraphIntro>
@@ -96,15 +97,15 @@ export default function ShoulderSection() {
 
               <FadeChild delay={350}>
                 <Para size={1.35} sizeLineHeight={1.25}>
-                  It's time platforms didn't lock us in, create data silos, and work against our
+                  It's time platforms didn't lock us in, create data silos and work against our
                   interest.
                 </Para>
               </FadeChild>
 
               <FadeChild delay={450}>
                 <Para size={1.35} sizeLineHeight={1.25}>
-                  Orbit is open source, decentralized, and gives you complete control over the data
-                  it syncs. No proprietary platform. A truly reliable platform for apps.
+                  Orbit is open source and decentralized. It gives you complete control over the
+                  data it syncs and the code that runs!
                 </Para>
               </FadeChild>
 

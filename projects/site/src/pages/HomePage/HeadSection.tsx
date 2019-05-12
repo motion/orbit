@@ -23,23 +23,23 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Introducing a new type of browser: designed for apps.`,
-    `Easier, faster, powerful, decentralized apps.`,
+    `Introducing a new type of thing: the app browser.`,
+    `Easy, powerful & fast decentralized apps.`,
   ],
   medium: [
-    `Introducing a new type of browser: designed for apps.`,
-    `Easier, faster, powerful, decentralized apps.`,
+    `Introducing a new type of thing: the app browser.`,
+    `Easy, powerful & fast decentralized apps.`,
   ],
   small: [
-    `Introducing a new type of browser: designed for apps.`,
-    `Easier, faster, powerful, decentralized apps.`,
+    `Introducing a new type of thing: the app browser.`,
+    `Easy, powerful & fast decentralized apps.`,
   ],
 }
 
 const subTexts = {
-  large: `How Orbit gives you control.`,
-  medium: `How Orbit gives you control.`,
-  small: `How Orbit apps work.`,
+  large: `How Orbit lets you build internal tools in no time.`,
+  medium: `How Orbit lets you build internal tools in no time.`,
+  small: `How Orbit solves internal tools.`,
 }
 
 const HeadContent = memo(() => {

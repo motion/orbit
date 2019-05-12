@@ -4,7 +4,7 @@ import { fontProps } from '../constants'
 import { ListSubTitle } from '../views/ListSubTitle'
 
 const titleItem = {
-  titleProps: { size: 1.1, ...fontProps.GTEesti, className: '' },
+  titleProps: { size: 1.1, ...fontProps.Nunito, className: '' },
 }
 
 const guides = [

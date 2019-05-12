@@ -3,7 +3,8 @@ html {
 }
 
 body {
-  font-family: 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica', sans-serif;
+  font-family: 'Nunito Sans', 'system-ui', 'BlinkMacSystemFont', 'Helvetica Neue', 'Helvetica',
+    sans-serif;
   margin: 0;
   padding: 0;
   color: #333;

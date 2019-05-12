@@ -225,15 +225,13 @@ export default function NeckSection() {
           header={
             <>
               <FadeChild delay={0}>
-                <PillButton>Build</PillButton>
+                <PillButton>Unify</PillButton>
               </FadeChild>
               <FadeChild delay={100}>
-                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together now.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
-                <FadeChild delay={200}>
-                  Apps that talk to each other + a radically rich interface kit.
-                </FadeChild>
+                <FadeChild delay={200}>Orbit makes common apps incredibly easy to build.</FadeChild>
               </TitleTextSub>
             </>
           }
@@ -246,8 +244,8 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
-                      data no code.
+                      Plug in data apps like{' '}
+                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> with a click.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -256,8 +254,8 @@ export default function NeckSection() {
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Orbit provides everything you need to build tools fast, with powerful views
-                      like a {elements[cur].title}.
+                      Every view in Orbit is fast, works together & is just lines of code, like the{' '}
+                      {elements[cur].title}.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -266,8 +264,8 @@ export default function NeckSection() {
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
-                      With selections + actions, exporting to{' '}
-                      <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
+                      Built-in select & share to other apps, like{' '}
+                      <Inline color="#F14336">{elements[cur].afterName}</Inline>.
                     </CenterText>
                   </FadeChild>
                 </SubSection>

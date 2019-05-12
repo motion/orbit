@@ -20,7 +20,6 @@ export default createApp({
 function PeopleAppIndex() {
   const people = useBitSearch({
     type: 'person',
-    take: 200,
     excludeData: true,
     where: { title: { $not: { $equal: '' } } },
   })

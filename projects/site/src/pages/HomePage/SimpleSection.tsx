@@ -8,8 +8,8 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 
 const titleFont = {
-  // WebkitTextFillColor: 'transparent',
-  // background: 'linear-gradient(to right, #B65138, #BE0DBE)',
+  WebkitTextFillColor: 'transparent',
+  background: 'linear-gradient(to right, #B65138, #BE0DBE)',
   backgroundSize: 300,
 }
 

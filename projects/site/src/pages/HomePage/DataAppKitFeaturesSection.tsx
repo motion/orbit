@@ -247,7 +247,7 @@ export default memo(function DataAppKitFeaturesSection() {
         top="10%"
         backgroundColor="transparent"
         backgroundPosition="top center"
-        opacity={0.7}
+        opacity={1}
         backgroundImage={blackWavePattern}
       />
     </>

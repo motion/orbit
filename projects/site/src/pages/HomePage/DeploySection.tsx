@@ -21,7 +21,7 @@ export default function ShoulderSection() {
     <Fade.FadeProvide>
       <Page.Parallax speed={0.95} zIndex={-1}>
         <FullScreen
-          opacity={0.16}
+          opacity={0.2}
           transform={{ y: '-30%', x: '25%', scale: 1.4 }}
           background="radial-gradient(circle closest-side, #4A00A8 20%, #4A00A8, transparent)"
         />
@@ -29,7 +29,7 @@ export default function ShoulderSection() {
 
       <Page.Parallax speed={0.5} zIndex={-1}>
         <FullScreen
-          opacity={0.25}
+          opacity={0.3}
           transform={{ y: '95%', x: '-40%', scale: 2 }}
           background="radial-gradient(circle closest-side, #235867 20%, transparent)"
         />
@@ -37,7 +37,7 @@ export default function ShoulderSection() {
 
       <Page.Parallax speed={-0.25} zIndex={-1}>
         <FullScreen
-          opacity={0.35}
+          opacity={0.45}
           transform={{ y: '80%', x: '55%', scale: 2.5 }}
           background="radial-gradient(circle closest-side, #441316, transparent)"
         />

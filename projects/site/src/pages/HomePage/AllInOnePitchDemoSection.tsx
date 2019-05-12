@@ -228,7 +228,7 @@ export default function NeckSection() {
                 <PillButton>Unify</PillButton>
               </FadeChild>
               <FadeChild delay={100}>
-                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together now.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={200}>Orbit makes common apps incredibly easy to build.</FadeChild>
@@ -446,9 +446,9 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.24}
+          opacity={0.4}
           transform={{ y: '-10%', scale: 2.4 }}
-          background="radial-gradient(circle closest-side, #4A00A8ee 20%, #750750aa, transparent)"
+          background="radial-gradient(circle closest-side, #4A00A899 20%, #750750, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

@@ -76,7 +76,7 @@ export class GMailBitFactory {
     return this.utils.createBit({
       type: 'person',
       originalId: participant.email,
-      title: participant.name || '',
+      title: participant.name || participant.email || '',
       webLink: 'mailto:' + participant.email,
       desktopLink: 'mailto:' + participant.email,
       email: participant.email,

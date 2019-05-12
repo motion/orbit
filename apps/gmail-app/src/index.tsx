@@ -1,9 +1,9 @@
 import { createApi, createApp } from '@o/kit'
 
+import { graph } from './api.graph.node'
 import { GmailApi } from './api.node'
 import { gmailIcon } from './gmailIcon'
 import { GmailSettings } from './GmailSettings'
-import { graph } from './graph.node'
 
 export default createApp({
   id: 'gmail',

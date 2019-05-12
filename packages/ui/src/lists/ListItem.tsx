@@ -62,7 +62,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
 
     const decorator = Config.customItems[item.type]
     if (decorator) {
-      // ItemView = decorator.listItem
+      ItemView = decorator.listItem
       getItemProps = decorator.getItemProps
     }
   }

@@ -1,4 +1,4 @@
-import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace } from '@o/kit'
+import { AppBit, AppIcon, useActiveAppsSorted } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
 import { Button, Section, SegmentedRow, SelectableGrid, Text, useContextMenu, useGet, View, ViewProps } from '@o/ui'
 import { Absolute, gloss } from 'gloss'
@@ -89,7 +89,7 @@ const AppIconContainer = gloss({
   borderRadius: 10,
 }).theme((_, theme) => ({
   '&:hover': {
-    background: theme.backgroundHover.alpha(0.05),
+    background: theme.backgroundStrong,
   },
 }))
 
@@ -98,14 +98,9 @@ export function ManageApps() {
   const activeApps = useActiveAppsSorted()
   const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
-  const [activeSpace] = useActiveSpace()
 
   return (
-    <Section
-      title={activeSpace ? `${activeSpace.name} Apps` : ''}
-      background="transparent"
-      titleBorder
-    >
+    <Section padInner="lg" background="transparent">
       <SelectableGrid
         minWidth={180}
         items={[

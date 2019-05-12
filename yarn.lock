@@ -9177,7 +9177,7 @@ fuzzysort@1.1.4, fuzzysort@^1.1.4:
   resolved "https://registry.yarnpkg.com/fuzzysort/-/fuzzysort-1.1.4.tgz#a0510206ed44532cbb52cf797bf5a3cb12acd4ba"
   integrity sha512-JzK/lHjVZ6joAg3OnCjylwYXYVjRiwTY6Yb25LvfpJHK8bjisfnZJ5bY8aVWwTwCXgxPNgLAtmHL+Hs5q1ddLQ==
 
-gapi-to-graphql@2.0.5:
+gapi-to-graphql@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/gapi-to-graphql/-/gapi-to-graphql-2.0.5.tgz#01bb0bc3c825ee44371ab29d1ffe8362cf30f364"
   integrity sha512-a6HvxW+ldOpk6Ys6CVyxAPvKAlPI6p3W4b8aqRNo7vt6RmFvPMMIQkeTRe0uMzU46hi+cMfJYwyrbeQ+vfQtww==

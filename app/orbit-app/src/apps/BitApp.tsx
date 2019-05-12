@@ -1,9 +1,11 @@
 import { useModel } from '@o/bridge'
-import { gloss, Row } from 'gloss'
 import { App, AppProps, createApp, HighlightedSearchable, ItemView } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
-import { Button, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
+import { Button, Col, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
+import { gloss, Row } from 'gloss'
 import * as React from 'react'
+
+import { AppActions } from '../actions/AppActions'
 
 export default createApp({
   id: 'bit',
@@ -39,7 +41,9 @@ export function BitAppMain(props: AppProps) {
         {({ searchBar }) => (
           <>
             <BitTitleBar bit={bit} searchBar={searchBar} />
-            <ItemView item={bit} />
+            <Col flex={1} scrollable>
+              <ItemView item={bit} />
+            </Col>
           </>
         )}
       </HighlightedSearchable>
@@ -61,20 +65,20 @@ export class BitTitleBar extends React.Component<{
         <Space />
         <SpaceGroup space="sm">
           <Button
+            alt="flat"
+            circular
+            iconSize={16}
             onClick={() => {
-              // !TODO
-              // AppActions.open(normalizedItem.locationLink)
-              // AppActions.setOrbitDocked(false)
+              AppActions.open(normalizedItem.locationLink)
             }}
             icon={normalizedItem.icon}
           >
             {normalizedItem.location}
           </Button>
           <Button
+            alt="flat"
             onClick={() => {
-              // !TODO
-              // AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
-              // AppActions.setOrbitDocked(false)
+              AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
             }}
             icon="share"
             tooltip="Open"

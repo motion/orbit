@@ -19,7 +19,7 @@ import { PropsTable } from './PropsTable'
 export const DocsContents = memo(
   ({ id, title, examples, examplesSource, source, children, types, beta }: any) => {
     const thisIndex = docsItems.all.findIndex(x => x['id'] === id)
-    const nextItem = docsItems.all[thisIndex + 1]
+    const nextItem = docsItems.all.find((x, i) => i > thisIndex && !!x['title'])
     const prevItem = docsItems.all[thisIndex - 1]
 
     const nextPrevious = (
@@ -33,7 +33,7 @@ export const DocsContents = memo(
           elementProps={{ tagName: 'a' }}
           textDecoration="none"
         >
-          <Row width="100%" space>
+          <Row marginTop={80} width="100%" space>
             {!!prevItem && (
               <Button
                 onClick={e => {
@@ -69,10 +69,15 @@ export const DocsContents = memo(
           }}
         >
           <Section
-            maxWidth={800}
+            maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
             pad={useScreenVal(
+              ['xxl', 'md', true, 'md'],
+              ['xxl', 'md', true, 'md'],
+              ['xxxl', 'xl', true, 'xl'],
+            )}
+            padInner={useScreenVal(
               ['xl', 'md', true, 'md'],
               ['xl', 'md', true, 'md'],
               ['xl', 'xl', true, 'xl'],

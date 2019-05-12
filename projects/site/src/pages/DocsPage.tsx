@@ -1,4 +1,4 @@
-import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar } from '@o/ui'
+import { BorderRight, Button, Col, gloss, List, Portal, Row, Sidebar, Space } from '@o/ui'
 import { createStoreContext, useForceUpdate, useReaction } from '@o/use-store'
 import { debounce } from 'lodash'
 import { compose, mount, route, withView } from 'navi'
@@ -201,6 +201,8 @@ const DocsPage = memo((props: { children?: any }) => {
                 <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
               </Col>
             </Row>
+
+            <Space size={250} />
 
             <BlogFooter />
           </SectionContent>

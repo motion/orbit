@@ -13,7 +13,7 @@ export type SizesObject = {
 
 // Padded
 export type PadProps = {
-  pad?: Sizes | Sizes[] | SizesObject
+  pad?: Sizes | SizesObject
 }
 
 export const getPadding = (
@@ -31,7 +31,7 @@ export const getPadding = (
   }
 }
 
-export const getSizableValue = (value: Sizes | SizesObject | Sizes[] | null | undefined) => {
+export const getSizableValue = (value: Sizes | SizesObject | null | undefined) => {
   if (typeof value !== 'undefined') {
     if (!value) {
       return

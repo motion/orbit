@@ -14,6 +14,7 @@ export const getSize = (size: Sizes) => {
   if (!size || size === true) return 1
   if (typeof size === 'string') return sizes[size]
   const scl = 0.75
+  if (Array.isArray(size)) return size.map(x => (typeof x === 'number' ? x * scl : x))
   if (size * scl <= 1) return size
   return size * scl
 }

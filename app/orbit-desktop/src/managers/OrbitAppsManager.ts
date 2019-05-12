@@ -1,6 +1,6 @@
 import { always, decorate, ensure, getGlobalConfig, react } from '@o/kit'
 import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
-import { copy, ensureDir, pathExists, readdir } from 'fs-extra'
+import { ensureDir, pathExists, readdir } from 'fs-extra'
 import { join } from 'path'
 
 import { addObserveMany } from './OrbitDataManager'
@@ -72,7 +72,8 @@ export class OrbitAppsManager {
       apps.map(async app => {
         const dest = this.spaceFolders[app.spaceId]
         if (!dest) return
-        await copy(Config.paths.dotApp, join(dest, `${app.name}.app`))
+        console.log('should copy app icon, need to get app definition')
+        // await copy(Config.paths.dotApp, join(dest, `${app.name}.app`))
       }),
     )
   }

@@ -1,5 +1,6 @@
 import { createApi, createApp } from '@o/kit'
 
+import { graph } from './api.graph.node'
 import { JiraApi } from './api.node'
 import { jiraIcon } from './jiraIcon'
 import { JiraLoader } from './JiraLoader'
@@ -12,6 +13,7 @@ export default createApp<JiraAppData>({
   itemType: 'markdown',
   sync: true,
   api: createApi<typeof JiraApi>(),
+  graph,
   setupValidate: async app => {
     const loader = new JiraLoader(app)
     await loader.test()

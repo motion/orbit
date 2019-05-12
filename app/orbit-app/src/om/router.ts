@@ -103,10 +103,8 @@ const ignoreNextPush: Action = om => {
   om.state.router.ignoreNextPush = true
 }
 
-const back: Action = om => {
-  if (om.state.router.history.length > 1) {
-    showPage(om, om.state.router.lastPage)
-  }
+const back: Action = () => {
+  history.back()
 }
 
 export const actions = {

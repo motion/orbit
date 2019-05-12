@@ -56,7 +56,10 @@ export const Icon = memo(
 )
 
 // @ts-ignore
-Icon.acceptsIconProps = true
+Icon.acceptsProps = {
+  icon: true,
+  hover: true,
+}
 
 const adjust = {
   icon: {

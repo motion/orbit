@@ -45,7 +45,10 @@ export const Icon = memo((rawProps: IconProps) => {
 })
 
 // @ts-ignore
-Icon.acceptsIconProps = true
+Icon.acceptsProps = {
+  icon: true,
+  hvoer: true,
+}
 
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
@@ -121,8 +124,10 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   )
 }
 
-PlainIcon.acceptsIconProps = true
-
+PlainIcon.acceptsProps = {
+  hover: true,
+  icon: true,
+}
 PlainIcon.defaultProps = {
   size: 16,
 }

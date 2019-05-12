@@ -91,4 +91,7 @@ export function AppIcon({ app, ...props }: AppIconProps) {
   )
 }
 
-AppIcon['acceptsIconProps'] = true
+AppIcon.acceptsProps = {
+  hover: true,
+  icon: true,
+}

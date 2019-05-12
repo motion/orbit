@@ -11,18 +11,18 @@ import * as React from 'react'
 
 import { ContextMenu } from '../ContextMenu'
 import { Interactive } from '../Interactive'
+import { SimpleText } from '../text/SimpleText'
 import { DataColumns, DataType } from '../types'
-import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
+import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
 const TableHeaderArrow = gloss({
   display: 'block',
-  float: 'right',
   fontSize: '75%',
   opacity: 0.6,
 })
 
-const TableHeadColumnText = gloss({
+const TableHeadColumnText = gloss(SimpleText, {
   display: 'inline-block',
   flex: 1,
   overflow: 'hidden',
@@ -49,6 +49,8 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
 const TableHeaderColumnContainer = gloss({
   flexFlow: 'row',
   padding: '0 8px',
+  margin: ['auto', 0],
+  alignItems: 'center'
 })
 
 const TableHeadContainer = gloss(Row, {
@@ -69,23 +71,23 @@ const TableHeadColumnContainer = gloss({
   flexFlow: 'row',
   justifyContent: 'space-between',
   position: 'relative',
-  height: 23,
-  lineHeight: '23px',
   fontSize: '0.85em',
   fontWeight: 500,
   userSelect: 'none',
-  '&::after': {
+  '&:after': {
     position: 'absolute',
-    content: '""',
+    content: '" "',
     right: 0,
-    top: 4,
-    height: 13,
+    top: '15%',
+    height: '60%',
     width: 1,
   },
   '&:last-child::after': {
     display: 'none',
   },
-}).theme(({ width }, theme) => ({
+}).theme(({ width, height }, theme) => ({
+  lineHeight: height || `${DEFAULT_ROW_HEIGHT}px`,
+  height: height || DEFAULT_ROW_HEIGHT,
   background:
     theme.tableHeadBackground || linearGradient(theme.background, theme.background.darken(0.05)),
   flexShrink: width === 'flex' ? 1 : 0,
@@ -104,6 +106,7 @@ function calculatePercentage(parentWidth: number, selfWidth: number): string {
 class TableHeadColumn extends React.PureComponent<{
   id: string
   width: string | number
+  height?: number
   sortable?: boolean
   isResizable: boolean
   leftHasResizer: boolean
@@ -116,14 +119,14 @@ class TableHeadColumn extends React.PureComponent<{
   title?: string
 }> {
   ref: HTMLElement
+  static defaultProps = {
+    height: DEFAULT_ROW_HEIGHT,
+  }
 
   onClick = () => {
-    console.log('got a sort!')
     const { id, onSort, sortOrder } = this.props
-
     const direction =
       sortOrder && sortOrder.key === id && sortOrder.direction === 'down' ? 'up' : 'down'
-
     if (onSort) {
       onSort({
         direction,
@@ -144,14 +147,11 @@ class TableHeadColumn extends React.PureComponent<{
     if (isPercentage(width)) {
       const { parentElement } = this.ref
       invariant(parentElement, 'expected there to be parentElement')
-
       const parentWidth = parentElement.clientWidth
       const { childNodes } = parentElement
-
       const lastElem = childNodes[childNodes.length - 1]
       const right =
         lastElem instanceof HTMLElement ? lastElem.offsetLeft + lastElem.clientWidth + 1 : 0
-
       if (right < parentWidth) {
         normalizedWidth = calculatePercentage(parentWidth, newWidth)
       }
@@ -168,7 +168,7 @@ class TableHeadColumn extends React.PureComponent<{
   }
 
   render() {
-    const { isResizable, sortable, width, title } = this.props
+    const { isResizable, sortable, width, title, height } = this.props
     let { children } = this.props
     children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
@@ -186,6 +186,7 @@ class TableHeadColumn extends React.PureComponent<{
 
     return (
       <TableHeadColumnContainer
+        height={height}
         width={width}
         title={title}
         onClick={sortable === true ? this.onClick : undefined}
@@ -229,6 +230,7 @@ export class TableHead extends React.PureComponent<
     onSort?: TableOnSort
     columnSizes?: TableColumnSizes
     onColumnResize?: TableOnColumnResize
+    height?: number
   },
   { columnSizes: TableColumnSizes }
 > {
@@ -281,7 +283,7 @@ export class TableHead extends React.PureComponent<
   }
 
   render() {
-    const { columnOrder, columns, onColumnResize, onSort, sortOrder } = this.props
+    const { columnOrder, columns, onColumnResize, onSort, sortOrder, height } = this.props
     const { columnSizes } = this.state
     const elems = []
 
@@ -326,6 +328,7 @@ export class TableHead extends React.PureComponent<
           columnSizes={columnSizes}
           onColumnResize={onColumnResize}
           title={key}
+          height={height}
         >
           <TableHeadColumnText>{col.value}</TableHeadColumnText>
           {arrow}

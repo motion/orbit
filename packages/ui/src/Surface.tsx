@@ -146,6 +146,9 @@ export type SurfaceSpecificProps = {
   /** Override space between sizing between Icon/Element */
   spaceSize?: Sizes
 
+  /** Add an element between the icon and inner element */
+  betweenIconElement?: React.ReactNode
+
   /** [Advanced] Add an extra theme to the inner element */
   elementTheme?: Gloss.ThemeFn
 }
@@ -230,6 +233,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     before,
     dangerouslySetInnerHTML,
     spaceSize,
+    betweenIconElement,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -300,6 +304,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   } else {
     showElement = !!(children || elementProps)
+    const spaceElement = <Space size={selectDefined(spaceSize, size * 8)} />
 
     const innerElements = (
       <PassProps
@@ -380,13 +385,25 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               order: 3,
             }}
           >
-            {showElement && <Space size={selectDefined(spaceSize, size * 8)} />}
+            {showElement && spaceElement}
+            {!!betweenIconElement && (
+              <>
+                {betweenIconElement}
+                {spaceElement}
+              </>
+            )}
             {innerElements}
           </div>
         ) : (
           <>
             {innerElements}
-            {showElement && icon && <Space size={selectDefined(spaceSize, size * 8)} />}
+            {!!betweenIconElement && (
+              <>
+                {spaceElement}
+                {betweenIconElement}
+              </>
+            )}
+            {showElement && icon && spaceElement}
           </>
         )}
         {glow && !disabled && (

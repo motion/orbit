@@ -1,4 +1,4 @@
-import { Button, List, Table } from '@o/ui'
+import { Button, List, Scale, Table } from '@o/ui'
 import React, { useState } from 'react'
 
 import { employees } from './fakeData'
@@ -88,4 +88,19 @@ export let section = (
     items={employees}
     height={250}
   />
+)
+
+export let scale = (
+  <Scale size={1.5}>
+    <Table
+      title="My List"
+      subTitle="Subtitle for my section"
+      collapsable
+      searchable
+      bordered
+      backgrounded
+      items={employees}
+      height={250}
+    />
+  </Scale>
 )

@@ -1,19 +1,13 @@
 import { gloss, Row } from 'gloss'
 import React, { forwardRef } from 'react'
 
-import { ClearButton } from '../buttons/ClearButton'
-import { Icon } from '../Icon'
-import { Space } from '../Space'
+import { Button, ButtonProps } from '../buttons/Button'
 import { FilterToken } from '../tables/FilterToken'
-import { TableInput } from '../tables/TableInput'
 import { TableFilter } from '../tables/types'
-import { View, ViewProps } from '../View/View'
 import { Input, InputProps } from './Input'
 
+// searchBarProps?: Object
 export type SearchInputProps = InputProps & {
-  before?: React.ReactNode
-  searchBarProps?: Object
-  after?: React.ReactNode
   actions?: React.ReactNode
   filters?: TableFilter[]
   onClickClear?: InputProps['onClick']
@@ -27,7 +21,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     width = '100%',
     before = null,
     placeholder = null,
-    searchBarProps = null,
+    // searchBarProps = null,
     after = null,
     actions = null,
     filters = [],
@@ -44,54 +38,34 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
 ) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
   return (
-    <SearchBar
-      position="relative"
-      zIndex={1}
-      key="searchbar"
-      flex={flex}
-      padding={padding}
-      {...searchBarProps}
-    >
-      {before}
-      <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <Space size="sm" />
-        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="search" size={14} />
-        {filters.map((filter, i) => (
-          <FilterToken
-            key={`${filter.key}:${filter.type}${i}`}
-            index={i}
-            filter={filter}
-            focused={i === focusedToken}
-            {...filterProps}
-          />
-        ))}
-        <Space size="sm" />
-        <Input
-          height="100%"
-          flex={1}
-          chromeless
-          padding={0}
-          placeholder={placeholder}
-          ref={ref}
-          size={1.1}
-          {...props}
+    <Input
+      ref={ref}
+      sizeRadius={3}
+      flex={1}
+      icon="search"
+      placeholder="Search..."
+      betweenIconElement={filters.map((filter, i) => (
+        <FilterToken
+          key={`${filter.key}:${filter.type}${i}`}
+          index={i}
+          filter={filter}
+          focused={i === focusedToken}
+          {...filterProps}
         />
-        <SearchClearButton
-          onClick={onClickClear}
-          visible={clearVisible}
-          opacity={1}
-          position="relative"
-          zIndex={2}
-          margin={[-2, 0, -2, 5]}
-        />
-      </SearchBox>
-      {after}
-      {actions != null ? <Actions>{actions}</Actions> : null}
-    </SearchBar>
+      ))}
+      after={
+        <>
+          <ClearButton onClick={onClickClear} visible={clearVisible} />
+          {after}
+          {!!actions && <Actions>{actions}</Actions>}
+        </>
+      }
+      {...props}
+    />
   )
 })
 
-const SearchClearButton = gloss<ViewProps & { visible?: boolean }>(ClearButton, {
+const ClearButton = gloss<ButtonProps & { visible?: boolean }>(Button, {
   opacity: 0,
   pointerEvents: 'none',
   visible: {
@@ -100,52 +74,14 @@ const SearchClearButton = gloss<ViewProps & { visible?: boolean }>(ClearButton, 
   },
 })
 
+ClearButton.defaultProps = {
+  icon: 'cross',
+  circular: true,
+  size: 0.65,
+  alt: 'flat',
+}
+
 const Actions = gloss(Row, {
   marginLeft: 8,
   flexShrink: 0,
 })
-
-export const SearchInnerInput = gloss(TableInput, {
-  fontWeight: 400,
-  fontSize: 14,
-  padding: 0,
-  paddingBottom: 1, // fixes visual height
-  flex: 1,
-  background: 'transparent',
-  height: '100%',
-  maxWidth: '100%',
-  width: 'calc(100% - 30px)',
-  lineHeight: '100%',
-  marginLeft: 2,
-}).theme(({ focus }, theme) => ({
-  color: theme.color,
-  border: focus ? '1px solid black' : 0,
-}))
-
-export const SearchIcon = gloss(Icon, {
-  minWidth: 16,
-})
-
-const SearchBar = gloss(Row, {
-  maxHeight: 40,
-  minHeight: 22,
-  padding: 5,
-  alignItems: 'center',
-})
-
-const SearchBox = gloss(View, {
-  position: 'relative',
-  flexFlow: 'row',
-  borderRadius: '999em',
-  height: '100%',
-  flex: 1,
-  alignItems: 'center',
-  padding: [0, 4],
-  minHeight: 32,
-  '&:focus-within': {
-    boxShadow: `0 0 0 2px rgba(0,0,0,0.05)`,
-  },
-}).theme((props, theme) => ({
-  background: props.background || theme.background,
-  border: [1, theme.borderColor],
-}))

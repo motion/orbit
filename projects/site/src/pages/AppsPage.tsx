@@ -1,23 +1,9 @@
-import {
-  Col,
-  FullScreen,
-  fuzzyFilter,
-  gloss,
-  Grid,
-  HotKeys,
-  Image,
-  SimpleText,
-  SizedSurface,
-  Space,
-  SubTitle,
-  Theme,
-  Title,
-  View,
-} from '@o/ui'
+import { Col, FullScreen, fuzzyFilter, gloss, Grid, HotKeys, Image, SimpleText, SizedSurface, Space, SubTitle, Theme, Title, View } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
 import { mount, route } from 'navi'
 import React, { memo, useCallback, useMemo } from 'react'
 
+import { fontProps } from '../constants'
 import { Header } from '../views/Header'
 import { Paragraph } from '../views/Paragraph'
 import { PillButton } from '../views/PillButton'
@@ -101,7 +87,7 @@ export function AppsPage() {
             <Space size="xxxl" />
 
             <Col
-              pad={useScreenVal(0, [50, '10%'], [100, '20%', 100])}
+              pad={useScreenVal(0, [50, '15%'], [100, '20%', 100])}
               space="xxl"
               spaceAround
               flex={1}
@@ -140,7 +126,7 @@ export function AppsPage() {
                   </>,
                   <>
                     Meanwhile, sync functionality is more interesting. Any app can create data at
-                    runtime with the `useAppData` hook. But if they want to sync a larger amount of
+                    runtime with the 'useAppData' hook. But if they want to sync a larger amount of
                     data for searching, they can define a sync process and save bits. This puts data
                     into a local SQLite database.
                   </>,
@@ -223,7 +209,15 @@ const FAQItem = ({ main, paragraphs, question }) => {
         </Title>
 
         {paragraphs.map((p, i) => (
-          <Title key={i} selectable size={1.5} alpha={0.6} fontWeight={300} sizeLineHeight={1.25}>
+          <Title
+            key={i}
+            selectable
+            size={1.35}
+            alpha={0.65}
+            fontWeight={100}
+            sizeLineHeight={1.25}
+            {...fontProps.Nunito}
+          >
             {p}
           </Title>
         ))}

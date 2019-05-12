@@ -1,4 +1,5 @@
 import './assets/font-gteesti/stylesheet.css'
+import './assets/font-nunito/stylesheet.css'
 import './assets/siteBase.css'
 import 'react-hot-loader'
 

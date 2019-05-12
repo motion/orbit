@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('NunitoSans-ExtraLight.woff2') format('woff2'),
+    url('NunitoSans-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('NunitoSans-Light.woff2') format('woff2'), url('NunitoSans-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}

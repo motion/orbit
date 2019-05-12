@@ -2,7 +2,6 @@ import { View, ViewProps } from '@o/ui'
 import React from 'react'
 
 import { Join } from './Join'
-import { Wavy } from './purpleWaveUrl'
 import { TitleTextSmallCaps } from './TitleTextSmallCaps'
 
 export function SignupForm(props: ViewProps) {
@@ -18,7 +17,6 @@ export function SignupForm(props: ViewProps) {
       background={theme => theme.backgroundStrong}
       {...props}
     >
-      <Wavy width="100%" height={4} />
       <View pad="lg">
         <Join
           header={
@@ -29,8 +27,6 @@ export function SignupForm(props: ViewProps) {
           space="md"
         />
       </View>
-
-      <Wavy width="100%" height={4} />
     </View>
   )
 }

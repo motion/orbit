@@ -12,7 +12,6 @@ export function PillButton({ children, ...props }: ButtonProps) {
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"
-      fontFamily="GT Eesti"
       width="max-content"
       padding={[2, 12]}
       margin={[0, 'auto']}

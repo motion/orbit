@@ -1,6 +1,6 @@
-import { Inline } from 'gloss'
 import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
+import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 
@@ -220,20 +220,18 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content ref={Fade.ref} transform={{ y: '4%' }}>
+      <Page.Content ref={Fade.ref} transform={{ y: 0 }}>
         <SpacedPageContent
           header={
             <>
               <FadeChild delay={0}>
-                <PillButton>Build</PillButton>
+                <PillButton>Unify</PillButton>
               </FadeChild>
               <FadeChild delay={100}>
-                <TitleText size={useScreenVal('lg', 'xl', 'xxxl')}>All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
-                <FadeChild delay={200}>
-                  Connect apps, data sources, and a custom interface with lines of code.
-                </FadeChild>
+                <FadeChild delay={200}>Orbit makes common apps incredibly easy to build.</FadeChild>
               </TitleTextSub>
             </>
           }
@@ -246,8 +244,8 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Apps like <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> provide
-                      data with just a line of code.
+                      Plug in data apps like{' '}
+                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> with a click.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -256,8 +254,8 @@ export default function NeckSection() {
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Orbit provides everything you need to build tools fast, with powerful views
-                      like a {elements[cur].title}.
+                      Every view in Orbit is fast, works together & is just lines of code, like the{' '}
+                      {elements[cur].title}.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -266,8 +264,8 @@ export default function NeckSection() {
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
-                      With selections + actions, exporting to{' '}
-                      <Inline color="#F14336">{elements[cur].afterName}</Inline> is easy.
+                      Built-in select & share to other apps, like{' '}
+                      <Inline color="#F14336">{elements[cur].afterName}</Inline>.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -442,15 +440,15 @@ export default function NeckSection() {
           bottom="auto"
           className="head-line-sep"
         >
-          <LineSep />
+          {false && <LineSep />}
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0.3} zIndex={-1}>
+      <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.3}
-          transform={{ y: '-6%', scale: 2.6 }}
-          background="radial-gradient(circle closest-side, #4299A277 20%, #750750, transparent)"
+          opacity={0.4}
+          transform={{ y: '-10%', scale: 2.4 }}
+          background="radial-gradient(circle closest-side, #4A00A899 20%, #750750, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

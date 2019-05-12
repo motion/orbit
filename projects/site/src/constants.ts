@@ -5,7 +5,9 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgen
 export const fontProps = {
   GTEesti: {
     fontFamily: 'GT Eesti',
-    className: 'font-smooth',
+  },
+  Nunito: {
+    fontFamily: 'Nunito Sans',
   },
 }
 

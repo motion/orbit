@@ -52,11 +52,11 @@ export default function WaistSection() {
         >
           <Row space={useScreenVal(20, 'lg', 'xl')}>
             <Col flex={3} space="xl">
-              <Pitch alpha={1} size="md">
+              <Pitch alpha={1} size="sm">
                 Orbit never sends single bit of data outside your firewall.
               </Pitch>
 
-              <Pitch fontWeight={200} alpha={0.7} size="sm" sizeLineHeight={1.5}>
+              <Pitch fontWeight={200} alpha={0.7} size="sm" sizeLineHeight={1.3}>
                 Get incredibly powerful internal tools without setting up infrastructure or having
                 to trust a startup with any of your data -- interface with sensitive internal
                 databases with ease, Orbit gives you complete control.
@@ -65,7 +65,7 @@ export default function WaistSection() {
 
             {screen !== 'small' && (
               <Col flex={1} padding={0}>
-                <Image maxWidth={300} margin="auto" src={people} />
+                <Image userSelect="none" maxWidth={300} margin="auto" src={people} />
               </Col>
             )}
           </Row>

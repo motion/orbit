@@ -1,5 +1,5 @@
-import { gloss, useTheme } from 'gloss'
 import { Space, View, ViewProps } from '@o/ui'
+import { gloss, useTheme } from 'gloss'
 import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
@@ -8,8 +8,8 @@ import { useParallax } from '../pages/HomePage'
 
 let logoScales = {
   small: 0.7,
-  medium: 0.8,
-  large: 0.9,
+  medium: 0.9,
+  large: 1,
 }
 
 export const LogoVertical = memo(

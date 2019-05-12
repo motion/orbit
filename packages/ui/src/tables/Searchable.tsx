@@ -11,7 +11,6 @@ import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
 import { FilterIncludeExclude, TableFilter } from './types'
 
-
 type State = {
   filters: TableFilter[]
   focusedToken: number
@@ -28,7 +27,6 @@ type Props = {
   onFilterChange?: (filters: TableFilter[]) => void
   defaultFilters?: TableFilter[]
   searchBarTheme?: Object
-  searchBarProps?: Object
   searchInputProps?: Object
   children?: (props: SearchableChildProps) => React.ReactNode
   focusOnMount?: boolean
@@ -299,16 +297,7 @@ export class Searchable extends React.PureComponent<Props, State> {
     })
 
   render() {
-    const {
-      placeholder,
-      actions,
-      searchBarProps,
-      searchInputProps,
-      before,
-      after,
-      width,
-      children,
-    } = this.props
+    const { placeholder, actions, searchInputProps, before, after, width, children } = this.props
     return children({
       addFilter: this.addFilter,
       searchTerm: this.state.searchTerm,
@@ -316,7 +305,6 @@ export class Searchable extends React.PureComponent<Props, State> {
         <SearchInput
           placeholder={placeholder}
           actions={actions}
-          searchBarProps={searchBarProps}
           before={before}
           after={after}
           width={width}

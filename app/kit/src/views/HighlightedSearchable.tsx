@@ -19,9 +19,6 @@ export const HighlightedSearchable = (props: Props) => {
       searchInputProps={{
         background: 'transaprent',
       }}
-      searchBarProps={{
-        minWidth: 120,
-      }}
     >
       {({ searchBar, searchTerm }) => {
         return (

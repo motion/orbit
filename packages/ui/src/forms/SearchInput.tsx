@@ -6,7 +6,6 @@ import { FilterToken } from '../tables/FilterToken'
 import { TableFilter } from '../tables/types'
 import { Input, InputProps } from './Input'
 
-// searchBarProps?: Object
 export type SearchInputProps = InputProps & {
   actions?: React.ReactNode
   filters?: TableFilter[]
@@ -21,7 +20,6 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     width = '100%',
     before = null,
     placeholder = null,
-    // searchBarProps = null,
     after = null,
     actions = null,
     filters = [],

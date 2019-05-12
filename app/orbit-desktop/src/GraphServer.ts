@@ -6,8 +6,9 @@ import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
 import bodyParser from 'body-parser'
 import express from 'express'
 import { readJSON } from 'fs-extra'
+import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import { makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
+import { makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -120,6 +121,7 @@ export class GraphServer {
       })
       .subscribe(async _ => {
         const apps: AppBit[] = _ as any
+
         let schemas = []
 
         const appDefs = await getWorkspaceAppDefinitions('@o/example-workspace')
@@ -127,13 +129,34 @@ export class GraphServer {
         for (const app of apps) {
           const appDef = appDefs.find(def => def.id === app.identifier)
 
+          if (app && !appDef) {
+            console.log(`
+              ${app.identifier}:
+              WARNING! found an app-bit but no app-def, meaning your DB is out of sync with your
+              workspace package.json deps. this is an orbit issue.
+            `)
+          } else {
+            console.log(`
+              loading ${app.identifier}, graph? ${!!appDef.graph}
+            `)
+          }
+
           if (!appDef) continue
           if (!appDef.graph) continue
 
           try {
             const appSchema = await appDef.graph(app)
 
-            let schema = appSchema.schema || appSchema
+            let schema: GraphQLSchema
+
+            if (typeof appSchema.schema === 'string') {
+              schema = makeExecutableSchema({
+                typeDefs: appSchema.schema,
+                resolvers: appSchema.resolvers,
+              })
+            } else {
+              schema = appSchema.schema || appSchema
+            }
 
             if (appSchema.link) {
               schema = makeRemoteExecutableSchema({

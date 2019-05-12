@@ -10,7 +10,7 @@ FLAGS=$@
 #
 
 if [[ "$FLAGS" =~ "--no-overmind" ]]; then
-  echo "ENABLE OVERMIND DEVTOOLS"
+  echo "DISABLE OVERMIND DEVTOOLS"
 else
   overmind-devtools &
 fi

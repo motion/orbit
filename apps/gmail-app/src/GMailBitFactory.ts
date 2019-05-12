@@ -1,15 +1,14 @@
 import { Bit } from '@o/kit'
+import { SyncerUtils } from '@o/sync-kit'
+
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModels'
-import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of gmail models.
  */
 export class GMailBitFactory {
-
-  constructor(private utils: SyncerUtils) {
-  }
+  constructor(private utils: SyncerUtils) {}
 
   /**
    * Creates a new bit from a given GMail thread.
@@ -77,11 +76,10 @@ export class GMailBitFactory {
     return this.utils.createBit({
       type: 'person',
       originalId: participant.email,
-      title: participant.name || '',
+      title: participant.name || participant.email || '',
       webLink: 'mailto:' + participant.email,
       desktopLink: 'mailto:' + participant.email,
       email: participant.email,
     })
   }
-
 }

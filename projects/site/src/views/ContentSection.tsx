@@ -7,9 +7,9 @@ export const ContentSection = (props: ColProps) => {
   const theme = useTheme()
   return (
     <Col
-      pad={['xxl', useScreenVal('sm', 'xl', 'xxxl')]}
+      pad={['xxl', useScreenVal('sm', 'xxl', 'xxxl')]}
       width="100%"
-      maxWidth={800}
+      maxWidth={760}
       margin="auto"
       fontSize={18}
       lineHeight={32}

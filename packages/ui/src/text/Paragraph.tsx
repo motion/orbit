@@ -1,8 +1,8 @@
 import { gloss } from 'gloss'
+
 import { SimpleText } from './SimpleText'
 
 export const Paragraph = gloss(SimpleText, {
-  alpha: 0.85,
   userSelect: 'text',
   display: 'block',
 
@@ -12,7 +12,6 @@ export const Paragraph = gloss(SimpleText, {
 })
 
 Paragraph.defaultProps = {
+  alpha: 0.85,
   sizeLineHeight: 1.2,
-  // why
-  margin: [0, 0, '1rem'],
 }

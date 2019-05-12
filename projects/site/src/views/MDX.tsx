@@ -32,15 +32,14 @@ export const components = {
   ),
   h2: props => (
     <>
-      <Space />
-      <TitleText size="lg" {...props} />
-      <Space />
+      <TitleText marginTop={16} size="lg" {...props} />
+      <Space size="lg" />
     </>
   ),
   h3: props => (
     <>
       <Space />
-      <TitleText size="md" {...props} />
+      <TitleText marginTop={16} size="md" {...props} />
       <Space />
     </>
   ),
@@ -65,7 +64,7 @@ export const components = {
   ),
   ul: props => (
     <>
-      <ul className="font-smooth" {...props} />
+      <ul className="body-text" {...props} />
       <Space />
     </>
   ),
@@ -76,14 +75,14 @@ export const components = {
 
   ol: props => (
     <>
-      <ol className="font-smooth" {...props} />
+      <ol className="body-text" {...props} />
       <Space />
     </>
   ),
   p: props => (
     <>
       <Paragraph
-        className="font-smooth"
+        className="body-text"
         margin={0}
         fontSize="inherit"
         lineHeight="inherit"
@@ -96,7 +95,7 @@ export const components = {
   description: props => (
     <>
       <Paragraph
-        className="font-smooth"
+        className="body-text"
         margin={0}
         {...props}
         fontSize="inherit"

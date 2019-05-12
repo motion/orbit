@@ -1,5 +1,6 @@
 import { Contents, ContentsProps } from 'gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
+
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
 type UseContextProps = {
@@ -30,6 +31,7 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
   return React.createElement(
     component,
     {
+      className: 'ui-contextmenu',
       onContextMenu,
       ...restProps,
     },

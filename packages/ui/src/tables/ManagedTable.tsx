@@ -379,14 +379,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   cache = {}
 
-  renderRow = (index, style) => {
+  renderRow = ({ index, style }) => {
     // because for some reason react window changes style object
     const key = JSON.stringify(style)
     const cache = this.cache[key]
     if (!cache) {
       this.cache[key] = style
     }
-    return this.renderRowInner(index, style)
+    return this.renderRowInner(index, cache || style)
   }
 
   getItemKey = (index: number) => {
@@ -461,7 +461,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             height={height - this.props.rowLineHeight}
             overscanCount={overscanCount}
           >
-            {({ index, style }) => this.renderRow(index, style)}
+            {this.renderRow}
           </SelectableVariableList>
         </ContextMenu>
       </TableContainer>

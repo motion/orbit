@@ -1,6 +1,9 @@
 import { gloss } from 'gloss'
 import React from 'react'
+
 import { useNodeSize } from './hooks/useNodeSize'
+import { useScale } from './Scale'
+import { DEFAULT_ROW_HEIGHT } from './tables/types'
 import { TreeItems } from './TreeItems'
 import { View } from './View/View'
 import { useVisibility } from './Visibility'
@@ -54,9 +57,16 @@ export function Tree(props: TreeProps) {
     disable: !visibility,
     throttle: 200,
   })
+  const scale = useScale()
   return (
     <TreeChrome ref={ref}>
-      <TreeItems width={width} height={height} rowHeight={23} zebra {...props} />
+      <TreeItems
+        width={width}
+        height={height}
+        rowHeight={scale * DEFAULT_ROW_HEIGHT}
+        zebra
+        {...props}
+      />
     </TreeChrome>
   )
 }

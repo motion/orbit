@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 
 import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
-import { SimpleText } from '../text/SimpleText'
+import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
@@ -97,12 +97,10 @@ const { clipboard } = Electron
 // TODO
 type ElectronMenuItemOptions = any
 
-const BaseContainer = gloss({
+const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
   paddingLeft: 10,
   userSelect: 'text',
   fontFamily: ` 'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
-  lineHeight: 14,
-  fontSize: 13,
 }).theme((props, theme) => ({
   color: props.color || theme.color,
   opacity: props.disabled ? 0.5 : 1,
@@ -121,7 +119,7 @@ const RecursiveBaseWrapper = gloss('span', {
 
 const PropertyContainer = gloss('span')
 
-const ExpandControl = gloss('span', {
+const ExpandControl = gloss(SimpleText, {
   color: '#6e6e6e',
   fontSize: 10,
   marginLeft: -11,
@@ -571,7 +569,6 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
 
     return (
       <BaseContainer
-        depth={depth}
         disabled={Boolean(this.props.setValue) === true && Boolean(setValue) === false}
       >
         <ContextMenu component="span" items={contextMenuItems}>

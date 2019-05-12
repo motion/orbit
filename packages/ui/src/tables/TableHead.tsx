@@ -29,8 +29,12 @@ const TableHeadColumnText = gloss(SimpleText, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   opacity: 0.65,
-  fontSize: 11,
+  fontWeight: 500,
 })
+
+TableHeadColumnText.defaultProps = {
+  size: 0.9,
+}
 
 const TableHeaderColumnInteractive = gloss(Interactive, {
   flex: 1,
@@ -50,7 +54,7 @@ const TableHeaderColumnContainer = gloss({
   flexFlow: 'row',
   padding: '0 8px',
   margin: ['auto', 0],
-  alignItems: 'center'
+  alignItems: 'center',
 })
 
 const TableHeadContainer = gloss(Row, {
@@ -71,8 +75,6 @@ const TableHeadColumnContainer = gloss({
   flexFlow: 'row',
   justifyContent: 'space-between',
   position: 'relative',
-  fontSize: '0.85em',
-  fontWeight: 500,
   userSelect: 'none',
   '&:after': {
     position: 'absolute',

@@ -106,8 +106,6 @@ export class GraphServer {
 
         let spaces: Space[] = _ as any
 
-        console.log('spaces', spaces)
-
         for (const space of spaces) {
           subs.push(this.watchAppsForSchemaSetup(space.id))
         }
@@ -148,8 +146,6 @@ export class GraphServer {
 
           try {
             const appSchema = await appDef.graph(app)
-
-            console.log('appSchema', appSchema)
 
             let schema: GraphQLSchema
 

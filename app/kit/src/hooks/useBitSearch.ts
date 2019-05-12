@@ -12,9 +12,18 @@ type UseBitsProps = FindOptions<Bit> & {
   searchable?: boolean
   query?: string
   delay?: number
+  excludeData?: boolean
 }
 
-export function useBitSearch({ type, delay = 100, where, ...args }: UseBitsProps = {}) {
+export function useBitSearch({
+  type,
+  delay = 100,
+  where,
+  // prevent excessive take
+  take = 5000,
+  excludeData,
+  ...args
+}: UseBitsProps = {}) {
   const listProps = useListProps()
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
   const activeQuery = useActiveQuery({ delay })
@@ -23,8 +32,8 @@ export function useBitSearch({ type, delay = 100, where, ...args }: UseBitsProps
   const state = useSearchState()
   const { appFilters } = state.filters
   let whereFinal = []
-  let take = typeof args.take === 'undefined' ? 5000 : args.take
 
+  // add filters
   // TODO exclusive/inclusive
   if (appFilters && appFilters.length) {
     for (const filter of appFilters) {
@@ -38,25 +47,66 @@ export function useBitSearch({ type, delay = 100, where, ...args }: UseBitsProps
     }
   }
 
+  // add search query
   if (isDefined(query)) {
     whereFinal = whereFinal.map(condition => {
       return {
         ...where,
         ...condition,
+        type,
         title: { $like: `%${query}%` },
       }
     })
   }
 
+  // add where, account for type
   if (isDefined(where)) {
-    whereFinal.push(where)
+    if (Array.isArray(where)) {
+      whereFinal = [...whereFinal, where.map(x => ({ type, ...x }))]
+    } else {
+      whereFinal.push({
+        type,
+        ...where,
+      })
+    }
+  } else if (type) {
+    whereFinal.push({ type })
   }
 
-  const finalArgs = {
+  if (excludeData) {
+    args.select = bitSelectAllButData
+  }
+
+  let finalArgs: FindOptions<Bit> = {
     ...args,
-    where: whereFinal,
     take,
+  }
+
+  // only add if necessary
+  if (whereFinal.length) {
+    finalArgs.where = whereFinal
   }
 
   return useModels(BitModel, finalArgs)[0]
 }
+
+export const bitSelectAllButData: (keyof Bit)[] = [
+  'appIdentifier',
+  'appId',
+  'author',
+  'authorId',
+  'bitCreatedAt',
+  'bitUpdatedAt',
+  'body',
+  'contentHash',
+  'crawled',
+  'createdAt',
+  'desktopLink',
+  'email',
+  'originalId',
+  'photo',
+  'webLink',
+  'updatedAt',
+  'title',
+  'type',
+]

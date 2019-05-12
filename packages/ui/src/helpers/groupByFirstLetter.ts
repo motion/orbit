@@ -1,10 +1,13 @@
 import { memoize } from 'lodash'
 
+const letter = /[a-z]/i
+const isLetter = x => letter.test(x)
+
 function getLetter(name: string) {
   let letter = '0-9'
   if (name) {
     letter = name[0].toLowerCase()
-    if (+name[0] === +name[0]) {
+    if (!isLetter(name[0])) {
       letter = '0-9'
     }
   }

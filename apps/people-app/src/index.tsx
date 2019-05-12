@@ -2,26 +2,29 @@ import { App, AppProps, Bit, createApp, LocationLink, useBit, useBits, useBitSea
 import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
-const PeopleApp = props => (
-  <App index={<PeopleAppIndex />}>
-    <PeopleAppMain {...props} />
-  </App>
-)
-
 export default createApp({
   id: 'people',
   name: 'People',
   icon: 'person',
   itemType: 'person',
-  app: PeopleApp,
+  app: props => (
+    <App index={<PeopleAppIndex />}>
+      <PeopleAppMain {...props} />
+    </App>
+  ),
   viewConfig: {
     acceptsSearch: true,
   },
 })
 
 function PeopleAppIndex() {
-  const people = useBitSearch({ type: 'person', where: { title: { $not: { $equal: '' } } } })
-  console.log('people', people)
+  const people = useBitSearch({
+    type: 'person',
+    take: 200,
+    excludeData: true,
+    where: { title: { $not: { $equal: '' } } },
+  })
+  console.log('people222', people)
   return (
     <List
       shareable

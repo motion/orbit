@@ -60,6 +60,7 @@ export const components = {
   li: props => (
     <>
       <li style={{ marginLeft: 26 }} {...props} />
+      <Space size="sm" />
     </>
   ),
   ul: props => (

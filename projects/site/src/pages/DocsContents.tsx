@@ -1,7 +1,7 @@
 import GithubIcon from '!raw-loader!../../public/logos/github.svg'
-import { ThemeProvide } from 'gloss'
 import { themes } from '@o/kit'
 import { Button, gloss, Icon, Row, Section, Space, SurfacePassProps, Tag, Title } from '@o/ui'
+import { ThemeProvide } from 'gloss'
 import React, { memo } from 'react'
 
 import { colors } from '../constants'
@@ -103,28 +103,43 @@ export const DocsContents = memo(
                   }}
                 >
                   <Row>
-                    {!!source && (
-                      <Button
-                        iconSize={16}
-                        icon="code"
-                        onClick={e => {
-                          e.stopPropagation()
-                          scrollTo('#component-source')
-                        }}
-                      >
-                        View Source
-                      </Button>
-                    )}
                     {!!types && (
                       <Button
                         iconSize={16}
                         icon="t"
+                        tooltip="Component Props"
                         onClick={e => {
                           e.stopPropagation()
                           scrollTo('#component-props')
                         }}
                       >
-                        View Props
+                        Props
+                      </Button>
+                    )}
+                    {!!source && (
+                      <Button
+                        iconSize={16}
+                        icon="code"
+                        tooltip="View Component Source"
+                        onClick={e => {
+                          e.stopPropagation()
+                          scrollTo('#component-source')
+                        }}
+                      >
+                        Component
+                      </Button>
+                    )}
+                    {!!source && (
+                      <Button
+                        iconSize={16}
+                        icon="code"
+                        tooltip="View Source for this Page"
+                        onClick={e => {
+                          e.stopPropagation()
+                          scrollTo('#component-source')
+                        }}
+                      >
+                        Page
                       </Button>
                     )}
                   </Row>

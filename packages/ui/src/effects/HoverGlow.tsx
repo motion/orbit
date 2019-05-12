@@ -84,8 +84,6 @@ const Glow = gloss({
 })
 
 export class HoverGlow extends React.Component<HoverGlowProps> {
-  static acceptsHovered = 'show'
-
   static defaultProps = {
     width: 380,
     height: 200,
@@ -369,5 +367,3 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     })
   }
 }
-
-HoverGlow.acceptsHovered = 'show'

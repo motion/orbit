@@ -52,9 +52,17 @@ function lightLog(val: any) {
   if (type === 'string' && val.length < 50) {
     return `"${val}"`
   }
-  if (type === 'object') {
+  if (
+    type === 'object' &&
+    (type.constructor.name === 'Object' || type.constructor.name === 'Array') &&
+    Object.keys(type).length < 20
+  ) {
     try {
+      let x = Date.now()
       const str = JSON.stringify(val)
+      if (Date.now() - x > 10) {
+        debugger
+      }
       if (str.length < 200) {
         return `(${str})`
       }

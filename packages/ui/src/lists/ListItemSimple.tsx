@@ -431,7 +431,9 @@ function getIcon(props: ListItemSimpleProps) {
   }
   let element = props.icon
   if (React.isValidElement(props.icon)) {
-    if (props.icon.type['acceptsIconProps']) {
+    const type = props.icon.type
+    // @ts-ignore
+    if (type.acceptsProps && type.acceptsProps.icon) {
       element = React.cloneElement(props.icon, iconPropsFinal)
     }
   } else {

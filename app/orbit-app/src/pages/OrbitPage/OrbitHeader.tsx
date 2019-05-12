@@ -55,6 +55,12 @@ const HomeButton = memo(
   }),
 )
 
+// @ts-ignore
+HomeButton.acceptsProps = {
+  icon: true,
+  hover: true,
+}
+
 const activeStyle = {
   opacity: 1,
 }

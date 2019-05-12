@@ -90,55 +90,55 @@ export function CustomAppTree() {
   const [selected, setSelected] = useState(0)
 
   return (
-    <Layout type="row">
-      <Pane title="Select Items" resizable>
-        <Tree
-          root={0}
-          selected={selected}
-          onTreeItemSelected={id => {
-            console.log('select2', id)
-            setSelected(id)
-          }}
-          onTreeItemExpanded={id => {
-            setTreeState(
-              produce(treeState, next => {
-                next[id].expanded = !next[id].expanded
-              }),
-            )
-          }}
-          elements={treeState}
-        />
-      </Pane>
-      <Pane flex={3} collapsable title="Inspect" resizable>
-        <Scale size={2}>
+    <Scale size={2}>
+      <Layout type="row">
+        <Pane title="Select Items" resizable>
+          <Tree
+            root={0}
+            selected={selected}
+            onTreeItemSelected={id => {
+              console.log('select2', id)
+              setSelected(id)
+            }}
+            onTreeItemExpanded={id => {
+              setTreeState(
+                produce(treeState, next => {
+                  next[id].expanded = !next[id].expanded
+                }),
+              )
+            }}
+            elements={treeState}
+          />
+        </Pane>
+        <Pane flex={3} collapsable title="Inspect" resizable>
           <Table searchable selectable items={items} />
-        </Scale>
-      </Pane>
-      <Pane title="Sidebar">
-        <Layout type="column">
-          <Pane title="Elements" pad collapsable>
-            <DataInspector
-              data={{
-                test: 'this',
-                thing: 0,
-                is: 'hi',
-                who: 'are',
-                you: new Date(),
-                color: 'yellow',
-                another: {
-                  one: 'color',
-                  two: 'green',
-                },
-              }}
-            />
-          </Pane>
-          <Pane title="Elements" flex={2} pad collapsable>
-            <Title>Description</Title>
-            <SubTitle>Sub title</SubTitle>
-            <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
-          </Pane>
-        </Layout>
-      </Pane>
-    </Layout>
+        </Pane>
+        <Pane title="Sidebar">
+          <Layout type="column">
+            <Pane title="Elements" pad collapsable>
+              <DataInspector
+                data={{
+                  test: 'this',
+                  thing: 0,
+                  is: 'hi',
+                  who: 'are',
+                  you: new Date(),
+                  color: 'yellow',
+                  another: {
+                    one: 'color',
+                    two: 'green',
+                  },
+                }}
+              />
+            </Pane>
+            <Pane title="Elements" flex={2} pad collapsable>
+              <Title>Description</Title>
+              <SubTitle>Sub title</SubTitle>
+              <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
+            </Pane>
+          </Layout>
+        </Pane>
+      </Layout>
+    </Scale>
   )
 }

@@ -21,7 +21,7 @@ export function Pane(props: PaneProps) {
       children,
       pad,
       padding,
-      scrollable,
+      scrollable = 'y',
       space,
       spaceAround,
       flexDirection,
@@ -47,10 +47,10 @@ export function Pane(props: PaneProps) {
           spaceAround={spaceAround}
           flexDirection={flexDirection}
           scrollable={scrollable}
-          pad={pad}
+          pad={toggle.isCollapsable && toggle.val ? 0 : pad}
           padding={padding}
           width="100%"
-          height="100%"
+          flex={1}
           position="relative"
           useCollapse={toggle}
         >

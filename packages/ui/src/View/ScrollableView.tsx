@@ -1,5 +1,5 @@
-import { Col, gloss } from 'gloss'
 import { isDefined } from '@o/utils'
+import { Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { getSpaceSize, Sizes } from '../Space'
@@ -112,7 +112,6 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   flexWrap: 'inherit',
   width: '100%',
   height: '100%',
-  margin: 1,
 }).theme(({ scrollable, hideScrollbars }) => ({
   ...(hideScrollbars && hideScrollbarsStyle),
   overflow: 'hidden',

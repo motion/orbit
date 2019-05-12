@@ -69,7 +69,9 @@ export function Table(tableProps: TableProps) {
   const isVisible = useVisibility()
   const scale = useScale()
   const rowHeight = rowLineHeight * scale
-  const { height, ref } = useNodeSize({ throttle: 150, disable: !isVisible })
+  const nodeSizer = useNodeSize({ throttle: 150, disable: !isVisible })
+  // its too easy to have the height accidentally baloon to infinity, limit it
+  const height = Math.min(5000, nodeSizer.height)
   const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),
@@ -112,11 +114,11 @@ export function Table(tableProps: TableProps) {
       ref={parentNodeSize.ref}
     >
       <SearchableTable
-        containerRef={ref}
+        containerRef={nodeSizer.ref}
         searchable={searchable}
         minWidth={100}
         minHeight={100}
-        maxHeight={height > 0 ? height : 200}
+        maxHeight={height > 0 ? height : 800}
         height={height}
         flex={flex}
         {...props}

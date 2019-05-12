@@ -1,6 +1,6 @@
-import { gloss } from 'gloss'
 import { useActiveSpace } from '@o/kit'
 import { ClearButton, ThemeContext, View } from '@o/ui'
+import { gloss } from 'gloss'
 import React, { memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -55,7 +55,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
       <After>
         <ClearButton
           margin={['auto', 5]}
-          hidden={!queryStore.hasQuery}
+          visible={queryStore.hasQuery}
           onClick={queryStore.clearQuery}
         />
       </After>
@@ -83,8 +83,4 @@ const FakeInput = gloss(View, {
   flex: 1,
   cursor: 'text',
   transition: 'none',
-  // '&:active': {
-  //   background: [0, 0, 0, 0.035],
-  //   transition: 'all ease-out 350ms 350ms',
-  // },
 })

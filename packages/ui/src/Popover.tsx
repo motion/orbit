@@ -390,7 +390,6 @@ const shouldShowPopover = (props: PopoverProps, state: State) => {
 }
 
 export class Popover extends React.Component<PopoverProps, State> {
-  static acceptsHovered = 'open'
   static defaultProps = defaultProps
 
   targetRef = React.createRef<HTMLDivElement>()

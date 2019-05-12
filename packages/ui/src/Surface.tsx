@@ -616,9 +616,9 @@ const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean
 
 const getIconSize = (props: SurfaceProps) => {
   if (isDefined(props.iconSize)) return props.iconSize
-  const iconSize = props.height ? +props.height * 0.15 + 5 : 12
+  const iconSize = props.height ? +props.height * 0.1 + 8 : 12
   const size = getSize(props.size) * iconSize * (props.sizeIcon || 1)
-  return Math.round(size * 100) / 100
+  return Math.floor(size)
 }
 
 const GlintContain = gloss<ColProps>(Col, {

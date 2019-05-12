@@ -16,9 +16,8 @@ import { DataColumns, DataType } from '../types'
 import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types'
 import { isPercentage, normaliseColumnWidth } from './utils'
 
-const TableHeaderArrow = gloss({
+const TableHeaderArrow = gloss(SimpleText, {
   display: 'block',
-  fontSize: '75%',
   opacity: 0.6,
 })
 
@@ -310,7 +309,9 @@ export class TableHead extends React.PureComponent<
 
       let arrow
       if (col.sortable === true && sortOrder && sortOrder.key === key) {
-        arrow = <TableHeaderArrow>{sortOrder.direction === 'up' ? '▲' : '▼'}</TableHeaderArrow>
+        arrow = (
+          <TableHeaderArrow size={0.6}>{sortOrder.direction === 'up' ? '▲' : '▼'}</TableHeaderArrow>
+        )
       }
 
       const width = normaliseColumnWidth(columnSizes[key])

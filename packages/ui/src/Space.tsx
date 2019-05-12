@@ -8,7 +8,7 @@ if (isBrowser) {
   require('./Space.css')
 }
 
-export type Sizes =
+type Size =
   | 'xs'
   | 'sm'
   | 'md'
@@ -20,6 +20,8 @@ export type Sizes =
   | boolean
   | undefined
   | string
+
+export type Sizes = Size | Size[]
 
 export type SpaceProps = {
   size?: Sizes
@@ -44,6 +46,9 @@ export function getSpaceSize(space: Sizes) {
   }
   if (!space || space === true) {
     space = 'md'
+  }
+  if (Array.isArray(space)) {
+    return space.map(getSpaceSize)
   }
   return spaceSizes[space] || space || 0
 }

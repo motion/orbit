@@ -121,7 +121,6 @@ const PropertyContainer = gloss('span')
 
 const ExpandControl = gloss(SimpleText, {
   color: '#6e6e6e',
-  fontSize: 10,
   marginLeft: -11,
   marginRight: 5,
   whiteSpace: 'pre',
@@ -573,7 +572,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
       >
         <ContextMenu component="span" items={contextMenuItems}>
           <PropertyContainer onClick={isExpandable ? this.handleClick : null}>
-            {expandedPaths && <ExpandControl>{expandGlyph}</ExpandControl>}
+            {expandedPaths && <ExpandControl size={0.6}>{expandGlyph}</ExpandControl>}
             {descriptionOrPreview}
             {wrapperStart}
           </PropertyContainer>

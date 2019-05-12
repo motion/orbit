@@ -16,15 +16,15 @@ let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'A new deal for apps',
+  large: 'A better deal for apps',
   medium: 'A new deal for apps',
   small: 'A new deal for apps',
 }
 
 let allTexts = {
   large: [
-    `Introducing a new type of thing: the app browser.`,
-    `Easy, powerful & fast decentralized apps.`,
+    `Introducing a new type of thing: a browser for apps.`,
+    `Easy, powerful & fast decentralized.`,
   ],
   medium: [
     `Introducing a new type of thing: the app browser.`,
@@ -96,11 +96,12 @@ const HeadContent = memo(() => {
 
       <View
         maxHeight={isSmall ? 0 : 'auto'}
+        overflow={isSmall ? 'hidden' : 'auto'}
         position="relative"
         flex={1}
         width={textsWidth}
         margin={[0, 'auto']}
-        maxWidth="90%"
+        maxWidth="80%"
       >
         <Paragraph
           fontWeight={100}

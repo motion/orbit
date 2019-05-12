@@ -151,14 +151,14 @@ export function MDX({ children, ...props }: any) {
 }
 
 const InlineCode = gloss({
-  fontSize: '90%',
   display: 'inline-block',
-  fontFamily: ` 'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
+  fontFamily: `Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
   borderRadius: 3,
   padding: [0, 2],
   margin: 0,
   lineHeight: '1.4rem',
-  fontWeight: 500,
+  fontWeight: 400,
+  fontSize: '80%',
 }).theme((_, theme) =>
   theme.background.isDark()
     ? {
@@ -166,7 +166,7 @@ const InlineCode = gloss({
         color: [255, 255, 255, 0.8],
       }
     : {
-        background: '#FDFFD0',
+        background: '#efefef',
         color: [0, 0, 0, 0.8],
       },
 )

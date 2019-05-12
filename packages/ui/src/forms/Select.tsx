@@ -19,6 +19,7 @@ const selectStyles = {
   }),
   option: provided => ({
     ...provided,
+    padding: 0,
   }),
   menuPortal: provided => ({
     ...provided,
@@ -45,6 +46,14 @@ const selectStyles = {
   control: provided => ({
     ...provided,
     minHeight: 28,
+  }),
+  container: provided => ({
+    ...provided,
+    // padding: 0,
+  }),
+  valueContainer: provided => ({
+    ...provided,
+    padding: `0px 4px`,
   }),
 }
 

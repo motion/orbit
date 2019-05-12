@@ -8,7 +8,7 @@ import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import { debounce, isEqual, throttle } from 'lodash'
 import memoize from 'memoize-weak'
-import React, { createRef } from 'react'
+import React, { createRef, useMemo } from 'react'
 import debounceRender from 'react-debounce-render'
 
 import { ContextMenu } from '../ContextMenu'
@@ -351,7 +351,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }, 100)
 
-  renderRowInner = memoize((index, style) => {
+  renderRowInner = memoize((index, style, _sortedRows) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
@@ -386,7 +386,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (!cache) {
       this.cache[key] = style
     }
-    return this.renderRowInner(index, cache || style)
+    return this.renderRowInner(index, cache || style, this.state.sortedRows)
   }
 
   getItemKey = (index: number) => {
@@ -456,6 +456,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             selectableStoreRef={this.selectableStoreRef}
             {...this.props}
             items={this.state.sortedRows}
+            itemData={this.state.sortedRows}
             width="100%"
             // for now just hardcoded TableHead height
             height={height - this.props.rowLineHeight}
@@ -469,11 +470,12 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 }
 
-function ManagedTableNormalized(props: ManagedTableProps) {
-  return <ManagedTableInner {...props} items={props.items.map(normalizeRow)} />
+export const ManagedTableNormalized = (props: ManagedTableProps) => {
+  const normalItems = useMemo(() => props.items.map(normalizeRow), [props.items])
+  return <ManagedTableInner {...props} items={normalItems} />
 }
 
-export const ManagedTable = debounceRender(ManagedTableNormalized, 100)
+export const ManagedTable = debounceRender(ManagedTableNormalized, 40)
 
 // this will:
 //    1. if no flex provided, assume that strings should flex double anything else

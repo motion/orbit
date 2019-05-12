@@ -20,7 +20,7 @@ export const View = gloss<ViewProps>(Base, {
 // margin
 
 export type MarginProps = {
-  margin?: Sizes | Sizes[] | SizesObject
+  margin?: Sizes | SizesObject
 }
 
 export function getMargin(props: MarginProps) {

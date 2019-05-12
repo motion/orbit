@@ -232,6 +232,13 @@ export function HeadSection() {
       <OuterSpace show={screen !== 'small'} />
 
       {/* <Page.Background background="linear-gradient(#000, #222)" /> */}
+      {/* <Page.Parallax>
+        <Center>
+          <View transform={{ scale: 30 }}>
+            <BrandMark />
+          </View>
+        </Center>
+      </Page.Parallax> */}
 
       <Page.Content>
         <Col

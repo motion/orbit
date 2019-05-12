@@ -8,7 +8,7 @@ import { isDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import { debounce, isEqual, throttle } from 'lodash'
 import memoize from 'memoize-weak'
-import React, { createRef, memo, useMemo } from 'react'
+import React, { createRef, useMemo } from 'react'
 import debounceRender from 'react-debounce-render'
 
 import { ContextMenu } from '../ContextMenu'

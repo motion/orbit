@@ -178,13 +178,6 @@ Beta:
 - DataExplorerApp
   - Needs to allow for basic REPL + persisting user state
 
-- AppsApp
-  - Needs some UX improvement
-  - Working App Settings
-  - Working rename/colors
-  - Working preview or remove
-
-
 ---
 
 (if all that is done, bonus stuff)
@@ -200,15 +193,6 @@ Beta:
 
 - a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways
 
----
-
-April:
-
-- Account/space
-
-  - Get account page setup with actual login
-  - Get space page simplified but working better
-  - Put initial version of hyperswarm in
 
 ---
 

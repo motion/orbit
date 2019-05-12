@@ -97,8 +97,10 @@ export function AppsMain(props: AppProps) {
   return (
     <Section
       backgrounded
+      flex={1}
       titleBorder
-      padInner
+      titlePad="xxl"
+      pad
       icon="cog"
       space
       title={props.title}

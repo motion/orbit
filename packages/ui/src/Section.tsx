@@ -21,6 +21,9 @@ export type SectionSpecificProps = Partial<
   /** Allow scaling just the TitleRow element */
   titleScale?: number
 
+  /** Allow padding just the title element */
+  titlePad?: Sizes
+
   /** Size the section: title, padding, border radius */
   size?: Sizes
 
@@ -106,6 +109,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleScale,
     borderRadius,
     titleElement,
+    titlePad,
     overflow,
     ...viewProps
   } = props
@@ -132,7 +136,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
-          pad={innerPad || (titleBorder || bordered ? true : null)}
+          pad={selectDefined(titlePad, titleBorder || bordered ? selectDefined(pad, true) : null)}
           size={selectDefined(titleSize, size)}
           titleProps={titleProps}
           useCollapse={collapse}

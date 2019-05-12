@@ -55,7 +55,7 @@ export default memo(function DataAppKitFeaturesSection() {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : ['-4%', 0, '6%']}
+            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : ['0', 0, '6%']}
             height="auto"
             header={
               <>
@@ -64,14 +64,14 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xxxl">
-                    Build together.
+                    A new way to build apps.
                   </TitleText>
                 </FadeChild>
-                <TitleTextSub>
+                <TitleTextSub size={0.9}>
                   <FadeChild delay={200}>
-                    Collaborate with your team, add apps with a click.
+                    Every app exposes data - in GraphQL and TypeScript.
                     {screen !== 'small' && <br />}
-                    &nbsp;Use, extend and build with the app store.
+                    &nbsp;Plug in many more with the app store.
                   </FadeChild>
                 </TitleTextSub>
               </>
@@ -121,6 +121,7 @@ export default memo(function DataAppKitFeaturesSection() {
           {/* Batteries Included. */}
 
           <Space size="sm" />
+          <View flex={1} />
 
           <Fade.FadeProvide>
             <SpacedPageContent
@@ -128,18 +129,18 @@ export default memo(function DataAppKitFeaturesSection() {
               maxHeight={100000}
               height="auto"
               flex={1}
-              margin={[0, 'auto']}
+              margin="auto"
               header={
                 <>
                   <FadeChild delay={0}>
                     <PillButton>App Kit</PillButton>
                   </FadeChild>
                   <FadeChild delay={100}>
-                    <TitleText size={useScreenVal('lg', 'xl', 'xxl')}>
+                    <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
                       Batteries Included.
                     </TitleText>
                   </FadeChild>
-                  <TitleTextSub>
+                  <TitleTextSub size={0.9}>
                     <FadeChild delay={200}>
                       Internal tools share patterns.
                       <br />
@@ -206,9 +207,8 @@ export default memo(function DataAppKitFeaturesSection() {
 
                 <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
                   <SectionP>
-                    <SectionIcon name="widget" />
-                    Orbit is building a desktop-class UI kit, and going further by making many views
-                    work together both in composition and shared prop types.
+                    <SectionIcon name="widget" />A desktop-class UI kit with views that work
+                    together both in composition and shared prop types.
                     {screen !== 'small' && (
                       <>
                         <Space />
@@ -241,10 +241,10 @@ export default memo(function DataAppKitFeaturesSection() {
         zIndex={-20}
         bottom="-150%"
         backgroundSize="cover"
-        left="-40%"
-        right="-40%"
-        width="180%"
-        top="-10%"
+        left="-20%"
+        right="-20%"
+        width="150%"
+        top="10%"
         backgroundColor="transparent"
         backgroundPosition="top center"
         opacity={0.7}

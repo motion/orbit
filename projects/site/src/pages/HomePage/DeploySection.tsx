@@ -18,27 +18,27 @@ export default function ShoulderSection() {
   const Fade = useFadePage()
   return (
     <Fade.FadeProvide>
-      <Page.Parallax speed={0.5} zIndex={-1}>
+      <Page.Parallax speed={0.95} zIndex={-1}>
         <FullScreen
-          opacity={0.2}
-          transform={{ y: '-10%', scale: 1.4 }}
-          background="radial-gradient(circle closest-side, #5C005D 20%, #4A00A8, transparent)"
+          opacity={0.16}
+          transform={{ y: '-30%', x: '25%', scale: 1.4 }}
+          background="radial-gradient(circle closest-side, #4A00A8 20%, #4A00A8, transparent)"
         />
       </Page.Parallax>
 
       <Page.Parallax speed={0.5} zIndex={-1}>
         <FullScreen
-          opacity={0.35}
+          opacity={0.25}
           transform={{ y: '95%', x: '-40%', scale: 2 }}
-          background="radial-gradient(circle closest-side, #781A51 20%, #770C59, transparent)"
+          background="radial-gradient(circle closest-side, #235867 20%, transparent)"
         />
       </Page.Parallax>
 
       <Page.Parallax speed={-0.25} zIndex={-1}>
         <FullScreen
-          opacity={0.3}
-          transform={{ y: 1000, x: '55%', scale: 2.5 }}
-          background="radial-gradient(circle closest-side, #003769 20%, #235867, transparent)"
+          opacity={0.35}
+          transform={{ y: '80%', x: '55%', scale: 2.5 }}
+          background="radial-gradient(circle closest-side, #441316, transparent)"
         />
       </Page.Parallax>
 
@@ -54,7 +54,7 @@ export default function ShoulderSection() {
               </FadeChild>
               <FadeChild delay={200}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                  You control it all.
+                  Designed for privacy & control.
                 </TitleText>
               </FadeChild>
             </>
@@ -88,15 +88,15 @@ export default function ShoulderSection() {
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
               <FadeChild delay={200}>
-                <ParagraphIntro size={1.5}>
-                  From idea to deploy. You control the data, the code that runs it, and where it
+                <ParagraphIntro size={1.7}>
+                  From idea to deploy - you control the data, the code that runs it, and where it
                   runs.
                 </ParagraphIntro>
               </FadeChild>
 
               <FadeChild delay={350}>
                 <Para size={1.35} sizeLineHeight={1.25}>
-                  We're tired of platforms that lock us in, create data silos, and work against our
+                  It's time platforms didn't lock us in, create data silos, and work against our
                   interest.
                 </Para>
               </FadeChild>
@@ -104,7 +104,7 @@ export default function ShoulderSection() {
               <FadeChild delay={450}>
                 <Para size={1.35} sizeLineHeight={1.25}>
                   Orbit is open source, decentralized, and gives you complete control over the data
-                  it syncs. No proprietary platform, complete control over your tools.
+                  it syncs. No proprietary platform. A truly reliable platform for apps.
                 </Para>
               </FadeChild>
 

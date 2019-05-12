@@ -1,6 +1,8 @@
 import { ButtonProps, SizedSurface } from '@o/ui'
 import React from 'react'
 
+import { fontProps } from '../constants'
+
 export function PillButton({ children, ...props }: ButtonProps) {
   return (
     <SizedSurface
@@ -12,7 +14,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"
-      fontFamily="GT Eesti"
+      {...fontProps.Nunito}
       width="max-content"
       padding={[2, 12]}
       margin={[0, 'auto']}

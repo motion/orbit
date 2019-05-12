@@ -10,30 +10,29 @@ import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
 import { linkProps } from './linkProps'
-import { OuterSpace } from './OuterSpace'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'Powerful apps in minutes',
-  medium: 'Powerful apps in minutes',
-  small: 'Powerful apps in minutes',
+  large: 'A new deal for apps',
+  medium: 'A new deal for apps',
+  small: 'A new deal for apps',
 }
 
 let allTexts = {
   large: [
-    `Plug data into incredibly rich views with no infrastacture at all.`,
-    `It's a new way to build smart, amazing apps.`,
+    `Introducing a new type of browser: designed for apps.`,
+    `Easier, faster, powerful, decentralized apps.`,
   ],
   medium: [
-    `Plug data into incredibly rich views with no infrastacture at all.`,
-    `It's a new way to build smart, amazing apps.`,
+    `Introducing a new type of browser: designed for apps.`,
+    `Easier, faster, powerful, decentralized apps.`,
   ],
   small: [
-    `Plug data into incredibly rich views with no infrastacture at all.`,
-    `It's a new way to build smart, amazing apps.`,
+    `Introducing a new type of browser: designed for apps.`,
+    `Easier, faster, powerful, decentralized apps.`,
   ],
 }
 
@@ -97,11 +96,11 @@ const HeadContent = memo(() => {
 
       <View
         maxHeight={isSmall ? 0 : 'auto'}
-        overflow="hidden"
         position="relative"
         flex={1}
         width={textsWidth}
         margin={[0, 'auto']}
+        maxWidth="90%"
       >
         <Paragraph
           fontWeight={100}
@@ -223,14 +222,11 @@ const Smaller = gloss({
 }))
 
 export function HeadSection() {
-  const screen = useScreenSize()
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
 
   return (
     <Fade.FadeProvide>
-      <OuterSpace show={screen !== 'small'} />
-
       {/* <Page.Background background="linear-gradient(#000, #222)" /> */}
       {/* <Page.Parallax>
         <Center>
@@ -245,14 +241,12 @@ export function HeadSection() {
           right={useScreenHeightVal(40, 0)}
           left={useScreenHeightVal(40, 0)}
           opacity={fontsLoaded ? 1 : 0}
-          bottom={50}
           margin={['auto', 0]}
         >
-          <Space size="lg" />
+          <Space size="xxxl" />
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
-
           <Space size="xxl" />
           <HeadJoin />
         </Col>

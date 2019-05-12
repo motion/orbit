@@ -1,8 +1,8 @@
 import { always, ensure, react, useStore } from '@o/use-store'
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
 
-import { isBrowser } from '../constants'
+import { defaultSortPressDelay, isBrowser } from '../constants'
 import { Config } from '../helpers/configure'
 import { DynamicListControlled } from './DynamicList'
 
@@ -27,6 +27,11 @@ export type SelectableProps = {
   defaultSelected?: number
   selectable?: 'multi' | boolean
   items?: any[]
+
+  // selections and sorting need to interacts (same concerns)
+  // these are sortable props but important
+  sortable?: boolean
+  pressDelay?: number
 }
 
 export const selectablePropKeys = [
@@ -266,6 +271,9 @@ export class SelectableStore {
     this.setActive(next)
   }
 
+  sortableMouseDownIndex = -1
+  sortableMouseDownTm = null
+
   setRowMouseDown(index: number, e?: React.MouseEvent) {
     document.body.classList.add('selectable-mouse-down')
 
@@ -282,7 +290,45 @@ export class SelectableStore {
     }
     this.dragStartIndex = index
     document.addEventListener('mouseup', this.onStopDragSelecting)
-    this.setRowActive(index, e)
+
+    // #sorting
+    // we dont want to select immediately when dealing with press delay
+    // so we need to do two things:
+    //   1: switch to onMouseUp strategy for single selection
+    //   2: still select this row if they drag down for multiple, and therefore avoid mouseup
+
+    if (this.props.sortable) {
+      this.sortableMouseDownIndex = index
+
+      // finally, we also want to select this row once the pressDelay window has passed, for good UX
+      this.sortableMouseDownTm = setTimeout(() => {
+        // but only if we dont start sorting
+        if (!this.isSorting) {
+          this.setRowActive(index)
+        }
+      }, selectDefined(this.props.pressDelay, defaultSortPressDelay) + 10)
+    } else {
+      this.setRowActive(index, e)
+    }
+  }
+
+  private onStopDragSelecting = () => {
+    clearTimeout(this.sortableMouseDownTm)
+    document.body.classList.remove('selectable-mouse-down')
+    this.dragStartIndex = null
+
+    // onMouseUp, finish selecting this row! (see #sorting)
+    if (this.isSorting) {
+      // we did a sort, so ignore the original select
+      this.sortableMouseDownIndex = -1
+    } else {
+      if (this.props.sortable && this.sortableMouseDownIndex > -1) {
+        this.setRowActive(this.sortableMouseDownIndex)
+        this.sortableMouseDownIndex = -1
+      }
+    }
+
+    document.removeEventListener('mouseup', this.onStopDragSelecting)
   }
 
   onHoverRow(index: number) {
@@ -290,6 +336,14 @@ export class SelectableStore {
       console.debug('Preventing selection while sorting')
       return
     }
+
+    // finish select in the case of mousemove (see #sorting)
+    const sindex = this.sortableMouseDownIndex
+    if (sindex > -1) {
+      this.sortableMouseDownIndex = -1
+      this.onHoverRow(sindex)
+    }
+
     const row = this.rows[index]
     const rowKey = key(row)
     if (!this.props.selectable) {
@@ -370,12 +424,6 @@ export class SelectableStore {
       } catch (e) {}
     }
     return selected
-  }
-
-  private onStopDragSelecting = () => {
-    document.body.classList.remove('selectable-mouse-down')
-    this.dragStartIndex = null
-    document.removeEventListener('mouseup', this.onStopDragSelecting)
   }
 
   private getModifiers(e?: React.MouseEvent): Modifiers {

@@ -3,6 +3,7 @@ import { idFn, selectDefined } from '@o/utils'
 import memoize from 'memoize-one'
 import React, { forwardRef, memo, RefObject, useCallback } from 'react'
 
+import { defaultSortPressDelay } from '../constants'
 import { Config } from '../helpers/configure'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { rowItemCompare } from '../helpers/rowItemCompare'
@@ -147,7 +148,7 @@ export function VirtualList(virtualProps: VirtualListProps) {
       shouldCancelStart={isRightClick}
       lockAxis="y"
       {...props}
-      pressDelay={selectDefined(props.pressDelay, 0)}
+      pressDelay={selectDefined(props.pressDelay, defaultSortPressDelay)}
       onSortStart={useCallback(
         (sort, event) => {
           selectableStore.setSorting(true)

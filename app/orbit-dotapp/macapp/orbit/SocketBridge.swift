@@ -1,10 +1,11 @@
 import Foundation
+import SwiftWebSocket
 
 class SocketBridge {
   var send: ((String)->Void) = { _ in }
   var onMessage: (String)->Void
   
-  init(queue: AsyncGroup, onMessage: @escaping (String)->Void) {
+  init(onMessage: @escaping (String)->Void) {
     self.onMessage = onMessage
 
     // socket bridge
@@ -22,11 +23,9 @@ class SocketBridge {
     ws.event.error = { error in
       print("screen.ws.error \(port) \(error)")
     }
-    queue.background {
-      ws.event.message = { (message) in
-        if let text = message as? String {
-          self.onMessage(text)
-        }
+    ws.event.message = { (message) in
+      if let text = message as? String {
+        self.onMessage(text)
       }
     }
   }

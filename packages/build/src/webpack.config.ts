@@ -102,11 +102,17 @@ const optimization = {
   prod: {
     usedExports: true,
     sideEffects: true,
-    runtimeChunk: true,
-    splitChunks: {
-      chunks: 'async',
-      name: false,
-    },
+    ...(target === 'node'
+      ? {
+          splitChunks: false,
+        }
+      : {
+          runtimeChunk: true,
+          splitChunks: {
+            chunks: 'async',
+            name: false,
+          },
+        }),
     minimizer: [
       new TerserPlugin({
         sourceMap: true,
@@ -132,15 +138,16 @@ const optimization = {
           },
         },
       }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: {
-          parser: safePostCssParser,
-          map: {
-            inline: false,
-            annotation: true,
+      target !== 'node' &&
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorOptions: {
+            parser: safePostCssParser,
+            map: {
+              inline: false,
+              annotation: true,
+            },
           },
-        },
-      }),
+        }),
     ].filter(Boolean),
   },
   dev: {
@@ -333,32 +340,33 @@ async function makeConfig() {
 
       new webpack.DefinePlugin(defines),
 
-      new webpack.IgnorePlugin(/electron-log/),
+      target !== 'node' && new webpack.IgnorePlugin(/electron-log/),
 
       !isProd &&
         new ForkTsCheckerWebpackPlugin({
           useTypescriptIncrementalApi: true,
         }),
 
-      new HtmlWebpackPlugin({
-        favicon: 'public/favicon.png',
-        template: 'public/index.html',
-        chunksSortMode: 'none',
-        ...(isProd && {
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true,
-          },
+      target !== 'node' &&
+        new HtmlWebpackPlugin({
+          favicon: 'public/favicon.png',
+          template: 'public/index.html',
+          chunksSortMode: 'none',
+          ...(isProd && {
+            minify: {
+              removeComments: true,
+              collapseWhitespace: true,
+              removeRedundantAttributes: true,
+              useShortDoctype: true,
+              removeEmptyAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              keepClosingSlash: true,
+              minifyJS: true,
+              minifyCSS: true,
+              minifyURLs: true,
+            },
+          }),
         }),
-      }),
 
       // WARNING: this may or may not work wiht code splitting
       // i was seeing all the chunks loaded inline in HTML, when it shouldn't have
@@ -366,15 +374,19 @@ async function makeConfig() {
       //   rel: 'preload',
       // }),
 
-      isProd && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      target !== 'node' &&
+        isProd &&
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
-      isProd &&
+      target !== 'node' &&
+        isProd &&
         new MiniCssExtractPlugin({
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      isProd &&
+      target !== 'node' &&
+        isProd &&
         target === 'web' &&
         new HtmlCriticalWebpackPlugin({
           base: outputPath,

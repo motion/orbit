@@ -31,30 +31,31 @@ class AtomApplication: NSObject, NSApplicationDelegate {
     return NSApplication.TerminateReply.terminateNow
   }
   
+  func onMessage(_: String) {
+  }
+  
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     print("applicationDidFinishLaunching PORT: \(ProcessInfo.processInfo.environment["SOCKET_PORT"] ?? "")")
 
     // setup socket bridge before any action that needs it...
-    socketBridge = SocketBridge(queue: self.queue, onMessage: self.onMessage)
+    socketBridge = SocketBridge(onMessage: self.onMessage)
 
-    if shouldRunAppWindow {
-      window.level = .floating // .floating to be on top
-      window.backgroundColor = NSColor.clear
-      window.alphaValue = 0
-      window.isOpaque = false
-      window.titlebarAppearsTransparent = true
-      window.titleVisibility = .hidden
-      window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
-      window.isMovableByWindowBackground = false
-      window.collectionBehavior = .managed
-      window.ignoresMouseEvents = true
-      // allow showing icon in sub-apps
-      if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
-        NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
-        self.setIcon(ProcessInfo.processInfo.environment["SHOW_ICON"]!)
-      }
-      window.makeKeyAndOrderFront(nil)
+    window.level = .floating // .floating to be on top
+    window.backgroundColor = NSColor.clear
+    window.alphaValue = 0
+    window.isOpaque = false
+    window.titlebarAppearsTransparent = true
+    window.titleVisibility = .hidden
+    window.setFrameOrigin(NSPoint.init(x: 0, y: 0))
+    window.isMovableByWindowBackground = false
+    window.collectionBehavior = .managed
+    window.ignoresMouseEvents = true
+    // allow showing icon in sub-apps
+    if ProcessInfo.processInfo.environment["SHOW_ICON"] != nil {
+      NSApp.setActivationPolicy(NSApplication.ActivationPolicy.regular)
+      self.setIcon(ProcessInfo.processInfo.environment["SHOW_ICON"]!)
     }
+    window.makeKeyAndOrderFront(nil)
     
     print("finished running app window")
   }

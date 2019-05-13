@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'

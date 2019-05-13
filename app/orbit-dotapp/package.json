@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",
-    "bundle": "pkg ./_/main.js --targets node10-macos-x64 -o ./dist/main"
+    "bundle": "mcro-build --build --prod --target node --entry ./src/main.ts",
+    "dist": "pkg ./_/main.js --targets node10-macos-x64 -o ./dist/main"
   },
   "dependencies": {
     "bonjour": "*",

@@ -3,7 +3,7 @@ import { Telemetry } from './telemetry'
 const instance = new Telemetry()
 
 const flush = () => {
-  instance.sendEvents().catch(e => {
+  instance.sendEvents().catch(() => {
     // ignore
   })
 }

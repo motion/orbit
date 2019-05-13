@@ -8,6 +8,10 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/config": "^2.5.2"
+    "@o/config": "^2.5.2",
+    "is-docker": "2.0.0",
+    "ci-info": "2.0.0",
+    "configstore": "4.0.0",
+    "prompts": "2.0.4"
   }
 }

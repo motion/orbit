@@ -76,7 +76,7 @@ export class Telemetry {
     this.buildAndStoreEvent(eventType, Object.assign(tags, decoration))
   }
 
-  captureError(type, tags = {}) {
+  captureError(type, tags: any = {}) {
     if (!this.isTrackingEnabled()) {
       return
     }
@@ -92,7 +92,7 @@ export class Telemetry {
     this.buildAndStoreEvent(eventType, Object.assign(tags, decoration))
   }
 
-  captureBuildError(type, tags = {}) {
+  captureBuildError(type, tags: any = {}) {
     if (!this.isTrackingEnabled()) {
       return
     }

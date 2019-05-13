@@ -1,5 +1,5 @@
 {
-  "name": "@o/demo-app-api-grid",
+  "name": "@o/demo-app-flow",
   "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",

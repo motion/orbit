@@ -101,7 +101,11 @@ export const reporter: Reporter = {
   },
 }
 
+// @ts-ignore
 console.log = (...args) => reporter.log(util.format(...args))
+// @ts-ignore
 console.warn = (...args) => reporter.warn(util.format(...args))
+// @ts-ignore
 console.info = (...args) => reporter.info(util.format(...args))
+// @ts-ignore
 console.error = (...args) => reporter.error(util.format(...args))

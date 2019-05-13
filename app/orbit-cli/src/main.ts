@@ -139,6 +139,8 @@ function main() {
     }
   }
 
+  console.log('test')
+
   const app = (p: Yargs.Argv) =>
     p.positional('app', {
       type: 'string',

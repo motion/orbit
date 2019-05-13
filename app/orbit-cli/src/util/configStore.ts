@@ -1,7 +1,7 @@
 import Configstore from 'configstore'
 import prompts from 'prompts'
 
-import report from '../reporter'
+import { reporter } from '../reporter'
 
 let conf
 try {
@@ -23,7 +23,7 @@ export const getPackageManager = () => conf.get(packageMangerConfigKey)
 
 export const setPackageManager = packageManager => {
   conf.set(packageMangerConfigKey, packageManager)
-  report.info(`Preferred package manager set to "${packageManager}"`)
+  reporter.info(`Preferred package manager set to "${packageManager}"`)
 }
 
 export const promptPackageManager = async () => {

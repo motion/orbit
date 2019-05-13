@@ -129,6 +129,9 @@ async function makeConfig(params: Params) {
             },
             {
               loader: 'babel-loader',
+              options: {
+                presets: ['@o/babel-preset-motion'],
+              },
             },
             'react-hot-loader/webpack',
           ],

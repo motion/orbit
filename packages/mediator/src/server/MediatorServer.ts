@@ -31,7 +31,7 @@ export class MediatorServer {
     const onSuccess = result => {
       this.options.transport.send({
         id: data.id,
-        result: result,
+        result,
       })
     }
     const onError = (error: any) => {

@@ -21,7 +21,7 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 )
 
 export const AppDevOpenCommand = new Command<
-  void,
+  number,
   {
     // URL of the bundle
     bundleURL: string

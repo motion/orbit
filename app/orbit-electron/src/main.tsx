@@ -3,14 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppDevOpenCommand,
-  CloseAppCommand,
-  NewFallbackServerPortCommand,
-  RestartAppCommand,
-  SendClientDataCommand,
-  TearAppCommand,
-} from '@o/models'
+import { AppDevOpenCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
@@ -46,8 +39,12 @@ export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async p
       },
     ],
   })
-  console.log('UPDATE', App.state.allApps)
-  forkAndStartOrbitApp({ appId, appInDev })
+  console.log('UPDATE', App.state.allApps, appId)
+  // setTimeout so command doesnt take forever to run
+  setTimeout(() => {
+    forkAndStartOrbitApp({ appId, appInDev })
+  })
+  return appId
 })
 
 export async function main() {

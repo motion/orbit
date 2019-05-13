@@ -118,7 +118,7 @@ class OrbitCLI {
     }
     let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
 
-    console.log('finished bundling, sending open command')
+    console.log('started bundling, sending open command')
 
     const res = await orbitDesktop.command(AppDevOpenCommand, {
       bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,

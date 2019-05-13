@@ -1,3 +1,4 @@
+import { orTimeout } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { Command, Model, TransportRequestType } from '../common'
@@ -7,7 +8,6 @@ import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
-import { orTimeout } from '@o/utils'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -70,19 +70,26 @@ export class MediatorClient {
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
-      const response = await orTimeout(
-        transport.execute('command', {
-          command: name,
-          args,
-        }),
-        300,
-      )
-      if (response !== null && response.notFound !== true) {
-        if (response.error) {
-          log.error(response.error)
-          throw new Error(response.error)
+      try {
+        console.log('attempting transport')
+        const response = await orTimeout(
+          transport.execute('command', {
+            command: name,
+            args,
+          }),
+          400,
+        )
+
+        if (response && response.notFound === true) {
+          if (response.error) {
+            console.error(response.error)
+          }
+        } else {
+          console.log('success, return', response.result)
+          return response.result
         }
-        return response.result
+      } catch (err) {
+        console.error('timeout', err)
       }
     }
 

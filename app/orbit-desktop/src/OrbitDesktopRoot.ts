@@ -83,6 +83,7 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
+import { OrbitAppsManager } from './managers/OrbitAppsManager'
 
 const log = new Logger('desktop')
 
@@ -113,6 +114,7 @@ export class OrbitDesktopRoot {
   private keyboardManager: KeyboardManager
   private topicsManager: TopicsManager
   private operatingSystemManager: OperatingSystemManager
+  private orbitAppsManager: OrbitAppsManager
 
   start = async () => {
     await Desktop.start({
@@ -189,6 +191,9 @@ export class OrbitDesktopRoot {
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
+
+    this.orbitAppsManager = new OrbitAppsManager()
+    await this.orbitAppsManager.start()
 
     new ContextManager({ screen: this.screen })
     new MousePositionManager({

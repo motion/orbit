@@ -29,6 +29,14 @@ common/temp/**
 
 app/build-orbit/stage-app/package-lock.json
 
+app/orbit-dotapp/macapp/orbit.xcodeproj/project.xcworkspace
+app/orbit-dotapp/macapp/orbit.xcodeproj/xcuserdata
+app/orbit-dotapp/macapp/Carthage
+app/orbit-dotapp/macapp/Index
+app/orbit-dotapp/macapp/Build
+app/orbit-dotapp/macapp/orbit.xcodeproj
+app/orbit-dotapp/macapp/orbit.xcworkspace/xcuserdata
+
 app/screen/train
 app/screen/orbit/orbit.xcodeproj/project.xcworkspace
 app/screen/orbit/orbit.xcodeproj/xcuserdata

@@ -25,6 +25,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   const nodeBinary = isProd ? app.getPath('exe') : (await execa('which', ['node'])).stdout
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')
+  const desktop = app.getPath('desktop')
   const [
     server,
     bridge,
@@ -51,6 +52,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
       nodeBinary,
       resources: Path.join(app.getAppPath(), '..'),
       dotApp,
+      desktop,
     },
     urls: {
       auth: 'https://orbitauth.com',

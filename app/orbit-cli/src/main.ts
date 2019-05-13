@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { AppDevOpenCommand } from '@o/models'
-import { randomString } from '@o/utils'
+import { orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
 import getPort from 'get-port'
 import * as Path from 'path'
@@ -23,13 +23,6 @@ let description = `Orbit v${version} - Build Amazing Apps Together`
 
 type Options = {
   projectRoot: string
-}
-
-function orTimeout<T>(promise: Promise<T>, timeout): Promise<T | null> {
-  let waitForTimeout = new Promise<null>(resolve => {
-    setTimeout(() => resolve(null), timeout)
-  })
-  return Promise.race([promise, waitForTimeout])
 }
 
 async function findBonjourService(type: string, timeout: number) {

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE54E0BA214B15A4000207B1 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54E0B9214B15A4000207B1 /* Async.swift */; };
 		AE9BDBE62188E9AC00ACDDAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFBEEE22202D838D005F925A /* MainMenu.xib */; };
+		AECE671E22891FAE0015403A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECE671D22891FAE0015403A /* WebSocket.swift */; };
 		AEE9270621913158006CAA2C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9270521913158006CAA2C /* main.swift */; };
 		CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */; };
 		CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBEEE1E202D838D005F925A /* AtomApplication.swift */; };
@@ -16,11 +16,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CF0BCD70202E0A790012723C /* CopyFiles */ = {
+		AECE671822891ED50015403A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolderSpec = 16;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -28,7 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		AE54E0B9214B15A4000207B1 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		AECE671D22891FAE0015403A /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = "../../../orbit-dotapp/macapp/orbit/WebSocket.swift"; sourceTree = "<group>"; };
 		AEE9270521913158006CAA2C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CF0BCDB6202E1BBB0012723C /* SocketBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketBridge.swift; sourceTree = "<group>"; };
 		CFBEEE1B202D838D005F925A /* orbit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = orbit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,9 +84,9 @@
 				CFBEEE1E202D838D005F925A /* AtomApplication.swift */,
 				CFBEEE20202D838D005F925A /* Assets.xcassets */,
 				CFBEEE22202D838D005F925A /* MainMenu.xib */,
+				AECE671D22891FAE0015403A /* WebSocket.swift */,
 				CFBEEE25202D838D005F925A /* Info.plist */,
 				CFBEEE26202D838D005F925A /* orbit.entitlements */,
-				AE54E0B9214B15A4000207B1 /* Async.swift */,
 			);
 			path = orbit;
 			sourceTree = "<group>";
@@ -101,8 +101,7 @@
 				CFBEEE17202D838D005F925A /* Sources */,
 				CFBEEE18202D838D005F925A /* Frameworks */,
 				CFBEEE19202D838D005F925A /* Resources */,
-				CF0BCD70202E0A790012723C /* CopyFiles */,
-				AE496FAB211BD8A5008319A0 /* ShellScript */,
+				AECE671822891ED50015403A /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -120,13 +119,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Nate Wienert";
 				TargetAttributes = {
 					CFBEEE1A202D838D005F925A = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1000;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -165,34 +164,14 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		AE496FAB211BD8A5008319A0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "touch ../../orbit-desktop/_/main.js\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		CFBEEE17202D838D005F925A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CF0BCDB7202E1BBB0012723C /* SocketBridge.swift in Sources */,
+				AECE671E22891FAE0015403A /* WebSocket.swift in Sources */,
 				CFBEEE1F202D838D005F925A /* AtomApplication.swift in Sources */,
-				AE54E0BA214B15A4000207B1 /* Async.swift in Sources */,
 				AEE9270621913158006CAA2C /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,7 +193,6 @@
 		CFBEEE27202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -275,7 +253,6 @@
 		CFBEEE28202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -328,10 +305,9 @@
 		CFBEEE2A202D838D005F925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -339,11 +315,10 @@
 					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "New New Orbit";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -351,10 +326,9 @@
 		CFBEEE2B202D838D005F925A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Nathan Wienert (399WY8X9HY)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -362,11 +336,10 @@
 					"$(PROJECT_DIR)/orbit",
 				);
 				INFOPLIST_FILE = orbit/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.o.orbit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "New New Orbit";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;

@@ -11,6 +11,7 @@ export type GlobalConfig = {
     nodeBinary: string
     dotApp: string
     resources: string
+    desktop: string
   }
   urls: {
     auth: string

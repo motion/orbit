@@ -6,8 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "build-app": "NODE_ENV=production mcro-build --build --target node"
+    "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/config": "^2.5.2",

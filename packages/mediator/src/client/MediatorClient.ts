@@ -66,18 +66,22 @@ export class MediatorClient {
   async command<Args, ReturnType>(
     command: Command<ReturnType, Args> | string,
     args?: Args,
+
+    // we have a higher timeout for clients than for the server itself
+    // so that if a client is down, the server still has time to go through many and finish them
+    // see MediatorServer.command setting timeout
+    timeout = 2000,
   ): Promise<ReturnType> {
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
       try {
-        console.log('attempting transport')
         const response = await orTimeout(
           transport.execute('command', {
             command: name,
             args,
           }),
-          400,
+          timeout,
         )
 
         if (response && response.notFound === true) {
@@ -85,7 +89,6 @@ export class MediatorClient {
             console.error(response.error)
           }
         } else {
-          console.log('success, return', response.result)
           return response.result
         }
       } catch (err) {

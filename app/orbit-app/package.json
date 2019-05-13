@@ -19,7 +19,6 @@
     "@o/config": "^2.5.2",
     "@o/confluence-app": "^2.5.6",
     "@o/constants": "^2.5.2",
-    "@o/custom-app": "^2.5.6",
     "@o/drive-app": "^2.5.6",
     "@o/fast-compare": "^2.5.2",
     "@o/github-app": "^2.5.6",

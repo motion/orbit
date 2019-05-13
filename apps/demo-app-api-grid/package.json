@@ -1,5 +1,5 @@
 {
-  "name": "@o/custom-tree-app",
+  "name": "@o/demo-app-api-grid",
   "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
@@ -9,8 +9,10 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/gmail-app": "^2.5.6",
     "@o/kit": "^2.5.6",
-    "@o/ui": "^2.5.6",
-    "immer": "1.7.2"
+    "@o/postgres-app": "^2.5.6",
+    "@o/slack-app": "^2.5.6",
+    "@o/ui": "^2.5.6"
   }
 }

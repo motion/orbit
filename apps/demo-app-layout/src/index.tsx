@@ -1,7 +1,14 @@
+import { createApp } from '@o/kit'
+import { employees } from '@o/mock-data'
 import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Title, Tree } from '@o/ui'
-import faker from 'faker'
-import produce from 'immer'
 import React, { useState } from 'react'
+
+export default createApp({
+  id: 'demo-app-layout',
+  name: 'App Demo: Layout',
+  icon: '',
+  app: DemoAppLayout,
+})
 
 const treeData = {
   0: {
@@ -72,25 +79,16 @@ const treeData = {
   },
 }
 
-const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
-const items = [...new Array(10000)].map((_, index) => ({
-  key: `${index}`,
-  category: rowTypes[index % 20],
-  values: {
-    name: faker.name.firstName(),
-    topic: faker.lorem.sentence(),
-    members: faker.random.number(),
-    createdAt: new Date(faker.date.past() * 1000),
-    active: false,
-  },
-}))
+// const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
+const len = employees.length
+const items = [...new Array(10000)].map((_, index) => employees[index % (len - 1)])
 
-export function CustomAppTree() {
+function DemoAppLayout() {
   const [treeState, setTreeState] = useState(treeData)
   const [selected, setSelected] = useState(0)
 
   return (
-    <Scale size={2}>
+    <Scale size={1.1}>
       <Layout type="row">
         <Pane title="Select Items" resizable>
           <Tree

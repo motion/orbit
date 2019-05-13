@@ -1,4 +1,5 @@
 import Observable from 'zen-observable'
+
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
 import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
@@ -202,7 +203,6 @@ export class WebSocketClientTransport implements ClientTransport {
         type: subscription.type,
         name: subscription.name,
         result: data.result,
-        resultString: JSON.stringify(data.result), // useful for debugging because original object can be changed
         notFound: data.notFound,
         sendIdentifier: data.sendIdentifier,
       })

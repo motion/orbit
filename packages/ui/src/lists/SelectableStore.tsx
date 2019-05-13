@@ -94,22 +94,6 @@ export class SelectableStore {
     },
   )
 
-  onSelection = react(
-    () => [...this.active],
-    activeRows => {
-      ensure('onSelect', !!this.props.onSelect)
-      ensure('has rows', !!this.rows.length)
-      ensure('wont unselect', !this.props.alwaysSelected || activeRows.length > 0)
-      if (activeRows.length) {
-        const index = this.keyToIndex[[...this.active][0]]
-        this.scrollToIndex(index)
-      }
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
   defaultSelectedProp = react(
     () => [this.props.defaultSelected, always(this.rows)],
     async ([index], { when }) => {
@@ -217,7 +201,9 @@ export class SelectableStore {
     if (isDefined(found)) {
       next.push(this.getIndexKey(nextIndex))
     }
+
     this.setActive(next)
+    this.scrollToIndex(nextIndex)
 
     return found
   }
@@ -355,10 +341,14 @@ export class SelectableStore {
     const { dragStartIndex } = this
     const isMouseDown = typeof dragStartIndex === 'number'
     if (isMouseDown) {
+      if (direction === Direction.down) {
+        this.scrollToIndex(index + 1)
+      } else {
+        this.scrollToIndex(index - 1)
+      }
       if (this.props.selectable === 'multi') {
         const startKey = this.getIndexKey(dragStartIndex)
         this.setActive(this.selectInRange(startKey, rowKey))
-        this.scrollToIndex(index)
         return direction
       } else {
         this.setActive([rowKey])

@@ -44,8 +44,8 @@ function CustomApp() {
 }
 
 export default createApp({
-  id: 'custom',
-  name: 'Custom',
+  id: 'demo-app-api-grid',
+  name: 'Demo App: API Grid',
   icon: '',
   app: CustomApp,
 })

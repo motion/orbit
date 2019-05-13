@@ -1,5 +1,4 @@
 import ConfluenceApp from '@o/confluence-app'
-import CustomApp from '@o/custom-app'
 import DriveApp from '@o/drive-app'
 import GithubApp from '@o/github-app'
 import GmailApp from '@o/gmail-app'
@@ -18,7 +17,6 @@ import { createElement } from 'react'
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
-import CustomApp2 from './custom/CustomApp'
 import DataExplorerApp from './DataExplorerApp'
 import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
@@ -49,8 +47,6 @@ const apps: AppDefinition[] = [
   SlackApp,
   WebsiteApp,
   PostgresApp,
-  CustomApp2,
-  CustomApp,
   GraphApp,
 ]
 

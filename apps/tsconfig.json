@@ -7,7 +7,6 @@
   "references": [
     { "path": "./confluence-app" },
     { "path": "./custom-app" },
-    { "path": "./custom-tree-app" },
     { "path": "./drive-app" },
     { "path": "./github-app" },
     { "path": "./graphql-source-app" },

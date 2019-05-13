@@ -117,12 +117,18 @@ class OrbitCLI {
       mode: 'development',
     }
     let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
-    await orbitDesktop.command(AppDevOpenCommand, {
+
+    console.log('finished bundling, sending open command')
+
+    const res = await orbitDesktop.command(AppDevOpenCommand, {
       bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,
       path: this.options.projectRoot,
       // @ts-ignore
       appId: this.options.projectRoot,
     })
+
+    console.log('got back', res)
+
     return
   }
 }
@@ -138,8 +144,6 @@ function main() {
       process.exit(2)
     }
   }
-
-  console.log('test')
 
   const app = (p: Yargs.Argv) =>
     p.positional('app', {

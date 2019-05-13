@@ -1,3 +1,5 @@
+import 'raf/polyfill'
+
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
@@ -12,10 +14,10 @@ import {
 import { render } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
-import 'raf/polyfill'
 import * as React from 'react'
 import waitOn from 'wait-on'
 import waitPort from 'wait-port'
+
 import AppsWindow from './apps/AppsWindow'
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
@@ -29,6 +31,7 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
+  console.log('resolving AppDevOpenCommand')
   let appInDev = {
     path: params.path,
     bundleURL: params.bundleURL,
@@ -58,6 +61,7 @@ export async function main() {
   // require after desktop starts to avoid reconnect errors
   const { Mediator } = require('./mediator')
   const port = await Mediator.command(NewFallbackServerPortCommand)
+  console.log('Electron started mediator on port', port)
 
   const mediatorServer = new MediatorServer({
     models: [],

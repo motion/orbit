@@ -11,11 +11,11 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@babel/code-frame": "^7.0.0",
-    "@hot-loader/react-dom": "*",
     "@o/telemetry": "^2.5.2",
     "@o/utils": "*",
     "@o/mediator": "*",
+    "@babel/code-frame": "^7.0.0",
+    "@hot-loader/react-dom": "*",
     "reconnecting-websocket": "4.1.10",
     "ws": "7.0.0",
     "babel-loader": "*",

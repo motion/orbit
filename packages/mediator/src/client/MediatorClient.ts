@@ -7,6 +7,7 @@ import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
+import { orTimeout } from '@o/utils'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -69,11 +70,14 @@ export class MediatorClient {
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
-      const response = await transport.execute('command', {
-        command: name,
-        args,
-      })
-      if (response.notFound !== true) {
+      const response = await orTimeout(
+        transport.execute('command', {
+          command: name,
+          args,
+        }),
+        300,
+      )
+      if (response !== null && response.notFound !== true) {
         if (response.error) {
           log.error(response.error)
           throw new Error(response.error)

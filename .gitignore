@@ -35,6 +35,7 @@ app/orbit-dotapp/macapp/Carthage
 app/orbit-dotapp/macapp/Index
 app/orbit-dotapp/macapp/Build
 app/orbit-dotapp/macapp/orbit.xcodeproj
+app/orbit-dotapp/macapp/orbit.xcworkspace/xcuserdata
 
 app/screen/train
 app/screen/orbit/orbit.xcodeproj/project.xcworkspace

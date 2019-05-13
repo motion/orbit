@@ -1,6 +1,10 @@
+import immer from 'immer'
+
 import * as TemplatesImport from './templates'
 
 export const Templates = TemplatesImport
+
+export const produce = immer
 
 export * from '@o/bridge'
 export * from '@o/config'

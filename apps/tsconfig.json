@@ -6,7 +6,10 @@
   },
   "references": [
     { "path": "./confluence-app" },
-    { "path": "./custom-app" },
+    { "path": "./demo-app-api-grid" },
+    { "path": "./demo-app-flow" },
+    { "path": "./demo-app-layout" },
+    { "path": "./demo-app-user-manager" },
     { "path": "./drive-app" },
     { "path": "./github-app" },
     { "path": "./graphql-source-app" },

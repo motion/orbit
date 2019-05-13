@@ -1,8 +1,15 @@
-import { Templates } from '@o/kit'
+import { createApp, Templates } from '@o/kit'
 import { Flow, FlowStep, Layout, List, Loading, Pane, Table, Title } from '@o/ui'
 import React from 'react'
 
-export function CustomApp2() {
+export default createApp({
+  id: 'demo-app-flow',
+  name: 'App Demo: Flow',
+  icon: '',
+  app: DemoAppFlow,
+})
+
+function DemoAppFlow() {
   return (
     <Flow
       initialData={{

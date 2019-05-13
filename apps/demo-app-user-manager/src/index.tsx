@@ -1,11 +1,19 @@
+import { createApp } from '@o/kit'
 import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, SearchInput, Section, Select, Tab, Table, Tabs, useFetch, useForm } from '@o/ui'
 import React, { useState } from 'react'
+
+export default createApp({
+  id: 'demo-app-user-manager',
+  name: 'App Demo: User Manager',
+  icon: '',
+  app: DemoAppUserManager,
+})
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
 
-export function CustomApp1() {
+export function DemoAppUserManager() {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
   const users = useFetch(`${endpoint}/users`).map((row, i) => ({

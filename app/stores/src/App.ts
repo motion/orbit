@@ -86,13 +86,7 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
-    allApps: [
-      {
-        id: 0,
-        appId: 0,
-        type: 'root',
-      },
-    ] as AppStateEntry[],
+    appWindows: {} as { [id: string]: AppStateEntry },
     orbitState: {
       docked: false,
       orbitOnLeft: false,

@@ -28,17 +28,14 @@ export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async p
     path: params.path,
     bundleURL: params.bundleURL,
   }
-  let appId = App.state.allApps.length
+  let appId = Object.keys(App.state.appWindows).length
   App.setState({
-    allApps: [
-      ...App.state.allApps,
-      {
-        type: 'root',
-        id: appId,
-      },
-    ],
+    appWindows: {
+      type: 'root',
+      id: appId,
+    },
   })
-  console.log('UPDATE', App.state.allApps, appId)
+  console.log('UPDATE', App.state.appWindows, appId)
   // setTimeout so command doesnt take forever to run
   setTimeout(() => {
     forkAndStartOrbitApp({ appId, appInDev })

@@ -10,8 +10,13 @@ export type AppWithDefinition = {
 }
 
 export function useActiveAppsWithDefinition(type?: string): AppWithDefinition[] {
-  return useActiveApps(type).map(app => ({
-    definition: getAppDefinition(app.identifier),
-    app,
-  }))
+  return (
+    useActiveApps(type)
+      .map(app => ({
+        definition: getAppDefinition(app.identifier),
+        app,
+      }))
+      // we may not have loaded definition yet...
+      .filter(x => !!x.definition)
+  )
 }

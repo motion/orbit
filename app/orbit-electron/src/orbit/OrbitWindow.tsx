@@ -176,7 +176,7 @@ export default function OrbitWindow() {
   const store = useStore(OrbitWindowStore, null)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const appQuery = `/?id=${appStartupConfig.appId}`
+  const appQuery = `/?id=${appStartupConfig.appId}&appInDev=${appStartupConfig.appInDev}`
   const url = `${Config.urls.server}${appStartupConfig.appId > 0 ? appQuery : ''}`
 
   log.info(

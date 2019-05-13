@@ -15,6 +15,11 @@ export function useActiveApps(type?: string): AppBit[] {
     select: appSelectAllButDataAndTimestamps,
   })
 
+  const isInDev = window.location.search.indexOf('appInDev=true') > -1
+  if (isInDev) {
+    return []
+  }
+
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 

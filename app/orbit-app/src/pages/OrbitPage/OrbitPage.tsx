@@ -1,37 +1,29 @@
-import { Stores } from '../../om/stores'
 import { command } from '@o/bridge'
-import { gloss } from 'gloss'
-import { AppDefinition, showConfirmDialog, themes, ProvideStores } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, themes } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
-import { Loading, ProvideFocus, Theme, ListPassProps, ViewProps, View } from '@o/ui'
+import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
+import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, {
-  memo,
-  Suspense,
-  useEffect,
-  useMemo,
-  useRef,
-  useLayoutEffect,
-  useCallback,
-} from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
+
 import { getApps } from '../../apps/orbitApps'
-import MainShortcutHandler from '../../views/MainShortcutHandler'
+import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
+import { useOm } from '../../om/om'
+import { Stores, useOrbitStore, usePaneManagerStore, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
+import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
-import { OrbitHeader } from './OrbitHeader'
-import { IS_ELECTRON } from '../../constants'
-import { useThemeStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
-import { useOm } from '../../om/om'
 import { OrbitDock } from './OrbitDock'
+import { OrbitHeader } from './OrbitHeader'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React

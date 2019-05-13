@@ -1,6 +1,7 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
 import { User } from '@o/models'
 import { decorate, deep } from '@o/use-store'
+
 import { Desktop } from './Desktop'
 
 export let App = null as AppStore
@@ -47,16 +48,6 @@ export type AppState = {
   size: [number, number]
 }
 
-export const defaultPeekState: AppState = {
-  id: 0,
-  torn: false,
-  target: null,
-  appProps: null,
-  peekOnLeft: false,
-  position: [0, 0],
-  size: [0, 0],
-}
-
 export type MenuState = {
   id: number
   open: boolean
@@ -83,7 +74,6 @@ class AppStore {
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   authState: AppStore['state']['authState']
-  peeksState: AppStore['state']['peeksState']
   setOrbitState: Function
   setAuthState: Function
 
@@ -118,7 +108,6 @@ class AppStore {
         3: defaultMenuState(3),
       },
     },
-    peeksState: [defaultPeekState],
     authState: {
       openId: null,
       closeId: null,
@@ -147,22 +136,8 @@ class AppStore {
     return App.isDark ? 'ultra-dark' : 'light'
   }
 
-  get peekState() {
-    return this.state.peeksState[0]
-  }
-
-  get isShowingPeek() {
-    return this.peekState && !!this.peekState.appProps
-  }
-
   get isShowingMenu() {
     return typeof this.openMenu === 'number'
-  }
-
-  getAppState(id: number): AppState {
-    return {
-      ...this.state.peeksState.find(x => x.id === id),
-    }
   }
 
   get openMenu(): MenuState {

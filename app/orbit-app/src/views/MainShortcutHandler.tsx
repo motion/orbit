@@ -69,10 +69,6 @@ export default memo(function MainShortcutHandler(props: {
           PopoverState.closeLast()
           return
         }
-        // clear peek first
-        if (App.peekState.appProps) {
-          return AppActions.clearPeek()
-        }
         // then orbit query
         if (queryStore) {
           return queryStore.setQuery('')

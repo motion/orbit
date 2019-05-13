@@ -1,7 +1,4 @@
-export * from './closeApp'
 export * from './closeOrbit'
 export * from './open'
-export * from './peekActions'
-export * from './setAppState'
 export * from './setContextMessage'
 export * from './finishAuthorization'

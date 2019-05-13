@@ -11,7 +11,6 @@ import * as React from 'react'
 import waitOn from 'wait-on'
 import waitPort from 'wait-port'
 
-import AppsWindow from './apps/AppsWindow'
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
@@ -118,13 +117,6 @@ export async function main() {
       render(
         <ElectronRoot>
           <MenuWindow />
-        </ElectronRoot>,
-      )
-      return
-    case 'electron-apps':
-      render(
-        <ElectronRoot>
-          <AppsWindow />
         </ElectronRoot>,
       )
       return

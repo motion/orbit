@@ -1,0 +1,24 @@
+{
+  "name": "@o/orbit-dotapp",
+  "version": "2.5.2",
+  "main": "./_/main.js",
+  "private": true,
+  "bin": {
+    "orbit": "./_/main.js"
+  },
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "bundle": "pkg ./_/main.js --targets node10-macos-x64 -o ./dist/main"
+  },
+  "dependencies": {
+    "bonjour": "*",
+    "reconnecting-websocket": "4.1.10",
+    "ws": "7.0.0",
+    "@o/utils": "*",
+    "@o/mediator": "*"
+  },
+  "devDependencies": {
+    "pkg": "4.4.0"
+  }
+}

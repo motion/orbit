@@ -3,10 +3,16 @@ import stringHash from 'string-hash'
 export * from './highlightText'
 export * from './on'
 
+/**
+ * Simply returns what its given.
+ */
 export function idFn<A>(a: A) {
   return a
 }
 
+/**
+ * Boolean if anything is defined
+ */
 export function isDefined(...args: any) {
   for (const arg of args) {
     if (typeof arg !== 'undefined') {
@@ -14,6 +20,16 @@ export function isDefined(...args: any) {
     }
   }
   return false
+}
+
+/**
+ * Simple way to do something async, or timeout.
+ */
+export function orTimeout<T>(promise: Promise<T>, timeout): Promise<T | null> {
+  let waitForTimeout = new Promise<null>(resolve => {
+    setTimeout(() => resolve(null), timeout)
+  })
+  return Promise.race([promise, waitForTimeout])
 }
 
 /**

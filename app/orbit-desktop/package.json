@@ -83,7 +83,7 @@
     "sqlite": "3.0.2",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
-    "ws": "6.0.0",
+    "ws": "7.0.0",
     "zen-observable": "0.8.13"
   },
   "peerDependencies": {

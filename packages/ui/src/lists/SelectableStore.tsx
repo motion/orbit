@@ -100,7 +100,6 @@ export class SelectableStore {
       ensure('onSelect', !!this.props.onSelect)
       ensure('has rows', !!this.rows.length)
       ensure('wont unselect', !this.props.alwaysSelected || activeRows.length > 0)
-      this.callbackOnSelect()
       if (activeRows.length) {
         const index = this.keyToIndex[[...this.active][0]]
         this.scrollToIndex(index)
@@ -117,14 +116,16 @@ export class SelectableStore {
       ensure('defined', isDefined(index))
       await when(() => !!this.rows.length)
       this.setActiveIndex(index)
-      this.callbackOnSelect()
     },
   )
 
-  callbackOnSelect = () => {
-    const { rows, indices } = this.selectedState
-    this.props.onSelect(rows, indices)
-  }
+  callbackOnSelect = react(
+    () => always(this.active),
+    () => {
+      const { rows, indices } = this.getSelectedState()
+      this.props.onSelect(rows, indices)
+    },
+  )
 
   private removeUnselectable = (keys: string[]) => {
     return keys.filter(k => {
@@ -172,7 +173,7 @@ export class SelectableStore {
     this.setActiveIndex(firstValidIndex)
   }
 
-  get selectedState() {
+  getSelectedState() {
     const rows = []
     const indices = []
     for (const rowKey of [...this.active]) {

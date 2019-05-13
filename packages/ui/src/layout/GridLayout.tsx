@@ -1,5 +1,5 @@
-import { Contents, gloss } from 'gloss'
 import { createStoreContext, ensure, react, useStore } from '@o/use-store'
+import { Contents, gloss } from 'gloss'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 
@@ -26,7 +26,16 @@ type GridItemDimensions = {
   h?: number | 'auto'
 }
 
-type Base = { cols?: Object }
+type Base = {
+  cols?: {
+    xxs?: number
+    xs?: number
+    sm?: number
+    md?: number
+    lg?: number
+  }
+}
+
 type GridLayoutPropsObject = Base & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
@@ -100,6 +109,7 @@ class GridStore {
   layouts = null
   breakpoints = { lg: 1400, md: 1000, sm: 800, xs: 500, xxs: 0 }
   width = window.innerWidth
+  enablePersist = false
 
   setItems = (items: GridItems) => {
     for (const key in items) {
@@ -107,14 +117,10 @@ class GridStore {
     }
   }
 
-  setWidth = (next: number) => {
-    this.width = next
-  }
-
-  get currentLayout() {
+  getCol(width: number) {
     return Object.keys(this.breakpoints).reduce((a, key) => {
       const val = this.breakpoints[key]
-      if (this.width > val && val > this.breakpoints[a]) {
+      if (width > val && val > this.breakpoints[a]) {
         return key
       }
       return a
@@ -122,30 +128,40 @@ class GridStore {
   }
 
   setLayout = (layout: any[], width?: number) => {
-    if (width) {
-      this.width = width
-    }
+    if (!this.enablePersist) return
+    const col = this.getCol(width)
     this.layouts = {
       ...this.layouts,
-      [this.currentLayout]: layout,
+      [col]: layout,
     }
   }
 
   updateLayout = react(
-    () => this.items,
-    async (items, { sleep }) => {
+    () => [this.items, this.props.cols],
+    async ([items, cols], { sleep }) => {
       ensure('items', !!Object.keys(items).length)
-      await sleep(50)
+
+      // react-grid had some bug if we listen to setLayout after sending
+      // it sends the wrong dimensions back to us, so we use this to ignore until after
+      this.enablePersist = false
+
+      await sleep(200)
       // always re-calc from large and reset
-      console.log(calculateLayout(items, this.props.cols['lg']))
       this.layouts = {
-        lg: calculateLayout(items, this.props.cols['lg']),
+        lg: calculateLayout(items, cols['lg']),
         // this would calc all layouts more nicely, but then when you change something it doesn't change all of them
         // so we'd need to re-calc them all when you resize/change, if we wanted that, wed need a better calculateLayout
-        md: calculateLayout(items, this.props.cols['md']),
-        sm: calculateLayout(items, this.props.cols['sm']),
-        xs: calculateLayout(items, this.props.cols['xs']),
+        md: calculateLayout(items, cols['md']),
+        // sm: calculateLayout(items, cols['sm']),
+        // xs: calculateLayout(items, cols['xs']),
+        // xxs: calculateLayout(items, cols['xs']),
       }
+
+      // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933
+      window.dispatchEvent(new Event('resize'))
+
+      await sleep(200)
+      this.enablePersist = true
     },
   )
 

@@ -13,7 +13,7 @@ import waitPort from 'wait-port'
 
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
-import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
+import { forkAndStartOrbitApp } from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
@@ -41,6 +41,7 @@ export async function main() {
     transport: new WebSocketServerTransport({ port }),
     resolvers: [
       resolveCommand(AppOpenWindowCommand, async ({ appId }) => {
+        console.log('got open window command, opening...', appId)
         Electron.setState({
           appWindows: {
             [appId]: {

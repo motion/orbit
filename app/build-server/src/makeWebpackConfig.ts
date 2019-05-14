@@ -6,10 +6,11 @@ const TerserPlugin = require('terser-webpack-plugin')
 type Params = {
   projectRoot: string
   mode: 'production' | 'development'
+  publicPath: string
 }
 
 export async function makeWebpackConfig(params: Params) {
-  let { projectRoot, mode = 'development' } = params
+  let { publicPath, projectRoot, mode = 'development' } = params
 
   const entry = './'
   const target = 'electron-renderer'
@@ -67,7 +68,7 @@ export async function makeWebpackConfig(params: Params) {
       library: 'window.OrbitAppToRun',
       libraryTarget: 'assign',
       libraryExport: 'default',
-      publicPath: '/',
+      publicPath,
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",

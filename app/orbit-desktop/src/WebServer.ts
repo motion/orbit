@@ -1,3 +1,4 @@
+import { BuildServer } from '@o/build-server'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
@@ -5,7 +6,6 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
-import { BuildServer } from '@o/build-server'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
@@ -36,7 +36,7 @@ export class WebServer {
     this.server.disable('etag')
 
     // use build server
-    this.server.use(this.buildServer.getMiddleware())
+    this.server.use('/appServer', this.buildServer.getMiddleware())
 
     // ROUTES
     this.server.use(bodyParser.json({ limit: '2048mb' }))

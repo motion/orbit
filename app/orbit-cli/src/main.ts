@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import { AppDevOpenCommand } from '@o/models'
+import { AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
 import { orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
 import * as Path from 'path'
@@ -71,7 +71,11 @@ class OrbitCLI {
     const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: this.options.projectRoot,
     })
-    console.log('loading app id', appId)
+    console.log('sent dev command, got app', appId)
+    await orbitDesktop.command(AppOpenWindowCommand, {
+      appId,
+    })
+    console.log('opening app window id', appId)
     return
   }
 }

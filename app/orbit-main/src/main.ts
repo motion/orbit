@@ -63,82 +63,86 @@ export async function main() {
       case 'electron-menus':
       case 'electron-apps':
         require('./startElectron').startElectron({ mainProcess: false })
-        return
+      default:
+        if (SUB_PROCESS.indexOf('orbit-app-') === 0) {
+          require('./startElectron').startElectron({ mainProcess: false })
+        }
     }
-  } else {
-    // this means we are the root process, so we run the forks
+    return
+  }
 
-    // setup process error watching before doing most stuff
-    require('./helpers/handleErrors').handleErrors()
-    // exit handling
+  // this means we are the root process, so we run the forks
 
-    // TODO move this into orbit-fork-process
-    // and make it work with other areas where we fork from orbit-fork-process
+  // setup process error watching before doing most stuff
+  require('./helpers/handleErrors').handleErrors()
+  // exit handling
 
-    const { handleExit, setupHandleExit } = require('./helpers/handleExit')
+  // TODO move this into orbit-fork-process
+  // and make it work with other areas where we fork from orbit-fork-process
 
-    if (process.env.NODE_ENV === 'development') {
-      // in prod electron handles thishandleErrors
-      process.on('exit', handleExit)
-      process.on('SIGINT', handleExit)
-      process.on('SIGSEGV', handleExit)
-      process.on('SIGTERM', handleExit)
-      process.on('SIGQUIT', handleExit)
-    }
+  const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
-    // our processes
-    // each call pushes the process into the array and then gives them all over to setupHandleExit
-    let processes: ChildProcess[] = []
-    const setupProcess = (opts: ChildProcessProps) => {
-      const p = startChildProcess(opts)
-      processes.push(p)
-      setupHandleExit(processes)
-    }
+  if (process.env.NODE_ENV === 'development') {
+    // in prod electron handles thishandleErrors
+    process.on('exit', handleExit)
+    process.on('SIGINT', handleExit)
+    process.on('SIGSEGV', handleExit)
+    process.on('SIGTERM', handleExit)
+    process.on('SIGQUIT', handleExit)
+  }
 
-    // start desktop before starting other processes (it runs the server)...
+  // our processes
+  // each call pushes the process into the array and then gives them all over to setupHandleExit
+  let processes: ChildProcess[] = []
+  const setupProcess = (opts: ChildProcessProps) => {
+    const p = startChildProcess(opts)
+    processes.push(p)
+    setupHandleExit(processes)
+  }
+
+  // start desktop before starting other processes (it runs the server)...
+  setupProcess({
+    name: 'desktop',
+    inspectPort: 9000,
+    isNode: true,
+  })
+
+  // syncers
+  // start before web processes because they connect to it
+  if (!DISABLE_SYNCERS) {
     setupProcess({
-      name: 'desktop',
-      inspectPort: 9000,
+      name: 'syncers',
+      inspectPort: 9003,
       isNode: true,
     })
-
-    // syncers
-    // start before web processes because they connect to it
-    if (!DISABLE_SYNCERS) {
-      setupProcess({
-        name: 'syncers',
-        inspectPort: 9003,
-        isNode: true,
-      })
-    }
-
-    if (DISABLE_ELECTRON !== 'true') {
-      console.log('Starting electron...')
-
-      // start main electron process inside this thread (no forking)
-      require('./startElectron').startElectron({ mainProcess: true })
-
-      // im turning off the menu/menu-apps stuff until/if we revisit that
-      // if (process.env.DISABLE_MENU !== 'true') {
-      //   // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
-      //   // see: https://github.com/electron/electron/issues/7246
-      //   await new Promise(res => setTimeout(res, 500))
-      //   setupProcess({
-      //     name: 'electron-menus',
-      //     inspectPort: 9006,
-      //     inspectPortRemote: 9007,
-      //   })
-      //   await new Promise(res => setTimeout(res, 500))
-      //   setupProcess({
-      //     name: 'electron-apps',
-      //     inspectPort: 9004,
-      //     inspectPortRemote: 9005,
-      //   })
-      // }
-    }
-
-    console.log('Started everything!')
   }
+
+  if (DISABLE_ELECTRON !== 'true') {
+    console.log('Starting electron...')
+
+    // start main electron process inside this thread (no forking)
+    require('./startElectron').startElectron({ mainProcess: true })
+
+    // im turning off the menu/menu-apps stuff until/if we revisit that
+    // if (process.env.DISABLE_MENU !== 'true') {
+    //   // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
+    //   // see: https://github.com/electron/electron/issues/7246
+    //   await new Promise(res => setTimeout(res, 500))
+    //   setupProcess({
+    //     name: 'electron-menus',
+    //     inspectPort: 9006,
+    //     inspectPortRemote: 9007,
+    //   })
+    //   await new Promise(res => setTimeout(res, 500))
+    //   setupProcess({
+    //     name: 'electron-apps',
+    //     inspectPort: 9004,
+    //     inspectPortRemote: 9005,
+    //   })
+    // }
+  }
+
+  console.log('Started everything!')
 }
 
 if (SUB_PROCESS || process.env.FIRST_RUN === 'true') {

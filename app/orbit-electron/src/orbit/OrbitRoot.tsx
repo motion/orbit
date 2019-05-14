@@ -1,30 +1,38 @@
 import { App } from '@o/reactron'
+import { appInstanceConf } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
+
 import { devTools } from '../helpers/devTools'
-import { ElectronStore } from '../stores/ElectronStore'
+import { ElectronDebugStore } from '../stores/ElectronDebugStore'
 import { MenuItems } from './MenuItems'
-import OrbitWindow from './OrbitWindow'
+import { OrbitAppWindow } from './OrbitAppWindow'
+import { OrbitMainWindow } from './OrbitMainWindow'
 
 export function OrbitRoot() {
-  const electronStore = useStore(ElectronStore)
+  const store = useStore(ElectronDebugStore)
 
-  if (electronStore.error) {
-    if (electronStore.error) {
-      console.log('error is', electronStore.error)
+  if (store.error) {
+    if (store.error) {
+      console.log('error is', store.error)
     }
     return null
   }
 
+  const isApp = typeof appInstanceConf.appId === 'number'
+  const appId = `${appInstanceConf.appId || ''}`
+
+  console.log('appInstanceConf', appInstanceConf)
+
   return (
     <App
-      onBeforeQuit={electronStore.handleBeforeQuit}
-      onWillQuit={electronStore.handleQuit}
-      ref={electronStore.handleAppRef}
+      onBeforeQuit={store.handleBeforeQuit}
+      onWillQuit={store.handleQuit}
+      ref={store.handleAppRef}
       devTools={devTools}
     >
-      <MenuItems electronStore={electronStore} />
-      <OrbitWindow />
+      <MenuItems electronStore={store} />
+      {isApp ? <OrbitAppWindow id={appId} appId={appId} showDevTools show /> : <OrbitMainWindow />}
     </App>
   )
 }

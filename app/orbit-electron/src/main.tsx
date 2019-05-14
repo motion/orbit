@@ -40,13 +40,14 @@ export async function main() {
     commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
     resolvers: [
-      resolveCommand(AppOpenWindowCommand, async ({ appId }) => {
+      resolveCommand(AppOpenWindowCommand, async ({ appId, isEditing }) => {
         console.log('got open window command, opening...', appId)
         Electron.setState({
           appWindows: {
             [appId]: {
               type: 'root',
               id: appId,
+              isEditing: !!isEditing,
             },
           },
         })

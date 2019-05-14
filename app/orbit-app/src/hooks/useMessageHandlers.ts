@@ -20,9 +20,6 @@ export function useMessageHandlers() {
         case 'SHOW':
           App.setOrbitState({ docked: true })
           return
-        case 'CLOSE_APP':
-          AppActions.closeApp(+value)
-          return
         case 'TOGGLE_SETTINGS':
           AppActions.setOrbitDocked(true)
           paneManagerStore.setPane('settings')

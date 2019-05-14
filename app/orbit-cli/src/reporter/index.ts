@@ -1,14 +1,14 @@
 import { trackError } from '@o/telemetry'
 import chalk from 'chalk'
 import { stripIndent } from 'common-tags'
-import opentracing from 'opentracing'
+import { globalTracer } from 'opentracing'
 import util from 'util'
 
 import { getErrorFormatter } from './errors'
 import { ActivityArgs, ActivityTracker, Reporter } from './types'
 import reporterInstance from './yurnalist'
 
-const tracer = opentracing.globalTracer()
+const tracer = globalTracer()
 const errorFormatter = getErrorFormatter()
 
 /**

@@ -68,23 +68,26 @@ async function main() {
 
   await fetchInitialConfig()
 
-  require('./configurations')
-
-  // prevent scroll bounce
-  document.body.style.overflow = 'hidden'
-  document.documentElement.style.overflow = 'hidden'
-
   // start cross-process stores
   console.time('loadStores')
   const { App } = require('@o/stores')
   await App.start()
   console.timeEnd('loadStores')
 
+  require('./configurations')
+
+  // prevent scroll bounce
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+
   // start om first so it inits before showing
   console.time('loadOm')
   const { om } = require('./om/om')
   await om.initialized
   console.timeEnd('loadOm')
+
+  // install dev tools
+  require('./helpers/installDevelopmentHelpers')
 
   // now run app..
   console.time('startApp')

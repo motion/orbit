@@ -29,14 +29,21 @@ export class WebSocketClientTransport implements ClientTransport {
       this.onConnectedCallbacks = []
     }
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
+
+    let retryDelay = 1000
     websocket.onerror = ({ error }) => {
       if (`${error}`.indexOf('ECONNREFUSED')) {
         clearTimeout(tm)
-        tm = setTimeout(() => log.info(`Connection refused ${name}, retrying...`), 1000)
+        retryDelay = Math.min(100000, retryDelay * 2)
+        tm = setTimeout(
+          () => log.info(`Connection refused ${name}, retrying after ${retryDelay}...`),
+          retryDelay,
+        )
       } else {
         log.error(`Error ${name} ${error}`)
       }
     }
+
     websocket.onclose = () => {
       if (websocket._shouldReconnect) {
         websocket._connect()

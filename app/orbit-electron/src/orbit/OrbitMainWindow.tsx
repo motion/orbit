@@ -1,8 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@o/models'
-import { Window } from '@o/reactron'
-import { App, appStartupConfig, Desktop, Electron } from '@o/stores'
+import { App, Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
@@ -13,6 +12,8 @@ import * as React from 'react'
 import { ROOT } from '../constants'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Mediator } from '../mediator'
+import { getDefaultAppBounds } from './getDefaultAppBounds'
+import { OrbitAppWindow } from './OrbitAppWindow'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
@@ -39,12 +40,10 @@ export const getOrbitShortcutsStore = () => {
   return orbitShortcutsStore
 }
 
-class OrbitWindowStore {
+class OrbitMainWindowStore {
   orbitRef: BrowserWindow
-  disposeShow = null
   alwaysOnTop = true
   hasMoved = false
-  blurred = true
   initialShow = false
   size = [0, 0]
   position = [0, 0]
@@ -78,33 +77,21 @@ class OrbitWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      ensure('has size', screenSize[0] !== 0)
       ensure('not torn', !Electron.isTorn)
-      // max initial size to prevent massive screen on huge monitor
-      let scl = 0.8
-      let w = screenSize[0] * scl
-      let h = screenSize[1] * scl
-      // clamp width to not be too wide
-      w = Math.min(h * 1.4, w)
-      const maxSize = [1440, 1024]
-      const minSize = [800, 700]
-      this.size = [w, h]
-        .map(x => Math.round(x))
-        .map((x, i) => Math.min(maxSize[i], x))
-        .map((x, i) => Math.max(minSize[i], x))
-      // centered
-      const TOOLBAR_HEIGHT = 23
-      this.position = [
-        // width
-        screenSize[0] / 2 - w / 2,
-        // height
-        screenSize[1] / 2 - h / 2 + TOOLBAR_HEIGHT,
-      ].map(x => Math.round(x))
+      if (this.size[0] !== 0) {
+        ensure('not been moved', !this.hasMoved)
+      }
+      const bounds = getDefaultAppBounds(screenSize)
+      console.log('bounds', bounds, screenSize)
+      this.position = bounds.position
+      this.size = bounds.size
     },
   )
 
-  setSize = (size, other) => {
-    console.log('got a resize', other, size)
-    // this.size = size
+  setSize = size => {
+    this.hasMoved = true
+    this.size = size
   }
 
   setPosition = position => {
@@ -139,13 +126,6 @@ class OrbitWindowStore {
     },
   )
 
-  get show() {
-    if (Electron.isTorn) {
-      return true
-    }
-    return this.initialShow ? App.orbitState.docked : false
-  }
-
   showOnNewSpace() {
     console.log('Show on new space...')
     this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
@@ -153,15 +133,17 @@ class OrbitWindowStore {
     this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
 
+  get show() {
+    if (Electron.isTorn) {
+      return true
+    }
+    return this.initialShow ? App.orbitState.docked : false
+  }
+
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
   handleFocus = () => {
-    this.blurred = false
     Electron.setState({ focusedAppId: 'app' })
-  }
-
-  handleBlur = () => {
-    this.blurred = true
   }
 
   setInitialShow = () => {
@@ -173,69 +155,58 @@ class OrbitWindowStore {
   }
 }
 
-export default function OrbitWindow() {
-  const store = useStore(OrbitWindowStore, null)
-  root['OrbitWindowStore'] = store // helper for dev
+const onToggleOpen = () => {
+  const shown = App.orbitState.docked
+  console.log('TOGGLE', shown)
+  showOrbit(shown)
+  Mediator.command(SendClientDataCommand, {
+    name: shown ? 'HIDE' : 'SHOW',
+  })
+}
 
-  const appQuery = `/?id=${appStartupConfig.appId}`
-  const url = `${Config.urls.server}${appStartupConfig.appId > 0 ? appQuery : ''}`
+export function OrbitMainWindow() {
+  const store = useStore(OrbitMainWindowStore, null)
+  root['OrbitMainWindowStore'] = store // helper for dev
+  const url = `${Config.urls.server}`
 
-  log.info(
-    `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${
-      store.vibrancy
-    }`,
-  )
+  log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size} ${store.vibrancy}`)
 
   orbitShortcutsStore = useStore(OrbitShortcutsStore, {
-    onToggleOpen() {
-      const shown = App.orbitState.docked
-      console.log('TOGGLE', shown)
-      showOrbit(shown)
-      Mediator.command(SendClientDataCommand, {
-        name: shown ? 'HIDE' : 'SHOW',
-      })
-    },
+    onToggleOpen,
   })
 
   // onMount
   React.useEffect(() => {
     store.start()
     orbitShortcutsStore.start()
-
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
     }
   }, [])
 
+  // wait for screensize/measure
   if (!store.size[0]) {
     return null
   }
 
   return (
-    <Window
-      show
-      webPreferences={{
-        nodeIntegration: true,
-        webSecurity: false,
-      }}
-      titleBarStyle="customButtonsOnHover"
+    <OrbitAppWindow
+      id="app"
+      show={store.show}
       onReadyToShow={store.setInitialShow}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
-      ref={store.handleRef}
+      forwardRef={store.handleRef}
       file={url}
-      position={store.position.slice()}
-      size={store.size.slice()}
+      defaultPosition={store.position.slice()}
+      defaultSize={store.size.slice()}
       onResize={store.setSize}
+      onPosition={store.setPosition}
       onMove={store.setPosition}
       onFocus={store.handleFocus}
-      onBlur={store.handleBlur}
       showDevTools={store.showDevTools}
-      transparent
-      background="#00000000"
       vibrancy={store.vibrancy}
-      hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />
   )

@@ -8,14 +8,13 @@ import { join } from 'path'
 
 import { ROOT } from '../constants'
 import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
-import { getOrbitShortcutsStore } from '../orbit/OrbitWindow'
+import { getOrbitShortcutsStore } from '../orbit/OrbitMainWindow'
 
 const log = new Logger('TearAppResolver')
 
 // TODO umed can we make this type not bread
 export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appType, appId }) => {
   log.info('Tearing app', appType, appId)
-
   const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
   if (!(await pathExists(iconPath))) {
     dialog.showErrorBox('No icon found for app...', 'Oops')
@@ -24,9 +23,7 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   } else {
     app.dock.setIcon(iconPath)
   }
-
   Electron.setIsTorn()
   getOrbitShortcutsStore().dispose()
-
   forkAndStartOrbitApp({ appId })
 })

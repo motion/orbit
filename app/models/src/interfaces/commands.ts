@@ -24,6 +24,7 @@ export const AppOpenWindowCommand = new Command<
   boolean,
   {
     appId: number
+    isEditing?: boolean
   }
 >('app-open-window')
 

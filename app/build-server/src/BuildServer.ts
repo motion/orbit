@@ -36,7 +36,7 @@ export class BuildServer {
       let compiler = Webpack(config)
       next.push(
         WebpackDevMiddleware(compiler, {
-          publicPath,
+          publicPath: '/',
         }),
       )
       next.push(WebpackHotMiddleware(compiler))

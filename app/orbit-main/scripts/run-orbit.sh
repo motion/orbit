@@ -2,10 +2,11 @@
 
 cd $(dirname $0)/..
 
-npx kill-port 3031 # overmind-dev
-npx kill-port 9001
-npx kill-port 9002
-npx kill-port 9003
+npx kill-port 3031 & # overmind-dev
+npx kill-port 9001 &
+npx kill-port 9002 &
+npx kill-port 9003 &
+wait
 export NODE_ENV=development
 export ELECTRON_DISABLE_SECURITY_WARNINGS=true
 
@@ -16,9 +17,9 @@ export FIRST_RUN=true
 
 if [[ "$DISABLE_GPU" =~ "true" ]]; then
   echo "⚠️ ⚠️ ⚠️ disabling gpu to prevent white bg bugs ⚠️ ⚠️ ⚠️"
-  electron --disable-gpu --async-stack-traces --inspect=9001 --remote-debugging-port=9002 _/main.js
+  npx electron --disable-gpu --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js
 else
-  electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 _/main.js
+  npx electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js
 fi
 
 ``

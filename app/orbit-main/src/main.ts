@@ -107,16 +107,6 @@ export async function main() {
     isNode: true,
   })
 
-  // syncers
-  // start before web processes because they connect to it
-  if (!DISABLE_SYNCERS) {
-    setupProcess({
-      name: 'syncers',
-      inspectPort: 9003,
-      isNode: true,
-    })
-  }
-
   if (DISABLE_ELECTRON !== 'true') {
     console.log('Starting electron...')
 
@@ -140,6 +130,16 @@ export async function main() {
     //     inspectPortRemote: 9005,
     //   })
     // }
+  }
+
+  // syncers
+  if (!DISABLE_SYNCERS) {
+    await new Promise(res => setTimeout(res, 1000))
+    setupProcess({
+      name: 'syncers',
+      inspectPort: 9003,
+      isNode: true,
+    })
   }
 
   console.log('Started everything!')

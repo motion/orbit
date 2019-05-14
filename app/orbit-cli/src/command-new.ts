@@ -9,7 +9,46 @@ import sysPath from 'path'
 import url from 'url'
 
 import { reporter } from './reporter'
-import { getPackageManager, promptPackageManager } from './util/configStore'
+import { configStore, promptPackageManager } from './util/configStore'
+
+type NewOptions = {
+  rootPath?: string
+}
+
+/**
+ * Main function that clones or copies the starter.
+ */
+export async function commandNew(starter: string, options: NewOptions = {}) {
+  const rootPath = options.rootPath || process.cwd()
+
+  const urlObject = url.parse(rootPath)
+  if (urlObject.protocol && urlObject.host) {
+    trackError(`NEW_PROJECT_NAME_MISSING`)
+    reporter.panic(
+      `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${rootPath}"`,
+    )
+    return
+  }
+
+  if (!isValid(rootPath)) {
+    reporter.panic(
+      `Could not create a project in "${sysPath.resolve(rootPath)}" because it's not a valid path`,
+    )
+    return
+  }
+
+  if (existsSync(sysPath.join(rootPath, `package.json`))) {
+    trackError(`NEW_PROJECT_IS_NPM_PROJECT`)
+    reporter.panic(`Directory ${rootPath} is already an npm project`)
+    return
+  }
+
+  const hostedInfo = hostedGitInfo.fromUrl(starter)
+
+  trackCli(`NEW_PROJECT`, { starterName: starter })
+  if (hostedInfo) await clone(hostedInfo, rootPath)
+  else await copy(starter, rootPath)
+}
 
 const isTTY = require(`./util/is-tty`)
 const spawn = (cmd: string, options?: any) => {
@@ -24,7 +63,7 @@ const shouldUseYarn = async () => {
   try {
     execSync(`yarnpkg --version`, { stdio: `ignore` })
 
-    let packageManager = getPackageManager()
+    let packageManager = configStore.packageManager.get()
     if (!packageManager) {
       // if package manager is not set:
       //  - prompt user to pick package manager if in interactive console
@@ -151,43 +190,4 @@ const clone = async (hostInfo: any, rootPath: string) => {
   await gitInit(rootPath)
   await maybeCreateGitIgnore(rootPath)
   await createInitialGitCommit(rootPath, url)
-}
-
-type InitOptions = {
-  rootPath?: string
-}
-
-/**
- * Main function that clones or copies the starter.
- */
-module.exports = async (starter: string, options: InitOptions = {}) => {
-  const rootPath = options.rootPath || process.cwd()
-
-  const urlObject = url.parse(rootPath)
-  if (urlObject.protocol && urlObject.host) {
-    trackError(`NEW_PROJECT_NAME_MISSING`)
-    reporter.panic(
-      `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${rootPath}"`,
-    )
-    return
-  }
-
-  if (!isValid(rootPath)) {
-    reporter.panic(
-      `Could not create a project in "${sysPath.resolve(rootPath)}" because it's not a valid path`,
-    )
-    return
-  }
-
-  if (existsSync(sysPath.join(rootPath, `package.json`))) {
-    trackError(`NEW_PROJECT_IS_NPM_PROJECT`)
-    reporter.panic(`Directory ${rootPath} is already an npm project`)
-    return
-  }
-
-  const hostedInfo = hostedGitInfo.fromUrl(starter)
-
-  trackCli(`NEW_PROJECT`, { starterName: starter })
-  if (hostedInfo) await clone(hostedInfo, rootPath)
-  else await copy(starter, rootPath)
 }

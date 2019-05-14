@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, themes, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { App, appStartupConfig } from '@o/stores'
+import { App, appInstanceConf } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
@@ -144,7 +144,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp RenderApp={RenderApp} bundleURL={appStartupConfig.appInDev.bundleURL} />
+        <LoadApp RenderApp={RenderApp} bundleURL={appInstanceConf.bundleURL} />
       </Suspense>
     )
   } else {

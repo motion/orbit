@@ -4,9 +4,9 @@ import { Desktop, Electron } from '@o/stores'
 import * as React from 'react'
 
 import { Mediator } from '../mediator'
-import { ElectronStore } from '../stores/ElectronStore'
+import { ElectronDebugStore } from '../stores/ElectronDebugStore'
 
-export class MenuItems extends React.Component<{ electronStore: ElectronStore }> {
+export class MenuItems extends React.Component<{ electronStore: ElectronDebugStore }> {
   isClosing = false
 
   toggleDevTools = (id = Electron.state.focusedAppId) => () => {

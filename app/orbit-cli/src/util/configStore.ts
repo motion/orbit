@@ -1,29 +1,14 @@
-import Configstore from 'configstore'
+import { isDefined } from '@o/utils'
+import ConfigStore from 'configstore'
 import prompts from 'prompts'
 
 import { reporter } from '../reporter'
 
-let conf
-try {
-  conf = new Configstore(`orbit`, {}, { globalConfigPath: true })
-} catch (e) {
-  // This should never happen (?)
-  conf = {
-    settings: {
-      'cli.packageManager': undefined,
-    },
-    get: key => conf.settings[key],
-    set: (key, value) => (conf.settings[key] = value),
-  }
-}
+const conf = new ConfigStore(`orbit`, {}, { globalConfigPath: true })
 
-const packageMangerConfigKey = `cli.packageManager`
-
-export const getPackageManager = () => conf.get(packageMangerConfigKey)
-
-export const setPackageManager = packageManager => {
-  conf.set(packageMangerConfigKey, packageManager)
-  reporter.info(`Preferred package manager set to "${packageManager}"`)
+export const configStore = {
+  packageManager: createConfig<string>('packageManager'),
+  orbitMainPath: createConfig<string>('orbitMainPath'),
 }
 
 export const promptPackageManager = async () => {
@@ -38,7 +23,25 @@ export const promptPackageManager = async () => {
   ])
   const response = promptsAnswer.package_manager
   if (response) {
-    setPackageManager(response)
+    configStore.packageManager.set(response)
   }
   return response
+}
+
+function createConfig<A extends any>(key: string) {
+  return {
+    get: (): A => conf.get(key),
+    set: (val: A) => {
+      conf.set(key, val)
+      reporter.info(`configStore.set ${key} ${JSON.stringify(val)}`)
+    },
+    getOrDefault: (val: A): A => {
+      let cur = conf.get(key)
+      if (!isDefined(cur)) {
+        cur = val
+        conf.set(key, val)
+      }
+      return cur
+    },
+  }
 }

@@ -1,14 +1,9 @@
 import { forkProcess } from '@o/orbit-fork-process'
-import { ORBIT_APP_STARTUP_CONFIG, AppInDev, AppStartupConfig } from '@o/stores'
+import { AppInDev, AppStartupConfig, ORBIT_APP_STARTUP_CONFIG } from '@o/stores'
+
 import { appProcesses } from '../orbit/OrbitWindow'
 
-export default function forkAndStartOrbitApp({
-  appId,
-  appInDev,
-}: {
-  appId: number
-  appInDev?: AppInDev
-}) {
+export function forkAndStartOrbitApp({ appId, appInDev }: { appId: number; appInDev?: AppInDev }) {
   let appStartupConfig: AppStartupConfig = {
     appId,
     appInDev,
@@ -17,7 +12,7 @@ export default function forkAndStartOrbitApp({
     [ORBIT_APP_STARTUP_CONFIG]: JSON.stringify(appStartupConfig),
   }
   let proc = forkProcess({
-    name: 'orbit',
+    name: `orbit-app-${appId}`,
     env,
     // TODO we can increment for each new orbit sub-process, need a counter here
     // inspectPort: 9006,

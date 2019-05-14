@@ -1,3 +1,4 @@
+import { orTimeout } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { Command, Model, TransportRequestType } from '../common'
@@ -65,20 +66,33 @@ export class MediatorClient {
   async command<Args, ReturnType>(
     command: Command<ReturnType, Args> | string,
     args?: Args,
+
+    // we have a higher timeout for clients than for the server itself
+    // so that if a client is down, the server still has time to go through many and finish them
+    // see MediatorServer.command setting timeout
+    timeout = 2000,
   ): Promise<ReturnType> {
     const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
-      const response = await transport.execute('command', {
-        command: name,
-        args,
-      })
-      if (response.notFound !== true) {
-        if (response.error) {
-          log.error(response.error)
-          throw new Error(response.error)
+      try {
+        const response = await orTimeout(
+          transport.execute('command', {
+            command: name,
+            args,
+          }),
+          timeout,
+        )
+
+        if (response && response.notFound === true) {
+          if (response.error) {
+            console.error(response.error)
+          }
+        } else {
+          return response.result
         }
-        return response.result
+      } catch (err) {
+        console.error('timeout', err)
       }
     }
 

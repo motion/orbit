@@ -5,9 +5,10 @@ import { Electron } from '@o/stores'
 import { app, dialog } from 'electron'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
+
 import { ROOT } from '../constants'
+import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
 import { getOrbitShortcutsStore } from '../orbit/OrbitWindow'
-import forkAndStartOrbitApp from '../helpers/forkAndStartOrbitApp'
 
 const log = new Logger('TearAppResolver')
 

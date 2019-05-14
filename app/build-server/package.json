@@ -1,0 +1,35 @@
+{
+  "name": "@o/build-server",
+  "version": "2.5.2",
+  "main": "./_/BuildServer.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@hot-loader/react-dom": "*",
+    "babel-loader": "*",
+    "cache-loader": "*",
+    "common-tags": "^1.8.0",
+    "css-loader": "*",
+    "file-loader": "*",
+    "ignore-loader": "*",
+    "image-webpack-loader": "*",
+    "lodash": "^4.17.11",
+    "null-loader": "*",
+    "raw-loader": "*",
+    "react-hot-loader": "*",
+    "style-loader": "*",
+    "svg-inline-loader": "*",
+    "thread-loader": "*",
+    "ts-loader": "*",
+    "url-loader": "*",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-middleware": "3.6.2",
+    "webpack-hot-middleware": "2.24.4",
+    "workerize-loader": "*",
+    "terser-webpack-plugin": "^1.2.3"
+  }
+}

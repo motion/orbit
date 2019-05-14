@@ -1,0 +1,10 @@
+{
+  "name": "@o/mock-data",
+  "version": "2.5.2",
+  "author": "Motion",
+  "main": "index.js",
+  "sideEffects": false,
+  "dependencies": {
+    "static-mock-data": "4.0.0"
+  }
+}

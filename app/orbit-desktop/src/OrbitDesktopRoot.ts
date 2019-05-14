@@ -40,6 +40,7 @@ import {
   TrendingTopicsModel,
   UserEntity,
   UserModel,
+  AppDevOpenCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -84,6 +85,7 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
+import { BuildServer } from '@o/build-server'
 
 const log = new Logger('desktop')
 
@@ -103,6 +105,7 @@ export class OrbitDesktopRoot {
   private cosal: Cosal
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
+  private buildServer: BuildServer
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -142,22 +145,26 @@ export class OrbitDesktopRoot {
     this.operatingSystemManager = new OperatingSystemManager()
     this.operatingSystemManager.start()
 
+    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
+
+    // mediator server before starting webserver, because electron needs mediator up
+    // so it can send commands as it starts up back to here, see NewFallbackServerPortCommand
+    this.cosal = this.cosalManager.cosal
+    // depends on cosal
+    this.registerMediatorServer()
+
+    this.buildServer = new BuildServer()
+
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
-    this.webServer = new WebServer()
+    this.webServer = new WebServer(this.buildServer)
     await this.webServer.start()
 
     this.authServer = new AuthServer()
     this.graphServer = new GraphServer()
-    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
 
-    await Promise.all([
-      this.cosalManager.start(),
-      this.authServer.start(),
-      this.graphServer.start(),
-    ])
-
-    this.cosal = this.cosalManager.cosal
+    await Promise.all([this.authServer.start(), this.graphServer.start()])
 
     // depends on cosal
     this.topicsManager = new TopicsManager({ cosal: this.cosal })
@@ -200,9 +207,6 @@ export class OrbitDesktopRoot {
       screen: this.screen,
       onMouseMove: this.keyboardManager.onMouseMove,
     })
-
-    // depends on cosal
-    this.registerMediatorServer()
 
     this.registerREPLGlobals()
 
@@ -296,6 +300,7 @@ export class OrbitDesktopRoot {
         ResetDataCommand,
         SendClientDataCommand,
         ChangeDesktopThemeCommand,
+        AppDevOpenCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -308,6 +313,16 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        resolveCommand(AppDevOpenCommand, async ({ path }) => {
+          const id = Object.keys(Electron.state.appWindows).length
+          this.buildServer.setApps([
+            {
+              path,
+              publicPath: `/appServer/${id}`,
+            },
+          ])
+          return id
+        }),
         AppRemoveResolver,
         NewFallbackServerPortResolver,
         CallAppBitApiMethodResolver,

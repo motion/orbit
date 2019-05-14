@@ -62,17 +62,9 @@ export class MousePositionManager {
     // orbit hovered
     const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
 
-    // app hovered
-    let appHovered = { ...Desktop.hoverState.appHovered }
-    for (const [index, app] of App.peeksState.entries()) {
-      const isPeek = index === 0
-      const hovered = isMouseOver(app, mousePos)
-      appHovered[app.id] = isPeek ? !!app.target && hovered : hovered
-    }
-
     // menu hovered
     const menuHovered = App.openMenu && isMouseOver(App.openMenu, mousePos)
 
-    Desktop.setState({ hoverState: { appHovered, orbitHovered, menuHovered } })
-  }, 35)
+    Desktop.setState({ hoverState: { orbitHovered, menuHovered } })
+  }, 100)
 }

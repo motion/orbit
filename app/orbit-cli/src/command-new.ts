@@ -9,7 +9,7 @@ import sysPath from 'path'
 import url from 'url'
 
 import { reporter } from './reporter'
-import { getPackageManager, promptPackageManager } from './util/configstore'
+import { getPackageManager, promptPackageManager } from './util/configStore'
 
 const isTTY = require(`./util/is-tty`)
 const spawn = (cmd: string, options?: any) => {

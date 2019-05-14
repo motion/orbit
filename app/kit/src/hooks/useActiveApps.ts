@@ -14,7 +14,6 @@ export function useActiveApps(type?: string): AppBit[] {
     where,
     select: appSelectAllButDataAndTimestamps,
   })
-
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 

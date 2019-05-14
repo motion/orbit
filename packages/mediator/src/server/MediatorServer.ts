@@ -31,7 +31,7 @@ export class MediatorServer {
     const onSuccess = result => {
       this.options.transport.send({
         id: data.id,
-        result: result,
+        result,
       })
     }
     const onError = (error: any) => {
@@ -71,7 +71,7 @@ export class MediatorServer {
         if (this.options.fallbackClient) {
           log.verbose(`command ${data.command} was not found, trying fallback clients`, data)
           this.options.fallbackClient
-            .command(data.command, data.args)
+            .command(data.command, data.args, 100)
             .then(onSuccess)
             .catch(onError)
         } else {

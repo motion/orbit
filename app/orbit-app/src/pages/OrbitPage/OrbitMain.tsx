@@ -1,7 +1,7 @@
-import { gloss } from 'gloss'
-import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
-import { isEditing } from '@o/stores'
+import { AppLoadContext, AppMainViewProps, SubPane, useStore } from '@o/kit'
+import { App } from '@o/stores'
 import { BorderLeft, BorderTop, Loading, View } from '@o/ui'
+import { gloss } from 'gloss'
 import React, { memo, Suspense, useContext } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -12,6 +12,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id, appDef } = useContext(AppLoadContext)
   const { appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
+  const { isEditing } = useStore(App)
 
   if (!props.children) {
     return null

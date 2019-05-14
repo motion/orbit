@@ -1,5 +1,5 @@
-import { Contents, gloss } from 'gloss'
 import { createStoreContext, ensure, react, useStore } from '@o/use-store'
+import { Contents, gloss } from 'gloss'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 
@@ -26,7 +26,16 @@ type GridItemDimensions = {
   h?: number | 'auto'
 }
 
-type Base = { cols?: Object }
+type Base = {
+  cols?: {
+    xxs?: number
+    xs?: number
+    sm?: number
+    md?: number
+    lg?: number
+  }
+}
+
 type GridLayoutPropsObject = Base & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
@@ -100,6 +109,7 @@ class GridStore {
   layouts = null
   breakpoints = { lg: 1400, md: 1000, sm: 800, xs: 500, xxs: 0 }
   width = window.innerWidth
+  enablePersist = false
 
   setItems = (items: GridItems) => {
     for (const key in items) {
@@ -107,14 +117,10 @@ class GridStore {
     }
   }
 
-  setWidth = (next: number) => {
-    this.width = next
-  }
-
-  get currentLayout() {
+  getCol(width: number) {
     return Object.keys(this.breakpoints).reduce((a, key) => {
       const val = this.breakpoints[key]
-      if (this.width > val && val > this.breakpoints[a]) {
+      if (width > val && val > this.breakpoints[a]) {
         return key
       }
       return a
@@ -122,30 +128,41 @@ class GridStore {
   }
 
   setLayout = (layout: any[], width?: number) => {
-    if (width) {
-      this.width = width
-    }
+    if (!this.enablePersist) return
+    const col = this.getCol(width)
+    dualCompact(layout)
     this.layouts = {
       ...this.layouts,
-      [this.currentLayout]: layout,
+      [col]: layout,
     }
   }
 
   updateLayout = react(
-    () => this.items,
-    async (items, { sleep }) => {
+    () => [this.items, this.props.cols],
+    async ([items, cols], { sleep }) => {
       ensure('items', !!Object.keys(items).length)
-      await sleep(50)
+
+      // react-grid had some bug if we listen to setLayout after sending
+      // it sends the wrong dimensions back to us, so we use this to ignore until after
+      this.enablePersist = false
+
+      await sleep(200)
       // always re-calc from large and reset
-      console.log(calculateLayout(items, this.props.cols['lg']))
       this.layouts = {
-        lg: calculateLayout(items, this.props.cols['lg']),
+        lg: calculateLayout(items, cols['lg']),
         // this would calc all layouts more nicely, but then when you change something it doesn't change all of them
         // so we'd need to re-calc them all when you resize/change, if we wanted that, wed need a better calculateLayout
-        md: calculateLayout(items, this.props.cols['md']),
-        sm: calculateLayout(items, this.props.cols['sm']),
-        xs: calculateLayout(items, this.props.cols['xs']),
+        md: calculateLayout(items, cols['md']),
+        // sm: calculateLayout(items, cols['sm']),
+        // xs: calculateLayout(items, cols['xs']),
+        // xxs: calculateLayout(items, cols['xs']),
       }
+
+      // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933
+      window.dispatchEvent(new Event('resize'))
+
+      await sleep(200)
+      this.enablePersist = true
     },
   )
 
@@ -311,4 +328,75 @@ function forwardSurfaceProps(children: any, props: SizedSurfaceProps) {
     return cloneElement(children, props)
   }
   return children
+}
+
+// compacts horizontal + vertical
+// see https://github.com/STRML/react-grid-layout/issues/157
+function dualCompact(items: any[]) {
+  const max_x = items.reduce(function(max_x, item) {
+    return Math.max(max_x, item.x + item.w)
+  }, 0)
+  const max_y = items.reduce(function(max_y, item) {
+    return Math.max(max_y, item.y + item.h)
+  }, 0)
+
+  const matrix = []
+
+  for (let y = 0; y < max_y; y++) {
+    matrix.push(new Array(max_x).fill(undefined))
+  }
+
+  //fill layout matrix
+  items.forEach(function(item) {
+    for (let i_y = item.y, i_y_max = item.y + item.h; i_y < i_y_max; i_y++) {
+      for (let i_x = item.x, i_x_max = item.x + item.w; i_x < i_x_max; i_x++) {
+        matrix[i_y][i_x] = item.i
+      }
+    }
+  })
+
+  //compact vertical
+  let compressed = 0
+  for (let y = 0; y < max_y; y++) {
+    let is_empty_row = true
+    for (let x = 0; x < max_x; x++) {
+      if (matrix[y][x] !== undefined) {
+        is_empty_row = false
+        break
+      }
+    }
+
+    if (is_empty_row) {
+      const compressed_y = y - compressed
+      items.forEach(function(item) {
+        if (item.y > compressed_y) {
+          item.y--
+        }
+      })
+      compressed++
+    }
+  }
+
+  //compact horizontal
+  compressed = 0
+  for (let x = 0; x < max_x; x++) {
+    let is_empty_col = true
+    for (let y = 0; y < max_y; y++) {
+      if (matrix[y][x] !== undefined) {
+        is_empty_col = false
+        break
+      }
+    }
+
+    if (is_empty_col) {
+      const compressed_x = x - compressed
+      items.forEach(function(item) {
+        if (item.x > compressed_x) {
+          item.x--
+        }
+      })
+
+      compressed++
+    }
+  }
 }

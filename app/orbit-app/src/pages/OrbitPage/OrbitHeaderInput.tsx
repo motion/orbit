@@ -29,7 +29,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = orbitStore.isTorn ? 16 : 18
+  const fontSize = 18
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

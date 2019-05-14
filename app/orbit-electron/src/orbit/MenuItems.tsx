@@ -1,7 +1,8 @@
 import { SendClientDataCommand } from '@o/models'
 import { Menu, MenuItem, MenuItemsExtra, SubMenu } from '@o/reactron'
-import { App, Desktop, Electron } from '@o/stores'
+import { Desktop, Electron } from '@o/stores'
 import * as React from 'react'
+
 import { Mediator } from '../mediator'
 import { ElectronStore } from '../stores/ElectronStore'
 
@@ -75,10 +76,6 @@ export class MenuItems extends React.Component<{ electronStore: ElectronStore }>
             label="Show Dev Tools [Focused Window]"
             accelerator="Command+Option+i"
             onClick={this.toggleDevTools()}
-          />
-          <MenuItem
-            label="Show Dev Tools [Peek]"
-            onClick={this.toggleDevTools(`${App.peekState.id}`)}
           />
         </SubMenu>
       </Menu>

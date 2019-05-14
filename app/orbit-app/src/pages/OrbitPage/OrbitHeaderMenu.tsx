@@ -1,5 +1,5 @@
-import { useActiveApps, useLocationLink } from '@o/kit'
-import { isEditing } from '@o/stores'
+import { useActiveApps, useLocationLink, useStore } from '@o/kit'
+import { App } from '@o/stores'
 import { Button, ListItem, PassProps, Popover } from '@o/ui'
 import React, { memo } from 'react'
 
@@ -45,6 +45,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
 })
 
 function OrbitEditAppItem() {
+  const { isEditing } = useStore(App)
   const { effects } = useOm()
   const { paneManagerStore, orbitStore } = useStores()
   const activePaneId = paneManagerStore.activePane.id

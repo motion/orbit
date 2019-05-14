@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
-import { Icon, useActiveAppsSorted, useLocationLink } from '@o/kit'
-import { isEditing } from '@o/stores'
+import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { App } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
@@ -68,22 +68,22 @@ const activeStyle = {
 export const OrbitHeader = memo(() => {
   const om = useOm()
   const { orbitStore, headerStore } = useStores()
-  const { isTorn } = orbitStore
   const theme = useTheme()
   const appId = om.state.router.appId
   const isOnSettings = appId === 'settings' || appId === 'spaces'
   const isOnTearablePane = !useIsOnStaticApp()
+  const { isEditing } = useStore(App)
 
   return (
     <>
       <OrbitHeaderContainer
-        isEditing={isTorn}
+        isEditing={isEditing}
         className="draggable"
         onMouseUp={headerStore.handleMouseUp}
       >
-        <OrbitHeaderEditingBg isActive={isTorn} />
+        <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isTorn ? 46 : 64} padding={isTorn ? [3, 10] : [5, 10]}>
+        <HeaderTop height={isEditing ? 46 : 64} padding={isEditing ? [3, 10] : [5, 10]}>
           <HeaderSide>
             <View flex={1} />
             <HeaderButtonPassProps>
@@ -156,7 +156,7 @@ export const OrbitHeader = memo(() => {
                   icon="cog"
                   iconSize={isEditing ? 10 : 12}
                   onClick={() => {
-                    if (activePaneType === 'settings') {
+                    if (om.state.router.appId === 'settings') {
                       om.actions.router.back()
                     } else {
                       om.actions.router.showAppPage({ id: 'settings' })
@@ -340,7 +340,7 @@ const ExtraButtonsChrome = gloss({
 const OpenButton = memo(() => {
   const { effects } = useOm()
 
-  if (isEditing) {
+  if (App.isEditing) {
     return null
   }
 

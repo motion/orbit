@@ -1,3 +1,4 @@
+import { BuildServer } from '@o/build-server'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
@@ -26,13 +27,16 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor() {
+  constructor(private buildServer: BuildServer) {
     this.server = express()
     this.server.set('port', Config.ports.server)
     this.server.use(cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
+
+    // use build server
+    this.server.use('/appServer', this.buildServer.getMiddleware())
 
     // ROUTES
     this.server.use(bodyParser.json({ limit: '2048mb' }))

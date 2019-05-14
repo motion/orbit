@@ -4,7 +4,10 @@
   "main": "index.ts",
   "private": true,
   "dependencies": {
-    "@o/custom-app": "^2.5.6",
+    "@o/demo-app-api-grid": "^2.5.6",
+    "@o/demo-app-flow": "^2.5.6",
+    "@o/demo-app-user-manager": "^2.5.6",
+    "@o/demo-app-layout": "^2.5.6",
     "@o/jira-app": "^2.5.6",
     "@o/lists-app": "^2.5.6",
     "@o/people-app": "^2.5.6",

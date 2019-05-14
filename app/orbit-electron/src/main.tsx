@@ -1,25 +1,19 @@
+import 'raf/polyfill'
+
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppDevOpenCommand,
-  CloseAppCommand,
-  NewFallbackServerPortCommand,
-  RestartAppCommand,
-  SendClientDataCommand,
-  TearAppCommand,
-} from '@o/models'
+import { AppOpenWindowCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
 import { render } from '@o/reactron'
-import { App, Electron } from '@o/stores'
+import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
-import 'raf/polyfill'
 import * as React from 'react'
 import waitOn from 'wait-on'
 import waitPort from 'wait-port'
-import AppsWindow from './apps/AppsWindow'
+
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
-import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
+import { forkAndStartOrbitApp } from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
@@ -27,25 +21,6 @@ import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
-
-export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
-  let appInDev = {
-    path: params.path,
-    bundleURL: params.bundleURL,
-  }
-  let appId = App.state.allApps.length
-  App.setState({
-    allApps: [
-      ...App.state.allApps,
-      {
-        type: 'root',
-        id: appId,
-      },
-    ],
-  })
-  console.log('UPDATE', App.state.allApps)
-  forkAndStartOrbitApp({ appId, appInDev })
-})
 
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
@@ -58,12 +33,33 @@ export async function main() {
   // require after desktop starts to avoid reconnect errors
   const { Mediator } = require('./mediator')
   const port = await Mediator.command(NewFallbackServerPortCommand)
+  console.log('Electron started mediator on port', port)
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [AppDevOpenCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
+    commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
-    resolvers: [OpenAppDevResolver, TearAppResolver, CloseAppResolver, RestartAppResolver],
+    resolvers: [
+      resolveCommand(AppOpenWindowCommand, async ({ appId }) => {
+        console.log('got open window command, opening...', appId)
+        Electron.setState({
+          appWindows: {
+            [appId]: {
+              type: 'root',
+              id: appId,
+            },
+          },
+        })
+        // setTimeout so command doesnt take forever to run
+        setTimeout(() => {
+          forkAndStartOrbitApp({ appId })
+        })
+        return true
+      }),
+      TearAppResolver,
+      CloseAppResolver,
+      RestartAppResolver,
+    ],
   })
   mediatorServer.bootstrap()
 
@@ -117,13 +113,6 @@ export async function main() {
       render(
         <ElectronRoot>
           <MenuWindow />
-        </ElectronRoot>,
-      )
-      return
-    case 'electron-apps':
-      render(
-        <ElectronRoot>
-          <AppsWindow />
         </ElectronRoot>,
       )
       return

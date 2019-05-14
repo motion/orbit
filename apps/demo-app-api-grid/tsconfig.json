@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../postgres-app" },
+    { "path": "../slack-app" },
+    { "path": "../../app/kit" },
+    { "path": "../../packages/ui" }
+  ]
+}

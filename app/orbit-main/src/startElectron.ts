@@ -1,5 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { app, dialog } from 'electron'
+
 import { handleExit } from './helpers/handleExit'
 
 export function startElectron({ mainProcess }) {
@@ -8,7 +9,6 @@ export function startElectron({ mainProcess }) {
     app.on('before-quit', handleExit)
 
     if (app.isReady) {
-      console.log('app already ready')
       finishLaunchingElectron({ mainProcess })
     } else {
       app.on('ready', finishLaunchingElectron)
@@ -19,10 +19,7 @@ export function startElectron({ mainProcess }) {
 }
 
 const finishLaunchingElectron = async ({ mainProcess }) => {
-  // electron white bg fix attempt:
-  // https://github.com/electron/electron/issues/2170#issuecomment-372108061
-  // await new Promise(res => setTimeout(res, 100))
-
+  console.log('finishLaunchingElectron')
   const Config = getGlobalConfig()
   // start electron...
   const ElectronApp = require('@o/orbit-electron')

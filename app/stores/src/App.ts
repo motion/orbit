@@ -1,6 +1,7 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
 import { User } from '@o/models'
 import { decorate, deep } from '@o/use-store'
+
 import { Desktop } from './Desktop'
 
 export let App = null as AppStore
@@ -15,14 +16,17 @@ export type AppInDev = {
   path: string
 }
 
+const conf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
+
 function getAppStartupConfig(): AppStartupConfig {
   let initial = {
     appId: 0,
     appInDev: null,
   }
-  if (process.env[ORBIT_APP_STARTUP_CONFIG] != null) {
+  // otherwise webpack filters it away
+  if (conf != null) {
     try {
-      return JSON.parse(process.env[ORBIT_APP_STARTUP_CONFIG])
+      return JSON.parse(conf)
     } catch (_err) {
       return initial
     }
@@ -34,7 +38,7 @@ function getAppStartupConfig(): AppStartupConfig {
 export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
 
 export let appStartupConfig: AppStartupConfig = getAppStartupConfig()
-export let isEditing: boolean = appStartupConfig.appInDev != null
+console.log('appStartupConfig', appStartupConfig, conf)
 
 export type AppState = {
   id: number
@@ -45,16 +49,6 @@ export type AppState = {
   peekOnLeft: boolean
   position: [number, number]
   size: [number, number]
-}
-
-export const defaultPeekState: AppState = {
-  id: 0,
-  torn: false,
-  target: null,
-  appProps: null,
-  peekOnLeft: false,
-  position: [0, 0],
-  size: [0, 0],
 }
 
 export type MenuState = {
@@ -71,19 +65,12 @@ const defaultMenuState = (index: number): MenuState => ({
   size: [0, 0],
 })
 
-export type AppStateEntry = {
-  id: number
-  type: string
-  appId: number
-}
-
 @decorate
 class AppStore {
   // TODO proxySetters should auto-type this
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   authState: AppStore['state']['authState']
-  peeksState: AppStore['state']['peeksState']
   setOrbitState: Function
   setAuthState: Function
 
@@ -96,13 +83,6 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
-    allApps: [
-      {
-        id: 0,
-        appId: 0,
-        type: 'root',
-      },
-    ] as AppStateEntry[],
     orbitState: {
       docked: false,
       orbitOnLeft: false,
@@ -118,7 +98,6 @@ class AppStore {
         3: defaultMenuState(3),
       },
     },
-    peeksState: [defaultPeekState],
     authState: {
       openId: null,
       closeId: null,
@@ -129,6 +108,10 @@ class AppStore {
     contextMessage: '',
     showSpaceSwitcher: 0,
   })
+
+  get isEditing() {
+    return appStartupConfig.appInDev != null
+  }
 
   get isDark() {
     const preference = App.state.userSettings.theme
@@ -147,22 +130,8 @@ class AppStore {
     return App.isDark ? 'ultra-dark' : 'light'
   }
 
-  get peekState() {
-    return this.state.peeksState[0]
-  }
-
-  get isShowingPeek() {
-    return this.peekState && !!this.peekState.appProps
-  }
-
   get isShowingMenu() {
     return typeof this.openMenu === 'number'
-  }
-
-  getAppState(id: number): AppState {
-    return {
-      ...this.state.peeksState.find(x => x.id === id),
-    }
   }
 
   get openMenu(): MenuState {

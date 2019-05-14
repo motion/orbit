@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
+    "@o/build-server": "*",
     "@o/config": "^2.5.2",
     "@o/confluence-app": "^2.5.6",
     "@o/example-workspace": "*",
@@ -84,7 +85,8 @@
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "ws": "7.0.0",
-    "zen-observable": "0.8.13"
+    "zen-observable": "0.8.13",
+    "apollo-link-http": "^1.5.14"
   },
   "peerDependencies": {
     "mobx": "*"

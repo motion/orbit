@@ -35,7 +35,6 @@ class DesktopStore {
   keyboardState: DesktopStore['state']['keyboardState']
   mouseState: DesktopStore['state']['mouseState']
   setKeyboardState: DesktopStore['setState']
-  setAppState: DesktopStore['setState']
   setOcrState: DesktopStore['setState']
   setSearchState: DesktopStore['setState']
   setMouseState: DesktopStore['setState']

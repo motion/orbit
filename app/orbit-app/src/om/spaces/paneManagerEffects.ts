@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { AppBit, getAppDefinition, PaneManagerPane, save } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
-import { appStartupConfig, isEditing } from '@o/stores'
+import { App, appStartupConfig } from '@o/stores'
 import { keyBy, sortBy } from 'lodash'
 
 import { paneManagerStore } from '../stores'
@@ -22,14 +22,19 @@ export const updatePaneManagerPanes = (apps: AppBit[]) => {
 }
 
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
-  if (isEditing) {
+  if (App.isEditing) {
     let pane = {
       type: appStartupConfig.appInDev.path,
       id: String(appStartupConfig.appId),
     }
     return [pane, settingsPane]
   } else {
-    const appPanes = apps.filter(x => !!getAppDefinition(x.identifier).app).map(appToPane)
+    const appPanes = apps
+      .filter(x => {
+        const def = getAppDefinition(x.identifier)
+        return !!(def && def.app)
+      })
+      .map(appToPane)
     return [...defaultPanes, ...appPanes]
   }
 }

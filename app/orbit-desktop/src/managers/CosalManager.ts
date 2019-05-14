@@ -5,6 +5,7 @@ import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { chunk, last } from 'lodash'
 import { getRepository } from 'typeorm'
+
 import { COSAL_DB } from '../constants'
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
@@ -32,7 +33,12 @@ export class CosalManager {
     this.cosal = new Cosal({
       database: this.dbPath,
     })
-    await this.cosal.start()
+
+    // heavy startup
+    setTimeout(() => {
+      this.cosal.start()
+    }, 2000)
+
     // sleep a bit, this is a heavy-ish operation and we can do it after things startup
     // TODO make this a bit better so its controlled above
     this.updateSearchIndexWithNewBits()

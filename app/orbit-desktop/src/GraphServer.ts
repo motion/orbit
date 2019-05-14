@@ -3,12 +3,13 @@ import { nestSchema } from '@o/graphql-nest-schema'
 import { AppDefinition } from '@o/kit'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
+import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
 import { readJSON } from 'fs-extra'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import { makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
+import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -149,20 +150,28 @@ export class GraphServer {
 
             let schema: GraphQLSchema
 
-            if (typeof appSchema.schema === 'string') {
-              schema = makeExecutableSchema({
-                typeDefs: appSchema.schema,
-                resolvers: appSchema.resolvers,
+            if (appSchema.remoteHttpLink) {
+              const link = createHttpLink(appSchema.remoteHttpLink)
+              const introspectionSchema = await introspectSchema(link)
+              schema = makeRemoteExecutableSchema({
+                schema: introspectionSchema,
+                link,
               })
             } else {
-              schema = appSchema.schema || appSchema
-            }
-
-            if (appSchema.link) {
-              schema = makeRemoteExecutableSchema({
-                schema,
-                link: appSchema.link,
-              })
+              if (typeof appSchema.schema === 'string') {
+                schema = makeExecutableSchema({
+                  typeDefs: appSchema.schema,
+                  resolvers: appSchema.resolvers,
+                })
+              } else {
+                schema = appSchema.schema || appSchema
+              }
+              if (appSchema.link) {
+                schema = makeRemoteExecutableSchema({
+                  schema,
+                  link: appSchema.link,
+                })
+              }
             }
 
             const whiteSpaceRegex = /[\s]+/g

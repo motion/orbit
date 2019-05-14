@@ -1,0 +1,18 @@
+{
+  "name": "@o/demo-app-api-grid",
+  "version": "2.5.6",
+  "main": "_/index.js",
+  "ts:main": "src/index.tsx",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@o/gmail-app": "^2.5.6",
+    "@o/kit": "^2.5.6",
+    "@o/postgres-app": "^2.5.6",
+    "@o/slack-app": "^2.5.6",
+    "@o/ui": "^2.5.6"
+  }
+}

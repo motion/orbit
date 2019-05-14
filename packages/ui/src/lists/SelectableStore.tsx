@@ -94,37 +94,22 @@ export class SelectableStore {
     },
   )
 
-  onSelection = react(
-    () => [...this.active],
-    activeRows => {
-      ensure('onSelect', !!this.props.onSelect)
-      ensure('has rows', !!this.rows.length)
-      ensure('wont unselect', !this.props.alwaysSelected || activeRows.length > 0)
-      this.callbackOnSelect()
-      if (activeRows.length) {
-        const index = this.keyToIndex[[...this.active][0]]
-        this.scrollToIndex(index)
-      }
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
   defaultSelectedProp = react(
     () => [this.props.defaultSelected, always(this.rows)],
     async ([index], { when }) => {
       ensure('defined', isDefined(index))
       await when(() => !!this.rows.length)
       this.setActiveIndex(index)
-      this.callbackOnSelect()
     },
   )
 
-  callbackOnSelect = () => {
-    const { rows, indices } = this.selectedState
-    this.props.onSelect(rows, indices)
-  }
+  callbackOnSelect = react(
+    () => always(this.active),
+    () => {
+      const { rows, indices } = this.getSelectedState()
+      this.props.onSelect(rows, indices)
+    },
+  )
 
   private removeUnselectable = (keys: string[]) => {
     return keys.filter(k => {
@@ -172,7 +157,7 @@ export class SelectableStore {
     this.setActiveIndex(firstValidIndex)
   }
 
-  get selectedState() {
+  getSelectedState() {
     const rows = []
     const indices = []
     for (const rowKey of [...this.active]) {
@@ -216,7 +201,9 @@ export class SelectableStore {
     if (isDefined(found)) {
       next.push(this.getIndexKey(nextIndex))
     }
+
     this.setActive(next)
+    this.scrollToIndex(nextIndex)
 
     return found
   }
@@ -354,10 +341,14 @@ export class SelectableStore {
     const { dragStartIndex } = this
     const isMouseDown = typeof dragStartIndex === 'number'
     if (isMouseDown) {
+      if (direction === Direction.down) {
+        this.scrollToIndex(index + 1)
+      } else {
+        this.scrollToIndex(index - 1)
+      }
       if (this.props.selectable === 'multi') {
         const startKey = this.getIndexKey(dragStartIndex)
         this.setActive(this.selectInRange(startKey, rowKey))
-        this.scrollToIndex(index)
         return direction
       } else {
         this.setActive([rowKey])

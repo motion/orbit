@@ -8,10 +8,8 @@ import * as React from 'react'
 
 import { AppActions } from '../../../actions/AppActions'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
-import { useStores } from '../../../hooks/useStores'
 import { StoreContext } from '../../../StoreContext'
 import MainShortcutHandler from '../../../views/MainShortcutHandler'
-import { AppSearchable } from '../../AppPage/AppSearchable'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
 import MenuApp from './MenuApp'
@@ -536,20 +534,13 @@ export function Menu() {
 // }
 
 const MenuLayerContent = React.memo(() => {
-  const { menuStore, queryStore } = useStores()
+  // const { menuStore, queryStore } = useStores()
   const menuApps = useMenuApps()
   return (
     <View className="app-parent-bounds">
-      <AppSearchable
-        inputProps={{
-          ref: menuStore.handleSearchInput,
-          onChange: queryStore.onChangeQuery,
-        }}
-      >
-        {menuApps.map(app => (
-          <MenuApp identifier={app.id} index={app.index} key={app.id} viewType="index" />
-        ))}
-      </AppSearchable>
+      {menuApps.map(app => (
+        <MenuApp identifier={app.id} index={app.index} key={app.id} viewType="index" />
+      ))}
     </View>
   )
 })

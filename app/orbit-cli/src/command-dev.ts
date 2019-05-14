@@ -50,7 +50,7 @@ async function getOrbitDesktop() {
   if (!port) {
     // run desktop and try again
     if (await runOrbitDesktop()) {
-      port = await findBonjourService('orbitDesktop', 4500)
+      port = await findBonjourService('orbitDesktop', 8500)
     }
   }
 
@@ -106,7 +106,7 @@ async function runOrbitDesktop(): Promise<boolean> {
 
       if (isInMonoRepo) {
         // wait a bit longer, in dev mode startup is slower
-        await sleep(3000)
+        await sleep(2000)
       }
 
       return true

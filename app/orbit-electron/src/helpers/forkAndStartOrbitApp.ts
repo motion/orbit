@@ -1,7 +1,7 @@
 import { forkProcess } from '@o/orbit-fork-process'
 import { AppInDev, AppStartupConfig, ORBIT_APP_STARTUP_CONFIG } from '@o/stores'
 
-import { appProcesses } from '../orbit/OrbitWindow'
+import { appProcesses } from '../orbit/OrbitMainWindow'
 
 export function forkAndStartOrbitApp({ appId, appInDev }: { appId: number; appInDev?: AppInDev }) {
   let appStartupConfig: AppStartupConfig = {

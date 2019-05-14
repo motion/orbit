@@ -1,10 +1,13 @@
 import { App } from '@o/reactron'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
+
+import { appStartupConfig } from '../../../stores/_'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'
 import { MenuItems } from './MenuItems'
-import OrbitWindow from './OrbitWindow'
+import { OrbitAppWindow } from './OrbitAppWindow'
+import { OrbitMainWindow } from './OrbitMainWindow'
 
 export function OrbitRoot() {
   const electronStore = useStore(ElectronStore)
@@ -16,6 +19,8 @@ export function OrbitRoot() {
     return null
   }
 
+  const appId = `${appStartupConfig.appId || ''}`
+
   return (
     <App
       onBeforeQuit={electronStore.handleBeforeQuit}
@@ -24,7 +29,7 @@ export function OrbitRoot() {
       devTools={devTools}
     >
       <MenuItems electronStore={electronStore} />
-      <OrbitWindow />
+      {appId ? <OrbitAppWindow id={appId} appId={appId} /> : <OrbitMainWindow />}
     </App>
   )
 }

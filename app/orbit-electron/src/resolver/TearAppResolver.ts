@@ -8,7 +8,7 @@ import { join } from 'path'
 
 import { ROOT } from '../constants'
 import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
-import { getOrbitShortcutsStore } from '../orbit/OrbitWindow'
+import { getOrbitShortcutsStore } from '../orbit/OrbitMainWindow'
 
 const log = new Logger('TearAppResolver')
 

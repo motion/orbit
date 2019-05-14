@@ -131,15 +131,15 @@ export class GraphServer {
           const appDef = appDefs.find(def => def.id === app.identifier)
 
           if (app && !appDef) {
-            console.log(`
-              ${app.identifier}:
-              WARNING! found an app-bit but no app-def, meaning your DB is out of sync with your
-              workspace package.json deps. this is an orbit issue.
-            `)
+            console.log(
+              `GraphServer, ${
+                app.identifier
+              }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,
+            )
           } else {
-            console.log(`
-              loading ${app.identifier}, graph? ${!!appDef.graph}
-            `)
+            // console.log(`
+            //   loading ${app.identifier}, graph? ${!!appDef.graph}
+            // `)
           }
 
           if (!appDef) continue

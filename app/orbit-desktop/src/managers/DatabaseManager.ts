@@ -4,6 +4,7 @@ import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { getConnection, getRepository } from 'typeorm'
+
 import { COSAL_DB, DATABASE_PATH } from '../constants'
 import connectModels from '../helpers/connectModels'
 
@@ -48,12 +49,8 @@ export class DatabaseManager {
       }
     }
 
-    log.info('Ensure search indices...')
-    await this.createSearchIndices()
-
-    // create some custom indices
-    log.info('Ensure other indices...')
-    await this.createIndices()
+    log.info('Ensure indices...')
+    await Promise.all([this.createSearchIndices(), this.createIndices()])
   }
 
   dispose() {

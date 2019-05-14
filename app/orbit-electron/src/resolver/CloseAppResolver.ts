@@ -2,7 +2,8 @@ import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { CloseAppCommand } from '@o/models'
 import { forceKillProcess } from '@o/orbit-fork-process'
-import { appProcesses } from '../orbit/OrbitWindow'
+
+import { appProcesses } from '../orbit/OrbitMainWindow'
 
 const log = new Logger('command:close-app')
 

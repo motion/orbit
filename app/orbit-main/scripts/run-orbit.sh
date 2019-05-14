@@ -2,10 +2,11 @@
 
 cd $(dirname $0)/..
 
-npx kill-port 3031 # overmind-dev
-npx kill-port 9001
-npx kill-port 9002
-npx kill-port 9003
+npx kill-port 3031 & # overmind-dev
+npx kill-port 9001 &
+npx kill-port 9002 &
+npx kill-port 9003 &
+wait
 export NODE_ENV=development
 export ELECTRON_DISABLE_SECURITY_WARNINGS=true
 

@@ -75,20 +75,22 @@ export const OrbitAppRenderOfDefinition = ({
     }
   }, [])
 
-  let RenderApp = appDef.app
+  let FinalAppView = appDef.app
 
-  const appChildEl = RenderApp({})
+  const appChildEl = FinalAppView({})
   const isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
 
   // automatically wrap with <App />, if they don't
   if (!isAppWrapped) {
     const AppView = appDef.app
-    RenderApp = props => (
+    FinalAppView = props => (
       <App>
         <AppView {...props} />
       </App>
     )
   }
+
+  console.log('appDef.app', appDef.app)
 
   return (
     <ProvideShare onChange={onChangeShare}>
@@ -98,7 +100,8 @@ export const OrbitAppRenderOfDefinition = ({
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  <RenderApp identifier={identifier} id={id} {...activeItem} />
+                  123
+                  <FinalAppView identifier={identifier} id={id} {...activeItem} />
                 </FadeIn>
               )}
             </Suspense>

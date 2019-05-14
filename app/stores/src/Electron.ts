@@ -34,6 +34,13 @@ export type PinKeyType =
   | 'right'
   | 'down'
 
+export type AppWindow = {
+  id: number
+  type: string
+  path: string
+  bundleURL: string
+}
+
 @decorate
 class ElectronStore {
   bridge = Bridge
@@ -56,6 +63,7 @@ class ElectronStore {
       downloading: false,
       percent: 0,
     },
+    appWindows: {} as { [id: string]: AppWindow },
     showDevTools: {
       app: false,
       0: false,

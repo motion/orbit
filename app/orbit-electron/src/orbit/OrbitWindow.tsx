@@ -2,13 +2,14 @@ import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@o/models'
 import { Window } from '@o/reactron'
-import { App, Desktop, Electron, appStartupConfig } from '@o/stores'
+import { App, appStartupConfig, Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import root from 'global'
 import { join } from 'path'
 import * as React from 'react'
+
 import { ROOT } from '../constants'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { Mediator } from '../mediator'
@@ -176,7 +177,7 @@ export default function OrbitWindow() {
   const store = useStore(OrbitWindowStore, null)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const appQuery = `/?id=${appStartupConfig.appId}&appInDev=${appStartupConfig.appInDev}`
+  const appQuery = `/?id=${appStartupConfig.appId}`
   const url = `${Config.urls.server}${appStartupConfig.appId > 0 ? appQuery : ''}`
 
   log.info(

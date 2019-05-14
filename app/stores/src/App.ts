@@ -16,14 +16,17 @@ export type AppInDev = {
   path: string
 }
 
+const conf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
+
 function getAppStartupConfig(): AppStartupConfig {
   let initial = {
     appId: 0,
     appInDev: null,
   }
-  if (process.env[ORBIT_APP_STARTUP_CONFIG] != null) {
+  // otherwise webpack filters it away
+  if (conf != null) {
     try {
-      return JSON.parse(process.env[ORBIT_APP_STARTUP_CONFIG])
+      return JSON.parse(conf)
     } catch (_err) {
       return initial
     }
@@ -35,6 +38,7 @@ function getAppStartupConfig(): AppStartupConfig {
 export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
 
 export let appStartupConfig: AppStartupConfig = getAppStartupConfig()
+console.log('appStartupConfig', appStartupConfig, conf)
 
 export type AppState = {
   id: number
@@ -61,12 +65,6 @@ const defaultMenuState = (index: number): MenuState => ({
   size: [0, 0],
 })
 
-export type AppStateEntry = {
-  id: number
-  type: string
-  appId: number
-}
-
 @decorate
 class AppStore {
   // TODO proxySetters should auto-type this
@@ -85,7 +83,6 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
-    appWindows: {} as { [id: string]: AppStateEntry },
     orbitState: {
       docked: false,
       orbitOnLeft: false,

@@ -176,7 +176,8 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
-  return <OrbitAppRenderOfDefinition appDef={appDef} id="6" identifier={appDef.id} />
+  console.log('RenderApp', appDef)
+  return <OrbitAppRenderOfDefinition appDef={appDef} id="1" identifier={appDef.id} hasShownOnce />
 }
 
 const OrbitContentArea = gloss({

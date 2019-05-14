@@ -5,7 +5,7 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
 import { AppDevOpenCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
 import { render } from '@o/reactron'
-import { App, Electron } from '@o/stores'
+import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
 import * as React from 'react'
 import waitOn from 'wait-on'
@@ -23,19 +23,19 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
-  console.log('resolving AppDevOpenCommand')
   let appInDev = {
     path: params.path,
     bundleURL: params.bundleURL,
   }
-  let appId = Object.keys(App.state.appWindows).length
-  App.setState({
+  let appId = Object.keys(Electron.state.appWindows).length
+  Electron.setState({
     appWindows: {
       type: 'root',
       id: appId,
+      ...appInDev,
     },
   })
-  console.log('UPDATE', App.state.appWindows, appId)
+  console.log('UPDATE', Electron.state.appWindows, appId)
   // setTimeout so command doesnt take forever to run
   setTimeout(() => {
     forkAndStartOrbitApp({ appId, appInDev })

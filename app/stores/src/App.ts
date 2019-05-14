@@ -20,7 +20,7 @@ const conf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
 
 function getAppStartupConfig(): AppStartupConfig {
   let initial = {
-    appId: 0,
+    appId: null,
     appInDev: null,
   }
   // otherwise webpack filters it away

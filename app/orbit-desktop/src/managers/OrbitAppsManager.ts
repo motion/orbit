@@ -72,7 +72,7 @@ export class OrbitAppsManager {
       apps.map(async app => {
         const dest = this.spaceFolders[app.spaceId]
         if (!dest) return
-        console.log('should copy app icon, need to get app definition')
+        // console.log('should copy app icon, need to get app definition')
         // await copy(Config.paths.dotApp, join(dest, `${app.name}.app`))
       }),
     )

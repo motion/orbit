@@ -131,7 +131,7 @@ export class GraphServer {
           const appDef = appDefs.find(def => def.id === app.identifier)
 
           if (app && !appDef) {
-            console.log(
+            log.verbose(
               `GraphServer, ${
                 app.identifier
               }: WARNING! found an app-bit but no app-def, DB maybe out of sync.`,

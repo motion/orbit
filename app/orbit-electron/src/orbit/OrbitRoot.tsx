@@ -1,8 +1,8 @@
 import { App } from '@o/reactron'
+import { appStartupConfig } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
-import { appStartupConfig } from '../../../stores/_'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'
 import { MenuItems } from './MenuItems'
@@ -19,6 +19,7 @@ export function OrbitRoot() {
     return null
   }
 
+  const isApp = typeof appStartupConfig.appId === 'number'
   const appId = `${appStartupConfig.appId || ''}`
 
   return (
@@ -29,7 +30,7 @@ export function OrbitRoot() {
       devTools={devTools}
     >
       <MenuItems electronStore={electronStore} />
-      {appId ? <OrbitAppWindow id={appId} appId={appId} /> : <OrbitMainWindow />}
+      {isApp ? <OrbitAppWindow id={appId} appId={appId} /> : <OrbitMainWindow />}
     </App>
   )
 }

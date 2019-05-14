@@ -8,7 +8,7 @@ import { join } from 'path'
 import * as React from 'react'
 
 import { ROOT } from '../constants'
-import { getDefaultAppBounds } from './OrbitMainWindow'
+import { getDefaultAppBounds } from './getDefaultAppBounds'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -80,7 +80,6 @@ export function OrbitAppWindow({
       }}
       titleBarStyle="customButtonsOnHover"
       onReadyToShow={store.setShown}
-      alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       ref={store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}

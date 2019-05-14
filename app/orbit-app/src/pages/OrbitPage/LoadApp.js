@@ -11,7 +11,6 @@ export let LoadApp = ({ bundleURL, RenderApp }) => {
         // TODO(andreypopp): this is hacky, find a way to expose app via bundle
         // eval result
         let appDef = window['OrbitAppToRun']
-        console.log('loaded app', appDef)
         return { default: () => React.createElement(RenderApp, { appDef }) }
       }),
     [bundleURL, RenderApp],

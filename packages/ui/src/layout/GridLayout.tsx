@@ -9,6 +9,7 @@ import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { SizedSurfaceProps } from '../SizedSurface'
 import { Omit } from '../types'
+import { Col, ColProps } from '../View/Col'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
@@ -137,6 +138,8 @@ class GridStore {
     }
   }
 
+  mounted = false
+
   updateLayout = react(
     () => [this.items, this.props.cols],
     async ([items, cols], { sleep }) => {
@@ -146,7 +149,8 @@ class GridStore {
       // it sends the wrong dimensions back to us, so we use this to ignore until after
       this.enablePersist = false
 
-      await sleep(200)
+      await sleep(50)
+      console.log('updateLayout', items, cols)
       // always re-calc from large and reset
       this.layouts = {
         lg: calculateLayout(items, cols['lg']),
@@ -161,16 +165,16 @@ class GridStore {
       // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933
       window.dispatchEvent(new Event('resize'))
 
+      await sleep(20)
+      this.mounted = true
+
       await sleep(200)
       this.enablePersist = true
     },
   )
 
   mountItem(props: GridItemProps) {
-    this.items = {
-      ...this.items,
-      [props.id]: props,
-    }
+    this.items = { ...this.items, [props.id]: props }
   }
 
   unmountItem(props: GridItemProps) {
@@ -193,7 +197,7 @@ export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps)
   return <GridLayoutChildren {...props} />
 })
 
-export function GridLayoutChildren(props: GridLayoutPropsControlled) {
+export const GridLayoutChildren = memo((props: GridLayoutPropsControlled) => {
   const { width, ref } = useParentNodeSize()
   const gridStore = useStore(GridStore, props)
   const childArr = Array.isArray(props.children) ? props.children : [props.children]
@@ -223,24 +227,28 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
     })
     .filter(Boolean)
 
+  console.log(items, gridStore.layouts)
+
   let children = null
   if (!gridStore.layouts) {
-    children = <div style={{ display: 'none', height: props.height }}>{items}</div>
+    children = <GridWrapper height={props.height}>{items}</GridWrapper>
   } else {
     children = (
-      <ResponsiveGridLayout
-        onLayoutChange={next => gridStore.setLayout(next, width)}
-        layouts={gridStore.layouts}
-        breakpoints={gridStore.breakpoints}
-        width={width}
-        height={props.height}
-        compactType="vertical"
-        measureBeforeMount={false}
-        draggableHandle=".grid-draggable"
-        cols={props.cols}
-      >
-        {items}
-      </ResponsiveGridLayout>
+      <GridWrapper mounted={gridStore.mounted}>
+        <ResponsiveGridLayout
+          onLayoutChange={next => gridStore.setLayout(next, width)}
+          layouts={gridStore.layouts}
+          breakpoints={gridStore.breakpoints}
+          width={width}
+          height={props.height}
+          compactType="vertical"
+          measureBeforeMount={false}
+          draggableHandle=".grid-draggable"
+          cols={props.cols}
+        >
+          {items}
+        </ResponsiveGridLayout>
+      </GridWrapper>
     )
   }
   return (
@@ -248,7 +256,18 @@ export function GridLayoutChildren(props: GridLayoutPropsControlled) {
       <SimpleProvider value={gridStore}>{children}</SimpleProvider>
     </Contents>
   )
-}
+})
+
+const GridWrapper = gloss<ColProps & { mounted?: boolean }>(Col, {
+  width: '100%',
+  flex: 1,
+  opacity: 0,
+  transition: 'all ease 300ms',
+  mounted: {
+    opacity: 1,
+    background: 'transparent',
+  },
+})
 
 const getSizes = items => {
   const sizes = {}

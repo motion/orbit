@@ -21,7 +21,7 @@ import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
-import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
+import { OrbitApp } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
@@ -189,9 +189,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   const appId = `${App.appConf.appId}`
-  return (
-    <OrbitAppRenderOfDefinition appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
-  )
+  return <OrbitApp appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
 }
 
 const OrbitContentArea = gloss({

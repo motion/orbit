@@ -23,7 +23,9 @@ export function AppCard<A extends AppDefinition>({
   ...cardProps
 }: AppCardProps<A>) {
   const [internalApp, setApp] = useState<AppBit>(null)
-  const isFocused = useFocusableItem(useRef(`appcard-${Math.random()}`).current)
+  const isFocused = useFocusableItem(
+    useRef(`appcard-${Math.floor(Math.random() * 100000)}`).current,
+  )
 
   useEffect(() => {
     onChange && onChange(internalApp)

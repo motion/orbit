@@ -74,8 +74,6 @@ export class MediatorClient {
   ): Promise<ReturnType> {
     const name = typeof command === 'string' ? command : command.name
 
-    console.log(command, timeout, 'transports:', this.options.transports.length)
-
     for (let transport of this.options.transports) {
       try {
         const response = await orTimeout(

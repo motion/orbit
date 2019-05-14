@@ -64,6 +64,8 @@ class AppStore {
   bridge = Bridge
   source = 'App'
 
+  appInstanceConf = appInstanceConf
+
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],

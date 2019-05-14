@@ -66,7 +66,6 @@ export class MediatorServer {
       command = this.options.commands.find(command => {
         return command.name === data.command
       })
-      console.log('got a command', command)
       // if command was not found - try fallback servers
       if (!command) {
         if (this.options.fallbackClient) {

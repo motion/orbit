@@ -3,15 +3,10 @@ import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { AppDevOpenCommand } from '@o/models'
 import { orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
-import getPort from 'get-port'
 import * as Path from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import Webpack from 'webpack'
-import WebpackDevServer from 'webpack-dev-server'
 import WebSocket from 'ws'
 import Yargs from 'yargs'
-
-import makeWebpackConfig from './webpack.config'
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
@@ -39,46 +34,6 @@ async function findBonjourService(type: string, timeout: number) {
     bonjourInstance.destroy()
   }
   return service
-}
-
-type Bundler = {
-  dispose(): void
-  host: string
-  port: number
-}
-
-async function startBundler(options): Promise<Bundler> {
-  let config = await makeWebpackConfig(options)
-  let compiler = Webpack(config)
-
-  let server = new WebpackDevServer(compiler, config.devServer)
-  let serverDispose = () =>
-    new Promise((resolve, reject) => {
-      server.close(err => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve()
-        }
-      })
-    })
-
-  let port = await getPort()
-  let host = 'localhost'
-
-  return new Promise((resolve, reject) => {
-    server.listen(port, host, err => {
-      if (err) {
-        reject()
-      } else {
-        resolve({
-          host,
-          port,
-          dispose: serverDispose,
-        })
-      }
-    })
-  })
 }
 
 async function getOrbitDesktop() {
@@ -112,23 +67,11 @@ class OrbitCLI {
   }
 
   async dev(_opts: {}) {
-    let config = {
-      projectRoot: this.options.projectRoot,
-      mode: 'development',
-    }
-    let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
-
-    console.log('started bundling, sending open command')
-
-    const res = await orbitDesktop.command(AppDevOpenCommand, {
-      bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,
+    let orbitDesktop = await getOrbitDesktop()
+    const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: this.options.projectRoot,
-      // @ts-ignore
-      appId: this.options.projectRoot,
     })
-
-    console.log('got back', res)
-
+    console.log('loading app id', appId)
     return
   }
 }

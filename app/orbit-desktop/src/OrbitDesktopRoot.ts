@@ -84,6 +84,7 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
+import { BuildServer } from '@o/build-server'
 
 const log = new Logger('desktop')
 
@@ -103,6 +104,7 @@ export class OrbitDesktopRoot {
   private cosal: Cosal
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
+  private buildServer: BuildServer
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -151,9 +153,11 @@ export class OrbitDesktopRoot {
     // depends on cosal
     this.registerMediatorServer()
 
+    this.buildServer = new BuildServer()
+
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
-    this.webServer = new WebServer()
+    this.webServer = new WebServer(this.buildServer)
     await this.webServer.start()
 
     this.authServer = new AuthServer()

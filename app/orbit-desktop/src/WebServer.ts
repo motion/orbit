@@ -5,6 +5,7 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
+import { BuildServer } from '@o/build-server'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()
@@ -26,13 +27,16 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor() {
+  constructor(private buildServer: BuildServer) {
     this.server = express()
     this.server.set('port', Config.ports.server)
     this.server.use(cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
+
+    // use build server
+    this.server.use(this.buildServer.getMiddleware())
 
     // ROUTES
     this.server.use(bodyParser.json({ limit: '2048mb' }))

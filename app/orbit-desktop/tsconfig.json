@@ -12,6 +12,7 @@
     { "path": "../stores" },
     { "path": "../screen" },
     { "path": "../oracle" },
+    { "path": "../build-server" },
     { "path": "../../apps" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },

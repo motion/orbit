@@ -8,12 +8,8 @@ type Params = {
   mode: 'production' | 'development'
 }
 
-async function makeConfig(params: Params) {
-  let {
-    projectRoot,
-    // TODO(andreypopp): switch default to production?
-    mode = 'development',
-  } = params
+export async function makeWebpackConfig(params: Params) {
+  let { projectRoot, mode = 'development' } = params
 
   const entry = './'
   const target = 'electron-renderer'
@@ -188,5 +184,3 @@ async function makeConfig(params: Params) {
   }
   return config
 }
-
-export default makeConfig

@@ -77,9 +77,13 @@ class OrbitMainWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      ensure('has size', screenSize[0] !== 0)
       ensure('not torn', !Electron.isTorn)
-      ensure('has moved', this.hasMoved)
+      if (this.size[0] !== 0) {
+        ensure('not been moved', !this.hasMoved)
+      }
       const bounds = getDefaultAppBounds(screenSize)
+      console.log('bounds', bounds, screenSize)
       this.position = bounds.position
       this.size = bounds.size
     },
@@ -165,11 +169,7 @@ export function OrbitMainWindow() {
   root['OrbitMainWindowStore'] = store // helper for dev
   const url = `${Config.urls.server}`
 
-  log.info(
-    `--- OrbitMainWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${
-      store.vibrancy
-    }`,
-  )
+  log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size} ${store.vibrancy}`)
 
   orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen,
@@ -197,7 +197,7 @@ export function OrbitMainWindow() {
       onReadyToShow={store.setInitialShow}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
-      ref={store.handleRef}
+      forwardRef={store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}
       defaultSize={store.size.slice()}

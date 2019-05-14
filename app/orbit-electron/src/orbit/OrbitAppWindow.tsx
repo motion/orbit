@@ -59,13 +59,14 @@ class OrbitAppWindowStore {
 export function OrbitAppWindow({
   id,
   appId,
+  forwardRef,
   ...windowProps
 }: { id: string; appId?: string } & any) {
   const store = useStore(OrbitAppWindowStore, { id })
   const appQuery = `/?id=${appId}`
   const url = `${Config.urls.server}${appId ? appQuery : ''}`
 
-  log.info(`OrbitAppWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size}`)
+  log.info(`OrbitAppWindow ${appId} ${store.show} ${url} ${store.size} ${store.position}`)
 
   if (!store.size[0]) {
     return null
@@ -80,7 +81,7 @@ export function OrbitAppWindow({
       }}
       titleBarStyle="customButtonsOnHover"
       onReadyToShow={store.setShown}
-      ref={store.handleRef}
+      ref={forwardRef || store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}
       defaultSize={store.size.slice()}

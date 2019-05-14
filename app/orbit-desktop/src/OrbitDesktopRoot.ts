@@ -318,7 +318,7 @@ export class OrbitDesktopRoot {
           this.buildServer.setApps([
             {
               path,
-              publicPath: `/${id}`,
+              publicPath: `/appServer/${id}`,
             },
           ])
           return id

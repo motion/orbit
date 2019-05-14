@@ -1,19 +1,11 @@
 import { command } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, themes, useStore } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
@@ -81,6 +73,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
   const paneManagerStore = usePaneManagerStore()
   const { actions } = useOm()
+  const forceUpdate = useForceUpdate()
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -150,10 +143,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   let contentArea = null
 
+  useEffect(() => {
+    hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
+      built: forceUpdate,
+    })
+  }, [])
+
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp key={0} RenderApp={RenderDevApp} bundleURL={App.bundleUrl} />
+        <LoadApp
+          key={0}
+          RenderApp={RenderDevApp}
+          bundleURL={`${App.bundleUrl}?cacheKey=${Math.random()}`}
+        />
       </Suspense>
     )
   } else {
@@ -186,11 +189,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   const appId = `${App.appConf.appId}`
-
-  useEffect(() => {
-    hmrSocket(`/appServer/${appId}/__webpack_hmr`)
-  }, [])
-
   return (
     <OrbitAppRenderOfDefinition appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
   )

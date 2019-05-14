@@ -21,7 +21,7 @@ function createEventSource(url: string) {
     }
   }
 
-  function handleDisconnect() {
+  function handleDisconnect(e) {
     source.close()
     setTimeout(init, 1000)
   }
@@ -33,7 +33,7 @@ function createEventSource(url: string) {
   }
 }
 
-export function hmrSocket(url: string) {
+export function hmrSocket(url: string, actions) {
   createEventSource(url).addMessageListener(handleMessage)
 
   function handleMessage(event) {
@@ -41,10 +41,57 @@ export function hmrSocket(url: string) {
       return
     }
     try {
-      processMessage(JSON.parse(event.data))
+      const msg = JSON.parse(event.data)
+      processMessage(msg)
+      if (actions[msg.action]) {
+        actions[msg.action](msg)
+      }
     } catch (ex) {
       console.warn('Invalid HMR message: ' + event.data + '\n' + ex)
     }
+  }
+}
+
+var customHandler
+var subscribeAllHandler
+function processMessage(obj) {
+  switch (obj.action) {
+    case 'building':
+      console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
+      break
+    case 'built':
+      console.log(
+        '[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilt in ' + obj.time + 'ms',
+      )
+    // fall through
+    case 'sync':
+      var applyUpdate = true
+      if (obj.errors.length > 0) {
+        // if (reporter) reporter.problems('errors', obj)
+        applyUpdate = false
+      } else if (obj.warnings.length > 0) {
+        // if (reporter) {
+        //   var overlayShown = reporter.problems('warnings', obj)
+        //   applyUpdate = overlayShown
+        // }
+      } else {
+        // if (reporter) {
+        //   reporter.cleanProblemsCache()
+        //   reporter.success()
+        // }
+      }
+      if (applyUpdate) {
+        // processUpdate(obj.hash, obj.modules, options)
+      }
+      break
+    default:
+      if (customHandler) {
+        customHandler(obj)
+      }
+  }
+
+  if (subscribeAllHandler) {
+    subscribeAllHandler(obj)
   }
 }
 
@@ -134,46 +181,3 @@ export function hmrSocket(url: string) {
 // }
 
 // var processUpdate = require('./process-update')
-
-var customHandler
-var subscribeAllHandler
-function processMessage(obj) {
-  switch (obj.action) {
-    case 'building':
-      console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
-      break
-    case 'built':
-      console.log(
-        '[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilt in ' + obj.time + 'ms',
-      )
-    // fall through
-    case 'sync':
-      var applyUpdate = true
-      if (obj.errors.length > 0) {
-        // if (reporter) reporter.problems('errors', obj)
-        applyUpdate = false
-      } else if (obj.warnings.length > 0) {
-        // if (reporter) {
-        //   var overlayShown = reporter.problems('warnings', obj)
-        //   applyUpdate = overlayShown
-        // }
-      } else {
-        // if (reporter) {
-        //   reporter.cleanProblemsCache()
-        //   reporter.success()
-        // }
-      }
-      if (applyUpdate) {
-        // processUpdate(obj.hash, obj.modules, options)
-      }
-      break
-    default:
-      if (customHandler) {
-        customHandler(obj)
-      }
-  }
-
-  if (subscribeAllHandler) {
-    subscribeAllHandler(obj)
-  }
-}

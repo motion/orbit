@@ -14,11 +14,15 @@ export class BuildServer {
 
   getMiddleware() {
     return (req, res, next) => {
-      if (!this.middlewares.length) {
+      if (req.url.indexOf('/appServer') !== 0) {
+        return next()
+      }
+      if (!this.middlewares.length || req.pathname) {
         return next()
       }
       for (const middleware of this.middlewares) {
-        middleware(req, res, next)
+        // have to disable next because for some reason they were sending next
+        middleware(req, res, () => {})
       }
     }
   }
@@ -44,7 +48,9 @@ export class BuildServer {
       )
       next.push(
         WebpackHotMiddleware(compiler, {
-          path: `/appServer${publicPath}/__webpack_hmr`,
+          path: `${publicPath}/__webpack_hmr`,
+          log: console.log,
+          heartBeat: 10 * 1000,
         }),
       )
     }

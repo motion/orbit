@@ -32,13 +32,11 @@ export class OrbitAppsManager {
       AppEntity,
       { select: appSelectAllButDataAndTimestamps },
       apps => {
-        console.log('got apps', apps.length)
         this.apps = apps
       },
     )
 
     addObserveMany(this.subscriptions, SpaceEntity, {}, spaces => {
-      console.log('got spaces', spaces.length)
       this.spaces = spaces
     })
   }

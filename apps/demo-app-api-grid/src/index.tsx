@@ -14,8 +14,6 @@ function CustomApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
 
-  console.log('rendering custom app...')
-
   return (
     <GridLayout>
       <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>

@@ -12,15 +12,19 @@ import { configStore } from './util/configStore'
 
 export async function commandDev(options: { projectRoot: string }) {
   let orbitDesktop = await getOrbitDesktop()
-  const appId = await orbitDesktop.command(AppDevOpenCommand, {
-    path: options.projectRoot,
-  })
-  console.log('sent dev command, got app', appId)
-  await orbitDesktop.command(AppOpenWindowCommand, {
-    appId,
-    isEditing: true,
-  })
-  console.log('opening app window id', appId)
+  try {
+    const appId = await orbitDesktop.command(AppDevOpenCommand, {
+      path: options.projectRoot,
+    })
+    console.log('sent dev command, got app', appId)
+    await orbitDesktop.command(AppOpenWindowCommand, {
+      appId,
+      isEditing: true,
+    })
+    console.log('opening app window id', appId)
+  } catch (err) {
+    console.log('Error opening app for dev', err.message, err.stack)
+  }
   return
 }
 
@@ -51,7 +55,9 @@ async function getOrbitDesktop() {
   if (!port) {
     // run desktop and try again
     if (await runOrbitDesktop()) {
-      port = await findBonjourService('orbitDesktop', 8500)
+      port = await findBonjourService('orbitDesktop', 10000)
+      // adding some sleep so it connects
+      await sleep(1000)
     }
   }
 
@@ -71,6 +77,10 @@ async function getOrbitDesktop() {
       ),
     ],
   })
+
+  // let mediator connect
+  await sleep(100)
+
   return Mediator
 }
 
@@ -104,11 +114,6 @@ async function runOrbitDesktop(): Promise<boolean> {
 
       child.stdout.pipe(process.stdout)
       child.stderr.pipe(process.stderr)
-
-      if (isInMonoRepo) {
-        // wait a bit longer, in dev mode startup is slower
-        await sleep(2000)
-      }
 
       return true
     } catch (e) {

@@ -9,7 +9,7 @@ type ConfigureOpts = {
   getApps: () => AppDefinition[]
 }
 
-export let config: ConfigureOpts = window['__orbitKitConfig'] || {
+export let config: ConfigureOpts = {
   StoreContext: createContext(null),
   handleLink: path => window.history.pushState(null, '', path),
   getApps: null,

@@ -3,26 +3,22 @@ import { User } from '@o/models'
 import { decorate, deep } from '@o/use-store'
 
 import { Desktop } from './Desktop'
-import { Electron } from './Electron'
+import { AppWindow, Electron } from './Electron'
 
 export let App = null as AppStore
 
-export type AppInstanceConf = {
-  appId: number | null
-  bundleURL?: string
-  path?: string
+function getAppId() {
+  if (process.env.APP_ID) return +process.env.APP_ID
+  if (typeof window !== 'undefined' && window.location && window.location.search) {
+    const match = window.location.search.match(/id=([0-9])+/)
+    if (match) {
+      return +match[1]
+    }
+  }
+  return -1
 }
 
-const envInfo = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
-
-export const appInstanceConf: AppInstanceConf = envInfo
-  ? JSON.parse(envInfo)
-  : {
-      appId: null,
-    }
-
-const appId = appInstanceConf.appId
-export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
+const appId = getAppId()
 
 export type AppState = {
   id: number
@@ -93,11 +89,21 @@ class AppStore {
     showSpaceSwitcher: 0,
   })
 
+  get appConf(): AppWindow {
+    return (
+      Electron.state.appWindows[appId] || {
+        appId,
+        type: 'root',
+      }
+    )
+  }
+
+  get bundleUrl() {
+    return `/appServer/${appId}/bundle.js`
+  }
+
   get isEditing() {
-    if (typeof appId === 'number') {
-      return Electron.state.appWindows[appId].isEditing
-    }
-    return false
+    return !!this.appConf.isEditing
   }
 
   get isDark() {

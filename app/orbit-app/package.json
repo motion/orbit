@@ -85,7 +85,8 @@
     "simple-quadtree": "^0.1.3",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
-    "webpack-runtime-require": "0.3.0"
+    "webpack-runtime-require": "0.3.0",
+    "sockjs-client": "1.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

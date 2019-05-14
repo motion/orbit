@@ -1,6 +1,7 @@
 import { Logger } from '@o/logger'
 import { BrowserWindow } from 'electron'
 import isEqual from 'lodash.isequal'
+
 import { BaseComponent } from './BaseComponent'
 
 const log = new Logger('reactron')
@@ -53,8 +54,6 @@ export class Window extends BaseComponent {
       fullScreen: !!props.fullScreen,
       icon: props.icon,
     })
-
-    console.log('new BrowserWindow(', this.options, ')')
 
     this.window = new BrowserWindow(this.options)
 
@@ -120,7 +119,6 @@ export class Window extends BaseComponent {
       if (!isEqual(this.options[key], newVal)) {
         const setterInst = this.window[`set${properCase(key)}`]
         if (setterInst) {
-          log.info('update window, set', key, newVal)
           setterInst.call(this.window, ...newVal)
           this.options[key] = newVal
         }

@@ -14,11 +14,15 @@ export class BuildServer {
 
   getMiddleware() {
     return (req, res, next) => {
-      if (!this.middlewares.length) {
+      if (req.url.indexOf('/appServer') !== 0) {
+        return next()
+      }
+      if (!this.middlewares.length || req.pathname) {
         return next()
       }
       for (const middleware of this.middlewares) {
-        middleware(req, res, next)
+        // have to disable next because for some reason they were sending next
+        middleware(req, res, () => {})
       }
     }
   }
@@ -28,18 +32,27 @@ export class BuildServer {
 
     for (const app of apps) {
       const publicPath = app.publicPath
+
       let config = await makeWebpackConfig({
         projectRoot: app.path,
         mode: 'development',
         publicPath,
       })
+
       let compiler = Webpack(config)
+
       next.push(
         WebpackDevMiddleware(compiler, {
-          publicPath: '/',
+          publicPath,
         }),
       )
-      next.push(WebpackHotMiddleware(compiler))
+      next.push(
+        WebpackHotMiddleware(compiler, {
+          path: `${publicPath}/__webpack_hmr`,
+          log: console.log,
+          heartBeat: 10 * 1000,
+        }),
+      )
     }
 
     this.middlewares = next

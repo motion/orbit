@@ -35,7 +35,7 @@ export type PinKeyType =
   | 'down'
 
 export type AppWindow = {
-  id: number
+  appId: number
   type: string
   isEditing?: boolean
   path?: string

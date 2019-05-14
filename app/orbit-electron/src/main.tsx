@@ -11,7 +11,7 @@ import * as React from 'react'
 import waitOn from 'wait-on'
 import waitPort from 'wait-port'
 
-import { IS_SUB_ORBIT } from './constants'
+import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import { forkAndStartOrbitApp } from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
@@ -23,76 +23,71 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export async function main() {
-  log.info(`Starting electron in env ${process.env.NODE_ENV}`)
-
   const desktopServerUrl = `http://localhost:${getGlobalConfig().ports.server}`
-  console.log('Waiting on desktop port', desktopServerUrl, '...')
+
+  log.info(
+    `Starting electron in env ${process.env.NODE_ENV}`,
+    `Waiting on desktop port: ${desktopServerUrl}`,
+    `IS_MAIN_ORBIT: ${IS_MAIN_ORBIT}`,
+  )
+
   await waitOn({ resources: [desktopServerUrl], interval: 50 })
-  console.log('Connected to desktop')
 
-  // require after desktop starts to avoid reconnect errors
-  const { Mediator } = require('./mediator')
-  const port = await Mediator.command(NewFallbackServerPortCommand)
-  console.log('Electron started mediator on port', port)
+  // we can have a different mediator if we want for child windows
+  if (IS_MAIN_ORBIT) {
+    // register app schema
+    const { app } = require('electron')
+    if (app.isDefaultProtocolClient('orbit') === false) {
+      app.setAsDefaultProtocolClient('orbit')
+    }
+    app.on('open-url', (_options, path) => {
+      console.log(`open-url emitted`, path)
+      Mediator.command(SendClientDataCommand, {
+        name: 'APP_URL_OPENED',
+        value: path.replace('orbit://', ''),
+      })
+    })
 
-  const mediatorServer = new MediatorServer({
-    models: [],
-    commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
-    transport: new WebSocketServerTransport({ port }),
-    resolvers: [
-      resolveCommand(AppOpenWindowCommand, async ({ appId, isEditing }) => {
-        console.log('got open window command, opening...', appId)
-        Electron.setState({
-          appWindows: {
-            [appId]: {
-              type: 'root',
-              id: appId,
-              isEditing: !!isEditing,
+    // require after desktop starts to avoid reconnect errors
+    const { Mediator } = require('./mediator')
+    const port = await Mediator.command(NewFallbackServerPortCommand)
+    console.log('Electron started mediator on port', port)
+    const mediatorServer = new MediatorServer({
+      models: [],
+      commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
+      transport: new WebSocketServerTransport({ port }),
+      resolvers: [
+        resolveCommand(AppOpenWindowCommand, async ({ appId, isEditing }) => {
+          console.log('got open window command, opening...', appId)
+          Electron.setState({
+            appWindows: {
+              [appId]: {
+                type: 'root',
+                appId,
+                isEditing: !!isEditing,
+              },
             },
-          },
-        })
-        // setTimeout so command doesnt take forever to run
-        setTimeout(() => {
-          forkAndStartOrbitApp({ appId })
-        })
-        return true
-      }),
-      TearAppResolver,
-      CloseAppResolver,
-      RestartAppResolver,
-    ],
-  })
-  mediatorServer.bootstrap()
+          })
+          // setTimeout so command doesnt take forever to run
+          setTimeout(() => {
+            forkAndStartOrbitApp({ appId })
+          })
+          return true
+        }),
+        TearAppResolver,
+        CloseAppResolver,
+        RestartAppResolver,
+      ],
+    })
+    mediatorServer.bootstrap()
+  }
 
-  // handle our own separate process in development
-  if (!IS_SUB_ORBIT && process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     // in any electron process...
     require('source-map-support/register')
     require('./helpers/installGlobals')
-    console.log('Waiting for dev ports')
+    require('./helpers/monitorResourceUsage')
     await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
-    console.log('Waiting for dev ports done')
-
-    if (process.env.SUB_PROCESS) {
-      // hide sub-process docks
-      require('electron').app.dock.hide()
-    } else {
-      // only in main electron process...
-      require('./helpers/monitorResourceUsage')
-
-      // register app schema
-      const { app } = require('electron')
-      if (app.isDefaultProtocolClient('orbit') === false) {
-        app.setAsDefaultProtocolClient('orbit')
-      }
-      app.on('open-url', (_options, path) => {
-        console.log(`open-url emitted`, path)
-        Mediator.command(SendClientDataCommand, {
-          name: 'APP_URL_OPENED',
-          value: path.replace('orbit://', ''),
-        })
-      })
-    }
   }
 
   // why not make it a bit easier in prod mode too

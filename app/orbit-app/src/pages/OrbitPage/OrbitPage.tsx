@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, themes, useStore } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { App, appInstanceConf } from '@o/stores'
+import { App } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
@@ -13,6 +13,7 @@ import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
+import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useOm } from '../../om/om'
@@ -72,6 +73,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
   const paneManagerStore = usePaneManagerStore()
   const { actions } = useOm()
+  const forceUpdate = useForceUpdate()
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -90,7 +92,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       if (isEditing) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          command(CloseAppCommand, { appId: appStartupConfig.appId })
+          command(CloseAppCommand, { appId: App.appConf.appId })
           return
         }
       } else {
@@ -141,10 +143,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   let contentArea = null
 
+  useEffect(() => {
+    hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
+      built: forceUpdate,
+    })
+  }, [])
+
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp RenderApp={RenderApp} bundleURL={appInstanceConf.bundleURL} />
+        <LoadApp
+          key={0}
+          RenderApp={RenderDevApp}
+          bundleURL={`${App.bundleUrl}?cacheKey=${Math.random()}`}
+        />
       </Suspense>
     )
   } else {
@@ -175,9 +187,11 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 })
 
-let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
-  console.log('RenderApp', appDef)
-  return <OrbitAppRenderOfDefinition appDef={appDef} id="1" identifier={appDef.id} hasShownOnce />
+let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
+  const appId = `${App.appConf.appId}`
+  return (
+    <OrbitAppRenderOfDefinition appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
+  )
 }
 
 const OrbitContentArea = gloss({

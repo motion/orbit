@@ -8,9 +8,9 @@ const OPTION_PEEK_DELAY = 300
 export class KeyboardManager {
   pauseTm = null
 
-  constructor({ screen }: { screen: Screen }) {
+  constructor(_opts: { screen: Screen }) {
     // for now only sends option key event out
-    console.log('TODO handle keyboard', !!screen)
+    // console.log('TODO handle keyboard', !!screen)
     // screen.onKeyboard(this.onOptionKey)
   }
 

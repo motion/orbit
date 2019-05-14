@@ -138,7 +138,6 @@ export class SocketManager {
     let id = 0
     this.server.on('connection', socket => {
       let uid = ++id
-      console.log('Got socket connection', uid)
       // add to active sockets
       this.activeSockets.push({ uid, socket })
       this.decorateSocket(uid, socket)

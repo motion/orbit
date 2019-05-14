@@ -28,7 +28,6 @@ export class ElectronDebugStore {
   handleAppRef = ref => {
     if (!ref) return
     this.appRef = ref.app
-
     // this.appRef.dock.hide()
   }
 

@@ -30,17 +30,20 @@ export class WebServer {
   constructor(private buildServer: BuildServer) {
     this.server = express()
     this.server.set('port', Config.ports.server)
+
+    // use build server, must be before cors
+    this.server.use(this.buildServer.getMiddleware())
+
     this.server.use(cors())
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
 
-    // use build server
-    this.server.use('/appServer', this.buildServer.getMiddleware())
-
     // ROUTES
     this.server.use(bodyParser.json({ limit: '2048mb' }))
     this.server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+
+    // test
     this.server.get('/hello', (_, res) => res.send('hello world'))
 
     // assets
@@ -56,8 +59,6 @@ export class WebServer {
 
   start() {
     return new Promise(async res => {
-      log.info('start()')
-
       log.verbose(`Killing old server on ${Config.ports.server}...`)
       await killPort(Config.ports.server)
 

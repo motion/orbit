@@ -26,18 +26,25 @@ export class OrbitDataManager {
     // dispose previous before running
     this.dispose()
 
-    // setup homedir
-    await ensureHomeDir(dataDir, dataPrivateDir, [dataSettingsDir, dataSpacesDir])
+    try {
+      // setup homedir
+      await ensureHomeDir(dataDir, dataPrivateDir, [dataSettingsDir, dataSpacesDir])
 
-    // validate homedir
-    const subDirsExist = await Promise.all([pathExists(dataSettingsDir), pathExists(dataSpacesDir)])
-    if (!subDirsExist) {
-      DesktopActions.error.setError({
-        title: 'Error checking data directories',
-        message: `You have a proper data directory, but are missing a sub-directory. Check that ${dataSettingsDir} and ${dataSpacesDir} exist.`,
-        type: 'error',
-      })
-      return
+      // validate homedir
+      const subDirsExist = await Promise.all([
+        pathExists(dataSettingsDir),
+        pathExists(dataSpacesDir),
+      ])
+      if (!subDirsExist) {
+        DesktopActions.error.setError({
+          title: 'Error checking data directories',
+          message: `You have a proper data directory, but are missing a sub-directory. Check that ${dataSettingsDir} and ${dataSpacesDir} exist.`,
+          type: 'error',
+        })
+        return
+      }
+    } catch (err) {
+      console.log('error in orbitdatamanager', err)
     }
 
     // start watching and persisting changes
@@ -91,7 +98,9 @@ export class OrbitDataManager {
     }
 
     const persist = debounce(async () => {
-      await ensureDir(join(dataSpacesDir, space.name))
+      try {
+        await ensureDir(join(dataSpacesDir, space.name))
+      } catch {}
       writeJSON(join(dataSpacesDir, space.name, 'orbit-data.json'), state, {
         spaces: 2,
       })

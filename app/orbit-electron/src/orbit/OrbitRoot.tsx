@@ -1,8 +1,10 @@
-import { App } from '@o/reactron'
-import { appInstanceConf } from '@o/stores'
+import { App as ReactronApp } from '@o/reactron'
+import { App } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
+import { selectDefined } from '../../../../packages/utils/_'
+import { IS_MAIN_ORBIT } from '../constants'
 import { devTools } from '../helpers/devTools'
 import { ElectronDebugStore } from '../stores/ElectronDebugStore'
 import { MenuItems } from './MenuItems'
@@ -19,13 +21,16 @@ export function OrbitRoot() {
     return null
   }
 
-  const isApp = typeof appInstanceConf.appId === 'number'
-  const appId = `${appInstanceConf.appId || ''}`
+  const isApp = !IS_MAIN_ORBIT
+  const appId = `${selectDefined(App.appConf.appId, '')}`
 
-  console.log('appInstanceConf', appInstanceConf)
+  if (isApp && appId === '') {
+    console.log(JSON.stringify(App.appConf.appId))
+    throw new Error('No app id found!')
+  }
 
   return (
-    <App
+    <ReactronApp
       onBeforeQuit={store.handleBeforeQuit}
       onWillQuit={store.handleQuit}
       ref={store.handleAppRef}
@@ -33,6 +38,6 @@ export function OrbitRoot() {
     >
       <MenuItems electronStore={store} />
       {isApp ? <OrbitAppWindow id={appId} appId={appId} showDevTools show /> : <OrbitMainWindow />}
-    </App>
+    </ReactronApp>
   )
 }

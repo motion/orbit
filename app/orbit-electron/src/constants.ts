@@ -1,6 +1,7 @@
 import { join } from 'path'
 
-export const IS_SUB_ORBIT = process.env.SUB_PROCESS === 'orbit'
+export const IS_MAIN_ORBIT = process.env.SUB_PROCESS === undefined
+export const IS_SUB_ORBIT = !IS_MAIN_ORBIT
 
 export const WEB_PREFERENCES = {
   nativeWindowOpen: true,

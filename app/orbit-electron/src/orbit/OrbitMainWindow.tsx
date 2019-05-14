@@ -83,7 +83,6 @@ class OrbitMainWindowStore {
         ensure('not been moved', !this.hasMoved)
       }
       const bounds = getDefaultAppBounds(screenSize)
-      console.log('bounds', bounds, screenSize)
       this.position = bounds.position
       this.size = bounds.size
     },

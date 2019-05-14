@@ -1,5 +1,5 @@
 import { DesktopActions } from '@o/stores'
-import { mkdir, pathExists } from 'fs-extra'
+import { ensureDir, pathExists } from 'fs-extra'
 
 // ensures we have a ~/.orbit like directory
 export async function ensureHomeDir(
@@ -23,38 +23,16 @@ export async function ensureHomeDir(
     return false
   }
 
-  let success = await ensureDir(path)
-  if (!success) return false
-
-  success = await ensureDir(orbitParentDir)
-  if (!success) return false
-
-  success = await setupSubDirectories(subDirectories)
-  if (!success) return false
-
-  return true
-}
-
-// sets up a new ~/.orbit like directory
-async function ensureDir(path: string) {
-  try {
-    await mkdir(path)
-  } catch (err) {
-    // permissions or some other problem
-    DesktopActions.error.setError({
-      title: 'Error creating orbit home directory',
-      message: `May be permissions or conflicting files: ${err.message}.`,
-      type: 'error',
-    })
-    return false
-  }
+  await ensureDir(path)
+  await ensureDir(orbitParentDir)
+  await setupSubDirectories(subDirectories)
 
   return true
 }
 
 async function setupSubDirectories(subDirectories: string[]) {
   try {
-    await Promise.all(subDirectories.map(dir => mkdir(dir)))
+    await Promise.all(subDirectories.map(dir => ensureDir(dir)))
   } catch (err) {
     console.error(err)
     return false

@@ -68,8 +68,6 @@ export class GraphServer {
   start() {
     this.watchWorkspacesForGraphs()
 
-    log.info('start()')
-
     // graphql
     this.server.use('/graphql/:workspaceId', bodyParser.json(), (req, res, next) => {
       const middleware = this.graphMiddleware[req.params.workspaceId]

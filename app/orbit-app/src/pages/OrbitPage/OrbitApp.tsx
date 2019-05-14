@@ -90,8 +90,6 @@ export const OrbitAppRenderOfDefinition = ({
     )
   }
 
-  console.log('appDef.app', appDef.app)
-
   return (
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>

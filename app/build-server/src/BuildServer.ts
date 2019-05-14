@@ -28,18 +28,25 @@ export class BuildServer {
 
     for (const app of apps) {
       const publicPath = app.publicPath
+
       let config = await makeWebpackConfig({
         projectRoot: app.path,
         mode: 'development',
         publicPath,
       })
+
       let compiler = Webpack(config)
+
       next.push(
         WebpackDevMiddleware(compiler, {
-          publicPath: '/',
+          publicPath,
         }),
       )
-      next.push(WebpackHotMiddleware(compiler))
+      next.push(
+        WebpackHotMiddleware(compiler, {
+          path: `/appServer${publicPath}/__webpack_hmr`,
+        }),
+      )
     }
 
     this.middlewares = next

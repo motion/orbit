@@ -14,7 +14,7 @@ function CustomApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
 
-  console.log('rendering custom app2220...')
+  console.log('rendering custom app22202...')
 
   return <div className="testme" style={{ width: 100, height: 100, background: 'red' }} />
 

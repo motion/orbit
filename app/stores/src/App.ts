@@ -99,7 +99,7 @@ class AppStore {
   }
 
   get bundleUrl() {
-    return `/appServer/bundle.js` //appId
+    return `/appServer/${appId}/bundle.js`
   }
 
   get isEditing() {

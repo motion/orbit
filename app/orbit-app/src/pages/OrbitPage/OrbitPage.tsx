@@ -5,7 +5,15 @@ import { App } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, {
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
@@ -13,6 +21,7 @@ import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
+import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useOm } from '../../om/om'
@@ -144,7 +153,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp key={0} RenderApp={RenderApp} bundleURL={App.bundleUrl} />
+        <LoadApp key={0} RenderApp={RenderDevApp} bundleURL={App.bundleUrl} />
       </Suspense>
     )
   } else {
@@ -175,14 +184,15 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 })
 
-let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
+let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
+  const appId = `${App.appConf.appId}`
+
+  useEffect(() => {
+    hmrSocket(`/appServer/${appId}/__webpack_hmr`)
+  }, [])
+
   return (
-    <OrbitAppRenderOfDefinition
-      appDef={appDef}
-      id={`${App.appConf.appId}`}
-      identifier={appDef.id}
-      hasShownOnce
-    />
+    <OrbitAppRenderOfDefinition appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
   )
 }
 

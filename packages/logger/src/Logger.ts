@@ -36,14 +36,6 @@ const knownUselessLog = str => {
   if (has(str, 'at __')) return true
   // common ts compiled code
   if (has(str, 'at res ')) return true
-  // mobx...
-  if (has(str, 'at executeAction$')) return true
-  if (has(str, 'at Reaction$')) return true
-  if (has(str, 'at runReactionsHelper')) return true
-  if (has(str, 'at reactionScheduler')) return true
-  if (has(str, 'at batchedUpdates$')) return true
-  if (has(str, 'at endBatch$')) return true
-  if (has(str, 'at endAction')) return true
   return false
 }
 

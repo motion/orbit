@@ -9,6 +9,19 @@
       "projects/*"
     ]
   },
+  "scripts": {
+    "watch": "source .env && build --watch",
+    "clean": "source .env && clean",
+    "clean-packages": "source .env && clean -all",
+    "start": "cd app/orbit && npm start",
+    "start-prod": "cd app/orbit && npm run start-prod",
+    "build-app": "cd app/build-orbit && npm run build-app",
+    "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
+    "publish-app": "cd app/build-orbit && npm run publish",
+    "publish-packages": "bin/publish",
+    "test-built-app": "cd app/build-orbit && npm run test-built-app",
+    "postinstall": "patch-package"
+  },
   "dependencies": {
     "global": "^4.3.2"
   },
@@ -63,18 +76,7 @@
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
     "enzyme": "3.9.0",
-    "json-diff": "0.5.4"
-  },
-  "scripts": {
-    "watch": "source .env && build --watch",
-    "clean": "source .env && clean",
-    "clean-packages": "source .env && clean -all",
-    "start": "cd app/orbit && npm start",
-    "start-prod": "cd app/orbit && npm run start-prod",
-    "build-app": "cd app/build-orbit && npm run build-app",
-    "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
-    "publish-app": "cd app/build-orbit && npm run publish",
-    "publish-packages": "bin/publish",
-    "test-built-app": "cd app/build-orbit && npm run test-built-app"
+    "json-diff": "0.5.4",
+    "patch-package": "6.1.2"
   }
 }

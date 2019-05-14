@@ -90,7 +90,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       if (isEditing) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          command(CloseAppCommand, { appId: appStartupConfig.appId })
+          command(CloseAppCommand, { appId: appInstanceConf.appId })
           return
         }
       } else {

@@ -8,6 +8,7 @@ import killPort from 'kill-port'
 import morgan from 'morgan'
 import Passport from 'passport'
 import * as Path from 'path'
+
 import { finishAuth } from './finishAuth'
 import OAuth from './oauth'
 import OAuthStrategies from './oauthStrategies'
@@ -43,7 +44,6 @@ export class AuthServer {
   }
 
   async start() {
-    log.info('start()')
     await killPort(Config.ports.auth)
     log.verbose('creating auth https server')
     this.setupExpressApp()

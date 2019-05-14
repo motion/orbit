@@ -80,7 +80,7 @@
     "request": "2.88.0",
     "sb-promisify": "^2.0.2",
     "semver": "5.5.1",
-    "source-map-support": "^0.4.16",
+    "source-map-support": "^0.5.12",
     "sqlite": "3.0.2",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",

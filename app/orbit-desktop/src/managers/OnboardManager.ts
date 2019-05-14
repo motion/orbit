@@ -35,7 +35,6 @@ export class OnboardManager {
   foundSources = null
 
   async start() {
-    log.info('start()')
     const user = await getRepository(UserEntity).findOne({})
     if (!user.settings.hasOnboarded) {
       this.scanHistory()

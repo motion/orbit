@@ -22,8 +22,6 @@ export function OrbitRoot() {
   const isApp = typeof appInstanceConf.appId === 'number'
   const appId = `${appInstanceConf.appId || ''}`
 
-  console.log('appInstanceConf', appInstanceConf)
-
   return (
     <App
       onBeforeQuit={store.handleBeforeQuit}

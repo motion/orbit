@@ -314,6 +314,7 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
         ]),
         resolveCommand(AppDevOpenCommand, async ({ path }) => {
+          console.log('got open', path)
           const id = Object.keys(Electron.state.appWindows).length
           this.buildServer.setApps([
             {

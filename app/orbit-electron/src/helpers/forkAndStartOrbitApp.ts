@@ -15,6 +15,7 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }) {
     env: {
       [ORBIT_APP_STARTUP_CONFIG]: JSON.stringify({
         appId,
+        bundleURL: `/appServer/bundle.js`,
       } as AppInstanceConf),
     },
     // TODO if we want to attach repl, increment for each new orbit sub-process, need a counter here

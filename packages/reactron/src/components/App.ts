@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron'
 import { pathExistsSync } from 'fs-extra'
+
 import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
@@ -26,10 +27,8 @@ export class App extends BaseComponent {
         const installer = require('electron-devtools-installer').default
         for (const tool of val) {
           if (pathExistsSync(tool)) {
-            console.log('Loading extension from disk', tool)
             BrowserWindow.addDevToolsExtension(tool)
           } else {
-            console.log('Loading extension from installer ID', tool)
             installer(tool)
           }
         }

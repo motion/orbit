@@ -41,7 +41,7 @@
     "pretty-error": "^2.1.1",
     "raw-loader": "*",
     "react-hot-loader": "*",
-    "source-map": "^0.7.3",
+    "source-map": "*",
     "stack-trace": "^0.0.10",
     "strip-ansi": "5.0.0",
     "style-loader": "*",
@@ -54,7 +54,8 @@
     "webpack-dev-server": "*",
     "workerize-loader": "*",
     "yargs": "^13.2.2",
-    "yurnalist": "^1.0.5"
+    "yurnalist": "^1.0.5",
+    "wait-on": "^3.2.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"

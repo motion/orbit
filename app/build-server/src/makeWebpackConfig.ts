@@ -91,7 +91,9 @@ export async function makeWebpackConfig(params: Params) {
         mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'browser', 'main'],
-      alias: {},
+      alias: {
+        'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+      },
     },
     resolveLoader: {
       modules: buildNodeModules,

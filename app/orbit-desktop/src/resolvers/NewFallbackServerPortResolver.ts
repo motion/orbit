@@ -1,9 +1,9 @@
 // import { Logger } from '@o/logger'
+import { getGlobalConfig } from '@o/kit'
 import { MediatorServer, resolveCommand, WebSocketClientTransport } from '@o/mediator'
 import { NewFallbackServerPortCommand } from '@o/models'
 import root from 'global'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { getGlobalConfig } from '@o/kit'
 
 // const log = new Logger('command:new-fallback-server-port')
 
@@ -13,10 +13,10 @@ export const NewFallbackServerPortResolver = resolveCommand(NewFallbackServerPor
   const port = getGlobalConfig().ports.electronMediators[lastUsed]
   lastUsed++
 
-  console.log('registering mediator fallback port', port)
+  const server = root.mediatorServer as MediatorServer
 
   // mutate, bad for now but we'd need to refactor MediatorServer
-  ;(root.mediatorServer as MediatorServer).options.fallbackClient.options.transports.push(
+  server.options.fallbackClient.options.transports.push(
     new WebSocketClientTransport(
       'electron',
       new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
@@ -25,5 +25,6 @@ export const NewFallbackServerPortResolver = resolveCommand(NewFallbackServerPor
       }),
     ),
   )
+
   return port
 })

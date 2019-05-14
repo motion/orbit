@@ -156,7 +156,7 @@ export const OrbitHeader = memo(() => {
                   icon="cog"
                   iconSize={isEditing ? 10 : 12}
                   onClick={() => {
-                    if (activePaneType === 'settings') {
+                    if (om.state.router.appId === 'settings') {
                       om.actions.router.back()
                     } else {
                       om.actions.router.showAppPage({ id: 'settings' })
@@ -340,7 +340,7 @@ const ExtraButtonsChrome = gloss({
 const OpenButton = memo(() => {
   const { effects } = useOm()
 
-  if (isEditing) {
+  if (App.isEditing) {
     return null
   }
 

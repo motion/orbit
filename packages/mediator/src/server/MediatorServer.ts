@@ -26,6 +26,11 @@ export class MediatorServer {
     this.options.transport.onMessage(data => this.handleMessage(data))
   }
 
+  sendRemoteCommand<Args, ReturnType>(command: Command<ReturnType, Args> | string, args?: Args) {
+    const name = typeof command === 'string' ? command : command.name
+    this.options.fallbackClient.command(name, args, 100)
+  }
+
   private async handleMessage(data: TransportRequest) {
     log.verbose('message', data)
     const onSuccess = result => {
@@ -61,7 +66,9 @@ export class MediatorServer {
     }
 
     // find a command or a model
-    let command: Command<any, any>, model: Model<any, any>
+    let command: Command<any, any>
+    let model: Model<any, any>
+
     if (data.type === 'command') {
       command = this.options.commands.find(command => {
         return command.name === data.command

@@ -15,6 +15,11 @@ export function addProcessDispose(fn: Function) {
 }
 
 async function dispose() {
+  // for some reason orTimeout wasnt returning after error
+  let finaltm = setTimeout(() => {
+    process.exit(0)
+  }, 1000)
+
   log('Disposing...')
   try {
     await orTimeout(
@@ -25,6 +30,7 @@ async function dispose() {
       ),
       1000,
     )
+    clearTimeout(finaltm)
   } catch (err) {
     if (err === OR_TIMED_OUT) {
       log('Timed out killing processes')

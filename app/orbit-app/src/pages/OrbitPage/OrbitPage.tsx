@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, themes, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { App, appInstanceConf } from '@o/stores'
+import { App } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
@@ -90,7 +90,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       if (isEditing) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          command(CloseAppCommand, { appId: appInstanceConf.appId })
+          command(CloseAppCommand, { appId: App.appConf.appId })
           return
         }
       } else {
@@ -144,7 +144,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp RenderApp={RenderApp} bundleURL={appInstanceConf.bundleURL} />
+        <LoadApp RenderApp={RenderApp} bundleURL={App.appConf.bundleURL} />
       </Suspense>
     )
   } else {

@@ -228,6 +228,8 @@ const light = {
     cardBackgroundHover: [255, 255, 255],
     cardBackgroundActive: [255, 255, 255],
     cardBorderColor: [0, 0, 0, 0.1],
+    orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
+    orbitInputBackgroundEditing: [0, 0, 0, 0.2],
   }),
 }
 
@@ -295,6 +297,7 @@ const dark = {
     headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.34]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
+    orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,

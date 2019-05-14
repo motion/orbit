@@ -69,7 +69,6 @@ export const OrbitHeader = memo(() => {
   const om = useOm()
   const { orbitStore, headerStore } = useStores()
   const theme = useTheme()
-  const appId = om.state.router.appId
   const isOnTearablePane = !useIsOnStaticApp()
   const { isEditing } = useStore(App)
 
@@ -84,13 +83,14 @@ export const OrbitHeader = memo(() => {
 
         <HeaderTop height={isEditing ? 46 : 64} padding={isEditing ? [3, 10] : [5, 10]}>
           <HeaderSide>
+            <View flex={1} />
             <HeaderButtonPassProps>
               <BackButton />
               <OrbitHeaderMenu />
             </HeaderButtonPassProps>
           </HeaderSide>
 
-          <HeaderContain isActive={false}>
+          <HeaderContain isActive={false} isEditing={isEditing}>
             {!isEditing && (
               <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                 <OrbitNavPopover target={<HomeButton id="home-button" />}>
@@ -118,8 +118,6 @@ export const OrbitHeader = memo(() => {
           </HeaderContain>
 
           <HeaderSide rightSide>
-            <View flex={1} />
-
             {isEditing && (
               <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
                 <>
@@ -159,6 +157,8 @@ export const OrbitHeader = memo(() => {
                 />
               )}
             </HeaderButtonPassProps>
+
+            <View flex={1} />
           </HeaderSide>
         </HeaderTop>
         {!isEditing && <HeaderFade />}
@@ -282,6 +282,7 @@ const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flex: 1,
   height: '100%',
   alignItems: 'center',
+  padding: [0, 8],
   justifyContent: 'flex-start',
   minWidth: 'max-content',
   rightSide: {
@@ -296,16 +297,20 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<{ isActive?: boolean }>({
+const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>({
   margin: ['auto', 0],
   alignItems: 'center',
   flexFlow: 'row',
-  flex: 10,
+  flex: 20,
   maxWidth: 800,
-  padding: [0, 5],
+  padding: [0, 10],
   borderRadius: 100,
-}).theme(({ isActive }, theme) => ({
-  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
+}).theme(({ isActive, isEditing }, theme) => ({
+  background: isEditing
+    ? theme.orbitInputBackgroundEditing
+    : isActive
+    ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
+    : 'none',
 }))
 
 const HeaderFade = gloss(FullScreen, {

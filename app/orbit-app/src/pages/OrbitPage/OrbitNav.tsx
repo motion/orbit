@@ -1,7 +1,8 @@
 import { save } from '@o/bridge'
-import { AppIcon, PaneManagerPane, useActiveAppsSorted } from '@o/kit'
+import { AppIcon, PaneManagerPane, useActiveAppsSorted, useStore } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
+import { App } from '@o/stores'
 import { isRightClick } from '@o/ui'
 import { gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
@@ -10,7 +11,6 @@ import React, { forwardRef, memo } from 'react'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { newAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
@@ -23,7 +23,7 @@ const pinWidth = 52
 export const OrbitNav = memo(
   forwardRef((_: any, ref) => {
     const paneManagerStore = usePaneManagerStore()
-    const { orbitStore } = useStores()
+    const { isEditing } = useStore(App)
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
     const { panes, paneId } = paneManagerStore
@@ -33,7 +33,7 @@ export const OrbitNav = memo(
     )
     const handleSortEnd = useAppSortHandler()
 
-    if (orbitStore.isEditing) {
+    if (isEditing) {
       return null
     }
 

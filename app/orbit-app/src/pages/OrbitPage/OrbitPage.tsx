@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, themes } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, themes, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { appStartupConfig, isEditing } from '@o/stores'
+import { App, appStartupConfig } from '@o/stores'
 import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
@@ -16,7 +16,7 @@ import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useOm } from '../../om/om'
-import { Stores, useOrbitStore, usePaneManagerStore, useThemeStore } from '../../om/stores'
+import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
@@ -69,7 +69,7 @@ const OrbitEffects = memo(() => {
 })
 
 const OrbitPageInner = memo(function OrbitPageInner() {
-  const orbitStore = useOrbitStore()
+  const { isEditing } = useStore(App)
   const paneManagerStore = usePaneManagerStore()
   const { actions } = useOm()
 
@@ -165,7 +165,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <MainShortcutHandler handlers={handlers}>
       <OrbitHeader />
       <OrbitDock />
-      <InnerChrome torn={orbitStore.isTorn}>
+      <InnerChrome torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
           <OrbitAppSettingsSidebar />

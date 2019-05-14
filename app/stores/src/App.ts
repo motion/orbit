@@ -35,7 +35,6 @@ function getAppStartupConfig(): AppStartupConfig {
 export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
 
 export let appStartupConfig: AppStartupConfig = getAppStartupConfig()
-export let isEditing: boolean = appStartupConfig.appInDev != null
 
 export type AppState = {
   id: number
@@ -112,6 +111,10 @@ class AppStore {
     contextMessage: '',
     showSpaceSwitcher: 0,
   })
+
+  get isEditing() {
+    return appStartupConfig.appInDev != null
+  }
 
   get isDark() {
     const preference = App.state.userSettings.theme

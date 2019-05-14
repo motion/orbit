@@ -1,4 +1,4 @@
-import { isEditing } from '@o/stores'
+import { App } from '@o/stores'
 import { Tab, Tabs } from '@o/ui'
 import React from 'react'
 
@@ -8,7 +8,7 @@ export function OrbitSettingsToolbar() {
   const om = useOm()
   const appId = om.state.router.appId
 
-  if (isEditing) {
+  if (App.isEditing) {
     return null
   }
 

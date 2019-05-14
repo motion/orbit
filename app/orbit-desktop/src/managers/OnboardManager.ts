@@ -1,4 +1,3 @@
-import { Logger } from '@o/logger'
 import { UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import Fs from 'fs-extra'
@@ -19,8 +18,6 @@ const chromeDbPaths = [
   ),
 ]
 const tmpDbPath = Path.join('/tmp', `db-${Math.random()}`.replace('.', ''))
-
-const log = new Logger('OnboardManager')
 
 const sourcePatterns = [
   { name: 'atlassian', patterns: ['%atlassian.net%'] },

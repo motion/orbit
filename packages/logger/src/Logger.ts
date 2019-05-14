@@ -194,27 +194,33 @@ export class Logger {
     // todo: in the production we'll need to output into our statistics/logger servers
     if (level === 'error') {
       console.error(
-        `%c${this.namespace}`,
-        'color: white; background-color: red; padding: 0 2px; margin: 0 2px',
+        ...colored(
+          this.namespace,
+          'color: white; background-color: red; padding: 0 2px; margin: 0 2px',
+        ),
         ...messages,
       )
       log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
       console.warn(
-        `%c${this.namespace}`,
-        'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
+        ...colored(
+          this.namespace,
+          'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
+        ),
         ...messages,
       )
       log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
       if (loggingEnabled) {
-        debug(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+        debug(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
         log.debug(this.namespace, ...messages)
       }
     } else if (level === 'info') {
       console.info(
-        `%c${this.namespace}`,
-        `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
+        ...colored(
+          this.namespace,
+          `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
+        ),
         ...messages,
       )
       log.info(this.namespace, ...messages)
@@ -250,7 +256,7 @@ export class Logger {
       }
     } else {
       if (loggingEnabled) {
-        console.log(`%c${this.namespace}`, `color: ${color}; font-weight: bold`, ...messages)
+        console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
         log.info(this.namespace, ...messages)
       }
     }
@@ -259,4 +265,9 @@ export class Logger {
       console.groupEnd()
     }
   }
+}
+
+const isNode = typeof process !== 'undefined' && process.release && process.release.name === 'node'
+const colored = (ns: string, style: string) => {
+  return isNode === false ? [`%c${ns}`, style] : [ns]
 }

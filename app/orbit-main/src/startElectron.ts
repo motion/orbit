@@ -19,7 +19,6 @@ export function startElectron({ mainProcess }) {
 }
 
 const finishLaunchingElectron = async ({ mainProcess }) => {
-  console.log('finishLaunchingElectron')
   const Config = getGlobalConfig()
   // start electron...
   const ElectronApp = require('@o/orbit-electron')

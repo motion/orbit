@@ -56,6 +56,8 @@ async function getOrbitDesktop() {
     // run desktop and try again
     if (await runOrbitDesktop()) {
       port = await findBonjourService('orbitDesktop', 10000)
+      // adding some sleep so it connects
+      await sleep(1000)
     }
   }
 
@@ -76,8 +78,8 @@ async function getOrbitDesktop() {
     ],
   })
 
-  // adding some sleep so it connects
-  await sleep(2000)
+  // let mediator connect
+  await sleep(100)
 
   return Mediator
 }

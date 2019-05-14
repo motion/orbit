@@ -40,6 +40,7 @@ import {
   TrendingTopicsModel,
   UserEntity,
   UserModel,
+  AppDevOpenCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -299,6 +300,7 @@ export class OrbitDesktopRoot {
         ResetDataCommand,
         SendClientDataCommand,
         ChangeDesktopThemeCommand,
+        AppDevOpenCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -311,6 +313,16 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        resolveCommand(AppDevOpenCommand, async ({ path }) => {
+          const id = Object.keys(Electron.state.appWindows).length
+          this.buildServer.setApps([
+            {
+              path,
+              publicPath: `/${id}`,
+            },
+          ])
+          return id
+        }),
         AppRemoveResolver,
         NewFallbackServerPortResolver,
         CallAppBitApiMethodResolver,

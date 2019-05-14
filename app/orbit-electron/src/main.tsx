@@ -3,7 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { AppDevOpenCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
+import { AppOpenWindowCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
@@ -22,27 +22,6 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
-export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
-  let appInDev = {
-    path: params.path,
-    bundleURL: params.bundleURL,
-  }
-  let appId = Object.keys(Electron.state.appWindows).length
-  Electron.setState({
-    appWindows: {
-      type: 'root',
-      id: appId,
-      ...appInDev,
-    },
-  })
-  console.log('UPDATE', Electron.state.appWindows, appId)
-  // setTimeout so command doesnt take forever to run
-  setTimeout(() => {
-    forkAndStartOrbitApp({ appId, appInDev })
-  })
-  return appId
-})
-
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 
@@ -58,9 +37,28 @@ export async function main() {
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [AppDevOpenCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
+    commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
-    resolvers: [OpenAppDevResolver, TearAppResolver, CloseAppResolver, RestartAppResolver],
+    resolvers: [
+      resolveCommand(AppOpenWindowCommand, async ({ appId }) => {
+        Electron.setState({
+          appWindows: {
+            [appId]: {
+              type: 'root',
+              id: appId,
+            },
+          },
+        })
+        // setTimeout so command doesnt take forever to run
+        setTimeout(() => {
+          forkAndStartOrbitApp({ appId })
+        })
+        return true
+      }),
+      TearAppResolver,
+      CloseAppResolver,
+      RestartAppResolver,
+    ],
   })
   mediatorServer.bootstrap()
 

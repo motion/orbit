@@ -15,29 +15,28 @@ let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
 function main() {
-  const app = (p: Yargs.Argv) =>
-    p.positional('app', {
-      type: 'string',
-      default: '.',
-      describe: 'The application to run',
-    })
-
   Yargs.scriptName('orbit')
     .usage('$0 <cmd> [args]')
     .command(
       'dev [app]',
       'Run an Orbit app in development mode',
-      p => app(p),
+      p =>
+        p.positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        }),
       async argv => {
         let projectRoot = Path.resolve(cwd, argv.app)
+        console.log('argv', argv)
         commandDev({ projectRoot, verbose: !!argv.verbose })
       },
     )
     .option('verbose', {
       alias: 'v',
-      default: false,
     })
     .version('version', 'Show version', description)
+    .showHelpOnFail(true)
     .help().argv
 }
 

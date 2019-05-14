@@ -29,9 +29,14 @@ export async function commandDev(options: { projectRoot: string; verbose?: boole
 
     addProcessDispose(async () => {
       log('Disposing orbit dev process...')
-      await orbitDesktop.command(AppDevCloseCommand, {
+      orbitDesktop.command(AppDevCloseCommand, {
         appId,
       })
+      await sleep(20)
+      // await orTimeout(
+      //   ,
+      //   500,
+      // )
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)

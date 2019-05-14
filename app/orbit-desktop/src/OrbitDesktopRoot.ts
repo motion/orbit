@@ -42,6 +42,7 @@ import {
   UserModel,
   AppDevCloseCommand,
   AppDevOpenCommand,
+  CloseAppCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -88,6 +89,7 @@ import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { BuildServer } from '@o/build-server'
 import { remove } from 'lodash'
+import { command } from '@o/kit'
 
 const log = new Logger('desktop')
 
@@ -329,8 +331,11 @@ export class OrbitDesktopRoot {
           return appId
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
+          log.info('Removing build server', appId)
           developingApps = remove(developingApps, x => x.appId === appId)
           this.buildServer.setApps(developingApps)
+          log.info('Removing process', appId)
+          await command(CloseAppCommand, { appId })
         }),
         AppRemoveResolver,
         NewFallbackServerPortResolver,

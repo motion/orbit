@@ -3,7 +3,6 @@ import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
-import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import root from 'global'
 import { join } from 'path'
@@ -30,8 +29,6 @@ function showOrbit(shown: boolean) {
     app.hide()
   }
 }
-
-export const appProcesses: { appId: number; process: ChildProcess }[] = []
 
 // this is just temporary to get TearAppResolver to work
 // @nate please help to fix it if following approach won't work

@@ -1,3 +1,7 @@
+import { OR_TIMED_OUT, orTimeout } from '@o/utils'
+
+import { log } from './command-dev'
+
 process.on('exit', dispose)
 process.on('SIGINT', dispose)
 process.on('SIGSEGV', dispose)
@@ -11,9 +15,22 @@ export function addProcessDispose(fn: Function) {
 }
 
 async function dispose() {
-  await Promise.all(
-    disposers.map(dispose => {
-      return dispose()
-    }),
-  )
+  log('Disposing...')
+  try {
+    await orTimeout(
+      Promise.all(
+        disposers.map(dispose => {
+          return dispose()
+        }),
+      ),
+      1000,
+    )
+  } catch (err) {
+    if (err === OR_TIMED_OUT) {
+      log('Timed out killing processes')
+    } else {
+      console.log(`Error disposing ${err.message}`)
+      log(`${err.stack}`)
+    }
+  }
 }

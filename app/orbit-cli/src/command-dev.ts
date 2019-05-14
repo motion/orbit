@@ -10,18 +10,21 @@ import WebSocket from 'ws'
 
 import { configStore } from './util/configStore'
 
-export async function commandDev(options: { projectRoot: string }) {
+let verbose
+const log = (...args) => verbose && console.log(...args)
+
+export async function commandDev(options: { projectRoot: string; verbose?: boolean }) {
+  verbose = options.verbose
+
   let orbitDesktop = await getOrbitDesktop()
   try {
     const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: options.projectRoot,
     })
-    console.log('sent dev command, got app', appId)
     await orbitDesktop.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
     })
-    console.log('opening app window id', appId)
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
   }
@@ -66,22 +69,19 @@ async function getOrbitDesktop() {
     return
   }
 
-  let Mediator = new MediatorClient({
-    transports: [
-      new WebSocketClientTransport(
-        'cli-client-' + randomString(5),
-        new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
-          WebSocket,
-          minReconnectionDelay: 1,
-        }),
-      ),
-    ],
+  const socket = new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+    WebSocket,
+    minReconnectionDelay: 1,
   })
 
-  // let mediator connect
-  await sleep(100)
+  // we want to be sure it opens before we send messages
+  await new Promise(res => {
+    socket.onopen = res
+  })
 
-  return Mediator
+  return new MediatorClient({
+    transports: [new WebSocketClientTransport('cli-client-' + randomString(5), socket)],
+  })
 }
 
 async function runOrbitDesktop(): Promise<boolean> {
@@ -96,12 +96,12 @@ async function runOrbitDesktop(): Promise<boolean> {
     cmd = `./${relative(cwd, script)}`
     configStore.orbitMainPath.set(cmd)
   } else if (!cmd) {
-    console.log('No orbit path found, searching...')
+    log('No orbit path found, searching...')
   }
 
   if (cmd) {
     try {
-      console.log('Running Orbit', cmd, cwd)
+      log('Running Orbit', cmd, cwd)
       const child = execa(cmd, [], {
         cwd,
         env: {
@@ -109,11 +109,14 @@ async function runOrbitDesktop(): Promise<boolean> {
           DISABLE_LOGGING: 'true',
           DISABLE_SYNCERS: 'true',
           DISABLE_MENU: 'true',
+          SINGLE_APP_MODE: 'true',
         },
       })
 
-      child.stdout.pipe(process.stdout)
-      child.stderr.pipe(process.stderr)
+      if (verbose) {
+        child.stdout.pipe(process.stdout)
+        child.stderr.pipe(process.stderr)
+      }
 
       return true
     } catch (e) {

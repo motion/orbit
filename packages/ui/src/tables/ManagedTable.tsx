@@ -14,6 +14,7 @@ import debounceRender from 'react-debounce-render'
 import { ContextMenu } from '../ContextMenu'
 import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
+import { weakKey } from '../helpers/weakKey'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableVariableList } from '../lists/SelectableList'
 import { SelectableProps, SelectableStore } from '../lists/SelectableStore'
@@ -351,7 +352,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }, 100)
 
-  renderRowInner = memoize((index, style, _sortedRows) => {
+  renderRowInner = memoize((index, style, _weakKey) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
@@ -386,7 +387,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (!cache) {
       this.cache[key] = style
     }
-    return this.renderRowInner(index, cache || style, this.state.sortedRows)
+    return this.renderRowInner(index, cache || style, this.itemKey)
   }
 
   getItemKey = (index: number) => {
@@ -400,6 +401,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   getRowHeight = (index: number) => {
     const { sortedRows } = this.state
     return (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight
+  }
+
+  get itemKey() {
+    return weakKey(this.state.sortedRows, this.state.columnSizes, this.state.columnOrder)
   }
 
   render() {
@@ -456,7 +461,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             selectableStoreRef={this.selectableStoreRef}
             {...this.props}
             items={this.state.sortedRows}
-            itemData={this.state.sortedRows}
+            itemData={this.itemKey}
             width="100%"
             // for now just hardcoded TableHead height
             height={height - this.props.rowLineHeight}

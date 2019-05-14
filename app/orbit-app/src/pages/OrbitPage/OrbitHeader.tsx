@@ -1,7 +1,7 @@
 import { invertLightness } from '@o/color'
 import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -70,7 +70,6 @@ export const OrbitHeader = memo(() => {
   const { orbitStore, headerStore } = useStores()
   const theme = useTheme()
   const appId = om.state.router.appId
-  const isOnSettings = appId === 'settings' || appId === 'spaces'
   const isOnTearablePane = !useIsOnStaticApp()
   const { isEditing } = useStore(App)
 
@@ -85,7 +84,6 @@ export const OrbitHeader = memo(() => {
 
         <HeaderTop height={isEditing ? 46 : 64} padding={isEditing ? [3, 10] : [5, 10]}>
           <HeaderSide>
-            <View flex={1} />
             <HeaderButtonPassProps>
               <BackButton />
               <OrbitHeaderMenu />
@@ -93,11 +91,13 @@ export const OrbitHeader = memo(() => {
           </HeaderSide>
 
           <HeaderContain isActive={false}>
-            <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-              <OrbitNavPopover target={<HomeButton id="home-button" />}>
-                <OrbitNav />
-              </OrbitNavPopover>
-            </View>
+            {!isEditing && (
+              <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+                <OrbitNavPopover target={<HomeButton id="home-button" />}>
+                  <OrbitNav />
+                </OrbitNavPopover>
+              </View>
+            )}
 
             <OrbitHeaderInput />
 
@@ -118,49 +118,43 @@ export const OrbitHeader = memo(() => {
           </HeaderContain>
 
           <HeaderSide rightSide>
+            <View flex={1} />
+
+            {isEditing && (
+              <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+                <>
+                  <Button circular icon="edit" tooltip="Open in VSCode" />
+                  <Space size="sm" />
+                  <Button tooltip="Deploy to space">Publish</Button>
+                  <Space size="sm" />
+                </>
+              </SurfacePassProps>
+            )}
+
             <HeaderButtonPassProps>
-              <View flex={1} />
-
-              {isEditing && (
-                <Row>
-                  <HeaderButton icon="edit" tooltip="Open in VSCode" />
-                  <Space />
-                  <HeaderButton alt="action" tooltip="Deploy to space">
-                    Publish
-                  </HeaderButton>
-                </Row>
+              {!isEditing && (
+                <>
+                  <Button
+                    {...om.state.router.appId === 'data-explorer' && activeStyle}
+                    {...useLocationLink('/app/data-explorer')}
+                    icon="layers"
+                    tooltip="Data explorer"
+                  />
+                  <Button
+                    {...om.state.router.appId === 'apps' && activeStyle}
+                    {...useLocationLink('/app/apps')}
+                    icon="layout-grid"
+                    tooltip="Manage apps"
+                  />
+                  <OrbitSpaceSwitch />
+                </>
               )}
-
-              <Button
-                {...om.state.router.appId === 'data-explorer' && activeStyle}
-                {...useLocationLink('/app/data-explorer')}
-                icon="layers"
-                tooltip="Data explorer"
-              />
-              <Button
-                {...om.state.router.appId === 'apps' && activeStyle}
-                {...useLocationLink('/app/apps')}
-                icon="layout-grid"
-                tooltip="Manage apps"
-              />
-
-              {!isEditing && <OrbitSpaceSwitch />}
 
               {isEditing && (
                 <Button
-                  chromeless
-                  opacity={isOnSettings ? 0.8 : 0.4}
-                  hoverStyle={{
-                    opacity: isOnSettings ? 1 : 0.6,
-                  }}
                   icon="cog"
-                  iconSize={isEditing ? 10 : 12}
                   onClick={() => {
-                    if (om.state.router.appId === 'settings') {
-                      om.actions.router.back()
-                    } else {
-                      om.actions.router.showAppPage({ id: 'settings' })
-                    }
+                    console.log('got to app specific settings')
                   }}
                 />
               )}
@@ -180,6 +174,12 @@ export const OrbitHeader = memo(() => {
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
+  const appStore = useStore(App)
+
+  if (appStore.isEditing) {
+    return null
+  }
+
   return (
     <>
       <OrbitNavHiddenBar
@@ -277,22 +277,17 @@ const OrbitHeaderContainer = gloss<any>(View, {
     theme.background.alpha(a => a * 0.65),
 }))
 
-const HeaderSide = gloss({
+const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flexFlow: 'row',
-  width: '15%',
+  flex: 1,
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  // padding: [0, 0, 0, 20],
+  minWidth: 'max-content',
   rightSide: {
-    padding: [0, 20, 0, 0],
     justifyContent: 'flex-end',
   },
 })
-
-function HeaderButton(props: ButtonProps) {
-  return <Button size={0.9} sizeHeight={0.9} {...props} />
-}
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
@@ -302,12 +297,11 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
 }))
 
 const HeaderContain = gloss<{ isActive?: boolean }>({
-  margin: 'auto',
+  margin: ['auto', 0],
   alignItems: 'center',
   flexFlow: 'row',
-  width: 'calc(100% - 300px)',
+  flex: 10,
   maxWidth: 800,
-  minWidth: 400,
   padding: [0, 5],
   borderRadius: 100,
 }).theme(({ isActive }, theme) => ({

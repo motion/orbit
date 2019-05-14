@@ -28,10 +28,13 @@ function main() {
       p => app(p),
       async argv => {
         let projectRoot = Path.resolve(cwd, argv.app)
-        let options = { projectRoot }
-        commandDev(options)
+        commandDev({ projectRoot, verbose: !!argv.verbose })
       },
     )
+    .option('verbose', {
+      alias: 'v',
+      default: false,
+    })
     .version('version', 'Show version', description)
     .help().argv
 }

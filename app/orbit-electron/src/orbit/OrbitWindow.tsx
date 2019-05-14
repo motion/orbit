@@ -214,7 +214,7 @@ export default function OrbitWindow() {
 
   return (
     <Window
-      show
+      show={store.show}
       webPreferences={{
         nodeIntegration: true,
         webSecurity: false,

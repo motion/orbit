@@ -16,9 +16,9 @@ export FIRST_RUN=true
 
 if [[ "$DISABLE_GPU" =~ "true" ]]; then
   echo "⚠️ ⚠️ ⚠️ disabling gpu to prevent white bg bugs ⚠️ ⚠️ ⚠️"
-  npx electron --disable-gpu --async-stack-traces --inspect=9001 --remote-debugging-port=9002 _/main.js
+  npx electron --disable-gpu --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js
 else
-  npx electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 _/main.js
+  npx electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js
 fi
 
 ``

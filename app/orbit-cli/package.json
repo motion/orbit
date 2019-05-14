@@ -37,6 +37,7 @@
     "minimist": "1.2.0",
     "null-loader": "*",
     "opentracing": "0.14.3",
+    "execa": "^1.0.0",
     "pretty-error": "^2.1.1",
     "raw-loader": "*",
     "react-hot-loader": "*",

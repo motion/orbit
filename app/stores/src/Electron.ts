@@ -37,8 +37,9 @@ export type PinKeyType =
 export type AppWindow = {
   id: number
   type: string
-  path: string
-  bundleURL: string
+  isEditing?: boolean
+  path?: string
+  bundleURL?: string
 }
 
 @decorate

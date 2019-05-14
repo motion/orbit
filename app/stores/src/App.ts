@@ -3,42 +3,21 @@ import { User } from '@o/models'
 import { decorate, deep } from '@o/use-store'
 
 import { Desktop } from './Desktop'
+import { Electron } from './Electron'
 
 export let App = null as AppStore
 
-export type AppStartupConfig = {
-  appId: number
-  appInDev?: null | AppInDev
+export type AppInstanceConf = {
+  appId: number | null
+  bundleURL?: string
+  path?: string
 }
 
-export type AppInDev = {
-  bundleURL: string
-  path: string
+const appInstanceConf: AppInstanceConf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`) || {
+  appId: null,
 }
-
-const conf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
-
-function getAppStartupConfig(): AppStartupConfig {
-  let initial = {
-    appId: null,
-    appInDev: null,
-  }
-  // otherwise webpack filters it away
-  if (conf != null) {
-    try {
-      return JSON.parse(conf)
-    } catch (_err) {
-      return initial
-    }
-  } else {
-    return initial
-  }
-}
-
+const appId = appInstanceConf.appId
 export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
-
-export let appStartupConfig: AppStartupConfig = getAppStartupConfig()
-console.log('appStartupConfig', appStartupConfig, conf)
 
 export type AppState = {
   id: number
@@ -110,7 +89,10 @@ class AppStore {
   })
 
   get isEditing() {
-    return appStartupConfig.appInDev != null
+    if (typeof appId === 'number') {
+      return Electron.state.appWindows[appId].isEditing
+    }
+    return false
   }
 
   get isDark() {

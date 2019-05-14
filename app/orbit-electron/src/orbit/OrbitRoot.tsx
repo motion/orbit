@@ -30,7 +30,7 @@ export function OrbitRoot() {
       devTools={devTools}
     >
       <MenuItems electronStore={electronStore} />
-      {isApp ? <OrbitAppWindow id={appId} appId={appId} /> : <OrbitMainWindow />}
+      {isApp ? <OrbitAppWindow id={appId} appId={appId} showDevTools /> : <OrbitMainWindow />}
     </App>
   )
 }

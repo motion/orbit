@@ -18,6 +18,7 @@ export async function commandDev(options: { projectRoot: string }) {
   console.log('sent dev command, got app', appId)
   await orbitDesktop.command(AppOpenWindowCommand, {
     appId,
+    isEditing: true,
   })
   console.log('opening app window id', appId)
   return

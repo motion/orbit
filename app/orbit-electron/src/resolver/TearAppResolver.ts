@@ -15,7 +15,6 @@ const log = new Logger('TearAppResolver')
 // TODO umed can we make this type not bread
 export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appType, appId }) => {
   log.info('Tearing app', appType, appId)
-
   const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
   if (!(await pathExists(iconPath))) {
     dialog.showErrorBox('No icon found for app...', 'Oops')
@@ -24,9 +23,7 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   } else {
     app.dock.setIcon(iconPath)
   }
-
   Electron.setIsTorn()
   getOrbitShortcutsStore().dispose()
-
   forkAndStartOrbitApp({ appId })
 })

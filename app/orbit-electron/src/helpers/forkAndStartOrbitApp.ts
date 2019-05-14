@@ -1,12 +1,11 @@
 import { forkProcess } from '@o/orbit-fork-process'
-import { AppInDev, AppStartupConfig, ORBIT_APP_STARTUP_CONFIG } from '@o/stores'
+import { AppInDev, AppInstanceConf, ORBIT_APP_STARTUP_CONFIG } from '@o/stores'
 
 import { appProcesses } from '../orbit/OrbitMainWindow'
 
-export function forkAndStartOrbitApp({ appId, appInDev }: { appId: number; appInDev?: AppInDev }) {
-  let appStartupConfig: AppStartupConfig = {
+export function forkAndStartOrbitApp({ appId }: { appId: number; appInDev?: AppInDev }) {
+  let appStartupConfig: AppInstanceConf = {
     appId,
-    appInDev,
   }
   let env = {
     [ORBIT_APP_STARTUP_CONFIG]: JSON.stringify(appStartupConfig),

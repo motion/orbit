@@ -81,9 +81,8 @@ export const OrbitHeader = memo(() => {
       >
         <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isEditing ? 46 : 64} padding={isEditing ? [3, 10] : [5, 10]}>
-          <HeaderSide>
-            <View flex={1} />
+        <HeaderTop height={isEditing ? 46 : 64}>
+          <HeaderSide spaceAround>
             <HeaderButtonPassProps>
               <BackButton />
               <OrbitHeaderMenu />
@@ -117,7 +116,7 @@ export const OrbitHeader = memo(() => {
             )}
           </HeaderContain>
 
-          <HeaderSide rightSide>
+          <HeaderSide spaceAround rightSide>
             {isEditing && (
               <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
                 <>
@@ -129,36 +128,34 @@ export const OrbitHeader = memo(() => {
               </SurfacePassProps>
             )}
 
-            <HeaderButtonPassProps>
-              {!isEditing && (
-                <>
-                  <Button
-                    {...om.state.router.appId === 'data-explorer' && activeStyle}
-                    {...useLocationLink('/app/data-explorer')}
-                    icon="layers"
-                    tooltip="Data explorer"
-                  />
-                  <Button
-                    {...om.state.router.appId === 'apps' && activeStyle}
-                    {...useLocationLink('/app/apps')}
-                    icon="layout-grid"
-                    tooltip="Manage apps"
-                  />
-                  <OrbitSpaceSwitch />
-                </>
-              )}
+            {!isEditing && (
+              <HeaderButtonPassProps>
+                <Button
+                  {...om.state.router.appId === 'data-explorer' && activeStyle}
+                  {...useLocationLink('/app/data-explorer')}
+                  icon="layers"
+                  tooltip="Data explorer"
+                />
+                <Button
+                  {...om.state.router.appId === 'apps' && activeStyle}
+                  {...useLocationLink('/app/apps')}
+                  icon="layout-grid"
+                  tooltip="Manage apps"
+                />
+                <OrbitSpaceSwitch />
+              </HeaderButtonPassProps>
+            )}
 
-              {isEditing && (
+            {isEditing && (
+              <HeaderButtonPassProps>
                 <Button
                   icon="cog"
                   onClick={() => {
                     console.log('got to app specific settings')
                   }}
                 />
-              )}
-            </HeaderButtonPassProps>
-
-            <View flex={1} />
+              </HeaderButtonPassProps>
+            )}
           </HeaderSide>
         </HeaderTop>
         {!isEditing && <HeaderFade />}
@@ -242,6 +239,17 @@ const OrbitNavHiddenBar = props => {
   )
 }
 
+const OrbitHeaderContainer = gloss<any>(View, {
+  position: 'relative',
+  overflow: 'hidden',
+  zIndex: 0,
+}).theme((props, theme) => ({
+  background:
+    (props.isEditing && theme.headerBackgroundOpaque) ||
+    theme.headerBackground ||
+    theme.background.alpha(a => a * 0.65),
+}))
+
 const OrbitNavHiddenBarChrome = gloss({
   position: 'absolute',
   bottom: -6,
@@ -264,25 +272,11 @@ const OrbitNavHiddenBarInner = gloss({
   background: theme.backgroundStrongest.alpha(0.5),
 }))
 
-const OrbitHeaderContainer = gloss<any>(View, {
-  position: 'relative',
-  overflow: 'hidden',
-  zIndex: 0,
-}).theme((props, theme) => ({
-  // borderBottom: [1, theme.borderColor],
-  background:
-    // 'rgba(0,50, 200, 0.2)' ||
-    (props.isEditing && theme.headerBackgroundOpaque) ||
-    theme.headerBackground ||
-    theme.background.alpha(a => a * 0.65),
-}))
-
 const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
   height: '100%',
   alignItems: 'center',
-  padding: [0, 8],
   justifyContent: 'flex-start',
   minWidth: 'max-content',
   rightSide: {
@@ -303,7 +297,7 @@ const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>({
   flexFlow: 'row',
   flex: 20,
   maxWidth: 800,
-  padding: [0, 10],
+  padding: [0, 12],
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing

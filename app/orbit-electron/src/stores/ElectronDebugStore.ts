@@ -11,7 +11,7 @@ debugUseStore(event => {
   }
 })
 
-export class ElectronStore {
+export class ElectronDebugStore {
   error = null
   appRef = null
   stores = null

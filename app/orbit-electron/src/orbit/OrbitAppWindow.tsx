@@ -7,6 +7,7 @@ import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
+import { selectDefined } from '../../../../packages/utils/_'
 import { ROOT } from '../constants'
 import { getDefaultAppBounds } from './getDefaultAppBounds'
 
@@ -65,10 +66,12 @@ export function OrbitAppWindow({
   const store = useStore(OrbitAppWindowStore, { id })
   const appQuery = `/?id=${appId}`
   const url = `${Config.urls.server}${appId ? appQuery : ''}`
+  const show = selectDefined(windowProps.show, store.show)
+  const size = windowProps.size || store.size
 
-  log.info(`OrbitAppWindow ${appId} ${store.show} ${url} ${store.size} ${store.position}`)
+  log.info(`OrbitAppWindow ${appId} ${show} ${url} ${size} ${store.position}`)
 
-  if (!store.size[0]) {
+  if (!size[0]) {
     return null
   }
 

@@ -13,9 +13,14 @@ export type AppInstanceConf = {
   path?: string
 }
 
-const appInstanceConf: AppInstanceConf = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`) || {
-  appId: null,
-}
+const envInfo = eval(`process.env['ORBIT_APP_STARTUP_CONFIG']`)
+
+export const appInstanceConf: AppInstanceConf = envInfo
+  ? JSON.parse(envInfo)
+  : {
+      appId: null,
+    }
+
 const appId = appInstanceConf.appId
 export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
 

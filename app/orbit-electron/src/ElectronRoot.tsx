@@ -1,11 +1,12 @@
 import { App } from '@o/reactron'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
+
 import { devTools } from './helpers/devTools'
-import { ElectronStore } from './stores/ElectronStore'
+import { ElectronDebugStore } from './stores/ElectronDebugStore'
 
 export default function ElectronRoot(props: { children: any }) {
-  const electronStore = useStore(ElectronStore)
+  const electronStore = useStore(ElectronDebugStore)
 
   if (electronStore.error) {
     if (electronStore.error) {

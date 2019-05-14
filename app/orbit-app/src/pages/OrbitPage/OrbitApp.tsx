@@ -98,7 +98,6 @@ export const OrbitAppRenderOfDefinition = ({
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  123
                   <FinalAppView identifier={identifier} id={id} {...activeItem} />
                 </FadeIn>
               )}

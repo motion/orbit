@@ -84,8 +84,6 @@ async function runOrbitDesktop(): Promise<boolean> {
     cwd = join(script, '..', '..')
     runPath = `./${relative(cwd, script)}`
     configStore.orbitMainPath.set(runPath)
-    // wait a bit longer, in dev mode startup is slower
-    await sleep(2000)
   } else if (!runPath) {
     console.log('No orbit path found, searching...')
   }
@@ -96,6 +94,12 @@ async function runOrbitDesktop(): Promise<boolean> {
       exec(runPath, isInMonoRepo ? { cwd } : null, (/* err, stdout, stderr */) => {
         // console.log('exec res', err, stdout, stderr)
       })
+
+      if (isInMonoRepo) {
+        // wait a bit longer, in dev mode startup is slower
+        await sleep(2500)
+      }
+
       return true
     } catch (e) {
       console.log('Error running', e)

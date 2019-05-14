@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import './processDispose'
+
 import * as Path from 'path'
 import Yargs from 'yargs'
 

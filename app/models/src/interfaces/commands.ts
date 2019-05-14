@@ -36,6 +36,8 @@ export const AppDevOpenCommand = new Command<
   }
 >('app-dev-open')
 
+export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
+
 export const SendClientDataCommand = new Command<
   void,
   {

@@ -1,5 +1,5 @@
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import { AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
+import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
 import { OR_TIMED_OUT, orTimeout, randomString, sleep } from '@o/utils'
 import bonjour from 'bonjour'
 import execa from 'execa'
@@ -8,10 +8,11 @@ import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from 'ws'
 
+import { addProcessDispose } from './processDispose'
 import { configStore } from './util/configStore'
 
 let verbose
-const log = (...args) => verbose && console.log(...args)
+export const log = (...args) => verbose && console.log(...args)
 
 export async function commandDev(options: { projectRoot: string; verbose?: boolean }) {
   verbose = options.verbose
@@ -24,6 +25,13 @@ export async function commandDev(options: { projectRoot: string; verbose?: boole
     await orbitDesktop.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
+    })
+
+    addProcessDispose(async () => {
+      log('Disposing orbit dev process...')
+      await orbitDesktop.command(AppDevCloseCommand, {
+        appId,
+      })
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
@@ -103,6 +111,7 @@ async function runOrbitDesktop(): Promise<boolean> {
     try {
       log('Running Orbit', cmd, cwd)
       const child = execa(cmd, [], {
+        detached: true,
         cwd,
         env: {
           HIDE_ON_START: 'true',

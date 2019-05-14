@@ -63,7 +63,7 @@ export async function main() {
             appWindows: {
               [appId]: {
                 type: 'root',
-                id: appId,
+                appId,
                 isEditing: !!isEditing,
               },
             },

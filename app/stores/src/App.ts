@@ -98,6 +98,10 @@ class AppStore {
     )
   }
 
+  get bundleUrl() {
+    return `/appServer/bundle.js` //appId
+  }
+
   get isEditing() {
     return !!this.appConf.isEditing
   }

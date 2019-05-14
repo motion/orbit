@@ -3,6 +3,7 @@ import { App } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
+import { selectDefined } from '../../../../packages/utils/_'
 import { IS_MAIN_ORBIT } from '../constants'
 import { devTools } from '../helpers/devTools'
 import { ElectronDebugStore } from '../stores/ElectronDebugStore'
@@ -20,10 +21,13 @@ export function OrbitRoot() {
     return null
   }
 
-  console.log('App.appConf', App.appConf)
-
   const isApp = !IS_MAIN_ORBIT
-  const appId = `${App.appConf.appId || ''}`
+  const appId = `${selectDefined(App.appConf.appId, '')}`
+
+  if (isApp && appId === '') {
+    console.log(JSON.stringify(App.appConf.appId))
+    throw new Error('No app id found!')
+  }
 
   return (
     <ReactronApp

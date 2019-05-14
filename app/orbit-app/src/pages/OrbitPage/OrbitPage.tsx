@@ -144,7 +144,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp RenderApp={RenderApp} bundleURL={App.appConf.bundleURL} />
+        <LoadApp key={0} RenderApp={RenderApp} bundleURL={App.bundleUrl} />
       </Suspense>
     )
   } else {
@@ -176,8 +176,14 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
-  console.log('RenderApp', appDef)
-  return <OrbitAppRenderOfDefinition appDef={appDef} id="1" identifier={appDef.id} hasShownOnce />
+  return (
+    <OrbitAppRenderOfDefinition
+      appDef={appDef}
+      id={`${App.appConf.appId}`}
+      identifier={appDef.id}
+      hasShownOnce
+    />
+  )
 }
 
 const OrbitContentArea = gloss({

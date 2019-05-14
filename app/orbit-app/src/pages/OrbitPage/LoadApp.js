@@ -7,10 +7,11 @@ export let LoadApp = ({ bundleURL, RenderApp }) => {
   let Lazy = React.useMemo(
     () =>
       React.lazy(async () => {
-        await import(/* webpackIgnore: true */ bundleURL)
+        await import(/* webpackIgnore: true */ `${bundleURL}?hmrid=${Math.random()}`)
         // TODO(andreypopp): this is hacky, find a way to expose app via bundle
         // eval result
         let appDef = window['OrbitAppToRun']
+        console.log('loaded app', appDef)
         return { default: () => React.createElement(RenderApp, { appDef }) }
       }),
     [bundleURL, RenderApp],

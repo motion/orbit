@@ -1,5 +1,3 @@
-import './helpers/installDevelopmentHelpers'
-
 import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'

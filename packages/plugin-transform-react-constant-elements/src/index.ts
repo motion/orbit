@@ -68,6 +68,7 @@ export default declare((api, options) => {
   }
 
   let IMPORTS = []
+  let hasExited = false
 
   return {
     name: 'transform-react-constant-elements',
@@ -75,17 +76,22 @@ export default declare((api, options) => {
     visitor: {
       // remove imports before to stop bug
       ImportDeclaration(path) {
-        IMPORTS.push(path.node)
-        path.remove()
+        // exit check because otherwise you run into: https://github.com/babel/babel/issues/8270
+        if (!hasExited) {
+          IMPORTS.push(path.node)
+          path.remove()
+        }
       },
 
       // then insert them back in after
       Program: {
         enter() {
+          hasExited = false
           IMPORTS = []
         },
 
         exit(path) {
+          hasExited = true
           path.node.body = [...IMPORTS, ...path.node.body]
         },
       },

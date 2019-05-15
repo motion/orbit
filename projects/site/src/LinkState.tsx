@@ -8,7 +8,7 @@ export const LinkState = {
   didAnimateOut: true,
 }
 
-const Navigation = eval(`window.Navigation`)
+const getNavigation = () => window['Navigation']
 
 const isOnRoute = (path, route) => route.url.pathname === path
 
@@ -55,11 +55,13 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
     document.body.classList.add('loading')
   }, 200)
   const finish = () => {
-    Navigation.navigate(href).then(() => {
-      clearTimeout(tm2)
-      document.body.classList.remove('loading')
-      document.body.classList.remove('will-load')
-    })
+    getNavigation()
+      .navigate(href)
+      .then(() => {
+        clearTimeout(tm2)
+        document.body.classList.remove('loading')
+        document.body.classList.remove('will-load')
+      })
   }
   if (header) {
     header.setShown(false)

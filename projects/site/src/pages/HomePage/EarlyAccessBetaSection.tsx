@@ -25,6 +25,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
               minWidth={1200}
               transform={{ scaleX: -1 }}
               zIndex={1}
+              opacity={0.2}
             />
             {outside}
           </>

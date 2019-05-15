@@ -16,7 +16,7 @@ export const EarlyAccessContent = () => {
         <>
           <PillButton>Beta</PillButton>
           <TitleText size="xxl">Early Access.</TitleText>
-          <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>
+          <TitleTextSub size={useScreenVal('xs', 'sm', 'sm')}>
             Join orbit insiders for early access.
           </TitleTextSub>
         </>

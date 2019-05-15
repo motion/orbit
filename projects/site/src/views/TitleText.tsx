@@ -1,5 +1,5 @@
-import { gloss } from 'gloss'
 import { Title } from '@o/ui'
+import { gloss } from 'gloss'
 import React from 'react'
 
 const titleProps = {
@@ -9,7 +9,9 @@ const titleProps = {
 }
 
 export const TitleText = gloss(
-  props => <Title className="font-smooth" selectable {...titleProps} {...props} />,
+  props => (
+    <Title className="font-smooth" selectable sizeLineHeight={1.1} {...titleProps} {...props} />
+  ),
   {
     fontFamily: 'GT Eesti',
   },

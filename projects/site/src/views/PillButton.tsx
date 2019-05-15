@@ -15,6 +15,7 @@ export function PillButton({ children, ...props }: ButtonProps) {
       letterSpacing={3}
       whiteSpace="pre"
       textTransform="uppercase"
+      userSelect="none"
       width="max-content"
       padding={[2, 12]}
       margin={[0, 'auto']}

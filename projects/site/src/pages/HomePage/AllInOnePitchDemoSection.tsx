@@ -220,7 +220,7 @@ export default function NeckSection() {
 
   return (
     <Fade.FadeProvide>
-      <Page.Content ref={Fade.ref} transform={{ y: 0 }}>
+      <Page.Content ref={Fade.ref}>
         <SpacedPageContent
           header={
             <>
@@ -231,12 +231,14 @@ export default function NeckSection() {
                 <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
-                <FadeChild delay={200}>Orbit makes common apps incredibly easy to build.</FadeChild>
+                <FadeChild delay={200}>
+                  Pull in data and collaborate with incredible simplicity.
+                </FadeChild>
               </TitleTextSub>
             </>
           }
         >
-          <Col maxWidth="100%" margin={[-10, 'auto', 0, 0]}>
+          <Col maxWidth="100%" margin={[0, 'auto', 0, 0]}>
             {screen !== 'small' && (
               <Row space>
                 <SubSection maxWidth="33%">
@@ -244,7 +246,7 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Plug in data apps like{' '}
+                      Plug in data sources like{' '}
                       <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> with a click.
                     </CenterText>
                   </FadeChild>
@@ -254,8 +256,8 @@ export default function NeckSection() {
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Every view in Orbit is fast, works together & is just lines of code, like the{' '}
-                      {elements[cur].title}.
+                      Pulling data from queries into views, and moving between views is easy. They
+                      all work together.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -281,8 +283,8 @@ export default function NeckSection() {
                     <Image
                       userSelect="none"
                       alignSelf="center"
-                      width={100}
-                      height={100}
+                      width={80}
+                      height={80}
                       src={elements[cur].iconBefore}
                     />
                   </FadeChild>
@@ -306,8 +308,8 @@ export default function NeckSection() {
                   <Button
                     alt="flat"
                     cursor="pointer"
-                    size={2}
-                    iconSize={22}
+                    size={1.9}
+                    iconSize={20}
                     circular
                     zIndex={100}
                     position="absolute"
@@ -319,8 +321,8 @@ export default function NeckSection() {
                   <Button
                     alt="flat"
                     cursor="pointer"
-                    size={2}
-                    iconSize={22}
+                    size={1.9}
+                    iconSize={20}
                     circular
                     zIndex={100}
                     position="absolute"
@@ -399,8 +401,8 @@ export default function NeckSection() {
                     <Image
                       userSelect="none"
                       alignSelf="center"
-                      width={100}
-                      height={100}
+                      width={80}
+                      height={80}
                       src={elements[cur].iconAfter}
                     />
                   </animated.div>
@@ -433,30 +435,31 @@ export default function NeckSection() {
 
       <Page.Parallax overflow="visible" speed={0} zIndex={0}>
         <FullScreen
-          transform={{ y: -120 }}
+          transform={{ y: -180 }}
           minWidth={1000}
           margin={[0, '-5vw']}
+          opacity={0.25}
           top={40}
           bottom="auto"
           className="head-line-sep"
         >
-          {false && <LineSep />}
+          <LineSep />
         </FullScreen>
       </Page.Parallax>
 
       <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.1}
-          transform={{ y: '-20%', x: '-20%', scale: 1.5 }}
-          background="radial-gradient(circle closest-side, #00CD87 20%, #D80070, transparent)"
+          opacity={0.16}
+          transform={{ y: '-35%', x: '-25%', scale: 1.35 }}
+          background="radial-gradient(circle closest-side, #F64097, #F27B81, transparent)"
         />
       </Page.Parallax>
 
-      <Page.Parallax speed={1} zIndex={-1}>
+      <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.1}
-          transform={{ y: '30%', x: '40%', scale: 1.8 }}
-          background="radial-gradient(circle closest-side, #FF7F19 20%, #D80070, transparent)"
+          opacity={0.2}
+          transform={{ y: '30%', x: '40%', scale: 1.48 }}
+          background="radial-gradient(circle closest-side, #00E5FF, #009A4C, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>
@@ -489,8 +492,8 @@ const CenterText = gloss(
       {...{
         selectable: true,
         sizeLineHeight: 1.2,
-        size: 1.2,
-        alpha: 0.8,
+        size: 1.15,
+        alpha: 0.68,
       }}
       {...props}
     />

@@ -17,8 +17,8 @@ let medSpc = <Space size="xxl" />
 
 let allTitles = {
   large: 'Collaborative, decentralized apps',
-  medium: 'A new deal for apps',
-  small: 'A new deal for apps',
+  medium: 'Collaborative, decentralized apps',
+  small: 'Collaborative, decentralized apps',
 }
 
 let allTexts = {

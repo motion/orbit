@@ -27,12 +27,12 @@ const TableHeadColumnText = gloss(SimpleText, {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  opacity: 0.65,
   fontWeight: 500,
 })
 
 TableHeadColumnText.defaultProps = {
-  size: 0.9,
+  size: 0.85,
+  alpha: 0.8,
 }
 
 const TableHeaderColumnInteractive = gloss(Interactive, {

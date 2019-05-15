@@ -8,6 +8,7 @@ const DataText = gloss(SimpleText)
 
 DataText.defaultProps = {
   alpha: 0.85,
+  size: 0.85,
 }
 
 export function DataValue(props: { type?: string; value: any }) {

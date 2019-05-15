@@ -33,7 +33,7 @@ export function textSizeTheme(props: TextSizeProps) {
   let lineHeightNum
   // find defaults and round them
   if (typeof fontSize === 'number') {
-    fontSizeNum = Math.round(fontSize * 10) / 10
+    fontSizeNum = Math.round(fontSize)
     styles = styles || {}
     styles.fontSizeNum = fontSizeNum
   }

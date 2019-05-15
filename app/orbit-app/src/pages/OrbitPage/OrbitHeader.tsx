@@ -134,7 +134,7 @@ export const OrbitHeader = memo(() => {
                   {...om.state.router.appId === 'data-explorer' && activeStyle}
                   {...useLocationLink('/app/data-explorer')}
                   icon="layers"
-                  tooltip="Data explorer"
+                  tooltip="Query Builder"
                 />
                 <Button
                   {...om.state.router.appId === 'apps' && activeStyle}

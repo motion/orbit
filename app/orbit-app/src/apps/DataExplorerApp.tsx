@@ -1,14 +1,13 @@
-import { App, AppProps, createApp, hasGraph, Templates, useActiveDataAppsWithDefinition, useAppState, useAppWithDefinition } from '@o/kit'
-import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, useSetShare, View } from '@o/ui'
+import { App, AppProps, createApp, Templates, useActiveDataAppsWithDefinition, useAppState, useAppWithDefinition } from '@o/kit'
+import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
 import { remove } from 'lodash'
 import React from 'react'
 
-import { GraphExplorer } from '../views/GraphExplorer'
 import { getAppListItem } from './apps/getAppListItem'
 
 export default createApp({
   id: 'data-explorer',
-  name: 'Data Explorer',
+  name: 'Query Builder',
   icon: '',
   app: props => (
     <App index={<DataExplorerIndex />}>
@@ -22,17 +21,8 @@ function DataExplorerIndex() {
   return (
     <List
       titleBorder
-      title="Data Explorer"
-      subTitle="Explore installed data apps"
-      items={[
-        dataApps.some(x => hasGraph(x.definition)) && {
-          subId: 'explorer-graph',
-          title: 'Graph',
-          icon: 'Graph',
-          subTitle: 'Explore all GraphQL app APIs',
-        },
-        ...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' })),
-      ].filter(Boolean)}
+      title="Query Builder"
+      items={[...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' }))].filter(Boolean)}
     />
   )
 }
@@ -40,11 +30,7 @@ function DataExplorerIndex() {
 function DataExplorerMain({ subId }: AppProps) {
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
-  const setShare = useSetShare()
-
-  if (subId === 'explorer-graph') {
-    return <GraphExplorer />
-  }
+  // const setShare = useSetShare()
 
   // TODO suspense
   if (!app) {

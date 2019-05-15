@@ -25,7 +25,7 @@ export const Dock = memo((props: any) => {
   return (
     <DockStoreContext.SimpleProvider value={dockStore}>
       <Flipper flipKey={dockStore.key}>
-        <Row position="fixed" bottom={20} right={20} zIndex={100000000} {...props} />
+        <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
       </Flipper>
     </DockStoreContext.SimpleProvider>
   )
@@ -51,8 +51,8 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
     <Flipped flipId={id}>
       <Button
         size="xl"
-        width={50}
-        height={50}
+        width={42}
+        height={42}
         marginLeft={15}
         {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         circular

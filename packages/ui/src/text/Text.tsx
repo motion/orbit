@@ -17,6 +17,7 @@ export type TextProps = CSSPropertySetStrict &
     editable?: boolean
     autoselect?: boolean
     selectable?: boolean
+    onStartEdit?: () => any
     onFinishEdit?: (value: string, event: any) => any
     onCancelEdit?: (value: string, event: any) => any
     forwardRef?: React.RefObject<HTMLElement>
@@ -170,6 +171,9 @@ export class Text extends React.PureComponent<TextProps> {
   handleDoubleClick = event => {
     if (this.props.editable && !this.state.isEditing) {
       event.stopPropagation()
+      if (this.props.onStartEdit) {
+        this.props.onStartEdit()
+      }
       this.setState({
         isEditing: true,
       })

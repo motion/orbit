@@ -150,6 +150,16 @@ const alternates: ThemeSet = {
     backgroundHover: colorThemes.blue.background,
     backgroundActive: colorThemes.blue.background,
   },
+  selectedInactive: parent => ({
+    ...colorThemes.blue,
+    ...colorize({
+      // dont make selected things hover/active, they're active already
+      background: [150, 150, 150, 0.1],
+      backgroundHover: [150, 150, 150, 0.1],
+      backgroundActive: [150, 150, 150, 0.1],
+    }),
+    color: parent.color
+  }),
   bordered: {
     glintColor: transparent,
     borderWidth: 2,

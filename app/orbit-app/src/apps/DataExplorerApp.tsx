@@ -21,12 +21,10 @@ const treeId = 'my-tree-list'
 
 export function QueryBuilderIndex() {
   const treeList = useTreeList(treeId)
-
   return (
     <>
       <TreeList backgrounded title="Queries" editable deletable use={treeList} sortable />
-
-      <Dock position="absolute">
+      <Dock>
         <DockButton
           id="add"
           icon="plus"
@@ -41,14 +39,15 @@ export function QueryBuilderIndex() {
   )
 }
 
-function DataExplorerMain({ subId }: AppProps) {
+function DataExplorerMain(props: AppProps) {
+  const { id, subId } = props
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
   // const setShare = useSetShare()
 
   // TODO suspense
   if (!app) {
-    return <Title>no app, subid {typeof subId}</Title>
+    return <Title>nothing {JSON.stringify(props)}</Title>
   }
 
   return (

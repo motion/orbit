@@ -2,7 +2,7 @@ import { command } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
@@ -50,11 +50,9 @@ export const OrbitPage = memo(() => {
           className={`theme-${themeStore.themeColor} app-parent-bounds`}
           color={theme.color}
         >
-          <ProvideFocus>
-            <OrbitPageInner />
-            {/* Inside provide stores to capture all our relevant stores */}
-            <OrbitEffects />
-          </ProvideFocus>
+          <OrbitPageInner />
+          {/* Inside provide stores to capture all our relevant stores */}
+          <OrbitEffects />
         </AppWrapper>
       </Theme>
     </ProvideStores>

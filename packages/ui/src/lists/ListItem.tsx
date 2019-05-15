@@ -1,7 +1,8 @@
 import { isDefined } from '@o/utils'
 import { gloss, Theme } from 'gloss'
-import React, { forwardRef, useCallback } from 'react'
+import React, { forwardRef, useCallback, useEffect, useState } from 'react'
 
+import { ProvideFocus } from '../Focus'
 import { Bit } from '../helpers/BitLike'
 import { Config, CustomItemView } from '../helpers/configure'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
@@ -48,6 +49,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
   const selectableStore = useSelectableStore(props)
   const visStore = useVisibilityStore()
+  const [isEditing, setIsEditing] = useState(false)
 
   // this is the view from sources, each bit type can have its own display
   let ItemView: CustomItemView = null
@@ -102,22 +104,46 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     ),
   }
 
+  const onStartEditCb = useCallback(() => {
+    // switch from selected to selectedInactive while editing
+    setIsEditing(true)
+    if (rest.onStartEdit) {
+      rest.onStartEdit()
+    }
+  }, [props.alt, rest.onStartEdit])
+
+  const onEditCb = useCallback(
+    a => {
+      setIsEditing(false)
+      if (rest.onEdit) {
+        rest.onEdit(a)
+      }
+    },
+    [props.alt, rest.onEdit],
+  )
+
   return (
-    <Theme alt={alt}>
-      <ListItemSimple
-        ref={ref}
-        {...itemProps}
-        {...rest}
-        icon={icon}
-        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
-        location={normalized ? normalized.location : props.location}
-        {...getItemProps && getItemProps(item)}
-        isSelected={getIsSelected}
-        // dont put children unless you actually have children,
-        // otherwise you trip up some spacing stuff in ListItem
-        {...childrenProps}
-      />
-    </Theme>
+    // this focused={} conditional may look weird. it's because we want to disable the focus state while editing
+    // so we look for edit, then turn off focus. `undefined` means "defer to parent value", so we are just ignoring
+    <ProvideFocus focused={isEditing === true ? false : undefined}>
+      <Theme alt={alt}>
+        <ListItemSimple
+          ref={ref}
+          {...itemProps}
+          {...rest}
+          onStartEdit={onStartEditCb}
+          onEdit={onEditCb}
+          icon={icon}
+          date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+          location={normalized ? normalized.location : props.location}
+          {...getItemProps && getItemProps(item)}
+          isSelected={getIsSelected}
+          // dont put children unless you actually have children,
+          // otherwise you trip up some spacing stuff in ListItem
+          {...childrenProps}
+        />
+      </Theme>
+    </ProvideFocus>
   )
 })
 

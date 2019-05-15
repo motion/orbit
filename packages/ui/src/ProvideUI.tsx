@@ -1,6 +1,7 @@
 import { ThemeSet } from '@o/css'
 import { ThemeProvide } from 'gloss'
 import React, { memo, useMemo } from 'react'
+
 import { ProvideFocus } from './Focus'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
@@ -25,15 +26,15 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
   return (
     <HighlightsContext.Provider value={defaultHighlight}>
       <ProvideVisibility visible={true}>
-        <ProvideShortcut>
-          <ProvideFocus>
+        <ProvideFocus focused={true}>
+          <ProvideShortcut>
             <ProvideShare>
               <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
                 {props.children}
               </ThemeProvide>
             </ProvideShare>
-          </ProvideFocus>
-        </ProvideShortcut>
+          </ProvideShortcut>
+        </ProvideFocus>
       </ProvideVisibility>
     </HighlightsContext.Provider>
   )

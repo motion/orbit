@@ -1,4 +1,4 @@
-import { createBrowserNavigation, lazy, mount } from 'navi'
+import { createBrowserNavigation, lazy, mount, route } from 'navi'
 import React from 'react'
 
 import { HomePage } from './pages/HomePage'

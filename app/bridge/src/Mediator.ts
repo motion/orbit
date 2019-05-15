@@ -1,8 +1,9 @@
+import { getGlobalConfig } from '@o/config'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { randomString } from '@o/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import { isBrowser } from './commands'
+const isBrowser = typeof window !== 'undefined'
 
 export const Mediator = isBrowser
   ? new MediatorClient({
@@ -11,7 +12,7 @@ export const Mediator = isBrowser
           'app-client-' + randomString(5),
           new ReconnectingWebSocket(
             // TODO get this from actual getGlobalConfig()
-            `ws://localhost:${window['GlobalConfig'].ports.desktopMediator}`,
+            `ws://localhost:${getGlobalConfig().ports.desktopMediator}`,
             [],
             {
               WebSocket,

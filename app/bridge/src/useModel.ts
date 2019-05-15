@@ -1,9 +1,10 @@
 import { Model } from '@o/mediator'
 import { isDefined } from '@o/utils'
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from 'command'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './commands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
 export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void

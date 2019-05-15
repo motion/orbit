@@ -2,7 +2,7 @@ import { MediatorClient } from '@o/mediator'
 
 import { Mediator } from './Mediator'
 
-export const isBrowser = typeof window !== 'undefined'
+const isBrowser = typeof window !== 'undefined'
 
 export const command: MediatorClient['command'] = isBrowser
   ? Mediator.command.bind(Mediator)

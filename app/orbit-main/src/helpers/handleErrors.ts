@@ -3,6 +3,7 @@ import { clipboard, dialog } from 'electron'
 import { pathExists, readFile } from 'fs-extra'
 import open from 'opn'
 import Raven from 'raven'
+
 import { handleExit } from './handleExit'
 
 Raven.config('https://e885a093bbcb4d5fb2527dfe921f7654@sentry.io/1282871').install()
@@ -41,7 +42,7 @@ export async function onError(error) {
 
   lastReported = Date.now()
 
-  const res = dialog.showMessageBox({
+  const { response } = await dialog.showMessageBox({
     type: 'warning',
     title: 'Orbit ran into an error!',
     buttons: ['Copy to clipboard', 'Quit', 'Cancel'],
@@ -53,16 +54,16 @@ export async function onError(error) {
     cancelId: 2,
   })
 
-  if (res === 2) {
+  if (response === 2) {
     return
   }
 
   // quit
-  if (res === 1) {
+  if (response === 1) {
     handleExit()
   }
 
-  if (res === 0) {
+  if (response === 0) {
     let log = ''
     const logPath = logFile.findLogPath()
     if (await pathExists(logPath)) {
@@ -84,7 +85,7 @@ ${log}`
     // copy to clipboard...
     clipboard.writeText(niceError)
 
-    const res = dialog.showMessageBox({
+    const { response } = await dialog.showMessageBox({
       type: 'question',
       title: 'Error copied!',
       message: 'Upload error/log to Orbit?',
@@ -92,11 +93,11 @@ ${log}`
       defaultId: 0,
       cancelId: 3,
     })
-    if (res === 0) {
+    if (response === 0) {
       Raven.captureException(niceError)
       return
     }
-    if (res === 1) {
+    if (response === 1) {
       open(
         `mailto:support@tryorbit.com?subject=${encodeURIComponent(
           'Orbit Error',

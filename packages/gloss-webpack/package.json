@@ -9,15 +9,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/generator": "^7.0.0",
-    "@babel/parser": "^7.0.0",
-    "@babel/traverse": "^7.0.0",
-    "@babel/types": "^7.0.0",
+    "@babel/core": "^7.4.4",
+    "@babel/generator": "^7.4.4",
+    "@babel/parser": "^7.4.4",
+    "@babel/traverse": "^7.4.4",
+    "@babel/types": "^7.4.4",
     "ajv": "^6.5.3",
     "invariant": "^2.2.1",
-    "jsxstyle": "^2.1.5",
-    "jsxstyle-utils": "^2.1.5",
     "loader-utils": "^1.1.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"

@@ -1,12 +1,12 @@
 import { dialog } from 'electron'
 
-export function showConfirmDialog({
+export async function showConfirmDialog({
   type = 'question',
   title = '',
   message = '',
   buttons,
-}): boolean {
-  const response = dialog.showMessageBox({
+}): Promise<boolean> {
+  const response = await dialog.showMessageBox({
     type,
     title,
     message,
@@ -14,7 +14,7 @@ export function showConfirmDialog({
     defaultId: 0,
     cancelId: 1,
   })
-  if (response === 0) {
+  if (response.response === 0) {
     return true
   }
   return false

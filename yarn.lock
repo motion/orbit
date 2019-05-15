@@ -659,14 +659,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-transform-react-constant-elements@7.2.0":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-constant-elements/-/plugin-transform-react-constant-elements-7.2.0.tgz#ed602dc2d8bff2f0cb1a5ce29263dbdec40779f7"
-  integrity sha512-YYQFg6giRFMsZPKUM9v+VcHOdfSQdz9jHCx3akAi3UYgyjndmdYGSXylQ/V+HswQt4fL8IklchD9HTsaOCrWQQ==
-  dependencies:
-    "@babel/helper-annotate-as-pure" "^7.0.0"
-    "@babel/helper-plugin-utils" "^7.0.0"
-
 "@babel/plugin-transform-react-display-name@7.2.0", "@babel/plugin-transform-react-display-name@^7.0.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.2.0.tgz#ebfaed87834ce8dc4279609a4f0c324c156e3eb0"
@@ -6587,7 +6579,7 @@ cssstyle@^1.0.0, cssstyle@^1.1.1:
   dependencies:
     cssom "0.3.x"
 
-csstype@^2.2.0, csstype@^2.5.2, csstype@^2.5.7:
+csstype@^2.2.0, csstype@^2.5.2:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.4.tgz#d585a6062096e324e7187f80e04f92bd0f00e37f"
   integrity sha512-lAJUJP3M6HxFXbqtGRc0iZrdyeN+WzOWeY0q/VnFzI+kqVrYIzC7bWlKqCW7oCIdzoPkvfp82EVvrTlQ8zsWQg==
@@ -12438,20 +12430,6 @@ jsx-ast-utils@^2.0.1:
   integrity sha512-yDGDG2DS4JcqhA6blsuYbtsT09xL8AoLuUR2Gb5exrw7UEM19sBcOTq+YBBhrNbl0PUC4R4LnFu+dHg2HKeVvA==
   dependencies:
     array-includes "^3.0.3"
-
-jsxstyle-utils@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/jsxstyle-utils/-/jsxstyle-utils-2.1.5.tgz#c49990af96ad70e6940e611e64101219051319ef"
-  integrity sha512-a6Is5V/GXTwjns2T8+ZByk0LF4FR3SDOicKPpXXK3d36ivs/Y4hPnDJTnVpoIOm3ZWJnasCTpTeq9BlpfmAGig==
-  dependencies:
-    csstype "^2.5.7"
-
-jsxstyle@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/jsxstyle/-/jsxstyle-2.1.5.tgz#539f727f3f6240fc2472bffe12a8cc1a05085700"
-  integrity sha512-OPGUV54ErFckMXXRyMPm95o+ZBZhYzuyV9N4k9bjbYAu1oVWYQ6FQ5Z6C7VZA9z49XvmdqtSpT3KT+zm/rs9RA==
-  dependencies:
-    jsxstyle-utils "^2.1.5"
 
 jszip@2.5.0:
   version "2.5.0"

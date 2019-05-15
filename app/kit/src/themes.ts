@@ -158,7 +158,8 @@ const alternates: ThemeSet = {
       backgroundHover: [150, 150, 150, 0.1],
       backgroundActive: [150, 150, 150, 0.1],
     }),
-    color: parent.color
+    borderColor: parent.borderColor,
+    color: parent.color,
   }),
   bordered: {
     glintColor: transparent,

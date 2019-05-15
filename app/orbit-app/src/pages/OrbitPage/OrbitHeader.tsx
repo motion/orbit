@@ -296,7 +296,7 @@ const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>({
   alignItems: 'center',
   flexFlow: 'row',
   flex: 20,
-  maxWidth: 800,
+  maxWidth: 600,
   padding: [0, 12],
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({

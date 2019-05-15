@@ -87,7 +87,6 @@ export const OrbitAppRenderOfDefinition = ({
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null
       if (isEqual(next, getActiveItem())) return
-      console.log('setting share', next)
       setActiveItemThrottled(next)
     }
     if (location === 'main') {

@@ -66,11 +66,11 @@ export class SelectableStore {
   private keyToIndex = {}
 
   get rows() {
-    return this.props.items
+    return this.props.items || []
   }
 
   resetKeyToIndex = react(
-    () => always(this.props.items),
+    () => always(this.rows),
     () => {
       this.keyToIndex = {}
     },

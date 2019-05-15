@@ -135,19 +135,26 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     identifier: pane.type,
   }))
 
-  const appsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
+  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
 
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
     .map(id => allApps.find(x => x.id === id))
     .filter(Boolean)
+    .map(x => ({
+      id: x.id,
+      definition: appDefsWithViews[x.identifier],
+    }))
 
   let contentArea = null
 
   useEffect(() => {
+    if (App.appConf.appId === -1) {
+      return
+    }
     hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
       built: forceUpdate,
     })
-  }, [])
+  }, [App.appConf.appId])
 
   if (isEditing) {
     contentArea = (
@@ -160,9 +167,19 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       </Suspense>
     )
   } else {
-    contentArea = stableSortedApps
-      .filter(x => appsWithViews[x.identifier])
-      .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
+    // load all apps
+    contentArea = (
+      <>
+        {stableSortedApps.map(app => (
+          <OrbitApp
+            key={app.id}
+            id={app.id}
+            identifier={app.definition.id}
+            appDef={app.definition}
+          />
+        ))}
+      </>
+    )
   }
 
   const onOpen = useCallback(rows => {

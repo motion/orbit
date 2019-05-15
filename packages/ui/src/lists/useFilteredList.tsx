@@ -1,11 +1,12 @@
 import { sortBy } from 'lodash'
-import { useMemo, useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { fuzzyFilter } from '../helpers/fuzzyFilter'
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 import { UseFilterProps } from '../hooks/useFilter'
 
 export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProps<any>) {
+  const items = props.items || []
   const search =
     props.searchable === false
       ? ''
@@ -14,10 +15,10 @@ export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProp
       : props.search || ''
 
   // cache the sort before we do the rest
-  let sortedItems = useMemo(
-    () => (props.sortBy ? sortBy(props.items, props.sortBy) : props.items),
-    [props.items, props.sortBy],
-  )
+  let sortedItems = useMemo(() => (props.sortBy ? sortBy(items, props.sortBy) : items), [
+    items,
+    props.sortBy,
+  ])
 
   // handle search
   const filteredItems = props.search
@@ -31,21 +32,24 @@ export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProp
 
   // handle groupBy function
   if (shouldGroup && props.groupBy) {
-    getGroupProps = useCallback((item: any, index: number, items: any[]) => {
-      if (items[index - 1]) {
-        const cur = props.groupBy(items[index - 1])
-        const next = props.groupBy(item)
-        if (next !== cur) {
+    getGroupProps = useCallback(
+      (item: any, index: number, items: any[]) => {
+        if (items[index - 1]) {
+          const cur = props.groupBy(items[index - 1])
+          const next = props.groupBy(item)
+          if (next !== cur) {
+            return {
+              separator: next,
+            }
+          }
+        } else {
           return {
-            separator: next,
+            separator: props.groupBy(item),
           }
         }
-      } else {
-        return {
-          separator: props.groupBy(item),
-        }
-      }
-    }, [props.groupBy])
+      },
+      [props.groupBy],
+    )
   }
 
   return {

@@ -1,3 +1,4 @@
+import { Theme } from 'gloss'
 import React from 'react'
 
 import { Link } from '../../views/LinkProps'
@@ -21,7 +22,9 @@ export const EarlyAccessContent = () => {
         </>
       }
     >
-      <SignupForm />
+      <Theme name="darkAlt">
+        <SignupForm />
+      </Theme>
       <TitleTextSub margin={[0, 'auto']} size="xs">
         Have a unique use case? <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
       </TitleTextSub>

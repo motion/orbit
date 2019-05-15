@@ -14,7 +14,7 @@ export default function EarlyAccessSection({ outside = null }: any) {
         zIndex={10}
         outside={
           <>
-            <FullScreen background={theme => theme.background} top={40} />
+            <FullScreen top={40} />
             <LineSep
               top="auto"
               bottom={0}

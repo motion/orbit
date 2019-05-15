@@ -1,4 +1,4 @@
-import { Col, FullScreen, Image, Row, Space } from '@o/ui'
+import { Col, Image, Row } from '@o/ui'
 import React from 'react'
 
 import bottomLightSeparator from '../../../public/images/bottom-sep.svg'
@@ -16,43 +16,23 @@ export default function WaistSection() {
   const screen = useScreenSize()
   return (
     <>
-      <Page.Content
-        outside={
-          <>
-            <FullScreen zIndex={-1} background={theme => theme.background} bottom={150} />
-            <Image
-              position="absolute"
-              bottom={100}
-              height={290}
-              left={0}
-              right={0}
-              width="100%"
-              minWidth={1000}
-              src={bottomSeparator}
-            />
-          </>
-        }
-      >
+      <Page.Content>
         <SpacedPageContent
           padding={[0, '5%']}
           margin="auto"
           maxWidth={860}
-          transform={{
-            y: '-7%',
-          }}
           header={
             <>
               <PillButton>Security</PillButton>
               <TitleText textAlign="center" maxWidth={400}>
                 Tell Security they can firewall Orbit completely.
               </TitleText>
-              <Space />
             </>
           }
         >
-          <Row space={useScreenVal(20, 'lg', 'xl')}>
-            <Col flex={3} space="xl">
-              <Pitch alpha={1} size="sm">
+          <Row space={useScreenVal(20, 'xl', 'xxxl')}>
+            <Col flex={3} space="lg">
+              <Pitch alpha={1} size="md">
                 Orbit never sends single bit of data outside your firewall.
               </Pitch>
 

@@ -3,7 +3,7 @@ import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
 import { useIsTiny } from '../hooks/useScreenSize'
-import { Header, y } from '../Layout'
+import { Header } from '../Layout'
 import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
@@ -28,8 +28,6 @@ const SecuritySection = loadOnIntersect(
 const EarlyAccessBetaSection = loadOnIntersect(
   lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection'))),
 )
-
-console.log('Header', y, Header)
 
 export function HomePage() {
   const siteStore = useSiteStore()
@@ -60,14 +58,12 @@ export function HomePage() {
           <Page offset={3}>
             <DataAppKitFeaturesSection pages={2} />
           </Page>
-          <Theme name="darkAlt">
-            <Page offset={5} zIndex={1}>
-              <EarlyAccessBetaSection />
-            </Page>
-            <Page offset={6}>
-              <SecuritySection />
-            </Page>
-          </Theme>
+          <Page offset={5} zIndex={1}>
+            <EarlyAccessBetaSection />
+          </Page>
+          <Page offset={6}>
+            <SecuritySection />
+          </Page>
           <Page offset={7}>
             <MissionMottoSection />
           </Page>

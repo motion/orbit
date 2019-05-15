@@ -18,7 +18,7 @@ export type AlphaColorProps = {
 
 export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const color = props.color || theme.color
-  const alpha = props.alpha || theme.alpha
+  const alpha = selectDefined(props.alpha, theme.alpha)
   const next: CSSPropertySet | null = {}
 
   if (color) {
@@ -60,6 +60,14 @@ function merge(
       next[key] = {
         color: color,
       }
+    }
+  }
+}
+
+function selectDefined(...args: any[]) {
+  for (const arg of args) {
+    if (arg !== undefined) {
+      return arg
     }
   }
 }

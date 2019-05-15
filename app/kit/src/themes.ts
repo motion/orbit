@@ -1,5 +1,5 @@
 import { linearGradient, toColor } from '@o/color'
-import { ThemeSet } from '@o/css'
+import { ThemeObject, ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
 export const colors = colorize({
@@ -269,16 +269,17 @@ const darkAlternates: ThemeSet = {
     }),
   },
 }
-const dark = {
+
+let dark: ThemeObject = {
   alternates: darkAlternates,
   ...base,
-  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+  backgroundZebra: darkBackground.lighten(0.2).alpha(0.35),
+  backgroundZebraHover: darkBackground.lighten(0.4).alpha(0.35),
+  backgroundStrongest: darkBackground.lighten(0.45),
+  backgroundStronger: darkBackground.lighten(0.3),
+  backgroundStrong: darkBackground.lighten(0.15),
+  background: darkBackground,
   ...fromStyles({
-    backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
-    backgroundStrongest: darkBackground.lighten(0.45),
-    backgroundStronger: darkBackground.lighten(0.3),
-    backgroundStrong: darkBackground.lighten(0.15),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
@@ -290,6 +291,13 @@ const dark = {
     borderColor: [180, 180, 180, 0.25],
     borderColorActive: [180, 180, 180, 0.25],
     borderColorLight: [180, 180, 180, 0.15],
+  }),
+}
+
+// makes it so we can reference the above base styles for the rest
+dark = {
+  ...dark,
+  ...colorize({
     sidebarBackground: [15, 15, 15],
     sidebarBackgroundTransparent: [15, 15, 15, 0.2],
     sidebarBorderColor: '#444',
@@ -315,7 +323,7 @@ const dark = {
     colorActive: '#fff',
     tabBackgroundHover: [255, 255, 255, 0.1],
     tabBackgroundActive: [255, 255, 255, 0.125],
-    tabBackgroundSelected: darkBackground.lighten(0.2),
+    tabBackgroundSelected: dark.backgroundStronger,
     glintColor: [255, 255, 255, 0.135],
     inputBackground: transparent,
     inputBackgroundHover: transparent,
@@ -331,6 +339,8 @@ const dark = {
     cardBackgroundActive: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
+    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     panelHeaderBackground: darkBackground.lighten(0.15),
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',

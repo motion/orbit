@@ -87,7 +87,7 @@ export const fromColor = (bgName: string): ThemeObject | null => {
 
 // generate some properly contrasted colors based on base colors
 // insert theme into psuedo styles for Blur Active and ActiveHighlight
-export const fromStyles = <A>(s: Partial<SimpleStyleObject>): ThemeObject & A => {
+export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObject & A => {
   if (!s.background && !s.color) {
     throw new Error('Themes require at least background or color')
   }

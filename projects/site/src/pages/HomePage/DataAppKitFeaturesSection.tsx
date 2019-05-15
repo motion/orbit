@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 
 import orbits from '../../../public/images/orbits.svg'
 import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
+import { linkProps } from '../../LinkState'
 import { useSiteStore } from '../../SiteStore'
 import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -12,7 +13,6 @@ import { TitleText } from '../../views/TitleText'
 import { apps } from './apps'
 import { BodyButton } from './BodyButton'
 import { GradientDown } from './GradientDown'
-import { linkProps } from "../../LinkState";
 import { blackWavePattern } from './purpleWaveUrl'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
@@ -55,7 +55,7 @@ export default memo(function DataAppKitFeaturesSection() {
         <Page.Content ref={FadeDataApps.ref} height={sectionHeight * 2}>
           <SpacedPageContent
             maxHeight={100000}
-            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : ['0', 0, '6%']}
+            margin={isTiny ? 0 : screen === 'small' ? ['-33%', 0, '10%'] : 0}
             height="auto"
             header={
               <>

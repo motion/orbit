@@ -7,7 +7,7 @@ import { animated, useSpring } from 'react-spring'
 import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
-import { linkProps } from "../../LinkState";
+import { linkProps } from '../../LinkState'
 import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -446,9 +446,17 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.4}
-          transform={{ y: '-10%', scale: 2.4 }}
-          background="radial-gradient(circle closest-side, #4A00A899 20%, #750750, transparent)"
+          opacity={0.1}
+          transform={{ y: '-20%', x: '-20%', scale: 1.5 }}
+          background="radial-gradient(circle closest-side, #00CD87 20%, #D80070, transparent)"
+        />
+      </Page.Parallax>
+
+      <Page.Parallax speed={1} zIndex={-1}>
+        <FullScreen
+          opacity={0.1}
+          transform={{ y: '30%', x: '40%', scale: 1.8 }}
+          background="radial-gradient(circle closest-side, #FF7F19 20%, #D80070, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

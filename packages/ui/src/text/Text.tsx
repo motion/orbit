@@ -144,16 +144,21 @@ export class Text extends React.PureComponent<TextProps> {
     return (this.node && this.node.innerText) || ''
   }
 
+  finishEdit = (value: string) => {
+    const { onFinishEdit } = this.props
+    if (onFinishEdit) {
+      onFinishEdit(value, event)
+    }
+    this.setState({ isEditing: false })
+  }
+
   handleKeydown = event => {
-    const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
+    const { onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
       const code = keycode(event)
       if (code === 'enter') {
         event.preventDefault()
-        if (onFinishEdit) {
-          onFinishEdit(this.value, event)
-          this.setState({ isEditing: false })
-        }
+        this.finishEdit(this.value)
       }
       if (code === 'esc') {
         event.preventDefault()
@@ -178,6 +183,10 @@ export class Text extends React.PureComponent<TextProps> {
         isEditing: true,
       })
     }
+  }
+
+  onBlur = () => {
+    this.finishEdit(this.value)
   }
 
   render() {
@@ -281,6 +290,7 @@ export class Text extends React.PureComponent<TextProps> {
         tagName={tagName}
         {...Config.defaultProps.text}
         contentEditable={editable && this.state.isEditing}
+        onBlur={this.onBlur}
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}

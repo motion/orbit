@@ -1,6 +1,6 @@
 import { OR_TIMED_OUT, orTimeout } from '@o/utils'
 
-import { log } from './command-dev'
+import { reporter } from './reporter'
 
 process.on('exit', dispose)
 process.on('SIGINT', dispose)
@@ -17,30 +17,30 @@ export function addProcessDispose(fn: Function) {
 async function dispose() {
   // for some reason orTimeout wasnt returning after error
   let finaltm = setTimeout(() => {
-    log('exit all')
+    reporter.info('exit all')
     process.exit(0)
   }, 1000)
 
-  log('Disposing...', disposers.length)
+  reporter.info('Disposing...', disposers.length)
   if (disposers.length) {
     try {
       await orTimeout(
         Promise.all(
           disposers.map(dispose => {
-            log('dispose', dispose)
+            reporter.info('dispose', dispose)
             return dispose()
           }),
         ),
         1000,
       )
       clearTimeout(finaltm)
-      log(`done disposing all, bye`)
+      reporter.info(`done disposing all, bye`)
     } catch (err) {
       if (err === OR_TIMED_OUT) {
-        log('Timed out killing processes')
+        reporter.info('Timed out killing processes')
       } else {
         console.log(`Error disposing ${err.message}`)
-        log(`${err.stack}`)
+        reporter.info(`${err.stack}`)
       }
     }
   }

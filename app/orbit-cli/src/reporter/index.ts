@@ -21,11 +21,16 @@ export const reporter: Reporter = {
    */
   stripIndent,
   format: chalk,
+  isVerbose: true,
+
   /**
    * Toggle verbosity.
    * @param {boolean} [isVerbose=true]
    */
-  setVerbose: (isVerbose = true) => reporterInstance.setVerbose(isVerbose),
+  setVerbose: (isVerbose = true) => {
+    reporter.isVerbose = isVerbose
+    reporterInstance.setVerbose(isVerbose)
+  },
   /**
    * Turn off colors in error output.
    * @param {boolean} [isNoColor=false]

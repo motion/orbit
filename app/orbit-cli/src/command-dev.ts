@@ -10,13 +10,11 @@ import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
 import { addProcessDispose } from './processDispose'
+import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 
-let verbose
-export const log = (...args) => verbose && console.log(...args)
-
 export async function commandDev(options: { projectRoot: string; verbose?: boolean }) {
-  verbose = options.verbose
+  reporter.setVerbose(options.verbose)
 
   let orbitDesktop = await getOrbitDesktop()
   try {
@@ -29,7 +27,7 @@ export async function commandDev(options: { projectRoot: string; verbose?: boole
     })
 
     addProcessDispose(async () => {
-      log('Disposing orbit dev process...')
+      reporter.info('Disposing orbit dev process...')
       await orbitDesktop.command(AppDevCloseCommand, {
         appId,
       })
@@ -99,7 +97,7 @@ async function runOrbitDesktop(): Promise<boolean> {
   let cwd = process.cwd()
 
   if (isInMonoRepo) {
-    console.log('\nDev mode: wait for webpack. Start with `run orbit-app`...')
+    reporter.info('\nDev mode: wait for webpack. Start with `run orbit-app`...')
     await waitOn({ resources: [`http://localhost:3999`], interval: 150 })
     const monoRoot = join(__dirname, '..', '..', '..')
     const script = join(monoRoot, 'app', 'orbit-main', 'scripts', 'run-orbit.sh')
@@ -107,12 +105,12 @@ async function runOrbitDesktop(): Promise<boolean> {
     cmd = `./${relative(cwd, script)}`
     configStore.orbitMainPath.set(cmd)
   } else if (!cmd) {
-    log('No orbit path found, searching...')
+    reporter.info('No orbit path found, searching...')
   }
 
   if (cmd) {
     try {
-      log('Running Orbit', cmd, cwd)
+      reporter.info('Running Orbit', cmd, cwd)
       const child = execa(cmd, [], {
         detached: true,
         cwd,
@@ -125,7 +123,7 @@ async function runOrbitDesktop(): Promise<boolean> {
         },
       })
 
-      if (verbose) {
+      if (reporter.isVerbose) {
         child.stdout.pipe(process.stdout)
         child.stderr.pipe(process.stderr)
       }

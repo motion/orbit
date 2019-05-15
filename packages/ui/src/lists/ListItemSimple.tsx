@@ -145,6 +145,9 @@ export type ListItemSpecificProps = ListItemHide & {
   /** Called when `editable` and after editing a title */
   onEdit?: (nextTitle: string) => any
 
+  /** Called when `editable` and cancelled editing a title */
+  onCancelEdit?: (nextTitle: string) => any
+
   /** Called when `editable` and start editing a title */
   onStartEdit?: () => any
 }
@@ -194,6 +197,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     editable,
     onEdit,
     onStartEdit,
+    onCancelEdit,
     ...surfaceProps
   } = props
   const theme = useTheme()
@@ -301,6 +305,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                 autoselect
                 editable={editable}
                 onFinishEdit={onEdit}
+                onCancelEdit={onCancelEdit}
                 onStartEdit={onStartEdit}
                 flex={1}
                 ellipse

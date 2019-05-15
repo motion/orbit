@@ -110,7 +110,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     if (rest.onStartEdit) {
       rest.onStartEdit()
     }
-  }, [props.alt, rest.onStartEdit])
+  }, [rest.onStartEdit])
 
   const onEditCb = useCallback(
     a => {
@@ -119,7 +119,17 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
         rest.onEdit(a)
       }
     },
-    [props.alt, rest.onEdit],
+    [rest.onEdit],
+  )
+
+  const onCancelEditCb = useCallback(
+    a => {
+      setIsEditing(false)
+      if (rest.onCancelEdit) {
+        rest.onCancelEdit(a)
+      }
+    },
+    [rest.onCancelEdit],
   )
 
   return (
@@ -133,6 +143,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
           {...rest}
           onStartEdit={onStartEditCb}
           onEdit={onEditCb}
+          onCancelEdit={onCancelEditCb}
           icon={icon}
           date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
           location={normalized ? normalized.location : props.location}

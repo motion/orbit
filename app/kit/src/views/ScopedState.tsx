@@ -1,12 +1,25 @@
 import { createContextualProps } from '@o/ui'
+import React from 'react'
 
-const ScopedStateContext = createContextualProps({
+type ScopedStateProps = {
+  id: string
+}
+
+const Context = createContextualProps<ScopedStateProps>({
   id: '',
 })
 
 export const useScopedStateId = () => {
-  const val = ScopedStateContext.useProps()
+  const val = Context.useProps()
   return (val && val.id) || ''
 }
 
-export const ScopedState = ScopedStateContext.PassProps
+// nests downwards...
+export const ScopedState = (props: ScopedStateProps & { children?: any }) => {
+  const existing = Context.useProps()
+  return (
+    <Context.PassProps id={`${existing ? existing.id : ''}${props.id}`}>
+      {props.children}
+    </Context.PassProps>
+  )
+}

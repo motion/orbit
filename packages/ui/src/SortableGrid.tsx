@@ -1,11 +1,7 @@
+import { SortableContainer, SortableContainerProps, SortableElement, SortableElementProps } from '@o/react-sortable-hoc'
 import { Grid } from 'gloss'
-import {
-  SortableContainer,
-  SortableContainerProps,
-  SortableElement,
-  SortableElementProps,
-} from '@o/react-sortable-hoc'
 import React from 'react'
+
 import { isRightClick } from './helpers/isRightClick'
 import { View, ViewProps } from './View/View'
 
@@ -54,5 +50,7 @@ const SortableGridInner = SortableContainer(
 )
 
 export function SortableGrid(props: SortableGridProps<any>) {
-  return <SortableGridInner shouldCancelStart={isRightClick} axis="xy" {...props} />
+  return (
+    <SortableGridInner sortable={false} shouldCancelStart={isRightClick} axis="xy" {...props} />
+  )
 }

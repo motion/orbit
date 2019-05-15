@@ -5,6 +5,8 @@
  * @format
  */
 
+export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
+
 export type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>

@@ -82,7 +82,7 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
-    console.log('share', items)
+    console.log('main select', items)
     items = !items || Object.keys(items).length === 0 ? null : items
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null
@@ -120,7 +120,11 @@ export const OrbitAppRenderOfDefinition = ({
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  <FinalAppView {...activeItem} identifier={identifier} id={id} />
+                  <FinalAppView
+                    {...activeItem}
+                    identifier={activeItem && activeItem.identifier || identifier}
+                    id={activeItem && activeItem.id || id}
+                  />
                 </FadeIn>
               )}
             </Suspense>

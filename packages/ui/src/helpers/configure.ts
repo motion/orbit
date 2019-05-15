@@ -8,9 +8,8 @@ import { ListItemProps } from '../lists/ListItem'
 import { ListItemViewProps } from '../lists/ListItemViewProps'
 import { SimpleTextProps } from '../text/SimpleText'
 import { TitleProps } from '../text/Title'
+import { ImmutableUpdateFn } from '../types'
 import { Bit } from './BitLike'
-
-export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
 
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces

@@ -1,6 +1,6 @@
 import { isDefined } from '@o/utils'
 import { gloss, Theme } from 'gloss'
-import React, { forwardRef, useCallback, useEffect, useState } from 'react'
+import React, { forwardRef, useCallback, useState } from 'react'
 
 import { ProvideFocus } from '../Focus'
 import { Bit } from '../helpers/BitLike'

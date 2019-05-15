@@ -5,6 +5,7 @@ export const configureHotKeys = HotKeys['configure']
 
 export { default as allIcons } from './icons'
 
+export { ImmutableUpdateFn } from './types'
 export * from '@o/color'
 export {
   Absolute,

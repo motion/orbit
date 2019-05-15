@@ -64,8 +64,8 @@ fi
 if [[ "$FLAGS" =~ "--no-app" ]]; then
   echo "DISABLE APP"
 else
-  if [ "$1" = "start-prod" ]; then
-    ../orbit-app/scripts/start.sh start-prod &
+  if [ "$1" = "start:prod" ]; then
+    ../orbit-app/scripts/start.sh start:prod &
   else
     ../orbit-app/scripts/start.sh &
   fi

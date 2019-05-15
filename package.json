@@ -14,7 +14,7 @@
     "clean": "source .env && clean",
     "clean-packages": "source .env && clean -all",
     "start": "cd app/orbit && npm start",
-    "start-prod": "cd app/orbit && npm run start-prod",
+    "start:prod": "cd app/orbit && npm run start:prod",
     "build-app": "cd app/build-orbit && npm run build-app",
     "build-app-resume": "cd app/build-orbit && npm run build-app-resume",
     "publish-app": "cd app/build-orbit && npm run publish",

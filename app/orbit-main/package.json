@@ -7,7 +7,7 @@
   "scripts": {
     "start": "./scripts/start.sh",
     "start-no-watch": "./scripts/start.sh --disable-watch",
-    "start-prod": "./scripts/start.sh start-prod",
+    "start:prod": "./scripts/start.sh start:prod",
     "build-app": "cd ../build-orbit && npm run build-app",
     "debug": "electron --require ndb-inspect ./_/main.js"
   },

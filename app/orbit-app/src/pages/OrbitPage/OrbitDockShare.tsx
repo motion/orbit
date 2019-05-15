@@ -1,10 +1,9 @@
-import { FloatingCard, List, Tabs, usePosition } from '@o/ui'
+import { DockButton, FloatingCard, List, Tabs, usePosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
 
 import { orbitStaticApps } from '../../apps/orbitApps'
 import { useOm } from '../../om/om'
-import { DockButton } from './Dock'
 
 export const isStaticApp = (identifier: string) => {
   return !!orbitStaticApps.find(x => x.id === identifier)

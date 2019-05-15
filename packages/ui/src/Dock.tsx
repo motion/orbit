@@ -1,7 +1,10 @@
-import { createStoreContext, selectDefined, useStore } from '@o/kit'
-import { Button, ButtonProps, Row } from '@o/ui'
-import React, { memo, useLayoutEffect, useState } from 'react'
+import { createStoreContext, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
+import React, { memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
+
+import { Button, ButtonProps } from './buttons/Button'
+import { Row } from './View/Row'
 
 class DockStore {
   key = 0

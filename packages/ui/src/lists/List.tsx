@@ -3,6 +3,7 @@ import { isDefined } from '@o/utils'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
+import { Button } from '../buttons/Button'
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
@@ -43,6 +44,12 @@ export type ListProps = SectionSpecificProps &
 
     /** On selection, automatically update Share with selection */
     shareable?: boolean | string
+
+    /** Shows a delete action next to item, calls onDelete when pressed */
+    deletable?: boolean
+
+    /** Called on pressing delete action */
+    onDelete?: (row: any, index: number) => any
 
     // flex?: CSSPropertySet['flex']
   }
@@ -90,6 +97,8 @@ export const List = memo((allProps: ListProps) => {
     getItemProps,
     search,
     shareable,
+    deletable,
+    onDelete,
     onSelect: _ignoreOnSelect,
     ...restProps
   } = listProps
@@ -148,14 +157,38 @@ export const List = memo((allProps: ListProps) => {
     })
   }, [onOpen, shortcutStore, shortcutStore, selectableStore])
 
-  const getItemPropsInner = useCallback((a, b, c) => {
+  const getItemPropsRaw: VirtualListProps['getItemProps'] = (a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
     const itemExtraProps = getItemPropsGet()(normalized, b, c)
     const filterExtraProps = filteredGetItemProps(a, b, c)
-    const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps }
+    const deleteProps: ListItemProps = deletable
+      ? {
+          after: (
+            <>
+              {itemExtraProps && itemExtraProps.after}
+              {
+                <Button
+                  alt="simpleGray"
+                  chromeless
+                  circular
+                  icon="cross"
+                  onMouseDown={e => {
+                    e.stopPropagation()
+                  }}
+                  onClick={() => {
+                    onDelete(a, b)
+                  }}
+                />
+              }
+            </>
+          ),
+        }
+      : null
+    const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps, ...deleteProps }
     return itemProps
-  }, [])
+  }
+  const getItemPropsInner = useCallback(getItemPropsRaw, [deletable])
 
   const onOpenInner: HandleSelection = useCallback(
     index => {

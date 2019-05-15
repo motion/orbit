@@ -1,29 +1,43 @@
-import { App, AppProps, createApp, Templates, useActiveDataAppsWithDefinition, useAppState, useAppWithDefinition } from '@o/kit'
-import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
-import { remove } from 'lodash'
+import { App, AppProps, createApp, Templates, TreeList, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
+import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, View } from '@o/ui'
+import { capitalize, remove } from 'lodash'
 import React from 'react'
-
-import { getAppListItem } from './apps/getAppListItem'
 
 export default createApp({
   id: 'data-explorer',
   name: 'Query Builder',
   icon: '',
   app: props => (
-    <App index={<DataExplorerIndex />}>
+    <App index={<QueryBuilderIndex />}>
       <DataExplorerMain {...props} />
     </App>
   ),
 })
 
-function DataExplorerIndex() {
-  const dataApps = useActiveDataAppsWithDefinition()
+// const dataApps = useActiveDataAppsWithDefinition()
+// items={[...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' }))].filter(Boolean)}
+
+const treeId = 'my-tree-list'
+
+export function QueryBuilderIndex() {
+  const treeList = useTreeList(treeId)
+
   return (
-    <List
-      titleBorder
-      title="Query Builder"
-      items={[...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' }))].filter(Boolean)}
-    />
+    <>
+      <TreeList editable deletable use={treeList} sortable />
+
+      <Dock position="absolute">
+        <DockButton
+          id="add"
+          icon="plus"
+          onClick={() => {
+            const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
+            console.log('name', name)
+            treeList.actions.addItem(name)
+          }}
+        />
+      </Dock>
+    </>
   )
 }
 

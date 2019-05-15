@@ -1,7 +1,7 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
 import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useGet, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
@@ -37,16 +37,18 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
   }, [isActive, hasShownOnce])
 
   return (
-    <ProvideStores stores={{ appStore }}>
-      <ProvideVisibility visible={isActive}>
-        <OrbitAppRender
-          id={id}
-          identifier={identifier}
-          hasShownOnce={hasShownOnce || shown}
-          appDef={appDef}
-        />
-      </ProvideVisibility>
-    </ProvideStores>
+    <ScopedState id={`appstate-${identifier}-${id}-`}>
+      <ProvideStores stores={{ appStore }}>
+        <ProvideVisibility visible={isActive}>
+          <OrbitAppRender
+            id={id}
+            identifier={identifier}
+            hasShownOnce={hasShownOnce || shown}
+            appDef={appDef}
+          />
+        </ProvideVisibility>
+      </ProvideStores>
+    </ScopedState>
   )
 }
 
@@ -54,12 +56,10 @@ type AppRenderProps = OrbitAppProps
 
 const OrbitAppRender = memo((props: AppRenderProps) => {
   const appDef = props.appDef || getAppDefinition(props.identifier)
-
   if (appDef.app == null) {
     console.warn('no app', props)
     return null
   }
-
   return <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
 })
 

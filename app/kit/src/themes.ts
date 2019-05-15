@@ -18,11 +18,13 @@ export const colors = colorize({
   yellow: '#E2EB53',
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
+  gray: 'rgba(125, 125, 125, 0.5)',
 })
 
 const transparent = [0, 0, 0, 0]
 
 const colorThemes: ThemeSet = {
+  // light
   lightRed: fromStyles({
     glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
@@ -55,6 +57,7 @@ const colorThemes: ThemeSet = {
     iconColor: colors.darkOrange,
     background: colors.lightOrange,
   }),
+  // regular
   red: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
@@ -88,6 +91,43 @@ const colorThemes: ThemeSet = {
     background: transparent,
     backgroundHover: transparent,
     backgroundActive: transparent,
+  }),
+  // chromeless (just foreground color)
+  simpleBlue: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.blue,
+  }),
+  simpleYellow: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.yellow,
+  }),
+  simpleOrange: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.orange,
+  }),
+  simpleGreen: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.green,
+  }),
+  simpleRed: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.red,
+  }),
+  simpleGray: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.gray,
   }),
 }
 

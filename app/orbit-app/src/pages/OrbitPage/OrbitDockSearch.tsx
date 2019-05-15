@@ -1,8 +1,6 @@
 import { AppMainView, useActiveAppDefinition, useStore } from '@o/kit'
-import { Input, Modal, ProvideVisibility } from '@o/ui'
+import { DockButton, Input, Modal, ProvideVisibility } from '@o/ui'
 import React from 'react'
-
-import { DockButton } from './Dock'
 
 class OrbitSearch {
   open = false

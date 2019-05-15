@@ -150,7 +150,7 @@ export class SelectableStore {
   }
 
   selectFirstValid() {
-    const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
+    const firstValidIndex = this.rows.findIndex(x => x && x.selectable !== false)
     if (firstValidIndex === -1) {
       console.warn('no selecatble row!', this.rows)
       return

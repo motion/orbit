@@ -3,6 +3,7 @@ import { UserModel } from '@o/models'
 import { selectDefined } from '@o/utils'
 import { useCallback, useEffect } from 'react'
 
+import { useScopedStateId } from '../views/ScopedState'
 import { ScopedAppState } from './useAppState'
 
 // for storage of UI state that is per-user and not per-workspace
@@ -12,8 +13,15 @@ import { ScopedAppState } from './useAppState'
 
 export type ScopedUserState<A> = ScopedAppState<A>
 
-export function useUserState<A>(uid: string, defaultState?: A): ScopedUserState<A> {
+export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A> {
+  // scope state id
+  const scopedId = useScopedStateId()
+  const uid = `${scopedId}${id}`
+
+  // ensure default state
   useEnsureDefaultUserState<A>(uid, defaultState)
+
+  // state
   const [state, update] = useModel(UserModel)
 
   const updateFn = useCallback(cb => {

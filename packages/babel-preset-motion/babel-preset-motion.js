@@ -18,7 +18,7 @@ module.exports = function(_, givenOpts) {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
       plug('gloss-displaynames', opts.glossDisplayNameConfig || {}),
-      plug('gloss-babel-optimize'),
+      // plug('gloss-babel-optimize'),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {

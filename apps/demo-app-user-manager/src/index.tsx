@@ -28,7 +28,7 @@ export function DemoAppUserManager() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <Row space spaceAround pad>
+              <Row space="sm" pad="sm">
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />

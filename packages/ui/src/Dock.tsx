@@ -50,13 +50,13 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
   return (
     <Flipped flipId={id}>
       <Button
-        size="xxl"
+        size="xl"
         width={50}
         height={50}
         marginLeft={15}
         {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         circular
-        iconSize={16}
+        iconSize={18}
         elevation={4}
         badgeProps={{
           background: '#333',

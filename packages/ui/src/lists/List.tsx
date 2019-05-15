@@ -51,6 +51,12 @@ export type ListProps = SectionSpecificProps &
     /** Called on pressing delete action */
     onDelete?: (row: any, index: number) => any
 
+    /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
+    editable?: boolean
+
+    /** Called on when `editable` and after editing a title */
+    onEdit?: (item: any, nextTitle: string) => any
+
     // flex?: CSSPropertySet['flex']
   }
 
@@ -99,6 +105,8 @@ export const List = memo((allProps: ListProps) => {
     shareable,
     deletable,
     onDelete,
+    editable,
+    onEdit,
     onSelect: _ignoreOnSelect,
     ...restProps
   } = listProps
@@ -185,10 +193,18 @@ export const List = memo((allProps: ListProps) => {
           ),
         }
       : null
-    const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps, ...deleteProps }
+
+    const itemProps = {
+      editable,
+      onEdit: onEdit ? title => onEdit(a, title) : undefined,
+      ...normalized,
+      ...itemExtraProps,
+      ...filterExtraProps,
+      ...deleteProps,
+    }
     return itemProps
   }
-  const getItemPropsInner = useCallback(getItemPropsRaw, [deletable])
+  const getItemPropsInner = useCallback(getItemPropsRaw, [deletable, editable, onEdit])
 
   const onOpenInner: HandleSelection = useCallback(
     index => {

@@ -137,6 +137,12 @@ export type ListItemSpecificProps = ListItemHide & {
 
   /** For use with automatic separator generation, when using `<List />` */
   group?: string
+
+  /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
+  editable?: boolean
+
+  /** Called on when `editable` and after editing a title */
+  onEdit?: (nextTitle: string) => any
 }
 
 export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
@@ -181,6 +187,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     alignItems,
     selectable,
     hideBorder,
+    editable,
+    onEdit,
     ...surfaceProps
   } = props
   const theme = useTheme()
@@ -283,7 +291,15 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                   <Space size="sm" />
                 </>
               )}
-              <HighlightText flex={1} ellipse fontWeight={theme.fontWeight || 400} {...titleProps}>
+              <HighlightText
+                autoselect
+                editable={editable}
+                onFinishEdit={onEdit}
+                flex={1}
+                ellipse
+                fontWeight={theme.fontWeight || 400}
+                {...titleProps}
+              >
                 {title}
               </HighlightText>
               {!!(props.afterTitle || afterHeaderElement) && <Space size={pad} />}

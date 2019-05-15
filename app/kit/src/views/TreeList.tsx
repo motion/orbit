@@ -74,6 +74,13 @@ const getActions = (
         }
       })
     },
+    updateItem(item: TreeItem) {
+      const update = treeState()[1]
+      update(next => {
+        const id = item.id
+        next.items[id] = item
+      })
+    },
     sort(oldIndex: number, newIndex: number) {
       const update = treeState()[1]
       update(next => {
@@ -198,13 +205,27 @@ export function TreeList(props: TreeListProps) {
     [useTree],
   )
 
+  const handleEditTitle = useCallback(
+    (item: TreeItem, name: string) => {
+      item.name = name
+      useTree.actions.updateItem(item)
+    },
+    [useTree],
+  )
+
   if (!items) {
     return null
   }
 
   return (
     <HighlightActiveQuery query={query}>
-      <List onSortEnd={handleSortEnd} {...rest} onDelete={handleDelete} items={loadedItems} />
+      <List
+        onEdit={handleEditTitle}
+        onSortEnd={handleSortEnd}
+        {...rest}
+        onDelete={handleDelete}
+        items={loadedItems}
+      />
     </HighlightActiveQuery>
   )
 }

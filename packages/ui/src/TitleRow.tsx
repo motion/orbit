@@ -1,4 +1,3 @@
-import { linearGradient } from '@o/color'
 import { gloss } from 'gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
@@ -143,11 +142,7 @@ export const TitleRow = themeable(
 )
 
 const titleRowBg = theme => {
-  return linearGradient(
-    '40deg',
-    theme.backgroundStrong || theme.background.lighten(0.1),
-    theme.background,
-  )
+  return theme.backgroundStrong
 }
 
 const TitleRowChrome = gloss(Col, {

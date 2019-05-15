@@ -24,7 +24,7 @@ export function QueryBuilderIndex() {
 
   return (
     <>
-      <TreeList editable deletable use={treeList} sortable />
+      <TreeList backgrounded title="Queries" editable deletable use={treeList} sortable />
 
       <Dock position="absolute">
         <DockButton

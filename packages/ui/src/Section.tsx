@@ -69,6 +69,8 @@ const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
+const defaultTitlePad = ['lg', true, 'sm']
+
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
   const [collapseProps, props] = splitCollapseProps(allProps)
@@ -136,7 +138,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
-          pad={selectDefined(titlePad, titleBorder || bordered ? selectDefined(pad, true) : null)}
+          pad={selectDefined(
+            titlePad,
+            titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,
+          )}
           size={selectDefined(titleSize, size)}
           titleProps={titleProps}
           useCollapse={collapse}

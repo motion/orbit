@@ -6,6 +6,7 @@ import execa from 'execa'
 import { pathExists, readJSON } from 'fs-extra'
 import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
 import { addProcessDispose } from './processDispose'
@@ -29,14 +30,9 @@ export async function commandDev(options: { projectRoot: string; verbose?: boole
 
     addProcessDispose(async () => {
       log('Disposing orbit dev process...')
-      orbitDesktop.command(AppDevCloseCommand, {
+      await orbitDesktop.command(AppDevCloseCommand, {
         appId,
       })
-      await sleep(20)
-      // await orTimeout(
-      //   ,
-      //   500,
-      // )
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
@@ -103,6 +99,8 @@ async function runOrbitDesktop(): Promise<boolean> {
   let cwd = process.cwd()
 
   if (isInMonoRepo) {
+    console.log('\nDev mode: wait for webpack. Start with `run orbit-app`...')
+    await waitOn({ resources: [`http://localhost:3999`], interval: 150 })
     const monoRoot = join(__dirname, '..', '..', '..')
     const script = join(monoRoot, 'app', 'orbit-main', 'scripts', 'run-orbit.sh')
     cwd = join(script, '..', '..')

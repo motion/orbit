@@ -28,7 +28,6 @@ function main() {
         }),
       async argv => {
         let projectRoot = Path.resolve(cwd, argv.app)
-        console.log('argv', argv)
         commandDev({ projectRoot, verbose: !!argv.verbose })
       },
     )

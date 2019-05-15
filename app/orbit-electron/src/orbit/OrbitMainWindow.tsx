@@ -136,12 +136,6 @@ class OrbitMainWindowStore {
     return this.initialShow ? App.orbitState.docked : false
   }
 
-  // just set this here for devtools opening,
-  // we are doing weird stuff with focus
-  handleFocus = () => {
-    Electron.setState({ focusedAppId: 'app' })
-  }
-
   setInitialShow = () => {
     this.initialShow = true
   }
@@ -200,7 +194,6 @@ export function OrbitMainWindow() {
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}
-      onFocus={store.handleFocus}
       showDevTools={store.showDevTools}
       vibrancy={store.vibrancy}
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}

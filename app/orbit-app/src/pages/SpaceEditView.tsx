@@ -59,7 +59,6 @@ export default function SpaceEditView(props: Props) {
     await save(AppModel, listsApp)
 
     store.values = { name: '', colors: [] }
-    AppActions.clearPeek()
   }
 
   const handleChange = (prop: keyof Space) => (val: Space[typeof prop]) => {

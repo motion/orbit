@@ -3,8 +3,8 @@ import { App, Desktop, Electron } from '@o/stores'
 import { MergeContext, View } from '@o/ui'
 import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
-import { createRef } from 'react'
 import * as React from 'react'
+import { createRef } from 'react'
 
 import { AppActions } from '../../../actions/AppActions'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
@@ -281,7 +281,7 @@ export class MenuStore {
     () => this.activeMenuIndex === -1,
     isClosed => {
       ensure('isClosed', isClosed)
-      AppActions.clearPeek()
+      // AppActions.clearPeek()
     },
   )
 

@@ -277,10 +277,10 @@ const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flex: 1,
   height: '100%',
   alignItems: 'center',
-  justifyContent: 'flex-start',
+  justifyContent: 'flex-end',
   minWidth: 'max-content',
   rightSide: {
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
   },
 })
 

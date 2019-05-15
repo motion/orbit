@@ -180,7 +180,7 @@ export function gloss<Props = any>(
           continue
         }
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
-        if (key === 'size' && props[key] === true) {
+        if (key === 'size' && typeof props[key] !== 'string') {
           continue
         }
         if (isDOMElement) {

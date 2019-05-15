@@ -640,6 +640,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
 
+    if (typeof zIndex !== 'number') {
+      debugger
+    }
+
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
         <div

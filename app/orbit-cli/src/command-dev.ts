@@ -17,6 +17,11 @@ export async function commandDev(options: { projectRoot: string; verbose?: boole
   reporter.setVerbose(options.verbose)
 
   let orbitDesktop = await getOrbitDesktop()
+
+  if (!orbitDesktop) {
+    process.exit(0)
+  }
+
   try {
     const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: options.projectRoot,

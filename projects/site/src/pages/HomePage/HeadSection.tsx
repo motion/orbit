@@ -9,7 +9,7 @@ import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
-import { linkProps } from './linkProps'
+import { linkProps } from "../../LinkState";
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />

@@ -4,7 +4,6 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
 import { useIsTiny } from '../hooks/useScreenSize'
-import { getRecentHMR } from '../SiteRoot'
 
 export type FadeInProps = UseSpringProps<any> & {
   delay?: number
@@ -138,7 +137,7 @@ export const useSimpleFade = ({
   useEffect(() => {}, [])
 
   // disable animations on recent hmr
-  const disable = hasMounted.current || getRecentHMR() || off
+  const disable = hasMounted.current || window['recentHMR'] || off
   return useSpring(
     spring || {
       from: disable ? to : from,

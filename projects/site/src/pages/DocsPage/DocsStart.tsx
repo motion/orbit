@@ -2,7 +2,7 @@ import { Button, CardProps, Col, Grid, Icon, Section, TiltCard } from '@o/ui'
 import React from 'react'
 
 import { themes } from '../../themes'
-import { linkProps } from '../HomePage/linkProps'
+import { linkProps } from "../../LinkState";
 
 const examples = [
   { title: 'Building an App', subTitle: 'Something', colors: themes.lightOrange, icon: 'home' },

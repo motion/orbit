@@ -12,7 +12,7 @@ import { TitleText } from '../../views/TitleText'
 import { apps } from './apps'
 import { BodyButton } from './BodyButton'
 import { GradientDown } from './GradientDown'
-import { linkProps } from './linkProps'
+import { linkProps } from "../../LinkState";
 import { blackWavePattern } from './purpleWaveUrl'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'

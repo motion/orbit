@@ -1,4 +1,4 @@
-import { createBrowserNavigation, lazy, mount, route } from 'navi'
+import { createBrowserNavigation, lazy, mount } from 'navi'
 import React from 'react'
 
 import { HomePage } from './pages/HomePage'
@@ -48,4 +48,6 @@ Navigation.subscribe(next => {
   }
 })
 
+// WARNING we had crazy circular dependencies, quick fix is here... see LinkState
 window['Navigation'] = Navigation
+window['routeTable'] = routeTable

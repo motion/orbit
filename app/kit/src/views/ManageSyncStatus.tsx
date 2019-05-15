@@ -2,8 +2,10 @@ import { command } from '@o/bridge'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
 import { Button, Space, SpaceGroup, Text, View } from '@o/ui'
 import * as React from 'react'
-import { useAppSyncState, useJobs } from '../'
+
 import { removeApp } from '../helpers/removeApp'
+import { useAppSyncState } from '../hooks/useAppSyncState'
+import { useJobs } from '../hooks/useJobs'
 
 const handleRefresh = async (appId: number) => {
   command(AppForceSyncCommand, {

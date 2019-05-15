@@ -22,6 +22,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 // const { PrepackPlugin } = require('prepack-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -61,6 +62,12 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || flags.entry || readPackage('main') || './src/index.ts'
 
+const NO_OPTIMIZE = process.env.NO_OPTIMIZE
+const IS_RUNNING = process.env.IS_RUNNING
+
+const target = flags.target || 'electron-renderer'
+const shouldExtractCSS = target !== 'node' && isProd && !IS_RUNNING
+
 //   eval-source-map (causes errors to not show stack trace in react development...)
 //   cheap-source-map (no line numbers...)
 //   cheap-module-eval-source-map (seems alright in both...)
@@ -78,7 +85,6 @@ const buildNodeModules = [
   Path.join(__dirname, '..', '..', '..', 'node_modules'),
 ]
 
-const target = flags.target || 'electron-renderer'
 const defines = {
   'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
@@ -90,7 +96,7 @@ const defines = {
 
 console.log(
   'webpack info',
-  (process.env.NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
+  (NO_OPTIMIZE && 'NO_OPTIMIZE!!') || '',
   JSON.stringify(
     { buildNodeModules, entry, outputPath, target, isProd, tsConfig, defines },
     null,
@@ -190,7 +196,7 @@ async function makeConfig() {
             electron: '{}',
           }
         : {},
-    optimization: process.env.NO_OPTIMIZE
+    optimization: NO_OPTIMIZE
       ? {
           minimize: false,
         }
@@ -206,19 +212,21 @@ async function makeConfig() {
     },
     devServer: {
       clientLogLevel: 'error',
-      stats: {
-        hash: false,
-        reasons: false,
-        version: false,
-        timings: false,
-        assets: false,
-        chunks: false,
-        source: false,
-        errors: true,
-        errorDetails: false,
-        warnings: false,
-        colors: true,
-      },
+      stats: isProd
+        ? true
+        : {
+            hash: false,
+            reasons: false,
+            version: false,
+            timings: false,
+            assets: false,
+            chunks: false,
+            source: false,
+            errors: true,
+            errorDetails: false,
+            warnings: false,
+            colors: true,
+          },
       historyApiFallback: true,
       hot: !flags.disableHMR && !isProd,
       headers: {
@@ -278,10 +286,10 @@ async function makeConfig() {
         {
           test: /\.css$/,
           use: [
-            isProd && {
+            shouldExtractCSS && {
               loader: MiniCssExtractPlugin.loader,
             },
-            !isProd && {
+            !shouldExtractCSS && {
               loader: 'style-loader',
             },
             'css-loader',
@@ -352,24 +360,27 @@ async function makeConfig() {
           favicon: 'public/favicon.png',
           template: 'public/index.html',
           chunksSortMode: 'none',
-          ...(isProd && {
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            },
-          }),
+          ...(isProd &&
+            !NO_OPTIMIZE && {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }),
         }),
 
       // WARNING: this may or may not work wiht code splitting
-      // i was seeing all the chunks loaded inline in HTML, when it shouldn't have
+      // i was seeing all the chunks loaded inline in HTML
+      // this was causing bad perf metrics in testing, and also slower rendering as you first
+      // start browsing the page because its loading so much
       // new PreloadWebpackPlugin({
       //   rel: 'preload',
       // }),
@@ -378,15 +389,13 @@ async function makeConfig() {
         isProd &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
-      target !== 'node' &&
-        isProd &&
+      shouldExtractCSS && // dont extract css when running directly
         new MiniCssExtractPlugin({
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
 
-      target !== 'node' &&
-        isProd &&
+      shouldExtractCSS &&
         target === 'web' &&
         new HtmlCriticalWebpackPlugin({
           base: outputPath,
@@ -416,6 +425,10 @@ async function makeConfig() {
       !isProd && new webpack.NamedModulesPlugin(),
 
       isProd && new DuplicatePackageCheckerPlugin(),
+
+      new CircularDependencyPlugin({
+        // failOnError: true,
+      }),
 
       // !process.env['ANALYZE_BUNDLE'] &&
       //   isProd &&

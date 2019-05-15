@@ -12,7 +12,7 @@ import { FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { docsItems } from './docsItems'
 import { Example } from './DocsPage/Example'
-import { linkProps } from './HomePage/linkProps'
+import { linkProps } from "../LinkState";
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { PropsTable } from './PropsTable'
 

@@ -1,9 +1,9 @@
 import orbit from '!raw-loader!../../public/images/logomark-solid.svg'
 import { gloss, useTheme } from 'gloss'
 import { SVG, View, ViewProps } from '@o/ui'
-import React, { memo, useRef } from 'react'
+import React, { memo } from 'react'
 
-import { useLink } from '../pages/HomePage/linkProps'
+import { useLink } from "../LinkState";
 
 export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
   const theme = useTheme()

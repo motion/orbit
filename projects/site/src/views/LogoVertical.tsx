@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import { useNavigation } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { useParallax } from '../pages/HomePage'
+import { useParallax } from '../pages/ParallaxContext'
 
 let logoScales = {
   small: 0.7,

@@ -1,8 +1,10 @@
 import memoize from 'memoize-weak'
 import { useCurrentRoute } from 'react-navi'
 
-import { Navigation, routeTable } from '../../Navigation'
-import { HeaderContext } from '../../views/HeaderContext'
+import { HeaderContext } from './views/HeaderContext'
+
+const Navigation = window['Navigation']
+const routeTable = window['routeTable']
 
 export const LinkState = {
   didAnimateOut: true,
@@ -14,7 +16,6 @@ export const useIsActiveRoute = (href: string) => {
   const route = useCurrentRoute()
   return isOnRoute(href, route)
 }
-
 const nullLink = e => e.preventDefault()
 const loadedRoutes = {}
 
@@ -70,7 +71,11 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
 
 export const linkProps = (
   href: string,
-  opts: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
+  opts: {
+    header?: any
+    isActive?: boolean
+    isExternal?: boolean
+  } = {},
 ): any => {
   return {
     href,
@@ -83,5 +88,4 @@ export const linkProps = (
     onMouseEnter: createPreloadLink(href),
   }
 }
-
 const checkExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

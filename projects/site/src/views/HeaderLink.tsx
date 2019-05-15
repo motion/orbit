@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { LinkState } from '../pages/HomePage/linkProps'
+import { LinkState } from "../LinkState";
 import { FadeChild, fastConfig, fastStatticConfig } from './FadeIn'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './LinkProps'

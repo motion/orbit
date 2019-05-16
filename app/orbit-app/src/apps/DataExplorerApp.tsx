@@ -3,7 +3,7 @@ import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, ra
 import { capitalize, remove } from 'lodash'
 import React, { useCallback, useEffect, useRef } from 'react'
 
-import { AppIconContainer, LargeIcon, OrbitAppIcon } from '../views/OrbitAppIcon'
+import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { StackNav, StackNavigator } from './StackNavigator'
 
 export default createApp({
@@ -65,7 +65,18 @@ function QueryBuilderSelectApp(props: AppProps) {
   const getActiveApps = useGet(dataApps)
   console.log('props', props)
   return (
-    <Section pad="xl" titlePad="lg" backgrounded title={props.title}>
+    <Section
+      pad="xl"
+      titlePad="lg"
+      backgrounded
+      title={props.title}
+      subTitle="Select data app."
+      afterTitle={
+        <>
+          <Button disabled>Next</Button>
+        </>
+      }
+    >
       <SelectableGrid
         minWidth={180}
         items={[
@@ -81,14 +92,6 @@ function QueryBuilderSelectApp(props: AppProps) {
           })),
         ]}
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
-          if (item.type === 'add') {
-            // TODO on click to new app pane
-            return (
-              <AppIconContainer onClick={onClick} onDoubleClick={onDoubleClick}>
-                <LargeIcon {...item} />
-              </AppIconContainer>
-            )
-          }
           return (
             <OrbitAppIcon
               app={getActiveApps().find(x => x.id === item.id)}

@@ -1,5 +1,5 @@
 import { AppBit } from '@o/models'
-import { IconProps, SVG, toColor, View } from '@o/ui'
+import { IconProps, SVG, toColor, useTheme, View } from '@o/ui'
 import React from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
@@ -17,19 +17,22 @@ export function AppIconInner({
 }: Partial<AppIconProps>) {
   // const theme = useTheme() props.color || theme.iconColor ||
   const fill = toColor('#fff').hex()
+  const theme = useTheme()
   let name = props.name
   let iconSrc
+  let svgProps
 
   if (!appIcons[name]) {
     let def = getAppDefinition(name)
     if (def) {
-      iconSrc = def.icon
+      iconSrc = theme.background.isDark() ? def.iconLight || def.icon : def.icon
     } else {
       name = name.indexOf('full') > 0 ? 'orbit-custom-full' : 'orbit-custom'
     }
   }
 
   if (!iconSrc) {
+    svgProps = { cleanup: true }
     iconSrc = `${appIcons[name]}`
     // colorize
     // warning: not having a string here literally causes a node level error....
@@ -47,7 +50,7 @@ export function AppIconInner({
       }}
       {...props}
     >
-      <SVG fill={`${fill}`} svg={iconSrc} width={`${size}px`} height={`${size}px`} cleanup />
+      <SVG fill={`${fill}`} svg={iconSrc} width={`${size}px`} height={`${size}px`} {...svgProps} />
     </View>
   )
 }

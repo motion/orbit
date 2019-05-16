@@ -226,7 +226,7 @@ export class SelectableStore {
     }
   }
 
-  isActiveIndex = (index: number) => {
+  isActiveIndex(index: number) {
     if (!this.rows.length || index >= this.rows.length) return false
     if (index === -1) return false
     return this.active.has(this.getIndexKey(index))

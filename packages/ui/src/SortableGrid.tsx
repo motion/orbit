@@ -13,6 +13,7 @@ export type SortableGridProps<A extends any> = SortableContainerProps &
     items?: A[]
     getItem?: GetGridItem<A>
     getSortableItemProps?: GetSortableItem<A>
+    sortable?: boolean
   }
 
 type SortableGridItemProps = {
@@ -31,7 +32,7 @@ class GridItem extends React.PureComponent<SortableGridItemProps> {
 const SortableItem = SortableElement(GridItem)
 
 const SortableGridInner = SortableContainer(
-  ({ items, getItem, getSortableItemProps, ...props }: any) => {
+  ({ items, getItem, getSortableItemProps, sortable, ...props }: any) => {
     return (
       <Grid autoFitRows autoFitColumns {...props}>
         {items.map((value, index) => (
@@ -41,6 +42,7 @@ const SortableGridInner = SortableContainer(
             realIndex={index}
             value={value}
             getItem={getItem}
+            disabled={!sortable}
             {...getSortableItemProps && getSortableItemProps(items[index], index)}
           />
         ))}

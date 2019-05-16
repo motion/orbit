@@ -1,30 +1,34 @@
 import { useStore } from '@o/use-store'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
-import { SelectableProps, SelectableStore } from './lists/SelectableStore'
+import { SelectableProps, SelectableStore, useSelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
+import { Omit } from './types'
 
-type SelectableGridProps<A> = SortableGridProps<A> &
+type SelectableGridProps<A> = Omit<SortableGridProps<A>, 'onSelect'> &
   SelectableProps & {
     getItem?: (item: A, { isSelected: boolean, select: Function }) => any
     selectableStore?: SelectableStore
   }
 
 export function SelectableGrid(props: SelectableGridProps<any>) {
-  const selectableStore = props.selectableStore || useStore(SelectableStore, props)
+  const store = useSelectableStore(props)
 
-  const itemViews = props.items.map((item, index) => {
-    // this is complex so we can do single updates on selection move
-    return function GridItem() {
-      const store = useStore(selectableStore)
-      return props.getItem(item, {
-        isSelected: store.isActiveIndex(index),
-        select: () => {
-          selectableStore.setRowMouseDown(index)
-        },
-      })
-    }
-  })
+  const itemViews = useMemo(() => {
+    return props.items.map((item, index) => {
+      // this is complex so we can do single updates on selection move
+      return function GridItem() {
+        const x = useStore(store)
+        const isSelected = x.isActiveIndex(index)
+        return props.getItem(item, {
+          isSelected,
+          select: () => {
+            x.setRowMouseDown(index)
+          },
+        })
+      }
+    })
+  }, [props.items])
 
   const getItem = useCallback(
     (_, index) => {
@@ -35,4 +39,8 @@ export function SelectableGrid(props: SelectableGridProps<any>) {
   )
 
   return <SortableGrid {...props} getItem={getItem} />
+}
+
+SelectableGrid.defaultProps = {
+  selectable: true,
 }

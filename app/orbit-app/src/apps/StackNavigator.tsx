@@ -78,6 +78,7 @@ export class StackNav {
         }
       }
       this.setState(next => {
+        next = next || this.state // weird bugfix
         next.stack = [
           ...next.stack,
           {
@@ -105,8 +106,10 @@ const StackNavigatorView = (props: StackNavigatorProps) => {
   const { stack } = state
 
   useEffect(() => {
-    stackNav.setUse({ state, setState })
-  }, [stackNav])
+    if (state) {
+      stackNav.setUse({ state, setState })
+    }
+  }, [state, setState, stackNav])
 
   // this would push the first item automatically onto stack
   // useEffect(() => {

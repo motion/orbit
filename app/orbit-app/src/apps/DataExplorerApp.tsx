@@ -1,7 +1,7 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
 import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { StackNav, StackNavigator } from './StackNavigator'
@@ -63,7 +63,23 @@ function QueryBuilderMain(props: AppProps) {
 function QueryBuilderSelectApp(props: AppProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
-  console.log('props', props)
+  const [selected, setSelected] = useState(null)
+  const selectableApps = useMemo(
+    () => [
+      ...dataApps.map(x => ({
+        id: x.id,
+        title: x.name,
+        type: 'installed',
+        group: 'Installed Apps',
+        disabled: x.tabDisplay !== 'plain',
+        onDoubleClick: () => {
+          console.log('Stack navigate!')
+        },
+      })),
+    ],
+    [dataApps],
+  )
+
   return (
     <Section
       pad="xl"
@@ -73,24 +89,23 @@ function QueryBuilderSelectApp(props: AppProps) {
       subTitle="Select data app."
       afterTitle={
         <>
-          <Button disabled>Next</Button>
+          <Button
+            onClick={() => {
+              console.log('do ', selected, props)
+            }}
+          >
+            Next
+          </Button>
         </>
       }
     >
       <SelectableGrid
         minWidth={180}
-        items={[
-          ...dataApps.map(x => ({
-            id: x.id,
-            title: x.name,
-            type: 'installed',
-            group: 'Installed Apps',
-            disabled: x.tabDisplay !== 'plain',
-            onDoubleClick: () => {
-              console.log('Stack navigate!')
-            },
-          })),
-        ]}
+        items={selectableApps}
+        onSelect={useCallback(i => {
+          console.log('selecting', i)
+          setSelected(i)
+        }, [])}
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
           return (
             <OrbitAppIcon

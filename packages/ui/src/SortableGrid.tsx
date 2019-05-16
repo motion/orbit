@@ -3,13 +3,14 @@ import { Grid } from 'gloss'
 import React from 'react'
 
 import { isRightClick } from './helpers/isRightClick'
+import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
 export type GetGridItem<A> = (item: A, index: number) => any
 export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>
 
 export type SortableGridProps<A extends any> = SortableContainerProps &
-  ViewProps & {
+  Omit<ViewProps, 'onSelect'> & {
     items?: A[]
     getItem?: GetGridItem<A>
     getSortableItemProps?: GetSortableItem<A>

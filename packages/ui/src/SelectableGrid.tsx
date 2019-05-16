@@ -3,9 +3,8 @@ import React, { useCallback, useMemo } from 'react'
 
 import { SelectableProps, SelectableStore, useSelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
-import { Omit } from './types'
 
-type SelectableGridProps<A> = Omit<SortableGridProps<A>, 'onSelect'> &
+type SelectableGridProps<A> = SortableGridProps<A> &
   SelectableProps & {
     getItem?: (item: A, { isSelected: boolean, select: Function }) => any
     selectableStore?: SelectableStore

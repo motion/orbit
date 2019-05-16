@@ -137,7 +137,7 @@ export type ListItemSpecificProps = ListItemHide & {
   separator?: React.ReactNode
 
   /** For use with automatic separator generation, when using `<List />` */
-  group?: string
+  groupName?: string
 
   /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
   editable?: boolean

@@ -22,7 +22,7 @@ export function ManageApps() {
             id: x.id,
             title: x.name,
             type: 'installed',
-            group: 'Installed Apps',
+            groupName: 'Installed Apps',
             disabled: x.tabDisplay !== 'plain',
             onDoubleClick: () => {
               om.actions.router.showAppPage({ id: `${x.id}` })

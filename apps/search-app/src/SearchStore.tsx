@@ -80,7 +80,7 @@ export class SearchStore {
           ⌘ + {index + 2}
         </SimpleText>
       ),
-      group: 'Apps',
+      groupName: 'Apps',
       extraData: {
         id: `${app.id}`,
         icon: `orbit-${app.identifier}-full`,

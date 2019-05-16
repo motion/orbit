@@ -72,7 +72,7 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
         id: x.id,
         title: x.name,
         type: 'installed',
-        group: 'Installed Apps',
+        groupName: 'Installed Apps',
         disabled: x.tabDisplay !== 'plain',
         onDoubleClick: () => {
           console.log('Stack navigate!')

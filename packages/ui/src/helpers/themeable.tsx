@@ -1,9 +1,8 @@
-import { Theme, ThemeSelect } from 'gloss'
-import { SimpleStyleObject } from 'gloss/_/theme/ThemeMaker'
+import { Theme, ThemeObject, ThemeSelect } from 'gloss'
 import React from 'react'
 
 export type ThemeableProps = {
-  theme?: string | SimpleStyleObject
+  theme?: string | ThemeObject
   themeSelect?: ThemeSelect
   alt?: string
 }

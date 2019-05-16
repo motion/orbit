@@ -1,4 +1,5 @@
 import { ThemeObject } from '@o/css'
+import { uniqueId } from 'lodash'
 import React, { useContext, useMemo } from 'react'
 
 import { Config } from '../config'
@@ -44,7 +45,7 @@ export const Theme = (props: ThemeProps) => {
   if (!nextThemeObj) {
     nextThemeObj = createThemeFromObject(props, prev, nextTheme)
     cacheThemes.set(nextTheme, nextThemeObj)
-    console.log('making theme', props)
+    console.log('making theme', props, nextThemeObj)
   }
 
   if (nextTheme === prev.activeTheme) {
@@ -59,7 +60,7 @@ function createThemeFromObject(
   prev: ThemeContextType,
   next: ThemeObject,
 ): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}`
+  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}.${uniqueId()}`
   return {
     ...prev,
     activeThemeName,

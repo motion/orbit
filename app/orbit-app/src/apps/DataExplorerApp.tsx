@@ -17,7 +17,7 @@ export default createApp({
   ),
 })
 
-const treeId = '1112'
+const treeId = '12'
 
 export function QueryBuilderIndex() {
   const treeList = useTreeList(treeId)
@@ -39,11 +39,15 @@ export function QueryBuilderIndex() {
 }
 
 function QueryBuilderMain(props: AppProps) {
+  console.log('props', props)
   const stackNav = useRef<StackNav>(null)
 
   useEffect(() => {
-    stackNav.current.navigate('SelectApp', props)
-  }, [stackNav.current])
+    console.log('stackNav', stackNav)
+    if (!stackNav.current.stack.length) {
+      stackNav.current.navigate('SelectApp', props)
+    }
+  }, [stackNav])
 
   return (
     <StackNavigator
@@ -105,6 +109,7 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
       }
     >
       <SelectableGrid
+        gridGap={20}
         minWidth={180}
         items={selectableApps}
         onSelect={useCallback(i => {

@@ -15,7 +15,7 @@ import { useVisibility } from '../Visibility'
 import { SearchableTable, SearchableTableProps } from './SearchableTable'
 import { DEFAULT_ROW_HEIGHT } from './types'
 
-export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
+export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children' | 'selectable'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
   Omit<SectionParentProps, 'children'> & {
     /** Flexibly define which columns to show, how to show them, and attach events to changes. Accepts array of strings, objects, or an object. */

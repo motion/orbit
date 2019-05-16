@@ -13,7 +13,7 @@ import { Col, ColProps } from './View/Col'
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
 export type SectionSpecificProps = Partial<
-  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size'>
+  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size' | 'selectable'>
 > & {
   /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
@@ -138,6 +138,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
+          userSelect="none"
           pad={selectDefined(
             titlePad,
             titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,

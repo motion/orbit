@@ -4,7 +4,7 @@ import { last } from 'lodash'
 import React, { forwardRef, FunctionComponent, Suspense, useEffect } from 'react'
 
 // TODO split into StackNavigator in UI
-type NavigatorProps = {
+export type NavigatorProps = {
   navigation: StackNav
 }
 

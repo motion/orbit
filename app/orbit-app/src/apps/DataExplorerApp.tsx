@@ -1,10 +1,10 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
-import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, Select, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { StackNav, StackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'data-explorer',
@@ -42,8 +42,6 @@ function QueryBuilderMain(props: AppProps) {
   const stackNav = useRef<StackNav>(null)
 
   useEffect(() => {
-    console.log('stackNav.current', stackNav.current, props)
-    if (!stackNav.current) return
     stackNav.current.navigate('SelectApp', props)
   }, [stackNav.current])
 
@@ -54,13 +52,13 @@ function QueryBuilderMain(props: AppProps) {
       id={`query-builder-nav=${props.id}`}
       items={{
         SelectApp: QueryBuilderSelectApp,
-        EditQuery: QueryBuilderEditQuery,
+        QueryEdit: QueryBuilderQueryEdit,
       }}
     />
   )
 }
 
-function QueryBuilderSelectApp(props: AppProps) {
+function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState(null)
@@ -91,7 +89,14 @@ function QueryBuilderSelectApp(props: AppProps) {
         <>
           <Button
             onClick={() => {
-              console.log('do ', selected, props)
+              if (!selected.length) {
+                alert('Please select an item first')
+                return
+              }
+              const item = selected[0]
+              console.log('do ', item, props)
+              // navigate to app definition:
+              props.navigation.navigate('QueryEdit', { id: item.id, title: item.title })
             }}
           >
             Next
@@ -121,8 +126,22 @@ function QueryBuilderSelectApp(props: AppProps) {
   )
 }
 
-function QueryBuilderEditQuery(props: AppProps) {
-  return <Section title="ok">{JSON.stringify(props)}</Section>
+function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
+  return (
+    <Section
+      pad="xl"
+      titlePad="lg"
+      backgrounded
+      title={props.title}
+      afterTitle={
+        <>
+          <Select options={['API', 'GraphQL']} />
+        </>
+      }
+    >
+      {JSON.stringify(props)}
+    </Section>
+  )
 }
 
 // unused

@@ -62,6 +62,9 @@ export type TitleRowSpecificProps = ThemeableProps &
 
     /** Add an extra line of elements below the title */
     children?: React.ReactNode
+
+    /** Allow text selection for everything inside */
+    selectable?: boolean
   }
 
 export type TitleRowProps = Omit<RowProps, 'size' | 'children'> & TitleRowSpecificProps
@@ -84,6 +87,7 @@ export const TitleRow = themeable(
         title,
         children,
         titleProps,
+        selectable,
         ...allProps
       }: TitleRowProps,
       ref,
@@ -95,7 +99,7 @@ export const TitleRow = themeable(
         (isValidElement(title) ? (
           title
         ) : (
-          <Title size={size} selectable ellipse {...titleProps}>
+          <Title size={size} selectable={selectable} ellipse {...titleProps}>
             {title}
           </Title>
         ))
@@ -121,7 +125,7 @@ export const TitleRow = themeable(
               {children}
               {!!subTitle && (
                 <>
-                  <SubTitle selectable ellipse marginBottom={0}>
+                  <SubTitle selectable={selectable} ellipse marginBottom={0}>
                     {subTitle}
                   </SubTitle>
                 </>

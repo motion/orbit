@@ -2,25 +2,28 @@ import { ThemeObject } from '@o/css'
 import React, { useContext, useMemo } from 'react'
 
 import { Config } from '../config'
-import { SimpleStyleObject } from '../types'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 
 type ThemeProps = {
-  theme?: string | SimpleStyleObject
+  theme?: string | ThemeObject
   themeSelect?: ThemeSelect
   alt?: string
   name?: string
   children: any
 }
 
-const themeContexts = new WeakMap()
+export const cacheThemes = new WeakMap<any, ThemeContextType>()
 
 export const Theme = (props: ThemeProps) => {
-  const { theme, name, children } = props
+  const { theme, name, children, themeSelect, alt } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
+
+  if (!theme && !name && !themeSelect && !alt) {
+    return children
+  }
 
   if (prev.allThemes[nextName]) {
     if (prev.allThemes[nextName] === prev.activeTheme) {
@@ -29,14 +32,19 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
+  if (typeof theme === 'object' && cacheThemes.has(theme)) {
+    return cacheThemes.get(theme)
+  }
+
   const nextTheme = Config.preProcessTheme
     ? Config.preProcessTheme(props, prev.activeTheme)
     : prev.activeTheme
-  let nextThemeObj: ThemeContextType = themeContexts.get(nextTheme)
+  let nextThemeObj = cacheThemes.get(nextTheme)
 
   if (!nextThemeObj) {
     nextThemeObj = createThemeFromObject(props, prev, nextTheme)
-    themeContexts.set(nextTheme, nextThemeObj)
+    cacheThemes.set(nextTheme, nextThemeObj)
+    console.log('making theme', props)
   }
 
   if (nextTheme === prev.activeTheme) {

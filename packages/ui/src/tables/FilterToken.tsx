@@ -4,7 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { gloss, Theme } from 'gloss'
+import { gloss, Theme, ThemeContext } from 'gloss'
+import { capitalize } from 'lodash'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -12,7 +13,7 @@ import { findDOMNode } from 'react-dom'
 import { Button, ButtonProps } from '../buttons/Button'
 import { Icon } from '../Icon'
 import { PopoverMenu } from '../PopoverMenu'
-import { Text } from '../text/Text'
+import { SimpleText } from '../text/SimpleText'
 import { TableFilter } from './types'
 
 // @ts-ignore
@@ -22,52 +23,25 @@ const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
   alignItems: 'center',
 }).theme(({ focused, background }, theme) => ({
   background: focused ? theme.backgroundHighlightActive : background || theme.backgroundHighlight,
-  color: theme.colorActiveHighlight || 'white',
+  color: theme.colorActiveHighlight || theme.color,
   '&:active': {
     background: theme.backgroundHighlightActive,
   },
 }))
 
-const Key = gloss(Text, {
-  position: 'relative',
-  fontWeight: 400,
-  paddingRight: 12,
-  textTransform: 'capitalize',
-  lineHeight: '21px',
-  '&:after': {
-    paddingLeft: 5,
-    position: 'absolute',
-    top: -1,
-    right: 0,
-    fontSize: 14,
-  },
-}).theme(({ type }, theme) => ({
-  color: theme.colorActiveHighlight || 'white',
-  '&:active:after': {
-    background: theme.backgroundHighlightActive,
-  },
-  '&:after': {
-    content: type === 'exclude' ? '"≠"' : '"="',
-  },
-}))
+const Key = gloss(SimpleText)
 
 Key.defaultProps = {
   size: 0.95,
 }
 
-const Value = gloss(Text, {
-  whiteSpace: 'nowrap',
+const Value = gloss(SimpleText, {
   maxWidth: 160,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  lineHeight: '21px',
-  paddingLeft: 3,
-}).theme((_, theme) => ({
-  color: theme.colorActiveHighlight || 'white',
-}))
+})
 
 Value.defaultProps = {
   size: 0.95,
+  ellipse: true,
 }
 
 type Props = {
@@ -84,8 +58,10 @@ export class FilterToken extends PureComponent {
   props: Props
   _ref: Element | void
 
+  static contextType = ThemeContext
+
   state = {
-    menuTemplate: null,
+    menuTemplate: [],
   }
 
   onMouseDown = () => {
@@ -212,13 +188,17 @@ export class FilterToken extends PureComponent {
       value = filter.value
     }
 
+    console.log('this.context.activeTheme._originalTheme', this.context.activeTheme._originalTheme)
+
     return (
       <Theme theme={{ background, color: '#fff' }}>
         <PopoverMenu
           // only show popover for non-electron environment
           openOnClick={!Electron.remote}
+          popoverTheme={this.context.activeTheme._originalTheme}
           target={
             <Token
+              tagName="div"
               tabIndex={-1}
               onMouseDown={this.onMouseDown}
               focused={this.props.focused}
@@ -228,8 +208,9 @@ export class FilterToken extends PureComponent {
               icon="chevron-down"
               iconAfter
             >
-              <Key type={this.props.filter.type} focused={this.props.focused}>
-                {filter.key}
+              <Key>
+                {capitalize(filter.key)}
+                {this.props.filter.type === 'exclude' ? '≠' : '='}
               </Key>
               <Value>{value}</Value>
             </Token>
@@ -240,7 +221,7 @@ export class FilterToken extends PureComponent {
               : this.state.menuTemplate.map(item => ({
                   title: item.label,
                   onClick: item.click,
-                  after: item.checked && <Icon name="check" />,
+                  after: item.checked && <Icon name="tick" size={12} />,
                 }))
           }
         />

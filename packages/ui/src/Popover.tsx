@@ -1112,7 +1112,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     )
 
     if (popoverTheme) {
-      popoverContent = <Theme name={popoverTheme}>{popoverContent}</Theme>
+      popoverContent = <Theme theme={popoverTheme}>{popoverContent}</Theme>
     }
 
     if (noPortal) {

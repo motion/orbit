@@ -82,7 +82,7 @@ export let section = (
     selectable="multi"
     collapsable
     searchable
-    filters={[createEnumFilter(['password']), createEnumFilter(['dob'])]}
+    filters={[createEnumFilter(['password', 'dob'])]}
     afterTitle={
       <>
         <Button icon="ex" tooltip="Example action button" />

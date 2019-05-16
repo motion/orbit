@@ -37,7 +37,6 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
 ) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
   const theme = useTheme()
-  console.log('theme.searchInputSizeRadius', theme)
   return (
     <Input
       ref={ref}

@@ -115,7 +115,6 @@ function use<ModelType, Args>(
       if (query && query['select']) {
         loadOne(model, { args: omit(query as any, 'select') }).then(finish)
       } else {
-        console.log('finish', valueRef.current)
         finish(valueRef.current)
       }
     },

@@ -7,8 +7,8 @@
 import { gloss, Theme, ThemeContext } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
-import { PureComponent } from 'react'
 import * as React from 'react'
+import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'

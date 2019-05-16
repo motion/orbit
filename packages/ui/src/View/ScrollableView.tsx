@@ -32,7 +32,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     return <>{props.children}</>
   }
 
-  const { children, pad, padding, scrollable, parentSpacing, ...viewPropsRaw } = props
+  const { tagName, children, pad, padding, scrollable, parentSpacing, ...viewPropsRaw } = props
   let content = children
   const controlPad = typeof pad !== 'undefined'
 
@@ -63,7 +63,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   if (!scrollable) {
     return (
-      <ScrollableInner ref={ref} {...viewProps} {...props} padding={0}>
+      <ScrollableInner tagName={tagName} ref={ref} {...viewProps} {...props} padding={0}>
         {content}
       </ScrollableInner>
     )
@@ -71,6 +71,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   return (
     <ScrollableChrome
+      tagName={tagName}
       className="ui-scrollable"
       ref={ref}
       scrollable={scrollable}

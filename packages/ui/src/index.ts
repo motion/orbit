@@ -1,8 +1,5 @@
 // until next hotkeys patches types
-import * as HotKeys from 'react-hotkeys'
-
-export const configureHotKeys = HotKeys['configure']
-
+export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
 
 export { ImmutableUpdateFn } from './types'

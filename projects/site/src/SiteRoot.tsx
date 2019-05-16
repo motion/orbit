@@ -3,11 +3,9 @@ import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
 
-import { Header, Layout } from './Layout'
+import { Layout } from './Layout'
 import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
-
-console.log('Layout', Layout, Header)
 
 export const SiteRoot = hot(() => {
   return (

@@ -2,7 +2,7 @@ import { CSSPropertySetStrict } from '@o/css'
 
 import { baseIgnoreAttrs, gloss, GlossProps } from '../gloss'
 import { AlphaColorProps, alphaColorTheme, propStyleTheme, PseudoStyleProps, psuedoStylePropsTheme } from '../themes'
-import { TextSizeProps, textSizeTheme } from '../themes/textSizeTheme'
+import { TextSizeProps } from '../themes/textSizeTheme'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -47,12 +47,10 @@ export type BaseProps = GlossProps<
 >
 
 export const Base = gloss<BaseProps>().theme(
-  // <Base color="red" /> style props
+  // <Base color="red" /> css props
   propStyleTheme,
   // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle
   psuedoStylePropsTheme,
-  // <Base size={1} /> for text sizing
-  textSizeTheme,
   // <Base alpha={0.5} /> for text opacity
   alphaColorTheme,
 )

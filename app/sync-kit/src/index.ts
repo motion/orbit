@@ -1,4 +1,4 @@
-export { hash, sleep } from '@o/utils'
+export { sleep } from '@o/utils'
 export * from '@o/logger'
 export * from '@o/config'
 export * from '@o/models'

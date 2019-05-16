@@ -8,7 +8,7 @@ import { PseudoStyleProps } from './psuedoStyleTheme'
 // mutate styles to have alpha if defined in props
 
 export type AlphaColorProps = {
-  applyPsuedoColors?: boolean
+  applyPsuedoColors?: boolean | 'only-if-defined'
   alpha?: number
   alphaHover?: number
   hoverStyle?: PseudoStyleProps['hoverStyle']
@@ -16,25 +16,31 @@ export type AlphaColorProps = {
   focusStyle?: PseudoStyleProps['focusStyle']
 }
 
+const mergeFocus = merge.bind(null, '&:focus', 'focusStyle', 'colorFocus', 'alphaFocus')
+const mergeHover = merge.bind(null, '&:hover', 'hoverStyle', 'colorHover', 'alphaHover')
+const mergeActive = merge.bind(null, '&:active', 'activeStyle', 'colorActive', 'alphaActive')
+
 export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const color = props.color || theme.color
   const alpha = selectDefined(props.alpha, theme.alpha)
   const next: CSSPropertySet | null = {}
-
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
-      next.color = `${Config.toColor(color).alpha(alpha)}`
+      next.color = Config.toColor(color).alpha(alpha)
     } else {
       next.color = color
     }
   }
-
-  if (props.applyPsuedoColors) {
-    merge('&:focus', 'focusStyle', 'colorFocus', 'alphaFocus', next, color, props, theme)
-    merge('&:hover', 'hoverStyle', 'colorHover', 'alphaHover', next, color, props, theme)
-    merge('&:active', 'activeStyle', 'colorActive', 'alphaActive', next, color, props, theme)
+  const applyPsuedos = props.applyPsuedoColors
+  if (
+    applyPsuedos === true ||
+    (applyPsuedos === 'only-if-defined' &&
+      (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle))
+  ) {
+    mergeFocus(next, color, props, theme)
+    mergeHover(next, color, props, theme)
+    mergeActive(next, color, props, theme)
   }
-
   return mergeStyles(previous, next)
 }
 
@@ -50,7 +56,6 @@ function merge(
 ) {
   const color = (props[styleKey] && props[styleKey].color) || theme[colorKey] || parentColor
   const alpha = (props[styleKey] && props[styleKey].alpha) || theme[alphaKey]
-
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {

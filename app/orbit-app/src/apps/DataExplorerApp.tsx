@@ -40,18 +40,18 @@ export function QueryBuilderIndex() {
 
 function QueryBuilderMain(props: AppProps) {
   console.log('props', props)
-  const stackNav = useRef<StackNav>(null)
+  const nav = useRef<StackNav>(null)
 
   useEffect(() => {
-    console.log('stackNav', stackNav)
-    if (!stackNav.current.stack.length) {
-      stackNav.current.navigate('SelectApp', props)
+    console.log('stackNav', nav)
+    if (!nav.current.stack.length) {
+      nav.current.navigate('SelectApp', props)
     }
-  }, [stackNav])
+  }, [nav])
 
   return (
     <StackNavigator
-      ref={stackNav}
+      ref={nav}
       key={props.id}
       id={`query-builder-nav=${props.id}`}
       items={{

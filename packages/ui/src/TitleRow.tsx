@@ -124,11 +124,9 @@ export const TitleRow = themeable(
               {titleElement}
               {children}
               {!!subTitle && (
-                <>
-                  <SubTitle selectable={selectable} ellipse marginBottom={0}>
-                    {subTitle}
-                  </SubTitle>
-                </>
+                <SubTitle selectable={selectable} ellipse marginBottom={0}>
+                  {subTitle}
+                </SubTitle>
               )}
             </View>
             <Row alignItems="center" space="sm">

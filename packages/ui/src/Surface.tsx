@@ -18,6 +18,7 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Sizes, Space } from './Space'
+import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
@@ -505,6 +506,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
 }).theme((props, theme) => {
   // :hover, :focus, :active
 
+  const fontStyle = scaledTextSizeTheme(props)
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const marginStyle = getMargin(props)
@@ -553,6 +555,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     ...styles,
     ...marginStyle,
     ...getPadding(props),
+    ...fontStyle,
 
     // this was an attempt to do smarter padding, but it fails in a case
     // it would allow you to set widht: 0 on surfaces just like youd expect

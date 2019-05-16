@@ -30,7 +30,7 @@ SimpleText.defaultProps = {
   applyPsuedoColors: 'only-if-defined',
 }
 
-function scaledTextSizeTheme(props: any) {
+export function scaledTextSizeTheme(props: any) {
   const scale = useScale()
   return getTextSizeTheme(props, scale)
 }

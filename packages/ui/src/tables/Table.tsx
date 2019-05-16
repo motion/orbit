@@ -17,7 +17,7 @@ import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { DEFAULT_ROW_HEIGHT } from './types'
 
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children' | 'selectable'>> &
-  ManagedTableProps &
+  Omit<ManagedTableProps, 'columns'> &
   FilterableProps &
   Omit<SectionParentProps, 'children'> & {
     /** Flexibly define which columns to show, how to show them, and attach events to changes. Accepts array of strings, objects, or an object. */

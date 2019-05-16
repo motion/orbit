@@ -13,10 +13,10 @@ import { GenericDataRow } from '../types'
 import { FilterIncludeExclude, TableFilter, TableRows } from './types'
 
 export type FilterableProps = {
-  addFilter: (filter: TableFilter) => void
+  addFilter?: (filter: TableFilter) => void
   searchable?: boolean
-  searchTerm: string
-  filters: TableFilter[]
+  searchTerm?: string
+  filters?: TableFilter[]
   defaultFilters?: TableFilter[]
   onEnter?: (value: string) => any
   onFilterChange?: (filters: TableFilter[]) => void

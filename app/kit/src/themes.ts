@@ -203,17 +203,15 @@ const alternates: ThemeSet = {
   flat: parent => {
     const background = parent.background.isDark()
       ? parent.background.lighten(0.08).alpha(0.5)
-      : parent.background.darken(0.02).alpha(0.5)
-
-    console.log('ok123123', background, background.alpha(1))
+      : parent.background.darken(0.01).alpha(0.5)
 
     return {
       color: parent.color,
       searchInputSizeRadius: 1,
       background,
       backgroundHover: background,
-      backgroundFocus: background.darken(0.1).alpha(0.8),
-      backgroundActive: background.darken(0.1).alpha(0.8),
+      backgroundFocus: background.darken(0.05),
+      backgroundActive: background.darken(0.05),
       glintColor: transparent,
       glintColorBottom: transparent,
       ...colorize({

@@ -141,6 +141,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             below={belowTitle}
             icon={icon}
             userSelect="none"
+            space="sm"
             pad={selectDefined(
               titlePad,
               titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,

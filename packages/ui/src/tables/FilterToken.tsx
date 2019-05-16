@@ -7,8 +7,8 @@
 import { gloss, Theme, ThemeContext } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
-import { PureComponent } from 'react'
 import * as React from 'react'
+import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'
@@ -167,6 +167,8 @@ export class FilterToken extends PureComponent {
 
   render() {
     const { filter } = this.props
+    const theme = this.context.activeTheme
+
     let background
     let value = ''
 
@@ -179,7 +181,6 @@ export class FilterToken extends PureComponent {
       } else if (filter.value.length === 2 && firstValue && secondValue) {
         value = `${firstValue.label} or ${secondValue.label}`
       } else if (filter.value.length === 1 && firstValue) {
-        console.log('firstValue.color', firstValue.color)
         value = firstValue.label
         background = firstValue.color
       } else if (firstValue) {
@@ -192,7 +193,7 @@ export class FilterToken extends PureComponent {
     console.log('this.context.activeTheme._originalTheme', this.context.activeTheme._originalTheme)
 
     return (
-      <Theme theme={colorize({ background, color: '#fff' })}>
+      <Theme theme={colorize({ background: background || theme.backgroundStrong, color: '#fff' })}>
         <PopoverMenu
           // only show popover for non-electron environment
           openOnClick={!Electron.remote}

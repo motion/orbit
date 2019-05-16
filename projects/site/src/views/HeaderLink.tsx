@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { LinkState } from "../LinkState";
+import { LinkState } from '../LinkState'
 import { FadeChild, fastConfig, fastStatticConfig } from './FadeIn'
 import { HeaderContext } from './HeaderContext'
 import { Link } from './LinkProps'
@@ -9,7 +9,7 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
   const header = HeaderContext.useProps()
   const leaving = header && header.shown === false
   return (
-    <Link width="33%" fontWeight={500} fontFamily="GT Eesti" fontSize={16} {...props}>
+    <Link width="33%" fontWeight={500} fontFamily="GT Eesti" fontSize={14} {...props}>
       <FadeChild
         willAnimateOnHover
         off={!LinkState.didAnimateOut}

@@ -202,13 +202,12 @@ const alternates: ThemeSet = {
     }),
   flat: parent => {
     const background = parent.background.isDark()
-      ? 'green' || parent.background.lighten(0.08).alpha(0.5)
-      : 'red' || parent.background.darken(0.01).alpha(0.25)
+      ? parent.background.lighten(0.08).alpha(0.5)
+      : parent.background.darken(0.01).alpha(0.25)
 
     return {
       color: parent.color,
       searchInputSizeRadius: 1,
-      inputBackground: 'red',
       background,
       backgroundHover: background,
       backgroundFocus: background.darken(0.05),

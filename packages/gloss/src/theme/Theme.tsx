@@ -33,26 +33,31 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
+  let next: any = null
+
   if (typeof theme === 'object' && cacheThemes.has(theme)) {
-    return cacheThemes.get(theme)
+    next = cacheThemes.get(theme) as ThemeContextType
+  } else {
+    const nextTheme = Config.preProcessTheme
+      ? Config.preProcessTheme(props, prev.activeTheme)
+      : prev.activeTheme
+
+    next = cacheThemes.get(nextTheme)
+
+    if (!next) {
+      next = createThemeFromObject(props, prev, nextTheme)
+      cacheThemes.set(nextTheme, next)
+    }
+    if (nextTheme === prev.activeTheme) {
+      return children
+    }
   }
 
-  const nextTheme = Config.preProcessTheme
-    ? Config.preProcessTheme(props, prev.activeTheme)
-    : prev.activeTheme
-  let nextThemeObj = cacheThemes.get(nextTheme)
-
-  if (!nextThemeObj) {
-    nextThemeObj = createThemeFromObject(props, prev, nextTheme)
-    cacheThemes.set(nextTheme, nextThemeObj)
-    console.log('making theme', props, nextThemeObj)
-  }
-
-  if (nextTheme === prev.activeTheme) {
+  if (next === prev) {
     return children
   }
 
-  return <ThemeContext.Provider value={nextThemeObj}>{children}</ThemeContext.Provider>
+  return <ThemeContext.Provider value={next}>{children}</ThemeContext.Provider>
 }
 
 function createThemeFromObject(
@@ -78,11 +83,15 @@ function ThemeByName({ name, children }: ThemeProps) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
     const nextTheme = allThemes[name]
-    return {
+    const next: ThemeContextType = {
       allThemes,
       activeTheme: nextTheme,
       activeThemeName: name,
     }
+
+    cacheThemes.set(nextTheme, next)
+
+    return next
   }, [name])
   return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
 }

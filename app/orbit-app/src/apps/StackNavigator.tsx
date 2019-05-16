@@ -1,8 +1,7 @@
-import { isEqual } from '@o/fast-compare'
-import { AppProps, ScopedState, useStore, useUserState } from '@o/kit'
-import { ImmutableUpdateFn, Slider, SliderPane } from '@o/ui'
+import { AppProps, ensure, react, ScopedState, useStore, useUserState } from '@o/kit'
+import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
 import { last } from 'lodash'
-import React, { forwardRef, FunctionComponent, useEffect } from 'react'
+import React, { forwardRef, FunctionComponent, Suspense, useEffect } from 'react'
 
 // TODO split into StackNavigator in UI
 type NavigatorProps = {
@@ -10,6 +9,7 @@ type NavigatorProps = {
 }
 
 type StackNavigatorProps = {
+  useNavigator?: StackNav
   items: {
     [key: string]: FunctionComponent<AppProps & NavigatorProps>
   }
@@ -21,64 +21,92 @@ export const StackNavigator = forwardRef<
     id: string
   }
 >((props, ref) => {
-  console.log('render me....................')
+  const stackNav = props.useNavigator || useStore(StackNav)
+
+  useEffect(() => {
+    if (!ref) return
+    ref['current'] = stackNav
+  }, [ref])
+
   return (
     <ScopedState id={`StackNavigator-${props.id}`}>
-      <StackNavigatorView ref={ref} items={props.items} />
+      <Suspense fallback={<Loading />}>
+        <StackNavigatorView items={props.items} useNavigator={stackNav} />
+      </Suspense>
     </ScopedState>
   )
 })
 
 type StackNavStateItem = {
   id: string
-  props: Object
+  props: { [key: string]: any }
 }
 
 type StackNavState = {
   stack: StackNavStateItem[]
 }
 
+type StackNavUse = {
+  state: StackNavState
+  setState: ImmutableUpdateFn<StackNavState>
+}
+
 export class StackNav {
-  props: {
-    state: StackNavState
-    setState: ImmutableUpdateFn<StackNavState>
+  state: StackNavUse['state'] = null
+  setState: ImmutableUpdateFn<StackNavState> = null
+  next = null
+
+  setUse(next: StackNavUse) {
+    this.state = next.state
+    this.setState = next.setState
   }
-  navigate(id: string, props: AppProps, forcePush = false) {
-    // dont update stack if already on same item, unless explicitly asking
-    if (this.props.state.stack.length) {
-      if (isEqual(props, last(this.props.state.stack).props)) {
-        if (forcePush === false) {
-          return
+
+  updateNavigation = react(
+    () => [this.next, this.state],
+    () => {
+      ensure('next', !!this.next)
+      ensure('state', !!this.state)
+      ensure('setState', !!this.setState)
+      const { id, props, forcePush } = this.next
+      // dont update stack if already on same item, unless explicitly asking
+      if (this.state.stack.length) {
+        const prev = last(this.state.stack)
+        if (id === prev.id) {
+          if (forcePush === false) {
+            return
+          }
         }
       }
-    }
-    this.props.setState(next => {
-      next.stack = [
-        ...next.stack,
-        {
-          id,
-          props,
-        },
-      ]
-    })
+      this.setState(next => {
+        next.stack = [
+          ...next.stack,
+          {
+            id,
+            props,
+          },
+        ]
+      })
+      this.next = null
+    },
+  )
+
+  navigate(id: string, props: AppProps, forcePush = false) {
+    this.next = { id, props, forcePush }
   }
+
   back() {
     console.log('todo')
   }
 }
 
-const StackNavigatorView = forwardRef<StackNav, StackNavigatorProps>((props, ref) => {
+const StackNavigatorView = (props: StackNavigatorProps) => {
   const [state, setState] = useUserState('StackNavigatorView', { stack: [] } as StackNavState)
-  const stackNav = useStore(StackNav, { state, setState })
+  const stackNav = props.useNavigator
   const { stack } = state
 
-  console.log('stack', stack)
   useEffect(() => {
-    console.log('got ref', ref)
-    if (ref) {
-      ref['current'] = stackNav
-    }
-  }, [ref])
+    stackNav.setUse({ state, setState })
+  }, [stackNav])
 
   // this would push the first item automatically onto stack
   // useEffect(() => {
@@ -108,4 +136,4 @@ const StackNavigatorView = forwardRef<StackNav, StackNavigatorProps>((props, ref
       })}
     </Slider>
   )
-})
+}

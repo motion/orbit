@@ -12,15 +12,12 @@ export default createApp({
   icon: '',
   app: props => (
     <App index={<QueryBuilderIndex />}>
-      <QueryBuilderMain {...props} />
+      <QueryBuilderMain key={props.id} {...props} />
     </App>
   ),
 })
 
-//
-// items={[...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' }))].filter(Boolean)}
-
-const treeId = 'my-tree-list'
+const treeId = '1112'
 
 export function QueryBuilderIndex() {
   const treeList = useTreeList(treeId)
@@ -46,8 +43,9 @@ function QueryBuilderMain(props: AppProps) {
 
   useEffect(() => {
     console.log('stackNav.current', stackNav.current, props)
-    stackNav.current.navigate('SelectApp', {})
-  }, [props.id])
+    if (!stackNav.current) return
+    stackNav.current.navigate('SelectApp', props)
+  }, [stackNav.current])
 
   return (
     <StackNavigator
@@ -65,8 +63,9 @@ function QueryBuilderMain(props: AppProps) {
 function QueryBuilderSelectApp(props: AppProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
+  console.log('props', props)
   return (
-    <Section padInner="lg" pad backgrounded title={props.title}>
+    <Section pad="xl" titlePad="lg" backgrounded title={props.title}>
       <SelectableGrid
         minWidth={180}
         items={[

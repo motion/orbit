@@ -130,7 +130,7 @@ export function Table(tableProps: TableProps) {
         flex={flex}
         {...props}
         columns={columns}
-        filterFn={filterable.filterFn}
+        filter={filterable.filter}
         onAddFilter={filterable.onAddFilter}
         onSelect={onSelect}
         rowLineHeight={rowHeight}

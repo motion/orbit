@@ -40,7 +40,7 @@
     "execa": "^1.0.0",
     "pretty-error": "^2.1.1",
     "raw-loader": "*",
-    "react-hot-loader": "*",
+    "react-hot-loader": "^4.8.5",
     "source-map": "*",
     "stack-trace": "^0.0.10",
     "strip-ansi": "5.0.0",

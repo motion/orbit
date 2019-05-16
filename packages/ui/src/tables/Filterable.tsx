@@ -5,7 +5,7 @@
  * @format
  */
 import { ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
-import React, { Ref, useEffect, useRef } from 'react'
+import React, { memo, Ref, useEffect, useRef } from 'react'
 
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
 import textContent from '../helpers/textContent'
@@ -41,7 +41,7 @@ class FilterableStore {
 
   onFilterChange = syncToProp(this, 'filters', 'onFilterChange')
 
-  filterFn = react(
+  filter = react(
     () => [this.filters, this.searchTerm],
     ([filters, searchTerm]) => {
       return filterRowsFactory(filters, searchTerm)
@@ -93,8 +93,9 @@ class FilterableStore {
     }
   }
 
-  onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) =>
+  onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.matchTags(e.target.value, false)
+  }
 
   matchTags = (searchTerm: string, matchEnd: boolean) => {
     const filterPattern = matchEnd
@@ -198,7 +199,7 @@ class FilterableStore {
 type UseFilterable = {
   ref: Ref<HTMLInputElement>
   store: FilterableStore
-  filterFn: (row: GenericDataRow) => boolean
+  filter: (row: GenericDataRow) => boolean
   onAddFilter: (fitler: TableFilter) => void
 }
 
@@ -216,38 +217,37 @@ export function useFilterable(props: FilterableProps): UseFilterable {
   return {
     ref,
     store,
-    filterFn: store.filterFn,
+    filter: store.filter,
     onAddFilter: store.addFilter,
   }
 }
 
-export const FilterableSearchInput = ({
-  useFilterable,
-  ...rest
-}: SearchInputProps & { useFilterable: UseFilterable }) => {
-  const { store } = useFilterable
-  return (
-    <SearchInput
-      placeholder="Search..."
-      ref={useFilterable.ref}
-      clearable={!!store.searchTerm}
-      onClickClear={store.clear}
-      focusedToken={store.focusedToken}
-      filters={store.filters}
-      filterProps={{
-        onFocus: store.onTokenFocus,
-        onDelete: store.removeFilter,
-        onReplace: store.replaceFilter,
-        onBlur: store.onTokenBlur,
-      }}
-      onChange={store.onChangeSearchTerm}
-      value={store.searchTerm}
-      onFocus={store.onInputFocus}
-      onBlur={store.onInputBlur}
-      {...rest}
-    />
-  )
-}
+export const FilterableSearchInput = memo(
+  ({ useFilterable, ...rest }: SearchInputProps & { useFilterable: UseFilterable }) => {
+    const { store } = useFilterable
+    return (
+      <SearchInput
+        placeholder="Search..."
+        ref={useFilterable.ref}
+        clearable={!!store.searchTerm}
+        onClickClear={store.clear}
+        focusedToken={store.focusedToken}
+        filters={store.filters}
+        filterProps={{
+          onFocus: store.onTokenFocus,
+          onDelete: store.removeFilter,
+          onReplace: store.replaceFilter,
+          onBlur: store.onTokenBlur,
+        }}
+        onChange={store.onChangeSearchTerm}
+        value={store.searchTerm}
+        onFocus={store.onInputFocus}
+        onBlur={store.onInputBlur}
+        {...rest}
+      />
+    )
+  },
+)
 
 export const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
   row: GenericDataRow,

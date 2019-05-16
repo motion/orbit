@@ -1,8 +1,12 @@
 // @ts-ignore
 import { dialog } from 'electron'
 
-export function showConfirmDialog({ type = 'question', title = '', message = '' }): boolean {
-  const response = dialog.showMessageBox({
+export async function showConfirmDialog({
+  type = 'question',
+  title = '',
+  message = '',
+}): Promise<boolean> {
+  const { response } = await dialog.showMessageBox({
     type,
     title,
     message,

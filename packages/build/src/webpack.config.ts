@@ -160,6 +160,7 @@ const optimization = {
     noEmitOnErrors: true,
     removeAvailableModules: false,
     namedModules: true,
+    usedExports: true,
   },
 }
 

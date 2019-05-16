@@ -28,6 +28,7 @@ export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'
+export { syncFromProp, syncToProp } from './syncProps'
 
 export interface UseStore<A extends ReactiveStore<any> | any> {
   (Store: { new (): A } | A | false, props?: InferProps<A>, options?: UseStoreOptions): A

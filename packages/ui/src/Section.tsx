@@ -1,4 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
+import { Theme } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { splitCollapseProps, useCollapse } from './Collapsable'
@@ -128,26 +129,28 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
 
     titleEl = (
       <Scale size={titleScale}>
-        <TitleRow
-          bordered={bordered || titleBorder}
-          backgrounded={selectDefined(backgrounded, bordered)}
-          title={title}
-          subTitle={subTitle}
-          after={afterTitle}
-          above={above}
-          before={beforeTitle}
-          below={belowTitle}
-          icon={icon}
-          userSelect="none"
-          pad={selectDefined(
-            titlePad,
-            titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,
-          )}
-          size={selectDefined(titleSize, size)}
-          titleProps={titleProps}
-          useCollapse={collapse}
-          {...adjustPadProps}
-        />
+        <Theme alt="flat">
+          <TitleRow
+            bordered={bordered || titleBorder}
+            backgrounded={selectDefined(backgrounded, bordered)}
+            title={title}
+            subTitle={subTitle}
+            after={afterTitle}
+            above={above}
+            before={beforeTitle}
+            below={belowTitle}
+            icon={icon}
+            userSelect="none"
+            pad={selectDefined(
+              titlePad,
+              titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,
+            )}
+            size={selectDefined(titleSize, size)}
+            titleProps={titleProps}
+            useCollapse={collapse}
+            {...adjustPadProps}
+          />
+        </Theme>
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>
     )

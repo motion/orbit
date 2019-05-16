@@ -67,6 +67,22 @@ export let OrderFilter = (
   />
 )
 
+export let Filtering = (
+  <List
+    // allows single selection
+    selectable
+    searchable
+    filters={[
+      {
+        type: 'inclusive',
+        value: 'something',
+      },
+    ]}
+    items={rows.slice(0, 20)}
+    height={300}
+  />
+)
+
 export let Selection = (
   <List
     // allows single selection
@@ -101,6 +117,7 @@ export let Section = (
         <Button icon="wave" tooltip="Some tooltip" />
       </>
     }
+    searchable
     bordered
     backgrounded
     items={rows.slice(0, 20)}

@@ -1,6 +1,7 @@
 import { debounce } from 'lodash'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
+
 import { innerHeight, innerWidth } from './utils/innerSize'
 import series from './utils/series'
 import shallowEqual from './utils/shallowEqual'
@@ -84,7 +85,7 @@ export default class TextFit extends React.Component<TextFitProps> {
     )
   }
 
-  componentDidUpdate(prevProps) {
+  inputFocus(prevProps) {
     const { ready } = this.state
     if (!ready) return
     if (shallowEqual(this.props, prevProps)) return

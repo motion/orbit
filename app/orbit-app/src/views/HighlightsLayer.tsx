@@ -1,5 +1,5 @@
-import { gloss } from 'gloss'
 import * as UI from '@o/ui'
+import { gloss } from 'gloss'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 
@@ -54,7 +54,7 @@ export class HighlightsLayer extends React.Component<Props, State> {
     this.doSearch()
   }
 
-  componentDidUpdate() {
+  inputFocus() {
     this.doSearch()
   }
 

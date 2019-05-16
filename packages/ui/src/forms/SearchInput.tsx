@@ -1,4 +1,5 @@
-import { gloss, Row } from 'gloss'
+import { selectDefined } from '@o/utils'
+import { gloss, Row, useTheme } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { Button, ButtonProps } from '../buttons/Button'
@@ -35,10 +36,12 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   ref,
 ) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
+  const theme = useTheme()
+  console.log('theme.searchInputSizeRadius', theme)
   return (
     <Input
       ref={ref}
-      sizeRadius={3}
+      sizeRadius={selectDefined(theme.searchInputSizeRadius, 3)}
       flex={1}
       icon="search"
       placeholder="Search..."

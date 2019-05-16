@@ -12,7 +12,6 @@ import React, { createRef, useMemo } from 'react'
 import debounceRender from 'react-debounce-render'
 
 import { ContextMenu } from '../ContextMenu'
-import { FilterableProps, filterRows } from '../Filterable'
 import { normalizeRow } from '../forms/normalizeRow'
 import { weakKey } from '../helpers/weakKey'
 import { DynamicListControlled } from '../lists/DynamicList'
@@ -22,6 +21,7 @@ import { SectionProps } from '../Section'
 import { Text } from '../text/Text'
 import { DataColumns, DataType, GenericDataRow } from '../types'
 import { Col } from '../View/Col'
+import { FilterableReceiverProps, filterRows } from './Filterable'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
@@ -32,7 +32,7 @@ const Electron = typeof electronRequire !== 'undefined' ? electronRequire('elect
 const clipboard = Electron.clipboard
 
 export type ManagedTableProps = SelectableProps &
-  Pick<FilterableProps, 'filter' | 'filterValue'> & {
+  FilterableReceiverProps & {
     containerRef?: any
     overflow?: SectionProps['overflow']
     flex?: SectionProps['flex']

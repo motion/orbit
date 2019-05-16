@@ -226,7 +226,7 @@ export class Parallax extends React.PureComponent<any> {
     this.props.scrollingElement.removeEventListener('scroll', this.onScroll)
   }
 
-  componentDidUpdate() {
+  inputFocus() {
     this.space = this.props.pageHeight
     this.update()
   }

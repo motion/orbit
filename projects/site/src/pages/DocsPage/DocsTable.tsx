@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import { employees as allEmployees } from './fakeData'
 
-const cols = ['username', 'password', 'ssn', 'dob', 'email', 'department']
+const cols = ['username', 'password', 'ssn', 'dob', 'email', 'department', 'gender', 'roles']
 const employees = allEmployees.map(x => pick(x, cols))
 const data = [...new Array(1000)].map((_, i) => employees[i % (employees.length - 1)])
 
@@ -82,12 +82,20 @@ export let section = (
     selectable="multi"
     collapsable
     searchable
-    filters={[
+    defaultFilters={[
       {
         type: 'exclude',
         key: 'department',
         value: 'Marketing',
       },
+      {
+        type: 'include',
+        key: 'gender',
+        value: 'female',
+      },
+      // {
+      //   type: 'enum',
+      // }
     ]}
     afterTitle={
       <>

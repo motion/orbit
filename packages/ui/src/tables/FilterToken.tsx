@@ -7,8 +7,8 @@
 import { gloss, Theme, ThemeContext } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
-import * as React from 'react'
 import { PureComponent } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'
@@ -189,8 +189,6 @@ export class FilterToken extends PureComponent {
     } else {
       value = filter.value
     }
-
-    console.log('this.context.activeTheme._originalTheme', this.context.activeTheme._originalTheme)
 
     return (
       <Theme theme={colorize({ background: background || theme.backgroundStrong, color: '#fff' })}>

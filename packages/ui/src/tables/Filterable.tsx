@@ -33,8 +33,8 @@ export type FilterableReceiverProps = {
 
 class FilterableStore {
   props: FilterableProps
-  filters = syncFromProp(this.props, 'defaultFilters', [])
-  searchTerm = syncFromProp(this.props, 'defaultValue', [])
+  filters = syncFromProp(this.props, 'filters', 'defaultFilters', [])
+  searchTerm = syncFromProp(this.props, 'value', 'defaultValue', [])
   focusedToken = -1
   inputFocused = false
   inputNode: HTMLInputElement = null

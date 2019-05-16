@@ -1,4 +1,4 @@
-import { Button, List, Scale, Table } from '@o/ui'
+import { Button, createEnumFilter, List, Scale, Table } from '@o/ui'
 import { pick } from 'lodash'
 import React, { useState } from 'react'
 
@@ -82,6 +82,7 @@ export let section = (
     selectable="multi"
     collapsable
     searchable
+    filters={[createEnumFilter(['password'])]}
     afterTitle={
       <>
         <Button icon="ex" tooltip="Example action button" />

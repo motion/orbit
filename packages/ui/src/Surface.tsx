@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import Gloss, { Col, ColProps, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
+import Gloss, { Base, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -21,9 +21,10 @@ import { Sizes, Space } from './Space'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
+import { Col, ColProps } from './View/Col'
 import { getElevation } from './View/elevate'
 import { getPadding } from './View/pad'
-import { getMargin, ViewProps } from './View/View'
+import { getMargin } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -154,7 +155,7 @@ export type SurfaceSpecificProps = {
   elementTheme?: Gloss.ThemeFn
 }
 
-export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
+export type SurfaceProps = Omit<ColProps, 'size'> & SurfaceSpecificProps
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
 const Context = createContextualProps<SizedSurfaceProps>()
@@ -624,7 +625,7 @@ const getIconSize = (props: SurfaceProps) => {
   return Math.floor(size)
 }
 
-const GlintContain = gloss<ColProps>(Col, {
+const GlintContain = gloss(Base, {
   height: '100%',
   position: 'absolute',
   top: 0,

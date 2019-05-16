@@ -4,27 +4,22 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { gloss, Row, RowProps } from 'gloss'
+import { gloss, Theme } from 'gloss'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
+
+import { Button, ButtonProps } from '../buttons/Button'
+import { Icon } from '../Icon'
+import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
 import { TableFilter } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
-const Token = gloss<RowProps & { focused?: boolean }>(Row, {
+const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
   alignItems: 'center',
-  borderRadius: 4,
-  marginRight: 4,
-  padding: 4,
-  paddingLeft: 6,
-  height: 21,
-  '&:first-of-type': {
-    marginLeft: 3,
-  },
 }).theme(({ focused, background }, theme) => ({
   background: focused ? theme.backgroundHighlightActive : background || theme.backgroundHighlight,
   color: theme.colorActiveHighlight || 'white',
@@ -75,7 +70,7 @@ Value.defaultProps = {
   size: 0.95,
 }
 
-const Chevron = gloss({
+const Chevron = gloss(SimpleText, {
   border: 0,
   paddingLeft: 3,
   paddingRight: 1,
@@ -233,22 +228,24 @@ export class FilterToken extends PureComponent {
     }
 
     return (
-      <Token
-        key={`${filter.key}:${value}=${filter.type}`}
-        tabIndex={-1}
-        onMouseDown={this.onMouseDown}
-        focused={this.props.focused}
-        background={background}
-        ref={this.setRef}
-      >
-        <Key type={this.props.filter.type} focused={this.props.focused}>
-          {filter.key}
-        </Key>
-        <Value>{value}</Value>
-        <Chevron tabIndex={-1} focused={this.props.focused}>
-          &#8964;
-        </Chevron>
-      </Token>
+      <Theme theme={{ background, color: '#fff' }}>
+        <Token
+          key={`${filter.key}:${value}=${filter.type}`}
+          tabIndex={-1}
+          onMouseDown={this.onMouseDown}
+          focused={this.props.focused}
+          ref={this.setRef}
+          space="xs"
+          pad="xs"
+          sizeHeight={0.8}
+        >
+          <Key type={this.props.filter.type} focused={this.props.focused}>
+            {filter.key}
+          </Key>
+          <Value>{value}</Value>
+          <Icon size={12} name="chevron-down" tabIndex={-1} />
+        </Token>
+      </Theme>
     )
   }
 }

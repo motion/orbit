@@ -136,9 +136,19 @@ class TableHeadColumn extends React.PureComponent<{
     }
   }
 
+  lastResize = Date.now()
+
   onResize = (newWidth: number) => {
     const { id, columnSizes, onColumnResize, width } = this.props
+
     if (!onColumnResize) {
+      return
+    }
+
+    // throttle a bit
+    const last = this.lastResize
+    this.lastResize = Date.now()
+    if (Date.now() - last < 30) {
       return
     }
 

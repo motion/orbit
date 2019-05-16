@@ -39,6 +39,7 @@ type TableRowProps = {
   onAddFilter?: TableOnAddFilter
   zebra?: boolean
   selectableStore?: SelectableStore
+  selectable?: boolean
   rowKey?: any
 }
 
@@ -187,7 +188,7 @@ const TableBodyRowContainer = gloss<TableRowProps>({
     height: props.multiline ? 'auto' : props.rowLineHeight,
     lineHeight: `${String(props.rowLineHeight)}px`,
     flexShrink: 0,
-    '&:hover': {
+    '&:hover': props.selectable && {
       background: props.highlighted
         ? background
         : isZebra

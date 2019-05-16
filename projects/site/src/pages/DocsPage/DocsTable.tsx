@@ -79,11 +79,12 @@ export let section = (
   <Table
     title="My List"
     subTitle="Subtitle for my section"
+    selectable="multi"
     collapsable
     searchable
     afterTitle={
       <>
-        <Button icon="wave" tooltip="Some tooltip" />
+        <Button icon="ex" tooltip="Example action button" />
       </>
     }
     bordered

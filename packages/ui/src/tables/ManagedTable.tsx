@@ -174,6 +174,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       (props.items.length && !isEqual(prevProps.items[0], props.items[0]))
     ) {
       // need to reorder or refilter the items
+      console.log('changed thing, getting')
       nextState.sortedRows = getSortedRows(
         props.sortOrder,
         filterRows(props.items, props.filterValue, props.filter),
@@ -268,6 +269,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       sortOrder,
       filterRows(this.props.items, this.props.filterValue, this.props.filter),
     )
+    console.log('got sorted rows', sortedRows[0])
     this.setState({ sortOrder, sortedRows })
     if (this.props.onSortOrder) {
       this.props.onSortOrder(sortOrder)
@@ -374,6 +376,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         onAddFilter={onAddFilter}
         zebra={zebra}
         selectableStore={store}
+        selectable={!!this.props.selectable && !sortedRows[index].values.disabled}
       />
     )
   })
@@ -428,6 +431,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         (typeof placeholder === 'function' ? placeholder(items) : placeholder)) ||
       null
 
+    console.log('ok', this.itemKey, this.state.sortedRows[0])
     return (
       <TableContainer
         minHeight={minHeight}

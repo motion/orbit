@@ -4,11 +4,13 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { PureComponent } from 'react'
-// import ContextMenu from '../ContextMenu'
-import textContent from '../helpers/textContent'
+
+import { textContent } from '../helpers/textContent'
 import { TableFilter } from './types'
+
+
+// import ContextMenu from '../ContextMenu'
 // import { colors } from '../helpers/colors'
 
 // const FilterText = gloss({

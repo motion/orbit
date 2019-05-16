@@ -276,7 +276,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         </Theme>
       )}
       <SizedSurface
-        flexFlow="row"
+        flexDirection="row"
         alignItems="center"
         themeSelect="listItem"
         borderRadius={borderRadius}

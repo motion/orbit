@@ -11,7 +11,7 @@ import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { Icon } from '../Icon'
-import { SimpleText } from '../text/SimpleText'
+import { PopoverMenu } from '../PopoverMenu'
 import { Text } from '../text/Text'
 import { TableFilter } from './types'
 
@@ -70,27 +70,6 @@ Value.defaultProps = {
   size: 0.95,
 }
 
-const Chevron = gloss(SimpleText, {
-  border: 0,
-  paddingLeft: 3,
-  paddingRight: 1,
-  marginRight: 0,
-  fontSize: 16,
-  backgroundColor: 'transparent',
-  position: 'relative',
-  top: -2,
-  height: 'auto',
-  lineHeight: 'initial',
-  '&:hover, &:active, &:focus': {
-    border: 0,
-    backgroundColor: 'transparent',
-  },
-}).withConfig({
-  ignoreAttrs: {
-    focused: true,
-  },
-})
-
 type Props = {
   filter: TableFilter
   focused: boolean
@@ -104,6 +83,10 @@ type Props = {
 export class FilterToken extends PureComponent {
   props: Props
   _ref: Element | void
+
+  state = {
+    menuTemplate: null,
+  }
 
   onMouseDown = () => {
     if (this.props.filter.persistent == null || this.props.filter.persistent === false) {
@@ -161,6 +144,8 @@ export class FilterToken extends PureComponent {
         x: parseInt(`${left}`, 10),
         y: parseInt(`${bottom}`, 10) + 8,
       })
+    } else {
+      this.setState({ menuTemplate })
     }
   }
 
@@ -229,22 +214,36 @@ export class FilterToken extends PureComponent {
 
     return (
       <Theme theme={{ background, color: '#fff' }}>
-        <Token
-          key={`${filter.key}:${value}=${filter.type}`}
-          tabIndex={-1}
-          onMouseDown={this.onMouseDown}
-          focused={this.props.focused}
-          ref={this.setRef}
-          space="xs"
-          pad="xs"
-          sizeHeight={0.8}
-        >
-          <Key type={this.props.filter.type} focused={this.props.focused}>
-            {filter.key}
-          </Key>
-          <Value>{value}</Value>
-          <Icon size={12} name="chevron-down" tabIndex={-1} />
-        </Token>
+        <PopoverMenu
+          // only show popover for non-electron environment
+          openOnClick={!Electron.remote}
+          target={
+            <Token
+              tabIndex={-1}
+              onMouseDown={this.onMouseDown}
+              focused={this.props.focused}
+              ref={this.setRef}
+              size={0.8}
+              sizeIcon={1.2}
+              icon="chevron-down"
+              iconAfter
+            >
+              <Key type={this.props.filter.type} focused={this.props.focused}>
+                {filter.key}
+              </Key>
+              <Value>{value}</Value>
+            </Token>
+          }
+          items={
+            Electron.remote
+              ? []
+              : this.state.menuTemplate.map(item => ({
+                  title: item.label,
+                  onClick: item.click,
+                  after: item.checked && <Icon name="check" />,
+                }))
+          }
+        />
       </Theme>
     )
   }

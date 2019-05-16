@@ -8,7 +8,7 @@ import { ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
 import React, { memo, Ref, useEffect, useRef } from 'react'
 
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
-import textContent from '../helpers/textContent'
+import { textContent } from '../helpers/textContent'
 import { GenericDataRow } from '../types'
 import { FilterIncludeExclude, TableFilter, TableRows } from './types'
 
@@ -249,31 +249,35 @@ export const FilterableSearchInput = memo(
   },
 )
 
+const sep = '~~'
 export const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
   row: GenericDataRow,
-): boolean =>
-  filters
+): boolean => {
+  const matchSearch =
+    !!searchTerm && searchTerm.length
+      ? Object.keys(row.values)
+          .map(key => textContent(row.values[key]))
+          .join(sep) // prevent from matching text spanning multiple columns
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      : true
+
+  const matchFilter = filters
     .map((filter: TableFilter) => {
       if (filter.type === 'enum' && row.category != null) {
         return filter.value.length === 0 || filter.value.indexOf(row.category) > -1
       } else if (filter.type === 'include') {
         return textContent(row.values[filter.key]).toLowerCase() === filter.value.toLowerCase()
       } else if (filter.type === 'exclude') {
-        return (
-          textContent(row.values[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
-        )
+        return textContent(row.values[filter.key]).toLowerCase() !== filter.value.toLowerCase()
       } else {
         return true
       }
     })
-    .reduce((acc, cv) => acc && cv, true) &&
-  (searchTerm != null && searchTerm.length > 0
-    ? Object.keys(row.values)
-        .map(key => textContent(row.values[key]))
-        .join('~~') // prevent from matching text spanning multiple columns
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    : true)
+    .reduce((acc, cv) => acc && cv, true)
+
+  return matchSearch && matchFilter
+}
 
 export const filterRows = (
   rows: TableRows,

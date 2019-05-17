@@ -9,28 +9,33 @@ import { GenericDataRow } from '../types'
 
 export type FilterIncludeExclude = 'include' | 'exclude'
 
-export type EnumFilterOption = {
-  label: string
-  color: string
-  value: string
-}
-
-export type TableFilterEnum = {
+export type TableFilterColumns = {
+  type: 'columns'
+  /** which table column to filter */
   key: string
-  value: string[]
-  type: 'enum'
-  enum: EnumFilterOption[]
+  /** list of all filters for that column */
+  options: {
+    /** value to match */
+    value: string
+    /** display name */
+    label?: string
+    /** color for row/filter */
+    color?: string
+  }[]
+  /** current state of active filters */
+  values: string[]
   persistent?: boolean
 }
 
 export type TableFilterIncludeExclude = {
+  /** maps to table column key */
   key: string
   value: string
   type: FilterIncludeExclude
   persistent?: boolean
 }
 
-export type TableFilter = TableFilterIncludeExclude | TableFilterEnum
+export type TableFilter = TableFilterIncludeExclude | TableFilterColumns
 
 export const MINIMUM_COLUMN_WIDTH = 100
 export const DEFAULT_COLUMN_WIDTH = 200

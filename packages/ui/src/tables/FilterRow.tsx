@@ -9,35 +9,8 @@ import { PureComponent } from 'react'
 import { textContent } from '../helpers/textContent'
 import { TableFilter } from './types'
 
-
 // import ContextMenu from '../ContextMenu'
 // import { colors } from '../helpers/colors'
-
-// const FilterText = gloss({
-//   display: 'flex',
-//   alignSelf: 'baseline',
-//   userSelect: 'none',
-//   cursor: 'pointer',
-//   position: 'relative',
-//   maxWidth: '100%',
-//   '&:hover': {
-//     color: colors.white,
-//   },
-//   '&:hover::after': {
-//     content: '""',
-//     position: 'absolute',
-//     top: 3,
-//     bottom: -2,
-//     left: -6,
-//     right: -6,
-//     borderRadius: '999em',
-//     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-//   },
-//   '&:hover *': {
-//     color: `${colors.white} !important`,
-//     zIndex: 2,
-//   },
-// })
 
 type Props = {
   children: any

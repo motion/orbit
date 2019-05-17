@@ -1,10 +1,11 @@
 import { selectDefined } from '@o/utils'
-import { gloss, Row, useTheme } from 'gloss'
+import { gloss, useTheme } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { FilterToken } from '../tables/FilterToken'
 import { TableFilter } from '../tables/types'
+import { Row } from '../View/Row'
 import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {
@@ -44,20 +45,24 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
       flex={1}
       icon="search"
       placeholder="Search..."
-      betweenIconElement={filters.map((filter, i) => (
-        <FilterToken
-          key={`${filter.key}:${filter.type}${i}`}
-          index={i}
-          filter={filter}
-          focused={i === focusedToken}
-          {...filterProps}
-        />
-      ))}
+      betweenIconElement={
+        <Row space="xs">
+          {filters.map((filter, i) => (
+            <FilterToken
+              key={`${filter.key}:${filter.type}${i}`}
+              index={i}
+              filter={filter}
+              focused={i === focusedToken}
+              {...filterProps}
+            />
+          ))}
+        </Row>
+      }
       after={
         <>
           <ClearButton onClick={onClickClear} visible={clearVisible} />
           {after}
-          {!!actions && <Actions>{actions}</Actions>}
+          {!!actions && <Actions space="xs">{actions}</Actions>}
         </>
       }
       {...props}

@@ -7,15 +7,15 @@
 import { gloss, Theme, ThemeContext } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
-import * as React from 'react'
 import { PureComponent } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { Icon } from '../Icon'
 import { PopoverMenu } from '../PopoverMenu'
 import { SimpleText } from '../text/SimpleText'
-import { TableFilter } from './types'
+import { TableFilter, TableFilterColumns } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -32,16 +32,11 @@ const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
 
 const Key = gloss(SimpleText)
 
-Key.defaultProps = {
-  size: 0.95,
-}
-
 const Value = gloss(SimpleText, {
   maxWidth: 160,
 })
 
 Value.defaultProps = {
-  size: 0.95,
   ellipse: true,
 }
 
@@ -75,13 +70,14 @@ export class FilterToken extends PureComponent {
   showDetails = () => {
     const menuTemplate = []
 
-    if (this.props.filter.type === 'enum') {
+    if (this.props.filter.type === 'columns') {
+      const filter = this.props.filter as TableFilterColumns
       menuTemplate.push(
-        ...this.props.filter.enum.map(({ value, label }) => ({
+        ...filter.options.map(({ value, label }) => ({
           label,
-          click: () => this.changeEnum(value),
+          click: () => this.toggleColumnFilter(value),
           type: 'checkbox',
-          checked: this.props.filter.value.indexOf(value) > -1,
+          checked: filter.values.indexOf(value) > -1,
         })),
       )
     } else {
@@ -112,6 +108,7 @@ export class FilterToken extends PureComponent {
       )
     }
     if (Electron.remote) {
+      // TODO make this automatic and move into <PopoverMenu />
       const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
       const { bottom, left } = this._ref
         ? this._ref.getBoundingClientRect()
@@ -128,7 +125,7 @@ export class FilterToken extends PureComponent {
 
   toggleFilter = () => {
     const { filter, index } = this.props
-    if (filter.type !== 'enum') {
+    if (filter.type !== 'columns') {
       const newFilter: TableFilter = {
         ...filter,
         type: filter.type === 'include' ? 'exclude' : 'include',
@@ -137,22 +134,22 @@ export class FilterToken extends PureComponent {
     }
   }
 
-  changeEnum = (newValue: string) => {
+  toggleColumnFilter = (next: string) => {
     const { filter, index } = this.props
-    if (filter.type === 'enum') {
-      let { value } = filter
-      if (value.indexOf(newValue) > -1) {
-        value = value.filter(v => v !== newValue)
+    if (filter.type === 'columns') {
+      let { values } = filter
+      if (values.indexOf(next) > -1) {
+        values = values.filter(v => v !== next)
       } else {
-        value = value.concat([newValue])
+        values = values.concat([next])
       }
-      if (value.length === filter.enum.length) {
-        value = []
+      if (values.length === filter.options.length) {
+        values = []
       }
       const newFilter: TableFilter = {
         type: 'enum',
         ...filter,
-        value,
+        values,
       }
       this.props.onReplace(index, newFilter)
     }
@@ -172,19 +169,19 @@ export class FilterToken extends PureComponent {
     let background
     let value = ''
 
-    if (filter.type === 'enum') {
-      const getEnum = next => filter.enum.find(e => e.value === next)
-      const firstValue = getEnum(filter.value[0])
-      const secondValue = getEnum(filter.value[1])
-      if (filter.value.length === 0) {
+    if (filter.type === 'columns') {
+      const getName = (next: string) => filter.options.find(e => e.value === next)
+      const firstValue = getName(filter.values[0])
+      const secondValue = getName(filter.values[1])
+      if (filter.values.length === 0) {
         value = 'All'
-      } else if (filter.value.length === 2 && firstValue && secondValue) {
+      } else if (filter.values.length === 2 && firstValue && secondValue) {
         value = `${firstValue.label} or ${secondValue.label}`
-      } else if (filter.value.length === 1 && firstValue) {
+      } else if (filter.values.length === 1 && firstValue) {
         value = firstValue.label
         background = firstValue.color
       } else if (firstValue) {
-        value = `${firstValue.label} or ${filter.value.length - 1} others`
+        value = `${firstValue.label} or ${filter.values.length - 1} others`
       }
     } else {
       value = filter.value

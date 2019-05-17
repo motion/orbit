@@ -1,4 +1,4 @@
-import { linearGradient, toColor } from '@o/color'
+import { invertLightness, linearGradient, toColor } from '@o/color'
 import { ThemeObject, ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
@@ -201,15 +201,13 @@ const alternates: ThemeSet = {
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = parent.background.isDark()
-      ? parent.background.lighten(0.08).alpha(0.5)
-      : parent.background.darken(0.01).alpha(0.25)
-
+    const background = invertLightness(parent.background, 0.05).alpha(0.35)
     return {
       color: parent.color,
       searchInputSizeRadius: 1,
       background,
       backgroundHover: background,
+      buttonBackgroundHover: invertLightness(background, 0.05),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
       glintColor: transparent,

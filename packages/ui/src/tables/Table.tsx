@@ -82,7 +82,6 @@ export function Table(tableProps: TableProps) {
 
   // do filtering...
   const filterable = useFilterable(props)
-  console.log('filterable', filterable)
 
   const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 150 })
 

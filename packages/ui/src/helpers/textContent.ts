@@ -21,7 +21,7 @@ const traverse = (node: Node, res = '') => {
     res += node
   } else if (Array.isArray(node)) {
     // traverse all array members and recursively stringify them
-    return node.map(x => traverse(x, res))
+    return node.map(x => traverse(x, res)).join('')
   } else if (isReactElement(node)) {
     // node is a react element access its children an recursively stringify them
     // @ts-ignore

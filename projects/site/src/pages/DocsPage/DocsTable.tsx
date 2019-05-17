@@ -1,4 +1,4 @@
-import { Button, List, Scale, Table } from '@o/ui'
+import { Button, FilterColumns, FilterExclude, FilterInclude, List, Scale, Table } from '@o/ui'
 import { pick } from 'lodash'
 import React, { useState } from 'react'
 
@@ -84,18 +84,34 @@ export let section = (
     searchable
     defaultFilters={[
       {
-        type: 'exclude',
-        key: 'department',
-        value: 'Marketing',
+        type: FilterExclude,
+        key: 'roles',
+        value: 'hourly',
       },
       {
-        type: 'include',
+        type: FilterInclude,
         key: 'gender',
         value: 'female',
       },
-      // {
-      //   type: 'enum',
-      // }
+      {
+        type: FilterColumns,
+        key: 'Department',
+        values: [],
+        options: [
+          {
+            value: 'Marketing',
+          },
+          {
+            value: 'Sales',
+          },
+          {
+            value: 'Human Resources',
+          },
+          {
+            value: 'Accounting',
+          },
+        ],
+      },
     ]}
     afterTitle={
       <>

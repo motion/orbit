@@ -5,6 +5,8 @@
  * @format
  */
 import { ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
+import { isDefined } from '@o/utils'
+import { capitalize } from 'lodash'
 import React, { memo, Ref, useEffect, useRef } from 'react'
 
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
@@ -31,10 +33,37 @@ export type FilterableReceiverProps = {
   defaultFilters?: TableFilter[]
 }
 
+// allows for optional label
+function normalizeFilters(filters: TableFilter[]) {
+  return filters.map(filter => {
+    if (filter.type === 'columns') {
+      if (filter.options.some(x => !isDefined(x.label))) {
+        return {
+          ...filter,
+          options: filter.options.map(x => ({
+            label: capitalize(x.value),
+            ...x,
+          })),
+        }
+      }
+    }
+    return filter
+  })
+}
+
 class FilterableStore {
   props: FilterableProps
-  filters = syncFromProp(this.props, 'filters', 'defaultFilters', [])
-  searchTerm = syncFromProp(this.props, 'value', 'defaultValue', [])
+  filters = syncFromProp(this.props, {
+    key: 'filters',
+    defaultKey: 'defaultFilters',
+    defaultValue: [],
+    normalize: normalizeFilters,
+  })
+  searchTerm = syncFromProp(this.props, {
+    key: 'value',
+    defaultKey: 'defaultValue',
+    defaultValue: [],
+  })
   focusedToken = -1
   inputFocused = false
   inputNode: HTMLInputElement = null
@@ -138,10 +167,10 @@ class FilterableStore {
       const defaultFilter: TableFilter = this.props.defaultFilters[filterIndex]
       if (
         defaultFilter != null &&
-        defaultFilter.type === 'enum' &&
+        defaultFilter.type === 'columns' &&
         filters[filterIndex].type === 'enum'
       ) {
-        filters[filterIndex]['enum'] = defaultFilter.enum
+        filters[filterIndex].options = defaultFilter.options
       }
       this.filters = filters
       // filter for this key already exists
@@ -264,12 +293,16 @@ export const filterRowsFactory = (filters: TableFilter[], searchTerm: string) =>
 
   const matchFilter = filters
     .map((filter: TableFilter) => {
-      if (filter.type === 'enum' && row.category != null) {
-        return filter.value.length === 0 || filter.value.indexOf(row.category) > -1
+      const val = row.values[filter.key]
+      if (filter.type === 'columns') {
+        if (!filter.values.length) {
+          return true
+        }
+        return filter.values.some(col => anyMatches(col, val))
       } else if (filter.type === 'include') {
-        return textContent(row.values[filter.key]).toLowerCase() === filter.value.toLowerCase()
+        return anyMatches(filter.value.toLowerCase(), val)
       } else if (filter.type === 'exclude') {
-        return textContent(row.values[filter.key]).toLowerCase() !== filter.value.toLowerCase()
+        return anyMatches(filter.value.toLowerCase(), val) === false
       } else {
         return true
       }
@@ -277,6 +310,14 @@ export const filterRowsFactory = (filters: TableFilter[], searchTerm: string) =>
     .reduce((acc, cv) => acc && cv, true)
 
   return matchSearch && matchFilter
+}
+
+function anyMatches(needle: string, hayStack: any) {
+  if (Array.isArray(hayStack)) {
+    return hayStack.some(x => anyMatches(x, needle))
+  } else {
+    return textContent(hayStack).toLowerCase() === needle
+  }
 }
 
 export const filterRows = (

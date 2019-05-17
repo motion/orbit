@@ -45,6 +45,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
       flex={1}
       icon="search"
       placeholder="Search..."
+      flexWrap="wrap"
       betweenIconElement={
         <Row space="xs">
           {filters.map((filter, i) => (
@@ -65,6 +66,9 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
           {!!actions && <Actions space="xs">{actions}</Actions>}
         </>
       }
+      elementProps={{
+        minWidth: 100,
+      }}
       {...props}
     />
   )

@@ -26,7 +26,7 @@ import { VirtualList, VirtualListProps } from './VirtualList'
 export type ListProps = SectionSpecificProps &
   /** Override the onOpen/onSelect */
   Omit<VirtualListProps<Bit | ListItemProps>, 'onOpen' | 'onSelect'> &
-  Partial<UseFilterProps<any>> & {
+  Omit<Partial<UseFilterProps<any>>, 'items'> & {
     /** Make list expand to parent height */
     flex?: number
 

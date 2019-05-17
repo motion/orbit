@@ -2,6 +2,18 @@ import { readJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
 
+type TypeDesc = {
+  name
+  params
+}
+
+type ApiType = {
+  name: string
+  typeString: string
+  comment: string
+  types: TypeDesc[]
+}
+
 export async function commandGenTypes(options: { projectRoot: string; projectEntry: string }) {
   const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
@@ -20,9 +32,7 @@ export async function commandGenTypes(options: { projectRoot: string; projectEnt
     defaultExportSymbol.valueDeclaration,
   )
 
-  const symbol = defaultExportType.symbol
-
-  console.log('symbol', symbol.getName())
+  let apiTypes: ApiType[] = []
 
   for (const sig of defaultExportType.getCallSignatures()) {
     const returns = sig.getReturnType()
@@ -32,11 +42,26 @@ export async function commandGenTypes(options: { projectRoot: string; projectEnt
 
       for (const prop of returnApiProperties) {
         const type = checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration)
+        const typeString = checker.typeToString(type)
+        const comment =
+          prop.getDocumentationComment &&
+          ts.displayPartsToString(prop.getDocumentationComment(checker))
 
-        console.log('type', checker.typeToString(type))
+        // if (type.symbol.members) {
+        //   type.symbol.members.forEach(x => {
+        //     console.log(x.getName(), x.getDocumentationComment(checker))
+        //   })
+        // }
+
+        apiTypes.push({
+          name: prop.getName(),
+          typeString,
+          comment,
+          types: [],
+        })
       }
     }
   }
 
-  return
+  return apiTypes
 }

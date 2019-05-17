@@ -1,4 +1,4 @@
-import { readJSON } from 'fs-extra'
+import { readJSON, writeJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
 
@@ -14,7 +14,11 @@ type ApiType = {
   types: TypeDesc[]
 }
 
-export async function commandGenTypes(options: { projectRoot: string; projectEntry: string }) {
+export async function commandGenTypes(options: {
+  projectRoot: string
+  projectEntry: string
+  out?: string
+}) {
   const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
 
@@ -32,7 +36,7 @@ export async function commandGenTypes(options: { projectRoot: string; projectEnt
     defaultExportSymbol.valueDeclaration,
   )
 
-  let apiTypes: ApiType[] = []
+  let apiTypes: { [key: string]: ApiType } = {}
 
   for (const sig of defaultExportType.getCallSignatures()) {
     const returns = sig.getReturnType()
@@ -41,27 +45,32 @@ export async function commandGenTypes(options: { projectRoot: string; projectEnt
       const returnApiProperties = returns.getApparentProperties()
 
       for (const prop of returnApiProperties) {
+        const name = prop.getName()
         const type = checker.getTypeOfSymbolAtLocation(prop, prop.valueDeclaration)
         const typeString = checker.typeToString(type)
         const comment =
           prop.getDocumentationComment &&
           ts.displayPartsToString(prop.getDocumentationComment(checker))
 
-        // if (type.symbol.members) {
-        //   type.symbol.members.forEach(x => {
-        //     console.log(x.getName(), x.getDocumentationComment(checker))
-        //   })
-        // }
-
-        apiTypes.push({
-          name: prop.getName(),
+        apiTypes[name] = {
+          name,
           typeString,
           comment,
           types: [],
-        })
+        }
       }
     }
   }
 
-  return apiTypes
+  if (options.out) {
+    await writeJSON(options.out, apiTypes)
+    console.log(`Written to ${options.out}`)
+    return
+  }
+
+  console.log(`Found API types:
+
+${JSON.stringify(apiTypes, null, 2)}
+
+`)
 }

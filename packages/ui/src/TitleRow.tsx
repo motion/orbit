@@ -134,9 +134,7 @@ export const TitleRow = themeable(
             </Row>
           </Row>
           {below}
-          {bordered && (
-            <BorderBottom height={borderSize} left={10 * sizePadding} right={10 * sizePadding} />
-          )}
+          {bordered && <BorderBottom height={borderSize} />}
         </TitleRowChrome>
       )
     },

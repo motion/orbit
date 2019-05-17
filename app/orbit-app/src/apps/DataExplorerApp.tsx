@@ -1,7 +1,7 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
-import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, Select, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
@@ -40,7 +40,6 @@ export function QueryBuilderIndex() {
 
 function QueryBuilderMain(props: AppProps) {
   const nav = useRef<StackNav>(null)
-
   return (
     <StackNavigator
       ref={nav}
@@ -133,13 +132,31 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
       pad="xl"
       titlePad="lg"
       backgrounded
+      titleBorder
       title={props.title}
       afterTitle={
         <>
-          <Select options={['API', 'GraphQL']} />
+          <Labeled>
+            <Labeled.Item group>
+              <Button tooltip="API" icon="code" />
+              <Button tooltip="Graph" icon="layout" />
+            </Labeled.Item>
+            <Labeled.Text>Query</Labeled.Text>
+          </Labeled>
+
+          <Labeled>
+            <Labeled.Item>
+              <Button tooltip="Explore API" icon="layouts" />
+            </Labeled.Item>
+            <Labeled.Text>Explore</Labeled.Text>
+          </Labeled>
         </>
       }
     >
+      <Layout type="row">
+        <Pane flex={2} />
+        <Pane scrollable="y" />
+      </Layout>
       {JSON.stringify(props)}
     </Section>
   )

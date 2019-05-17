@@ -1,7 +1,8 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Theme } from 'gloss'
+import { Base, Theme } from 'gloss'
 import React, { forwardRef } from 'react'
 
+import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Scale } from './Scale'
@@ -131,7 +132,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       <Scale size={titleScale}>
         <Theme alt="flat">
           <TitleRow
-            bordered={bordered || titleBorder}
             backgrounded={selectDefined(backgrounded, bordered)}
             title={title}
             subTitle={subTitle}
@@ -155,6 +155,15 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>
     )
+
+    if (bordered || titleBorder) {
+      titleEl = (
+        <Base position="relative">
+          {titleEl}
+          {!!(bordered || titleBorder) && <BorderBottom opacity={0.5} />}
+        </Base>
+      )
+    }
   }
 
   return (

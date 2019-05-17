@@ -13,9 +13,7 @@ import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 
-export async function commandDev(options: { projectRoot: string; verbose?: boolean }) {
-  reporter.setVerbose(options.verbose)
-
+export async function commandDev(options: { projectRoot: string }) {
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {

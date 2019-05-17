@@ -1,6 +1,6 @@
 import { createApi, createApp } from '@o/kit'
 
-import { PostgresApi } from './api.node'
+import PostgresApi from './api.node'
 import { graph } from './graph.node'
 import { postgresIcon } from './postgresIcon'
 

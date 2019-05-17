@@ -14,7 +14,6 @@ import { findDOMNode } from 'react-dom'
 import { Button, ButtonProps } from '../buttons/Button'
 import { Icon } from '../Icon'
 import { PopoverMenu } from '../PopoverMenu'
-import { SimpleText } from '../text/SimpleText'
 import { TableFilter, TableFilterColumns } from './types'
 
 // @ts-ignore
@@ -22,23 +21,16 @@ const Electron = typeof electronRequire !== 'undefined' ? electronRequire('elect
 
 const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
   alignItems: 'center',
-}).theme(({ focused, background }, theme) => ({
-  background: focused ? theme.backgroundHighlightActive : background || theme.backgroundHighlight,
+}).theme(({ focused }, theme) => ({
+  background:
+    'red' || focused
+      ? theme.backgroundHighlightActive
+      : theme.background || theme.backgroundHighlight,
   color: theme.colorActiveHighlight || theme.color,
   '&:active': {
     background: theme.backgroundHighlightActive,
   },
 }))
-
-const Key = gloss(SimpleText)
-
-const Value = gloss(SimpleText, {
-  maxWidth: 160,
-})
-
-Value.defaultProps = {
-  ellipse: true,
-}
 
 type Props = {
   filter: TableFilter
@@ -187,14 +179,21 @@ export class FilterToken extends PureComponent {
       value = filter.value
     }
 
+    const filterTheme = colorize({
+      background: 'red' || background || theme.backgroundStrong,
+      color: '#fff',
+    })
+    console.log('filterTheme', filterTheme)
+
     return (
-      <Theme theme={colorize({ background: background || theme.backgroundStrong, color: '#fff' })}>
+      <Theme theme={filterTheme}>
         <PopoverMenu
           // only show popover for non-electron environment
           openOnClick={!Electron.remote}
           popoverTheme={this.context.activeTheme._originalTheme}
           target={
             <Token
+              {...{ debug: true }}
               tagName="div"
               tabIndex={-1}
               onMouseDown={this.onMouseDown}
@@ -205,11 +204,9 @@ export class FilterToken extends PureComponent {
               icon="chevron-down"
               iconAfter
             >
-              <Key>
-                {capitalize(filter.key)}
-                {this.props.filter.type === 'exclude' ? '≠' : '='}
-              </Key>
-              <Value>{value}</Value>
+              {capitalize(filter.key)}
+              {this.props.filter.type === 'exclude' ? '≠' : '='}
+              {value}
             </Token>
           }
           items={

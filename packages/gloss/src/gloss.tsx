@@ -361,7 +361,7 @@ function addDynamicStyles(
 
   // merge parent and current classnames
   if (parentClassNames) {
-    classNames = [...parentClassNames, ...(classNames || [])]
+    classNames = [...(classNames || []), ...parentClassNames]
   }
 
   // check what classNames have been removed if this is a secondary render

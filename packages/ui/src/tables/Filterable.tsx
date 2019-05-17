@@ -38,14 +38,17 @@ function normalizeFilters(filters: TableFilterSimple[]): TableFilter[] {
   return filters.map(normalizeFilter)
 }
 
+const themeColors = ['orange', 'red', 'blue', 'green', 'yellow']
+const randomColor = (index: number) => themeColors[index % (themeColors.length - 1)]
+
 function normalizeFilter(filter: TableFilterSimple): TableFilter {
   if (filter.type === 'columns') {
     if (filter.options.some(x => typeof x === 'string' || !isDefined(x.label))) {
       return {
         ...filter,
-        options: (filter.options as any).map(x =>
+        options: (filter.options as any).map((x, i) =>
           typeof x === 'string'
-            ? { label: capitalize(x), value: x }
+            ? { label: capitalize(x), value: x, color: randomColor(i) }
             : {
                 label: capitalize(x.value),
                 value: x.value,

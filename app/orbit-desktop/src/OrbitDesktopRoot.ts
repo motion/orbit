@@ -90,6 +90,7 @@ import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { BuildServer } from '@o/build-server'
 import { remove } from 'lodash'
+import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 
 const log = new Logger('desktop')
 
@@ -339,10 +340,7 @@ export class OrbitDesktopRoot {
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
         }),
-        resolveCommand(AppOpenWorkspaceCommand, async ({ path }) => {
-          console.log('should load workspace', path)
-          return true
-        }),
+        AppOpenWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,
         CallAppBitApiMethodResolver,

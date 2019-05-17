@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+
 import { AppBit } from '../interfaces/AppBit'
 import { Space } from '../interfaces/SpaceInterface'
 import { AppEntity } from './AppEntity.node'
@@ -10,6 +11,12 @@ export class SpaceEntity extends BaseEntity implements Space {
 
   @Column()
   name?: string
+
+  @Column()
+  identifier?: string
+
+  @Column()
+  directory?: string
 
   @Column({ type: 'simple-json' })
   colors?: string[]

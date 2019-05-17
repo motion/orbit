@@ -2,7 +2,9 @@ import { AppOpenWorkspaceCommand } from '@o/models'
 
 import { getOrbitDesktop } from './getDesktop'
 
-export async function commandWs(options: { workspaceRoot: string }) {
+type CommandWSOptions = { workspaceRoot: string }
+
+export async function commandWs(options: CommandWSOptions) {
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {
@@ -15,6 +17,7 @@ export async function commandWs(options: { workspaceRoot: string }) {
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
+    return
   }
   return
 }

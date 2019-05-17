@@ -56,7 +56,8 @@
     "yargs": "^13.2.2",
     "yurnalist": "^1.0.5",
     "wait-on": "^3.2.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "watchpack": "^1.6.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"

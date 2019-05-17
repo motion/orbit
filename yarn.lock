@@ -21402,7 +21402,7 @@ warpjs@1.0.8:
   resolved "https://registry.yarnpkg.com/warpjs/-/warpjs-1.0.8.tgz#61af080a5aa521e31fb50b1967d944067ce14910"
   integrity sha512-WBlSYafy87MFhH3azS0mN10novFhwXFjOXT397wNtJaGMUIKwv0NRyOIuEA0VvAIWViUi+kgeEVc4wCMb6K8ig==
 
-watchpack@^1.5.0:
+watchpack@^1.5.0, watchpack@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.6.0.tgz#4bc12c2ebe8aa277a71f1d3f14d685c7b446cd00"
   integrity sha512-i6dHe3EyLjMmDlU1/bGQpEw25XSjkJULPuAVKCbNRefQVq48yXKUpwg538F7AZTf9kyr57zj++pQFltUa5H7yA==

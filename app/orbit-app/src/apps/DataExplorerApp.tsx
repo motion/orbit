@@ -1,7 +1,7 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
 import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
@@ -127,9 +127,11 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
 }
 
 function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
+  const [mode, setMode] = useState<'api' | 'graph'>('api')
+
   return (
     <Section
-      pad="xl"
+      flex={1}
       titlePad="lg"
       backgrounded
       titleBorder
@@ -153,14 +155,35 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
         </>
       }
     >
-      <Layout type="row">
-        <Pane flex={2} />
-        <Pane scrollable="y" />
-      </Layout>
+      {mode === 'api' ? <APIQueryBuild id={+props.id} /> : <GraphQueryBuild id={+props.id} />}
       {JSON.stringify(props)}
     </Section>
   )
 }
+
+const APIQueryBuild = memo((props: { id: number }) => {
+  const [app, def] = useAppWithDefinition(+props.id)
+  return (
+    <Layout type="row">
+      <Pane flex={2} resizable>
+        <Layout type="column">
+          <Pane flex={2}>123</Pane>
+          <Pane>123</Pane>
+        </Layout>
+      </Pane>
+      <Pane title="Explore API" scrollable="y" />
+    </Layout>
+  )
+})
+
+const GraphQueryBuild = memo((props: { id: number }) => {
+  return (
+    <Layout type="row">
+      <Pane flex={2} />
+      <Pane title="Explore API" scrollable="y" />
+    </Layout>
+  )
+})
 
 // unused
 export function CreateQuery(props: AppProps) {

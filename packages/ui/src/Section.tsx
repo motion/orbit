@@ -1,10 +1,11 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Base, Theme } from 'gloss'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, Suspense } from 'react'
 
 import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
+import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
@@ -208,7 +209,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           overflow="hidden"
           {...viewProps}
         >
-          {children}
+          <Suspense fallback={<Loading />}>{children}</Suspense>
         </Col>
       </Reset>
       {below}

@@ -95,7 +95,7 @@ export let section = (
       },
       {
         type: FilterColumns,
-        key: 'Department',
+        key: 'department',
         values: [],
         options: [
           {

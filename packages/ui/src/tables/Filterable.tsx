@@ -316,7 +316,7 @@ function anyMatches(needle: string, hayStack: any) {
   if (Array.isArray(hayStack)) {
     return hayStack.some(x => anyMatches(x, needle))
   } else {
-    return textContent(hayStack).toLowerCase() === needle
+    return hayStack === needle || textContent(hayStack).toLowerCase() === needle
   }
 }
 

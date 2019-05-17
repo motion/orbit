@@ -96,7 +96,7 @@ const HeadContent = memo(() => {
 
       <View
         maxHeight={isSmall ? 0 : 'auto'}
-        overflow={isSmall ? 'hidden' : 'auto'}
+        overflow={isSmall ? 'hidden' : 'visible'}
         position="relative"
         flex={1}
         width={textsWidth}

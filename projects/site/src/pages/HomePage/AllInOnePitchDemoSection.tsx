@@ -449,7 +449,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.16}
+          opacity={0.12}
           transform={{ y: '-35%', x: '-25%', scale: 1.35 }}
           background="radial-gradient(circle closest-side, #F64097, #F27B81, transparent)"
         />
@@ -457,7 +457,7 @@ export default function NeckSection() {
 
       <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.2}
+          opacity={0.15}
           transform={{ y: '30%', x: '40%', scale: 1.48 }}
           background="radial-gradient(circle closest-side, #00E5FF, #009A4C, transparent)"
         />

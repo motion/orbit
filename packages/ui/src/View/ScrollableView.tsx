@@ -44,18 +44,18 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     }),
   }
 
-  if (!scrollable) {
-    return (
-      <ScrollableInner ref={ref} {...viewProps} {...props}>
-        {content}
-      </ScrollableInner>
-    )
-  }
-
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
   const innerPad = getPadding(props)
   const hasInnerPad = !!(innerPad && innerPad.padding)
+
+  if (!scrollable) {
+    return (
+      <ScrollableInner ref={ref} {...viewProps} {...props} {...innerPad}>
+        {content}
+      </ScrollableInner>
+    )
+  }
 
   if (hasInnerPad) {
     content = (

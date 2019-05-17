@@ -22,7 +22,6 @@ import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
-import { getPadding } from './View/pad'
 import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -557,7 +556,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
         },
     ...styles,
     ...marginStyle,
-    ...getPadding(props),
     ...fontStyle,
   }
 })

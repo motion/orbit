@@ -35,6 +35,12 @@ export type TableFilterIncludeExclude = {
   persistent?: boolean
 }
 
+export type TableFilterColumnsSimple = TableFilterColumns & {
+  options: string[]
+}
+
+export type TableFilterSimple = TableFilterIncludeExclude | TableFilterColumnsSimple
+
 export type TableFilter = TableFilterIncludeExclude | TableFilterColumns
 
 export const MINIMUM_COLUMN_WIDTH = 100

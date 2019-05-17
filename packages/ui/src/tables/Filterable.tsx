@@ -12,14 +12,14 @@ import React, { memo, Ref, useEffect, useRef } from 'react'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
 import { textContent } from '../helpers/textContent'
 import { GenericDataRow } from '../types'
-import { FilterIncludeExclude, TableFilter, TableRows } from './types'
+import { FilterIncludeExclude, TableFilter, TableFilterSimple, TableRows } from './types'
 
 export type FilterableProps = {
   addFilter?: (filter: TableFilter) => void
   searchable?: boolean
   searchTerm?: string
-  filters?: TableFilter[]
-  defaultFilters?: TableFilter[]
+  filters?: TableFilterSimple[]
+  defaultFilters?: TableFilterSimple[]
   onEnter?: (value: string) => any
   onFilterChange?: (filters: TableFilter[]) => void
 }
@@ -34,16 +34,21 @@ export type FilterableReceiverProps = {
 }
 
 // allows for optional label
-function normalizeFilters(filters: TableFilter[]) {
+function normalizeFilters(filters: TableFilterSimple[]): TableFilter[] {
   return filters.map(filter => {
     if (filter.type === 'columns') {
-      if (filter.options.some(x => !isDefined(x.label))) {
+      if (filter.options.some(x => typeof x === 'string' || !isDefined(x.label))) {
         return {
           ...filter,
-          options: filter.options.map(x => ({
-            label: capitalize(x.value),
-            ...x,
-          })),
+          options: filter.options.map(x =>
+            typeof x === 'string'
+              ? { label: capitalize(x), value: x }
+              : {
+                  label: capitalize(x.value),
+                  value: x.value,
+                  color: x.color,
+                },
+          ),
         }
       }
     }

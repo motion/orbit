@@ -97,20 +97,7 @@ export let section = (
         type: FilterColumns,
         key: 'department',
         values: [],
-        options: [
-          {
-            value: 'Marketing',
-          },
-          {
-            value: 'Sales',
-          },
-          {
-            value: 'Human Resources',
-          },
-          {
-            value: 'Accounting',
-          },
-        ],
+        options: ['Marketing', 'Sales', 'Human Resources', 'Accounting'],
       },
     ]}
     afterTitle={

@@ -9,8 +9,11 @@ export type NavigatorProps = {
   navigation: StackNav
 }
 
+type StackItemProps = AppProps
+
 type StackNavigatorProps = {
   useNavigator?: StackNav
+  defaultItem?: { id: string; props: StackItemProps }
   items: {
     [key: string]: FunctionComponent<AppProps & NavigatorProps>
   }
@@ -32,6 +35,12 @@ export const StackNavigator = forwardRef<
     if (!ref) return
     ref['current'] = stackNav
   }, [ref])
+
+  useEffect(() => {
+    if (!stackNav.stack.length && props.defaultItem) {
+      stackNav.navigate(props.defaultItem.id, props.defaultItem.props)
+    }
+  }, [])
 
   return (
     <Slider curFrame={stack.length - 1}>

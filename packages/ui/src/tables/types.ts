@@ -1,4 +1,4 @@
-import { GenericDataRow } from '../types'
+import { GenericDataRow, Omit } from '../types'
 
 /**
  * Copyright 2018-present Facebook.
@@ -35,8 +35,8 @@ export type TableFilterIncludeExclude = {
   persistent?: boolean
 }
 
-export type TableFilterColumnsSimple = TableFilterColumns & {
-  options: string[]
+export type TableFilterColumnsSimple = Omit<TableFilterColumns, 'options'> & {
+  options: string[] | TableFilterColumns['options']
 }
 
 export type TableFilterSimple = TableFilterIncludeExclude | TableFilterColumnsSimple

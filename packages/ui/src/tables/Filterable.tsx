@@ -35,40 +35,45 @@ export type FilterableReceiverProps = {
 
 // allows for optional label
 function normalizeFilters(filters: TableFilterSimple[]): TableFilter[] {
-  return filters.map(filter => {
-    if (filter.type === 'columns') {
-      if (filter.options.some(x => typeof x === 'string' || !isDefined(x.label))) {
-        return {
-          ...filter,
-          options: filter.options.map(x =>
-            typeof x === 'string'
-              ? { label: capitalize(x), value: x }
-              : {
-                  label: capitalize(x.value),
-                  value: x.value,
-                  color: x.color,
-                },
-          ),
-        }
+  return filters.map(normalizeFilter)
+}
+
+function normalizeFilter(filter: TableFilterSimple): TableFilter {
+  if (filter.type === 'columns') {
+    if (filter.options.some(x => typeof x === 'string' || !isDefined(x.label))) {
+      return {
+        ...filter,
+        options: (filter.options as any).map(x =>
+          typeof x === 'string'
+            ? { label: capitalize(x), value: x }
+            : {
+                label: capitalize(x.value),
+                value: x.value,
+                color: x.color,
+              },
+        ),
       }
     }
-    return filter
-  })
+  }
+  return filter as any
 }
 
 class FilterableStore {
   props: FilterableProps
+
   filters = syncFromProp(this.props, {
     key: 'filters',
     defaultKey: 'defaultFilters',
     defaultValue: [],
     normalize: normalizeFilters,
   })
+
   searchTerm = syncFromProp(this.props, {
     key: 'value',
     defaultKey: 'defaultValue',
     defaultValue: [],
   })
+
   focusedToken = -1
   inputFocused = false
   inputNode: HTMLInputElement = null
@@ -169,7 +174,7 @@ class FilterableStore {
     const filterIndex = this.filters.findIndex(f => f.key === filter.key)
     if (filterIndex > -1) {
       const filters = [...this.filters]
-      const defaultFilter: TableFilter = this.props.defaultFilters[filterIndex]
+      const defaultFilter: TableFilter = normalizeFilter(this.props.defaultFilters[filterIndex])
       if (
         defaultFilter != null &&
         defaultFilter.type === 'columns' &&

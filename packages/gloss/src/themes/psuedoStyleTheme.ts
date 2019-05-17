@@ -85,13 +85,14 @@ const applyPsuedoTheme = (props, theme, previous, useTheme = false) => {
     if (props[extraStyleProp] === null || props[extraStyleProp] === false) continue // forced empty
 
     // cache sub-keys like backgroundHover colorHover
-    if (!SubThemeKeys[postfix]) {
-      SubThemeKeys[postfix] = themeKeys.map(([k]) => [`${k}${postfix}`, k] as [string, string])
+    let subKeys = SubThemeKeys[postfix]
+    if (!subKeys) {
+      subKeys = themeKeys.map(([k]) => [`${k}${postfix}`, k] as [string, string])
+      SubThemeKeys[postfix] = subKeys
     }
-    const subThemeKeys = SubThemeKeys[postfix]
 
     // now process and get styles, but dont assign them yet
-    let psuedoStyle = getPsuedoStyles(props, theme, subThemeKeys, useTheme).styles
+    let psuedoStyle = getPsuedoStyles(props, theme, subKeys, useTheme).styles
 
     // for any prop overrides from base, override them on psuedo too
     // (this could be an optional parameter)

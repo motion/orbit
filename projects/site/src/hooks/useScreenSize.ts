@@ -9,7 +9,7 @@ export const sizes = {
   small: { maxWidth: widths.small },
   medium: { minWidth: widths.medium },
   large: { minWidth: widths.large },
-  short: { maxHeight: 800 },
+  short: { maxHeight: 900 },
 }
 
 export function useIsTiny(): ScreenSize {

@@ -1,4 +1,5 @@
 import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+
 import { Config } from '../config'
 
 export function styleVal(val: any, theme: ThemeObject, props?: Object) {
@@ -19,7 +20,7 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet {
     }
     // &:hover, etc
     const abbrev = Config.pseudoAbbreviations ? Config.pseudoAbbreviations[key] : null
-    if (key[0] === '&' || abbrev) {
+    if (abbrev || key[0] === '&') {
       const psuedoKey = abbrev || key
       const subStyle = props[key]
       const val = {}
@@ -30,6 +31,5 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet {
       styles[psuedoKey] = val
     }
   }
-
   return styles
 }

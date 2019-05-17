@@ -2,7 +2,7 @@ import { command } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, ProvideFocus, Theme, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
@@ -21,7 +21,7 @@ import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
-import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
+import { OrbitApp } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
@@ -50,11 +50,9 @@ export const OrbitPage = memo(() => {
           className={`theme-${themeStore.themeColor} app-parent-bounds`}
           color={theme.color}
         >
-          <ProvideFocus>
-            <OrbitPageInner />
-            {/* Inside provide stores to capture all our relevant stores */}
-            <OrbitEffects />
-          </ProvideFocus>
+          <OrbitPageInner />
+          {/* Inside provide stores to capture all our relevant stores */}
+          <OrbitEffects />
         </AppWrapper>
       </Theme>
     </ProvideStores>
@@ -135,19 +133,26 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     identifier: pane.type,
   }))
 
-  const appsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
+  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
 
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
     .map(id => allApps.find(x => x.id === id))
     .filter(Boolean)
+    .map(x => ({
+      id: x.id,
+      definition: appDefsWithViews[x.identifier],
+    }))
 
   let contentArea = null
 
   useEffect(() => {
+    if (App.appConf.appId === -1) {
+      return
+    }
     hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
       built: forceUpdate,
     })
-  }, [])
+  }, [App.appConf.appId])
 
   if (isEditing) {
     contentArea = (
@@ -160,9 +165,19 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       </Suspense>
     )
   } else {
-    contentArea = stableSortedApps
-      .filter(x => appsWithViews[x.identifier])
-      .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
+    // load all apps
+    contentArea = (
+      <>
+        {stableSortedApps.map(app => (
+          <OrbitApp
+            key={app.id}
+            id={app.id}
+            identifier={app.definition.id}
+            appDef={app.definition}
+          />
+        ))}
+      </>
+    )
   }
 
   const onOpen = useCallback(rows => {
@@ -189,9 +204,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   const appId = `${App.appConf.appId}`
-  return (
-    <OrbitAppRenderOfDefinition appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
-  )
+  return <OrbitApp appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
 }
 
 const OrbitContentArea = gloss({

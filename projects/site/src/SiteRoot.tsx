@@ -9,7 +9,7 @@ import { SiteStoreContext } from './SiteStore'
 
 export const SiteRoot = hot(() => {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary name="Site Root">
       <SiteStoreContext.Provider>
         {/* this key helps HMR for lazy imports... */}
         <Router
@@ -18,7 +18,7 @@ export const SiteRoot = hot(() => {
         >
           <Layout>
             <Suspense fallback={null}>
-              <View disableScrolling={recentHMR} hashScrollBehavior="smooth" />
+              <View disableScrolling={window['recentHMR']} hashScrollBehavior="smooth" />
             </Suspense>
           </Layout>
         </Router>
@@ -27,19 +27,15 @@ export const SiteRoot = hot(() => {
   )
 })
 
-export let recentHMR = false
-
-export function getRecentHMR() {
-  return recentHMR
-}
+window['recentHMR'] = false
 
 if (module['hot']) {
   let tm
   module['hot'].addStatusHandler(() => {
-    recentHMR = true
+    window['recentHMR'] = true
     clearTimeout(tm)
     tm = setTimeout(() => {
-      recentHMR = false
+      window['recentHMR'] = false
     }, 500)
   })
 }

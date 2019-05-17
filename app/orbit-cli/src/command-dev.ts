@@ -1,27 +1,42 @@
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import { AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
+import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
 import { OR_TIMED_OUT, orTimeout, randomString, sleep } from '@o/utils'
 import bonjour from 'bonjour'
 import execa from 'execa'
 import { pathExists, readJSON } from 'fs-extra'
 import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
+import { addProcessDispose } from './processDispose'
+import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 
-export async function commandDev(options: { projectRoot: string }) {
+export async function commandDev(options: { projectRoot: string; verbose?: boolean }) {
+  reporter.setVerbose(options.verbose)
+
   let orbitDesktop = await getOrbitDesktop()
+
+  if (!orbitDesktop) {
+    process.exit(0)
+  }
+
   try {
     const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: options.projectRoot,
     })
-    console.log('sent dev command, got app', appId)
     await orbitDesktop.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
     })
-    console.log('opening app window id', appId)
+
+    addProcessDispose(async () => {
+      reporter.info('Disposing orbit dev process...')
+      await orbitDesktop.command(AppDevCloseCommand, {
+        appId,
+      })
+    })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
   }
@@ -66,22 +81,19 @@ async function getOrbitDesktop() {
     return
   }
 
-  let Mediator = new MediatorClient({
-    transports: [
-      new WebSocketClientTransport(
-        'cli-client-' + randomString(5),
-        new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
-          WebSocket,
-          minReconnectionDelay: 1,
-        }),
-      ),
-    ],
+  const socket = new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+    WebSocket,
+    minReconnectionDelay: 1,
   })
 
-  // let mediator connect
-  await sleep(100)
+  // we want to be sure it opens before we send messages
+  await new Promise(res => {
+    socket.onopen = res
+  })
 
-  return Mediator
+  return new MediatorClient({
+    transports: [new WebSocketClientTransport('cli-client-' + randomString(5), socket)],
+  })
 }
 
 async function runOrbitDesktop(): Promise<boolean> {
@@ -90,30 +102,36 @@ async function runOrbitDesktop(): Promise<boolean> {
   let cwd = process.cwd()
 
   if (isInMonoRepo) {
+    reporter.info('\nDev mode: wait for webpack. Start with `run orbit-app`...')
+    await waitOn({ resources: [`http://localhost:3999`], interval: 150 })
     const monoRoot = join(__dirname, '..', '..', '..')
     const script = join(monoRoot, 'app', 'orbit-main', 'scripts', 'run-orbit.sh')
     cwd = join(script, '..', '..')
     cmd = `./${relative(cwd, script)}`
     configStore.orbitMainPath.set(cmd)
   } else if (!cmd) {
-    console.log('No orbit path found, searching...')
+    reporter.info('No orbit path found, searching...')
   }
 
   if (cmd) {
     try {
-      console.log('Running Orbit', cmd, cwd)
+      reporter.info('Running Orbit', cmd, cwd)
       const child = execa(cmd, [], {
+        detached: true,
         cwd,
         env: {
           HIDE_ON_START: 'true',
           DISABLE_LOGGING: 'true',
           DISABLE_SYNCERS: 'true',
           DISABLE_MENU: 'true',
+          SINGLE_APP_MODE: 'true',
         },
       })
 
-      child.stdout.pipe(process.stdout)
-      child.stderr.pipe(process.stderr)
+      if (reporter.isVerbose) {
+        child.stdout.pipe(process.stdout)
+        child.stderr.pipe(process.stderr)
+      }
 
       return true
     } catch (e) {

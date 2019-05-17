@@ -1,10 +1,10 @@
-import { Button, List, Scale, Table } from '@o/ui'
+import { Button, FilterColumns, FilterExclude, FilterInclude, List, Scale, Table } from '@o/ui'
 import { pick } from 'lodash'
 import React, { useState } from 'react'
 
 import { employees as allEmployees } from './fakeData'
 
-const cols = ['username', 'password', 'ssn', 'dob', 'email', 'department']
+const cols = ['username', 'password', 'ssn', 'dob', 'email', 'department', 'gender', 'roles']
 const employees = allEmployees.map(x => pick(x, cols))
 const data = [...new Array(1000)].map((_, i) => employees[i % (employees.length - 1)])
 
@@ -79,11 +79,30 @@ export let section = (
   <Table
     title="My List"
     subTitle="Subtitle for my section"
+    selectable="multi"
     collapsable
     searchable
+    defaultFilters={[
+      {
+        type: FilterExclude,
+        key: 'roles',
+        value: 'hourly',
+      },
+      {
+        type: FilterInclude,
+        key: 'gender',
+        value: 'female',
+      },
+      {
+        type: FilterColumns,
+        key: 'department',
+        values: [],
+        options: ['Marketing', 'Sales', 'Human Resources', 'Accounting'],
+      },
+    ]}
     afterTitle={
       <>
-        <Button icon="wave" tooltip="Some tooltip" />
+        <Button icon="ex" tooltip="Example action button" />
       </>
     }
     bordered

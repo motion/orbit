@@ -53,7 +53,7 @@
 		"prepack-webpack-plugin": "1.1.2",
 		"raw-loader": "2.0.0",
 		"react-dev-utils": "8.0.0",
-		"react-hot-loader": "4.8.4",
+		"react-hot-loader": "^4.8.5",
 		"schedule": "0.5.0",
 		"style-loader": "0.23.1",
 		"svg-inline-loader": "0.8.0",
@@ -69,7 +69,8 @@
 		"webpack-deep-scope-plugin": "1.6.0",
 		"webpack-dev-server": "3.3.1",
 		"webpack-notifier": "1.7.0",
-		"workerize-loader": "1.0.4"
+		"workerize-loader": "1.0.4",
+		"circular-dependency-plugin": "5.0.2"
 	},
 	"gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

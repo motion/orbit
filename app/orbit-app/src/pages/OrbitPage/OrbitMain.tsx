@@ -28,8 +28,8 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}
       >
         <View className="app-container" flex={1} position="relative" maxHeight="100%">
-          {props.hasSidebar && <BorderLeft opacity={0.5} />}
-          {props.hasToolbar && <BorderTop opacity={0.5} />}
+          {props.hasSidebar && <BorderLeft />}
+          {props.hasToolbar && <BorderTop />}
           <Suspense fallback={<Loading />}>{props.children}</Suspense>
         </View>
         <Suspense fallback={null}>{props.hasStatusbar && statusbarPadElement}</Suspense>

@@ -60,7 +60,7 @@ export function TabItem(props: ButtonProps) {
       ellipse
       minWidth="min-content"
       sizeHeight={0.8}
-      sizeFont={0.9}
+      sizeFont={0.85}
       sizeIcon={1.2}
       sizePadding={2.4}
       fontWeight={500}

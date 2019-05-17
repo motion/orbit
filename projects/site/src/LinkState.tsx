@@ -1,12 +1,14 @@
 import memoize from 'memoize-weak'
 import { useCurrentRoute } from 'react-navi'
 
-import { Navigation, routeTable } from '../../Navigation'
-import { HeaderContext } from '../../views/HeaderContext'
+import { routeTable } from './routeTable'
+import { HeaderContext } from './views/HeaderContext'
 
 export const LinkState = {
   didAnimateOut: true,
 }
+
+const getNavigation = () => window['Navigation']
 
 const isOnRoute = (path, route) => route.url.pathname === path
 
@@ -14,7 +16,6 @@ export const useIsActiveRoute = (href: string) => {
   const route = useCurrentRoute()
   return isOnRoute(href, route)
 }
-
 const nullLink = e => e.preventDefault()
 const loadedRoutes = {}
 
@@ -54,11 +55,13 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
     document.body.classList.add('loading')
   }, 200)
   const finish = () => {
-    Navigation.navigate(href).then(() => {
-      clearTimeout(tm2)
-      document.body.classList.remove('loading')
-      document.body.classList.remove('will-load')
-    })
+    getNavigation()
+      .navigate(href)
+      .then(() => {
+        clearTimeout(tm2)
+        document.body.classList.remove('loading')
+        document.body.classList.remove('will-load')
+      })
   }
   if (header) {
     header.setShown(false)
@@ -70,7 +73,11 @@ export const createLink = memoize((href: string, header = null, isExternal = fal
 
 export const linkProps = (
   href: string,
-  opts: { header?: any; isActive?: boolean; isExternal?: boolean } = {},
+  opts: {
+    header?: any
+    isActive?: boolean
+    isExternal?: boolean
+  } = {},
 ): any => {
   return {
     href,
@@ -83,5 +90,4 @@ export const linkProps = (
     onMouseEnter: createPreloadLink(href),
   }
 }
-
 const checkExternal = href => href.indexOf('http') === 0 || href.indexOf('mailto') === 0

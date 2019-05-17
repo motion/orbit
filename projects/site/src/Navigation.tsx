@@ -2,18 +2,7 @@ import { createBrowserNavigation, lazy, mount, route } from 'navi'
 import React from 'react'
 
 import { HomePage } from './pages/HomePage'
-
-// for easy pre-loading
-export const routeTable = {
-  '/docs': () => import('./pages/DocsPage'),
-  '/blog': () => import('./pages/BlogPage'),
-  '/about': () => import('./pages/AboutPage'),
-  '/beta': () => import('./pages/BetaPage'),
-  '/apps': () => import('./pages/AppsPage'),
-  '/privacy': () => import('./pages/PrivacyPage'),
-  '/terms': () => import('./pages/TermsPage'),
-  '/faq': () => import('./pages/FAQPage'),
-}
+import { routeTable } from './routeTable'
 
 // window for hmr preservation
 
@@ -48,4 +37,6 @@ Navigation.subscribe(next => {
   }
 })
 
+// WARNING we had crazy circular dependencies
 window['Navigation'] = Navigation
+window['routeTable'] = routeTable

@@ -1,3 +1,4 @@
+import { Theme } from 'gloss'
 import React from 'react'
 
 import { Link } from '../../views/LinkProps'
@@ -15,13 +16,15 @@ export const EarlyAccessContent = () => {
         <>
           <PillButton>Beta</PillButton>
           <TitleText size="xxl">Early Access.</TitleText>
-          <TitleTextSub size={useScreenVal('sm', 'md', 'md')}>
+          <TitleTextSub size={useScreenVal('xs', 'sm', 'sm')}>
             Join orbit insiders for early access.
           </TitleTextSub>
         </>
       }
     >
-      <SignupForm />
+      <Theme name="darkAlt">
+        <SignupForm />
+      </Theme>
       <TitleTextSub margin={[0, 'auto']} size="xs">
         Have a unique use case? <Link href="mailto:hi@tryorbit.com">Contact us</Link>.
       </TitleTextSub>

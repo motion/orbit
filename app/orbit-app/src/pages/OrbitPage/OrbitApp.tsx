@@ -1,9 +1,10 @@
 import '../../apps/orbitApps'
 
-import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useThrottleFn, useVisibility } from '@o/ui'
+import { isEqual } from '@o/fast-compare'
+import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
+import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useGet, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
-import React, { memo, Suspense, useCallback, useEffect, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -13,37 +14,50 @@ import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
-export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
+type OrbitAppProps = {
+  id: string
+  identifier: string
+  appDef?: AppDefinition
+  hasShownOnce?: boolean
+}
+
+export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === id
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,
   })
-  const [hasShownOnce, setHasShownOnce] = useState(false)
+  const [shown, setShown] = useState(false)
 
   useEffect(() => {
     if (isActive && !hasShownOnce) {
-      setHasShownOnce(true)
+      setShown(true)
     }
   }, [isActive, hasShownOnce])
 
   return (
-    <ProvideStores stores={{ appStore }}>
-      <ProvideVisibility visible={isActive}>
-        <OrbitAppRender id={id} identifier={identifier} hasShownOnce={hasShownOnce} />
-      </ProvideVisibility>
-    </ProvideStores>
+    <ScopedState id={`appstate-${identifier}-${id}-`}>
+      <ProvideStores stores={{ appStore }}>
+        <ProvideVisibility visible={isActive}>
+          <OrbitAppRender
+            id={id}
+            identifier={identifier}
+            hasShownOnce={hasShownOnce || shown}
+            appDef={appDef}
+          />
+        </ProvideVisibility>
+      </ProvideStores>
+    </ScopedState>
   )
 }
 
-type AppRenderProps = { id: string; identifier: string; hasShownOnce?: boolean }
+type AppRenderProps = OrbitAppProps
 
 const OrbitAppRender = memo((props: AppRenderProps) => {
-  // get definition
-  const appDef = getAppDefinition(props.identifier)
+  const appDef = props.appDef || getAppDefinition(props.identifier)
   if (appDef.app == null) {
-    console.debug('no app', props)
+    console.warn('no app', props)
     return null
   }
   return <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
@@ -64,31 +78,39 @@ export const OrbitAppRenderOfDefinition = ({
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
   const [activeItem, setActiveItem] = useState(null)
+  const getActiveItem = useGet(activeItem)
   const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
+    console.log('main select', items)
+    items = !items || Object.keys(items).length === 0 ? null : items
     if (location === 'main') {
-      setActiveItemThrottled(getAppProps(items[0]))
+      const next = items ? getAppProps(items[0]) : null
+      if (isEqual(next, getActiveItem())) return
+      setActiveItemThrottled(next)
     }
     if (location === 'main') {
       om.actions.setShare({ key: `app-${id}`, value: items })
     }
   }, [])
 
-  let FinalAppView = appDef.app
+  let AppDefMain = appDef.app
 
-  const appChildEl = FinalAppView({})
+  // test to see if they wrapped with <App>
+  const appChildEl = AppDefMain({})
   const isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
 
-  // automatically wrap with <App />, if they don't
-  if (!isAppWrapped) {
-    const AppView = appDef.app
-    FinalAppView = props => (
+  // must memo to avoid remounting
+  const FinalAppView = useMemo(() => {
+    if (isAppWrapped) {
+      return AppDefMain
+    }
+    return props => (
       <App>
-        <AppView {...props} />
+        <AppDefMain {...props} />
       </App>
     )
-  }
+  }, [isAppWrapped, AppDefMain])
 
   return (
     <ProvideShare onChange={onChangeShare}>
@@ -98,7 +120,11 @@ export const OrbitAppRenderOfDefinition = ({
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
-                  <FinalAppView identifier={identifier} id={id} {...activeItem} />
+                  <FinalAppView
+                    {...activeItem}
+                    identifier={activeItem && activeItem.identifier || identifier}
+                    id={activeItem && activeItem.id || id}
+                  />
                 </FadeIn>
               )}
             </Suspense>

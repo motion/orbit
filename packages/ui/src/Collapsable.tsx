@@ -1,6 +1,6 @@
-import { gloss } from 'gloss'
 import { selectDefined } from '@o/utils'
-import React from 'react'
+import { gloss } from 'gloss'
+import React, { useMemo } from 'react'
 
 import { Toggler, useToggle } from './hooks/useToggle'
 import { Icon } from './Icon'
@@ -26,20 +26,25 @@ export type CollapsableProps = {
 export const splitCollapseProps = <A extends CollapsableProps>(
   all: A,
 ): [CollapsableProps, Omit<A, keyof CollapsableProps>] => {
-  const {
-    defaultCollapsed,
-    collapsed,
-    collapsable,
-    onCollapse,
-    useCollapse: useToggleOg,
-    ...rest
-  } = all
-  if (
-    selectDefined(defaultCollapsed, collapsed, collapsable, onCollapse, useToggle) === undefined
-  ) {
-    return [null, rest]
-  }
-  return [{ defaultCollapsed, collapsed, collapsable, onCollapse, useCollapse: useToggleOg }, rest]
+  return useMemo(() => {
+    const {
+      defaultCollapsed,
+      collapsed,
+      collapsable,
+      onCollapse,
+      useCollapse: useToggleOg,
+      ...rest
+    } = all
+    if (
+      selectDefined(defaultCollapsed, collapsed, collapsable, onCollapse, useToggle) === undefined
+    ) {
+      return [null, rest] as any
+    }
+    return [
+      { defaultCollapsed, collapsed, collapsable, onCollapse, useCollapse: useToggleOg },
+      rest,
+    ]
+  }, [all])
 }
 
 export const useCollapse = (props: CollapsableProps) => {

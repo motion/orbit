@@ -7,5 +7,9 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "references": [{ "path": "../fast-compare" }, { "path": "../automagical" }]
+  "references": [
+    { "path": "../fast-compare" },
+    { "path": "../automagical" },
+    { "path": "../utils" }
+  ]
 }

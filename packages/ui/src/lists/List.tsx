@@ -3,6 +3,7 @@ import { isDefined } from '@o/utils'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
+import { Button } from '../buttons/Button'
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
@@ -25,7 +26,7 @@ import { VirtualList, VirtualListProps } from './VirtualList'
 export type ListProps = SectionSpecificProps &
   /** Override the onOpen/onSelect */
   Omit<VirtualListProps<Bit | ListItemProps>, 'onOpen' | 'onSelect'> &
-  Partial<UseFilterProps<any>> & {
+  Omit<Partial<UseFilterProps<any>>, 'items'> & {
     /** Make list expand to parent height */
     flex?: number
 
@@ -43,6 +44,18 @@ export type ListProps = SectionSpecificProps &
 
     /** On selection, automatically update Share with selection */
     shareable?: boolean | string
+
+    /** Shows a delete action next to item, calls onDelete when pressed */
+    deletable?: boolean
+
+    /** Called on pressing delete action */
+    onDelete?: (row: any, index: number) => any
+
+    /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
+    editable?: boolean
+
+    /** Called on when `editable` and after editing a title */
+    onEdit?: (item: any, nextTitle: string) => any
 
     // flex?: CSSPropertySet['flex']
   }
@@ -90,6 +103,10 @@ export const List = memo((allProps: ListProps) => {
     getItemProps,
     search,
     shareable,
+    deletable,
+    onDelete,
+    editable,
+    onEdit,
     onSelect: _ignoreOnSelect,
     ...restProps
   } = listProps
@@ -148,14 +165,46 @@ export const List = memo((allProps: ListProps) => {
     })
   }, [onOpen, shortcutStore, shortcutStore, selectableStore])
 
-  const getItemPropsInner = useCallback((a, b, c) => {
+  const getItemPropsRaw: VirtualListProps['getItemProps'] = (a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
     const itemExtraProps = getItemPropsGet()(normalized, b, c)
     const filterExtraProps = filteredGetItemProps(a, b, c)
-    const itemProps = { ...normalized, ...itemExtraProps, ...filterExtraProps }
+    const deleteProps: ListItemProps = deletable
+      ? {
+          after: (
+            <>
+              {itemExtraProps && itemExtraProps.after}
+              {
+                <Button
+                  alt="simpleGray"
+                  chromeless
+                  circular
+                  icon="cross"
+                  onMouseDown={e => {
+                    e.stopPropagation()
+                  }}
+                  onClick={() => {
+                    onDelete(a, b)
+                  }}
+                />
+              }
+            </>
+          ),
+        }
+      : null
+
+    const itemProps = {
+      editable,
+      onEdit: onEdit ? title => onEdit(a, title) : undefined,
+      ...normalized,
+      ...itemExtraProps,
+      ...filterExtraProps,
+      ...deleteProps,
+    }
     return itemProps
-  }, [])
+  }
+  const getItemPropsInner = useCallback(getItemPropsRaw, [deletable, editable, onEdit])
 
   const onOpenInner: HandleSelection = useCallback(
     index => {

@@ -4,97 +4,33 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
-import { gloss, Row, RowProps } from 'gloss'
-import * as React from 'react'
+import { gloss, Theme, ThemeContext } from 'gloss'
+import { colorize } from 'gloss-theme'
+import { capitalize } from 'lodash'
 import { PureComponent } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import { Text } from '../text/Text'
-import { TableFilter } from './types'
+
+import { Button, ButtonProps } from '../buttons/Button'
+import { Icon } from '../Icon'
+import { PopoverMenu } from '../PopoverMenu'
+import { TableFilter, TableFilterColumns } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
-const Token = gloss<RowProps & { focused?: boolean }>(Row, {
+const Token = gloss<ButtonProps & { focused?: boolean }>(Button, {
   alignItems: 'center',
-  borderRadius: 4,
-  marginRight: 4,
-  padding: 4,
-  paddingLeft: 6,
-  height: 21,
-  '&:first-of-type': {
-    marginLeft: 3,
-  },
-}).theme(({ focused, background }, theme) => ({
-  background: focused ? theme.backgroundHighlightActive : background || theme.backgroundHighlight,
-  color: theme.colorActiveHighlight || 'white',
+}).theme(({ focused }, theme) => ({
+  background:
+    'red' || focused
+      ? theme.backgroundHighlightActive
+      : theme.background || theme.backgroundHighlight,
+  color: theme.colorActiveHighlight || theme.color,
   '&:active': {
     background: theme.backgroundHighlightActive,
   },
 }))
-
-const Key = gloss(Text, {
-  position: 'relative',
-  fontWeight: 400,
-  paddingRight: 12,
-  textTransform: 'capitalize',
-  lineHeight: '21px',
-  '&:after': {
-    paddingLeft: 5,
-    position: 'absolute',
-    top: -1,
-    right: 0,
-    fontSize: 14,
-  },
-}).theme(({ type }, theme) => ({
-  color: theme.colorActiveHighlight || 'white',
-  '&:active:after': {
-    background: theme.backgroundHighlightActive,
-  },
-  '&:after': {
-    content: type === 'exclude' ? '"≠"' : '"="',
-  },
-}))
-
-Key.defaultProps = {
-  size: 0.95,
-}
-
-const Value = gloss(Text, {
-  whiteSpace: 'nowrap',
-  maxWidth: 160,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  lineHeight: '21px',
-  paddingLeft: 3,
-}).theme((_, theme) => ({
-  color: theme.colorActiveHighlight || 'white',
-}))
-
-Value.defaultProps = {
-  size: 0.95,
-}
-
-const Chevron = gloss({
-  border: 0,
-  paddingLeft: 3,
-  paddingRight: 1,
-  marginRight: 0,
-  fontSize: 16,
-  backgroundColor: 'transparent',
-  position: 'relative',
-  top: -2,
-  height: 'auto',
-  lineHeight: 'initial',
-  '&:hover, &:active, &:focus': {
-    border: 0,
-    backgroundColor: 'transparent',
-  },
-}).withConfig({
-  ignoreAttrs: {
-    focused: true,
-  },
-})
 
 type Props = {
   filter: TableFilter
@@ -110,6 +46,12 @@ export class FilterToken extends PureComponent {
   props: Props
   _ref: Element | void
 
+  static contextType = ThemeContext
+
+  state = {
+    menuTemplate: [],
+  }
+
   onMouseDown = () => {
     if (this.props.filter.persistent == null || this.props.filter.persistent === false) {
       this.props.onFocus(this.props.index)
@@ -120,13 +62,14 @@ export class FilterToken extends PureComponent {
   showDetails = () => {
     const menuTemplate = []
 
-    if (this.props.filter.type === 'enum') {
+    if (this.props.filter.type === 'columns') {
+      const filter = this.props.filter as TableFilterColumns
       menuTemplate.push(
-        ...this.props.filter.enum.map(({ value, label }) => ({
+        ...filter.options.map(({ value, label }) => ({
           label,
-          click: () => this.changeEnum(value),
+          click: () => this.toggleColumnFilter(value),
           type: 'checkbox',
-          checked: this.props.filter.value.indexOf(value) > -1,
+          checked: filter.values.indexOf(value) > -1,
         })),
       )
     } else {
@@ -157,6 +100,7 @@ export class FilterToken extends PureComponent {
       )
     }
     if (Electron.remote) {
+      // TODO make this automatic and move into <PopoverMenu />
       const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
       const { bottom, left } = this._ref
         ? this._ref.getBoundingClientRect()
@@ -166,12 +110,14 @@ export class FilterToken extends PureComponent {
         x: parseInt(`${left}`, 10),
         y: parseInt(`${bottom}`, 10) + 8,
       })
+    } else {
+      this.setState({ menuTemplate })
     }
   }
 
   toggleFilter = () => {
     const { filter, index } = this.props
-    if (filter.type !== 'enum') {
+    if (filter.type !== 'columns') {
       const newFilter: TableFilter = {
         ...filter,
         type: filter.type === 'include' ? 'exclude' : 'include',
@@ -180,22 +126,22 @@ export class FilterToken extends PureComponent {
     }
   }
 
-  changeEnum = (newValue: string) => {
+  toggleColumnFilter = (next: string) => {
     const { filter, index } = this.props
-    if (filter.type === 'enum') {
-      let { value } = filter
-      if (value.indexOf(newValue) > -1) {
-        value = value.filter(v => v !== newValue)
+    if (filter.type === 'columns') {
+      let { values } = filter
+      if (values.indexOf(next) > -1) {
+        values = values.filter(v => v !== next)
       } else {
-        value = value.concat([newValue])
+        values = values.concat([next])
       }
-      if (value.length === filter.enum.length) {
-        value = []
+      if (values.length === filter.options.length) {
+        values = []
       }
       const newFilter: TableFilter = {
         type: 'enum',
         ...filter,
-        value,
+        values,
       }
       this.props.onReplace(index, newFilter)
     }
@@ -210,45 +156,70 @@ export class FilterToken extends PureComponent {
 
   render() {
     const { filter } = this.props
+    const theme = this.context.activeTheme
+
     let background
     let value = ''
 
-    if (filter.type === 'enum') {
-      const getEnum = next => filter.enum.find(e => e.value === next)
-      const firstValue = getEnum(filter.value[0])
-      const secondValue = getEnum(filter.value[1])
-      if (filter.value.length === 0) {
+    if (filter.type === 'columns') {
+      const getName = (next: string) => filter.options.find(e => e.value === next)
+      const firstValue = getName(filter.values[0])
+      const secondValue = getName(filter.values[1])
+      if (filter.values.length === 0) {
         value = 'All'
-      } else if (filter.value.length === 2 && firstValue && secondValue) {
+      } else if (filter.values.length === 2 && firstValue && secondValue) {
         value = `${firstValue.label} or ${secondValue.label}`
-      } else if (filter.value.length === 1 && firstValue) {
-        console.log('firstValue.color', firstValue.color)
+      } else if (filter.values.length === 1 && firstValue) {
         value = firstValue.label
         background = firstValue.color
       } else if (firstValue) {
-        value = `${firstValue.label} or ${filter.value.length - 1} others`
+        value = `${firstValue.label} or ${filter.values.length - 1} others`
       }
     } else {
       value = filter.value
     }
 
+    const filterTheme = colorize({
+      background: 'red' || background || theme.backgroundStrong,
+      color: '#fff',
+    })
+    console.log('filterTheme', filterTheme)
+
     return (
-      <Token
-        key={`${filter.key}:${value}=${filter.type}`}
-        tabIndex={-1}
-        onMouseDown={this.onMouseDown}
-        focused={this.props.focused}
-        background={background}
-        ref={this.setRef}
-      >
-        <Key type={this.props.filter.type} focused={this.props.focused}>
-          {filter.key}
-        </Key>
-        <Value>{value}</Value>
-        <Chevron tabIndex={-1} focused={this.props.focused}>
-          &#8964;
-        </Chevron>
-      </Token>
+      <Theme theme={filterTheme}>
+        <PopoverMenu
+          // only show popover for non-electron environment
+          openOnClick={!Electron.remote}
+          popoverTheme={this.context.activeTheme._originalTheme}
+          target={
+            <Token
+              {...{ debug: true }}
+              tagName="div"
+              tabIndex={-1}
+              onMouseDown={this.onMouseDown}
+              focused={this.props.focused}
+              ref={this.setRef}
+              size={0.8}
+              sizeIcon={1.2}
+              icon="chevron-down"
+              iconAfter
+            >
+              {capitalize(filter.key)}
+              {this.props.filter.type === 'exclude' ? '≠' : '='}
+              {value}
+            </Token>
+          }
+          items={
+            Electron.remote
+              ? []
+              : this.state.menuTemplate.map(item => ({
+                  title: item.label,
+                  onClick: item.click,
+                  after: item.checked && <Icon name="tick" size={12} />,
+                }))
+          }
+        />
+      </Theme>
     )
   }
 }

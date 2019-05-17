@@ -38,10 +38,10 @@ export const getSizedRadius = (size: number, sizeRadius: number | true) => {
   return clampRound(num(sizeRadius) * 6 * size)
 }
 
-// always return even so things center
 const getHeight = (size: number, sizeHeight: number | boolean) => {
   const height = clampRound(LINE_HEIGHT * num(sizeHeight) * size)
-  return height % 2 === 1 ? height : height + 1
+  // ensure even height so things center properly
+  return height % 2 === 0 ? height : height + 1
 }
 
 export function SizedSurface(direct: SizedSurfaceProps) {

@@ -1,25 +1,17 @@
-import { createContextualProps, ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
+import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import React, { lazy, Suspense, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
 import { useIsTiny } from '../hooks/useScreenSize'
+import { Header } from '../Layout'
 import { useSiteStore } from '../SiteStore'
-import { Header } from '../views/Header'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
 import AllInOnePitchDemoSection from './HomePage/AllInOnePitchDemoSection'
 import DeploySection from './HomePage/DeploySection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
-
-const ParallaxContext = createContextualProps<{ value: Parallax }>({ value: null })
-export const useParallax = () => {
-  try {
-    return ParallaxContext.useProps().value
-  } catch {
-    return null
-  }
-}
+import { ParallaxContext } from './ParallaxContext'
 
 const DataAppKitFeaturesSection = loadOnIntersect(
   lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection'))),
@@ -44,12 +36,7 @@ export function HomePage() {
   return (
     <ParallaxContext.PassProps value={parallax}>
       <LoadingPage />
-      <Header
-        aby={() => {
-          // fix for bad optimization react-constant-elements
-          '123'
-        }}
-      />
+      <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
           disable={useIsTiny()}
@@ -71,14 +58,12 @@ export function HomePage() {
           <Page offset={3}>
             <DataAppKitFeaturesSection pages={2} />
           </Page>
-          <Theme name="darkAlt">
-            <Page offset={5} zIndex={1}>
-              <EarlyAccessBetaSection />
-            </Page>
-            <Page offset={6}>
-              <SecuritySection />
-            </Page>
-          </Theme>
+          <Page offset={5} zIndex={1}>
+            <EarlyAccessBetaSection />
+          </Page>
+          <Page offset={6}>
+            <SecuritySection />
+          </Page>
           <Page offset={7}>
             <MissionMottoSection />
           </Page>

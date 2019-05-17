@@ -25,8 +25,8 @@ export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
-  /** If you set a group, it acts as an ID that makes sure only one popover within that ID is ever open */
-  group?: string
+  /** If you set a openKey, it acts as an ID that makes sure only one popover within that ID is ever open */
+  openKey?: string
 
   /** Can pass function to get isOpen passed in */
   children?: React.ReactNode | PopoverChildrenFn
@@ -947,12 +947,12 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   closeOthersWithinGroup() {
-    if (this.props.group) {
+    if (this.props.openKey) {
       for (const popover of [...PopoverState.openPopovers]) {
         if (popover === this) {
           continue
         }
-        if (popover.props.group === this.props.group) {
+        if (popover.props.group === this.props.openKey) {
           popover.forceClose()
         }
       }
@@ -1112,7 +1112,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     )
 
     if (popoverTheme) {
-      popoverContent = <Theme name={popoverTheme}>{popoverContent}</Theme>
+      popoverContent = <Theme theme={popoverTheme}>{popoverContent}</Theme>
     }
 
     if (noPortal) {

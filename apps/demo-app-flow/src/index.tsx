@@ -57,11 +57,11 @@ function DemoAppFlow() {
         {(/* { data, setData, done } */) => (
           <Templates.MasterDetail
             items={[
-              { title: 'Something', group: 'Hello', icon: 'test', subTitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'smoe', subTitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'hi', subTitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'aos', subTitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'dn', subTitle: 'hello' },
+              { title: 'Something', groupName: 'Hello', icon: 'test', subTitle: 'hello' },
+              { title: 'Something', groupName: 'Hello', icon: 'smoe', subTitle: 'hello' },
+              { title: 'Something', groupName: 'Hello', icon: 'hi', subTitle: 'hello' },
+              { title: 'Something', groupName: 'Hello', icon: 'aos', subTitle: 'hello' },
+              { title: 'Something', groupName: 'Hello', icon: 'dn', subTitle: 'hello' },
             ]}
           >
             {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}

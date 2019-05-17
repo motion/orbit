@@ -1,15 +1,7 @@
 import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
-import {
-  AppBit,
-  AppEntity,
-  Bit,
-  BitContentType,
-  BitEntity,
-  CosalTopWordsModel,
-  Location,
-} from '@o/models'
-import { hash, sleep } from '@o/utils'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@o/models'
+import { sleep, stringHash } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
 import { EntityManager, In, MoreThan } from 'typeorm'
 
@@ -289,7 +281,7 @@ export class SyncerUtils {
    * Creates a bit id.
    */
   generateBitId(data: string): number {
-    return hash(`${this.app.identifier}-${this.app.id}-${data}`)
+    return stringHash(`${this.app.identifier}-${this.app.id}-${data}`)
   }
 
   /**
@@ -327,22 +319,24 @@ export class SyncerUtils {
    * Creates a content hash for a given bit.
    */
   bitContentHash(bit: Bit): number {
-    return hash(
-      [
-        bit.id,
-        bit.appId,
-        bit.app ? bit.app.id : bit.appId,
-        bit.title,
-        bit.body,
-        bit.type,
-        bit.webLink,
-        bit.desktopLink,
-        bit.data,
-        bit.location,
-        bit.bitCreatedAt,
-        bit.bitUpdatedAt,
-        bit.authorId,
-      ].filter(item => item !== null && item !== undefined),
+    return stringHash(
+      JSON.stringify(
+        [
+          bit.id,
+          bit.appId,
+          bit.app ? bit.app.id : bit.appId,
+          bit.title,
+          bit.body,
+          bit.type,
+          bit.webLink,
+          bit.desktopLink,
+          bit.data,
+          bit.location,
+          bit.bitCreatedAt,
+          bit.bitUpdatedAt,
+          bit.authorId,
+        ].filter(item => item !== null && item !== undefined),
+      ),
     )
   }
 }

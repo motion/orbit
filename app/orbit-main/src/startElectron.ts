@@ -29,7 +29,7 @@ const finishLaunchingElectron = async ({ mainProcess }) => {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
       app.dock.bounce('informational')
-      const response = dialog.showMessageBox({
+      const { response } = await dialog.showMessageBox({
         type: 'question',
         title: 'Move to apps?',
         message: 'Move Orbit to Applications folder?',

@@ -1,6 +1,6 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, ThemeFn } from 'gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
+import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, ThemeFn } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
@@ -17,8 +17,9 @@ export type TextProps = CSSPropertySetStrict &
     editable?: boolean
     autoselect?: boolean
     selectable?: boolean
-    onFinishEdit?: Function
-    onCancelEdit?: Function
+    onStartEdit?: () => any
+    onFinishEdit?: (value: string, event: any) => any
+    onCancelEdit?: (value: string, event: any) => any
     forwardRef?: React.RefObject<HTMLElement>
     ellipse?: boolean | number
     tagName?: string
@@ -47,7 +48,6 @@ export type Highlights = {
 export class Text extends React.PureComponent<TextProps> {
   selected = false
   editable = false
-  node: any = null
 
   static contextType = ScaleContext
 
@@ -57,6 +57,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   state = {
+    isEditing: false,
     doClamp: false,
     textHeight: 0,
   }
@@ -67,15 +68,25 @@ export class Text extends React.PureComponent<TextProps> {
     this.measure()
   }
 
-  ref = React.createRef()
+  ref = React.createRef<HTMLDivElement>()
 
   get nodeRef() {
     return this.props.forwardRef || this.ref
   }
 
+  get node() {
+    return this.nodeRef.current
+  }
+
   componentDidUpdate() {
     this.handleProps(this.props)
-    if (this.node && this.props.autoselect && this.props.editable && !this.selected) {
+    const shouldSelect =
+      this.props.editable &&
+      this.node &&
+      !this.selected &&
+      this.props.autoselect &&
+      this.state.isEditing
+    if (shouldSelect) {
       this.node.focus()
       document.execCommand('selectAll', false, null)
       this.selected = true
@@ -133,22 +144,49 @@ export class Text extends React.PureComponent<TextProps> {
     return (this.node && this.node.innerText) || ''
   }
 
+  finishEdit = (value: string) => {
+    const { onFinishEdit } = this.props
+    if (onFinishEdit) {
+      onFinishEdit(value, event)
+    }
+    this.setState({ isEditing: false })
+  }
+
   handleKeydown = event => {
-    const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
+    const { onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
       const code = keycode(event)
       if (code === 'enter') {
         event.preventDefault()
-        if (onFinishEdit) onFinishEdit(this.value, event)
+        this.finishEdit(this.value)
       }
       if (code === 'esc') {
         event.preventDefault()
-        if (onCancelEdit) onCancelEdit(this.value, event)
+        if (onCancelEdit) {
+          onCancelEdit(this.value, event)
+          this.setState({ isEditing: false })
+        }
       }
     }
     if (onKeyDown) {
       onKeyDown(event)
     }
+  }
+
+  handleDoubleClick = event => {
+    if (this.props.editable && !this.state.isEditing) {
+      event.stopPropagation()
+      if (this.props.onStartEdit) {
+        this.props.onStartEdit()
+      }
+      this.setState({
+        isEditing: true,
+      })
+    }
+  }
+
+  onBlur = () => {
+    this.finishEdit(this.value)
   }
 
   render() {
@@ -251,7 +289,8 @@ export class Text extends React.PureComponent<TextProps> {
         className={`ui-text ${className || ''}`}
         tagName={tagName}
         {...Config.defaultProps.text}
-        contentEditable={editable}
+        contentEditable={editable && this.state.isEditing}
+        onBlur={this.onBlur}
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
@@ -261,6 +300,7 @@ export class Text extends React.PureComponent<TextProps> {
         ellipse={ellipse}
         fontSize={textStyle.fontSize}
         lineHeight={textStyle.lineHeight}
+        onDoubleClick={this.handleDoubleClick}
         {...props}
         {...finalProps}
         // override props

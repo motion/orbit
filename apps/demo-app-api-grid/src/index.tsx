@@ -14,12 +14,14 @@ function CustomApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
 
+  console.log('re render custom app')
+
   return (
     <GridLayout>
       <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
         {({ api }) => {
           const res = api.channelsList()
-          console.log('re render table')
+          console.log('re render table', res, api)
           return (
             <Table
               shareable

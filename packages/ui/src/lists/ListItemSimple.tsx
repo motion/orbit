@@ -6,6 +6,7 @@ import React from 'react'
 
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
+import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
 import { useScale } from '../Scale'
@@ -136,7 +137,19 @@ export type ListItemSpecificProps = ListItemHide & {
   separator?: React.ReactNode
 
   /** For use with automatic separator generation, when using `<List />` */
-  group?: string
+  groupName?: string
+
+  /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
+  editable?: boolean
+
+  /** Called when `editable` and after editing a title */
+  onEdit?: (nextTitle: string) => any
+
+  /** Called when `editable` and cancelled editing a title */
+  onCancelEdit?: (nextTitle: string) => any
+
+  /** Called when `editable` and start editing a title */
+  onStartEdit?: () => any
 }
 
 export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
@@ -181,9 +194,14 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     alignItems,
     selectable,
     hideBorder,
+    editable,
+    onEdit,
+    onStartEdit,
+    onCancelEdit,
     ...surfaceProps
   } = props
   const theme = useTheme()
+  const isFocused = useFocus()
   const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
   const showSubtitle = !!subTitle && !props.hideSubtitle
@@ -248,7 +266,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   }).map(x => x * scale)
 
   return (
-    <Theme alt={isSelected ? 'selected' : null}>
+    <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
       {above}
       {!!separator && (
         <Theme name={activeThemeName}>
@@ -258,7 +276,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         </Theme>
       )}
       <SizedSurface
-        flexFlow="row"
+        flexDirection="row"
         alignItems="center"
         themeSelect="listItem"
         borderRadius={borderRadius}
@@ -283,7 +301,17 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                   <Space size="sm" />
                 </>
               )}
-              <HighlightText flex={1} ellipse fontWeight={theme.fontWeight || 400} {...titleProps}>
+              <HighlightText
+                autoselect
+                editable={editable}
+                onFinishEdit={onEdit}
+                onCancelEdit={onCancelEdit}
+                onStartEdit={onStartEdit}
+                flex={1}
+                ellipse
+                fontWeight={theme.fontWeight || 400}
+                {...titleProps}
+              >
                 {title}
               </HighlightText>
               {!!(props.afterTitle || afterHeaderElement) && <Space size={pad} />}

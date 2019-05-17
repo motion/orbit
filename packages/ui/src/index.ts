@@ -1,10 +1,8 @@
 // until next hotkeys patches types
-import * as HotKeys from 'react-hotkeys'
-
-export const configureHotKeys = HotKeys['configure']
-
+export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
 
+export { ImmutableUpdateFn } from './types'
 export * from '@o/color'
 export {
   Absolute,
@@ -121,7 +119,6 @@ export * from './lists/List'
 export * from './lists/ListItem'
 export * from './lists/ListItemSimple'
 export * from './lists/ListItemViewProps'
-export * from './lists/SearchableList'
 export { Direction, SelectableStore } from './lists/SelectableStore'
 export * from './lists/VirtualList'
 export * from './lists/VirtualListItem'
@@ -160,8 +157,7 @@ export * from './Tab'
 export * from './Tag'
 export * from './tables/createFilter'
 export * from './tables/ManagedTable'
-export * from './tables/Searchable'
-export * from './tables/SearchableTable'
+export * from './tables/Filterable'
 export * from './tables/Table'
 export * from './tables/TableHead'
 export * from './tables/TableInput'
@@ -193,3 +189,6 @@ export * from './hooks/useBoundedNumberState'
 export * from './hooks/useWindowSize'
 export * from './hooks/useNode'
 export * from './helpers/filterCleanObject'
+export * from './Dock'
+export * from './helpers/randomNames'
+export * from './PopoverMenu'

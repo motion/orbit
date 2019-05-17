@@ -11,6 +11,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/utils": "^2.5.2",
     "@o/automagical": "^2.5.2",
     "@o/fast-compare": "^2.5.2"
   },

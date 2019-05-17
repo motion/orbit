@@ -6,7 +6,7 @@
  */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { gloss, Row, ThemeObject } from 'gloss'
+import { gloss, ThemeObject } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -39,6 +39,7 @@ type TableRowProps = {
   onAddFilter?: TableOnAddFilter
   zebra?: boolean
   selectableStore?: SelectableStore
+  selectable?: boolean
   rowKey?: any
 }
 
@@ -135,11 +136,8 @@ export const TableRow = memo(function TableRow({
 
 const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
   if (props.highlighted) {
-    if (props.highlightedBackgroundColor) {
-      return props.highlightedBackgroundColor
-    } else {
-      return theme.highlightBackground
-    }
+    const bg = props.highlightedBackgroundColor || theme.highlightBackground
+    return props.even && props.zebra ? bg.lighten(0.05) : bg
   } else {
     if (!props.background && props.row) {
       const cat = props.row.category
@@ -152,7 +150,7 @@ const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
     } else if (props.even && props.zebra) {
       return theme.backgroundZebra || theme.backgroundZebra
     } else {
-      return 'transparent'
+      return theme.background
     }
   }
 }
@@ -168,28 +166,37 @@ const getColor = (props: TableRowProps, theme: ThemeObject) => {
   return color || 'inherit'
 }
 
-const TableBodyRowContainer = gloss<TableRowProps>(Row, {
+const TableBodyRowContainer = gloss<TableRowProps>({
+  flexFlow: 'row',
   fontWeight: 'inherit',
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
-}).theme((props, theme) => ({
-  background: backgroundColor(props, theme),
-  boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.alpha(0.35)}`,
-  color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
-  '& *': {
-    color: props.highlighted ? `${theme.colorHighlight} !important` : null,
-  },
-  '& img': {
-    background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
-  },
-  height: props.multiline ? 'auto' : props.rowLineHeight,
-  lineHeight: `${String(props.rowLineHeight)}px`,
-  flexShrink: 0,
-  // '&:hover': {
-  //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundZebra : 'none',
-  // },
-}))
+}).theme((props, theme) => {
+  const isZebra = props.even && props.zebra
+  const background = backgroundColor(props, theme)
+  return {
+    background,
+    boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.alpha(0.35)}`,
+    color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
+    '& *': {
+      color: props.highlighted ? `${theme.colorHighlight} !important` : null,
+    },
+    '& img': {
+      background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
+    },
+    height: props.multiline ? 'auto' : props.rowLineHeight,
+    lineHeight: `${String(props.rowLineHeight)}px`,
+    flexShrink: 0,
+    '&:hover': props.selectable && {
+      background: props.highlighted
+        ? background
+        : isZebra
+        ? theme.backgroundZebraHover || theme.backgroundStronger
+        : theme.backgroundStrong,
+    },
+  }
+})
 
 const TableBodyColumnContainer = gloss({
   overflow: 'hidden',

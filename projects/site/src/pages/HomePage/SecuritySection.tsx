@@ -1,8 +1,7 @@
-import { Col, FullScreen, Image, Row, Space } from '@o/ui'
+import { Col, Image, Row, View } from '@o/ui'
 import React from 'react'
 
-import bottomLightSeparator from '../../../public/images/bottom-sep.svg'
-import people from '../../../public/images/people.svg'
+import people from '../../assets/illustrations/undraw_server_down_s4lk.svg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { Page } from '../../views/Page'
 import { PillButton } from '../../views/PillButton'
@@ -10,53 +9,32 @@ import { TitleText } from '../../views/TitleText'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-export const bottomSeparator = bottomLightSeparator
-
 export default function WaistSection() {
   const screen = useScreenSize()
   return (
     <>
-      <Page.Content
-        outside={
-          <>
-            <FullScreen zIndex={-1} background={theme => theme.background} bottom={150} />
-            <Image
-              position="absolute"
-              bottom={100}
-              height={290}
-              left={0}
-              right={0}
-              width="100%"
-              minWidth={1000}
-              src={bottomSeparator}
-            />
-          </>
-        }
-      >
+      <Page.Content>
         <SpacedPageContent
           padding={[0, '5%']}
           margin="auto"
           maxWidth={860}
-          transform={{
-            y: '-7%',
-          }}
           header={
             <>
               <PillButton>Security</PillButton>
               <TitleText textAlign="center" maxWidth={400}>
                 Tell Security they can firewall Orbit completely.
               </TitleText>
-              <Space />
             </>
           }
         >
-          <Row space={useScreenVal(20, 'lg', 'xl')}>
-            <Col flex={3} space="xl">
-              <Pitch alpha={1} size="sm">
+          <View flex={1} />
+          <Row space={useScreenVal(20, 'xl', 'xxxl')}>
+            <Col flex={3} space="lg">
+              <Pitch alpha={1} size="md">
                 Orbit never sends single bit of data outside your firewall.
               </Pitch>
 
-              <Pitch fontWeight={200} alpha={0.7} size="sm" sizeLineHeight={1.3}>
+              <Pitch fontWeight={200} alpha={0.7} size="xs" sizeLineHeight={1.3}>
                 Get incredibly powerful internal tools without setting up infrastructure or having
                 to trust a startup with any of your data -- interface with sensitive internal
                 databases with ease, Orbit gives you complete control.
@@ -69,6 +47,7 @@ export default function WaistSection() {
               </Col>
             )}
           </Row>
+          <View flex={1} />
         </SpacedPageContent>
       </Page.Content>
     </>

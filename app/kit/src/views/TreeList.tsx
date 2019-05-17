@@ -6,9 +6,7 @@ import { pick } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
-import { useStoresSimple } from '../hooks/useStores'
 import { ScopedUserState, useUserState } from '../hooks/useUserState'
-import { KitStores } from '../stores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 
@@ -48,17 +46,40 @@ const defaultState: TreeStateStatic = {
 const getActions = (
   treeState: () => ScopedAppState<TreeStateStatic>,
   userState: () => ScopedUserState<TreeUserState>,
-  stores: KitStores,
+  // stores: KitStores,
 ) => {
   const Actions = {
-    addFolder(name?: string) {
+    addItem(name: string, item?: Object) {
       const update = treeState()[1]
       update(next => {
         const id = Math.random()
         next.items[Actions.curId()].children.push(id)
-        next.items[id] = { id, name, type: 'folder', children: [] }
+        next.items[id] = { children: [], ...item, id, name }
       })
-      stores.queryStore.clearQuery()
+    },
+    addFolder(name?: string) {
+      Actions.addItem(name, { type: 'folder' })
+    },
+    deleteItem(id: number) {
+      const update = treeState()[1]
+      update(next => {
+        // remove this item
+        delete next.items[id]
+        // remove any references to this item in .children[]
+        for (const key in next.items) {
+          const item = next.items[key]
+          if (item.children.indexOf(id) > -1) {
+            item.children = item.children.filter(x => x !== id)
+          }
+        }
+      })
+    },
+    updateItem(item: TreeItem) {
+      const update = treeState()[1]
+      update(next => {
+        const id = item.id
+        next.items[id] = item
+      })
     },
     sort(oldIndex: number, newIndex: number) {
       const update = treeState()[1]
@@ -110,7 +131,7 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
 
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
-  const stores = useStoresSimple()
+  // const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
     subSelect,
     props ? pick(props, 'rootItemID', 'items') : defaultState,
@@ -118,7 +139,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
   const us = useUserState(`${subSelect}_treeState`, defaultUserState)
   const getTs = useGet(ts)
   const getUs = useGet(us)
-  const actions = useMemo(() => getActions(getTs, getUs, stores), [])
+  const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
   return {
     state: deriveState(ts[0], us[0]),
     userState: us[0],
@@ -140,9 +161,19 @@ async function loadListItem(item: TreeItem): Promise<ListItemProps> {
       return {
         item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
       }
+    default:
+      return {
+        id: `${item.id}`,
+        title: item.name,
+        subTitle: findAttribute(item, 'subTitle'),
+        subId: findAttribute(item, 'subId'),
+        subType: findAttribute(item, 'subType'),
+      }
   }
-  return null
 }
+
+const findAttribute = (item: TreeItem, key: string) =>
+  (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
 export function TreeList(props: TreeListProps) {
   const { use, query, getItemProps = loadListItem, ...rest } = props
@@ -167,13 +198,34 @@ export function TreeList(props: TreeListProps) {
     [useTree],
   )
 
+  const handleDelete = useCallback(
+    (item: ListItemProps) => {
+      useTree.actions.deleteItem(+item.id)
+    },
+    [useTree],
+  )
+
+  const handleEditTitle = useCallback(
+    (item: TreeItem, name: string) => {
+      item.name = name
+      useTree.actions.updateItem(item)
+    },
+    [useTree],
+  )
+
   if (!items) {
     return null
   }
 
   return (
     <HighlightActiveQuery query={query}>
-      <List onSortEnd={handleSortEnd} {...rest} items={loadedItems} />
+      <List
+        onEdit={handleEditTitle}
+        onSortEnd={handleSortEnd}
+        {...rest}
+        onDelete={handleDelete}
+        items={loadedItems}
+      />
     </HighlightActiveQuery>
   )
 }

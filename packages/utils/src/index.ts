@@ -1,10 +1,17 @@
-import stringHash from 'string-hash'
-
 export * from './highlightText'
 export * from './on'
 
 /**
- * Simply returns what its given.
+ * Remove last X items from array (without mutating).
+ */
+export function removeLast(arr: any[], num = 1) {
+  let x = [...arr]
+  x.splice(-num, num)
+  return x
+}
+
+/**
+ * Returns what its given.
  */
 export function idFn<A>(a: A) {
   return a
@@ -43,13 +50,16 @@ export function sleep(ms: number) {
 }
 
 /**
- * Generates a hash number for a given object.
- * Make sure given object does not have circular structure.
- *
- * @see https://github.com/darkskyapp/string-hash
+ * Just hash a string (thx darksky: https://git.io/v9kWO)
  */
-export function hash(value: any): number {
-  return stringHash(JSON.stringify(value))
+export function stringHash(str: string): number {
+  let res = 5381
+  let i = 0
+  let len = str.length
+  while (i < len) {
+    res = (res * 33) ^ str.charCodeAt(i++)
+  }
+  return res >>> 0
 }
 
 /**

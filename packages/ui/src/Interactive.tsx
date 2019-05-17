@@ -5,8 +5,8 @@
  * @format
  */
 import { isEqual } from '@o/fast-compare'
-import { gloss } from 'gloss'
 import { on } from '@o/utils'
+import { gloss } from 'gloss'
 import invariant from 'invariant'
 import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
@@ -288,6 +288,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   trackNodePos(node) {
     this.useResizeObserver(node, entries => {
+      this.lastMeasure = Date.now()
       this.currentRect = entries[0].contentRect
     })
     this.currentRect = node.getBoundingClientRect()
@@ -498,12 +499,12 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  lastForceUpdate = Date.now()
+  lastMeasure = Date.now()
   getCurrentRect() {
     // force update every so often in case things animate
-    if (Date.now() - this.lastForceUpdate > 1000) {
+    if (Date.now() - this.lastMeasure > 3000) {
       this.currentRect = this.ref.current.getBoundingClientRect()
-      this.lastForceUpdate = Date.now()
+      this.lastMeasure = Date.now()
     }
     return this.currentRect
   }
@@ -638,6 +639,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       onMouseLeave: this.onMouseLeave,
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
+
+    if (typeof zIndex !== 'number') {
+      debugger
+    }
 
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>

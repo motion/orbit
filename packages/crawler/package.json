@@ -6,7 +6,7 @@
   "module": "src/index.js",
   "scripts": {
     "start": "node index.js",
-    "start-prod": "NODE_ENV=production node lib/index.js"
+    "start:prod": "NODE_ENV=production node lib/index.js"
   },
   "dependencies": {
     "@o/logger": "^2.5.2",

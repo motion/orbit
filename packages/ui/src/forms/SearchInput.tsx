@@ -1,9 +1,11 @@
-import { gloss, Row } from 'gloss'
+import { selectDefined } from '@o/utils'
+import { gloss, useTheme } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { FilterToken } from '../tables/FilterToken'
 import { TableFilter } from '../tables/types'
+import { Row } from '../View/Row'
 import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {
@@ -35,29 +37,38 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   ref,
 ) {
   const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
+  const theme = useTheme()
   return (
     <Input
       ref={ref}
-      sizeRadius={3}
+      sizeRadius={selectDefined(theme.searchInputSizeRadius, 3)}
       flex={1}
       icon="search"
       placeholder="Search..."
-      betweenIconElement={filters.map((filter, i) => (
-        <FilterToken
-          key={`${filter.key}:${filter.type}${i}`}
-          index={i}
-          filter={filter}
-          focused={i === focusedToken}
-          {...filterProps}
-        />
-      ))}
+      flexWrap="wrap"
+      betweenIconElement={
+        <Row space="xs">
+          {filters.map((filter, i) => (
+            <FilterToken
+              key={`${filter.key}:${filter.type}${i}`}
+              index={i}
+              filter={filter}
+              focused={i === focusedToken}
+              {...filterProps}
+            />
+          ))}
+        </Row>
+      }
       after={
         <>
           <ClearButton onClick={onClickClear} visible={clearVisible} />
           {after}
-          {!!actions && <Actions>{actions}</Actions>}
+          {!!actions && <Actions space="xs">{actions}</Actions>}
         </>
       }
+      elementProps={{
+        minWidth: 100,
+      }}
       {...props}
     />
   )

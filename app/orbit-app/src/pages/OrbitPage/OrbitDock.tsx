@@ -1,6 +1,6 @@
+import { Dock } from '@o/ui'
 import React, { memo } from 'react'
 
-import { Dock } from './Dock'
 import { OrbitDockSearch } from './OrbitDockSearch'
 import { OrbitDockShare } from './OrbitDockShare'
 

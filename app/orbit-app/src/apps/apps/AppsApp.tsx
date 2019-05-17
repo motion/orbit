@@ -2,6 +2,7 @@ import { App, AppDefinition, AppMainView, AppProps, createApp, Icon, isDataDefin
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React from 'react'
 
+import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { AppSetupForm } from './AppSetupForm'
 import { AppsMainAddApp } from './AppsMainAddApp'
@@ -35,7 +36,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    group: 'Install App',
+    groupName: 'Install App',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',
@@ -64,12 +65,18 @@ export function AppsIndex() {
           subTitle: 'Manage apps',
           subType: 'manage-apps',
         },
+        {
+          subType: 'explorer-graph',
+          title: 'Graph',
+          icon: 'Graph',
+          subTitle: 'Explore all GraphQL app APIs',
+        },
         ...clientApps
           .map(getAppListItem)
-          .map(x => ({ ...x, group: 'App Settings', subType: 'settings' })),
+          .map(x => ({ ...x, groupName: 'App Settings', subType: 'settings' })),
         ...dataApps.map(getAppListItem).map(x => ({
           ...x,
-          group: 'Source Settings',
+          groupName: 'Source Settings',
           subType: 'settings',
           after: sourceIcon,
         })),
@@ -81,6 +88,10 @@ export function AppsIndex() {
 
 export function AppsMain(props: AppProps) {
   const [app, definition] = useAppWithDefinition(+props.subId)
+
+  if (props.subType === 'explorer-graph') {
+    return <GraphExplorer />
+  }
 
   if (props.subType === 'manage-apps') {
     return <ManageApps />

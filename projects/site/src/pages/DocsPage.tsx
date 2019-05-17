@@ -6,12 +6,11 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
 import { useScreenSize } from '../hooks/useScreenSize'
-import { usePageTheme } from '../Layout'
+import { Header, usePageTheme } from '../Layout'
+import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
-import { recentHMR } from '../SiteRoot'
 import { useSiteStore } from '../SiteStore'
 import { FadeChild, useFadePage } from '../views/FadeIn'
-import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
 import { DocsContents } from './DocsContents'
@@ -20,7 +19,6 @@ import DocsStart from './DocsPage/DocsStart.mdx'
 import { Example } from './DocsPage/Example'
 import { DocsPageHeader } from './DocsPageHeader'
 import { docsNavigate, loadDocsPage, navTm, preloadItem } from './docsPageHelpers'
-import { linkProps } from './HomePage/linkProps'
 import { NotFoundPage } from './NotFoundPage'
 import { useStickySidebar } from './useStickySidebar'
 
@@ -263,7 +261,7 @@ export default compose(
     }
     return (
       <DocsPage>
-        <View disableScrolling={recentHMR} />
+        <View disableScrolling={window['recentHMR']} />
       </DocsPage>
     )
   }),

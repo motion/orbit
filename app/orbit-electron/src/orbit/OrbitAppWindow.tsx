@@ -14,8 +14,6 @@ import { getDefaultAppBounds } from './getDefaultAppBounds'
 const log = new Logger('electron')
 const Config = getGlobalConfig()
 
-const bounds = getDefaultAppBounds(Electron.state.screenSize)
-
 class OrbitAppWindowStore {
   props: {
     id: string
@@ -25,8 +23,9 @@ class OrbitAppWindowStore {
   alwaysOnTop = true
   hasMoved = false
   show = false
-  size = bounds.size
-  position = bounds.position
+  bounds = getDefaultAppBounds(Electron.state.screenSize)
+  size = this.bounds.size
+  position = this.bounds.position
   vibrancy = 'light'
 
   // use reaction to allow us to modify it at runtime to test

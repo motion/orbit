@@ -12,6 +12,7 @@ export type ActivityArgs = {
 type LogMessageType = (format: string, ...args: any[]) => void
 
 export interface Reporter {
+  isVerbose: boolean
   stripIndent: Function
   format: Object
   setVerbose(isVerbose: boolean): void

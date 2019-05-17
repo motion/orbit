@@ -1,7 +1,10 @@
-import { createStoreContext, selectDefined, useStore } from '@o/kit'
-import { Button, ButtonProps, Row } from '@o/ui'
-import React, { memo, useLayoutEffect, useState } from 'react'
+import { createStoreContext, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
+import React, { memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
+
+import { Button, ButtonProps } from './buttons/Button'
+import { Row } from './View/Row'
 
 class DockStore {
   key = 0
@@ -22,7 +25,7 @@ export const Dock = memo((props: any) => {
   return (
     <DockStoreContext.SimpleProvider value={dockStore}>
       <Flipper flipKey={dockStore.key}>
-        <Row position="fixed" bottom={20} right={20} zIndex={100000000} {...props} />
+        <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
       </Flipper>
     </DockStoreContext.SimpleProvider>
   )
@@ -47,13 +50,13 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
   return (
     <Flipped flipId={id}>
       <Button
-        size="xxl"
-        width={50}
-        height={50}
+        size="xl"
+        width={42}
+        height={42}
         marginLeft={15}
         {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         circular
-        iconSize={16}
+        iconSize={18}
         elevation={4}
         badgeProps={{
           background: '#333',

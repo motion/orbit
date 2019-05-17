@@ -1,22 +1,20 @@
+import { SortableContainer, SortableContainerProps, SortableElement, SortableElementProps } from '@o/react-sortable-hoc'
 import { Grid } from 'gloss'
-import {
-  SortableContainer,
-  SortableContainerProps,
-  SortableElement,
-  SortableElementProps,
-} from '@o/react-sortable-hoc'
 import React from 'react'
+
 import { isRightClick } from './helpers/isRightClick'
+import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
 export type GetGridItem<A> = (item: A, index: number) => any
 export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>
 
 export type SortableGridProps<A extends any> = SortableContainerProps &
-  ViewProps & {
+  Omit<ViewProps, 'onSelect'> & {
     items?: A[]
     getItem?: GetGridItem<A>
     getSortableItemProps?: GetSortableItem<A>
+    sortable?: boolean
   }
 
 type SortableGridItemProps = {
@@ -35,7 +33,7 @@ class GridItem extends React.PureComponent<SortableGridItemProps> {
 const SortableItem = SortableElement(GridItem)
 
 const SortableGridInner = SortableContainer(
-  ({ items, getItem, getSortableItemProps, ...props }: any) => {
+  ({ items, getItem, getSortableItemProps, sortable, ...props }: any) => {
     return (
       <Grid autoFitRows autoFitColumns {...props}>
         {items.map((value, index) => (
@@ -45,6 +43,7 @@ const SortableGridInner = SortableContainer(
             realIndex={index}
             value={value}
             getItem={getItem}
+            disabled={!sortable}
             {...getSortableItemProps && getSortableItemProps(items[index], index)}
           />
         ))}
@@ -54,5 +53,7 @@ const SortableGridInner = SortableContainer(
 )
 
 export function SortableGrid(props: SortableGridProps<any>) {
-  return <SortableGridInner shouldCancelStart={isRightClick} axis="xy" {...props} />
+  return (
+    <SortableGridInner sortable={false} shouldCancelStart={isRightClick} axis="xy" {...props} />
+  )
 }

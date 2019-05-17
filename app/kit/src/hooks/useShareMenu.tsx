@@ -1,6 +1,7 @@
 import { Icon, ListItemProps, Popover, preventDefault, View } from '@o/ui'
 import { flow, memoize } from 'lodash'
 import React, { useCallback } from 'react'
+
 import { SearchItemShareProvide } from '../views/SearchItemProvide'
 import { ShareMenu } from '../views/ShareMenu'
 import { useStores } from './useStores'
@@ -39,7 +40,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
             }
             openOnClick
             closeOnClickAway
-            group="filters"
+            openKey="filters"
             background
             borderRadius={10}
             elevation={1}

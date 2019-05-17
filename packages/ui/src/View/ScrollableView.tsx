@@ -4,7 +4,6 @@ import React, { forwardRef } from 'react'
 
 import { getSpaceSize, Sizes } from '../Space'
 import { Omit } from '../types'
-import { ColProps } from './Col'
 import { getPadding } from './pad'
 import { PaddedView } from './PaddedView'
 import { ViewProps } from './View'
@@ -36,22 +35,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   let content = children
   const controlPad = typeof pad !== 'undefined'
 
-  // wrap inner with padding view only if necessary (this is super low level view)
-  // this is necessary so CSS scrollable has proper "end margin"
-  const innerPad = getPadding(props)
-  if (innerPad && innerPad.padding) {
-    content = (
-      <PaddedView
-        ref={!scrollable ? ref : null}
-        pad={pad}
-        padding={padding}
-        {...!scrollable && viewPropsRaw}
-      >
-        {children}
-      </PaddedView>
-    )
-  }
-
   const viewProps = {
     ...viewPropsRaw,
     isWrapped: viewPropsRaw.flexWrap === 'wrap',
@@ -61,11 +44,24 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     }),
   }
 
+  // wrap inner with padding view only if necessary (this is super low level view)
+  // this is necessary so CSS scrollable has proper "end margin"
+  const innerPad = getPadding(props)
+  const hasInnerPad = !!(innerPad && innerPad.padding)
+
   if (!scrollable) {
     return (
-      <ScrollableInner ref={ref} {...viewProps} {...props} padding={0}>
+      <ScrollableInner ref={ref} {...viewProps} {...props} {...innerPad}>
         {content}
       </ScrollableInner>
+    )
+  }
+
+  if (hasInnerPad) {
+    content = (
+      <PaddedView ref={!scrollable ? ref : null} {...!scrollable && viewPropsRaw} {...innerPad}>
+        {content}
+      </PaddedView>
     )
   }
 
@@ -91,7 +87,7 @@ const hideScrollbarsStyle = {
   },
 }
 
-const ScrollableInner = gloss<ColProps & { isWrapped?: boolean }>(Col, {
+const ScrollableInner = gloss<any & { parentSpacing: any; isWrapped?: boolean }>(Col, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
 }).theme(props => {

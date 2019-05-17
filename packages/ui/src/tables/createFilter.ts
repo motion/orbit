@@ -1,25 +1,26 @@
-import { capitalize } from 'lodash'
-import { EnumFilterOption, TableFilter, TableFilterEnum } from './types'
+import { useMemo } from 'react'
 
-type PartialEnumFilter = Pick<EnumFilterOption, 'value'> & Partial<EnumFilterOption>
+import { TableFilter } from './types'
 
-export function createEnumFilter(
-  options: (string | PartialEnumFilter)[],
-  filter?: Partial<TableFilterEnum>,
-): TableFilter {
-  return {
-    type: 'enum',
-    enum: options.map(partial => {
-      let obj = typeof partial === 'string' ? { value: partial } : partial
-      return {
-        label: obj.label || capitalize(obj.value),
-        value: obj.value,
-        color: obj.color || null,
-      }
-    }),
-    key: 'type',
-    value: [],
-    persistent: true,
-    ...filter,
-  }
+// export function useFilters(filters: TableFilter[], options) {
+//   const [filterVal]
+// }
+
+export const FilterInclude = 'include' as 'include'
+export const FilterExclude = 'exclude' as 'exclude'
+export const FilterColumns = 'columns' as 'columns'
+
+export function useFilters(filters: TableFilter[]) {
+  return useMemo(() => filters, [JSON.stringify(filters)])
 }
+
+// function normalizeEnum(options: (string | Partial<any>)[]) {
+//   return options.map(partial => {
+//     let obj = typeof partial === 'string' ? { value: partial } : partial
+//     return {
+//       label: obj.label || capitalize(obj.value),
+//       value: obj.value,
+//       color: obj.color || null,
+//     }
+//   })
+// }

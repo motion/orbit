@@ -1,16 +1,16 @@
-import { Inline, Row } from 'gloss'
 import { BorderRight, Col, Divider, Image, ListItemSimple, PassProps, Space, TextProps, Theme, Title, View } from '@o/ui'
+import { Inline, Row } from 'gloss'
 import { mount, route } from 'navi'
 import React from 'react'
 
 import confettiImage from '../../public/images/confetti.jpg'
 import { scrollTo } from '../etc/helpers'
 import { useScreenSize } from '../hooks/useScreenSize'
+import { Header } from '../Layout'
 import { FadeChild, useFadePage } from '../views/FadeIn'
-import { Header } from '../views/Header'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
-import { linkProps } from './HomePage/linkProps'
+import { linkProps } from "../LinkState";
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { useStickySidebar } from './useStickySidebar'
 

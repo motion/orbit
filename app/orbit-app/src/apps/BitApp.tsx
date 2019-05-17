@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { App, AppProps, createApp, HighlightedSearchable, ItemView } from '@o/kit'
+import { App, AppProps, createApp, ItemView } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
 import { Button, Col, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
 import { gloss, Row } from 'gloss'
@@ -37,30 +37,22 @@ export function BitAppMain(props: AppProps) {
   }
   return (
     <ItemPropsProvider value={defaultItemProps}>
-      <HighlightedSearchable>
-        {({ searchBar }) => (
-          <>
-            <BitTitleBar bit={bit} searchBar={searchBar} />
-            <Col flex={1} scrollable>
-              <ItemView item={bit} />
-            </Col>
-          </>
-        )}
-      </HighlightedSearchable>
+      <BitTitleBar bit={bit} />
+      <Col flex={1} scrollable>
+        <ItemView item={bit} />
+      </Col>
     </ItemPropsProvider>
   )
 }
 
 export class BitTitleBar extends React.Component<{
-  searchBar: any
   bit: Bit
 }> {
   render() {
-    const { bit, searchBar } = this.props
+    const { bit } = this.props
     const normalizedItem = normalizeItem(bit)
     return (
       <ToolbarChrome>
-        {searchBar}
         <View flex={1} />
         <Space />
         <SpaceGroup space="sm">

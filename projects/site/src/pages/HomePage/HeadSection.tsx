@@ -3,36 +3,36 @@ import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
+import { linkProps } from '../../LinkState'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { TitleText } from '../../views/TitleText'
 import { useTextFit } from '../../views/useTextFit'
 import { Join } from './Join'
-import { linkProps } from './linkProps'
 import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
 
 let allTitles = {
-  large: 'A better deal for apps',
-  medium: 'A new deal for apps',
-  small: 'A new deal for apps',
+  large: 'Collaborative, decentralized apps',
+  medium: 'Collaborative, decentralized apps',
+  small: 'Collaborative, decentralized apps',
 }
 
 let allTexts = {
   large: [
-    `Introducing a new type of thing: a browser for apps.`,
-    `Easy, powerful & fast decentralized.`,
+    `A new platform to create and share incredible apps.`,
+    `Data-first, easy to build, built for internal tools, under your control.`,
   ],
   medium: [
-    `Introducing a new type of thing: the app browser.`,
-    `Easy, powerful & fast decentralized apps.`,
+    `A new platform to create and share incredible apps.`,
+    `Data-first, easy to build, built for internal tools, under your control.`,
   ],
   small: [
-    `Introducing a new type of thing: the app browser.`,
-    `Easy, powerful & fast decentralized apps.`,
+    `A new platform to create and share incredible apps.`,
+    `Data-first, easy to build, built for internal tools, under your control.`,
   ],
 }
 
@@ -96,7 +96,7 @@ const HeadContent = memo(() => {
 
       <View
         maxHeight={isSmall ? 0 : 'auto'}
-        overflow={isSmall ? 'hidden' : 'auto'}
+        overflow={isSmall ? 'hidden' : 'visible'}
         position="relative"
         flex={1}
         width={textsWidth}

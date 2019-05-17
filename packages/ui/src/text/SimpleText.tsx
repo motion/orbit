@@ -1,6 +1,4 @@
-import { alphaColorTheme, Base, BaseProps, gloss } from 'gloss'
-import { isDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import { Base, BaseProps, getTextSizeTheme, gloss } from 'gloss'
 
 import { Config } from '../helpers/configure'
 import { useScale } from '../Scale'
@@ -10,20 +8,7 @@ export type SimpleTextProps = BaseProps & {
   selectable?: boolean
 }
 
-export const SimpleText = forwardRef(({ size = 1, ...props }: SimpleTextProps, ref) => {
-  const scale = useScale()
-  return (
-    <SimpleTextElement
-      applyPsuedoColors={isDefined(props.hoverStyle, props.activeStyle, props.focusStyle)}
-      {...Config.defaultProps.text}
-      ref={ref}
-      size={size * scale}
-      {...props}
-    />
-  )
-})
-
-export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
+export const SimpleText = gloss<SimpleTextProps>(Base, {
   display: 'inline-block',
   whiteSpace: 'normal',
   ellipse: {
@@ -38,4 +23,14 @@ export const SimpleTextElement = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-}).theme(alphaColorTheme)
+}).theme(scaledTextSizeTheme)
+
+SimpleText.defaultProps = {
+  ...Config.defaultProps.text,
+  applyPsuedoColors: 'only-if-defined',
+}
+
+export function scaledTextSizeTheme(props: any) {
+  const scale = useScale()
+  return getTextSizeTheme(props, scale)
+}

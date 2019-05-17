@@ -164,6 +164,7 @@ function configureSize(this: Window, { size: oSize, onResize, defaultSize, anima
   if (this.unmounted) {
     return
   }
+  console.log('configure size', oSize, defaultSize)
   let size = oSize
   if (Array.isArray(oSize)) {
     size = size.map(x => Math.round(x))

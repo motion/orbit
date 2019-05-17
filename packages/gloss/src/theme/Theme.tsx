@@ -1,26 +1,30 @@
 import { ThemeObject } from '@o/css'
+import { uniqueId } from 'lodash'
 import React, { useContext, useMemo } from 'react'
 
 import { Config } from '../config'
-import { SimpleStyleObject } from '../types'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 
 export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 
 type ThemeProps = {
-  theme?: string | SimpleStyleObject
+  theme?: string | ThemeObject
   themeSelect?: ThemeSelect
   alt?: string
   name?: string
   children: any
 }
 
-const themeContexts = new WeakMap()
+export const cacheThemes = new WeakMap<any, ThemeContextType>()
 
 export const Theme = (props: ThemeProps) => {
-  const { theme, name, children } = props
+  const { theme, name, children, themeSelect, alt } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
+
+  if (!theme && !name && !themeSelect && !alt) {
+    return children
+  }
 
   if (prev.allThemes[nextName]) {
     if (prev.allThemes[nextName] === prev.activeTheme) {
@@ -29,21 +33,31 @@ export const Theme = (props: ThemeProps) => {
     return <ThemeByName name={nextName}>{children}</ThemeByName>
   }
 
-  const nextTheme = Config.preProcessTheme
-    ? Config.preProcessTheme(props, prev.activeTheme)
-    : prev.activeTheme
-  let nextThemeObj: ThemeContextType = themeContexts.get(nextTheme)
+  let next: any = null
 
-  if (!nextThemeObj) {
-    nextThemeObj = createThemeFromObject(props, prev, nextTheme)
-    themeContexts.set(nextTheme, nextThemeObj)
+  if (typeof theme === 'object' && cacheThemes.has(theme)) {
+    next = cacheThemes.get(theme) as ThemeContextType
+  } else {
+    const nextTheme = Config.preProcessTheme
+      ? Config.preProcessTheme(props, prev.activeTheme)
+      : prev.activeTheme
+
+    next = cacheThemes.get(nextTheme)
+
+    if (!next) {
+      next = createThemeFromObject(props, prev, nextTheme)
+      cacheThemes.set(nextTheme, next)
+    }
+    if (nextTheme === prev.activeTheme) {
+      return children
+    }
   }
 
-  if (nextTheme === prev.activeTheme) {
+  if (next === prev) {
     return children
   }
 
-  return <ThemeContext.Provider value={nextThemeObj}>{children}</ThemeContext.Provider>
+  return <ThemeContext.Provider value={next}>{children}</ThemeContext.Provider>
 }
 
 function createThemeFromObject(
@@ -51,7 +65,7 @@ function createThemeFromObject(
   prev: ThemeContextType,
   next: ThemeObject,
 ): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}`
+  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}.${uniqueId()}`
   return {
     ...prev,
     activeThemeName,
@@ -69,11 +83,15 @@ function ThemeByName({ name, children }: ThemeProps) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
     const nextTheme = allThemes[name]
-    return {
+    const next: ThemeContextType = {
       allThemes,
       activeTheme: nextTheme,
       activeThemeName: name,
     }
+
+    cacheThemes.set(nextTheme, next)
+
+    return next
   }, [name])
   return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
 }

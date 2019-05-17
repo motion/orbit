@@ -1,9 +1,60 @@
 import { createStoreContext, react, useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
+import React from 'react'
+
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { useVisibilityStore } from './Visibility'
 
-export class FocusStore {
+// TODO
+// this has two parts
+//   1. a nestable, focus managing store with order for moving between
+//   2. a simpler, value passing <FocusContext>
+
+// part 1 is contained in the FocusManagerStore stuff, but on hold for now
+// part 2 is here, simpler for now
+
+//
+// part 1
+//
+
+type FocusProps = { focused: boolean }
+class FocusStore {
+  props: FocusProps
+  get focused() {
+    return this.props.focused
+  }
+}
+const Context = createStoreContext(FocusStore)
+// focus parents override children
+export const ProvideFocus = (props: FocusProps & { children: any }) => {
+  const parent = Context.useStore()
+  return (
+    <Context.Provider
+      focused={
+        !parent || parent.focused === true
+          ? selectDefined(props.focused, parent ? parent.focused : true)
+          : false
+      }
+    >
+      {props.children}
+    </Context.Provider>
+  )
+}
+export function useFocus() {
+  try {
+    const store = Context.useStore()
+    return selectDefined(store.focused, true)
+  } catch {
+    // no focus store provided
+    return true
+  }
+}
+
+//
+// part 2
+//
+
+export class FocusManagerStore {
   active = -1
   ids = []
   focusOrder = []
@@ -63,16 +114,16 @@ export class FocusStore {
   }
 }
 
-const context = createStoreContext(FocusStore)
+const context = createStoreContext(FocusManagerStore)
 
-export const useFocusStore = context.useStore
-export const useCreateFocusStore = context.useCreateStore
-export const ProvideFocus = context.Provider
+export const useFocusManager = context.useStore
+export const useCreateFocusManager = context.useCreateStore
+export const ProvideFocusManager = context.Provider
 
 // for sub-items
 // attaches them as focsed when visibile
 export function useFocusableItem(id: string, forceVisible?: boolean) {
-  const focusStore = useFocusStore()
+  const focusStore = useFocusManager()
   const visStore = useVisibilityStore()
 
   useReaction(

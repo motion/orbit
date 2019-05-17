@@ -1,21 +1,9 @@
-import {
-  Layout,
-  List,
-  ListItemProps,
-  ListProps,
-  Pane,
-  PaneProps,
-  SearchableListProps,
-  Sidebar,
-  SidebarProps,
-  useMedia,
-  View,
-} from '@o/ui'
+import { Layout, List, ListItemProps, ListProps, Pane, PaneProps, Sidebar, SidebarProps, useMedia, View } from '@o/ui'
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 
 import { Omit } from '../types'
 
-export type MasterDetailProps = Omit<SearchableListProps, 'children'> & {
+export type MasterDetailProps = Omit<ListProps, 'children'> & {
   children?: React.ReactNode | ((selected: ListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
   masterProps?: PaneProps | SidebarProps

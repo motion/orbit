@@ -17,7 +17,7 @@ export const SpacedPageContent = forwardRef(
         {...props}
       >
         <div style={{ flex: 1 }} />
-        <Col space="md" alignItems="center">
+        <Col space="xl" alignItems="center">
           {header}
         </Col>
         {children}

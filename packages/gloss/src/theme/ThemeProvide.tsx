@@ -1,6 +1,8 @@
-import { ThemeSet } from '@o/css'
+import { ThemeObject, ThemeSet } from '@o/css'
 import React, { useContext, useMemo } from 'react'
-import { ThemeContext } from './ThemeContext'
+
+import { cacheThemes } from './Theme'
+import { ThemeContext, ThemeContextType } from './ThemeContext'
 
 type ThemeProvideProps = {
   activeTheme?: string
@@ -12,13 +14,18 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
   const themeContext = useContext(ThemeContext)
 
   const val = useMemo(() => {
-    const next = {
+    const next: ThemeContextType = {
       ...themeContext,
-      allThemes: { ...themeContext.allThemes, ...themes },
+      allThemes: { ...themeContext.allThemes, ...themes } as ThemeObject,
     }
     if (activeTheme) {
       next.activeThemeName = activeTheme
     }
+
+    if (activeTheme) {
+      cacheThemes.set(activeTheme, next)
+    }
+
     return next
   }, [themeContext, activeTheme, themes])
 

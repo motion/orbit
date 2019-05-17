@@ -16,6 +16,8 @@
 
     // dev time needs
     { "path": "./packages/build" },
+    { "path": "./packages/plugin-transform-react-constant-elements" },
+    { "path": "./packages/gloss-babel-optimize" },
     { "path": "./packages/wait-for-fonts" }
   ]
 }

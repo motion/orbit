@@ -34,7 +34,6 @@ export class LinearGradient {
   }
 
   darken(amt) {
-    console.log('this.getColors()[1]', this.getColors()[1])
     return this.getColors()[1].darken(amt)
   }
 }

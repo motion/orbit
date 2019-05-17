@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import './processDispose'
+
 import * as Path from 'path'
 import Yargs from 'yargs'
 
@@ -13,26 +15,27 @@ let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
 function main() {
-  const app = (p: Yargs.Argv) =>
-    p.positional('app', {
-      type: 'string',
-      default: '.',
-      describe: 'The application to run',
-    })
-
   Yargs.scriptName('orbit')
     .usage('$0 <cmd> [args]')
     .command(
       'dev [app]',
       'Run an Orbit app in development mode',
-      p => app(p),
+      p =>
+        p.positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        }),
       async argv => {
         let projectRoot = Path.resolve(cwd, argv.app)
-        let options = { projectRoot }
-        commandDev(options)
+        commandDev({ projectRoot, verbose: !!argv.verbose })
       },
     )
+    .option('verbose', {
+      alias: 'v',
+    })
     .version('version', 'Show version', description)
+    .showHelpOnFail(true)
     .help().argv
 }
 

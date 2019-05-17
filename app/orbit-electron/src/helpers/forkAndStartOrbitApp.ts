@@ -1,6 +1,6 @@
 import { forkProcess } from '@o/orbit-fork-process'
 
-import { appProcesses } from '../orbit/OrbitMainWindow'
+import { addAppProcess } from '../resolver/CloseAppResolver'
 
 export function forkAndStartOrbitApp({ appId }: { appId: number }) {
   if (typeof appId !== 'number') {
@@ -17,5 +17,8 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }) {
     // inspectPortRemote: 9007,
   })
 
-  appProcesses.push({ appId, process: proc })
+  addAppProcess({
+    appId,
+    process: proc,
+  })
 }

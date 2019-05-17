@@ -1,5 +1,5 @@
-import { linearGradient, toColor } from '@o/color'
-import { ThemeSet } from '@o/css'
+import { invertLightness, linearGradient, toColor } from '@o/color'
+import { ThemeObject, ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
 export const colors = colorize({
@@ -18,11 +18,13 @@ export const colors = colorize({
   yellow: '#E2EB53',
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
+  gray: 'rgba(125, 125, 125, 0.5)',
 })
 
 const transparent = [0, 0, 0, 0]
 
 const colorThemes: ThemeSet = {
+  // light
   lightRed: fromStyles({
     glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
@@ -55,6 +57,7 @@ const colorThemes: ThemeSet = {
     iconColor: colors.darkOrange,
     background: colors.lightOrange,
   }),
+  // regular
   red: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',
@@ -89,6 +92,43 @@ const colorThemes: ThemeSet = {
     backgroundHover: transparent,
     backgroundActive: transparent,
   }),
+  // chromeless (just foreground color)
+  simpleBlue: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.blue,
+  }),
+  simpleYellow: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.yellow,
+  }),
+  simpleOrange: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.orange,
+  }),
+  simpleGreen: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.green,
+  }),
+  simpleRed: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.red,
+  }),
+  simpleGray: fromStyles({
+    glintColorBottom: transparent,
+    glintColor: transparent,
+    background: transparent,
+    color: colors.gray,
+  }),
 }
 
 const alternates: ThemeSet = {
@@ -110,6 +150,17 @@ const alternates: ThemeSet = {
     backgroundHover: colorThemes.blue.background,
     backgroundActive: colorThemes.blue.background,
   },
+  selectedInactive: parent => ({
+    ...colorThemes.blue,
+    ...colorize({
+      // dont make selected things hover/active, they're active already
+      background: [150, 150, 150, 0.1],
+      backgroundHover: [150, 150, 150, 0.1],
+      backgroundActive: [150, 150, 150, 0.1],
+    }),
+    borderColor: parent.borderColor,
+    color: parent.color,
+  }),
   bordered: {
     glintColor: transparent,
     borderWidth: 2,
@@ -150,15 +201,15 @@ const alternates: ThemeSet = {
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = parent.background.isDark()
-      ? parent.background.lighten(0.08).alpha(0.5)
-      : parent.background.darken(0.05).alpha(0.5)
+    const background = invertLightness(parent.background, 0.05).alpha(0.35)
     return {
       color: parent.color,
+      searchInputSizeRadius: 1,
       background,
-      backgroundHover: background.alpha(1),
-      backgroundFocus: background.alpha(1),
-      backgroundActive: background.alpha(1),
+      backgroundHover: background,
+      buttonBackgroundHover: invertLightness(background, 0.05),
+      backgroundFocus: background.darken(0.05),
+      backgroundActive: background.darken(0.05),
       glintColor: transparent,
       glintColorBottom: transparent,
       ...colorize({
@@ -228,6 +279,8 @@ const light = {
     cardBackgroundHover: [255, 255, 255],
     cardBackgroundActive: [255, 255, 255],
     cardBorderColor: [0, 0, 0, 0.1],
+    orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
+    orbitInputBackgroundEditing: [0, 0, 0, 0.2],
   }),
 }
 
@@ -267,16 +320,17 @@ const darkAlternates: ThemeSet = {
     }),
   },
 }
-const dark = {
+
+let dark: ThemeObject = {
   alternates: darkAlternates,
   ...base,
-  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+  backgroundZebra: darkBackground.lighten(0.2).alpha(0.35),
+  backgroundZebraHover: darkBackground.lighten(0.4).alpha(0.35),
+  backgroundStrongest: darkBackground.lighten(0.45),
+  backgroundStronger: darkBackground.lighten(0.3),
+  backgroundStrong: darkBackground.lighten(0.15),
+  background: darkBackground,
   ...fromStyles({
-    backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
-    backgroundStrongest: darkBackground.lighten(0.45),
-    backgroundStronger: darkBackground.lighten(0.3),
-    backgroundStrong: darkBackground.lighten(0.15),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
@@ -288,6 +342,13 @@ const dark = {
     borderColor: [180, 180, 180, 0.25],
     borderColorActive: [180, 180, 180, 0.25],
     borderColorLight: [180, 180, 180, 0.15],
+  }),
+}
+
+// makes it so we can reference the above base styles for the rest
+dark = {
+  ...dark,
+  ...colorize({
     sidebarBackground: [15, 15, 15],
     sidebarBackgroundTransparent: [15, 15, 15, 0.2],
     sidebarBorderColor: '#444',
@@ -295,6 +356,7 @@ const dark = {
     headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.34]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
+    orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,
@@ -312,7 +374,7 @@ const dark = {
     colorActive: '#fff',
     tabBackgroundHover: [255, 255, 255, 0.1],
     tabBackgroundActive: [255, 255, 255, 0.125],
-    tabBackgroundSelected: darkBackground.lighten(0.2),
+    tabBackgroundSelected: dark.backgroundStronger,
     glintColor: [255, 255, 255, 0.135],
     inputBackground: transparent,
     inputBackgroundHover: transparent,
@@ -328,6 +390,8 @@ const dark = {
     cardBackgroundActive: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
+    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     panelHeaderBackground: darkBackground.lighten(0.15),
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',

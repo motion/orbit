@@ -12,11 +12,13 @@ import { useShareStore } from '../Share'
 import { TitleRowSpecificProps } from '../TitleRow'
 import { DataColumnsShort, Omit } from '../types'
 import { useVisibility } from '../Visibility'
-import { SearchableTable, SearchableTableProps } from './SearchableTable'
+import { FilterableProps, FilterableSearchInput, useFilterable } from './Filterable'
+import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { DEFAULT_ROW_HEIGHT } from './types'
 
-export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children'>> &
-  Omit<SearchableTableProps, 'columns' | 'selectableStore' | 'children'> &
+export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title' | 'children' | 'selectable'>> &
+  Omit<ManagedTableProps, 'columns'> &
+  FilterableProps &
   Omit<SectionParentProps, 'children'> & {
     /** Flexibly define which columns to show, how to show them, and attach events to changes. Accepts array of strings, objects, or an object. */
     columns?: DataColumnsShort
@@ -77,6 +79,10 @@ export function Table(tableProps: TableProps) {
     () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),
     [props.columns, items],
   )
+
+  // do filtering...
+  const filterable = useFilterable(props)
+
   const parentNodeSize = useParentNodeSize({ disable: !isVisible, throttle: 150 })
 
   const getOnSelect = useGet(props.onSelect)
@@ -112,10 +118,10 @@ export function Table(tableProps: TableProps) {
         parentNodeSize.width === 0 ? undefined : parentNodeSize.width,
       )}
       ref={parentNodeSize.ref}
+      belowTitle={searchable && <FilterableSearchInput useFilterable={filterable} />}
     >
-      <SearchableTable
+      <ManagedTable
         containerRef={nodeSizer.ref}
-        searchable={searchable}
         minWidth={100}
         minHeight={100}
         maxHeight={height > 0 ? height : 800}
@@ -123,7 +129,8 @@ export function Table(tableProps: TableProps) {
         flex={flex}
         {...props}
         columns={columns}
-        items={items}
+        filter={filterable.filter}
+        onAddFilter={filterable.onAddFilter}
         onSelect={onSelect}
         rowLineHeight={rowHeight}
       />

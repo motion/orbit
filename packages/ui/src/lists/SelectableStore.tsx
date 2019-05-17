@@ -66,11 +66,11 @@ export class SelectableStore {
   private keyToIndex = {}
 
   get rows() {
-    return this.props.items
+    return this.props.items || []
   }
 
   resetKeyToIndex = react(
-    () => always(this.props.items),
+    () => always(this.rows),
     () => {
       this.keyToIndex = {}
     },
@@ -106,6 +106,7 @@ export class SelectableStore {
   callbackOnSelect = react(
     () => always(this.active),
     () => {
+      ensure('this.props.onSelect', !!this.props.onSelect)
       const { rows, indices } = this.getSelectedState()
       this.props.onSelect(rows, indices)
     },
@@ -149,7 +150,7 @@ export class SelectableStore {
   }
 
   selectFirstValid() {
-    const firstValidIndex = this.rows.findIndex(x => x.selectable !== false)
+    const firstValidIndex = this.rows.findIndex(x => x && x.selectable !== false)
     if (firstValidIndex === -1) {
       console.warn('no selecatble row!', this.rows)
       return
@@ -225,7 +226,7 @@ export class SelectableStore {
     }
   }
 
-  isActiveIndex = (index: number) => {
+  isActiveIndex(index: number) {
     if (!this.rows.length || index >= this.rows.length) return false
     if (index === -1) return false
     return this.active.has(this.getIndexKey(index))

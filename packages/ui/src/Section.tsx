@@ -1,4 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
+import { Theme } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { splitCollapseProps, useCollapse } from './Collapsable'
@@ -13,7 +14,7 @@ import { Col, ColProps } from './View/Col'
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
 export type SectionSpecificProps = Partial<
-  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size'>
+  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size' | 'selectable'>
 > & {
   /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
@@ -68,6 +69,8 @@ export type SectionProps = Omit<ColProps, 'onSubmit'> & SectionSpecificProps
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
+
+const defaultTitlePad = ['lg', true, 'sm']
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -126,22 +129,29 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
 
     titleEl = (
       <Scale size={titleScale}>
-        <TitleRow
-          bordered={bordered || titleBorder}
-          backgrounded={selectDefined(backgrounded, bordered)}
-          title={title}
-          subTitle={subTitle}
-          after={afterTitle}
-          above={above}
-          before={beforeTitle}
-          below={belowTitle}
-          icon={icon}
-          pad={selectDefined(titlePad, titleBorder || bordered ? selectDefined(pad, true) : null)}
-          size={selectDefined(titleSize, size)}
-          titleProps={titleProps}
-          useCollapse={collapse}
-          {...adjustPadProps}
-        />
+        <Theme alt="flat">
+          <TitleRow
+            bordered={bordered || titleBorder}
+            backgrounded={selectDefined(backgrounded, bordered)}
+            title={title}
+            subTitle={subTitle}
+            after={afterTitle}
+            above={above}
+            before={beforeTitle}
+            below={belowTitle}
+            icon={icon}
+            userSelect="none"
+            space="sm"
+            pad={selectDefined(
+              titlePad,
+              titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,
+            )}
+            size={selectDefined(titleSize, size)}
+            titleProps={titleProps}
+            useCollapse={collapse}
+            {...adjustPadProps}
+          />
+        </Theme>
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>
     )

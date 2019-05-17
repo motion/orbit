@@ -1,25 +1,31 @@
+import { gloss } from 'gloss'
 import React from 'react'
+
 import { DateFormat } from './text/DateFormat'
 import { SimpleText } from './text/SimpleText'
 
+const DataText = gloss(SimpleText)
+
+DataText.defaultProps = {
+  alpha: 0.85,
+  size: 0.85,
+}
+
 export function DataValue(props: { type?: string; value: any }) {
   const { type, value } = props
-
   let element = null
-
   if (type === 'date') {
     element = (
-      <SimpleText ellipse>
+      <DataText ellipse>
         <DateFormat date={value} />
-      </SimpleText>
+      </DataText>
     )
   } else if (type === 'string') {
-    element = <SimpleText ellipse>{value}</SimpleText>
+    element = <DataText ellipse>{value}</DataText>
   } else if (type === 'boolean') {
-    element = <SimpleText fontWeight={500}>{value ? 'true' : 'false'}</SimpleText>
+    element = <DataText fontWeight={500}>{value ? 'true' : 'false'}</DataText>
   } else {
-    element = <SimpleText ellipse>{`${value}`}</SimpleText>
+    element = <DataText ellipse>{`${value}`}</DataText>
   }
-
   return element
 }

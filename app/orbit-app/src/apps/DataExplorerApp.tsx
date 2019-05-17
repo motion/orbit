@@ -1,54 +1,160 @@
-import { App, AppProps, createApp, hasGraph, Templates, useActiveDataAppsWithDefinition, useAppState, useAppWithDefinition } from '@o/kit'
-import { Button, Divider, Form, FormField, List, Section, SubTitle, Tab, Table, Tabs, TextArea, Title, useSetShare, View } from '@o/ui'
-import { remove } from 'lodash'
-import React from 'react'
+import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
+import { Button, Divider, Dock, DockButton, Form, FormField, randomAdjective, randomNoun, Section, Select, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { capitalize, remove } from 'lodash'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { GraphExplorer } from '../views/GraphExplorer'
-import { getAppListItem } from './apps/getAppListItem'
+import { OrbitAppIcon } from '../views/OrbitAppIcon'
+import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'data-explorer',
-  name: 'Data Explorer',
+  name: 'Query Builder',
   icon: '',
   app: props => (
-    <App index={<DataExplorerIndex />}>
-      <DataExplorerMain {...props} />
+    <App index={<QueryBuilderIndex />}>
+      <QueryBuilderMain key={props.id} {...props} />
     </App>
   ),
 })
 
-function DataExplorerIndex() {
-  const dataApps = useActiveDataAppsWithDefinition()
+const treeId = '12'
+
+export function QueryBuilderIndex() {
+  const treeList = useTreeList(treeId)
   return (
-    <List
-      titleBorder
-      title="Data Explorer"
-      subTitle="Explore installed data apps"
-      items={[
-        dataApps.some(x => hasGraph(x.definition)) && {
-          subId: 'explorer-graph',
-          title: 'Graph',
-          icon: 'Graph',
-          subTitle: 'Explore all GraphQL app APIs',
-        },
-        ...dataApps.map(x => ({ ...getAppListItem(x), group: 'Data Apps' })),
-      ].filter(Boolean)}
+    <>
+      <TreeList backgrounded title="Queries" editable deletable use={treeList} sortable />
+      <Dock>
+        <DockButton
+          id="add"
+          icon="plus"
+          onClick={() => {
+            const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
+            treeList.actions.addItem(name)
+          }}
+        />
+      </Dock>
+    </>
+  )
+}
+
+function QueryBuilderMain(props: AppProps) {
+  const nav = useRef<StackNav>(null)
+
+  return (
+    <StackNavigator
+      ref={nav}
+      key={props.id}
+      id={`query-builder-nav=${props.id}`}
+      defaultItem={{
+        id: 'SelectApp',
+        props,
+      }}
+      items={{
+        SelectApp: QueryBuilderSelectApp,
+        QueryEdit: QueryBuilderQueryEdit,
+      }}
     />
   )
 }
 
-function DataExplorerMain({ subId }: AppProps) {
+function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
+  const dataApps = useActiveDataApps()
+  const getActiveApps = useGet(dataApps)
+  const [selected, setSelected] = useState(null)
+  const selectableApps = useMemo(
+    () => [
+      ...dataApps.map(x => ({
+        id: x.id,
+        title: x.name,
+        type: 'installed',
+        groupName: 'Installed Apps',
+        disabled: x.tabDisplay !== 'plain',
+        onDoubleClick: () => {
+          console.log('Stack navigate!')
+        },
+      })),
+    ],
+    [dataApps],
+  )
+
+  return (
+    <Section
+      pad="xl"
+      titlePad="lg"
+      backgrounded
+      title={props.title}
+      subTitle="Select data app."
+      afterTitle={
+        <>
+          <Button
+            onClick={() => {
+              if (!selected.length) {
+                alert('Please select an item first')
+                return
+              }
+              const item = selected[0]
+              console.log('do ', item, props)
+              // navigate to app definition:
+              props.navigation.navigate('QueryEdit', { id: item.id, title: item.title })
+            }}
+          >
+            Next
+          </Button>
+        </>
+      }
+    >
+      <SelectableGrid
+        gridGap={20}
+        minWidth={180}
+        items={selectableApps}
+        onSelect={useCallback(i => {
+          console.log('selecting', i)
+          setSelected(i)
+        }, [])}
+        getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
+          return (
+            <OrbitAppIcon
+              app={getActiveApps().find(x => x.id === item.id)}
+              isSelected={isSelected}
+              onClick={select}
+              onDoubleClick={onDoubleClick}
+            />
+          )
+        }, [])}
+      />
+    </Section>
+  )
+}
+
+function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
+  return (
+    <Section
+      pad="xl"
+      titlePad="lg"
+      backgrounded
+      title={props.title}
+      afterTitle={
+        <>
+          <Select options={['API', 'GraphQL']} />
+        </>
+      }
+    >
+      {JSON.stringify(props)}
+    </Section>
+  )
+}
+
+// unused
+export function CreateQuery(props: AppProps) {
+  const { subId } = props
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
-  const setShare = useSetShare()
-
-  if (subId === 'explorer-graph') {
-    return <GraphExplorer />
-  }
+  // const setShare = useSetShare()
 
   // TODO suspense
   if (!app) {
-    return <Title>no app, subid {typeof subId}</Title>
+    return <Title>nothing {JSON.stringify(props)}</Title>
   }
 
   return (

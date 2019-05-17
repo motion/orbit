@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import Gloss, { Col, ColProps, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
+import Gloss, { Base, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -18,11 +18,11 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Sizes, Space } from './Space'
+import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
-import { getPadding } from './View/pad'
-import { getMargin, ViewProps } from './View/View'
+import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -426,7 +426,12 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {children}
           </Element>
         )}
-        {after}
+        {after && (
+          <>
+            {spaceElement}
+            {after}
+          </>
+        )}
       </>
     )
   }
@@ -452,33 +457,33 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
-  let element = (
-    <IconPropsContext.Provider value={iconContext}>
-      <BreadcrumbReset>
-        <SurfaceFrame
-          className={`${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`}
-          ref={forwardRef}
-          themeSelect={themeSelect}
-          lineHeight={lineHeight}
-          pad={pad}
-          padding={padding}
-          borderWidth={borderWidth}
-          borderPosition={borderPosition}
-          alt={alt}
-          applyPsuedoColors
-          {...!showElement && elementProps}
-          {...throughProps}
-          {...viewProps}
-          {...segmentedStyle}
-          {...childrenProps}
-          {...!noInnerElement && { tagName }}
-          opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
-        />
-      </BreadcrumbReset>
-    </IconPropsContext.Provider>
+  return (
+    <Context.Reset>
+      <IconPropsContext.Provider value={iconContext}>
+        <BreadcrumbReset>
+          <SurfaceFrame
+            className={`${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`}
+            ref={forwardRef}
+            themeSelect={themeSelect}
+            lineHeight={lineHeight}
+            pad={pad}
+            padding={padding}
+            borderWidth={borderWidth}
+            borderPosition={borderPosition}
+            alt={alt}
+            applyPsuedoColors
+            {...!showElement && elementProps}
+            {...throughProps}
+            {...viewProps}
+            {...segmentedStyle}
+            {...childrenProps}
+            {...!noInnerElement && { tagName }}
+            opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
+          />
+        </BreadcrumbReset>
+      </IconPropsContext.Provider>
+    </Context.Reset>
   )
-
-  return <Context.Reset>{element}</Context.Reset>
 })
 
 const chromelessStyle = {
@@ -487,7 +492,7 @@ const chromelessStyle = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
+const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
@@ -503,8 +508,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     padding: 0,
   },
 }).theme((props, theme) => {
-  // :hover, :focus, :active
-
+  const fontStyle = scaledTextSizeTheme(props)
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const marginStyle = getMargin(props)
@@ -532,7 +536,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
     boxShadow = [...boxShadow, getElevation(props).boxShadow]
   }
 
-  styles = {
+  return {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
     overflow: props.overflow || theme.overflow,
@@ -552,30 +556,8 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
         },
     ...styles,
     ...marginStyle,
-    ...getPadding(props),
-
-    // this was an attempt to do smarter padding, but it fails in a case
-    // it would allow you to set widht: 0 on surfaces just like youd expect
-    // we use spacers for padding so we can actually set width: 0; see:
-    // paddingTop: padStyle && padStyle[0],
-    // paddingBottom: padStyle && selectDefined(padStyle[3], padStyle[0]),
-    // paddingLeft: 0,
-    // paddingRight: 0,
-    // // using before/after lets you naturally set width without box-sizing forcing padding to stay
-    // // which is a weird quirk of css and wouldnt be necessary on native
-    // '&:before': padStyle && {
-    //   display: 'block',
-    //   content: '" "',
-    //   width: padStyle.padding[1],
-    // },
-    // '&:after': padStyle && {
-    //   display: 'block',
-    //   content: '" "',
-    //   width: 8 || selectDefined(padStyle.padding[3], padStyle.padding[1]),
-    // },
+    ...fontStyle,
   }
-
-  return styles
 })
 
 const perfectCenterStyle = props => {
@@ -621,7 +603,7 @@ const getIconSize = (props: SurfaceProps) => {
   return Math.floor(size)
 }
 
-const GlintContain = gloss<ColProps>(Col, {
+const GlintContain = gloss(Base, {
   height: '100%',
   position: 'absolute',
   top: 0,

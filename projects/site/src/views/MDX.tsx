@@ -5,7 +5,7 @@ import React from 'react'
 import componentNames from '../../tmp/componentNames.json'
 import { Navigation } from '../Navigation'
 import { Example } from '../pages/DocsPage/Example'
-import { linkProps } from '../pages/HomePage/linkProps'
+import { linkProps } from "../LinkState";
 import { CodeBlock } from './CodeBlock'
 import { IntroText } from './IntroText'
 import { Key } from './Key'

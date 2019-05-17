@@ -18,6 +18,7 @@ module.exports = function(_, givenOpts) {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
       plug('gloss-displaynames', opts.glossDisplayNameConfig || {}),
+      // plug('gloss-babel-optimize'),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
@@ -34,7 +35,7 @@ module.exports = function(_, givenOpts) {
       ...(((!isDev || process.env['OPTIMIZE_REACT']) && [
         plug('babel-plugin-transform-react-remove-prop-types'),
         plug('@babel/plugin-transform-react-inline-elements'),
-        false && plug('@babel/plugin-transform-react-constant-elements'),
+        plug('@o/plugin-transform-react-constant-elements'),
       ]) ||
         []),
     ].filter(Boolean),

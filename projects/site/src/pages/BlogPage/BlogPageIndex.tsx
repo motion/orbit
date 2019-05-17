@@ -4,7 +4,7 @@ import React from 'react'
 import { colors } from '../../constants'
 import { FadeChild } from '../../views/FadeIn'
 import { TitleText } from '../../views/TitleText'
-import { linkProps } from '../HomePage/linkProps'
+import { linkProps } from "../../LinkState";
 import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'

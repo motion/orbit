@@ -40,7 +40,9 @@ import {
   TrendingTopicsModel,
   UserEntity,
   UserModel,
+  AppDevCloseCommand,
   AppDevOpenCommand,
+  CloseAppCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -86,6 +88,7 @@ import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { BuildServer } from '@o/build-server'
+import { remove } from 'lodash'
 
 const log = new Logger('desktop')
 
@@ -270,7 +273,9 @@ export class OrbitDesktopRoot {
 
     const client = new MediatorClient({ transports: [syncersTransport] })
 
-    let mediatorServerPort = this.config.ports.desktopMediator
+    const mediatorServerPort = this.config.ports.desktopMediator
+    let developingApps: { path: string; publicPath: string; appId: number }[] = []
+
     this.mediatorServer = new MediatorServer({
       models: [
         AppModel,
@@ -301,6 +306,7 @@ export class OrbitDesktopRoot {
         SendClientDataCommand,
         ChangeDesktopThemeCommand,
         AppDevOpenCommand,
+        AppDevCloseCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -314,14 +320,22 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
         ]),
         resolveCommand(AppDevOpenCommand, async ({ path }) => {
-          const id = Object.keys(Electron.state.appWindows).length
-          this.buildServer.setApps([
-            {
-              path,
-              publicPath: `/appServer/${id}`,
-            },
-          ])
-          return id
+          const appId = Object.keys(Electron.state.appWindows).length
+          developingApps.push({
+            appId,
+            path,
+            publicPath: `/appServer/${appId}`,
+          })
+          this.buildServer.setApps(developingApps)
+          return appId
+        }),
+        resolveCommand(AppDevCloseCommand, async ({ appId }) => {
+          log.info('Removing build server', appId)
+          developingApps = remove(developingApps, x => x.appId === appId)
+          this.buildServer.setApps(developingApps)
+          log.info('Removing process', appId)
+          await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
+          log.info('Closed app', appId)
         }),
         AppRemoveResolver,
         NewFallbackServerPortResolver,

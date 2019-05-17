@@ -3,7 +3,7 @@ import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
 import { CodeBlock } from '../../views/CodeBlock'
-import { linkProps } from '../HomePage/linkProps'
+import { linkProps } from "../../LinkState";
 
 export type ExampleProps = {
   source: string

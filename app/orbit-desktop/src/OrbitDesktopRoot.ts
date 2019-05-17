@@ -42,6 +42,7 @@ import {
   UserModel,
   AppDevCloseCommand,
   AppDevOpenCommand,
+  AppOpenWorkspaceCommand,
   CloseAppCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
@@ -307,6 +308,7 @@ export class OrbitDesktopRoot {
         ChangeDesktopThemeCommand,
         AppDevOpenCommand,
         AppDevCloseCommand,
+        AppOpenWorkspaceCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -336,6 +338,10 @@ export class OrbitDesktopRoot {
           log.info('Removing process', appId)
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
+        }),
+        resolveCommand(AppOpenWorkspaceCommand, async ({ path }) => {
+          console.log('should load workspace', path)
+          return true
         }),
         AppRemoveResolver,
         NewFallbackServerPortResolver,

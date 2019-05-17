@@ -63,7 +63,9 @@ export async function commandGenTypes(options: {
   }
 
   if (options.out) {
-    await writeJSON(options.out, apiTypes)
+    await writeJSON(options.out, apiTypes, {
+      spaces: 2,
+    })
     console.log(`Written to ${options.out}`)
     return
   }

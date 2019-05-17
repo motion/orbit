@@ -36,6 +36,14 @@ export const AppDevOpenCommand = new Command<
   }
 >('app-dev-open')
 
+export const AppOpenWorkspaceCommand = new Command<
+  boolean,
+  {
+    // Path to the workspace project in dev
+    path: string
+  }
+>('app-workspace-open')
+
 export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
 
 export const SendClientDataCommand = new Command<

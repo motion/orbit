@@ -7,6 +7,7 @@ import Yargs from 'yargs'
 
 import { commandDev } from './command-dev'
 import { commandGenTypes } from './command-gen-types'
+import { commandWs } from './command-ws'
 import { reporter } from './reporter'
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
@@ -36,9 +37,24 @@ function main() {
       },
     )
     .command(
+      'ws [workspace]',
+      'Run an Orbit workspace',
+      p =>
+        p.positional('workspace', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        }),
+      async argv => {
+        reporter.setVerbose(!!argv.verbose)
+        let workspaceRoot = Path.resolve(cwd, argv.workspace)
+        commandWs({ workspaceRoot })
+      },
+    )
+    .command(
       'gen-types [app]',
       'Generate a types.json for the public API (internal, useful for testing)',
-      _ => _,
+      p => p.option('out', { alias: 'o' }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)
         const projectRoot = Path.resolve(cwd)
@@ -47,7 +63,11 @@ function main() {
           // ts:main?
           (await readJSON(Path.join(projectRoot, 'package.json')))['ts:main'],
         )
-        commandGenTypes({ projectRoot, projectEntry })
+        commandGenTypes({
+          projectRoot,
+          projectEntry,
+          out: argv.out ? `${argv.out}` : undefined,
+        })
       },
     )
     .option('verbose', {

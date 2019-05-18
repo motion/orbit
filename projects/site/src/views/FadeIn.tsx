@@ -16,8 +16,8 @@ export const fadeUpProps = {
 }
 
 export const slowConfigLessBounce = {
-  mass: 0.5,
-  tension: 50,
+  mass: 0.35,
+  tension: 25,
   friction: 8,
 }
 
@@ -96,7 +96,7 @@ export const FadeChild = memo(
 export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
-  delay = 0,
+  delay = 200,
   threshold = 0.2,
   off,
   ...props
@@ -142,7 +142,7 @@ export const useSimpleFade = ({
     spring || {
       from: disable ? to : from,
       to: shown || disable ? to : from,
-      config: defaultConfig,
+      config: slowConfigLessBounce,
       ...rest,
     },
   )

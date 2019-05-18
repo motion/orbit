@@ -53,7 +53,7 @@ export default function ShoulderSection() {
               <FadeChild delay={0}>
                 <PillButton>Trust</PillButton>
               </FadeChild>
-              <FadeChild delay={200}>
+              <FadeChild delay={300}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
                   Designed for privacy & control.
                 </TitleText>
@@ -63,7 +63,7 @@ export default function ShoulderSection() {
         >
           <Row space={60} margin={[0, '-180%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
-              <FadeChild {...fadeLeftProps} delay={250}>
+              <FadeChild {...fadeLeftProps} delay={450}>
                 <View
                   borderRadius={10}
                   elevation={3}
@@ -88,28 +88,28 @@ export default function ShoulderSection() {
             </Col>
 
             <Col space flex={2} minWidth={300} maxWidth={340}>
-              <FadeChild delay={200}>
+              <FadeChild delay={500}>
                 <ParagraphIntro {...fontProps.GTEesti} sizeLineHeight={1.1} size={1.5}>
                   From idea to deploy - you control the data, the code that runs it, and where it
                   runs.
                 </ParagraphIntro>
               </FadeChild>
 
-              <FadeChild delay={350}>
+              <FadeChild delay={650}>
                 <Para size={1.35} sizeLineHeight={1.25}>
                   It's time platforms didn't lock us in, create data silos and work against our
                   interest.
                 </Para>
               </FadeChild>
 
-              <FadeChild delay={450}>
+              <FadeChild delay={700}>
                 <Para size={1.35} sizeLineHeight={1.25}>
                   Orbit is open source and decentralized. It gives you complete control over the
                   data it syncs and the code that runs!
                 </Para>
               </FadeChild>
 
-              <FadeChild delay={550}>
+              <FadeChild delay={800}>
                 <Para
                   tagName="a"
                   href="ok"
@@ -129,7 +129,7 @@ export default function ShoulderSection() {
             </Col>
 
             <Col flex={2} alignItems="flex-start" justifyContent="center">
-              <FadeChild {...fadeRightProps} delay={400}>
+              <FadeChild {...fadeRightProps} delay={800}>
                 <View
                   borderRadius={10}
                   elevation={3}

@@ -1,4 +1,4 @@
-import { decorate, getGlobalConfig } from '@o/kit'
+import { decorate } from '@o/kit'
 import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
 
 import { addObserveMany } from './OrbitDataManager'
@@ -15,7 +15,7 @@ export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'token',
 ]
 
-const Config = getGlobalConfig()
+// const Config = getGlobalConfig()
 
 @decorate
 export class OrbitAppsManager {

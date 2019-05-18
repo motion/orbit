@@ -1,7 +1,7 @@
 {
   "name": "@o/build-server",
   "version": "2.5.2",
-  "main": "./_/BuildServer.js",
+  "main": "_/index.js",
   "private": true,
   "scripts": {
     "build": "tsc || true",

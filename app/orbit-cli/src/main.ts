@@ -5,6 +5,7 @@ import { readJSON } from 'fs-extra'
 import * as Path from 'path'
 import Yargs from 'yargs'
 
+import { commandBuild } from './command-build'
 import { commandDev } from './command-dev'
 import { commandGenTypes } from './command-gen-types'
 import { commandWs } from './command-ws'
@@ -34,6 +35,21 @@ function main() {
         reporter.setVerbose(!!argv.verbose)
         let projectRoot = Path.resolve(cwd, argv.app)
         commandDev({ projectRoot })
+      },
+    )
+    .command(
+      'build [app]',
+      'Builds an app for deployment',
+      p =>
+        p.positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        }),
+      async argv => {
+        reporter.setVerbose(!!argv.verbose)
+        let projectRoot = Path.resolve(cwd, argv.app)
+        commandBuild({ projectRoot })
       },
     )
     .command(

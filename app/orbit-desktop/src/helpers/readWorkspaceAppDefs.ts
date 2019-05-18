@@ -5,9 +5,7 @@ import { join } from 'path'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
-export async function readAppDefinitionsFromWorkspace(
-  space: Space,
-): Promise<AppDefinitions | null> {
+export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions | null> {
   const directory = space.directory
   const pkg = await readJSON(join(directory, 'package.json'))
   if (!pkg) {
@@ -20,7 +18,17 @@ export async function readAppDefinitionsFromWorkspace(
     return null
   }
 
-  const nodeModuleDir = join(directory, 'node_modules')
+  let nodeModuleDir = join(directory, 'node_modules')
+
+  // find parent node_modules
+  while (!(await pathExists(nodeModuleDir)) && nodeModuleDir !== '/') {
+    nodeModuleDir = join(nodeModuleDir, '..', '..', 'node_modules')
+  }
+
+  if (!(await pathExists(nodeModuleDir))) {
+    console.log('Error no node_modules directory found')
+    return {}
+  }
 
   const definitions: AppDefinitions = {}
 
@@ -34,7 +42,7 @@ export async function readAppDefinitionsFromWorkspace(
             console.log('No package "main" found in package.json')
             return
           }
-          const entry = require(pkgEntry)
+          const entry = require(join(pkgPath, ...pkgEntry.split('/')))
           if (!entry || !entry.default) {
             console.log('App must `export default` an AppDefinition')
             return

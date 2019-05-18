@@ -3,6 +3,8 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   testRegex: `.*src/.*.(test|spec).(jsx?|tsx?)$`,
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverage: true,

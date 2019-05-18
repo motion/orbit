@@ -20,7 +20,8 @@
     "publish-app": "cd app/build-orbit && npm run publish",
     "publish-packages": "bin/publish",
     "test-built-app": "cd app/build-orbit && npm run test-built-app",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "test": "jest"
   },
   "dependencies": {
     "global": "^4.3.2"
@@ -73,7 +74,7 @@
     "sb-promisify": "^2.0.2",
     "verdaccio": "3.10.1",
     "microbundle": "0.10.1",
-    "jest": "24.5.0",
+    "jest": "24.8.0",
     "ts-jest": "24.0.0",
     "enzyme": "3.9.0",
     "json-diff": "0.5.4",

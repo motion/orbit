@@ -3,11 +3,11 @@ import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
-import { selectDefined } from '../../../../packages/utils/_'
 import { ROOT } from '../constants'
 import { getDefaultAppBounds } from './getDefaultAppBounds'
 

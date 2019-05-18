@@ -2,7 +2,7 @@ import { decorate, react } from '@o/kit'
 import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
-import { readAppDefinitionsFromWorkspace } from '../helpers/readAppDefinitionsFromWorkspace'
+import { readWorkspaceAppDefs } from '../helpers/readWorkspaceAppDefs'
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -60,7 +60,7 @@ export class OrbitAppsManager {
   activeAppDefinitions = react(
     () => this.activeSpace,
     async space => {
-      const appDefinitions = readAppDefinitionsFromWorkspace(space)
+      const appDefinitions = readWorkspaceAppDefs(space)
       console.log('appDefinitions', appDefinitions)
       return appDefinitions
     },

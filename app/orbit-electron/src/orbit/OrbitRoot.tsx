@@ -1,9 +1,9 @@
 import { App as ReactronApp } from '@o/reactron'
 import { App } from '@o/stores'
 import { useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import * as React from 'react'
 
-import { selectDefined } from '../../../../packages/utils/_'
 import { IS_MAIN_ORBIT } from '../constants'
 import { devTools } from '../helpers/devTools'
 import { ElectronDebugStore } from '../stores/ElectronDebugStore'

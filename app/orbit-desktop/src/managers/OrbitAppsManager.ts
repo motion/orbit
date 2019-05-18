@@ -1,7 +1,8 @@
-import { decorate } from '@o/kit'
-import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
+import { decorate, react } from '@o/kit'
+import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { getRepository } from 'typeorm'
 
-import { addObserveMany } from './OrbitDataManager'
+import { readAppDefinitionsFromWorkspace } from '../helpers/readAppDefinitionsFromWorkspace'
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -22,22 +23,48 @@ export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
   spaces: Space[] = []
   apps: AppBit[] = []
+  user: User = null
   spaceFolders: { [id: number]: string } = {}
 
   async start() {
-    addObserveMany(
-      this.subscriptions,
-      AppEntity,
-      { select: appSelectAllButDataAndTimestamps },
-      apps => {
-        this.apps = apps
-      },
-    )
+    const appsSubscription = getRepository(AppEntity)
+      .observe({ select: appSelectAllButDataAndTimestamps })
+      .subscribe(next => {
+        this.apps = next as any
+      })
 
-    addObserveMany(this.subscriptions, SpaceEntity, {}, spaces => {
-      this.spaces = spaces
-    })
+    const spacesSubscription = getRepository(SpaceEntity)
+      .observe({})
+      .subscribe(next => {
+        this.spaces = next
+      })
+
+    const userSubscription = getRepository(UserEntity)
+      .observeOne({})
+      .subscribe(next => {
+        this.user = next
+      })
+
+    this.subscriptions.add(userSubscription)
+    this.subscriptions.add(appsSubscription)
+    this.subscriptions.add(spacesSubscription)
   }
+
+  get activeSpace() {
+    if (!this.user) {
+      return null
+    }
+    return this.spaces.find(x => x.id === this.user.activeSpace)
+  }
+
+  activeAppDefinitions = react(
+    () => this.activeSpace,
+    async space => {
+      const appDefinitions = readAppDefinitionsFromWorkspace(space)
+      console.log('appDefinitions', appDefinitions)
+      return appDefinitions
+    },
+  )
 
   // manageDesktopFoldersAndIcons = react(
   //   () => always(this.apps, this.spaces),

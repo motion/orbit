@@ -1,18 +1,24 @@
 import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
-import React, { lazy, Suspense, useRef, useState } from 'react'
+import { once } from 'lodash'
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
+import { requestIdleCallback } from '../etc/requestIdle'
 import { useIsTiny } from '../hooks/useScreenSize'
 import { Header } from '../Layout'
 import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
-import AllInOnePitchDemoSection from './HomePage/AllInOnePitchDemoSection'
-import DeploySection from './HomePage/DeploySection'
 import { HeadSection } from './HomePage/HeadSection'
 import { LoadingPage } from './LoadingPage'
 import { ParallaxContext } from './ParallaxContext'
 
+const DeploySection = loadOnIntersect(
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DeploySection'))),
+)
+const AllInOnePitchDemoSection = loadOnIntersect(
+  lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/AllInOnePitchDemoSection'))),
+)
 const DataAppKitFeaturesSection = loadOnIntersect(
   lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/DataAppKitFeaturesSection'))),
 )
@@ -81,11 +87,50 @@ export function HomePage() {
 HomePage.theme = 'home'
 HomePage.showPeekHeader = true
 
+let allUpcoming = []
+
+const onIdle = () => new Promise(res => requestIdleCallback(res))
+
+const startLoading = once(async () => {
+  // let initial animation run
+  await new Promise(res => setTimeout(res, 1000))
+  // load rest of page
+  while (allUpcoming.length) {
+    await onIdle()
+    await new Promise(res => setTimeout(res, 100))
+    const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
+    next.load()
+    allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
+    console.log('load done', next, allUpcoming)
+  }
+})
+
 function loadOnIntersect(LazyComponent) {
   return props => {
-    const hasIntersected = useRef(false)
+    const [show, setShow] = useState(false)
     const ref = useRef(null)
-    const intersect = useIntersectionObserver({ ref, options: { threshold: 0 } })
+
+    console.log('i am', LazyComponent, show)
+
+    useIntersectionObserver({
+      ref,
+      options: { threshold: 0 },
+      onChange(entries) {
+        if (entries && entries[0].isIntersecting === true && !show) {
+          setShow(true)
+        }
+      },
+    })
+
+    // preload them when ready
+    useEffect(() => {
+      allUpcoming.push({
+        top: ref.current.getBoundingClientRect().y,
+        load: () => setShow(true),
+      })
+      startLoading()
+    }, [])
+
     const fallback = (
       <Page {...props}>
         <Page.Content pages={props.pages}>
@@ -106,15 +151,13 @@ function loadOnIntersect(LazyComponent) {
         </Page.Content>
       </Page>
     )
-    hasIntersected.current =
-      hasIntersected.current || (intersect && intersect[0].isIntersecting === true)
 
-    if (!hasIntersected.current) {
+    if (!show) {
       return fallback
     }
 
     return (
-      <ErrorBoundary>
+      <ErrorBoundary name={`${LazyComponent.name}`}>
         <Suspense fallback={fallback}>
           <LazyComponent {...props} />
         </Suspense>

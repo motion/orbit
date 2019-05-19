@@ -58,7 +58,7 @@ async function findOrCreateSpace(identifier: string, directory: string) {
     return ws
   }
 
-  return await getRepository(SpaceEntity).create({
+  return await getRepository(SpaceEntity).save({
     identifier,
     name: `${randomAdjective()} ${randomNoun()}`,
     colors: ['orange', 'pink'],

@@ -13,6 +13,7 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
     return {}
   }
   const directory = space.directory
+  log.info('read space directory', directory)
   const pkg = await readJSON(join(directory, 'package.json'))
   if (!pkg) {
     log.error('No package found!')
@@ -24,6 +25,7 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
     return null
   }
 
+  log.info('found packages', packages)
   let nodeModuleDir = join(directory, 'node_modules')
 
   // find parent node_modules

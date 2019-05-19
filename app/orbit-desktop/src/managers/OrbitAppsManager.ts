@@ -1,4 +1,4 @@
-import { decorate, react } from '@o/kit'
+import { decorate, react, ensure } from '@o/kit'
 import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
@@ -64,11 +64,8 @@ export class OrbitAppsManager {
   activeAppDefinitions = react(
     () => [this.activeSpace, this.packageRefresh],
     async ([space]) => {
-      if (!space) {
-        console.log('no space!')
-        return
-      }
-      const appDefinitions = readWorkspaceAppDefs(space)
+      ensure('space', !!space)
+      const appDefinitions = await readWorkspaceAppDefs(space)
       console.log('got app definitions', appDefinitions)
       return appDefinitions
     },
@@ -77,6 +74,7 @@ export class OrbitAppsManager {
   syncFromActiveSpacePackageJSON = react(
     () => this.activeSpace,
     space => {
+      ensure('space', !!space)
       if (this.packageWatcher) {
         this.packageWatcher.close()
       }

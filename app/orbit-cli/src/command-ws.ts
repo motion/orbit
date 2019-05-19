@@ -1,6 +1,7 @@
 import { AppOpenWorkspaceCommand } from '@o/models'
 
 import { getOrbitDesktop } from './getDesktop'
+import { reporter } from './reporter'
 
 type CommandWSOptions = { workspaceRoot: string }
 
@@ -12,6 +13,7 @@ export async function commandWs(options: CommandWSOptions) {
   }
 
   try {
+    reporter.info('Sending open workspace command')
     await orbitDesktop.command(AppOpenWorkspaceCommand, {
       path: options.workspaceRoot,
     })

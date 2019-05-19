@@ -1,4 +1,4 @@
-import { resolveCommand, Subscription } from '@o/kit'
+import { Logger, resolveCommand, Subscription } from '@o/kit'
 import { AppEntity, AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { readJSON } from 'fs-extra'
@@ -7,6 +7,8 @@ import { getRepository } from 'typeorm'
 import Watchpack from 'watchpack'
 
 import { appSelectAllButDataAndTimestamps } from '../managers/OrbitAppsManager'
+
+const log = new Logger('AppOpenWorkspaceResolver')
 
 type WorkspaceInfo = {
   identifier: string
@@ -17,9 +19,11 @@ export const AppOpenWorkspaceResolver = resolveCommand(
   async ({ path }) => {
     console.log('should load workspace', path)
     const { identifier } = await loadWorkspace(path)
+    console.log('got', identifier)
 
     // ensure/find space
     const space = await findOrCreateSpace(identifier, path)
+    console.log('got space', space)
 
     // set active space
     const user = await getRepository(UserEntity).findOne({})
@@ -59,9 +63,9 @@ async function syncPackageJsonToAppBit(directory: string, spaceId: number) {
   if (watcher) {
     watcher.close()
   }
-
-  watcher = new Watchpack([], directory)
-
+  const files = join(directory, 'package.json')
+  console.log('watching files', files)
+  watcher = new Watchpack(files, [])
   watcher.on('change', filePath => {
     console.log('file changed, check for updates', filePath, spaceId)
   })
@@ -80,6 +84,8 @@ async function findOrCreateSpace(identifier: string, directory: string) {
       identifier,
     },
   })
+
+  log.info('Find or create space', identifier, 'found?', !!ws)
 
   if (ws) {
     // moved!

@@ -22,6 +22,7 @@ import {
   CheckProxyCommand,
   CosalSaliencyModel,
   CosalTopicsModel,
+  GetPIDCommand,
   CosalTopWordsModel,
   NewFallbackServerPortCommand,
   OpenCommand,
@@ -330,6 +331,7 @@ export class OrbitDesktopRoot {
         AppDevOpenCommand,
         AppDevCloseCommand,
         AppOpenWorkspaceCommand,
+        GetPIDCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -342,6 +344,9 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        resolveCommand(GetPIDCommand, async () => {
+          return process.pid
+        }),
         resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
           const appId = Object.keys(Electron.state.appWindows).length
           developingApps.push({

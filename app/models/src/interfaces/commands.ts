@@ -20,6 +20,8 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
+export const GetPIDCommand = new Command<number>('get-pid')
+
 export const AppOpenWindowCommand = new Command<
   boolean,
   {

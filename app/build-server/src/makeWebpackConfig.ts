@@ -4,16 +4,17 @@ import webpack from 'webpack'
 const TerserPlugin = require('terser-webpack-plugin')
 
 type Params = {
+  entry: string
   projectRoot: string
   mode: 'production' | 'development'
   publicPath: string
+  target?: 'node' | 'electron-renderer' | 'web'
 }
 
 export async function makeWebpackConfig(params: Params) {
-  let { publicPath, projectRoot, mode = 'development' } = params
+  let { entry, publicPath, projectRoot, mode = 'development' } = params
 
-  const entry = './'
-  const target = 'electron-renderer'
+  const target = params.target || 'electron-renderer'
   const outputPath = Path.join(projectRoot, 'dist')
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
@@ -52,6 +53,10 @@ export async function makeWebpackConfig(params: Params) {
     '@o/kit': 'OrbitKit',
     '@o/ui': 'OrbitUI',
   }
+
+  const entryPath = Path.join(projectRoot, entry)
+
+  console.log(entryPath, outputPath)
 
   const config = {
     context: projectRoot,
@@ -105,9 +110,16 @@ export async function makeWebpackConfig(params: Params) {
           use: ['workerize-loader'],
           // exclude: /node_modules/,
         },
-        // ignore .node.js modules
-        {
+        // ignore .node.js modules in web modes
+        target !== 'node' && {
           test: /\.node.[jt]sx?/,
+          use: 'ignore-loader',
+        },
+        // ignore non-.node.js modules in node mode
+        target === 'node' && {
+          test: x => {
+            return entryPath === x || x.indexOf('.node.ts') > -1
+          },
           use: 'ignore-loader',
         },
         // ignore .electron.js modules if in web mode

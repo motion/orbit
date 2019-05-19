@@ -1,4 +1,6 @@
 import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
+import { readJSON } from 'fs-extra'
+import { join } from 'path'
 
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
@@ -11,9 +13,13 @@ export async function commandDev(options: { projectRoot: string }) {
     process.exit(0)
   }
 
+  const pkg = await readJSON(join(options.projectRoot, 'package.json'))
+  const entry = pkg['ts:main'] || pkg.main
+
   try {
     const appId = await orbitDesktop.command(AppDevOpenCommand, {
       path: options.projectRoot,
+      entry: join(options.projectRoot, entry),
     })
     await orbitDesktop.command(AppOpenWindowCommand, {
       appId,

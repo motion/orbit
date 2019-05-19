@@ -16,8 +16,7 @@ export async function commandBuild(options: { projectRoot: string }) {
       console.error(`No main entry found at ${main}`)
       return null
     }
-
-    await buildApp(join(options.projectRoot, main))
+    await buildApp(options.projectRoot, main)
   } catch (err) {
     reporter.error(err.message, err)
   }

@@ -33,6 +33,7 @@ export const AppDevOpenCommand = new Command<
   {
     // Path to the app project in dev
     path: string
+    entry: string
   }
 >('app-dev-open')
 

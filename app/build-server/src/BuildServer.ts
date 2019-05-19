@@ -5,6 +5,7 @@ import WebpackHotMiddleware from 'webpack-hot-middleware'
 import { makeWebpackConfig } from './makeWebpackConfig'
 
 type AppDesc = {
+  entry: string
   path: string
   publicPath: string
 }
@@ -37,6 +38,7 @@ export class BuildServer {
         projectRoot: app.path,
         mode: 'development',
         publicPath,
+        entry: app.entry,
       })
 
       let compiler = Webpack(config)

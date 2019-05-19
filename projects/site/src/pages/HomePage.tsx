@@ -101,7 +101,6 @@ const startLoading = once(async () => {
     const next = allUpcoming.reduce((a, b) => (b.top < a.top ? b : a), { top: Infinity })
     next.load()
     allUpcoming.splice(allUpcoming.findIndex(x => x.load === next.load), 1)
-    console.log('load done', next, allUpcoming)
   }
 })
 
@@ -109,8 +108,6 @@ function loadOnIntersect(LazyComponent) {
   return props => {
     const [show, setShow] = useState(false)
     const ref = useRef(null)
-
-    console.log('i am', LazyComponent, show)
 
     useIntersectionObserver({
       ref,

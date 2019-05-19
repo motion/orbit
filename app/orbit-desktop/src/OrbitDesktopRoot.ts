@@ -345,9 +345,10 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
-        resolveCommand(AppDevOpenCommand, async ({ path }) => {
+        resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
           const appId = Object.keys(Electron.state.appWindows).length
           developingApps.push({
+            entry,
             appId,
             path,
             publicPath: `/appServer/${appId}`,

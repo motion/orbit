@@ -60,6 +60,7 @@ export class OrbitAppsManager {
   activeAppDefinitions = react(
     () => this.activeSpace,
     async space => {
+      console.log('reading defs for space', space)
       const appDefinitions = readWorkspaceAppDefs(space)
       console.log('appDefinitions', appDefinitions)
       return appDefinitions

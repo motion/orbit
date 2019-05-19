@@ -1,6 +1,5 @@
 import { resolveCommand } from '@o/mediator'
-import { AppEntity, CallAppBitApiMethodCommand } from '@o/models'
-import { getRepository } from 'typeorm'
+import { CallAppBitApiMethodCommand } from '@o/models'
 
 import { OrbitAppsManager } from '../managers/OrbitAppsManager'
 
@@ -10,17 +9,23 @@ export const createCallAppBitApiMethodResolver = (appsManager: OrbitAppsManager)
   return resolveCommand(
     CallAppBitApiMethodCommand,
     async ({ appId, appIdentifier, method, args }) => {
-      if (!apis[appIdentifier]) throw new Error(`No API for app "${appIdentifier}" was found`)
+      appsManager
+      appId
+      appIdentifier
+      method
+      args
+      return null
+      // if (!apis[appIdentifier]) throw new Error(`No API for app "${appIdentifier}" was found`)
 
-      const app = await getRepository(AppEntity).findOneOrFail(appId)
+      // const app = await getRepository(AppEntity).findOneOrFail(appId)
 
-      const Create = apis[appIdentifier] as any
-      const api = Create.isClass ? new Create(app) : Create(app)
+      // const Create = apis[appIdentifier] as any
+      // const api = Create.isClass ? new Create(app) : Create(app)
 
-      if (!api) throw new Error(`API for app "${appId}" is invalid`)
-      if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
+      // if (!api) throw new Error(`API for app "${appId}" is invalid`)
+      // if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
 
-      return api[method](...(args || []))
+      // return api[method](...(args || []))
     },
   )
 }

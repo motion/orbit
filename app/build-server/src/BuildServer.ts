@@ -4,7 +4,8 @@ import WebpackHotMiddleware from 'webpack-hot-middleware'
 
 import { makeWebpackConfig } from './makeWebpackConfig'
 
-type AppDesc = {
+export type AppDesc = {
+  appId: number
   entry: string
   path: string
   publicPath: string

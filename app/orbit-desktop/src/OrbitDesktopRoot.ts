@@ -74,10 +74,7 @@ import { OrbitDataManager } from './managers/OrbitDataManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
-import {
-  CallAppBitApiMethodResolver,
-  createCallAppBitApiMethodResolver,
-} from './resolvers/CallAppBitApiMethodResolver'
+import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
@@ -91,7 +88,7 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
-import { BuildServer } from '@o/build-server'
+import { BuildServer, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 
@@ -299,7 +296,7 @@ export class OrbitDesktopRoot {
     const client = new MediatorClient({ transports: [syncersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
-    let developingApps: { path: string; publicPath: string; appId: number }[] = []
+    let developingApps: AppDesc[] = []
 
     this.mediatorServer = new MediatorServer({
       models: [

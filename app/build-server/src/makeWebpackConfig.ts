@@ -3,16 +3,18 @@ import webpack from 'webpack'
 
 const TerserPlugin = require('terser-webpack-plugin')
 
-type Params = {
+export type WebpackParams = {
   entry: string
   projectRoot: string
-  mode: 'production' | 'development'
-  publicPath: string
+  publicPath?: string
+  mode?: 'production' | 'development'
   target?: 'node' | 'electron-renderer' | 'web'
+  outputFile?: string
 }
 
-export async function makeWebpackConfig(params: Params) {
-  let { entry, publicPath, projectRoot, mode = 'development' } = params
+export async function makeWebpackConfig(params: WebpackParams) {
+  console.log('got params', params)
+  let { outputFile, entry, publicPath = '/', projectRoot, mode = 'development' } = params
 
   const target = params.target || 'electron-renderer'
   const outputPath = Path.join(projectRoot, 'dist')
@@ -67,7 +69,7 @@ export async function makeWebpackConfig(params: Params) {
     output: {
       path: outputPath,
       pathinfo: mode === 'development',
-      filename: 'bundle.js',
+      filename: outputFile || 'index.js',
       // TODO(andreypopp): sort this out, we need some custom symbol here which
       // we will communicate to Orbit
       library: 'window.OrbitAppToRun',

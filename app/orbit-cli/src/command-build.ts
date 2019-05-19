@@ -16,7 +16,18 @@ export async function commandBuild(options: { projectRoot: string }) {
       console.error(`No main entry found at ${main}`)
       return null
     }
-    await buildApp(options.projectRoot, main)
+
+    // build node
+    console.log('Building node app...')
+    await buildApp({
+      projectRoot: options.projectRoot,
+      entry: main,
+      target: 'node',
+      outputFile: 'index.node.js',
+    })
+
+    // build web
+    console.log('Building web app...')
   } catch (err) {
     reporter.error(err.message, err)
   }

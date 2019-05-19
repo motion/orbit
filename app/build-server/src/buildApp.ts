@@ -1,21 +1,23 @@
 import { join } from 'path'
 import Webpack from 'webpack'
 
-import { makeWebpackConfig } from './makeWebpackConfig'
+import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
-export async function buildApp(projectRoot: string, entry: string) {
-  console.log('should build app', projectRoot)
+export async function buildApp(props: WebpackParams) {
+  console.log('should build app', props)
 
   let config = await makeWebpackConfig({
-    projectRoot,
+    ...props,
+    entry: join(props.projectRoot, props.entry),
     mode: 'development',
     publicPath: '/',
-    target: 'node',
-    entry: join(projectRoot, entry),
   })
 
-  Webpack(config, (err, stats) => {
-    console.log('done', err, stats.toString())
+  return new Promise(res => {
+    Webpack(config, (err, stats) => {
+      console.log('done', err, stats.toString())
+      res()
+    })
   })
 
   // TODO build into two bundles: node and js

@@ -1,20 +1,26 @@
-import { AppDefinition } from '@o/kit'
+import { AppDefinition, Logger } from '@o/kit'
 import { Space } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
+const log = new Logger('readWorkspaceAppDefs')
+
 export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions | null> {
+  if (!space) {
+    log.info('no space given!')
+    return {}
+  }
   const directory = space.directory
   const pkg = await readJSON(join(directory, 'package.json'))
   if (!pkg) {
-    console.error('No package found!')
+    log.error('No package found!')
     return null
   }
   const packages = pkg.dependencies
   if (!packages) {
-    console.error('No app definitions in package.json')
+    log.error('No app definitions in package.json')
     return null
   }
 
@@ -26,7 +32,7 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
   }
 
   if (!(await pathExists(nodeModuleDir))) {
-    console.log('Error no node_modules directory found')
+    log.info('Error no node_modules directory found')
     return {}
   }
 
@@ -39,17 +45,17 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
         try {
           const nodeEntry = require(join(pkgPath, 'dist', 'index.node.js'))
           if (!nodeEntry || !nodeEntry.default) {
-            console.log('App must `export default` an AppDefinition')
+            log.info('App must `export default` an AppDefinition')
             return
           }
-          console.log('got an app def', nodeEntry.default)
+          log.info('got an app def', nodeEntry.default)
           definitions[id] = nodeEntry.default
         } catch (err) {
-          console.log(`Error finding package definition: ${id}, message: ${err.message}`)
-          console.log(err.stack)
+          log.error(`Error finding package definition: ${id}, message: ${err.message}`)
+          log.error(err.stack)
         }
       } else {
-        console.log('Module not installed', id)
+        log.error('Module not installed', id)
       }
     }),
   )

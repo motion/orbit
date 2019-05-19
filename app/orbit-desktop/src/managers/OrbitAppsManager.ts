@@ -3,6 +3,8 @@ import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/mode
 import { getRepository } from 'typeorm'
 
 import { readWorkspaceAppDefs } from '../helpers/readWorkspaceAppDefs'
+import { FSWatcher, watch } from 'chokidar'
+import { join } from 'path'
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -25,6 +27,8 @@ export class OrbitAppsManager {
   apps: AppBit[] = []
   user: User = null
   spaceFolders: { [id: number]: string } = {}
+  packageWatcher: FSWatcher = null
+  packageRefresh = 0
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
@@ -58,18 +62,51 @@ export class OrbitAppsManager {
   }
 
   activeAppDefinitions = react(
-    () => this.activeSpace,
-    async space => {
+    () => [this.activeSpace, this.packageRefresh],
+    async ([space]) => {
       if (!space) {
         console.log('no space!')
         return
       }
-      console.log('reading defs for space', space)
       const appDefinitions = readWorkspaceAppDefs(space)
-      console.log('appDefinitions', appDefinitions)
+      console.log('got app definitions', appDefinitions)
       return appDefinitions
     },
   )
+
+  syncFromActiveSpacePackageJSON = react(
+    () => this.activeSpace,
+    space => {
+      if (this.packageWatcher) {
+        this.packageWatcher.close()
+      }
+      const pkg = join(space.directory, 'package.json')
+      this.packageWatcher = watch(pkg, {
+        persistent: true,
+      })
+      this.packageWatcher.on('change', () => {
+        this.packageRefresh++
+      })
+    },
+  )
+
+  // let appsSubscription: Subscription = null
+  // async function syncAppBitToPackageJson(spaceId: number) {
+  //   if (appsSubscription) {
+  //     appsSubscription.unsubscribe()
+  //   }
+
+  //   appsSubscription = getRepository(AppEntity)
+  //     .observe({
+  //       select: appSelectAllButDataAndTimestamps,
+  //       where: {
+  //         spaceId,
+  //       },
+  //     })
+  //     .subscribe(apps => {
+  //       console.log('space got apps, sync down', apps)
+  //     })
+  // }
 
   // manageDesktopFoldersAndIcons = react(
   //   () => always(this.apps, this.spaces),

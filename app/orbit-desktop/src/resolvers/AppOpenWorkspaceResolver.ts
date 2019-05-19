@@ -1,12 +1,9 @@
-import { Logger, resolveCommand, Subscription } from '@o/kit'
-import { AppEntity, AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import { Logger, resolveCommand } from '@o/kit'
+import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
-import Watchpack from 'watchpack'
-
-import { appSelectAllButDataAndTimestamps } from '../managers/OrbitAppsManager'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 
@@ -30,46 +27,11 @@ export const AppOpenWorkspaceResolver = resolveCommand(
     user.activeSpace = space.id
     await getRepository(UserEntity).save(user)
 
-    // we need two way syncing:
-    // if they update package.json, we update AppBit
-    // if they update AppBit, we update package.json
-    syncAppBitToPackageJson(space.id)
-    syncPackageJsonToAppBit(path, space.id)
+    // see OrbitAppsManager for other app related sync
 
     return true
   },
 )
-
-let appsSubscription: Subscription = null
-async function syncAppBitToPackageJson(spaceId: number) {
-  if (appsSubscription) {
-    appsSubscription.unsubscribe()
-  }
-
-  appsSubscription = getRepository(AppEntity)
-    .observe({
-      select: appSelectAllButDataAndTimestamps,
-      where: {
-        spaceId,
-      },
-    })
-    .subscribe(apps => {
-      console.log('space got apps, sync down', apps)
-    })
-}
-
-let watcher: Watchpack = null
-async function syncPackageJsonToAppBit(directory: string, spaceId: number) {
-  if (watcher) {
-    watcher.close()
-  }
-  const files = join(directory, 'package.json')
-  console.log('watching files', files)
-  watcher = new Watchpack(files, [])
-  watcher.on('change', filePath => {
-    console.log('file changed, check for updates', filePath, spaceId)
-  })
-}
 
 async function loadWorkspace(path: string): Promise<WorkspaceInfo> {
   const pkg = await readJSON(join(path, 'package.json'))

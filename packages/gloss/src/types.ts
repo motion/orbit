@@ -39,3 +39,10 @@ export type SimpleStyleObject = {
   borderColor?: ColorLike
   [a: string]: ColorLike | ColorObject | any
 }
+
+export type StrictOptions = {
+  displayName: boolean
+  evaluate: boolean
+  ignore: RegExp
+  babelOptions: Object
+}

@@ -1,4 +1,4 @@
-import { simplifyObject } from './simplifyObject'
+import { simplifyObject } from '../simplifyObject'
 
 export function handleGlossReferences(parentNode, name, references, file, babel) {
   const { types: t } = babel

@@ -8,5 +8,4 @@ module.exports = {
     '<rootDir>/app/*/jest.config.js',
     // '<rootDir>/projects/*/jest.config.js',
   ],
-  coverageDirectory: '<rootDir>/coverage/',
 }

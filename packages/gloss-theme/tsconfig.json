@@ -7,5 +7,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "references": [{ "path": "../css" }, { "path": "../color" }, { "path": "../gloss-displaynames" }]
+  "references": [{ "path": "../css" }, { "path": "../color" }]
 }

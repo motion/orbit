@@ -8,5 +8,4 @@ wait
 (cd packages/color && npm run build) &
 wait
 (cd packages/gloss && npm run build) &
-(cd packages/gloss-displaynames && npm run build) &
 wait

@@ -4,7 +4,7 @@ import { join } from 'path'
 
 import { reporter } from './reporter'
 
-export async function commandBuild(options: { projectRoot: string }) {
+export async function commandBuild(options: { projectRoot: string; watch?: boolean }) {
   try {
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     if (!pkg) {
@@ -18,16 +18,15 @@ export async function commandBuild(options: { projectRoot: string }) {
     }
 
     // build node
-    console.log('Building node app...')
     await buildApp(pkg.name, {
       projectRoot: options.projectRoot,
       entry: main,
       target: 'node',
       outputFile: 'index.node.js',
+      watch: options.watch,
     })
 
     // build web
-    console.log('Building web app...')
   } catch (err) {
     reporter.error(err.message, err)
   }

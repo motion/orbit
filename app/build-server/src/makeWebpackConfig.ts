@@ -9,10 +9,12 @@ export type WebpackParams = {
   publicPath?: string
   mode?: 'production' | 'development'
   target?: 'node' | 'electron-renderer' | 'web'
+  outputDir?: string
   outputFile?: string
   output?: any
   externals?: any
   ignore?: string[]
+  watch?: boolean
 }
 
 export async function makeWebpackConfig(params: WebpackParams) {
@@ -23,14 +25,13 @@ export async function makeWebpackConfig(params: WebpackParams) {
     projectRoot,
     mode = 'development',
     output,
+    outputDir = Path.join(projectRoot, 'dist'),
     externals,
     ignore = [],
+    watch,
   } = params
 
-  console.log('makeWebpackConfig', mode, 'got params', params)
-
   const target = params.target || 'electron-renderer'
-  const outputPath = Path.join(projectRoot, 'dist')
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
     Path.join(__dirname, '..', '..', '..', 'node_modules'),
@@ -61,13 +62,14 @@ export async function makeWebpackConfig(params: WebpackParams) {
   const entryPath = Path.join(projectRoot, entry)
 
   const config = {
+    watch,
     context: projectRoot,
     target,
     mode,
     entry,
     optimization: optimization[mode],
     output: {
-      path: outputPath,
+      path: outputDir,
       pathinfo: mode === 'development',
       filename: outputFile || 'index.js',
       ...output,

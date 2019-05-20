@@ -41,15 +41,20 @@ function main() {
       'build [app]',
       'Builds an app for deployment',
       p =>
-        p.positional('app', {
-          type: 'string',
-          default: '.',
-          describe: 'The application to run',
-        }),
+        p
+          .positional('app', {
+            type: 'string',
+            default: '.',
+            describe: 'The application to run',
+          })
+          .option('watch', {
+            type: 'boolean',
+            default: false,
+          }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)
         let projectRoot = Path.resolve(cwd, argv.app)
-        commandBuild({ projectRoot })
+        await commandBuild({ projectRoot, watch: !!argv.watch })
       },
     )
     .command(

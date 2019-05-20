@@ -20627,6 +20627,11 @@ typeorm@^0.3.0-alpha.22:
     yargs "^13.2.1"
     zen-observable "^0.8.9"
 
+typescript@3.5.0-dev.20190518:
+  version "3.5.0-dev.20190518"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.0-dev.20190518.tgz#06ed70f95a6eb88c73844701411935f543a1f949"
+  integrity sha512-s5JWFkb5VFSsXuwn65qGhXNLNSi6yqIKJSftX6ig4UnO52PoUVTg5h9MEEpnh5dNMLYgx+l5oMmgn7vvQ5cMvA==
+
 typescript@3.5.0-rc:
   version "3.5.0-rc"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.0-rc.tgz#6f1ada90c15427713f8c0f4550ef7d357ac2a5f1"

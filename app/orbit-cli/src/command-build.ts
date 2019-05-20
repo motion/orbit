@@ -19,7 +19,7 @@ export async function commandBuild(options: { projectRoot: string }) {
 
     // build node
     console.log('Building node app...')
-    await buildApp({
+    await buildApp(pkg.name, {
       projectRoot: options.projectRoot,
       entry: main,
       target: 'node',

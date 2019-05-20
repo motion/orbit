@@ -47,10 +47,10 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
         try {
           const nodeEntry = require(join(pkgPath, 'dist', 'index.node.js'))
           if (!nodeEntry || !nodeEntry.default) {
-            log.info('App must `export default` an AppDefinition')
+            log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
             return
           }
-          log.info('got an app def', nodeEntry.default)
+          log.info('got an app def', id, !!nodeEntry.default)
           definitions[id] = nodeEntry.default
         } catch (err) {
           log.error(`Error finding package definition: ${id}, message: ${err.message}`)

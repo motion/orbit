@@ -3,7 +3,7 @@ import Webpack from 'webpack'
 
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
-export async function buildApp(props: WebpackParams) {
+export async function buildApp(appName: string, props: WebpackParams) {
   console.log('should build app', props, require.resolve('webpack'))
 
   let config = await makeWebpackConfig({
@@ -15,6 +15,10 @@ export async function buildApp(props: WebpackParams) {
       typeorm: 'typeorm',
     },
     ignore: ['electron-log'],
+    output: {
+      library: appName,
+      libraryTarget: 'umd',
+    },
   })
 
   return new Promise(res => {

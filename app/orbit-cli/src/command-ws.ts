@@ -2,6 +2,7 @@ import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
+import { commandBuild } from './command-build'
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
@@ -33,7 +34,13 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   const directory = options.workspaceRoot
   const appRoots = await getAppRoots(directory)
   if (!appRoots) return
-  console.log('got appRoots', appRoots)
+  for (const appRoot of appRoots) {
+    console.log('watching app', appRoot)
+    commandBuild({
+      projectRoot: appRoot,
+      watch: true,
+    })
+  }
 }
 
 async function getAppRoots(directory: string) {

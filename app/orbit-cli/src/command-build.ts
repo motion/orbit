@@ -11,7 +11,9 @@ export async function commandBuild(options: { projectRoot: string; watch?: boole
       console.error('No package found!')
       return null
     }
-    const main = pkg['ts:main'] || pkg.main
+
+    const main = join(options.projectRoot, pkg['ts:main'] || pkg.main)
+
     if (!main || !(await pathExists(main))) {
       console.error(`No main entry found at ${main}`)
       return null

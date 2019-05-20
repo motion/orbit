@@ -93,7 +93,7 @@ function replaceAppBackground(iconSrc, bg) {
   return iconSrc
 }
 
-export function AppIcon({ app, ...props }: AppIconProps) {
+export const AppIcon = ({ app, ...props }: AppIconProps) => {
   return (
     <AppIconInner
       background={app.colors[0]}

@@ -25,7 +25,7 @@
     "thread-loader": "*",
     "ts-loader": "*",
     "url-loader": "*",
-    "webpack": "*",
+    "webpack": "^4.32.0",
     "webpack-cli": "*",
     "webpack-dev-middleware": "3.6.2",
     "webpack-hot-middleware": "2.24.4",

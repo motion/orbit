@@ -4,13 +4,17 @@ import Webpack from 'webpack'
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
 export async function buildApp(props: WebpackParams) {
-  console.log('should build app', props)
+  console.log('should build app', props, require.resolve('webpack'))
 
   let config = await makeWebpackConfig({
     ...props,
     entry: join(props.projectRoot, props.entry),
     mode: 'development',
     publicPath: '/',
+    externals: {
+      typeorm: 'typeorm',
+    },
+    ignore: ['electron-log'],
   })
 
   return new Promise(res => {

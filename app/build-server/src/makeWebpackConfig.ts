@@ -10,11 +10,24 @@ export type WebpackParams = {
   mode?: 'production' | 'development'
   target?: 'node' | 'electron-renderer' | 'web'
   outputFile?: string
+  output?: any
+  externals?: any
+  ignore?: string[]
 }
 
 export async function makeWebpackConfig(params: WebpackParams) {
-  console.log('got params', params)
-  let { outputFile, entry, publicPath = '/', projectRoot, mode = 'development' } = params
+  let {
+    outputFile,
+    entry,
+    publicPath = '/',
+    projectRoot,
+    mode = 'development',
+    output,
+    externals,
+    ignore = [],
+  } = params
+
+  console.log('makeWebpackConfig', mode, 'got params', params)
 
   const target = params.target || 'electron-renderer'
   const outputPath = Path.join(projectRoot, 'dist')
@@ -30,35 +43,22 @@ export async function makeWebpackConfig(params: WebpackParams) {
 
   const optimization = {
     production: {
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /node_modules/,
-            chunks: 'initial',
-            name: 'vendor',
-            priority: 10,
-            enforce: true,
-          },
-        },
-      },
+      splitChunks: false,
     },
     development: {
       noEmitOnErrors: true,
-      removeAvailableModules: false,
-      namedModules: true,
+      removeAvailableModules: true,
+      // namedModules: true,
+      // remove some stuff even in dev
+      concatenateModules: true,
+      sideEffects: true,
+      providedExports: true,
+      usedExports: true,
+      splitChunks: false,
     },
   }
 
-  let externals = {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    '@o/kit': 'OrbitKit',
-    '@o/ui': 'OrbitUI',
-  }
-
   const entryPath = Path.join(projectRoot, entry)
-
-  console.log(entryPath, outputPath)
 
   const config = {
     context: projectRoot,
@@ -70,11 +70,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
       path: outputPath,
       pathinfo: mode === 'development',
       filename: outputFile || 'index.js',
-      // TODO(andreypopp): sort this out, we need some custom symbol here which
-      // we will communicate to Orbit
-      library: 'window.OrbitAppToRun',
-      libraryTarget: 'assign',
-      libraryExport: 'default',
+      ...output,
       publicPath,
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
@@ -90,7 +86,8 @@ export async function makeWebpackConfig(params: WebpackParams) {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    devtool: mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool:
+      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
     externals,
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -107,7 +104,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
     module: {
       rules: [
-        {
+        target !== 'node' && {
           test: /.worker\.[jt]sx?$/,
           use: ['workerize-loader'],
           // exclude: /node_modules/,
@@ -132,22 +129,21 @@ export async function makeWebpackConfig(params: WebpackParams) {
         {
           test: /\.tsx?$/,
           use: [
-            'thread-loader',
-            {
-              loader: 'ts-loader',
-              options: {
-                happyPackMode: true,
-                transpileOnly: true, // disable - we use it in fork plugin
-              },
-            },
             {
               loader: 'babel-loader',
               options: {
-                presets: ['@o/babel-preset-motion'],
+                presets: [
+                  [
+                    '@o/babel-preset-motion',
+                    {
+                      disable: target === 'node' ? ['react-hot-loader/babel'] : [],
+                    },
+                  ],
+                ],
               },
             },
-            'react-hot-loader/webpack',
-          ],
+            target !== 'node' && 'react-hot-loader/webpack',
+          ].filter(Boolean),
         },
         {
           test: /\.css$/,
@@ -177,10 +173,6 @@ export async function makeWebpackConfig(params: WebpackParams) {
           ],
         },
         {
-          test: /\.(mp4)$/,
-          use: ['file-loader'],
-        },
-        {
           test: /\.(md)$/,
           use: 'raw-loader',
         },
@@ -188,7 +180,16 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
     plugins: [
       new webpack.DefinePlugin(defines),
-      new webpack.IgnorePlugin(/electron-log/),
+
+      new webpack.IgnorePlugin({
+        checkResource(resource) {
+          if (ignore.find(x => resource.indexOf(x) > -1)) {
+            return true
+          }
+          return false
+        },
+      }),
+
       mode === 'production' &&
         new TerserPlugin({
           parallel: true,
@@ -196,8 +197,10 @@ export async function makeWebpackConfig(params: WebpackParams) {
             ecma: 6,
           },
         }),
-      mode === 'development' && new webpack.NamedModulesPlugin(),
+
+      // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean),
   }
+
   return config
 }

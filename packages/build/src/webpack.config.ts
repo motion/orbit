@@ -267,16 +267,6 @@ async function makeConfig() {
           test: /\.tsx?$/,
           include: tsEntries,
           use: [
-            'thread-loader',
-            {
-              loader: 'ts-loader',
-              options: {
-                configFile: tsConfig,
-                happyPackMode: true,
-                transpileOnly: true, // disable - we use it in fork plugin
-                experimentalWatchApi: true,
-              },
-            },
             {
               loader: 'babel-loader',
               options: babelrcOptions,

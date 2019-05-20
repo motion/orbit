@@ -40,7 +40,7 @@ module.exports = function(_, givenOpts) {
     presets:
       opts.presets ||
       [
-        plug('gloss/babel', opts.glossConfig || {}),
+        // plug('gloss/babel', opts.glossConfig || {}),
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),

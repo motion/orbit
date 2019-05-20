@@ -2,23 +2,28 @@ import { LOGGER_COLOR_WHEEL } from './constants'
 import { LoggerSettings } from './LoggerSettings'
 
 const voidfn = (...args: any[]) => args
-let log
-
-if (typeof window !== 'undefined') {
-  // disable in renderer for now because were avoiding compiling it to electron
-  log = {
-    info: voidfn,
-    debug: voidfn,
-    warn: voidfn,
-    error: voidfn,
-  }
-} else {
-  // just use it for its simple/nice file log writing
-  log = require('electron-log')
-  // disable console output from electron-log
-  // @ts-ignore
-  log.transports.console = () => {}
+let log = {
+  info: voidfn,
+  debug: voidfn,
+  warn: voidfn,
+  error: voidfn,
 }
+
+// // disable in renderer for now because were avoiding compiling it to electron
+// if (typeof window === 'undefined') {
+//   try {
+//     const electronLog = require('electron-log')
+//     if (electronLog) {
+//       // just use it for its simple/nice file log writing
+//       log = electronLog
+//       // disable console output from electron-log
+//       // @ts-ignore
+//       log.transports.console = () => {}
+//     }
+//   } catch {
+//     console.debug('no electron-log in this env')
+//   }
+// }
 
 // electron doesnt have console.debug...
 const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))

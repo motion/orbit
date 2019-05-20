@@ -1,11 +1,5 @@
-import immer from 'immer'
-
-import * as TemplatesImport from './templates'
-
-export const Templates = TemplatesImport
-
-export const produce = immer
-
+export { Templates } from './templates/all'
+export { produce } from './helpers/produce'
 export * from '@o/bridge'
 export * from '@o/config'
 export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'

@@ -40,6 +40,20 @@ export class BuildServer {
         mode: 'development',
         publicPath,
         entry: app.entry,
+        output: {
+          // TODO(andreypopp): sort this out, we need some custom symbol here which
+          // we will communicate to Orbit
+          library: 'window.OrbitAppToRun',
+          libraryTarget: 'assign',
+          libraryExport: 'default',
+        },
+        externals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          '@o/kit': 'OrbitKit',
+          '@o/ui': 'OrbitUI',
+        },
+        ignore: ['electron-log'],
       })
 
       let compiler = Webpack(config)

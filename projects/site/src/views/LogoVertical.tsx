@@ -84,8 +84,10 @@ let cleanBrand = words.split('\n')
 cleanBrand.splice(15, 4)
 cleanBrand = cleanBrand.join('')
 
-export const BrandWords = memo(({ fill = '#ffffff', ...props }: any) => {
-  return <SVG svg={cleanBrand} cleanup fill={fill} {...props} />
+export const BrandWords = memo(({ fill, ...props }: any) => {
+  const theme = useTheme()
+  const f = fill || theme.color
+  return <SVG svg={cleanBrand} cleanup fill={f} {...props} />
 })
 
 const Image = gloss(View)

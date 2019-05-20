@@ -1,9 +1,8 @@
-import { Col, gloss, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, Title, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
-import { linkProps } from '../../LinkState'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -78,7 +77,7 @@ const HeadContent = memo(() => {
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>
 
-      <Space size={useScreenVal('md', 'lg', 'xl')} />
+      <Space size={useScreenVal('md', 'lg', 'xxxl')} />
 
       {isSmall && (
         <Paragraph
@@ -135,9 +134,9 @@ const HeadContent = memo(() => {
               {br}
             </>
           )}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+          {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
-          </FadeChild>
+          </FadeChild> */}
         </Paragraph>
 
         {/* this is just to measure */}
@@ -207,21 +206,6 @@ const HeadJoin = () => (
   </View>
 )
 
-const Smaller = gloss({
-  cursor: 'pointer',
-  textDecoration: 'underline',
-  textDecorationColor: '#222',
-  transition: 'color ease 350ms',
-  fontSize: 30,
-  marginTop: 12,
-}).theme((props, theme) => ({
-  ...props,
-  color: theme.color.alpha(0.5),
-  '&:hover': {
-    color: theme.color.alpha(1),
-  },
-}))
-
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
@@ -248,13 +232,49 @@ export function HeadSection() {
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
-          <Space size="xxl" />
+          <Space size={40} />
+          <Row space="xl" pad={[0, 'xl']}>
+            <SubSection index={0} title="Build powerful apps">
+              A large UI kit that gives you patterns for common apps, like Master/Detail with CRUD.
+            </SubSection>
+
+            <SubSection index={1} title="Use data">
+              The Orbit App Store has data apps like Slack, Postgres, the G-suite and more that plug
+              in with a click.
+            </SubSection>
+
+            <SubSection index={2} title="Runs like native">
+              Apps live on your desktop & launch in their own window. Orbit focuses on performance
+              by default.
+            </SubSection>
+
+            <SubSection index={3} title="Serverless & private">
+              Using true peer-to-peer, build rich apps with your team without any infrastructure.
+            </SubSection>
+          </Row>
+          <Space size={120} />
           <HeadJoin />
         </Col>
       </Page.Content>
     </Fade.FadeProvide>
   )
 }
+
+const SubSection = memo(({ title, children, index }: any) => {
+  return (
+    <Col flex={1}>
+      <FadeChild {...fadeUpProps} delay={200 + index * 200}>
+        <Title selectable size={0.7}>
+          {title}
+        </Title>
+        <Space size="sm" />
+        <SimpleText selectable alpha={0.5}>
+          {children}
+        </SimpleText>
+      </FadeChild>
+    </Col>
+  )
+})
 
 // {false && (
 //   <Page.Parallax zIndex={1} speed={0}>

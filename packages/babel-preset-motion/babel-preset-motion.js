@@ -17,8 +17,6 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
-      plug('gloss/babel-displaynames', opts.glossDisplayNameConfig || {}),
-      // plug('gloss/babel', opts.glossConfig || {}),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
@@ -42,6 +40,7 @@ module.exports = function(_, givenOpts) {
     presets:
       opts.presets ||
       [
+        plug('gloss/babel', opts.glossConfig || {}),
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),

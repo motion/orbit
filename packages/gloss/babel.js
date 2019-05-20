@@ -1,1 +1,1 @@
-module.exports = require('./_/babel')
+module.exports = require('./_/babel').default

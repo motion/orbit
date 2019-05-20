@@ -67,11 +67,11 @@ export class Module {
     options: { id: string; filename: string; paths: string[] },
   ) => string
 
-  id: string
+  id: string = ''
 
-  filename: string
+  filename: string = ''
 
-  paths: string[]
+  paths: string[] = []
 
   exports: any
 
@@ -112,7 +112,7 @@ export class Module {
 
   resolve(id: string) {
     const extensions = NativeModule['_extensions']
-    const added = []
+    const added: string[] = []
 
     try {
       // Check for supported extensions

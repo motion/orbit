@@ -9,5 +9,4 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverage: false,
   coveragePathIgnorePatterns: ['(tests/.*.mock).(jsx?|tsx?)$'],
-  verbose: true,
 }

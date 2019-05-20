@@ -1,17 +1,17 @@
-import dedent from 'dedent'
-
 import { transform } from '../transform'
 
-it('works', async () => {
+async function test() {
   const { cssText } = await transform(
-    dedent`
+    `
       import { gloss } from 'gloss'
 
       export const View = gloss({
         background: [0,0,0],
         transform: {
-          y: 10
-        }
+          y: 10,
+          rotate: '10deg'
+        },
+        border: [[10, 10, [0,0,0,0.1]]],
       })
     `,
     {
@@ -20,6 +20,7 @@ it('works', async () => {
     },
   )
 
-  expect(cssText).toBe(`background:rgb(0,0,0);transform:translateY(10px);`)
-  // expect(cssText).toMatchSnapshot()
-})
+  console.log('cssText', cssText)
+}
+
+test()

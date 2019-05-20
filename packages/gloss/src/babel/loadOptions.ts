@@ -6,9 +6,9 @@ export type PluginOptions = StrictOptions & {
   configFile: string
 }
 
-const explorer = cosmiconfig('linaria')
+const explorer = cosmiconfig('gloss')
 
-export default function loadOptions(overrides: PluginOptions): StrictOptions {
+export function loadOptions(overrides?: PluginOptions): StrictOptions {
   const { configFile, ...rest } = overrides || { configFile: undefined }
   const result = configFile !== undefined ? explorer.loadSync(configFile) : explorer.searchSync()
   const options = {

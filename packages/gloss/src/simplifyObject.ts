@@ -1,36 +1,69 @@
 import { css } from '@o/css'
 
 export function simplifyObject(node, t) {
-  let finalObject = {}
+  try {
+    let object = astToObject(node, t)
+    console.log('object', object)
+    let cssString = css(object)
+    console.log('cssString', cssString)
+    // TODO cssName
+    // TODO back to node
+    return cssString
+  } catch (err) {
+    if (err instanceof NotSimpleObjectError) {
+      console.error('Not a simple object, cant simplify')
+      return node
+    } else {
+      throw err
+    }
+  }
+}
+
+class NotSimpleObjectError extends Error {}
+
+const isSimpleValue = (x, t) => {
+  return t.isIdentifier(x) || t.isStringLiteral(x) || t.isNumericLiteral(x)
+}
+
+function astToObject(node: any, t) {
+  let obj = {}
   for (let i = 0; i < node.properties.length; i++) {
     let property = node.properties[i]
 
-    if (
-      !t.isObjectProperty(property) ||
-      property.computed ||
-      (!t.isIdentifier(property.key) && !t.isStringLiteral(property.key)) ||
-      (!t.isStringLiteral(property.value) &&
-        !t.isNumericLiteral(property.value) &&
-        !t.isObjectExpression(property.value))
-    ) {
-      return node
+    if (!isSimpleValue(property.key, t)) {
+      throw new NotSimpleObjectError()
     }
 
     let key = property.key.name || property.key.value
-    if (key === 'styles') {
-      return node
-    }
+
     if (t.isObjectExpression(property.value)) {
-      let simplifiedChild = simplifyObject(property.value, t)
-      if (!t.isStringLiteral(simplifiedChild)) {
-        return node
-      }
-      finalObject[key] = simplifiedChild.value
+      obj[key] = astToObject(property.value, t)
       continue
     }
-    let value = property.value.value
-    finalObject[key] = value
-    // finalString += serializeStyles([{ [key]: value }]).styles
+    if (t.isArrayExpression(property.value)) {
+      obj[key] = astToArray(property.value, t)
+      continue
+    }
+    obj[key] = property.value.value
   }
-  return css(finalObject)
+  return obj
+}
+
+function astToArray(x, t) {
+  let arr: any[] = []
+  for (const el of x.elements) {
+    if (t.isObjectExpression(el)) {
+      arr.push(astToObject(el, t))
+      continue
+    }
+    if (t.isArrayExpression(el)) {
+      arr.push(astToArray(el, t))
+      continue
+    }
+    if (!isSimpleValue(el, t)) {
+      throw new NotSimpleObjectError()
+    }
+    arr.push(el.value)
+  }
+  return arr
 }

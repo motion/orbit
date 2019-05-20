@@ -1,4 +1,5 @@
 import nodePath from 'path'
+
 import { looksLike } from './looksLike'
 
 export default function glossViewDisplayNames(babel) {
@@ -6,7 +7,7 @@ export default function glossViewDisplayNames(babel) {
   const referenceState = {}
 
   return {
-    name: 'gloss-displaynames',
+    name: 'gloss-babel-displaynames',
     visitor: {
       ImportDeclaration(path, state) {
         const fileName = path.hub.file.opts.filename
@@ -40,6 +41,7 @@ export default function glossViewDisplayNames(babel) {
       },
       Program: {
         exit({ node }, { file }) {
+          console.log('referenceState', referenceState)
           if (referenceState[file.opts.filename]) {
             const { name, paths } = referenceState[file.opts.filename]
             handleGlossReferences(node, name, paths, file, babel)

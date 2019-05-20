@@ -3,8 +3,6 @@ import { simplifyObject } from '../simplifyObject'
 export function handleGlossReferences(parentNode, name, references, file, babel) {
   const { types: t } = babel
 
-  console.log('references', references.length)
-
   references.forEach(reference => {
     handleComponent(reference)
   })
@@ -16,8 +14,7 @@ export function handleGlossReferences(parentNode, name, references, file, babel)
     if (!isGlossView(name, path)) {
       return
     }
-    const css = getCSS(path.parentPath)
-    console.log('css', css)
+    return getCSS(path.parentPath)
   }
 
   function getCSS(path) {
@@ -27,6 +24,7 @@ export function handleGlossReferences(parentNode, name, references, file, babel)
       if (!node.isPure()) return
       if (t.isObjectExpression(node)) {
         const className = simplifyObject(node.node, t)
+        console.log('gotem', className)
         node.replaceWith(
           t.objectExpExpression([
             t.objectProperty(t.identifier('className'), t.stringLiteral(className)),

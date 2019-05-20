@@ -1,7 +1,7 @@
 import * as babel from '@babel/core'
 import { SourceMapGenerator } from 'source-map'
 
-import loadOptions, { PluginOptions } from './babel/loadOptions'
+import { loadOptions, PluginOptions } from './babel/loadOptions'
 
 export type Replacement = {
   original: { start: Location; end: Location }
@@ -43,17 +43,8 @@ export type Preprocessor =
   | ((selector: string, cssText: string) => string)
   | void
 
-export function transform(code: string, options: Options): Result {
-  // Check if the file contains `css` or `styled` words first
-  // Otherwise we should skip transforming
-  if (!/\b(styled|css)/.test(code)) {
-    return {
-      code,
-      sourceMap: options.inputSourceMap,
-    }
-  }
-
-  const pluginOptions = loadOptions(options.pluginOptions)
+export async function transform(code: string, options: Options): Promise<Result> {
+  const pluginOptions = await loadOptions(options.pluginOptions)
 
   // Parse the code first so babel uses user's babel config for parsing
   // We don't want to use user's config when transforming the code
@@ -63,7 +54,11 @@ export function transform(code: string, options: Options): Result {
     caller: { name: 'gloss' },
   })
 
-  const { metadata, code: transformedCode, map } = babel.transformFromAstSync(ast, code, {
+  if (!ast) {
+    throw new Error('No AST')
+  }
+
+  const res = babel.transformFromAstSync(ast, code, {
     filename: options.filename,
     presets: [[require.resolve('./babel'), pluginOptions]],
     babelrc: false,
@@ -73,7 +68,13 @@ export function transform(code: string, options: Options): Result {
     inputSourceMap: options.inputSourceMap,
   })
 
-  const out = metadata['gloss']
+  if (!res) {
+    throw new Error('No babel res')
+  }
+
+  const { metadata, code: transformedCode, map } = res
+
+  const out = metadata && metadata['gloss']
 
   if (!out) {
     return {
@@ -82,8 +83,12 @@ export function transform(code: string, options: Options): Result {
     }
   }
 
+  if (!map) {
+    throw new Error('No map returned')
+  }
+
   const { rules, replacements, dependencies } = out
-  const mappings = []
+  const mappings: Object[] = []
 
   let cssText = ''
 
@@ -108,7 +113,7 @@ export function transform(code: string, options: Options): Result {
   })
 
   return {
-    code: transformedCode,
+    code: transformedCode || '',
     cssText,
     rules,
     replacements,
@@ -121,7 +126,7 @@ export function transform(code: string, options: Options): Result {
         })
 
         mappings.forEach(mapping =>
-          generator.addMapping(Object.assign({}, mapping, { source: options.filename })),
+          generator.addMapping({ ...mapping, source: options.filename } as any),
         )
 
         generator.setSourceContent(options.filename, code)

@@ -10,7 +10,7 @@ import { useParallax } from '../pages/ParallaxContext'
 let logoScales = {
   small: 0.7,
   medium: 0.9,
-  large: 1,
+  large: 0.9,
 }
 
 export const LogoVertical = memo(

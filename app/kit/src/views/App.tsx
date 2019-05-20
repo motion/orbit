@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react'
+
 import { AppElements } from '../types/AppDefinition'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context', 'actions']
@@ -21,7 +22,7 @@ export const AppViewsContext = createContext({
   Actions: null as React.FunctionComponent,
 })
 
-export function App(props: AppElements) {
+export const App = function App(props: AppElements) {
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)

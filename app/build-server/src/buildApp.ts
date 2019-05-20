@@ -9,7 +9,6 @@ export async function buildApp(appName: string, props: WebpackParams) {
 
   let config = await makeWebpackConfig({
     ...props,
-    entry: join(props.projectRoot, props.entry),
     mode: 'development',
     publicPath: '/',
     externals: {
@@ -30,7 +29,7 @@ export async function buildApp(appName: string, props: WebpackParams) {
         return
       }
 
-      console.log('built', appName)
+      console.log('built', err, appName, _stats.toString())
 
       await writeJSON(join(outputDir, 'buildInfo.json'), {
         built: Date.now(),

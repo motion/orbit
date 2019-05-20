@@ -3,6 +3,8 @@
   "version": "2.5.2",
   "private": true,
   "main": "_/index.js",
+  "ts:main": "./src/index.ts",
+  "sideEffects": "false",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

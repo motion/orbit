@@ -1,5 +1,6 @@
 import * as Path from 'path'
 import webpack from 'webpack'
+import nodeExternals from 'webpack-node-externals'
 
 const TerserPlugin = require('terser-webpack-plugin')
 
@@ -31,6 +32,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     watch,
   } = params
 
+  const entryDir = Path.join(entry, '..')
   const target = params.target || 'electron-renderer'
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
@@ -59,7 +61,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
   }
 
-  const entryPath = Path.join(projectRoot, entry)
+  const modulesDir = Path.resolve(projectRoot, '..', '..', 'node_modules')
 
   const config = {
     watch,
@@ -90,7 +92,13 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
     devtool:
       mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
-    externals,
+    externals: [
+      externals,
+      nodeExternals(),
+      nodeExternals({
+        modulesDir,
+      }),
+    ],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields:
@@ -119,7 +127,17 @@ export async function makeWebpackConfig(params: WebpackParams) {
         // ignore non-.node.js modules in node mode
         target === 'node' && {
           test: x => {
-            return entryPath === x || x.indexOf('.node.ts') > -1
+            // explicit ignores from options
+            if (ignore.find(z => z.indexOf(x) > -1)) {
+              return true
+            }
+            // dont ignore if outside of this app source
+            if (x.indexOf(entryDir) !== 0) {
+              return false
+            }
+            // ignore if inside this apps src, and not matching our .node pattern (or entry):
+            const isValidNodeFile = entry === x || x.indexOf('.node.ts') > -1
+            return !isValidNodeFile
           },
           use: 'ignore-loader',
         },
@@ -182,15 +200,6 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
     plugins: [
       new webpack.DefinePlugin(defines),
-
-      new webpack.IgnorePlugin({
-        checkResource(resource) {
-          if (ignore.find(x => resource.indexOf(x) > -1)) {
-            return true
-          }
-          return false
-        },
-      }),
 
       mode === 'production' &&
         new TerserPlugin({

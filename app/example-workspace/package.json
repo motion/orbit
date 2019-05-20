@@ -4,6 +4,7 @@
   "main": "index.ts",
   "private": true,
   "dependencies": {
-    "@o/postgres-app": "^2.5.6"
+    "@o/postgres-app": "^2.5.6",
+    "@o/demo-app-user-manager": "^2.5.6"
   }
 }

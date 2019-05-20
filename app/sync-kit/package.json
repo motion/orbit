@@ -4,6 +4,7 @@
   "main": "_/index.js",
   "ts:main": "src/index.ts",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --preserveWatchOutput --watch"

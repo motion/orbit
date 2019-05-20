@@ -235,11 +235,12 @@ export function HeadSection() {
           </Col>
           <Space size={40} />
           <Row space="xl" pad={[0, 'xl']}>
-            <SubSection index={0} title="Build powerful apps">
-              A large UI kit that solves for common apps, like Master/Detail with CRUD.
+            <SubSection index={0} title="Easy to build">
+              A large UI kit that solves for common apps, like Master/Detail with CRUD, letting you
+              focus on the use case.
             </SubSection>
 
-            <SubSection index={1} title="Use data">
+            <SubSection index={1} title="Easy data">
               An App Store with data apps like Slack, Postgres, G-suite and more - add with a click.
             </SubSection>
 

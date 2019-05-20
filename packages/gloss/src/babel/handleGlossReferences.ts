@@ -1,40 +1,35 @@
+import { styleToClassName } from '@o/css'
+
 import { simplifyObject } from '../simplifyObject'
+import { BabelState } from '../types'
 
-export function handleGlossReferences(parentNode, name, references, file, babel) {
+export function handleGlossReferences(parentNode, name, references, babel): BabelState['rules'] {
   const { types: t } = babel
+  const rules = {}
 
-  references.forEach(reference => {
-    handleComponent(reference)
-  })
-
-  parentNode
-  file
-
-  function handleComponent(path) {
-    if (!isGlossView(name, path)) {
-      return
-    }
-    return getCSS(path.parentPath)
-  }
-
-  function getCSS(path) {
-    const x = path.get('arguments')
-
-    x.forEach(node => {
-      if (!node.isPure()) return
-      if (t.isObjectExpression(node)) {
-        const className = simplifyObject(node.node, t)
-        console.log('gotem', className)
-        node.replaceWith(
-          t.objectExpExpression([
-            t.objectProperty(t.identifier('className'), t.stringLiteral(className)),
-          ]),
-        )
+  for (const path of references) {
+    if (!isGlossView(name, path)) continue
+    const start = parentNode && parentNode.loc ? parentNode.loc.start : null
+    const args = path.parentPath.get('arguments')
+    for (const node of args) {
+      if (!node.isPure()) continue
+      if (!t.isObjectExpression(node)) continue
+      const cssText = simplifyObject(node.node, t)
+      const className = styleToClassName(cssText)
+      node.replaceWith(
+        t.objectExpression([
+          t.objectProperty(t.identifier('className'), t.stringLiteral(className)),
+        ]),
+      )
+      rules[`.${className}`] = {
+        cssText,
+        className,
+        start,
       }
-    })
-
-    return ''
+    }
   }
+
+  return rules
 }
 
 export function looksLike(a, b) {

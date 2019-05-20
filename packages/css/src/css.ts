@@ -119,3 +119,18 @@ function cssValue(key: string, value: any) {
   }
   console.debug(`Invalid style value for ${key}: ${JSON.stringify(value)}`)
 }
+
+export function styleToClassName(style: string): string {
+  return `g${stringHash(style)}`
+}
+
+// thx darksky: https://git.io/v9kWO
+function stringHash(str: string): number {
+  let res = 5381
+  let i = 0
+  let len = str.length
+  while (i < len) {
+    res = (res * 33) ^ str.charCodeAt(i++)
+  }
+  return res >>> 0
+}

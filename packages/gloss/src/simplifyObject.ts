@@ -1,14 +1,14 @@
-import { css } from '@o/css'
+import { cssString } from '@o/css'
 
 export function simplifyObject(node, t) {
   try {
     let object = astToObject(node, t)
     console.log('object', object)
-    let cssString = css(object)
-    console.log('cssString', cssString)
+    let css = cssString(object)
+    console.log('css', css)
     // TODO cssName
     // TODO back to node
-    return cssString
+    return css
   } catch (err) {
     if (err instanceof NotSimpleObjectError) {
       console.error('Not a simple object, cant simplify')

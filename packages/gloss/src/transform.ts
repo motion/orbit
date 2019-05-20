@@ -74,6 +74,8 @@ export async function transform(code: string, options: Options): Promise<Result>
 
   const { metadata, code: transformedCode, map } = res
 
+  console.log('metadata', metadata)
+
   const out = metadata && metadata['gloss']
 
   if (!out) {
@@ -92,12 +94,6 @@ export async function transform(code: string, options: Options): Promise<Result>
 
   let cssText = ''
 
-  let preprocessor
-
-  if (typeof options.preprocessor === 'function') {
-    preprocessor = options.preprocessor
-  }
-
   Object.keys(rules).forEach((selector, index) => {
     mappings.push({
       generated: {
@@ -109,7 +105,7 @@ export async function transform(code: string, options: Options): Promise<Result>
     })
 
     // Run each rule through stylis to support nesting
-    cssText += `${preprocessor(selector, rules[selector].cssText)}\n`
+    cssText += `${rules[selector].cssText}\n`
   })
 
   return {

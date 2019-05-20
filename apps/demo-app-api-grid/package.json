@@ -11,8 +11,8 @@
   "dependencies": {
     "@o/gmail-app": "^2.5.6",
     "@o/kit": "^2.5.6",
+    "@o/ui": "^2.5.6",
     "@o/postgres-app": "^2.5.6",
-    "@o/slack-app": "^2.5.6",
-    "@o/ui": "^2.5.6"
+    "@o/slack-app": "^2.5.6"
   }
 }

@@ -60,8 +60,11 @@ function traverseGlossBlocks(babel, state: BabelState) {
       references.add(fileName)
       const paths = path.scope.getBinding(name).referencePaths
       // extract static styles
-      const rules = extractStyles(path.node, name, paths, babel)
-      state.rules = rules
+      // TODO @nate need to finish this
+      if (false) {
+        const rules = extractStyles(path.node, name, paths, babel)
+        state.rules = rules
+      }
       // add display name
       addDisplayName(path.node, name, paths, state.file, babel)
     },

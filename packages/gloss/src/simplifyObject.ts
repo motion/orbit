@@ -3,11 +3,7 @@ import { cssString } from '@o/css'
 export function simplifyObject(node, t) {
   try {
     let object = astToObject(node, t)
-    console.log('object', object)
     let css = cssString(object)
-    console.log('css', css)
-    // TODO cssName
-    // TODO back to node
     return css
   } catch (err) {
     if (err instanceof NotSimpleObjectError) {

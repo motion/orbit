@@ -8,6 +8,7 @@
   },
   "include": ["src/**/*"],
   "references": [
+    { "path": "../kit" },
     { "path": "../models" },
     { "path": "../stores" },
     { "path": "../screen" },

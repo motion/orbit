@@ -9,6 +9,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/kit": "*",
     "apollo-link": "^1.2.11",
     "apollo-link-http": "^1.5.14",
     "graphql-tools": "^4.0.4"

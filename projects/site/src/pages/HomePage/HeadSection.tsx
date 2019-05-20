@@ -13,6 +13,7 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
+let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
   large: 'A new desktop app platform',
@@ -22,16 +23,16 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and share incredible, beautiful apps that sync without a server.`,
+    `Designed around easy data APIs and internal tools use cases.`,
   ],
   medium: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and share incredible, beautiful apps that sync without a server.`,
+    `Designed around easy data APIs and internal tools use cases.`,
   ],
   small: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and share incredible, beautiful apps that sync without a server.`,
+    `Designed around easy data APIs and internal tools use cases.`,
   ],
 }
 
@@ -50,7 +51,7 @@ const HeadContent = memo(() => {
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = useScreenVal(smallSpc, medSpc, medSpc)
+  const br = useScreenVal(smallSpc, medSpc, lgSpace)
 
   const textsWidth = useScreenVal('95%', '100%', '90%')
 
@@ -82,7 +83,7 @@ const HeadContent = memo(() => {
       {isSmall && (
         <Paragraph
           size={1.8}
-          sizeLineHeight={1.4}
+          sizeLineHeight={1.6}
           margin={[0, 'auto']}
           textAlign="center"
           alpha={0.6}
@@ -235,12 +236,11 @@ export function HeadSection() {
           <Space size={40} />
           <Row space="xl" pad={[0, 'xl']}>
             <SubSection index={0} title="Build powerful apps">
-              A large UI kit that gives you patterns for common apps, like Master/Detail with CRUD.
+              A large UI kit that solves for common apps, like Master/Detail with CRUD.
             </SubSection>
 
             <SubSection index={1} title="Use data">
-              The Orbit App Store has data apps like Slack, Postgres, the G-suite and more that plug
-              in with a click.
+              An App Store with data apps like Slack, Postgres, G-suite and more - add with a click.
             </SubSection>
 
             <SubSection index={2} title="Runs like native">
@@ -268,7 +268,7 @@ const SubSection = memo(({ title, children, index }: any) => {
           {title}
         </Title>
         <Space size="sm" />
-        <SimpleText selectable alpha={0.5}>
+        <SimpleText selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
           {children}
         </SimpleText>
       </FadeChild>

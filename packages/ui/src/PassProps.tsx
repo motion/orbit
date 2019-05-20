@@ -6,7 +6,7 @@ export type PassPropsProps = {
   [key: string]: any
 }
 
-export function PassProps({ children, getChildProps, passCondition, ...props }: PassPropsProps) {
+export const PassProps = ({ children, getChildProps, passCondition, ...props }: PassPropsProps) => {
   return (
     <>
       {Children.map(children, (child, index) => {

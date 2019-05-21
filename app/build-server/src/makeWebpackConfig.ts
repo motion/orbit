@@ -53,7 +53,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
       removeAvailableModules: true,
       // namedModules: true,
       // remove some stuff even in dev
-      concatenateModules: true,
+      // concatenateModules: true,
       sideEffects: true,
       providedExports: true,
       usedExports: true,

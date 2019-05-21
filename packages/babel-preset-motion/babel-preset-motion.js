@@ -21,7 +21,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
-        useESModules: true,
+        useESModules: false,
       }),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,

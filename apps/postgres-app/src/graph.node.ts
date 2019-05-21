@@ -1,5 +1,6 @@
 import { AppBit } from '@o/kit'
 import { ApolloLink, Observable } from 'apollo-link'
+import graphileBuild from 'graphile-build'
 import { graphql, print } from 'graphql'
 import { Pool } from 'pg'
 import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext } from 'postgraphile'
@@ -83,7 +84,7 @@ async function performQuery(pgPool, schema, query, variables, operationName) {
 function requireFrom(modules, moduleName) {
   const path = [...modules, moduleName].join('/node_modules/')
   try {
-    return require(path) // eslint-disable-line
+    return require(path)
   } catch (e) {
     // Doesn't exist.
     if (modules.length > 1) {
@@ -96,8 +97,6 @@ function requireFrom(modules, moduleName) {
     )
   }
 }
-
-const graphileBuild = requireFrom(['postgraphile', 'postgraphile-core'], 'graphile-build')
 
 function RenamedQueryPlugin(builder) {
   builder.hook('build', build =>

@@ -26,8 +26,11 @@ export class BuildServer {
   }
 
   start() {
-    this.server.listen(3999, () => {
-      console.log('listening on 3999')
+    return new Promise(res => {
+      this.server.listen(3999, () => {
+        console.log('listening on 3999')
+        res()
+      })
     })
   }
 }

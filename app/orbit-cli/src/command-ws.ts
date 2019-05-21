@@ -10,7 +10,6 @@ type CommandWSOptions = { workspaceRoot: string }
 
 export async function commandWs(options: CommandWSOptions) {
   const appIdentifiers = await watchBuildWorkspace(options)
-  return
 
   let orbitDesktop = await getOrbitDesktop()
 
@@ -64,7 +63,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
 
   const server = new BuildServer(config)
 
-  server.start()
+  await server.start()
 
   return appRoots.map(x => x.id)
 }

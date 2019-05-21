@@ -13,8 +13,8 @@ type WorkspaceInfo = {
 
 export const AppOpenWorkspaceResolver = resolveCommand(
   AppOpenWorkspaceCommand,
-  async ({ path }) => {
-    console.log('should load workspace', path)
+  async ({ path, appIdentifiers }) => {
+    console.log('should load workspace', path, appIdentifiers)
     const { identifier } = await loadWorkspace(path)
     console.log('got', identifier)
 

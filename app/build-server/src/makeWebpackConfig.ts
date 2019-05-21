@@ -1,6 +1,6 @@
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
-import nodeExternals from 'webpack-node-externals'
 
 const TerserPlugin = require('terser-webpack-plugin')
 
@@ -66,7 +66,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
   }
 
-  const modulesDir = Path.resolve(projectRoot, '..', '..', 'node_modules')
+  // const modulesDir = Path.resolve(projectRoot, '..', '..', 'node_modules')
 
   const config = {
     watch,
@@ -95,15 +95,9 @@ export async function makeWebpackConfig(params: WebpackParams) {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    devtool:
-      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
-    externals: [
-      externals,
-      nodeExternals(),
-      nodeExternals({
-        modulesDir,
-      }),
-    ],
+    devtool: 'source-map',
+    // mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
+    externals: [externals, { electron: '{}' }],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields:
@@ -205,6 +199,12 @@ export async function makeWebpackConfig(params: WebpackParams) {
     },
     plugins: [
       new webpack.DefinePlugin(defines),
+
+      target !== 'node' &&
+        new HtmlWebpackPlugin({
+          template: Path.join(__dirname, '..', 'index.html'),
+          chunksSortMode: 'none',
+        }),
 
       mode === 'production' &&
         new TerserPlugin({

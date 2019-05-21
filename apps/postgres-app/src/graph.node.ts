@@ -81,23 +81,6 @@ async function performQuery(pgPool, schema, query, variables, operationName) {
   )
 }
 
-function requireFrom(modules, moduleName) {
-  const path = [...modules, moduleName].join('/node_modules/')
-  try {
-    return require(path)
-  } catch (e) {
-    // Doesn't exist.
-    if (modules.length > 1) {
-      const result = requireFrom(modules.slice(0, modules.length - 1), moduleName)
-      if (result) return result
-    }
-    return (
-      requireFrom(modules.slice(1), moduleName) ||
-      requireFrom(modules.slice(0, modules.length - 1), moduleName)
-    )
-  }
-}
-
 function RenamedQueryPlugin(builder) {
   builder.hook('build', build =>
     build.extend(

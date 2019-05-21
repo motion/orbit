@@ -39,7 +39,7 @@ export class AppMiddleware {
         projectRoot: app.path,
         mode: 'development',
         publicPath,
-        entry: app.entry,
+        entry: [app.entry],
         output: {
           // TODO(andreypopp): sort this out, we need some custom symbol here which
           // we will communicate to Orbit

@@ -28,7 +28,7 @@
     "webpack": "^4.32.0",
     "webpack-cli": "*",
     "webpack-dev-middleware": "3.6.2",
-    "webpack-hot-middleware": "2.24.4",
+    "webpack-hot-middleware": "^2.25.0",
     "workerize-loader": "*",
     "terser-webpack-plugin": "^1.2.3",
     "webpack-node-externals": "^1.7.2",

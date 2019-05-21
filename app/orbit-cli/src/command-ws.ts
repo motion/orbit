@@ -62,12 +62,14 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   await buildApp('apps', {
     ...appsConf,
     watch: false,
+    hot: true,
   })
   // }
 
   const appsConfig = await getAppConfig('apps', {
     ...appsConf,
     watch: true,
+    hot: true,
   })
 
   let entry = ''
@@ -80,13 +82,12 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   }
   const wsConfig = await getAppConfig('workspace', {
     projectRoot: options.workspaceRoot,
-    entry: {
-      workspace: entry,
-    },
+    entry: [entry],
     target: 'web',
     outputFile: '[name].test.js',
     watch: true,
     devServer: true,
+    hot: true,
     dllReference: dllFile,
   })
 

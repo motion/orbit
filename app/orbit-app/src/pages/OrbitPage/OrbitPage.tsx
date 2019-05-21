@@ -34,7 +34,7 @@ window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
 
-  console.log(123123)
+  console.log('hi')
 
   useLayoutEffect(() => {
     if (!IS_ELECTRON) {

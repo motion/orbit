@@ -5,7 +5,7 @@ import webpack from 'webpack'
 const TerserPlugin = require('terser-webpack-plugin')
 
 export type WebpackParams = {
-  entry: string | { [key: string]: string } | string[]
+  entry: string[]
   projectRoot: string
   publicPath?: string
   mode?: 'production' | 'development'
@@ -19,9 +19,10 @@ export type WebpackParams = {
   dll?: string
   dllReference?: string
   devServer?: boolean
+  hot?: boolean
 }
 
-export async function makeWebpackConfig(_appName: string, params: WebpackParams) {
+export async function makeWebpackConfig(appName: string, params: WebpackParams) {
   let {
     outputFile,
     entry,
@@ -36,15 +37,10 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     dll,
     dllReference,
     devServer,
+    hot,
   } = params
 
-  const entryDir = Array.isArray(entry)
-    ? __dirname
-    : typeof entry === 'string'
-    ? Path.join(entry, '..')
-    : entry.main
-    ? Path.join(entry.main, '..')
-    : __dirname
+  const entryDir = __dirname
   const target = params.target || 'electron-renderer'
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
@@ -80,7 +76,9 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     context: projectRoot,
     target,
     mode,
-    entry,
+    entry: {
+      main: hot ? [`webpack-hot-middleware/client?name=${appName}`, ...entry] : entry,
+    },
     optimization: optimization[mode],
     output: {
       path: outputDir,
@@ -236,6 +234,8 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
         new webpack.DllReferencePlugin({
           manifest: dllReference,
         }),
+
+      hot && new webpack.HotModuleReplacementPlugin(),
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean),

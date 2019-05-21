@@ -3,7 +3,7 @@ import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
 import express from 'express'
-import proxy from 'http-proxy-middleware'
+import httpProxyMiddleware from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
 
@@ -80,7 +80,7 @@ export class WebServer {
       }
       this.server.use(
         '/',
-        proxy({
+        httpProxyMiddleware({
           target: webpackUrl,
           changeOrigin: true,
           secure: false,

@@ -77,7 +77,9 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
     target,
     mode,
     entry: {
-      main: hot ? [`webpack-hot-middleware/client?name=${appName}`, ...entry] : entry,
+      main: hot
+        ? [`webpack-hot-middleware/client?name=${appName}&path=/__webpack_hmr`, ...entry]
+        : entry,
     },
     optimization: optimization[mode],
     output: {
@@ -89,6 +91,16 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+
+      ...(appName === 'workspace'
+        ? {
+            hotUpdateChunkFilename: 'hot-update.js',
+            hotUpdateMainFilename: 'hot-update.json',
+          }
+        : {
+            hotUpdateChunkFilename: 'hot-update2.js',
+            hotUpdateMainFilename: 'hot-update2.json',
+          }),
     },
     devServer: devServer
       ? {

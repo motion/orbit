@@ -8,7 +8,7 @@ export class BuildServer {
 
   constructor(private config) {
     const compiler = Webpack(this.config)
-    const publicPath = '/'
+    const publicPath = '/dist/'
 
     this.server.use(
       WebpackDevMiddleware(compiler, {

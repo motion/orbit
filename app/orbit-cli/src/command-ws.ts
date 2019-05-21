@@ -50,6 +50,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     projectRoot: directory,
     entry: appEntries,
     target: 'web',
+    publicPath: '/apps/',
     outputFile: '[name].apps.js',
     output: {
       library: 'apps',

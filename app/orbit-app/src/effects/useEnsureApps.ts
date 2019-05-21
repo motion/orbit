@@ -1,6 +1,4 @@
 import { AppModel, loadOne, save, useActiveSpace } from '@o/kit'
-import { SaveOptions } from '@o/mediator'
-import { PostgresAppData } from '@o/postgres-app/_/PostgresModels'
 import { useEffect } from 'react'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -53,7 +51,7 @@ export function useEnsureApps() {
             username: 'postgres',
             password: 'test',
           },
-        } as SaveOptions<PostgresAppData>,
+        } as any,
       })
     })
 

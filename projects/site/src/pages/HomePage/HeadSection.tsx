@@ -23,23 +23,17 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Create and share incredible, beautiful apps that sync without a server.`,
-    `Designed around easy data APIs and internal tools use cases.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
   medium: [
-    `Create and share incredible, beautiful apps that sync without a server.`,
-    `Designed around easy data APIs and internal tools use cases.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
   small: [
-    `Create and share incredible, beautiful apps that sync without a server.`,
-    `Designed around easy data APIs and internal tools use cases.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
-}
-
-const subTexts = {
-  large: `How Orbit lets you build internal tools in no time.`,
-  medium: `How Orbit lets you build internal tools in no time.`,
-  small: `How Orbit solves internal tools.`,
 }
 
 const HeadContent = memo(() => {

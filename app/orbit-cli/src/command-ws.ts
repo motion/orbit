@@ -1,4 +1,5 @@
-import { BuildServer, getAppConfig } from '@o/build-server'
+import { buildApp, BuildServer, getAppConfig } from '@o/build-server'
+import { WebpackParams } from '@o/build-server/_/makeWebpackConfig'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -38,39 +39,64 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     console.log('No apps found')
     return []
   }
-  const entry: any = {}
+  const dllFile = join(__dirname, 'manifest.json')
+  console.log('dllFile', dllFile)
 
+  const appEntries = []
+  for (const { entry } of appRoots) {
+    appEntries.push(entry)
+  }
+
+  const appsConf: WebpackParams = {
+    projectRoot: directory,
+    entry: appEntries,
+    target: 'web',
+    outputFile: '[name].test.js',
+    watch: false,
+    dll: dllFile,
+  }
+
+  if (!(await pathExists(dllFile))) {
+    // we have to build apps once
+    console.log('building apps DLL...')
+    await buildApp('apps', appsConf)
+  }
+
+  const appsConfig = await getAppConfig('apps', {
+    ...appsConf,
+    watch: true,
+  })
+
+  let entry = ''
   const isInMonoRepo = await getIsInMonorepo()
   if (isInMonoRepo) {
     // main entry for orbit-app
     const monoRoot = join(__dirname, '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
-    entry.main = appEntry
+    entry = appEntry
   }
-
-  for (const { id, directory } of appRoots) {
-    entry[id] = directory
-  }
-
-  const config = await getAppConfig('workspace', {
+  const wsConfig = await getAppConfig('workspace', {
     projectRoot: options.workspaceRoot,
-    entry,
+    entry: {
+      workspace: entry,
+    },
     target: 'web',
     outputFile: '[name].test.js',
     watch: true,
     devServer: true,
+    dllReference: dllFile,
   })
 
-  const server = new BuildServer(config)
+  const server = new BuildServer([wsConfig, appsConfig])
 
   await server.start()
 
   return appRoots.map(x => x.id)
 }
 
-async function getAppRoots(directory: string) {
-  reporter.info('read space directory', directory)
-  const pkg = await readJSON(join(directory, 'package.json'))
+async function getAppRoots(spaceDirectory: string) {
+  reporter.info('read space spaceDirectory', spaceDirectory)
+  const pkg = await readJSON(join(spaceDirectory, 'package.json'))
   if (!pkg) {
     reporter.log('No package found!')
     return null
@@ -82,7 +108,7 @@ async function getAppRoots(directory: string) {
   }
 
   reporter.info('found packages', packages)
-  let nodeModuleDir = join(directory, 'node_modules')
+  let nodeModuleDir = join(spaceDirectory, 'node_modules')
 
   // find parent node_modules
   while (!(await pathExists(nodeModuleDir)) && nodeModuleDir !== '/') {
@@ -98,9 +124,12 @@ async function getAppRoots(directory: string) {
     Object.keys(packages).map(async id => {
       const directory = join(nodeModuleDir, ...id.split('/'))
       if (await pathExists(directory)) {
+        const appPkg = await readJSON(join(directory, 'package.json'))
+        const entry = appPkg.main
         return {
           id,
           directory,
+          entry: join(directory, entry),
         }
       }
     }),

@@ -5,7 +5,7 @@ import webpack from 'webpack'
 const TerserPlugin = require('terser-webpack-plugin')
 
 export type WebpackParams = {
-  entry: string | { [key: string]: string }
+  entry: string | { [key: string]: string } | string[]
   projectRoot: string
   publicPath?: string
   mode?: 'production' | 'development'
@@ -16,9 +16,11 @@ export type WebpackParams = {
   externals?: any
   ignore?: string[]
   watch?: boolean
+  dll?: string
+  dllReference?: string
 }
 
-export async function makeWebpackConfig(params: WebpackParams) {
+export async function makeWebpackConfig(_appName: string, params: WebpackParams) {
   let {
     outputFile,
     entry,
@@ -30,14 +32,17 @@ export async function makeWebpackConfig(params: WebpackParams) {
     externals,
     ignore = [],
     watch,
+    dll,
+    dllReference,
   } = params
 
-  const entryDir =
-    typeof entry === 'string'
-      ? Path.join(entry, '..')
-      : entry.main
-      ? Path.join(entry.main, '..')
-      : __dirname
+  const entryDir = Array.isArray(entry)
+    ? __dirname
+    : typeof entry === 'string'
+    ? Path.join(entry, '..')
+    : entry.main
+    ? Path.join(entry.main, '..')
+    : __dirname
   const target = params.target || 'electron-renderer'
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
@@ -200,10 +205,13 @@ export async function makeWebpackConfig(params: WebpackParams) {
     plugins: [
       new webpack.DefinePlugin(defines),
 
-      target !== 'node' &&
+      !dll &&
+        target !== 'node' &&
         new HtmlWebpackPlugin({
           template: Path.join(__dirname, '..', 'index.html'),
           chunksSortMode: 'none',
+          inject: false,
+          externals: ['apps.js'],
         }),
 
       mode === 'production' &&
@@ -212,6 +220,17 @@ export async function makeWebpackConfig(params: WebpackParams) {
           terserOptions: {
             ecma: 6,
           },
+        }),
+
+      !!dll &&
+        new webpack.DllPlugin({
+          name: 'apps',
+          path: dll,
+        }),
+
+      !!dllReference &&
+        new webpack.DllReferencePlugin({
+          manifest: dllReference,
         }),
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),

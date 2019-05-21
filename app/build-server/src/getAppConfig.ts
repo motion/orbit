@@ -18,7 +18,7 @@ export async function getAppConfig(appName: string, props: BuildAppProps) {
     },
   }
 
-  return await makeWebpackConfig({
+  return await makeWebpackConfig(appName, {
     ...props,
     ...(props.devServer && devServerOpts),
     mode: 'development',
@@ -29,7 +29,7 @@ export async function getAppConfig(appName: string, props: BuildAppProps) {
     ignore: ['electron-log'],
     outputDir,
     output: {
-      library: appName,
+      library: '[name]',
       libraryTarget: 'umd',
     },
   })

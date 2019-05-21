@@ -1,4 +1,4 @@
-import { BuildServer } from '@o/build-server'
+import { AppMiddleware } from '@o/build-server'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
@@ -27,7 +27,7 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor(private buildServer: BuildServer) {
+  constructor(private buildServer: AppMiddleware) {
     this.server = express()
     this.server.set('port', Config.ports.server)
 

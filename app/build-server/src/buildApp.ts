@@ -2,25 +2,16 @@ import { writeJSON } from 'fs-extra'
 import { join } from 'path'
 import Webpack from 'webpack'
 
-import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
+import { getAppConfig } from './getAppConfig'
+import { WebpackParams } from './makeWebpackConfig'
 
-export async function buildApp(appName: string, props: WebpackParams) {
+export type BuildAppProps = WebpackParams & {
+  devServer?: boolean
+}
+
+export async function buildApp(appName: string, props: BuildAppProps) {
   const outputDir = join(props.projectRoot, 'dist')
-
-  let config = await makeWebpackConfig({
-    ...props,
-    mode: 'development',
-    publicPath: '/',
-    externals: {
-      typeorm: 'typeorm',
-    },
-    ignore: ['electron-log'],
-    outputDir,
-    output: {
-      library: appName,
-      libraryTarget: 'umd',
-    },
-  })
+  const config = await getAppConfig(appName, props)
 
   return new Promise((res, rej) => {
     Webpack(config, async (err, _stats) => {

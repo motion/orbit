@@ -1,4 +1,4 @@
-import { buildApp } from '@o/build-server'
+import { BuildServer, getAppConfig } from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -52,14 +52,20 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   for (const { id, directory } of appRoots) {
     entry[id] = directory
   }
-  console.log('building', entry)
-  buildApp('workspace', {
+
+  const config = await getAppConfig('workspace', {
     projectRoot: options.workspaceRoot,
     entry,
     target: 'web',
-    outputFile: 'index.test.js',
+    outputFile: '[name].test.js',
     watch: true,
+    devServer: true,
   })
+
+  const server = new BuildServer(config)
+
+  server.start()
+
   return appRoots.map(x => x.id)
 }
 

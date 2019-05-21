@@ -89,7 +89,7 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
-import { BuildServer, AppDesc } from '@o/build-server'
+import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 
@@ -110,7 +110,7 @@ export class OrbitDesktopRoot {
   private webServer: WebServer
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
-  private buildServer: BuildServer
+  private buildServer: AppMiddleware
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -161,7 +161,7 @@ export class OrbitDesktopRoot {
       this.orbitAppsManager.start(),
     ])
 
-    this.buildServer = new BuildServer()
+    this.buildServer = new AppMiddleware()
 
     const cosal = this.cosalManager.cosal
 
@@ -284,7 +284,7 @@ export class OrbitDesktopRoot {
   private registerMediatorServer(props: {
     cosal: Cosal
     orbitAppsManager: OrbitAppsManager
-    buildServer: BuildServer
+    buildServer: AppMiddleware
   }) {
     const syncersTransport = new WebSocketClientTransport(
       'syncers',

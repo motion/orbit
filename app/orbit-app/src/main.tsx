@@ -18,8 +18,6 @@ if (IS_ELECTRON) {
   require('electron')
 }
 
-console.log('attempting require of app', require('@o/postgres-app'))
-
 // initialize firebase
 if (firebase && firebase.initializeApp) {
   firebase.initializeApp({

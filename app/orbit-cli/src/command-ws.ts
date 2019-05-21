@@ -43,24 +43,26 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   console.log('dllFile', dllFile)
 
   const appEntries = []
-  for (const { entry } of appRoots) {
-    appEntries.push(entry)
+  for (const { id } of appRoots) {
+    appEntries.push(id)
   }
-
   const appsConf: WebpackParams = {
     projectRoot: directory,
     entry: appEntries,
     target: 'web',
-    outputFile: '[name].test.js',
+    outputFile: '[name].apps.js',
     watch: false,
+    output: {
+      library: 'apps',
+    },
     dll: dllFile,
   }
 
-  if (!(await pathExists(dllFile))) {
-    // we have to build apps once
-    console.log('building apps DLL...')
-    await buildApp('apps', appsConf)
-  }
+  // if (!(await pathExists(dllFile))) {
+  // we have to build apps once
+  console.log('building apps DLL...')
+  await buildApp('apps', appsConf)
+  // }
 
   const appsConfig = await getAppConfig('apps', {
     ...appsConf,

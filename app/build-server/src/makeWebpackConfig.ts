@@ -224,7 +224,7 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
 
       !!dll &&
         new webpack.DllPlugin({
-          name: 'apps',
+          name: 'main',
           path: dll,
         }),
 

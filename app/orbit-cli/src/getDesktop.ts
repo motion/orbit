@@ -138,7 +138,7 @@ export async function runOrbitDesktop(): Promise<boolean> {
   return false
 }
 
-async function getIsInMonorepo() {
+export async function getIsInMonorepo() {
   const monorepoPkg = join(__dirname, '..', '..', '..', 'package.json')
   return (await pathExists(monorepoPkg)) && (await readJSON(monorepoPkg)).name === 'orbit-monorepo'
 }

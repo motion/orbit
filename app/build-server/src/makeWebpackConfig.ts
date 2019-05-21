@@ -5,7 +5,7 @@ import nodeExternals from 'webpack-node-externals'
 const TerserPlugin = require('terser-webpack-plugin')
 
 export type WebpackParams = {
-  entry: string | any[]
+  entry: string | { [key: string]: string }
   projectRoot: string
   publicPath?: string
   mode?: 'production' | 'development'
@@ -32,7 +32,12 @@ export async function makeWebpackConfig(params: WebpackParams) {
     watch,
   } = params
 
-  const entryDir = Path.join(Array.isArray(entry) ? entry[0] : entry, '..')
+  const entryDir =
+    typeof entry === 'string'
+      ? Path.join(entry, '..')
+      : entry.main
+      ? Path.join(entry.main, '..')
+      : __dirname
   const target = params.target || 'electron-renderer'
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),

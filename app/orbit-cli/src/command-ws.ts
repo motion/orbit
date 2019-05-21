@@ -3,19 +3,20 @@ import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { getOrbitDesktop } from './getDesktop'
+import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
 type CommandWSOptions = { workspaceRoot: string }
 
 export async function commandWs(options: CommandWSOptions) {
+  const appIdentifiers = await watchBuildWorkspace(options)
+  return
+
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {
     process.exit(0)
   }
-
-  const appIdentifiers = await watchBuildWorkspace(options)
 
   try {
     reporter.info('Sending open workspace command')
@@ -38,17 +39,26 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     console.log('No apps found')
     return []
   }
-  const entry = []
-  for (const { id, directory } of appRoots) {
-    entry.push({
-      [id]: directory,
-    })
+  const entry: any = {}
+
+  const isInMonoRepo = await getIsInMonorepo()
+  if (isInMonoRepo) {
+    // main entry for orbit-app
+    const monoRoot = join(__dirname, '..', '..', '..')
+    const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
+    entry.main = appEntry
   }
+
+  for (const { id, directory } of appRoots) {
+    entry[id] = directory
+  }
+  console.log('building', entry)
   buildApp('workspace', {
     projectRoot: options.workspaceRoot,
     entry,
     target: 'web',
     outputFile: 'index.test.js',
+    watch: true,
   })
   return appRoots.map(x => x.id)
 }

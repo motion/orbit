@@ -1,7 +1,7 @@
 import { buildApp, BuildServer, getAppConfig } from '@o/build-server'
 import { WebpackParams } from '@o/build-server/_/makeWebpackConfig'
 import { AppOpenWorkspaceCommand } from '@o/models'
-import { pathExists, readJSON } from 'fs-extra'
+import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 
 import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
@@ -86,6 +86,19 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
     entry = appEntry
   }
+
+  await writeFile(
+    join(entry, '..', '..', 'appDefinitions.js'),
+    `
+    // all apps
+    ${appRoots
+      .map(app => {
+        return `export const ${app.id.replace(/[^a-zA-Z]/g, '')} = require('${app.id}')`
+      })
+      .join('\n')}
+  `,
+  )
+
   const wsConfig = await getAppConfig('workspace', {
     projectRoot: options.workspaceRoot,
     entry: [entry],

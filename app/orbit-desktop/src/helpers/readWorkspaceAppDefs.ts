@@ -45,7 +45,9 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
       const pkgPath = join(nodeModuleDir, ...id.split('/'))
       if (await pathExists(pkgPath)) {
         try {
-          const nodeEntry = require(join(pkgPath, 'dist', 'index.node.js'))
+          const entry = join(pkgPath, 'dist', 'index.node.js')
+          log.info(`Importing entry ${entry}`)
+          const nodeEntry = require(entry)
           if (!nodeEntry || !nodeEntry.default) {
             log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
             return

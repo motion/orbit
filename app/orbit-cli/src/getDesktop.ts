@@ -6,7 +6,6 @@ import { pathExists, readJSON } from 'fs-extra'
 import killPort from 'kill-port'
 import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
 import { reporter } from './reporter'
@@ -101,8 +100,6 @@ export async function runOrbitDesktop(): Promise<boolean> {
   let cwd = process.cwd()
 
   if (isInMonoRepo) {
-    reporter.info('\nDev mode: wait for webpack. Start with `run orbit-app`...')
-    await waitOn({ resources: [`http://localhost:3999`], interval: 150 })
     const monoRoot = join(__dirname, '..', '..', '..')
     const script = join(monoRoot, 'app', 'orbit-main', 'scripts', 'run-orbit.sh')
     cwd = join(script, '..', '..')

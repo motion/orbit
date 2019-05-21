@@ -1,3 +1,4 @@
+import { buildApp } from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -43,20 +44,13 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
       [id]: directory,
     })
   }
-  return new Promise(res => {
-    // load all app entries + main orbit entry here in webpack
-    // in prod mode would just load app entries not main entry
-    entry
-    res([])
-    // build node
-    // await buildApp(pkg.name, {
-    //   projectRoot: options.projectRoot,
-    //   entry: main,
-    //   target: 'node',
-    //   outputFile: 'index.node.js',
-    //   watch: options.watch,
-    // })
+  buildApp('workspace', {
+    projectRoot: options.workspaceRoot,
+    entry,
+    target: 'web',
+    outputFile: 'index.test.js',
   })
+  return appRoots.map(x => x.id)
 }
 
 async function getAppRoots(directory: string) {

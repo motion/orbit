@@ -86,7 +86,7 @@ export class OrbitAppsManager {
     },
   )
 
-  ensureAppBits = react(() => this.activeAppDefinitions, definitions => {})
+  // ensureAppBits = react(() => this.activeAppDefinitions, definitions => {})
 
   // let appsSubscription: Subscription = null
   // async function syncAppBitToPackageJson(spaceId: number) {

@@ -2,16 +2,13 @@ import { DockButton, FloatingCard, List, Tabs, usePosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
 
-import { orbitStaticApps } from '../../apps/orbitApps'
 import { useOm } from '../../om/om'
 
-export const isStaticApp = (identifier: string) => {
-  return !!orbitStaticApps.find(x => x.id === identifier)
-}
-
 export const useIsOnStaticApp = () => {
-  const om = useOm()
-  return isStaticApp(om.state.router.appId)
+  // const om = useOm()
+  return false
+  // TODO nate static apps
+  // return isStaticApp(om.state.router.appId)
 }
 
 export function OrbitDockShare({

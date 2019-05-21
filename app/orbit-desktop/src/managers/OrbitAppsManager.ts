@@ -1,10 +1,10 @@
-import { decorate, react, ensure } from '@o/kit'
+import { decorate, ensure, react } from '@o/kit'
 import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { FSWatcher, watch } from 'chokidar'
+import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { readWorkspaceAppDefs } from '../helpers/readWorkspaceAppDefs'
-import { FSWatcher, watch } from 'chokidar'
-import { join } from 'path'
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -17,8 +17,6 @@ export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'colors',
   'token',
 ]
-
-// const Config = getGlobalConfig()
 
 @decorate
 export class OrbitAppsManager {
@@ -87,6 +85,8 @@ export class OrbitAppsManager {
       })
     },
   )
+
+  ensureAppBits = react(() => this.activeAppDefinitions, definitions => {})
 
   // let appsSubscription: Subscription = null
   // async function syncAppBitToPackageJson(spaceId: number) {

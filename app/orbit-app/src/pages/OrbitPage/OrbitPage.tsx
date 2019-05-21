@@ -11,7 +11,6 @@ import * as ReactDOM from 'react-dom'
 import { getApps } from '../../apps/orbitApps'
 import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
-import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
@@ -63,7 +62,6 @@ const OrbitEffects = memo(() => {
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
-  useEnsureApps()
   return null
 })
 

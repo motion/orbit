@@ -2,7 +2,7 @@ import { ImmutableUpdateFn } from '@o/bridge'
 import { AppBit } from '@o/models'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { AppDefinition } from '../types/AppDefinition'
+import { AppDefinition } from '../types/AppTypes'
 import { useAppBit } from './useAppBit'
 
 export function useAppWithDefinition(

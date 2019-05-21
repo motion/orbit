@@ -1,5 +1,5 @@
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { AppDefinition } from '../types/AppDefinition'
+import { AppDefinition } from '../types/AppTypes'
 import { useStores } from './useStores'
 
 export function useAppDefinition(): AppDefinition {

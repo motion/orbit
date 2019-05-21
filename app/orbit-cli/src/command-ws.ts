@@ -2,7 +2,6 @@ import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { commandBuild } from './command-build'
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
@@ -15,12 +14,13 @@ export async function commandWs(options: CommandWSOptions) {
     process.exit(0)
   }
 
-  watchBuildWorkspace(options)
+  const appIdentifiers = await watchBuildWorkspace(options)
 
   try {
     reporter.info('Sending open workspace command')
     await orbitDesktop.command(AppOpenWorkspaceCommand, {
       path: options.workspaceRoot,
+      appIdentifiers,
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
@@ -33,14 +33,30 @@ export async function commandWs(options: CommandWSOptions) {
 async function watchBuildWorkspace(options: CommandWSOptions) {
   const directory = options.workspaceRoot
   const appRoots = await getAppRoots(directory)
-  if (!appRoots) return
-  for (const appRoot of appRoots) {
-    console.log('watching app', appRoot)
-    commandBuild({
-      projectRoot: appRoot,
-      watch: true,
+  if (!appRoots || !appRoots.length) {
+    console.log('No apps found')
+    return []
+  }
+  const entry = []
+  for (const { id, directory } of appRoots) {
+    entry.push({
+      [id]: directory,
     })
   }
+  return new Promise(res => {
+    // load all app entries + main orbit entry here in webpack
+    // in prod mode would just load app entries not main entry
+    entry
+    res([])
+    // build node
+    // await buildApp(pkg.name, {
+    //   projectRoot: options.projectRoot,
+    //   entry: main,
+    //   target: 'node',
+    //   outputFile: 'index.node.js',
+    //   watch: options.watch,
+    // })
+  })
 }
 
 async function getAppRoots(directory: string) {
@@ -71,9 +87,12 @@ async function getAppRoots(directory: string) {
 
   return await Promise.all(
     Object.keys(packages).map(async id => {
-      const pkgPath = join(nodeModuleDir, ...id.split('/'))
-      if (await pathExists(pkgPath)) {
-        return pkgPath
+      const directory = join(nodeModuleDir, ...id.split('/'))
+      if (await pathExists(directory)) {
+        return {
+          id,
+          directory,
+        }
       }
     }),
   )

@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 
-import { AppElements } from '../types/AppDefinition'
+import { AppElements } from '../types/AppTypes'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context', 'actions']
 

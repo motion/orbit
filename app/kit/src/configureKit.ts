@@ -1,18 +1,18 @@
 import { Context, createContext } from 'react'
 
 import { KitStores } from './stores'
-import { AppDefinition } from './types/AppDefinition'
+import { AppDefinition } from './types/AppTypes'
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
   handleLink?: (url: string) => void
-  getApps: () => AppDefinition[]
+  getLoadedApps: () => AppDefinition[]
 }
 
 export let config: ConfigureOpts = {
   StoreContext: createContext(null),
   handleLink: path => window.history.pushState(null, '', path),
-  getApps: null,
+  getLoadedApps: null,
 }
 
 export function configureKit(opts: ConfigureOpts) {

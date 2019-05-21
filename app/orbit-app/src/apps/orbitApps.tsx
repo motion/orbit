@@ -1,17 +1,5 @@
-import ConfluenceApp from '@o/confluence-app'
-import DriveApp from '@o/drive-app'
-import GithubApp from '@o/github-app'
-import GmailApp from '@o/gmail-app'
-import GraphApp from '@o/graphql-source-app'
-import JiraApp from '@o/jira-app'
 import { AppDefinition, configureKit, createApp } from '@o/kit'
-import ListsApp from '@o/lists-app'
-import PeopleApp from '@o/people-app'
-import PostgresApp from '@o/postgres-app'
-import SearchApp from '@o/search-app'
-import SlackApp from '@o/slack-app'
 import { Loading } from '@o/ui'
-import WebsiteApp from '@o/website-app'
 import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -80,7 +68,7 @@ if (module['hot']) {
     if (status === 'apply') {
       configureKit({
         StoreContext,
-        getApps,
+        getLoadedApps: getApps,
       })
     }
   })

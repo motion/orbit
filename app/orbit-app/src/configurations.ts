@@ -12,7 +12,7 @@ function configure() {
 
   configureKit({
     StoreContext,
-    getApps: require('./apps/orbitApps').getApps,
+    getLoadedApps: require('./apps/orbitApps').getApps,
     handleLink: path => {
       console.log('link', path)
       page.show(path)

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { AppDefinition } from './types/AppDefinition'
+
+import { AppDefinition } from './types/AppTypes'
 
 type AppLoadInfo = {
   // AppDefinition ID

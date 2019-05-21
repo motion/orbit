@@ -15,6 +15,7 @@
     { "path": "../../packages/color" },
     { "path": "../models" },
     { "path": "../stores" },
+    { "path": "../types" },
     { "path": "../bridge" }
   ]
 }

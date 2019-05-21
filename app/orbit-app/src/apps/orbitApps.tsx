@@ -37,7 +37,10 @@ export const orbitStaticApps: AppDefinition[] = [
   LoadingApp,
 ]
 
-let orbitDynamicApps = []
+let orbitDynamicApps = [
+  require('@o/postgres-app').default,
+  require('@o/demo-app-user-manager').default,
+]
 
 export function getApps(): AppDefinition[] {
   return [...orbitStaticApps, ...orbitDynamicApps]
@@ -46,14 +49,19 @@ export function getApps(): AppDefinition[] {
 // super hacky workaround for now
 // @ts-ignore
 const wrq = __webpack_require__
-const requireApp = x => wrq(`../../apps/${x}/src/index.tsx`)
+const requireApp = x => {
+  const req = `../../apps/${x}/src/index.tsx`
+  console.log('requiring', req)
+  return wrq(req)
+}
 window['requireApp'] = requireApp
 
 reaction(
   () => Desktop.state.workspaceState.appIdentifiers,
   async appIdentifiers => {
     const appDefinitions = appIdentifiers.map(x => {
-      return requireApp(x.replace('@o/', '')).default
+      const name = x.replace('@o/', '')
+      return requireApp(name).default
     })
     orbitDynamicApps = appDefinitions
   },

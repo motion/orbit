@@ -23,7 +23,7 @@ export type WebpackParams = {
   hot?: boolean
 }
 
-export async function makeWebpackConfig(appName: string, params: WebpackParams) {
+export async function makeWebpackConfig(_appName: string, params: WebpackParams) {
   let {
     outputFile,
     entry,

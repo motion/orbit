@@ -1,5 +1,7 @@
 import { AppDefinition, configureKit, createApp } from '@o/kit'
+import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
+import { reaction } from 'mobx'
 import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -35,31 +37,30 @@ export const orbitStaticApps: AppDefinition[] = [
   LoadingApp,
 ]
 
-let orbitDynamicApps = [
-  require('@o/postgres-app').default,
-  require('@o/demo-app-user-manager').default,
-]
+let orbitDynamicApps = []
 
 export function getApps(): AppDefinition[] {
   return [...orbitStaticApps, ...orbitDynamicApps]
 }
 
-// reaction(
-//   () => Desktop.state.workspaceState.appIdentifiers,
-//   async appIdentifiers => {
-//     const appImport = appIdentifiers
-//       .map(id => {
-//         return `require('${id}')`
-//       })
-//       .join(',')
+// super hacky workaround for now
+// @ts-ignore
+const wrq = __webpack_require__
+const requireApp = x => wrq(`../../apps/${x}/src/index.tsx`)
+window['requireApp'] = requireApp
 
-//     const appDefinitions = eval(appImport)
-//     console.log('orbitDynamicApps', appImport, appDefinitions)
-//   },
-//   {
-//     fireImmediately: true,
-//   },
-// )
+reaction(
+  () => Desktop.state.workspaceState.appIdentifiers,
+  async appIdentifiers => {
+    const appDefinitions = appIdentifiers.map(x => {
+      return requireApp(x.replace('@o/', '')).default
+    })
+    orbitDynamicApps = appDefinitions
+  },
+  {
+    fireImmediately: true,
+  },
+)
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {

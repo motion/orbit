@@ -3,6 +3,7 @@ import * as Path from 'path'
 import webpack from 'webpack'
 
 const TerserPlugin = require('terser-webpack-plugin')
+const TimeFixPlugin = require('time-fix-plugin')
 
 export type WebpackParams = {
   entry: string[]
@@ -77,9 +78,7 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
     target,
     mode,
     entry: {
-      main: hot
-        ? [`webpack-hot-middleware/client?name=${appName}&path=/__webpack_hmr`, ...entry]
-        : entry,
+      main: entry,
     },
     optimization: optimization[mode],
     output: {
@@ -91,9 +90,6 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
-
-      hotUpdateChunkFilename: `hot/${appName}-hot-update.js`,
-      hotUpdateMainFilename: `hot/${appName}-hot-update.json`,
     },
     // @ts-ignore
     devServer: devServer
@@ -211,6 +207,8 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
       ].filter(Boolean),
     },
     plugins: [
+      new TimeFixPlugin(),
+
       new webpack.DefinePlugin(defines),
 
       !dll &&

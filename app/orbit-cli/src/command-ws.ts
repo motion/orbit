@@ -7,7 +7,10 @@ import { join } from 'path'
 import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
-type CommandWSOptions = { workspaceRoot: string }
+type CommandWSOptions = {
+  workspaceRoot: string
+  clean: boolean
+}
 
 export async function commandWs(options: CommandWSOptions) {
   const appIdentifiers = await watchBuildWorkspace(options)
@@ -60,19 +63,19 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     dll: dllFile,
   }
   // we have to build apps once
-  if (!(await pathExists(dllFile))) {
+  if (options.clean || !(await pathExists(dllFile))) {
     console.log('building apps DLL once...')
     await buildApp('apps', {
       ...appsConf,
       watch: false,
-      hot: true,
+      // hot: true,
     })
   }
 
   const appsConfig = await getAppConfig('apps', {
     ...appsConf,
     watch: true,
-    hot: true,
+    // hot: true,
   })
 
   let entry = ''

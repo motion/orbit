@@ -61,15 +61,20 @@ function main() {
       'ws [workspace]',
       'Run an Orbit workspace',
       p =>
-        p.positional('workspace', {
-          type: 'string',
-          default: '.',
-          describe: 'The application to run',
-        }),
+        p
+          .positional('workspace', {
+            type: 'string',
+            default: '.',
+            describe: 'The application to run',
+          })
+          .option('clean', {
+            type: 'boolean',
+            default: false,
+          }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)
         let workspaceRoot = Path.resolve(cwd, argv.workspace)
-        commandWs({ workspaceRoot })
+        commandWs({ workspaceRoot, clean: !!argv.clean })
       },
     )
     .command(

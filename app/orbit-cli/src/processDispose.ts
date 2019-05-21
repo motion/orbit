@@ -8,6 +8,14 @@ process.on('SIGSEGV', dispose)
 process.on('SIGTERM', dispose)
 process.on('SIGQUIT', dispose)
 
+// log errors
+process.on('uncaughtException', err => {
+  console.log('uncaughtException', err)
+})
+process.on('unhandledRejection', err => {
+  console.log('unhandledRejection', err)
+})
+
 let disposers = []
 
 export function addProcessDispose(fn: Function) {

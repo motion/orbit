@@ -12,6 +12,8 @@ type CommandWSOptions = { workspaceRoot: string }
 export async function commandWs(options: CommandWSOptions) {
   const appIdentifiers = await watchBuildWorkspace(options)
 
+  console.log('what')
+
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {
@@ -58,14 +60,14 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     dll: dllFile,
   }
   // we have to build apps once
-  // if (!(await pathExists(dllFile))) {
-  console.log('building apps DLL once...')
-  await buildApp('apps', {
-    ...appsConf,
-    watch: false,
-    hot: true,
-  })
-  // }
+  if (!(await pathExists(dllFile))) {
+    console.log('building apps DLL once...')
+    await buildApp('apps', {
+      ...appsConf,
+      watch: false,
+      hot: true,
+    })
+  }
 
   const appsConfig = await getAppConfig('apps', {
     ...appsConf,

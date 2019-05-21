@@ -28,7 +28,7 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
     entry,
     publicPath = '/',
     projectRoot,
-    mode = 'development',
+    mode = 'development' as any,
     output,
     outputDir = Path.join(projectRoot, 'dist'),
     externals,
@@ -71,7 +71,7 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
 
   // const modulesDir = Path.resolve(projectRoot, '..', '..', 'node_modules')
 
-  const config = {
+  const config: webpack.Configuration = {
     watch,
     context: projectRoot,
     target,
@@ -91,7 +91,11 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+
+      hotUpdateChunkFilename: `hot/${appName}-hot-update.js`,
+      hotUpdateMainFilename: `hot/${appName}-hot-update.json`,
     },
+    // @ts-ignore
     devServer: devServer
       ? {
           stats: {
@@ -235,12 +239,13 @@ export async function makeWebpackConfig(appName: string, params: WebpackParams) 
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
+          context: projectRoot,
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
-    ].filter(Boolean),
+    ].filter(Boolean) as webpack.Plugin[],
   }
 
   console.log('made config', JSON.stringify(config, null, 2))

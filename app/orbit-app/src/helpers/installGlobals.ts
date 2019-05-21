@@ -35,12 +35,7 @@ import { log } from './log'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
-// @ts-ignore
-if (typeof __webpack_require__ !== 'undefined') {
-  // @ts-ignore
-  window['webpackData'] = __webpack_require__
-  window['require'] = require('webpack-runtime-require').Require
-}
+window['require'] = require('webpack-runtime-require').Require
 
 const toJS = obj => {
   const next = Mobx.toJS(obj)

@@ -20,24 +20,6 @@ const LoadingApp = createApp({
   app: () => createElement(Loading),
 })
 
-// "available" apps to install/use
-// eventually can be in a dynamic app store service
-
-const apps: AppDefinition[] = [
-  ListsApp,
-  SearchApp,
-  PeopleApp,
-  ConfluenceApp,
-  JiraApp,
-  GmailApp,
-  DriveApp,
-  GithubApp,
-  SlackApp,
-  WebsiteApp,
-  PostgresApp,
-  GraphApp,
-]
-
 // apps we use internally in orbit
 
 export const orbitStaticApps: AppDefinition[] = [
@@ -53,11 +35,11 @@ export const orbitStaticApps: AppDefinition[] = [
   LoadingApp,
 ]
 
-export const orbitApps: AppDefinition[] = [...orbitStaticApps, ...apps]
-
-export function getApps() {
-  return orbitApps
+export function getApps(): AppDefinition[] {
+  return [...orbitStaticApps, require('@o/postgres-app').default]
 }
+
+console.log('got', getApps())
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {

@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
-import { Contents } from 'gloss'
 import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
+import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -68,6 +68,11 @@ export const AppView = memoIsEqualDeep(
 
     const definition = getAppDefinition(props.identifier)
     let View = null
+
+    if (!definition) {
+      console.warn('no definition found', props)
+      return null
+    }
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {
       View = definition[props.viewType]

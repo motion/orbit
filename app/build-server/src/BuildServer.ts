@@ -8,29 +8,17 @@ export class BuildServer {
     const compiler = Webpack(this.config)
 
     this.server = new WebpackDevServer(compiler, {
-      publicPath: '/dist/',
+      publicPath: '/',
       hot: true,
       inline: true,
+      historyApiFallback: true,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
       stats: {
         color: true,
       },
     })
-
-    // const publicPath = '/dist/'
-
-    // this.server.use(
-    //   WebpackDevMiddleware(compiler, {
-    //     publicPath,
-    //   }),
-    // )
-
-    // this.server.use(
-    //   WebpackHotMiddleware(compiler, {
-    //     path: `/__webpack_hmr`,
-    //     log: console.log,
-    //     heartBeat: 10 * 1000,
-    //   }),
-    // )
   }
 
   start() {
@@ -40,12 +28,5 @@ export class BuildServer {
         res()
       })
     })
-
-    // return new Promise(res => {
-    //   this.server.listen(3999, () => {
-    //     console.log('listening on 3999')
-    //     res()
-    //   })
-    // })
   }
 }

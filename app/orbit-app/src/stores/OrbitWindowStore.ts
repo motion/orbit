@@ -44,9 +44,11 @@ export class OrbitWindowStore {
     async (_, { sleep }) => {
       // sleep here because often the socket is actually faster than the html
       await sleep()
-      App.setOrbitState({
-        size: [ORBIT_WIDTH, this.contentHeight],
-        position: [window.innerWidth - ORBIT_WIDTH - 10, 10],
+      App.setState({
+        orbitState: {
+          size: [ORBIT_WIDTH, this.contentHeight],
+          position: [window.innerWidth - ORBIT_WIDTH - 10, 10],
+        },
       })
     },
   )

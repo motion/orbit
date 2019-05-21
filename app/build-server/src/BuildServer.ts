@@ -18,7 +18,7 @@ export class BuildServer {
 
     this.server.use(
       WebpackHotMiddleware(compiler, {
-        path: `${publicPath}/__webpack_hmr`,
+        path: `/__webpack_hmr`,
         log: console.log,
         heartBeat: 10 * 1000,
       }),

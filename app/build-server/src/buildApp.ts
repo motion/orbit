@@ -5,11 +5,7 @@ import Webpack from 'webpack'
 import { getAppConfig } from './getAppConfig'
 import { WebpackParams } from './makeWebpackConfig'
 
-export type BuildAppProps = WebpackParams & {
-  devServer?: boolean
-}
-
-export async function buildApp(appName: string, props: BuildAppProps) {
+export async function buildApp(appName: string, props: WebpackParams) {
   const outputDir = join(props.projectRoot, 'dist')
   const config = await getAppConfig(appName, props)
 

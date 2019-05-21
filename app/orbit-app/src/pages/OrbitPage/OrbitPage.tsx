@@ -34,6 +34,8 @@ window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
 
+  console.log(123123)
+
   useLayoutEffect(() => {
     if (!IS_ELECTRON) {
       document.body.style.background = themes[themeStore.themeColor].background.toCSS()

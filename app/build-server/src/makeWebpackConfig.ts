@@ -18,6 +18,7 @@ export type WebpackParams = {
   watch?: boolean
   dll?: string
   dllReference?: string
+  devServer?: boolean
 }
 
 export async function makeWebpackConfig(_appName: string, params: WebpackParams) {
@@ -34,6 +35,7 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     watch,
     dll,
     dllReference,
+    devServer,
   } = params
 
   const entryDir = Array.isArray(entry)
@@ -90,16 +92,18 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devServer: {
-      stats: {
-        warnings: false,
-      },
-      historyApiFallback: true,
-      hot: mode === 'development',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    },
+    devServer: devServer
+      ? {
+          stats: {
+            warnings: false,
+          },
+          historyApiFallback: true,
+          hot: mode === 'development',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      : undefined,
     devtool: 'source-map',
     // mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
     externals: [externals, { electron: '{}' }],
@@ -236,6 +240,8 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean),
   }
+
+  console.log('made config', JSON.stringify(config, null, 2))
 
   return config
 }

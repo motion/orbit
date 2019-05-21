@@ -51,17 +51,18 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     entry: appEntries,
     target: 'web',
     outputFile: '[name].apps.js',
-    watch: false,
     output: {
       library: 'apps',
     },
     dll: dllFile,
   }
-
-  // if (!(await pathExists(dllFile))) {
   // we have to build apps once
-  console.log('building apps DLL...')
-  await buildApp('apps', appsConf)
+  // if (!(await pathExists(dllFile))) {
+  console.log('building apps DLL once...')
+  await buildApp('apps', {
+    ...appsConf,
+    watch: false,
+  })
   // }
 
   const appsConfig = await getAppConfig('apps', {

@@ -35,11 +35,31 @@ export const orbitStaticApps: AppDefinition[] = [
   LoadingApp,
 ]
 
+let orbitDynamicApps = [
+  require('@o/postgres-app').default,
+  require('@o/demo-app-user-manager').default,
+]
+
 export function getApps(): AppDefinition[] {
-  return [...orbitStaticApps, require('@o/postgres-app').default]
+  return [...orbitStaticApps, ...orbitDynamicApps]
 }
 
-console.log('got', getApps())
+// reaction(
+//   () => Desktop.state.workspaceState.appIdentifiers,
+//   async appIdentifiers => {
+//     const appImport = appIdentifiers
+//       .map(id => {
+//         return `require('${id}')`
+//       })
+//       .join(',')
+
+//     const appDefinitions = eval(appImport)
+//     console.log('orbitDynamicApps', appImport, appDefinitions)
+//   },
+//   {
+//     fireImmediately: true,
+//   },
+// )
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {

@@ -43,11 +43,12 @@ export async function readWorkspaceAppDefs(space: Space): Promise<AppDefinitions
   await Promise.all(
     Object.keys(packages).map(async id => {
       const pkgPath = join(nodeModuleDir, ...id.split('/'))
+
       if (await pathExists(pkgPath)) {
         try {
-          const entry = join(pkgPath, 'dist', 'index.node.js')
-          log.info(`Importing entry ${entry}`)
-          const nodeEntry = require(entry)
+          const nodeEntryPath = join(pkgPath, 'dist', 'index.node.js')
+          log.info(`Importing entry ${nodeEntryPath}`)
+          const nodeEntry = require(nodeEntryPath)
           if (!nodeEntry || !nodeEntry.default) {
             log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
             return

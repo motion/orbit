@@ -1,5 +1,6 @@
 import { Logger, resolveCommand } from '@o/kit'
 import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import { Desktop } from '@o/stores'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -14,7 +15,13 @@ type WorkspaceInfo = {
 export const AppOpenWorkspaceResolver = resolveCommand(
   AppOpenWorkspaceCommand,
   async ({ path, appIdentifiers }) => {
-    console.log('should load workspace', path, appIdentifiers)
+    Desktop.setState({
+      workspaceState: {
+        path,
+        appIdentifiers,
+      },
+    })
+
     const { identifier } = await loadWorkspace(path)
     console.log('got', identifier)
 

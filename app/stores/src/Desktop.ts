@@ -48,7 +48,10 @@ class DesktopStore {
   source = 'Desktop'
 
   state = deep({
-    appDefinitions: [] as string[],
+    workspaceState: {
+      path: '',
+      appIdentifiers: [] as string[],
+    },
     appState: {
       id: '',
       name: '',

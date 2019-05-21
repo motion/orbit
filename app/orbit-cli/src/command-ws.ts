@@ -39,8 +39,8 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     console.log('No apps found')
     return []
   }
+
   const dllFile = join(__dirname, 'manifest.json')
-  console.log('dllFile', dllFile)
 
   const appEntries = []
   for (const { id } of appRoots) {

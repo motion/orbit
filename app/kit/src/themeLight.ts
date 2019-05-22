@@ -8,6 +8,10 @@ const lightColor = '#444'
 const lightBackground = toColor('#fff')
 const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 
+const backgroundStrong = lightBackground.darken(0.025)
+const backgroundStronger = lightBackground.darken(0.05)
+const backgroundStrongest = lightBackground.darken(0.075)
+
 export const light = {
   alternates,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
@@ -15,9 +19,9 @@ export const light = {
   ...fromStyles({
     glintColor: [255, 255, 255, 0.85],
     background: lightBackground,
-    backgroundStrong: lightBackground.darken(0.025),
-    backgroundStronger: lightBackground.darken(0.05),
-    backgroundStrongest: lightBackground.darken(0.075),
+    backgroundStrong,
+    backgroundStronger,
+    backgroundStrongest,
     backgroundZebra: '#f6f7f9aa',
     backgroundHighlightActive: colors.blue.lighten(0.1),
     backgroundHighlight: colors.blue,
@@ -57,5 +61,6 @@ export const light = {
     cardBorderColor: [0, 0, 0, 0.1],
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
+    separatorBackground: backgroundStrong,
   }),
 }

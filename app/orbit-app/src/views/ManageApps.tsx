@@ -17,7 +17,7 @@ export function ManageApps() {
       <Templates.Message
         icon="app"
         title="No apps installed yet!"
-        subTitle="Use the sidebar to instally your first app."
+        subTitle="Use the sidebar to install your first app."
       />
     )
   }

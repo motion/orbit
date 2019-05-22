@@ -45,6 +45,7 @@ import {
   AppDevOpenCommand,
   AppOpenWorkspaceCommand,
   CloseAppCommand,
+  AppMetaCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -332,6 +333,7 @@ export class OrbitDesktopRoot {
         AppDevCloseCommand,
         AppOpenWorkspaceCommand,
         GetPIDCommand,
+        AppMetaCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -344,6 +346,12 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        resolveCommand(AppMetaCommand, async ({ identifier }) => {
+          console.log('resolve meta', identifier)
+          return {
+            apiTypes: {},
+          }
+        }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
         }),

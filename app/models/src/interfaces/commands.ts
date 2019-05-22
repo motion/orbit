@@ -22,6 +22,16 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 
 export const GetPIDCommand = new Command<number>('get-pid')
 
+// return extra information about app
+export const AppMetaCommand = new Command<
+  {
+    apiTypes: { [key: string]: { name: string; typeString: string; comment: string; types: any[] } }
+  },
+  {
+    identifier: string
+  }
+>('app-meta')
+
 export const AppOpenWindowCommand = new Command<
   boolean,
   {

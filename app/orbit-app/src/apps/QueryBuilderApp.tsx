@@ -1,4 +1,5 @@
-import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useTreeList } from '@o/kit'
+import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
+import { AppMetaCommand } from '@o/models'
 import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, useCallback, useMemo, useState } from 'react'
@@ -180,8 +181,14 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
   )
 }
 
+function useAppMeta(identifier: string) {
+  return useCommand(AppMetaCommand, { identifier })
+}
+
 const APIQueryBuild = memo((props: { id: number }) => {
   const [app, def] = useAppWithDefinition(+props.id)
+  const meta = useAppMeta(def.id)
+  console.log('got app meta', meta, app, def)
   return (
     <Layout type="row">
       <Pane flex={2} resizable>

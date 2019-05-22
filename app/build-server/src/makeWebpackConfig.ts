@@ -74,6 +74,7 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
       ...(target === 'node' && {
+        removeAvailableModules: true,
         sideEffects: true,
         providedExports: true,
         usedExports: true,

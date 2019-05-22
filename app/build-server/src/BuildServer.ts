@@ -5,13 +5,7 @@ import WebpackHotMiddleware from 'webpack-hot-middleware'
 
 const existsInCache = (middleware, path) => {
   try {
-    // console.log(
-    //   'trying for',
-    //   path,
-    //   middleware.fileSystem['data']['Users']['nw']['projects']['motion']['orbit'],
-    // )
     if (middleware.fileSystem.readFileSync(path)) {
-      console.log('FUCK YEA')
       return true
     }
   } catch {}
@@ -47,6 +41,9 @@ export class BuildServer {
   constructor(configs: { main: any; [key: string]: any }) {
     const { main, ...apps } = configs
 
+    // you have to do it this janky ass way because webpack just isnt really great at
+    // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
+
     // apps first, then fallback to main
     for (const name in apps) {
       const config = apps[name]
@@ -58,53 +55,6 @@ export class BuildServer {
     const { devMiddleware, hotMiddleware } = getMiddleware('main', main)
     this.server.use(devMiddleware)
     this.server.use(hotMiddleware)
-
-    // let resolved = false
-
-    // for (const [index, name] of this.configNames.entries()) {
-    //   const config = this.configs[index]
-    //   const compiler = Webpack(config)
-    //   const publicPath = config.output.publicPath
-
-    //   const devMiddleware = WebpackDevMiddleware(compiler, {
-    //     publicPath,
-    //   })
-    //   const hotMiddleware = WebpackHotMiddleware(compiler, {
-    //     path: `/__webpack_hmr_${name}`,
-    //     log: console.log,
-    //     heartBeat: 10 * 1000,
-    //   })
-
-    //   this.server.use((req, res, next) => {
-    //     console.log('got one', index, req.url, resolved)
-
-    //     if (index === 1 && resolved === false) {
-    //       devMiddleware(req, res, next)
-    //       return
-    //     }
-
-    //     resolved = false
-    //     if (existsInCache(devMiddleware, config.output.path + req.url)) {
-    //       console.log('exists in cache')
-    //       resolved = true
-    //       devMiddleware(req, res, next)
-    //     } else {
-    //       next()
-    //     }
-    //   })
-    //   this.server.use((req, res, next) => {
-    //     if (index === 1 && resolved === false) {
-    //       hotMiddleware(req, res, next)
-    //       return
-    //     }
-
-    //     if (existsInCache(devMiddleware, config.output.path + req.url)) {
-    //       hotMiddleware(req, res, next)
-    //     } else {
-    //       next()
-    //     }
-    //   })
-    // }
   }
 
   start() {

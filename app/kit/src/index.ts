@@ -1,3 +1,5 @@
+import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
+
 export { Templates } from './templates/all'
 export { produce } from './helpers/produce'
 export * from '@o/orbit-types'
@@ -93,3 +95,7 @@ export * from './hooks/useNLP'
 export * from './hooks/useAppDefinition'
 export * from './hooks/useIsActive'
 export * from './views/ScopedState'
+
+export const __SERIOUSLY_SECRET = {
+  reloadAppDefinitions,
+}

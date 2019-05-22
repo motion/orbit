@@ -86,7 +86,22 @@ export class OrbitAppsManager {
     },
   )
 
-  // ensureAppBits = react(() => this.activeAppDefinitions, definitions => {})
+  // dont think we want this, we want to let them install via interface
+  // ensureAppBits = react(
+  //   () => this.activeAppDefinitions,
+  //   async definitions => {
+  //     const spaceId = this.activeSpace.id
+  //     for (const id in definitions) {
+  //       const def = definitions[id]
+  //       if (!(await getRepository(AppEntity).findOne({ where: { spaceId, identifier: id } }))) {
+  //         await getRepository(AppEntity).create({
+  //           name: def.name,
+  //           identifier: id
+  //         })
+  //       }
+  //     }
+  //   },
+  // )
 
   // let appsSubscription: Subscription = null
   // async function syncAppBitToPackageJson(spaceId: number) {

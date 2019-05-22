@@ -1,4 +1,4 @@
-import { AppDefinition, configureKit, createApp } from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -53,6 +53,7 @@ reaction(
   async appIdentifiers => {
     console.log('appIdentifiers updated', appIdentifiers, requireDynamicApps())
     dynamicApps = requireDynamicApps()
+    __SERIOUSLY_SECRET.reloadAppDefinitions()
   },
 )
 

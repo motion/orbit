@@ -2,7 +2,7 @@ import { AppBit } from '@o/models'
 import { IconProps, SVG, toColor, useTheme, View } from '@o/ui'
 import React from 'react'
 
-import { getAppDefinition } from '../helpers/getAppDefinition'
+import { useAppDefinition } from '../hooks/useAppDefinition'
 import { appIcons } from './icons'
 
 export type AppIconProps = Partial<IconProps> & { app: AppBit }
@@ -21,9 +21,9 @@ export function AppIconInner({
   let name = props.name
   let iconSrc
   let svgProps
+  let def = useAppDefinition(name)
 
   if (!appIcons[name]) {
-    let def = getAppDefinition(name)
     if (def) {
       iconSrc = theme.background.isDark() ? def.iconLight || def.icon : def.icon
     } else {

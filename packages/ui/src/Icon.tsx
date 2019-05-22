@@ -73,7 +73,6 @@ export const PlainIcon = ({ style, ignoreColor, svg, ...props }: IconProps) => {
   }
 
   if (isDefined(svg)) {
-    console.log('got svg', props, svg)
     return (
       <View
         width={size}

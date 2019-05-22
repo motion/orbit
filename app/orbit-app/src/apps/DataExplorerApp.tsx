@@ -5,7 +5,6 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { useUserDataAppDefinitions } from './orbitApps'
 import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
 
 export default createApp({
@@ -17,7 +16,7 @@ export default createApp({
 
 function QueryBuilder(props: AppProps) {
   const om = useOm()
-  const dataApps = useUserDataAppDefinitions()
+  const dataApps = useActiveDataApps()
 
   if (!dataApps.length) {
     return (

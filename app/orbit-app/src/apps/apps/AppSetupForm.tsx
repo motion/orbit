@@ -19,6 +19,7 @@ export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
   return (
     <Form
       submitButton
+      fields={def.setup}
       onSubmit={async values => {
         app.data.setup = values
 

@@ -11,7 +11,6 @@ export function SubTitle({ verticalSpacing = 1, children, ...props }) {
       size={1.1}
       alignItems="center"
       flexFlow="row"
-      margin={[3 * verticalSpacing, 0, 5 * verticalSpacing]}
       {...Config.defaultProps.title}
       {...props}
     >

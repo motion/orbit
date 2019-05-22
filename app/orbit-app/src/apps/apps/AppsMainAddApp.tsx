@@ -1,15 +1,5 @@
 import { useAppDefinition } from '@o/kit'
-import {
-  Button,
-  ButtonProps,
-  Message,
-  Paragraph,
-  Row,
-  Section,
-  Space,
-  SubTitle,
-  TitleRow,
-} from '@o/ui'
+import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle } from '@o/ui'
 import React from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
@@ -21,50 +11,43 @@ export function AppsMainAddApp(props: { identifier: string }) {
 
   return (
     <Section
-      pad="xl"
+      pad="lg"
       space
-      titleElement={
-        <TitleRow
-          backgrounded
-          pad="xl"
-          space
-          icon={props.identifier}
-          title={def.name}
-          after={
-            <>
-              {!hasSetup && def.sync && (
-                <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>
-                  Authenticate and add
-                </Button>
-              )}
-              {!def.sync && (
-                <Button alt="action" icon="add">
-                  Install
-                </Button>
-              )}
-            </>
-          }
-          below={
-            <Row space>
-              <SubItem>{def['author'] || 'anonymous'}</SubItem>
-              <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
-            </Row>
-          }
-        />
+      icon={props.identifier}
+      title={def.name}
+      titlePad
+      titleBorder
+      afterTitle={
+        <>
+          {!hasSetup && def.sync && (
+            <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>
+              Authenticate and add
+            </Button>
+          )}
+          {!def.sync && !def.setup && (
+            <Button alt="confirm" icon="plus" iconAfter>
+              Install
+            </Button>
+          )}
+        </>
+      }
+      belowTitle={
+        <Row space>
+          <SubItem>{def['author'] || 'anonymous'}</SubItem>
+          <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
+        </Row>
       }
     >
       {hasSetup && (
         <Section space>
-          <SubTitle>Setup</SubTitle>
+          <Section bordered pad title="Setup" titleSize={0.85}>
+            <AppSetupForm def={def} />
+          </Section>
           <Message alt="warn" icon="warn">
             This app stores data. This data will be stored privately, only on your device. If your
             team enables decentralized key-sharing, it will sync <strong>directly</strong> to
             authorized users in this space.
           </Message>
-          <Section bordered pad title="Setup">
-            <AppSetupForm def={def} />
-          </Section>
-          <Space />
         </Section>
       )}
 

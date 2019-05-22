@@ -82,8 +82,6 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     },
   }
 
-  // const modulesDir = Path.resolve(projectRoot, '..', '..', 'node_modules')
-
   const config: webpack.Configuration = {
     watch,
     context: projectRoot,
@@ -103,8 +101,8 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
 
-      hotUpdateChunkFilename: `${_appName}.hot-update.js`,
-      hotUpdateMainFilename: `${_appName}.hot-update.json`,
+      hotUpdateChunkFilename: `hot-update.js`,
+      hotUpdateMainFilename: `hot-update.json`,
     },
     // @ts-ignore
     devServer: devServer

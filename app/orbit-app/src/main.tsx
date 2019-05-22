@@ -62,6 +62,9 @@ async function main() {
   // we've already started, ignore
   if (getGlobalConfig()) return
 
+  // until resolved: https://github.com/webpack-contrib/webpack-hot-middleware/pull/362
+  console.group = console.groupCollapsed
+
   console.timeEnd('splash')
 
   // if you want to show a loading screen, do it above here

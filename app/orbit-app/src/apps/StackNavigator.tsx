@@ -91,6 +91,10 @@ export class StackNav {
       }
     }
     this.props.setState(next => {
+      if (!next) {
+        console.warn('no item?')
+        return
+      }
       console.log('adding to', next)
       next.stack = [
         ...next.stack,

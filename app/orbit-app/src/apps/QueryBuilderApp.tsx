@@ -96,8 +96,6 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
     [dataApps],
   )
 
-  console.log('now we have', dataApps)
-
   return (
     <Section
       pad="xl"

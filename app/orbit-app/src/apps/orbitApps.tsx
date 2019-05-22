@@ -48,6 +48,10 @@ export function getApps(): AppDefinition[] {
   return [...orbitStaticApps, ...dynamicApps]
 }
 
+export function getUserApps(): AppDefinition[] {
+  return dynamicApps
+}
+
 reaction(
   () => Desktop.state.workspaceState.appIdentifiers,
   async appIdentifiers => {

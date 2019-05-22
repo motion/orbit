@@ -53,7 +53,7 @@ const HomeButton = memo(
           opacity: 1,
         }}
         color={invertLightness(theme.color, 0.5)}
-        name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
+        name={state.navHovered ? 'orbit-home' : `orbit-${icon}`}
         size={22}
         onMouseUp={e => {
           e.stopPropagation()

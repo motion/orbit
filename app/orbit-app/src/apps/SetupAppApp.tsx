@@ -1,9 +1,20 @@
 import { App, AppIcon, createApp } from '@o/kit'
-import { Button, List, ListItemProps, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
+import {
+  Button,
+  List,
+  ListItemProps,
+  Section,
+  Slider,
+  SliderPane,
+  Text,
+  Title,
+  Toolbar,
+  View,
+} from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
-import { defaultApps } from '../stores/NewAppStore'
+import { getUserApps } from './orbitApps'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -15,11 +26,11 @@ const descriptions = {
 
 function SetupAppMain() {
   const { actions } = useOm()
-  const items = defaultApps.map(app => ({
+  const items: ListItemProps[] = getUserApps().map(app => ({
     title: app.name,
-    identifier: app.identifier,
-    subTitle: descriptions[app.identifier],
-    icon: <AppIcon app={app} />,
+    identifier: app.id,
+    subTitle: app.description || 'No description',
+    icon: <AppIcon app={{ identifier: app.id, colors: ['red', 'pink'] }} />,
     iconBefore: true,
     iconProps: {
       size: 44,
@@ -100,10 +111,10 @@ function SetupAppMain() {
             width="70%"
             background="transparent"
             margin="auto"
-            height="70%"
+            height="80%"
             title="New app"
             bordered
-            subTitle="Choose an app from your library to add to space."
+            subTitle="Choose from your apps."
           >
             <List
               searchable

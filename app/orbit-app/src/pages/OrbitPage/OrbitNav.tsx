@@ -37,14 +37,6 @@ export const OrbitNav = memo(
       return null
     }
 
-    if (!activeAppsSorted.length || !activeAppsSorted.length) {
-      return (
-        <OrbitNavClip>
-          <OrbitNavChrome />
-        </OrbitNavClip>
-      )
-    }
-
     const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
     const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 150 : 120
 
@@ -101,7 +93,7 @@ export const OrbitNav = memo(
           }
         },
       )
-      .filter(Boolean)
+      .filter(x => !!x)
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
     const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 0
@@ -135,11 +127,9 @@ export const OrbitNav = memo(
               iconAdjustOpacity={-0.2}
               onClick={actions.router.toggleSetupAppPage}
             />
-
             {permanentItems.map(props => (
               <OrbitTab key={props.app.id} {...props} />
             ))}
-
             {/* Pinned tabs */}
             <SortableTabs
               className="hide-scrollbars"
@@ -156,7 +146,6 @@ export const OrbitNav = memo(
               overflowX="auto"
               overflowY="hidden"
             />
-
             <SortableTabs
               className="hide-scrollbars"
               axis="x"
@@ -173,7 +162,6 @@ export const OrbitNav = memo(
               overflowX="auto"
               overflowY="hidden"
             />
-
             {isOnSetupApp && (
               <OrbitTab
                 width={tabWidth}

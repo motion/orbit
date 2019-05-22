@@ -1,7 +1,17 @@
 import { invertLightness } from '@o/color'
 import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -198,7 +208,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         distance={8}
         sizeRadius
         background={(theme => theme.backgroundStrongest) as any}
-        adjust={[80, 0]}
+        adjust={[10, 0]}
         {...rest}
       >
         {children}

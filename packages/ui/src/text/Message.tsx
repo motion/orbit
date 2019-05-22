@@ -13,7 +13,7 @@ export const Message = gloss<SizedSurfaceProps>(
 )
 
 const defaultProps: Partial<SizedSurfaceProps> = {
-  sizeLineHeight: 1.2,
+  sizeLineHeight: 1.3,
   className: 'text',
   hoverStyle: false,
   activeStyle: false,

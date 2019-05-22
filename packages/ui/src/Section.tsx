@@ -120,7 +120,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   } = props
   const hasTitle = isDefined(title, afterTitle)
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered || titleElement) ? pad : null)
-  const spaceSize = !!space ? selectDefined(size, space) : space
+  const spaceSize = selectDefined(space, size)
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)
 
@@ -207,9 +207,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
           overflow="hidden"
+          suspense={<Loading />}
           {...viewProps}
         >
-          <Suspense fallback={<Loading />}>{children}</Suspense>
+          {children}
         </Col>
       </Reset>
       {below}

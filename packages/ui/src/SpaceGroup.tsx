@@ -65,7 +65,9 @@ export function createSpacedChildren({
       </>
     )
   }
+
   const spaceElement = separator || <Space size={space} />
+
   return (
     <>
       {beforeSpace}

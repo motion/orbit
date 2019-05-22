@@ -5,7 +5,7 @@ import { Text, TextProps } from './text/Text'
 export type SeparatorProps = TextProps
 
 export const Separator = gloss<SeparatorProps>(Text, {
-  paddingTop: 18,
+  paddingTop: 24,
   paddingLeft: 10,
   paddingRight: 10,
   paddingBottom: 4,

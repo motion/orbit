@@ -1,5 +1,15 @@
 import { useAppDefinition } from '@o/kit'
-import { Button, ButtonProps, Message, Paragraph, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
+import {
+  Button,
+  ButtonProps,
+  Message,
+  Paragraph,
+  Row,
+  Section,
+  Space,
+  SubTitle,
+  TitleRow,
+} from '@o/ui'
 import React from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'

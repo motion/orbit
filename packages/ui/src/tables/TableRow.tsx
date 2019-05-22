@@ -136,8 +136,8 @@ export const TableRow = memo(function TableRow({
 
 const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
   if (props.highlighted) {
-    const bg = props.highlightedBackgroundColor || theme.highlightBackground
-    return props.even && props.zebra ? bg.lighten(0.05) : bg
+    const bg = theme.backgroundHighlight || theme.backgroundActive
+    return props.even && props.zebra ? bg.lighten(0.025) : bg
   } else {
     if (!props.background && props.row) {
       const cat = props.row.category

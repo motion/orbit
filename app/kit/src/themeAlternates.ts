@@ -6,6 +6,14 @@ import { colors, transparent } from './themeColors'
 
 const colorThemes: ThemeSet = {
   // light
+  lightGray: fromStyles({
+    glintColor: transparent,
+    color: '#444',
+    iconColor: '#444',
+    background: colors.gray.alpha(0.2),
+    backgroundHover: colors.gray.alpha(0.2),
+    backgroundActive: colors.gray.alpha(0.2),
+  }),
   lightRed: fromStyles({
     glintColorBottom: transparent,
     glintColor: [255, 255, 255, 0.25],
@@ -39,6 +47,14 @@ const colorThemes: ThemeSet = {
     background: colors.lightOrange,
   }),
   // regular
+  gray: fromStyles({
+    glintColor: transparent,
+    color: '#444',
+    iconColor: '#444',
+    background: colors.gray,
+    backgroundHover: colors.gray,
+    backgroundActive: colors.gray,
+  }),
   red: fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: '#fff',

@@ -43,7 +43,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
           <Section bordered pad title="Setup" titleSize={0.85}>
             <AppSetupForm def={def} />
           </Section>
-          <Message alt="warn" icon="warn">
+          <Message alt="lightGray" icon="warn">
             This app stores data. This data will be stored privately, only on your device. If your
             team enables decentralized key-sharing, it will sync <strong>directly</strong> to
             authorized users in this space.
@@ -76,5 +76,5 @@ export function AppsMainAddApp(props: { identifier: string }) {
 }
 
 function SubItem(props: ButtonProps) {
-  return <Button chromeless fontWeight={500} {...props} />
+  return <Button chromeless {...props} />
 }

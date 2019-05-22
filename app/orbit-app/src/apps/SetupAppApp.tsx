@@ -93,7 +93,8 @@ function SetupAppMain() {
             background="transparent"
             margin="auto"
             height="80%"
-            title="Setup visual app"
+            titleSize={0.85}
+            title="Add app to workspace"
             bordered
             subTitle="Choose from your installed apps."
           >

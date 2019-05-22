@@ -174,11 +174,11 @@ const isRightClick = e =>
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const getSeparatorProps = (items: any[], item: any, index: number) => {
-  if (!item || !item.group) {
+  if (!item || !item.groupName) {
     return null
   }
-  if (index === 0 || item.group !== items[index - 1].group) {
-    return { separator: `${item.group}` }
+  if (index === 0 || item.groupName !== items[index - 1].groupName) {
+    return { separator: `${item.groupName}` }
   }
   return null
 }

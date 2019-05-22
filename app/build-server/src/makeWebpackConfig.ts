@@ -55,18 +55,26 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
 
   const optimization = {
     production: {
-      splitChunks: false,
+      usedExports: true,
+      splitChunks: {
+        chunks: 'async',
+        name: false,
+      },
+      ...(target === 'node' && {
+        splitChunks: false,
+      }),
     },
     development: {
       noEmitOnErrors: true,
       removeAvailableModules: true,
-      // namedModules: true,
-      // remove some stuff even in dev
-      // concatenateModules: true,
-      sideEffects: true,
-      providedExports: true,
-      usedExports: true,
-      splitChunks: false,
+      // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
+      // so optimize away side effects in node
+      ...(target === 'node' && {
+        sideEffects: true,
+        providedExports: true,
+        usedExports: true,
+        splitChunks: false,
+      }),
     },
   }
 
@@ -104,8 +112,8 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
           },
         }
       : undefined,
-    devtool: 'source-map',
-    // mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool:
+      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
     externals: [externals, { electron: '{}' }],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -222,9 +230,27 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
 
       mode === 'production' &&
         new TerserPlugin({
+          sourceMap: true,
           parallel: true,
+          cache: true,
           terserOptions: {
-            ecma: 6,
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 6,
+              warnings: false,
+            },
+            mangle: {
+              safari10: true,
+            },
+            keep_classnames: true,
+            output: {
+              ecma: 6,
+              comments: false,
+              beautify: false,
+              ascii_only: true,
+            },
           },
         }),
 

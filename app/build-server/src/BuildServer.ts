@@ -3,45 +3,108 @@ import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
 
-// import WebpackDevServer from 'webpack-dev-server'
+const existsInCache = (middleware, path) => {
+  try {
+    // console.log(
+    //   'trying for',
+    //   path,
+    //   middleware.fileSystem['data']['Users']['nw']['projects']['motion']['orbit'],
+    // )
+    if (middleware.fileSystem.readFileSync(path)) {
+      console.log('FUCK YEA')
+      return true
+    }
+  } catch {}
+  return false
+}
+
+const resolveIfExists = (middleware, config) => (req, res, next) => {
+  if (existsInCache(middleware, config.output.path + req.url)) {
+    middleware(req, res, next)
+  } else {
+    next()
+  }
+}
+
+const getMiddleware = (name: string, config: any) => {
+  const compiler = Webpack(config)
+  const publicPath = config.output.publicPath
+  const devMiddleware = WebpackDevMiddleware(compiler, {
+    publicPath,
+  })
+  const hotMiddleware = WebpackHotMiddleware(compiler, {
+    path: `/__webpack_hmr_${name}`,
+    log: console.log,
+    heartBeat: 10 * 1000,
+  })
+  return { devMiddleware, hotMiddleware }
+}
+
 export class BuildServer {
   server = express()
-  // server: WebpackDevServer
+  middlewares = []
 
-  constructor(configs: any[], configNames: string[]) {
-    for (const [index, name] of configNames.entries()) {
-      const config = configs[index]
-      const compiler = Webpack(config)
-      const publicPath = config.output.publicPath
+  constructor(configs: { main: any; [key: string]: any }) {
+    const { main, ...apps } = configs
 
-      console.log('serving at', publicPath)
-
-      this.server.use(
-        WebpackDevMiddleware(compiler, {
-          publicPath,
-        }),
-      )
-      this.server.use(
-        WebpackHotMiddleware(compiler, {
-          path: `/__webpack_hmr_${name}`,
-          log: console.log,
-          heartBeat: 10 * 1000,
-        }),
-      )
+    // apps first, then fallback to main
+    for (const name in apps) {
+      const config = apps[name]
+      const { devMiddleware, hotMiddleware } = getMiddleware(name, config)
+      this.server.use(resolveIfExists(devMiddleware, config))
+      this.server.use(resolveIfExists(hotMiddleware, config))
     }
 
-    // this.server = new WebpackDevServer(compiler, {
-    //   publicPath: '/',
-    //   hot: true,
-    //   inline: true,
-    //   historyApiFallback: true,
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //   },
-    //   stats: {
-    //     color: true,
-    //   },
-    // })
+    const { devMiddleware, hotMiddleware } = getMiddleware('main', main)
+    this.server.use(devMiddleware)
+    this.server.use(hotMiddleware)
+
+    // let resolved = false
+
+    // for (const [index, name] of this.configNames.entries()) {
+    //   const config = this.configs[index]
+    //   const compiler = Webpack(config)
+    //   const publicPath = config.output.publicPath
+
+    //   const devMiddleware = WebpackDevMiddleware(compiler, {
+    //     publicPath,
+    //   })
+    //   const hotMiddleware = WebpackHotMiddleware(compiler, {
+    //     path: `/__webpack_hmr_${name}`,
+    //     log: console.log,
+    //     heartBeat: 10 * 1000,
+    //   })
+
+    //   this.server.use((req, res, next) => {
+    //     console.log('got one', index, req.url, resolved)
+
+    //     if (index === 1 && resolved === false) {
+    //       devMiddleware(req, res, next)
+    //       return
+    //     }
+
+    //     resolved = false
+    //     if (existsInCache(devMiddleware, config.output.path + req.url)) {
+    //       console.log('exists in cache')
+    //       resolved = true
+    //       devMiddleware(req, res, next)
+    //     } else {
+    //       next()
+    //     }
+    //   })
+    //   this.server.use((req, res, next) => {
+    //     if (index === 1 && resolved === false) {
+    //       hotMiddleware(req, res, next)
+    //       return
+    //     }
+
+    //     if (existsInCache(devMiddleware, config.output.path + req.url)) {
+    //       hotMiddleware(req, res, next)
+    //     } else {
+    //       next()
+    //     }
+    //   })
+    // }
   }
 
   start() {

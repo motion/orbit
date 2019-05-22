@@ -43,8 +43,6 @@ export async function makeWebpackConfig(params: WebpackParams) {
     name,
   } = params
 
-  console.log('params', params)
-
   const entryDir = __dirname
   const target = params.target || 'electron-renderer'
   const buildNodeModules = [

@@ -54,7 +54,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     context: nodeModuleDir,
     entry: appEntries,
     target: 'web',
-    publicPath: '/apps/',
+    publicPath: '/',
     outputFile: '[name].apps.js',
     output: {
       library: 'apps',
@@ -100,7 +100,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   )
 
   const wsConfig = await getAppConfig({
-    name: 'workspace',
+    name: 'main',
     context: options.workspaceRoot,
     entry: [entry],
     target: 'web',
@@ -111,7 +111,10 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     dllReference: dllFile,
   })
 
-  const server = new BuildServer([wsConfig, appsConfig], ['apps', 'workspace'])
+  const server = new BuildServer({
+    main: wsConfig,
+    apps: appsConfig,
+  })
 
   await server.start()
 

@@ -15,7 +15,7 @@ export function ManageApps() {
   if (!activeApps.length) {
     return (
       <Templates.Message
-        icon="wait"
+        icon="app"
         title="No apps installed yet!"
         subTitle="Use the sidebar to instally your first app."
       />

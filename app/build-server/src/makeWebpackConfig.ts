@@ -102,6 +102,9 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+
+      hotUpdateChunkFilename: `${_appName}.hot-update.js`,
+      hotUpdateMainFilename: `${_appName}.hot-update.json`,
     },
     // @ts-ignore
     devServer: devServer

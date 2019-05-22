@@ -89,8 +89,6 @@ export function AppsIndex() {
 export function AppsMain(props: AppProps) {
   const [app, definition] = useAppWithDefinition(+props.subId)
 
-  console.log('props', props)
-
   if (props.subType === 'explorer-graph') {
     return <GraphExplorer />
   }

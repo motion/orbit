@@ -1,4 +1,4 @@
-import { useActiveAppsSorted } from '@o/kit'
+import { Templates, useActiveAppsSorted } from '@o/kit'
 import { Section, SelectableGrid, useGet } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -11,6 +11,16 @@ export function ManageApps() {
   const activeApps = useActiveAppsSorted()
   const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
+
+  if (!activeApps.length) {
+    return (
+      <Templates.Message
+        icon="wait"
+        title="No apps installed yet!"
+        subTitle="Use the sidebar to instally your first app."
+      />
+    )
+  }
 
   return (
     <Section padInner="lg" background="transparent">

@@ -56,6 +56,8 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
   const optimization = {
     production: {
       usedExports: true,
+      providedExports: true,
+      sideEffects: true,
       splitChunks: {
         chunks: 'async',
         name: false,
@@ -66,14 +68,15 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     },
     development: {
       noEmitOnErrors: true,
-      removeAvailableModules: true,
+      removeAvailableModules: false,
+      namedModules: true,
+      splitChunks: false,
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
       // so optimize away side effects in node
       ...(target === 'node' && {
         sideEffects: true,
         providedExports: true,
         usedExports: true,
-        splitChunks: false,
       }),
     },
   }

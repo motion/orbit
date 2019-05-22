@@ -4,7 +4,7 @@ import { IconProps, View } from '@o/ui'
 import React, { memo, forwardRef } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
-import { appIcons, icons } from './icons'
+import { appIcons } from './icons'
 
 export const Icon = memo(
   forwardRef(function Icon(props: IconProps & { svg?: string }, ref) {
@@ -13,8 +13,9 @@ export const Icon = memo(
     const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
     // image based source icons
-    const sourceIcon = useAppIcon(props)
-    if (sourceIcon) {
+    const appIcon = useAppIcon(props)
+
+    if (appIcon) {
       const sizeProps = {
         width: size,
         height: size,
@@ -27,12 +28,12 @@ export const Icon = memo(
           justifyContent="center"
           style={style}
           opacity={opacity}
-          {...(sourceIcon ? adjust[name] : adjust.icon)}
+          {...(appIcon ? adjust[name] : adjust.icon)}
           {...sizeProps}
           {...props}
           className={`ui-icon ${props.className || ''}`}
         >
-          {sourceIcon}
+          {appIcon}
         </View>
       )
     }
@@ -40,8 +41,6 @@ export const Icon = memo(
     if (appIcons[name]) {
       return <AppIconInner {...props} />
     }
-
-    const svg = props.svg || icons[name]
 
     return (
       <UI.PlainIcon
@@ -51,7 +50,6 @@ export const Icon = memo(
         style={style}
         opacity={opacity}
         {...restProps}
-        svg={svg}
       />
     )
   }),

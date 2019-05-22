@@ -1,6 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Base, Theme } from 'gloss'
-import React, { forwardRef, Suspense } from 'react'
+import React, { forwardRef } from 'react'
 
 import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'

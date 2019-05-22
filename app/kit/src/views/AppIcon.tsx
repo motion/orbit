@@ -15,9 +15,13 @@ export function AppIconInner({
   style,
   ...props
 }: Partial<AppIconProps>) {
-  // const theme = useTheme() props.color || theme.iconColor ||
-  const fill = toColor('#fff').hex()
   const theme = useTheme()
+  let fill
+  try {
+    fill = toColor(props.color || theme.color).hex()
+  } catch {
+    fill = props.color || 'currentColor'
+  }
   let name = props.name
   let iconSrc
   let svgProps
@@ -66,7 +70,7 @@ function replaceAppBackground(iconSrc, bg) {
   const matches = iconSrc.match(idReplace)
 
   if (!matches) {
-    console.warn('no matches')
+    console.warn('no matches', iconSrc)
     return iconSrc
   }
 

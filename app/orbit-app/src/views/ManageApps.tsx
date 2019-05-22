@@ -1,14 +1,17 @@
 import { Templates, useActiveAppsSorted } from '@o/kit'
-import { Section, SelectableGrid, useGet } from '@o/ui'
+import { Section, SelectableGrid, useGet, Button, SubTitle } from '@o/ui'
 import React, { useCallback } from 'react'
+import pluralize from 'pluralize'
 
 import { useAppSortHandler } from '../hooks/useAppSortHandler'
 import { useOm } from '../om/om'
 import { AppIconContainer, LargeIcon, OrbitAppIcon } from './OrbitAppIcon'
+import { useUserVisualApps } from '../apps/orbitApps'
 
 export function ManageApps() {
   const om = useOm()
   const activeApps = useActiveAppsSorted()
+  const viewAppDefs = useUserVisualApps()
   const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
 
@@ -17,8 +20,16 @@ export function ManageApps() {
       <Templates.Message
         icon="app"
         title="No apps installed yet!"
-        subTitle="Use the sidebar to install your first app."
-      />
+        subTitle="Use the sidebar to setup data source apps."
+      >
+        <SubTitle>
+          You have {viewAppDefs.length} view {pluralize('app', viewAppDefs.length)}, you can set it
+          up in the toolbar, or:
+        </SubTitle>
+        <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'setupApp' })}>
+          Setup app
+        </Button>
+      </Templates.Message>
     )
   }
 

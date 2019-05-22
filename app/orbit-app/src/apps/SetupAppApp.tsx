@@ -14,7 +14,7 @@ import {
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
-import { getUserApps } from './orbitApps'
+import { getUserApps, useUserVisualApps } from './orbitApps'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -26,7 +26,7 @@ const descriptions = {
 
 function SetupAppMain() {
   const { actions } = useOm()
-  const items: ListItemProps[] = getUserApps().map(app => ({
+  const items: ListItemProps[] = useUserVisualApps().map(app => ({
     title: app.name,
     identifier: app.id,
     subTitle: app.description || 'No description',
@@ -112,9 +112,9 @@ function SetupAppMain() {
             background="transparent"
             margin="auto"
             height="80%"
-            title="New app"
+            title="Setup visual app"
             bordered
-            subTitle="Choose from your apps."
+            subTitle="Choose from your installed apps."
           >
             <List
               searchable

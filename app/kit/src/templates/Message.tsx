@@ -4,7 +4,13 @@ import React from 'react'
 import { AppProps } from '../types/AppProps'
 import { Icon } from '../views/Icon'
 
-export function Message({ title, icon, subTitle, subType }: AppProps) {
+export function Message({
+  title,
+  icon,
+  subTitle,
+  subType,
+  children,
+}: AppProps & { children?: React.ReactNode }) {
   return (
     <Col flex={1} pad="lg" space="lg" alignItems="center" justifyContent="center">
       <Col space="sm" alignItems="center" justifyContent="center">
@@ -17,6 +23,7 @@ export function Message({ title, icon, subTitle, subType }: AppProps) {
           {typeof icon === 'string' ? <Icon name={icon} /> : icon || null}
         </PassProps>
       </>
+      {children}
     </Col>
   )
 }

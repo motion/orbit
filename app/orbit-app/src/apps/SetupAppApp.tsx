@@ -1,24 +1,13 @@
-import { App, AppIcon, createApp } from '@o/kit'
-import {
-  Button,
-  List,
-  ListItemProps,
-  Section,
-  Slider,
-  SliderPane,
-  Text,
-  Title,
-  Toolbar,
-  View,
-} from '@o/ui'
+import { AppIcon, createApp } from '@o/kit'
+import { Button, List, ListItemProps, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
-import { getUserApps, useUserVisualApps } from './orbitApps'
+import { useUserVisualAppDefinitions } from './orbitApps'
 
 function SetupAppMain() {
   const { actions } = useOm()
-  const items: ListItemProps[] = useUserVisualApps().map(app => ({
+  const items: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
     identifier: app.id,
     subTitle: app.description || 'No description',

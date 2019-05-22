@@ -1,17 +1,17 @@
 import { Templates, useActiveAppsSorted } from '@o/kit'
-import { Section, SelectableGrid, useGet, Button, SubTitle } from '@o/ui'
-import React, { useCallback } from 'react'
+import { Button, Section, SelectableGrid, SubTitle, useGet } from '@o/ui'
 import pluralize from 'pluralize'
+import React, { useCallback } from 'react'
 
+import { useUserVisualAppDefinitions } from '../apps/orbitApps'
 import { useAppSortHandler } from '../hooks/useAppSortHandler'
 import { useOm } from '../om/om'
 import { AppIconContainer, LargeIcon, OrbitAppIcon } from './OrbitAppIcon'
-import { useUserVisualApps } from '../apps/orbitApps'
 
 export function ManageApps() {
   const om = useOm()
   const activeApps = useActiveAppsSorted()
-  const viewAppDefs = useUserVisualApps()
+  const viewAppDefs = useUserVisualAppDefinitions()
   const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
 

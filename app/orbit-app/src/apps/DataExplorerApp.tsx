@@ -3,19 +3,41 @@ import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pa
 import { capitalize, remove } from 'lodash'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
+import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
+import { useUserDataAppDefinitions } from './orbitApps'
 import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'data-explorer',
   name: 'Query Builder',
   icon: '',
-  app: props => (
+  app: QueryBuilder,
+})
+
+function QueryBuilder(props: AppProps) {
+  const om = useOm()
+  const dataApps = useUserDataAppDefinitions()
+
+  if (!dataApps.length) {
+    return (
+      <Templates.Message
+        title="No data apps"
+        subTitle="You haven't added any data apps to this workspace."
+      >
+        <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
+          Install apps
+        </Button>
+      </Templates.Message>
+    )
+  }
+
+  return (
     <App index={<QueryBuilderIndex />}>
       <QueryBuilderMain key={props.id} {...props} />
     </App>
-  ),
-})
+  )
+}
 
 const treeId = '12'
 

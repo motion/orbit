@@ -1,10 +1,4 @@
-import {
-  __SERIOUSLY_SECRET,
-  AppDefinition,
-  configureKit,
-  createApp,
-  useAppDefinitions,
-} from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -59,13 +53,17 @@ export function getUserApps(): AppDefinition[] {
 }
 
 // refreshes when they change
-export function useUserApps() {
+export function useUserAppDefinitions() {
   useAppDefinitions() // this triggers update on app defs update
   return getUserApps()
 }
 
-export function useUserVisualApps() {
-  return useUserApps().filter(x => !!x.app)
+export function useUserVisualAppDefinitions() {
+  return useUserAppDefinitions().filter(x => !!x.app)
+}
+
+export function useUserDataAppDefinitions() {
+  return useUserAppDefinitions().filter(x => !!(x.api || x.graph))
 }
 
 reaction(

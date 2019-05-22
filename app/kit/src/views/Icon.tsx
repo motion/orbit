@@ -41,6 +41,8 @@ export const Icon = memo(
       return <AppIconInner {...props} />
     }
 
+    const svg = props.svg || icons[name]
+
     return (
       <UI.PlainIcon
         name={name}
@@ -49,7 +51,7 @@ export const Icon = memo(
         style={style}
         opacity={opacity}
         {...restProps}
-        svg={props.svg || icons[name]}
+        svg={svg}
       />
     )
   }),

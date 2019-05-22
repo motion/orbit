@@ -1,6 +1,6 @@
 import { Base, BaseProps, getTextSizeTheme, gloss } from 'gloss'
 
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { useScale } from '../Scale'
 
 export type SimpleTextProps = BaseProps & {

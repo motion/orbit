@@ -3,7 +3,7 @@ import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
 
 import { defaultSortPressDelay, isBrowser } from '../constants'
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
 
 if (isBrowser) {

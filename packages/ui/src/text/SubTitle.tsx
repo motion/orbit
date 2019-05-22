@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { Text } from './Text'
 
 export function SubTitle({ verticalSpacing = 1, children, ...props }) {

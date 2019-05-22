@@ -4,7 +4,7 @@ import memoize from 'memoize-one'
 import React, { forwardRef, memo, RefObject, useCallback } from 'react'
 
 import { defaultSortPressDelay } from '../constants'
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent, Omit } from '../types'

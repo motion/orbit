@@ -5,7 +5,7 @@ import fuzzySort from 'fuzzysort'
 import { useTheme } from 'gloss'
 import React, { createContext, memo, useContext } from 'react'
 
-import { Config } from './helpers/configure'
+import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
 import { SVG } from './SVG'
 import { View, ViewProps } from './View/View'
@@ -53,8 +53,7 @@ Icon.acceptsProps = {
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export const PlainIcon = ({ style, ignoreColor, ...props }: IconProps) => {
-  const name = findName(props.name)
+export const PlainIcon = ({ style, ignoreColor, svg, ...props }: IconProps) => {
   const theme = useTheme(props)
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
@@ -73,17 +72,19 @@ export const PlainIcon = ({ style, ignoreColor, ...props }: IconProps) => {
     debugger
   }
 
-  if (isDefined(props.svg)) {
+  if (isDefined(svg)) {
+    console.log('got svg', props, svg)
     return (
       <View
         width={size}
         height={size}
-        className={`icon ${props.className || ''}`}
+        data-name={props.name}
+        className={`ui-icon ${props.className || ''}`}
         color={color}
         {...props}
       >
         <SVG
-          svg={props.svg}
+          svg={svg}
           width={`${size}px`}
           height={`${size}px`}
           style={{
@@ -106,14 +107,15 @@ export const PlainIcon = ({ style, ignoreColor, ...props }: IconProps) => {
   // choose which pixel grid is most appropriate for given icon size
   const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.
-  const paths = renderSvgPaths(pixelGridSize, name)
+  const iconName = findName(props.name)
+  const paths = renderSvgPaths(pixelGridSize, iconName)
   const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
     <View width={size} height={size} {...props}>
       <svg
         style={{ color: `${color}`, ...style }}
-        data-icon={name}
+        data-icon={iconName}
         width={`${size}px`}
         height={`${size}px`}
         viewBox={viewBox}

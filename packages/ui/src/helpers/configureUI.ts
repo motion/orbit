@@ -88,6 +88,7 @@ export let Config: ConfigureUIProps = {
 export function configureUI(opts: Partial<ConfigureUIProps>) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
+
   Object.assign(Config, opts)
 
   configureCSS({

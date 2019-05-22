@@ -4,7 +4,7 @@ import { alphaColorTheme, CSSPropertySet, gloss, propStyleTheme, textSizeTheme, 
 import keycode from 'keycode'
 import * as React from 'react'
 
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
 import { getTextSize } from '../Sizes'
 import { Sizes } from '../Space'

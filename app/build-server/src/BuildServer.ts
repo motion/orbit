@@ -2,6 +2,7 @@ import express from 'express'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
+import historyAPIFallback from 'connect-history-api-fallback'
 
 const existsInCache = (middleware, path) => {
   try {
@@ -44,7 +45,7 @@ export class BuildServer {
     // you have to do it this janky ass way because webpack just isnt really great at
     // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
 
-    // apps first, then fallback to main
+    // apps first only if they matching cached file
     for (const name in apps) {
       const config = apps[name]
       const { devMiddleware, hotMiddleware } = getMiddleware(name, config)
@@ -52,9 +53,14 @@ export class BuildServer {
       this.server.use(resolveIfExists(hotMiddleware, config))
     }
 
+    // falls back to the main entry middleware
     const { devMiddleware, hotMiddleware } = getMiddleware('main', main)
     this.server.use(devMiddleware)
     this.server.use(hotMiddleware)
+    this.server.use(historyAPIFallback())
+    // need to have this one after, see:
+    // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
+    this.server.use(devMiddleware)
   }
 
   start() {

@@ -36,7 +36,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    groupName: 'Install App',
+    groupName: 'Setup Data Source',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',

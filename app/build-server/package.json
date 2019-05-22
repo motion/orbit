@@ -35,6 +35,7 @@
     "webpack-node-externals": "^1.7.2",
     "express": "^4.17.0",
     "html-webpack-plugin": "^3.2.0",
-    "time-fix-plugin": "^2.0.6"
+    "time-fix-plugin": "^2.0.6",
+    "connect-history-api-fallback": "^1.6.0"
   }
 }

@@ -4,7 +4,7 @@ import React, { forwardRef, useCallback, useState } from 'react'
 
 import { ProvideFocus } from '../Focus'
 import { Bit } from '../helpers/BitLike'
-import { Config, CustomItemView } from '../helpers/configure'
+import { Config, CustomItemView } from '../helpers/configureUI'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
 import { Omit } from '../types'

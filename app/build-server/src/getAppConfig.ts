@@ -2,11 +2,10 @@ import { join } from 'path'
 
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
-export async function getAppConfig(appName: string, props: WebpackParams) {
-  const outputDir = join(props.projectRoot, 'dist')
+export async function getAppConfig(props: WebpackParams) {
+  const outputDir = join(props.context, 'dist')
 
-  return await makeWebpackConfig(appName, {
-    ...props,
+  return await makeWebpackConfig({
     mode: 'development',
     publicPath: '/',
     externals: {
@@ -18,5 +17,6 @@ export async function getAppConfig(appName: string, props: WebpackParams) {
       library: '[name]',
       libraryTarget: 'umd',
     },
+    ...props,
   })
 }

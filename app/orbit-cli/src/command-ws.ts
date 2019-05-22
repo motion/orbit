@@ -15,8 +15,6 @@ type CommandWSOptions = {
 export async function commandWs(options: CommandWSOptions) {
   const appIdentifiers = await watchBuildWorkspace(options)
 
-  console.log('what')
-
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {
@@ -39,7 +37,7 @@ export async function commandWs(options: CommandWSOptions) {
 
 async function watchBuildWorkspace(options: CommandWSOptions) {
   const directory = options.workspaceRoot
-  const appRoots = await getAppRoots(directory)
+  const { appRoots, nodeModuleDir } = await getAppRoots(directory)
   if (!appRoots || !appRoots.length) {
     console.log('No apps found')
     return []
@@ -51,8 +49,9 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   for (const { id } of appRoots) {
     appEntries.push(id)
   }
+
   const appsConf: WebpackParams = {
-    projectRoot: directory,
+    context: nodeModuleDir,
     entry: appEntries,
     target: 'web',
     publicPath: '/apps/',
@@ -65,17 +64,18 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
     console.log('building apps DLL once...')
-    await buildApp('apps', {
+    await buildApp({
+      name: 'apps',
       ...appsConf,
       watch: false,
-      // hot: true,
     })
   }
 
-  const appsConfig = await getAppConfig('apps', {
+  const appsConfig = await getAppConfig({
+    name: 'apps',
     ...appsConf,
     watch: true,
-    // hot: true,
+    hot: true,
   })
 
   let entry = ''
@@ -99,18 +99,19 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   `,
   )
 
-  const wsConfig = await getAppConfig('workspace', {
-    projectRoot: options.workspaceRoot,
+  const wsConfig = await getAppConfig({
+    name: 'workspace',
+    context: options.workspaceRoot,
     entry: [entry],
     target: 'web',
     outputFile: '[name].test.js',
     watch: true,
-    devServer: true,
+    // devServer: true,
     hot: true,
     dllReference: dllFile,
   })
 
-  const server = new BuildServer([wsConfig, appsConfig])
+  const server = new BuildServer([wsConfig, appsConfig], ['apps', 'workspace'])
 
   await server.start()
 
@@ -143,18 +144,21 @@ async function getAppRoots(spaceDirectory: string) {
     return null
   }
 
-  return await Promise.all(
-    Object.keys(packages).map(async id => {
-      const directory = join(nodeModuleDir, ...id.split('/'))
-      if (await pathExists(directory)) {
-        const appPkg = await readJSON(join(directory, 'package.json'))
-        const entry = appPkg.main
-        return {
-          id,
-          directory,
-          entry: join(directory, entry),
+  return {
+    nodeModuleDir,
+    appRoots: await Promise.all(
+      Object.keys(packages).map(async id => {
+        const directory = join(nodeModuleDir, ...id.split('/'))
+        if (await pathExists(directory)) {
+          const appPkg = await readJSON(join(directory, 'package.json'))
+          const entry = appPkg.main
+          return {
+            id,
+            directory,
+            entry: join(directory, entry),
+          }
         }
-      }
-    }),
-  )
+      }),
+    ),
+  }
 }

@@ -35,8 +35,8 @@ export class AppMiddleware {
     for (const app of apps) {
       const publicPath = app.publicPath
 
-      let config = await makeWebpackConfig('apps', {
-        projectRoot: app.path,
+      let config = await makeWebpackConfig({
+        context: app.path,
         mode: 'development',
         publicPath,
         entry: [app.entry],

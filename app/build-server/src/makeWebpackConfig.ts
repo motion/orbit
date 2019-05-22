@@ -6,8 +6,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
 
 export type WebpackParams = {
+  name?: string
   entry: string[]
-  projectRoot: string
+  context: string
   publicPath?: string
   mode?: 'production' | 'development'
   target?: 'node' | 'electron-renderer' | 'web'
@@ -23,15 +24,15 @@ export type WebpackParams = {
   hot?: boolean
 }
 
-export async function makeWebpackConfig(_appName: string, params: WebpackParams) {
+export async function makeWebpackConfig(params: WebpackParams) {
   let {
     outputFile,
     entry,
     publicPath = '/',
-    projectRoot,
+    context,
     mode = 'development' as any,
     output,
-    outputDir = Path.join(projectRoot, 'dist'),
+    outputDir = Path.join(context, 'dist'),
     externals,
     ignore = [],
     watch,
@@ -39,7 +40,10 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     dllReference,
     devServer,
     hot,
+    name,
   } = params
+
+  console.log('params', params)
 
   const entryDir = __dirname
   const target = params.target || 'electron-renderer'
@@ -82,13 +86,15 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     },
   }
 
-  const config: webpack.Configuration = {
+  let config: webpack.Configuration = {
     watch,
-    context: projectRoot,
+    context: context,
     target,
     mode,
     entry: {
-      main: entry,
+      main: hot
+        ? [`webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`, ...entry]
+        : entry,
     },
     optimization: optimization[mode],
     output: {
@@ -101,22 +107,11 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
 
-      hotUpdateChunkFilename: `hot-update.js`,
-      hotUpdateMainFilename: `hot-update.json`,
+      // this makes the first entry fail but not hard reload
+      // comment it out for hard reloads, so far no fix seen
+      // hotUpdateChunkFilename: `hot-update.js`,
+      // hotUpdateMainFilename: `hot-update.json`,
     },
-    // @ts-ignore
-    devServer: devServer
-      ? {
-          stats: {
-            warnings: false,
-          },
-          historyApiFallback: true,
-          hot: mode === 'development',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-          },
-        }
-      : undefined,
     devtool:
       mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
     externals: [externals, { electron: '{}' }],
@@ -268,7 +263,7 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context: projectRoot,
+          context: context,
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
@@ -277,7 +272,21 @@ export async function makeWebpackConfig(_appName: string, params: WebpackParams)
     ].filter(Boolean) as webpack.Plugin[],
   }
 
-  console.log('made config', JSON.stringify(config, null, 2))
+  if (devServer) {
+    // @ts-ignore
+    config.devServer = {
+      stats: {
+        warnings: false,
+      },
+      historyApiFallback: true,
+      hot,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    }
+  }
+
+  // console.log('made config', config)
 
   return config
 }

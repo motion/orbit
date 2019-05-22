@@ -1,24 +1,47 @@
+import express from 'express'
 import Webpack from 'webpack'
-import WebpackDevServer from 'webpack-dev-server'
+import WebpackDevMiddleware from 'webpack-dev-middleware'
+import WebpackHotMiddleware from 'webpack-hot-middleware'
 
+// import WebpackDevServer from 'webpack-dev-server'
 export class BuildServer {
-  server: WebpackDevServer
+  server = express()
+  // server: WebpackDevServer
 
-  constructor(private config) {
-    const compiler = Webpack(this.config)
+  constructor(configs: any[], configNames: string[]) {
+    for (const [index, name] of configNames.entries()) {
+      const config = configs[index]
+      const compiler = Webpack(config)
+      const publicPath = config.output.publicPath
 
-    this.server = new WebpackDevServer(compiler, {
-      publicPath: '/',
-      hot: true,
-      inline: true,
-      historyApiFallback: true,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      stats: {
-        color: true,
-      },
-    })
+      console.log('serving at', publicPath)
+
+      this.server.use(
+        WebpackDevMiddleware(compiler, {
+          publicPath,
+        }),
+      )
+      this.server.use(
+        WebpackHotMiddleware(compiler, {
+          path: `/__webpack_hmr_${name}`,
+          log: console.log,
+          heartBeat: 10 * 1000,
+        }),
+      )
+    }
+
+    // this.server = new WebpackDevServer(compiler, {
+    //   publicPath: '/',
+    //   hot: true,
+    //   inline: true,
+    //   historyApiFallback: true,
+    //   headers: {
+    //     'Access-Control-Allow-Origin': '*',
+    //   },
+    //   stats: {
+    //     color: true,
+    //   },
+    // })
   }
 
   start() {

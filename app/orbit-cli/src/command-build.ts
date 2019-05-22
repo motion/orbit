@@ -20,8 +20,9 @@ export async function commandBuild(options: { projectRoot: string; watch?: boole
     }
 
     // build node
-    await buildApp(pkg.name, {
-      projectRoot: options.projectRoot,
+    await buildApp({
+      name: pkg.name,
+      context: options.projectRoot,
       entry: [main],
       target: 'node',
       outputFile: 'index.node.js',

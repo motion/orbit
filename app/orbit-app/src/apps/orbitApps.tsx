@@ -52,6 +52,10 @@ export function getUserApps(): AppDefinition[] {
   return dynamicApps
 }
 
+export function useStaticAppDefinitions() {
+  return orbitStaticApps
+}
+
 // refreshes when they change
 export function useUserAppDefinitions() {
   useAppDefinitions() // this triggers update on app defs update

@@ -1,31 +1,17 @@
 import { command } from '@o/bridge'
-import {
-  AppDefinition,
-  ProvideStores,
-  showConfirmDialog,
-  themes,
-  useForceUpdate,
-  useStore,
-} from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, Theme, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
 import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
+import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
 import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
@@ -74,6 +60,7 @@ export const OrbitPage = memo(() => {
 })
 
 const OrbitEffects = memo(() => {
+  useEnsureStaticAppBits()
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()

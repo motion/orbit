@@ -16,14 +16,6 @@ import React, { useState } from 'react'
 import { useOm } from '../om/om'
 import { getUserApps, useUserVisualApps } from './orbitApps'
 
-const descriptions = {
-  search: 'Custom search with filters',
-  lists: 'Controlled or controllable list',
-  people: 'Manageable list of people',
-  custom: 'Internal development test app',
-  custom2: 'Internal development test app',
-}
-
 function SetupAppMain() {
   const { actions } = useOm()
   const items: ListItemProps[] = useUserVisualApps().map(app => ({

@@ -142,9 +142,5 @@ export default createApp({
   id: 'setupApp',
   name: 'Setup App',
   icon: '',
-  app: () => (
-    <App>
-      <SetupAppMain />
-    </App>
-  ),
+  app: SetupAppMain,
 })

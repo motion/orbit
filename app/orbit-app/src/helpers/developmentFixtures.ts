@@ -3,11 +3,17 @@ import { AppModel, loadOne, save } from '@o/kit'
 import { om } from '../om/om'
 
 export async function insertDevelopmentPostgres() {
+  const activeSpace = om.state.spaces.activeSpace
   const app = await loadOne(AppModel, {
-    args: { where: { identifier: 'postgres', name: 'Postgres on docker' } },
+    args: {
+      where: {
+        identifier: 'postgres',
+        name: 'Postgres on docker',
+        spaceId: activeSpace.id,
+      },
+    },
   })
   if (app) return
-  const activeSpace = om.state.spaces.activeSpace
   save(AppModel, {
     colors: [],
     createdAt: new Date(),

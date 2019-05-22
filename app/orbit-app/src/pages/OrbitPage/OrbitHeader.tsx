@@ -1,17 +1,7 @@
 import { invertLightness } from '@o/color'
 import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  Popover,
-  PopoverProps,
-  Row,
-  RowProps,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -141,8 +131,8 @@ export const OrbitHeader = memo(() => {
             {!isEditing && (
               <HeaderButtonPassProps>
                 <Button
-                  {...om.state.router.appId === 'data-explorer' && activeStyle}
-                  {...useLocationLink('/app/data-explorer')}
+                  {...om.state.router.appId === 'query-builder' && activeStyle}
+                  {...useLocationLink('/app/query-builder')}
                   icon="layers"
                   tooltip="Query Builder"
                 />

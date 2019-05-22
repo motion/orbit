@@ -1,5 +1,5 @@
 import { Base, BaseProps } from 'gloss'
-import React, { memo } from 'react'
+import React from 'react'
 
 import { useScale } from './Scale'
 import { LINE_HEIGHT } from './SizedSurface'
@@ -10,12 +10,12 @@ export type LabeledProps = BaseProps
 export type LabeledTextProps = TextProps
 export type LabeledItemProps = RowProps
 
-export const Labeled = memo((props: LabeledProps) => {
+export const Labeled = (props: LabeledProps) => {
   const scale = useScale()
   return (
     <Base alignItems="center" justifyContent="center" height={LINE_HEIGHT * 2 * scale} {...props} />
   )
-})
+}
 
 // @ts-ignore
 Labeled.Text = function LabeledText(props: LabeledTextProps) {

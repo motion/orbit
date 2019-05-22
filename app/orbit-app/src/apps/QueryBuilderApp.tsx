@@ -5,10 +5,10 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { NavigatorProps, StackNav, StackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNavigator } from './StackNavigator'
 
 export default createApp({
-  id: 'data-explorer',
+  id: 'query-builder',
   name: 'Query Builder',
   icon: '',
   app: QueryBuilder,
@@ -38,7 +38,7 @@ function QueryBuilder(props: AppProps) {
   )
 }
 
-const treeId = '12'
+const treeId = 'query-builder'
 
 export function QueryBuilderIndex() {
   const treeList = useTreeList(treeId)
@@ -60,10 +60,8 @@ export function QueryBuilderIndex() {
 }
 
 function QueryBuilderMain(props: AppProps) {
-  const nav = useRef<StackNav>(null)
   return (
     <StackNavigator
-      ref={nav}
       key={props.id}
       id={`query-builder-nav=${props.id}`}
       defaultItem={{
@@ -97,6 +95,8 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
     ],
     [dataApps],
   )
+
+  console.log('now we have', dataApps)
 
   return (
     <Section

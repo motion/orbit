@@ -32,8 +32,8 @@ export const StackNavigator = forwardRef<
   const { stack } = stackNav
 
   useEffect(() => {
-    if (!ref) return
-    ref['current'] = stackNav
+    if (!ref || typeof ref !== 'function') return
+    ref(stackNav)
   }, [ref])
 
   useEffect(() => {

@@ -8,8 +8,6 @@ export function useAppIcon(props: IconProps) {
   const { activeTheme } = useContext(ThemeContext)
   const def = useAppDefinition(name)
 
-  console.log('lookin for', def, name)
-
   if (!name || !def) return null
   const extImg = name && (name[0] === '/' || name.indexOf('http') === 0) ? name : null
   let iconImg = extImg

@@ -1,7 +1,10 @@
 #!/usr/bin/env node
+import 'isomorphic-fetch'
 
 import killPort from 'kill-port'
+
 import Browser from './debugBrowser'
+
 
 // quiet exit handling
 let browser

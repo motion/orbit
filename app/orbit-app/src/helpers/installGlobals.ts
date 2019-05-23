@@ -12,6 +12,7 @@ import * as Models from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
 import { PopoverState } from '@o/ui'
 import * as dateFns from 'date-fns'
+import global from 'global'
 import { css } from 'gloss'
 import * as Mobx from 'mobx'
 import page from 'page'
@@ -35,7 +36,7 @@ import { log } from './log'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
-window['require'] = require('webpack-runtime-require').Require
+global.require = require('webpack-runtime-require').Require
 
 const toJS = obj => {
   const next = Mobx.toJS(obj)
@@ -45,31 +46,31 @@ const toJS = obj => {
   return next
 }
 
-window['page'] = page
-window['css'] = css
-window['ReconnectingWebSocket'] = ReconnectingWebSocket
-window['Mediator'] = Mediator
-window['PopoverState'] = PopoverState
-window['React'] = React
-window['Constants'] = Constants
-window['Mobx'] = Mobx
-window['Config'] = getGlobalConfig()
-window['log'] = log
-window['Helpers'] = Helpers
-window['App'] = App
-window['Desktop'] = Desktop
-window['Electron'] = Electron
-window['toColor'] = toColor
-window['dateFns'] = dateFns
-window['LoggerSettings'] = LoggerSettings
-window['toJS'] = toJS
-window['stringify'] = JSON.stringify.bind(JSON)
-window['AppActions'] = AppActions
-window['Models'] = Models
-window['Themes'] = themes
+global.page = page
+global.css = css
+global.ReconnectingWebSocket = ReconnectingWebSocket
+global.Mediator = Mediator
+global.PopoverState = PopoverState
+global.React = React
+global.Constants = Constants
+global.Mobx = Mobx
+global.Config = getGlobalConfig()
+global.log = log
+global.Helpers = Helpers
+global.App = App
+global.Desktop = Desktop
+global.Electron = Electron
+global.toColor = toColor
+global.dateFns = dateFns
+global.LoggerSettings = LoggerSettings
+global.toJS = toJS
+global.stringify = JSON.stringify.bind(JSON)
+global.AppActions = AppActions
+global.Models = Models
+global.Themes = themes
 
 const { isEqual } = require('@o/fast-compare')
-window['isEqualDebug'] = (a, b) => {
+global.isEqualDebug = (a, b) => {
   for (const key in a) {
     if (!isEqual(a[key], b[key])) {
       console.log('falsy value', key)

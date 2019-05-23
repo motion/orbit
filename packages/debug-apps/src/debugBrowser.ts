@@ -77,7 +77,6 @@ export default class DebugApps {
 
   renderLoop = async () => {
     while (this.shouldRun) {
-      await sleep(5000)
       try {
         const sessions = await this.getSessions()
         await this.ensureEnoughTabs(sessions)
@@ -93,6 +92,7 @@ export default class DebugApps {
         this.lastErr = err.message
         console.log('debugBrowser err', err)
       }
+      await sleep(5000)
     }
   }
 
@@ -126,7 +126,7 @@ export default class DebugApps {
       // timeout because it doesnt resolve if the app is down
       setTimeout(() => {
         resolve(null)
-      }, 5000)
+      }, 1000)
       try {
         const answers = await fetch(infoUrl).then(res => res.json())
         const sortedAnswers = answers
@@ -157,7 +157,7 @@ export default class DebugApps {
   }
 
   numTabs = curSessions => {
-    return this.options.expectTabs || Math.max(curSessions.length, this.sessions.length)
+    return this.options.expectTabs || curSessions.length
   }
 
   ensureEnoughTabs = async sessions => {

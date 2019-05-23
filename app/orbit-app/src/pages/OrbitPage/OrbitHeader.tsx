@@ -136,8 +136,6 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   const appStore = useStore(App)
 
-  console.log('state.navVisible', state.navVisible, appStore.isEditing)
-
   if (appStore.isEditing) {
     return null
   }
@@ -154,10 +152,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         openOnClick
         openOnHover
         onHover={actions.setNavVisible}
-        onChangeVisibility={next => {
-          console.log('change visibility', next)
-          actions.setNavVisible(next)
-        }}
+        onChangeVisibility={actions.setNavVisible}
         open={state.router.isOnSetupApp ? true : state.navVisible}
         maxWidth="80vw"
         padding={4}

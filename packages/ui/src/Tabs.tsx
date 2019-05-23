@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 
@@ -24,7 +25,7 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // Callback for when the active tab has changed.
   onChange?: (key: string | void) => void
   // The key of the currently active tab.
-  active?: string | void
+  active?: number | string | void
   // Tab elements.
   children?: any[] | React.ReactNode
   // Whether the tabs can be reordered by the user.
@@ -95,7 +96,7 @@ function TabsControlled({
   }
 
   function add(allTabs) {
-    for (const [index, tab] of [].concat(allTabs || []).entries()) {
+    for (const [, tab] of [].concat(allTabs || []).entries()) {
       if (Array.isArray(tab)) {
         add(tab)
         continue
@@ -112,13 +113,10 @@ function TabsControlled({
       const { closable, label, icon, onClose, width, ...rest } = tab.props
       const TabChildren = tab.props.children
       let id = getKey(tab)
-      if (typeof id !== 'string') {
-        id = `${index}`
-      }
       if (!keys.includes(id)) {
         keys.push(id)
       }
-      const isActive: boolean = active === id
+      const isActive: boolean = active == id
 
       const childrenElement =
         typeof TabChildren === 'function' ? isActive ? <TabChildren /> : null : TabChildren
@@ -238,21 +236,13 @@ const TabContainer = gloss(View, {
 
 const getKey = comp => (comp ? comp.props.id || (comp.key && comp.key.replace('.$', '')) : null)
 
+const controlledConfig = {
+  active: 'onChange',
+}
+
 export function Tabs(props: TabsProps & { defaultActive?: string | boolean }) {
-  const firstId = getKey(Children.toArray(props.children)[0])
-  const defaultActive =
-    typeof props.defaultActive === 'string'
-      ? props.defaultActive
-      : props.defaultActive === false
-      ? undefined
-      : firstId
-  const controlledProps = useUncontrolled(
-    { defaultActive, ...props },
-    {
-      active: 'onChange',
-    },
-  )
-  return <TabsControlled {...controlledProps} />
+  const cProps = useUncontrolled(props, controlledConfig)
+  return <TabsControlled {...cProps} active={selectDefined(cProps.active, props.defaultActive)} />
 }
 
 const HideScrollbar = gloss({

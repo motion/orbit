@@ -60,7 +60,12 @@ export function DemoAppUserManager() {
         </Pane>
 
         <Pane>
-          <Tabs padding={10} centered sizeRadius={2}>
+          <Tabs
+            defaultActive={highlighted.length ? highlighted[0].id : undefined}
+            padding={10}
+            centered
+            sizeRadius={2}
+          >
             {highlighted.map(row => (
               <Tab key={row.id} id={row.id} label={row.name}>
                 <PersonInfo row={row} />

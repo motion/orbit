@@ -86,7 +86,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
     return (
       <LayoutRow
         minHeight={size.height || 'auto'}
-        maxHeight="100%"
+        maxHeight={size.height || '100%'}
         overflow="hidden"
         ref={ref}
         {...colProps}
@@ -99,7 +99,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
   return (
     <LayoutCol
       minHeight={size.height || 'auto'}
-      maxHeight="100%"
+      maxHeight={size.height || '100%'}
       overflow="hidden"
       ref={ref}
       {...colProps}

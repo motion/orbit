@@ -82,17 +82,17 @@ function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
   return (
     <Layout type="column">
-      <Pane pad>
-        <Section scrollable="y" bordered title={props.row.name}>
+      <Pane>
+        <Section scrollable="y" titleBorder title={props.row.name}>
           <Fieldsets items={[props.row]} />
         </Section>
       </Pane>
-      <Pane pad resizable>
+      <Pane resizable>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
             <Table
               selectable
-              bordered
+              titleBorder
               title="Albums"
               items={albums}
               onSelect={items => setAlbum(items[0])}
@@ -100,12 +100,12 @@ function PersonInfo(props: { row: any }) {
           )}
         </Fetch>
       </Pane>
-      <Pane pad resizable>
+      <Pane resizable>
         {!!album && (
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
             {photos => (
               <Table
-                bordered
+                titleBorder
                 selectable="multi"
                 searchable
                 title={`${album.id} Album ${album.title} Pictures`}

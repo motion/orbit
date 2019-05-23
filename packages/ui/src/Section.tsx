@@ -72,7 +72,7 @@ const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
-const defaultTitlePad = ['lg', true, 'sm']
+const defaultTitlePad = ['lg', true, true]
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -129,6 +129,16 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   if (!titleElement && hasTitle) {
     const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
 
+    const titlePadFinal = selectDefined(
+      titlePad,
+      selectDefined(
+        bordered ? selectDefined(pad, true) : undefined,
+        titleBorder ? selectDefined(pad, defaultTitlePad) : undefined,
+        null,
+      ),
+    )
+    console.log('titlePadFinal', titlePadFinal)
+
     titleEl = (
       <Scale size={titleScale}>
         <Theme alt="flat">
@@ -143,14 +153,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             icon={icon}
             userSelect="none"
             space="sm"
-            pad={selectDefined(
-              titlePad,
-              selectDefined(
-                (bordered && selectDefined(pad, true)) || undefined,
-                (titleBorder && selectDefined(pad, defaultTitlePad)) || undefined,
-                null,
-              ),
-            )}
+            pad={titlePadFinal}
             size={selectDefined(titleSize, size)}
             titleProps={titleProps}
             useCollapse={collapse}

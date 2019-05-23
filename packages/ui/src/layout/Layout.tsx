@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React, { Children, cloneElement, createContext, isValidElement, memo, useMemo } from 'react'
+import React, { Children, cloneElement, createContext, isValidElement, memo, ReactElement, useMemo } from 'react'
 
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { Col, ColProps } from '../View/Col'
@@ -24,14 +24,16 @@ export const LayoutContext = createContext<{
 })
 
 export const Layout = memo((props: LayoutProps) => {
-  Children.map(props.children, child => {
+  const children: ReactElement[] = Children.map(props.children, child => {
     if (!isValidElement(child) || child.type !== Pane) {
-      throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
+      console.warn(`Invalid child: <Layout /> accepts only <Pane /> as children.`, child, props)
+      return null
     }
-  })
+    return child
+  }).filter(Boolean)
   const visibility = useVisibility()
-  const total = Children.count(props.children)
-  const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
+  const total = children.length
+  const flexes = children.map(child => child.props.flex || 1)
   const memoValue = useMemo(() => ({ type: props.type, total, flexes }), [
     props.type,
     total,

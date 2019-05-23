@@ -110,8 +110,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
       // hotUpdateChunkFilename: `hot-update.js`,
       // hotUpdateMainFilename: `hot-update.json`,
     },
-    devtool:
-      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
     externals: [externals, { electron: '{}' }],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],

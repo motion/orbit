@@ -10,7 +10,7 @@ export const Icon = memo(
   forwardRef(function Icon(props: IconProps & { svg?: string }, ref) {
     const { name, color, size = 32, style, opacity, ...restProps } = props
     const theme = useTheme()
-    const finalColor = color || theme.color ? theme.color.toString() : '#fff'
+    const finalColor = color || (theme.color ? theme.color.toString() : '#fff')
 
     // image based source icons
     const appIcon = useAppIcon(props)

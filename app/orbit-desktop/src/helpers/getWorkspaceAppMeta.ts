@@ -58,7 +58,6 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
       if (await pathExists(apiInfoPath)) {
         apiInfo = await readJSON(apiInfoPath)
       }
-      console.log('return pacakge', packageId, directory)
       return {
         packageId,
         packageJson,

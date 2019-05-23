@@ -51,7 +51,6 @@ class AppStore {
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   authState: AppStore['state']['authState']
-  setOrbitState: Function
   setAuthState: Function
 
   setState = Bridge.setState
@@ -63,8 +62,8 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
+    showOrbitMain: false,
     orbitState: {
-      docked: false,
       orbitOnLeft: false,
       position: [0, 0],
       size: [0, 0],

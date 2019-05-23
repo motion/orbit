@@ -39,7 +39,7 @@ export class MousePositionManager {
   }
 
   updateHoverAttributes = react(
-    () => [App.orbitState.docked, App.openMenu, App.orbitState.size],
+    () => [App.state.showOrbitMain, App.openMenu, App.orbitState.size],
     () => this.updateHoverState(),
   )
 
@@ -60,7 +60,7 @@ export class MousePositionManager {
     // update hover states...
 
     // orbit hovered
-    const orbitHovered = App.orbitState.docked && isMouseOver(App.orbitState, mousePos)
+    const orbitHovered = App.state.showOrbitMain && isMouseOver(App.orbitState, mousePos)
 
     // menu hovered
     const menuHovered = App.openMenu && isMouseOver(App.openMenu, mousePos)

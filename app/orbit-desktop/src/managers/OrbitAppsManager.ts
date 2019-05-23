@@ -84,6 +84,10 @@ export class OrbitAppsManager {
     async appDefs => {
       ensure('appDefs', !!appDefs)
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
+      console.log('appsMeta', appsMeta)
+      if (!appsMeta) {
+        return null
+      }
       for (const meta of appsMeta) {
         const identifier = this.identifierToPackageId[meta.packageId]
         this.appMeta[identifier] = meta

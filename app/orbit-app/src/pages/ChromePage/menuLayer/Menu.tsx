@@ -6,7 +6,6 @@ import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
 
-import { AppActions } from '../../../actions/AppActions'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../StoreContext'
 import MainShortcutHandler from '../../../views/MainShortcutHandler'
@@ -357,7 +356,7 @@ export class MenuStore {
       switch (event.value) {
         case '0':
           // special case: switch us over to the main orbit app
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          App.setState({ showOrbitMain: !App.state.showOrbitMain })
           // and close this menu
           this.closeMenu()
           break

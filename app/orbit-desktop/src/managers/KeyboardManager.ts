@@ -39,8 +39,8 @@ export class KeyboardManager {
     }
   }
 
-  clearOnDocked = react(
-    () => App.orbitState.docked,
+  clearOnHide = react(
+    () => App.state.showOrbitMain,
     () => {
       this.resetHoldingOption()
       this.isOptionDown = false

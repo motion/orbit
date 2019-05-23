@@ -145,7 +145,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             space="sm"
             pad={selectDefined(
               titlePad,
-              titleBorder || bordered ? selectDefined(pad, defaultTitlePad) : null,
+              selectDefined(
+                (bordered && selectDefined(pad, true)) || undefined,
+                (titleBorder && selectDefined(pad, defaultTitlePad)) || undefined,
+                null,
+              ),
             )}
             size={selectDefined(titleSize, size)}
             titleProps={titleProps}

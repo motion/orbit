@@ -112,6 +112,7 @@ export const AppIcon = forwardRef(({ app, ...props }: AppIconProps, ref) => {
   )
 })
 
+// @ts-ignore
 AppIcon.acceptsProps = {
   hover: true,
   icon: true,

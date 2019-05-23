@@ -1,7 +1,17 @@
 import { invertLightness } from '@o/color'
 import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -154,8 +164,11 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         openOnClick
         openOnHover
         onHover={actions.setNavVisible}
-        onChangeVisibility={actions.setNavVisible}
-        open={state.router.isOnSetupApp ? true : state.navVisible || state.navHovered}
+        onChangeVisibility={next => {
+          console.log('change visibility', next)
+          actions.setNavVisible(next)
+        }}
+        open={state.router.isOnSetupApp ? true : state.navHovered || false}
         maxWidth="80vw"
         padding={4}
         elevation={10}
@@ -181,23 +194,23 @@ const HomeButton = forwardRef((props: any, ref) => {
   const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
 
   return (
-    <Icon
-      ref={ref}
-      onMouseEnter={() => actions.setNavHovered(true)}
-      onMouseLeave={() => actions.setNavHovered(false)}
-      opacity={0.65}
-      hoverStyle={{
-        opacity: 1,
-      }}
-      color={invertLightness(theme.color, 0.5)}
-      name={state.navHovered ? 'orbit-home' : `orbit-${icon}`}
-      size={22}
-      onMouseUp={e => {
-        e.stopPropagation()
-        actions.router.showHomePage()
-      }}
-      {...props}
-    />
+    <View ref={ref} {...props}>
+      <Icon
+        onMouseEnter={() => actions.setNavHovered(true)}
+        onMouseLeave={() => actions.setNavHovered(false)}
+        opacity={0.65}
+        hoverStyle={{
+          opacity: 1,
+        }}
+        color={invertLightness(theme.color, 0.5)}
+        name={state.navHovered ? 'orbit-home' : `orbit-${icon}`}
+        size={22}
+        onMouseUp={e => {
+          e.stopPropagation()
+          actions.router.showHomePage()
+        }}
+      />
+    </View>
   )
 })
 

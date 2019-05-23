@@ -113,7 +113,7 @@ export async function runOrbitDesktop(): Promise<boolean> {
     try {
       reporter.info('Running Orbit', cmd, cwd)
       const child = execa(cmd, [], {
-        detached: true,
+        detached: !isInMonoRepo,
         cwd,
         env: {
           HIDE_ON_START: 'true',

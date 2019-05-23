@@ -24,12 +24,19 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
   }
 
   log.info('found packages', packages)
-  let nodeModuleDir = join(spaceDir, 'node_modules')
+  let parentDir = join(spaceDir)
+  let nodeModuleDir = ''
 
   // find parent node_modules
-  while (!(await pathExists(nodeModuleDir)) && nodeModuleDir !== '/') {
-    nodeModuleDir = join(nodeModuleDir, '..', '..', 'node_modules')
+  while (parentDir.length > 1) {
+    nodeModuleDir = join(parentDir, 'node_modules')
+    if (await pathExists(nodeModuleDir)) {
+      break
+    }
+    parentDir = join(parentDir, '..')
   }
+
+  console.log('nodeModuleDir', nodeModuleDir)
 
   if (!(await pathExists(nodeModuleDir))) {
     log.info('Error no node_modules directory found')
@@ -38,7 +45,7 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
 
   return await Promise.all(
     Object.keys(packages).map(async packageId => {
-      const directory = join(spaceDir, ...packageId.split('/'))
+      const directory = join(nodeModuleDir, ...packageId.split('/'))
       const packageJsonPath = join(directory, 'package.json')
       let packageJson = null
       if (!(await pathExists(packageJsonPath))) {
@@ -51,6 +58,7 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
       if (await pathExists(apiInfoPath)) {
         apiInfo = await readJSON(apiInfoPath)
       }
+      console.log('return pacakge', packageId, directory)
       return {
         packageId,
         packageJson,

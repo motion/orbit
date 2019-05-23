@@ -1,5 +1,6 @@
 import { writeJSON } from 'fs-extra'
 import webpack from 'webpack'
+
 import makeConfig from './webpack.config'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
@@ -14,7 +15,7 @@ async function main() {
 
   // console.log(JSON.stringify(finalConfig, null, 2))
 
-  webpack(finalConfig, async (err, stats) => {
+  webpack(finalConfig as any, async (err, stats) => {
     if (err) {
       console.log(err)
       return
@@ -22,7 +23,6 @@ async function main() {
     console.log(
       stats.toString({
         colors: true,
-        verbose: true,
       }),
     )
 

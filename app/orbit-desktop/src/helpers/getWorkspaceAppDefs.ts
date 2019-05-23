@@ -6,7 +6,7 @@ import { getWorkspaceAppMeta } from './getWorkspaceAppMeta'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
-const log = new Logger('readWorkspaceAppDefs')
+const log = new Logger('getWorkspaceAppDefs')
 
 export async function getWorkspaceAppDefs(
   space: Space,
@@ -15,7 +15,6 @@ export async function getWorkspaceAppDefs(
   identifierToPackageId: { [key: string]: string }
 }> {
   const appsMeta = await getWorkspaceAppMeta(space)
-
   const definitions: AppDefinitions = {}
   const identifierToPackageId = {}
 

@@ -52,6 +52,7 @@ const flags = {
   entry: getFlag('--entry'),
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
+  executable: getFlag('--executable'),
 }
 
 if (flags.prod) {
@@ -420,6 +421,12 @@ async function makeConfig() {
       new CircularDependencyPlugin({
         // failOnError: true,
       }),
+
+      flags.executable &&
+        new webpack.BannerPlugin({
+          banner: '#!/usr/bin/env node',
+          raw: true,
+        }),
 
       // !process.env['ANALYZE_BUNDLE'] &&
       //   isProd &&

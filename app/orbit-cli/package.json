@@ -1,14 +1,15 @@
 {
   "name": "@o/orbit-cli",
   "version": "2.5.2",
-  "main": "./_/main.js",
   "private": true,
+  "main": "_/index.js",
   "bin": {
-    "orbit": "./_/main.js"
+    "orbit": "./_/index.js"
   },
   "scripts": {
     "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "watch": "tsc --watch --preserveWatchOutput",
+    "bundle": "mcro-build --build --prod --target node --executable"
   },
   "dependencies": {
     "@o/telemetry": "^2.5.2",

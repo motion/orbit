@@ -22,7 +22,7 @@ export function createContextualProps<A extends any>(defaults?: A) {
           return componentProps as any
         }
         // merge just undefined componentProps from extra
-        const final = { ...componentProps }
+        const final: any = { ...componentProps }
         for (const key in extra) {
           if (typeof final[key] === 'undefined') {
             final[key] = extra[key]

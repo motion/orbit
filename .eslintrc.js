@@ -93,5 +93,6 @@ module.exports = {
     Symbol: true,
     electronRequire: true,
     WeakMap: true,
+    __webpack_require__: true,
   },
 }

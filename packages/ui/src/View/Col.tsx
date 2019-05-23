@@ -1,5 +1,5 @@
 import { Base } from 'gloss'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, Suspense } from 'react'
 
 import { Breadcrumbs } from '../Breadcrumbs'
 import { CollapsableProps, createCollapsableChildren, splitCollapseProps } from '../Collapsable'
@@ -11,7 +11,12 @@ type GroupProps = {
   separator?: React.ReactNode
 }
 
-export type ColProps = CollapsableProps & ScrollableViewProps & SpaceGroupProps & GroupProps
+export type ColProps = CollapsableProps &
+  ScrollableViewProps &
+  SpaceGroupProps &
+  GroupProps & {
+    suspense?: React.ReactNode | null
+  }
 
 export const Col = forwardRef((colProps: ColProps, ref) => {
   if (!colProps.children) {
@@ -19,7 +24,17 @@ export const Col = forwardRef((colProps: ColProps, ref) => {
   }
   const [
     collapseProps,
-    { space = false, spaceAround, children, beforeSpace, afterSpace, group, separator, ...props },
+    {
+      space = false,
+      spaceAround,
+      children,
+      beforeSpace,
+      afterSpace,
+      group,
+      separator,
+      suspense,
+      ...props
+    },
   ] = splitCollapseProps(colProps)
   let element = children
 
@@ -47,7 +62,7 @@ export const Col = forwardRef((colProps: ColProps, ref) => {
   // scrollable
   return (
     <ScrollableView ref={ref} flexDirection="column" parentSpacing={space} {...props}>
-      {element}
+      {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
     </ScrollableView>
   )
 })

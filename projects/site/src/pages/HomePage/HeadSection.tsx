@@ -1,9 +1,8 @@
-import { Col, gloss, Scale, Space, SurfacePassProps, Theme, View } from '@o/ui'
+import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, Title, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
-import { linkProps } from '../../LinkState'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -14,32 +13,27 @@ import { useScreenVal } from './SpacedPageContent'
 
 let smallSpc = <Space size="xl" />
 let medSpc = <Space size="xxl" />
+let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Collaborative, decentralized apps',
-  medium: 'Collaborative, decentralized apps',
-  small: 'Collaborative, decentralized apps',
+  large: 'A new desktop app platform',
+  medium: 'A new desktop app platform',
+  small: 'A new desktop app platform',
 }
 
 let allTexts = {
   large: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
   medium: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
   small: [
-    `A new platform to create and share incredible apps.`,
-    `Data-first, easy to build, built for internal tools, under your control.`,
+    `Create and collaborate on apps that sync without a server.`,
+    `Easy to build with many data APIs, designed for internal tools.`,
   ],
-}
-
-const subTexts = {
-  large: `How Orbit lets you build internal tools in no time.`,
-  medium: `How Orbit lets you build internal tools in no time.`,
-  small: `How Orbit solves internal tools.`,
 }
 
 const HeadContent = memo(() => {
@@ -51,7 +45,7 @@ const HeadContent = memo(() => {
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
-  const br = useScreenVal(smallSpc, medSpc, medSpc)
+  const br = useScreenVal(smallSpc, medSpc, lgSpace)
 
   const textsWidth = useScreenVal('95%', '100%', '90%')
 
@@ -78,12 +72,12 @@ const HeadContent = memo(() => {
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>
 
-      <Space size={useScreenVal('md', 'lg', 'xl')} />
+      <Space size={useScreenVal('md', 'lg', 'xxxl')} />
 
       {isSmall && (
         <Paragraph
           size={1.8}
-          sizeLineHeight={1.4}
+          sizeLineHeight={1.6}
           margin={[0, 'auto']}
           textAlign="center"
           alpha={0.6}
@@ -135,9 +129,9 @@ const HeadContent = memo(() => {
               {br}
             </>
           )}
-          <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
+          {/* <FadeChild {...fadeUpProps} disable={!measured} delay={650}>
             <Smaller {...linkProps('/apps#faq')}>{subTexts[screen]}</Smaller>
-          </FadeChild>
+          </FadeChild> */}
         </Paragraph>
 
         {/* this is just to measure */}
@@ -207,21 +201,6 @@ const HeadJoin = () => (
   </View>
 )
 
-const Smaller = gloss({
-  cursor: 'pointer',
-  textDecoration: 'underline',
-  textDecorationColor: '#222',
-  transition: 'color ease 350ms',
-  fontSize: 30,
-  marginTop: 12,
-}).theme((props, theme) => ({
-  ...props,
-  color: theme.color.alpha(0.5),
-  '&:hover': {
-    color: theme.color.alpha(1),
-  },
-}))
-
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const Fade = useFadePage()
@@ -248,13 +227,49 @@ export function HeadSection() {
           <Col ref={Fade.ref} margin={['auto', 0]} alignItems="center" justifyContent="center">
             <HeadContent />
           </Col>
-          <Space size="xxl" />
+          <Space size={40} />
+          <Row space="xl" pad={[0, 'xl']}>
+            <SubSection index={0} title="Easy to build">
+              A large UI kit that solves for common apps, like Master/Detail with CRUD, letting you
+              focus on the use case.
+            </SubSection>
+
+            <SubSection index={1} title="Easy data">
+              An App Store with data apps like Slack, Postgres, G-suite and more - add with a click.
+            </SubSection>
+
+            <SubSection index={2} title="Runs like native">
+              Apps live on your desktop & launch in their own window. Orbit focuses on performance
+              by default.
+            </SubSection>
+
+            <SubSection index={3} title="Serverless & private">
+              Using true peer-to-peer, build rich apps with your team without any infrastructure.
+            </SubSection>
+          </Row>
+          <Space size={120} />
           <HeadJoin />
         </Col>
       </Page.Content>
     </Fade.FadeProvide>
   )
 }
+
+const SubSection = memo(({ title, children, index }: any) => {
+  return (
+    <Col flex={1}>
+      <FadeChild {...fadeUpProps} delay={200 + index * 200}>
+        <Title selectable size={0.7}>
+          {title}
+        </Title>
+        <Space size="sm" />
+        <SimpleText selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
+          {children}
+        </SimpleText>
+      </FadeChild>
+    </Col>
+  )
+})
 
 // {false && (
 //   <Page.Parallax zIndex={1} speed={0}>

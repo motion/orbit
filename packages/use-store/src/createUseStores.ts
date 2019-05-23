@@ -65,7 +65,7 @@ export function createUseStores<A extends Object>(getStores: () => A) {
               return
             }
             if (process.env.NODE_ENV === 'development') {
-              console.warn(`Attempted to get store ${String(key)} which is not in context`)
+              console.debug(`Attempted to get store ${key} which is not in context`)
             }
           }
         },

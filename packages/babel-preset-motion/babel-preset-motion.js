@@ -17,13 +17,12 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
-      plug('gloss-displaynames', opts.glossDisplayNameConfig || {}),
-      // plug('gloss-babel-optimize'),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
-        useESModules: true,
+        // careful, can mess with node environments
+        useESModules: false,
       }),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
@@ -42,6 +41,7 @@ module.exports = function(_, givenOpts) {
     presets:
       opts.presets ||
       [
+        // plug('gloss/babel', opts.glossConfig || {}),
         plug('@babel/preset-react', {
           pragmaFrag: 'React.Fragment',
         }),

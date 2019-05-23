@@ -22,6 +22,7 @@ import {
   CheckProxyCommand,
   CosalSaliencyModel,
   CosalTopicsModel,
+  GetPIDCommand,
   CosalTopWordsModel,
   NewFallbackServerPortCommand,
   OpenCommand,
@@ -42,7 +43,9 @@ import {
   UserModel,
   AppDevCloseCommand,
   AppDevOpenCommand,
+  AppOpenWorkspaceCommand,
   CloseAppCommand,
+  AppMetaCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -73,7 +76,7 @@ import { OrbitDataManager } from './managers/OrbitDataManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
-import { CallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
+import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
@@ -87,8 +90,9 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
-import { BuildServer } from '@o/build-server'
+import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
+import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 
 const log = new Logger('desktop')
 
@@ -105,10 +109,9 @@ export class OrbitDesktopRoot {
   private onboardManager: OnboardManager
   private disposed = false
   private webServer: WebServer
-  private cosal: Cosal
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
-  private buildServer: BuildServer
+  private buildServer: AppMiddleware
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -133,6 +136,8 @@ export class OrbitDesktopRoot {
       },
     })
 
+    // TODO: this abritrary ordering here is really a dependency graph, should be setup in that way
+
     // FIRST THING
     // databaserunner runs your migrations which everything can be impacted by...
     // leave it as high up here as possible
@@ -140,24 +145,42 @@ export class OrbitDesktopRoot {
     await this.databaseManager.start()
 
     // run this early, it sets up the general setting if needed
-    // TODO: this abritrary ordering of these things is really a dependency graph, could be setup that way
     this.generalSettingManager = new GeneralSettingManager()
-    await this.generalSettingManager.start()
 
     // manages operating system state
     this.operatingSystemManager = new OperatingSystemManager()
-    this.operatingSystemManager.start()
 
+    // search index
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
 
-    // mediator server before starting webserver, because electron needs mediator up
-    // so it can send commands as it starts up back to here, see NewFallbackServerPortCommand
-    this.cosal = this.cosalManager.cosal
-    // depends on cosal
-    this.registerMediatorServer()
+    // manage apps/apis
+    this.orbitAppsManager = new OrbitAppsManager()
 
-    this.buildServer = new BuildServer()
+    await Promise.all([
+      this.generalSettingManager.start(),
+      this.operatingSystemManager.start(),
+      this.orbitAppsManager.start(),
+    ])
+
+    this.buildServer = new AppMiddleware()
+
+    const cosal = this.cosalManager.cosal
+
+    // pass dependencies into here as arguments to be clear
+    const mediatorPort = this.registerMediatorServer({
+      buildServer: this.buildServer,
+      cosal,
+      orbitAppsManager: this.orbitAppsManager,
+    })
+
+    // start announcing on bonjour
+    this.bonjour = bonjour()
+    this.bonjourService = this.bonjour.publish({
+      name: 'orbitDesktop',
+      type: 'orbitDesktop',
+      port: mediatorPort,
+    })
+    this.bonjourService.start()
 
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
@@ -170,7 +193,7 @@ export class OrbitDesktopRoot {
     await Promise.all([this.authServer.start(), this.graphServer.start()])
 
     // depends on cosal
-    this.topicsManager = new TopicsManager({ cosal: this.cosal })
+    this.topicsManager = new TopicsManager({ cosal })
     await this.topicsManager.start()
 
     this.onboardManager = new OnboardManager()
@@ -201,9 +224,6 @@ export class OrbitDesktopRoot {
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
-
-    this.orbitAppsManager = new OrbitAppsManager()
-    await this.orbitAppsManager.start()
 
     new ContextManager({ screen: this.screen })
     new MousePositionManager({
@@ -262,7 +282,11 @@ export class OrbitDesktopRoot {
    * Registers a mediator server which is responsible
    * for communication between processes.
    */
-  private registerMediatorServer() {
+  private registerMediatorServer(props: {
+    cosal: Cosal
+    orbitAppsManager: OrbitAppsManager
+    buildServer: AppMiddleware
+  }) {
     const syncersTransport = new WebSocketClientTransport(
       'syncers',
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
@@ -274,7 +298,7 @@ export class OrbitDesktopRoot {
     const client = new MediatorClient({ transports: [syncersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
-    let developingApps: { path: string; publicPath: string; appId: number }[] = []
+    let developingApps: AppDesc[] = []
 
     this.mediatorServer = new MediatorServer({
       models: [
@@ -307,6 +331,9 @@ export class OrbitDesktopRoot {
         ChangeDesktopThemeCommand,
         AppDevOpenCommand,
         AppDevCloseCommand,
+        AppOpenWorkspaceCommand,
+        GetPIDCommand,
+        AppMetaCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -319,34 +346,42 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
-        resolveCommand(AppDevOpenCommand, async ({ path }) => {
+        resolveCommand(AppMetaCommand, async ({ identifier }) => {
+          return this.orbitAppsManager.appMeta[identifier]
+        }),
+        resolveCommand(GetPIDCommand, async () => {
+          return process.pid
+        }),
+        resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
           const appId = Object.keys(Electron.state.appWindows).length
           developingApps.push({
+            entry,
             appId,
             path,
             publicPath: `/appServer/${appId}`,
           })
-          this.buildServer.setApps(developingApps)
+          props.buildServer.setApps(developingApps)
           return appId
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
           log.info('Removing build server', appId)
           developingApps = remove(developingApps, x => x.appId === appId)
-          this.buildServer.setApps(developingApps)
+          props.buildServer.setApps(developingApps)
           log.info('Removing process', appId)
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
         }),
+        AppOpenWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,
-        CallAppBitApiMethodResolver,
-        ...getCosalResolvers(this.cosal),
-        getBitNearTopicsResolver(this.cosal),
-        getPeopleNearTopicsResolver(this.cosal),
+        createCallAppBitApiMethodResolver(props.orbitAppsManager),
+        ...getCosalResolvers(props.cosal),
+        getBitNearTopicsResolver(props.cosal),
+        getPeopleNearTopicsResolver(props.cosal),
         resolveMany(SearchResultModel, async args => {
-          return await new SearchResultResolver(this.cosal, args).resolve()
+          return await new SearchResultResolver(props.cosal, args).resolve()
         }),
-        getSalientWordsResolver(this.cosal),
+        getSalientWordsResolver(props.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
         ResetDataResolver,
@@ -370,15 +405,8 @@ export class OrbitDesktopRoot {
       ],
     })
     this.mediatorServer.bootstrap()
-    log.info(`mediatorServer starts listening at ${mediatorServerPort}`)
+    log.info(`mediatorServer listening at ${mediatorServerPort}`)
 
-    // start announcing on bonjour
-    this.bonjour = bonjour()
-    this.bonjourService = this.bonjour.publish({
-      name: 'orbitDesktop',
-      type: 'orbitDesktop',
-      port: mediatorServerPort,
-    })
-    this.bonjourService.start()
+    return mediatorServerPort
   }
 }

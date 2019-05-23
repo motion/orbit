@@ -227,11 +227,11 @@ export default function NeckSection() {
               <FadeChild delay={0}>
                 <PillButton>Unify</PillButton>
               </FadeChild>
-              <FadeChild delay={100}>
+              <FadeChild delay={200}>
                 <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
-                <FadeChild delay={200}>
+                <FadeChild delay={300}>
                   Pull in data and collaborate with incredible simplicity.
                 </FadeChild>
               </TitleTextSub>
@@ -242,7 +242,7 @@ export default function NeckSection() {
             {screen !== 'small' && (
               <Row space>
                 <SubSection maxWidth="33%">
-                  <FadeChild {...fadeLeftProps} delay={200}>
+                  <FadeChild {...fadeLeftProps} delay={400}>
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
@@ -252,7 +252,7 @@ export default function NeckSection() {
                   </FadeChild>
                 </SubSection>
                 <SubSection flex={2} pad={[true, 'xxl']}>
-                  <FadeChild delay={400}>
+                  <FadeChild delay={500}>
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
@@ -262,7 +262,7 @@ export default function NeckSection() {
                   </FadeChild>
                 </SubSection>
                 <SubSection maxWidth="33%">
-                  <FadeChild {...fadeRightProps} delay={200}>
+                  <FadeChild {...fadeRightProps} delay={600}>
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
@@ -279,7 +279,7 @@ export default function NeckSection() {
             <Row space>
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
                 <animated.div style={springFast}>
-                  <FadeChild {...fadeLeftProps} delay={300}>
+                  <FadeChild {...fadeLeftProps} delay={700}>
                     <Image
                       userSelect="none"
                       alignSelf="center"
@@ -291,7 +291,7 @@ export default function NeckSection() {
                 </animated.div>
                 <Space size="xxl" />
                 <animated.div style={{ ...springFast, alignSelf: 'flex-end' }}>
-                  <FadeChild delay={400}>
+                  <FadeChild delay={800}>
                     <Image
                       userSelect="none"
                       opacity={0.5}
@@ -304,7 +304,7 @@ export default function NeckSection() {
                 </animated.div>
               </Flex>
               <Flex flex={2} position="relative" margin={useScreenVal([0, '-5%'], 0, 0)}>
-                <FadeChild>
+                <FadeChild delay={300}>
                   <Button
                     alt="flat"
                     cursor="pointer"
@@ -334,7 +334,7 @@ export default function NeckSection() {
                 </FadeChild>
 
                 <animated.div style={{ ...springSlowest, margin: 'auto' }}>
-                  <FadeChild config={slowConfigLessBounce} delay={300}>
+                  <FadeChild config={slowConfigLessBounce} delay={500}>
                     <TiltSquircle
                       {...linkProps(elements[cur].link)}
                       tagName="div"
@@ -372,7 +372,7 @@ export default function NeckSection() {
                     zIndex: -1,
                   }}
                 >
-                  <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={500}>
+                  <FadeChild config={slowConfigLessBounce} {...fadeUpProps} delay={800}>
                     <View
                       width="100%"
                       height={300}
@@ -396,7 +396,7 @@ export default function NeckSection() {
               </Flex>
 
               <Flex alignItems="center" display={screen === 'small' ? 'none' : 'inherit'}>
-                <FadeChild {...fadeRightProps} delay={200}>
+                <FadeChild {...fadeRightProps} delay={400}>
                   <animated.div style={springSlowest}>
                     <Image
                       userSelect="none"
@@ -409,7 +409,7 @@ export default function NeckSection() {
                 </FadeChild>
                 <Space size="xxl" />
                 <animated.div style={{ ...springFast, alignSelf: 'flex-start' }}>
-                  <FadeChild delay={400}>
+                  <FadeChild delay={600}>
                     <Image
                       userSelect="none"
                       opacity={0.5}

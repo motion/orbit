@@ -1,20 +1,50 @@
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 
 const TerserPlugin = require('terser-webpack-plugin')
+const TimeFixPlugin = require('time-fix-plugin')
 
-type Params = {
-  projectRoot: string
-  mode: 'production' | 'development'
-  publicPath: string
+export type WebpackParams = {
+  name?: string
+  entry: string[]
+  context: string
+  publicPath?: string
+  mode?: 'production' | 'development'
+  target?: 'node' | 'electron-renderer' | 'web'
+  outputDir?: string
+  outputFile?: string
+  output?: any
+  externals?: any
+  ignore?: string[]
+  watch?: boolean
+  dll?: string
+  dllReference?: string
+  devServer?: boolean
+  hot?: boolean
 }
 
-export async function makeWebpackConfig(params: Params) {
-  let { publicPath, projectRoot, mode = 'development' } = params
+export async function makeWebpackConfig(params: WebpackParams) {
+  let {
+    outputFile,
+    entry,
+    publicPath = '/',
+    context,
+    mode = 'development' as any,
+    output,
+    outputDir = Path.join(context, 'dist'),
+    externals,
+    ignore = [],
+    watch,
+    dll,
+    dllReference,
+    devServer,
+    hot,
+    name,
+  } = params
 
-  const entry = './'
-  const target = 'electron-renderer'
-  const outputPath = Path.join(projectRoot, 'dist')
+  const entryDir = __dirname
+  const target = params.target || 'electron-renderer'
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
     Path.join(__dirname, '..', '..', '..', 'node_modules'),
@@ -27,64 +57,62 @@ export async function makeWebpackConfig(params: Params) {
 
   const optimization = {
     production: {
+      usedExports: true,
+      providedExports: true,
+      sideEffects: true,
       splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /node_modules/,
-            chunks: 'initial',
-            name: 'vendor',
-            priority: 10,
-            enforce: true,
-          },
-        },
+        chunks: 'async',
+        name: false,
       },
+      ...(target === 'node' && {
+        splitChunks: false,
+      }),
     },
     development: {
       noEmitOnErrors: true,
       removeAvailableModules: false,
       namedModules: true,
+      splitChunks: false,
+      // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed
+      // so optimize away side effects in node
+      ...(target === 'node' && {
+        removeAvailableModules: true,
+        sideEffects: true,
+        providedExports: true,
+        usedExports: true,
+      }),
     },
   }
 
-  let externals = {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    '@o/kit': 'OrbitKit',
-    '@o/ui': 'OrbitUI',
-  }
-
-  const config = {
-    context: projectRoot,
+  let config: webpack.Configuration = {
+    watch,
+    context: context,
     target,
     mode,
-    entry,
+    entry: {
+      main: hot
+        ? [`webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`, ...entry]
+        : entry,
+    },
     optimization: optimization[mode],
     output: {
-      path: outputPath,
+      path: outputDir,
       pathinfo: mode === 'development',
-      filename: 'bundle.js',
-      // TODO(andreypopp): sort this out, we need some custom symbol here which
-      // we will communicate to Orbit
-      library: 'window.OrbitAppToRun',
-      libraryTarget: 'assign',
-      libraryExport: 'default',
+      filename: outputFile || 'index.js',
+      ...output,
       publicPath,
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
+
+      // this makes the first entry fail but not hard reload
+      // comment it out for hard reloads, so far no fix seen
+      // hotUpdateChunkFilename: `hot-update.js`,
+      // hotUpdateMainFilename: `hot-update.json`,
     },
-    devServer: {
-      stats: {
-        warnings: false,
-      },
-      historyApiFallback: true,
-      hot: mode === 'development',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    },
-    devtool: mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
-    externals,
+    devtool:
+      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
+    externals: [externals, { electron: '{}' }],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields:
@@ -100,14 +128,31 @@ export async function makeWebpackConfig(params: Params) {
     },
     module: {
       rules: [
-        {
+        target !== 'node' && {
           test: /.worker\.[jt]sx?$/,
           use: ['workerize-loader'],
           // exclude: /node_modules/,
         },
-        // ignore .node.js modules
-        {
+        // ignore .node.js modules in web modes
+        target !== 'node' && {
           test: /\.node.[jt]sx?/,
+          use: 'ignore-loader',
+        },
+        // ignore non-.node.js modules in node mode
+        target === 'node' && {
+          test: x => {
+            // explicit ignores from options
+            if (ignore.find(z => z.indexOf(x) > -1)) {
+              return true
+            }
+            // dont ignore if outside of this app source
+            if (x.indexOf(entryDir) !== 0) {
+              return false
+            }
+            // ignore if inside this apps src, and not matching our .node pattern (or entry):
+            const isValidNodeFile = entry === x || x.indexOf('.node.ts') > -1
+            return !isValidNodeFile
+          },
           use: 'ignore-loader',
         },
         // ignore .electron.js modules if in web mode
@@ -118,22 +163,21 @@ export async function makeWebpackConfig(params: Params) {
         {
           test: /\.tsx?$/,
           use: [
-            'thread-loader',
-            {
-              loader: 'ts-loader',
-              options: {
-                happyPackMode: true,
-                transpileOnly: true, // disable - we use it in fork plugin
-              },
-            },
             {
               loader: 'babel-loader',
               options: {
-                presets: ['@o/babel-preset-motion'],
+                presets: [
+                  [
+                    '@o/babel-preset-motion',
+                    {
+                      disable: target === 'node' ? ['react-hot-loader/babel'] : [],
+                    },
+                  ],
+                ],
               },
             },
-            'react-hot-loader/webpack',
-          ],
+            target !== 'node' && 'react-hot-loader/webpack',
+          ].filter(Boolean),
         },
         {
           test: /\.css$/,
@@ -163,27 +207,84 @@ export async function makeWebpackConfig(params: Params) {
           ],
         },
         {
-          test: /\.(mp4)$/,
-          use: ['file-loader'],
-        },
-        {
           test: /\.(md)$/,
           use: 'raw-loader',
         },
       ].filter(Boolean),
     },
     plugins: [
+      new TimeFixPlugin(),
+
       new webpack.DefinePlugin(defines),
-      new webpack.IgnorePlugin(/electron-log/),
+
+      !dll &&
+        target !== 'node' &&
+        new HtmlWebpackPlugin({
+          template: Path.join(__dirname, '..', 'index.html'),
+          chunksSortMode: 'none',
+          inject: false,
+          externals: ['apps.js'],
+        }),
+
       mode === 'production' &&
         new TerserPlugin({
+          sourceMap: true,
           parallel: true,
+          cache: true,
           terserOptions: {
-            ecma: 6,
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 6,
+              warnings: false,
+            },
+            mangle: {
+              safari10: true,
+            },
+            keep_classnames: true,
+            output: {
+              ecma: 6,
+              comments: false,
+              beautify: false,
+              ascii_only: true,
+            },
           },
         }),
-      mode === 'development' && new webpack.NamedModulesPlugin(),
-    ].filter(Boolean),
+
+      !!dll &&
+        new webpack.DllPlugin({
+          name: 'main',
+          path: dll,
+        }),
+
+      !!dllReference &&
+        new webpack.DllReferencePlugin({
+          manifest: dllReference,
+          context: context,
+        }),
+
+      hot && new webpack.HotModuleReplacementPlugin(),
+
+      // mode === 'development' && new webpack.NamedModulesPlugin(),
+    ].filter(Boolean) as webpack.Plugin[],
   }
+
+  if (devServer) {
+    // @ts-ignore
+    config.devServer = {
+      stats: {
+        warnings: false,
+      },
+      historyApiFallback: true,
+      hot,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    }
+  }
+
+  // console.log('made config', config)
+
   return config
 }

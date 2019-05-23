@@ -1,6 +1,6 @@
-import { createApi, createApp } from '@o/kit'
+import { createApp } from '@o/kit'
 
-import { PostgresApi } from './api.node'
+import PostgresApi from './api.node'
 import { graph } from './graph.node'
 import { postgresIcon } from './postgresIcon'
 
@@ -9,7 +9,7 @@ export default createApp({
   name: 'Postgres',
   icon: postgresIcon,
   itemType: 'document',
-  api: createApi<typeof PostgresApi>(),
+  api: PostgresApi,
   graph,
   setup: {
     hostname: {

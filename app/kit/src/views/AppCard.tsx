@@ -5,7 +5,7 @@ import React, { Suspense, useEffect, useRef, useState } from 'react'
 
 import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { Omit } from '../types'
-import { AppDefinition } from '../types/AppDefinition'
+import { AppDefinition } from '../types/AppTypes'
 import { SelectApp } from './SelectApp'
 
 type AppCardProps<Def extends AppDefinition> = Omit<CardProps, 'children' | 'onChange'> & {

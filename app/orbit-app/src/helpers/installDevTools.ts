@@ -5,6 +5,10 @@ import { spy } from 'mobx'
 import { setConfig } from 'react-hot-loader'
 
 import { Stores } from '../om/stores'
+import * as Fixtures from './developmentFixtures'
+
+console.warn('To run development fixtures, use Fixtures.*')
+window['Fixtures'] = Fixtures
 
 window['enableLog'] = false
 

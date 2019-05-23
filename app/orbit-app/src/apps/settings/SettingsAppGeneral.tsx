@@ -45,11 +45,11 @@ const electronToNiceChars = (charString: string) => {
 }
 
 const focusShortcut = () => {
-  App.setOrbitState({ shortcutInputFocused: true })
+  App.setState({ orbitState: { shortcutInputFocused: true } })
 }
 
 const blurShortcut = () => {
-  App.setOrbitState({ shortcutInputFocused: false })
+  App.setState({ orbitState: { shortcutInputFocused: false } })
 }
 
 export function SettingsAppGeneral(_props: AppProps) {

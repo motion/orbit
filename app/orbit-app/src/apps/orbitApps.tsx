@@ -1,26 +1,16 @@
-import ConfluenceApp from '@o/confluence-app'
-import DriveApp from '@o/drive-app'
-import GithubApp from '@o/github-app'
-import GmailApp from '@o/gmail-app'
-import GraphApp from '@o/graphql-source-app'
-import JiraApp from '@o/jira-app'
-import { AppDefinition, configureKit, createApp } from '@o/kit'
-import ListsApp from '@o/lists-app'
-import PeopleApp from '@o/people-app'
-import PostgresApp from '@o/postgres-app'
-import SearchApp from '@o/search-app'
-import SlackApp from '@o/slack-app'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
-import WebsiteApp from '@o/website-app'
+import { reaction } from 'mobx'
 import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
-import DataExplorerApp from './DataExplorerApp'
 import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
+import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
@@ -32,28 +22,10 @@ const LoadingApp = createApp({
   app: () => createElement(Loading),
 })
 
-// "available" apps to install/use
-// eventually can be in a dynamic app store service
-
-const apps: AppDefinition[] = [
-  ListsApp,
-  SearchApp,
-  PeopleApp,
-  ConfluenceApp,
-  JiraApp,
-  GmailApp,
-  DriveApp,
-  GithubApp,
-  SlackApp,
-  WebsiteApp,
-  PostgresApp,
-  GraphApp,
-]
-
 // apps we use internally in orbit
 
 export const orbitStaticApps: AppDefinition[] = [
-  DataExplorerApp,
+  QueryBuilderApp,
   SettingsApp,
   SpacesApp,
   AppsApp,
@@ -65,11 +37,47 @@ export const orbitStaticApps: AppDefinition[] = [
   LoadingApp,
 ]
 
-export const orbitApps: AppDefinition[] = [...orbitStaticApps, ...apps]
-
-export function getApps() {
-  return orbitApps
+const requireDynamicApps = () => {
+  const rawApps = require('../../appDefinitions')
+  return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
+
+let dynamicApps = requireDynamicApps()
+
+export function getApps(): AppDefinition[] {
+  return [...orbitStaticApps, ...dynamicApps]
+}
+
+export function getUserApps(): AppDefinition[] {
+  return dynamicApps
+}
+
+export function useStaticAppDefinitions() {
+  return orbitStaticApps
+}
+
+// refreshes when they change
+export function useUserAppDefinitions() {
+  useAppDefinitions() // this triggers update on app defs update
+  return getUserApps()
+}
+
+export function useUserVisualAppDefinitions() {
+  return useUserAppDefinitions().filter(x => !!x.app)
+}
+
+export function useUserDataAppDefinitions() {
+  return useUserAppDefinitions().filter(x => !!(x.api || x.graph))
+}
+
+reaction(
+  () => Desktop.state.workspaceState.appIdentifiers,
+  async appIdentifiers => {
+    console.log('appIdentifiers updated', appIdentifiers, requireDynamicApps())
+    dynamicApps = requireDynamicApps()
+    __SERIOUSLY_SECRET.reloadAppDefinitions()
+  },
+)
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {
@@ -80,7 +88,7 @@ if (module['hot']) {
     if (status === 'apply') {
       configureKit({
         StoreContext,
-        getApps,
+        getLoadedApps: getApps,
       })
     }
   })

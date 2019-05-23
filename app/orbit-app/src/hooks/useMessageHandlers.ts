@@ -15,13 +15,13 @@ export function useMessageHandlers() {
       console.log('got a message', name, value)
       switch (name) {
         case 'HIDE':
-          App.setOrbitState({ docked: false })
+          App.setState({ showOrbitMain: false })
           return
         case 'SHOW':
-          App.setOrbitState({ docked: true })
+          App.setState({ showOrbitMain: true })
           return
         case 'TOGGLE_SETTINGS':
-          AppActions.setOrbitDocked(true)
+          App.setState({ showOrbitMain: true })
           paneManagerStore.setPane('settings')
           return
         case 'APP_URL_OPENED':

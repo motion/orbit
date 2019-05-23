@@ -6,9 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../../app/kit" },
-    { "path": "../../packages/ui" },
-    { "path": "../postgres-app" }
-  ]
+  "references": [{ "path": "../../app/kit" }, { "path": "../../packages/ui" }]
 }

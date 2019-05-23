@@ -24,7 +24,7 @@ import { TearAppResolver } from './resolver/TearAppResolver'
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export async function main() {
-  const desktopServerUrl = `http://localhost:${getGlobalConfig().ports.server}`
+  const desktopServerUrl = `http://localhost:${getGlobalConfig().ports.server}/hello`
 
   log.info(
     `Starting electron in env ${process.env.NODE_ENV}`,

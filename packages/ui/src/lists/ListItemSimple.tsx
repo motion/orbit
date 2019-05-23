@@ -211,13 +211,22 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = small ? 0.8 : 1
-  let pad = small ? 'xs' : 'sm'
+  let padDefault = small ? 'xs' : 'sm'
+  let pad = props.iconBefore ? (small ? 'sm' : 12) : padDefault
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
     hoverStyle: null,
     activeStyle: null,
   }
+
+  const iconElement = showIcon && getIcon(props)
+  const scale = useScale()
+  const listItemAdjustedPadding = getListItemPadding({
+    ...props,
+    pad: selectDefined(surfaceProps.pad, pad),
+  }).map(x => x * scale)
+  const spaceSize = listItemAdjustedPadding[1]
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
@@ -254,25 +263,16 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       >
         {`${location}`}
       </RoundButtonSmall>
-      <Space size="sm" />
+      <Space size={spaceSize} />
     </>
   )
-
-  const iconElement = showIcon && getIcon(props)
-  const scale = useScale()
-  const listItemAdjustedPadding = getListItemPadding({
-    ...props,
-    pad: selectDefined(surfaceProps.pad, pad),
-  }).map(x => x * scale)
 
   return (
     <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
       {above}
       {!!separator && (
         <Theme name={activeThemeName}>
-          <Separator paddingTop={16} {...separatorProps}>
-            {separator}
-          </Separator>
+          <Separator {...separatorProps}>{separator}</Separator>
         </Theme>
       )}
       <SizedSurface
@@ -285,7 +285,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
         before={before}
-        spaceSize={listItemAdjustedPadding[1]}
+        spaceSize={spaceSize}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
         after={!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
@@ -298,7 +298,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               {showIcon && !iconBefore && (
                 <>
                   {iconElement}
-                  <Space size="sm" />
+                  <Space size={spaceSize} />
                 </>
               )}
               <HighlightText
@@ -443,7 +443,7 @@ const getIconSize = props =>
   (props.iconBefore
     ? props.small || !(props.subTitle || props.children)
       ? 20
-      : 26
+      : 28
     : props.small
     ? 12
     : 14)

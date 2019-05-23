@@ -1,43 +1,5 @@
-import { getAppDefinition } from '@o/kit'
 import { AppBit } from '@o/models'
-
-export const defaultApps: AppBit[] = [
-  {
-    target: 'app',
-    name: 'Search',
-    identifier: 'search',
-    colors: ['red'],
-    data: {},
-  },
-  {
-    target: 'app',
-    name: 'List',
-    identifier: 'lists',
-    colors: ['blue'],
-    data: {},
-  },
-  {
-    target: 'app',
-    name: 'Directory',
-    identifier: 'people',
-    colors: ['green'],
-    data: {},
-  },
-  {
-    target: 'app',
-    name: 'Custom',
-    identifier: 'custom',
-    colors: ['gray'],
-    data: {},
-  },
-  {
-    target: 'app',
-    name: 'Custom 2',
-    identifier: 'custom2',
-    colors: ['gray'],
-    data: {},
-  },
-]
+import { getUserApps } from '../apps/orbitApps'
 
 export class NewAppStore {
   showCreateNew = false
@@ -46,7 +8,11 @@ export class NewAppStore {
     this.showCreateNew = val
   }
 
-  app: AppBit = defaultApps[0]
+  app: AppBit = {
+    target: 'app',
+    identifier: 'custom',
+    colors: ['red', 'orange'],
+  }
 
   update(app: Partial<AppBit>) {
     this.app = {
@@ -56,7 +22,8 @@ export class NewAppStore {
   }
 
   setApp(identifier: string) {
-    const nextApp = defaultApps.find(x => x.identifier === identifier)
+    const userApps = getUserApps()
+    const nextApp = userApps.find(x => x.id === identifier)
     console.log('next app', nextApp)
     if (!nextApp) {
       console.warn('no app', nextApp)
@@ -66,19 +33,9 @@ export class NewAppStore {
     // update name and colors if unedited
     let name = this.app.name
     let colors = this.app.colors
-    const neverChangedName =
-      name === defaultApps.find(x => x.identifier === this.app.identifier).name
+    const neverChangedName = name === userApps.find(x => x.id === this.app.identifier).name
     if (neverChangedName) {
       name = nextApp.name
-      colors = nextApp.colors
-    }
-
-    // get data from defaultValue
-    let data = nextApp.data
-    const def = getAppDefinition(identifier)
-    if (!def) {
-      console.warn('no wapp?')
-      return
     }
 
     this.app = {
@@ -88,11 +45,17 @@ export class NewAppStore {
       colors,
       // always update
       identifier,
-      data,
+      data: {},
     }
   }
 
   reset = () => {
-    this.app = defaultApps[0]
+    const initialDef = getUserApps()[0]
+    this.app = {
+      target: 'app',
+      name: initialDef.name,
+      identifier: initialDef.id,
+      colors: ['yellow', 'red'],
+    }
   }
 }

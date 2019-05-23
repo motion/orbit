@@ -2,7 +2,6 @@ import { App } from '@o/stores'
 import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
-import { AppActions } from '../actions/AppActions'
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
 
@@ -74,8 +73,8 @@ export default memo(function MainShortcutHandler(props: {
           return queryStore.setQuery('')
         }
         // then orbit itself
-        if (App.state.orbitState.docked) {
-          return AppActions.setOrbitDocked(false)
+        if (App.state.showOrbitMain) {
+          App.setState({ showOrbitMain: false })
         }
       },
       UP: () => shortcutStore.emit(Direction.up),

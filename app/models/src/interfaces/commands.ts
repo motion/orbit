@@ -20,6 +20,23 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
+export const GetPIDCommand = new Command<number>('get-pid')
+
+export interface AppMeta {
+  packageId: string
+  directory: string
+  packageJson: Object
+  apiInfo: { [key: string]: { name: string; typeString: string; comment: string; types: any[] } }
+}
+
+// return extra information about app
+export const AppMetaCommand = new Command<
+  AppMeta,
+  {
+    identifier: string
+  }
+>('app-meta')
+
 export const AppOpenWindowCommand = new Command<
   boolean,
   {
@@ -33,8 +50,18 @@ export const AppDevOpenCommand = new Command<
   {
     // Path to the app project in dev
     path: string
+    entry: string
   }
 >('app-dev-open')
+
+export const AppOpenWorkspaceCommand = new Command<
+  boolean,
+  {
+    // Path to the workspace project in dev
+    path: string
+    appIdentifiers: string[]
+  }
+>('app-workspace-open')
 
 export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
 

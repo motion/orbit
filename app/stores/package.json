@@ -3,11 +3,14 @@
   "version": "2.5.2",
   "private": true,
   "main": "_/index.js",
+  "ts:main": "./src/index.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/orbit-types": "^2.5.2",
     "@o/config": "^2.5.2",
     "@o/constants": "^2.5.2",
     "@o/mobx-bridge": "^2.5.2",

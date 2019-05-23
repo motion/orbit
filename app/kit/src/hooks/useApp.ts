@@ -3,7 +3,7 @@ import { AppBit } from '@o/models'
 import { useForceUpdate } from '@o/use-store'
 import { useEffect, useRef } from 'react'
 
-import { AppDefinition } from '../types/AppDefinition'
+import { AppDefinition } from '../types/AppTypes'
 import { useAppBit } from './useAppBit'
 
 // type ApiCall = AppWithDefinition & {

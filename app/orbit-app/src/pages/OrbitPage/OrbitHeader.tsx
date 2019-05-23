@@ -24,43 +24,6 @@ export const headerButtonProps = {
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
-const HomeButton = memo(
-  forwardRef((props: any, ref) => {
-    const { state, actions } = useOm()
-    const theme = useTheme()
-    const { newAppStore, paneManagerStore } = useStores()
-    const { activePane } = paneManagerStore
-    const activePaneType = activePane.type
-    const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-
-    return (
-      <Icon
-        ref={ref}
-        onMouseEnter={() => actions.setNavHovered(true)}
-        onMouseLeave={() => actions.setNavHovered(false)}
-        opacity={0.65}
-        hoverStyle={{
-          opacity: 1,
-        }}
-        color={invertLightness(theme.color, 0.5)}
-        name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
-        size={22}
-        onMouseUp={e => {
-          e.stopPropagation()
-          actions.router.showHomePage()
-        }}
-        {...props}
-      />
-    )
-  }),
-)
-
-// @ts-ignore
-HomeButton.acceptsProps = {
-  icon: true,
-  hover: true,
-}
-
 const activeStyle = {
   opacity: 1,
 }
@@ -81,7 +44,7 @@ export const OrbitHeader = memo(() => {
       >
         <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isEditing ? 46 : 64}>
+        <HeaderTop height={isEditing ? 46 : 56}>
           <HeaderSide spaceAround>
             <HeaderButtonPassProps>
               <BackButton />
@@ -131,8 +94,8 @@ export const OrbitHeader = memo(() => {
             {!isEditing && (
               <HeaderButtonPassProps>
                 <Button
-                  {...om.state.router.appId === 'data-explorer' && activeStyle}
-                  {...useLocationLink('/app/data-explorer')}
+                  {...om.state.router.appId === 'query-builder' && activeStyle}
+                  {...useLocationLink('/app/query-builder')}
                   icon="layers"
                   tooltip="Query Builder"
                 />
@@ -198,13 +161,50 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         distance={8}
         sizeRadius
         background={(theme => theme.backgroundStrongest) as any}
-        adjust={[80, 0]}
+        adjust={[10, 0]}
         {...rest}
       >
         {children}
       </Popover>
     </>
   )
+}
+
+const HomeButton = memo(
+  forwardRef((props: any, ref) => {
+    const { state, actions } = useOm()
+    const theme = useTheme()
+    const { newAppStore, paneManagerStore } = useStores()
+    const { activePane } = paneManagerStore
+    const activePaneType = activePane.type
+    const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
+
+    return (
+      <View ref={ref} {...props}>
+        <Icon
+          onMouseEnter={() => actions.setNavHovered(true)}
+          onMouseLeave={() => actions.setNavHovered(false)}
+          opacity={0.65}
+          hoverStyle={{
+            opacity: 1,
+          }}
+          color={invertLightness(theme.color, 0.5)}
+          name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
+          size={22}
+          onMouseUp={e => {
+            e.stopPropagation()
+            actions.router.showHomePage()
+          }}
+        />
+      </View>
+    )
+  }),
+)
+
+// @ts-ignore
+HomeButton.acceptsProps = {
+  icon: true,
+  hover: true,
 }
 
 const OrbitNavHiddenBar = props => {

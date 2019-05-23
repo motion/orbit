@@ -100,7 +100,6 @@ function publish-packages() {
       --ignore "@o/playground" \
       --ignore "@o/site" \
       --ignore "@o/babel-preset-motion" \
-      --ignore "gloss-displaynames" \
       --ignore "@o/blog" \
       --ignore "@o/cosal-test" \
       -- npm publish --force --registry http://localhost:4343)

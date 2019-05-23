@@ -6,21 +6,7 @@ export type PassPropsProps = {
   [key: string]: any
 }
 
-const getChild = (child: any, props: PassPropsProps) => {
-  if (!child || typeof child === 'string') {
-    return child
-  }
-  if (isValidElement(child)) {
-    return cloneElement(child, {
-      ...props,
-      ...child.props,
-    })
-  }
-  const Child = child
-  return <Child {...props} />
-}
-
-export function PassProps({ children, getChildProps, passCondition, ...props }: PassPropsProps) {
+export const PassProps = ({ children, getChildProps, passCondition, ...props }: PassPropsProps) => {
   return (
     <>
       {Children.map(children, (child, index) => {
@@ -34,3 +20,17 @@ export function PassProps({ children, getChildProps, passCondition, ...props }: 
 }
 
 PassProps.canUnwrap = true
+
+function getChild(child: any, props: PassPropsProps) {
+  if (!child || typeof child === 'string') {
+    return child
+  }
+  if (isValidElement(child)) {
+    return cloneElement(child, {
+      ...props,
+      ...child.props,
+    })
+  }
+  const Child = child
+  return <Child {...props} />
+}

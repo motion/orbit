@@ -4,7 +4,11 @@ import React from 'react'
 
 import { OrbitOrb } from './OrbitOrb'
 
-export function SpaceIcon({ space, size = 32, ...props }: { space: Space } & Partial<IconProps>) {
+export const SpaceIcon = ({
+  space,
+  size = 32,
+  ...props
+}: { space: Space } & Partial<IconProps>) => {
   return <OrbitOrb size={size} colors={space.colors} {...props} />
 }
 

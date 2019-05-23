@@ -1,9 +1,11 @@
 import { isDefined, selectDefined } from '@o/utils'
-import { Theme } from 'gloss'
+import { Base, Theme } from 'gloss'
 import React, { forwardRef } from 'react'
 
+import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'
 import { createContextualProps } from './helpers/createContextualProps'
+import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Sizes, Space } from './Space'
@@ -118,7 +120,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   } = props
   const hasTitle = isDefined(title, afterTitle)
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered || titleElement) ? pad : null)
-  const spaceSize = !!space ? selectDefined(size, space) : space
+  const spaceSize = selectDefined(space, size)
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
   const collapse = useCollapse(collapseProps)
 
@@ -131,7 +133,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       <Scale size={titleScale}>
         <Theme alt="flat">
           <TitleRow
-            bordered={bordered || titleBorder}
             backgrounded={selectDefined(backgrounded, bordered)}
             title={title}
             subTitle={subTitle}
@@ -155,6 +156,15 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>
     )
+
+    if (bordered || titleBorder) {
+      titleEl = (
+        <Base position="relative">
+          {titleEl}
+          {!!(bordered || titleBorder) && <BorderBottom opacity={0.5} />}
+        </Base>
+      )
+    }
   }
 
   return (
@@ -197,6 +207,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
           overflow="hidden"
+          suspense={<Loading />}
           {...viewProps}
         >
           {children}

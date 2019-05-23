@@ -1,4 +1,4 @@
-import React, { cloneElement, isValidElement, Suspense } from 'react'
+import React, { cloneElement, isValidElement, memo, Suspense } from 'react'
 
 import { CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
@@ -11,7 +11,7 @@ export type PaneProps = ColProps &
   Partial<CollapsableProps> &
   PaneTitleRowParentProps
 
-export function Pane(props: PaneProps) {
+export const Pane = memo((props: PaneProps) => {
   const [
     collapseProps,
     {
@@ -62,4 +62,4 @@ export function Pane(props: PaneProps) {
       </Suspense>
     </SizablePane>
   )
-}
+})

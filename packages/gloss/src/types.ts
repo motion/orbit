@@ -39,3 +39,39 @@ export type SimpleStyleObject = {
   borderColor?: ColorLike
   [a: string]: ColorLike | ColorObject | any
 }
+
+export type StrictOptions = {
+  displayName: boolean
+  evaluate: boolean
+  ignore: RegExp
+  babelOptions: Object
+}
+
+export type BabelState = {
+  opts: {
+    matchNames: string[]
+    matchImports: string[]
+  }
+  rules: {
+    [selector: string]: {
+      className: string
+      displayName: string
+      cssText: string
+      start?: Location
+    }
+  }
+  replacements: {
+    original: { start: Location; end: Location }
+    length: number
+  }[]
+  index: number
+  dependencies: string[]
+  file: {
+    opts: {
+      cwd: string
+      root: string
+      filename: string
+    }
+    metadata: any
+  }
+}

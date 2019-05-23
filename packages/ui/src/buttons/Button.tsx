@@ -1,6 +1,6 @@
 import { Theme, useTheme } from 'gloss'
 import { selectDefined } from '@o/utils'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, memo } from 'react'
 
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
@@ -50,17 +50,19 @@ function ButtonInner(props: ButtonProps) {
   )
 }
 
-export const Button = forwardRef((buttonProps: ButtonProps, ref) => {
-  const props = useSurfaceProps(buttonProps)
-  const { alt, theme, themeSelect, ...rest } = props
-  return (
-    <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
-      <ButtonInner forwardRef={ref} {...rest} />
-    </Theme>
-  )
-})
+export const Button = memo(
+  forwardRef((buttonProps: ButtonProps, ref) => {
+    const props = useSurfaceProps(buttonProps)
+    const { alt, theme, themeSelect, ...rest } = props
+    return (
+      <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
+        <ButtonInner forwardRef={ref} {...rest} />
+      </Theme>
+    )
+  }),
+)
 
-Button.defaultProps = {
+Button['defaultProps'] = {
   themeSelect: 'button',
 }
 

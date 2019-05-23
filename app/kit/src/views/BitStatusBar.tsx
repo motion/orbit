@@ -10,7 +10,7 @@ import {
   View,
 } from '@o/ui'
 import * as React from 'react'
-import { AppBitMainProps } from '../types/AppDefinition'
+import { AppBitMainProps } from '../types/AppTypes'
 
 const Cmd = gloss({
   opacity: 0.6,

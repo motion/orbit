@@ -25,14 +25,14 @@ export class CosalManager {
 
   constructor({ dbPath }: { dbPath: string }) {
     this.dbPath = dbPath
+    this.cosal = new Cosal({
+      database: this.dbPath,
+    })
   }
 
   async start() {
     log.info(`start()`)
     await ensureSetting('cosalIndexUpdatedTo', 0)
-    this.cosal = new Cosal({
-      database: this.dbPath,
-    })
 
     // heavy startup
     setTimeout(() => {

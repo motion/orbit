@@ -1,11 +1,11 @@
 import { isEqual } from '@o/fast-compare'
-import { Contents } from 'gloss'
 import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
+import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 
-import { getAppDefinition } from '../helpers/getAppDefinition'
+import { useAppDefinition } from '../hooks/useAppDefinition'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { AppViewsContext } from './App'
@@ -54,6 +54,7 @@ export const AppView = memoIsEqualDeep(
     const context = useMemo(() => ({ [capitalize(props.viewType)]: ChildrenOnly } as any), [
       props.viewType,
     ])
+    const definition = useAppDefinition(props.identifier)
 
     // prevent infinite loop of nesting, which can be relatively easy to do
     if (isEqual(prev, props)) {
@@ -66,8 +67,12 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app identifier')
     }
 
-    const definition = getAppDefinition(props.identifier)
     let View = null
+
+    if (!definition) {
+      console.warn('no definition found', props)
+      return null
+    }
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {
       View = definition[props.viewType]

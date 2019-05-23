@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { getTextSize } from '../Sizes'
 import { Text, TextProps } from './Text'
 

@@ -1,3 +1,4 @@
 export * from './useModel'
-export * from './commands'
+export * from './bridgeCommands'
 export * from './Mediator'
+export * from './useCommand'

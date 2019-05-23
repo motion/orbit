@@ -1,9 +1,9 @@
-import { BuildServer } from '@o/build-server'
+import { AppMiddleware } from '@o/build-server'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
 import express from 'express'
-import proxy from 'http-proxy-middleware'
+import httpProxyMiddleware from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
 
@@ -27,7 +27,7 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor(private buildServer: BuildServer) {
+  constructor(private buildServer: AppMiddleware) {
     this.server = express()
     this.server.set('port', Config.ports.server)
 
@@ -80,7 +80,7 @@ export class WebServer {
       }
       this.server.use(
         '/',
-        proxy({
+        httpProxyMiddleware({
           target: webpackUrl,
           changeOrigin: true,
           secure: false,

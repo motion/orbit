@@ -45,7 +45,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
   return obj
 }
 
-export function Table(tableProps: TableProps) {
+export const Table = (tableProps: TableProps) => {
   // const focusStore = useFocusStore()
   const shareStore = useShareStore()
   const sectionProps: SectionSpecificProps = useSectionProps(tableProps as any) // TODO fix

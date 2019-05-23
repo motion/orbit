@@ -1,4 +1,17 @@
-import { App, AppDefinition, AppMainView, AppProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import {
+  App,
+  AppDefinition,
+  AppMainView,
+  AppProps,
+  createApp,
+  Icon,
+  isDataDefinition,
+  removeApp,
+  useActiveAppsWithDefinition,
+  useActiveDataAppsWithDefinition,
+  useAppDefinitions,
+  useAppWithDefinition,
+} from '@o/kit'
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React from 'react'
 
@@ -36,7 +49,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    groupName: 'Install App',
+    groupName: 'Setup Data Source',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',
@@ -56,7 +69,6 @@ export function AppsIndex() {
       subTitle="Use search to find new apps."
       itemProps={{
         iconBefore: true,
-        iconSize: 36,
       }}
       items={[
         {
@@ -98,7 +110,7 @@ export function AppsMain(props: AppProps) {
   }
 
   if (!app) {
-    return null
+    return <>hi</>
   }
 
   if (props.subType === 'add-app') {

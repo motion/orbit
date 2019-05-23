@@ -1,11 +1,8 @@
-import immer from 'immer'
+import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
 
-import * as TemplatesImport from './templates'
-
-export const Templates = TemplatesImport
-
-export const produce = immer
-
+export { Templates } from './templates/all'
+export { produce } from './helpers/produce'
+export * from '@o/orbit-types'
 export * from '@o/bridge'
 export * from '@o/config'
 export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
@@ -68,8 +65,7 @@ export * from './ServiceLoader'
 export * from './stores'
 export * from './stores/PaneManagerStore'
 export * from './themes'
-export * from './types/AppDefinition'
-export * from './types/AppProps'
+export * from './types/AppTypes'
 export * from './types/NLPTypes'
 export * from './views/App'
 export * from './views/AppCard'
@@ -99,3 +95,7 @@ export * from './hooks/useNLP'
 export * from './hooks/useAppDefinition'
 export * from './hooks/useIsActive'
 export * from './views/ScopedState'
+
+export const __SERIOUSLY_SECRET = {
+  reloadAppDefinitions,
+}

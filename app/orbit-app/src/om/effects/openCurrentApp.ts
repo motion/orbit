@@ -37,11 +37,11 @@ export async function openCurrentApp() {
     appId: nextId,
   })
 
-  // set App.orbitState.docked false so next orbit window is hidden on start
+  // set App.state.showOrbitMain false so next orbit window is hidden on start
   // TODO clean up tearing a bit, including this settimeout
   // for now its just happening becuase i dont want to deal with having a proper system
   // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
   setTimeout(() => {
-    App.setOrbitState({ docked: false })
+    App.setState({ showOrbitMain: false })
   }, 100)
 }

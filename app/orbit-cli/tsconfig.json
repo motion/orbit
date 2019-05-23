@@ -6,5 +6,9 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/build" }, { "path": "../telemetry" }]
+  "references": [
+    { "path": "../../packages/build" },
+    { "path": "../telemetry" },
+    { "path": "../build-server" }
+  ]
 }

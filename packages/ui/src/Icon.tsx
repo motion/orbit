@@ -3,9 +3,9 @@ import { toColor } from '@o/color'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import { useTheme } from 'gloss'
-import React, { createContext, memo, useContext } from 'react'
+import React, { createContext, forwardRef, memo, useContext } from 'react'
 
-import { Config } from './helpers/configure'
+import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
 import { SVG } from './SVG'
 import { View, ViewProps } from './View/View'
@@ -37,24 +37,25 @@ const findName = (name: string) => {
 }
 
 // lets users wrap around icons
-export const Icon = memo((rawProps: IconProps) => {
-  const extraProps = useContext(IconPropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = Config.useIcon || PlainIcon
-  return <ResolvedIcon themeSelect="icon" {...props} />
-})
+export const Icon = memo(
+  forwardRef((rawProps: IconProps, ref) => {
+    const extraProps = useContext(IconPropsContext)
+    const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+    const ResolvedIcon = Config.useIcon || PlainIcon
+    return <ResolvedIcon ref={ref} themeSelect="icon" {...props} />
+  }),
+)
 
 // @ts-ignore
 Icon.acceptsProps = {
   icon: true,
-  hvoer: true,
+  hover: true,
 }
 
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
-  const name = findName(props.name)
+export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: IconProps, ref) => {
   const theme = useTheme(props)
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
@@ -73,17 +74,19 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
     debugger
   }
 
-  if (isDefined(props.svg)) {
+  if (isDefined(svg)) {
     return (
       <View
+        ref={ref}
         width={size}
         height={size}
-        className={`icon ${props.className || ''}`}
+        data-name={props.name}
+        className={`ui-icon ${props.className || ''}`}
         color={color}
         {...props}
       >
         <SVG
-          svg={props.svg}
+          svg={svg}
           width={`${size}px`}
           height={`${size}px`}
           style={{
@@ -106,14 +109,15 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
   // choose which pixel grid is most appropriate for given icon size
   const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.
-  const paths = renderSvgPaths(pixelGridSize, name)
+  const iconName = findName(props.name)
+  const paths = renderSvgPaths(pixelGridSize, iconName)
   const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
     <View width={size} height={size} {...props}>
       <svg
         style={{ color: `${color}`, ...style }}
-        data-icon={name}
+        data-icon={iconName}
         width={`${size}px`}
         height={`${size}px`}
         viewBox={viewBox}
@@ -122,12 +126,14 @@ export function PlainIcon({ style, ignoreColor, ...props }: IconProps) {
       </svg>
     </View>
   )
-}
+})
 
+// @ts-ignore
 PlainIcon.acceptsProps = {
   hover: true,
   icon: true,
 }
+// @ts-ignore
 PlainIcon.defaultProps = {
   size: 16,
 }

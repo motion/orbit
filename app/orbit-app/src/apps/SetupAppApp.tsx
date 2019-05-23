@@ -1,25 +1,17 @@
-import { App, AppIcon, createApp } from '@o/kit'
+import { AppIcon, createApp } from '@o/kit'
 import { Button, List, ListItemProps, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
-import { defaultApps } from '../stores/NewAppStore'
-
-const descriptions = {
-  search: 'Custom search with filters',
-  lists: 'Controlled or controllable list',
-  people: 'Manageable list of people',
-  custom: 'Internal development test app',
-  custom2: 'Internal development test app',
-}
+import { useUserVisualAppDefinitions } from './orbitApps'
 
 function SetupAppMain() {
   const { actions } = useOm()
-  const items = defaultApps.map(app => ({
+  const items: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
-    identifier: app.identifier,
-    subTitle: descriptions[app.identifier],
-    icon: <AppIcon app={app} />,
+    identifier: app.id,
+    subTitle: app.description || 'No description',
+    icon: <AppIcon app={{ identifier: app.id, colors: ['red', 'pink'] }} />,
     iconBefore: true,
     iconProps: {
       size: 44,
@@ -100,10 +92,11 @@ function SetupAppMain() {
             width="70%"
             background="transparent"
             margin="auto"
-            height="70%"
-            title="New app"
+            height="80%"
+            titleSize={0.85}
+            title="Add app to workspace"
             bordered
-            subTitle="Choose an app from your library to add to space."
+            subTitle="Choose from your installed apps."
           >
             <List
               searchable
@@ -139,9 +132,5 @@ export default createApp({
   id: 'setupApp',
   name: 'Setup App',
   icon: '',
-  app: () => (
-    <App>
-      <SetupAppMain />
-    </App>
-  ),
+  app: SetupAppMain,
 })

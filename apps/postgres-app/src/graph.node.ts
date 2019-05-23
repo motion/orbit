@@ -1,5 +1,6 @@
 import { AppBit } from '@o/kit'
 import { ApolloLink, Observable } from 'apollo-link'
+import * as graphileBuild from 'graphile-build'
 import { graphql, print } from 'graphql'
 import { Pool } from 'pg'
 import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext } from 'postgraphile'
@@ -79,25 +80,6 @@ async function performQuery(pgPool, schema, query, variables, operationName) {
     graphql(schema, queryString, null, { ...context }, variables, operationName),
   )
 }
-
-function requireFrom(modules, moduleName) {
-  const path = [...modules, moduleName].join('/node_modules/')
-  try {
-    return require(path) // eslint-disable-line
-  } catch (e) {
-    // Doesn't exist.
-    if (modules.length > 1) {
-      const result = requireFrom(modules.slice(0, modules.length - 1), moduleName)
-      if (result) return result
-    }
-    return (
-      requireFrom(modules.slice(1), moduleName) ||
-      requireFrom(modules.slice(0, modules.length - 1), moduleName)
-    )
-  }
-}
-
-const graphileBuild = requireFrom(['postgraphile', 'postgraphile-core'], 'graphile-build')
 
 function RenamedQueryPlugin(builder) {
   builder.hook('build', build =>

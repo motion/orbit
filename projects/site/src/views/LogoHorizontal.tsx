@@ -30,7 +30,11 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       {...useLink('/')}
       {...props}
     >
-      <SVG width={`${w}px`} height={`${h}px`} svg={orbit} />
+      <SVG
+        width={`${w}px`}
+        height={`${h}px`}
+        svg={orbit.replace('fill="#000000"', 'fill="currentColor"')}
+      />
     </View>
   )
 })

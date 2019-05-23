@@ -1,4 +1,3 @@
-import { Bit } from '@o/models'
 import { isDefined } from '@o/utils'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
@@ -23,9 +22,16 @@ import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
 import { Direction, SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
+// TODO round out, we can likely import models
+type BitLike = {
+  title?: string
+  body?: string
+  [key: string]: any
+}
+
 export type ListProps = SectionSpecificProps &
   /** Override the onOpen/onSelect */
-  Omit<VirtualListProps<Bit | ListItemProps>, 'onOpen' | 'onSelect'> &
+  Omit<VirtualListProps<BitLike | ListItemProps>, 'onOpen' | 'onSelect'> &
   Omit<Partial<UseFilterProps<any>>, 'items'> & {
     /** Make list expand to parent height */
     flex?: number

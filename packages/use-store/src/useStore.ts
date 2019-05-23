@@ -39,6 +39,7 @@ export interface UseStoreCurried<A extends ReactiveStore<any> | any> {
 }
 
 export type UsableStore<T, Props> = T & AutomagicStore<Props> & { useStore: UseStoreCurried<T> }
+
 type InferProps<T> = T extends { props: infer R } ? R : undefined
 
 const StoreCache = {}
@@ -62,7 +63,7 @@ export function createUsableStore<T, Props extends InferProps<T>>(
     return existing
   }
 
-  const Store = decorate(OGStore, initialProps)
+  const Store = decorate(OGStore, initialProps as Object)
   const store = (new Store() as any) as UsableStore<T, Props>
   store.useStore = options => useStore(store, undefined, options)
   StoreCache[hmrKey] = store
@@ -127,7 +128,7 @@ export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
   return captureHooks
 }
 
-function setupReactiveStore<A>(Store: new () => A, props?: Object) {
+function setupReactiveStore<A>(Store: new () => A, props?: any) {
   const component = useCurrentComponent()
   const AutomagicStore = decorate(Store, props)
 

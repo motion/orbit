@@ -22,7 +22,7 @@ const setScreenSize = () => {
   Electron.setState({ screenSize: getScreenSize() })
 }
 
-function showOrbit(shown: boolean) {
+function focusApp(shown: boolean) {
   if (shown) {
     app.focus()
   } else {
@@ -109,16 +109,16 @@ class OrbitMainWindowStore {
       // wait for move to finish
       await sleep(150)
       // wait for showing
-      await when(() => App.orbitState.docked)
+      await when(() => App.state.showOrbitMain)
       this.showOnNewSpace()
     },
   )
 
-  handleOrbitDocked = react(
-    () => App.orbitState.docked,
-    docked => {
+  handleShowOrbitMain = react(
+    () => App.state.showOrbitMain,
+    shown => {
       ensure('not torn', !Electron.isTorn)
-      showOrbit(docked)
+      focusApp(shown)
     },
   )
 
@@ -133,7 +133,7 @@ class OrbitMainWindowStore {
     if (Electron.isTorn) {
       return true
     }
-    return this.initialShow ? App.orbitState.docked : false
+    return this.initialShow ? App.state.showOrbitMain : false
   }
 
   setInitialShow = () => {
@@ -146,9 +146,9 @@ class OrbitMainWindowStore {
 }
 
 const onToggleOpen = () => {
-  const shown = App.orbitState.docked
+  const shown = App.state.showOrbitMain
   console.log('TOGGLE', shown)
-  showOrbit(shown)
+  focusApp(shown)
   Mediator.command(SendClientDataCommand, {
     name: shown ? 'HIDE' : 'SHOW',
   })

@@ -18,4 +18,15 @@ export interface Space {
    * Pane sort order.
    */
   paneSort?: number[]
+
+  /**
+   * Unique identifier used on filesystem to match to model.
+   * For now match it to the package.json.name
+   */
+  identifier?: string
+
+  /**
+   * Local path on filesystem.
+   */
+  directory?: string
 }

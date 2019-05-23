@@ -4,30 +4,13 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
-import * as firebase from 'firebase/app'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
-// order important
-require('firebase/auth')
-require('firebase/firestore')
-
 // @ts-ignore
 if (IS_ELECTRON) {
   require('electron')
-}
-
-// initialize firebase
-if (firebase && firebase.initializeApp) {
-  firebase.initializeApp({
-    apiKey: 'AIzaSyD0wuHFVnF7W2B5uPunzittKP4IXwbeROo',
-    authDomain: 'orbit-motion-dev.firebaseapp.com',
-    databaseURL: 'https://orbit-motion-dev.firebaseio.com',
-    projectId: 'orbit-motion-dev',
-    storageBucket: 'orbit-motion-dev.appspot.com',
-    messagingSenderId: '790826289951',
-  })
 }
 
 // because for some reason we are picking up electron process.env stuff...
@@ -61,6 +44,9 @@ async function fetchInitialConfig() {
 async function main() {
   // we've already started, ignore
   if (getGlobalConfig()) return
+
+  // until resolved: https://github.com/webpack-contrib/webpack-hot-middleware/pull/362
+  console.group = console.groupCollapsed
 
   console.timeEnd('splash')
 
@@ -141,3 +127,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 main()
+
+if (module['hot']) {
+  module['hot'].accept(() => {
+    console.log('accepted root')
+  })
+}

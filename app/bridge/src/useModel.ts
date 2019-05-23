@@ -1,10 +1,10 @@
 import { Model } from '@o/mediator'
-import { isDefined } from '@o/utils'
+import { isDefined, OR_TIMED_OUT, orTimeout } from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './commands'
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
 export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
@@ -156,7 +156,18 @@ function use<ModelType, Args>(
       if (isDefined(cache.current)) {
         valueRef.current = cache.current
       } else {
-        throw cache.read
+        throw new Promise((res, rej) => {
+          orTimeout(cache.read, 1000)
+            .then(x => res(x))
+            .catch(err => {
+              if (err === OR_TIMED_OUT) {
+                console.warn('Model query timed out', model, query)
+                cache.current = defaultValues[type]
+              } else {
+                rej(err)
+              }
+            })
+        })
       }
     }
   }

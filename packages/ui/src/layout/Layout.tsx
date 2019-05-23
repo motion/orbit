@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
+import React, { Children, cloneElement, createContext, isValidElement, memo, useMemo } from 'react'
 
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { Col, ColProps } from '../View/Col'
@@ -23,7 +23,7 @@ export const LayoutContext = createContext<{
   type: 'row',
 })
 
-export function Layout(props: LayoutProps) {
+export const Layout = memo((props: LayoutProps) => {
   Children.map(props.children, child => {
     if (!isValidElement(child) || child.type !== Pane) {
       throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
@@ -58,9 +58,9 @@ export function Layout(props: LayoutProps) {
       </LayoutContext.Provider>
     </View>
   )
-}
+})
 
-function FlexLayout({ children, type, ...colProps }: LayoutProps) {
+const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
   const visibility = useVisibility()
   const { ref, ...size } = useParentNodeSize({
     disable: !visibility,
@@ -105,7 +105,7 @@ function FlexLayout({ children, type, ...colProps }: LayoutProps) {
       {childElements}
     </LayoutCol>
   )
-}
+})
 
 const LayoutRow = gloss(Row, {
   flex: 1,

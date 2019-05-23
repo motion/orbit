@@ -21,9 +21,5 @@
     "@o/fast-compare": "^2.5.2",
     "gloss": "^2.5.6"
   },
-  "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
-  },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

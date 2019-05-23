@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetResolved, cssString, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetResolved, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -526,7 +526,7 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   const style = cssString(rules)
 
   // build the class name with the display name of the styled component and a unique id based on the css and namespace
-  const className = `g${stringHash(style)}`
+  const className = styleToClassName(style)
 
   // this is the first time we've found this className
   if (!tracker.has(className)) {
@@ -563,15 +563,4 @@ function getSelector(className: string, namespace: string, tagName: string = '')
     return namespace.replace(/&/g, classSelect)
   }
   return classSelect
-}
-
-// thx darksky: https://git.io/v9kWO
-function stringHash(str: string): number {
-  let res = 5381
-  let i = 0
-  let len = str.length
-  while (i < len) {
-    res = (res * 33) ^ str.charCodeAt(i++)
-  }
-  return res >>> 0
 }

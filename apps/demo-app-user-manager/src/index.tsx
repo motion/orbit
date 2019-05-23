@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 export default createApp({
   id: 'demo-app-user-manager',
   name: 'App Demo: User Manager',
-  icon: '',
+  icon: 'tool',
   app: DemoAppUserManager,
 })
 

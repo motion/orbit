@@ -4,7 +4,7 @@ import React from 'react'
 
 import { useActiveDataApps } from '../hooks/useActiveDataApps'
 import { Omit } from '../types'
-import { AppDefinition } from '../types/AppDefinition'
+import { AppDefinition } from '../types/AppTypes'
 
 export type SelectAppProps = Omit<SelectProps, 'onChange' | 'type'> & {
   appType?: AppDefinition

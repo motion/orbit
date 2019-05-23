@@ -1,29 +1,34 @@
 import { AppBit } from '@o/models'
 import { IconProps, SVG, toColor, useTheme, View } from '@o/ui'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
-import { getAppDefinition } from '../helpers/getAppDefinition'
+import { useAppDefinition } from '../hooks/useAppDefinition'
 import { appIcons } from './icons'
 
 export type AppIconProps = Partial<IconProps> & { app: AppBit }
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export function AppIconInner({
+export const AppIconInner = ({
   background = '#222',
   size = 32,
   style,
+  forwardRef,
   ...props
-}: Partial<AppIconProps>) {
-  // const theme = useTheme() props.color || theme.iconColor ||
-  const fill = toColor('#fff').hex()
+}: Partial<AppIconProps> & { forwardRef?: any }) => {
   const theme = useTheme()
   let name = props.name
+  const def = useAppDefinition(name)
+  let fill
+  try {
+    fill = toColor(props.color || theme.color).hex()
+  } catch {
+    fill = props.color || 'currentColor'
+  }
   let iconSrc
   let svgProps
 
   if (!appIcons[name]) {
-    let def = getAppDefinition(name)
     if (def) {
       iconSrc = theme.background.isDark() ? def.iconLight || def.icon : def.icon
     } else {
@@ -43,6 +48,7 @@ export function AppIconInner({
 
   return (
     <View
+      ref={forwardRef}
       style={{
         width: size,
         height: size,
@@ -66,7 +72,7 @@ function replaceAppBackground(iconSrc, bg) {
   const matches = iconSrc.match(idReplace)
 
   if (!matches) {
-    console.warn('no matches')
+    console.warn('no matches', iconSrc)
     return iconSrc
   }
 
@@ -93,9 +99,10 @@ function replaceAppBackground(iconSrc, bg) {
   return iconSrc
 }
 
-export function AppIcon({ app, ...props }: AppIconProps) {
+export const AppIcon = forwardRef(({ app, ...props }: AppIconProps, ref) => {
   return (
     <AppIconInner
+      forwardRef={ref}
       background={app.colors[0]}
       color={app.colors[1]}
       name={app.identifier}
@@ -103,8 +110,9 @@ export function AppIcon({ app, ...props }: AppIconProps) {
       {...props}
     />
   )
-}
+})
 
+// @ts-ignore
 AppIcon.acceptsProps = {
   hover: true,
   icon: true,

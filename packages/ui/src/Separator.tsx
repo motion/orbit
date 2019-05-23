@@ -1,18 +1,27 @@
-import { gloss } from 'gloss'
+import { gloss, selectThemeSubset, ThemeSelect, psuedoStyleTheme } from 'gloss'
 
-import { Text, TextProps } from './text/Text'
+import { SimpleText, SimpleTextProps } from './text/SimpleText'
+import { useScale } from './Scale'
 
-export type SeparatorProps = TextProps
+export type SeparatorProps = SimpleTextProps & { themeSelect?: ThemeSelect }
 
-export const Separator = gloss<SeparatorProps>(Text, {
-  paddingTop: 18,
-  paddingLeft: 10,
-  paddingRight: 10,
-  paddingBottom: 4,
-  opacity: 0.6,
+export const Separator = gloss<SeparatorProps>(SimpleText).theme((props, themeIn) => {
+  const scale = useScale()
+  const theme = selectThemeSubset(props.themeSelect, themeIn)
+  const themeStyle = psuedoStyleTheme(props, theme)
+  return {
+    borderTop: [1, theme.borderColor],
+    borderBottom: [1, theme.borderColor],
+    padding: [scale * 4, scale * 8],
+    ...themeStyle,
+  }
 })
 
 Separator.defaultProps = {
+  activeStyle: false,
+  hoverStyle: false,
+  themeSelect: 'separator',
   fontWeight: 400,
-  size: 0.9,
+  size: 0.85,
+  alpha: 0.8,
 }

@@ -52,6 +52,7 @@ const flags = {
   entry: getFlag('--entry'),
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
+  executable: getFlag('--executable'),
 }
 
 if (flags.prod) {
@@ -267,16 +268,6 @@ async function makeConfig() {
           test: /\.tsx?$/,
           include: tsEntries,
           use: [
-            'thread-loader',
-            {
-              loader: 'ts-loader',
-              options: {
-                configFile: tsConfig,
-                happyPackMode: true,
-                transpileOnly: true, // disable - we use it in fork plugin
-                experimentalWatchApi: true,
-              },
-            },
             {
               loader: 'babel-loader',
               options: babelrcOptions,
@@ -430,6 +421,12 @@ async function makeConfig() {
       new CircularDependencyPlugin({
         // failOnError: true,
       }),
+
+      flags.executable &&
+        new webpack.BannerPlugin({
+          banner: '#!/usr/bin/env node',
+          raw: true,
+        }),
 
       // !process.env['ANALYZE_BUNDLE'] &&
       //   isProd &&

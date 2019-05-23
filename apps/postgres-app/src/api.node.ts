@@ -1,4 +1,3 @@
-import { AppBit } from '@o/kit'
 import { createConnection } from 'typeorm'
 
 import { PostgresAppData } from './PostgresModels'
@@ -16,7 +15,7 @@ const connect = (appData: PostgresAppData) => {
   })
 }
 
-export const PostgresApi = (app: AppBit) => {
+export default (app: any) => {
   return {
     async query(query: string, parameters: any[] = []): Promise<any[]> {
       const appData: PostgresAppData = app.data

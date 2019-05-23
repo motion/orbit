@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity, Entities, SpaceEntity, userDefaultValue, UserEntity } from '@o/models'
+import { Entities, userDefaultValue, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
@@ -22,8 +22,6 @@ export class DatabaseManager {
     await connectModels(Entities)
 
     // setup default data
-    await this.ensureDefaultSpace()
-    await this.ensureDefaultApps()
     await this.ensureDefaultUser()
 
     await sleep(100)
@@ -142,92 +140,13 @@ export class DatabaseManager {
     await getConnection().query('DROP TRIGGER after_bit_delete')
   }
 
-  private async ensureDefaultSpace() {
-    let spaces = await getRepository(SpaceEntity).find()
-    if (!spaces.length) {
-      await getRepository(SpaceEntity).save([
-        {
-          name: 'Orbit',
-          paneSort: [],
-          colors: ['#CACCAC', '#270769'],
-        },
-        {
-          name: 'Me',
-          paneSort: [],
-          colors: ['#ACEACE', '#D48D48'],
-        },
-      ])
-    }
-  }
-
-  private async ensureDefaultApps() {
-    const spaces = await getRepository(SpaceEntity).find()
-
-    await Promise.all(
-      spaces.map(async space => {
-        const apps = await getRepository(AppEntity).find({ spaceId: space.id })
-        if (!apps.length) {
-          const defaultApps: AppBit[] = [
-            {
-              target: 'app',
-              identifier: 'search',
-              name: 'Search',
-              colors: ['#D48D48', '#ACEACE'],
-              tabDisplay: 'permanent',
-              spaceId: space.id,
-              data: {},
-            },
-            {
-              target: 'app',
-              name: 'Directory',
-              identifier: 'people',
-              colors: ['#0F1453', '#449878'],
-              spaceId: space.id,
-              tabDisplay: 'pinned',
-              data: {},
-            },
-            {
-              target: 'app',
-              name: 'Home',
-              identifier: 'lists',
-              spaceId: space.id,
-              colors: ['#353353', '#EADEAD'],
-              tabDisplay: 'pinned',
-              data: {
-                rootItemID: 0,
-                items: {
-                  0: {
-                    id: 0,
-                    name: 'Root',
-                    type: 'root',
-                    children: [],
-                  },
-                },
-              },
-            },
-          ]
-          await Promise.all(
-            defaultApps.map(app => {
-              return getRepository(AppEntity).save(app)
-            }),
-          )
-        }
-      }),
-    )
-  }
-
   private async ensureDefaultUser() {
     const user = await getRepository(UserEntity).findOne({})
-    const firstSpace = await getRepository(SpaceEntity).findOne({})
-
-    if (!firstSpace) {
-      throw new Error('Should be at least one space...')
-    }
 
     if (!user) {
       await getRepository(UserEntity).save({
         ...userDefaultValue,
-        activeSpace: firstSpace.id,
+        activeSpace: -1,
       })
     }
   }

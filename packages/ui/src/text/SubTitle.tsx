@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Config } from '../helpers/configure'
+import { Config } from '../helpers/configureUI'
 import { Text } from './Text'
 
 export function SubTitle({ verticalSpacing = 1, children, ...props }) {
@@ -11,7 +11,6 @@ export function SubTitle({ verticalSpacing = 1, children, ...props }) {
       size={1.1}
       alignItems="center"
       flexFlow="row"
-      margin={[3 * verticalSpacing, 0, 5 * verticalSpacing]}
       {...Config.defaultProps.title}
       {...props}
     >

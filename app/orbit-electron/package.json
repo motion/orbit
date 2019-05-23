@@ -49,8 +49,8 @@
   "peerDependencies": {
     "electron": "*",
     "mobx": "*",
-    "react": "16.8.3",
-    "react-dom": "16.8.3"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
     "@types/electron": "1.6.10",

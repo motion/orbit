@@ -7,7 +7,6 @@ export function useAppIcon(props: IconProps) {
   const { name } = props
   const { activeTheme } = useContext(ThemeContext)
   const def = useAppDefinition(name)
-
   if (!name || !def) return null
   const extImg = name && (name[0] === '/' || name.indexOf('http') === 0) ? name : null
   let iconImg = extImg

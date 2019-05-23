@@ -16,10 +16,6 @@ export const Icon = memo(
     const appIcon = useAppIcon(props)
 
     if (appIcon) {
-      const sizeProps = {
-        width: size,
-        height: size,
-      }
       return (
         <View
           ref={ref}
@@ -29,7 +25,8 @@ export const Icon = memo(
           style={style}
           opacity={opacity}
           {...(appIcon ? adjust[name] : adjust.icon)}
-          {...sizeProps}
+          width={size}
+          height={size}
           {...props}
           className={`ui-icon ${props.className || ''}`}
         >
@@ -39,7 +36,7 @@ export const Icon = memo(
     }
 
     if (appIcons[name]) {
-      return <AppIconInner {...props} />
+      return <AppIconInner forwardRef={ref} {...props} />
     }
 
     return (
@@ -49,6 +46,7 @@ export const Icon = memo(
         size={size}
         style={style}
         opacity={opacity}
+        ref={ref}
         {...restProps}
       />
     )

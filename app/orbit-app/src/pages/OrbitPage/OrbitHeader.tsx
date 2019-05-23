@@ -24,43 +24,6 @@ export const headerButtonProps = {
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
-const HomeButton = memo(
-  forwardRef((props: any, ref) => {
-    const { state, actions } = useOm()
-    const theme = useTheme()
-    const { newAppStore, paneManagerStore } = useStores()
-    const { activePane } = paneManagerStore
-    const activePaneType = activePane.type
-    const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-
-    return (
-      <Icon
-        ref={ref}
-        onMouseEnter={() => actions.setNavHovered(true)}
-        onMouseLeave={() => actions.setNavHovered(false)}
-        opacity={0.65}
-        hoverStyle={{
-          opacity: 1,
-        }}
-        color={invertLightness(theme.color, 0.5)}
-        name={state.navHovered ? 'orbit-home' : `orbit-${icon}`}
-        size={22}
-        onMouseUp={e => {
-          e.stopPropagation()
-          actions.router.showHomePage()
-        }}
-        {...props}
-      />
-    )
-  }),
-)
-
-// @ts-ignore
-HomeButton.acceptsProps = {
-  icon: true,
-  hover: true,
-}
-
 const activeStyle = {
   opacity: 1,
 }
@@ -81,7 +44,7 @@ export const OrbitHeader = memo(() => {
       >
         <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isEditing ? 46 : 64}>
+        <HeaderTop height={isEditing ? 46 : 56}>
           <HeaderSide spaceAround>
             <HeaderButtonPassProps>
               <BackButton />
@@ -173,6 +136,8 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   const appStore = useStore(App)
 
+  console.log('state.navVisible', state.navVisible, appStore.isEditing)
+
   if (appStore.isEditing) {
     return null
   }
@@ -190,7 +155,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         openOnHover
         onHover={actions.setNavVisible}
         onChangeVisibility={actions.setNavVisible}
-        open={state.router.isOnSetupApp ? true : state.navVisible}
+        open={state.router.isOnSetupApp ? true : state.navVisible || state.navHovered}
         maxWidth="80vw"
         padding={4}
         elevation={10}
@@ -205,6 +170,41 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
       </Popover>
     </>
   )
+}
+
+const HomeButton = forwardRef((props: any, ref) => {
+  const { state, actions } = useOm()
+  const theme = useTheme()
+  const { newAppStore, paneManagerStore } = useStores()
+  const { activePane } = paneManagerStore
+  const activePaneType = activePane.type
+  const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
+
+  return (
+    <Icon
+      ref={ref}
+      onMouseEnter={() => actions.setNavHovered(true)}
+      onMouseLeave={() => actions.setNavHovered(false)}
+      opacity={0.65}
+      hoverStyle={{
+        opacity: 1,
+      }}
+      color={invertLightness(theme.color, 0.5)}
+      name={state.navHovered ? 'orbit-home' : `orbit-${icon}`}
+      size={22}
+      onMouseUp={e => {
+        e.stopPropagation()
+        actions.router.showHomePage()
+      }}
+      {...props}
+    />
+  )
+})
+
+// @ts-ignore
+HomeButton.acceptsProps = {
+  icon: true,
+  hover: true,
 }
 
 const OrbitNavHiddenBar = props => {

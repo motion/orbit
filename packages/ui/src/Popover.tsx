@@ -359,7 +359,7 @@ const initialState = {
   delay: 16,
   props: {} as PopoverProps,
   closing: false,
-  measureState: 'done' as 'done' | 'measured' | 'shouldMeasure',
+  measureState: 'done' as 'done' | 'shouldMeasure',
 }
 
 type State = typeof initialState & {
@@ -502,6 +502,8 @@ export class Popover extends React.Component<PopoverProps, State> {
         })
       }
     }
+
+    this.updateMeasure()
   }
 
   unmounted = false
@@ -512,11 +514,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (this.state.measureState === 'shouldMeasure') {
-      this.setPosition(() => {
-        this.setState({ showPopover: true })
-      })
-    }
+    this.updateMeasure()
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
         this.props.onChangeVisibility(this.state.showPopover)
@@ -551,13 +549,22 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  setPosition = (afterMeasure = () => void 0) => {
+  updateMeasure() {
+    if (this.state.measureState === 'shouldMeasure') {
+      this.setPosition(() => {
+        this.setState({ showPopover: true })
+      })
+    }
+  }
+
+  setPosition = afterMeasure => {
     const { props } = this
     if (this.unmounted) return
     if (getIsManuallyPositioned(props)) return
     if (!this.popoverRef || !this.target) {
       throw new Error('missing popvoer ref or target')
     }
+
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
     const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
     const targetBounds = this.target.getBoundingClientRect()
@@ -586,16 +593,11 @@ export class Popover extends React.Component<PopoverProps, State> {
         nextState.targetBounds,
       )
 
-      this.setState(
-        {
-          ...nextState,
-          measureState: 'measured',
-          ...nextPosition,
-        },
-        () => {
-          this.setState({ measureState: 'done' }, afterMeasure)
-        },
-      )
+      this.setState({
+        ...nextState,
+        measureState: 'done',
+        ...nextPosition,
+      })
     } else {
       this.setState(
         {

@@ -3,7 +3,7 @@ import { toColor } from '@o/color'
 import { isDefined, mergeDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import { useTheme } from 'gloss'
-import React, { createContext, memo, useContext } from 'react'
+import React, { createContext, forwardRef, memo, useContext } from 'react'
 
 import { Config } from './helpers/configureUI'
 import { useScale } from './Scale'
@@ -37,12 +37,14 @@ const findName = (name: string) => {
 }
 
 // lets users wrap around icons
-export const Icon = memo((rawProps: IconProps) => {
-  const extraProps = useContext(IconPropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = Config.useIcon || PlainIcon
-  return <ResolvedIcon themeSelect="icon" {...props} />
-})
+export const Icon = memo(
+  forwardRef((rawProps: IconProps, ref) => {
+    const extraProps = useContext(IconPropsContext)
+    const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+    const ResolvedIcon = Config.useIcon || PlainIcon
+    return <ResolvedIcon ref={ref} themeSelect="icon" {...props} />
+  }),
+)
 
 // @ts-ignore
 Icon.acceptsProps = {
@@ -53,7 +55,7 @@ Icon.acceptsProps = {
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-export const PlainIcon = ({ style, ignoreColor, svg, ...props }: IconProps) => {
+export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: IconProps, ref) => {
   const theme = useTheme(props)
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
@@ -75,6 +77,7 @@ export const PlainIcon = ({ style, ignoreColor, svg, ...props }: IconProps) => {
   if (isDefined(svg)) {
     return (
       <View
+        ref={ref}
         width={size}
         height={size}
         data-name={props.name}
@@ -123,12 +126,14 @@ export const PlainIcon = ({ style, ignoreColor, svg, ...props }: IconProps) => {
       </svg>
     </View>
   )
-}
+})
 
+// @ts-ignore
 PlainIcon.acceptsProps = {
   hover: true,
   icon: true,
 }
+// @ts-ignore
 PlainIcon.defaultProps = {
   size: 16,
 }

@@ -1,5 +1,6 @@
 import { createUseStores, UseStoresOptions } from '@o/use-store'
 import { useContext } from 'react'
+
 import { config } from '../configureKit'
 import { KitStores } from '../stores'
 

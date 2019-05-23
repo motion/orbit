@@ -1,6 +1,6 @@
 import { AppBit } from '@o/models'
 import { IconProps, SVG, toColor, useTheme, View } from '@o/ui'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
 import { appIcons } from './icons'
@@ -9,23 +9,24 @@ export type AppIconProps = Partial<IconProps> & { app: AppBit }
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export function AppIconInner({
+export const AppIconInner = ({
   background = '#222',
   size = 32,
   style,
+  forwardRef,
   ...props
-}: Partial<AppIconProps>) {
+}: Partial<AppIconProps> & { forwardRef?: any }) => {
   const theme = useTheme()
+  let name = props.name
+  const def = useAppDefinition(name)
   let fill
   try {
     fill = toColor(props.color || theme.color).hex()
   } catch {
     fill = props.color || 'currentColor'
   }
-  let name = props.name
   let iconSrc
   let svgProps
-  let def = useAppDefinition(name)
 
   if (!appIcons[name]) {
     if (def) {
@@ -47,6 +48,7 @@ export function AppIconInner({
 
   return (
     <View
+      ref={forwardRef}
       style={{
         width: size,
         height: size,
@@ -97,9 +99,10 @@ function replaceAppBackground(iconSrc, bg) {
   return iconSrc
 }
 
-export const AppIcon = ({ app, ...props }: AppIconProps) => {
+export const AppIcon = forwardRef(({ app, ...props }: AppIconProps, ref) => {
   return (
     <AppIconInner
+      forwardRef={ref}
       background={app.colors[0]}
       color={app.colors[1]}
       name={app.identifier}
@@ -107,7 +110,7 @@ export const AppIcon = ({ app, ...props }: AppIconProps) => {
       {...props}
     />
   )
-}
+})
 
 AppIcon.acceptsProps = {
   hover: true,

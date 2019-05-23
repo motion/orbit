@@ -1,6 +1,6 @@
 import { AppBit } from '@o/kit'
 import { ApolloLink, Observable } from 'apollo-link'
-import graphileBuild from 'graphile-build'
+import * as graphileBuild from 'graphile-build'
 import { graphql, print } from 'graphql'
 import { Pool } from 'pg'
 import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext } from 'postgraphile'

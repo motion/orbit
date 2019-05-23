@@ -59,7 +59,7 @@ export const Table = (tableProps: TableProps) => {
     afterTitle,
     searchable,
     shareable,
-    maxHeight = 3000,
+    maxHeight,
     maxWidth,
     children: _discardChildren,
     rowLineHeight = DEFAULT_ROW_HEIGHT,
@@ -72,8 +72,7 @@ export const Table = (tableProps: TableProps) => {
   const scale = useScale()
   const rowHeight = rowLineHeight * scale
   const sizer = useNodeSize({ throttle: 150, disable: !isVisible })
-  // its too easy to have the height accidentally baloon to infinity, limit it
-  const height = Math.min(maxHeight, sizer.height)
+  const height = maxHeight ? Math.min(maxHeight, sizer.height) : sizer.height
   const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),
@@ -102,6 +101,8 @@ export const Table = (tableProps: TableProps) => {
     <Section
       background="transparent"
       flex={flex}
+      // this may be necessary to prevent the inifity bug
+      overflow="hidden"
       title={title}
       subTitle={subTitle}
       bordered={bordered}
@@ -124,7 +125,7 @@ export const Table = (tableProps: TableProps) => {
         containerRef={sizer.ref}
         minWidth={100}
         minHeight={100}
-        maxHeight={height > 0 ? height : 800}
+        maxHeight={height > 0 ? Math.min(height, rowHeight * items.length) : 800}
         height={height}
         flex={flex}
         {...props}

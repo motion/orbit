@@ -6,7 +6,6 @@ import { Col, ColProps } from '../View/Col'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { Pane } from './Pane'
 
 export type LayoutProps = ColProps & {
   type?: 'column' | 'row'
@@ -23,9 +22,12 @@ export const LayoutContext = createContext<{
   type: 'row',
 })
 
+export const acceptsProps = (child, key) =>
+  !!(child.type.acceptsProps && child.type.acceptsProps[key])
+
 export const Layout = memo((props: LayoutProps) => {
   const children: ReactElement[] = Children.map(props.children, child => {
-    if (!isValidElement(child) || child.type !== Pane) {
+    if (!isValidElement(child) || !acceptsProps(child, 'paneProps')) {
       console.warn(`Invalid child: <Layout /> accepts only <Pane /> as children.`, child, props)
       return null
     }

@@ -104,6 +104,7 @@ export const SizablePane = memo(
       )
     } else {
       const isLast = props.index === total - 1
+      console.log(props, flex,  isLast)
       element = (
         <PaneChrome
           flex={typeof flex === 'undefined' && isLast ? 1 : flex}

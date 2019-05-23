@@ -63,3 +63,7 @@ export const Pane = memo((props: PaneProps) => {
     </SizablePane>
   )
 })
+
+Pane['acceptsProps'] = {
+  paneProps: true,
+}

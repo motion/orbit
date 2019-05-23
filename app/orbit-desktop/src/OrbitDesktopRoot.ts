@@ -347,10 +347,7 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
         ]),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          console.log('resolve meta', identifier)
-          return {
-            apiTypes: {},
-          }
+          return this.orbitAppsManager.appMeta[identifier]
         }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid

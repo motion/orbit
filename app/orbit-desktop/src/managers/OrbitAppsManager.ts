@@ -1,10 +1,11 @@
-import { decorate, ensure, react } from '@o/kit'
-import { AppBit, AppEntity, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { AppDefinition, decorate, ensure, react } from '@o/kit'
+import { AppBit, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { FSWatcher, watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { readWorkspaceAppDefs } from '../helpers/readWorkspaceAppDefs'
+import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
+import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -27,6 +28,9 @@ export class OrbitAppsManager {
   spaceFolders: { [id: number]: string } = {}
   packageWatcher: FSWatcher = null
   packageRefresh = 0
+  appMeta: { [identifier: string]: AppMeta } = {}
+  appDefinitions: { [identifier: string]: AppDefinition } = {}
+  identifierToPackageId = {}
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
@@ -59,13 +63,31 @@ export class OrbitAppsManager {
     return this.spaces.find(x => x.id === this.user.activeSpace)
   }
 
-  activeAppDefinitions = react(
+  updateAppDefinitions = react(
     () => [this.activeSpace, this.packageRefresh],
     async ([space]) => {
       ensure('space', !!space)
-      const appDefinitions = await readWorkspaceAppDefs(space)
-      console.log('got app definitions', appDefinitions)
-      return appDefinitions
+      const { definitions, identifierToPackageId } = await getWorkspaceAppDefs(space)
+      this.appDefinitions = {
+        ...this.appDefinitions,
+        ...definitions,
+      }
+      this.identifierToPackageId = {
+        ...this.identifierToPackageId,
+        ...identifierToPackageId,
+      }
+    },
+  )
+
+  updateAppMeta = react(
+    () => this.appDefinitions,
+    async appDefs => {
+      ensure('appDefs', !!appDefs)
+      const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
+      for (const meta of appsMeta) {
+        const identifier = this.identifierToPackageId[meta.packageId]
+        this.appMeta[identifier] = meta
+      }
     },
   )
 
@@ -86,79 +108,64 @@ export class OrbitAppsManager {
     },
   )
 
-  // dont think we want this, we want to let them install via interface
-  // ensureAppBits = react(
-  //   () => this.activeAppDefinitions,
-  //   async definitions => {
-  //     const spaceId = this.activeSpace.id
-  //     for (const id in definitions) {
-  //       const def = definitions[id]
-  //       if (!(await getRepository(AppEntity).findOne({ where: { spaceId, identifier: id } }))) {
-  //         await getRepository(AppEntity).create({
-  //           name: def.name,
-  //           identifier: id
-  //         })
-  //       }
-  //     }
-  //   },
-  // )
-
-  // let appsSubscription: Subscription = null
-  // async function syncAppBitToPackageJson(spaceId: number) {
-  //   if (appsSubscription) {
-  //     appsSubscription.unsubscribe()
-  //   }
-
-  //   appsSubscription = getRepository(AppEntity)
-  //     .observe({
-  //       select: appSelectAllButDataAndTimestamps,
-  //       where: {
-  //         spaceId,
-  //       },
-  //     })
-  //     .subscribe(apps => {
-  //       console.log('space got apps, sync down', apps)
-  //     })
-  // }
-
-  // manageDesktopFoldersAndIcons = react(
-  //   () => always(this.apps, this.spaces),
-  //   async () => {
-  //     ensure('has spaces and apps', !!this.spaces.length && !!this.apps.length)
-  //     await this.ensureSpacesFolders(this.spaces)
-  //     await this.ensureSpacesAppIcons(this.apps)
-  //   },
-  // )
-
-  // async ensureSpacesFolders(spaces: Space[]) {
-  //   await Promise.all(
-  //     spaces.map(async space => {
-  //       const spaceFolder = join(Config.paths.desktop, space.name)
-  //       await ensureDir(spaceFolder)
-  //       const files = await readdir(spaceFolder)
-  //       const existingSpaceConfig = await pathExists(join(spaceFolder, 'orbit.json'))
-  //       const isValidOrbitDir = files.length === 0 || existingSpaceConfig
-  //       if (isValidOrbitDir) {
-  //         this.spaceFolders[space.id] = spaceFolder
-  //       }
-  //     }),
-  //   )
-  // }
-
-  // async ensureSpacesAppIcons(apps: AppBit[]) {
-  //   await Promise.all(
-  //     apps.map(async app => {
-  //       const dest = this.spaceFolders[app.spaceId]
-  //       if (!dest) return
-  //       // console.log('should copy app icon, need to get app definition')
-  //       // await copy(Config.paths.dotApp, join(dest, `${app.name}.app`))
-  //     }),
-  //   )
-  // }
-
   dispose() {
     for (const subscription of [...this.subscriptions]) {
       subscription.unsubscribe()
     }
   }
 }
+
+// experiment in making app icons on your desktop
+
+// let appsSubscription: Subscription = null
+// async function syncAppBitToPackageJson(spaceId: number) {
+//   if (appsSubscription) {
+//     appsSubscription.unsubscribe()
+//   }
+
+//   appsSubscription = getRepository(AppEntity)
+//     .observe({
+//       select: appSelectAllButDataAndTimestamps,
+//       where: {
+//         spaceId,
+//       },
+//     })
+//     .subscribe(apps => {
+//       console.log('space got apps, sync down', apps)
+//     })
+// }
+
+// manageDesktopFoldersAndIcons = react(
+//   () => always(this.apps, this.spaces),
+//   async () => {
+//     ensure('has spaces and apps', !!this.spaces.length && !!this.apps.length)
+//     await this.ensureSpacesFolders(this.spaces)
+//     await this.ensureSpacesAppIcons(this.apps)
+//   },
+// )
+
+// async ensureSpacesFolders(spaces: Space[]) {
+//   await Promise.all(
+//     spaces.map(async space => {
+//       const spaceFolder = join(Config.paths.desktop, space.name)
+//       await ensureDir(spaceFolder)
+//       const files = await readdir(spaceFolder)
+//       const existingSpaceConfig = await pathExists(join(spaceFolder, 'orbit.json'))
+//       const isValidOrbitDir = files.length === 0 || existingSpaceConfig
+//       if (isValidOrbitDir) {
+//         this.spaceFolders[space.id] = spaceFolder
+//       }
+//     }),
+//   )
+// }
+
+// async ensureSpacesAppIcons(apps: AppBit[]) {
+//   await Promise.all(
+//     apps.map(async app => {
+//       const dest = this.spaceFolders[app.spaceId]
+//       if (!dest) return
+//       // console.log('should copy app icon, need to get app definition')
+//       // await copy(Config.paths.dotApp, join(dest, `${app.name}.app`))
+//     }),
+//   )
+// }

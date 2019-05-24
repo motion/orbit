@@ -99,7 +99,7 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
     output: {
       path: outputDir,
       pathinfo: mode === 'development',
-      filename: outputFile || 'index.js',
+      filename: outputFile || '[name].js',
       ...output,
       publicPath,
       // fixes react-hmr bug, pending
@@ -286,5 +286,9 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
 
   // console.log('made config', config)
 
-  return merge([config, extraConfig].filter(Boolean))
+  if (extraConfig) {
+    return merge.smart([config, extraConfig].filter(Boolean))
+  }
+
+  return config
 }

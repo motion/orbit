@@ -1,9 +1,16 @@
+const { join } = require('path')
+
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
-module.exports = {
-  plugins: [
-    new MonacoWebpackPlugin({
-      languages: ['json', 'typescript'],
-    }),
-  ],
-}
+module.exports = [
+  {
+    entry: {
+      monaco: join(__dirname, 'src', 'monaco'),
+    },
+    plugins: [
+      new MonacoWebpackPlugin({
+        languages: ['json', 'javascript'],
+      }),
+    ],
+  },
+]

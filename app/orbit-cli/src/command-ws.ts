@@ -101,24 +101,39 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   `,
   )
 
-  const wsConfig = await getAppConfig(
-    {
-      name: 'main',
-      context: options.workspaceRoot,
-      entry: [entry],
-      target: 'web',
-      outputFile: '[name].test.js',
-      watch: true,
-      // devServer: true,
-      hot: true,
-      dllReference: dllFile,
-    },
-    extraConfig,
-  )
+  let extraEntries = {}
+
+  if (Array.isArray(extraConfig)) {
+    for (const [index, config] of extraConfig.entries()) {
+      const name = `main${index}`
+      extraEntries[name] = await getAppConfig(
+        {
+          name,
+          context: options.workspaceRoot,
+          entry: [],
+          target: 'web',
+          watch: true,
+          hot: true,
+        },
+        config,
+      )
+    }
+  }
+
+  const wsConfig = await getAppConfig({
+    name: 'main',
+    context: options.workspaceRoot,
+    entry: [entry],
+    target: 'web',
+    watch: true,
+    hot: true,
+    dllReference: dllFile,
+  })
 
   const server = new BuildServer({
     main: wsConfig,
     apps: appsConfig,
+    ...extraEntries,
   })
 
   await server.start()

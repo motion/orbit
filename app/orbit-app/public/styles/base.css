@@ -2,10 +2,13 @@
   pointer-events: all;
 }
 
+.monaco-editor * {
+  all: initial;
+}
+
 /* go back to default browser style */
 .reset * {
-  display: block;
-  flex-direction: row;
+  all: initial;
 }
 
 .react-hot-loader-error-overlay * {
@@ -487,8 +490,8 @@ body * {
   display: flex;
   flex-flow: column;
   box-sizing: border-box;
-  align-items: stretch;
   flex-shrink: 0;
+  align-items: stretch;
   outline: 0;
   /* flexbox has super weird behavior otherwise where things dont "shrink to fit" unless you set this */
   min-width: 0;

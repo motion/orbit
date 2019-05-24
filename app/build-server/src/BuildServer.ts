@@ -1,8 +1,8 @@
+import historyAPIFallback from 'connect-history-api-fallback'
 import express from 'express'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
-import historyAPIFallback from 'connect-history-api-fallback'
 
 const existsInCache = (middleware, path) => {
   try {
@@ -13,22 +13,23 @@ const existsInCache = (middleware, path) => {
   return false
 }
 
-const resolveIfExists = (middleware, config) => (req, res, next) => {
-  if (existsInCache(middleware, config.output.path + req.url)) {
+const resolveIfExists = (middleware, config, resolvePaths) => (req, res, next) => {
+  const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
+  if (isInResolvePaths || existsInCache(middleware, config.output.path + req.url)) {
     middleware(req, res, next)
   } else {
     next()
   }
 }
 
-const getMiddleware = (name: string, config: any) => {
+const getMiddleware = (hmrPath: string, config: any) => {
   const compiler = Webpack(config)
   const publicPath = config.output.publicPath
   const devMiddleware = WebpackDevMiddleware(compiler, {
     publicPath,
   })
   const hotMiddleware = WebpackHotMiddleware(compiler, {
-    path: `/__webpack_hmr_${name}`,
+    path: hmrPath,
     log: console.log,
     heartBeat: 10 * 1000,
   })
@@ -48,9 +49,11 @@ export class BuildServer {
     // apps first only if they matching cached file
     for (const name in apps) {
       const config = apps[name]
-      const { devMiddleware, hotMiddleware } = getMiddleware(name, config)
-      this.server.use(resolveIfExists(devMiddleware, config))
-      this.server.use(resolveIfExists(hotMiddleware, config))
+      const hmrPath = `/__webpack_hmr_${name}`
+      const resolvePaths = [hmrPath]
+      const { devMiddleware, hotMiddleware } = getMiddleware(hmrPath, config)
+      this.server.use(resolveIfExists(devMiddleware, config, resolvePaths))
+      this.server.use(resolveIfExists(hotMiddleware, config, resolvePaths))
     }
 
     // falls back to the main entry middleware

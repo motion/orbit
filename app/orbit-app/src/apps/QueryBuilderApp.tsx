@@ -1,24 +1,12 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, useOnMount, View, ViewProps } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import * as monaco from 'monaco-editor'
-import React, { memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
-
-function MonacoEditor(props: ViewProps) {
-  const ref = useRef()
-  useOnMount(() => {
-    monaco.editor.create(ref.current, {
-      value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join('\n'),
-      language: 'javascript',
-    })
-  })
-  return <View className="reset" ref={ref} flex={1} {...props} />
-}
 
 export default createApp({
   id: 'query-builder',
@@ -217,7 +205,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
       <Pane flex={2} resizable>
         <Layout type="column">
           <Pane flex={2}>
-            <MonacoEditor />
+            hello
           </Pane>
           <Pane>123</Pane>
         </Layout>

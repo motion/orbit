@@ -66,7 +66,6 @@ export const Button = memo(
     const controlledProps = useUncontrolled(rest, {
       active: 'onChangeActive',
     })
-    if (rest.onChangeActive) console.log('controlledProps', rest, controlledProps)
     return (
       <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
         <ButtonInner forwardRef={ref} {...rest} {...controlledProps} />

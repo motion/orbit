@@ -171,10 +171,7 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
             <Labeled.Item>
               <Button
                 defaultActive
-                onChangeActive={x => {
-                  console.log('now ', x)
-                  setShowSidebar(x)
-                }}
+                onChangeActive={setShowSidebar}
                 tooltip="Toggle Explore API sidebar"
                 icon="panel-stats"
               />

@@ -79,12 +79,14 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   })
 
   let entry = ''
+  let extraConfig
   const isInMonoRepo = await getIsInMonorepo()
   if (isInMonoRepo) {
     // main entry for orbit-app
     const monoRoot = join(__dirname, '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
     entry = appEntry
+    extraConfig = require(join(appEntry, '..', '..', 'webpack.config.js'))
   }
 
   await writeFile(
@@ -99,17 +101,20 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   `,
   )
 
-  const wsConfig = await getAppConfig({
-    name: 'main',
-    context: options.workspaceRoot,
-    entry: [entry],
-    target: 'web',
-    outputFile: '[name].test.js',
-    watch: true,
-    // devServer: true,
-    hot: true,
-    dllReference: dllFile,
-  })
+  const wsConfig = await getAppConfig(
+    {
+      name: 'main',
+      context: options.workspaceRoot,
+      entry: [entry],
+      target: 'web',
+      outputFile: '[name].test.js',
+      watch: true,
+      // devServer: true,
+      hot: true,
+      dllReference: dllFile,
+    },
+    extraConfig,
+  )
 
   const server = new BuildServer({
     main: wsConfig,

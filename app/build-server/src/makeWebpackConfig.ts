@@ -1,6 +1,7 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
+import merge from 'webpack-merge'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
@@ -24,7 +25,7 @@ export type WebpackParams = {
   hot?: boolean
 }
 
-export async function makeWebpackConfig(params: WebpackParams) {
+export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any) {
   let {
     outputFile,
     entry,
@@ -285,5 +286,5 @@ export async function makeWebpackConfig(params: WebpackParams) {
 
   // console.log('made config', config)
 
-  return config
+  return merge([config, extraConfig].filter(Boolean))
 }

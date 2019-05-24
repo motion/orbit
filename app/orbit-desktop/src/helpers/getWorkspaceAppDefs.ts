@@ -12,11 +12,11 @@ export async function getWorkspaceAppDefs(
   space: Space,
 ): Promise<{
   definitions: AppDefinitions | null
-  identifierToPackageId: { [key: string]: string }
+  packageIdToIdentifier: { [key: string]: string }
 }> {
   const appsMeta = await getWorkspaceAppMeta(space)
   const definitions: AppDefinitions = {}
-  const identifierToPackageId = {}
+  const packageIdToIdentifier = {}
 
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
@@ -31,7 +31,7 @@ export async function getWorkspaceAppDefs(
         const id = nodeEntry.default.id
         log.info('got an app def', id, !!nodeEntry.default)
         definitions[id] = nodeEntry.default
-        identifierToPackageId[id] = packageId
+        packageIdToIdentifier[packageId] = id
       } catch (err) {
         log.error(`Error finding package definition: ${packageId}, message: ${err.message}`)
         log.error(err.stack)
@@ -41,6 +41,6 @@ export async function getWorkspaceAppDefs(
 
   return {
     definitions,
-    identifierToPackageId,
+    packageIdToIdentifier,
   }
 }

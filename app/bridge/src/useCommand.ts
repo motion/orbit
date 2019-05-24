@@ -1,4 +1,5 @@
 import { Command } from '@o/mediator'
+import { isDefined } from '@o/utils'
 
 import { Mediator } from './Mediator'
 
@@ -15,7 +16,7 @@ export function useCommand<Args, ReturnType>(
 ): ReturnType {
   const key = JSON.stringify({ args, name: command.name })
 
-  if (cache[key]) {
+  if (cache[key] && isDefined(cache[key].value)) {
     return cache[key].value
   }
 

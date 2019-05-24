@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 
@@ -186,9 +186,9 @@ function useAppMeta(identifier: string) {
 }
 
 const APIQueryBuild = memo((props: { id: number }) => {
-  const [app, def] = useAppWithDefinition(+props.id)
+  const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
-  console.log('got app meta', meta, app, def)
+  const hasApiInfo = !!meta && !!meta.apiInfo
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
@@ -197,7 +197,19 @@ const APIQueryBuild = memo((props: { id: number }) => {
           <Pane>123</Pane>
         </Layout>
       </Pane>
-      <Pane title="Explore API" scrollable="y" />
+      <Pane title="Explore API" scrollable="y" pad>
+        {hasApiInfo &&
+          Object.keys(meta.apiInfo).map(key => {
+            const info = meta.apiInfo[key]
+            return (
+              <Col key={key} space="xs" borderRadius={8}>
+                <SubTitle>{info.name}</SubTitle>
+                <Paragraph>{info.typeString}</Paragraph>
+                <Paragraph>{info.comment}</Paragraph>
+              </Col>
+            )
+          })}
+      </Pane>
     </Layout>
   )
 })

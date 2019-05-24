@@ -1,3 +1,7 @@
+#webpack-hot-middleware-clientOverlay {
+  pointer-events: all;
+}
+
 /* go back to default browser style */
 .reset * {
   display: block;

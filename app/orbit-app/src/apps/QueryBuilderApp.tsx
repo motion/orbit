@@ -1,12 +1,24 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, useOnMount } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
+import * as monaco from 'monaco-editor'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
+
+function MonacoEditor() {
+  const ref = useRef()
+  useOnMount(() => {
+    monaco.editor.create(ref.current, {
+      value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join('\n'),
+      language: 'javascript',
+    })
+  })
+  return <div ref={ref} />
+}
 
 export default createApp({
   id: 'query-builder',
@@ -204,7 +216,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     <Layout type="row">
       <Pane flex={2} resizable>
         <Layout type="column">
-          <Pane flex={2}>123</Pane>
+          <Pane flex={2}>
+            <MonacoEditor />
+          </Pane>
           <Pane>123</Pane>
         </Layout>
       </Pane>

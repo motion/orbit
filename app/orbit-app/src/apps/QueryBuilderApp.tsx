@@ -2,7 +2,7 @@ import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAp
 import { AppMetaCommand } from '@o/models'
 import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
@@ -148,6 +148,7 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
 
 function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
+  const [showSidebar, setShowSidebar] = useState(true)
 
   return (
     <Section
@@ -168,15 +169,28 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
 
           <Labeled>
             <Labeled.Item>
-              <Button tooltip="Explore API" icon="layouts" />
+              <Button
+                defaultActive
+                onChangeActive={x => {
+                  console.log('now ', x)
+                  setShowSidebar(x)
+                }}
+                tooltip="Toggle Explore API sidebar"
+                icon="panel-stats"
+              />
             </Labeled.Item>
-            <Labeled.Text>Explore</Labeled.Text>
+            <Labeled.Text>API</Labeled.Text>
           </Labeled>
         </>
       }
     >
-      {mode === 'api' ? <APIQueryBuild id={+props.id} /> : <GraphQueryBuild id={+props.id} />}
-      {JSON.stringify(props)}
+      <Suspense fallback={null}>
+        {mode === 'api' ? (
+          <APIQueryBuild id={+props.id} showSidebar={showSidebar} />
+        ) : (
+          <GraphQueryBuild id={+props.id} />
+        )}
+      </Suspense>
     </Section>
   )
 }
@@ -185,7 +199,7 @@ function useAppMeta(identifier: string) {
   return useCommand(AppMetaCommand, { identifier })
 }
 
-const APIQueryBuild = memo((props: { id: number }) => {
+const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
   const hasApiInfo = !!meta && !!meta.apiInfo
@@ -197,7 +211,7 @@ const APIQueryBuild = memo((props: { id: number }) => {
           <Pane>123</Pane>
         </Layout>
       </Pane>
-      <Pane title="Explore API" scrollable="y" pad>
+      <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
         {hasApiInfo &&
           Object.keys(meta.apiInfo).map(key => {
             const info = meta.apiInfo[key]

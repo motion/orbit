@@ -1,7 +1,8 @@
+import { isDefined, selectDefined } from '@o/utils'
 import { Theme, useTheme } from 'gloss'
-import { selectDefined } from '@o/utils'
-import React, { forwardRef, memo } from 'react'
+import React, { forwardRef, memo, useCallback } from 'react'
 
+import { useUncontrolled } from '../helpers/useUncontrolled'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { useSurfaceProps } from '../Surface'
 
@@ -9,6 +10,9 @@ export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
     /** force button not to apply hover styles */
     ignoreHover?: boolean
+
+    /** use defaultActive/onChangeActive for easy active on/off */
+    onChangeActive?: (next: boolean) => any
   }
 
 const glowProps = {
@@ -45,6 +49,11 @@ function ButtonInner(props: ButtonProps) {
       pointerEvents={props.disabled ? 'none' : undefined}
       activeStyle={activeStyle}
       glowProps={glowProps}
+      onClick={useCallback(() => {
+        if (isDefined(props.active)) {
+          props.onChangeActive(!props.active)
+        }
+      }, [props.onChangeActive, props.active])}
       {...props}
     />
   )
@@ -54,9 +63,13 @@ export const Button = memo(
   forwardRef((buttonProps: ButtonProps, ref) => {
     const props = useSurfaceProps(buttonProps)
     const { alt, theme, themeSelect, ...rest } = props
+    const controlledProps = useUncontrolled(rest, {
+      active: 'onChangeActive',
+    })
+    if (rest.onChangeActive) console.log('controlledProps', rest, controlledProps)
     return (
       <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
-        <ButtonInner forwardRef={ref} {...rest} />
+        <ButtonInner forwardRef={ref} {...rest} {...controlledProps} />
       </Theme>
     )
   }),

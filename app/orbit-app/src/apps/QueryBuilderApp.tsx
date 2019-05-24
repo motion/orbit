@@ -1,15 +1,15 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, useOnMount } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, useOnMount, View, ViewProps } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import * as monaco from 'monaco-editor'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useRef, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
 
-function MonacoEditor() {
+function MonacoEditor(props: ViewProps) {
   const ref = useRef()
   useOnMount(() => {
     monaco.editor.create(ref.current, {
@@ -17,7 +17,7 @@ function MonacoEditor() {
       language: 'javascript',
     })
   })
-  return <div ref={ref} />
+  return <View className="reset" ref={ref} flex={1} {...props} />
 }
 
 export default createApp({

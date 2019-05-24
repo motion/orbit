@@ -114,7 +114,7 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
     externals: [externals, { electron: '{}' }],
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields:
         mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']

@@ -162,8 +162,12 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
         <>
           <Labeled>
             <Labeled.Item group>
-              <Button tooltip="API" icon="code" />
-              <Button tooltip="Graph" icon="layout" />
+              <Tabs TabComponent={Button} defaultActive="0">
+                <Tab key="0" icon="code" />
+                <Tab key="1" icon="layout" />
+              </Tabs>
+              {/* <Button tooltip="API" icon="code" />
+              <Button tooltip="Graph" icon="layout" /> */}
             </Labeled.Item>
             <Labeled.Text>Query</Labeled.Text>
           </Labeled>

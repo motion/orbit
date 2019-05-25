@@ -1,5 +1,5 @@
 import { selectDefined } from '@o/utils'
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 
 import { colors } from './helpers/colors'
@@ -20,43 +20,45 @@ import { View, ViewProps } from './View/View'
  * @format
  */
 export type TabsProps = Omit<ViewProps, 'order'> & {
-  // tab height
+  /** tab height */
   height?: number
-  // Callback for when the active tab has changed.
+  /** Callback for when the active tab has changed. */
   onChange?: (key: string | void) => void
-  // The key of the currently active tab.
+  /** The key of the currently active tab. */
   active?: number | string | void
-  // Tab elements.
+  /** Uncontrolled active state (use with onChange). */
+  defaultActive?: string | boolean
+  /** Tab elements. */
   children?: any[] | React.ReactNode
-  // Whether the tabs can be reordered by the user.
+  /** Whether the tabs can be reordered by the user. */
   sortable?: boolean
-  // Callback when the tab order changes.
+  /** Callback when the tab order changes. */
   onSort?: (order: string[]) => void
-  // Order of tabs.
+  /** Order of tabs. */
   order?: string[]
-  // Whether to include the contents of every tab in the DOM and just toggle
+  /** Whether to include the contents of every tab in the DOM and just toggle */
   persist?: boolean
-  // Whether to include a button to create additional items.
+  /** Whether to include a button to create additional items. */
   newable?: boolean
-  // Callback for when the new button is clicked.
+  /** Callback for when the new button is clicked. */
   onNew?: () => void
-  // Elements to insert before all tabs in the tab list.
+  /** Elements to insert before all tabs in the tab list. */
   before?: any[]
-  // Elements to insert after all tabs in the tab list.
+  /** Elements to insert after all tabs in the tab list. */
   after?: any[]
-  // extra props to pass to each tab
+  /** extra props to pass to each tab */
   tabProps?: ViewProps
-  // extra props to pass to active tab
+  /** extra props to pass to active tab */
   tabPropsActive?: ViewProps
-  // component to render each tab with
+  /** component to render each tab with */
   TabComponent?: any
-  // center the tabs
+  /** center the tabs */
   centered?: boolean
-  // tab radius sizing
+  /** tab radius sizing */
   sizeRadius?: number
-  // tab padding sizing
+  /** tab padding sizing */
   sizePadding?: number
-  // tab width
+  /** tab width */
   tabWidth?: number | string
 }
 
@@ -65,7 +67,7 @@ function TabsControlled({
   tabProps,
   tabPropsActive,
   onChange: onChange,
-  height = 26,
+  height,
   borderRadius,
   onSort,
   onNew,
@@ -240,12 +242,12 @@ const controlledConfig = {
   active: 'onChange',
 }
 
-export function Tabs(props: TabsProps & { defaultActive?: string | boolean }) {
+export function Tabs(props: TabsProps) {
   const cProps = useUncontrolled(props, controlledConfig)
   return <TabsControlled {...cProps} active={selectDefined(cProps.active, props.defaultActive)} />
 }
 
-const HideScrollbar = gloss({
+const HideScrollbar = gloss(Box, {
   flexFlow: 'row',
   overflowX: 'auto',
   overflowY: 'hidden',
@@ -256,7 +258,7 @@ const HideScrollbar = gloss({
   boxSizing: 'content-box',
 })
 
-const CloseButton = gloss({
+const CloseButton = gloss(Box, {
   color: '#000',
   float: 'right',
   fontSize: 10,
@@ -274,7 +276,7 @@ const CloseButton = gloss({
   },
 })
 
-const OrderableContainer = gloss({
+const OrderableContainer = gloss(Box, {
   display: 'inline-block',
 })
 

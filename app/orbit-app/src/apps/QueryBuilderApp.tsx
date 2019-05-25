@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Card, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, Paragraph, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Card, CardSimple, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -275,13 +275,21 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
-                <Col key={key} space="xs" borderRadius={8}>
-                  <Tag alt="lightGray">{info.name}</Tag>
-                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
-                    {info.typeString}
-                  </MonoSpaceText>
-                  <Paragraph>{info.comment}</Paragraph>
-                </Col>
+                <>
+                  <CardSimple title={info.name}>
+                    <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                      {info.typeString}
+                    </MonoSpaceText>
+                    {info.comment}
+                  </CardSimple>
+                  {/* <Col key={key} space="xs" borderRadius={8}>
+                    <Tag alt="lightGray">{info.name}</Tag>
+                    <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                      {info.typeString}
+                    </MonoSpaceText>
+                    <Paragraph>{info.comment}</Paragraph>
+                  </Col> */}
+                </>
               )
             })}
           </Pane>

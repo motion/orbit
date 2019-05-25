@@ -16,7 +16,6 @@ export type CardProps = SizedSurfaceSpecificProps &
   ListItemSpecificProps &
   Partial<CollapsableProps> &
   Omit<ColProps, 'size'> & {
-    space?: Sizes
     collapseOnClick?: boolean
     onClickTitle?: Function
     headerProps?: ListItemProps

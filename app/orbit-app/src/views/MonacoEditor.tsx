@@ -1,4 +1,4 @@
-import { useOnMount, View, ViewProps } from '@o/ui'
+import { useOnMount, useTheme, View, ViewProps } from '@o/ui'
 import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
 
@@ -8,14 +8,19 @@ export type MonacoEditorProps = monaco.editor.IEditorConstructionOptions &
 export function MonacoEditor({ width, height, ...props }: MonacoEditorProps) {
   const node = useRef(null)
   const mnco = useRef(null)
+  const theme = useTheme()
+  const monacoTheme = props.theme || (theme.background.isDark() ? 'vs-dark' : 'vs-light')
 
   useOnMount(() => {
-    mnco.current = monaco.editor.create(node.current, props)
+    mnco.current = monaco.editor.create(node.current, {
+      ...props,
+      theme: monacoTheme,
+    })
   })
 
   useEffect(() => {
-    monaco.editor.setTheme(props.theme)
-  }, [props.theme])
+    monaco.editor.setTheme(monacoTheme)
+  }, [monacoTheme])
 
   useEffect(() => {
     mnco.current.layout()
@@ -30,9 +35,9 @@ const defaults: MonacoEditorProps = {
   selectOnLineNumbers: true,
   roundedSelection: true,
   cursorStyle: 'line',
-  theme: 'vs-dark',
   automaticLayout: true,
   scrollBeyondLastLine: false,
+  showUnused: true,
   highlightActiveIndentGuide: false,
   renderLineHighlight: 'gutter',
   minimap: {

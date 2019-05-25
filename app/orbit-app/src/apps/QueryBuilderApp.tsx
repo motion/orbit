@@ -4,8 +4,8 @@ import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layou
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
-import { MonacoEditor } from '../monaco'
 import { useOm } from '../om/om'
+import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
 

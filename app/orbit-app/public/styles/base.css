@@ -492,6 +492,10 @@ body {
   min-width: 0;
 }
 
+body * {
+  outline: 0;
+}
+
 style {
   display: none;
 }

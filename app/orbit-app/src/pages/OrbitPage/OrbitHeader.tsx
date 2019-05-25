@@ -217,7 +217,7 @@ const OrbitNavHiddenBar = props => {
   }
   return (
     <OrbitNavHiddenBarChrome {...props}>
-      <OrbitNavHiddenBarInner isVisible={props.isVisible}>
+      <OrbitNavHiddenBarInner>
         {apps.map(app => {
           const isActive = paneId === `${app.id}`
           return (

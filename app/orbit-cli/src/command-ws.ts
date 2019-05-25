@@ -86,7 +86,10 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     const monoRoot = join(__dirname, '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
     entry = appEntry
-    extraConfig = require(join(appEntry, '..', '..', 'webpack.config.js'))
+    const extraConfFile = join(appEntry, '..', '..', 'webpack.config.js')
+    if (await pathExists(extraConfFile)) {
+      extraConfig = require(extraConfFile)
+    }
   }
 
   await writeFile(

@@ -63,12 +63,12 @@ const defaults: MonacoEditorProps = {
   showUnused: true,
   lineNumbers: 'off',
   highlightActiveIndentGuide: false,
-  renderLineHighlight: 'gutter',
+  renderLineHighlight: 'none',
   minimap: {
     enabled: false,
   },
   scrollbar: {
-    horizontalScrollbarSize: 5,
+    horizontalScrollbarSize: 0,
     horizontalSliderSize: 0,
     useShadows: false,
   },

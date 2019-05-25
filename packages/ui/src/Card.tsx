@@ -1,5 +1,5 @@
-import { Theme, useThemeContext } from 'gloss'
 import { isDefined, selectDefined } from '@o/utils'
+import { Theme, useThemeContext } from 'gloss'
 import React, { forwardRef, useCallback } from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
@@ -66,6 +66,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
     padding,
   }
   const hasTitleClick = !!(collapseOnClick || onClickTitle || (headerProps && headerProps.onClick))
+  const hasTitle = selectDefined(title, afterTitle, subTitle, icon, date, location)
   return (
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <Scale size={getSize(size)}>
@@ -88,44 +89,46 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
           activeStyle={null}
         >
           {/* Cards are ListItems scaled up 1.1 */}
-          <Scale size={1.1}>
-            <ListItemSimple
-              before={<CollapseArrow useCollapse={toggle} />}
-              className="ui-card-header grid-draggable"
-              onClickLocation={onClickLocation}
-              onDoubleClick={
-                (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
-              }
-              onClick={useCallback(
-                e => {
-                  collapseOnClick && toggle.toggle()
-                  onClickTitle && onClickTitle(e)
-                },
-                [collapseOnClick, onClickTitle],
-              )}
-              cursor={hasTitleClick ? 'pointer' : 'auto'}
-              alignItems="center"
-              titleFlex={titleFlex}
-              subTitleProps={subTitleProps}
-              titleProps={{
-                fontWeight: 400,
-                ...titleProps,
-              }}
-              hoverStyle={hasTitleClick ? true : false}
-              afterTitle={afterTitle}
-              title={title}
-              subTitle={subTitle}
-              date={date}
-              icon={icon}
-              location={location}
-              hideSubtitle={hideSubtitle}
-              iconProps={iconProps}
-              preview={preview}
-              iconBefore={iconBefore}
-              pad={selectDefined(titlePad, 'sm')}
-              {...headerProps}
-            />
-          </Scale>
+          {hasTitle && (
+            <Scale size={1.1}>
+              <ListItemSimple
+                before={<CollapseArrow useCollapse={toggle} />}
+                className="ui-card-header grid-draggable"
+                onClickLocation={onClickLocation}
+                onDoubleClick={
+                  (!collapseOnClick && collapseProps.collapsable && toggle.toggle) || undefined
+                }
+                onClick={useCallback(
+                  e => {
+                    collapseOnClick && toggle.toggle()
+                    onClickTitle && onClickTitle(e)
+                  },
+                  [collapseOnClick, onClickTitle],
+                )}
+                cursor={hasTitleClick ? 'pointer' : 'auto'}
+                alignItems="center"
+                titleFlex={titleFlex}
+                subTitleProps={subTitleProps}
+                titleProps={{
+                  fontWeight: 400,
+                  ...titleProps,
+                }}
+                hoverStyle={hasTitleClick ? true : false}
+                afterTitle={afterTitle}
+                title={title}
+                subTitle={subTitle}
+                date={date}
+                icon={icon}
+                location={location}
+                hideSubtitle={hideSubtitle}
+                iconProps={iconProps}
+                preview={preview}
+                iconBefore={iconBefore}
+                pad={selectDefined(titlePad, 'sm')}
+                {...headerProps}
+              />
+            </Scale>
+          )}
           {/* reset inner contents to be original theme */}
           <Theme name={activeThemeName}>
             <Col

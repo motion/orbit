@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SeparatorVertical, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Card, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SeparatorVertical, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -205,6 +205,11 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
   const hasApiInfo = !!meta && !!meta.apiInfo
+  const [numLines, setNumLines] = useState(5)
+
+  const onChangeSource = useCallback(source => {
+    setNumLines(source.split('\n').length)
+  }, [])
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
@@ -214,10 +219,15 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
   return (
     <Layout type="row">
-      <Pane flex={2} resizable>
-        <MonacoEditor
-          value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
-        />
+      <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
+        <Col pad>
+          <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+            <MonacoEditor
+              value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
+              onChange={onChangeSource}
+            />
+          </Card>
+        </Col>
       </Pane>
       <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
         {Object.keys(meta.apiInfo).map(key => {

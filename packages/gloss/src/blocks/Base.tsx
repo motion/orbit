@@ -49,7 +49,6 @@ export const Box = gloss<BoxProps>({
   flexFlow: 'column',
   boxSizing: 'border-box',
   flexShrink: 0,
-  alignItems: 'stretch',
   minWidth: 0,
 })
 

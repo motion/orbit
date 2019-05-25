@@ -100,7 +100,7 @@ type ElectronMenuItemOptions = any
 const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
   paddingLeft: 10,
   userSelect: 'text',
-  fontFamily: ` 'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
+  fontFamily: `'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
 }).theme((props, theme) => ({
   color: props.color || theme.color,
   opacity: props.disabled ? 0.5 : 1,

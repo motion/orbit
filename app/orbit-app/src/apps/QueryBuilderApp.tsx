@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -100,8 +100,8 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
 
   return (
     <Section
-      pad="xl"
-      titlePad="lg"
+      pad
+      titlePad
       backgrounded
       title={props.title}
       subTitle="Select data app."
@@ -154,7 +154,7 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
   return (
     <Section
       flex={1}
-      titlePad="lg"
+      titlePad
       backgrounded
       titleBorder
       title={props.title}
@@ -217,8 +217,10 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             const info = meta.apiInfo[key]
             return (
               <Col key={key} space="xs" borderRadius={8}>
-                <SubTitle>{info.name}</SubTitle>
-                <Paragraph>{info.typeString}</Paragraph>
+                <Tag alt="lightGray">{info.name}</Tag>
+                <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                  {info.typeString}
+                </MonoSpaceText>
                 <Paragraph>{info.comment}</Paragraph>
               </Col>
             )

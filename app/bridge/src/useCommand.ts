@@ -12,14 +12,15 @@ let cache: {
 } = {}
 
 export function useCommand<Args, ReturnType>(
-  command: Command<ReturnType, Args>,
+  command: Command<ReturnType, Args> | false,
   args: Args,
 ): ReturnType {
-  const key = JSON.stringify({ args, name: command.name })
+  const key = JSON.stringify({ args, name: command ? command.name : '' })
   const forceUpdate = useForceUpdate()
 
   // check if updated and refresh with new value if changed
   useEffect(() => {
+    if (command === false) return
     let cancelled = false
     Mediator.command(command, args).then(res => {
       if (cancelled) return
@@ -35,6 +36,10 @@ export function useCommand<Args, ReturnType>(
 
   if (cache[key] && isDefined(cache[key].value)) {
     return cache[key].value
+  }
+
+  if (command === false) {
+    return null
   }
 
   cache[key] = {

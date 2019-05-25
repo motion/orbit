@@ -6,7 +6,6 @@ import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Loading } from './progress/Loading'
-import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
 import { Col } from './View/Col'
@@ -205,25 +204,24 @@ function TabsControlled({
         maxWidth="100%"
         margin={centered ? [0, 'auto'] : 'inherit'}
         justifyContent={centered ? 'center' : 'inherit'}
+        group
         {...rest}
       >
-        <SegmentedRow sizePadding={sizePadding} sizeRadius={sizeRadius}>
-          {before}
-          <View
-            {...{
-              flex: 1,
-              overflow: 'hidden',
-              height,
-            }}
-          >
-            <HideScrollbar className="hide-scrollbars">
-              {Children.map(tabList, (child, key) =>
-                cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
-              )}
-            </HideScrollbar>
-          </View>
-          {after}
-        </SegmentedRow>
+        {before}
+        <View
+          {...{
+            flex: 1,
+            overflow: 'hidden',
+            height,
+          }}
+        >
+          <HideScrollbar className="hide-scrollbars">
+            {Children.map(tabList, (child, key) =>
+              cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
+            )}
+          </HideScrollbar>
+        </View>
+        {after}
       </Row>
       {tabContents}
       {tabSiblings}

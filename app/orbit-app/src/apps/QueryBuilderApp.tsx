@@ -201,30 +201,38 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
   const hasApiInfo = !!meta && !!meta.apiInfo
+
+  if (!hasApiInfo) {
+    return <Templates.Message title="This app doesn't have an API" />
+  }
+
+  const firstApiMethod = meta.apiInfo[Object.keys(meta.apiInfo)[0]]
+
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
         <Layout type="column">
           <Pane flex={2}>
-            <MonacoEditor />
+            <MonacoEditor
+              value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
+            />
           </Pane>
           <Pane>123</Pane>
         </Layout>
       </Pane>
       <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
-        {hasApiInfo &&
-          Object.keys(meta.apiInfo).map(key => {
-            const info = meta.apiInfo[key]
-            return (
-              <Col key={key} space="xs" borderRadius={8}>
-                <Tag alt="lightGray">{info.name}</Tag>
-                <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
-                  {info.typeString}
-                </MonoSpaceText>
-                <Paragraph>{info.comment}</Paragraph>
-              </Col>
-            )
-          })}
+        {Object.keys(meta.apiInfo).map(key => {
+          const info = meta.apiInfo[key]
+          return (
+            <Col key={key} space="xs" borderRadius={8}>
+              <Tag alt="lightGray">{info.name}</Tag>
+              <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                {info.typeString}
+              </MonoSpaceText>
+              <Paragraph>{info.comment}</Paragraph>
+            </Col>
+          )
+        })}
       </Pane>
     </Layout>
   )

@@ -1,28 +1,56 @@
-import { View, ViewProps } from '@o/ui'
-import React from 'react'
-import ReactMonacoEditor from 'react-monaco-editor'
+import { useOnMount, View, ViewProps } from '@o/ui'
+import * as monaco from 'monaco-editor'
+import React, { useEffect, useRef } from 'react'
 
-const options = {
+export type MonacoEditorProps = monaco.editor.IEditorConstructionOptions &
+  Pick<ViewProps, 'width' | 'height'>
+
+export function MonacoEditor({ width, height, ...props }: MonacoEditorProps) {
+  const node = useRef(null)
+  const mnco = useRef(null)
+
+  useOnMount(() => {
+    mnco.current = monaco.editor.create(node.current, props)
+  })
+
+  useEffect(() => {
+    monaco.editor.setTheme(props.theme)
+  }, [props.theme])
+
+  useEffect(() => {
+    mnco.current.layout()
+  }, [width, height])
+
+  return <View ref={node} position="relative" overflow="hidden" width={width} height={height} />
+}
+
+const defaults: MonacoEditorProps = {
+  width: '100%',
+  height: '100%',
   selectOnLineNumbers: true,
-  roundedSelection: false,
-  readOnly: false,
+  roundedSelection: true,
   cursorStyle: 'line',
+  theme: 'vs-dark',
   automaticLayout: true,
+  scrollBeyondLastLine: false,
+  highlightActiveIndentGuide: false,
+  renderLineHighlight: 'gutter',
+  minimap: {
+    enabled: false,
+  },
+  scrollbar: {
+    horizontalScrollbarSize: 5,
+    horizontalSliderSize: 0,
+    useShadows: false,
+  },
+  value: `export class Something {
+  x = 0
+
+  run() {
+    console.log('hello world')
+  }
+}`,
+  language: 'typescript',
 }
 
-export function MonacoEditor(props: ViewProps) {
-  return (
-    <View position="relative" overflow="hidden" width="100%" height="100%" {...props}>
-      <ReactMonacoEditor
-        width="100%"
-        height="100%"
-        language="javascript"
-        theme="vs-dark"
-        value={`function() {}`}
-        options={options}
-        //  onChange={::this.onChange}
-        //  editorDidMount={::this.editorDidMount}
-      />
-    </View>
-  )
-}
+MonacoEditor.defaultProps = defaults

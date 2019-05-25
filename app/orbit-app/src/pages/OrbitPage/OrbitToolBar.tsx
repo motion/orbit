@@ -1,7 +1,7 @@
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
-import { gloss, Row, RowProps } from 'gloss'
+import { Block, gloss, Row, RowProps } from 'gloss'
 import React, { memo, useContext } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
@@ -9,9 +9,7 @@ import { useStoresSimple } from '../../hooks/useStores'
 const toolbarHeight = 36
 
 export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
-  <div
-    style={{ pointerEvents: 'none', height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0 }}
-  />
+  <Block pointerEvents="none" height={p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0} />
 )
 
 const opts = {

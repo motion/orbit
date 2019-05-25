@@ -2,10 +2,6 @@
   pointer-events: all;
 }
 
-.monaco-editor * {
-  all: initial;
-}
-
 /* go back to default browser style */
 .reset * {
   all: initial;
@@ -485,8 +481,7 @@ textarea {
     'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-body,
-body * {
+body {
   display: flex;
   flex-flow: column;
   box-sizing: border-box;

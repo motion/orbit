@@ -4,7 +4,7 @@ import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
 import { isRightClick } from '@o/ui'
-import { gloss, Row, RowProps } from 'gloss'
+import { Box, gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
 import React, { forwardRef, memo } from 'react'
 
@@ -188,12 +188,12 @@ export const OrbitNav = memo(
   }),
 )
 
-const OrbitNavClip = gloss({
+const OrbitNavClip = gloss(Box, {
   padding: [20, 40],
   margin: [-20, 0],
 })
 
-const OrbitNavChrome = gloss({
+const OrbitNavChrome = gloss(Box, {
   maxWidth: '100%',
   pointerEvents: 'inherit',
   height: tabHeight,

@@ -12,7 +12,14 @@ const options = {
 
 export function MonacoEditor(props: ViewProps) {
   return (
-    <View position="relative" overflow="hidden" width="100%" height="100%" {...props}>
+    <View
+      className="reset"
+      position="relative"
+      overflow="hidden"
+      width="100%"
+      height="100%"
+      {...props}
+    >
       <ReactMonacoEditor
         width="100%"
         height="100%"

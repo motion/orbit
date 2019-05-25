@@ -3,7 +3,7 @@ import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, Theme, View, ViewProps } from '@o/ui'
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
@@ -207,7 +207,7 @@ let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   return <OrbitApp appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
 }
 
-const OrbitContentArea = gloss({
+const OrbitContentArea = gloss(Box, {
   flexFlow: 'row',
   flex: 1,
   transform: {

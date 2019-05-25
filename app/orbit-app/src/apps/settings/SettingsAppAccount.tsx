@@ -132,22 +132,22 @@ export default function SettingsAppAccount() {
       {!!statusMessage && <Message>{statusMessage}</Message>}
 
       {user && user.email && user.cloudId && (
-        <div>
+        <>
           {isSyncing === false && user && user.lastTimeSync && (
-            <div>
+            <>
               <Message>
                 You account was synced last time on {new Date(user.lastTimeSync).toString()}.
                 <Button alt="action" onClick={cloudSync}>
                   Sync now
                 </Button>
               </Message>
-            </div>
+            </>
           )}
 
           <Button alt="action" onClick={logout}>
             Logout
           </Button>
-        </div>
+        </>
       )}
 
       {user && !user.cloudId && (

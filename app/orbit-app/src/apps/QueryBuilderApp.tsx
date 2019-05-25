@@ -4,6 +4,7 @@ import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layou
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
+import { MonacoEditor } from '../monaco'
 import { useOm } from '../om/om'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
@@ -205,7 +206,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
       <Pane flex={2} resizable>
         <Layout type="column">
           <Pane flex={2}>
-            hello
+            <MonacoEditor />
           </Pane>
           <Pane>123</Pane>
         </Layout>

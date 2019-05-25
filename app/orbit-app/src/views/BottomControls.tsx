@@ -1,6 +1,6 @@
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 
-export const BottomControls = gloss({
+export const BottomControls = gloss(Box, {
   flexFlow: 'row',
   position: 'absolute',
   bottom: 16,

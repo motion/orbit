@@ -2,7 +2,7 @@ import { invertLightness } from '@o/color'
 import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
-import { FullScreen, gloss, useTheme } from 'gloss'
+import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -221,7 +221,7 @@ const OrbitNavHiddenBar = props => {
         {apps.map(app => {
           const isActive = paneId === `${app.id}`
           return (
-            <div
+            <Block
               key={app.id}
               style={{
                 background: app.colors ? app.colors[0] : 'black',
@@ -250,7 +250,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
     theme.background.alpha(a => a * 0.65),
 }))
 
-const OrbitNavHiddenBarChrome = gloss({
+const OrbitNavHiddenBarChrome = gloss(Box, {
   position: 'absolute',
   bottom: -6,
   left: 0,
@@ -262,7 +262,7 @@ const OrbitNavHiddenBarChrome = gloss({
   },
 }))
 
-const OrbitNavHiddenBarInner = gloss({
+const OrbitNavHiddenBarInner = gloss(Box, {
   flexFlow: 'row',
   height: 3,
   borderRadius: 3,
@@ -322,7 +322,7 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const ExtraButtonsChrome = gloss({
+const ExtraButtonsChrome = gloss(Box, {
   flexFlow: 'row',
   paddingRight: 22,
   paddingLeft: 12,

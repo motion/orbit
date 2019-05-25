@@ -1,6 +1,6 @@
 import { useActiveSpace } from '@o/kit'
 import { ClearButton, ThemeContext, View } from '@o/ui'
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import React, { memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -63,7 +63,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
   )
 })
 
-const After = gloss({
+const After = gloss(Box, {
   position: 'absolute',
   top: 0,
   right: 0,

@@ -2,6 +2,8 @@ const { join } = require('path')
 
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
+// disabled for now, allows multi entry
+
 module.exports = {
   monaco: {
     entry: {

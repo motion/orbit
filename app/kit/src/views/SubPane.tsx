@@ -1,4 +1,4 @@
-import { gloss } from 'gloss'
+import { gloss, Box } from 'gloss'
 import * as UI from '@o/ui'
 import { useStore } from '@o/use-store'
 import { throttle } from 'lodash'
@@ -114,6 +114,6 @@ const SubPaneInner = gloss<UI.ViewProps>(UI.View, {
   flex: 1,
 })
 
-const PaneContentInner = gloss({
+const PaneContentInner = gloss(Box, {
   position: 'relative',
 })

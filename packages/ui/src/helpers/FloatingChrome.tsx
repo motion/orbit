@@ -1,3 +1,4 @@
+import { Box } from 'gloss'
 import React, { HTMLAttributes, memo, RefObject, useEffect, useState } from 'react'
 
 import { getRect, Rect, usePosition } from '../hooks/usePosition'
@@ -16,7 +17,7 @@ export const FloatingChrome = memo(function FloatingChrome(
   const { target, style, measureKey, zIndex = 150000000, ...rest } = props
   const [pos, setPos] = useState<Rect | null>(null)
   const element = (
-    <div
+    <Box
       style={{
         position: 'absolute',
         zIndex,
@@ -39,7 +40,7 @@ export const FloatingChrome = memo(function FloatingChrome(
 
   return (
     <Portal style={{ zIndex }}>
-      <div style={fullScreen as any}>{element}</div>
+      <Box style={fullScreen as any}>{element}</Box>
     </Portal>
   )
 })

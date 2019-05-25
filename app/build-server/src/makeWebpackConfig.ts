@@ -8,7 +8,7 @@ const TimeFixPlugin = require('time-fix-plugin')
 
 export type WebpackParams = {
   name?: string
-  entry: string[]
+  entry?: string[]
   context: string
   publicPath?: string
   mode?: 'production' | 'development'
@@ -28,7 +28,7 @@ export type WebpackParams = {
 export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any) {
   let {
     outputFile,
-    entry,
+    entry = [],
     publicPath = '/',
     context,
     mode = 'development' as any,
@@ -36,7 +36,7 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
     outputDir = Path.join(context, 'dist'),
     externals,
     ignore = [],
-    watch,
+    watch = mode === 'development' ? true : false,
     dll,
     dllReference,
     devServer,
@@ -112,7 +112,7 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
       // hotUpdateMainFilename: `hot-update.json`,
     },
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
-    externals: [externals, { electron: '{}' }],
+    externals: [{ ...externals, electron: '{}' }],
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields:
@@ -287,7 +287,7 @@ export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any
   // console.log('made config', config)
 
   if (extraConfig) {
-    return merge.smart([config, extraConfig].filter(Boolean))
+    return merge.smart([config, extraConfig])
   }
 
   return config

@@ -57,7 +57,7 @@ export class BuildServer {
     }
 
     // falls back to the main entry middleware
-    const { devMiddleware, hotMiddleware } = getMiddleware('main', main)
+    const { devMiddleware, hotMiddleware } = getMiddleware('/__webpack_hmr_main', main)
     this.server.use(devMiddleware)
     this.server.use(hotMiddleware)
     this.server.use(historyAPIFallback())

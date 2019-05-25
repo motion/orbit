@@ -1,9 +1,6 @@
-import { join } from 'path'
-
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
 export async function getAppConfig(props: WebpackParams, extraConfig?: any) {
-  const outputDir = join(props.context, 'dist')
   return await makeWebpackConfig(
     {
       mode: 'development',
@@ -12,7 +9,6 @@ export async function getAppConfig(props: WebpackParams, extraConfig?: any) {
         typeorm: 'typeorm',
       },
       ignore: ['electron-log'],
-      outputDir,
       output: {
         library: '[name]',
         libraryTarget: 'umd',

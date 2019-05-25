@@ -1,5 +1,5 @@
 import { buildApp, BuildServer, getAppConfig } from '@o/build-server'
-import { WebpackParams } from '@o/build-server/_/makeWebpackConfig'
+import { makeWebpackConfig, WebpackParams } from '@o/build-server/_/makeWebpackConfig'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -103,24 +103,24 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
 
   let extraEntries = {}
 
-  if (Array.isArray(extraConfig)) {
-    for (const [index, config] of extraConfig.entries()) {
-      const name = `main${index}`
-      extraEntries[name] = await getAppConfig(
+  if (extraConfig) {
+    for (const name in extraConfig) {
+      extraEntries[name] = await makeWebpackConfig(
         {
           name,
+          outputFile: `${name}.js`,
           context: options.workspaceRoot,
-          entry: [],
           target: 'web',
-          watch: true,
           hot: true,
         },
-        config,
+        extraConfig[name],
       )
+
+      console.log(name, extraEntries[name])
     }
   }
 
-  const wsConfig = await getAppConfig({
+  const wsConfig = await makeWebpackConfig({
     name: 'main',
     context: options.workspaceRoot,
     entry: [entry],

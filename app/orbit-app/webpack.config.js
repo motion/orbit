@@ -2,10 +2,10 @@ const { join } = require('path')
 
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
-module.exports = [
-  {
+module.exports = {
+  monaco: {
     entry: {
-      monaco: join(__dirname, 'src', 'monaco'),
+      main: [join(__dirname, 'src', 'monaco')],
     },
     plugins: [
       new MonacoWebpackPlugin({
@@ -13,4 +13,4 @@ module.exports = [
       }),
     ],
   },
-]
+}

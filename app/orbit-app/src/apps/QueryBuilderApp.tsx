@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Card, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SeparatorVertical, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Card, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, Paragraph, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -209,7 +209,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
   const hasApiInfo = !!meta && !!meta.apiInfo
-  const [numLines, setNumLines] = useState(5)
+  const [numLines, setNumLines] = useState(1)
+  const allMethods = Object.keys(meta.apiInfo)
+  const [method, setMethod] = useState(meta.apiInfo[allMethods[0]])
 
   const onChangeSource = useCallback(source => {
     setNumLines(source.split('\n').length)
@@ -219,33 +221,69 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     return <Templates.Message title="This app doesn't have an API" />
   }
 
-  const firstApiMethod = meta.apiInfo[Object.keys(meta.apiInfo)[0]]
-
   return (
     <Layout type="row">
       <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
-        <Col pad>
+        <Col pad space>
+          <Tag size={1.2} alt="lightGray">
+            {method.name}
+          </Tag>
+          <SubTitle>query</SubTitle>
           <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
             <MonacoEditor
-              value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
+              value={`${method.name}${method.typeString.replace(/ =>.*/g, '')}`}
               onChange={onChangeSource}
             />
           </Card>
+
+          <Row space alignItems="center">
+            <SubTitle>parameters</SubTitle>
+            <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+              Optional
+            </Tag>
+          </Row>
+          <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+            <MonacoEditor
+              value={`${method.name}${method.typeString.replace(/ =>.*/g, '')}`}
+              onChange={onChangeSource}
+            />
+          </Card>
+
+          <Space size="xl" />
+          <SeparatorHorizontal />
+          <Space size="xl" />
         </Col>
       </Pane>
-      <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
-        {Object.keys(meta.apiInfo).map(key => {
-          const info = meta.apiInfo[key]
-          return (
-            <Col key={key} space="xs" borderRadius={8}>
-              <Tag alt="lightGray">{info.name}</Tag>
-              <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
-                {info.typeString}
-              </MonoSpaceText>
-              <Paragraph>{info.comment}</Paragraph>
-            </Col>
-          )
-        })}
+      <Pane display={props.showSidebar ? undefined : 'none'}>
+        <Layout type="column">
+          <Pane
+            title="Placeholders"
+            afterTitle={<PaneButton circular icon="plus" />}
+            scrollable="y"
+            pad
+          >
+            <FormField label="Name" name="pname" defaultValue="" />
+            <FormField label="Type">
+              <Select options={['String']} />
+            </FormField>
+            <Row flex={1} justifyContent="flex-end" />
+          </Pane>
+
+          <Pane title="Explore API" scrollable="y" pad flex={2}>
+            {allMethods.map(key => {
+              const info = meta.apiInfo[key]
+              return (
+                <Col key={key} space="xs" borderRadius={8}>
+                  <Tag alt="lightGray">{info.name}</Tag>
+                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                    {info.typeString}
+                  </MonoSpaceText>
+                  <Paragraph>{info.comment}</Paragraph>
+                </Col>
+              )
+            })}
+          </Pane>
+        </Layout>
       </Pane>
     </Layout>
   )

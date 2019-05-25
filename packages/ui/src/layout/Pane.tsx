@@ -1,5 +1,6 @@
 import React, { cloneElement, isValidElement, memo, Suspense } from 'react'
 
+import { Button, ButtonProps } from '../buttons/Button'
 import { CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
@@ -67,3 +68,5 @@ export const Pane = memo((props: PaneProps) => {
 Pane['acceptsProps'] = {
   paneProps: true,
 }
+
+export const PaneButton = (props: ButtonProps) => <Button size={0.7} sizeIcon={2.3} {...props} />

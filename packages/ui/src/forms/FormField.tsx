@@ -30,33 +30,52 @@ const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</Tabl
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
+export type FormFieldLayout = 'horizontal' | 'vertical'
+
 export type SimpleFormFieldProps = RowProps & {
+  layout?: FormFieldLayout
   children?: React.ReactNode
   name?: string
 }
 
-export function SimpleFormField({ name, label, children }: SimpleFormFieldProps) {
+export function SimpleFormField({ name, label, children, layout }: SimpleFormFieldProps) {
   const error = useFormError(`${label}`)
+
+  const labelElement = (
+    <Label width="100%" htmlFor={name}>
+      {label}
+    </Label>
+  )
+
+  const valueElement = (
+    <Col>
+      {children}
+      {error && (
+        <>
+          <SimpleText alt="error">{error}</SimpleText>
+        </>
+      )}
+    </Col>
+  )
+
+  if (layout === 'vertical') {
+    return (
+      <>
+        {labelElement}
+        {valueElement}
+      </>
+    )
+  }
+
   return (
     <FormTableRow>
       <FormTableLabel>
         <Row flex={1} alignItems="center">
-          <Label width="100%" htmlFor={name}>
-            {label}
-          </Label>
+          {labelElement}
           <Space />
         </Row>
       </FormTableLabel>
-      <FormTableValue>
-        <Col>
-          {children}
-          {error && (
-            <>
-              <SimpleText alt="error">{error}</SimpleText>
-            </>
-          )}
-        </Col>
-      </FormTableValue>
+      <FormTableValue>{valueElement}</FormTableValue>
     </FormTableRow>
   )
 }
@@ -67,18 +86,21 @@ type FormFieldProps =
       label: React.ReactNode
       value: any
       name?: string
+      layout?: FormFieldLayout
     }
   | {
       type?: DataType
       label: React.ReactNode
       defaultValue: any
       name?: string
+      layout?: FormFieldLayout
     }
   | {
       label: React.ReactNode
       children: React.ReactNode
       type?: undefined
       name?: string
+      layout?: FormFieldLayout
     }
 
 export function FormField(props: FormFieldProps) {

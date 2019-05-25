@@ -2,6 +2,7 @@ import { gloss, Row } from 'gloss'
 import React from 'react'
 
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
+import { Scale } from './Scale'
 import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -23,21 +24,23 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
   const [collapseProps, textProps] = splitCollapseProps(rest)
   const toggle = useCollapse(collapseProps)
   return (
-    <PanelHeader onDoubleClick={toggle.toggle}>
-      {before}
-      {collapseProps.collapsable && (
-        <>
-          <CollapseArrow {...collapseProps} />
-          <Space size="xs" />
-        </>
-      )}
-      <View flex={1}>
-        <Text size={0.9} alpha={0.65} {...textProps}>
-          {title}
-        </Text>
-      </View>
-      {after}
-    </PanelHeader>
+    <Scale size={0.8}>
+      <PanelHeader onDoubleClick={toggle.toggle}>
+        {before}
+        {collapseProps.collapsable && (
+          <>
+            <CollapseArrow {...collapseProps} />
+            <Space />
+          </>
+        )}
+        <View flex={1}>
+          <Text alpha={0.65} {...textProps}>
+            {title}
+          </Text>
+        </View>
+        {after}
+      </PanelHeader>
+    </Scale>
   )
 }
 

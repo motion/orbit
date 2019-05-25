@@ -72,16 +72,19 @@ export function createSpacedChildren({
     <>
       {beforeSpace}
       {spaceAround && spaceElement}
-      {childs.map((child, index) =>
-        child && child.type && child.type.isSpace ? (
+      {childs.map((child, index) => {
+        const isSpace = child && child.type && child.type.isSpace
+        const isNextSpace =
+          childs[index + 1] && childs[index + 1].type && childs[index + 1].type.isSpace
+        return isSpace || isNextSpace ? (
           child
         ) : (
           <Fragment key={index}>
             {child}
             {index !== total - 1 && spaceElement}
           </Fragment>
-        ),
-      )}
+        )
+      })}
       {spaceAround && spaceElement}
       {afterSpace}
     </>

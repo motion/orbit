@@ -1,20 +1,15 @@
-import { Base, BaseProps } from 'gloss'
 import React from 'react'
 
-import { useScale } from './Scale'
-import { LINE_HEIGHT } from './SizedSurface'
 import { Text, TextProps } from './text/Text'
+import { Col, ColProps } from './View/Col'
 import { Row, RowProps } from './View/Row'
 
-export type LabeledProps = BaseProps
+export type LabeledProps = ColProps
 export type LabeledTextProps = TextProps
 export type LabeledItemProps = RowProps
 
 export const Labeled = (props: LabeledProps) => {
-  const scale = useScale()
-  return (
-    <Base alignItems="center" justifyContent="center" height={LINE_HEIGHT * 2 * scale} {...props} />
-  )
+  return <Col space="xs" alignItems="center" justifyContent="center" {...props} />
 }
 
 // @ts-ignore
@@ -24,6 +19,5 @@ Labeled.Text = function LabeledText(props: LabeledTextProps) {
 
 // @ts-ignore
 Labeled.Item = function LabeledItem(props: LabeledItemProps) {
-  const scale = useScale()
-  return <Row marginBottom={scale * 8} alignItems="center" position="relative" {...props} />
+  return <Row alignItems="center" position="relative" {...props} />
 }

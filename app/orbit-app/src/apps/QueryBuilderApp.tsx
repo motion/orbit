@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SeparatorVertical, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -179,6 +179,10 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
             </Labeled.Item>
             <Labeled.Text>API</Labeled.Text>
           </Labeled>
+
+          <SeparatorVertical height={40} />
+
+          <Button alt="action">Save</Button>
         </>
       }
     >
@@ -211,14 +215,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
-        <Layout type="column">
-          <Pane flex={2}>
-            <MonacoEditor
-              value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
-            />
-          </Pane>
-          <Pane>123</Pane>
-        </Layout>
+        <MonacoEditor
+          value={`${firstApiMethod.name}${firstApiMethod.typeString.replace(/ =>.*/g, '')}`}
+        />
       </Pane>
       <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
         {Object.keys(meta.apiInfo).map(key => {

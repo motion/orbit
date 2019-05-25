@@ -9,8 +9,8 @@ import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
+import { ListSeparator, ListSeparatorProps } from '../ListSeparator'
 import { useScale } from '../Scale'
-import { Separator, SeparatorProps } from '../Separator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
@@ -98,7 +98,7 @@ export type ListItemSpecificProps = ListItemHide & {
   /** Adds extra IconProps to icon elements */
   iconProps?: Partial<IconProps>
 
-  separatorProps?: Partial<SeparatorProps>
+  separatorProps?: Partial<ListSeparatorProps>
 
   /** Add className */
   className?: string
@@ -272,7 +272,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       {above}
       {!!separator && (
         <Theme name={activeThemeName}>
-          <Separator {...separatorProps}>{separator}</Separator>
+          <ListSeparator {...separatorProps}>{separator}</ListSeparator>
         </Theme>
       )}
       <SizedSurface

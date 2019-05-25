@@ -129,7 +129,7 @@ export const TitleRow = themeable(
                 </SubTitle>
               )}
             </View>
-            <Row alignItems="center" space="sm">
+            <Row alignItems="center" space>
               {after}
             </Row>
           </Row>

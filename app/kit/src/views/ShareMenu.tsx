@@ -1,6 +1,7 @@
-import { ListItem, ListItemProps, Separator, View } from '@o/ui'
+import { ListItem, ListItemProps, ListSeparator, View } from '@o/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
+
 import { useActiveApps } from '../hooks/useActiveApps'
 import { SearchItemShareContext } from './SearchItemProvide'
 
@@ -14,7 +15,7 @@ export const ShareMenu = memo(function ShareMenu() {
 
   return (
     <View overflowX="hidden" overflowY="auto" flex={1}>
-      <Separator paddingTop={10}>Send to...</Separator>
+      <ListSeparator paddingTop={10}>Send to...</ListSeparator>
       {flatten(
         listApps.map(app => {
           let items: ListItemProps[] = [

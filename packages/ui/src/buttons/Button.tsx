@@ -13,6 +13,8 @@ export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
 
     /** use defaultActive/onChangeActive for easy active on/off */
     onChangeActive?: (next: boolean) => any
+
+    defaultActive?: boolean
   }
 
 const glowProps = {

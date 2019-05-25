@@ -1,3 +1,4 @@
+import { isDefined } from '@o/utils'
 import { useCallback, useRef, useState } from 'react'
 
 // allows you to automatically handle uncontrolled props for a component
@@ -10,8 +11,8 @@ export function useUncontrolled<A extends Object>(props: A, config: { [key: stri
       const { [defaultProp]: defaultValue, [fieldName]: propsValue, ...rest } = result
       const handlerName = config[fieldName]
       const [stateValue, setState] = useState(defaultValue)
-      const curProp = isProp(props, fieldName)
-      const wasProp = isProp(prevProps.current, fieldName)
+      const curProp = isDefined(props[fieldName])
+      const wasProp = isDefined(prevProps.current[fieldName])
 
       if (!curProp && wasProp) {
         setState(defaultValue)
@@ -27,6 +28,10 @@ export function useUncontrolled<A extends Object>(props: A, config: { [key: stri
         [setState, propsHandler],
       )
 
+      if (!isDefined(defaultValue)) {
+        return rest
+      }
+
       return {
         ...rest,
         [fieldName]: curProp ? propsValue : stateValue,
@@ -41,8 +46,4 @@ export function useUncontrolled<A extends Object>(props: A, config: { [key: stri
 
 function defaultKey(key: string) {
   return 'default' + key.charAt(0).toUpperCase() + key.substr(1)
-}
-
-function isProp(props, prop) {
-  return props[prop] !== undefined
 }

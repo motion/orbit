@@ -1,10 +1,11 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, Pane, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, TextArea, Title, useGet } from '@o/ui'
+import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
+import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
 import { NavigatorProps, StackNavigator } from './StackNavigator'
 
@@ -99,8 +100,8 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
 
   return (
     <Section
-      pad="xl"
-      titlePad="lg"
+      pad
+      titlePad
       backgrounded
       title={props.title}
       subTitle="Select data app."
@@ -148,11 +149,12 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
 
 function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
+  const [showSidebar, setShowSidebar] = useState(true)
 
   return (
     <Section
       flex={1}
-      titlePad="lg"
+      titlePad
       backgrounded
       titleBorder
       title={props.title}
@@ -168,15 +170,25 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
 
           <Labeled>
             <Labeled.Item>
-              <Button tooltip="Explore API" icon="layouts" />
+              <Button
+                defaultActive
+                onChangeActive={setShowSidebar}
+                tooltip="Toggle Explore API sidebar"
+                icon="panel-stats"
+              />
             </Labeled.Item>
-            <Labeled.Text>Explore</Labeled.Text>
+            <Labeled.Text>API</Labeled.Text>
           </Labeled>
         </>
       }
     >
-      {mode === 'api' ? <APIQueryBuild id={+props.id} /> : <GraphQueryBuild id={+props.id} />}
-      {JSON.stringify(props)}
+      <Suspense fallback={null}>
+        {mode === 'api' ? (
+          <APIQueryBuild id={+props.id} showSidebar={showSidebar} />
+        ) : (
+          <GraphQueryBuild id={+props.id} />
+        )}
+      </Suspense>
     </Section>
   )
 }
@@ -185,19 +197,35 @@ function useAppMeta(identifier: string) {
   return useCommand(AppMetaCommand, { identifier })
 }
 
-const APIQueryBuild = memo((props: { id: number }) => {
-  const [app, def] = useAppWithDefinition(+props.id)
+const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
+  const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
-  console.log('got app meta', meta, app, def)
+  const hasApiInfo = !!meta && !!meta.apiInfo
   return (
     <Layout type="row">
       <Pane flex={2} resizable>
         <Layout type="column">
-          <Pane flex={2}>123</Pane>
+          <Pane flex={2}>
+            <MonacoEditor />
+          </Pane>
           <Pane>123</Pane>
         </Layout>
       </Pane>
-      <Pane title="Explore API" scrollable="y" />
+      <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
+        {hasApiInfo &&
+          Object.keys(meta.apiInfo).map(key => {
+            const info = meta.apiInfo[key]
+            return (
+              <Col key={key} space="xs" borderRadius={8}>
+                <Tag alt="lightGray">{info.name}</Tag>
+                <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                  {info.typeString}
+                </MonoSpaceText>
+                <Paragraph>{info.comment}</Paragraph>
+              </Col>
+            )
+          })}
+      </Pane>
     </Layout>
   )
 })

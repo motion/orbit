@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { gloss, Theme } from 'gloss'
+import { Box, gloss, Theme } from 'gloss'
 import React, { forwardRef, useCallback, useState } from 'react'
 
 import { ProvideFocus } from '../Focus'
@@ -158,7 +158,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   )
 })
 
-const Bottom = gloss({
+const Bottom = gloss(Box, {
   flexFlow: 'row',
   alignItems: 'center',
 })

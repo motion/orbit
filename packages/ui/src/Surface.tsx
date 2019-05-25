@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import Gloss, { Base, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
+import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -380,11 +380,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           </GlintContain>
         )}
         {icon && iconAfter ? (
-          <div
-            style={{
-              flexDirection: 'inherit',
-              order: 3,
-            }}
+          <Box
+            style={
+              {
+                flexDirection: 'inherit',
+                order: 3,
+              } as any
+            }
           >
             {showElement && spaceElement}
             {!!betweenIconElement && (
@@ -394,7 +396,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               </>
             )}
             {innerElements}
-          </div>
+          </Box>
         ) : (
           <>
             {innerElements}

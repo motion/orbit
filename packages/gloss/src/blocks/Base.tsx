@@ -42,11 +42,19 @@ export type CommonHTMLProps = Omit<
 >
 
 // TODO this should be a "disjoint" type, avoid overlapping!
-export type BaseProps = GlossProps<
-  CommonHTMLProps & CSSPropertySetStrict & PseudoStyleProps & TextSizeProps & AlphaColorProps
->
+export type BoxProps = GlossProps<CommonHTMLProps & CSSPropertySetStrict>
 
-export const Base = gloss<BaseProps>().theme(
+export const Box = gloss<BoxProps>({
+  display: 'flex',
+  flexFlow: 'column',
+  boxSizing: 'border-box',
+  flexShrink: 0,
+  minWidth: 0,
+})
+
+export type BaseProps = BoxProps & PseudoStyleProps & TextSizeProps & AlphaColorProps
+
+export const Base = gloss<BaseProps>(Box).theme(
   // <Base color="red" /> css props
   propStyleTheme,
   // <Base hoverStyle={{ color: 'red' }} />, focusStyle, activeStyle

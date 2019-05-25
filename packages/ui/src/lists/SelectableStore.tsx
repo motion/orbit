@@ -103,10 +103,12 @@ export class SelectableStore {
     },
   )
 
+  // async so we have time to render the active state first
   callbackOnSelect = react(
     () => always(this.active),
-    () => {
+    async (_, { sleep }) => {
       ensure('this.props.onSelect', !!this.props.onSelect)
+      await sleep(16)
       const { rows, indices } = this.getSelectedState()
       this.props.onSelect(rows, indices)
     },

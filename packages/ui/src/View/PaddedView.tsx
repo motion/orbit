@@ -5,10 +5,10 @@ import { View, ViewProps } from './View'
 
 // plain padded view
 export const PaddedView = gloss<ViewProps & PadProps>(View, {
-  width: '100%',
   flexDirection: 'inherit',
   flexWrap: 'inherit',
-  flex: 'inherit',
+  flex: 'none',
   alignItems: 'inherit',
   justifyContent: 'inherit',
+  overflow: 'inherit',
 }).theme(getPadding)

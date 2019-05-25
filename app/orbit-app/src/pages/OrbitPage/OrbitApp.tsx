@@ -2,8 +2,9 @@ import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
-import { ErrorBoundary, ListItemProps, Loading, ProvideShare, ProvideVisibility, useGet, useThrottleFn, useVisibility } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, useGet, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
+import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
@@ -122,8 +123,8 @@ export const OrbitAppRenderOfDefinition = ({
                 <FadeIn>
                   <FinalAppView
                     {...activeItem}
-                    identifier={activeItem && activeItem.identifier || identifier}
-                    id={activeItem && activeItem.id || id}
+                    identifier={(activeItem && activeItem.identifier) || identifier}
+                    id={(activeItem && activeItem.id) || id}
                   />
                 </FadeIn>
               )}
@@ -177,6 +178,18 @@ export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppProps {
 
 const onIdle = () => new Promise(res => window['requestIdleCallback'](res))
 
+const FadeInDiv = gloss(Box, {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  transition: 'all ease 200ms',
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none',
+})
+
 const FadeIn = (props: any) => {
   const [shown, setShown] = useState(false)
 
@@ -189,23 +202,14 @@ const FadeIn = (props: any) => {
   }, [])
 
   return (
-    <div
+    <FadeInDiv
       style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         opacity: shown ? 1 : 0,
         transform: `translateX(${shown ? 0 : -10}px)`,
-        transition: 'all ease 200ms',
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
       }}
     >
       {props.children}
-    </div>
+    </FadeInDiv>
   )
 }
 

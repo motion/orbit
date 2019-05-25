@@ -34,8 +34,9 @@ export type FilterableReceiverProps = {
 }
 
 // allows for optional label
+const EMPTY_FILTERS = []
 function normalizeFilters(filters: TableFilterSimple[]): TableFilter[] {
-  return filters.map(normalizeFilter)
+  return filters ? filters.map(normalizeFilter) : EMPTY_FILTERS
 }
 
 const themeColors = ['orange', 'red', 'blue', 'green', 'yellow']

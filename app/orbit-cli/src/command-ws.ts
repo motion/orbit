@@ -1,5 +1,5 @@
 import { buildApp, BuildServer, getAppConfig } from '@o/build-server'
-import { WebpackParams } from '@o/build-server/_/makeWebpackConfig'
+import { makeWebpackConfig, WebpackParams } from '@o/build-server/_/makeWebpackConfig'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -79,12 +79,17 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   })
 
   let entry = ''
+  let extraConfig
   const isInMonoRepo = await getIsInMonorepo()
   if (isInMonoRepo) {
     // main entry for orbit-app
     const monoRoot = join(__dirname, '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
     entry = appEntry
+    const extraConfFile = join(appEntry, '..', '..', 'webpack.config.js')
+    if (await pathExists(extraConfFile)) {
+      extraConfig = require(extraConfFile)
+    }
   }
 
   await writeFile(
@@ -99,21 +104,45 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   `,
   )
 
-  const wsConfig = await getAppConfig({
-    name: 'main',
-    context: options.workspaceRoot,
-    entry: [entry],
-    target: 'web',
-    outputFile: '[name].test.js',
-    watch: true,
-    // devServer: true,
-    hot: true,
-    dllReference: dllFile,
-  })
+  let extraEntries = {}
+  let extraMainConfig = null
+
+  if (extraConfig) {
+    const { main, ...others } = extraConfig
+    extraMainConfig = main
+    for (const name in others) {
+      extraEntries[name] = await makeWebpackConfig(
+        {
+          name,
+          outputFile: `${name}.js`,
+          context: options.workspaceRoot,
+          target: 'web',
+          hot: true,
+        },
+        extraConfig[name],
+      )
+
+      console.log(name, extraEntries[name])
+    }
+  }
+
+  const wsConfig = await makeWebpackConfig(
+    {
+      name: 'main',
+      context: options.workspaceRoot,
+      entry: [entry],
+      target: 'web',
+      watch: true,
+      hot: true,
+      dllReference: dllFile,
+    },
+    extraMainConfig,
+  )
 
   const server = new BuildServer({
     main: wsConfig,
     apps: appsConfig,
+    ...extraEntries,
   })
 
   await server.start()

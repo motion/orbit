@@ -1,8 +1,9 @@
-import { gloss } from 'gloss'
 import { ClearButton, Icon } from '@o/ui'
+import { Box, gloss } from 'gloss'
 import * as React from 'react'
+
 import { useStores } from '../../hooks/useStores'
-import { useOm } from '../../om/om';
+import { useOm } from '../../om/om'
 
 const Section = gloss('section', {
   flexFlow: 'row',
@@ -18,7 +19,7 @@ const Section = gloss('section', {
   },
 })
 
-const Interactive = gloss({
+const Interactive = gloss(Box, {
   flexFlow: 'row',
   alignItems: 'center',
   opacity: 0,
@@ -41,16 +42,8 @@ export default function OrbitHeaderButtons() {
   return (
     <>
       <Section invisible={appId === 'onboard'}>
-        <Interactive
-          enabled={appId === 'settings' || queryStore.hasQuery}
-        >
-          <ClearButton
-            onClick={
-              appId === 'settings'
-                ? om.actions.router.back
-                : clearSearch
-            }
-          >
+        <Interactive enabled={appId === 'settings' || queryStore.hasQuery}>
+          <ClearButton onClick={appId === 'settings' ? om.actions.router.back : clearSearch}>
             <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
           </ClearButton>
         </Interactive>

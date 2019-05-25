@@ -30,7 +30,7 @@ export class OrbitAppsManager {
   packageRefresh = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   appDefinitions: { [identifier: string]: AppDefinition } = {}
-  identifierToPackageId = {}
+  packageIdToIdentifier = {}
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
@@ -67,14 +67,14 @@ export class OrbitAppsManager {
     () => [this.activeSpace, this.packageRefresh],
     async ([space]) => {
       ensure('space', !!space)
-      const { definitions, identifierToPackageId } = await getWorkspaceAppDefs(space)
+      const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
+      this.packageIdToIdentifier = {
+        ...this.packageIdToIdentifier,
+        ...packageIdToIdentifier,
+      }
       this.appDefinitions = {
         ...this.appDefinitions,
         ...definitions,
-      }
-      this.identifierToPackageId = {
-        ...this.identifierToPackageId,
-        ...identifierToPackageId,
       }
     },
   )
@@ -84,12 +84,9 @@ export class OrbitAppsManager {
     async appDefs => {
       ensure('appDefs', !!appDefs)
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
-      console.log('appsMeta', appsMeta)
-      if (!appsMeta) {
-        return null
-      }
+      ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
-        const identifier = this.identifierToPackageId[meta.packageId]
+        const identifier = this.packageIdToIdentifier[meta.packageId]
         this.appMeta[identifier] = meta
       }
     },

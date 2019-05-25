@@ -1,5 +1,5 @@
 import { ColorLike } from '@o/color'
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import React from 'react'
 
 export type ProgressBarProps = {
@@ -25,7 +25,7 @@ export class ProgressBar extends React.Component<ProgressBarProps> {
   }
 }
 
-const Outer = gloss({
+const Outer = gloss(Box, {
   height: 6,
   margin: ['auto', 5],
   borderRadius: 100,
@@ -36,7 +36,7 @@ const Outer = gloss({
   background: background || theme.background ? theme.background.darken(0.5) : '#eee',
 }))
 
-const Inner = gloss({
+const Inner = gloss<any>(Box, {
   height: '100%',
   borderRadius: 100,
 }).theme(({ percent, color }, theme) => ({

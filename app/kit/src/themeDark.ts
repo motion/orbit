@@ -3,7 +3,7 @@ import { ThemeObject, ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
 import { alternates } from './themeAlternates'
-import { colors, transparent } from './themeColors'
+import { transparent } from './themeColors'
 
 const color = [255, 255, 255]
 const background = toColor([30, 30, 30])
@@ -28,7 +28,7 @@ const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   return acc
 }, {})
 
-const backgroundSelected = background.darken(0.3)
+const selectedColor = toColor('#363165')
 
 const darkAlternates: ThemeSet = {
   ...alternates,
@@ -38,10 +38,11 @@ const darkAlternates: ThemeSet = {
   approve: darkAltLight.lightGreen,
   success: darkAltLight.lightGreen,
   selected: colorize({
+    color: '#fff',
     borderColor,
-    background: backgroundSelected,
-    backgroundHover: backgroundSelected,
-    backgroundFocus: backgroundSelected,
+    background: selectedColor,
+    backgroundHover: selectedColor,
+    backgroundFocus: selectedColor,
   }),
   bordered: {
     ...alternates.bordered,
@@ -67,8 +68,8 @@ export const dark: ThemeObject = {
     background,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
-    backgroundHighlightActive: colors.blue.lighten(0.2),
-    backgroundHighlight: colors.blue,
+    backgroundHighlightActive: selectedColor,
+    backgroundHighlight: selectedColor,
     color: color,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',

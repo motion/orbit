@@ -1,6 +1,6 @@
 import { Color } from '@o/color'
 import { on } from '@o/utils'
-import { gloss } from 'gloss'
+import { Block, gloss } from 'gloss'
 import { debounce } from 'lodash'
 import throttle from 'raf-throttle'
 import * as React from 'react'
@@ -331,7 +331,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
               `,
           }}
         >
-          <div
+          <Block
             style={{
               transform:
                 scale * extraScale !== 1

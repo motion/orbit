@@ -1,12 +1,11 @@
 import { gloss } from 'gloss'
-import React, { Children, cloneElement, createContext, isValidElement, memo, useMemo } from 'react'
+import React, { Children, cloneElement, createContext, isValidElement, memo, ReactElement, useMemo } from 'react'
 
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { Col, ColProps } from '../View/Col'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
-import { Pane } from './Pane'
 
 export type LayoutProps = ColProps & {
   type?: 'column' | 'row'
@@ -23,15 +22,20 @@ export const LayoutContext = createContext<{
   type: 'row',
 })
 
+export const acceptsProps = (child, key) =>
+  !!(child.type.acceptsProps && child.type.acceptsProps[key])
+
 export const Layout = memo((props: LayoutProps) => {
-  Children.map(props.children, child => {
-    if (!isValidElement(child) || child.type !== Pane) {
-      throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
+  const children: ReactElement[] = Children.map(props.children, child => {
+    if (!isValidElement(child) || !acceptsProps(child, 'paneProps')) {
+      console.warn(`Invalid child: <Layout /> accepts only <Pane /> as children.`, child, props)
+      return null
     }
-  })
+    return child
+  }).filter(Boolean)
   const visibility = useVisibility()
-  const total = Children.count(props.children)
-  const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
+  const total = children.length
+  const flexes = children.map(child => child.props.flex || 1)
   const memoValue = useMemo(() => ({ type: props.type, total, flexes }), [
     props.type,
     total,
@@ -84,7 +88,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
     return (
       <LayoutRow
         minHeight={size.height || 'auto'}
-        maxHeight="100%"
+        maxHeight={size.height || '100%'}
         overflow="hidden"
         ref={ref}
         {...colProps}
@@ -97,7 +101,7 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
   return (
     <LayoutCol
       minHeight={size.height || 'auto'}
-      maxHeight="100%"
+      maxHeight={size.height || '100%'}
       overflow="hidden"
       ref={ref}
       {...colProps}

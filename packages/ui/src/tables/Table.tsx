@@ -57,7 +57,10 @@ export const Table = (tableProps: TableProps) => {
     icon,
     beforeTitle,
     afterTitle,
+    titleBorder,
     searchable,
+    titlePad,
+    titleElement,
     shareable,
     maxHeight,
     maxWidth,
@@ -71,9 +74,8 @@ export const Table = (tableProps: TableProps) => {
   const isVisible = useVisibility()
   const scale = useScale()
   const rowHeight = rowLineHeight * scale
-  const nodeSizer = useNodeSize({ throttle: 150, disable: !isVisible })
-  // its too easy to have the height accidentally baloon to infinity, limit it
-  const height = Math.min(5000, nodeSizer.height)
+  const sizer = useNodeSize({ throttle: 150, disable: !isVisible })
+  const height = maxHeight ? Math.min(maxHeight, sizer.height) : sizer.height
   const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),
@@ -102,9 +104,14 @@ export const Table = (tableProps: TableProps) => {
     <Section
       background="transparent"
       flex={flex}
+      // this may be necessary to prevent the inifity bug
+      overflow="hidden"
       title={title}
       subTitle={subTitle}
       bordered={bordered}
+      titleBorder={titleBorder}
+      titlePad={titlePad}
+      titleElement={titleElement}
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
@@ -121,10 +128,10 @@ export const Table = (tableProps: TableProps) => {
       belowTitle={searchable && <FilterableSearchInput useFilterable={filterable} />}
     >
       <ManagedTable
-        containerRef={nodeSizer.ref}
+        containerRef={sizer.ref}
         minWidth={100}
         minHeight={100}
-        maxHeight={height > 0 ? height : 800}
+        maxHeight={height > 0 ? Math.min(height, rowHeight * items.length) : 800}
         height={height}
         flex={flex}
         {...props}

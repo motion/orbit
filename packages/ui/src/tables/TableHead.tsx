@@ -5,7 +5,7 @@
  * @format
  */
 import { linearGradient } from '@o/color'
-import { gloss, Row } from 'gloss'
+import { Box, gloss, Row } from 'gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 
@@ -49,7 +49,7 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
   },
 }))
 
-const TableHeaderColumnContainer = gloss({
+const TableHeaderColumnContainer = gloss(Box, {
   flexFlow: 'row',
   padding: '0 8px',
   margin: ['auto', 0],
@@ -70,7 +70,7 @@ const TableHeadContainer = gloss(Row, {
   color: theme.color,
 }))
 
-const TableHeadColumnContainer = gloss({
+const TableHeadColumnContainer = gloss(Box, {
   flexFlow: 'row',
   justifyContent: 'space-between',
   position: 'relative',
@@ -179,7 +179,7 @@ class TableHeadColumn extends React.PureComponent<{
   }
 
   render() {
-    const { isResizable, sortable, width, title, height } = this.props
+    const { isResizable, sortable, width, height } = this.props
     let { children } = this.props
     children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
@@ -199,7 +199,6 @@ class TableHeadColumn extends React.PureComponent<{
       <TableHeadColumnContainer
         height={height}
         width={width}
-        title={title}
         onClick={sortable === true ? this.onClick : undefined}
         ref={this.setRef}
       >

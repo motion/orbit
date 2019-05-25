@@ -55,18 +55,18 @@ function traverseGlossBlocks(babel, state: BabelState) {
       }
       const importSpecifiers = path.get('specifiers')
       const names: string[] = importSpecifiers.map(x => x.node.local.name)
-      const name = matchNames.find(needle => names.indexOf(needle) !== -1)
-      if (!name) return
+      const glossFnName = matchNames.find(needle => names.indexOf(needle) !== -1)
+      if (!glossFnName) return
       references.add(fileName)
-      const paths = path.scope.getBinding(name).referencePaths
+      const paths = path.scope.getBinding(glossFnName).referencePaths
       // extract static styles
       // TODO @nate need to finish this
       if (false) {
-        const rules = extractStyles(path.node, name, paths, babel)
+        const rules = extractStyles(path.node, glossFnName, paths, babel)
         state.rules = rules
       }
       // add display name
-      addDisplayName(path.node, name, paths, state.file, babel)
+      addDisplayName(path, glossFnName, paths, state.file, babel)
     },
   }
 }

@@ -1,7 +1,10 @@
+#webpack-hot-middleware-clientOverlay {
+  pointer-events: all;
+}
+
 /* go back to default browser style */
 .reset * {
-  display: block;
-  flex-direction: row;
+  all: initial;
 }
 
 .react-hot-loader-error-overlay * {
@@ -478,16 +481,19 @@ textarea {
     'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-body,
-body * {
+body {
   display: flex;
   flex-flow: column;
   box-sizing: border-box;
-  align-items: stretch;
   flex-shrink: 0;
+  align-items: stretch;
   outline: 0;
   /* flexbox has super weird behavior otherwise where things dont "shrink to fit" unless you set this */
   min-width: 0;
+}
+
+body * {
+  outline: 0;
 }
 
 style {

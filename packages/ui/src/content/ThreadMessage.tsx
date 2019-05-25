@@ -1,5 +1,6 @@
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import * as React from 'react'
+
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
@@ -44,7 +45,7 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
   )
 }
 
-const Message = gloss({
+const Message = gloss(Box, {
   padding: 15,
   borderBottom: [1, 'dotted', '#eee'],
 })

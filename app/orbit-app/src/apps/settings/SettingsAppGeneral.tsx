@@ -56,8 +56,10 @@ export function SettingsAppGeneral(_props: AppProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user || { settings: {} }
 
-  const updateSettings = settings => {
-    const next = { ...user.settings, ...settings }
+  const updateSettings = (updateFn: Function) => {
+    console.log('update setting', settings)
+    updateFn(user.settings)
+    const next = user.settings
     App.setState({ userSettings: next })
     updateUser(user => {
       user.settings = next
@@ -82,7 +84,7 @@ export function SettingsAppGeneral(_props: AppProps) {
   }
 
   return (
-    <Section bordered margin="xl" pad="xl" title="General Settings">
+    <Section titleBorder margin pad title="General Settings">
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}

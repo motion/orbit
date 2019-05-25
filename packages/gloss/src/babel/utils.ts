@@ -17,7 +17,7 @@ function isPrimitive(val) {
   return val == null || /^[sbn]/.test(typeof val)
 }
 
-export function isGlossView(name, path) {
+export function isGlossView(name: string, path) {
   const calledByGloss = looksLike(path, {
     parent: {
       callee: {
@@ -28,6 +28,7 @@ export function isGlossView(name, path) {
   if (!calledByGloss) {
     return false
   }
+
   let topPath = path
   while (topPath) {
     if (!topPath.parentPath || !topPath.parentPath.parentPath) {
@@ -39,6 +40,7 @@ export function isGlossView(name, path) {
       topPath = topPath.parentPath
     }
   }
+
   const isAssigned = looksLike(topPath, {
     parentPath: {
       type: 'CallExpression',

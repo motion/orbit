@@ -141,9 +141,7 @@ export const TitleRow = themeable(
   ),
 )
 
-const titleRowBg = theme => {
-  return theme.backgroundStrong
-}
+const titleRowBg = theme => theme.backgroundStrong
 
 const TitleRowChrome = gloss(Col, {
   position: 'relative',

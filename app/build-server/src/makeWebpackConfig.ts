@@ -1,13 +1,14 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
+import merge from 'webpack-merge'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
 
 export type WebpackParams = {
   name?: string
-  entry: string[]
+  entry?: string[]
   context: string
   publicPath?: string
   mode?: 'production' | 'development'
@@ -24,10 +25,10 @@ export type WebpackParams = {
   hot?: boolean
 }
 
-export async function makeWebpackConfig(params: WebpackParams) {
+export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any) {
   let {
     outputFile,
-    entry,
+    entry = [],
     publicPath = '/',
     context,
     mode = 'development' as any,
@@ -35,7 +36,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     outputDir = Path.join(context, 'dist'),
     externals,
     ignore = [],
-    watch,
+    watch = mode === 'development' ? true : false,
     dll,
     dllReference,
     devServer,
@@ -98,7 +99,7 @@ export async function makeWebpackConfig(params: WebpackParams) {
     output: {
       path: outputDir,
       pathinfo: mode === 'development',
-      filename: outputFile || 'index.js',
+      filename: outputFile || '[name].js',
       ...output,
       publicPath,
       // fixes react-hmr bug, pending
@@ -110,15 +111,14 @@ export async function makeWebpackConfig(params: WebpackParams) {
       // hotUpdateChunkFilename: `hot-update.js`,
       // hotUpdateMainFilename: `hot-update.json`,
     },
-    devtool:
-      mode === 'production' || target === 'node' ? 'source-map' : 'cheap-module-eval-source-map',
-    externals: [externals, { electron: '{}' }],
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
+    externals: [{ ...externals, electron: '{}' }],
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields:
         mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']
-          : ['ts:main', 'browser', 'main'],
+          : ['ts:main', 'module', 'browser', 'main'],
       alias: {
         'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
       },
@@ -285,6 +285,10 @@ export async function makeWebpackConfig(params: WebpackParams) {
   }
 
   // console.log('made config', config)
+
+  if (extraConfig) {
+    return merge.smart([config, extraConfig])
+  }
 
   return config
 }

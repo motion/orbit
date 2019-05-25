@@ -1,7 +1,7 @@
 import { AppLoadContext, AppMainViewProps, SubPane, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderLeft, BorderTop, Loading, View } from '@o/ui'
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useContext } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -38,7 +38,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>({
+const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>(Box, {
   flex: 1,
   overflowY: 'auto',
 }).theme((props, theme) => ({

@@ -1,14 +1,14 @@
 import { BorderBottom, Button, ErrorBoundary, FullScreen, Portal, ProvideUI, Row, RowProps, Theme, Title, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
-import { gloss, useTheme } from 'gloss'
+import { Box, gloss, useTheme } from 'gloss'
 import { throttle } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { scrollTo } from './etc/helpers'
 import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
-import { LinkState } from "./LinkState";
+import { LinkState } from './LinkState'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { BusyIndicator } from './views/BusyIndicator'
@@ -230,7 +230,7 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
     </Theme>
   )
 })
-const LinkRow = gloss({
+const LinkRow = gloss(Box, {
   flexFlow: 'row',
   flex: 1,
   alignItems: 'center',

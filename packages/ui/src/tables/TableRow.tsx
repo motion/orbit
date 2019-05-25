@@ -6,7 +6,7 @@
  */
 import { Color } from '@o/color'
 import { useReaction } from '@o/use-store'
-import { gloss, ThemeObject } from 'gloss'
+import { Box, gloss, ThemeObject } from 'gloss'
 import React, { memo } from 'react'
 
 import { DataValue } from '../DataValue'
@@ -138,7 +138,7 @@ const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
   if (props.highlighted) {
     const bg = theme.backgroundHighlight || theme.backgroundActive
     return props.even && props.zebra ? bg.lighten(0.025) : bg
-  } else {
+
     if (!props.background && props.row) {
       const cat = props.row.category
       if (cat && guesses[cat]) {
@@ -166,7 +166,7 @@ const getColor = (props: TableRowProps, theme: ThemeObject) => {
   return color || 'inherit'
 }
 
-const TableBodyRowContainer = gloss<TableRowProps>({
+const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   flexFlow: 'row',
   fontWeight: 'inherit',
   overflow: 'hidden',
@@ -198,7 +198,7 @@ const TableBodyRowContainer = gloss<TableRowProps>({
   }
 })
 
-const TableBodyColumnContainer = gloss({
+const TableBodyColumnContainer = gloss<any>(Box, {
   overflow: 'hidden',
   padding: [0, 8],
   userSelect: 'none',

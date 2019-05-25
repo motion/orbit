@@ -105,9 +105,12 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   )
 
   let extraEntries = {}
+  let extraMainConfig = null
 
   if (extraConfig) {
-    for (const name in extraConfig) {
+    const { main, ...others } = extraConfig
+    extraMainConfig = main
+    for (const name in others) {
       extraEntries[name] = await makeWebpackConfig(
         {
           name,
@@ -123,15 +126,18 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     }
   }
 
-  const wsConfig = await makeWebpackConfig({
-    name: 'main',
-    context: options.workspaceRoot,
-    entry: [entry],
-    target: 'web',
-    watch: true,
-    hot: true,
-    dllReference: dllFile,
-  })
+  const wsConfig = await makeWebpackConfig(
+    {
+      name: 'main',
+      context: options.workspaceRoot,
+      entry: [entry],
+      target: 'web',
+      watch: true,
+      hot: true,
+      dllReference: dllFile,
+    },
+    extraMainConfig,
+  )
 
   const server = new BuildServer({
     main: wsConfig,

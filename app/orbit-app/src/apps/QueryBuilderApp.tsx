@@ -161,6 +161,20 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
       afterTitle={
         <>
           <Labeled>
+            <Labeled.Item>
+              <Button
+                defaultActive
+                onChangeActive={setShowSidebar}
+                tooltip="Toggle Explore API sidebar"
+                icon="panel-stats"
+              />
+            </Labeled.Item>
+            <Labeled.Text>Sidebar</Labeled.Text>
+          </Labeled>
+
+          <SeparatorVertical height={40} />
+
+          <Labeled>
             <Labeled.Item group>
               <Tabs TabComponent={Button} defaultActive="0">
                 <Tab key="0" icon="code" />
@@ -170,18 +184,6 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
               <Button tooltip="Graph" icon="layout" /> */}
             </Labeled.Item>
             <Labeled.Text>Query</Labeled.Text>
-          </Labeled>
-
-          <Labeled>
-            <Labeled.Item>
-              <Button
-                defaultActive
-                onChangeActive={setShowSidebar}
-                tooltip="Toggle Explore API sidebar"
-                icon="panel-stats"
-              />
-            </Labeled.Item>
-            <Labeled.Text>API</Labeled.Text>
           </Labeled>
 
           <SeparatorVertical height={40} />

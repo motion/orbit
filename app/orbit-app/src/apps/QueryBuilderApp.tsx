@@ -1,6 +1,6 @@
 import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Card, CardSimple, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Card, CardSimple, Col, DataInspector, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -254,6 +254,10 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           <Space size="xl" />
           <SeparatorHorizontal />
           <Space size="xl" />
+
+          <Card title="Output" pad>
+            <DataInspector data={{ hello: 'world' }} />
+          </Card>
         </Col>
       </Pane>
       <Pane display={props.showSidebar ? undefined : 'none'}>
@@ -263,12 +267,18 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             afterTitle={<PaneButton circular icon="plus" />}
             scrollable="y"
             pad
+            below={
+              <View pad>
+                <Button iconAfter icon="play">
+                  Test
+                </Button>
+              </View>
+            }
           >
             <FormField label="Name" name="pname" defaultValue="" />
             <FormField label="Type">
               <Select options={['String']} />
             </FormField>
-            <Row flex={1} justifyContent="flex-end" />
           </Pane>
 
           <Pane title="Explore API" scrollable="y" pad flex={2}>

@@ -87,12 +87,14 @@ class OrbitMainWindowStore {
 
   setSize = size => {
     this.hasMoved = true
-    this.size = size
+    size
+    // this.size = size
   }
 
   setPosition = position => {
     this.hasMoved = true
-    this.position = position
+    position
+    // this.position = position
   }
 
   handleRef = ref => {

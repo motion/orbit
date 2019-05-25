@@ -179,7 +179,7 @@ class TableHeadColumn extends React.PureComponent<{
   }
 
   render() {
-    const { isResizable, sortable, width, title, height } = this.props
+    const { isResizable, sortable, width, height } = this.props
     let { children } = this.props
     children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
@@ -199,7 +199,6 @@ class TableHeadColumn extends React.PureComponent<{
       <TableHeadColumnContainer
         height={height}
         width={width}
-        title={title}
         onClick={sortable === true ? this.onClick : undefined}
         ref={this.setRef}
       >

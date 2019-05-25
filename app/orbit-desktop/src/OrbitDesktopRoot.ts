@@ -404,7 +404,12 @@ export class OrbitDesktopRoot {
         }),
       ],
     })
+
     this.mediatorServer.bootstrap()
+
+    // TODO see NewFallbackServerPortResolver
+    root.mediatorServer = this.mediatorServer
+
     log.info(`mediatorServer listening at ${mediatorServerPort}`)
 
     return mediatorServerPort

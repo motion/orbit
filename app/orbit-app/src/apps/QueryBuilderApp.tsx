@@ -1,6 +1,6 @@
 import { App, AppViewProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
-import { Button, Card, CardSimple, Col, DataInspector, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
+import { Button, Card, CardSimple, Col, DataInspector, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -215,6 +215,12 @@ function useAppMeta(identifier: string) {
   return useCommand(AppMetaCommand, { identifier })
 }
 
+const defaultValues = {
+  string: '`hello`',
+  number: '0',
+  Object: '{}',
+}
+
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
@@ -242,32 +248,40 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
           </Row>
 
-          {(method.args || []).map(arg => {
+          {(method.args || []).map((arg, index) => {
             console.log('arg', arg)
-            return null
-            // return ()
+            return (
+              <React.Fragment key={index}>
+                <Row space alignItems="center">
+                  <SubTitle>{arg.name}</SubTitle>
+                  <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+                    {arg.type}
+                  </Tag>
+                  {arg.isOptional && (
+                    <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+                      Optional
+                    </Tag>
+                  )}
+                </Row>
+                <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+                  <MonacoEditor
+                    value={`${defaultValues[arg.type] || ''}`}
+                    onChange={onChangeSource}
+                  />
+                </Card>
+              </React.Fragment>
+            )
           })}
 
-          <SubTitle>query</SubTitle>
-          <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
-            <MonacoEditor
-              value={`${method.name}${method.typeString.replace(/ =>.*/g, '')}`}
-              onChange={onChangeSource}
-            />
-          </Card>
+          <Space size="xl" />
+          <SeparatorHorizontal />
+          <Space size="xl" />
 
-          <Row space alignItems="center">
-            <SubTitle>parameters</SubTitle>
-            <Tag alt="lightBlue" size={0.75} fontWeight={200}>
-              Optional
-            </Tag>
-          </Row>
-          <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
-            <MonacoEditor
-              value={`${method.name}${method.typeString.replace(/ =>.*/g, '')}`}
-              onChange={onChangeSource}
-            />
-          </Card>
+          <Card title="Preview" pad />
+
+          <Button margin={[0, 'auto']} size={1.3} iconAfter icon="play">
+            Run
+          </Button>
 
           <Space size="xl" />
           <SeparatorHorizontal />
@@ -285,18 +299,14 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             afterTitle={<PaneButton circular icon="plus" />}
             scrollable="y"
             pad
-            below={
-              <View pad>
-                <Button iconAfter icon="play">
-                  Test
-                </Button>
-              </View>
-            }
           >
-            <FormField label="Name" name="pname" defaultValue="" />
+            <SimpleFormField label="Name">
+              <Tag alt="lightBlue">$0</Tag>
+            </SimpleFormField>
             <FormField label="Type">
               <Select options={['String']} />
             </FormField>
+            <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
           <Pane title="Explore API" scrollable="y" pad flex={2}>

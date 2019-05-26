@@ -55,7 +55,7 @@ export const Slider = memo((props: SliderProps) => {
   useParentNodeSize({
     ref: frameRef,
     disable: !visible,
-    throttle: 200,
+    throttle: 30,
     onChange: setSize,
   })
 
@@ -86,7 +86,7 @@ export const Slider = memo((props: SliderProps) => {
           curFrame,
           isActive: curFrame === index,
           transition,
-          width: width,
+          width,
           index,
           onChangeHeight: (next: number) => {
             heights[index] = next

@@ -25,6 +25,7 @@ export default (app: any) => {
         connection = await connect(appData)
         console.log('querying...')
         const result = await connection.query(query, parameters)
+        console.log('got result yo', result)
         return result
       } catch (err) {
         console.log('error in postgres', err)

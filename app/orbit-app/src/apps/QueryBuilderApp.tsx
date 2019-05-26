@@ -164,6 +164,13 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
       backgrounded
       titleBorder
       title={props.title}
+      titleProps={{
+        editable: true,
+        autoselect: true,
+        onFinishEdit: (val: string) => {
+          console.log('should persist new title', val)
+        }
+      }}
       subTitle={props.subTitle}
       icon={def.icon}
       afterTitle={

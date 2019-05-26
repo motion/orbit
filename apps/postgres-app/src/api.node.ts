@@ -21,12 +21,15 @@ export default (app: any) => {
       let connection: Connection
       try {
         const appData: PostgresAppData = app.data
+        console.log('connecting...')
         connection = await connect(appData)
+        console.log('querying...')
         const result = await connection.query(query, parameters)
         return result
       } catch (err) {
-        console.error(err)
+        console.log('error in postgres', err)
       } finally {
+        console.log('closing...')
         if (connection) {
           await connection.close()
         }

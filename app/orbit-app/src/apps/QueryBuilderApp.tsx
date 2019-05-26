@@ -385,14 +385,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
-                <>
-                  <CardSimple title={info.name}>
-                    <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
-                      {info.typeString}
-                    </MonoSpaceText>
-                    {info.comment}
-                  </CardSimple>
-                </>
+                <CardSimple key={key} title={info.name}>
+                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                    {info.typeString}
+                  </MonoSpaceText>
+                  {info.comment}
+                </CardSimple>
               )
             })}
           </Pane>

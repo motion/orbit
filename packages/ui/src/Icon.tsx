@@ -74,6 +74,13 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
     debugger
   }
 
+  if (typeof props.name === 'string') {
+    const nameTrim = props.name.trim()
+    if (nameTrim.indexOf('<svg') === 0) {
+      svg = props.name
+    }
+  }
+
   if (isDefined(svg)) {
     return (
       <View

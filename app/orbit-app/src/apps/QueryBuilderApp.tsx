@@ -114,11 +114,11 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
                 return
               }
               const item = selected[0]
-              console.log('do ', item, props)
               // navigate to app definition:
               props.navigation.navigate('QueryEdit', {
-                ...props,
+                title: props.title,
                 id: item.id,
+                subType: item.identifier,
                 subTitle: item.title,
               })
             }}
@@ -154,8 +154,8 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
 function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
-
-  console.log('props', props)
+  const [app, def] = useAppWithDefinition(+props.id)
+  console.log('appDef', app, def)
 
   return (
     <Section
@@ -164,6 +164,8 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
       backgrounded
       titleBorder
       title={props.title}
+      subTitle={props.subTitle}
+      icon={def.icon}
       afterTitle={
         <>
           <Labeled>

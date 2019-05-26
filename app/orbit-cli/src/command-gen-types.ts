@@ -4,7 +4,7 @@ import ts from 'typescript'
 
 type ApiType = {
   name: string
-  args: { name: string; type: string }[]
+  args: { name: string; type: string; isOptional: boolean }[]
   typeString: string
   comment: string
 }
@@ -56,9 +56,12 @@ export async function commandGenTypes(options: {
           const params = callSignatures[0].getParameters()
           for (const param of params) {
             const type = checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration)
+            const paramDec = checker.symbolToParameterDeclaration(param)
+            const isOptional = !!(paramDec && paramDec.questionToken)
             args.push({
               name: param.escapedName,
               type: checker.typeToString(type),
+              isOptional,
             })
           }
         }

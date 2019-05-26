@@ -1,11 +1,11 @@
-import { Col, gloss, Row } from 'gloss'
+import { gloss, Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
 import { getDataType } from '../helpers/getDataType'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
-import { View } from '../View/View'
+import { Col, ColProps } from '../View/Col'
 import { CheckBoxField } from './CheckboxField'
 import { useFormError } from './Form'
 import { InputField } from './InputField'
@@ -15,20 +15,16 @@ type RowProps = {
   label?: React.ReactNode
 }
 
-const TableCell = gloss(View, {
-  padding: [4, 0],
-  marginBottom: 'auto',
-})
+const FormItem = (props: ColProps) => <Col pad="xs" {...props} />
 
-const FormTableRow = gloss(Row, {
+const FormRow = gloss(Row, {
   width: '100%',
-  minHeight: 32,
   alignItems: 'center',
 })
 
-const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
+const FormLabel = ({ children }) => <FormItem width="30%">{children}</FormItem>
 
-export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
+export const FormValue = ({ children }) => <FormItem width="70%">{children}</FormItem>
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
@@ -68,15 +64,15 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
   }
 
   return (
-    <FormTableRow>
-      <FormTableLabel>
+    <FormRow>
+      <FormLabel>
         <Row flex={1} alignItems="center">
           {labelElement}
           <Space />
         </Row>
-      </FormTableLabel>
-      <FormTableValue>{valueElement}</FormTableValue>
-    </FormTableRow>
+      </FormLabel>
+      <FormValue>{valueElement}</FormValue>
+    </FormRow>
   )
 }
 

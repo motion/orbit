@@ -1,6 +1,7 @@
 import { gloss, Row } from 'gloss'
 import React from 'react'
 
+import { BorderTop } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Scale } from './Scale'
 import { Space } from './Space'
@@ -26,6 +27,7 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
   return (
     <Scale size={0.8}>
       <PanelHeader onDoubleClick={toggle.toggle}>
+        <BorderTop opacity={0.5} />
         {before}
         {collapseProps.collapsable && (
           <>
@@ -50,10 +52,7 @@ const PanelHeader = gloss(Row, {
   fontWeight: 500,
   flexShrink: 0,
   padding: [3, 10],
+  position: 'relative',
 }).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor],
   backgroundColor: theme.panelHeaderBackground || theme.backgroundZebra,
-  '&:not(:first-child)': {
-    borderTop: [1, theme.sidebarBorderColor || theme.borderColor],
-  },
 }))

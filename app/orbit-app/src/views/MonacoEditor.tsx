@@ -5,9 +5,19 @@ import React, { useEffect, useRef } from 'react'
 export type MonacoEditorProps = monaco.editor.IEditorConstructionOptions &
   Pick<ViewProps, 'width' | 'height'> & {
     onChange?: (value: string, event: monaco.editor.IModelContentChangedEvent) => void
+    noGutter?: boolean
   }
 
-export function MonacoEditor({ width, height, ...props }: MonacoEditorProps) {
+// any type because its using hidden options
+const noGutterProps: any = {
+  lineNumbers: 'off',
+  glyphMargin: false,
+  folding: false,
+  lineDecorationsWidth: 0,
+  lineNumbersMinChars: 0,
+}
+
+export function MonacoEditor({ width, height, noGutter, ...props }: MonacoEditorProps) {
   const node = useRef(null)
   const ed = useRef<monaco.editor.IStandaloneCodeEditor>(null)
   const theme = useTheme()
@@ -18,6 +28,7 @@ export function MonacoEditor({ width, height, ...props }: MonacoEditorProps) {
     const editor = monaco.editor.create(node.current, {
       ...props,
       theme: monacoTheme,
+      ...(noGutter && noGutterProps),
     })
 
     ed.current = editor

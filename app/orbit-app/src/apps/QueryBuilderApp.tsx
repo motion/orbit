@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, TitleRow, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -237,17 +237,31 @@ class QueryBuilderStore {
   placeholders: PlaceHolder[] = []
   arguments: any[] = []
   result = null
+  preview = ''
+  argumentsVersion = 0
 
   updateMethod = react(
     () => this.props.method,
     () => {
       this.arguments = []
+      this.argumentsVersion++
       this.placeholders = []
+    },
+  )
+
+  updatePreview = react(
+    () => this.argumentsVersion,
+    async (_, { sleep }) => {
+      await sleep(500)
+      this.preview = `${this.props.method}(${this.resolvedArguments()
+        .map(argToVal)
+        .join(', ')})`
     },
   )
 
   setArg = (index: number, val: any) => {
     this.arguments[index] = val
+    this.argumentsVersion++
   }
 
   resolvedArguments() {
@@ -321,16 +335,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                 <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
                   <MonacoEditor
                     // not controlled
+                    noGutter
                     value={queryBuilder.arguments[index]}
                     onChange={val => {
                       setNumLines(val.split('\n').length)
                       queryBuilder.setArg(index, val)
                     }}
-                    lineNumbers="off"
-                    glyphMargin={false}
-                    folding={false}
-                    lineDecorationsWidth={0}
-                    lineNumbersMinChars={0}
                   />
                 </Card>
               </React.Fragment>
@@ -341,11 +351,26 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           <SeparatorHorizontal />
           <Space size="xl" />
 
-          <Title size="xs">Preview</Title>
+          <TitleRow
+            title="Preview"
+            size="xs"
+            after={
+              <Button
+                alt="approve"
+                margin={[0, 'auto']}
+                size="lg"
+                iconAfter
+                icon="play"
+                onClick={queryBuilder.run}
+              >
+                Run
+              </Button>
+            }
+          />
 
-          <Button margin={[0, 'auto']} size={1.3} iconAfter icon="play" onClick={queryBuilder.run}>
-            Run
-          </Button>
+          <Card pad elevation={3} height={24 * 3 + 16 * 2}>
+            <MonacoEditor noGutter readOnly value={queryBuilder.preview} />
+          </Card>
 
           <Title size="xs">Output</Title>
           <Tabs pad defaultActive="0">
@@ -405,3 +430,13 @@ const GraphQueryBuild = memo((props: { id: number }) => {
     </Layout>
   )
 })
+
+function argToVal(arg: any): string {
+  if (typeof arg === 'string') {
+    return `"${arg}"`
+  }
+  if (typeof arg === 'number' || typeof arg === 'boolean') {
+    return `${arg}`
+  }
+  return JSON.stringify(arg)
+}

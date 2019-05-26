@@ -81,7 +81,7 @@ export function OrbitAppWindow({
         nodeIntegration: true,
         webSecurity: false,
       }}
-      titleBarStyle="inset"
+      titleBarStyle="customButtonsOnHover"
       onReadyToShow={store.setShown}
       ref={forwardRef || store.handleRef}
       file={url}

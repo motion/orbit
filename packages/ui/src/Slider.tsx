@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
+import React, { cloneElement, isValidElement, memo, useCallback, useRef, useState } from 'react'
 
 import { useParentNodeSize } from './hooks/useParentNodeSize'
 import { SliderPane } from './SliderPane'
@@ -55,7 +55,7 @@ export const Slider = memo((props: SliderProps) => {
   useParentNodeSize({
     ref: frameRef,
     disable: !visible,
-    throttle: 30,
+    throttle: 120,
     onChange: setSize,
   })
 
@@ -78,20 +78,25 @@ export const Slider = memo((props: SliderProps) => {
         if (!isValidElement(child)) {
           throw new Error(`Must pass <SliderPane /> to <Slider />`)
         }
-        return cloneElement(child as any, {
+        const isActive = curFrame === index
+
+        const onChangeHeight = useCallback((next: number) => {
+          heights[index] = next
+          setHeights(heights)
+        }, [])
+
+        return cloneElement(child, {
           framePad,
           verticalPad,
           fixHeightToTallest,
           currentHeight: height,
           curFrame,
-          isActive: curFrame === index,
+          isActive,
           transition,
           width,
           index,
-          onChangeHeight: (next: number) => {
-            heights[index] = next
-            setHeights(heights)
-          },
+          onChangeHeight,
+          display: isActive ? undefined : 'none',
         })
       })}
     </SliderContainer>

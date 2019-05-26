@@ -6,7 +6,7 @@ import { ProvideFocus } from './Focus'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
 import { HighlightsContext } from './text/HighlightText'
-import { ProvideVisibility } from './Visibility'
+import { Visibility } from './Visibility'
 
 export type ProvideUIProps = {
   activeTheme?: string
@@ -25,7 +25,7 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
   )
   return (
     <HighlightsContext.Provider value={defaultHighlight}>
-      <ProvideVisibility visible={true}>
+      <Visibility visible={true}>
         <ProvideFocus focused={true}>
           <ProvideShortcut>
             <ProvideShare>
@@ -35,7 +35,7 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
             </ProvideShare>
           </ProvideShortcut>
         </ProvideFocus>
-      </ProvideVisibility>
+      </Visibility>
     </HighlightsContext.Provider>
   )
 })

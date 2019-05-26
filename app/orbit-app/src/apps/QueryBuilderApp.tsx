@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -385,7 +385,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <DataInspector data={{ data: queryBuilder.result }} />
             </Tab>
             <Tab pad key="1" label="JSON">
-              <pre minHeight={200}>{JSON.stringify(queryBuilder.result)}</pre>
+              <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
             </Tab>
             <Tab pad key="2" label="Table">
               <Table items={[].concat(queryBuilder.result)} />

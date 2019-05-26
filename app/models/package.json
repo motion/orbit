@@ -13,6 +13,7 @@
     "@o/config": "^2.5.2",
     "@o/mediator": "^2.5.2",
     "@o/utils": "^2.5.2",
+    "@o/ui": "^2.5.2",
     "global": "^4.3.2",
     "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",

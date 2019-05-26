@@ -1,5 +1,6 @@
+import { AppDefinition } from '@o/models'
+
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { AppDefinition } from '../types/AppTypes'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
 import { useStores } from './useStores'
 

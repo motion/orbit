@@ -1,4 +1,5 @@
-import { AppDefinition } from '../types/AppTypes'
+import { AppDefinition } from '@o/models'
+
 import { useActiveAppsWithDefinition } from './useActiveAppsWithDefinition'
 
 export const hasGraph = (x: AppDefinition) => !!Object.keys(x).some(x => x === 'graph')

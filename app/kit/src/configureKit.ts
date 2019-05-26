@@ -1,7 +1,7 @@
+import { AppDefinition } from '@o/models'
 import { Context, createContext } from 'react'
 
 import { KitStores } from './stores'
-import { AppDefinition } from './types/AppTypes'
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>

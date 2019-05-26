@@ -1,8 +1,9 @@
-import { AppBit, ItemType } from '@o/models'
 import { FormErrors, FormFieldsObj } from '@o/ui'
 import { FunctionComponent } from 'react'
 
 import { AppViewProps } from './AppViewProps'
+import { AppBit } from './interfaces/AppBit'
+import { ItemType } from './interfaces/ItemType'
 
 export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any> = {
   /** Unique identifier for app bundle */

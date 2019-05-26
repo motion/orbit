@@ -83,7 +83,7 @@
     "source-map-support": "^0.5.12",
     "sqlite": "3.0.2",
     "turndown": "4.0.2",
-    "typeorm": "^0.3.0-alpha.22",
+    "typeorm": "^0.3.0-alpha.23",
     "ws": "7.0.0",
     "zen-observable": "0.8.13",
     "apollo-link-http": "^1.5.14"

@@ -12,7 +12,7 @@
     "@o/fast-compare": "^2.5.2",
     "@o/logger": "^2.5.2",
     "@o/utils": "^2.5.2",
-    "typeorm": "^0.3.0-alpha.22",
+    "typeorm": "^0.3.0-alpha.23",
     "ws": "7.0.0",
     "zen-observable": "0.8.13"
   },

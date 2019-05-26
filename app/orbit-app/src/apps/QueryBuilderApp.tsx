@@ -236,6 +236,7 @@ class QueryBuilderStore {
 
   placeholders: PlaceHolder[] = []
   arguments: any[] = []
+  result = null
 
   updateMethod = react(
     () => this.props.method,
@@ -262,16 +263,12 @@ class QueryBuilderStore {
   }
 
   run = async () => {
-    console.log(
-      this.resolvedArguments,
-      this.arguments,
-      await command(CallAppBitApiMethodCommand, {
-        appId: this.props.appId,
-        appIdentifier: this.props.appIdentifier,
-        method: this.props.method,
-        args: this.resolvedArguments(),
-      }),
-    )
+    this.result = await command(CallAppBitApiMethodCommand, {
+      appId: this.props.appId,
+      appIdentifier: this.props.appIdentifier,
+      method: this.props.method,
+      args: this.resolvedArguments(),
+    })
   }
 }
 
@@ -353,13 +350,13 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           <Title size="xs">Output</Title>
           <Tabs pad defaultActive="0">
             <Tab key="0" label="Inspect">
-              <DataInspector data={{ hello: 'world' }} />
+              <DataInspector data={{ data: queryBuilder.result }} />
             </Tab>
             <Tab key="1" label="JSON">
-              <TextArea minHeight={200} />
+              <TextArea minHeight={200} value={JSON.stringify(queryBuilder.result)} />
             </Tab>
             <Tab key="2" label="Table">
-              <Table items={[{ title: 'example', something: 'else' }]} />
+              <Table items={[].concat(queryBuilder.result)} />
             </Tab>
           </Tabs>
         </Col>

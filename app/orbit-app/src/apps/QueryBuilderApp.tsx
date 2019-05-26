@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, TitleRow, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -169,7 +169,7 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
         autoselect: true,
         onFinishEdit: (val: string) => {
           console.log('should persist new title', val)
-        }
+        },
       }}
       subTitle={props.subTitle}
       icon={def.icon}
@@ -380,14 +380,14 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
           </Card>
 
           <Title size="xs">Output</Title>
-          <Tabs pad defaultActive="0">
-            <Tab key="0" label="Inspect">
+          <Tabs defaultActive="0">
+            <Tab pad key="0" label="Inspect">
               <DataInspector data={{ data: queryBuilder.result }} />
             </Tab>
-            <Tab key="1" label="JSON">
-              <TextArea minHeight={200} value={JSON.stringify(queryBuilder.result)} />
+            <Tab pad key="1" label="JSON">
+              <pre minHeight={200}>{JSON.stringify(queryBuilder.result)}</pre>
             </Tab>
-            <Tab key="2" label="Table">
+            <Tab pad key="2" label="Table">
               <Table items={[].concat(queryBuilder.result)} />
             </Tab>
           </Tabs>

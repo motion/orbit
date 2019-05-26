@@ -2,17 +2,14 @@ import { readJSON, writeJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
 
-type TypeDesc = {
-  name
-  params
-}
-
 type ApiType = {
   name: string
+  args: { name: string; type: string }[]
   typeString: string
   comment: string
-  types: TypeDesc[]
 }
+
+let checker: ts.TypeChecker
 
 export async function commandGenTypes(options: {
   projectRoot: string
@@ -23,7 +20,7 @@ export async function commandGenTypes(options: {
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
 
   const program = ts.createProgram([apiEntry], compilerOptions)
-  const checker = program.getTypeChecker()
+  checker = program.getTypeChecker()
 
   const sourceFile = program.getSourceFile(apiEntry)
   const moduleSymbol = checker.getSymbolAtLocation(sourceFile)
@@ -51,12 +48,26 @@ export async function commandGenTypes(options: {
         const comment =
           prop.getDocumentationComment &&
           ts.displayPartsToString(prop.getDocumentationComment(checker))
+        const args = []
+
+        // get args
+        const callSignatures = type.getCallSignatures()
+        if (callSignatures[0]) {
+          const params = callSignatures[0].getParameters()
+          for (const param of params) {
+            const type = checker.getTypeOfSymbolAtLocation(param, param.valueDeclaration)
+            args.push({
+              name: param.escapedName,
+              type: checker.typeToString(type),
+            })
+          }
+        }
 
         apiTypes[name] = {
           name,
+          args,
           typeString,
           comment,
-          types: [],
         }
       }
     }

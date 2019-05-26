@@ -1,7 +1,7 @@
-import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
-import { AppMetaCommand } from '@o/models'
-import { Button, Col, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, Paragraph, randomAdjective, randomNoun, Section, SelectableGrid, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
-import { capitalize, remove } from 'lodash'
+import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
+import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
+import { Button, Card, CardSimple, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet } from '@o/ui'
+import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -16,7 +16,7 @@ export default createApp({
   app: QueryBuilder,
 })
 
-function QueryBuilder(props: AppProps) {
+function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
 
@@ -61,7 +61,7 @@ export function QueryBuilderIndex() {
   )
 }
 
-function QueryBuilderMain(props: AppProps) {
+function QueryBuilderMain(props: AppViewProps) {
   return (
     <StackNavigator
       key={props.id}
@@ -78,7 +78,7 @@ function QueryBuilderMain(props: AppProps) {
   )
 }
 
-function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
+function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState(null)
@@ -114,9 +114,13 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
                 return
               }
               const item = selected[0]
-              console.log('do ', item, props)
               // navigate to app definition:
-              props.navigation.navigate('QueryEdit', { id: item.id, title: item.title })
+              props.navigation.navigate('QueryEdit', {
+                title: props.title,
+                id: item.id,
+                subType: item.identifier,
+                subTitle: item.title,
+              })
             }}
           >
             Next
@@ -147,9 +151,11 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
   )
 }
 
-function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
+function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
+  const [app, def] = useAppWithDefinition(+props.id)
+  console.log('appDef', app, def)
 
   return (
     <Section
@@ -158,16 +164,10 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
       backgrounded
       titleBorder
       title={props.title}
+      subTitle={props.subTitle}
+      icon={def.icon}
       afterTitle={
         <>
-          <Labeled>
-            <Labeled.Item group>
-              <Button tooltip="API" icon="code" />
-              <Button tooltip="Graph" icon="layout" />
-            </Labeled.Item>
-            <Labeled.Text>Query</Labeled.Text>
-          </Labeled>
-
           <Labeled>
             <Labeled.Item>
               <Button
@@ -177,8 +177,26 @@ function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
                 icon="panel-stats"
               />
             </Labeled.Item>
-            <Labeled.Text>API</Labeled.Text>
+            <Labeled.Text>Sidebar</Labeled.Text>
           </Labeled>
+
+          <SeparatorVertical height={40} />
+
+          <Labeled>
+            <Labeled.Item group>
+              <Tabs TabComponent={Button} defaultActive="0">
+                <Tab key="0" icon="code" />
+                <Tab key="1" icon="layout" />
+              </Tabs>
+              {/* <Button tooltip="API" icon="code" />
+              <Button tooltip="Graph" icon="layout" /> */}
+            </Labeled.Item>
+            <Labeled.Text>Query</Labeled.Text>
+          </Labeled>
+
+          <SeparatorVertical height={40} />
+
+          <Button alt="action">Save</Button>
         </>
       }
     >
@@ -197,34 +215,183 @@ function useAppMeta(identifier: string) {
   return useCommand(AppMetaCommand, { identifier })
 }
 
+const defaultValues = {
+  string: '',
+  number: '0',
+  Object: '{}',
+}
+
+type PlaceHolder = {
+  name: string
+  type: 'string' | 'date' | 'number'
+  value: any
+}
+
+class QueryBuilderStore {
+  props: {
+    appId: number
+    appIdentifier: string
+    method: string
+  }
+
+  placeholders: PlaceHolder[] = []
+  arguments: any[] = []
+  result = null
+
+  updateMethod = react(
+    () => this.props.method,
+    () => {
+      this.arguments = []
+      this.placeholders = []
+    },
+  )
+
+  setArg = (index: number, val: any) => {
+    this.arguments[index] = val
+  }
+
+  resolvedArguments() {
+    return this.arguments.map(x => {
+      let y = x
+      if (this.placeholders.length) {
+        for (const [index, placeholder] of this.placeholders.entries()) {
+          y = y.replace(`$${index}`, placeholder)
+        }
+      }
+      return y
+    })
+  }
+
+  run = async () => {
+    this.result = await command(CallAppBitApiMethodCommand, {
+      appId: this.props.appId,
+      appIdentifier: this.props.appIdentifier,
+      method: this.props.method,
+      args: this.resolvedArguments(),
+    })
+  }
+}
+
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
-  const [, def] = useAppWithDefinition(+props.id)
+  const [app, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
+  const allMethods = Object.keys(meta.apiInfo)
+  const [method, setMethod] = useState(meta.apiInfo[allMethods[0]])
+  const queryBuilder = useStore(QueryBuilderStore, {
+    method: method.name,
+    appId: app.id,
+    appIdentifier: def.id,
+  })
   const hasApiInfo = !!meta && !!meta.apiInfo
+  const [numLines, setNumLines] = useState(1)
+
+  if (!hasApiInfo) {
+    return <Templates.Message title="This app doesn't have an API" />
+  }
+
   return (
     <Layout type="row">
-      <Pane flex={2} resizable>
-        <Layout type="column">
-          <Pane flex={2}>
-            <MonacoEditor />
-          </Pane>
-          <Pane>123</Pane>
-        </Layout>
-      </Pane>
-      <Pane title="Explore API" scrollable="y" pad display={props.showSidebar ? undefined : 'none'}>
-        {hasApiInfo &&
-          Object.keys(meta.apiInfo).map(key => {
-            const info = meta.apiInfo[key]
+      <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
+        <Col pad space>
+          <Row justifyContent="space-between">
+            <Tag size={1.2} alt="lightGray">
+              {method.name}
+            </Tag>
+            <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
+          </Row>
+
+          {(method.args || []).map((arg, index) => {
+            if (typeof queryBuilder.arguments[index] === 'undefined') {
+              queryBuilder.arguments[index] = defaultValues[arg.type] || ''
+            }
+
             return (
-              <Col key={key} space="xs" borderRadius={8}>
-                <Tag alt="lightGray">{info.name}</Tag>
-                <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
-                  {info.typeString}
-                </MonoSpaceText>
-                <Paragraph>{info.comment}</Paragraph>
-              </Col>
+              <React.Fragment key={index}>
+                <Row space alignItems="center">
+                  <SubTitle>{arg.name}</SubTitle>
+                  <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+                    {arg.type}
+                  </Tag>
+                  {arg.isOptional && (
+                    <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+                      Optional
+                    </Tag>
+                  )}
+                </Row>
+                <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+                  <MonacoEditor
+                    // not controlled
+                    value={queryBuilder.arguments[index]}
+                    onChange={val => {
+                      setNumLines(val.split('\n').length)
+                      queryBuilder.setArg(index, val)
+                    }}
+                    lineNumbers="off"
+                    glyphMargin={false}
+                    folding={false}
+                    lineDecorationsWidth={0}
+                    lineNumbersMinChars={0}
+                  />
+                </Card>
+              </React.Fragment>
             )
           })}
+
+          <Space size="xl" />
+          <SeparatorHorizontal />
+          <Space size="xl" />
+
+          <Title size="xs">Preview</Title>
+
+          <Button margin={[0, 'auto']} size={1.3} iconAfter icon="play" onClick={queryBuilder.run}>
+            Run
+          </Button>
+
+          <Title size="xs">Output</Title>
+          <Tabs pad defaultActive="0">
+            <Tab key="0" label="Inspect">
+              <DataInspector data={{ data: queryBuilder.result }} />
+            </Tab>
+            <Tab key="1" label="JSON">
+              <TextArea minHeight={200} value={JSON.stringify(queryBuilder.result)} />
+            </Tab>
+            <Tab key="2" label="Table">
+              <Table items={[].concat(queryBuilder.result)} />
+            </Tab>
+          </Tabs>
+        </Col>
+      </Pane>
+      <Pane display={props.showSidebar ? undefined : 'none'}>
+        <Layout type="column">
+          <Pane
+            title="Placeholders"
+            afterTitle={<PaneButton circular icon="plus" tooltip="Create new placeholder" />}
+            scrollable="y"
+            pad
+          >
+            <SimpleFormField label="Name">
+              <Tag alt="lightBlue">$0</Tag>
+            </SimpleFormField>
+            <FormField label="Type">
+              <Select options={['String']} />
+            </FormField>
+            <FormField label="Value" name="pname" defaultValue="" />
+          </Pane>
+
+          <Pane title="Explore API" scrollable="y" pad flex={2}>
+            {allMethods.map(key => {
+              const info = meta.apiInfo[key]
+              return (
+                <CardSimple key={key} title={info.name}>
+                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                    {info.typeString}
+                  </MonoSpaceText>
+                  {info.comment}
+                </CardSimple>
+              )
+            })}
+          </Pane>
+        </Layout>
       </Pane>
     </Layout>
   )
@@ -238,79 +405,3 @@ const GraphQueryBuild = memo((props: { id: number }) => {
     </Layout>
   )
 })
-
-// unused
-export function CreateQuery(props: AppProps) {
-  const { subId } = props
-  const [app, definition] = useAppWithDefinition((subId && +subId) || false)
-  const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
-  // const setShare = useSetShare()
-
-  // TODO suspense
-  if (!app) {
-    return <Title>nothing {JSON.stringify(props)}</Title>
-  }
-
-  return (
-    <Section
-      pad
-      backgrounded
-      title={app.name}
-      subTitle={definition.name}
-      titleBorder
-      icon={definition.icon}
-      afterTitle={
-        <Button
-          alt="confirm"
-          onClick={() => updateQueries(cur => [{ id: Math.random(), name: 'My Query' }, ...cur])}
-        >
-          Add query
-        </Button>
-      }
-    >
-      {queries.map(query => (
-        <Section
-          key={query.id}
-          bordered
-          title={query.name}
-          afterTitle={
-            <>
-              <Button
-                icon="cross"
-                onClick={() => updateQueries(cur => remove(cur, x => x.id !== query.id))}
-              />
-            </>
-          }
-          minHeight={200}
-        >
-          <Templates.MasterDetail
-            placeholder=""
-            items={[{ title: 'getMessages' }, { title: 'getThreads' }]}
-          >
-            {selected => (
-              <>
-                <View padding={20}>
-                  <SubTitle>{selected.title}</SubTitle>
-                  <Divider />
-                  <Form>
-                    <FormField label="inboxId" value="" />
-                    <FormField label="search" value="" />
-                  </Form>
-                </View>
-
-                <Tabs>
-                  <Tab id="0" label="JSON">
-                    <TextArea minHeight={200} />
-                  </Tab>
-                  <Tab id="1" label="Table">
-                    <Table items={[{ title: 'example', something: 'else' }]} />
-                  </Tab>
-                </Tabs>
-              </>
-            )}
-          </Templates.MasterDetail>
-        </Section>
-      ))}
-    </Section>
-  )
-}

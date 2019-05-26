@@ -1,10 +1,9 @@
-import { AppBit } from '@o/models'
+import { AppBit, AppDefinition } from '@o/models'
 import { Select, SelectProps } from '@o/ui'
 import React from 'react'
 
 import { useActiveDataApps } from '../hooks/useActiveDataApps'
 import { Omit } from '../types'
-import { AppDefinition } from '../types/AppTypes'
 
 export type SelectAppProps = Omit<SelectProps, 'onChange' | 'type'> & {
   appType?: AppDefinition

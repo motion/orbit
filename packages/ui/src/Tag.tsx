@@ -3,7 +3,9 @@ import React from 'react'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 
-export const Tag = ({ size = 0.9, ...props }: SizedSurfaceProps) => {
+export type TagProps = SizedSurfaceProps
+
+export const Tag = ({ size = 0.9, ...props }: TagProps) => {
   const sz = getSize(size)
   return (
     <SizedSurface
@@ -19,7 +21,7 @@ export const Tag = ({ size = 0.9, ...props }: SizedSurfaceProps) => {
       justifyContent="center"
       alignItems="center"
       display="inline-flex"
-      alignSelf="flex-start"
+      width="max-content"
       hoverStyle={!!props.onClick}
       activeStyle={!!props.onClick}
       {...props}

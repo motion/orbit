@@ -1,7 +1,7 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppViewProps, AppStore, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
 import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, useGet, useThrottleFn, useVisibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
@@ -23,6 +23,7 @@ type OrbitAppProps = {
 }
 
 export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
+  const { orbitStore } = useStoresSimple()
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === id
   const appStore = useStoreSimple(AppStore, {
@@ -35,7 +36,10 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
     if (isActive && !hasShownOnce) {
       setShown(true)
     }
-  }, [isActive, hasShownOnce])
+    if (isActive) {
+      orbitStore.setActiveAppStore(appStore)
+    }
+  }, [orbitStore, appStore, isActive, hasShownOnce])
 
   return (
     <ScopedState id={`appstate-${identifier}-${id}-`}>
@@ -136,7 +140,7 @@ export const OrbitAppRenderOfDefinition = ({
   )
 }
 
-function getAppProps(props: ListItemProps): AppProps {
+function getAppProps(props: ListItemProps): AppViewProps {
   if (!props) {
     return {}
   }
@@ -163,7 +167,7 @@ function getAppProps(props: ListItemProps): AppProps {
   }
 }
 
-export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppProps {
+export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppViewProps {
   if (!appDef) {
     throw new Error(`No source given: ${JSON.stringify(appDef)}`)
   }

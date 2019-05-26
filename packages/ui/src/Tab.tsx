@@ -12,7 +12,7 @@ export type TabProps = Omit<ColProps, 'children'> & {
   /**
    * Label of this tab to show in the tab list.
    */
-  label: any
+  label?: any
   /**
    * Whether this tab is closable.
    */
@@ -62,15 +62,12 @@ export function TabItem(props: ButtonProps) {
       sizeHeight={0.8}
       sizeFont={0.85}
       sizeIcon={1.2}
-      sizePadding={2.4}
+      sizePadding={1.5}
       fontWeight={500}
       elevation={0}
       iconAfter={false}
       borderWidth={1}
       borderPosition="outside"
-      elementProps={{
-        flex: typeof props.width === 'number' ? 'none' : 'inherit',
-      }}
       {...props}
     />
   )

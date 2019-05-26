@@ -3,9 +3,7 @@ import { HTMLProps } from 'react'
 
 import { SimpleText, SimpleTextProps } from '../text/SimpleText'
 
-export const Label = gloss<SimpleTextProps & HTMLProps<HTMLLabelElement>>(SimpleText, {
-  padding: 5,
-})
+export const Label = gloss<SimpleTextProps & HTMLProps<HTMLLabelElement>>(SimpleText)
 
 Label.defaultProps = {
   tagName: 'label',

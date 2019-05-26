@@ -1,11 +1,11 @@
-import { gloss, selectThemeSubset, ThemeSelect, psuedoStyleTheme } from 'gloss'
+import { gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
 
-import { SimpleText, SimpleTextProps } from './text/SimpleText'
 import { useScale } from './Scale'
+import { SimpleText, SimpleTextProps } from './text/SimpleText'
 
-export type SeparatorProps = SimpleTextProps & { themeSelect?: ThemeSelect }
+export type ListSeparatorProps = SimpleTextProps & { themeSelect?: ThemeSelect }
 
-export const Separator = gloss<SeparatorProps>(SimpleText).theme((props, themeIn) => {
+export const ListSeparator = gloss<ListSeparatorProps>(SimpleText).theme((props, themeIn) => {
   const scale = useScale()
   const theme = selectThemeSubset(props.themeSelect, themeIn)
   const themeStyle = psuedoStyleTheme(props, theme)
@@ -17,7 +17,7 @@ export const Separator = gloss<SeparatorProps>(SimpleText).theme((props, themeIn
   }
 })
 
-Separator.defaultProps = {
+ListSeparator.defaultProps = {
   activeStyle: false,
   hoverStyle: false,
   themeSelect: 'separator',

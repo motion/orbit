@@ -304,7 +304,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
       childrenProps.children = children || null
     }
   } else {
-    showElement = !!(children || elementProps)
+    showElement = !!(hasChildren(children) || elementProps)
     const spaceElement = <Space size={selectDefined(spaceSize, size * 8)} />
 
     const innerElements = (
@@ -487,6 +487,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     </Context.Reset>
   )
 })
+
+const hasChildren = (children: React.ReactNode) => {
+  if (Array.isArray(children)) {
+    return children.some(x => isDefined(x) && x !== null && x !== false)
+  }
+  return !!children
+}
 
 const chromelessStyle = {
   borderColor: 'transparent',

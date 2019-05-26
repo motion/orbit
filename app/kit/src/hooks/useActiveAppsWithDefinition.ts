@@ -1,7 +1,6 @@
-import { AppBit } from '@o/models'
+import { AppBit, AppDefinition } from '@o/models'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { AppDefinition } from '../types/AppTypes'
 import { useActiveApps } from './useActiveApps'
 
 export type AppWithDefinition = {

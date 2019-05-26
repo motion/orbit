@@ -2,12 +2,11 @@ import { Absolute, AbsoluteProps, CSSPropertySet, gloss } from 'gloss'
 
 const Border = gloss<
   AbsoluteProps & {
-    light?: boolean
     borderColor?: CSSPropertySet['borderColor']
   }
 >(Absolute).theme((p, theme) => ({
   ...p,
-  background: p.borderColor || (p.light ? theme.borderColorLight : theme.borderColor),
+  background: p.borderColor ? p.borderColor.toString() : theme.borderColor,
 }))
 
 export const BorderTop = gloss(Border, {

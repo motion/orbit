@@ -1,6 +1,7 @@
-import React, { createContext, useContext } from 'react'
+import { isEqual } from '@o/fast-compare'
+import React, { createContext, useContext, useEffect } from 'react'
 
-import { AppElements } from '../types/AppTypes'
+import { useStoresSimple } from '../hooks/useStores'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context', 'actions']
 
@@ -22,13 +23,32 @@ export const AppViewsContext = createContext({
   Actions: null as React.FunctionComponent,
 })
 
-export const App = function App(props: AppElements) {
+export type AppMenuItem = {
+  title?: string
+  subTitle?: string
+  icon?: string
+  after?: string
+  checked?: boolean
+}
+
+export type AppProps = {
+  index?: React.ReactElement<any>
+  children?: React.ReactNode
+  statusBar?: React.ReactElement<any>
+  toolBar?: React.ReactElement<any>
+  context?: any
+  actions?: React.ReactElement<any>
+  menuItems?: AppMenuItem[]
+}
+
+export const App = function App(props: AppProps) {
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
     }
   }
 
+  const { appStore } = useStoresSimple()
   const { Statusbar, Main, Sidebar, Toolbar, Actions } = useContext(AppViewsContext)
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
@@ -42,6 +62,12 @@ export const App = function App(props: AppElements) {
     hasToolbar,
   }
 
+  useEffect(() => {
+    if (!isEqual(props.menuItems, appStore.menuItems)) {
+      appStore.setMenuItems(props.menuItems)
+    }
+  }, [props.menuItems])
+
   return (
     <>
       {hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>}
@@ -54,3 +80,9 @@ export const App = function App(props: AppElements) {
 }
 
 App.isApp = true
+
+export const AppMenuItems: { [key: string]: AppMenuItem } = {
+  ShowHints: {
+    title: 'Show Hints',
+  },
+}

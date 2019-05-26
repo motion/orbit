@@ -1,9 +1,9 @@
-import { AppProps } from '@o/kit'
+import { AppViewProps } from '@o/kit'
 import * as React from 'react'
 import SpacesAppEdit from './SpacesAppEdit'
 import { SpacesAppNewSpace } from './SpacesAppNewSpace'
 
-export default function SpacesAppMain(props: AppProps) {
+export default function SpacesAppMain(props: AppViewProps) {
   if (props.subType === 'new-space') {
     return <SpacesAppNewSpace />
   }

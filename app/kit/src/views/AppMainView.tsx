@@ -1,9 +1,10 @@
+import { AppViewProps } from '@o/models'
 import { Loading } from '@o/ui'
 import React from 'react'
-import { AppProps } from '../types/AppProps'
+
 import { AppView } from './AppView'
 
-export function AppMainView(props: AppProps) {
+export function AppMainView(props: AppViewProps) {
   if (!props.identifier) {
     return <Loading />
   }

@@ -10,7 +10,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/orbit-types": "^2.5.2",
     "@o/config": "^2.5.2",
     "@o/constants": "^2.5.2",
     "@o/mobx-bridge": "^2.5.2",

@@ -1,4 +1,4 @@
-import { App, AppBit, AppMainView, AppModel, AppProps, Bit, createApp, getTargetValue, save, TreeList, useBitSearch, useTreeList } from '@o/kit'
+import { App, AppBit, AppMainView, AppModel, AppViewProps, Bit, createApp, getTargetValue, save, TreeList, useBitSearch, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Button, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, TitleRow, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import pluralize from 'pluralize'
@@ -19,7 +19,7 @@ export default createApp({
 
 const id = 'my-tree-list'
 
-function ListApp(props: AppProps) {
+function ListApp(props: AppViewProps) {
   return (
     <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
       <ListsAppMain {...props} />
@@ -85,7 +85,7 @@ export function ListsAppIndex() {
   )
 }
 
-function ListsAppMain(props: AppProps) {
+function ListsAppMain(props: AppViewProps) {
   if (props.subType === 'folder') {
     return <ListsAppMainFolder {...props} />
   }
@@ -97,7 +97,7 @@ function ListsAppMain(props: AppProps) {
   )
 }
 
-function ListsAppMainFolder(props: AppProps) {
+function ListsAppMainFolder(props: AppViewProps) {
   const treeList = useTreeList(id)
   const selectedItem = treeList.state.items[+props.subId]
   const [children, setChildren] = useState<ListItemProps[]>([])

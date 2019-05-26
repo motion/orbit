@@ -1,7 +1,7 @@
+import { AppViewProps } from '@o/models'
 import { Col, PassProps, SubTitle, Title } from '@o/ui'
 import React from 'react'
 
-import { AppProps } from '../types/AppProps'
 import { Icon } from '../views/Icon'
 
 export function Message({
@@ -10,7 +10,7 @@ export function Message({
   subTitle,
   subType,
   children,
-}: AppProps & { children?: React.ReactNode }) {
+}: AppViewProps & { children?: React.ReactNode }) {
   return (
     <Col flex={1} pad="lg" space="lg" alignItems="center" justifyContent="center">
       <Col space="sm" alignItems="center" justifyContent="center">

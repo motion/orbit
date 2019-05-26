@@ -1,4 +1,4 @@
-export type AppProps<A = any> = {
+export type AppViewProps<A = any> = {
   identifier?: string
   id?: string
   subId?: string

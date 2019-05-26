@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { BorderBottom } from '../Border'
 import { Section, SectionProps } from '../Section'
 
@@ -8,7 +9,7 @@ export function Fieldset({ children, ...props }: FieldsetProps) {
   return (
     <Section padding={10} background="transparent" {...props}>
       {children}
-      <BorderBottom light />
+      <BorderBottom />
     </Section>
   )
 }

@@ -1,11 +1,11 @@
-import { Col, gloss, Row } from 'gloss'
+import { gloss, Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
 import { getDataType } from '../helpers/getDataType'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
-import { View } from '../View/View'
+import { Col, ColProps } from '../View/Col'
 import { CheckBoxField } from './CheckboxField'
 import { useFormError } from './Form'
 import { InputField } from './InputField'
@@ -15,49 +15,64 @@ type RowProps = {
   label?: React.ReactNode
 }
 
-const TableCell = gloss(View, {
-  padding: [4, 0],
-  marginBottom: 'auto',
-})
+const FormItem = (props: ColProps) => <Col pad="xs" {...props} />
 
-const FormTableRow = gloss(Row, {
+const FormRow = gloss(Row, {
   width: '100%',
-  minHeight: 32,
   alignItems: 'center',
 })
 
-const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
+const FormLabel = ({ children }) => <FormItem width="30%">{children}</FormItem>
 
-export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
+export const FormValue = ({ children }) => <FormItem width="70%">{children}</FormItem>
+
+export type FormFieldLayout = 'horizontal' | 'vertical'
 
 export type SimpleFormFieldProps = RowProps & {
+  layout?: FormFieldLayout
   children?: React.ReactNode
   name?: string
 }
 
-export function SimpleFormField({ name, label, children }: SimpleFormFieldProps) {
+export function SimpleFormField({ name, label, children, layout }: SimpleFormFieldProps) {
   const error = useFormError(`${label}`)
+
+  const labelElement = (
+    <Label width="100%" htmlFor={name}>
+      {label}
+    </Label>
+  )
+
+  const valueElement = (
+    <Col>
+      {children}
+      {error && (
+        <>
+          <SimpleText alt="error">{error}</SimpleText>
+        </>
+      )}
+    </Col>
+  )
+
+  if (layout === 'vertical') {
+    return (
+      <>
+        {labelElement}
+        {valueElement}
+      </>
+    )
+  }
+
   return (
-    <FormTableRow>
-      <FormTableLabel>
+    <FormRow>
+      <FormLabel>
         <Row flex={1} alignItems="center">
-          <Label width="100%" htmlFor={name}>
-            {label}
-          </Label>
+          {labelElement}
           <Space />
         </Row>
-      </FormTableLabel>
-      <FormTableValue>
-        <Col>
-          {children}
-          {error && (
-            <>
-              <SimpleText alt="error">{error}</SimpleText>
-            </>
-          )}
-        </Col>
-      </FormTableValue>
-    </FormTableRow>
+      </FormLabel>
+      <FormValue>{valueElement}</FormValue>
+    </FormRow>
   )
 }
 
@@ -67,18 +82,21 @@ type FormFieldProps =
       label: React.ReactNode
       value: any
       name?: string
+      layout?: FormFieldLayout
     }
   | {
       type?: DataType
       label: React.ReactNode
       defaultValue: any
       name?: string
+      layout?: FormFieldLayout
     }
   | {
       label: React.ReactNode
       children: React.ReactNode
       type?: undefined
       name?: string
+      layout?: FormFieldLayout
     }
 
 export function FormField(props: FormFieldProps) {

@@ -1,6 +1,5 @@
+import { AppDefinition } from '@o/models'
 import * as React from 'react'
-
-import { AppDefinition } from './types/AppTypes'
 
 type AppLoadInfo = {
   // AppDefinition ID

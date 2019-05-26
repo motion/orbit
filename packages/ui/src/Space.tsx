@@ -1,4 +1,4 @@
-import { gloss } from 'gloss'
+import { Box, gloss } from 'gloss'
 
 import { isBrowser } from './constants'
 import { useScale } from './Scale'
@@ -53,7 +53,7 @@ export function getSpaceSize(space: Sizes) {
   return spaceSizes[space] || space || 0
 }
 
-export const Space = gloss<SpaceProps>()
+export const Space = gloss<SpaceProps>(Box)
   .theme(({ size, ...rest }: SpaceProps) => {
     const dim = getSpaceSize(size) * useScale()
     return {

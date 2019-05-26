@@ -1,4 +1,4 @@
-import { AppProps } from '@o/kit'
+import { AppViewProps } from '@o/kit'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 60
@@ -42,7 +42,7 @@ let lastTarget = null
 
 export function peekPosition(
   target,
-  appProps: AppProps,
+  appProps: AppViewProps,
   parentBounds: Position,
 ): AppPosition | null {
   if (!target) {
@@ -102,7 +102,7 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: AppPosi
 function getPeekPositionFromTarget(
   target,
   lastPeek,
-  appProps: AppProps,
+  appProps: AppViewProps,
   parentBounds: Position,
   appOnLeft?: boolean,
 ): AppPosition | null {

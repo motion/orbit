@@ -3,27 +3,50 @@ import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
 
 export type MonacoEditorProps = monaco.editor.IEditorConstructionOptions &
-  Pick<ViewProps, 'width' | 'height'>
+  Pick<ViewProps, 'width' | 'height'> & {
+    onChange?: (value: string, event: monaco.editor.IModelContentChangedEvent) => void
+  }
 
 export function MonacoEditor({ width, height, ...props }: MonacoEditorProps) {
   const node = useRef(null)
-  const mnco = useRef(null)
+  const ed = useRef<monaco.editor.IStandaloneCodeEditor>(null)
   const theme = useTheme()
   const monacoTheme = props.theme || (theme.background.isDark() ? 'vs-dark' : 'vs-light')
+  const preventUpdate = useRef(false)
 
   useOnMount(() => {
-    mnco.current = monaco.editor.create(node.current, {
+    const editor = monaco.editor.create(node.current, {
       ...props,
       theme: monacoTheme,
     })
+
+    ed.current = editor
   })
+
+  useEffect(() => {
+    preventUpdate.current = true
+    ed.current.setValue(props.value)
+    preventUpdate.current = false
+  }, [props.value])
+
+  useEffect(() => {
+    const disposer = ed.current.onDidChangeModelContent(event => {
+      const value = ed.current.getValue()
+      if (!preventUpdate.current) {
+        props.onChange(value, event)
+      }
+    })
+    return () => {
+      disposer.dispose()
+    }
+  }, [props.onChange])
 
   useEffect(() => {
     monaco.editor.setTheme(monacoTheme)
   }, [monacoTheme])
 
   useEffect(() => {
-    mnco.current.layout()
+    ed.current.layout()
   }, [width, height])
 
   return <View ref={node} position="relative" overflow="hidden" width={width} height={height} />
@@ -38,13 +61,14 @@ const defaults: MonacoEditorProps = {
   automaticLayout: true,
   scrollBeyondLastLine: false,
   showUnused: true,
+  lineNumbers: 'off',
   highlightActiveIndentGuide: false,
-  renderLineHighlight: 'gutter',
+  renderLineHighlight: 'none',
   minimap: {
     enabled: false,
   },
   scrollbar: {
-    horizontalScrollbarSize: 5,
+    horizontalScrollbarSize: 0,
     horizontalSliderSize: 0,
     useShadows: false,
   },

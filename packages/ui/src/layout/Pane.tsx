@@ -1,5 +1,6 @@
 import React, { cloneElement, isValidElement, memo, Suspense } from 'react'
 
+import { Button, ButtonProps } from '../buttons/Button'
 import { CollapsableProps, splitCollapseProps, useCollapse } from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
@@ -9,7 +10,10 @@ import { SizablePane, SizablePaneProps } from './SizablePane'
 export type PaneProps = ColProps &
   SizablePaneProps &
   Partial<CollapsableProps> &
-  PaneTitleRowParentProps
+  PaneTitleRowParentProps & {
+    above?: React.ReactNode
+    below?: React.ReactNode
+  }
 
 export const Pane = memo((props: PaneProps) => {
   const [
@@ -25,6 +29,8 @@ export const Pane = memo((props: PaneProps) => {
       space,
       spaceAround,
       flexDirection,
+      above,
+      below,
       ...sizablePaneProps
     },
   ] = splitCollapseProps(props)
@@ -42,6 +48,7 @@ export const Pane = memo((props: PaneProps) => {
         />
       )}
       <Suspense fallback={<Loading />}>
+        {above}
         <Col
           space={space}
           spaceAround={spaceAround}
@@ -59,6 +66,7 @@ export const Pane = memo((props: PaneProps) => {
             ? cloneElement(children as any, { maxHeight: children.props['maxHeight'] || '100%' })
             : children}
         </Col>
+        {below}
       </Suspense>
     </SizablePane>
   )
@@ -67,3 +75,5 @@ export const Pane = memo((props: PaneProps) => {
 Pane['acceptsProps'] = {
   paneProps: true,
 }
+
+export const PaneButton = (props: ButtonProps) => <Button size={0.7} sizeIcon={2.3} {...props} />

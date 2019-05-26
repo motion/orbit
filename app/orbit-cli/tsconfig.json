@@ -9,6 +9,7 @@
   "references": [
     { "path": "../../packages/build" },
     { "path": "../telemetry" },
+    { "path": "../models" },
     { "path": "../build-server" }
   ]
 }

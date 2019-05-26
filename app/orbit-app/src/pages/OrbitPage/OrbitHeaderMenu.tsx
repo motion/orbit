@@ -20,7 +20,14 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
       width={260}
       background
       elevation={5}
-      target={<Button iconSize={16} tooltip="App menu" icon="verticalDots" />}
+      target={
+        <Button
+          iconSize={16}
+          tooltip="App menu"
+          icon="more"
+          iconProps={{ transform: { rotate: '90deg' } }}
+        />
+      }
     >
       <PassProps>
         <ListItem

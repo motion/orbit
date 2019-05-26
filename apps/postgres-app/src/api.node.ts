@@ -1,4 +1,4 @@
-import { createConnection } from 'typeorm'
+import { Connection, createConnection } from 'typeorm'
 
 import { PostgresAppData } from './PostgresModels'
 
@@ -18,11 +18,23 @@ const connect = (appData: PostgresAppData) => {
 export default (app: any) => {
   return {
     async query(query: string, parameters: any[] = []): Promise<any[]> {
-      const appData: PostgresAppData = app.data
-      const connection = await connect(appData)
-      const result = await connection.query(query, parameters)
-      await connection.close()
-      return result
+      let connection: Connection
+      try {
+        const appData: PostgresAppData = app.data
+        console.log('connecting...')
+        connection = await connect(appData)
+        console.log('querying...')
+        const result = await connection.query(query, parameters)
+        console.log('got result yo', result)
+        return result
+      } catch (err) {
+        console.log('error in postgres', err)
+      } finally {
+        console.log('closing...')
+        if (connection) {
+          await connection.close()
+        }
+      }
     },
   }
 }

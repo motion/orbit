@@ -10,7 +10,6 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@o/orbit-types": "^2.5.2",
     "@o/bridge": "^2.5.2",
     "@o/color": "^2.5.2",
     "@o/config": "^2.5.2",
@@ -33,7 +32,7 @@
     "react-cache": "^2.0.0-alpha.1",
     "react-svg-inline": "2.1.1",
     "sherlockjs": "1.4.0",
-    "typeorm": "^0.3.0-alpha.22"
+    "typeorm": "^0.3.0-alpha.23"
   },
   "peerDependencies": {
     "electron": "*",

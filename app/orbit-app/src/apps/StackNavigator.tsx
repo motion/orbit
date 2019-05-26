@@ -1,4 +1,4 @@
-import { AppProps, useStore, useUserState } from '@o/kit'
+import { AppViewProps, useStore, useUserState } from '@o/kit'
 import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last } from 'lodash'
@@ -9,7 +9,7 @@ export type NavigatorProps = {
   navigation: StackNav
 }
 
-type StackItemProps = AppProps
+type StackItemProps = AppViewProps
 
 type StackNavigatorProps = {
   useNavigator?: StackNav
@@ -80,7 +80,7 @@ export class StackNav {
     return this.props.state.stack || []
   }
 
-  navigate(id: string, props: AppProps, forcePush = false) {
+  navigate(id: string, props: AppViewProps, forcePush = false) {
     // dont update stack if already on same item, unless explicitly asking
     if (this.stack.length) {
       const prev = last(this.stack)

@@ -1,11 +1,11 @@
 import { useModel } from '@o/bridge'
-import { AppProps } from '@o/kit'
+import { AppViewProps } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import * as React from 'react'
 
 import { SpaceEdit } from './SpaceEdit'
 
-export default function SpacesAppEdit(props: AppProps) {
+export default function SpacesAppEdit(props: AppViewProps) {
   const id = +props.id
   const [space] = useModel(SpaceModel, { where: { id } })
 

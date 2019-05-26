@@ -1,10 +1,11 @@
+import { Logger } from '@o/kit'
 import { resolveCommand } from '@o/mediator'
 import { AppEntity, CallAppBitApiMethodCommand } from '@o/models'
 import { getRepository } from 'typeorm'
 
 import { OrbitAppsManager } from '../managers/OrbitAppsManager'
 
-// const log = new Logger('command:call-app-bit-api-method')
+const log = new Logger('command:call-app-bit-api-method')
 
 export const createCallAppBitApiMethodResolver = (appsManager: OrbitAppsManager) => {
   return resolveCommand(
@@ -14,6 +15,13 @@ export const createCallAppBitApiMethodResolver = (appsManager: OrbitAppsManager)
       const api = appsManager.appDefinitions[appIdentifier].api(app)
       if (!api) throw new Error(`API for app "${appId}" is invalid`)
       if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
+
+      log.info(
+        `Calling api for app ${appIdentifier} id ${appId} method ${method} args ${JSON.stringify(
+          args,
+        )}`,
+      )
+
       return await Promise.resolve(api[method](...args))
     },
   )

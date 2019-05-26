@@ -16,6 +16,7 @@
     "@o/utils": "*",
     "@o/mediator": "*",
     "@o/build-server": "*",
+    "@o/models": "*",
     "@babel/code-frame": "^7.0.0",
     "reconnecting-websocket": "4.1.10",
     "ws": "7.0.0",

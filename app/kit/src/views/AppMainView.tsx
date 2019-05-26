@@ -1,4 +1,4 @@
-import { AppViewProps } from '@o/orbit-types'
+import { AppViewProps } from '@o/models'
 import { Loading } from '@o/ui'
 import React from 'react'
 

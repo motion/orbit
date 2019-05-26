@@ -15,6 +15,10 @@ export * from './interfaces/SpaceInterface'
 export * from './interfaces/User'
 export * from './models'
 
+export { AppDefinition } from './AppDefinition'
+export { AppViewProps } from './AppViewProps'
+export { ApiInfo, ApiType } from './ApiInfo'
+
 // todo: find a good place for this function
 // TODO could return title/body separately when improving search
 export const getSearchableText = (bit: Bit): string => {

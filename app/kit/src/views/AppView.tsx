@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { AppViewProps } from '@o/orbit-types'
+import { AppViewProps } from '@o/models'
 import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'

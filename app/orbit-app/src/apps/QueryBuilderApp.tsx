@@ -241,6 +241,13 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             </Tag>
             <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
           </Row>
+
+          {method.args.map(arg => {
+            console.log('arg', arg)
+            return null
+            // return ()
+          })}
+
           <SubTitle>query</SubTitle>
           <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
             <MonacoEditor

@@ -1,13 +1,7 @@
+import { ApiInfo } from '@o/models'
 import { readJSON, writeJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
-
-type ApiType = {
-  name: string
-  args: { name: string; type: string; isOptional: boolean }[]
-  typeString: string
-  comment: string
-}
 
 let checker: ts.TypeChecker
 
@@ -33,7 +27,7 @@ export async function commandGenTypes(options: {
     defaultExportSymbol.valueDeclaration,
   )
 
-  let apiTypes: { [key: string]: ApiType } = {}
+  let apiTypes: ApiInfo = {}
 
   for (const sig of defaultExportType.getCallSignatures()) {
     const returns = sig.getReturnType()

@@ -1,5 +1,7 @@
 import { Command } from '@o/mediator'
 
+import { ApiInfo } from '../ApiInfo'
+
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
 export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
@@ -26,7 +28,7 @@ export interface AppMeta {
   packageId: string
   directory: string
   packageJson: Object
-  apiInfo: { [key: string]: { name: string; typeString: string; comment: string; types: any[] } }
+  apiInfo: ApiInfo
 }
 
 // return extra information about app

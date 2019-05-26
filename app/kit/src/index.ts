@@ -2,7 +2,6 @@ import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
 
 export { Templates } from './templates/all'
 export { produce } from './helpers/produce'
-export * from '@o/orbit-types'
 export * from '@o/bridge'
 export * from '@o/config'
 export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'

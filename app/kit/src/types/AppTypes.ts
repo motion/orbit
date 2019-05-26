@@ -1,7 +1,4 @@
-import { AppBit, Bit } from '@o/models'
-import { AppDefinition, AppViewProps } from '@o/orbit-types'
-
-export { AppDefinition } from '@o/orbit-types'
+import { AppBit, AppDefinition, AppViewProps, Bit } from '@o/models'
 
 export type AppBitMainProps = { item: Bit }
 

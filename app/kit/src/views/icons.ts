@@ -32,5 +32,4 @@ export const appIcons = isNode
       neutral: require('!raw-loader!../../public/icons/neutral.svg').default,
       upArrow: require('!raw-loader!../../public/icons/up-arrow.svg').default,
       downArrow: require('!raw-loader!../../public/icons/down-arrow.svg').default,
-      verticalDots: require('!raw-loader!../../public/icons/vertical-dots.svg').default,
     }

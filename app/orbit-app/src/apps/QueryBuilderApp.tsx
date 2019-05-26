@@ -1,5 +1,5 @@
-import { App, AppViewProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
-import { AppMetaCommand } from '@o/models'
+import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
+import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Col, DataInspector, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
@@ -221,13 +221,65 @@ const defaultValues = {
   Object: '{}',
 }
 
+type PlaceHolder = {
+  name: string
+  type: 'string' | 'date' | 'number'
+  value: any
+}
+
+class QueryBuilderStore {
+  props: {
+    appId: number
+    appIdentifier: string
+    method: string
+  }
+  placeholders: PlaceHolder[] = []
+  arguments: any[] = []
+
+  updateMethod = react(
+    () => this.props.method,
+    () => {
+      this.arguments = []
+      this.placeholders = []
+    },
+  )
+
+  get values() {
+    return this.arguments.map(x => {
+      let y = x
+      for (const [index, placeholder] of this.placeholders.entries()) {
+        y = y.replace(`$${index}`, placeholder)
+      }
+      return y
+    })
+  }
+
+  async test() {
+    console.log(
+      await command(CallAppBitApiMethodCommand, {
+        appId: this.props.appId,
+        appIdentifier: this.props.appIdentifier,
+        method: this.props.method,
+        args: this.values,
+      }),
+    )
+  }
+}
+
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
-  const [, def] = useAppWithDefinition(+props.id)
+  const [app, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
-  const hasApiInfo = !!meta && !!meta.apiInfo
-  const [numLines, setNumLines] = useState(1)
   const allMethods = Object.keys(meta.apiInfo)
   const [method, setMethod] = useState(meta.apiInfo[allMethods[0]])
+  const queryBuilder = useStore(QueryBuilderStore, {
+    method: method.name,
+    appId: app.id,
+    appIdentifier: def.id,
+  })
+  const hasApiInfo = !!meta && !!meta.apiInfo
+  const [numLines, setNumLines] = useState(1)
+
+  console.log('queryBuilder', queryBuilder)
 
   const onChangeSource = useCallback(source => {
     setNumLines(source.split('\n').length)
@@ -296,7 +348,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
         <Layout type="column">
           <Pane
             title="Placeholders"
-            afterTitle={<PaneButton circular icon="plus" />}
+            afterTitle={<PaneButton circular icon="plus" tooltip="Create new placeholder" />}
             scrollable="y"
             pad
           >

@@ -1,10 +1,9 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { gloss, Theme } from 'gloss'
+import { Contents, gloss, Theme } from 'gloss'
 import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
-import { findDOMNode } from 'react-dom'
 import { animated, AnimatedProps } from 'react-spring'
 
 import { Arrow } from './Arrow'
@@ -393,9 +392,12 @@ export class Popover extends React.Component<PopoverProps, State> {
   static defaultProps = defaultProps
 
   targetRef = React.createRef<HTMLDivElement>()
-  target: HTMLElement
   popoverRef: HTMLElement
   state = initialState
+
+  get target() {
+    return this.targetRef.current
+  }
 
   static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: State) {
     let nextState: Partial<State> = {}
@@ -447,10 +449,6 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
   }
 
-  get domNode() {
-    return findDOMNode(this) as HTMLDivElement
-  }
-
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
@@ -465,18 +463,15 @@ export class Popover extends React.Component<PopoverProps, State> {
 
     const isManuallyPositioned = getIsManuallyPositioned(this.props)
 
-    // allow multiple flexible ways to pass in targets
+    // allow multiple ways to pass in targets
     if (typeof target === 'string') {
-      this.target = getTarget(target)
+      // selector
+      this.targetRef['current'] = getTarget(target)
     } else {
-      const target = this.domNode.classList.contains('popover-target')
-      if (target) {
-        this.target = this.domNode
-      } else {
-        if (!isManuallyPositioned) {
-          // potentially we can just get it directly
-          throw new Error('Couldnt pass className down to target to do measurements...')
-        }
+      console.log('this.target', this.target)
+      if (!this.target && !isManuallyPositioned) {
+        // potentially we can just get it directly
+        throw new Error('Couldnt pass className down to target to do measurements...')
       }
     }
 
@@ -489,7 +484,7 @@ export class Popover extends React.Component<PopoverProps, State> {
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
       if (closeOnEsc) {
-        const parentNode = this.domNode.parentNode as HTMLDivElement
+        const parentNode = this.target.parentElement.parentElement
         const parentPortalNode =
           (parentNode.querySelector('.popover-portal') as HTMLDivElement) ||
           parentNode.firstElementChild
@@ -566,8 +561,8 @@ export class Popover extends React.Component<PopoverProps, State> {
     }
 
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
-    const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
-    const targetBounds = this.target.getBoundingClientRect()
+    const popoverBounds = this.popoverRef.firstElementChild.getBoundingClientRect()
+    const targetBounds = this.target.firstElementChild.getBoundingClientRect()
     const extraY = window.scrollY
     const nextState = {
       targetBounds: {
@@ -930,11 +925,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (!target) {
       return null
     }
-    if (!React.isValidElement(target)) {
-      return target
-    }
     const targetProps = {
-      ref: this.targetRef,
       active: false,
       className: `${target.props['className'] || ''} popover-target`,
     }
@@ -945,7 +936,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (acceptsHovered) {
       targetProps[acceptsHovered === true ? 'hover' : acceptsHovered] = this.showPopover
     }
-    return React.cloneElement(target, targetProps)
+    return <Contents ref={this.targetRef}>{React.cloneElement(target, targetProps)}</Contents>
   }
 
   closeOthersWithinGroup() {

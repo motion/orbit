@@ -1,4 +1,4 @@
-import { AppBit, AppModel, AppProps, SettingManageRow, useModel, useStore } from '@o/kit'
+import { AppBit, AppModel, AppViewProps, SettingManageRow, useModel, useStore } from '@o/kit'
 import { Table } from '@o/ui'
 import * as React from 'react'
 
@@ -36,7 +36,7 @@ class DriveSettingsStore {
   }
 }
 
-export function DriveSettings({ subId }: AppProps) {
+export function DriveSettings({ subId }: AppViewProps) {
   const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders

@@ -1,5 +1,5 @@
 import { command } from '@o/bridge'
-import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
+import { AppViewProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Button, CheckBoxField, Divider, FormField, Input, Section, Space } from '@o/ui'
@@ -52,7 +52,7 @@ const blurShortcut = () => {
   App.setState({ orbitState: { shortcutInputFocused: false } })
 }
 
-export function SettingsAppGeneral(_props: AppProps) {
+export function SettingsAppGeneral(_props: AppViewProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user || { settings: {} }
 

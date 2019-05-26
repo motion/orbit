@@ -2,7 +2,7 @@ import { AppBit, ItemType } from '@o/models'
 import { FormErrors, FormFieldsObj } from '@o/ui'
 import { FunctionComponent } from 'react'
 
-import { AppProps } from './AppProps'
+import { AppViewProps } from './AppViewProps'
 
 export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any> = {
   /** Unique identifier for app bundle */
@@ -24,10 +24,10 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   itemType?: ItemType
 
   /** Main view of app */
-  app?: FunctionComponent<AppProps<AppData>>
+  app?: FunctionComponent<AppViewProps<AppData>>
 
   /** Settings view of app */
-  settings?: FunctionComponent<AppProps<AppData>>
+  settings?: FunctionComponent<AppViewProps<AppData>>
 
   /** Define fields for use in setting up app or storing credentials */
   setup?: SetupFields

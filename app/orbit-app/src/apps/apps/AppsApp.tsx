@@ -2,7 +2,7 @@ import {
   App,
   AppDefinition,
   AppMainView,
-  AppProps,
+  AppViewProps,
   createApp,
   Icon,
   isDataDefinition,
@@ -98,7 +98,7 @@ export function AppsIndex() {
   )
 }
 
-export function AppsMain(props: AppProps) {
+export function AppsMain(props: AppViewProps) {
   const [app, definition] = useAppWithDefinition(+props.subId)
 
   if (props.subType === 'explorer-graph') {

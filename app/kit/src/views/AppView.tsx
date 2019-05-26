@@ -1,4 +1,5 @@
 import { isEqual } from '@o/fast-compare'
+import { AppViewProps } from '@o/orbit-types'
 import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
@@ -7,11 +8,10 @@ import { findDOMNode } from 'react-dom'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
 import { AppStore } from '../stores'
-import { AppProps } from '../types/AppProps'
 import { AppViewsContext } from './App'
 
-export type AppViewProps = {
-  appProps?: AppProps
+export type AppSubViewProps = {
+  appProps?: AppViewProps
   viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   id?: string
   identifier: string
@@ -45,10 +45,10 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 
 const ChildrenOnly = props => props.children
 
-const AppViewContext = createContext<Partial<AppViewProps>>({})
+const AppViewContext = createContext<Partial<AppSubViewProps>>({})
 
 export const AppView = memoIsEqualDeep(
-  forwardRef<AppViewRef, AppViewProps>(function AppView({ appProps, ...props }, ref) {
+  forwardRef<AppViewRef, AppSubViewProps>(function AppView({ appProps, ...props }, ref) {
     const prev = useContext(AppViewContext)
     const rootRef = useRef<HTMLDivElement>(null)
     const context = useMemo(() => ({ [capitalize(props.viewType)]: ChildrenOnly } as any), [

@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { App, AppProps, createApp, ItemView } from '@o/kit'
+import { App, AppViewProps, createApp, ItemView } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
 import { Button, Col, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
 import { gloss, Row } from 'gloss'
@@ -27,7 +27,7 @@ const defaultItemProps = {
   },
 }
 
-export function BitAppMain(props: AppProps) {
+export function BitAppMain(props: AppViewProps) {
   const [bit] = useModel(BitModel, {
     where: { id: +props.id },
     relations: ['people'],

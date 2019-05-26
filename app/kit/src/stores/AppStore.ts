@@ -1,6 +1,7 @@
 import { react, useHooks } from '@o/use-store'
 
 import { useStoresSimple } from '../hooks/useStores'
+import { AppMenuItem } from '../views/App'
 
 export class AppStore {
   props: {
@@ -9,6 +10,11 @@ export class AppStore {
   }
 
   hooks = useHooks({ stores: useStoresSimple })
+  menuItems: AppMenuItem[] = []
+
+  setMenuItems(items: AppMenuItem[]) {
+    this.menuItems = items
+  }
 
   sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
   lastSidebarWidth = react(() => this.sidebarWidth, {

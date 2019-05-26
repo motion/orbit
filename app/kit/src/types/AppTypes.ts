@@ -1,24 +1,12 @@
 import { AppBit, Bit } from '@o/models'
-import { AppDefinition } from '@o/orbit-types'
-import * as React from 'react'
-
-import { AppProps } from './AppProps'
+import { AppDefinition, AppViewProps } from '@o/orbit-types'
 
 export { AppDefinition } from '@o/orbit-types'
-
-export type AppElements = {
-  index?: React.ReactElement<any>
-  children?: React.ReactNode
-  statusBar?: React.ReactElement<any>
-  toolBar?: React.ReactElement<any>
-  context?: any
-  actions?: React.ReactElement<any>
-}
 
 export type AppBitMainProps = { item: Bit }
 
 export type AppSettingsProps<T extends AppBit> = {
-  appProps?: AppProps
+  appProps?: AppViewProps
   app: T
 }
 

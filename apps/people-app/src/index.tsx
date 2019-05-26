@@ -1,4 +1,4 @@
-import { App, AppProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { App, AppViewProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
 import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -50,7 +50,7 @@ function PeopleAppIndex() {
   )
 }
 
-export function PeopleAppMain(props: AppProps) {
+export function PeopleAppMain(props: AppViewProps) {
   if (props.identifier === 'people') {
     return (
       <Center>

@@ -20,13 +20,13 @@ export type ListItemProps = ListItemSimpleProps &
     /** Internally used for selection, can be overridden */
     index?: number
 
-    /** Attach an ID for index view selection, see AppProps */
+    /** Attach an ID for index view selection, see AppViewProps */
     id?: string
 
-    /** Attach an identifier for index view selection, see AppProps */
+    /** Attach an identifier for index view selection, see AppViewProps */
     identifier?: string
 
-    /** Attach a subType for index view selection, see AppProps */
+    /** Attach a subType for index view selection, see AppViewProps */
     subType?: string
 
     /** Show a row of people below the list item */

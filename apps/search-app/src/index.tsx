@@ -1,4 +1,4 @@
-import { App, AppFilterButton, AppMainView, AppProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
+import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
 
@@ -20,7 +20,7 @@ export default createApp({
   },
 })
 
-function SearchApp(props: AppProps) {
+function SearchApp(props: AppViewProps) {
   const searchStore = useStore(SearchStore)
 
   useSearchState(state => {

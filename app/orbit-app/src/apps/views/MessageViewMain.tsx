@@ -1,6 +1,6 @@
-import { AppProps, Templates } from '@o/kit'
+import { AppViewProps, Templates } from '@o/kit'
 import React from 'react'
 
-export function MessageViewMain(props: AppProps) {
+export function MessageViewMain(props: AppViewProps) {
   return <Templates.Message {...props} />
 }

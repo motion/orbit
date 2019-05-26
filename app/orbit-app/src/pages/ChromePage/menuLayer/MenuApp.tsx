@@ -1,11 +1,12 @@
-import { AppView, AppViewProps, SubPane } from '@o/kit'
+import { AppSubViewProps, AppView, SubPane } from '@o/kit'
 import { App } from '@o/stores'
 import { memoize } from 'lodash'
 import * as React from 'react'
+
 import { MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 
-type MenuAppProps = AppViewProps
+type MenuAppProps = AppSubViewProps
 
 const menuHeightSetter = memoize((index: number) => (height: number) => {
   App.setState({

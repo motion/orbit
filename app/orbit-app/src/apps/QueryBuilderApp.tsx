@@ -1,4 +1,4 @@
-import { App, AppProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
+import { App, AppViewProps, createApp, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useTreeList } from '@o/kit'
 import { AppMetaCommand } from '@o/models'
 import { Button, Card, CardSimple, Col, DataInspector, Divider, Dock, DockButton, Form, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, Space, SubTitle, Tab, Table, Tabs, Tag, TextArea, Title, useGet, View } from '@o/ui'
 import { capitalize, remove } from 'lodash'
@@ -16,7 +16,7 @@ export default createApp({
   app: QueryBuilder,
 })
 
-function QueryBuilder(props: AppProps) {
+function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
 
@@ -61,7 +61,7 @@ export function QueryBuilderIndex() {
   )
 }
 
-function QueryBuilderMain(props: AppProps) {
+function QueryBuilderMain(props: AppViewProps) {
   return (
     <StackNavigator
       key={props.id}
@@ -78,7 +78,7 @@ function QueryBuilderMain(props: AppProps) {
   )
 }
 
-function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
+function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState(null)
@@ -116,7 +116,11 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
               const item = selected[0]
               console.log('do ', item, props)
               // navigate to app definition:
-              props.navigation.navigate('QueryEdit', { id: item.id, title: item.title })
+              props.navigation.navigate('QueryEdit', {
+                ...props,
+                id: item.id,
+                subTitle: item.title,
+              })
             }}
           >
             Next
@@ -147,9 +151,11 @@ function QueryBuilderSelectApp(props: AppProps & NavigatorProps) {
   )
 }
 
-function QueryBuilderQueryEdit(props: AppProps & NavigatorProps) {
+function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
+
+  console.log('props', props)
 
   return (
     <Section
@@ -227,9 +233,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     <Layout type="row">
       <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
         <Col pad space>
-          <Tag size={1.2} alt="lightGray">
-            {method.name}
-          </Tag>
+          <Row justifyContent="space-between">
+            <Tag size={1.2} alt="lightGray">
+              {method.name}
+            </Tag>
+            <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
+          </Row>
           <SubTitle>query</SubTitle>
           <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
             <MonacoEditor
@@ -319,7 +328,7 @@ const GraphQueryBuild = memo((props: { id: number }) => {
 })
 
 // unused
-export function CreateQuery(props: AppProps) {
+export function CreateQuery(props: AppViewProps) {
   const { subId } = props
   const [app, definition] = useAppWithDefinition((subId && +subId) || false)
   const [queries, updateQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])

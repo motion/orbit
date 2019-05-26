@@ -48,7 +48,7 @@ export type ListItemSpecificProps = ListItemHide & {
   /** Adds extra indentation for tree-style view */
   indent?: number
 
-  /** Attach a subId for index view selection, see AppProps */
+  /** Attach a subId for index view selection, see AppViewProps */
   subId?: string | number
 
   /** Adds a button before the subtitle */

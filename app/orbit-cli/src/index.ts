@@ -65,11 +65,19 @@ Yargs.scriptName('orbit')
         .option('clean', {
           type: 'boolean',
           default: false,
+        })
+        .option('production', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let workspaceRoot = resolve(cwd, argv.workspace)
-      await require('./command-ws').commandWs({ workspaceRoot, clean: !!argv.clean })
+      await require('./command-ws').commandWs({
+        workspaceRoot,
+        clean: !!argv.clean,
+        mode: argv.production ? 'production' : 'development',
+      })
     },
   )
   .command(

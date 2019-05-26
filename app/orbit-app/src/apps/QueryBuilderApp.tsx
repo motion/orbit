@@ -319,6 +319,11 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                   <MonacoEditor
                     value={`${defaultValues[arg.type] || ''}`}
                     onChange={onChangeSource}
+                    lineNumbers="off"
+                    glyphMargin={false}
+                    folding={false}
+                    lineDecorationsWidth={0}
+                    lineNumbersMinChars={0}
                   />
                 </Card>
               </React.Fragment>

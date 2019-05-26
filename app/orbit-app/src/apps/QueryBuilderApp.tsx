@@ -242,7 +242,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
           </Row>
 
-          {method.args.map(arg => {
+          {(method.args || []).map(arg => {
             console.log('arg', arg)
             return null
             // return ()

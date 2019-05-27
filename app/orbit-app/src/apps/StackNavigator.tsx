@@ -25,10 +25,11 @@ export const StackNavigator = forwardRef<
     id: string
   }
 >((props, ref) => {
-  const [state, setState] = useUserState(`StackNavigator-${props.id}`, {
+  const [state, setState] = useUserState<StackNavState>(`StackNavigator-${props.id}`, {
     stack: [],
-  } as StackNavState)
-  const stackNav = props.useNavigator || useStore(StackNav, { state, setState })
+  })
+  const backupStackNav = useStore(StackNav, { state, setState })
+  const stackNav = props.useNavigator || backupStackNav
   const { stack } = stackNav
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export const StackNavigator = forwardRef<
     if (!stackNav.stack.length && props.defaultItem) {
       stackNav.navigate(props.defaultItem.id, props.defaultItem.props)
     }
-  }, [])
+  }, [props.defaultItem])
 
   return (
     <Slider curFrame={stack.length - 1}>

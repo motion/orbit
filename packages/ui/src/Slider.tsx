@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React, { cloneElement, isValidElement, memo, useCallback, useRef, useState } from 'react'
+import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
 
 import { useParentNodeSize } from './hooks/useParentNodeSize'
 import { SliderPane } from './SliderPane'
@@ -80,10 +80,10 @@ export const Slider = memo((props: SliderProps) => {
         }
         const isActive = curFrame === index
 
-        const onChangeHeight = useCallback((next: number) => {
+        const onChangeHeight = (next: number) => {
           heights[index] = next
           setHeights(heights)
-        }, [])
+        }
 
         return cloneElement(child, {
           framePad,

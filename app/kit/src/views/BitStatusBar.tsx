@@ -1,18 +1,10 @@
-import { gloss } from 'gloss'
-import {
-  DateFormat,
-  normalizeItem,
-  StatusBar,
-  StatusBarButton,
-  StatusBarSection,
-  StatusBarSpace,
-  StatusBarText,
-  View,
-} from '@o/ui'
+import { DateFormat, normalizeItem, StatusBar, StatusBarButton, StatusBarSection, StatusBarSpace, StatusBarText, View } from '@o/ui'
+import { Box, gloss } from 'gloss'
 import * as React from 'react'
+
 import { AppBitMainProps } from '../types/AppTypes'
 
-const Cmd = gloss({
+const Cmd = gloss(Box, {
   opacity: 0.6,
   marginLeft: 4,
 })

@@ -1,4 +1,3 @@
-import { writeJSON } from 'fs-extra'
 import { join } from 'path'
 import Webpack from 'webpack'
 
@@ -7,7 +6,10 @@ import { WebpackParams } from './makeWebpackConfig'
 
 export async function buildApp(props: WebpackParams) {
   const outputDir = join(props.context, 'dist')
-  const config = await getAppConfig(props)
+  const config = await getAppConfig({
+    ...props,
+    outputDir,
+  })
 
   return new Promise((res, rej) => {
     Webpack(config, async (err, _stats) => {
@@ -15,16 +17,8 @@ export async function buildApp(props: WebpackParams) {
         rej(err)
         return
       }
-
-      console.log('built', err, props.name, _stats.toString())
-
-      await writeJSON(join(outputDir, 'buildInfo.json'), {
-        built: Date.now(),
-      })
-
-      // console.log('done', err, stats.toString())
       if (!props.watch) {
-        res()
+        res(outputDir)
       }
     })
   })

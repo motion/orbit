@@ -1,0 +1,10 @@
+{
+  "name": "@o/orbit-registry",
+  "version": "2.5.6",
+  "main": "./_/main.js",
+  "private": true,
+  "scripts": {
+    "start": "docker-compose up -d"
+  },
+  "dependencies": {}
+}

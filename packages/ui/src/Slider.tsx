@@ -55,7 +55,7 @@ export const Slider = memo((props: SliderProps) => {
   useParentNodeSize({
     ref: frameRef,
     disable: !visible,
-    throttle: 200,
+    throttle: 120,
     onChange: setSize,
   })
 
@@ -78,20 +78,25 @@ export const Slider = memo((props: SliderProps) => {
         if (!isValidElement(child)) {
           throw new Error(`Must pass <SliderPane /> to <Slider />`)
         }
-        return cloneElement(child as any, {
+        const isActive = curFrame === index
+
+        const onChangeHeight = (next: number) => {
+          heights[index] = next
+          setHeights(heights)
+        }
+
+        return cloneElement(child, {
           framePad,
           verticalPad,
           fixHeightToTallest,
           currentHeight: height,
           curFrame,
-          isActive: curFrame === index,
+          isActive,
           transition,
-          width: width,
+          width,
           index,
-          onChangeHeight: (next: number) => {
-            heights[index] = next
-            setHeights(heights)
-          },
+          onChangeHeight,
+          display: isActive ? undefined : 'none',
         })
       })}
     </SliderContainer>

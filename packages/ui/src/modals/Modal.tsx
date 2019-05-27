@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React from 'react'
+import React, { memo } from 'react'
 import { GlobalHotKeys } from 'react-hotkeys'
 
 import { Button } from '../buttons/Button'
@@ -8,7 +8,7 @@ import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
-import { ProvideVisibility } from '../Visibility'
+import { Visibility } from '../Visibility'
 
 export type SimpleModalProps = SectionProps &
   SizedSurfaceProps & {
@@ -28,45 +28,47 @@ const modalKeyMap = {
   esc: 'close',
 }
 
-export function Modal({
-  backgroundProps,
-  onClickBackground,
-  background,
-  children,
-  chromeless,
-  ...props
-}: ModalProps) {
-  return (
-    <Portal
-      prepend
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: Number.MAX_SAFE_INTEGER,
-        pointerEvents: 'none',
-      }}
-    >
-      {props.open && (
-        <GlobalHotKeys
-          keyMap={modalKeyMap}
-          handlers={{ close: props.onChangeOpen.bind(null, false) }}
-        />
-      )}
-      <ModalBackground
-        onClick={onClickBackground}
-        open={props.open}
-        background={background}
-        {...backgroundProps}
+export const Modal = memo(
+  ({
+    backgroundProps,
+    onClickBackground,
+    background,
+    children,
+    chromeless,
+    ...props
+  }: ModalProps) => {
+    return (
+      <Portal
+        prepend
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: Number.MAX_SAFE_INTEGER,
+          pointerEvents: 'none',
+        }}
       >
-        {chromeless && children}
-        {!chromeless && <SimpleModal {...props}>{children}</SimpleModal>}
-      </ModalBackground>
-    </Portal>
-  )
-}
+        {props.open && (
+          <GlobalHotKeys
+            keyMap={modalKeyMap}
+            handlers={{ close: props.onChangeOpen.bind(null, false) }}
+          />
+        )}
+        <ModalBackground
+          onClick={onClickBackground}
+          open={props.open}
+          background={background}
+          {...backgroundProps}
+        >
+          {chromeless && children}
+          {!chromeless && <SimpleModal {...props}>{children}</SimpleModal>}
+        </ModalBackground>
+      </Portal>
+    )
+  },
+)
 
 function SimpleModal({
   title,
@@ -82,7 +84,7 @@ function SimpleModal({
   ...props
 }: SimpleModalProps) {
   return (
-    <ProvideVisibility visible={!!open}>
+    <Visibility visible={!!open}>
       <ModalSizedSurface
         sizeRadius={1}
         hoverStyle={null}
@@ -114,7 +116,7 @@ function SimpleModal({
           {children}
         </Section>
       </ModalSizedSurface>
-    </ProvideVisibility>
+    </Visibility>
   )
 }
 

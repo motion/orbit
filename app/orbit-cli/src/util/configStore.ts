@@ -6,9 +6,17 @@ import { reporter } from '../reporter'
 
 const conf = new ConfigStore(`orbit`, {}, { globalConfigPath: true })
 
+type AppBuildInfo = {
+  [key: string]: {
+    buildId: number
+  }
+}
+
 export const configStore = {
   packageManager: createConfig<string>('packageManager'),
   orbitMainPath: createConfig<string>('orbitMainPath'),
+  /** { [fullpath]: info } */
+  appBuildInfo: createConfig<AppBuildInfo>('appBuildInfo'),
 }
 
 export const promptPackageManager = async () => {

@@ -45,11 +45,36 @@ Yargs.scriptName('orbit')
         .option('watch', {
           type: 'boolean',
           default: false,
+        })
+        .option('force', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
-      await require('./command-build').commandBuild({ projectRoot, watch: !!argv.watch })
+      await require('./command-build').commandBuild({
+        projectRoot,
+        watch: !!argv.watch,
+        force: !!argv.force,
+      })
+    },
+  )
+  .command(
+    'publish [app]',
+    'Publish new version of app to registry',
+    p =>
+      p.positional('app', {
+        type: 'string',
+        default: '.',
+        describe: 'The application to run',
+      }),
+    async argv => {
+      reporter.setVerbose(!!argv.verbose)
+      let projectRoot = resolve(cwd, argv.app)
+      await require('./command-publish').commandPublish({
+        projectRoot,
+      })
     },
   )
   .command(
@@ -65,11 +90,19 @@ Yargs.scriptName('orbit')
         .option('clean', {
           type: 'boolean',
           default: false,
+        })
+        .option('production', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let workspaceRoot = resolve(cwd, argv.workspace)
-      await require('./command-ws').commandWs({ workspaceRoot, clean: !!argv.clean })
+      await require('./command-ws').commandWs({
+        workspaceRoot,
+        clean: !!argv.clean,
+        mode: argv.production ? 'production' : 'development',
+      })
     },
   )
   .command(

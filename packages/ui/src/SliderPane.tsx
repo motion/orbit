@@ -1,5 +1,5 @@
 import { gloss } from 'gloss'
-import React, { useRef } from 'react'
+import React, { memo, useRef } from 'react'
 
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
@@ -16,44 +16,46 @@ type SliderPaneProps = ColProps &
     curFrame?: number
   }
 
-export function SliderPane({
-  children,
-  onChangeHeight,
-  width,
-  fixHeightToTallest,
-  currentHeight,
-  verticalPad,
-  framePad,
-  isActive,
-  ...props
-}: SliderPaneProps) {
-  const ref = useRef(null)
-  const visiblity = useVisibility()
+export const SliderPane = memo(
+  ({
+    children,
+    onChangeHeight,
+    width,
+    fixHeightToTallest,
+    currentHeight,
+    verticalPad,
+    framePad,
+    isActive,
+    ...props
+  }: SliderPaneProps) => {
+    const ref = useRef(null)
+    const visiblity = useVisibility()
 
-  useNodeSize({
-    disable: !visiblity,
-    throttle: 200,
-    ref,
-    onChange({ height }) {
-      if (onChangeHeight) {
-        onChangeHeight(height)
-      }
-    },
-  })
+    useNodeSize({
+      disable: !visiblity,
+      throttle: 200,
+      ref,
+      onChange({ height }) {
+        if (onChangeHeight) {
+          onChangeHeight(height)
+        }
+      },
+    })
 
-  return (
-    <SliderPaneChrome
-      width={width}
-      height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
-      ref={ref}
-      padding={[verticalPad, framePad, verticalPad]}
-      isActive={isActive}
-      {...props}
-    >
-      {children}
-    </SliderPaneChrome>
-  )
-}
+    return (
+      <SliderPaneChrome
+        width={width}
+        height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
+        ref={ref}
+        padding={[verticalPad, framePad, verticalPad]}
+        isActive={isActive}
+        {...props}
+      >
+        {children}
+      </SliderPaneChrome>
+    )
+  },
+)
 
 const SliderPaneChrome = gloss<ColProps & { isActive?: boolean }>(Col, {
   position: 'absolute',

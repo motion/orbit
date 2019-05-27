@@ -1,7 +1,7 @@
 import { AppBit, AppIcon } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
 import { Button, SegmentedRow, Text, useContextMenu, View, ViewProps } from '@o/ui'
-import { gloss, Theme } from 'gloss'
+import { Box, gloss, Theme } from 'gloss'
 import React, { memo } from 'react'
 
 type LargeIconProps = ViewProps & {
@@ -72,7 +72,7 @@ export const OrbitAppIcon = memo(
   },
 )
 
-export const AppIconContainer = gloss({
+export const AppIconContainer = gloss<any>(Box, {
   height: 180,
   padding: 10,
   alignItems: 'center',

@@ -10,6 +10,7 @@ import { reporter } from './reporter'
 type CommandWSOptions = {
   workspaceRoot: string
   clean: boolean
+  mode: 'development' | 'production'
 }
 
 export async function commandWs(options: CommandWSOptions) {
@@ -36,9 +37,11 @@ export async function commandWs(options: CommandWSOptions) {
 }
 
 async function watchBuildWorkspace(options: CommandWSOptions) {
+  reporter.info(`Running command ws in mode ${options.mode}`)
+
   const directory = options.workspaceRoot
-  const { appRoots, nodeModuleDir } = await getAppRoots(directory)
-  if (!appRoots || !appRoots.length) {
+  const { appsInfo, appsRootDir } = await getAppsInfo(directory)
+  if (!appsInfo || !appsInfo.length) {
     console.log('No apps found')
     return []
   }
@@ -46,13 +49,14 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   const dllFile = join(__dirname, 'manifest.json')
 
   const appEntries = []
-  for (const { id } of appRoots) {
+  for (const { id } of appsInfo) {
     appEntries.push(id)
   }
 
   const appsConf: WebpackParams = {
-    context: nodeModuleDir,
+    mode: options.mode,
     entry: appEntries,
+    context: appsRootDir,
     target: 'web',
     publicPath: '/',
     outputFile: '[name].apps.js',
@@ -96,7 +100,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     join(entry, '..', '..', 'appDefinitions.js'),
     `
     // all apps
-    ${appRoots
+    ${appsInfo
       .map(app => {
         return `export const ${app.id.replace(/[^a-zA-Z]/g, '')} = require('${app.id}')`
       })
@@ -113,6 +117,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
     for (const name in others) {
       extraEntries[name] = await makeWebpackConfig(
         {
+          mode: options.mode,
           name,
           outputFile: `${name}.js`,
           context: options.workspaceRoot,
@@ -147,11 +152,11 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
 
   await server.start()
 
-  return appRoots.map(x => x.id)
+  return appsInfo.map(x => x.id)
 }
 
-async function getAppRoots(spaceDirectory: string) {
-  reporter.info('read space spaceDirectory', spaceDirectory)
+async function getAppsInfo(spaceDirectory: string) {
+  reporter.info(`read space spaceDirectory ${spaceDirectory}`)
   const pkg = await readJSON(join(spaceDirectory, 'package.json'))
   if (!pkg) {
     reporter.log('No package found!')
@@ -163,34 +168,40 @@ async function getAppRoots(spaceDirectory: string) {
     return null
   }
 
-  reporter.info('found packages', packages)
-  let nodeModuleDir = join(spaceDirectory, 'node_modules')
+  reporter.info(`found apps ${Object.keys(packages).join(', ')}`)
+  let appsRootDir = ''
 
-  // find parent node_modules
-  while (!(await pathExists(nodeModuleDir)) && nodeModuleDir !== '/') {
-    nodeModuleDir = join(nodeModuleDir, '..', '..', 'node_modules')
-  }
-
-  if (!(await pathExists(nodeModuleDir))) {
-    reporter.info('Error no node_modules directory found')
-    return null
-  }
+  const appsInfo = await Promise.all(
+    Object.keys(packages).map(async id => {
+      const directory = await findNodeModuleDir(spaceDirectory, id)
+      if (directory) {
+        appsRootDir = directory // can be last one
+        const appPkg = await readJSON(join(directory, 'package.json'))
+        const entry = appPkg.main
+        return {
+          id,
+          directory,
+          entry: join(directory, entry),
+        }
+      }
+    }),
+  )
 
   return {
-    nodeModuleDir,
-    appRoots: await Promise.all(
-      Object.keys(packages).map(async id => {
-        const directory = join(nodeModuleDir, ...id.split('/'))
-        if (await pathExists(directory)) {
-          const appPkg = await readJSON(join(directory, 'package.json'))
-          const entry = appPkg.main
-          return {
-            id,
-            directory,
-            entry: join(directory, entry),
-          }
-        }
-      }),
-    ),
+    appsRootDir,
+    appsInfo: appsInfo.filter(Boolean),
   }
+}
+
+async function findNodeModuleDir(startDir: string, packageName: string) {
+  let modulesDir = join(startDir, 'node_modules')
+  // find parent node_modules
+  while (modulesDir !== '/') {
+    modulesDir = join(modulesDir, '..', '..', 'node_modules')
+    const moduleDir = join(modulesDir, ...packageName.split('/'))
+    if (await pathExists(moduleDir)) {
+      return moduleDir
+    }
+  }
+  return null
 }

@@ -97,10 +97,12 @@ const { clipboard } = Electron
 // TODO
 type ElectronMenuItemOptions = any
 
+export const fontFamilyMonospace = `'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`
+
 const BaseContainer = gloss<SimpleTextProps & { disabled?: boolean }>(SimpleText, {
   paddingLeft: 10,
   userSelect: 'text',
-  fontFamily: `'Operator Mono', 'Meslo LG S DZ', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`,
+  fontFamily: fontFamilyMonospace,
 }).theme((props, theme) => ({
   color: props.color || theme.color,
   opacity: props.disabled ? 0.5 : 1,

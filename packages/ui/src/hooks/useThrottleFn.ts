@@ -11,8 +11,8 @@ export function useThrottleFn<Args extends any[], Returns extends any>(
     clearTimeout(tm.current)
     const now = Date.now()
     const since = now - last.current
-    last.current = now
     if (since > props.amount) {
+      last.current = now
       if (props.ignoreFirst) return
       fn(...args)
     } else {

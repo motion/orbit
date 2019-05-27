@@ -174,7 +174,6 @@ async function getAppsInfo(spaceDirectory: string) {
   const appsInfo = await Promise.all(
     Object.keys(packages).map(async id => {
       const directory = await findNodeModuleDir(spaceDirectory, id)
-      console.log('exits', directory, spaceDirectory, id)
       if (directory) {
         appsRootDir = directory // can be last one
         const appPkg = await readJSON(join(directory, 'package.json'))

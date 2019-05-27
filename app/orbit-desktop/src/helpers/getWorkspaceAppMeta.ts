@@ -24,28 +24,10 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
   }
 
   log.info('found packages', packages)
-  let parentDir = join(spaceDir)
-  let nodeModuleDir = ''
-
-  // find parent node_modules
-  while (parentDir.length > 1) {
-    nodeModuleDir = join(parentDir, 'node_modules')
-    if (await pathExists(nodeModuleDir)) {
-      break
-    }
-    parentDir = join(parentDir, '..')
-  }
-
-  console.log('nodeModuleDir', nodeModuleDir)
-
-  if (!(await pathExists(nodeModuleDir))) {
-    log.info('Error no node_modules directory found')
-    return null
-  }
 
   return await Promise.all(
     Object.keys(packages).map(async packageId => {
-      const directory = join(nodeModuleDir, ...packageId.split('/'))
+      const directory = await findNodeModuleDir(spaceDir, packageId)
       const packageJsonPath = join(directory, 'package.json')
       let packageJson = null
       if (!(await pathExists(packageJsonPath))) {
@@ -66,4 +48,19 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
       }
     }),
   )
+}
+
+// TODO this fn shared by orbit-cli
+
+async function findNodeModuleDir(startDir: string, packageName: string) {
+  let modulesDir = join(startDir, 'node_modules')
+  // find parent node_modules
+  while (modulesDir !== '/') {
+    modulesDir = join(modulesDir, '..', '..', 'node_modules')
+    const moduleDir = join(modulesDir, ...packageName.split('/'))
+    if (await pathExists(moduleDir)) {
+      return moduleDir
+    }
+  }
+  return null
 }

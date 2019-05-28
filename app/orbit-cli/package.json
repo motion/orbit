@@ -42,7 +42,8 @@
     "wait-on": "3.3.0-beta.0",
     "typescript": "3.5.0-rc",
     "chokidar": "^3.0.0",
-    "kill-port": "^1.5.0"
+    "kill-port": "^1.5.0",
+    "command-exists": "^1.2.8"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"

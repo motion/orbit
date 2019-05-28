@@ -15,7 +15,8 @@ export async function commandPublish(options: CommandPublishOptions) {
 
 async function publishApp(options: CommandPublishOptions) {
   console.log('publish to verdaccio', options)
-  await npmCommand(`publish --registry http://example.com`)
+  const res = await npmCommand(`publish --registry https://registry.tryorbit.com`)
+  console.log('res', res)
 }
 
 async function npmCommand(args: string) {

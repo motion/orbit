@@ -50,12 +50,10 @@ type BuildInfo = {
 }
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
-  const [nodeConf, webConf] = await Promise.all([
-    getWebAppConfig(entry, pkg, options),
-    getNodeAppConfig(entry, pkg, options),
-  ])
+  const nodeConf = await getNodeAppConfig(entry, pkg, options)
+  const webConf = getWebAppConfig(entry, pkg, options)
 
-  await webpack([nodeConf, webConf])
+  await webpack([nodeConf, webConf].filter(Boolean))
 
   const buildId = Date.now()
   await setBuildInfo(options.projectRoot, {
@@ -70,7 +68,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   })
 }
 
-async function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   return getAppConfig({
     name: pkg.name,
     context: options.projectRoot,

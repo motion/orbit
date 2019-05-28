@@ -19975,6 +19975,11 @@ sticky-sidebar@3.3.1:
   resolved "https://registry.yarnpkg.com/sticky-sidebar/-/sticky-sidebar-3.3.1.tgz#142bf6b64c2b416e4b707ebf8f09b8b5a5043877"
   integrity sha1-FCv2tkwrQW5LcH6/jwm4taUEOHc=
 
+stopword@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/stopword/-/stopword-0.2.4.tgz#41d1d8a072926affc5d331d5caa1f91fd847143c"
+  integrity sha512-cPrTLrcUq10+N6i66xeFQKyEV5E9KGAxC9Omzl8oSX3Q8zp6Q/VPstU626u/S94E/vd02X5W4Vw21WQvGiMInw==
+
 stream-browserify@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.2.tgz#87521d38a44aa7ee91ce1cd2a47df0cb49dd660b"

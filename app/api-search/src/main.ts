@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
-import functions from 'firebase-functions'
+import { https } from 'firebase-functions'
 
 class ApiSearchServer {
   app = express()
@@ -29,4 +29,4 @@ class ApiSearchServer {
 
 const api = new ApiSearchServer()
 
-export const search = functions.https.onRequest(api.app)
+export const search = https.onRequest(api.app)

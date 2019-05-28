@@ -417,3 +417,27 @@ In my mind, not enough startups are doing this:
 5. Attempt sales and iterate
 
 It may not seem much different, but what happens is it gives you time to most efficiently build. It's easy to say: this is just what developers want, another reason to architect astronaut. But it's also easy to say: ship early. The truth is, if you have the right intuitions about the market, I'd bet the latter strategy will allow you launch with a 2-3x better product: and not in terms of just features or design, but in terms of market-fit. Because most products "fit" is a result of a really clear, compelling demo. And you'll know when you have it. It's far easier to build a compelling demo when you can plan to have 6-12 months of continous development, without having to put out fires for clients every week, and without having to rush to the next "demo" you want to send out. They are antithetical to each other, and while each startup is unique and you'll need *some* amount of balance between the two, I have a strong belief that in our MVP-infested culture, today, the latter is being almost wholly ignored, which means theres less competition at the "top" of the quality market for whatever product you are building.
+
+---
+
+# Why lines of code is actually a great metric for productivity at early startup
+
+- obviously has some constraints
+  1. depends on type of startup: needs to be heavy on product
+  2. have to filter out noisy code like dependencies
+
+- but the ground truth of it is this:
+  - doing a startup is way more than just code:
+    - docs
+    - website
+    - deployment
+    - lots of services
+
+- lines of code actually captures movement really well
+
+- it has some good and bad incentives
+- but, you can control for the bad ones easily
+  - because you can codify them in the repo/CI
+
+- good incentives:
+  - no hiding, forces eyes on whats going on easily

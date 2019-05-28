@@ -1,5 +1,4 @@
-import { buildApp, BuildServer, getAppConfig } from '@o/build-server'
-import { makeWebpackConfig, WebpackParams } from '@o/build-server/_/makeWebpackConfig'
+import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -54,6 +53,8 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   }
 
   const appsConf: WebpackParams = {
+    name: 'apps',
+    watch: false,
     mode: options.mode,
     entry: appEntries,
     context: appsRootDir,
@@ -68,15 +69,11 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
     console.log('building apps DLL once...')
-    await buildApp({
-      name: 'apps',
-      ...appsConf,
-      watch: false,
-    })
+    await webpackPromise(getAppConfig(appsConf))
   }
 
-  const appsConfig = await getAppConfig({
-    name: 'apps',
+  // create app config now with `hot`
+  const appsConfig = getAppConfig({
     ...appsConf,
     watch: true,
     hot: true,

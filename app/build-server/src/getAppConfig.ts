@@ -1,7 +1,7 @@
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
-export async function getAppConfig(props: WebpackParams, extraConfig?: any) {
-  return await makeWebpackConfig(
+export function getAppConfig(props: WebpackParams, extraConfig?: any) {
+  return makeWebpackConfig(
     {
       mode: 'development',
       publicPath: '/',

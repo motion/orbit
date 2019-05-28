@@ -25,7 +25,7 @@ export type WebpackParams = {
   hot?: boolean
 }
 
-export async function makeWebpackConfig(params: WebpackParams, extraConfig?: any) {
+export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
   let {
     outputFile,
     entry = [],

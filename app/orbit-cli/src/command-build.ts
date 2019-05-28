@@ -1,6 +1,7 @@
-import { buildApp } from '@o/build-server'
+import { getAppConfig } from '@o/build-server'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
+import webpack = require('webpack')
 
 import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
@@ -49,15 +50,12 @@ type BuildInfo = {
 }
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
-  // build node
-  await buildApp({
-    name: pkg.name,
-    context: options.projectRoot,
-    entry: [entry],
-    target: 'node',
-    outputFile: 'index.node.js',
-    watch: options.watch,
-  })
+  const [nodeConf, webConf] = await Promise.all([
+    getWebAppConfig(entry, pkg, options),
+    getNodeAppConfig(entry, pkg, options),
+  ])
+
+  await webpack([nodeConf, webConf])
 
   const buildId = Date.now()
   await setBuildInfo(options.projectRoot, {
@@ -72,8 +70,39 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   })
 }
 
+async function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+  return getAppConfig({
+    name: pkg.name,
+    context: options.projectRoot,
+    entry: [entry],
+    target: 'web', // TODO electron-renderer
+    outputFile: 'index.js',
+    watch: options.watch,
+  })
+}
+
+async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+  // for now just check harcoded file
+  if (!(await pathExists(join(options.projectRoot, 'src', 'index.node.ts')))) {
+    console.log('No node api found')
+    return
+  }
+  // TODO
+  // seems like this is still picking up imports from index.ts,
+  // ignore loader should still remove all things besides direct .node.ts imports
+  return getAppConfig({
+    name: pkg.name,
+    context: options.projectRoot,
+    entry: [entry],
+    target: 'node',
+    outputFile: 'index.node.js',
+    watch: options.watch,
+  })
+}
+
 async function isBuildUpToDate(options: CommandBuildOptions) {
-  const configInfo = configStore.appBuildInfo.get()[options.projectRoot]
+  const config = configStore.appBuildInfo.get() || {}
+  const configInfo = config[options.projectRoot]
   const buildInfo = await getBuildInfo(options.projectRoot)
   return configInfo && buildInfo && configInfo.buildId === buildInfo.buildId
 }
@@ -85,7 +114,7 @@ async function setBuildInfo(projectRoot: string, next: BuildInfo) {
 
 async function getBuildInfo(projectRoot: string): Promise<BuildInfo | null> {
   const file = join(projectRoot, 'dist', 'buildInfo.json')
-  if (!(await pathExists(file))) {
+  if (await pathExists(file)) {
     return (await readJSON(file)) as BuildInfo
   }
   return null

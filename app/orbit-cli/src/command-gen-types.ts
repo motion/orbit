@@ -1,5 +1,5 @@
 import { ApiInfo } from '@o/models'
-import { readJSON, writeJSON } from 'fs-extra'
+import { pathExists, readJSON, writeJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
 
@@ -12,6 +12,10 @@ export async function commandGenTypes(options: {
 }) {
   const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
+
+  if (!(await pathExists(apiEntry))) {
+    return
+  }
 
   const program = ts.createProgram([apiEntry], compilerOptions)
   checker = program.getTypeChecker()

@@ -7,7 +7,7 @@ services:
     ports:
       - '4873:4873'
     volumes:
-      - './storage:/verdaccio/storage'
+      - './tmp/storage:/verdaccio/storage'
       - './conf:/verdaccio/conf'
   https-portal:
     image: steveltn/https-portal:1

@@ -1,32 +1,16 @@
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
-import { https } from 'firebase-functions'
+import * as functions from 'firebase-functions'
 
-class ApiSearchServer {
-  app = express()
+const app = express()
 
-  start() {
-    this.app.use(cors({ origin: true }))
-    this.app.use(bodyParser.json({ limit: '2048mb' }))
-    this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
+app.use(cors({ origin: true }))
+app.use(bodyParser.json({ limit: '2048mb' }))
+app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-    this.app.use('/search', (req, res) => {
-      console.log('req', req)
-      res.send({
-        ok: true,
-      })
-    })
+app.get('/', (_, res) => {
+  res.send('home works with or without trailing slash')
+})
 
-    this.app.use('/index', (req, res) => {
-      console.log('req', req)
-      res.send({
-        ok: true,
-      })
-    })
-  }
-}
-
-const api = new ApiSearchServer()
-
-export const search = https.onRequest(api.app)
+export const search = functions.https.onRequest(app)

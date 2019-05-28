@@ -2,13 +2,10 @@ version: '2'
 
 services:
   verdaccio:
-    image: verdaccio/verdaccio:4.0.0-beta.5
+    build: ./verdaccio
     container_name: verdaccio-https
     ports:
       - '4873:4873'
-    volumes:
-      - './tmp/storage:/verdaccio/storage'
-      - './conf:/verdaccio/conf'
   https-portal:
     image: steveltn/https-portal:1
     ports:
@@ -17,6 +14,5 @@ services:
     links:
       - verdaccio:verdaccio
     environment:
-      DOMAINS: 'example.com -> http://verdaccio:4873'
-      STAGE: local
-      CLIENT_MAX_BODY_SIZE: 100M
+      DOMAINS: 'registry.tryorbit.com -> http://verdaccio:4873'
+      CLIENT_MAX_BODY_SIZE: 50M

@@ -8,8 +8,8 @@ auth:
     file: /verdaccio/conf/htpasswd
 
 uplinks:
-  npmjs:
-    url: https://registry.npmjs.org/
+  # npmjs:
+  #   url: https://registry.npmjs.org/
 
 middlewares:
   audit:

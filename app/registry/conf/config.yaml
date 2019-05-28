@@ -1,6 +1,8 @@
 plugins: /verdaccio/plugins
 storage: /verdaccio/storage
 
+max_body_size: 100mb
+
 auth:
   htpasswd:
     file: /verdaccio/conf/htpasswd
@@ -25,4 +27,4 @@ packages:
     proxy: npmjs
 
 logs:
-  - {type: stdout, format: pretty, level: trace}
+  - { type: stdout, format: pretty, level: trace }

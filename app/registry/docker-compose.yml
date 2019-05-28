@@ -5,10 +5,10 @@ services:
     image: verdaccio/verdaccio:4.0.0-beta.5
     container_name: verdaccio-https
     ports:
-      - "4873:4873"
+      - '4873:4873'
     volumes:
-        - "./storage:/verdaccio/storage"
-        - "./conf:/verdaccio/conf"
+      - './storage:/verdaccio/storage'
+      - './conf:/verdaccio/conf'
   https-portal:
     image: steveltn/https-portal:1
     ports:
@@ -19,3 +19,4 @@ services:
     environment:
       DOMAINS: 'example.com -> http://verdaccio:4873'
       STAGE: local
+      CLIENT_MAX_BODY_SIZE: 100M

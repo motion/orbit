@@ -9,7 +9,10 @@ import prompts from 'prompts'
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
 
-type CommandPublishOptions = { projectRoot: string }
+type CommandPublishOptions = {
+  projectRoot: string
+  rebuild?: boolean
+}
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -18,10 +21,20 @@ const apiUrl = isDev
   ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
   : `https://tryorbit.com/search`
 
+export function invariant(condition: boolean, message: string) {
+  if (!condition) {
+    reporter.error(message)
+    throw new Error(message)
+  }
+}
+
 export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
-    await commandBuild(options)
+    await commandBuild({
+      projectRoot: options.projectRoot,
+      force: options.rebuild,
+    })
 
     // publish to registry
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
@@ -33,16 +46,16 @@ export async function commandPublish(options: CommandPublishOptions) {
     // run before publish so if there's any error we can validate before publishing
     let appInfo
     try {
-      appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js'))
+      appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+      console.log('appInfo', appInfo)
     } catch (err) {
       reporter.error(`appInfo.js didn't build, there was some error building your app`)
       return
     }
 
-    if (!appInfo.id || !appInfo.name || !appInfo.icon) {
-      reporter.error(`Must set id, name, and icon in export default createApp({ ... })`)
-      return
-    }
+    invariant(typeof appInfo.id === 'string', `Must set appInfo.id, got: ${appInfo.id}`)
+    invariant(typeof appInfo.icon === 'string', `Must set appInfo.icon, got: ${appInfo.icon}`)
+    invariant(typeof appInfo.name === 'string', `Must set appInfo.name, got: ${appInfo.name}`)
 
     if (registryInfo.versions && registryInfo.versions[verion]) {
       shouldPublish = false

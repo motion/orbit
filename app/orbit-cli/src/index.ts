@@ -70,7 +70,7 @@ Yargs.scriptName('orbit')
           default: '.',
           describe: 'The application to run',
         })
-        .option('force', {
+        .option('rebuild', {
           type: 'boolean',
           default: false,
         }),
@@ -79,7 +79,7 @@ Yargs.scriptName('orbit')
       let projectRoot = resolve(cwd, argv.app)
       await require('./command-publish').commandPublish({
         projectRoot,
-        force: !!argv.force,
+        rebuild: !!argv.rebuild,
       })
     },
   )

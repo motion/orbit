@@ -6,7 +6,7 @@ import React, { useCallback } from 'react'
 import { useUserVisualAppDefinitions } from '../apps/orbitApps'
 import { useAppSortHandler } from '../hooks/useAppSortHandler'
 import { useOm } from '../om/om'
-import { AppIconContainer, LargeIcon, OrbitAppIcon } from './OrbitAppIcon'
+import { OrbitAppIcon } from './OrbitAppIcon'
 
 export function ManageApps() {
   const om = useOm()
@@ -42,6 +42,7 @@ export function ManageApps() {
           ...activeApps.map(x => ({
             id: x.id,
             title: x.name,
+            subTitle: x.identifier,
             type: 'installed',
             groupName: 'Installed Apps',
             disabled: x.tabDisplay !== 'plain',
@@ -51,14 +52,6 @@ export function ManageApps() {
           })),
         ]}
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
-          if (item.type === 'add') {
-            // TODO on click to new app pane
-            return (
-              <AppIconContainer onClick={onClick} onDoubleClick={onDoubleClick}>
-                <LargeIcon {...item} />
-              </AppIconContainer>
-            )
-          }
           return (
             <OrbitAppIcon
               app={getActiveApps().find(x => x.id === item.id)}

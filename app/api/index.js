@@ -141,12 +141,15 @@ app.post('/searchUpdate', async (req, res) => {
     const versions = Object.keys(registryInfo.versions)
     const lastVersion = registryInfo.versions[versions[versions.length - 1]]
     const { description = '' } = lastVersion
+    const fullDescription = req.body.fullDescription || ''
+
     const db = admin.firestore()
     const docRef = db.collection('apps').doc(identifier)
 
     // : ApiSearchItem
     const doc = {
       packageId,
+      fullDescription,
       description,
       identifier,
       name,

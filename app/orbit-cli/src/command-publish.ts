@@ -3,7 +3,7 @@ import 'isomorphic-fetch'
 import { AppDefinition } from '@o/models'
 import commandExists from 'command-exists'
 import exec from 'execa'
-import { readJSON } from 'fs-extra'
+import { pathExists, readFile, readJSON } from 'fs-extra'
 import { join } from 'path'
 import prompts from 'prompts'
 
@@ -99,6 +99,14 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
+
+    // get README.md description
+    let fullDescription = pkg.description
+    const readmePath = join(options.projectRoot, 'README.md')
+    if (await pathExists(readmePath)) {
+      fullDescription = await readFile(readmePath)
+    }
+
     await fetch(`${apiUrl}/searchUpdate`, {
       method: 'post',
       headers: {
@@ -113,6 +121,7 @@ export async function commandPublish(options: CommandPublishOptions) {
         features: Object.keys(app).filter(
           x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
         ),
+        fullDescription,
       }),
     }).then(x => x.json())
 

@@ -7,7 +7,7 @@ import admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import stopword from 'stopword'
 
-admin.initializeApp(functions.config().firebase)
+admin.initializeApp(functions.config().firebase, 'search')
 
 const app = express()
 
@@ -32,9 +32,14 @@ app.get('/', async (req, res) => {
 })
 
 app.post('/index', async (req, res) => {
-  console.log('req.params', JSON.stringify(req.body))
   const packageId = req.body.packageId
   const identifier = req.body.identifier
+  if (!packageId || !identifier) {
+    res.send({
+      error: 'No packageId or identifier sent in body',
+    })
+    return
+  }
   try {
     const registryInfo = await fetch(`https://registry.tryorbit.com/${packageId}`).then(x =>
       x.json(),
@@ -48,19 +53,24 @@ app.post('/index', async (req, res) => {
       return
     }
 
-    const { name, description } = registryInfo
+    const { name, description = '' } = registryInfo
     console.log('registryInfo', registryInfo, name, description)
     const db = admin.firestore()
+    const docRef = db.collection('apps').doc(identifier)
+    const doc = {
+      packageId,
+      description,
+      identifier,
+      search: stopword.removeStopwords(description.split(' ')),
+    }
 
     // TODO only update if doesnt exist for this version
-    db.collection('apps')
-      .doc(packageId)
-      .set({
-        packageId,
-        description,
-        identifier,
-        search: stopword.removeStopwords(description.split(' ')),
-      })
+    const existing = await docRef.get()
+    if (!existing) {
+      docRef.create(doc)
+    } else {
+      docRef.set(doc)
+    }
 
     // success, scan new package
 

@@ -236,7 +236,7 @@ export function HeadSection() {
             </SubSection>
 
             <SubSection index={3} title="Serverless, private">
-              True peer-to-peer comes fere, so you can build without infrastructure.
+              True peer-to-peer, so you can build securely without infrastructure.
             </SubSection>
           </Row>
           <Space size={120} />

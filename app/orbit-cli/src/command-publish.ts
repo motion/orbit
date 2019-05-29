@@ -16,7 +16,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const registryUrl = isDev ? `http://example.com` : `https://registry.tryorbit.com`
 const apiUrl = isDev
   ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
-  : `https://api.tryorbit.com`
+  : `https://tryorbit.com/search`
 
 export async function commandPublish(options: CommandPublishOptions) {
   try {

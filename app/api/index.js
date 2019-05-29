@@ -40,6 +40,7 @@ app.get('/search/:search?', async (req, res) => {
   const db = admin.firestore()
 
   try {
+    // TODO: make it do multiple where() so it narrows, fall back to "or where"
     const results = fireStoreArr(
       await db
         .collection('apps')

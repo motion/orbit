@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  verdaccio:
+    extends:
+      file: ./docker-compose.yml
+      service: verdaccio
+    image: verdaccio/verdaccio:4.0.0-beta.5
+    volumes:
+      - './tmp/storage:/verdaccio/storage'
+      - './verdaccio/conf:/verdaccio/conf'
+  https-portal:
+    environment:
+      STAGE: local
+      DOMAINS: 'example.com -> http://verdaccio:4873'

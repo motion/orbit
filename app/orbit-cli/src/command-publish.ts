@@ -11,8 +11,12 @@ import { reporter } from './reporter'
 
 type CommandPublishOptions = { projectRoot: string }
 
-const registryUrl = `https://registry.tryorbit.com`
-const apiUrl = `http://localhost:5000/orbit-3b7f1/us-central1/search`
+const registryUrl =
+  process.env.NODE_ENV === 'development' ? `http://example.com` : `https://registry.tryorbit.com`
+const apiUrl =
+  process.env.NODE_ENV === 'development'
+    ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
+    : `https://api.tryorbit.com`
 
 export async function commandPublish(options: CommandPublishOptions) {
   try {

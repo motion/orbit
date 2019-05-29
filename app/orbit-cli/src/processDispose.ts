@@ -10,7 +10,7 @@ process.on('SIGQUIT', dispose)
 
 // log errors
 process.on('uncaughtException', err => {
-  console.log('uncaughtException', err)
+  console.log('uncaughtException', err.message, err.stack)
 })
 process.on('unhandledRejection', err => {
   console.log('unhandledRejection', err)

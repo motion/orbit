@@ -1,7 +1,9 @@
 import { ApiInfo } from '@o/models'
-import { readJSON, writeJSON } from 'fs-extra'
+import { pathExists, readJSON, writeJSON } from 'fs-extra'
 import path, { join } from 'path'
 import ts from 'typescript'
+
+import { reporter } from './reporter'
 
 let checker: ts.TypeChecker
 
@@ -10,8 +12,13 @@ export async function commandGenTypes(options: {
   projectEntry: string
   out?: string
 }) {
+  reporter.info('Running orbit gen-types')
   const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
+
+  if (!(await pathExists(apiEntry))) {
+    return
+  }
 
   const program = ts.createProgram([apiEntry], compilerOptions)
   checker = program.getTypeChecker()
@@ -21,6 +28,11 @@ export async function commandGenTypes(options: {
   const exprts = checker.getExportsOfModule(moduleSymbol)
 
   const defaultExportSymbol = exprts.find(x => x.escapedName === 'default')
+
+  if (!defaultExportSymbol) {
+    reporter.info('No default export symbol, no api found')
+    return
+  }
 
   const defaultExportType = checker.getTypeOfSymbolAtLocation(
     defaultExportSymbol,

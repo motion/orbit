@@ -18,6 +18,7 @@ export {
   SearchQuery,
   User,
   AppDefinition,
+  AppViewProps,
 } from '@o/models'
 export { Actions } from './Actions'
 export * from '@o/use-store'

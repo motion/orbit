@@ -1,7 +1,7 @@
 {
   "files": [],
   "compilerOptions": {
-    // "incremental": true
+    "incremental": true
   },
   "references": [
     // apps (main entries)

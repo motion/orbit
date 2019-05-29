@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
-    // "incremental": true,
+    "incremental": true,
     "declaration": true,
     "declarationMap": true,
     "module": "CommonJS",

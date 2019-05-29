@@ -1,13 +1,15 @@
 plugins: /verdaccio/plugins
 storage: /verdaccio/storage
 
+max_body_size: 100mb
+
 auth:
   htpasswd:
     file: /verdaccio/conf/htpasswd
 
 uplinks:
-  npmjs:
-    url: https://registry.npmjs.org/
+  # npmjs:
+  #   url: https://registry.npmjs.org/
 
 middlewares:
   audit:
@@ -25,4 +27,4 @@ packages:
     proxy: npmjs
 
 logs:
-  - {type: stdout, format: pretty, level: trace}
+  - { type: stdout, format: pretty, level: trace }

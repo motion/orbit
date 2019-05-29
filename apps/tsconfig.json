@@ -1,8 +1,8 @@
 {
   "files": [],
   "compilerOptions": {
-    "composite": true
-    // "incremental": true
+    "composite": true,
+    "incremental": true
   },
   "references": [
     { "path": "./confluence-app" },

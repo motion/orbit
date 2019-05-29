@@ -1,4 +1,5 @@
-export * from './buildApp'
+export * from './webpackPromise'
 export * from './AppMiddleware'
 export * from './BuildServer'
 export * from './getAppConfig'
+export * from './makeWebpackConfig'

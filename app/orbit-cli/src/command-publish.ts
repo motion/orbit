@@ -1,5 +1,6 @@
 import 'isomorphic-fetch'
 
+import { AppDefinition } from '@o/models'
 import commandExists from 'command-exists'
 import exec from 'execa'
 import { readJSON } from 'fs-extra'
@@ -44,18 +45,18 @@ export async function commandPublish(options: CommandPublishOptions) {
     let shouldPublish = true
 
     // run before publish so if there's any error we can validate before publishing
-    let appInfo
+    let app: AppDefinition
     try {
-      appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
-      console.log('appInfo', appInfo)
+      app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+      console.log('appInfo', app)
     } catch (err) {
       reporter.error(`appInfo.js didn't build, there was some error building your app`)
       return
     }
 
-    invariant(typeof appInfo.id === 'string', `Must set appInfo.id, got: ${appInfo.id}`)
-    invariant(typeof appInfo.icon === 'string', `Must set appInfo.icon, got: ${appInfo.icon}`)
-    invariant(typeof appInfo.name === 'string', `Must set appInfo.name, got: ${appInfo.name}`)
+    invariant(typeof app.id === 'string', `Must set appInfo.id, got: ${app.id}`)
+    invariant(typeof app.icon === 'string', `Must set appInfo.icon, got: ${app.icon}`)
+    invariant(typeof app.name === 'string', `Must set appInfo.name, got: ${app.name}`)
 
     if (registryInfo.versions && registryInfo.versions[verion]) {
       shouldPublish = false
@@ -106,9 +107,12 @@ export async function commandPublish(options: CommandPublishOptions) {
       },
       body: JSON.stringify({
         packageId,
-        identifier: appInfo.id,
-        name: appInfo.name,
-        icon: appInfo.icon,
+        identifier: app.id,
+        name: app.name,
+        icon: app.icon,
+        features: Object.keys(app).filter(
+          x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
+        ),
       }),
     }).then(x => x.json())
 

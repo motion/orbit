@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppMainView, AppViewProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
@@ -53,6 +53,14 @@ export function AppsIndex() {
   const dataApps = useActiveDataAppsWithDefinition()
   const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
 
+  useEffect(() => {
+    fetch(`https://tryorbit.com/api/apps`)
+      .then(res => res.json())
+      .then(apps => {
+        console.log('top apps', apps)
+      })
+  }, [])
+
   const handleQuery = useCallback(next => {
     let cancel = false
     const query = next.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
@@ -67,7 +75,9 @@ export function AppsIndex() {
               title: item.name,
               subTitle: item.description.slice(0, 300),
               icon: item.icon,
-              // after: item.features.some(x => x === 'data') ? sourceIcon : null,
+              after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api')
+                ? sourceIcon
+                : null,
             })),
           )
         }

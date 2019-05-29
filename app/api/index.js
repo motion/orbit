@@ -30,6 +30,56 @@ function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[
 }
 
 // because for some reason firebase functions dont accept .query
+app.get('/apps', async (req, res) => {
+  const db = admin.firestore()
+  try {
+    const results = fireStoreArr(
+      await db
+        .collection('apps')
+        .orderBy('installs', 'desc')
+        .limit(40)
+        .get(),
+    )
+    res.send(results)
+  } catch (err) {
+    console.error(err.message, err.stack)
+    res.status(500)
+    res.send({
+      error: err.message,
+    })
+  }
+})
+
+// because for some reason firebase functions dont accept .query
+app.get('/search/:search?', async (req, res) => {
+  const query = `${req.path || ''}`
+    .replace('/search/', '')
+    .split('-')
+    .join(' ')
+
+  console.log('query', query)
+  const db = admin.firestore()
+
+  try {
+    // TODO: make it do multiple where() so it narrows, fall back to "or where"
+    const results = fireStoreArr(
+      await db
+        .collection('apps')
+        .where('search', 'array-contains', query)
+        .limit(20)
+        .get(),
+    )
+    res.send(results)
+  } catch (err) {
+    console.error(err.message, err.stack)
+    res.status(500)
+    res.send({
+      error: err.message,
+    })
+  }
+})
+
+// because for some reason firebase functions dont accept .query
 app.get('/search/:search?', async (req, res) => {
   const query = `${req.path || ''}`
     .replace('/search/', '')
@@ -63,6 +113,7 @@ app.post('/searchUpdate', async (req, res) => {
   const identifier = req.body.identifier || ''
   const name = req.body.name || ''
   const icon = req.body.icon || ''
+  const features = req.body.features || []
 
   if (!packageId || !identifier || !name || !icon) {
     res.send({
@@ -99,6 +150,7 @@ app.post('/searchUpdate', async (req, res) => {
       identifier,
       name,
       icon,
+      features,
       search: stopword.removeStopwords(description.split(' ')).map(x => x.toLowerCase()),
     }
 

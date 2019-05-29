@@ -23,6 +23,7 @@ export type WebpackParams = {
   dllReference?: string
   devServer?: boolean
   hot?: boolean
+  minify?: boolean
 }
 
 export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
@@ -37,6 +38,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     externals,
     ignore = [],
     watch = false,
+    minify = true,
     dll,
     dllReference,
     devServer,
@@ -58,9 +60,11 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
 
   const optimization = {
     production: {
+      minimize: minify,
       usedExports: true,
       providedExports: true,
       sideEffects: true,
+      concatenateModules: true,
       splitChunks: {
         chunks: 'async',
         name: false,
@@ -70,6 +74,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       }),
     },
     development: {
+      minimize: minify,
       noEmitOnErrors: true,
       removeAvailableModules: false,
       namedModules: true,
@@ -226,7 +231,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
           externals: ['apps.js'],
         }),
 
-      mode === 'production' &&
+      ((mode === 'production' && minify !== false) || minify === true) &&
         new TerserPlugin({
           sourceMap: true,
           parallel: true,

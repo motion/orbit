@@ -1,4 +1,4 @@
-import { getAppConfig, webpackPromise } from '@o/build-server'
+import { getAppConfig, makeWebpackConfig, webpackPromise } from '@o/build-server'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
@@ -58,11 +58,12 @@ function getOrbitVersion() {
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
   reporter.info(`Running orbit build`)
+  const entryConf = await getEntryAppConfig(entry, pkg, options)
   const nodeConf = await getNodeAppConfig(entry, pkg, options)
   const webConf = getWebAppConfig(entry, pkg, options)
-  const configs: webpack.Configuration[] = [nodeConf, webConf].filter(Boolean)
+  const configs: webpack.Configuration[] = [entryConf, nodeConf, webConf].filter(Boolean)
 
-  reporter.info(`Found ${configs.length} entry points, running bundle`)
+  reporter.info(`Building ${configs.length} bundles, running...`)
 
   await webpackPromise(configs, {
     loud: true,
@@ -72,7 +73,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   reporter.info(`Writing out app build information`)
 
-  const app = require(join(options.projectRoot, 'dist', 'index.node.js')).default
+  const app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
 
   await setBuildInfo(options.projectRoot, {
     identifier: app.id,
@@ -119,6 +120,39 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
     outputFile: 'index.node.js',
     watch: options.watch,
   })
+}
+
+// used just to get the information like id/name from the entry file
+async function getEntryAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+  return await makeWebpackConfig(
+    {
+      name: pkg.name,
+      context: options.projectRoot,
+      entry: [entry],
+      target: 'node',
+      mode: 'production',
+      minify: false,
+      outputFile: 'appInfo.js',
+      watch: options.watch,
+      output: {
+        library: '[name]',
+        libraryTarget: 'umd',
+      },
+    },
+    {
+      externals: {
+        '@o/kit': '@o/kit/export-app',
+      },
+      module: {
+        rules: [
+          {
+            test: x => x !== entry,
+            use: 'ignore-loader',
+          },
+        ],
+      },
+    },
+  )
 }
 
 async function isBuildUpToDate(options: CommandBuildOptions) {

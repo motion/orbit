@@ -60,13 +60,13 @@ app.get('/search/:search?', async (req, res) => {
 
 app.post('/searchUpdate', async (req, res) => {
   const packageId = req.body.packageId
-  const identifier = req.body.identifier
-  const name = req.body.name
-  const icon = req.body.icon
+  const identifier = req.body.identifier || ''
+  const name = req.body.name || ''
+  const icon = req.body.icon || ''
 
-  if (!packageId || !identifier || !name) {
+  if (!packageId || !identifier || !name || !icon) {
     res.send({
-      error: 'One of packageId, name, identifier: not set',
+      error: 'One of packageId, name, identifier, icon: not set',
     })
     return
   }

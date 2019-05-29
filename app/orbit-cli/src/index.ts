@@ -21,15 +21,48 @@ Yargs.scriptName('orbit')
     'dev [app]',
     'Run an Orbit app in development mode',
     p =>
-      p.positional('app', {
-        type: 'string',
-        default: '.',
-        describe: 'The application to run',
-      }),
+      p
+        .positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
+        }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
       require('./command-dev').commandDev({ projectRoot })
+    },
+  )
+  .command(
+    'install [id] [ws]',
+    'Install app into workspace',
+    p =>
+      p
+        .positional('id', {
+          type: 'string',
+          default: '.',
+          describe: 'The application identifier to install',
+        })
+        .positional('ws', {
+          type: 'string',
+          default: '.',
+          describe: 'The workspace name to install to',
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
+        }),
+    async argv => {
+      reporter.setVerbose(!!argv.verbose)
+      require('./command-install').commandInstall({
+        workspace: argv.ws,
+        identifier: argv.id,
+        verbose: !!argv.verbose,
+      })
     },
   )
   .command(

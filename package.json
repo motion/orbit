@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "overmind-devtools": "18.1.0",
-    "typescript": "3.5.0-dev.20190518",
+    "typescript": "3.5.1",
     "@babel/runtime": "^7.4.4",
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",

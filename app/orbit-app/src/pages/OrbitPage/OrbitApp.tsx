@@ -2,10 +2,10 @@ import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, useGet, useThrottleFn, useVisibility, Visibility } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, useGet, useThrottleFn, useVisibility, View, Visibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -30,30 +30,49 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
     id,
     identifier,
   })
+  // this is used for initial show/animation
   const [shown, setShown] = useState(false)
+  // this is used to set display flex/none based on visibility to avoid too much on screen
+  const [appVisibility, setAppVisibility] = useState(isActive)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // set shown
     if (isActive && !hasShownOnce) {
       setShown(true)
     }
     if (isActive) {
       orbitStore.setActiveAppStore(appStore)
     }
+
+    // set appVisibility
+    let tm
+    if (isActive) {
+      setAppVisibility(true)
+    } else {
+      tm = setTimeout(() => {
+        setAppVisibility(false)
+      }, 1000)
+    }
+    return () => {
+      clearTimeout(tm)
+    }
   }, [orbitStore, appStore, isActive, hasShownOnce])
 
   return (
-    <ScopedState id={`appstate-${identifier}-${id}-`}>
-      <ProvideStores stores={{ appStore }}>
-        <Visibility visible={isActive}>
-          <OrbitAppRender
-            id={id}
-            identifier={identifier}
-            hasShownOnce={hasShownOnce || shown}
-            appDef={appDef}
-          />
-        </Visibility>
-      </ProvideStores>
-    </ScopedState>
+    <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
+      <ScopedState id={`appstate-${identifier}-${id}-`}>
+        <ProvideStores stores={{ appStore }}>
+          <Visibility visible={isActive}>
+            <OrbitAppRender
+              id={id}
+              identifier={identifier}
+              hasShownOnce={hasShownOnce || shown}
+              appDef={appDef}
+            />
+          </Visibility>
+        </ProvideStores>
+      </ScopedState>
+    </View>
   )
 }
 

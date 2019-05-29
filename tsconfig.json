@@ -1,7 +1,7 @@
 {
   "files": [],
   "compilerOptions": {
-    // "incremental": true
+    "incremental": true
   },
   "references": [
     // apps (main entries)
@@ -10,7 +10,6 @@
     { "path": "./app/orbit-repl" },
     { "path": "./app/orbit-dotapp" },
     { "path": "./app/orbit-cli" },
-    { "path": "./app/api-search" },
 
     // apps
     { "path": "./apps" },

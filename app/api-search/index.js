@@ -1,22 +1,19 @@
-import 'isomorphic-fetch'
+require('isomorphic-fetch')
 
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import express from 'express'
-import admin from 'firebase-admin'
-import * as functions from 'firebase-functions'
-import stopword from 'stopword'
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const express = require('express')
+const admin = require('firebase-admin')
+const functions = require('firebase-functions')
+const stopword = require('stopword')
 
 // @ts-ignore
-const serviceAccount = require('../app_data/serviceAccount.json')
+const serviceAccount = require('./app_data/serviceAccount.json')
 
-admin.initializeApp(
-  {
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://orbit-3b7f1.firebaseio.com',
-  },
-  'search',
-)
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://orbit-3b7f1.firebaseio.com',
+})
 
 const app = express()
 
@@ -83,11 +80,11 @@ app.post('/index', async (req, res) => {
 
     // success, scan new package
 
-    res.send(200)
+    res.sendStatus(200)
   } catch (err) {
     console.error(err.message, err.stack)
-    res.send(500)
+    res.sendStatus(500)
   }
 })
 
-export const search = functions.https.onRequest(app)
+exports.search = functions.https.onRequest(app)

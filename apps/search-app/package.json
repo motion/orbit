@@ -1,6 +1,6 @@
 {
   "name": "@o/search-app",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "scripts": {

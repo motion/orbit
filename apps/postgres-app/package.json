@@ -1,7 +1,7 @@
 {
   "name": "@o/postgres-app",
   "description": "Plug in Postgres SQL database and query it",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "scripts": {

@@ -37,7 +37,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    groupName: 'Setup Data Source',
+    groupName: 'Setup',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',
@@ -114,7 +114,7 @@ export function AppsIndex() {
           .map(x => ({ ...x, groupName: 'App Settings', subType: 'settings' })),
         ...dataApps.map(getAppListItem).map(x => ({
           ...x,
-          groupName: 'Source Settings',
+          groupName: 'App Settings',
           subType: 'settings',
           after: sourceIcon,
         })),

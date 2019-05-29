@@ -33,14 +33,15 @@ function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[
 app.get('/apps', async (req, res) => {
   const db = admin.firestore()
   try {
-    const results = fireStoreArr(
-      await db
-        .collection('apps')
-        .orderBy('installs', 'desc')
-        .limit(40)
-        .get(),
+    res.send(
+      fireStoreArr(
+        await db
+          .collection('apps')
+          .orderBy('installs', 'desc')
+          .limit(40)
+          .get(),
+      ),
     )
-    res.send(results)
   } catch (err) {
     console.error(err.message, err.stack)
     res.status(500)
@@ -156,10 +157,14 @@ app.post('/searchUpdate', async (req, res) => {
 
     // TODO only update if doesnt exist for this version
     const existing = await docRef.get()
+
     if (!existing) {
-      docRef.create(doc)
+      docRef.create({
+        ...doc,
+        installs: 0,
+      })
     } else {
-      docRef.set(doc)
+      docRef.update(doc)
     }
 
     // success, scan new package

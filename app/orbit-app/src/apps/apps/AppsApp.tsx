@@ -1,17 +1,4 @@
-import {
-  App,
-  AppDefinition,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  Icon,
-  isDataDefinition,
-  removeApp,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useAppDefinitions,
-  useAppWithDefinition,
-} from '@o/kit'
+import { App, AppDefinition, AppMainView, AppViewProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React from 'react'
 

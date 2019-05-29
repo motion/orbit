@@ -1,4 +1,5 @@
 import { react } from '@o/use-store'
+
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryFilterStore, SourceDesc } from './QueryFilterStore'
 
@@ -56,8 +57,8 @@ export class QueryStore {
     this.queryInstant = value
   }
 
-  onChangeQuery = e => {
-    this.queryInstant = e.target.value
+  onChangeQuery = (next: string) => {
+    this.queryInstant = next
   }
 
   toggleLocationFilter(location: string) {

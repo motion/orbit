@@ -5,7 +5,7 @@ import React from 'react'
 export default createApp({
   id: 'demo-app-flow',
   name: 'App Demo: Flow',
-  icon: '',
+  icon: 'flow',
   app: DemoAppFlow,
 })
 

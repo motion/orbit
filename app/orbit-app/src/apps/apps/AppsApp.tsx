@@ -61,14 +61,13 @@ export function AppsIndex() {
     fetch(`https://tryorbit.com/api/search/${query}`)
       .then(res => res.json())
       .then((res: ApiSearchItem[]) => {
-        console.log('got search results')
         if (!cancel) {
           setSearchResults(
-            res.map(item => ({
+            res.slice(0, 200).map(item => ({
               title: item.name,
-              subTitle: '',
-              icon: '',
-              after: item.features.some(x => x === 'data') ? sourceIcon : null,
+              subTitle: item.description.slice(0, 300),
+              icon: item.icon,
+              // after: item.features.some(x => x === 'data') ? sourceIcon : null,
             })),
           )
         }

@@ -26,13 +26,13 @@ export async function commandPublish(options: CommandPublishOptions) {
     if (registryInfo.versions[verion]) {
       reporter.info('Already published this version')
     } else {
-      await publishApp(options)
+      await publishApp()
     }
 
     const buildInfo = await readJSON(join(options.projectRoot, 'dist', 'buildInfo.json'))
 
     // trigger search api index update
-    const result = await fetch(`${apiUrl}/index`, {
+    await fetch(`${apiUrl}/index`, {
       method: 'post',
       headers: {
         Accept: 'application/json',
@@ -44,18 +44,14 @@ export async function commandPublish(options: CommandPublishOptions) {
       }),
     }).then(x => x.json())
 
-    console.log('result', result)
-
     reporter.info(`Published app`)
   } catch (err) {
     reporter.error(err.message, err)
   }
 }
 
-async function publishApp(options: CommandPublishOptions) {
-  console.log('publish to verdaccio', options)
-  const res = await npmCommand(`publish --registry ${registryUrl}`)
-  console.log('res', res)
+async function publishApp() {
+  return await npmCommand(`publish --registry ${registryUrl}`)
 }
 
 async function npmCommand(args: string) {

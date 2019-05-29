@@ -12,7 +12,7 @@ import { reporter } from './reporter'
 
 type CommandPublishOptions = {
   projectRoot: string
-  rebuild?: boolean
+  force?: boolean
 }
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -34,7 +34,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     // wont build it already built
     await commandBuild({
       projectRoot: options.projectRoot,
-      force: options.rebuild,
+      force: options.force,
     })
 
     // publish to registry

@@ -7,7 +7,12 @@ import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 
-type CommandBuildOptions = { projectRoot: string; watch?: boolean; force?: boolean }
+type CommandBuildOptions = {
+  projectRoot: string
+  watch?: boolean
+  force?: boolean
+  verbose?: boolean
+}
 
 export async function commandBuild(options: CommandBuildOptions) {
   if ((await isBuildUpToDate(options)) && !options.force) {
@@ -66,7 +71,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   reporter.info(`Building ${configs.length} bundles, running...`)
 
   await webpackPromise(configs, {
-    loud: true,
+    loud: options.verbose,
   })
 
   const buildId = Date.now()

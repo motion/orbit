@@ -4,3 +4,8 @@
 exports.createApp = function(x) {
   return x
 }
+exports.createApi = function(x) {
+  return x
+}
+
+// TODO tenative can we put a proxy around exports in case they use other things in entry?

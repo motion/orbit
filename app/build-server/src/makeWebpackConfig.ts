@@ -36,7 +36,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     outputDir = Path.join(context, 'dist'),
     externals,
     ignore = [],
-    watch = mode === 'development' ? true : false,
+    watch = false,
     dll,
     dllReference,
     devServer,

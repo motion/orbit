@@ -26,7 +26,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
     let shouldPublish = true
 
-    if (registryInfo.versions[verion]) {
+    if (registryInfo.versions && registryInfo.versions[verion]) {
       shouldPublish = false
       reporter.info('Already published this version')
       const { value: shouldUpdateVersion } = await prompts({
@@ -67,6 +67,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     const buildInfo = await readJSON(join(options.projectRoot, 'dist', 'buildInfo.json'))
 
     // trigger search api index update
+    reporter.info(`Indexing new app information for search`)
     await fetch(`${apiUrl}/index`, {
       method: 'post',
       headers: {

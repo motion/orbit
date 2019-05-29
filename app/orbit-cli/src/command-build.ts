@@ -1,7 +1,7 @@
-import { getAppConfig } from '@o/build-server'
+import { getAppConfig, webpackPromise } from '@o/build-server'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
-import webpack = require('webpack')
+import webpack from 'webpack'
 
 import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
@@ -57,13 +57,16 @@ function getOrbitVersion() {
 }
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
+  reporter.info(`Running orbit build`)
   const nodeConf = await getNodeAppConfig(entry, pkg, options)
   const webConf = getWebAppConfig(entry, pkg, options)
-  const configs = [nodeConf, webConf].filter(Boolean)
+  const configs: webpack.Configuration[] = [nodeConf, webConf].filter(Boolean)
 
-  reporter.info(`Found ${configs.length} entry points`)
+  reporter.info(`Found ${configs.length} entry points, running bundle`)
 
-  await webpack(configs)
+  await webpackPromise(configs, {
+    loud: true,
+  })
 
   const buildId = Date.now()
 

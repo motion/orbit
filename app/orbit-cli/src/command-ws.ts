@@ -13,6 +13,7 @@ type CommandWSOptions = {
 }
 
 export async function commandWs(options: CommandWSOptions) {
+  reporter.info('Running orbit ws')
   const appIdentifiers = await watchBuildWorkspace(options)
 
   let orbitDesktop = await getOrbitDesktop()
@@ -69,7 +70,7 @@ async function watchBuildWorkspace(options: CommandWSOptions) {
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
     console.log('building apps DLL once...')
-    await webpackPromise(getAppConfig(appsConf))
+    await webpackPromise([getAppConfig(appsConf)])
   }
 
   // create app config now with `hot`

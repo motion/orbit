@@ -32,7 +32,7 @@ function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[
 // because for some reason firebase functions dont accept .query
 app.get('/search/:search?', async (req, res) => {
   const query = `${req.path || ''}`
-    .replace('/search', '')
+    .replace('/search/', '')
     .split('-')
     .join(' ')
 

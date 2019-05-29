@@ -161,6 +161,8 @@ app.post('/searchUpdate', async (req, res) => {
     // TODO only update if doesnt exist for this version
     const existing = await docRef.get()
 
+    console.log('existing', existing)
+
     if (!existing) {
       docRef.create({
         ...doc,

@@ -87,7 +87,7 @@ export async function commandPublish(options: CommandPublishOptions) {
           await npmCommand(
             runner === 'npm'
               ? `version ${bumpType}`
-              : `version --new-version --no-git-tag-version ${bumpType}`,
+              : `version --new-version ${bumpType} --no-git-tag-version`,
           )
           shouldPublish = true
         }

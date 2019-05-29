@@ -85,7 +85,9 @@ export async function commandPublish(options: CommandPublishOptions) {
           reporter.info(`Bumping version ${bumpType}`)
           const runner = await yarnOrNpm()
           await npmCommand(
-            runner === 'npm' ? `version ${bumpType}` : `version --new-version ${bumpType}`,
+            runner === 'npm'
+              ? `version ${bumpType}`
+              : `version --new-version --no-git-tag-version ${bumpType}`,
           )
           shouldPublish = true
         }

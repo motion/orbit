@@ -27,7 +27,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         background="transparent"
         width={appStore.showSidebar ? appStore.sidebarWidth : 0}
         onResize={appStore.setSidebarWidth}
-        minWidth={appStore.showSidebar ? 100 : 0}
+        minWidth={appStore.showSidebar ? 200 : 0}
         maxWidth={500}
         noBorder
       >

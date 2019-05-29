@@ -30,6 +30,20 @@ export async function commandPublish(options: CommandPublishOptions) {
     const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
     let shouldPublish = true
 
+    // run before publish so if there's any error we can validate before publishing
+    let appInfo
+    try {
+      appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js'))
+    } catch (err) {
+      reporter.error(`appInfo.js didn't build, there was some error building your app`)
+      return
+    }
+
+    if (!appInfo.id || !appInfo.name || !appInfo.icon) {
+      reporter.error(`Must set id, name, and icon in export default createApp({ ... })`)
+      return
+    }
+
     if (registryInfo.versions && registryInfo.versions[verion]) {
       shouldPublish = false
       reporter.info('Already published this version')
@@ -65,10 +79,9 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     if (shouldPublish) {
+      reporter.info(`Publishing app to registry`)
       await publishApp()
     }
-
-    const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js'))
 
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
@@ -86,7 +99,7 @@ export async function commandPublish(options: CommandPublishOptions) {
       }),
     }).then(x => x.json())
 
-    reporter.info(`Published app`)
+    reporter.success(`Published app`)
   } catch (err) {
     reporter.error(err.message, err)
   }

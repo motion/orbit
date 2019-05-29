@@ -39,7 +39,7 @@ export async function commandBuild(options: CommandBuildOptions) {
       }),
     ])
 
-    // build web
+    reporter.success('Built app')
   } catch (err) {
     reporter.error(err.message, err)
   }

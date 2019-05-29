@@ -64,16 +64,22 @@ Yargs.scriptName('orbit')
     'publish [app]',
     'Publish new version of app to registry',
     p =>
-      p.positional('app', {
-        type: 'string',
-        default: '.',
-        describe: 'The application to run',
-      }),
+      p
+        .positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        })
+        .option('force', {
+          type: 'boolean',
+          default: false,
+        }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
       await require('./command-publish').commandPublish({
         projectRoot,
+        force: !!argv.force,
       })
     },
   )

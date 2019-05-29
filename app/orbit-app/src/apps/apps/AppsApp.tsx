@@ -37,7 +37,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    groupName: 'Setup',
+    groupName: 'Setup (Local)',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',
@@ -48,16 +48,33 @@ export const appDefToItem = (def: AppDefinition): ListItemProps => {
   }
 }
 
+const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
+  title: item.name,
+  subTitle: item.description.slice(0, 300),
+  icon: item.icon,
+  groupName: 'Search (App Store)',
+  after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
+  subType: 'add-app',
+  subId: item.identifier,
+})
+
 export function AppsIndex() {
   const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
+  const [topApps, setTopApps] = useState<ListItemProps[]>([])
   const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
 
   useEffect(() => {
     fetch(`https://tryorbit.com/api/apps`)
       .then(res => res.json())
-      .then(apps => {
+      .then((apps: ApiSearchItem[]) => {
         console.log('top apps', apps)
+        setTopApps(
+          apps.map(x => ({
+            ...appSearchToListItem(x),
+            groupName: 'Trending (App Store)',
+          })),
+        )
       })
   }, [])
 
@@ -70,16 +87,7 @@ export function AppsIndex() {
       .then(res => res.json())
       .then((res: ApiSearchItem[]) => {
         if (!cancel) {
-          setSearchResults(
-            res.slice(0, 200).map(item => ({
-              title: item.name,
-              subTitle: item.description.slice(0, 300),
-              icon: item.icon,
-              after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api')
-                ? sourceIcon
-                : null,
-            })),
-          )
+          setSearchResults(res.slice(0, 200).map(appSearchToListItem))
         }
       })
 
@@ -104,21 +112,22 @@ export function AppsIndex() {
           subType: 'manage-apps',
         },
         {
-          subType: 'explorer-graph',
           title: 'Graph',
           icon: 'Graph',
           subTitle: 'Explore all GraphQL app APIs',
+          subType: 'explorer-graph',
         },
         ...clientApps
           .map(getAppListItem)
-          .map(x => ({ ...x, groupName: 'App Settings', subType: 'settings' })),
+          .map(x => ({ ...x, groupName: 'Settings', subType: 'settings' })),
         ...dataApps.map(getAppListItem).map(x => ({
           ...x,
-          groupName: 'App Settings',
+          groupName: 'Settings',
           subType: 'settings',
           after: sourceIcon,
         })),
         ...useDataAppDefinitions().map(appDefToItem),
+        ...topApps,
         ...searchResults,
       ]}
     />

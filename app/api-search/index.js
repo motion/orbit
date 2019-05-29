@@ -21,12 +21,30 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json({ limit: '2048mb' }))
 app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-app.get('/', async (req, res) => {
-  const query = req.params.query
+function fireStoreArr(results: FirebaseFirestore.QuerySnapshot): any[] {
+  let all = []
+  results.forEach(x => {
+    all.push(x.data())
+  })
+  return all
+}
+
+// because for some reason firebase functions dont accept .query
+app.get('/:search?', async (req, res) => {
+  const query = `${req.path || ''}`
+    .slice(1)
+    .split('-')
+    .join(' ')
   const db = admin.firestore()
 
   try {
-    const results = await db.collection('apps').where('search', 'array-contains', query)
+    const results = fireStoreArr(
+      await db
+        .collection('apps')
+        .where('search', 'array-contains', query)
+        .limit(20)
+        .get(),
+    )
     res.send(results)
   } catch (err) {
     console.error(err.message, err.stack)
@@ -59,18 +77,16 @@ app.post('/index', async (req, res) => {
       return
     }
 
-    console.log('registryInfo', registryInfo)
     const versions = Object.keys(registryInfo.versions)
     const lastVersion = registryInfo.versions[versions[versions.length - 1]]
     const { description = '' } = lastVersion
-    console.log('lastVersion', lastVersion)
     const db = admin.firestore()
     const docRef = db.collection('apps').doc(identifier)
     const doc = {
       packageId,
       description,
       identifier,
-      search: stopword.removeStopwords(description.split(' ')),
+      search: stopword.removeStopwords(description.split(' ')).map(x => x.toLowerCase()),
     }
 
     // TODO only update if doesnt exist for this version

@@ -7,7 +7,16 @@ import admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import stopword from 'stopword'
 
-admin.initializeApp(functions.config().firebase, 'search')
+// @ts-ignore
+const serviceAccount = require('../app_data/serviceAccount.json')
+
+admin.initializeApp(
+  {
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://orbit-3b7f1.firebaseio.com',
+  },
+  'search',
+)
 
 const app = express()
 

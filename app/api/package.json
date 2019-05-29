@@ -1,5 +1,5 @@
 {
-  "name": "@o/orbit-api-search",
+  "name": "@o/orbit-api",
   "version": "2.5.6",
   "main": "index.js",
   "private": true,

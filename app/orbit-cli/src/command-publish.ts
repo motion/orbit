@@ -72,7 +72,7 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
-    await fetch(`${apiUrl}/update`, {
+    await fetch(`${apiUrl}/searchUpdate`, {
       method: 'post',
       headers: {
         Accept: 'application/json',

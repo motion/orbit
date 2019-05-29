@@ -30,11 +30,13 @@ function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[
 }
 
 // because for some reason firebase functions dont accept .query
-app.get('/:search?', async (req, res) => {
+app.get('/search/:search?', async (req, res) => {
   const query = `${req.path || ''}`
     .slice(1)
     .split('-')
     .join(' ')
+
+  console.log('query', query)
   const db = admin.firestore()
 
   try {
@@ -55,7 +57,7 @@ app.get('/:search?', async (req, res) => {
   }
 })
 
-app.post('/update', async (req, res) => {
+app.post('/searchUpdate', async (req, res) => {
   const packageId = req.body.packageId
   const identifier = req.body.identifier
   if (!packageId || !identifier) {
@@ -108,4 +110,8 @@ app.post('/update', async (req, res) => {
   }
 })
 
-exports.search = functions.https.onRequest(app)
+// Create "main" function to host all other top-level functions
+const main = express()
+main.use('/api', app)
+
+exports.main = functions.https.onRequest(main)

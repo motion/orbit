@@ -4,6 +4,7 @@ import commandExists from 'command-exists'
 import exec from 'execa'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
+import prompts from 'prompts'
 
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
@@ -23,9 +24,43 @@ export async function commandPublish(options: CommandPublishOptions) {
     const packageId = pkg.name
     const verion = pkg.version
     const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
+    let shouldPublish = true
+
     if (registryInfo.versions[verion]) {
+      shouldPublish = false
       reporter.info('Already published this version')
-    } else {
+      const { value: shouldUpdateVersion } = await prompts({
+        type: 'confirm',
+        name: 'value',
+        message: 'This version already published, would you like to update to a new version?',
+        initial: true,
+      })
+
+      if (shouldUpdateVersion) {
+        const { value: bumpType } = await prompts({
+          type: 'select',
+          name: 'value',
+          message: 'Which version type would you like to bump to?',
+          choices: [
+            { title: 'Patch', value: 'patch' },
+            { title: 'Minor', value: 'minor' },
+            { title: 'Major', value: 'major' },
+          ],
+          initial: 0,
+        })
+
+        if (bumpType) {
+          reporter.info(`Bumping version ${bumpType}`)
+          const runner = await yarnOrNpm()
+          await npmCommand(
+            runner === 'npm' ? `version ${bumpType}` : `version --new-version ${bumpType}`,
+          )
+          shouldPublish = true
+        }
+      }
+    }
+
+    if (shouldPublish) {
       await publishApp()
     }
 

@@ -59,8 +59,11 @@ app.post('/index', async (req, res) => {
       return
     }
 
-    const { name, description = '' } = registryInfo
-    console.log('registryInfo', registryInfo, name, description)
+    console.log('registryInfo', registryInfo)
+    const versions = Object.keys(registryInfo.versions)
+    const lastVersion = registryInfo.versions[versions[versions.length - 1]]
+    const { description = '' } = lastVersion
+    console.log('lastVersion', lastVersion)
     const db = admin.firestore()
     const docRef = db.collection('apps').doc(identifier)
     const doc = {

@@ -21,7 +21,7 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json({ limit: '2048mb' }))
 app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-function fireStoreArr(results: FirebaseFirestore.QuerySnapshot): any[] {
+function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[] */ {
   let all = []
   results.forEach(x => {
     all.push(x.data())

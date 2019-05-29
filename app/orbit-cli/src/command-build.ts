@@ -10,7 +10,7 @@ import { configStore } from './util/configStore'
 type CommandBuildOptions = { projectRoot: string; watch?: boolean; force?: boolean }
 
 export async function commandBuild(options: CommandBuildOptions) {
-  if (await isBuildUpToDate(options)) {
+  if ((await isBuildUpToDate(options)) && !options.force) {
     reporter.info(`App build is up to date, run with --force to force re-run`)
     return
   }
@@ -46,19 +46,38 @@ export async function commandBuild(options: CommandBuildOptions) {
 }
 
 type BuildInfo = {
+  appVersion: string
+  orbitVersion: string
   buildId: number
+  identifier: string
+}
+
+function getOrbitVersion() {
+  return require('../package.json').version
 }
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
   const nodeConf = await getNodeAppConfig(entry, pkg, options)
   const webConf = getWebAppConfig(entry, pkg, options)
+  const configs = [nodeConf, webConf].filter(Boolean)
 
-  await webpack([nodeConf, webConf].filter(Boolean))
+  reporter.info(`Found ${configs.length} entry points`)
+
+  await webpack(configs)
 
   const buildId = Date.now()
+
+  reporter.info(`Writing out app build information`)
+
+  const app = require(join(options.projectRoot, 'dist', 'index.node.js')).default
+
   await setBuildInfo(options.projectRoot, {
+    identifier: app.id,
     buildId,
+    appVersion: pkg.version,
+    orbitVersion: getOrbitVersion(),
   })
+
   const appBuildInfo = configStore.appBuildInfo.get() || {}
   configStore.appBuildInfo.set({
     ...appBuildInfo,
@@ -81,8 +100,9 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
 
 async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   // for now just check harcoded file
-  if (!(await pathExists(join(options.projectRoot, 'src', 'index.node.ts')))) {
-    console.log('No node api found')
+  const nodeEntry = join(options.projectRoot, 'src', 'api.node.ts')
+  if (!(await pathExists(nodeEntry))) {
+    console.log(`No node api found at: ${nodeEntry}`)
     return
   }
   // TODO

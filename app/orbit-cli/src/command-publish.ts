@@ -1,21 +1,60 @@
+import 'isomorphic-fetch'
+
 import commandExists from 'command-exists'
 import exec from 'execa'
+import { readJSON } from 'fs-extra'
+import { join } from 'path'
 
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
 
 type CommandPublishOptions = { projectRoot: string }
 
+const registryUrl = `https://registry.tryorbit.com`
+const apiUrl = `http://localhost:5000/orbit-3b7f1/us-central1/search`
+
 export async function commandPublish(options: CommandPublishOptions) {
-  // wont build it already built
-  await commandBuild(options)
-  await publishApp(options)
-  reporter.info(`Published app`)
+  try {
+    // wont build it already built
+    await commandBuild(options)
+
+    // publish to registry
+    const pkg = await readJSON(join(options.projectRoot, 'package.json'))
+    const packageId = pkg.name
+    const verion = pkg.version
+    const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
+    if (registryInfo.versions[verion]) {
+      reporter.info('Already published this version')
+    } else {
+      await publishApp(options)
+    }
+
+    const buildInfo = await readJSON(join(options.projectRoot, 'dist', 'buildInfo.json'))
+
+    // trigger search api index update
+    const result = await fetch(`${apiUrl}/index`, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        packageId,
+        identifier: buildInfo.identifier,
+      }),
+    }).then(x => x.json())
+
+    console.log('result', result)
+
+    reporter.info(`Published app`)
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
 }
 
 async function publishApp(options: CommandPublishOptions) {
   console.log('publish to verdaccio', options)
-  const res = await npmCommand(`publish --registry https://registry.tryorbit.com`)
+  const res = await npmCommand(`publish --registry ${registryUrl}`)
   console.log('res', res)
 }
 

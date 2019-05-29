@@ -80,7 +80,9 @@ app.post('/index', async (req, res) => {
 
     // success, scan new package
 
-    res.sendStatus(200)
+    res.send({
+      ok: true,
+    })
   } catch (err) {
     console.error(err.message, err.stack)
     res.sendStatus(500)

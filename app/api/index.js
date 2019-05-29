@@ -61,12 +61,18 @@ app.get('/search/:search?', async (req, res) => {
 app.post('/searchUpdate', async (req, res) => {
   const packageId = req.body.packageId
   const identifier = req.body.identifier
-  if (!packageId || !identifier) {
+  const name = req.body.name
+  const icon = req.body.icon
+
+  if (!packageId || !identifier || !name) {
     res.send({
-      error: 'No packageId or identifier sent in body',
+      error: 'One of packageId, name, identifier: not set',
     })
     return
   }
+
+  console.log('got', identifier, name, icon)
+
   try {
     const registryInfo = await fetch(`https://registry.tryorbit.com/${packageId}`).then(x =>
       x.json(),
@@ -85,10 +91,14 @@ app.post('/searchUpdate', async (req, res) => {
     const { description = '' } = lastVersion
     const db = admin.firestore()
     const docRef = db.collection('apps').doc(identifier)
+
+    // : ApiSearchItem
     const doc = {
       packageId,
       description,
       identifier,
+      name,
+      icon,
       search: stopword.removeStopwords(description.split(' ')).map(x => x.toLowerCase()),
     }
 

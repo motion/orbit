@@ -18,6 +18,7 @@ export * from './models'
 export { AppDefinition } from './AppDefinition'
 export { AppViewProps } from './AppViewProps'
 export { ApiInfo, ApiType } from './ApiInfo'
+export * from './ApiSearchItem'
 
 // todo: find a good place for this function
 // TODO could return title/body separately when improving search

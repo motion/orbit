@@ -68,7 +68,7 @@ export async function commandPublish(options: CommandPublishOptions) {
       await publishApp()
     }
 
-    const buildInfo = await readJSON(join(options.projectRoot, 'dist', 'buildInfo.json'))
+    const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js'))
 
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
@@ -80,7 +80,9 @@ export async function commandPublish(options: CommandPublishOptions) {
       },
       body: JSON.stringify({
         packageId,
-        identifier: buildInfo.identifier,
+        identifier: appInfo.id,
+        name: appInfo.name,
+        icon: appInfo.icon,
       }),
     }).then(x => x.json())
 

@@ -1,6 +1,6 @@
 import { selectDefined } from '@o/utils'
 import { sortBy } from 'lodash'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { fuzzyFilter } from '../helpers/fuzzyFilter'
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
@@ -10,8 +10,19 @@ import { useSearch } from '../Search'
 export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProps<any>) {
   const items = props.items || []
   const searchStore = useSearch()
+  const initialQuery = useRef(true)
 
   const query = selectDefined(props.query, searchStore.query)
+
+  useEffect(() => {
+    if (initialQuery.current) {
+      initialQuery.current = false
+      return
+    }
+    if (props.onQueryChange) {
+      props.onQueryChange(query)
+    }
+  }, [query])
 
   const search =
     props.searchable === false

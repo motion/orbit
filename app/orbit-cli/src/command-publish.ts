@@ -11,12 +11,12 @@ import { reporter } from './reporter'
 
 type CommandPublishOptions = { projectRoot: string }
 
-const registryUrl =
-  process.env.NODE_ENV === 'development' ? `http://example.com` : `https://registry.tryorbit.com`
-const apiUrl =
-  process.env.NODE_ENV === 'development'
-    ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
-    : `https://api.tryorbit.com`
+const isDev = process.env.NODE_ENV === 'development'
+
+const registryUrl = isDev ? `http://example.com` : `https://registry.tryorbit.com`
+const apiUrl = isDev
+  ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
+  : `https://api.tryorbit.com`
 
 export async function commandPublish(options: CommandPublishOptions) {
   try {
@@ -72,7 +72,7 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
-    await fetch(`${apiUrl}/index`, {
+    await fetch(`${apiUrl}/update`, {
       method: 'post',
       headers: {
         Accept: 'application/json',

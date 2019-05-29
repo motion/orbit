@@ -17964,9 +17964,9 @@ react-transition-group@^2.2.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-"react-window@https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20":
-  version "1.8.0-alpha.1"
-  resolved "https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20"
+"react-window@https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504":
+  version "1.9.0-alpha.1"
+  resolved "https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504"
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"

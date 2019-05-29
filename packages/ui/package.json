@@ -42,7 +42,7 @@
     "react-spring": "9.0.0-beta.7",
     "react-svg-inline": "^2.1.1",
     "react-switch": "^4.1.0",
-    "react-window": "https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20",
+    "react-window": "https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504",
     "react-with-gesture": "4.0.8",
     "remark-emoji": "2.0.2",
     "resize-observer-polyfill": "1.5.1",

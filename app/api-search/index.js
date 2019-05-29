@@ -55,7 +55,7 @@ app.get('/:search?', async (req, res) => {
   }
 })
 
-app.post('/index', async (req, res) => {
+app.post('/update', async (req, res) => {
   const packageId = req.body.packageId
   const identifier = req.body.identifier
   if (!packageId || !identifier) {

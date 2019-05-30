@@ -116,6 +116,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleElement,
     titlePad,
     overflow,
+    className,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
@@ -175,6 +176,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
 
   return (
     <SizedSurface
+      className={`ui-section ${className}`}
       forwardRef={ref}
       hoverStyle={null}
       activeStyle={null}

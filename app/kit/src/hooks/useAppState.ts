@@ -41,7 +41,6 @@ export function useImmutableUpdateFn(
         return
       }
       update(draft => {
-        console.log('looking at', draft, subKey, uid)
         if (typeof val === 'function') {
           val(draft[subKey][uid])
         } else {

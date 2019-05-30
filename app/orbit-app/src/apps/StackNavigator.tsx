@@ -89,7 +89,6 @@ export class StackNavigatorStore {
   }
 
   navigate(id: string, rawProps: AppViewProps, forcePush = false) {
-    console.log('props', rawProps)
     const props = filterSimpleValues(rawProps)
     // dont update stack if already on same item, unless explicitly asking
     this.props.setState(next => {

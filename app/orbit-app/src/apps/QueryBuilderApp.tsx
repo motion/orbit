@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
+import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -304,7 +304,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     appIdentifier: def.id,
   })
   const hasApiInfo = !!meta && !!meta.apiInfo
-  const [numLines, setNumLines] = useState(1)
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
@@ -325,35 +324,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             if (typeof queryBuilder.arguments[index] === 'undefined') {
               queryBuilder.arguments[index] = defaultValues[arg.type] || ''
             }
-
-            return (
-              <React.Fragment key={index}>
-                <Row space alignItems="center">
-                  <SubTitle>{arg.name}</SubTitle>
-                  <Tag alt="lightGreen" size={0.75} fontWeight={200}>
-                    {arg.type}
-                  </Tag>
-                  {arg.isOptional && (
-                    <Tag alt="lightBlue" size={0.75} fontWeight={200}>
-                      Optional
-                    </Tag>
-                  )}
-                  <Space flex={1} />
-                  <Toggle defaultChecked={!arg.isOptional} />
-                </Row>
-                <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
-                  <MonacoEditor
-                    // not controlled
-                    noGutter
-                    value={queryBuilder.arguments[index]}
-                    onChange={val => {
-                      setNumLines(val.split('\n').length)
-                      queryBuilder.setArg(index, val)
-                    }}
-                  />
-                </Card>
-              </React.Fragment>
-            )
+            return <ArgumentField key={index} arg={arg} queryBuilder={queryBuilder} index={index} />
           })}
 
           <Space size="xl" />
@@ -430,6 +401,62 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     </Layout>
   )
 })
+
+const ArgumentField = memo(
+  ({
+    arg,
+    queryBuilder,
+    index,
+  }: {
+    queryBuilder: QueryBuilderStore
+    index: number
+    arg: ApiArgType
+  }) => {
+    const [numLines, setNumLines] = useState(1)
+    const [isActive, setIsActive] = useAppState(
+      `arg-${index}${arg.name}${arg.type}`,
+      arg.isOptional ? false : true,
+    )
+
+    return (
+      <Col space>
+        <Row space alignItems="center">
+          <SubTitle>{arg.name}</SubTitle>
+          <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+            {arg.type}
+          </Tag>
+          {arg.isOptional && (
+            <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+              Optional
+            </Tag>
+          )}
+          <Space flex={1} />
+          {arg.isOptional && (
+            <Toggle
+              checked={isActive}
+              onChange={x => {
+                console.log('val', x)
+                setIsActive(x)
+              }}
+            />
+          )}
+        </Row>
+        <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+          <MonacoEditor
+            // not controlled
+            noGutter
+            value={queryBuilder.arguments[index]}
+            onChange={val => {
+              setIsActive(true)
+              setNumLines(val.split('\n').length)
+              queryBuilder.setArg(index, val)
+            }}
+          />
+        </Card>
+      </Col>
+    )
+  },
+)
 
 const GraphQueryBuild = memo((props: { id: number }) => {
   return (

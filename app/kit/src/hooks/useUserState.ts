@@ -1,10 +1,10 @@
 import { useModel } from '@o/bridge'
 import { UserModel } from '@o/models'
 import { selectDefined } from '@o/utils'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
-import { ScopedAppState } from './useAppState'
+import { ScopedAppState, useImmutableUpdateFn } from './useAppState'
 
 // for storage of UI state that is per-user and not per-workspace
 // if you want to store data that is shared between everyone, use useScopedAppState
@@ -23,16 +23,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
 
   // state
   const [state, update] = useModel(UserModel)
-
-  const updateFn = useCallback(cb => {
-    if (!state || !uid) {
-      console.error('State not loaded / not found yet, or no uid!')
-      return
-    }
-    update(draft => {
-      cb(draft.appState[uid])
-    })
-  }, [])
+  const updateFn = useImmutableUpdateFn(state, update, uid, 'appState')
 
   // scopes user down
   return [selectDefined(state && state.appState[uid], defaultState), updateFn]

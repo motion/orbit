@@ -8,7 +8,7 @@ import { AppSetupForm } from './AppSetupForm'
 export function AppsMainAddApp(props: { identifier: string }) {
   const def = useAppDefinition(props.identifier) || useAppDefinitionFromStore(props.identifier)
   const hasSetup = !!def.setup
-
+  console.log('def', def)
   return (
     <Section
       pad="lg"

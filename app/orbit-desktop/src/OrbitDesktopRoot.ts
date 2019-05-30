@@ -46,11 +46,12 @@ import {
   AppOpenWorkspaceCommand,
   CloseAppCommand,
   AppMetaCommand,
+  GetAppStoreAppDefinitionCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSON } from 'fs-extra'
+import { writeJSON, ensureDir } from 'fs-extra'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
@@ -93,6 +94,7 @@ import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
+import execa from 'execa'
 
 const log = new Logger('desktop')
 
@@ -346,6 +348,24 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        resolveCommand(GetAppStoreAppDefinitionCommand, async ({ packageId }) => {
+          const Config = getGlobalConfig()
+          const tempPackageDir = Path.join(Config.paths.userData, 'app_definitions')
+          await ensureDir(tempPackageDir)
+          try {
+            await execa(
+              `npm i --force ${packageId}@latest --registry https://registry.tryorbit.com`,
+              {
+                cwd: tempPackageDir,
+              },
+            )
+          } catch (err) {
+            console.log('error', err)
+            return { error: err.message }
+          }
+          console.log('we should have a temp package now setup in', tempPackageDir)
+          return { error: 'TODO, success case' }
+        }),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
           return this.orbitAppsManager.appMeta[identifier]
         }),

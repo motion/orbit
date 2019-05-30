@@ -1,4 +1,4 @@
-import { AppDefinition } from '@o/models'
+import { ApiSearchItem, AppDefinition } from '@o/models'
 import { isDefined } from '@o/utils'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
@@ -47,7 +47,7 @@ const ApiDefSearch = createResource((identifier: string) => {
   return fetch(`https://tryorbit.com/api/apps/${identifier}`).then(res => res.json())
 })
 
-export function getSearchAppDefinitions(query: string | false) {
+export function getSearchAppDefinitions(query: string | false): ApiSearchItem | null {
   if (query === false) {
     return null
   }

@@ -435,8 +435,18 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
-                <CardSimple key={key} title={info.name}>
-                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                <CardSimple
+                  key={key}
+                  title={info.name}
+                  onClick={() => {
+                    if (
+                      confirm(`Change current method? This will clear your current query data.`)
+                    ) {
+                      setMethod(info)
+                    }
+                  }}
+                >
+                  <MonoSpaceText alpha={0.6} fontWeight={500} size={0.8}>
                     {info.typeString}
                   </MonoSpaceText>
                   {info.comment}

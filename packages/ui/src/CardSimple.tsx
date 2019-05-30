@@ -18,14 +18,16 @@ export const CardSimple = forwardRef(
     { title, titleProps, onClickTitle, children, space, group, pad, ...props }: CardSimpleProps,
     ref,
   ) => {
+    const hasClick = !!props.onClick
     return (
       <SizedSurface
         ref={ref}
         className="ui-cardsimple-surface"
         borderWidth={0}
         overflow={isDefined(props.scrollable, props.maxHeight) ? 'hidden' : 'hidden'}
-        hoverStyle={!!props.onClick}
-        activeStyle={null}
+        hoverStyle={hasClick}
+        activeStyle={hasClick}
+        cursor={hasClick ? 'pointer' : 'inherit'}
         themeSelect="cardSimple"
         {...props}
         noInnerElement

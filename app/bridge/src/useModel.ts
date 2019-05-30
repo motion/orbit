@@ -7,7 +7,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
-export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
+type UpdateFn<A> = (draft: A) => A
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | any) => void
 
 export type UseModelOptions = {
   defaultValue?: any
@@ -107,6 +108,9 @@ function use<ModelType, Args>(
     updaterFn => {
       const finish = (val: any) => {
         const next = produce(val, updaterFn)
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`save model`, model.name, next)
+        }
         save(model, next as any)
       }
 

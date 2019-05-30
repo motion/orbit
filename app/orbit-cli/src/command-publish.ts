@@ -13,6 +13,7 @@ import { reporter } from './reporter'
 type CommandPublishOptions = {
   projectRoot: string
   force?: boolean
+  ignoreVersion?: boolean
 }
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -58,7 +59,11 @@ export async function commandPublish(options: CommandPublishOptions) {
     invariant(typeof app.icon === 'string', `Must set appInfo.icon, got: ${app.icon}`)
     invariant(typeof app.name === 'string', `Must set appInfo.name, got: ${app.name}`)
 
-    if (registryInfo.versions && registryInfo.versions[verion]) {
+    if (options.ignoreVersion) {
+      shouldPublish = false
+    }
+
+    if (registryInfo.versions && registryInfo.versions[verion] && !options.ignoreVersion) {
       shouldPublish = false
       reporter.info('Already published this version')
       const { value: shouldUpdateVersion } = await prompts({

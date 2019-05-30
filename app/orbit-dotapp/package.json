@@ -3,9 +3,6 @@
   "version": "2.5.2",
   "main": "./_/main.js",
   "private": true,
-  "bin": {
-    "orbit": "./_/main.js"
-  },
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",

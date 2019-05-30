@@ -115,6 +115,10 @@ Yargs.scriptName('orbit')
         .option('verbose', {
           type: 'boolean',
           default: false,
+        })
+        .option('ignore-version', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
@@ -123,6 +127,7 @@ Yargs.scriptName('orbit')
         projectRoot,
         force: !!argv.force,
         verbose: !!argv.verbose,
+        ignoreVersion: argv['ignore-version'],
       })
     },
   )

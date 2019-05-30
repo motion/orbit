@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -338,6 +338,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                       Optional
                     </Tag>
                   )}
+                  <Space flex={1} />
+                  <Toggle defaultChecked={!arg.isOptional} />
                 </Row>
                 <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
                   <MonacoEditor

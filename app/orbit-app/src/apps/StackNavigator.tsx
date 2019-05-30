@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { AppProps, AppViewProps, createStoreContext, useStore, useUserState } from '@o/kit'
+import { AppProps, AppViewProps, createStoreContext, useReaction, useStore, useUserState } from '@o/kit'
 import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
@@ -13,8 +13,14 @@ export type NavigatorProps = {
 
 type StackItemProps = AppViewProps
 
+type StackItem = {
+  id: string
+  props: StackItemProps
+}
+
 type BaseProps = {
-  defaultItem?: { id: string; props: StackItemProps }
+  defaultItem?: StackItem
+  onNavigate: (next: StackItem) => any
   items: {
     [key: string]: FunctionComponent<AppProps & NavigatorProps>
   }
@@ -45,6 +51,13 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavigatorProp
       stackNav.navigate(props.defaultItem.id, props.defaultItem.props)
     }
   }, [props.defaultItem])
+
+  useReaction(
+    () => stackNav.currentItem,
+    stackItem => {
+      props.onNavigate(stackItem)
+    },
+  )
 
   return (
     <Slider curFrame={stack.length - 1}>
@@ -93,7 +106,6 @@ export class StackNavigatorStore {
     // dont update stack if already on same item, unless explicitly asking
     this.props.setState(next => {
       if (!next || !next.stack) {
-        debugger
         return
       }
       if (next.stack.length) {

@@ -21,7 +21,7 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json({ limit: '2048mb' }))
 app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
 
-function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[] */ {
+function getFireStoreList(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[] */ {
   let all = []
   results.forEach(x => {
     all.push(x.data())
@@ -30,11 +30,11 @@ function fireStoreArr(results /* : FirebaseFirestore.QuerySnapshot */) /* : any[
 }
 
 // because for some reason firebase functions dont accept .query
-app.get('/apps', async (req, res) => {
+app.get('/apps', async (_, res) => {
   const db = admin.firestore()
   try {
     res.send(
-      fireStoreArr(
+      getFireStoreList(
         await db
           .collection('apps')
           .orderBy('installs', 'desc')
@@ -52,18 +52,32 @@ app.get('/apps', async (req, res) => {
 })
 
 // because for some reason firebase functions dont accept .query
-app.get('/search/:search?', async (req, res) => {
-  const query = `${req.path || ''}`
-    .replace('/search/', '')
-    .split('-')
-    .join(' ')
+app.get('/apps/:identifier', async (req, res) => {
+  const db = admin.firestore()
+  try {
+    const item = await db
+      .collection('apps')
+      .where('identifier', '==', req.params.identifier || '')
+      .get()
+    res.send(item.data())
+  } catch (err) {
+    console.error(err.message, err.stack)
+    res.status(500)
+    res.send({
+      error: err.message,
+    })
+  }
+})
 
-  console.log('query', query)
+// because for some reason firebase functions dont accept .query
+app.get('/search/:query?', async (req, res) => {
+  const query = (req.params.query || '').split('-').join(' ')
+  console.log('query', query, req.params.query)
   const db = admin.firestore()
 
   try {
     // TODO: make it do multiple where() so it narrows, fall back to "or where"
-    const results = fireStoreArr(
+    const results = getFireStoreList(
       await db
         .collection('apps')
         .where('search', 'array-contains', query)
@@ -92,7 +106,7 @@ app.get('/search/:search?', async (req, res) => {
 
   try {
     // TODO: make it do multiple where() so it narrows, fall back to "or where"
-    const results = fireStoreArr(
+    const results = getFireStoreList(
       await db
         .collection('apps')
         .where('search', 'array-contains', query)
@@ -147,7 +161,7 @@ app.post('/searchUpdate', async (req, res) => {
     const docRef = db.collection('apps').doc(identifier)
 
     // : ApiSearchItem
-    const doc = {
+    const next = {
       packageId,
       fullDescription,
       description,
@@ -159,17 +173,15 @@ app.post('/searchUpdate', async (req, res) => {
     }
 
     // TODO only update if doesnt exist for this version
-    const existing = await docRef.get()
+    const doc = await docRef.get()
 
-    console.log('existing', existing)
-
-    if (!existing) {
+    if (!doc.exists) {
       docRef.create({
-        ...doc,
+        ...next,
         installs: 0,
       })
     } else {
-      docRef.update(doc)
+      docRef.update(next)
     }
 
     // success, scan new package

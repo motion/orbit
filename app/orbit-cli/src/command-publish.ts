@@ -65,7 +65,7 @@ export async function commandPublish(options: CommandPublishOptions) {
         type: 'confirm',
         name: 'value',
         message: 'This version already published, would you like to update to a new version?',
-        initial: true,
+        initial: false,
       })
 
       if (shouldUpdateVersion) {

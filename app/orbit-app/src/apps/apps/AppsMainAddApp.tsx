@@ -1,4 +1,4 @@
-import { useAppDefinition } from '@o/kit'
+import { useAppDefinition, useAppDefinitionSearch } from '@o/kit'
 import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle } from '@o/ui'
 import React from 'react'
 
@@ -6,7 +6,7 @@ import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
-  const def = useAppDefinition(props.identifier)
+  const def = useAppDefinition(props.identifier) || useAppDefinitionSearch(props.identifier)
   const hasSetup = !!def.setup
 
   return (

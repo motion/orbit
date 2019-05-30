@@ -2,7 +2,7 @@ import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, useGet, useThrottleFn, useVisibility, View, Visibility } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, useGet, useThrottledFn, useVisibility, View, Visibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -103,7 +103,7 @@ export const OrbitAppRenderOfDefinition = ({
   const Actions = OrbitActions
   const [activeItem, setActiveItem] = useState(null)
   const getActiveItem = useGet(activeItem)
-  const setActiveItemThrottled = useThrottleFn(setActiveItem, { amount: 250 })
+  const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
     console.log('main select', items)

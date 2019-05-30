@@ -525,11 +525,24 @@ const GraphQueryBuild = memo((props: { id: number }) => {
 })
 
 function argToVal(arg: any): string {
-  if (typeof arg === 'string') {
-    return `"${arg}"`
+  try {
+    if (typeof arg === 'string') {
+      return `"${arg}"`
+    }
+    if (typeof arg === 'number' || typeof arg === 'boolean') {
+      return `${arg}`
+    }
+    if (arg === null) {
+      return `null`
+    }
+    if (arg === undefined) {
+      return `undefined`
+    }
+    return JSON.stringify(arg)
+      .slice(1)
+      .slice(0, arg.length - 2)
+  } catch (err) {
+    console.warn('error', err)
+    return ``
   }
-  if (typeof arg === 'number' || typeof arg === 'boolean') {
-    return `${arg}`
-  }
-  return JSON.stringify(arg)
 }

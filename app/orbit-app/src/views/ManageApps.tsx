@@ -38,6 +38,7 @@ export function ManageApps() {
       <SelectableGrid
         sortable
         minWidth={180}
+        maxWidth={220}
         items={[
           ...activeApps.map(x => ({
             id: x.id,

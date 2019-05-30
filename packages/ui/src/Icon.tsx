@@ -59,14 +59,20 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
   const theme = useTheme(props)
   const size = snapToSizes(props.size) * useScale()
   let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
+  let opacity
 
   if (isDefined(props.opacity)) {
-    try {
-      color = toColor(color)
-        .alpha(props.opacity)
-        .toCSS()
-    } catch {
-      console.debug('bad color', color)
+    if (color === 'inherit') {
+      opacity = props.opacity
+    } else {
+      try {
+        color = toColor(color)
+          .alpha(props.opacity)
+          .toCSS()
+      } catch {
+        console.debug('couldnt interpret color', color)
+        opacity = props.opacity
+      }
     }
   }
 
@@ -90,6 +96,7 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
         data-name={props.name}
         className={`ui-icon ${props.className || ''}`}
         color={color}
+        opacity={opacity}
         {...props}
       >
         <SVG

@@ -8,8 +8,14 @@ auth:
     file: /verdaccio/conf/htpasswd
 
 uplinks:
-  # npmjs:
-  #   url: https://registry.npmjs.org/
+  yarnjs:
+    url: https://registry.yarnpkg.com/
+    max_fails: 100
+    cache: false
+  npmjs:
+    url: https://registry.npmjs.org/
+    max_fails: 100
+    cache: false
 
 middlewares:
   audit:

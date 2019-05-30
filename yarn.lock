@@ -10084,10 +10084,10 @@ graphile-build@4.4.0:
     pluralize "^7.0.0"
     semver "^5.6.0"
 
-graphiql-explorer@0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/graphiql-explorer/-/graphiql-explorer-0.3.7.tgz#92f1c0860d6371754373cb5107db8672dc3ee381"
-  integrity sha512-i24+xTe012/OAMFH/r9YL5QarSr/YqkP0Si0NspCnXKmJv7HzHueFUTRpFRPF1Ka9dLqiszrmOg/5stU4gCQnA==
+graphiql-explorer@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/graphiql-explorer/-/graphiql-explorer-0.4.2.tgz#7b1f10aef05d1575aff47efdd0ae99891e3ff27c"
+  integrity sha512-Q3zQ8r5cm7Sc8ZxnRn58rgfdWZJa5IHT+jy8IyfAFAX/xtm3g6iNaeWk0X5OZD8cteZiDhuUWBohMMOx9aCP9A==
 
 graphql-config@2.0.1:
   version "2.0.1"

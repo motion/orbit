@@ -117,6 +117,11 @@ export function GraphExplorer() {
                   color: inherit;
                   display: flex;
                   flex: 3;
+                  font-family: inherit;
+                }
+
+                .graphiql-explorer-node {
+                  font-family: inherit !important;
                 }
 
                 .editorWrap {
@@ -153,13 +158,28 @@ export function GraphExplorer() {
                   background: rgba(150,150,150,0.2);
                   border: none;
                   box-shadow: none;
+                  transform: scale(0.8);
+                }
+
+                .graphiql-container .execute-button svg {
+                  transform: translateY(1px);
+                  fill: currentColor;
+                }
+
+                .toolbar-button {
+                  background: rgba(150,150,150,0.15) !important;
+                  color: inherit !important;
+                  font-size: 12px !important;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
                 }
 
                 .graphiql-container .toolbar-button {
-                  background: rgba(150,150,150,0.15);
                   border: none;
                   box-shadow: none;
                   color: inherit;
+                  padding: 2px 6px;
+                  font-size: 12px;
                 }
 
                 .graphiql-container .topBar {
@@ -240,6 +260,18 @@ export function GraphExplorer() {
 
                 .CodeMirror-sizer {
                   margin-left: 12px !important;
+                }
+
+                #query-MyQuery {
+                  border-bottom: none !important;
+                }
+
+                .graphql-container input {
+                  background: none;
+                }
+
+                .theme-dark .graphiql-explorer-node span {
+                  color: inherit !important;
                 }
               `,
             }}

@@ -54,7 +54,7 @@ export function QueryBuilderIndex({
     <>
       <TreeList
         getItemProps={item => {
-          const treeItem = treeList.state.itemsAtDepth.find(x => x.id === +item.id)
+          const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
           if (treeItem) {
             const definition = getAppDefinition(`${treeItem.data.identifier}`)
             if (definition) {

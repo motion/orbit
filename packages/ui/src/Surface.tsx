@@ -379,7 +379,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             )}
           </GlintContain>
         )}
-        {icon && iconAfter ? (
+        {!!icon && iconAfter ? (
           <Box
             style={
               {
@@ -409,7 +409,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {showElement && icon && spaceElement}
           </>
         )}
-        {glow && !disabled && (
+        {!!glow && !disabled && (
           <HoverGlow
             full
             scale={1.1}
@@ -428,7 +428,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {children}
           </Element>
         )}
-        {after && (
+        {!!after && (
           <>
             {spaceElement}
             {after}

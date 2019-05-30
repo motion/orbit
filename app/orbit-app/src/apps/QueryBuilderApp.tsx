@@ -160,6 +160,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
       <SelectableGrid
         gridGap={20}
         minWidth={180}
+        maxWidth={220}
         items={useMemo(
           () => [
             ...dataApps.map(x => ({

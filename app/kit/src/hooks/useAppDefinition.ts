@@ -42,9 +42,9 @@ function createResource(fetch: any) {
   }
 }
 
-const ApiDefSearch = createResource((query: string) => {
-  console.log('query', query)
-  return fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
+const ApiDefSearch = createResource((identifier: string) => {
+  console.log('identifier', identifier)
+  return fetch(`https://tryorbit.com/api/apps/${identifier}`).then(res => res.json())
 })
 
 export function getSearchAppDefinitions(query: string | false) {
@@ -60,6 +60,6 @@ export function useAppDefinition(identifier?: string): AppDefinition {
   return getAppDefinition(identifier || appStore.identifier)
 }
 
-export function useAppDefinitionSearch(query?: string) {
+export function useAppDefinitionFromStore(query?: string) {
   return getSearchAppDefinitions(query)
 }

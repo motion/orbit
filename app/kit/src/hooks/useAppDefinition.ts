@@ -1,4 +1,5 @@
-import { ApiSearchItem, AppDefinition } from '@o/models'
+import { useCommand } from '@o/bridge'
+import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
@@ -60,6 +61,19 @@ export function useAppDefinition(identifier?: string): AppDefinition {
   return getAppDefinition(identifier || appStore.identifier)
 }
 
-export function useAppDefinitionFromStore(query?: string) {
-  return getSearchAppDefinitions(query)
+export function useAppDefinitionFromStore(query?: string): AppDefinition {
+  const searchedApp = getSearchAppDefinitions(query)
+  if (!searchedApp) {
+    return null
+  }
+  return useTempAppPackage(searchedApp.packageId)
+}
+
+function useTempAppPackage(packageId: string) {
+  const res = useCommand(GetAppStoreAppDefinitionCommand, { packageId })
+  if ('error' in res) {
+    console.error(res)
+    return null
+  }
+  return res
 }

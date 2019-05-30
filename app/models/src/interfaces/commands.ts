@@ -24,8 +24,8 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 )
 
 export const GetAppStoreAppDefinitionCommand = new Command<
-  { packageId: string },
-  AppDefinition | { error: string }
+  AppDefinition | { error: string },
+  { packageId: string }
 >('GetAppStoreAppDefinition')
 
 export const GetPIDCommand = new Command<number>('get-pid')

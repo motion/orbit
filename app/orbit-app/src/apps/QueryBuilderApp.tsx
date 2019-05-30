@@ -19,7 +19,6 @@ export default createApp({
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
-  console.log(props.id)
   const navigator = useStackNavigator({ id: `query-builder-nav-${props.id}` })
 
   if (!dataApps.length) {

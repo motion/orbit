@@ -93,7 +93,7 @@ export class StackNavigatorStore {
     // dont update stack if already on same item, unless explicitly asking
     this.props.setState(next => {
       if (!next || !next.stack) {
-        console.warn('no item?')
+        debugger
         return
       }
       if (next.stack.length) {

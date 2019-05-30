@@ -57,7 +57,7 @@ app.get('/apps/:identifier', async (req, res) => {
   try {
     const item = await db
       .collection('apps')
-      .where('identifier', '==', req.params.identifier || '')
+      .doc(req.params.identifier || '')
       .get()
     res.send(item.data())
   } catch (err) {

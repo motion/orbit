@@ -31,13 +31,12 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
 
 export function useEnsureDefaultUserState<A>(uid: string, ensure: A) {
   const [user, update] = useModel(UserModel)
-
   useEffect(() => {
     if (!user) return
     if (user.appState[uid]) return
-
     // ensure default
     update(next => {
+      console.log('settiing default', ensure)
       next.appState[uid] = ensure
     })
   }, [user, uid])

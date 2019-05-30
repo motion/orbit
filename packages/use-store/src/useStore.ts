@@ -237,19 +237,22 @@ export function useStore<A extends ReactiveStore<any> | any>(
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
-  const construct = Store && Store['constructor'].name !== 'Function'
+  const isInstantiated = Store && Store['constructor'].name !== 'Function'
   let store: any = null
 
-  if (construct) {
+  if (isInstantiated) {
     // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
     const shouldUpdate = lastStore.current !== Store
     if (shouldUpdate && lastStore.current) {
       disposeStore(lastStore.current)
     }
-
     lastStore.current = Store
     store = Store
     store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
+    if (!!store && props) {
+      console.log('stores', store, props)
+      updateProps(store, props as any)
+    }
   } else {
     const res = useReactiveStore(Store as any, props)
     store = res && res.store
@@ -264,12 +267,12 @@ export function useStore<A extends ReactiveStore<any> | any>(
 
   // dispose on unmount
   useEffect(() => {
-    if (!construct) {
+    if (!isInstantiated) {
       return () => {
         store && disposeStore(store, component)
       }
     }
-  }, [store, construct])
+  }, [store, isInstantiated])
 
   return store
 }

@@ -7,6 +7,7 @@ import { useScale } from '../Scale'
 import { LINE_HEIGHT } from '../SizedSurface'
 import { getSize } from '../Sizes'
 import { Sizes } from '../Space'
+import { Tooltip } from '../Tooltip'
 
 type ToggleProps = Partial<ReactSwitchProps> & {
   defaultChecked?: boolean
@@ -15,6 +16,7 @@ type ToggleProps = Partial<ReactSwitchProps> & {
   onChange?: (checked: boolean) => any
   theme?: Object
   size?: Sizes
+  tooltip?: string
 }
 
 export function Toggle(props: ToggleProps) {
@@ -23,9 +25,9 @@ export function Toggle(props: ToggleProps) {
   const checked = typeof props.checked !== 'undefined' ? props.checked : internal.val
   const colorProps = props.theme ? props.theme : toggleTheme(theme)
   const scale = useScale()
-  const height = props.height || getSize(props.size) * scale * LINE_HEIGHT * 0.66
+  const height = props.height || getSize(props.size) * scale * LINE_HEIGHT * 0.6
   const width = props.width || height * 2
-  return (
+  let element = (
     <Switch
       {...colorProps}
       uncheckedIcon={false}
@@ -37,6 +39,10 @@ export function Toggle(props: ToggleProps) {
       onChange={next => (props.onChange ? props.onChange(next) : internal.setState(next))}
     />
   )
+  if (props.tooltip) {
+    element = <Tooltip label={props.tooltip}>{element}</Tooltip>
+  }
+  return element
 }
 
 function toggleTheme(theme: ThemeObject) {
@@ -44,7 +50,7 @@ function toggleTheme(theme: ThemeObject) {
     boxShadow: undefined,
     offColor: theme.backgroundStrongest.hex(),
     onColor: theme.backgroundStrongest.hex(),
-    offHandleColor: theme.backgroundZebra.hex(),
+    offHandleColor: theme.backgroundHighlight.hex(),
     onHandleColor: theme.backgroundHighlight.hex(),
   }
 }

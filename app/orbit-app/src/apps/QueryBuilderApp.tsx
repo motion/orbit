@@ -1,5 +1,5 @@
 import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
-import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
+import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
@@ -7,7 +7,7 @@ import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { NavigatorProps, StackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNavigator, StackNavigatorStore, useStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'query-builder',
@@ -19,6 +19,7 @@ export default createApp({
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
+  const navigator = useStackNavigator({ id: `query-builder-nav=${props.id}` })
 
   if (!dataApps.length) {
     return (
@@ -34,19 +35,30 @@ function QueryBuilder(props: AppViewProps) {
   }
 
   return (
-    <App index={<QueryBuilderIndex />}>
-      <QueryBuilderMain key={props.id} {...props} />
+    <App index={<QueryBuilderIndex navigator={navigator} />}>
+      <QueryBuilderMain key={props.id} {...props} navigator={navigator} />
     </App>
   )
 }
 
-const treeId = 'query-builder'
+const treeId = 'query-build'
 
-export function QueryBuilderIndex() {
+export function QueryBuilderIndex(props: { navigator: StackNavigatorStore }) {
   const treeList = useTreeList(treeId)
+  console.log('treeList', treeList)
   return (
     <>
-      <TreeList backgrounded title="Queries" editable deletable use={treeList} sortable />
+      <TreeList
+        getItemProps={x => {
+          console.log('x', x, props.navigator)
+          return null
+        }}
+        title="Queries"
+        sortable
+        editable
+        deletable
+        use={treeList}
+      />
       <Dock>
         <DockButton
           id="add"
@@ -61,11 +73,11 @@ export function QueryBuilderIndex() {
   )
 }
 
-function QueryBuilderMain(props: AppViewProps) {
+function QueryBuilderMain(props: AppViewProps & { navigator: StackNavigatorStore }) {
   return (
     <StackNavigator
       key={props.id}
-      id={`query-builder-nav=${props.id}`}
+      useNavigator={props.navigator}
       defaultItem={{
         id: 'SelectApp',
         props,
@@ -421,19 +433,22 @@ const ArgumentField = memo(
     return (
       <Col space>
         <Row space alignItems="center">
-          <SubTitle>{arg.name}</SubTitle>
-          <Tag alt="lightGreen" size={0.75} fontWeight={200}>
-            {arg.type}
-          </Tag>
-          {arg.isOptional && (
-            <Tag alt="lightBlue" size={0.75} fontWeight={200}>
-              Optional
+          <Row opacity={isActive ? 1 : 0.35} space alignItems="center">
+            <SubTitle>{arg.name}</SubTitle>
+            <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+              {arg.type}
             </Tag>
-          )}
+            {arg.isOptional && (
+              <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+                Optional
+              </Tag>
+            )}
+          </Row>
           <Space flex={1} />
           {arg.isOptional && (
             <Toggle
               checked={isActive}
+              tooltip="Toggle active"
               onChange={x => {
                 console.log('val', x)
                 setIsActive(x)
@@ -441,7 +456,13 @@ const ArgumentField = memo(
             />
           )}
         </Row>
-        <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
+        <Card
+          transition="all ease 300ms"
+          opacity={isActive ? 1 : 0.35}
+          pad
+          elevation={1}
+          height={24 * numLines + /* padding */ 16 * 2}
+        >
           <MonacoEditor
             // not controlled
             noGutter

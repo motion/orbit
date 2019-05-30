@@ -156,10 +156,10 @@ export type SurfaceSpecificProps = {
 export type SurfaceProps = Omit<ViewProps, 'size'> & SurfaceSpecificProps
 
 // TODO this is using SizedSurfaceProps, needs some work to separate the two
-const Context = createContextualProps<SizedSurfaceProps>()
-export const SurfacePassPropsReset = Context.Reset
-export const SurfacePassProps = Context.PassProps
-export const useSurfaceProps = Context.useProps
+const SizedSurfacePropsContext = createContextualProps<SizedSurfaceProps>()
+export const SurfacePassPropsReset = SizedSurfacePropsContext.Reset
+export const SurfacePassProps = SizedSurfacePropsContext.PassProps
+export const useSurfaceProps = SizedSurfacePropsContext.useProps
 
 type ThroughProps = Pick<
   SurfaceProps,
@@ -184,7 +184,7 @@ const acceptsIcon = child =>
   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
 
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
-  const props = Context.useProps(direct)
+  const props = SizedSurfacePropsContext.useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const theme = useTheme(props)
@@ -460,7 +460,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
   return (
-    <Context.Reset>
+    <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
           <SurfaceFrame
@@ -484,7 +484,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
-    </Context.Reset>
+    </SizedSurfacePropsContext.Reset>
   )
 })
 

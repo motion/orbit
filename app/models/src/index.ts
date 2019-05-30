@@ -15,9 +15,9 @@ export * from './interfaces/SpaceInterface'
 export * from './interfaces/User'
 export * from './models'
 
-export { AppDefinition } from './AppDefinition'
-export { AppViewProps } from './AppViewProps'
-export { ApiInfo, ApiType } from './ApiInfo'
+export * from './AppDefinition'
+export * from './AppViewProps'
+export * from './ApiInfo'
 export * from './ApiSearchItem'
 
 // todo: find a good place for this function

@@ -181,20 +181,18 @@ export const List = memo((allProps: ListProps) => {
           after: (
             <>
               {itemExtraProps && itemExtraProps.after}
-              {
-                <Button
-                  alt="simpleGray"
-                  chromeless
-                  circular
-                  icon="cross"
-                  onMouseDown={e => {
-                    e.stopPropagation()
-                  }}
-                  onClick={() => {
-                    onDelete(a, b)
-                  }}
-                />
-              }
+              <Button
+                chromeless
+                circular
+                icon="cross"
+                opacity={0.75}
+                onMouseDown={e => {
+                  e.stopPropagation()
+                }}
+                onClick={() => {
+                  onDelete(a, b)
+                }}
+              />
             </>
           ),
         }

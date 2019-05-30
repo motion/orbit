@@ -1,18 +1,17 @@
-import { AppViewProps, useStore, useUserState } from '@o/kit'
-import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
+import { AppProps, AppViewProps, createStoreContext, useHooks, useStore, useUserState } from '@o/kit'
+import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last } from 'lodash'
-import React, { forwardRef, FunctionComponent, Suspense, useEffect } from 'react'
+import React, { forwardRef, FunctionComponent, Suspense, useEffect, useRef } from 'react'
 
 // TODO split into StackNavigator in UI
 export type NavigatorProps = {
-  navigation: StackNav
+  navigation: StackNavigatorStore
 }
 
 type StackItemProps = AppViewProps
 
 type StackNavigatorProps = {
-  useNavigator?: StackNav
   defaultItem?: { id: string; props: StackItemProps }
   items: {
     [key: string]: FunctionComponent<AppProps & NavigatorProps>
@@ -20,16 +19,18 @@ type StackNavigatorProps = {
 }
 
 export const StackNavigator = forwardRef<
-  StackNav,
-  StackNavigatorProps & {
-    id: string
-  }
+  StackNavigatorStore,
+  | StackNavigatorProps & {
+      id: string
+    }
+  | StackNavigatorProps & {
+      useNavigator?: StackNavigatorStore
+    }
 >((props, ref) => {
-  const [state, setState] = useUserState<StackNavState>(`StackNavigator-${props.id}`, {
-    stack: [],
-  })
-  const backupStackNav = useStore(StackNav, { state, setState })
-  const stackNav = props.useNavigator || backupStackNav
+  const stackNavParent = 'useNavigator' in props ? props.useNavigator : null
+  const stackNavLocal = useStore(StackNavigatorStore, 'id' in props ? { id: props.id } : undefined)
+  const stackNav = stackNavParent || stackNavLocal
+
   const { stack } = stackNav
 
   useEffect(() => {
@@ -37,8 +38,12 @@ export const StackNavigator = forwardRef<
     ref(stackNav)
   }, [ref])
 
+  const has = useRef(false)
   useEffect(() => {
     if (!stackNav.stack.length && props.defaultItem) {
+      if (has.current) return
+      has.current = true
+      console.log('should navigate', props.defaultItem.id, props.defaultItem.props)
       stackNav.navigate(props.defaultItem.id, props.defaultItem.props)
     }
   }, [props.defaultItem])
@@ -69,16 +74,29 @@ type StackNavState = {
 }
 
 type StackNavUse = {
-  state: StackNavState
-  setState: ImmutableUpdateFn<StackNavState>
+  id: string
 }
 
-export class StackNav {
+export class StackNavigatorStore {
   props: StackNavUse
   next = null
+  hooks = useHooks({
+    userState: () =>
+      useUserState<StackNavState>(`StackNavigator-${this.props.id}`, {
+        stack: [],
+      }),
+  })
 
   get stack() {
-    return this.props.state.stack || []
+    return this.hooks.userState[0].stack || []
+  }
+
+  get setState() {
+    return this.hooks.userState[1]
+  }
+
+  get currentItem() {
+    return this.stack[this.stack.length - 1]
   }
 
   navigate(id: string, props: AppViewProps, forcePush = false) {
@@ -91,7 +109,7 @@ export class StackNav {
         }
       }
     }
-    this.props.setState(next => {
+    this.setState(next => {
       if (!next) {
         console.warn('no item?')
         return
@@ -108,8 +126,11 @@ export class StackNav {
   }
 
   back() {
-    this.props.setState(next => {
+    this.setState(next => {
       next.stack = removeLast(next.stack)
     })
   }
 }
+
+const StackNavContext = createStoreContext(StackNavigatorStore)
+export const useStackNavigator = StackNavContext.useCreateStore

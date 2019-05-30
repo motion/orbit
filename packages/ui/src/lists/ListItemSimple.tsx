@@ -270,6 +270,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   return (
     <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
       {above}
+      {/* unset the theme for the separator */}
       {!!separator && (
         <Theme name={activeThemeName}>
           <ListSeparator {...separatorProps}>{separator}</ListSeparator>

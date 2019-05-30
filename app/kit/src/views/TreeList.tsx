@@ -12,12 +12,11 @@ import { HighlightActiveQuery } from './HighlightActiveQuery'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<ListProps, 'items' | 'getItemProps'> & {
+export type TreeListProps = Omit<ListProps, 'items'> & {
   // we should make this either require use or items
   items?: TreeItems
   use?: TreeListStore
   rootItemID?: number
-  getItemProps?: (item: TreeItem) => Promise<ListItemProps>
   placeholder?: React.ReactNode
   query?: string
 }
@@ -68,7 +67,7 @@ const getActions = (
         // remove any references to this item in .children[]
         for (const key in next.items) {
           const item = next.items[key]
-          if (item.children.indexOf(id) > -1) {
+          if (item.children && item.children.indexOf(id) > -1) {
             item.children = item.children.filter(x => x !== id)
           }
         }
@@ -147,7 +146,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
   }
 }
 
-async function loadListItem(item: TreeItem): Promise<ListItemProps> {
+async function loadTreeListItemProps(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {
@@ -176,16 +175,18 @@ const findAttribute = (item: TreeItem, key: string) =>
   (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
 export function TreeList(props: TreeListProps) {
-  const { use, query, getItemProps = loadListItem, ...rest } = props
+  const { use, query, ...rest } = props
   const useTree = use || useTreeList(false, props)
   const { rootItemID, items } = useTree.state
   const [loadedItems, setLoadedItems] = useState<ListItemProps[]>([])
 
   useEffect(() => {
     let cancel = false
-    Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
-      !cancel && setLoadedItems(res)
-    })
+    Promise.all(items[rootItemID].children.map(id => loadTreeListItemProps(items[id]))).then(
+      res => {
+        !cancel && setLoadedItems(res)
+      },
+    )
     return () => {
       cancel = true
     }

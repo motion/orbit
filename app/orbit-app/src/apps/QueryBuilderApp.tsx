@@ -19,7 +19,8 @@ export default createApp({
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
-  const navigator = useStackNavigator({ id: `query-builder-nav=${props.id}` })
+  console.log(props.id)
+  const navigator = useStackNavigator({ id: `query-builder-nav-${props.id}` })
 
   if (!dataApps.length) {
     return (
@@ -45,7 +46,6 @@ const treeId = 'query-build'
 
 export function QueryBuilderIndex(props: { navigator: StackNavigatorStore }) {
   const treeList = useTreeList(treeId)
-  console.log('treeList', treeList)
   return (
     <>
       <TreeList
@@ -73,11 +73,14 @@ export function QueryBuilderIndex(props: { navigator: StackNavigatorStore }) {
   )
 }
 
-function QueryBuilderMain(props: AppViewProps & { navigator: StackNavigatorStore }) {
+function QueryBuilderMain({
+  navigator,
+  ...props
+}: AppViewProps & { navigator: StackNavigatorStore }) {
   return (
     <StackNavigator
       key={props.id}
-      useNavigator={props.navigator}
+      useNavigator={navigator}
       defaultItem={{
         id: 'SelectApp',
         props,
@@ -168,6 +171,10 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
   const [showSidebar, setShowSidebar] = useState(true)
   const [app, def] = useAppWithDefinition(+props.id)
   console.log('appDef', app, def)
+
+  if (!def) {
+    return null
+  }
 
   return (
     <Section

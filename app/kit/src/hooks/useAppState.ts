@@ -34,18 +34,21 @@ export function useImmutableUpdateFn(
   uid: string,
   subKey: string,
 ) {
-  return useCallback(val => {
-    if (!state || !uid) {
-      console.error('State not loaded / not found yet, or no uid!')
-      return
-    }
-    update(draft => {
-      console.log('looking at', draft, subKey, uid)
-      if (typeof val === 'function') {
-        val(draft[subKey][uid])
-      } else {
-        draft[subKey][uid] = val
+  return useCallback(
+    val => {
+      if (!state || !uid) {
+        console.error('State not loaded / not found yet, or no uid!')
+        return
       }
-    })
-  }, [])
+      update(draft => {
+        console.log('looking at', draft, subKey, uid)
+        if (typeof val === 'function') {
+          val(draft[subKey][uid])
+        } else {
+          draft[subKey][uid] = val
+        }
+      })
+    },
+    [uid, subKey],
+  )
 }

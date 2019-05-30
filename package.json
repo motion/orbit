@@ -22,6 +22,7 @@
     "publish:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- yarn orbit:publish",
     "test:built:app": "cd app/build-orbit && npm run test-built-app",
     "postinstall": "patch-package",
+    "open:dev:datafolder": "open ~/Library/Application\\ Support/Electron",
     "test": "jest"
   },
   "dependencies": {

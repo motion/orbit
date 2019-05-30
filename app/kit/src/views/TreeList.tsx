@@ -31,8 +31,12 @@ type TreeUserState = {
 
 // derived state can go here
 type TreeState = TreeStateStatic & {
+  // current deepest item
   currentItem: TreeItem
-  itemsAtDepth: TreeItem[]
+  // current deepest item children
+  currentItemChildren: TreeItem[]
+  // a breadcrumb history of items leading up to current one
+  history: TreeItem[]
 }
 
 const defaultState: TreeStateStatic = {
@@ -171,7 +175,8 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
   return {
     ...state,
     currentItem,
-    itemsAtDepth: currentItem.children.map(x => state.items[x]),
+    currentItemChildren: currentItem.children.map(x => state.items[x]),
+    history: userState.depth.map(item => state.items[item.id]),
   }
 }
 

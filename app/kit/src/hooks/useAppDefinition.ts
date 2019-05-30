@@ -12,8 +12,6 @@ function createResource(fetch: any) {
     read: (...args) => {
       const key = JSON.stringify(args)
 
-      console.log('reading', cache[key])
-
       if (cache[key]) {
         if (isDefined(cache[key].value)) {
           return cache[key].value

@@ -2,6 +2,7 @@ import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, Title, Vie
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
+import { colors } from '../../constants'
 import { useScreenHeightVal, useScreenSize } from '../../hooks/useScreenSize'
 import { FadeChild, fadeUpProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
@@ -16,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A new desktop app platform',
-  medium: 'A new desktop app platform',
-  small: 'A new desktop app platform',
+  large: 'The easier, faster app platform',
+  medium: 'The easier, faster app platform',
+  small: 'The easier, faster app platform',
 }
 
 let allTexts = {
   large: [
-    `Create and collaborate on apps that sync without a server.`,
-    `Easy to build with many data APIs, designed for internal tools.`,
+    `Create, collaborate on apps with incredible ease.`,
+    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
   ],
   medium: [
-    `Create and collaborate on apps that sync without a server.`,
-    `Easy to build with many data APIs, designed for internal tools.`,
+    `Create, collaborate on apps with incredible ease.`,
+    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
   ],
   small: [
-    `Create and collaborate on apps that sync without a server.`,
-    `Easy to build with many data APIs, designed for internal tools.`,
+    `Create, collaborate on apps with incredible ease.`,
+    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
   ],
 }
 
@@ -152,15 +153,7 @@ const HeadContent = memo(() => {
 })
 
 const HeadJoin = () => (
-  <View
-    flex={1}
-    width="100%"
-    maxWidth={1000}
-    margin={[0, 'auto']}
-    position="relative"
-    bottom={0}
-    alignItems="center"
-  >
+  <View flex={1} width="100%" maxWidth={1000} position="absolute" bottom={5} alignItems="center">
     <FadeChild {...fadeUpProps} delay={500}>
       <SurfacePassProps elevation={5} fontFamily="GT Eesti">
         <Theme name="orbitOneDark">
@@ -228,23 +221,22 @@ export function HeadSection() {
             <HeadContent />
           </Col>
           <Space size={40} />
-          <Row space="xl" pad={[0, 'xl']}>
-            <SubSection index={0} title="Easy to build">
-              A large UI kit that solves for common apps, like Master/Detail with CRUD, letting you
-              focus on the use case.
+          <Row space="xl" pad={[0, 'xl']} marginBottom={-90} scrollable="x" maxWidth="100vw">
+            <SubSection index={0} title="Rich desktop apps">
+              Not just a UI kit: complete patterns that let you build common interfaces with ease.
             </SubSection>
 
-            <SubSection index={1} title="Easy data">
-              An App Store with data apps like Slack, Postgres, G-suite and more - add with a click.
+            <SubSection index={2} title="Desktop first">
+              Virtualization, static analysis and powerful APIs give you incredible power and speed.
             </SubSection>
 
-            <SubSection index={2} title="Runs like native">
-              Apps live on your desktop & launch in their own window. Orbit focuses on performance
-              by default.
+            <SubSection index={1} title="An ecosystem">
+              Use the App Store to plug in data from Slack to Postgres. Add apps and views with a
+              click.
             </SubSection>
 
-            <SubSection index={3} title="Serverless & private">
-              Using true peer-to-peer, build rich apps with your team without any infrastructure.
+            <SubSection index={3} title="Serverless, private">
+              True peer-to-peer, so you can build securely without infrastructure.
             </SubSection>
           </Row>
           <Space size={120} />
@@ -257,9 +249,9 @@ export function HeadSection() {
 
 const SubSection = memo(({ title, children, index }: any) => {
   return (
-    <Col flex={1}>
+    <Col flex={1} minWidth={180}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title selectable size={0.7}>
+        <Title color={colors.orange} selectable size={0.7}>
           {title}
         </Title>
         <Space size="sm" />

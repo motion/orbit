@@ -1,21 +1,42 @@
-import { gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
+import { alphaColorTheme, gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
+import React from 'react'
 
+import { BorderBottom, BorderTop } from './Border'
 import { useScale } from './Scale'
-import { SimpleText, SimpleTextProps } from './text/SimpleText'
+import { scaledTextSizeTheme, SimpleText, SimpleTextProps } from './text/SimpleText'
 
 export type ListSeparatorProps = SimpleTextProps & { themeSelect?: ThemeSelect }
 
-export const ListSeparator = gloss<ListSeparatorProps>(SimpleText).theme((props, themeIn) => {
-  const scale = useScale()
-  const theme = selectThemeSubset(props.themeSelect, themeIn)
-  const themeStyle = psuedoStyleTheme(props, theme)
-  return {
-    borderTop: [1, theme.borderColor],
-    borderBottom: [1, theme.borderColor],
-    padding: [scale * 4, scale * 8],
-    ...themeStyle,
-  }
+export const ListSeparator = (props: ListSeparatorProps) => {
+  return (
+    <ListSeparatorChrome>
+      <BorderTop />
+      <BorderBottom />
+      <ListSeparatorText {...props} />
+    </ListSeparatorChrome>
+  )
+}
+
+const ListSeparatorChrome = gloss({
+  position: 'relative',
+  overflow: 'hidden',
 })
+
+const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
+  width: '100%',
+}).theme(
+  (props, themeIn) => {
+    const scale = useScale()
+    const theme = selectThemeSubset(props.themeSelect, themeIn)
+    const themeStyle = psuedoStyleTheme(props, theme)
+    return {
+      padding: [scale * 4, scale * 8],
+      ...themeStyle,
+    }
+  },
+  scaledTextSizeTheme,
+  alphaColorTheme,
+)
 
 ListSeparator.defaultProps = {
   activeStyle: false,
@@ -23,5 +44,5 @@ ListSeparator.defaultProps = {
   themeSelect: 'separator',
   fontWeight: 400,
   size: 0.85,
-  alpha: 0.8,
+  alpha: 0.6,
 }

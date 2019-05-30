@@ -38,7 +38,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     externals,
     ignore = [],
     watch = false,
-    minify = true,
+    minify = mode === 'production',
     dll,
     dllReference,
     devServer,

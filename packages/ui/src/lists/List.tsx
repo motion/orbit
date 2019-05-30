@@ -107,7 +107,7 @@ export const List = memo((allProps: ListProps) => {
     onOpen,
     placeholder,
     getItemProps,
-    search,
+    query: search,
     shareable,
     deletable,
     onDelete,
@@ -226,7 +226,7 @@ export const List = memo((allProps: ListProps) => {
   const showPlaceholder = noQuery && !hasResults
   const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
-  const words = useMemo(() => (props.search ? props.search.split(' ') : []), [props.search])
+  const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
 
   const children = (
     <HighlightProvide
@@ -282,9 +282,9 @@ function ListPlaceholder(props: ListProps) {
       <Center alignItems="center">
         <View>
           <SubTitle>No results</SubTitle>
-          {!!props.search && (
+          {!!props.query && (
             <Text ellipse size={0.95} alpha={0.6}>
-              "{props.search}"
+              "{props.query}"
             </Text>
           )}
         </View>

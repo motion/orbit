@@ -10,7 +10,10 @@ export type UseFilterProps<A> = {
   items: A[]
 
   /** String for filtering items */
-  search?: string
+  query?: string
+
+  /** Callback for when query changes */
+  onQueryChange?: (next: string) => any
 
   /** Function to determine sort order of items, should return a string determining sort order */
   sortBy?: (item: A) => string

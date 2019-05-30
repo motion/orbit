@@ -11,4 +11,5 @@ export const PaddedView = gloss<ViewProps & PadProps>(View, {
   alignItems: 'inherit',
   justifyContent: 'inherit',
   overflow: 'inherit',
+  maxWidth: '100%',
 }).theme(getPadding)

@@ -1,23 +1,42 @@
 import 'isomorphic-fetch'
 
+import { AppDefinition } from '@o/models'
 import commandExists from 'command-exists'
 import exec from 'execa'
-import { readJSON } from 'fs-extra'
+import { pathExists, readFile, readJSON } from 'fs-extra'
 import { join } from 'path'
 import prompts from 'prompts'
 
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
 
-type CommandPublishOptions = { projectRoot: string }
+type CommandPublishOptions = {
+  projectRoot: string
+  force?: boolean
+  ignoreVersion?: boolean
+}
 
-const registryUrl = `https://registry.tryorbit.com`
-const apiUrl = `http://localhost:5000/orbit-3b7f1/us-central1/search`
+const isDev = process.env.NODE_ENV === 'development'
+
+const registryUrl = isDev ? `http://example.com` : `https://registry.tryorbit.com`
+const apiUrl = isDev
+  ? `http://localhost:5000/orbit-3b7f1/us-central1/search`
+  : `https://tryorbit.com/api`
+
+export function invariant(condition: boolean, message: string) {
+  if (!condition) {
+    reporter.error(message)
+    throw new Error(message)
+  }
+}
 
 export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
-    await commandBuild(options)
+    await commandBuild({
+      projectRoot: options.projectRoot,
+      force: options.force,
+    })
 
     // publish to registry
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
@@ -26,14 +45,32 @@ export async function commandPublish(options: CommandPublishOptions) {
     const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
     let shouldPublish = true
 
-    if (registryInfo.versions && registryInfo.versions[verion]) {
+    // run before publish so if there's any error we can validate before publishing
+    let app: AppDefinition
+    try {
+      app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+      console.log('appInfo', app)
+    } catch (err) {
+      reporter.error(`appInfo.js didn't build, there was some error building your app`)
+      return
+    }
+
+    invariant(typeof app.id === 'string', `Must set appInfo.id, got: ${app.id}`)
+    invariant(typeof app.icon === 'string', `Must set appInfo.icon, got: ${app.icon}`)
+    invariant(typeof app.name === 'string', `Must set appInfo.name, got: ${app.name}`)
+
+    if (options.ignoreVersion) {
+      shouldPublish = false
+    }
+
+    if (registryInfo.versions && registryInfo.versions[verion] && !options.ignoreVersion) {
       shouldPublish = false
       reporter.info('Already published this version')
       const { value: shouldUpdateVersion } = await prompts({
         type: 'confirm',
         name: 'value',
         message: 'This version already published, would you like to update to a new version?',
-        initial: true,
+        initial: false,
       })
 
       if (shouldUpdateVersion) {
@@ -53,7 +90,9 @@ export async function commandPublish(options: CommandPublishOptions) {
           reporter.info(`Bumping version ${bumpType}`)
           const runner = await yarnOrNpm()
           await npmCommand(
-            runner === 'npm' ? `version ${bumpType}` : `version --new-version ${bumpType}`,
+            runner === 'npm'
+              ? `version ${bumpType}`
+              : `version --new-version ${bumpType} --no-git-tag-version`,
           )
           shouldPublish = true
         }
@@ -61,14 +100,21 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     if (shouldPublish) {
+      reporter.info(`Publishing app to registry`)
       await publishApp()
     }
 
-    const buildInfo = await readJSON(join(options.projectRoot, 'dist', 'buildInfo.json'))
-
     // trigger search api index update
     reporter.info(`Indexing new app information for search`)
-    await fetch(`${apiUrl}/index`, {
+
+    // get README.md description
+    let fullDescription = pkg.description
+    const readmePath = join(options.projectRoot, 'README.md')
+    if (await pathExists(readmePath)) {
+      fullDescription = await readFile(readmePath)
+    }
+
+    await fetch(`${apiUrl}/searchUpdate`, {
       method: 'post',
       headers: {
         Accept: 'application/json',
@@ -76,11 +122,17 @@ export async function commandPublish(options: CommandPublishOptions) {
       },
       body: JSON.stringify({
         packageId,
-        identifier: buildInfo.identifier,
+        identifier: app.id,
+        name: app.name,
+        icon: app.icon,
+        features: Object.keys(app).filter(
+          x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
+        ),
+        fullDescription,
       }),
     }).then(x => x.json())
 
-    reporter.info(`Published app`)
+    reporter.success(`Published app`)
   } catch (err) {
     reporter.error(err.message, err)
   }

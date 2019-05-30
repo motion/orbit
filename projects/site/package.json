@@ -9,8 +9,8 @@
     "start:prod": "mcro-build --prod --port 5000 --report --target web",
     "serve:prod": "static-server -p 3999 -n dist/index.html dist",
     "build:docs:ui": "node ./scripts/build-docs-ui.js",
-    "deploy": "firebase deploy",
-    "publish:site": "rm -r dist || true && yarn build:docs:ui && yarn build && ./firebase-fix.sh && yarn deploy"
+    "deploy:firebase": "firebase deploy --only hosting",
+    "deploy": "rm -r dist || true && yarn build:docs:ui && yarn build && ./firebase-fix.sh && yarn deploy:firebase"
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",

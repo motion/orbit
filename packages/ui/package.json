@@ -36,19 +36,20 @@
     "react-date-range": "1.0.0-beta2",
     "react-debounce-render": "^5.0.0",
     "react-grid-layout": "0.16.6",
-    "react-hotkeys": "2.0.0-pre5",
+    "react-hotkeys": "2.0.0-pre6",
     "react-markdown": "4.0.6",
     "react-select": "^2.4.2",
     "react-spring": "9.0.0-beta.7",
     "react-svg-inline": "^2.1.1",
     "react-switch": "^4.1.0",
-    "react-window": "https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20",
+    "react-window": "https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504",
     "react-with-gesture": "4.0.8",
     "remark-emoji": "2.0.2",
     "resize-observer-polyfill": "1.5.1",
     "string-natural-compare": "2.0.3",
     "react-flip-toolkit": "^6.5.9",
-    "uncontrollable": "^6.1.0"
+    "uncontrollable": "^6.1.0",
+    "react-use": "^9.1.2"
   },
   "devDependencies": {
     "@types/react": "16.8.8",

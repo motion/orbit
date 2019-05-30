@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 export default createApp({
   id: 'demo-app-layout',
   name: 'App Demo: Layout',
-  icon: '',
+  icon: 'layout',
   app: DemoAppLayout,
 })
 

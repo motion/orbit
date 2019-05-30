@@ -7,7 +7,7 @@ import { SearchStore } from './SearchStore'
 export default createApp({
   id: 'search',
   name: 'Search',
-  icon: '',
+  icon: 'search',
   app: SearchApp,
   setup: {
     date: {

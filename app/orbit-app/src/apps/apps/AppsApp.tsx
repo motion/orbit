@@ -1,19 +1,7 @@
-import {
-  App,
-  AppDefinition,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  Icon,
-  isDataDefinition,
-  removeApp,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useAppDefinitions,
-  useAppWithDefinition,
-} from '@o/kit'
+import { App, AppDefinition, AppMainView, AppViewProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { ApiSearchItem } from '@o/models'
 import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
@@ -49,7 +37,7 @@ export function useDataAppDefinitions() {
 export const appDefToItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
-    groupName: 'Setup Data Source',
+    groupName: 'Setup (Local)',
     title: def.name,
     icon: def.id,
     subTitle: getDescription(def) || 'No Description',
@@ -60,13 +48,59 @@ export const appDefToItem = (def: AppDefinition): ListItemProps => {
   }
 }
 
+const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
+  title: item.name,
+  subTitle: item.description.slice(0, 300),
+  icon: item.icon,
+  groupName: 'Search (App Store)',
+  after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
+  subType: 'add-app',
+  subId: item.identifier,
+})
+
 export function AppsIndex() {
   const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
+  const [topApps, setTopApps] = useState<ListItemProps[]>([])
+  const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
+
+  useEffect(() => {
+    fetch(`https://tryorbit.com/api/apps`)
+      .then(res => res.json())
+      .then((apps: ApiSearchItem[]) => {
+        console.log('top apps', apps)
+        setTopApps(
+          apps.map(x => ({
+            ...appSearchToListItem(x),
+            groupName: 'Trending (App Store)',
+          })),
+        )
+      })
+  }, [])
+
+  const handleQuery = useCallback(next => {
+    let cancel = false
+    const query = next.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
+    console.log('search', next, 'query', query)
+
+    fetch(`https://tryorbit.com/api/search/${query}`)
+      .then(res => res.json())
+      .then((res: ApiSearchItem[]) => {
+        if (!cancel) {
+          setSearchResults(res.slice(0, 200).map(appSearchToListItem))
+        }
+      })
+
+    return () => {
+      cancel = true
+    }
+  }, [])
+
   return (
     <List
       title="Manage Apps"
       subTitle="Use search to find new apps."
+      onQueryChange={handleQuery}
       itemProps={{
         iconBefore: true,
       }}
@@ -78,21 +112,23 @@ export function AppsIndex() {
           subType: 'manage-apps',
         },
         {
-          subType: 'explorer-graph',
           title: 'Graph',
           icon: 'Graph',
           subTitle: 'Explore all GraphQL app APIs',
+          subType: 'explorer-graph',
         },
         ...clientApps
           .map(getAppListItem)
-          .map(x => ({ ...x, groupName: 'App Settings', subType: 'settings' })),
+          .map(x => ({ ...x, groupName: 'Settings', subType: 'settings' })),
         ...dataApps.map(getAppListItem).map(x => ({
           ...x,
-          groupName: 'Source Settings',
+          groupName: 'Settings',
           subType: 'settings',
           after: sourceIcon,
         })),
         ...useDataAppDefinitions().map(appDefToItem),
+        ...topApps,
+        ...searchResults,
       ]}
     />
   )

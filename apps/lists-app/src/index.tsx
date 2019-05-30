@@ -9,7 +9,7 @@ import { ListsAppBit } from './types'
 export default createApp({
   id: 'lists',
   name: 'Lists',
-  icon: '',
+  icon: 'list',
   app: ListApp,
   api: () => API,
   viewConfig: {

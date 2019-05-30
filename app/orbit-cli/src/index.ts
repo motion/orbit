@@ -21,15 +21,48 @@ Yargs.scriptName('orbit')
     'dev [app]',
     'Run an Orbit app in development mode',
     p =>
-      p.positional('app', {
-        type: 'string',
-        default: '.',
-        describe: 'The application to run',
-      }),
+      p
+        .positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
+        }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
       require('./command-dev').commandDev({ projectRoot })
+    },
+  )
+  .command(
+    'install [id] [ws]',
+    'Install app into workspace',
+    p =>
+      p
+        .positional('id', {
+          type: 'string',
+          default: '.',
+          describe: 'The application identifier to install',
+        })
+        .positional('ws', {
+          type: 'string',
+          default: '.',
+          describe: 'The workspace name to install to',
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
+        }),
+    async argv => {
+      reporter.setVerbose(!!argv.verbose)
+      require('./command-install').commandInstall({
+        workspace: argv.ws,
+        identifier: argv.id,
+        verbose: !!argv.verbose,
+      })
     },
   )
   .command(
@@ -49,6 +82,10 @@ Yargs.scriptName('orbit')
         .option('force', {
           type: 'boolean',
           default: false,
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
@@ -57,6 +94,7 @@ Yargs.scriptName('orbit')
         projectRoot,
         watch: !!argv.watch,
         force: !!argv.force,
+        verbose: !!argv.verbose,
       })
     },
   )
@@ -64,16 +102,32 @@ Yargs.scriptName('orbit')
     'publish [app]',
     'Publish new version of app to registry',
     p =>
-      p.positional('app', {
-        type: 'string',
-        default: '.',
-        describe: 'The application to run',
-      }),
+      p
+        .positional('app', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        })
+        .option('force', {
+          type: 'boolean',
+          default: false,
+        })
+        .option('verbose', {
+          type: 'boolean',
+          default: false,
+        })
+        .option('ignore-version', {
+          type: 'boolean',
+          default: false,
+        }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
       await require('./command-publish').commandPublish({
         projectRoot,
+        force: !!argv.force,
+        verbose: !!argv.verbose,
+        ignoreVersion: argv['ignore-version'],
       })
     },
   )

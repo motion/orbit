@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 export default createApp({
   id: 'demo-app-api-grid',
   name: 'Demo App: API Grid',
-  icon: '',
+  icon: 'grid',
   app: CustomApp,
 })
 

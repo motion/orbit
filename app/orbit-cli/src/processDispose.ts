@@ -29,7 +29,6 @@ async function dispose() {
     process.exit(0)
   }, 1000)
 
-  reporter.info('Disposing...', disposers.length)
   if (disposers.length) {
     try {
       await orTimeout(

@@ -1,7 +1,8 @@
 import { isEqual } from '@o/fast-compare'
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
+
 import { useResizeObserver } from './useResizeObserver'
-import { useThrottleFn } from './useThrottleFn'
+import { useThrottledFn } from './useThrottleFn'
 
 export type UseNodeSizeProps = {
   ref?: RefObject<HTMLElement>
@@ -14,7 +15,7 @@ export type UseNodeSizeProps = {
 export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = []) {
   const [state, setState] = useState({ width: 0, height: 0 })
   const updateFn = props.onChange || setState
-  const updateFnThrottled = useThrottleFn(updateFn, {
+  const updateFnThrottled = useThrottledFn(updateFn, {
     amount: props.throttle || 0,
     ignoreFirst: props.ignoreFirst,
   })

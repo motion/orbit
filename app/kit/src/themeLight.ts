@@ -62,6 +62,5 @@ export const light = {
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
     separatorBackground: backgroundStrong,
-    separatorBorderColor: backgroundStronger,
   }),
 }

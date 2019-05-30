@@ -1,7 +1,7 @@
 import { useActiveSpace } from '@o/kit'
-import { ClearButton, ThemeContext, View } from '@o/ui'
+import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
@@ -20,7 +20,8 @@ function useActivePane() {
 }
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
-  const { orbitStore, orbitWindowStore, queryStore, headerStore } = useStores()
+  const search = useSearch()
+  const { orbitWindowStore, queryStore, headerStore } = useStores()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()
@@ -30,6 +31,12 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
   const fontSize = 18
+
+  const onChangeQuery = useCallback(e => {
+    search.setQuery(e.target.value)
+    queryStore.onChangeQuery(e.target.value)
+  }, [])
+
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
@@ -46,7 +53,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
           value={queryStore.queryInstant}
           highlight={headerStore.highlightWords}
           color={activeTheme.color}
-          onChange={queryStore.onChangeQuery}
+          onChange={onChangeQuery}
           onFocus={orbitWindowStore.onFocus}
           onBlur={orbitWindowStore.onBlur}
           onKeyDown={handleKeyDown}

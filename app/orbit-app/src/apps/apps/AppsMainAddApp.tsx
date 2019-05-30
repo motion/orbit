@@ -1,4 +1,4 @@
-import { useAppDefinition } from '@o/kit'
+import { useAppDefinition, useAppDefinitionFromStore } from '@o/kit'
 import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle } from '@o/ui'
 import React from 'react'
 
@@ -6,7 +6,7 @@ import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
-  const def = useAppDefinition(props.identifier)
+  const def = useAppDefinition(props.identifier) || useAppDefinitionFromStore(props.identifier)
   const hasSetup = !!def.setup
 
   return (
@@ -44,9 +44,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
             <AppSetupForm def={def} />
           </Section>
           <Message alt="lightGray" icon="warn">
-            This app stores data. This data will be stored privately, only on your device. If your
-            team enables decentralized key-sharing, it will sync <strong>directly</strong> to
-            authorized users in this space.
+            This app stores data privately, only on your device. If your team enables decentralized
+            key-sharing, it syncs private keys securely, <strong>only directly</strong> to others
+            users in this space.
           </Message>
         </Section>
       )}
@@ -54,22 +54,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
       <Section space>
         <SubTitle>Description</SubTitle>
 
-        <Paragraph>
-          Features Fuzzy-matching autocomplete to create new file relative to existing path Create
-          new directories while creating a new file Create a directory instead of a file by
-          suffixing the file path with / as in somedirectory/ to create the directory (thanks to
-          maximilianschmitt).
-        </Paragraph>
-
-        <Paragraph>
-          Ignores gitignored and workspace files.exclude settings. Additional option of adding
-          advancedNewFile.exclude settings to workspace settings just like native files.exlude
-          except it explicitly effects AdvancedNewFile plugin only. (thanks to Kaffiend) Control the
-          order of top convenient options ("last selection", "current file", etc) via config setting
-          advancedNewFile.convenienceOptions Configuration Example Command palette: "Advanced New
-          File" Keyboard shortcut: cmd+alt+n (Mac), ctrl+alt+n (Win, Linux) Keybindings You can add
-          your own keybinding in your keybindings.json
-        </Paragraph>
+        {`${def.fullDescription || def.description || ''}`.split('\n').map((par, index) => (
+          <Paragraph key={index}>{par}</Paragraph>
+        ))}
       </Section>
     </Section>
   )

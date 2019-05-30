@@ -2,7 +2,7 @@ import { gloss, ThemeFn } from 'gloss'
 import React, { useCallback, useMemo } from 'react'
 
 import { isWebkit } from '../constants'
-import { useThrottleFn } from '../hooks/useThrottleFn'
+import { useThrottledFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
 import { getElevation } from '../View/elevate'
@@ -40,7 +40,7 @@ export const Input = React.forwardRef(function Input(
   const formStore = useFormContext()
 
   // update form context every so often, avoid too many re-renders
-  const updateFormContext = useThrottleFn(
+  const updateFormContext = useThrottledFn(
     (value: string) => {
       if (formStore) {
         formStore.changeField({

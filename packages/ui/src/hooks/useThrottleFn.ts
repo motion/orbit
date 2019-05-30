@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-export function useThrottleFn<Args extends any[], Returns extends any>(
+export function useThrottledFn<Args extends any[], Returns extends any>(
   fn: (...args: Args) => Returns,
   props: { amount: number; ignoreFirst?: boolean },
   mountArgs?: any[],

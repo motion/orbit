@@ -64,6 +64,7 @@ export const dark: ThemeObject = {
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,
+  separatorBackground: backgroundStrong,
   ...fromStyles({
     background,
     backgroundHover: [20, 20, 20, 0.2],

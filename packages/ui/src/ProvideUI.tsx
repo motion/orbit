@@ -3,6 +3,7 @@ import { ThemeProvide } from 'gloss'
 import React, { memo, useMemo } from 'react'
 
 import { ProvideFocus } from './Focus'
+import { ProvideSearch } from './Search'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
 import { HighlightsContext } from './text/HighlightText'
@@ -25,17 +26,19 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
   )
   return (
     <HighlightsContext.Provider value={defaultHighlight}>
-      <Visibility visible={true}>
-        <ProvideFocus focused={true}>
-          <ProvideShortcut>
-            <ProvideShare>
-              <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
-                {props.children}
-              </ThemeProvide>
-            </ProvideShare>
-          </ProvideShortcut>
-        </ProvideFocus>
-      </Visibility>
+      <ProvideSearch query="">
+        <Visibility visible={true}>
+          <ProvideFocus focused={true}>
+            <ProvideShortcut>
+              <ProvideShare>
+                <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+                  {props.children}
+                </ThemeProvide>
+              </ProvideShare>
+            </ProvideShortcut>
+          </ProvideFocus>
+        </Visibility>
+      </ProvideSearch>
     </HighlightsContext.Provider>
   )
 })

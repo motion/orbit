@@ -147,7 +147,13 @@ export class WebSocketClientTransport implements ClientTransport {
       // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
-          log.verbose('sent client data', query)
+          log.verbose(
+            'sent client data',
+            query.model,
+            query.type,
+            query.id,
+            JSON.stringify(query.args),
+          )
           this.websocket.send(JSON.stringify(query))
         } catch (err) {
           fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)

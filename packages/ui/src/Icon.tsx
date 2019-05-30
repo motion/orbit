@@ -66,7 +66,7 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
         .alpha(props.opacity)
         .toCSS()
     } catch {
-      console.debug('bad color')
+      console.debug('bad color', color)
     }
   }
 

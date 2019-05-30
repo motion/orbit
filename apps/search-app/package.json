@@ -1,5 +1,6 @@
 {
   "name": "@o/search-app",
+  "description": "Search across all synced data.",
   "version": "2.5.7",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",

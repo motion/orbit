@@ -1,5 +1,6 @@
 {
   "name": "@o/lists-app",
+  "description": "Create lists of any bits or data.",
   "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",

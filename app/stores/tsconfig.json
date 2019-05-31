@@ -8,7 +8,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
-    { "path": "../../packages/config" },
+    { "path": "../config" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },

@@ -9,11 +9,11 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../stores" },
+    { "path": "../config" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/reactron" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
-    { "path": "../../packages/config" },
     { "path": "../../packages/orbit-fork-process" }
   ]
 }

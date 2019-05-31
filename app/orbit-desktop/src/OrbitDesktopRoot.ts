@@ -336,7 +336,7 @@ export class OrbitDesktopRoot {
               cwd: tempPackageDir,
             })
           } catch (err) {
-            console.log('error', err)
+            console.log('npm install error', err.message, err.stack)
             return { error: err.message }
           }
           console.log('we should have a temp package now setup in', tempPackageDir)

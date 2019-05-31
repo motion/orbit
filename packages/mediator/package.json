@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@o/fast-compare": "^2.5.2",
+    "@o/config": "^2.5.2",
     "@o/logger": "^2.5.2",
     "@o/utils": "^2.5.2",
     "typeorm": "^0.3.0-alpha.23",

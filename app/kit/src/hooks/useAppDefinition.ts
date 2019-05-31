@@ -70,8 +70,7 @@ export function useAppDefinitionFromStore(query?: string): AppDefinition {
 function useTempAppPackage(packageId: string) {
   const res = useCommand(GetAppStoreAppDefinitionCommand, { packageId })
   if ('error' in res) {
-    console.error(res)
-    return null
+    throw res.error
   }
   return res
 }

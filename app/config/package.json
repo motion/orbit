@@ -1,6 +1,10 @@
 {
   "name": "@o/config",
+  "version": "2.5.2",
   "main": "_/config.js",
   "sideEffects": false,
-  "version": "2.5.2"
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  }
 }

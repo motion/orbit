@@ -14,8 +14,8 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../bridge" },
+    { "path": "../config" },
     { "path": "../../apps" },
-    { "path": "../../packages/config" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/react-textfit" },
     { "path": "../../packages/color" }

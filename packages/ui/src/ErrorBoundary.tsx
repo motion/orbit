@@ -27,7 +27,9 @@ export class ErrorBoundary extends Component<{ name: string }> {
     const { error } = this.state
     if (error) {
       if (process.env.NODE_ENV === 'development') {
-        return <ErrorMessage setError={this.setState.bind(this)} error={error} name={this.props.name} />
+        return (
+          <ErrorMessage setError={this.setState.bind(this)} error={error} name={this.props.name} />
+        )
       } else {
         // more subtle in prod
         return (

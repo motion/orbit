@@ -8,6 +8,7 @@ import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
 import { HighlightsContext } from './text/HighlightText'
 import { Visibility } from './Visibility'
+import { ProvideBanner } from './Banner'
 
 export type ProvideUIProps = {
   activeTheme?: string
@@ -26,19 +27,21 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
   )
   return (
     <HighlightsContext.Provider value={defaultHighlight}>
-      <ProvideSearch query="">
-        <Visibility visible={true}>
-          <ProvideFocus focused={true}>
-            <ProvideShortcut>
-              <ProvideShare>
-                <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
-                  {props.children}
-                </ThemeProvide>
-              </ProvideShare>
-            </ProvideShortcut>
-          </ProvideFocus>
-        </Visibility>
-      </ProvideSearch>
+      <ProvideBanner>
+        <ProvideSearch query="">
+          <Visibility visible={true}>
+            <ProvideFocus focused={true}>
+              <ProvideShortcut>
+                <ProvideShare>
+                  <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
+                    {props.children}
+                  </ThemeProvide>
+                </ProvideShare>
+              </ProvideShortcut>
+            </ProvideFocus>
+          </Visibility>
+        </ProvideSearch>
+      </ProvideBanner>
     </HighlightsContext.Provider>
   )
 })

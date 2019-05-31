@@ -1,8 +1,8 @@
-import { AppLoadContext, AppMainViewProps, SubPane, useStore } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useStore, SuspenseWithBanner } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderLeft, BorderTop, Loading, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, Suspense, useContext } from 'react'
+import React, { memo, useContext } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
@@ -20,9 +20,9 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
 
   return (
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
-      <Suspense fallback={null}>
+      <SuspenseWithBanner fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
-      </Suspense>
+      </SuspenseWithBanner>
       <OrbitMainContainer
         isEditing={isEditing}
         transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}
@@ -30,9 +30,11 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         <View className="app-container" flex={1} position="relative" maxHeight="100%">
           {props.hasSidebar && <BorderLeft />}
           {props.hasToolbar && <BorderTop />}
-          <Suspense fallback={<Loading />}>{props.children}</Suspense>
+          <SuspenseWithBanner fallback={<Loading />}>{props.children}</SuspenseWithBanner>
         </View>
-        <Suspense fallback={null}>{props.hasStatusbar && statusbarPadElement}</Suspense>
+        <SuspenseWithBanner fallback={null}>
+          {props.hasStatusbar && statusbarPadElement}
+        </SuspenseWithBanner>
       </OrbitMainContainer>
     </SubPane>
   )

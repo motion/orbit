@@ -5,11 +5,8 @@ import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
 import {
   AppOpenWindowCommand,
-  CloseAppCommand,
   NewFallbackServerPortCommand,
-  RestartAppCommand,
   SendClientDataCommand,
-  TearAppCommand,
 } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'

@@ -356,15 +356,16 @@ export class OrbitDesktopRoot {
             console.log('got app, need to provide app definition')
 
             const appPath = Path.join(tempPackageDir, 'node_modules', ...packageId.split('/'))
-            const appDefPath = Path.join(appPath, 'dist', 'appEntry.js')
+            const appDefPath = Path.join(appPath, 'dist', 'appInfo.js')
 
-            log.info(`Importing app definition`)
+            log.info(`Importing app definition at ${appDefPath}`)
 
             let def: AppDefinition
 
             try {
               def = require(appDefPath).default
             } catch (err) {
+              console.log('error with app def', err)
               return {
                 error: err.message,
               }

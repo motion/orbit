@@ -105,7 +105,6 @@ export function AppsMainAddAppContent({
           <Section bordered pad title="Setup" titleSize={0.85}>
             <AppSetupForm
               onFocus={() => {
-                console.log('focused form')
                 setShouldLoadFullDef(true)
               }}
               def={def}

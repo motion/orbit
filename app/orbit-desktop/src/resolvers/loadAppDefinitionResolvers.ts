@@ -42,6 +42,13 @@ function resolveAppSetupVerify() {
       return loadedDef
     }
 
+    if (!loadedDef.definition.setupValidate) {
+      return {
+        type: 'success' as const,
+        message: 'Success, no validation defined',
+      }
+    }
+
     const res = await loadedDef.definition.setupValidate(app)
 
     if (typeof res === 'string') {

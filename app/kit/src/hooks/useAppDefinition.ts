@@ -90,8 +90,6 @@ export function useAppStoreInstalledAppDefinition(
     if (!identifier) return
     let cancel = false
 
-    console.log('fetching full def', identifier)
-
     command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId })
       .then(res => {
         clearTimeout(tm.current)
@@ -111,13 +109,13 @@ export function useAppStoreInstalledAppDefinition(
     return () => {
       cancel = true
     }
-  }, [])
+  }, [identifier])
 
   // show some nice messages during install
   useEffect(() => {
     if (!identifier) return
     if (options) {
-      options.onStatus('Fetching full app definition...')
+      options.onStatus('Fetching app definition for validation...')
       tm.current = setTimeout(() => {
         options.onStatus('Getting app definition dependencies...')
         tm.current = setTimeout(() => {
@@ -129,7 +127,7 @@ export function useAppStoreInstalledAppDefinition(
       }, 3000)
     }
     return () => clearTimeout(tm.current)
-  }, [])
+  }, [identifier])
 
   return reply
 }

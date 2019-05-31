@@ -1,4 +1,5 @@
-import { AppBit, AppDefinition, AppModel, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
+import { AppBit, AppDefinition, AppModel, command, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
+import { AppDefinitionSetupVerifyCommand } from '@o/models'
 import { Form, FormProps } from '@o/ui'
 import React from 'react'
 
@@ -28,16 +29,17 @@ export function AppSetupForm({
       onSubmit={async values => {
         app.data.setup = values
 
-        // pass back for validation
-        if (def.setupValidate) {
-          try {
-            def.setupValidate(app)
-          } catch (err) {
-            return err
-              ? err.message || err
-              : `Error in validating form ${app.name || app.identifier}`
-          }
+        const res = await command(AppDefinitionSetupVerifyCommand, {
+          identifier: def.id,
+          app,
+        })
+
+        if (res.type === 'error') {
+          return res.errors
         }
+
+        // TODO show banner here
+        console.log('success validating', res)
 
         // add to space if not added
         app.spaces = app.spaces || []

@@ -133,6 +133,7 @@ export async function commandPublish(options: CommandPublishOptions) {
           x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
         ),
         fullDescription,
+        setup: app.setup,
       }),
     }).then(x => x.json())
 

@@ -55,10 +55,14 @@ export function AppsMainAddAppContent({
   let error = ''
   let def: AppDefinition = localDef
 
-  if ('error' in fullSetupDef) {
+  if (fullSetupDef && 'error' in fullSetupDef) {
     error = fullSetupDef.error
-  } else {
-    def = def || fullSetupDef || simpleSearchDef
+  } else if (!def) {
+    if (fullSetupDef && !('error' in fullSetupDef)) {
+      def = fullSetupDef
+    } else {
+      def = simpleSearchDef
+    }
   }
 
   if (!def) {

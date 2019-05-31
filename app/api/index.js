@@ -129,6 +129,7 @@ app.post('/searchUpdate', async (req, res) => {
   const name = req.body.name || ''
   const icon = req.body.icon || ''
   const features = req.body.features || []
+  const setup = req.body.setup || null
 
   if (!packageId || !identifier || !name || !icon) {
     res.send({
@@ -137,7 +138,7 @@ app.post('/searchUpdate', async (req, res) => {
     return
   }
 
-  console.log('got', identifier, name, icon)
+  console.log('got', identifier, name, icon, setup)
 
   try {
     const registryInfo = await fetch(`https://registry.tryorbit.com/${packageId}`).then(x =>
@@ -169,6 +170,7 @@ app.post('/searchUpdate', async (req, res) => {
       name,
       icon,
       features,
+      setup,
       search: stopword.removeStopwords(description.split(' ')).map(x => x.toLowerCase()),
     }
 

@@ -40,6 +40,7 @@ import {
   CloseAppCommand,
   AppMetaCommand,
   GetAppStoreAppDefinitionCommand,
+  AppDefinition,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -85,6 +86,7 @@ import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
+import commandExists from 'command-exists'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import execa from 'execa'
@@ -330,10 +332,8 @@ export class OrbitDesktopRoot {
           const tempPackageDir = Path.join(Config.paths.userData, 'app_definitions')
           await ensureDir(tempPackageDir)
           try {
-            const command = `npm`
-            const args = `i --force ${packageId}@latest --registry https://registry.tryorbit.com`.split(
-              ' ',
-            )
+            const command = await yarnOrNpm()
+            const args = `i ${packageId}@latest --registry https://registry.tryorbit.com`.split(' ')
             log.info(`executing ${command} in ${tempPackageDir}`)
             const proc = execa(command, args, {
               cwd: tempPackageDir,
@@ -347,7 +347,24 @@ export class OrbitDesktopRoot {
             // get app definition
             console.log('got app, need to provide app definition')
 
-            return null
+            const appPath = Path.join(tempPackageDir, 'node_modules', ...packageId.split('/'))
+            const appDefPath = Path.join(appPath, 'dist', 'appEntry.js')
+
+            log.info(`Importing app definition`)
+
+            let def: AppDefinition
+
+            try {
+              def = require(appDefPath).default
+            } catch (err) {
+              return {
+                error: err.message,
+              }
+            }
+
+            log.info(`got def ${def.name}`)
+
+            return def
           } catch (err) {
             console.log('npm install error', err.message, err.stack)
             return { error: err.message }
@@ -423,4 +440,13 @@ export class OrbitDesktopRoot {
 
     return mediatorServerPort
   }
+}
+
+async function yarnOrNpm() {
+  const hasYarn = await commandExists('yarn')
+  const hasNpm = await commandExists('npm')
+  if (!hasYarn && !hasNpm) {
+    throw new Error(`Neither npm or yarn installed, need one of them to continue.`)
+  }
+  return hasYarn ? 'yarn' : 'npm'
 }

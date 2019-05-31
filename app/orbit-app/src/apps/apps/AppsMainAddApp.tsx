@@ -39,7 +39,7 @@ export function AppsMainAddAppContent({
   const def = useAppDefinition(identifier)
   const search = useAppDefinitionFromStore(identifier, {
     onStatus(message: string) {
-      banner && banner.setMessage(message)
+      banner.setMessage(message)
     },
   })
 

@@ -77,7 +77,7 @@ export function useAppDefinitionFromStore(
           options.onStatus('Slow network or large package, still installing...')
           tm = setTimeout(() => {
             options.onStatus('Compiling dependencies...')
-          }, 4000)
+          }, 8000)
         }, 4000)
       }, 3000)
     }

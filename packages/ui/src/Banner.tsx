@@ -91,15 +91,22 @@ export type BannerHandle = Pick<BannerItem, 'close' | 'setMessage'> & {
 export function useBanner(): BannerHandle {
   const bannerStore = BannerManager.useStore()
   const banner = useRef<BannerItem>(null)
+  const show = (props: BannerProps) => {
+    banner.current = bannerStore.show(props)
+  }
   return {
-    show(props: BannerProps) {
-      banner.current = bannerStore.show(props)
-    },
+    show,
     setMessage(message: string) {
-      banner.current.setMessage(message)
+      if (!banner.current) {
+        show({ message })
+      } else {
+        banner.current.setMessage(message)
+      }
     },
     close() {
-      banner.current.close()
+      if (banner.current) {
+        banner.current.close()
+      }
     },
   }
 }

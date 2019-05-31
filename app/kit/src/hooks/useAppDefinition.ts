@@ -89,6 +89,9 @@ export function useAppStoreInstalledAppDefinition(
   useEffect(() => {
     if (!identifier) return
     let cancel = false
+
+    console.log('fetching full def', identifier)
+
     command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId })
       .then(res => {
         clearTimeout(tm.current)

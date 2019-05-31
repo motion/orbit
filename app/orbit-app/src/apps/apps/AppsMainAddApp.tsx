@@ -103,7 +103,13 @@ export function AppsMainAddAppContent({
       {hasSetup && (
         <Section space>
           <Section bordered pad title="Setup" titleSize={0.85}>
-            <AppSetupForm onFocus={() => setShouldLoadFullDef(true)} def={def} />
+            <AppSetupForm
+              onFocus={() => {
+                console.log('focused form')
+                setShouldLoadFullDef(true)
+              }}
+              def={def}
+            />
           </Section>
           <Message alt="lightGray" icon="warn">
             This app stores data privately, only on your device. If your team enables decentralized

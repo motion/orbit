@@ -9,9 +9,6 @@ export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
 
   useEffect(() => {
-    banner.show({
-      message: 'Installing...',
-    })
     return () => {
       banner.close()
     }

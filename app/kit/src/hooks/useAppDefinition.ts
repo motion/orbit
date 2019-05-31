@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
@@ -72,6 +72,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): AppDefin
         api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
         sync: !!searchedApp.features.some(x => x === 'sync') ? true : false,
+        setup: searchedApp.setup,
       }
 }
 

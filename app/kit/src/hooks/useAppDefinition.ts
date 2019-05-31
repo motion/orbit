@@ -90,7 +90,7 @@ export function useAppStoreInstalledAppDefinition(
     if (!identifier) return
     let cancel = false
 
-    command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId })
+    command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId }, 50000)
       .then(res => {
         clearTimeout(tm.current)
         options && options.onStatus(false)

@@ -148,10 +148,7 @@ export class WebSocketClientTransport implements ClientTransport {
       const callback = () => {
         try {
           log.verbose(
-            'sent client data',
-            query.model,
-            query.type,
-            query.id,
+            `sent client data ${query.model} ${query.type} ${query.id}`,
             JSON.stringify(query.args),
           )
           this.websocket.send(JSON.stringify(query))

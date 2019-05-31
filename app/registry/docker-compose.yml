@@ -16,3 +16,5 @@ services:
     environment:
       DOMAINS: 'registry.tryorbit.com -> http://verdaccio:4873'
       CLIENT_MAX_BODY_SIZE: 50M
+      STAGE: 'production'
+      FORCE_RENEW: 'true'

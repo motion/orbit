@@ -1,17 +1,6 @@
-import { useAppDefinition, useAppDefinitionFromStore } from '@o/kit'
-import {
-  BannerHandle,
-  Button,
-  ButtonProps,
-  Loading,
-  Message,
-  Paragraph,
-  Row,
-  Section,
-  SubTitle,
-  useBanner,
-} from '@o/ui'
-import React, { Suspense, useEffect } from 'react'
+import { AppDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import React, { Suspense, useEffect, useState } from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
@@ -46,19 +35,34 @@ export function AppsMainAddAppContent({
   identifier: string
   banner: BannerHandle
 }) {
+  // only download full definition once necessary
+  const [shouldLoadFullDef, setShouldLoadFullDef] = useState(false)
   const localDef = useAppDefinition(identifier)
-  const searchDef = useAppDefinitionFromStore(!localDef && identifier, {
-    onStatus(message: string | false) {
-      if (message === false) {
-        banner.close()
-      } else {
-        banner.setMessage(message)
-      }
+  const simpleSearchDef = useAppDefinitionFromStore(!localDef && identifier)
+  const fullSetupDef = useAppStoreInstalledAppDefinition(
+    !localDef && shouldLoadFullDef && identifier,
+    {
+      onStatus(message: string | false) {
+        if (message === false) {
+          banner.close()
+        } else {
+          banner.setMessage(message)
+        }
+      },
     },
-  })
-  const def = localDef || searchDef
+  )
+
+  let error = ''
+  let def: AppDefinition = localDef
+
+  if ('error' in fullSetupDef) {
+    error = fullSetupDef.error
+  } else {
+    def = def || fullSetupDef || simpleSearchDef
+  }
 
   if (!def) {
+    console.warn('no definition found...')
     return null
   }
 
@@ -93,10 +97,12 @@ export function AppsMainAddAppContent({
         </Row>
       }
     >
+      {!!error && <Message alt="error">{error}</Message>}
+
       {hasSetup && (
         <Section space>
           <Section bordered pad title="Setup" titleSize={0.85}>
-            <AppSetupForm def={def} />
+            <AppSetupForm onFocus={() => setShouldLoadFullDef(true)} def={def} />
           </Section>
           <Message alt="lightGray" icon="warn">
             This app stores data privately, only on your device. If your team enables decentralized

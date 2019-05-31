@@ -1,6 +1,7 @@
 import { Command } from '@o/mediator'
 
 import { ApiInfo } from '../ApiInfo'
+import { AppBit } from './AppBit'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
@@ -30,8 +31,8 @@ export const GetAppStoreAppDefinitionCommand = new Command<
 
 // run verification on setup
 export const AppDefinitionSetupVerifyCommand = new Command<
-  { type: 'error'; message: any; errors?: any } | { type: 'success'; message: string },
-  { identifier: string; app: any[] }
+  { type: 'error'; message?: string; errors?: any } | { type: 'success'; message: string },
+  { identifier: string; app: AppBit }
 >('AppDefinitionSetupVerify')
 
 export const GetPIDCommand = new Command<number>('get-pid')

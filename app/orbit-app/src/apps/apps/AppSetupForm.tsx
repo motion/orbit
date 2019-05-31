@@ -1,5 +1,5 @@
 import { AppBit, AppDefinition, AppModel, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
-import { Form } from '@o/ui'
+import { Form, FormProps } from '@o/ui'
 import React from 'react'
 
 export function createNewApp(def: AppDefinition): AppBit {
@@ -11,13 +11,18 @@ export function createNewApp(def: AppDefinition): AppBit {
   }
 }
 
-export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
+export function AppSetupForm({
+  def,
+  id,
+  ...rest
+}: FormProps<any> & { id?: number; def: AppDefinition }) {
   const [activeSpace] = useActiveSpace()
   const [existingApp] = useAppBit(selectDefined(id, false))
   const app: AppBit = existingApp || createNewApp(def)
 
   return (
     <Form
+      {...rest}
       submitButton
       fields={def.setup}
       onSubmit={async values => {

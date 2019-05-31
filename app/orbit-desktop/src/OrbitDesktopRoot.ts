@@ -334,7 +334,7 @@ export class OrbitDesktopRoot {
           try {
             const command = await yarnOrNpm()
             const args = `i ${packageId}@latest --registry https://registry.tryorbit.com`.split(' ')
-            log.info(`executing ${command} in ${tempPackageDir}`)
+            log.info(`executing ${command} ${args.join(' ')} in ${tempPackageDir}`)
             const proc = execa(command, args, {
               cwd: tempPackageDir,
             })

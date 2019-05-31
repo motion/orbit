@@ -1,8 +1,8 @@
-import { AppLoadContext, AppMainViewProps, SubPane, useStore } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderLeft, BorderTop, Loading, SuspenseWithBanner, View } from '@o/ui'
+import { BorderLeft, BorderTop, Loading, SuspenseWithBanner, useShareStore, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, useContext } from 'react'
+import React, { memo, Suspense, useContext, useRef } from 'react'
 
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
@@ -11,8 +11,20 @@ import { ToolBarPad } from './OrbitToolBar'
 export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id, appDef } = useContext(AppLoadContext)
   const { appStore } = useStores()
+  const shareStore = useShareStore()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
   const { isEditing } = useStore(App)
+  const suspenseBanner = useRef<SuspenseWithBanner>()
+
+  useReaction(
+    () => shareStore.clipboards['main'],
+    () => {
+      suspenseBanner.current.clearError()
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
 
   if (!props.children) {
     return null
@@ -20,9 +32,9 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
 
   return (
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
-      <SuspenseWithBanner fallback={null}>
+      <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
-      </SuspenseWithBanner>
+      </Suspense>
       <OrbitMainContainer
         isEditing={isEditing}
         transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}
@@ -30,11 +42,11 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         <View className="app-container" flex={1} position="relative" maxHeight="100%">
           {props.hasSidebar && <BorderLeft />}
           {props.hasToolbar && <BorderTop />}
-          <SuspenseWithBanner fallback={<Loading />}>{props.children}</SuspenseWithBanner>
+          <SuspenseWithBanner ref={suspenseBanner} fallback={<Loading />}>
+            {props.children}
+          </SuspenseWithBanner>
         </View>
-        <SuspenseWithBanner fallback={null}>
-          {props.hasStatusbar && statusbarPadElement}
-        </SuspenseWithBanner>
+        <Suspense fallback={null}>{props.hasStatusbar && statusbarPadElement}</Suspense>
       </OrbitMainContainer>
     </SubPane>
   )

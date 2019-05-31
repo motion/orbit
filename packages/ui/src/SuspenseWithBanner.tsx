@@ -14,6 +14,10 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps> {
     error: null,
   }
 
+  clearError = () => {
+    this.setState({ error: null })
+  }
+
   componentDidCatch(error) {
     console.warn('catching error', error)
     this.setState({ error })

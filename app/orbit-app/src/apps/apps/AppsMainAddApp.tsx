@@ -1,15 +1,27 @@
 import { useAppDefinition, useAppDefinitionFromStore } from '@o/kit'
-import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle, SuspenseWithBanner, useBanner } from '@o/ui'
-import React, { useEffect } from 'react'
+import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import React, { Suspense, useEffect } from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
+  const banner = useBanner()
+  console.log('banner', banner)
+
+  useEffect(() => {
+    banner.show({
+      message: 'Installing...',
+    })
+    return () => {
+      banner.close()
+    }
+  }, [])
+
   return (
-    <SuspenseWithBanner>
-      <AppsMainAddAppContent {...props} />
-    </SuspenseWithBanner>
+    <Suspense fallback={<Loading />}>
+      <AppsMainAddAppContent banner={banner} {...props} />
+    </Suspense>
   )
 }
 
@@ -17,20 +29,19 @@ function SubItem(props: ButtonProps) {
   return <Button chromeless {...props} />
 }
 
-export function AppsMainAddAppContent(props: { identifier: string }) {
-  const def = useAppDefinition(props.identifier)
-  const banner = useBanner()
-  const search = useAppDefinitionFromStore(props.identifier, {
+export function AppsMainAddAppContent({
+  banner,
+  identifier,
+}: {
+  identifier: string
+  banner: BannerHandle
+}) {
+  const def = useAppDefinition(identifier)
+  const search = useAppDefinitionFromStore(identifier, {
     onStatus(message: string) {
-      banner.setMessage(message)
+      banner && banner.setMessage(message)
     },
   })
-
-  useEffect(() => {
-    banner.show({
-      message: 'Installing...',
-    })
-  }, [])
 
   if (!def) {
     return null
@@ -42,7 +53,7 @@ export function AppsMainAddAppContent(props: { identifier: string }) {
     <Section
       pad="lg"
       space
-      icon={props.identifier}
+      icon={identifier}
       title={def.name}
       titlePad
       titleBorder

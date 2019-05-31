@@ -84,7 +84,11 @@ export const ProvideBanner = memo(
   },
 )
 
-export function useBanner() {
+export type BannerHandle = Pick<BannerItem, 'close' | 'setMessage'> & {
+  show: (props: BannerProps) => void
+}
+
+export function useBanner(): BannerHandle {
   const bannerStore = BannerManager.useStore()
   const banner = useRef<BannerItem>(null)
   return {

@@ -48,7 +48,6 @@ export const ProvideBanner = memo(
   }) => {
     const bannerStore = BannerManager.useCreateStore()
     const BannerView = template
-    console.log('have banners', bannerStore.banners)
     return (
       <BannerManager.SimpleProvider value={bannerStore}>
         {children}

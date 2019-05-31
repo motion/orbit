@@ -60,7 +60,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     invariant(typeof app.name === 'string', `Must set appInfo.name, got: ${app.name}`)
 
     if (options.ignoreVersion) {
-      shouldPublish = false
+      shouldPublish = true
     }
 
     if (registryInfo.versions && registryInfo.versions[verion] && !options.ignoreVersion) {
@@ -101,7 +101,11 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     if (shouldPublish) {
       reporter.info(`Publishing app to registry`)
-      await publishApp()
+      try {
+        await publishApp()
+      } catch (err) {
+        console.log('Error publishing', err.message)
+      }
     }
 
     // trigger search api index update

@@ -4,12 +4,10 @@
   "main": "./_/main.js",
   "private": true,
   "scripts": {
-    "start": "yarn env:dev && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
-    "start:prod": "yarn env:prod && docker-compose up -d",
-    "start:prod:recreate": "yarn env:prod && docker-compose up --force-recreate --build --always-recreate-deps --renew-anon-volumes -d",
-    "stop:prod": "yarn env:prod && docker-compose up -d",
-    "env:dev": "eval $(docker-machine env -u)",
-    "env:prod": "eval $(docker-machine env orbit-registry)",
+    "start": "eval $(docker-machine env -u) && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+    "start:prod": "yarn eval $(docker-machine env orbit-registry) && docker-compose up -d",
+    "start:prod:recreate": "yarn eval $(docker-machine env orbit-registry) && docker-compose up --force-recreate --build --always-recreate-deps --renew-anon-volumes -d",
+    "stop:prod": "yarn eval $(docker-machine env orbit-registry) && docker-compose up -d",
     "create:droplet": "docker-machine create --digitalocean-size 's-1vcpu-1gb' --digitalocean-region 'sfo2' --digitalocean-private-networking --digitalocean-ipv6 --digitalocean-backups --digitalocean-access-token $ORBIT_DO_TOKEN --driver digitalocean --digitalocean-access-token $ORBIT_DO_ACCESS_TOKEN orbit-registry",
     "ssh:prod": "docker-machine ssh orbit-registry"
   },

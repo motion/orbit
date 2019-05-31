@@ -3,7 +3,6 @@
   "version": "2.5.2",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
-  "private": true,
   "sideEffects": false,
   "scripts": {
     "build": "tsc || true",

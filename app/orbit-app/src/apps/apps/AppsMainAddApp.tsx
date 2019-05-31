@@ -6,9 +6,15 @@ import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
-  const def = useAppDefinition(props.identifier) || useAppDefinitionFromStore(props.identifier)
+  const def = useAppDefinition(props.identifier)
+  const search = useAppDefinitionFromStore(props.identifier)
+
+  if (!def) {
+    return null
+  }
+
   const hasSetup = !!def.setup
-  console.log('def', def)
+  console.log('def', def, search)
   return (
     <Section
       pad="lg"

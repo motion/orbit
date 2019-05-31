@@ -45,7 +45,7 @@ import {
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSON, ensureDir, ensureFile } from 'fs-extra'
+import { writeJSON, ensureDir } from 'fs-extra'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
@@ -338,7 +338,10 @@ export class OrbitDesktopRoot {
           })
           try {
             const command = await yarnOrNpm()
-            const args = `i ${packageId}@latest --registry https://registry.tryorbit.com`.split(' ')
+            const addMethod = command === 'yarn' ? 'add' : 'install'
+            const args = `${addMethod} ${packageId}@latest --registry https://registry.tryorbit.com`.split(
+              ' ',
+            )
             log.info(`executing ${command} ${args.join(' ')} in ${tempPackageDir}`)
             const proc = execa(command, args, {
               cwd: tempPackageDir,

@@ -33,13 +33,7 @@ export type FormFieldsObj = { [key: string]: FormFieldType }
  * If falsy, no problem, if truthful, shows an error.
  * Maps to fields.
  * */
-export type FormErrors<A> =
-  | { [key in keyof A]: string }
-  | string
-  | null
-  | boolean
-  | undefined
-  | void
+export type FormErrors<A> = { [key in keyof A]: string } | string | null | true | void
 
 type FormFieldType =
   | {

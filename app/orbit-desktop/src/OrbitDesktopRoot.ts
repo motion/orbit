@@ -39,13 +39,11 @@ import {
   AppDevOpenCommand,
   CloseAppCommand,
   AppMetaCommand,
-  GetAppStoreAppDefinitionCommand,
-  AppDefinition,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSON, ensureDir } from 'fs-extra'
+import { writeJSON } from 'fs-extra'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
@@ -86,10 +84,9 @@ import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
-import commandExists from 'command-exists'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
-import execa from 'execa'
+import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 
 const log = new Logger('desktop')
 
@@ -327,60 +324,7 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
-        resolveCommand(GetAppStoreAppDefinitionCommand, async ({ packageId }) => {
-          const Config = getGlobalConfig()
-          const tempPackageDir = Path.join(Config.paths.userData, 'app_definitions')
-          await ensureDir(tempPackageDir)
-          await writeJSON(Path.join(tempPackageDir, 'package.json'), {
-            name: '@o/app-definitions',
-            version: '0.0.0',
-            description: 'im just used to make yarn happy',
-          })
-          try {
-            const command = await yarnOrNpm()
-            const addMethod = command === 'yarn' ? 'add' : 'install'
-            const args = `${addMethod} ${packageId}@latest --registry https://registry.tryorbit.com`.split(
-              ' ',
-            )
-            log.info(`executing ${command} ${args.join(' ')} in ${tempPackageDir}`)
-            const proc = execa(command, args, {
-              cwd: tempPackageDir,
-            })
-
-            proc.stdout.pipe(process.stdout)
-            proc.stderr.pipe(process.stderr)
-
-            await proc
-
-            // get app definition
-            console.log('got app, need to provide app definition')
-
-            const appPath = Path.join(tempPackageDir, 'node_modules', ...packageId.split('/'))
-            const appDefPath = Path.join(appPath, 'dist', 'appInfo.js')
-
-            log.info(`Importing app definition at ${appDefPath}`)
-
-            let def: AppDefinition
-
-            try {
-              def = require(appDefPath).default
-            } catch (err) {
-              console.log('error with app def', err)
-              return {
-                error: err.message,
-              }
-            }
-
-            log.info(`got def ${def.name}`)
-
-            return def
-          } catch (err) {
-            console.log('npm install error', err.message, err.stack)
-            return { error: err.message }
-          }
-          console.log('we should have a temp package now setup in', tempPackageDir)
-          return { error: 'TODO, success case' }
-        }),
+        ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
           return this.orbitAppsManager.appMeta[identifier]
         }),
@@ -449,13 +393,4 @@ export class OrbitDesktopRoot {
 
     return mediatorServerPort
   }
-}
-
-async function yarnOrNpm() {
-  const hasYarn = await commandExists('yarn')
-  const hasNpm = await commandExists('npm')
-  if (!hasYarn && !hasNpm) {
-    throw new Error(`Neither npm or yarn installed, need one of them to continue.`)
-  }
-  return hasYarn ? 'yarn' : 'npm'
 }

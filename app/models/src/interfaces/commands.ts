@@ -1,7 +1,6 @@
 import { Command } from '@o/mediator'
 
 import { ApiInfo } from '../ApiInfo'
-import { AppDefinition } from '../AppDefinition'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
@@ -23,10 +22,17 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
+// download app definition from registry
 export const GetAppStoreAppDefinitionCommand = new Command<
-  AppDefinition | { error: string },
+  { type: 'error'; error: string } | { type: 'success'; identifier: string },
   { packageId: string }
 >('GetAppStoreAppDefinition')
+
+// run verification on setup
+export const AppDefinitionSetupVerifyComand = new Command<
+  { type: 'error'; errors: any } | { type: 'success'; message: string },
+  { identifier: string; app: any[] }
+>('AppDefinitionSetupVerify')
 
 export const GetPIDCommand = new Command<number>('get-pid')
 

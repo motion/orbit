@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from 'react'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
 import { useStores } from './useStores'
-import { SearchableTopBar } from '@o/ui'
 
 function createResource(fetch: any) {
   const cache = {}
@@ -94,7 +93,8 @@ export function useAppStoreInstalledAppDefinition(
         clearTimeout(tm.current)
         options && options.onStatus(false)
         if (!cancel) {
-          setReply(res)
+          console.log('success, import real app definition', res)
+          // setReply(res)
         }
       })
       .catch(error => {
@@ -113,13 +113,13 @@ export function useAppStoreInstalledAppDefinition(
   useEffect(() => {
     if (!identifier) return
     if (options) {
-      options.onStatus('Installing...')
+      options.onStatus('Fetching full app definition...')
       tm.current = setTimeout(() => {
-        options.onStatus('Downloading dependencies...')
+        options.onStatus('Getting app definition dependencies...')
         tm.current = setTimeout(() => {
-          options.onStatus('Slow network or large package, still installing...')
+          options.onStatus('Slow network or large package, still fetching...')
           tm.current = setTimeout(() => {
-            options.onStatus('Compiling dependencies...')
+            options.onStatus('Setting up app definition...')
           }, 8000)
         }, 4000)
       }, 3000)

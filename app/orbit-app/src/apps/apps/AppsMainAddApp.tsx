@@ -1,5 +1,16 @@
 import { useAppDefinition, useAppDefinitionFromStore } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import {
+  BannerHandle,
+  Button,
+  ButtonProps,
+  Loading,
+  Message,
+  Paragraph,
+  Row,
+  Section,
+  SubTitle,
+  useBanner,
+} from '@o/ui'
 import React, { Suspense, useEffect } from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
@@ -36,19 +47,24 @@ export function AppsMainAddAppContent({
   identifier: string
   banner: BannerHandle
 }) {
-  const def = useAppDefinition(identifier)
-  const search = useAppDefinitionFromStore(identifier, {
-    onStatus(message: string) {
-      banner.setMessage(message)
+  const localDef = useAppDefinition(identifier)
+  const searchDef = useAppDefinitionFromStore(!localDef && identifier, {
+    onStatus(message: string | false) {
+      if (message === false) {
+        banner.close()
+      } else {
+        banner.setMessage(message)
+      }
     },
   })
+  const def = localDef || searchDef
 
   if (!def) {
     return null
   }
 
   const hasSetup = !!def.setup
-  console.log('def', def, search)
+  console.log('def', def)
   return (
     <Section
       pad="lg"

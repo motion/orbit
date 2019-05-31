@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
@@ -61,47 +61,33 @@ export function useAppDefinition(identifier?: string): AppDefinition {
 }
 
 export function useAppDefinitionFromStore(
-  query?: string,
-  options?: { onStatus: (message: string) => any },
+  query?: string | false,
+  options?: { onStatus: (message: string | false) => any },
 ): AppDefinition {
   const searchedApp = getSearchAppDefinitions(query)
-
-  // show some nice messages during install
-  useEffect(() => {
-    let tm
-    if (options) {
-      options.onStatus('Installing...')
-      tm = setTimeout(() => {
-        options.onStatus('Downloading dependencies...')
-        tm = setTimeout(() => {
-          options.onStatus('Slow network or large package, still installing...')
-          tm = setTimeout(() => {
-            options.onStatus('Compiling dependencies...')
-          }, 8000)
-        }, 4000)
-      }, 3000)
-    }
-    return () => clearTimeout(tm)
-  }, [])
-
-  if (!searchedApp) {
-    return null
-  }
-  return useTempAppPackage(searchedApp.packageId)
-}
-
-function useTempAppPackage(packageId: string) {
   const [reply, setReply] = useState(null)
+  const tm = useRef(null)
+  console.log('got reply', reply)
 
   useEffect(() => {
+    if (!query) return
+    if (!searchedApp) {
+      console.warn('no searched app found')
+      return null
+    }
+
     let cancel = false
-    command(GetAppStoreAppDefinitionCommand, { packageId })
+    command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId })
       .then(res => {
+        clearTimeout(tm.current)
+        options && options.onStatus(false)
         if (!cancel) {
           setReply(res)
         }
       })
       .catch(error => {
+        clearTimeout(tm.current)
+        options && options.onStatus(false)
         if (!cancel) {
           setReply({ error })
         }
@@ -109,6 +95,24 @@ function useTempAppPackage(packageId: string) {
     return () => {
       cancel = true
     }
+  }, [])
+
+  // show some nice messages during install
+  useEffect(() => {
+    if (!query) return
+    if (options) {
+      options.onStatus('Installing...')
+      tm.current = setTimeout(() => {
+        options.onStatus('Downloading dependencies...')
+        tm.current = setTimeout(() => {
+          options.onStatus('Slow network or large package, still installing...')
+          tm.current = setTimeout(() => {
+            options.onStatus('Compiling dependencies...')
+          }, 8000)
+        }, 4000)
+      }, 3000)
+    }
+    return () => clearTimeout(tm.current)
   }, [])
 
   return reply

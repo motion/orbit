@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
 import { useStores } from './useStores'
+import { SearchableTopBar } from '@o/ui'
 
 function createResource(fetch: any) {
   const cache = {}
@@ -60,22 +61,33 @@ export function useAppDefinition(identifier?: string): AppDefinition {
   return getAppDefinition(identifier || appStore.identifier)
 }
 
-export function useAppDefinitionFromStore(
-  query?: string | false,
+export function useAppDefinitionFromStore(identifier?: string | false): AppDefinition {
+  const searchedApp = getSearchAppDefinitions(identifier)
+  return !identifier
+    ? null
+    : {
+        id: searchedApp.identifier,
+        icon: searchedApp.icon,
+        name: searchedApp.name,
+        description: searchedApp.description,
+        api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
+        graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
+        sync: !!searchedApp.features.some(x => x === 'sync') ? true : false,
+      }
+}
+
+export function useAppStoreInstalledAppDefinition(
+  identifier?: string | false,
   options?: { onStatus: (message: string | false) => any },
-): AppDefinition {
-  const searchedApp = getSearchAppDefinitions(query)
-  const [reply, setReply] = useState(null)
+) {
+  const searchedApp = getSearchAppDefinitions(identifier)
+  // start out with the searched app to load quickly
+  const [reply, setReply] = useState<AppDefinition | { error: string }>(null)
   const tm = useRef(null)
-  console.log('got reply', reply)
 
+  // then install the app definition and have it ready for use in setup validation
   useEffect(() => {
-    if (!query) return
-    if (!searchedApp) {
-      console.warn('no searched app found')
-      return null
-    }
-
+    if (!identifier) return
     let cancel = false
     command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId })
       .then(res => {
@@ -99,7 +111,7 @@ export function useAppDefinitionFromStore(
 
   // show some nice messages during install
   useEffect(() => {
-    if (!query) return
+    if (!identifier) return
     if (options) {
       options.onStatus('Installing...')
       tm.current = setTimeout(() => {

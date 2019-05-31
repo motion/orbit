@@ -18,7 +18,6 @@ import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
-  console.log('banner', banner)
 
   useEffect(() => {
     banner.show({

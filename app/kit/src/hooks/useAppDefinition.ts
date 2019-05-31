@@ -1,7 +1,7 @@
-import { useCommand } from '@o/bridge'
+import { command } from '@o/bridge'
 import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
@@ -91,9 +91,25 @@ export function useAppDefinitionFromStore(
 }
 
 function useTempAppPackage(packageId: string) {
-  const res = useCommand(GetAppStoreAppDefinitionCommand, { packageId })
-  if ('error' in res) {
-    throw res.error
-  }
-  return res
+  const [reply, setReply] = useState(null)
+
+  useEffect(() => {
+    let cancel = false
+    command(GetAppStoreAppDefinitionCommand, { packageId })
+      .then(res => {
+        if (!cancel) {
+          setReply(res)
+        }
+      })
+      .catch(error => {
+        if (!cancel) {
+          setReply({ error })
+        }
+      })
+    return () => {
+      cancel = true
+    }
+  }, [])
+
+  return reply
 }

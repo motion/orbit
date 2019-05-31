@@ -334,10 +334,20 @@ export class OrbitDesktopRoot {
             const args = `i --force ${packageId}@latest --registry https://registry.tryorbit.com`.split(
               ' ',
             )
-            log.info(`errexecuting ${command} in ${tempPackageDir}`)
-            await execa(command, args, {
+            log.info(`executing ${command} in ${tempPackageDir}`)
+            const proc = execa(command, args, {
               cwd: tempPackageDir,
             })
+
+            proc.stdout.pipe(process.stdout)
+            proc.stderr.pipe(process.stderr)
+
+            await proc
+
+            // get app definition
+            console.log('got app, need to provide app definition')
+
+            return null
           } catch (err) {
             console.log('npm install error', err.message, err.stack)
             return { error: err.message }

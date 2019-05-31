@@ -10,6 +10,8 @@ const log = new Logger('app-store-definition-resolvers')
 const Config = getGlobalConfig()
 const tempPackageDir = join(Config.paths.userData, 'app_definitions')
 
+console.log('AppDefinitionSetupVerifyCommand', AppDefinitionSetupVerifyCommand)
+
 export function loadAppDefinitionResolvers() {
   return [resolveGetAppStoreDefinition(), resolveAppSetupVerify()]
 }

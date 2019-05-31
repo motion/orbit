@@ -2,7 +2,9 @@ import { Suspense, useEffect } from 'react'
 import React from 'react'
 
 import { useBanner } from './Banner'
+import { Center } from './Center'
 import { Loading, LoadingProps } from './progress/Loading'
+import { SubTitle } from './text/SubTitle'
 
 type SuspenseProps = LoadingProps & {
   children?: React.ReactNode
@@ -27,7 +29,9 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps> {
     if (this.state.error) {
       return (
         <ErrorHandler error={this.state.error} onClose={() => this.setState({ error: null })}>
-          <Loading />
+          <Center>
+            <SubTitle>Error loading content</SubTitle>
+          </Center>
         </ErrorHandler>
       )
     }

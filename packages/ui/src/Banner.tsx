@@ -34,7 +34,6 @@ class BannerStore {
   show(banner: BannerProps) {
     const key = Math.random()
     const bannerItem: BannerItem = {
-      type: 'warn',
       ...banner,
       key,
       setMessage: this.setMessage.bind(null, key),

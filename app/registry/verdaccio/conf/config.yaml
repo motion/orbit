@@ -7,15 +7,15 @@ auth:
   htpasswd:
     file: /verdaccio/conf/htpasswd
 
-# uplinks:
-#   yarnjs:
-#     url: https://registry.yarnpkg.com/
-#     max_fails: 100
-#     cache: false
-#   npmjs:
-#     url: https://registry.npmjs.org/
-#     max_fails: 100
-#     cache: false
+uplinks:
+  yarnjs:
+    url: https://registry.yarnpkg.com/
+    max_fails: 100
+    cache: false
+  npmjs:
+    url: https://registry.npmjs.org/
+    max_fails: 100
+    cache: false
 
 middlewares:
   audit:

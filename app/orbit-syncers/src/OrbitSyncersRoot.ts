@@ -7,13 +7,7 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import {
-  AppForceCancelCommand,
-  AppForceSyncCommand,
-  Entities,
-  JobEntity,
-  JobModel,
-} from '@o/models'
+import { Entities, JobEntity, JobModel } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'

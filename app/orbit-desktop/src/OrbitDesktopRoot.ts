@@ -45,7 +45,7 @@ import {
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSON, ensureDir } from 'fs-extra'
+import { writeJSON, ensureDir, ensureFile } from 'fs-extra'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
@@ -331,6 +331,11 @@ export class OrbitDesktopRoot {
           const Config = getGlobalConfig()
           const tempPackageDir = Path.join(Config.paths.userData, 'app_definitions')
           await ensureDir(tempPackageDir)
+          await writeJSON(Path.join(tempPackageDir, 'package.json'), {
+            name: '@o/app-definitions',
+            version: '0.0.0',
+            description: 'im just used to make yarn happy',
+          })
           try {
             const command = await yarnOrNpm()
             const args = `i ${packageId}@latest --registry https://registry.tryorbit.com`.split(' ')

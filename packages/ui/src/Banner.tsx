@@ -1,7 +1,7 @@
 import { createStoreContext } from '@o/use-store'
 import { FullScreen } from 'gloss'
 import { filter } from 'lodash'
-import React, { FunctionComponent, memo } from 'react'
+import React, { FunctionComponent, memo, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Message } from './text/Message'
@@ -18,13 +18,30 @@ type BannerProps = {
 
 type BannerItem = BannerProps & {
   key: number
+  setMessage: (message: string) => void
+  close: () => void
 }
 
 class BannerStore {
   banners: BannerItem[] = []
 
+  setMessage(key: number, message: string) {
+    const banner = this.banners.find(x => x.key === key)
+    banner.message = message
+    this.banners = [...this.banners]
+  }
+
   show(banner: BannerProps) {
-    this.banners = [...this.banners, { type: 'warn', ...banner, key: Math.random() }]
+    const key = Math.random()
+    const bannerItem: BannerItem = {
+      type: 'warn',
+      ...banner,
+      key,
+      setMessage: this.setMessage.bind(null, key),
+      close: this.hide.bind(null, key),
+    }
+    this.banners = [...this.banners, bannerItem]
+    return bannerItem
   }
 
   hide(key: number) {
@@ -68,7 +85,19 @@ export const ProvideBanner = memo(
 )
 
 export function useBanner() {
-  return BannerManager.useStore()
+  const bannerStore = BannerManager.useStore()
+  const banner = useRef<BannerItem>(null)
+  return {
+    show(props: BannerProps) {
+      banner.current = bannerStore.show(props)
+    },
+    setMessage(message: string) {
+      banner.current.setMessage(message)
+    },
+    close() {
+      banner.current.close()
+    },
+  }
 }
 
 export type BannerViewProps = BannerProps & { close: () => void }

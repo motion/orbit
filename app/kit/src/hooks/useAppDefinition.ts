@@ -1,6 +1,7 @@
 import { useCommand } from '@o/bridge'
 import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
+import { useEffect } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
@@ -59,8 +60,30 @@ export function useAppDefinition(identifier?: string): AppDefinition {
   return getAppDefinition(identifier || appStore.identifier)
 }
 
-export function useAppDefinitionFromStore(query?: string): AppDefinition {
+export function useAppDefinitionFromStore(
+  query?: string,
+  options?: { onStatus: (message: string) => any },
+): AppDefinition {
   const searchedApp = getSearchAppDefinitions(query)
+
+  // show some nice messages during install
+  useEffect(() => {
+    let tm
+    if (options) {
+      options.onStatus('Installing...')
+      tm = setTimeout(() => {
+        options.onStatus('Downloading dependencies...')
+        tm = setTimeout(() => {
+          options.onStatus('Slow network or large package, still installing...')
+          tm = setTimeout(() => {
+            options.onStatus('Compiling dependencies...')
+          }, 4000)
+        }, 4000)
+      }, 3000)
+    }
+    return () => clearTimeout(tm)
+  }, [])
+
   if (!searchedApp) {
     return null
   }

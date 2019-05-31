@@ -1,13 +1,36 @@
 import { useAppDefinition, useAppDefinitionFromStore } from '@o/kit'
-import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle } from '@o/ui'
-import React from 'react'
+import { Button, ButtonProps, Message, Paragraph, Row, Section, SubTitle, SuspenseWithBanner, useBanner } from '@o/ui'
+import React, { useEffect } from 'react'
 
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
+  return (
+    <SuspenseWithBanner>
+      <AppsMainAddAppContent {...props} />
+    </SuspenseWithBanner>
+  )
+}
+
+function SubItem(props: ButtonProps) {
+  return <Button chromeless {...props} />
+}
+
+export function AppsMainAddAppContent(props: { identifier: string }) {
   const def = useAppDefinition(props.identifier)
-  const search = useAppDefinitionFromStore(props.identifier)
+  const banner = useBanner()
+  const search = useAppDefinitionFromStore(props.identifier, {
+    onStatus(message: string) {
+      banner.setMessage(message)
+    },
+  })
+
+  useEffect(() => {
+    banner.show({
+      message: 'Installing...',
+    })
+  }, [])
 
   if (!def) {
     return null
@@ -66,8 +89,4 @@ export function AppsMainAddApp(props: { identifier: string }) {
       </Section>
     </Section>
   )
-}
-
-function SubItem(props: ButtonProps) {
-  return <Button chromeless {...props} />
 }

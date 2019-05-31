@@ -2,11 +2,11 @@ import { Suspense, useEffect } from 'react'
 import React from 'react'
 
 import { useBanner } from './Banner'
-import { Loading } from './progress/Loading'
+import { Loading, LoadingProps } from './progress/Loading'
 
-interface SuspenseProps {
+type SuspenseProps = LoadingProps & {
   children?: React.ReactNode
-  fallback: NonNullable<React.ReactNode> | null
+  fallback?: NonNullable<React.ReactNode> | null
 }
 
 export class SuspenseWithBanner extends React.Component<SuspenseProps> {
@@ -28,7 +28,9 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps> {
       )
     }
 
-    return <Suspense fallback={<Loading />}>{this.props.children}</Suspense>
+    return (
+      <Suspense fallback={<Loading message={this.props.message} />}>{this.props.children}</Suspense>
+    )
   }
 }
 

@@ -1,7 +1,8 @@
 import { Suspense, useEffect } from 'react'
 import React from 'react'
-import { Loading } from './progress/Loading'
+
 import { useBanner } from './Banner'
+import { Loading } from './progress/Loading'
 
 interface SuspenseProps {
   children?: React.ReactNode
@@ -14,6 +15,7 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps> {
   }
 
   componentDidCatch(error) {
+    console.warn('catching error', error)
     this.setState({ error })
   }
 

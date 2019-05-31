@@ -2,14 +2,23 @@ import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
 import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
+import { useThemeStore } from './om/stores'
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 export const OrbitRoot = hot(() => {
+  const themeStore = useThemeStore()
+
+  useLayoutEffect(() => {
+    if (!IS_ELECTRON) {
+      document.body.style.background = themes[themeStore.themeColor].background.toCSS()
+    }
+  }, [themeStore.themeColor])
+
   // capture un-captured links
   // if you don't then clicking a link will cause electron to go there
   // this is a good safeguard
@@ -35,7 +44,7 @@ export const OrbitRoot = hot(() => {
         }
       }}
     >
-      <ProvideUI themes={themes}>
+      <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
         <ErrorBoundary name="Root">
           <React.Suspense fallback={null}>
             <OrbitPage />

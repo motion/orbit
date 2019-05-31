@@ -4,7 +4,7 @@
   "private": true,
   "main": "_/index.js",
   "bin": {
-    "orbit": "./_/index.js"
+    "orbit": "_/index.js"
   },
   "scripts": {
     "build": "tsc || true",

@@ -525,6 +525,12 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || []
 
+  // we should only ever get this in really weird error cases (i'm seeing it during a componentDidCatch)
+  if (!themeStyle) {
+    debugger
+    return null
+  }
+
   const borderColor = `${themeStyle.borderColor || ''}`
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 

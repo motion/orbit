@@ -1,6 +1,6 @@
-import { AppLoadContext, AppMainViewProps, SubPane, useStore, SuspenseWithBanner } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderLeft, BorderTop, Loading, View } from '@o/ui'
+import { BorderLeft, BorderTop, Loading, SuspenseWithBanner, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useContext } from 'react'
 

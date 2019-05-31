@@ -1,10 +1,12 @@
-import React, { FunctionComponent } from 'react'
 import { createStoreContext } from '@o/use-store'
 import { FullScreen } from 'gloss'
-import { Message } from './text/Message'
-import { remove } from 'lodash'
+import { filter } from 'lodash'
+import React, { FunctionComponent, memo } from 'react'
+
 import { Button } from './buttons/Button'
+import { Message } from './text/Message'
 import { Row } from './View/Row'
+import { View } from './View/View'
 
 type BannerProps = {
   message: string
@@ -22,7 +24,7 @@ class BannerStore {
   banners: BannerItem[] = []
 
   show(banner: BannerProps) {
-    this.banners = [...this.banners, { ...banner, key: Math.random() }]
+    this.banners = [...this.banners, { type: 'warn', ...banner, key: Math.random() }]
   }
 
   hide(key: number) {
@@ -30,38 +32,41 @@ class BannerStore {
     if (toRemove.onClose) {
       toRemove.onClose()
     }
-    this.banners = remove(this.banners, x => x.key === key)
+    this.banners = filter(this.banners, x => x.key !== key)
   }
 }
 
 const BannerManager = createStoreContext(BannerStore)
 
-export function ProvideBanner({
-  children,
-  template = Banner,
-}: {
-  children: any
-  template?: FunctionComponent<BannerViewProps>
-}) {
-  const bannerStore = BannerManager.useCreateStore()
-  const BannerView = template
-  return (
-    <BannerManager.SimpleProvider value={bannerStore}>
-      {children}
+export const ProvideBanner = memo(
+  ({
+    children,
+    template = Banner,
+  }: {
+    children: any
+    template?: FunctionComponent<BannerViewProps>
+  }) => {
+    const bannerStore = BannerManager.useCreateStore()
+    const BannerView = template
+    console.log('have banners', bannerStore.banners)
+    return (
+      <BannerManager.SimpleProvider value={bannerStore}>
+        {children}
 
-      {/* default to a bottom fixed position, we can make this customizable */}
-      <FullScreen pointerEvents="none" top="auto">
-        {bannerStore.banners.map(banner => (
-          <BannerView
-            key={JSON.stringify(banner)}
-            {...banner}
-            close={() => bannerStore.hide(banner.key)}
-          />
-        ))}
-      </FullScreen>
-    </BannerManager.SimpleProvider>
-  )
-}
+        {/* default to a bottom fixed position, we can make this customizable */}
+        <FullScreen pointerEvents="none" top="auto" zIndex={1000000000}>
+          {bannerStore.banners.map(banner => (
+            <BannerView
+              key={JSON.stringify(banner)}
+              {...banner}
+              close={() => bannerStore.hide(banner.key)}
+            />
+          ))}
+        </FullScreen>
+      </BannerManager.SimpleProvider>
+    )
+  },
+)
 
 export function useBanner() {
   return BannerManager.useStore()
@@ -71,11 +76,20 @@ export type BannerViewProps = BannerProps & { close: () => void }
 
 export function Banner(props: BannerViewProps) {
   return (
-    <Message sizeRadius={0} pointerEvents="auto" position="relative" alt={props.type}>
-      <Row>
-        {props.message}
-        <Button chromeless icon="cross" iconSize={1.25} onClick={props.close} />
-      </Row>
-    </Message>
+    <View width="100%" overflow="hidden" background={theme => theme.background}>
+      <Message
+        className="ui-banner"
+        sizeRadius={0}
+        pointerEvents="auto"
+        position="relative"
+        alt={props.type}
+        width="100%"
+      >
+        <Row flex={1} justifyContent="space-between" alignItems="center">
+          {props.message}
+          <Button chromeless icon="cross" iconSize={20} onClick={props.close} />
+        </Row>
+      </Message>
+    </View>
   )
 }

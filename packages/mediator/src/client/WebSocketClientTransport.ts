@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
@@ -99,10 +100,10 @@ export class WebSocketClientTransport implements ClientTransport {
       // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
-          this.websocket.send(JSON.stringify(data))
+          this.websocket.send(JSON.stringify(selectDefined(data, null)))
         } catch (err) {
           subject.error(err)
-          console.warn(`Failed to execute websocket operation ${JSON.stringify(err)}`)
+          console.warn(`Failed to execute websocket operation ${err} ${err.message} ${err.stack}`)
         }
       }
       if (this.websocket.readyState === this.websocket.OPEN) {
@@ -147,13 +148,10 @@ export class WebSocketClientTransport implements ClientTransport {
       // to be executed later on when websocket connection will be established
       const callback = () => {
         try {
-          log.verbose(
-            `sent client data ${query.model} ${query.type} ${query.id}`,
-            JSON.stringify(query.args),
-          )
+          log.verbose(`sent client data ${query.model} ${query.type} ${query.id}`, query.args)
           this.websocket.send(JSON.stringify(query))
         } catch (err) {
-          fail(`Failed to execute websocket operation ${JSON.stringify(err)}`)
+          fail(`Failed to execute websocket operation ${err.message} ${err.stack} ${err}`)
           return
         }
 

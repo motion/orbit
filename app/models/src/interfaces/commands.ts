@@ -24,13 +24,13 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 
 // download app definition from registry
 export const GetAppStoreAppDefinitionCommand = new Command<
-  { type: 'error'; error: string } | { type: 'success'; identifier: string },
+  { type: 'error'; message: string } | { type: 'success'; identifier: string },
   { packageId: string }
 >('GetAppStoreAppDefinition')
 
 // run verification on setup
-export const AppDefinitionSetupVerifyComand = new Command<
-  { type: 'error'; errors: any } | { type: 'success'; message: string },
+export const AppDefinitionSetupVerifyCommand = new Command<
+  { type: 'error'; message: any; errors?: any } | { type: 'success'; message: string },
   { identifier: string; app: any[] }
 >('AppDefinitionSetupVerify')
 

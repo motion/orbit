@@ -1,5 +1,5 @@
 import { getGlobalConfig, Logger, resolveCommand } from '@o/kit'
-import { AppDefinition, AppDefinitionSetupVerifyComand, GetAppStoreAppDefinitionCommand } from '@o/models'
+import { AppDefinition, AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand } from '@o/models'
 import commandExists from 'command-exists'
 import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
@@ -17,7 +17,7 @@ export function loadAppDefinitionResolvers() {
 const identifierToPackageId = {}
 
 function resolveAppSetupVerify() {
-  return resolveCommand(AppDefinitionSetupVerifyComand, async ({ identifier, app }) => {
+  return resolveCommand(AppDefinitionSetupVerifyCommand, async ({ identifier, app }) => {
     const packageId = identifierToPackageId[identifier]
     if (!packageId) {
       return {

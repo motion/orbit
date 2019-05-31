@@ -26,7 +26,7 @@ export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
         // pass back for validation
         if (def.setupValidate) {
           try {
-            def.setupValidate(app, values)
+            def.setupValidate(app)
           } catch (err) {
             return err
               ? err.message || err

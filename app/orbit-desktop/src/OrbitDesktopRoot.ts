@@ -330,12 +330,11 @@ export class OrbitDesktopRoot {
           const tempPackageDir = Path.join(Config.paths.userData, 'app_definitions')
           await ensureDir(tempPackageDir)
           try {
-            await execa(
-              `npm i --force ${packageId}@latest --registry https://registry.tryorbit.com`,
-              {
-                cwd: tempPackageDir,
-              },
-            )
+            const command = `npm i --force ${packageId}@latest --registry https://registry.tryorbit.com`
+            log.info(`executring ${command} in ${tempPackageDir}`)
+            await execa(command, {
+              cwd: tempPackageDir,
+            })
           } catch (err) {
             console.log('error', err)
             return { error: err.message }

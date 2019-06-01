@@ -15,11 +15,16 @@ import { OrbitNav } from './OrbitNav'
 
 // import { clipboard } from 'electron'
 export const headerButtonProps = {
-  chromeless: true,
+  circular: true,
+  background: 'transparent',
+  glint: false,
+  glintBottom: false,
+  borderWidth: 0,
   margin: [-1, 2],
   opacity: 0.75,
-  hoverStyle: { opacity: 1 },
+  hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
   iconSize: 14,
+  activeStyle: false,
 }
 
 const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
@@ -99,6 +104,7 @@ export const OrbitHeader = memo(() => {
                   icon="layers"
                   tooltip="Query Builder"
                 />
+                <Space size="xs" />
                 <Button
                   {...om.state.router.appId === 'apps' && activeStyle}
                   {...useLocationLink('/app/apps')}

@@ -45,10 +45,10 @@ class BannerStore {
 
   hide(key: number) {
     const toRemove = this.banners.find(x => x.key === key)
-    if (toRemove.onClose) {
+    if (toRemove) {
       toRemove.onClose()
+      this.banners = filter(this.banners, x => x.key !== key)
     }
-    this.banners = filter(this.banners, x => x.key !== key)
   }
 }
 

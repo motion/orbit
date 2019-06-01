@@ -26,8 +26,10 @@ export function AppSetupForm({
       {...rest}
       submitButton
       fields={def.setup}
-      onSubmit={async values => {
+      onSubmit={async (_, values) => {
         app.data.setup = values
+
+        debugger
 
         const res = await command(AppDefinitionSetupVerifyCommand, {
           identifier: def.id,

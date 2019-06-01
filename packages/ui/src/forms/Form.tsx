@@ -160,8 +160,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
       if (onSubmit) {
         // first do any field validation
         let fieldErrors = {}
-        for (const key in formStore.values) {
-          const field = formStore.values[key]
+        const values = { ...formStore.values }
+        for (const key in values) {
+          const field = values[key]
           if (field.required && !field.value) {
             fieldErrors[name] = 'is required.'
             continue
@@ -180,7 +181,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
         }
 
         // then submit and check validation
-        let nextErrors = onSubmit(e, formStore.values)
+        let nextErrors = onSubmit(e, values)
         if (nextErrors instanceof Promise) {
           nextErrors = await nextErrors
         }

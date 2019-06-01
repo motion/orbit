@@ -134,7 +134,9 @@ async function yarnOrNpm() {
 
 async function getLoadedAppDefinition(packageId: string) {
   const appPath = join(tempPackageDir, 'node_modules', ...packageId.split('/'))
-  const appDefPath = join(appPath, 'dist', 'appInfo.js')
+
+  // load full web app for validation
+  const appDefPath = join(appPath, 'dist', 'index.js')
 
   log.info(`Importing app definition at ${appDefPath}`)
 

@@ -104,6 +104,7 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
     target: 'web', // TODO electron-renderer
     outputFile: 'index.js',
     watch: options.watch,
+    mode: 'production',
   })
 }
 

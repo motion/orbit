@@ -15,10 +15,6 @@ type CommandBuildOptions = {
 }
 
 export async function commandBuild(options: CommandBuildOptions) {
-  if ((await isBuildUpToDate(options)) && !options.force) {
-    reporter.info(`App build is up to date, run with --force to force re-run`)
-    return
-  }
   try {
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     if (!pkg) {
@@ -161,22 +157,22 @@ async function getEntryAppConfig(entry: string, pkg: any, options: CommandBuildO
   )
 }
 
-async function isBuildUpToDate(options: CommandBuildOptions) {
-  const config = configStore.appBuildInfo.get() || {}
-  const configInfo = config[options.projectRoot]
-  const buildInfo = await getBuildInfo(options.projectRoot)
-  return configInfo && buildInfo && configInfo.buildId === buildInfo.buildId
-}
-
 async function setBuildInfo(projectRoot: string, next: BuildInfo) {
   await ensureDir(join(projectRoot, 'dist'))
   await writeJSON(join(projectRoot, 'dist', 'buildInfo.json'), next)
 }
 
-async function getBuildInfo(projectRoot: string): Promise<BuildInfo | null> {
-  const file = join(projectRoot, 'dist', 'buildInfo.json')
-  if (await pathExists(file)) {
-    return (await readJSON(file)) as BuildInfo
-  }
-  return null
-}
+// async function isBuildUpToDate(options: CommandBuildOptions) {
+//   const config = configStore.appBuildInfo.get() || {}
+//   const configInfo = config[options.projectRoot]
+//   const buildInfo = await getBuildInfo(options.projectRoot)
+//   return configInfo && buildInfo && configInfo.buildId === buildInfo.buildId
+// }
+
+// async function getBuildInfo(projectRoot: string): Promise<BuildInfo | null> {
+//   const file = join(projectRoot, 'dist', 'buildInfo.json')
+//   if (await pathExists(file)) {
+//     return (await readJSON(file)) as BuildInfo
+//   }
+//   return null
+// }

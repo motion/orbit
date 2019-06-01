@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish --ignore-version"
+    "orbit:publish": "orbit publish"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

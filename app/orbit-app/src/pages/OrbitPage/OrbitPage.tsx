@@ -1,15 +1,14 @@
 import { command } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, themes, useForceUpdate, useStore } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, Theme, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
-import { IS_ELECTRON } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
 import { useUserEffects } from '../../effects/userEffects'
@@ -34,27 +33,16 @@ window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
-
-  useLayoutEffect(() => {
-    if (!IS_ELECTRON) {
-      document.body.style.background = themes[themeStore.themeColor].background.toCSS()
-    }
-  }, [themeStore.themeColor])
-
-  const { theme } = themeStore
-
   return (
     <ProvideStores stores={Stores}>
-      <Theme name={themeStore.themeColor}>
-        <AppWrapper
-          className={`theme-${themeStore.themeColor} app-parent-bounds`}
-          color={theme.color}
-        >
-          <OrbitPageInner />
-          {/* Inside provide stores to capture all our relevant stores */}
-          <OrbitEffects />
-        </AppWrapper>
-      </Theme>
+      <AppWrapper
+        className={`theme-${themeStore.themeColor} app-parent-bounds`}
+        color={themeStore.theme.color}
+      >
+        <OrbitPageInner />
+        {/* Inside provide stores to capture all our relevant stores */}
+        <OrbitEffects />
+      </AppWrapper>
     </ProvideStores>
   )
 })

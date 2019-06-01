@@ -86,7 +86,8 @@
     "typeorm": "^0.3.0-alpha.23",
     "ws": "7.0.0",
     "zen-observable": "0.8.13",
-    "apollo-link-http": "^1.5.14"
+    "apollo-link-http": "^1.5.14",
+    "command-exists": "^1.2.8"
   },
   "peerDependencies": {
     "mobx": "*"

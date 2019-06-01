@@ -25,6 +25,7 @@ export type Sizes = Size | Size[]
 
 export type SpaceProps = {
   size?: Sizes
+  flex?: number
 }
 
 export const spaceSizes = {

@@ -1,5 +1,6 @@
-import { AppBit, AppDefinition, AppModel, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
-import { Form } from '@o/ui'
+import { AppBit, AppDefinition, AppModel, command, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
+import { AppDefinitionSetupVerifyCommand } from '@o/models'
+import { Form, FormProps } from '@o/ui'
 import React from 'react'
 
 export function createNewApp(def: AppDefinition): AppBit {
@@ -11,28 +12,38 @@ export function createNewApp(def: AppDefinition): AppBit {
   }
 }
 
-export function AppSetupForm({ def, id }: { id?: number; def: AppDefinition }) {
+export function AppSetupForm({
+  def,
+  id,
+  ...rest
+}: FormProps<any> & { id?: number; def: AppDefinition }) {
   const [activeSpace] = useActiveSpace()
   const [existingApp] = useAppBit(selectDefined(id, false))
   const app: AppBit = existingApp || createNewApp(def)
 
   return (
     <Form
+      {...rest}
       submitButton
       fields={def.setup}
-      onSubmit={async values => {
+      onSubmit={async (_, values) => {
         app.data.setup = values
 
-        // pass back for validation
-        if (def.setupValidate) {
-          try {
-            def.setupValidate(app, values)
-          } catch (err) {
-            return err
-              ? err.message || err
-              : `Error in validating form ${app.name || app.identifier}`
-          }
+        console.log('sending app for validation', app)
+
+        const res = await command(AppDefinitionSetupVerifyCommand, {
+          identifier: def.id,
+          app,
+        })
+
+        console.log('res is', res)
+
+        if (res.type === 'error') {
+          return res.errors
         }
+
+        // TODO show banner here
+        console.log('success validating', res)
 
         // add to space if not added
         app.spaces = app.spaces || []

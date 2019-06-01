@@ -7,7 +7,7 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import { AppForceCancelCommand, AppForceSyncCommand, Entities, JobEntity, JobModel } from '@o/models'
+import { Entities, JobEntity, JobModel } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -32,12 +32,16 @@ export class OrbitSyncersRoot {
       transports: [
         new WebSocketClientTransport(
           'syncers', // randomString(5)
-          new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
-            WebSocket,
-            minReconnectionDelay: 1,
-          }),
-        )
-      ]
+          new ReconnectingWebSocket(
+            `ws://localhost:${getGlobalConfig().ports.desktopMediator}`,
+            [],
+            {
+              WebSocket,
+              minReconnectionDelay: 1,
+            },
+          ),
+        ),
+      ],
     })
 
     // setup proper instances to use inside sync-kit package
@@ -95,20 +99,12 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [
-        JobModel
-      ],
-      commands: [
-        AppForceSyncCommand,
-        AppForceCancelCommand
-      ],
+      models: [JobModel],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
-        ...typeormResolvers(this.connection, [
-          { entity: JobEntity, models: [JobModel] },
-        ]),
+        ...typeormResolvers(this.connection, [{ entity: JobEntity, models: [JobModel] }]),
         AppForceSyncResolver,
         AppForceCancelResolver,
       ],

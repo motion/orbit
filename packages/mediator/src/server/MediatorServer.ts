@@ -9,7 +9,6 @@ export interface MediatorServerOptions {
   transport: ServerTransport
   fallbackClient?: MediatorClient
   resolvers: ResolveInterface<any, any, any>[]
-  commands: Command<any, any>[]
   models: Model<any, any>[]
 }
 
@@ -19,8 +18,13 @@ export class MediatorServer {
     subscription: Subscription
   }[] = []
   dataIds: string[] = []
+  commands: Command<any, any>[] = []
 
-  constructor(public options: MediatorServerOptions) {}
+  constructor(public options: MediatorServerOptions) {
+    this.commands = this.options.resolvers
+      .map(x => (x.type === 'command' ? x.command : null))
+      .filter(Boolean)
+  }
 
   bootstrap() {
     this.options.transport.onMessage(data => this.handleMessage(data))
@@ -70,7 +74,7 @@ export class MediatorServer {
     let model: Model<any, any>
 
     if (data.type === 'command') {
-      command = this.options.commands.find(command => {
+      command = this.commands.find(command => {
         return command.name === data.command
       })
       // if command was not found - try fallback servers

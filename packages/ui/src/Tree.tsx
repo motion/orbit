@@ -36,16 +36,14 @@ export type TreeItem = {
     value: string
   }[]
   data?: {
-    [name: string]: {
-      [key: string]:
-        | string
-        | number
-        | boolean
-        | {
-            __type__: string
-            value: any
-          }
-    }
+    [name: string]:
+      | string
+      | number
+      | boolean
+      | {
+          __type__: string
+          value: any
+        }
   }
   decoration?: string
   type?: string

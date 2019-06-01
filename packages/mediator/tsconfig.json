@@ -6,5 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../logger" }, { "path": "../utils" }]
+  "references": [{ "path": "../../app/config" }, { "path": "../logger" }, { "path": "../utils" }]
 }

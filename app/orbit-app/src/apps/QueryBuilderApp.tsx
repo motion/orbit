@@ -1,13 +1,13 @@
-import { App, AppViewProps, command, createApp, react, Templates, TreeList, useActiveDataApps, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
-import { AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, useGet } from '@o/ui'
+import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
+import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
+import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { NavigatorProps, StackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNavigator, StackNavigatorStore, useStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'query-builder',
@@ -16,9 +16,13 @@ export default createApp({
   app: QueryBuilder,
 })
 
+const treeId = 'query-build'
+
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
+  const navigator = useStackNavigator({ id: `query-builder-nav-${props.id}` })
+  const treeList = useTreeList(treeId)
 
   if (!dataApps.length) {
     return (
@@ -34,26 +38,50 @@ function QueryBuilder(props: AppViewProps) {
   }
 
   return (
-    <App index={<QueryBuilderIndex />}>
-      <QueryBuilderMain key={props.id} {...props} />
+    <App index={<QueryBuilderIndex treeList={treeList} navigator={navigator} />}>
+      <QueryBuilderMain key={props.id} {...props} treeList={treeList} navigator={navigator} />
     </App>
   )
 }
 
-const treeId = 'query-builder'
-
-export function QueryBuilderIndex() {
-  const treeList = useTreeList(treeId)
+export function QueryBuilderIndex({
+  treeList,
+}: {
+  treeList: TreeListStore
+  navigator: StackNavigatorStore
+}) {
   return (
     <>
-      <TreeList backgrounded title="Queries" editable deletable use={treeList} sortable />
+      <TreeList
+        getItemProps={item => {
+          const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
+          if (treeItem) {
+            const definition = getAppDefinition(`${treeItem.data.identifier}`)
+            if (definition) {
+              return {
+                icon: definition.icon,
+              }
+            }
+          }
+          return null
+        }}
+        title="Queries"
+        sortable
+        editable
+        deletable
+        use={treeList}
+      />
       <Dock>
         <DockButton
           id="add"
           icon="plus"
           onClick={() => {
             const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
-            treeList.actions.addItem(name)
+            treeList.actions.addItem(name, {
+              data: {
+                identifier: '',
+              },
+            })
           }}
         />
       </Dock>
@@ -61,14 +89,30 @@ export function QueryBuilderIndex() {
   )
 }
 
-function QueryBuilderMain(props: AppViewProps) {
+function QueryBuilderMain({
+  navigator,
+  treeList,
+  ...props
+}: AppViewProps & { navigator: StackNavigatorStore; treeList: TreeListStore }) {
   return (
     <StackNavigator
       key={props.id}
-      id={`query-builder-nav=${props.id}`}
+      useNavigator={navigator}
       defaultItem={{
         id: 'SelectApp',
         props,
+      }}
+      onNavigate={item => {
+        console.log('navigating to', item, treeList)
+        if (!item) {
+          return
+        }
+        // const icon = getAppDefinition(item.id)
+        treeList.actions.updateSelectedItem({
+          data: {
+            identifier: item.props.subType,
+          },
+        })
       }}
       items={{
         SelectApp: QueryBuilderSelectApp,
@@ -82,22 +126,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState(null)
-  const selectableApps = useMemo(
-    () => [
-      ...dataApps.map(x => ({
-        id: x.id,
-        title: x.name,
-        type: 'installed',
-        groupName: 'Installed Apps',
-        disabled: x.tabDisplay !== 'plain',
-        onDoubleClick: () => {
-          console.log('Stack navigate!')
-        },
-      })),
-    ],
-    [dataApps],
-  )
-
   return (
     <Section
       pad
@@ -114,12 +142,13 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
                 return
               }
               const item = selected[0]
+              const app = dataApps.find(x => x.id === item.id)
               // navigate to app definition:
               props.navigation.navigate('QueryEdit', {
-                title: props.title,
-                id: item.id,
-                subType: item.identifier,
-                subTitle: item.title,
+                title: app.name,
+                id: `${app.id}`,
+                subType: app.identifier,
+                subTitle: app.name,
               })
             }}
           >
@@ -131,7 +160,22 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
       <SelectableGrid
         gridGap={20}
         minWidth={180}
-        items={selectableApps}
+        maxWidth={220}
+        items={useMemo(
+          () => [
+            ...dataApps.map(x => ({
+              id: x.id,
+              title: x.name,
+              type: 'installed',
+              groupName: 'Installed Apps',
+              disabled: x.tabDisplay !== 'plain',
+              onDoubleClick: () => {
+                console.log('Stack navigate!')
+              },
+            })),
+          ],
+          [dataApps],
+        )}
         onSelect={useCallback(i => {
           console.log('selecting', i)
           setSelected(i)
@@ -156,6 +200,10 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
   const [showSidebar, setShowSidebar] = useState(true)
   const [app, def] = useAppWithDefinition(+props.id)
   console.log('appDef', app, def)
+
+  if (!def) {
+    return null
+  }
 
   return (
     <Section
@@ -304,7 +352,6 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
     appIdentifier: def.id,
   })
   const hasApiInfo = !!meta && !!meta.apiInfo
-  const [numLines, setNumLines] = useState(1)
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
@@ -325,33 +372,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             if (typeof queryBuilder.arguments[index] === 'undefined') {
               queryBuilder.arguments[index] = defaultValues[arg.type] || ''
             }
-
-            return (
-              <React.Fragment key={index}>
-                <Row space alignItems="center">
-                  <SubTitle>{arg.name}</SubTitle>
-                  <Tag alt="lightGreen" size={0.75} fontWeight={200}>
-                    {arg.type}
-                  </Tag>
-                  {arg.isOptional && (
-                    <Tag alt="lightBlue" size={0.75} fontWeight={200}>
-                      Optional
-                    </Tag>
-                  )}
-                </Row>
-                <Card pad elevation={3} height={24 * numLines + /* padding */ 16 * 2}>
-                  <MonacoEditor
-                    // not controlled
-                    noGutter
-                    value={queryBuilder.arguments[index]}
-                    onChange={val => {
-                      setNumLines(val.split('\n').length)
-                      queryBuilder.setArg(index, val)
-                    }}
-                  />
-                </Card>
-              </React.Fragment>
-            )
+            return <ArgumentField key={index} arg={arg} queryBuilder={queryBuilder} index={index} />
           })}
 
           <Space size="xl" />
@@ -414,8 +435,18 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
-                <CardSimple key={key} title={info.name}>
-                  <MonoSpaceText alpha={0.6} fontWeight={700} size={0.85}>
+                <CardSimple
+                  key={key}
+                  title={info.name}
+                  onClick={() => {
+                    if (
+                      confirm(`Change current method? This will clear your current query data.`)
+                    ) {
+                      setMethod(info)
+                    }
+                  }}
+                >
+                  <MonoSpaceText alpha={0.6} fontWeight={500} size={0.8}>
                     {info.typeString}
                   </MonoSpaceText>
                   {info.comment}
@@ -429,6 +460,71 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   )
 })
 
+const ArgumentField = memo(
+  ({
+    arg,
+    queryBuilder,
+    index,
+  }: {
+    queryBuilder: QueryBuilderStore
+    index: number
+    arg: ApiArgType
+  }) => {
+    const [numLines, setNumLines] = useState(1)
+    const [isActive, setIsActive] = useAppState(
+      `arg-${index}${arg.name}${arg.type}`,
+      arg.isOptional ? false : true,
+    )
+
+    return (
+      <Col space>
+        <Row space alignItems="center">
+          <Row opacity={isActive ? 1 : 0.35} space alignItems="center">
+            <SubTitle>{arg.name}</SubTitle>
+            <Tag alt="lightGreen" size={0.75} fontWeight={200}>
+              {arg.type}
+            </Tag>
+            {arg.isOptional && (
+              <Tag alt="lightBlue" size={0.75} fontWeight={200}>
+                Optional
+              </Tag>
+            )}
+          </Row>
+          <Space flex={1} />
+          {arg.isOptional && (
+            <Toggle
+              checked={isActive}
+              tooltip="Toggle active"
+              onChange={x => {
+                console.log('val', x)
+                setIsActive(x)
+              }}
+            />
+          )}
+        </Row>
+        <Card
+          transition="all ease 300ms"
+          opacity={isActive ? 1 : 0.35}
+          pad
+          elevation={1}
+          height={24 * numLines + /* padding */ 16 * 2}
+        >
+          <MonacoEditor
+            // not controlled
+            noGutter
+            value={queryBuilder.arguments[index]}
+            onChange={val => {
+              setIsActive(true)
+              setNumLines(val.split('\n').length)
+              queryBuilder.setArg(index, val)
+            }}
+          />
+        </Card>
+      </Col>
+    )
+  },
+)
+
 const GraphQueryBuild = memo((props: { id: number }) => {
   return (
     <Layout type="row">
@@ -439,11 +535,24 @@ const GraphQueryBuild = memo((props: { id: number }) => {
 })
 
 function argToVal(arg: any): string {
-  if (typeof arg === 'string') {
-    return `"${arg}"`
+  try {
+    if (typeof arg === 'string') {
+      return `"${arg}"`
+    }
+    if (typeof arg === 'number' || typeof arg === 'boolean') {
+      return `${arg}`
+    }
+    if (arg === null) {
+      return `null`
+    }
+    if (arg === undefined) {
+      return `undefined`
+    }
+    return JSON.stringify(arg)
+      .slice(1)
+      .slice(0, arg.length - 2)
+  } catch (err) {
+    console.warn('error', err)
+    return ``
   }
-  if (typeof arg === 'number' || typeof arg === 'boolean') {
-    return `${arg}`
-  }
-  return JSON.stringify(arg)
 }

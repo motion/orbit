@@ -1,50 +1,89 @@
-- oleksy has some ml referrals
+June Goals:
 
-make gloss work with shadow-root; not too hard:
-  1. <ThemeConfig rootElement={shadowRootRef} />
-  2. GlossView(props)
-     1. => glossify(styles, context.rootElement)
-     2. => sheet.addStyles(rootElement)
+QueryBuilder:
 
----
+- Fix layout issues:
+  - Resize handles overlap content sometimes
+  - On mount it shows the sidebar large, then resizes it down
+- Error/Success messages:
+  - Show an error message on errors
+  - Success message on success
+- Get parameters working
+  - Add new parameter
+  - Select type properly
+  - Insert into query
+  - Show in preview
+- CMD+Enter to run query
+- Fix Output JSON showing properly
+- Fix topbar tabs
+- GraphQL editor
 
-orbit-cli
+Visual Fixes:
 
-we automatically run it from orbit-app, to handle commands
-avoid all config, just package.json
-put apps in your workspace by default
-~/o/workspace/apps
-that way we can put a lot of config above it, can even run ts above it
+- Lists search+select seems to have regressed, could be new react-window
+- Fix GraphQL Explorer interface small glitches
+- Fix general settings not showing selected item anymore
+- Fix settings pane tabs not showing active
+- Fix settings > Spaces pane not loading
 
+App Icons:
 
----
+- Redo app icons so you can choose any blueprint icon for your app
+- Simplify them a bit
 
-May
+Install apps:
 
-"Demos + Finish docs/website"
+- Fix search apps to be more reliable
+- Get install working from remote
+- Get install command working from cli
+- Have workspace update with new app
+- Fix apps showing icons in topbar
+- Fix show home app by default on load
+- Test loading multiple different workspaces and apps
 
-3 - Example-Workspace with apps that run + Docs
-    - see about router + code splitting for orbit, would make initial loads
-    - faster
-    - Grid Layout + Grid Docs
-4 - Split out example apps in workspace
-5 - Polish apps, Share data between apps
-6 - CLI development
+Edit apps from interface:
 
-- Demo Apps
-  - Use CLI to create it
-  - User Manager with real integration
-  - Lists app working
-  - Export to file/json/api working
+- Get editing apps working from UI
+- Test full edit => publish flow with build to production command
+- Needs some visual feedback with banners/messages
 
-- Website
-  - Join slack + prominent
-  - Search/Now
-  - Apps/Faq
-  - Blog/update-two
-  - About/#sublinks
-  - Footer/links
+Launch App into own window:
 
+- Get this working again, test it out with new code
+
+Workspaces:
+
+- Get second example workspace setup
+- Move between the two workspace in the interface
+
+App Settings:
+
+- Fix app settings various bugs that have come up
+- Make CRUD of settings work wel
+
+Home:
+
+- Make all workspaces have a search/home app by default
+
+Demo apps:
+
+- Get demo apps imported into Example workspace
+- Iterate on a few of them together with real app data
+
+Dock:
+
+- Get the QueryBuilder into the dock
+- Get dragging from dock into apps (as part of demo apps as well)
+- Export options (to file/json/api)
+
+Website:
+
+- Join slack + prominent
+- Search/Now
+- Apps/Faq
+- Blog/update-two
+- About/#sublinks
+- Footer/links
 - Docs
   - Docs/Search
   - Docs/toggle code
@@ -70,10 +109,6 @@ May
   - Thread
 
 ---
-
-June
-
-"Multi-apps on desktop and make them feel better"
 
 July
 
@@ -232,3 +267,15 @@ view Main {
   <div onClick={inc} />
 }
 ```
+
+---
+
+- oleksy has some ml referrals
+
+---
+
+make gloss work with shadow-root; not too hard:
+  1. <ThemeConfig rootElement={shadowRootRef} />
+  2. GlossView(props)
+     1. => glossify(styles, context.rootElement)
+     2. => sheet.addStyles(rootElement)

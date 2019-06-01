@@ -1,5 +1,7 @@
-import { AppDefinition } from '@o/models'
+import { command } from '@o/bridge'
+import { ApiSearchItem, AppDefinition, GetAppStoreAppDefinitionCommand } from '@o/models'
 import { isDefined } from '@o/utils'
+import { useEffect, useRef, useState } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { useReloadAppDefinitions } from './useReloadAppDefinitions'
@@ -10,8 +12,6 @@ function createResource(fetch: any) {
   return {
     read: (...args) => {
       const key = JSON.stringify(args)
-
-      console.log('reading', cache[key])
 
       if (cache[key]) {
         if (isDefined(cache[key].value)) {
@@ -47,7 +47,7 @@ const ApiDefSearch = createResource((identifier: string) => {
   return fetch(`https://tryorbit.com/api/apps/${identifier}`).then(res => res.json())
 })
 
-export function getSearchAppDefinitions(query: string | false) {
+export function getSearchAppDefinitions(query: string | false): ApiSearchItem | null {
   if (query === false) {
     return null
   }
@@ -60,6 +60,74 @@ export function useAppDefinition(identifier?: string): AppDefinition {
   return getAppDefinition(identifier || appStore.identifier)
 }
 
-export function useAppDefinitionFromStore(query?: string) {
-  return getSearchAppDefinitions(query)
+export function useAppDefinitionFromStore(identifier?: string | false): AppDefinition {
+  const searchedApp = getSearchAppDefinitions(identifier)
+  return !identifier
+    ? null
+    : {
+        id: searchedApp.identifier,
+        icon: searchedApp.icon,
+        name: searchedApp.name,
+        description: searchedApp.description,
+        api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
+        graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
+        sync: !!searchedApp.features.some(x => x === 'sync') ? true : false,
+        setup: searchedApp.setup,
+      }
+}
+
+export function useAppStoreInstalledAppDefinition(
+  identifier?: string | false,
+  options?: { onStatus: (message: string | false) => any },
+) {
+  const searchedApp = getSearchAppDefinitions(identifier)
+  // start out with the searched app to load quickly
+  const [reply, setReply] = useState<AppDefinition | { error: string }>(null)
+  const tm = useRef(null)
+
+  // then install the app definition and have it ready for use in setup validation
+  useEffect(() => {
+    if (!identifier) return
+    let cancel = false
+
+    command(GetAppStoreAppDefinitionCommand, { packageId: searchedApp.packageId }, 50000)
+      .then(res => {
+        clearTimeout(tm.current)
+        options && options.onStatus(false)
+        if (!cancel) {
+          console.log('success, import real app definition', res)
+          // setReply(res)
+        }
+      })
+      .catch(error => {
+        clearTimeout(tm.current)
+        options && options.onStatus(false)
+        if (!cancel) {
+          setReply({ error })
+        }
+      })
+    return () => {
+      cancel = true
+    }
+  }, [identifier])
+
+  // show some nice messages during install
+  useEffect(() => {
+    if (!identifier) return
+    if (options) {
+      options.onStatus('Fetching app definition for validation...')
+      tm.current = setTimeout(() => {
+        options.onStatus('Getting app definition dependencies...')
+        tm.current = setTimeout(() => {
+          options.onStatus('Slow network or large package, still fetching...')
+          tm.current = setTimeout(() => {
+            options.onStatus('Setting up app definition...')
+          }, 8000)
+        }, 4000)
+      }, 3000)
+    }
+    return () => clearTimeout(tm.current)
+  }, [identifier])
+
+  return reply
 }

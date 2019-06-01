@@ -12,23 +12,31 @@ import { HighlightActiveQuery } from './HighlightActiveQuery'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<ListProps, 'items' | 'getItemProps'> & {
+export type TreeListProps = Omit<ListProps, 'items'> & {
   // we should make this either require use or items
   items?: TreeItems
   use?: TreeListStore
   rootItemID?: number
-  getItemProps?: (item: TreeItem) => Promise<ListItemProps>
   placeholder?: React.ReactNode
   query?: string
 }
 
 type TreeStateStatic = Pick<TreeListProps, 'items' | 'rootItemID'>
-type TreeUserState = { depth?: number[]; curId?: number }
+type TreeUserState = {
+  depth?: {
+    id: number
+    selectedIndex: number
+  }[]
+}
 
 // derived state can go here
 type TreeState = TreeStateStatic & {
+  // current deepest item
   currentItem: TreeItem
-  depth: TreeItem[]
+  // current deepest item children
+  currentItemChildren: TreeItem[]
+  // a breadcrumb history of items leading up to current one
+  history: TreeItem[]
 }
 
 const defaultState: TreeStateStatic = {
@@ -49,7 +57,7 @@ const getActions = (
   // stores: KitStores,
 ) => {
   const Actions = {
-    addItem(name: string, item?: Object) {
+    addItem(name: string, item?: Partial<TreeItem>) {
       const update = treeState()[1]
       update(next => {
         const id = Math.random()
@@ -68,7 +76,7 @@ const getActions = (
         // remove any references to this item in .children[]
         for (const key in next.items) {
           const item = next.items[key]
-          if (item.children.indexOf(id) > -1) {
+          if (item.children && item.children.indexOf(id) > -1) {
             item.children = item.children.filter(x => x !== id)
           }
         }
@@ -81,6 +89,37 @@ const getActions = (
         next.items[id] = item
       })
     },
+    updateSelectedItem(item: Partial<TreeItem>) {
+      const selectedItem = Actions.getSelectedItem()
+      console.log('selectedItem', selectedItem)
+      if (!selectedItem) {
+        return
+      }
+      Actions.updateItem({
+        ...selectedItem,
+        ...item,
+      })
+    },
+    getSelectedItem() {
+      const { selectedIndex } = Actions.curDepth()
+      console.log('selectedIndex', selectedIndex)
+      if (selectedIndex === -1) {
+        console.error('No item selected')
+        return
+      }
+      const items = treeState()[0].items
+      const curItem = Actions.curItem()
+      const curSelectedId = curItem.children[selectedIndex]
+      return items[curSelectedId]
+    },
+    setSelectedIndex(index: number) {
+      const update = userState()[1]
+      update(draft => {
+        const curDepth = draft.depth[draft.depth.length - 1]
+        console.log('setSelectedIndex', index, curDepth)
+        curDepth.selectedIndex = index
+      })
+    },
     sort(oldIndex: number, newIndex: number) {
       const update = treeState()[1]
       update(next => {
@@ -88,22 +127,26 @@ const getActions = (
         item.children = arrayMove(item.children, oldIndex, newIndex)
       })
     },
-    curId() {
-      return userState()[0].curId || 0
+    curDepth() {
+      const { depth } = userState()[0]
+      return depth[depth.length - 1] || { id: 0, selectedIndex: -1 }
     },
     curItem() {
       return treeState()[0].items[this.curId()]
     },
+    curId() {
+      return Actions.curDepth().id
+    },
     selectFolder(id: number) {
       const update = userState()[1]
       update(next => {
-        next.curId = id
+        next.depth.push({ id, selectedIndex: -1 })
       })
     },
     back() {
       const update = userState()[1]
       update(next => {
-        if (next.depth.length > 0) {
+        if (next.depth.length > 1) {
           next.depth.pop()
         }
       })
@@ -119,15 +162,23 @@ export type TreeListStore = {
 }
 
 const defaultUserState: TreeUserState = {
-  curId: 0,
-  depth: [0],
+  depth: [
+    {
+      id: 0,
+      selectedIndex: -1,
+    },
+  ],
 }
 
-const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeState => ({
-  ...state,
-  currentItem: state.items[userState.curId],
-  depth: userState.depth.map(id => state.items[id]),
-})
+const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeState => {
+  const currentItem = state.items[userState.depth[userState.depth.length - 1].id]
+  return {
+    ...state,
+    currentItem,
+    currentItemChildren: currentItem.children.map(x => state.items[x]),
+    history: userState.depth.map(item => state.items[item.id]),
+  }
+}
 
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
@@ -136,7 +187,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
     subSelect,
     props ? pick(props, 'rootItemID', 'items') : defaultState,
   )
-  const us = useUserState(`${subSelect}_treeState`, defaultUserState)
+  const us = useUserState(`${subSelect}-tree-state`, defaultUserState)
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
@@ -147,7 +198,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
   }
 }
 
-async function loadListItem(item: TreeItem): Promise<ListItemProps> {
+async function loadTreeListItemProps(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {
@@ -176,16 +227,18 @@ const findAttribute = (item: TreeItem, key: string) =>
   (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
 export function TreeList(props: TreeListProps) {
-  const { use, query, getItemProps = loadListItem, ...rest } = props
+  const { use, query, ...rest } = props
   const useTree = use || useTreeList(false, props)
   const { rootItemID, items } = useTree.state
   const [loadedItems, setLoadedItems] = useState<ListItemProps[]>([])
 
   useEffect(() => {
     let cancel = false
-    Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
-      !cancel && setLoadedItems(res)
-    })
+    Promise.all(items[rootItemID].children.map(id => loadTreeListItemProps(items[id]))).then(
+      res => {
+        !cancel && setLoadedItems(res)
+      },
+    )
     return () => {
       cancel = true
     }
@@ -213,6 +266,18 @@ export function TreeList(props: TreeListProps) {
     [useTree],
   )
 
+  const handleSelect = useCallback(
+    (rows: any[], indices: number[]) => {
+      if (indices.length) {
+        useTree.actions.setSelectedIndex(indices[0])
+      }
+      if (props.onSelect) {
+        props.onSelect(rows, indices)
+      }
+    },
+    [props.onSelect],
+  )
+
   if (!items) {
     return null
   }
@@ -223,6 +288,7 @@ export function TreeList(props: TreeListProps) {
         onEdit={handleEditTitle}
         onSortEnd={handleSortEnd}
         {...rest}
+        onSelect={handleSelect}
         onDelete={handleDelete}
         items={loadedItems}
       />

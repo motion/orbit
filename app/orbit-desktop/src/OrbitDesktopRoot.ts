@@ -13,27 +13,21 @@ import {
 import {
   AppEntity,
   AppModel,
-  AppRemoveCommand,
   BitEntity,
   BitModel,
   BitsNearTopicModel,
-  CallAppBitApiMethodCommand,
-  ChangeDesktopThemeCommand,
   CheckProxyCommand,
   CosalSaliencyModel,
   CosalTopicsModel,
   GetPIDCommand,
   CosalTopWordsModel,
-  NewFallbackServerPortCommand,
   OpenCommand,
   PeopleNearTopicModel,
-  ResetDataCommand,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
   SearchPinnedResultModel,
   SearchResultModel,
-  SendClientDataCommand,
   SetupProxyCommand,
   SpaceEntity,
   SpaceModel,
@@ -43,7 +37,6 @@ import {
   UserModel,
   AppDevCloseCommand,
   AppDevOpenCommand,
-  AppOpenWorkspaceCommand,
   CloseAppCommand,
   AppMetaCommand,
 } from '@o/models'
@@ -93,6 +86,7 @@ import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
+import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 
 const log = new Logger('desktop')
 
@@ -319,22 +313,6 @@ export class OrbitDesktopRoot {
         CosalSaliencyModel,
         CosalTopWordsModel,
       ],
-      commands: [
-        NewFallbackServerPortCommand,
-        CallAppBitApiMethodCommand,
-        AppRemoveCommand,
-        SetupProxyCommand,
-        CheckProxyCommand,
-        OpenCommand,
-        ResetDataCommand,
-        SendClientDataCommand,
-        ChangeDesktopThemeCommand,
-        AppDevOpenCommand,
-        AppDevCloseCommand,
-        AppOpenWorkspaceCommand,
-        GetPIDCommand,
-        AppMetaCommand,
-      ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
       }),
@@ -346,6 +324,7 @@ export class OrbitDesktopRoot {
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
+        ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
           return this.orbitAppsManager.appMeta[identifier]
         }),

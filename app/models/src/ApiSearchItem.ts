@@ -7,4 +7,5 @@ export type ApiSearchItem = {
   icon: string
   search: string[]
   installs: number
+  setup: Object
 }

@@ -12,8 +12,9 @@ import { reporter } from './reporter'
 
 type CommandPublishOptions = {
   projectRoot: string
-  force?: boolean
+  ignoreBuild?: boolean
   ignoreVersion?: boolean
+  bumpVersion?: 'patch' | 'minor' | 'major'
 }
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -30,20 +31,30 @@ export function invariant(condition: boolean, message: string) {
   }
 }
 
+const bumpVersions = {
+  patch: 'patch',
+  minor: 'minor',
+  major: 'major',
+}
+
 export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
-    await commandBuild({
-      projectRoot: options.projectRoot,
-      force: options.force,
-    })
+    if (!options.ignoreBuild) {
+      await commandBuild({
+        projectRoot: options.projectRoot,
+        force: true,
+      })
+    }
 
     // publish to registry
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     const packageId = pkg.name
     const verion = pkg.version
     const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
+
     let shouldPublish = true
+    let bumpVersion = bumpVersions[options.bumpVersion]
 
     // run before publish so if there's any error we can validate before publishing
     let app: AppDefinition
@@ -60,10 +71,16 @@ export async function commandPublish(options: CommandPublishOptions) {
     invariant(typeof app.name === 'string', `Must set appInfo.name, got: ${app.name}`)
 
     if (options.ignoreVersion) {
-      shouldPublish = false
+      shouldPublish = true
     }
 
-    if (registryInfo.versions && registryInfo.versions[verion] && !options.ignoreVersion) {
+    // if should prompt for version update
+    if (
+      !bumpVersion &&
+      registryInfo.versions &&
+      registryInfo.versions[verion] &&
+      !options.ignoreVersion
+    ) {
       shouldPublish = false
       reporter.info('Already published this version')
       const { value: shouldUpdateVersion } = await prompts({
@@ -74,7 +91,7 @@ export async function commandPublish(options: CommandPublishOptions) {
       })
 
       if (shouldUpdateVersion) {
-        const { value: bumpType } = await prompts({
+        const { value } = await prompts({
           type: 'select',
           name: 'value',
           message: 'Which version type would you like to bump to?',
@@ -85,23 +102,30 @@ export async function commandPublish(options: CommandPublishOptions) {
           ],
           initial: 0,
         })
-
-        if (bumpType) {
-          reporter.info(`Bumping version ${bumpType}`)
-          const runner = await yarnOrNpm()
-          await npmCommand(
-            runner === 'npm'
-              ? `version ${bumpType}`
-              : `version --new-version ${bumpType} --no-git-tag-version`,
-          )
+        if (value) {
+          bumpVersion = value
           shouldPublish = true
         }
       }
     }
 
+    if (bumpVersion) {
+      reporter.info(`Bumping version ${bumpVersion}`)
+      const runner = await yarnOrNpm()
+      await npmCommand(
+        runner === 'npm'
+          ? `version ${bumpVersion}`
+          : `version --new-version ${bumpVersion} --no-git-tag-version`,
+      )
+    }
+
     if (shouldPublish) {
       reporter.info(`Publishing app to registry`)
-      await publishApp()
+      try {
+        await publishApp()
+      } catch (err) {
+        console.log('Error publishing', err.message)
+      }
     }
 
     // trigger search api index update
@@ -129,6 +153,7 @@ export async function commandPublish(options: CommandPublishOptions) {
           x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
         ),
         fullDescription,
+        setup: app.setup,
       }),
     }).then(x => x.json())
 

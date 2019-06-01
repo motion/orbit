@@ -232,6 +232,7 @@ function TabsControlled({
 const TabContainer = gloss(View, {
   flex: 1,
   overflow: 'hidden',
+  minHeight: 'max-content',
 })
 
 const getKey = comp => (comp ? comp.props.id || (comp.key && comp.key.replace('.$', '')) : null)

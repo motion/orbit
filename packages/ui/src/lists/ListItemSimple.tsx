@@ -270,6 +270,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   return (
     <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
       {above}
+      {/* unset the theme for the separator */}
       {!!separator && (
         <Theme name={activeThemeName}>
           <ListSeparator {...separatorProps}>{separator}</ListSeparator>
@@ -284,11 +285,15 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         padding={listItemAdjustedPadding}
         paddingLeft={indent ? indent * 22 : undefined}
         width="100%"
-        before={before}
+        before={
+          <>
+            {before}
+            {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
+          </>
+        }
         spaceSize={spaceSize}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
-        after={!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
         {...disablePsuedoProps}
         {...surfaceProps}
       >

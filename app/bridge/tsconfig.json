@@ -9,7 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/mediator" },
-    { "path": "../../packages/config" },
+    { "path": "../config" },
     { "path": "../../packages/utils" }
   ]
 }

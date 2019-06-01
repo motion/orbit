@@ -1,7 +1,0 @@
-{
-  "name": "@o/config",
-  "main": "_/config.js",
-  "sideEffects": false,
-  "private": true,
-  "version": "2.5.2"
-}

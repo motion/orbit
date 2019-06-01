@@ -70,7 +70,7 @@ export class MediatorClient {
     // we have a higher timeout for clients than for the server itself
     // so that if a client is down, the server still has time to go through many and finish them
     // see MediatorServer.command setting timeout
-    timeout = 5000,
+    timeout = 10000,
   ): Promise<ReturnType> {
     const name = typeof command === 'string' ? command : command.name
 
@@ -86,13 +86,13 @@ export class MediatorClient {
 
         if (response && response.notFound === true) {
           if (response.error) {
-            console.error(response.error)
+            console.error('notFound response', response.error)
           }
         } else {
           return response.result
         }
       } catch (err) {
-        console.error('timeout', err)
+        console.error('command error', err)
       }
     }
 

@@ -7,7 +7,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
-export type ImmutableUpdateFn<A> = (cb: (draft: A) => A | void) => void
+type UpdateFn<A> = (draft: A) => A
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | any) => void
 
 export type UseModelOptions = {
   defaultValue?: any
@@ -56,7 +57,7 @@ const dispose = sub => {
 }
 
 // allow undefined for stuff like useBits() but dont allow useBits(null) useBits(false)
-const shouldQuery = (x: any) => {
+const hasQuery = (x: any) => {
   return x !== false && x !== null
 }
 
@@ -78,7 +79,7 @@ function use<ModelType, Args>(
 
   // on new query: subscribe, update
   useEffect(() => {
-    if (!shouldQuery(query)) return
+    if (!hasQuery(query)) return
     if (yallReadyKnow.current) {
       yallReadyKnow.current = false
       return
@@ -107,6 +108,9 @@ function use<ModelType, Args>(
     updaterFn => {
       const finish = (val: any) => {
         const next = produce(val, updaterFn)
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`save model`, model.name, next)
+        }
         save(model, next as any)
       }
 
@@ -125,7 +129,7 @@ function use<ModelType, Args>(
     const key = getKey(model.name, type, queryKey)
     let cache = PromiseCache[key]
 
-    if (!shouldQuery(query)) {
+    if (!hasQuery(query)) {
       valueRef.current = defaultValues[type]
     } else {
       if (!cache) {
@@ -156,18 +160,22 @@ function use<ModelType, Args>(
       if (isDefined(cache.current)) {
         valueRef.current = cache.current
       } else {
-        throw new Promise((res, rej) => {
-          orTimeout(cache.read, 1000)
-            .then(x => res(x))
-            .catch(err => {
-              if (err === OR_TIMED_OUT) {
-                console.warn('Model query timed out', model, query)
-                cache.current = defaultValues[type]
-              } else {
-                rej(err)
-              }
-            })
-        })
+        if (cache.read) {
+          throw cache.read
+        } else {
+          throw new Promise((res, rej) => {
+            orTimeout(cache.read, 1000)
+              .then(res)
+              .catch(err => {
+                if (err === OR_TIMED_OUT) {
+                  console.warn('Model query timed out', model, query)
+                  cache.current = defaultValues[type]
+                } else {
+                  rej(err)
+                }
+              })
+          })
+        }
       }
     }
   }

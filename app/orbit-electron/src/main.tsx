@@ -3,7 +3,11 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { AppOpenWindowCommand, CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, SendClientDataCommand, TearAppCommand } from '@o/models'
+import {
+  AppOpenWindowCommand,
+  NewFallbackServerPortCommand,
+  SendClientDataCommand,
+} from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -54,7 +58,6 @@ export async function main() {
     const port = await Mediator.command(NewFallbackServerPortCommand)
     const mediatorServer = new MediatorServer({
       models: [],
-      commands: [AppOpenWindowCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
       transport: new WebSocketServerTransport({ port }),
       resolvers: [
         resolveCommand(AppOpenWindowCommand, async ({ appId, isEditing }) => {

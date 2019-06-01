@@ -1,6 +1,7 @@
 import { Command } from '@o/mediator'
 
 import { ApiInfo } from '../ApiInfo'
+import { AppBit } from './AppBit'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
@@ -21,6 +22,18 @@ export const ResetDataCommand = new Command<void, void>('reset-data')
 export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'light' }>(
   'change-desktop-theme',
 )
+
+// download app definition from registry
+export const GetAppStoreAppDefinitionCommand = new Command<
+  { type: 'error'; message: string } | { type: 'success'; identifier: string },
+  { packageId: string }
+>('GetAppStoreAppDefinition')
+
+// run verification on setup
+export const AppDefinitionSetupVerifyCommand = new Command<
+  { type: 'error'; message?: string; errors?: any } | { type: 'success'; message: string },
+  { identifier: string; app: AppBit }
+>('AppDefinitionSetupVerify')
 
 export const GetPIDCommand = new Command<number>('get-pid')
 

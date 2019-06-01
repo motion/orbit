@@ -1,7 +1,7 @@
 import { ThemeObject, ThemeSet } from '@o/css'
 import React, { useContext, useMemo } from 'react'
 
-import { cacheThemes } from './Theme'
+import { Theme } from './Theme'
 import { ThemeContext, ThemeContextType } from './ThemeContext'
 
 type ThemeProvideProps = {
@@ -13,21 +13,12 @@ type ThemeProvideProps = {
 export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProps) {
   const themeContext = useContext(ThemeContext)
 
-  const val = useMemo(() => {
-    const next: ThemeContextType = {
+  const val: ThemeContextType = useMemo(() => {
+    return {
       ...themeContext,
       allThemes: { ...themeContext.allThemes, ...themes } as ThemeObject,
     }
-    if (activeTheme) {
-      next.activeThemeName = activeTheme
-    }
-
-    if (activeTheme) {
-      cacheThemes.set(activeTheme, next)
-    }
-
-    return next
-  }, [themeContext, activeTheme, themes])
+  }, [themeContext, themes])
 
   if (!Object.keys(themes).length) {
     console.error('No themes provided! Please provide a theme to ThemeProvide.')
@@ -36,7 +27,7 @@ export function ThemeProvide({ activeTheme, children, themes }: ThemeProvideProp
 
   return (
     <ThemeContext.Provider key={weakKey(themes)} value={val as any}>
-      {children}
+      <Theme name={activeTheme}>{children}</Theme>
     </ThemeContext.Provider>
   )
 }

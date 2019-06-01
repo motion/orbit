@@ -1,13 +1,13 @@
 {
   "name": "@o/slack-app",
   "description": "Query, explore and sync the full Slack API",
-  "version": "2.5.7",
+  "version": "2.5.9",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish --ignore-version"
+    "orbit:publish": "orbit publish"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

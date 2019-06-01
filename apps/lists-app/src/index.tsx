@@ -127,7 +127,7 @@ function ListAppStatusBar() {
   return (
     <>
       <Breadcrumbs>
-        {treeList.state.depth.map(item => (
+        {treeList.state.history.map(item => (
           <Breadcrumb size={0.9} alpha={0.68} fontWeight={500} key={item.id}>
             {item.name}
           </Breadcrumb>

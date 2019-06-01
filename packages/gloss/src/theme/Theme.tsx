@@ -39,8 +39,12 @@ export const Theme = (props: ThemeProps) => {
     next = cacheThemes.get(theme) as ThemeContextType
   } else {
     // getting the alt theme or create theme
-    // this is doing some heavy work and is awkwardly named
-    let previousOriginalTheme = prev.activeTheme._originalTheme || prev.activeTheme
+    let previousOriginalTheme = prev.activeTheme
+
+    // if alt is defined and were already on alternate, swap to original theme before going to new alternate
+    if (typeof alt !== 'undefined') {
+      previousOriginalTheme = prev.activeTheme._originalTheme || prev.activeTheme
+    }
 
     const nextTheme = Config.preProcessTheme
       ? Config.preProcessTheme(props, previousOriginalTheme)

@@ -1,35 +1,44 @@
-import { AppViewProps, useStore, useUserState } from '@o/kit'
+import { isEqual } from '@o/fast-compare'
+import { AppProps, AppViewProps, createStoreContext, useReaction, useStore, useUserState } from '@o/kit'
 import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
-import { last } from 'lodash'
+import { last, pickBy } from 'lodash'
 import React, { forwardRef, FunctionComponent, Suspense, useEffect } from 'react'
 
 // TODO split into StackNavigator in UI
+
 export type NavigatorProps = {
-  navigation: StackNav
+  navigation: StackNavigatorStore
 }
 
 type StackItemProps = AppViewProps
 
-type StackNavigatorProps = {
-  useNavigator?: StackNav
-  defaultItem?: { id: string; props: StackItemProps }
+type StackItem = {
+  id: string
+  props: StackItemProps
+}
+
+type BaseProps = {
+  defaultItem?: StackItem
+  onNavigate: (next: StackItem) => any
   items: {
     [key: string]: FunctionComponent<AppProps & NavigatorProps>
   }
 }
 
-export const StackNavigator = forwardRef<
-  StackNav,
-  StackNavigatorProps & {
-    id: string
-  }
->((props, ref) => {
-  const [state, setState] = useUserState<StackNavState>(`StackNavigator-${props.id}`, {
-    stack: [],
-  })
-  const backupStackNav = useStore(StackNav, { state, setState })
-  const stackNav = props.useNavigator || backupStackNav
+export type StackNavigatorProps =
+  | BaseProps & {
+      id: string
+    }
+  | BaseProps & {
+      useNavigator?: StackNavigatorStore
+    }
+
+export const StackNavigator = forwardRef<StackNavigatorStore, StackNavigatorProps>((props, ref) => {
+  const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
+  // should never switch them out....
+  const stackNav = stackNavParent || useStackNavigator({ id: 'id' in props ? props.id : 'none' })
+
   const { stack } = stackNav
 
   useEffect(() => {
@@ -42,6 +51,13 @@ export const StackNavigator = forwardRef<
       stackNav.navigate(props.defaultItem.id, props.defaultItem.props)
     }
   }, [props.defaultItem])
+
+  useReaction(
+    () => stackNav.currentItem,
+    stackItem => {
+      props.onNavigate(stackItem)
+    },
+  )
 
   return (
     <Slider curFrame={stack.length - 1}>
@@ -68,35 +84,38 @@ type StackNavState = {
   stack: StackNavStateItem[]
 }
 
-type StackNavUse = {
+type StackNavUseProps = {
   state: StackNavState
   setState: ImmutableUpdateFn<StackNavState>
 }
 
-export class StackNav {
-  props: StackNavUse
+export class StackNavigatorStore {
+  props: StackNavUseProps
   next = null
 
   get stack() {
     return this.props.state.stack || []
   }
 
-  navigate(id: string, props: AppViewProps, forcePush = false) {
+  get currentItem() {
+    return this.stack[this.stack.length - 1]
+  }
+
+  navigate(id: string, rawProps: AppViewProps, forcePush = false) {
+    const props = filterSimpleValues(rawProps)
     // dont update stack if already on same item, unless explicitly asking
-    if (this.stack.length) {
-      const prev = last(this.stack)
-      if (id === prev.id) {
-        if (forcePush === false) {
-          return
-        }
-      }
-    }
     this.props.setState(next => {
-      if (!next) {
-        console.warn('no item?')
+      if (!next || !next.stack) {
         return
       }
-      console.log('adding to', next)
+      if (next.stack.length) {
+        const prev = last(next.stack)
+        if (id === prev.id && isEqual(props, prev.props)) {
+          if (forcePush === false) {
+            return
+          }
+        }
+      }
       next.stack = [
         ...next.stack,
         {
@@ -112,4 +131,19 @@ export class StackNav {
       next.stack = removeLast(next.stack)
     })
   }
+}
+
+const filterSimpleValues = obj =>
+  pickBy(obj, val => typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean')
+
+const StackNavContext = createStoreContext(StackNavigatorStore)
+
+export const useStackNavigator = (props: { id: string }) => {
+  const [state, setState] = useUserState<StackNavState>(`StackNavigator-${props.id}`, {
+    stack: [],
+  })
+  return StackNavContext.useCreateStore({
+    state,
+    setState,
+  })
 }

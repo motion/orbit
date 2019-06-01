@@ -10,7 +10,7 @@
   "references": [
     { "path": "../models" },
     { "path": "../sync-kit" },
-    { "path": "../../packages/config" },
+    { "path": "../config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/cosal" },

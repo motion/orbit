@@ -1,20 +1,8 @@
 import { invertLightness } from '@o/color'
-import { gloss, useTheme } from 'gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
-import {
-  Button,
-  ButtonProps,
-  IconProps,
-  memoIsEqualDeep,
-  MenuTemplate,
-  Row,
-  SimpleText,
-  Tooltip,
-  useContextMenu,
-  View,
-  ViewProps,
-} from '@o/ui'
+import { Button, ButtonProps, IconProps, memoIsEqualDeep, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
+import { Box, gloss, useTheme } from 'gloss'
 import * as React from 'react'
 
 export const tabHeight = 28
@@ -152,7 +140,7 @@ export function OrbitTabButton(props: ButtonProps) {
 
 const tabTransition = 'all ease-out 350ms'
 
-const NavButtonChromeInner = gloss({
+const NavButtonChromeInner = gloss<any>(Box, {
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',

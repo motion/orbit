@@ -18,15 +18,7 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
   useEnsureDefaultAppState<A>(uid, defaultState)
 
   const [state, update] = useAppBit()
-  const updateFn = useCallback(cb => {
-    if (!state || !uid) {
-      console.error('State not loaded / not found yet, or no uid!')
-      return
-    }
-    update(draft => {
-      cb(draft.data[uid])
-    })
-  }, [])
+  const updateFn = useImmutableUpdateFn(state, update, uid, 'data')
 
   if (!uid) {
     return [null, idFn]
@@ -34,4 +26,28 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
 
   // scopes state down
   return [selectDefined(state && state.data[uid], defaultState), updateFn]
+}
+
+export function useImmutableUpdateFn(
+  state: any,
+  update: ImmutableUpdateFn<any>,
+  uid: string,
+  subKey: string,
+) {
+  return useCallback(
+    val => {
+      if (!state || !uid) {
+        console.error('State not loaded / not found yet, or no uid!')
+        return
+      }
+      update(draft => {
+        if (typeof val === 'function') {
+          val(draft[subKey][uid])
+        } else {
+          draft[subKey][uid] = val
+        }
+      })
+    },
+    [uid, subKey],
+  )
 }

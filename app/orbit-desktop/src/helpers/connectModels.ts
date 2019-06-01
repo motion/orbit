@@ -1,6 +1,7 @@
-import { AppBit, AppEntity } from '@o/models'
+import { sleep } from '@o/kit'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
+
 import { DATABASE_PATH } from '../constants'
 import { migrations } from '../migrations'
 
@@ -18,7 +19,18 @@ function buildOptions(models): ConnectionOptions {
     migrationsRun: true,
     busyErrorRetry: 1000,
     maxQueryExecutionTime: 3000,
-    enableWAL: true,
+    // disabling this fixed database re-creation
+    // enableWAL: true,
+  }
+}
+
+const closeConnection = async (connection?: Connection) => {
+  if (!connection) return
+  try {
+    await connection.close()
+  } catch (err) {
+    // fine, just in case something odd kept it open
+    console.log('err closing connection', err)
   }
 }
 
@@ -38,12 +50,7 @@ export default async function connectModels(models) {
     return connection
   } catch (err1) {
     console.error(`\n\nerror during connection create: `, err1)
-
-    try {
-      await connection.close()
-    } catch {
-      // fine, just in case something odd kept it open
-    }
+    await closeConnection(connection)
 
     // if its going to fail this time again we have no choice - we drop all apps and spaces as well
     // and user will have to add spaces, apps and settings from scratch again
@@ -52,19 +59,33 @@ export default async function connectModels(models) {
       // create connection without synchronizations and migrations running to execute raw SQL queries
       connection = await createConnection({
         ...buildOptions(models),
+        migrations: [],
         synchronize: false,
         migrationsRun: false,
       })
 
-      // execute drop queries
-      await connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'job_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'bit_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'person_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
+      console.log('created connection no synchronize/migrations')
 
-      await connection.close()
+      // maybe no database (was deleted from disk, lets re-create)
+      const queryRunner = connection.createQueryRunner()
+      if (!(await queryRunner.hasDatabase('default'))) {
+        console.log('No database found, re-creating...')
+        await queryRunner.createDatabase('default', true)
+        await closeConnection(connection)
+        return await createConnection(buildOptions(models))
+      }
+
+      // execute drop queries
+      await Promise.all([
+        connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`),
+        connection.query(`DROP TABLE IF EXISTS 'job_entity'`),
+        connection.query(`DROP TABLE IF EXISTS 'bit_entity'`),
+        connection.query(`DROP TABLE IF EXISTS 'person_entity'`),
+        connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`),
+        connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`),
+      ])
+
+      await closeConnection(connection)
 
       connection = await createConnection({
         ...buildOptions(models),
@@ -72,35 +93,8 @@ export default async function connectModels(models) {
         migrationsRun: false,
       })
 
-      // reset app last sync settings, since we are going to start it from scratch
-      try {
-        const apps = (await connection.getRepository(AppEntity).find()) as AppBit[]
-        for (let app of apps) {
-          if (app.identifier === 'confluence') {
-            app.data.values.blogLastSync = {}
-            app.data.values.pageLastSync = {}
-          } else if (app.identifier === 'github') {
-            app.data.values.lastSyncIssues = {}
-            app.data.values.lastSyncPullRequests = {}
-          } else if (app.identifier === 'drive') {
-            app.data.values.lastSync = {}
-          } else if (app.identifier === 'gmail') {
-            // app.data.values.lastSync = {} // todo: do after my another PR merge
-          } else if (app.identifier === 'jira') {
-            app.data.values.lastSync = {}
-          } else if (app.identifier === 'slack') {
-            app.data.values.lastMessageSync = {}
-            app.data.values.lastAttachmentSync = {}
-          }
-        }
-
-        await connection.getRepository(AppEntity).save(apps)
-      } catch {
-        console.log('failed with method 2')
-      }
-
       // close connection
-      await connection.close()
+      await closeConnection(connection)
 
       // create create connection again
       connection = await createConnection(buildOptions(models))
@@ -111,11 +105,7 @@ export default async function connectModels(models) {
         err2,
       )
 
-      try {
-        await connection.close()
-      } catch {
-        // it may have been left open in previous block, or may not in which case its fine
-      }
+      await closeConnection(connection)
 
       // create connection without synchronizations and migrations running to execute raw SQL queries
       connection = await createConnection({
@@ -130,21 +120,23 @@ export default async function connectModels(models) {
 
       try {
         // execute drop queries
-        await connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'job_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'bit_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'person_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'app_entity_spaces_space_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'space_entity'`) // maybe we should remove them next step instead? (and make apps to be retrieved from spaces)
+        await Promise.all([
+          connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'job_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'bit_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'person_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'setting_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'app_entity_spaces_space_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'app_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'app_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'setting_entity'`),
+          connection.query(`DROP TABLE IF EXISTS 'space_entity'`), // maybe we should remove them next step instead? (and make apps to be retrieved from spaces),
+        ])
 
         // close connection
-        await connection.close()
+        await closeConnection(connection)
 
         return await createConnection(buildOptions(models))
       } catch (err) {
@@ -154,6 +146,10 @@ export default async function connectModels(models) {
       // holy shit things went wrong. fucking hell... lets nuke.
       console.log('going nuclear!')
       await remove(DATABASE_PATH)
+      await sleep(500)
+      await closeConnection(connection)
+
+      console.log('now re-connect from scratch')
 
       return await createConnection(buildOptions(models))
     }

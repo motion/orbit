@@ -8,7 +8,7 @@
   },
   "exclude": ["_", "node_modules", "tmp", "dist"],
   "references": [
-    { "path": "../../packages/config" },
+    { "path": "../../app/config" },
     { "path": "../../packages/gloss" },
     { "path": "../../packages/color" },
     { "path": "../../packages/use-store" },

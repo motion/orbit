@@ -36,7 +36,6 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   /** Validate setup fields */
   setupValidate?: (
     app: AppBit<AppData>,
-    values: Partial<AppData>,
   ) => FormErrors<FormErrors<SetupFields>> | Promise<FormErrors<SetupFields>>
 
   /** Define a syncer [TODO] allow oauth config here */

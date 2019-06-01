@@ -117,7 +117,10 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       // hotUpdateMainFilename: `hot-update.json`,
     },
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
-    externals: [{ ...externals, electron: '{}' }],
+    externals: {
+      electron: '{}',
+      ...externals,
+    },
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
       mainFields:

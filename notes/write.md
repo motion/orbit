@@ -441,3 +441,12 @@ It may not seem much different, but what happens is it gives you time to most ef
 
 - good incentives:
   - no hiding, forces eyes on whats going on easily
+
+---
+
+# Configuring a good dev environment
+
+- it shouldnt force you to look at things you aren't working on:
+  - noEmitOnError is a Bad Thing
+  - it forces you to get out of flow for small things that dont actually affect your current task
+  - you can still have a rule to not allow PRs of course without no errors

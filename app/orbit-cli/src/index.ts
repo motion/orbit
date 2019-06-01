@@ -58,6 +58,7 @@ Yargs.scriptName('orbit')
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
+      reporter.info(`argv ${JSON.stringify(argv)}`)
       require('./command-install').commandInstall({
         workspace: argv.ws,
         identifier: argv.id,
@@ -89,6 +90,7 @@ Yargs.scriptName('orbit')
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
+      reporter.info(`argv ${JSON.stringify(argv)}`)
       let projectRoot = resolve(cwd, argv.app)
       await require('./command-build').commandBuild({
         projectRoot,
@@ -108,7 +110,7 @@ Yargs.scriptName('orbit')
           default: '.',
           describe: 'The application to run',
         })
-        .option('force', {
+        .option('ignore-build', {
           type: 'boolean',
           default: false,
         })
@@ -119,15 +121,21 @@ Yargs.scriptName('orbit')
         .option('ignore-version', {
           type: 'boolean',
           default: false,
+        })
+        .option('bump-version', {
+          type: 'string',
+          describe: 'One of: patch, minor, major',
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
+      reporter.info(`argv ${JSON.stringify(argv)}`)
       let projectRoot = resolve(cwd, argv.app)
       await require('./command-publish').commandPublish({
         projectRoot,
-        force: !!argv.force,
         verbose: !!argv.verbose,
-        ignoreVersion: argv['ignore-version'],
+        ignoreBuild: !!argv['ignore-build'],
+        ignoreVersion: !!argv['ignore-version'],
+        bumpVersion: argv['bump-version'],
       })
     },
   )
@@ -151,6 +159,7 @@ Yargs.scriptName('orbit')
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
+      reporter.info(`argv ${JSON.stringify(argv)}`)
       let workspaceRoot = resolve(cwd, argv.workspace)
       await require('./command-ws').commandWs({
         workspaceRoot,
@@ -165,6 +174,7 @@ Yargs.scriptName('orbit')
     p => p.option('out', { alias: 'o' }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
+      reporter.info(`argv ${JSON.stringify(argv)}`)
       const projectRoot = resolve(cwd)
       const projectEntry = join(
         projectRoot,

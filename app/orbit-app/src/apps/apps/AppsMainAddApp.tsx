@@ -121,7 +121,7 @@ export function AppsMainAddAppContent({
       <Section space>
         <SubTitle>Description</SubTitle>
 
-        {`${def.fullDescription || def.description || ''}`.split('\n').map((par, index) => (
+        {`${def.description || ''}`.split('\n').map((par, index) => (
           <Paragraph key={index}>{par}</Paragraph>
         ))}
       </Section>

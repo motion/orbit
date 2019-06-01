@@ -10,8 +10,6 @@ const log = new Logger('app-store-definition-resolvers')
 const Config = getGlobalConfig()
 const tempPackageDir = join(Config.paths.userData, 'app_definitions')
 
-console.log('AppDefinitionSetupVerifyCommand', AppDefinitionSetupVerifyCommand)
-
 export function loadAppDefinitionResolvers() {
   return [resolveGetAppStoreDefinition(), resolveAppSetupVerify()]
 }
@@ -51,7 +49,17 @@ function resolveAppSetupVerify() {
       }
     }
 
-    const res = await loadedDef.definition.setupValidate(app)
+    let res
+
+    try {
+      res = await loadedDef.definition.setupValidate(app)
+    } catch (err) {
+      console.log('error running validate', err)
+      return {
+        type: 'error' as const,
+        errors: `${err}`,
+      }
+    }
 
     if (typeof res === 'string') {
       return {

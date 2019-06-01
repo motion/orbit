@@ -29,12 +29,12 @@ export function AppSetupForm({
       onSubmit={async (_, values) => {
         app.data.setup = values
 
-        debugger
-
         const res = await command(AppDefinitionSetupVerifyCommand, {
           identifier: def.id,
           app,
         })
+
+        console.log('res is', res)
 
         if (res.type === 'error') {
           return res.errors

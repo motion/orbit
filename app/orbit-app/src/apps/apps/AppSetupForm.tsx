@@ -29,6 +29,8 @@ export function AppSetupForm({
       onSubmit={async (_, values) => {
         app.data.setup = values
 
+        console.log('sending app for validation', app)
+
         const res = await command(AppDefinitionSetupVerifyCommand, {
           identifier: def.id,
           app,

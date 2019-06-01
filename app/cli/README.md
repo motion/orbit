@@ -1,4 +1,4 @@
-# orbit-cli
+# cli
 
 The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps can run in a couple ways:
 
@@ -7,9 +7,9 @@ The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps
 
 --
 
-## Developing the orbit-cli
+## Developing the cli
 
-To work on orbit-cli, run orbit in dev mode as usual with `run orbit`, then use `bin/orbit dev /path/to/custom-app` — it should fork a new instance with a running custom app.
+To work on cli, run orbit in dev mode as usual with `run orbit`, then use `bin/orbit dev /path/to/custom-app` — it should fork a new instance with a running custom app.
 
 ---
 
@@ -53,7 +53,7 @@ The example `package.json` for an app could look like:
 
 ### Installing Orbit Runtime
 
-For now, the orbit cli lives in app/orbit-cli as @o/orbit-cli. Eventually it will be bundled together with the app-kit under one name, the npm package `orbit`.
+For now, the orbit cli lives in app/cli as @o/cli. Eventually it will be bundled together with the app-kit under one name, the npm package `orbit`.
 
 Orbit runtime is distributed through npm:
 

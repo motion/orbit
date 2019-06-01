@@ -6,7 +6,9 @@ import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 
-export async function commandDev(options: { projectRoot: string }) {
+export type CommandDevOptions = { projectRoot: string }
+
+export async function commandDev(options: CommandDevOptions) {
   let orbitDesktop = await getOrbitDesktop()
 
   if (!orbitDesktop) {

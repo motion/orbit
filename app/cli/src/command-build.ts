@@ -7,7 +7,7 @@ import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 
-type CommandBuildOptions = {
+export type CommandBuildOptions = {
   projectRoot: string
   watch?: boolean
   force?: boolean

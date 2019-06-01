@@ -47,7 +47,7 @@ export class Telemetry {
     try {
       const jsonfile = join(
         require
-          .resolve(`orbit-cli`) // Resolve where current orbit-cli would be loaded from.
+          .resolve(`cli`) // Resolve where current cli would be loaded from.
           .split(sep)
           .slice(0, -2) // drop lib/index.js
           .join(sep),
@@ -119,7 +119,7 @@ export class Telemetry {
       time: new Date(),
       machineId: this.getMachineId(),
       repositoryId: this.getRepoId(),
-      componentId: `orbit-cli`,
+      componentId: `cli`,
       osInformation: this.getOsInfo(),
       componentVersion: this.componentVersion,
     }

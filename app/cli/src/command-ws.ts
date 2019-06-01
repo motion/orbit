@@ -6,13 +6,13 @@ import { join } from 'path'
 import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 
-type CommandWSOptions = {
+export type CommandWsOptions = {
   workspaceRoot: string
   clean: boolean
   mode: 'development' | 'production'
 }
 
-export async function commandWs(options: CommandWSOptions) {
+export async function commandWs(options: CommandWsOptions) {
   reporter.info('Running orbit ws')
   const appIdentifiers = await watchBuildWorkspace(options)
 
@@ -36,7 +36,7 @@ export async function commandWs(options: CommandWSOptions) {
   return
 }
 
-async function watchBuildWorkspace(options: CommandWSOptions) {
+async function watchBuildWorkspace(options: CommandWsOptions) {
   reporter.info(`Running command ws in mode ${options.mode}`)
 
   const directory = options.workspaceRoot

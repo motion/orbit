@@ -50,7 +50,7 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
   )
 }
 
-// TODO this fn shared by orbit-cli
+// TODO this fn shared by cli
 
 async function findNodeModuleDir(startDir: string, packageName: string) {
   let modulesDir = join(startDir, 'node_modules')

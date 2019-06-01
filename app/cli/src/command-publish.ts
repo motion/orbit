@@ -10,7 +10,7 @@ import prompts from 'prompts'
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
 
-type CommandPublishOptions = {
+export type CommandPublishOptions = {
   projectRoot: string
   ignoreBuild?: boolean
   ignoreVersion?: boolean

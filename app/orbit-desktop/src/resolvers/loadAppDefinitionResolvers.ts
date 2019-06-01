@@ -1,9 +1,11 @@
+import { commandInstall } from '@o/cli'
 import { getGlobalConfig, Logger, resolveCommand } from '@o/kit'
-import { AppDefinition, AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand } from '@o/models'
+import { AppDefinition, AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand, InstallAppToWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
 import commandExists from 'command-exists'
 import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
+import { getRepository } from 'typeorm'
 
 const log = new Logger('app-store-definition-resolvers')
 
@@ -11,7 +13,34 @@ const Config = getGlobalConfig()
 const tempPackageDir = join(Config.paths.userData, 'app_definitions')
 
 export function loadAppDefinitionResolvers() {
-  return [resolveGetAppStoreDefinition(), resolveAppSetupVerify()]
+  return [resolveGetAppStoreDefinition(), resolveAppSetupVerify(), resolveInstallAppToWorkspace()]
+}
+
+async function getActiveSpace() {
+  const activeUser = await getRepository(UserEntity).findOne()
+  return await getRepository(SpaceEntity).findOne({
+    where: {
+      id: activeUser.activeSpace,
+    },
+  })
+}
+
+async function getWorkspaceDirectory() {
+  return (await getActiveSpace()).directory
+}
+
+function resolveInstallAppToWorkspace() {
+  return resolveCommand(InstallAppToWorkspaceCommand, async ({ identifier }) => {
+    const directory = await getWorkspaceDirectory()
+    const res = await commandInstall({ identifier, directory })
+    if (res.type === 'error') {
+      return res
+    }
+    return {
+      type: 'success' as const,
+      message: `Installed ${identifier} successfully`,
+    }
+  })
 }
 
 const identifierToPackageId = {}

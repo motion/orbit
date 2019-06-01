@@ -23,6 +23,11 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
+export const InstallAppToWorkspaceCommand = new Command<
+  { type: 'error'; message: string } | { type: 'success'; message: string },
+  { identifier: string }
+>('InstallAppToWorkspaceCommand')
+
 // download app definition from registry
 export const GetAppStoreAppDefinitionCommand = new Command<
   { type: 'error'; message: string } | { type: 'success'; identifier: string },

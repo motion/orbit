@@ -24,7 +24,7 @@ Goal #3: Apps store for p2p
 Goal #4: App building CLI
 
 1. Not sure if this should go above the first goal, or parallel with it
-2. In orbit-cli:
+2. In cli:
    1. Should be able to init a new app, have our @o/build run it and compile it
    2. Should be able to start/stop/create/publish apps generally
 3. In orbit-app:

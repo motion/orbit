@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.4",
+    "@o/cli": "*",
     "@o/build-server": "*",
     "@o/config": "^2.5.2",
     "@o/confluence-app": "^2.5.6",

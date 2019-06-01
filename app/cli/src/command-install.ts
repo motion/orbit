@@ -1,12 +1,21 @@
+import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reporter } from './reporter'
+import { getPackageId } from './util/getPackageId'
 
 export type CommandInstallOptions = {
-  workspace: string
+  directory: string
   identifier: string
-  verbose: boolean
+  verbose?: boolean
 }
 
 export async function commandInstall(options: CommandInstallOptions) {
-  reporter.info(`Installing ${options.identifier} into ${options.workspace}`)
+  reporter.info(`Installing ${options.identifier} into ${options.directory}`)
+
+  const command = await yarnOrNpm()
+  const packageId = await getPackageId(options.identifier)
+  const curVersion = await getRegistryLatestVersion(packageId)
+
+  console.log('command', command, curVersion)
+
   return
 }

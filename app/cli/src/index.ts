@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import './processDispose'
 
 import { readJSON } from 'fs-extra'
@@ -13,7 +14,7 @@ import { CommandPublishOptions } from './command-publish'
 import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 
-#!/usr/bin/env node
+
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
 const packageJson = require('../package.json')
@@ -203,6 +204,10 @@ Yargs.scriptName('orbit')
   .help().argv
 
 // programmatic API
+
+export * from './util/downloadAppDefinition'
+export * from './util/requireAppDefinition'
+export * from './util/getPackageId'
 
 export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
 export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)

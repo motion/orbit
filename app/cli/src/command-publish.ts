@@ -37,6 +37,14 @@ const bumpVersions = {
   major: 'major',
 }
 
+export const getRegistryInfo = (packageId: string) =>
+  fetch(`${registryUrl}/${packageId}`).then(x => x.json())
+
+export const getRegistryLatestVersion = async (packageId: string) => {
+  const info = await getRegistryInfo(packageId)
+  return `${info['dist-tags'].latest}`
+}
+
 export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
@@ -50,8 +58,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     // publish to registry
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     const packageId = pkg.name
-    const verion = pkg.version
-    const registryInfo = await fetch(`${registryUrl}/${packageId}`).then(x => x.json())
+    const version = pkg.version
 
     let shouldPublish = true
     let bumpVersion = bumpVersions[options.bumpVersion]
@@ -74,11 +81,13 @@ export async function commandPublish(options: CommandPublishOptions) {
       shouldPublish = true
     }
 
+    const registryInfo = await getRegistryInfo(packageId)
+
     // if should prompt for version update
     if (
       !bumpVersion &&
       registryInfo.versions &&
-      registryInfo.versions[verion] &&
+      registryInfo.versions[version] &&
       !options.ignoreVersion
     ) {
       shouldPublish = false
@@ -167,12 +176,12 @@ async function publishApp() {
   return await npmCommand(`publish --registry ${registryUrl}`)
 }
 
-async function npmCommand(args: string) {
+export async function npmCommand(args: string) {
   const cmd = await yarnOrNpm()
   await exec(cmd, args.split(' '))
 }
 
-async function yarnOrNpm() {
+export async function yarnOrNpm() {
   const hasYarn = await commandExists('yarn')
   const hasNpm = await commandExists('npm')
   if (!hasYarn && !hasNpm) {

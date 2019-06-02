@@ -1,5 +1,6 @@
 import { isDefined } from '@o/utils'
 
+import { useScale } from '../Scale'
 import { getSpaceSize, Sizes } from '../Space'
 
 export type SizesObject = {
@@ -21,13 +22,14 @@ export const getPadding = (
     padding?: any
   },
 ) => {
+  const scale = useScale()
   if (typeof props.padding !== 'undefined') {
     return {
       padding: props.padding,
     }
   }
   if (props.pad) {
-    return { padding: getSizableValue(props.pad) }
+    return { padding: scale * getSizableValue(props.pad) }
   }
 }
 

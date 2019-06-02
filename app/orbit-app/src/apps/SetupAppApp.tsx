@@ -1,5 +1,6 @@
 import { AppIcon, createApp } from '@o/kit'
-import { Button, Col, Flow, List, ListItemProps, Section, Text, Toolbar, View } from '@o/ui'
+import { Button, Col, Flow, IconLabeled, List, ListItemProps, Scale, Section, Text, Toolbar, View } from '@o/ui'
+import SelectableGrid from '@o/ui/_/SelectableGrid'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -36,27 +37,38 @@ function SetupAppCustom() {
       <Col width="70%" background="transparent" margin="auto">
         <Flow>
           <Flow.Step title="Template" subTitle="Choose template">
-            <Col pad>hello 123</Col>
+            <SelectableGrid
+              items={[
+                {
+                  label: 'Blank',
+                  icon: 'template',
+                  subTitle: 'Empty app template',
+                },
+              ]}
+              getItem={props => <IconLabeled {...props} />}
+            />
           </Flow.Step>
         </Flow>
       </Col>
 
-      <Toolbar size="md">
-        <Button alt="action" iconAfter={false} icon="chevron-left" onClick={stackNav.back}>
-          Back
-        </Button>
-        <View flex={1} />
-        <Button
-          size={1.4}
-          alt="confirm"
-          onClick={() => {
-            actions.setupApp.create(selected.identifier)
-          }}
-          icon="chevron-right"
-        >
-          Start
-        </Button>
-      </Toolbar>
+      <Scale size="lg">
+        <Toolbar>
+          <Button alt="action" iconAfter={false} icon="chevron-left" onClick={stackNav.back}>
+            Back
+          </Button>
+          <View flex={1} />
+          <Button
+            size={1.4}
+            alt="confirm"
+            onClick={() => {
+              actions.setupApp.create(selected.identifier)
+            }}
+            icon="chevron-right"
+          >
+            Start
+          </Button>
+        </Toolbar>
+      </Scale>
     </>
   )
 }
@@ -97,40 +109,41 @@ function SetupAppHome() {
         />
       </Section>
 
-      <Toolbar size="md">
-        <Button
-          alt="action"
-          onClick={() => {
-            stackNav.navigate({
-              id: 'SetupAppCustom',
-            })
-          }}
-          icon="plus"
-          tooltip="Create new custom app"
-        >
-          Create Custom App
-        </Button>
-        <View flex={1} />
-        {selected && (
-          <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
-            <Text fontWeight={600}>Add app to space</Text>
-            <Text ellipse alpha={0.6} size={1.25}>
-              {selected.title}
-            </Text>
-          </View>
-        )}
-        <Button
-          size={1.4}
-          alt="confirm"
-          onClick={() => {
-            actions.setupApp.create(selected.identifier)
-          }}
-          icon="chevron-right"
-          tooltip="Create new custom app"
-        >
-          Add
-        </Button>
-      </Toolbar>
+      <Scale size="lg">
+        <Toolbar>
+          <Button
+            alt="action"
+            onClick={() => {
+              stackNav.navigate({
+                id: 'SetupAppCustom',
+              })
+            }}
+            icon="plus"
+            tooltip="Create new custom app"
+          >
+            Create Custom App
+          </Button>
+          <View flex={1} />
+          {selected && (
+            <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
+              <Text ellipse alpha={0.6} size={1.25}>
+                {selected.title}
+              </Text>
+            </View>
+          )}
+          <Button
+            size={1.4}
+            alt="confirm"
+            onClick={() => {
+              actions.setupApp.create(selected.identifier)
+            }}
+            icon="chevron-right"
+            tooltip="Create new custom app"
+          >
+            Add
+          </Button>
+        </Toolbar>
+      </Scale>
     </>
   )
 }

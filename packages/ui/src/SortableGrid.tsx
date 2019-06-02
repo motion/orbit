@@ -52,7 +52,7 @@ const SortableGridInner = SortableContainer(
   },
 )
 
-export function SortableGrid(props: SortableGridProps<any>) {
+export function SortableGrid<A>(props: SortableGridProps<A>) {
   return (
     <SortableGridInner sortable={false} shouldCancelStart={isRightClick} axis="xy" {...props} />
   )

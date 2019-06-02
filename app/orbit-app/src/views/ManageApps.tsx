@@ -1,5 +1,6 @@
-import { Templates, useActiveAppsSorted } from '@o/kit'
-import { Button, Section, SelectableGrid, SubTitle, useGet } from '@o/ui'
+import { getAppDefinition, isDataDefinition, Templates, useActiveAppsSorted } from '@o/kit'
+import { Button, Center, Section, SortableGrid, SortableGridProps, SubTitle, View } from '@o/ui'
+import { partition } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useCallback } from 'react'
 
@@ -10,10 +11,13 @@ import { OrbitAppIcon } from './OrbitAppIcon'
 
 export function ManageApps() {
   const om = useOm()
-  const activeApps = useActiveAppsSorted()
+  const activeApps = useActiveAppsSorted().map(app => ({
+    app,
+    definition: getAppDefinition(app.identifier),
+  }))
   const viewAppDefs = useUserVisualAppDefinitions()
-  const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
+  const [dataApps, viewApps] = partition(activeApps, x => isDataDefinition(x.definition))
 
   if (!activeApps.length) {
     return (
@@ -35,43 +39,58 @@ export function ManageApps() {
 
   return (
     <Section padInner="lg" background="transparent">
-      <SelectableGrid
-        sortable
-        minWidth={180}
-        maxWidth={220}
-        items={[
-          ...activeApps.map(x => ({
-            id: x.id,
-            title: x.name,
-            subTitle: x.identifier,
-            type: 'installed',
-            groupName: 'Installed Apps',
-            disabled: x.tabDisplay !== 'plain',
-            onDoubleClick: () => {
-              om.actions.router.showAppPage({ id: `${x.id}` })
-            },
-          })),
-        ]}
-        getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
-          return (
-            <OrbitAppIcon
-              app={getActiveApps().find(x => x.id === item.id)}
-              isSelected={isSelected}
-              onClick={select}
-              onDoubleClick={onDoubleClick}
-            />
-          )
-        }, [])}
-        distance={10}
-        onSortEnd={handleSortEnd}
-        getSortableItemProps={item => {
-          if (item.disabled) {
-            return {
-              disabled: true,
+      <Section size="sm" title="View apps">
+        {!viewApps.length && (
+          <View height={200}>
+            <Center>
+              <SubTitle>No view apps</SubTitle>
+            </Center>
+          </View>
+        )}
+        <AppSortableGrid
+          sortable
+          items={viewApps}
+          getItem={item => {
+            return (
+              <OrbitAppIcon
+                app={item.app}
+                onDoubleClick={() => {
+                  om.actions.router.showAppPage({ id: `${x.id}` })
+                }}
+              />
+            )
+          }}
+          distance={10}
+          onSortEnd={handleSortEnd}
+          getSortableItemProps={item => {
+            if (item.app.tabDisplay === 'permanent') {
+              return {
+                disabled: true,
+              }
             }
-          }
-        }}
-      />
+          }}
+        />
+      </Section>
+
+      <Section size="sm" title="Data apps">
+        {!dataApps.length && (
+          <View height={200}>
+            <Center>
+              <SubTitle>No data apps</SubTitle>
+            </Center>
+          </View>
+        )}
+        <AppSortableGrid
+          items={dataApps}
+          getItem={item => {
+            return <OrbitAppIcon app={item.app} />
+          }}
+        />
+      </Section>
     </Section>
   )
+}
+
+function AppSortableGrid<A>(props: SortableGridProps<A>) {
+  return <SortableGrid minWidth={180} maxWidth={220} distance={10} {...props} />
 }

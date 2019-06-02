@@ -13,6 +13,7 @@ export async function webpackPromise(
       if (options.loud) {
         console.log(
           stats.toString({
+            chunks: false,
             colors: true,
           }),
         )

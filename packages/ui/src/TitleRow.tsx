@@ -92,7 +92,6 @@ export const TitleRow = themeable(
       ref,
     ) => {
       const spaceSize = getSpaceSize(size)
-      console.log('spaceSize', spaceSize)
       const [collapseProps, rowProps] = splitCollapseProps(allProps)
       const collapse = useCollapse(collapseProps)
       const titleElement =

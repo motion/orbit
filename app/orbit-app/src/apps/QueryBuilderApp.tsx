@@ -196,7 +196,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
 }
 
 const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
-  console.log('QueryBuilderQueryEdit')
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
   const [app, def] = useAppWithDefinition(+props.id)

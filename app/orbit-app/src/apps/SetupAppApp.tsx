@@ -1,5 +1,5 @@
 import { AppIcon, createApp } from '@o/kit'
-import { Button, Flow, List, ListItemProps, Section, Text, Toolbar, View } from '@o/ui'
+import { Button, Col, Flow, List, ListItemProps, Section, Text, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -33,19 +33,13 @@ function SetupAppCustom() {
   const { actions } = useOm()
   return (
     <>
-      <Section
-        width="70%"
-        background="transparent"
-        margin="auto"
-        height="70%"
-        title="Create Custom App"
-        bordered
-        subTitle="Choose template"
-      >
+      <Col width="70%" background="transparent" margin="auto">
         <Flow>
-          <Flow.Step>hello</Flow.Step>
+          <Flow.Step title="Template" subTitle="Choose template">
+            <Col pad>hello 123</Col>
+          </Flow.Step>
         </Flow>
-      </Section>
+      </Col>
 
       <Toolbar size="md">
         <Button alt="action" iconAfter={false} icon="chevron-left" onClick={stackNav.back}>

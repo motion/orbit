@@ -5,7 +5,6 @@ import { Button } from './buttons/Button'
 import { Section } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
-import { StatusBar } from './StatusBar'
 import { SurfacePassProps } from './Surface'
 
 export type FlowProps = {
@@ -46,7 +45,7 @@ type StepState = {
   setStepIndex: (index: number) => void
 }
 
-const DefaultFlowLayout = ({
+export const DefaultFlowLayout = ({
   renderToolbar,
   children,
   index,
@@ -59,7 +58,6 @@ const DefaultFlowLayout = ({
   return (
     <Section
       bordered
-      padding={0}
       title={step.title}
       subTitle={step.subTitle || `${index + 1}/${total}`}
       minHeight={300}
@@ -71,8 +69,10 @@ const DefaultFlowLayout = ({
           borderWidth={0}
           glint={false}
           borderBottom={[3, 'transparent']}
+          color={theme => theme.background}
           borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
           sizeRadius={0}
+          sizeHeight={1.2}
           sizePadding={1.5}
         >
           <Row>
@@ -83,7 +83,7 @@ const DefaultFlowLayout = ({
                 active={steps[index].key === stp.key}
                 onClick={() => state.setStepIndex(stepIndex)}
               >
-                {stp.title}
+                {stp.title || 'No title'}
               </Button>
             ))}
           </Row>
@@ -96,7 +96,6 @@ const DefaultFlowLayout = ({
           </Row>
         ) : null
       }
-      below={<StatusBar>helloworld</StatusBar>}
     >
       {children}
     </Section>

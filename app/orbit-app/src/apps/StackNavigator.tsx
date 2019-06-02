@@ -71,7 +71,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavigatorProp
   )
 
   const stackElements = useMemo(() => {
-    console.log('re-calc stack elements')
     return stackNav.stack
       .map((stackItem, i) => {
         const View = props.items[stackItem.id]

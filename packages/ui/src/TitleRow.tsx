@@ -106,13 +106,12 @@ export const TitleRow = themeable(
 
       return (
         <TitleRowChrome
-          background={backgrounded ? titleRowBg : null}
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
+          background={backgrounded ? titleRowBg : null}
           ref={ref}
-          {...rowProps}
         >
           {above}
-          <Row alignItems="center" space>
+          <Row alignItems="center" space {...rowProps}>
             {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
             {before}
             {typeof icon === 'string' ? (

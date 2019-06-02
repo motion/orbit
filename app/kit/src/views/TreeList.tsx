@@ -91,7 +91,6 @@ const getActions = (
     },
     updateSelectedItem(item: Partial<TreeItem>) {
       const selectedItem = Actions.getSelectedItem()
-      console.log('selectedItem', selectedItem)
       if (!selectedItem) {
         return
       }
@@ -102,7 +101,6 @@ const getActions = (
     },
     getSelectedItem() {
       const { selectedIndex } = Actions.curDepth()
-      console.log('selectedIndex', selectedIndex)
       if (selectedIndex === -1) {
         console.error('No item selected')
         return
@@ -116,7 +114,6 @@ const getActions = (
       const update = userState()[1]
       update(draft => {
         const curDepth = draft.depth[draft.depth.length - 1]
-        console.log('setSelectedIndex', index, curDepth)
         curDepth.selectedIndex = index
       })
     },

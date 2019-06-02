@@ -7,7 +7,7 @@ import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
 import { OrbitAppIcon } from '../views/OrbitAppIcon'
-import { NavigatorProps, StackNavigator, StackNavigatorStore, useStackNavigator } from './StackNavigator'
+import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'query-builder',
@@ -21,7 +21,7 @@ const treeId = 'query-build'
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
-  const navigator = useStackNavigator({ id: `query-builder-nav-${props.id}` })
+  const navigator = useCreateStackNavigator({ id: `query-builder-nav-${props.id}` })
   const treeList = useTreeList(treeId)
 
   if (!dataApps.length) {
@@ -144,11 +144,14 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
               const item = selected[0]
               const app = dataApps.find(x => x.id === item.id)
               // navigate to app definition:
-              props.navigation.navigate('QueryEdit', {
-                title: app.name,
-                id: `${app.id}`,
-                subType: app.identifier,
-                subTitle: app.name,
+              props.navigation.navigate({
+                id: 'QueryEdit',
+                props: {
+                  title: app.name,
+                  id: `${app.id}`,
+                  subType: app.identifier,
+                  subTitle: app.name,
+                },
               })
             }}
           >
@@ -176,10 +179,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
           ],
           [dataApps],
         )}
-        onSelect={useCallback(i => {
-          console.log('selecting', i)
-          setSelected(i)
-        }, [])}
+        onSelect={useCallback(i => setSelected(i), [])}
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
           return (
             <OrbitAppIcon
@@ -195,11 +195,11 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   )
 }
 
-function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
+const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
+  console.log('QueryBuilderQueryEdit')
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
   const [app, def] = useAppWithDefinition(+props.id)
-  console.log('appDef', app, def)
 
   if (!def) {
     return null
@@ -264,7 +264,7 @@ function QueryBuilderQueryEdit(props: AppViewProps & NavigatorProps) {
       </Suspense>
     </Section>
   )
-}
+})
 
 function useAppMeta(identifier: string) {
   return useCommand(AppMetaCommand, { identifier })

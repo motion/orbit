@@ -1,5 +1,5 @@
 import { Row } from 'gloss'
-import React, { Children, useState } from 'react'
+import React, { Children, FunctionComponent, memo, useState } from 'react'
 
 import { Button } from './buttons/Button'
 import { Section } from './Section'
@@ -103,63 +103,66 @@ const DefaultFlowLayout = ({
   )
 }
 
-export function Flow({
-  height,
-  renderToolbar,
-  renderLayout = DefaultFlowLayout,
-  ...props
-}: FlowProps) {
-  const [index, setIndex] = useState(0)
-  const [data, setDataDumb] = useState(props.initialData)
-  // make it  merge by default
-  const setData = x => setDataDumb({ ...data, ...x })
-  const total = Children.count(props.children)
-  const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
-    (child, idx) => ({
-      key: `${idx}`,
-      ...child,
-    }),
-  )
-  const next = () => setIndex(Math.min(total - 1, index + 1))
-  const prev = () => setIndex(Math.max(0, index - 1))
-  const actions = {
-    data,
-    setData,
-    next,
-    prev,
-    setStepIndex: setIndex,
-  }
-
-  const contents = (
-    <Slider fixHeightToParent curFrame={index}>
-      {Children.map(props.children, (child, idx) => {
-        const step = child.props
-        const ChildView = step.children
-        return (
-          <SliderPane key={idx}>
-            {typeof step.children === 'function' ? <ChildView {...actions} /> : step.children}
-          </SliderPane>
-        )
-      })}
-    </Slider>
-  )
-
-  return (
-    <>
-      {renderLayout({
-        renderToolbar,
-        children: contents,
-        index: index,
-        total,
-        step: steps[index],
-        steps,
-        state: actions,
-        height,
-      })}
-    </>
-  )
+interface FlowComponent<Props> extends FunctionComponent<Props> {
+  Step: FunctionComponent<FlowStepProps>
 }
+
+export const Flow: FlowComponent<FlowProps> = memo(
+  ({ height, renderToolbar, renderLayout = DefaultFlowLayout, ...props }: FlowProps) => {
+    const [index, setIndex] = useState(0)
+    const [data, setDataDumb] = useState(props.initialData)
+    // make it  merge by default
+    const setData = x => setDataDumb({ ...data, ...x })
+    const total = Children.count(props.children)
+    const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
+      (child, idx) => ({
+        key: `${idx}`,
+        ...child,
+      }),
+    )
+    const next = () => setIndex(Math.min(total - 1, index + 1))
+    const prev = () => setIndex(Math.max(0, index - 1))
+    const actions = {
+      data,
+      setData,
+      next,
+      prev,
+      setStepIndex: setIndex,
+    }
+
+    const contents = (
+      <Slider fixHeightToParent curFrame={index}>
+        {Children.map(props.children, (child, idx) => {
+          const step = child.props
+          const ChildView = step.children
+          return (
+            <SliderPane key={idx}>
+              {typeof step.children === 'function' ? <ChildView {...actions} /> : step.children}
+            </SliderPane>
+          )
+        })}
+      </Slider>
+    )
+
+    return (
+      <>
+        {renderLayout({
+          renderToolbar,
+          children: contents,
+          index: index,
+          total,
+          step: steps[index],
+          steps,
+          state: actions,
+          height,
+        })}
+      </>
+    )
+  },
+) as any
 
 export function FlowStep(_: FlowStepProps) {
   return null
 }
+
+Flow.Step = FlowStep

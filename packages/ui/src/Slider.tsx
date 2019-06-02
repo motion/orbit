@@ -1,6 +1,7 @@
 import { gloss } from 'gloss'
-import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
+import React, { cloneElement, isValidElement, memo, useCallback, useRef, useState } from 'react'
 
+import { useGet } from './hooks/useGet'
 import { useParentNodeSize } from './hooks/useParentNodeSize'
 import { SliderPane } from './SliderPane'
 import { View } from './View/View'
@@ -51,6 +52,11 @@ export const Slider = memo((props: SliderProps) => {
   const [heights, setHeights] = useState([])
   let currentHeight = 0
   const visible = useVisibility()
+  const getProps = useGet(props)
+  const [numMounted, setNumMounted] = useState(React.Children.count(children))
+  const handleDidMount = useCallback(() => {
+    setNumMounted(React.Children.count(getProps().children))
+  }, [])
 
   useParentNodeSize({
     ref: frameRef,
@@ -78,7 +84,9 @@ export const Slider = memo((props: SliderProps) => {
         if (!isValidElement(child)) {
           throw new Error(`Must pass <SliderPane /> to <Slider />`)
         }
-        const isActive = curFrame === index
+
+        const isMounting = index > numMounted - 1
+        const isActive = !isMounting && curFrame === index
 
         const onChangeHeight = (next: number) => {
           heights[index] = next
@@ -96,7 +104,7 @@ export const Slider = memo((props: SliderProps) => {
           width,
           index,
           onChangeHeight,
-          display: isActive ? undefined : 'none',
+          onMountChange: handleDidMount,
         })
       })}
     </SliderContainer>

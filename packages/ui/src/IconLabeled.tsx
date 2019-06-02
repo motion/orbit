@@ -6,7 +6,7 @@ import { getSize } from './Sizes'
 import { SimpleText, SimpleTextProps } from './text/SimpleText'
 import { Col, ColProps } from './View/Col'
 
-type IconLabeledProps = ColProps & {
+export type IconLabeledProps = ColProps & {
   icon?: React.ReactNode
   label?: string
   labelProps?: SimpleTextProps

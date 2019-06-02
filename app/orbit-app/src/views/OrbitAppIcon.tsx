@@ -1,48 +1,15 @@
 import { AppBit, AppIcon } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import { Button, Col, SegmentedRow, Text, useContextMenu, View, ViewProps } from '@o/ui'
+import { Button, IconLabeled, IconLabeledProps, SegmentedRow, useContextMenu, View } from '@o/ui'
 import { Box, gloss, Theme } from 'gloss'
 import React, { memo } from 'react'
-
-type LargeIconProps = ViewProps & {
-  icon?: React.ReactNode
-  title?: string
-  subTitle?: string
-}
-
-export function LargeIcon({ icon, title, subTitle, ...restProps }: LargeIconProps) {
-  return (
-    <Col space="xs" alignItems="center" justifyContent="center" {...restProps}>
-      <View
-        marginTop={16}
-        marginBottom={6}
-        alignItems="center"
-        position="relative"
-        width={58}
-        height={58}
-      >
-        {icon}
-      </View>
-      {!!title && (
-        <Text ellipse fontWeight={500} size={0.9}>
-          {title}
-        </Text>
-      )}
-      {!!subTitle && (
-        <Text ellipse alpha={0.7} size={0.85}>
-          {subTitle}
-        </Text>
-      )}
-    </Col>
-  )
-}
 
 export const OrbitAppIcon = memo(
   ({
     app,
     isSelected,
     ...props
-  }: LargeIconProps & {
+  }: IconLabeledProps & {
     app: AppBit
     isSelected?: boolean
   }) => {
@@ -61,9 +28,9 @@ export const OrbitAppIcon = memo(
               )}
             </SegmentedRow>
           </View>
-          <LargeIcon
+          <IconLabeled
             {...contextMenuProps}
-            title={app.name}
+            label={app.name}
             subTitle={app.identifier}
             icon={<AppIcon app={app} size={58} />}
             {...props}

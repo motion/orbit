@@ -138,6 +138,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         null,
       ),
     )
+    console.log('titlePadFinal', titlePadFinal, props.title)
 
     titleEl = (
       <Scale size={titleScale}>

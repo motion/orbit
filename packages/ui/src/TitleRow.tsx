@@ -44,9 +44,6 @@ export type TitleRowSpecificProps = ThemeableProps &
     /** Add an element below title */
     below?: React.ReactNode
 
-    /** Size the padding independently of title */
-    sizePadding?: number
-
     /** Adds a subtle background behind the title */
     backgrounded?: boolean
 
@@ -77,7 +74,6 @@ export const TitleRow = themeable(
         bordered,
         after,
         size = 'md',
-        sizePadding = 1,
         subTitle,
         backgrounded,
         below,
@@ -104,6 +100,7 @@ export const TitleRow = themeable(
           </Title>
         ))
 
+      console.log('ok', rowProps.pad, title, rowProps.padding)
       return (
         <TitleRowChrome
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
@@ -112,7 +109,7 @@ export const TitleRow = themeable(
           {...rowProps}
         >
           {above}
-          <Row alignItems="center" space>
+          <Row alignItems="center" space={size}>
             {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
             {before}
             {typeof icon === 'string' ? (

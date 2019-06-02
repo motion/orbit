@@ -29,22 +29,26 @@ export const getPadding = (
     }
   }
   if (props.pad) {
-    return { padding: scale * getSizableValue(props.pad) }
+    let padding = getSizableValue(props.pad)
+    padding = Array.isArray(padding) ? padding.map(x => x * scale) : padding * scale
+    return { padding }
   }
 }
 
-export const getSizableValue = (value: Sizes | SizesObject | null | undefined) => {
+export const getSizableValue = (
+  value: Sizes | SizesObject | null | undefined,
+): number | number[] => {
   if (typeof value !== 'undefined') {
     if (!value) {
       return
     }
     if (Array.isArray(value)) {
-      return value.map(x => getSpaceSize(x))
+      return getSpaceSize(value)
     }
     if (typeof value === 'object') {
       const { top, left, right, bottom, x, y } = value
       if (isDefined(x) || isDefined(y)) {
-        return [x, y, x, y].map(val => getSpaceSize(val))
+        return [x, y, x, y].map(getSpaceSize)
       }
       return [top, right, bottom, left].map(side => getSpaceSize(side || 0))
     }

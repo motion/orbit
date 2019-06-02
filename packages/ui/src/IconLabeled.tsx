@@ -1,7 +1,8 @@
 import React, { memo } from 'react'
 
+import { Icon, IconProps } from './Icon'
 import { Scale } from './Scale'
-import { getSpaceSize } from './Space'
+import { getSize } from './Sizes'
 import { SimpleText, SimpleTextProps } from './text/SimpleText'
 import { Col, ColProps } from './View/Col'
 
@@ -11,34 +12,50 @@ type IconLabeledProps = ColProps & {
   labelProps?: SimpleTextProps
   subTitle?: string
   subTitleProps?: SimpleTextProps
+  iconProps?: IconProps
 }
 
 export const IconLabeled = memo(
-  ({ icon, label, labelProps, subTitle, size, subTitleProps, ...restProps }: IconLabeledProps) => {
-    const spaceSize = getSpaceSize(size)
+  ({
+    icon,
+    label,
+    labelProps,
+    subTitle,
+    size = 1,
+    subTitleProps,
+    iconProps,
+    ...restProps
+  }: IconLabeledProps) => {
+    const sizeNum = getSize(size)
     return (
       <Scale size={size}>
-        <Col space="xs" alignItems="center" justifyContent="center" {...restProps}>
+        <Col flex={1} pad space alignItems="center" justifyContent="center" {...restProps}>
           <Col
             marginTop="md"
             marginBottom="sm"
             alignItems="center"
             position="relative"
-            width={spaceSize * 48}
-            height={spaceSize * 48}
+            width={size * 48}
+            height={size * 48}
           >
-            {icon}
+            {typeof icon === 'string' ? (
+              <Icon name={icon} size={sizeNum * 48} {...iconProps} />
+            ) : (
+              icon
+            )}
           </Col>
-          {!!label && (
-            <SimpleText ellipse fontWeight={500} size={0.9} {...labelProps}>
-              {label}
-            </SimpleText>
-          )}
-          {!!subTitle && (
-            <SimpleText ellipse alpha={0.7} size={0.85} {...subTitleProps}>
-              {subTitle}
-            </SimpleText>
-          )}
+          <Col alignItems="center" justifyContent="center" space="xs">
+            {!!label && (
+              <SimpleText ellipse fontWeight={500} size={0.9} {...labelProps}>
+                {label}
+              </SimpleText>
+            )}
+            {!!subTitle && (
+              <SimpleText ellipse alpha={0.7} size={0.85} {...subTitleProps}>
+                {subTitle}
+              </SimpleText>
+            )}
+          </Col>
         </Col>
       </Scale>
     )

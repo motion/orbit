@@ -1,6 +1,5 @@
 import { AppIcon, createApp } from '@o/kit'
-import { Button, Col, Flow, IconLabeled, List, ListItemProps, Scale, Section, Text, Toolbar, View } from '@o/ui'
-import SelectableGrid from '@o/ui/_/SelectableGrid'
+import { Button, Col, Flow, IconLabeled, List, ListItemProps, Scale, Section, SelectableGrid, Text, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -17,6 +16,7 @@ export default createApp({
 function SetupAppMain() {
   return (
     <StackNavigator
+      key={Math.random()}
       defaultItem={{
         id: 'SetupAppHome',
         props: {},
@@ -37,16 +37,18 @@ function SetupAppCustom() {
       <Col width="70%" background="transparent" margin="auto">
         <Flow>
           <Flow.Step title="Template" subTitle="Choose template">
-            <SelectableGrid
-              items={[
-                {
-                  label: 'Blank',
-                  icon: 'template',
-                  subTitle: 'Empty app template',
-                },
-              ]}
-              getItem={props => <IconLabeled {...props} />}
-            />
+            <Col pad>
+              <SelectableGrid
+                items={[
+                  {
+                    label: 'Blank',
+                    icon: 'template',
+                    subTitle: 'Empty app template',
+                  },
+                ]}
+                getItem={props => <IconLabeled {...props} />}
+              />
+            </Col>
           </Flow.Step>
         </Flow>
       </Col>

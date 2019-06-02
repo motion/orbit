@@ -1,5 +1,5 @@
 import { AppIcon, createApp } from '@o/kit'
-import { Button, Col, Flow, IconLabeled, List, ListItemProps, Scale, Section, SelectableGrid, Text, Toolbar, View } from '@o/ui'
+import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -35,18 +35,47 @@ function SetupAppCustom() {
   return (
     <>
       <Col width="70%" background="transparent" margin="auto">
-        <Flow>
+        <Flow
+          initialData={{
+            selectedTemplate: null,
+          }}
+        >
           <Flow.Step title="Template" subTitle="Choose template">
+            {({ setData }) => {
+              return (
+                <Col pad>
+                  <SelectableGrid
+                    items={[
+                      {
+                        label: 'Blank',
+                        icon: 'template',
+                        subTitle: 'Empty app template',
+                      },
+                    ]}
+                    getItem={props => <IconLabeled {...props} />}
+                    onSelect={item => {
+                      setData(item)
+                    }}
+                  />
+                </Col>
+              )
+            }}
+          </Flow.Step>
+
+          <Flow.Step title="Setup" subTitle="Give it a name and icon">
             <Col pad>
-              <SelectableGrid
-                items={[
-                  {
-                    label: 'Blank',
-                    icon: 'template',
-                    subTitle: 'Empty app template',
+              <Form
+                fields={{
+                  name: {
+                    name: 'Name',
+                    type: 'string',
                   },
-                ]}
-                getItem={props => <IconLabeled {...props} />}
+                  identifier: {
+                    name: 'identifier',
+                    type: 'string',
+                    value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
+                  },
+                }}
               />
             </Col>
           </Flow.Step>

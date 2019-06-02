@@ -13,6 +13,7 @@ export type PseudoStyleProps = {
   hoverStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   activeStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
   focusStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
+  disabledStyle?: CSSPropertySetStrict & { alpha?: number } | boolean | null
 }
 
 export const psuedoStyleTheme: ThemeFn = (a, b, c) => {
@@ -49,6 +50,12 @@ const pseudos = {
     postfix: 'Active',
     forceOnProp: 'active',
     extraStyleProp: 'activeStyle',
+  },
+  disabled: {
+    pseudoKey: '&:disabled',
+    postfix: 'Disabled',
+    forceOnProp: 'disabled',
+    extraStyleProp: 'disabledStyle',
   },
 }
 
@@ -115,6 +122,7 @@ const applyPsuedoTheme = (props, theme, previous, useTheme = false) => {
     // ... but either way, we allow users to "force" it on
     // (this could also be an optional parameter)
     const booleanOn = forceOnProp && props[forceOnProp] === true
+
     if (psuedoStyle && booleanOn) {
       styles = styles || {}
       Object.assign(styles, psuedoStyle)

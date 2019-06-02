@@ -34,7 +34,7 @@ function SetupAppCustom() {
   const { actions } = useOm()
   return (
     <>
-      <Col width="70%" background="transparent" margin="auto">
+      <Col width="70%" margin="auto">
         <Flow
           initialData={{
             selectedTemplate: null,

@@ -4,11 +4,13 @@ import { SimpleStyleObject, ThemeObject } from 'gloss'
 const darken = (color, amt) => {
   return color.darken(amt(color))
 }
-const increaseContrast = (color, amt) => {
+
+export const increaseContrast = (color, amt) => {
   const adjustAmt = amt(color)
   return color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
 }
-const decreaseContrast = (color, amt) => {
+
+export const decreaseContrast = (color, amt) => {
   const adjustAmt = amt(color)
   return color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
 }
@@ -24,7 +26,7 @@ const roundToExtreme = (color, pct = 20) => {
   return color
 }
 
-const smallAmt = color => {
+export const smallAmount = color => {
   // 1 = white, 1 = black, 0 = middle
   const ranged = Math.abs(50 / (50 - color.lightness()))
   // this is 0-0.025
@@ -33,7 +35,8 @@ const smallAmt = color => {
   return softened * 1.8
 }
 
-const largeAmt = color => smallAmt(color) * 1.25
+export const largeAmount = color => smallAmount(color) * 1.25
+
 const opposite = color => {
   return color.isDark()
     ? color.mix(color.lightness(0.1)).lightness(75)
@@ -99,8 +102,8 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
   // some handy basic styles
   const base = colorize({
     background: backgroundColored,
-    color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmt)),
-    borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmt),
+    color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmount)),
+    borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmount),
   })
   // flattened
   const res: ThemeObject = {
@@ -110,17 +113,21 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
       backgroundHover:
         s.backgroundHover ||
         base.background.lighten((100 / (base.background.lightness() + 1)) * 0.04),
-      borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmt),
-      backgroundActiveHover: s.backgroundActiveHover || increaseContrast(base.background, largeAmt),
-      backgroundActive: s.backgroundActive || decreaseContrast(base.background, largeAmt),
-      borderColorActive: s.borderColorActive || decreaseContrast(base.borderColor, smallAmt),
-      backgroundBlur: s.backgroundBlur || darken(base.background, largeAmt),
-      colorBlur: s.colorBlur || darken(base.color, largeAmt),
-      borderColorBlur: s.borderColorBlur || darken(base.borderColor, largeAmt),
+      borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmount),
+      backgroundActiveHover:
+        s.backgroundActiveHover || increaseContrast(base.background, largeAmount),
+      backgroundActive: s.backgroundActive || decreaseContrast(base.background, largeAmount),
+      borderColorActive: s.borderColorActive || decreaseContrast(base.borderColor, smallAmount),
+      backgroundBlur: s.backgroundBlur || darken(base.background, largeAmount),
+      colorBlur: s.colorBlur || darken(base.color, largeAmount),
+      borderColorBlur: s.borderColorBlur || darken(base.borderColor, largeAmount),
       // focus is not desirable for many things...
-      // backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmt),
-      // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmt),
+      // backgroundFocus: s.backgroundFocus || decreaseContrast(base.background, largeAmount),
+      // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
       // ensure rest is last so they can override anything
+
+      colorDisabled: decreaseContrast(base.color, largeAmount),
+
       ...s,
       // except for base which is already using the right order
       ...base,

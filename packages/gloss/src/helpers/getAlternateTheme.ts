@@ -63,8 +63,17 @@ function createAlternateTheme(
     ...(shouldFallback
       ? {
           background: theme.background,
+          backgroundDisabled: theme.backgroundDisabled,
+          backgroundDisabledActive: theme.backgroundActive,
+          backgroundDisabledFocus: theme.backgroundFocus,
           borderColor: theme.borderColor,
+          borderColorDisabled: theme.borderColorDisabled,
+          borderColorDisabledActive: theme.borderColorActive,
+          borderColorDisabledFocus: theme.borderColorFocus,
           color: theme.color,
+          colorDisabled: theme.colorDisabled,
+          colorDisabledActive: theme.colorActive,
+          colorDisabledFocus: theme.colorFocus,
         }
       : null),
     // todo why types mad

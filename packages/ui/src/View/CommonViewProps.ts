@@ -5,6 +5,7 @@ export type CommonViewProps = Pick<
   | 'hoverStyle'
   | 'activeStyle'
   | 'focusStyle'
+  | 'disabledStyle'
   | 'alignContent'
   | 'alignItems'
   | 'alignSelf'

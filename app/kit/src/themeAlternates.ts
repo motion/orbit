@@ -207,6 +207,7 @@ export const alternates: ThemeSet = {
       buttonBackgroundHover: invertLightness(background, 0.05),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
+      colorDisabled: parent.color.alpha(0.15),
       backgroundStrong: parent.backgroundStrong,
       backgroundStronger: parent.backgroundStronger,
       backgroundStrongest: parent.backgroundStrongest,

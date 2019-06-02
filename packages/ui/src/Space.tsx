@@ -29,6 +29,8 @@ export type SpaceProps = {
 }
 
 export const spaceSizes = {
+  xxxs: 1,
+  xxs: 2,
   xs: 4,
   sm: 8,
   md: 16,

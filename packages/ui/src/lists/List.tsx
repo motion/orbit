@@ -270,6 +270,7 @@ export const List = memo((allProps: ListProps) => {
       backgrounded={backgrounded}
       elevation={elevation}
       titleScale={titleScale}
+      titlePad
       pad={pad}
       {...collapseProps}
     >

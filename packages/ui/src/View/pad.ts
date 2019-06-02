@@ -1,4 +1,4 @@
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 
 import { useScale } from '../Scale'
 import { getSpaceSize, Sizes } from '../Space'
@@ -20,18 +20,43 @@ export type PadProps = {
 export const getPadding = (
   props: PadProps & {
     padding?: any
+    paddingTop?: any
+    paddingLeft?: any
+    paddingRight?: any
+    paddingBottom?: any
   },
 ) => {
   const scale = useScale()
   if (typeof props.padding !== 'undefined') {
     return {
-      padding: props.padding,
+      paddingTop: selectDefined(props.paddingTop, props.padding[0], props.padding),
+      paddingRight: selectDefined(props.paddingRight, props.padding[1], props.padding),
+      paddingBottom: selectDefined(
+        props.paddingBottom,
+        props.padding[2],
+        props.padding[0],
+        props.padding,
+      ),
+      paddingLeft: selectDefined(
+        props.paddingLeft,
+        props.padding[3],
+        props.padding[1],
+        props.padding,
+      ),
     }
   }
   if (props.pad) {
     let padding = getSizableValue(props.pad)
     padding = Array.isArray(padding) ? padding.map(x => x * scale) : padding * scale
-    return { padding }
+
+    const paddingObj = {
+      paddingTop: selectDefined(props.paddingTop, padding[0], padding),
+      paddingRight: selectDefined(props.paddingRight, padding[1], padding),
+      paddingBottom: selectDefined(props.paddingBottom, padding[2], padding[0], padding),
+      paddingLeft: selectDefined(props.paddingLeft, padding[3], padding[1], padding),
+    }
+
+    return paddingObj
   }
 }
 

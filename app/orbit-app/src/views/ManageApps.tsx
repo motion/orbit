@@ -38,10 +38,10 @@ export function ManageApps() {
   }
 
   return (
-    <Section padInner="lg" background="transparent">
-      <Section size="sm" title="View apps">
+    <Section title="Installed Apps" size="lg" pad>
+      <Section size="xs" title="View apps">
         {!viewApps.length && (
-          <View height={200}>
+          <View height={200} position="relative">
             <Center>
               <SubTitle>No view apps</SubTitle>
             </Center>
@@ -72,9 +72,9 @@ export function ManageApps() {
         />
       </Section>
 
-      <Section size="sm" title="Data apps">
+      <Section size="xs" title="Data apps">
         {!dataApps.length && (
-          <View height={200}>
+          <View height={200} position="relative">
             <Center>
               <SubTitle>No data apps</SubTitle>
             </Center>

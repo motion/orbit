@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { Sizes, Space } from './Space'
+import { getSpaceSize, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -72,7 +72,8 @@ const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
-const defaultTitlePad = ['lg', true, true]
+// more padded above title
+const defaultTitlePadAmount = [1.5, 1, 1]
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -105,8 +106,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     spaceAround,
     pad,
     padInner,
-    titleSize,
-    size,
+    size = true,
+    titleSize = size,
     fixedTitle,
     elevation,
     titleProps,
@@ -120,25 +121,34 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
-  const innerPad = selectDefined(padInner, !!(hasTitle || bordered || titleElement) ? pad : null)
+  const padSized = pad === true ? size : pad
+  const innerPad = selectDefined(
+    padInner,
+    !!(hasTitle || bordered || titleElement) ? padSized : undefined,
+  )
+  const titleSizePx = getSpaceSize(titleSize)
   const spaceSize = selectDefined(space, size)
-  const showTitleAbove = isDefined(fixedTitle, pad, scrollable)
+  const showTitleAbove = isDefined(fixedTitle, pad, scrollable, innerPad)
   const collapse = useCollapse(collapseProps)
 
   let titleEl: React.ReactNode = titleElement || null
+
+  const defaultTitlePad = defaultTitlePadAmount.map(x => x * titleSizePx)
 
   if (!titleElement && hasTitle) {
     const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
 
     const titlePadFinal = selectDefined(
-      titlePad,
       selectDefined(
+        titlePad !== true ? titlePad : undefined,
+        (titlePad || pad) === true ? defaultTitlePad : undefined,
         bordered ? selectDefined(pad, true) : undefined,
         titleBorder ? selectDefined(pad, defaultTitlePad) : undefined,
         null,
       ),
     )
 
+    console.log('titlePad', titlePad, title, titlePadFinal, titleSizePx)
     titleEl = (
       <Scale size={titleScale}>
         <Theme alt="flat">
@@ -154,6 +164,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             userSelect="none"
             space="sm"
             pad={titlePadFinal}
+            // avoid double pad between content/title padding
+            paddingBottom={pad === true && titlePad === undefined ? 0 : undefined}
             size={selectDefined(titleSize, size)}
             titleProps={titleProps}
             useCollapse={collapse}
@@ -198,7 +210,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         overflow,
         isDefined(scrollable, maxHeight, bordered, borderRadius) ? 'hidden' : undefined,
       )}
-      pad={!showTitleAbove ? pad : false}
+      pad={!showTitleAbove ? padSized : false}
       size={size}
     >
       {showTitleAbove && titleEl}

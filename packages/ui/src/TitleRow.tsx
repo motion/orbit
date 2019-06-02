@@ -100,7 +100,6 @@ export const TitleRow = themeable(
           </Title>
         ))
 
-      console.log('ok', rowProps.pad, title, rowProps.padding)
       return (
         <TitleRowChrome
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}

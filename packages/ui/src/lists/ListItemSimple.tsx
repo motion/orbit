@@ -324,6 +324,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               {afterHeaderElement}
             </ListItemTitleBar>
           )}
+          <Space size={spaceSize / 2} />
           {showSubtitle && (
             <ListItemSubtitle>
               {!!location && locationElement}
@@ -398,10 +399,13 @@ const getHeightSize = (props: ListItemSimpleProps) => {
 // we scale padX more than padY, depending on height of list item
 const getListItemPadding = (props: ListItemSimpleProps) => {
   const padXScale = getHeightSize(props)
-  const padding = getPadding(props).padding
-  const padX = Array.isArray(padding) ? padding[1] : padding
-  const padY = Array.isArray(padding) ? padding[0] : padding
-  return [padY, padX * padXScale]
+  const padding = getPadding(props)
+  return [
+    padding.paddingTop,
+    padding.paddingRight * padXScale,
+    padding.paddingBottom,
+    padding.paddingLeft * padXScale,
+  ]
 }
 
 const ListItemTitleBar = gloss(View, {

@@ -102,7 +102,7 @@ export function AppsMainAddAppContent({
 
       {hasSetup && (
         <Section space>
-          <Section bordered pad title="Setup" titleSize={0.85}>
+          <Section bordered pad title="Setup" titlePad titleSize={0.85}>
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)

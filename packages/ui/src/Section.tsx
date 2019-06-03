@@ -126,7 +126,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padInner,
     !!(hasTitle || bordered || titleElement) ? padSized : undefined,
   )
-  const titleSizePx = getSpaceSize(titleSize)
+  const titleSizePx = getSpaceSize(selectDefined(titlePad, titleSize))
   const spaceSize = selectDefined(space, size)
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable, innerPad)
   const collapse = useCollapse(collapseProps)

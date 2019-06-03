@@ -15,7 +15,6 @@ export function getAppListItem(app: AppWithDefinition) {
       </Suspense>
     ) : null,
     icon: <AppIcon identifier={identifier} colors={app.app.colors} />,
-    iconBefore: true,
     viewType: 'settings' as 'settings',
     subId: `${app.app.id}`,
     identifier: app.app.identifier,

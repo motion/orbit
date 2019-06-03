@@ -1,6 +1,6 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, FormField, Icon, List, ListItemProps, Section, SubSection } from '@o/ui'
+import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle } from '@o/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -117,15 +117,21 @@ export function AppsIndex() {
           subTitle: 'Explore all GraphQL app APIs',
           subType: 'explorer-graph',
         },
-        ...clientApps
-          .map(getAppListItem)
-          .map(x => ({ ...x, groupName: 'Settings', subType: 'settings' })),
+        ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
         ...dataApps.map(getAppListItem).map(x => ({
           ...x,
-          groupName: 'Settings',
           subType: 'settings',
           after: sourceIcon,
         })),
+        {
+          selectable: false,
+          pad: false,
+          children: (
+            <Col padding={[38, 8, 16]}>
+              <SubTitle>Install Apps</SubTitle>
+            </Col>
+          ),
+        },
         ...useDataAppDefinitions().map(appDefToListItem),
         ...topApps,
         ...searchResults,

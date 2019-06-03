@@ -1,7 +1,7 @@
 import { useReaction } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
-import { gloss, Theme, ThemeContext, useTheme } from 'gloss'
+import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import React from 'react'
 
 import { BorderBottom } from '../Border'
@@ -387,6 +387,9 @@ const getHeightSize = (props: ListItemSimpleProps) => {
 const getListItemPadding = (props: ListItemSimpleProps) => {
   const padXScale = getHeightSize(props)
   const padding = getPadding(props)
+  if (!padding) {
+    return []
+  }
   return [
     padding.paddingTop,
     padding.paddingRight * padXScale,
@@ -415,16 +418,15 @@ const ListItemSubtitle = gloss(View, {
   overflow: 'hidden',
 })
 
-const AfterHeader = gloss({
+const AfterHeader = gloss(Box, {
   alignItems: 'flex-end',
   // why? for some reason this is really hard to align the text with the title,
   // check the visual date in list items to see if this helps align it in the row
   marginBottom: -4,
 })
 
-const ListItemMainContent = gloss({
+const ListItemMainContent = gloss(Box, {
   flex: 1,
-  maxWidth: '100%',
   margin: ['auto', 0],
   oneLine: {
     flexFlow: 'row',

@@ -1,5 +1,3 @@
-// Be careful not to import anything that depends on getGlobalConfig() here
-// we set it up once with setGlobalConfig() and then import the rest of the app
 import '../public/styles/base.css'
 import 'react-hot-loader'
 
@@ -8,6 +6,8 @@ import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
+// Be careful not to import anything that depends on getGlobalConfig() here
+// we set it up once with setGlobalConfig() and then import the rest of the app
 // @ts-ignore
 if (IS_ELECTRON) {
   require('electron')

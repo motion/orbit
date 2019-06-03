@@ -1,5 +1,6 @@
 import { OnInitialize } from 'overmind'
 
+import { startAppLoadWatch } from '../apps/orbitApps'
 import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
@@ -17,6 +18,9 @@ export const onInitialize: OnInitialize = async om => {
 
   // load apps once before loading rest of app
   await effects.apps.start(om)
+
+  // start watching for updated app ids
+  startAppLoadWatch()
 
   effects.router.start()
 }

@@ -14,18 +14,19 @@ export type AppIconProps = BaseIconProps & {
 
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
-    let icon = props.icon
+    let icon = props.icon || ''
     let iconLight = ''
     let colors = props.colors || ['red', 'green']
+    const definition = useAppDefinition(!!props.identifier && props.identifier)
 
     if (props.identifier) {
-      const definition = useAppDefinition(props.identifier)
       icon = definition.icon
       iconLight = definition.iconLight
+      console.log('definition', !!definition.icon)
     }
 
     if (!icon) {
-      console.warn('no icon for', props)
+      console.warn('no icon for', props, icon)
       icon = 'home'
     }
 

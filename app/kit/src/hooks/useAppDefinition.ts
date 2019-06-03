@@ -54,9 +54,12 @@ export function getSearchAppDefinitions(query: string | false): ApiSearchItem | 
   return ApiDefSearch.read(query)
 }
 
-export function useAppDefinition(identifier?: string): AppDefinition {
+export function useAppDefinition(identifier?: string | false): AppDefinition {
   useReloadAppDefinitions()
   const { appStore } = useStores()
+  if (identifier === false) {
+    return null
+  }
   return getAppDefinition(identifier || appStore.identifier)
 }
 

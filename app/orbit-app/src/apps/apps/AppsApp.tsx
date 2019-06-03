@@ -35,7 +35,6 @@ export function useDataAppDefinitions() {
 }
 
 export const appDefToListItem = (def: AppDefinition): ListItemProps => {
-  console.log('ok', def.id)
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',

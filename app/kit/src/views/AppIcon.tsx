@@ -17,12 +17,13 @@ export const AppIcon = memo(
     let icon = props.icon || ''
     let iconLight = ''
     let colors = props.colors || ['black', 'black']
-    const definition = useAppDefinition(!!props.identifier && props.identifier)
 
-    if (props.identifier && definition) {
+    const identifier = typeof props.identifier === 'string' ? props.identifier : false
+    const definition = useAppDefinition(identifier)
+
+    if (identifier && definition) {
       icon = definition.icon
       iconLight = definition.iconLight
-      console.log('definition', !!definition.icon)
     }
 
     if (!icon) {

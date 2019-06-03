@@ -4,8 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { ThemeContext, ThemeObject } from 'gloss'
 import { selectDefined } from '@o/utils'
+import { ThemeContext, ThemeObject } from 'gloss'
 import * as React from 'react'
 
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
@@ -172,7 +172,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
     return (
       <Interactive
-        className={this.props.className}
+        className={`ui-sidebar ${this.props.className || ''}`}
         minWidth={minWidth}
         maxWidth={maxWidth}
         width={horizontal ? (onResize ? width : this.state.width) : '100%'}

@@ -57,16 +57,16 @@ const getActions = (
   // stores: KitStores,
 ) => {
   const Actions = {
-    addItem(name: string, item?: Partial<TreeItem>) {
+    addItem(item?: Partial<TreeItem>) {
       const update = treeState()[1]
       update(next => {
-        const id = Math.random()
+        const id = item.id || Math.random()
         next.items[Actions.curId()].children.push(id)
-        next.items[id] = { children: [], ...item, id, name }
+        next.items[id] = { children: [], ...item, id }
       })
     },
     addFolder(name?: string) {
-      Actions.addItem(name, { type: 'folder' })
+      Actions.addItem({ name, type: 'folder' })
     },
     deleteItem(id: number) {
       const update = treeState()[1]
@@ -91,7 +91,6 @@ const getActions = (
     },
     updateSelectedItem(item: Partial<TreeItem>) {
       const selectedItem = Actions.getSelectedItem()
-      console.log('selectedItem', selectedItem)
       if (!selectedItem) {
         return
       }
@@ -102,7 +101,6 @@ const getActions = (
     },
     getSelectedItem() {
       const { selectedIndex } = Actions.curDepth()
-      console.log('selectedIndex', selectedIndex)
       if (selectedIndex === -1) {
         console.error('No item selected')
         return
@@ -116,7 +114,6 @@ const getActions = (
       const update = userState()[1]
       update(draft => {
         const curDepth = draft.depth[draft.depth.length - 1]
-        console.log('setSelectedIndex', index, curDepth)
         curDepth.selectedIndex = index
       })
     },

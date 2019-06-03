@@ -7,11 +7,13 @@ import { reporter } from './reporter'
 
 let checker: ts.TypeChecker
 
-export async function commandGenTypes(options: {
+export type CommandGenTypesOptions = {
   projectRoot: string
   projectEntry: string
   out?: string
-}) {
+}
+
+export async function commandGenTypes(options: CommandGenTypesOptions) {
   reporter.info('Running orbit gen-types')
   const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')

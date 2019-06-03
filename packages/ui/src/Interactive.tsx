@@ -6,7 +6,7 @@
  */
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Box, gloss } from 'gloss'
+import { Col, gloss } from 'gloss'
 import invariant from 'invariant'
 import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
@@ -646,10 +646,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
-        <Box
+        <Col
           className={this.props.className}
-          style={{
-            position: position as any,
+          {...{
+            position,
             cursor,
             left,
             top,
@@ -685,7 +685,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
             )}
             {this.props.children}
           </InteractiveContainer>
-        </Box>
+        </Col>
       </InteractiveNesting.Provider>
     )
   }

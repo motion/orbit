@@ -3,6 +3,8 @@ type TextStyles = {
   lineHeight?: string | number
   lineHeightNum?: number
   fontSizeNum?: number
+  marginTop?: number
+  marginBottom?: number
 }
 
 export type TextSizeProps = {
@@ -15,11 +17,12 @@ export type TextSizeProps = {
 
 // dont return undefined
 
-export function textSizeTheme(props: TextSizeProps) {
-  return getTextSizeTheme(props)
+type TextSizeExtraProps = {
+  scale?: number
 }
 
-export function getTextSizeTheme(props: TextSizeProps, scale = 1) {
+export function getTextSizeTheme(props: TextSizeProps, extraProps: TextSizeExtraProps = {}) {
+  const scale = extraProps.scale || 1
   const size = (props.size || 1) * scale
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
   let fontSize = props.fontSize
@@ -65,6 +68,15 @@ export function getTextSizeTheme(props: TextSizeProps, scale = 1) {
   if (lineHeight) {
     styles = styles || {}
     styles.lineHeight = lineHeight
+    // we only want lineHeight to affect the "in between lines"
+    // in CSS by default it also adds padding above/below single-line text
+    // so we remove that spacing by default here
+    // TODO (gloss scales default line height to 14, we can make that adjustable)
+    // CONST of lineHeight seems to be the proper amount to avoid the extra spacing
+    styles.marginTop = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
+    styles.marginBottom = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
   }
   return styles
 }
+
+const LINE_HEIGHT_EXTRA_SCALE = 0.15

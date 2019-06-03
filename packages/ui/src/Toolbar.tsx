@@ -1,5 +1,6 @@
 import { gloss } from 'gloss'
 import React from 'react'
+
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Sizes } from './Space'
 import { SpaceGroup } from './SpaceGroup'
@@ -39,13 +40,12 @@ export function Toolbar({
     <SurfacePassProps
       borderWidth={0}
       sizeRadius={1.2}
-      size={size}
       iconAfter
       tooltipProps={{ towards: opposite[attach] as any }}
       glint={false}
       borderPosition="outside"
     >
-      <ToolbarChrome elevation={elevation} {...props}>
+      <ToolbarChrome elevation={elevation} pad={size} {...props}>
         {border !== false && borderElement[attach]}
         <SpaceGroup space={size}>{children}</SpaceGroup>
       </ToolbarChrome>
@@ -61,7 +61,3 @@ const ToolbarChrome = gloss<ToolbarProps>(Row, {
 }).theme((props, theme) => ({
   background: props.background || theme.backgroundStrong,
 }))
-
-ToolbarChrome.defaultProps = {
-  pad: true,
-}

@@ -14,11 +14,19 @@ export type AlphaColorProps = {
   hoverStyle?: PseudoStyleProps['hoverStyle']
   activeStyle?: PseudoStyleProps['activeStyle']
   focusStyle?: PseudoStyleProps['focusStyle']
+  disabledStyle?: PseudoStyleProps['disabledStyle']
 }
 
 const mergeFocus = merge.bind(null, '&:focus', 'focusStyle', 'colorFocus', 'alphaFocus')
 const mergeHover = merge.bind(null, '&:hover', 'hoverStyle', 'colorHover', 'alphaHover')
 const mergeActive = merge.bind(null, '&:active', 'activeStyle', 'colorActive', 'alphaActive')
+const mergeDisabled = merge.bind(
+  null,
+  '&:disabled',
+  'disabledStyle',
+  'colorDisabled',
+  'alphaDisabled',
+)
 
 export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const color = props.color || theme.color
@@ -35,11 +43,12 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   if (
     applyPsuedos === true ||
     (applyPsuedos === 'only-if-defined' &&
-      (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle))
+      (!!props.hoverStyle || !!props.activeStyle || !!props.focusStyle || !!props.disabledStyle))
   ) {
     mergeFocus(next, color, props, theme)
     mergeHover(next, color, props, theme)
     mergeActive(next, color, props, theme)
+    mergeDisabled(next, color, props, theme)
   }
   return mergeStyles(previous, next)
 }

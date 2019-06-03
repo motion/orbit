@@ -316,6 +316,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         hoverStyle={props.hoverStyle}
         activeStyle={props.activeStyle}
         focusStyle={props.focusStyle}
+        disabledStyle={props.disabledStyle}
         color="inherit"
         {...perfectCenterStyle(throughProps)}
         {...iconProps}
@@ -474,6 +475,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             borderPosition={borderPosition}
             alt={alt}
             applyPsuedoColors
+            disabled={disabled}
             {...!showElement && elementProps}
             {...throughProps}
             {...viewProps}

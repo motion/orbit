@@ -10,11 +10,15 @@ const sizes = {
   xxxl: 1.8,
 }
 
-export const getSize = (size: Sizes) => {
+export const getSize = (size: Sizes): Sizes extends any[] ? number[] : number => {
   if (!size || size === true) return 1
   if (typeof size === 'string') return sizes[size]
   const scl = 0.75
-  if (Array.isArray(size)) return size.map(x => (typeof x === 'number' ? x * scl : x))
+  if (Array.isArray(size)) {
+    return size.map(x => {
+      return (typeof x === 'number' ? x : +getSize(x)) * scl
+    }) as any
+  }
   if (size * scl <= 1) return size
   return size * scl
 }

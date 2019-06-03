@@ -11,14 +11,15 @@ import url from 'url'
 import { reporter } from './reporter'
 import { configStore, promptPackageManager } from './util/configStore'
 
-type NewOptions = {
+export type CommandNewOptions = {
+  starter: string
   rootPath?: string
 }
 
 /**
  * Main function that clones or copies the starter.
  */
-export async function commandNew(starter: string, options: NewOptions = {}) {
+export async function commandNew(options: CommandNewOptions) {
   const rootPath = options.rootPath || process.cwd()
 
   const urlObject = url.parse(rootPath)
@@ -43,11 +44,11 @@ export async function commandNew(starter: string, options: NewOptions = {}) {
     return
   }
 
-  const hostedInfo = hostedGitInfo.fromUrl(starter)
+  const hostedInfo = hostedGitInfo.fromUrl(options.starter)
 
-  trackCli(`NEW_PROJECT`, { starterName: starter })
+  trackCli(`NEW_PROJECT`, { starterName: options.starter })
   if (hostedInfo) await clone(hostedInfo, rootPath)
-  else await copy(starter, rootPath)
+  else await copy(options.starter, rootPath)
 }
 
 const isTTY = require(`./util/is-tty`)

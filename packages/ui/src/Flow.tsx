@@ -1,25 +1,24 @@
-import { Row } from 'gloss'
-import React, { Children, useState } from 'react'
+import React, { Children, FunctionComponent, memo, useState } from 'react'
 
 import { Button } from './buttons/Button'
 import { Section } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
-import { StatusBar } from './StatusBar'
 import { SurfacePassProps } from './Surface'
+import { Row } from './View/Row'
 
 export type FlowProps = {
   initialData?: any
   children: any
   renderLayout?: (props: FlowLayoutProps) => React.ReactNode
-  renderToolbar?: (props: StepState) => React.ReactNode
+  Toolbar?: FunctionComponent<FlowLayoutProps>
   height?: number
 }
 
 type FlowStepProps = {
   title?: string
   subTitle?: string
-  children?: React.ReactNode | ((props: StepState) => React.ReactNode)
+  children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
   validateFinished?: (a: any) => true | any
 }
 
@@ -28,17 +27,17 @@ type FlowStep = FlowStepProps & {
 }
 
 export type FlowLayoutProps = {
-  renderToolbar: FlowProps['renderToolbar']
+  Toolbar: FlowProps['Toolbar']
   children: React.ReactChild
   index: number
   total: number
   step: FlowStep
   steps: FlowStep[]
-  state: StepState
+  currentStep: StepProps
   height?: number
 }
 
-type StepState = {
+type StepProps = {
   data: any
   setData: (a: any) => void
   next: () => void
@@ -46,20 +45,33 @@ type StepState = {
   setStepIndex: (index: number) => void
 }
 
-const DefaultFlowLayout = ({
-  renderToolbar,
-  children,
-  index,
-  total,
-  step,
-  steps,
-  state,
-  height,
-}: FlowLayoutProps) => {
+const DefaultFlowToolbar = (props: FlowLayoutProps) => {
+  const isOnFirstStep = props.index === 0
+  const isOnLastStep = props.index === props.total - 1
+
+  return (
+    <Row space="sm">
+      <Button
+        disabled={isOnFirstStep}
+        iconAfter
+        icon="chevron-left"
+        onClick={props.currentStep.prev}
+      />
+      <Button
+        disabled={isOnLastStep}
+        iconAfter
+        icon="chevron-right"
+        onClick={props.currentStep.next}
+      />
+    </Row>
+  )
+}
+
+export const DefaultFlowLayout = (props: FlowLayoutProps) => {
+  const { Toolbar, children, index, total, step, steps, height } = props
   return (
     <Section
       bordered
-      padding={0}
       title={step.title}
       subTitle={step.subTitle || `${index + 1}/${total}`}
       minHeight={300}
@@ -71,8 +83,10 @@ const DefaultFlowLayout = ({
           borderWidth={0}
           glint={false}
           borderBottom={[3, 'transparent']}
+          color={theme => theme.background}
           borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
           sizeRadius={0}
+          sizeHeight={1.2}
           sizePadding={1.5}
         >
           <Row>
@@ -81,85 +95,86 @@ const DefaultFlowLayout = ({
                 key={stp.key}
                 alt={steps[index].key === stp.key ? 'selected' : null}
                 active={steps[index].key === stp.key}
-                onClick={() => state.setStepIndex(stepIndex)}
+                onClick={() => props.currentStep.setStepIndex(stepIndex)}
               >
-                {stp.title}
+                {stp.title || 'No title'}
               </Button>
             ))}
           </Row>
         </SurfacePassProps>
       }
-      afterTitle={
-        renderToolbar ? (
-          <Row height="100%" alignItems="center">
-            {renderToolbar(state)}
-          </Row>
-        ) : null
-      }
-      below={<StatusBar>helloworld</StatusBar>}
+      afterTitle={Toolbar && <Toolbar {...props} />}
     >
       {children}
     </Section>
   )
 }
 
-export function Flow({
-  height,
-  renderToolbar,
-  renderLayout = DefaultFlowLayout,
-  ...props
-}: FlowProps) {
-  const [index, setIndex] = useState(0)
-  const [data, setDataDumb] = useState(props.initialData)
-  // make it  merge by default
-  const setData = x => setDataDumb({ ...data, ...x })
-  const total = Children.count(props.children)
-  const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
-    (child, idx) => ({
-      key: `${idx}`,
-      ...child,
-    }),
-  )
-  const next = () => setIndex(Math.min(total - 1, index + 1))
-  const prev = () => setIndex(Math.max(0, index - 1))
-  const actions = {
-    data,
-    setData,
-    next,
-    prev,
-    setStepIndex: setIndex,
-  }
-
-  const contents = (
-    <Slider fixHeightToParent curFrame={index}>
-      {Children.map(props.children, (child, idx) => {
-        const step = child.props
-        const ChildView = step.children
-        return (
-          <SliderPane key={idx}>
-            {typeof step.children === 'function' ? <ChildView {...actions} /> : step.children}
-          </SliderPane>
-        )
-      })}
-    </Slider>
-  )
-
-  return (
-    <>
-      {renderLayout({
-        renderToolbar,
-        children: contents,
-        index: index,
-        total,
-        step: steps[index],
-        steps,
-        state: actions,
-        height,
-      })}
-    </>
-  )
+interface FlowComponent<Props> extends FunctionComponent<Props> {
+  Step: FunctionComponent<FlowStepProps>
 }
+
+export const Flow: FlowComponent<FlowProps> = memo(
+  ({
+    height,
+    Toolbar = DefaultFlowToolbar,
+    renderLayout = DefaultFlowLayout,
+    ...props
+  }: FlowProps) => {
+    const [index, setIndex] = useState(0)
+    const [data, setDataDumb] = useState(props.initialData)
+    // make it  merge by default
+    const setData = x => setDataDumb({ ...data, ...x })
+    const total = Children.count(props.children)
+    const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
+      (child, idx) => ({
+        key: `${idx}`,
+        ...child,
+      }),
+    )
+    const next = () => setIndex(Math.min(total - 1, index + 1))
+    const prev = () => setIndex(Math.max(0, index - 1))
+    const stepProps = {
+      data,
+      setData,
+      next,
+      prev,
+      setStepIndex: setIndex,
+    }
+
+    const contents = (
+      <Slider fixHeightToParent curFrame={index}>
+        {Children.map(props.children, (child, idx) => {
+          const step = child.props
+          const ChildView = step.children
+          return (
+            <SliderPane key={idx}>
+              {typeof step.children === 'function' ? <ChildView {...stepProps} /> : step.children}
+            </SliderPane>
+          )
+        })}
+      </Slider>
+    )
+
+    return (
+      <>
+        {renderLayout({
+          Toolbar,
+          children: contents,
+          index: index,
+          total,
+          step: steps[index],
+          steps,
+          currentStep: stepProps,
+          height,
+        })}
+      </>
+    )
+  },
+) as any
 
 export function FlowStep(_: FlowStepProps) {
   return null
 }
+
+Flow.Step = FlowStep

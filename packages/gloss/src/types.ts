@@ -1,6 +1,6 @@
 import { ThemeObject } from '@o/css'
 
-export type Psuedos = '&:hover' | '&:active' | '&:focus'
+export type Psuedos = '&:hover' | '&:active' | '&:focus' | '&:disabled'
 
 export type GlossOptions = {
   toColor: Function

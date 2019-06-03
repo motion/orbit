@@ -2,7 +2,7 @@ import { AppDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStore
 import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useEffect, useState } from 'react'
 
-import { addAppClickHandler } from '../../helpers/addAppClickHandler'
+import { installApp } from '../../helpers/installApp'
 import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
@@ -80,7 +80,7 @@ export function AppsMainAddAppContent({
       afterTitle={
         <>
           {!hasSetup && def.sync && (
-            <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>
+            <Button alt="confirm" icon="lock" onClick={() => installApp(def)}>
               Authenticate and add
             </Button>
           )}

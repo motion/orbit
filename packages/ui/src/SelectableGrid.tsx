@@ -42,4 +42,7 @@ export function SelectableGrid(props: SelectableGridProps<any>) {
 
 SelectableGrid.defaultProps = {
   selectable: true,
+  gridGap: 16,
+  minWidth: 150,
+  maxWidth: 250,
 }

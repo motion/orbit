@@ -27,10 +27,10 @@ const OrbitDockAppMenu = () => {
     return null
   }
   const { menuItems } = orbitStore.activeAppStore
-  console.log('menuItems', menuItems, orbitStore.activeAppStore)
   if (!menuItems || !menuItems.length) {
     return null
   }
+  console.log('menuItems', menuItems, orbitStore.activeAppStore)
   return (
     <PopoverMenu
       target={<DockButton id="app-menu" icon="menu" />}

@@ -3,7 +3,7 @@ we need a basic way to search packages
 plan is:
 
 1. we'll run our own verdaccio at app/registry
-2. in orbit-cli
+2. in cli
    1. on `orbit publish`, if we get a successful publish to verdaccio:
    2. hit a cloud function here to scan the package
    3. scan package and insert it into firestore

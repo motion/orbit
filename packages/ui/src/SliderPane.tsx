@@ -1,6 +1,7 @@
 import { gloss } from 'gloss'
-import React, { memo, useRef } from 'react'
+import React, { memo, useLayoutEffect, useRef } from 'react'
 
+import { useDebounceValue } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
 import { Col, ColProps } from './View/Col'
@@ -14,6 +15,7 @@ type SliderPaneProps = ColProps &
     currentHeight?: number
     isActive?: boolean
     curFrame?: number
+    onMountChange?: (isMounted: boolean) => any
   }
 
 export const SliderPane = memo(
@@ -26,10 +28,24 @@ export const SliderPane = memo(
     verticalPad,
     framePad,
     isActive,
+    onMountChange,
     ...props
   }: SliderPaneProps) => {
     const ref = useRef(null)
     const visiblity = useVisibility()
+    const shouldHide = useDebounceValue(!isActive, 300)
+    const display = 'inherit' || (shouldHide && !isActive ? 'none' : 'inherit')
+
+    // console.log('shouldHide', isActive, shouldHide, display)
+
+    useLayoutEffect(() => {
+      if (onMountChange) {
+        onMountChange(true)
+        return () => {
+          onMountChange(false)
+        }
+      }
+    }, [])
 
     useNodeSize({
       disable: !visiblity,
@@ -49,6 +65,7 @@ export const SliderPane = memo(
         ref={ref}
         padding={[verticalPad, framePad, verticalPad]}
         isActive={isActive}
+        display={display}
         {...props}
       >
         {children}

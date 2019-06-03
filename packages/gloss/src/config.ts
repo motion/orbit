@@ -11,6 +11,7 @@ export let Config: GlossOptions = {
     hoverStyle: '&:hover',
     activeStyle: '&:active',
     focusStyle: '&:focus',
+    disabledStyle: '&:disabled',
   },
   preProcessTheme: preProcessTheme,
 }

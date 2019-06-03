@@ -5,13 +5,12 @@ import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { themeable, ThemeableProps } from './helpers/themeable'
 import { Icon } from './Icon'
-import { Sizes } from './Space'
+import { getSpaceSize, Sizes } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
-import { View } from './View/View'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {
@@ -45,9 +44,6 @@ export type TitleRowSpecificProps = ThemeableProps &
     /** Add an element below title */
     below?: React.ReactNode
 
-    /** Size the padding independently of title */
-    sizePadding?: number
-
     /** Adds a subtle background behind the title */
     backgrounded?: boolean
 
@@ -78,7 +74,6 @@ export const TitleRow = themeable(
         bordered,
         after,
         size = 'md',
-        sizePadding = 1,
         subTitle,
         backgrounded,
         below,
@@ -92,6 +87,7 @@ export const TitleRow = themeable(
       }: TitleRowProps,
       ref,
     ) => {
+      const spaceSize = getSpaceSize(size)
       const [collapseProps, rowProps] = splitCollapseProps(allProps)
       const collapse = useCollapse(collapseProps)
       const titleElement =
@@ -106,13 +102,13 @@ export const TitleRow = themeable(
 
       return (
         <TitleRowChrome
-          background={backgrounded ? titleRowBg : null}
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
+          background={backgrounded ? titleRowBg : null}
           ref={ref}
           {...rowProps}
         >
           {above}
-          <Row alignItems="center" space>
+          <Row alignItems="center" space={size}>
             {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
             {before}
             {typeof icon === 'string' ? (
@@ -120,15 +116,15 @@ export const TitleRow = themeable(
             ) : (
               icon || null
             )}
-            <View flex={1} alignItems="flex-start">
+            <Col space={spaceSize / 2} flex={1} alignItems="flex-start">
               {titleElement}
-              {children}
               {!!subTitle && (
                 <SubTitle selectable={selectable} ellipse marginBottom={0}>
                   {subTitle}
                 </SubTitle>
               )}
-            </View>
+              {children}
+            </Col>
             <Row alignItems="center" space>
               {after}
             </Row>

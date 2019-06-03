@@ -5,7 +5,15 @@ import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
 
+import { CommandBuildOptions } from './command-build'
+import { CommandDevOptions } from './command-dev'
+import { CommandGenTypesOptions } from './command-gen-types'
+import { CommandInstallOptions } from './command-install'
+import { CommandNewOptions } from './command-new'
+import { CommandPublishOptions } from './command-publish'
+import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
+
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
@@ -194,3 +202,20 @@ Yargs.scriptName('orbit')
   .version('version', 'Show version', description)
   .showHelpOnFail(true)
   .help().argv
+
+// programmatic API
+
+export * from './util/downloadAppDefinition'
+export * from './util/requireAppDefinition'
+export * from './util/getPackageId'
+
+export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
+export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)
+export const commandBuild = (x: CommandBuildOptions) => require('./command-build').commandBuild(x)
+export const commandPublish = (x: CommandPublishOptions) =>
+  require('./command-publish').commandPublish(x)
+export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
+export const commandGenTypes = (x: CommandGenTypesOptions) =>
+  require('./command-gen-types').commandGenTypes(x)
+export const commandInstall = (x: CommandInstallOptions) =>
+  require('./command-install').commandInstall(x)

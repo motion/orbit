@@ -13,6 +13,12 @@ export async function webpackPromise(
       if (options.loud) {
         console.log(
           stats.toString({
+            // make it a bit quieter
+            chunks: false,
+            builtAt: false,
+            children: false,
+            moduleTrace: false,
+
             colors: true,
           }),
         )

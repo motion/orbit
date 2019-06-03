@@ -7,7 +7,7 @@ import { sleep } from '@o/utils'
 import { Box, gloss } from 'gloss'
 import React from 'react'
 
-import { addAppClickHandler } from '../helpers/addAppClickHandler'
+import { installApp } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
@@ -179,7 +179,7 @@ export function OnboardMain() {
             }}
             items={dataDefs.map(appDefToItem)}
             getItemProps={(_, i) => ({
-              onClick: addAppClickHandler(dataDefs[i]),
+              onClick: () => installApp(dataDefs[i]),
               after: (
                 <AddButton size={0.9} disabled={isInstalled(dataDefs[i].id)}>
                   {isInstalled(dataDefs[i].id) ? (

@@ -1,4 +1,4 @@
-import { isDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
@@ -11,6 +11,7 @@ import { useGet, useGetFn } from '../hooks/useGet'
 import { Section, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
+import { Sizes } from '../Space'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
@@ -63,7 +64,8 @@ export type ListProps = SectionSpecificProps &
     /** Called on when `editable` and after editing a title */
     onEdit?: (item: any, nextTitle: string) => any
 
-    // flex?: CSSPropertySet['flex']
+    /** Adds padding */
+    pad?: Sizes
   }
 
 export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {
@@ -98,7 +100,7 @@ export const List = memo((allProps: ListProps) => {
     afterTitle,
     backgrounded,
     elevation,
-    titleScale = 0.85,
+    titleScale = 0.9,
     ...listProps
   } = props
   const getProps = useGet(props)
@@ -114,6 +116,7 @@ export const List = memo((allProps: ListProps) => {
     editable,
     onEdit,
     onSelect: _ignoreOnSelect,
+    pad,
     ...restProps
   } = listProps
   items // ignore var
@@ -256,7 +259,7 @@ export const List = memo((allProps: ListProps) => {
   return (
     <Section
       background="transparent"
-      flex={flex || 1}
+      flex={selectDefined(flex, 1)}
       title={title}
       subTitle={subTitle}
       bordered={bordered}
@@ -267,6 +270,8 @@ export const List = memo((allProps: ListProps) => {
       backgrounded={backgrounded}
       elevation={elevation}
       titleScale={titleScale}
+      titlePad
+      pad={pad}
       {...collapseProps}
     >
       {children}

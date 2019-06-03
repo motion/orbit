@@ -1,6 +1,6 @@
-import { App, AppDefinition, AppMainView, AppViewProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { App, AppDefinition, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
+import { Button, FormField, Icon, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'

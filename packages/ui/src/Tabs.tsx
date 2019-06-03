@@ -59,6 +59,8 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   sizePadding?: number
   /** tab width */
   tabWidth?: number | string
+  /** allow x scrolling if tabs overflow */
+  scrollable?: boolean
 }
 
 function TabsControlled({
@@ -81,6 +83,7 @@ function TabsControlled({
   centered,
   sizeRadius = 0,
   sizePadding = 1,
+  scrollable,
   tabWidth,
   ...rest
 }: TabsProps) {
@@ -208,19 +211,15 @@ function TabsControlled({
         {...rest}
       >
         {before}
-        <View
-          {...{
-            flex: 1,
-            overflow: 'hidden',
-            height,
-          }}
+        <HideScrollbarRow
+          className="hide-scrollbars"
+          overflowX={scrollable ? 'auto' : undefined}
+          height={height}
         >
-          <HideScrollbar className="hide-scrollbars">
-            {Children.map(tabList, (child, key) =>
-              cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
-            )}
-          </HideScrollbar>
-        </View>
+          {Children.map(tabList, (child, key) =>
+            cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
+          )}
+        </HideScrollbarRow>
         {after}
       </Row>
       {tabContents}
@@ -231,7 +230,6 @@ function TabsControlled({
 
 const TabContainer = gloss(View, {
   flex: 1,
-  overflow: 'hidden',
   minHeight: 'max-content',
 })
 
@@ -246,10 +244,8 @@ export function Tabs(props: TabsProps) {
   return <TabsControlled {...cProps} active={selectDefined(cProps.active, props.defaultActive)} />
 }
 
-const HideScrollbar = gloss(Box, {
+const HideScrollbarRow = gloss(Box, {
   flexFlow: 'row',
-  overflowX: 'auto',
-  overflowY: 'hidden',
   flex: 1,
   // because we use box shadows for outlines
   // margin: [0, 1],

@@ -9,7 +9,7 @@ export type LabeledTextProps = TextProps
 export type LabeledItemProps = RowProps
 
 export const Labeled = (props: LabeledProps) => {
-  return <Col space="xs" alignItems="center" justifyContent="center" {...props} />
+  return <Col space="sm" alignItems="center" justifyContent="center" {...props} />
 }
 
 // @ts-ignore

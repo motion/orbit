@@ -139,6 +139,7 @@ app.post('/searchUpdate', async (req, res) => {
   const icon = req.body.icon || ''
   const features = req.body.features || []
   const setup = req.body.setup || null
+  const author = req.body.author || ''
 
   if (!packageId || !identifier || !name || !icon) {
     res.send({
@@ -180,6 +181,7 @@ app.post('/searchUpdate', async (req, res) => {
       icon,
       features,
       setup,
+      author,
       search: stopword.removeStopwords(description.split(' ')).map(x => x.toLowerCase()),
     }
 

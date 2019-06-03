@@ -1,4 +1,4 @@
-import { AppDefinition, AppIcon, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
 import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useEffect, useState } from 'react'
 
@@ -35,6 +35,7 @@ export function AppsMainAddAppContent({
   // only download full definition once necessary
   const [shouldLoadFullDef, setShouldLoadFullDef] = useState(false)
   const localDef = useAppDefinition(identifier)
+  const searchApp = getSearchAppDefinitions(!localDef && identifier)
   const simpleSearchDef = useAppDefinitionFromStore(!localDef && identifier)
   const fullSetupDef = useAppStoreInstalledAppDefinition(
     !localDef && shouldLoadFullDef && identifier,
@@ -68,7 +69,7 @@ export function AppsMainAddAppContent({
   }
 
   const hasSetup = !!def.setup
-  console.log('def', def)
+
   return (
     <Section
       pad="lg"
@@ -92,10 +93,12 @@ export function AppsMainAddAppContent({
         </>
       }
       belowTitle={
-        <Row space>
-          <SubItem>{def['author'] || 'anonymous'}</SubItem>
-          <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
-        </Row>
+        !!searchApp && (
+          <Row space>
+            <SubItem>{searchApp.author || 'anonymous'}</SubItem>
+            <SubItem icon="download">{searchApp.installs || '11,129'}</SubItem>
+          </Row>
+        )
       }
     >
       {!!error && <Message alt="error">{error}</Message>}

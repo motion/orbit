@@ -164,6 +164,7 @@ export async function commandPublish(options: CommandPublishOptions) {
         ),
         fullDescription,
         setup: app.setup,
+        author: pkg.author || 'anonymous',
       }),
     }).then(x => x.json())
 

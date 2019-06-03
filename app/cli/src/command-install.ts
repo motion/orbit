@@ -13,6 +13,12 @@ export async function commandInstall(options: CommandInstallOptions) {
 
   const command = await yarnOrNpm()
   const packageId = await getPackageId(options.identifier)
+
+  if (!packageId) {
+    console.warn('no package id found')
+    return
+  }
+
   const curVersion = await getRegistryLatestVersion(packageId)
 
   console.log('TODO INSTALL', command, curVersion, packageId)

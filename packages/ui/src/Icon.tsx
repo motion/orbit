@@ -27,7 +27,7 @@ export const IconPropsContext = createContext<Partial<IconProps>>(null)
 const names = Object.keys(IconSvgPaths16)
 
 const cache = {}
-const findName = (name: string) => {
+export const findName = (name: string) => {
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
   const matches = fuzzySort.go(name, names)

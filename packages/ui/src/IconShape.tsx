@@ -19,11 +19,12 @@ const shapes = {
 }
 
 export const IconShape = memo((props: IconShapeProps) => {
-  const iconPath = IconSvgPaths20[findName(props.name)].join(' ')
+  const name = findName(props.name)
+  const iconPath = (IconSvgPaths20[name] || IconSvgPaths20.home).join(' ')
   const [svgPath, setSVGPath] = useState('')
 
   useEffect(() => {
-    const draw = SVG('empty').size(150, 150)
+    const draw = SVG('empty').size(28, 28)
     const icon = draw.path(iconPath)
     const out = icon
       .size(16, 16)
@@ -33,16 +34,24 @@ export const IconShape = memo((props: IconShapeProps) => {
     setSVGPath(`${shapes[props.shape]} ${out}`)
   }, [iconPath])
 
+  const scale = props.size / 28
   return (
-    <>
+    <div
+      style={{
+        transform: `scale(${scale})`,
+      }}
+    >
       <div style={{ display: 'none' }} id="empty" />
-      <div style={{ background: 'black', width: 1000, height: 1000 }}>
-        <svg>
-          <g>
-            <path d={`${svgPath}`} fill="red" />
-          </g>
-        </svg>
-      </div>
-    </>
+      <svg width={28} height={28}>
+        <g>
+          <path d={`${svgPath}`} fill={`${props.color || '#999'}`} />
+        </g>
+      </svg>
+    </div>
   )
 })
+
+// @ts-ignore
+IconShape.defaultProps = {
+  shape: 'squircle',
+}

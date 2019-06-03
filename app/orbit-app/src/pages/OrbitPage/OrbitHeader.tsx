@@ -1,7 +1,7 @@
 import { invertLightness } from '@o/color'
-import { appIcons, Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, IconProps, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, IconShape, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -188,7 +188,7 @@ const HomeButton = memo(
 
     return (
       <View ref={ref} {...props}>
-        <AppIcon
+        <IconShape
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
@@ -197,7 +197,7 @@ const HomeButton = memo(
           }}
           color={invertLightness(theme.color, 0.5)}
           name={state.navHovered || state.navVisible ? 'home' : icon}
-          size={22}
+          size={28}
           onMouseUp={e => {
             e.stopPropagation()
             actions.router.showHomePage()
@@ -207,21 +207,6 @@ const HomeButton = memo(
     )
   }),
 )
-
-export type AppIconProps = IconProps & {
-  shape?: 'circle' | 'squircle'
-}
-
-const AppIcon = memo((props: AppIconProps) => {
-  const presetName = `orbit-${props.name}`
-  const presetIcon = appIcons[presetName]
-
-  if (!!presetIcon) {
-    return <Icon {...props} name={presetName} />
-  }
-
-  return <Icon {...props} />
-})
 
 // @ts-ignore
 HomeButton.acceptsProps = {

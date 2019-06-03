@@ -62,7 +62,11 @@ AppIcon.acceptsProps = {
 const getIconColor = (props: AppIconProps, theme: ThemeObject) => {
   let fill
   try {
-    fill = toColor(props.color || (props.app && props.app.colors[0]) || theme.color).hex()
+    if ('app' in props) {
+      fill = props.app.colors[0] || 'red'
+    } else {
+      fill = toColor((props.colors && props.colors[0]) || props.color || theme.color).hex()
+    }
   } catch (err) {
     console.debug('error parsing color', err)
     fill = props.color || 'currentColor'

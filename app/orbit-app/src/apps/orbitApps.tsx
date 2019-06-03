@@ -22,8 +22,8 @@ export function startAppLoadWatch() {
     watcher = react(
       () => Desktop.state.workspaceState.appIdentifiers,
       async appIdentifiers => {
-        console.log('appIdentifiers updated', appIdentifiers, requireDynamicApps())
         dynamicApps = requireDynamicApps()
+        console.log('appIdentifiers updated', appIdentifiers, dynamicApps)
         __SERIOUSLY_SECRET.reloadAppDefinitions()
       },
     )

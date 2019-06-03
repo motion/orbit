@@ -1,4 +1,4 @@
-import { App, AppDefinition, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, FormField, Icon, List, ListItemProps, Section, SubSection } from '@o/ui'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -34,12 +34,12 @@ export function useDataAppDefinitions() {
   return useAppDefinitions().filter(x => isDataDefinition(x))
 }
 
-export const appDefToItem = (def: AppDefinition): ListItemProps => {
+export const appDefToListItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
     title: def.name,
-    icon: def.id,
+    icon: <AppIcon app={{ identifier: def.id, colors: ['black', 'red'] }} />,
     subTitle: getDescription(def) || 'No Description',
     after: sourceIcon,
     identifier: 'apps',
@@ -51,7 +51,7 @@ export const appDefToItem = (def: AppDefinition): ListItemProps => {
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
   subTitle: item.description.slice(0, 300),
-  icon: item.icon,
+  icon: <AppIcon icon={item.icon} colors={['pink', 'orange']} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
@@ -126,7 +126,7 @@ export function AppsIndex() {
           subType: 'settings',
           after: sourceIcon,
         })),
-        ...useDataAppDefinitions().map(appDefToItem),
+        ...useDataAppDefinitions().map(appDefToListItem),
         ...topApps,
         ...searchResults,
       ]}

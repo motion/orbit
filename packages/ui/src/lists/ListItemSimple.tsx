@@ -412,7 +412,7 @@ const ListItemSubtitle = gloss(View, {
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,
-  overflowX: 'hidden',
+  overflow: 'hidden',
 })
 
 const AfterHeader = gloss({

@@ -35,6 +35,7 @@ export function useDataAppDefinitions() {
 }
 
 export const appDefToListItem = (def: AppDefinition): ListItemProps => {
+  console.log('ok', def.id)
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
@@ -107,7 +108,7 @@ export function AppsIndex() {
       items={[
         {
           title: 'Apps',
-          icon: 'orbit-apps',
+          icon: 'apps',
           subTitle: 'Manage apps',
           subType: 'manage-apps',
         },

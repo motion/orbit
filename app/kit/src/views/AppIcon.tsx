@@ -9,17 +9,17 @@ type BaseIconProps = Omit<Partial<IconProps>, 'icon' | 'color'>
 export type AppIconProps = BaseIconProps & {
   identifier?: string
   icon?: string
-  colors: string[]
+  colors?: string[]
 }
 
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
     let icon = props.icon || ''
     let iconLight = ''
-    let colors = props.colors || ['red', 'green']
+    let colors = props.colors || ['black', 'black']
     const definition = useAppDefinition(!!props.identifier && props.identifier)
 
-    if (props.identifier) {
+    if (props.identifier && definition) {
       icon = definition.icon
       iconLight = definition.iconLight
       console.log('definition', !!definition.icon)

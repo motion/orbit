@@ -31,11 +31,12 @@ export const AppIcon = memo(
 
     return (
       <IconShape
-        forwardRef={ref}
+        ref={ref}
         background={app.colors[0]}
         color={app.colors[1]}
         name={app.identifier}
         size={48}
+        shape="squircle"
         {...props}
       />
     )

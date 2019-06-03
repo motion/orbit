@@ -19,7 +19,7 @@ const shapes = {
 }
 
 export const IconShape = memo(
-  forwardRef((props: IconShapeProps, ref) => {
+  forwardRef((props: IconShapeProps, ref: any) => {
     const name = findName(props.name)
     const iconPath = (IconSvgPaths20[name] || IconSvgPaths20.home).join(' ')
     const [svgPath, setSVGPath] = useState('')
@@ -37,7 +37,7 @@ export const IconShape = memo(
 
     const scale = props.size / 28
     return (
-      <div ref={ref} style={{}}>
+      <div ref={ref} style={{ width: props.size, height: props.size }}>
         <div style={{ display: 'none' }} id="empty" />
         <svg
           width={28}

@@ -48,6 +48,7 @@ export function ManageApps() {
           </View>
         )}
         <AppSortableGrid
+          margin={[16, 0]}
           sortable
           items={viewApps}
           getItem={item => {
@@ -81,6 +82,7 @@ export function ManageApps() {
           </View>
         )}
         <AppSortableGrid
+          margin={[16, 0]}
           items={dataApps}
           getItem={item => {
             return <OrbitAppIcon app={item.app} />

@@ -39,7 +39,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
     title: def.name,
-    icon: <AppIcon app={{ identifier: def.id, colors: ['black', 'red'] }} />,
+    icon: <AppIcon identifier={def.id} colors={['black', 'red']} />,
     subTitle: getDescription(def) || 'No Description',
     after: sourceIcon,
     identifier: 'apps',

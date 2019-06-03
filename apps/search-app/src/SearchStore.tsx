@@ -74,7 +74,7 @@ export class SearchStore {
     return {
       key: `${app.id}`,
       title: app.name,
-      icon: <AppIcon app={app} />,
+      icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
       after: (
         <SimpleText alpha={0.5} size={1.5}>
           ⌘ + {index + 2}

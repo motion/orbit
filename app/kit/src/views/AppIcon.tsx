@@ -1,30 +1,32 @@
-import { AppBit } from '@o/models'
 import { IconProps, IconShape, SVG, toColor, useTheme } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
 
-export type AppIconProps =
-  | Partial<IconProps> & { app: Pick<AppBit, 'identifier' | 'colors'> }
-  | Partial<IconProps> & { icon: string; colors: string[] }
+type BaseIconProps = Omit<Partial<IconProps>, 'icon' | 'color'>
 
-// const idReplace = / id="([a-z0-9-_]+)"/gi
+export type AppIconProps = BaseIconProps & {
+  identifier?: string
+  icon?: string
+  colors: string[]
+}
 
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
-    let icon = ''
+    let icon = props.icon
     let iconLight = ''
-    let colors = []
+    let colors = props.colors || ['red', 'green']
 
-    if ('icon' in props) {
-      icon = props.icon
-      colors = props.colors
-    } else {
-      const definition = useAppDefinition(props.app.identifier)
+    if (props.identifier) {
+      const definition = useAppDefinition(props.identifier)
       icon = definition.icon
       iconLight = definition.iconLight
-      colors = props.app.colors
+    }
+
+    if (!icon) {
+      console.warn('no icon for', props)
+      icon = 'home'
     }
 
     const theme = useTheme()
@@ -43,10 +45,10 @@ export const AppIcon = memo(
     return (
       <IconShape
         ref={ref}
-        background={colors[0]}
-        color={colors[1]}
+        color={`linear-gradient(${colors[0]}, ${colors[1]})`}
         size={48}
         shape="squircle"
+        name={icon}
         {...props}
       />
     )
@@ -62,14 +64,10 @@ AppIcon.acceptsProps = {
 const getIconColor = (props: AppIconProps, theme: ThemeObject) => {
   let fill
   try {
-    if ('app' in props) {
-      fill = props.app.colors[0] || 'red'
-    } else {
-      fill = toColor((props.colors && props.colors[0]) || props.color || theme.color).hex()
-    }
+    fill = toColor((props.colors && props.colors[0]) || theme.color).hex()
   } catch (err) {
     console.debug('error parsing color', err)
-    fill = props.color || 'currentColor'
+    fill = 'currentColor'
   }
   // translate inherit to currentColor
   fill = fill === 'inherit' ? 'currentColor' : fill

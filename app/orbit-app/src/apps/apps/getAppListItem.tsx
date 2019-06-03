@@ -13,7 +13,7 @@ export function getAppListItem(app: AppWithDefinition) {
         <OrbitAppInfo {...app} />
       </Suspense>
     ) : null,
-    icon: <AppIcon app={app.app} />,
+    icon: <AppIcon identifer={app.app.identifier} colors={app.app.colors} />,
     iconBefore: true,
     viewType: 'settings' as 'settings',
     subId: `${app.app.id}`,

@@ -206,13 +206,18 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
     const size = scale * getTextSize(this.props.size)
-    const textStyle = getTextSizeTheme({
-      sizeLineHeight: this.props.sizeLineHeight,
-      lineHeight: this.props.lineHeight,
-      fontSize: this.props.fontSize,
-      size,
-      sizeMethod: this.props.sizeMethod,
-    })
+    const textStyle = getTextSizeTheme(
+      {
+        sizeLineHeight: this.props.sizeLineHeight,
+        lineHeight: this.props.lineHeight,
+        fontSize: this.props.fontSize,
+        size,
+        sizeMethod: this.props.sizeMethod,
+      },
+      {
+        scale,
+      },
+    )
     const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
     const maxHeight =
       typeof ellipse === 'number' && textStyle.lineHeightNum

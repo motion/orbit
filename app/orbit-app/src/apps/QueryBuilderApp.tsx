@@ -77,7 +77,8 @@ export function QueryBuilderIndex({
           icon="plus"
           onClick={() => {
             const name = `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`
-            treeList.actions.addItem(name, {
+            treeList.actions.addItem({
+              name,
               data: {
                 identifier: '',
               },

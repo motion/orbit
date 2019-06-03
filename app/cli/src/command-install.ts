@@ -15,7 +15,7 @@ export async function commandInstall(options: CommandInstallOptions) {
   const packageId = await getPackageId(options.identifier)
   const curVersion = await getRegistryLatestVersion(packageId)
 
-  console.log('TODO INSTALL', command, curVersion)
+  console.log('TODO INSTALL', command, curVersion, packageId)
 
   return
 }

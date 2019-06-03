@@ -32,5 +32,5 @@ SimpleText.defaultProps = {
 
 export function scaledTextSizeTheme(props: any) {
   const scale = useScale()
-  return getTextSizeTheme(props, scale)
+  return getTextSizeTheme(props, { scale })
 }

@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { getSpaceSize, Sizes, Space } from './Space'
+import { getSpaceSize, Sizes } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -148,7 +148,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       ),
     )
 
-    console.log('titlePad', titlePad, title, titlePadFinal, titleSizePx)
     titleEl = (
       <Scale size={titleScale}>
         <Theme alt="flat">
@@ -172,7 +171,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             {...adjustPadProps}
           />
         </Theme>
-        {!!spaceSize && !showTitleAbove && <Space size={spaceSize} />}
       </Scale>
     )
 

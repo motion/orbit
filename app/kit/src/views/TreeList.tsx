@@ -57,16 +57,16 @@ const getActions = (
   // stores: KitStores,
 ) => {
   const Actions = {
-    addItem(name: string, item?: Partial<TreeItem>) {
+    addItem(item?: Partial<TreeItem>) {
       const update = treeState()[1]
       update(next => {
-        const id = Math.random()
+        const id = item.id || Math.random()
         next.items[Actions.curId()].children.push(id)
-        next.items[id] = { children: [], ...item, id, name }
+        next.items[id] = { children: [], ...item, id }
       })
     },
     addFolder(name?: string) {
-      Actions.addItem(name, { type: 'folder' })
+      Actions.addItem({ name, type: 'folder' })
     },
     deleteItem(id: number) {
       const update = treeState()[1]

@@ -17,7 +17,12 @@ export type TextSizeProps = {
 
 // dont return undefined
 
-export function getTextSizeTheme(props: TextSizeProps, scale = 1) {
+type TextSizeExtraProps = {
+  scale?: number
+}
+
+export function getTextSizeTheme(props: TextSizeProps, extraProps: TextSizeExtraProps = {}) {
+  const scale = extraProps.scale || 1
   const size = (props.size || 1) * scale
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
   let fontSize = props.fontSize

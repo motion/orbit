@@ -63,9 +63,6 @@ export type ListItemSpecificProps = ListItemHide & {
   /** Override the opacity of the text elements below title */
   subTextOpacity?: number
 
-  /** Display a more condensed list item */
-  small?: boolean
-
   /** Adds an element vertically above list item */
   above?: React.ReactNode
 
@@ -186,7 +183,6 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     before,
     separatorProps,
     above,
-    small,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.6,
     after,
@@ -210,9 +206,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showTitle = !!title && !props.hideTitle
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  const sizeLineHeight = small ? 0.8 : 1
-  let padDefault = small ? 'xs' : 'sm'
-  let pad = props.iconBefore ? (small ? 'sm' : 12) : padDefault
+  let padDefault = 'sm'
+  let pad = props.iconBefore ? 13 : padDefault
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
@@ -228,17 +223,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   }).map(x => x * scale)
   const spaceSize = listItemAdjustedPadding[1]
 
-  // add a little vertical height for full height icons
-  if (small && iconBefore) {
-    pad = 'sm'
-  }
-
   const hasChildren = showChildren && !!children
   const childrenElement = hasChildren && (
     <SimpleText margin={['auto', 0]} flex={1} size={0.9} alpha={subTextOpacity}>
       {children}
     </SimpleText>
   )
+
   const { activeThemeName } = React.useContext(ThemeContext)
 
   // TODO could let a prop control content
@@ -324,36 +315,32 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               {afterHeaderElement}
             </ListItemTitleBar>
           )}
-          <Space size={spaceSize / 2} />
           {showSubtitle && (
-            <ListItemSubtitle>
-              {!!location && locationElement}
-              {!!subTitle &&
-                (typeof subTitle === 'string' ? (
-                  <HighlightText
-                    alpha={subTextOpacity}
-                    size={0.9}
-                    sizeLineHeight={sizeLineHeight}
-                    ellipse
-                    {...subTitleProps}
-                  >
-                    {subTitle}
-                  </HighlightText>
-                ) : (
-                  subTitle
-                ))}
-              {!subTitle && (
-                <>
-                  <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                </>
-              )}
-              {!showTitle && (
-                <>
-                  <Space />
-                  {afterHeaderElement}
-                </>
-              )}
-            </ListItemSubtitle>
+            <>
+              <Space size={spaceSize / 2} />
+              <ListItemSubtitle>
+                {!!location && locationElement}
+                {!!subTitle &&
+                  (typeof subTitle === 'string' ? (
+                    <HighlightText alpha={subTextOpacity} size={0.9} ellipse {...subTitleProps}>
+                      {subTitle}
+                    </HighlightText>
+                  ) : (
+                    subTitle
+                  ))}
+                {!subTitle && (
+                  <>
+                    <div style={{ display: 'flex', flex: showPreviewInSubtitle ? 0 : 1 }} />
+                  </>
+                )}
+                {!showTitle && (
+                  <>
+                    <Space />
+                    {afterHeaderElement}
+                  </>
+                )}
+              </ListItemSubtitle>
+            </>
           )}
           {!showSubtitle && !showTitle && (
             <View
@@ -449,13 +436,7 @@ const ListItemMainContent = gloss({
 const getIconSize = props =>
   props.iconSize ||
   (props.iconProps && props.iconProps.size) ||
-  (props.iconBefore
-    ? props.small || !(props.subTitle || props.children)
-      ? 20
-      : 28
-    : props.small
-    ? 12
-    : 14)
+  (props.iconBefore ? (!(props.subTitle || props.children) ? 20 : 28) : 14)
 
 function getIcon(props: ListItemSimpleProps) {
   const size = getIconSize(props)
@@ -464,7 +445,7 @@ function getIcon(props: ListItemSimpleProps) {
     ...props.iconProps,
   }
   if (!props.iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${props.small ? 4 : 3}px)` }
+    iconPropsFinal['style'] = { transform: `translateY(${3}px)` }
   }
   let element = props.icon
   if (React.isValidElement(props.icon)) {

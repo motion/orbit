@@ -96,6 +96,15 @@ export function AppsIndex() {
     }
   }, [])
 
+  const myApps = [
+    ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
+    ...dataApps.map(getAppListItem).map(x => ({
+      ...x,
+      subType: 'settings',
+      after: sourceIcon,
+    })),
+  ]
+
   return (
     <List
       title="Manage Apps"
@@ -106,9 +115,9 @@ export function AppsIndex() {
       }}
       items={[
         {
-          title: 'Apps',
+          title: 'Organize',
           icon: 'apps',
-          subTitle: 'Manage apps',
+          subTitle: 'View and organize installed apps',
           subType: 'manage-apps',
         },
         {
@@ -117,12 +126,25 @@ export function AppsIndex() {
           subTitle: 'Explore all GraphQL app APIs',
           subType: 'explorer-graph',
         },
-        ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
-        ...dataApps.map(getAppListItem).map(x => ({
-          ...x,
-          subType: 'settings',
-          after: sourceIcon,
-        })),
+
+        {
+          selectable: false,
+          pad: false,
+          children: (
+            <Col padding={[38, 8, 16]}>
+              <SubTitle>My Apps</SubTitle>
+            </Col>
+          ),
+        },
+        ...(myApps.length
+          ? myApps
+          : [
+              {
+                selectable: false,
+                title: 'No apps installed, yet!',
+              },
+            ]),
+
         {
           selectable: false,
           pad: false,

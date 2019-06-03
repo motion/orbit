@@ -425,7 +425,7 @@ const AfterHeader = gloss(Box, {
   marginBottom: -4,
 })
 
-const ListItemMainContent = gloss(Box, {
+const ListItemMainContent = gloss<{ oneLine?: boolean }>(Box, {
   flex: 1,
   margin: ['auto', 0],
   oneLine: {

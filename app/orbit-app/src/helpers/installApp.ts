@@ -4,14 +4,14 @@ import { AppDefinition } from '@o/kit'
 import { InstallAppToWorkspaceCommand, OpenCommand, SetupProxyCommand } from '@o/models'
 
 export async function installApp(app: AppDefinition) {
-  const res = await command(InstallAppToWorkspaceCommand, { identifier: app.id })
-  if (res.type === 'error') {
-    return res
-  }
   if (await command(SetupProxyCommand)) {
     const url = `${getGlobalConfig().urls.auth}/auth/${app.id}`
     console.log('proxy setup success, opening...', url)
     await command(OpenCommand, { url })
+  }
+  const res = await command(InstallAppToWorkspaceCommand, { identifier: app.id })
+  if (res.type === 'error') {
+    return res
   }
   return {
     type: 'success' as const,

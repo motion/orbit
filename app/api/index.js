@@ -55,11 +55,20 @@ app.get('/apps', async (_, res) => {
 app.get('/apps/:identifier', async (req, res) => {
   const db = admin.firestore()
   try {
+    const id = req.params.identifier || ''
+    console.log('looking up', id)
     const item = await db
       .collection('apps')
-      .doc(req.params.identifier || '')
+      .doc(id)
       .get()
-    res.send(item.data())
+
+    if (item.exists) {
+      res.send(item.data())
+    } else {
+      res.send({
+        error: `not found ${id}`,
+      })
+    }
   } catch (err) {
     console.error(err.message, err.stack)
     res.status(500)

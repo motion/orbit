@@ -1,4 +1,4 @@
-import { AppDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { AppDefinition, AppIcon, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
 import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useEffect, useState } from 'react'
 
@@ -73,7 +73,7 @@ export function AppsMainAddAppContent({
     <Section
       pad="lg"
       space
-      icon={identifier}
+      icon={<AppIcon icon={def.icon} identifier={identifier} />}
       title={def.name}
       titlePad
       titleBorder

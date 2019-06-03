@@ -100,7 +100,7 @@ export const List = memo((allProps: ListProps) => {
     afterTitle,
     backgrounded,
     elevation,
-    titleScale = 0.85,
+    titleScale = 0.9,
     ...listProps
   } = props
   const getProps = useGet(props)

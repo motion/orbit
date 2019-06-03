@@ -1,8 +1,6 @@
 import { AppViewProps } from '@o/models'
-import { Col, PassProps, SubTitle, Title } from '@o/ui'
+import { Col, Icon, PassProps, SubTitle, Title } from '@o/ui'
 import React from 'react'
-
-import { Icon } from '../views/Icon'
 
 export function Message({
   title,

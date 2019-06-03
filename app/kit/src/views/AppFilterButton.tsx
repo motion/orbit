@@ -1,8 +1,7 @@
-import { Button, Col, ListItem, Popover, Text, View, ViewProps } from '@o/ui'
+import { Button, Col, ListItem, Popover, Text, View, ViewProps, Icon } from '@o/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
-import { Icon } from './Icon'
 
 export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFilterStore }) {
   const stores = useStores()

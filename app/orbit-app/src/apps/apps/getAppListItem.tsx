@@ -1,4 +1,4 @@
-import { AppWithDefinition, isDataDefinition } from '@o/kit'
+import { AppIcon, AppWithDefinition } from '@o/kit'
 import React, { Suspense } from 'react'
 
 import { OrbitAppInfo } from '../../views/OrbitAppInfo'
@@ -13,7 +13,7 @@ export function getAppListItem(app: AppWithDefinition) {
         <OrbitAppInfo {...app} />
       </Suspense>
     ) : null,
-    icon: isDataDefinition(app.definition) ? app.definition.id : `orbit-${app.definition.id}-full`,
+    icon: <AppIcon app={app.app} />,
     iconBefore: true,
     viewType: 'settings' as 'settings',
     subId: `${app.app.id}`,

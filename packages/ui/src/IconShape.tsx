@@ -1,5 +1,5 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
-import React, { memo, useEffect, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useState } from 'react'
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
@@ -18,38 +18,42 @@ const shapes = {
     a ${radius},${radius} 0 1,1 -${diameter},0`,
 }
 
-export const IconShape = memo((props: IconShapeProps) => {
-  const name = findName(props.name)
-  const iconPath = (IconSvgPaths20[name] || IconSvgPaths20.home).join(' ')
-  const [svgPath, setSVGPath] = useState('')
+export const IconShape = memo(
+  forwardRef((props: IconShapeProps, ref) => {
+    const name = findName(props.name)
+    const iconPath = (IconSvgPaths20[name] || IconSvgPaths20.home).join(' ')
+    const [svgPath, setSVGPath] = useState('')
 
-  useEffect(() => {
-    const draw = SVG('empty').size(28, 28)
-    const icon = draw.path(iconPath)
-    const out = icon
-      .size(16, 16)
-      .move(6, 6)
-      .array()
-      .toString()
-    setSVGPath(`${shapes[props.shape]} ${out}`)
-  }, [iconPath])
+    useEffect(() => {
+      const draw = SVG('empty').size(28, 28)
+      const icon = draw.path(iconPath)
+      const out = icon
+        .size(16, 16)
+        .move(6, 6)
+        .array()
+        .toString()
+      setSVGPath(`${shapes[props.shape]} ${out}`)
+    }, [iconPath])
 
-  const scale = props.size / 28
-  return (
-    <div
-      style={{
-        transform: `scale(${scale})`,
-      }}
-    >
-      <div style={{ display: 'none' }} id="empty" />
-      <svg width={28} height={28}>
-        <g>
-          <path d={`${svgPath}`} fill={`${props.color || '#999'}`} />
-        </g>
-      </svg>
-    </div>
-  )
-})
+    const scale = props.size / 28
+    return (
+      <div ref={ref} style={{}}>
+        <div style={{ display: 'none' }} id="empty" />
+        <svg
+          width={28}
+          height={28}
+          style={{
+            transform: `scale(${scale})`,
+          }}
+        >
+          <g>
+            <path d={`${svgPath}`} fill={`${props.color || '#999'}`} />
+          </g>
+        </svg>
+      </div>
+    )
+  }),
+)
 
 // @ts-ignore
 IconShape.defaultProps = {

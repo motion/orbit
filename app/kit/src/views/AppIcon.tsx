@@ -9,8 +9,8 @@ export type AppIconProps = Partial<IconProps> & { app: AppBit }
 
 // const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export const AppIcon = forwardRef(
-  memo((props: AppIconProps, ref) => {
+export const AppIcon = memo(
+  forwardRef((props: AppIconProps, ref) => {
     const app = props.app
     const theme = useTheme()
     const definition = useAppDefinition(app.identifier)

@@ -6,7 +6,6 @@
  */
 import { StyleSheet } from './sheet'
 
-
 type BaseRules = {
   [key: string]: string | number
 }
@@ -42,7 +41,7 @@ export class GarbageCollector {
 
   tracker: StyleTracker
   sheet: StyleSheet
-  garbageTimer?: NodeJS.Timeout
+  garbageTimer?: any
   rulesToClass: RulesToClass
 
   hasQueuedCollection(): boolean {

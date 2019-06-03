@@ -272,7 +272,7 @@ export class Logger {
   }
 }
 
-const isNode = typeof process !== 'undefined' && process.release && process.release.name === 'node'
+const isNode = typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
 const colored = (ns: string, style: string) => {
   return isNode === false ? [`%c${ns}`, style] : [ns]
 }

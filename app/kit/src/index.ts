@@ -96,6 +96,7 @@ export * from './hooks/useNLP'
 export * from './hooks/useAppDefinition'
 export * from './hooks/useIsActive'
 export * from './views/ScopedState'
+export * from './views/icons'
 
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,

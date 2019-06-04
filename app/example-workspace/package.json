@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@o/demo-app-user-manager": "^2.5.6",
+    "@o/lists-app": "2.5.8",
     "@o/postgres-app": "^2.5.6",
     "@o/slack-app": "2.5.10"
   }

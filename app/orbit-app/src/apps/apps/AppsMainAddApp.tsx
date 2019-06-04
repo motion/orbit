@@ -4,6 +4,7 @@ import React, { Suspense, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
 import { AppSetupForm } from './AppSetupForm'
+import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
@@ -69,7 +70,8 @@ export function AppsMainAddAppContent({
       pad="lg"
       space="xxl"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
-      title={def.name}
+      title="Add app"
+      subTitle={`Setup ${def.name} app`}
       titlePad
       titleBorder
       afterTitle={
@@ -97,31 +99,34 @@ export function AppsMainAddAppContent({
     >
       {!!error && <Message alt="error">{error}</Message>}
 
-      {hasSetup && (
-        <Section space>
-          <Section
-            bordered
-            elevation={3}
-            pad
-            title="Setup"
-            subTitle="This app has required configuration"
-            titlePad
-            titleSize={0.85}
-          >
+      <Section
+        bordered
+        elevation={3}
+        pad
+        title="Setup"
+        subTitle="Customize and add app to workspace"
+        titlePad
+        titleSize={0.85}
+        space
+      >
+        <AppsMainNew app={{ target: 'app', name: def.name, identifier: def.id }} />
+
+        {hasSetup && (
+          <>
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)
               }}
               def={def}
             />
-          </Section>
-          <Message alt="lightGray" icon="warn">
-            This app stores data privately, only on your device. If your team enables decentralized
-            key-sharing, it syncs private keys securely, <strong>only directly</strong> to others
-            users in this space.
-          </Message>
-        </Section>
-      )}
+            <Message alt="lightGray" icon="warn">
+              This app stores data privately, only on your device. If your team enables
+              decentralized key-sharing, it syncs private keys securely,{' '}
+              <strong>only directly</strong> to others users in this space.
+            </Message>
+          </>
+        )}
+      </Section>
 
       <Section space>
         <SubTitle>Description</SubTitle>

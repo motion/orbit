@@ -108,7 +108,6 @@ export function AppsIndex() {
   ]
 
   const localApps = useUserAppDefinitions()
-  console.log('localApps', localApps)
 
   return (
     <List

@@ -1,5 +1,5 @@
 import { AppBit, AppIcon } from '@o/kit'
-import { Input, Popover, Row, Space, View } from '@o/ui'
+import { Col, FormField, Input } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
@@ -17,34 +17,17 @@ export function AppsMainNew({ app }: { app: AppBit }) {
   }, [inputRef.current])
 
   return (
-    <>
-      <Row alignItems="center">
-        <Popover
-          popoverTheme="tooltip"
-          borderRadius={10}
-          elevation={1}
-          openOnClick
-          background
-          width={250}
-          height={250}
-          target={
-            <View>
-              <AppIcon removeStroke app={app} size={48} />
-            </View>
-          }
-          overflowY="auto"
-          padding={10}
-        >
-          <ColorPicker
-            onChangeColor={colors => {
-              actions.setupApp.update({ colors })
-            }}
-            activeColor={state.setupApp.app.colors[0]}
-          />
-        </Popover>
-
-        <Space />
-
+    <Col space>
+      <FormField label="Icon">
+        <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
+        <ColorPicker
+          onChangeColor={colors => {
+            actions.setupApp.update({ colors })
+          }}
+          activeColor={state.setupApp.app.colors[0]}
+        />
+      </FormField>
+      <FormField label="Name">
         <Input
           ref={inputRef}
           size={1.5}
@@ -58,7 +41,7 @@ export function AppsMainNew({ app }: { app: AppBit }) {
             actions.setupApp.update({ name: e.target.value })
           }}
         />
-      </Row>
-    </>
+      </FormField>
+    </Col>
   )
 }

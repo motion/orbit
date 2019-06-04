@@ -6,7 +6,8 @@ import { findName, IconProps } from './Icon'
 import { View } from './View/View'
 
 export type IconShapeProps = IconProps & {
-  shape: 'circle' | 'squircle'
+  shape?: 'circle' | 'squircle'
+  gradient?: string[]
 }
 
 const diameter = 28
@@ -20,12 +21,18 @@ const shapes = {
 }
 
 export const IconShape = memo(
-  forwardRef(({ shape, style, ...props }: IconShapeProps, ref: any) => {
-    const name = findName(props.name)
-    const iconPath = (IconSvgPaths20[name] || IconSvgPaths20.home).join(' ')
-    const [svgPath, setSVGPath] = useState('')
+  forwardRef(({ shape = 'squircle', style, gradient, ...props }: IconShapeProps, ref: any) => {
+    let iconPath: string
+
+    if (name) {
+      const name = findName(props.name)
+      iconPath = IconSvgPaths20[name].join(' ')
+    }
+
+    const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
 
     useEffect(() => {
+      if (!iconPath) return
       const draw = SVG('empty').size(28, 28)
       const icon = draw.path(iconPath)
       const out = icon
@@ -37,6 +44,7 @@ export const IconShape = memo(
     }, [iconPath])
 
     const scale = props.size / 28
+
     return (
       <View ref={ref} style={{ ...style, width: props.size, height: props.size }} {...props}>
         <div style={{ display: 'none' }} id="empty" />
@@ -48,8 +56,24 @@ export const IconShape = memo(
             transform: `scale(${scale})`,
           }}
         >
+          {!!gradient && (
+            <defs>
+              <linearGradient id="gradient" gradientTransform="rotate(90)">
+                {gradient.map((color, index) => (
+                  <stop
+                    key={`${color}${index}`}
+                    offset={`${index / (gradient.length - 1)}`}
+                    stopColor={`${color}`}
+                  />
+                ))}
+              </linearGradient>
+            </defs>
+          )}
           <g>
-            <path d={`${svgPath}`} fill={`${props.color || '#999'}`} />
+            <path
+              d={`${svgPath}`}
+              fill={!!gradient ? `url(#gradient)` : `${props.color || '#999'}`}
+            />
           </g>
         </svg>
       </View>

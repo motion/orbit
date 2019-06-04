@@ -93,7 +93,7 @@ export const Slider = memo((props: SliderProps) => {
           setHeights(heights)
         }
 
-        return cloneElement(child, {
+        const props = {
           framePad: framePad as any,
           verticalPad,
           fixHeightToTallest,
@@ -105,7 +105,9 @@ export const Slider = memo((props: SliderProps) => {
           index,
           onChangeHeight,
           onMountChange: handleDidMount,
-        })
+        }
+
+        return cloneElement(child, props)
       })}
     </SliderContainer>
   )

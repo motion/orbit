@@ -2,7 +2,7 @@ import { invertLightness } from '@o/color'
 import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, IconShape, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
-import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
+import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -224,7 +224,7 @@ const OrbitNavHiddenBar = props => {
   return (
     <OrbitNavHiddenBarChrome {...props}>
       <OrbitNavHiddenBarInner>
-        {apps.map(app => {
+        {/* {apps.map(app => {
           const isActive = paneId === `${app.id}`
           return (
             <Block
@@ -239,7 +239,7 @@ const OrbitNavHiddenBar = props => {
               }}
             />
           )
-        })}
+        })} */}
       </OrbitNavHiddenBarInner>
     </OrbitNavHiddenBarChrome>
   )

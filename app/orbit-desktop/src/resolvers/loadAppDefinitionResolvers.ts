@@ -1,6 +1,12 @@
 import { commandInstall, getPackageId, requireAppDefinition } from '@o/cli'
 import { getGlobalConfig, Logger, resolveCommand } from '@o/kit'
-import { AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand, InstallAppToWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import {
+  AppDefinitionSetupVerifyCommand,
+  GetAppStoreAppDefinitionCommand,
+  InstallAppToWorkspaceCommand,
+  SpaceEntity,
+  UserEntity,
+} from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -64,6 +70,7 @@ function resolveAppSetupVerify() {
 
     // run definition
     const loadedDef = await requireAppDefinition(packageId)
+
     if (loadedDef.type === 'error') {
       return loadedDef
     }

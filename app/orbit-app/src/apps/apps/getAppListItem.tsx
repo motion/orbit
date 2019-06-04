@@ -9,11 +9,13 @@ export function getAppListItem(app: AppWithDefinition) {
   return {
     key: app.app ? app.app.id : identifier,
     title,
-    subTitle: app.definition.sync ? (
+    subTitle: app.definition.auth ? (
       <Suspense fallback={null}>
         <OrbitAppInfo {...app} />
       </Suspense>
-    ) : null,
+    ) : (
+      app.definition.name
+    ),
     icon: <AppIcon identifier={identifier} colors={app.app.colors} />,
     viewType: 'settings' as 'settings',
     subId: `${app.app.id}`,

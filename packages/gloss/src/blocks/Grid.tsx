@@ -9,6 +9,8 @@ import { Base, BaseProps } from './Base'
 const px = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
 export type GridProps = BaseProps & {
+  itemMinWidth?: number
+  itemMaxWidth?: number
   colSpan?: number
   autoFitColumns?: boolean
   autoFitRows?: boolean
@@ -20,7 +22,7 @@ export const Grid = gloss<GridProps>(Base, {
   ...(p.colSpan ? { gridColumn: `span ${p.colSpan}` } : null),
   gridTemplateColumns:
     p.autoFitColumns &&
-    `repeat(auto-fit, minmax(${px(p.minWidth || 100)}, ${px(p.maxWidth || '1fr')}))`,
+    `repeat(auto-fit, minmax(${px(p.itemMinWidth || 100)}, ${px(p.itemMaxWidth || '1fr')}))`,
   gridTemplateRows: p.autoFitRows && `repeat(100000, ${px(p.minHeight || 100)}, [col-start])`,
   width: 'auto',
   ...p,

@@ -5,6 +5,7 @@ import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { themeable, ThemeableProps } from './helpers/themeable'
 import { Icon } from './Icon'
+import { useScale } from './Scale'
 import { getSpaceSize, Sizes } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
@@ -87,6 +88,8 @@ export const TitleRow = themeable(
       }: TitleRowProps,
       ref,
     ) => {
+      const scale = useScale()
+      const iconSize = 32 * scale
       const spaceSize = getSpaceSize(size)
       const [collapseProps, rowProps] = splitCollapseProps(allProps)
       const collapse = useCollapse(collapseProps)
@@ -112,7 +115,9 @@ export const TitleRow = themeable(
             {collapse.isCollapsable && <CollapseArrow useCollapse={collapse} />}
             {before}
             {typeof icon === 'string' ? (
-              <Icon alignSelf="center" name={icon} size={32} />
+              <Icon alignSelf="center" name={icon} size={iconSize} />
+            ) : React.isValidElement(icon) ? (
+              React.cloneElement(icon, { size: iconSize })
             ) : (
               icon || null
             )}

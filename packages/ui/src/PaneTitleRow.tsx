@@ -3,7 +3,7 @@ import React from 'react'
 
 import { BorderTop } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
-import { Scale } from './Scale'
+import { Scale, useScale } from './Scale'
 import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -25,7 +25,7 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
   const [collapseProps, textProps] = splitCollapseProps(rest)
   const toggle = useCollapse(collapseProps)
   return (
-    <Scale size={0.8}>
+    <Scale size={0.85}>
       <PanelHeader onDoubleClick={toggle.toggle}>
         <BorderTop opacity={0.5} />
         {before}
@@ -51,8 +51,11 @@ const PanelHeader = gloss(Row, {
   alignItems: 'center',
   fontWeight: 500,
   flexShrink: 0,
-  padding: [3, 10],
   position: 'relative',
-}).theme((_, theme) => ({
-  backgroundColor: theme.panelHeaderBackground || theme.backgroundZebra,
-}))
+}).theme((_, theme) => {
+  const scale = useScale()
+  return {
+    padding: [6 * scale, 8 * scale],
+    backgroundColor: theme.panelHeaderBackground || theme.backgroundZebra,
+  }
+})

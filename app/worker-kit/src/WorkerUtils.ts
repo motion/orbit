@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
-import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@o/models'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location, WorkerUtilsInstance } from '@o/models'
 import { sleep, stringHash } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
 import { EntityManager, In, MoreThan } from 'typeorm'
@@ -8,26 +8,17 @@ import { EntityManager, In, MoreThan } from 'typeorm'
 /**
  * Common utils for syncers.
  */
-export class SyncerUtils {
-  private app: AppBit
-  private manager: EntityManager
-  private log: Logger
-  private mediator: MediatorClient
-
+export class WorkerUtils implements WorkerUtilsInstance {
   isAborted: () => Promise<boolean>
 
   constructor(
-    app: AppBit,
-    log: Logger,
-    manager: EntityManager,
+    private app: AppBit,
+    private log: Logger,
+    private manager: EntityManager,
+    private mediator: MediatorClient,
     isAborted: () => Promise<boolean>,
-    mediator: MediatorClient,
   ) {
-    this.app = app
-    this.manager = manager
-    this.log = log
     this.isAborted = isAborted
-    this.mediator = mediator
   }
 
   /**

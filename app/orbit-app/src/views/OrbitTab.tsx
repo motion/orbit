@@ -1,7 +1,7 @@
 import { invertLightness } from '@o/color'
-import { Icon, useLocationLink } from '@o/kit'
+import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Button, ButtonProps, IconProps, memoIsEqualDeep, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
+import { Button, ButtonProps, Icon, IconProps, memoIsEqualDeep, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
 import * as React from 'react'
 

@@ -1,39 +1,41 @@
+import { getGlobalConfig } from '@o/config'
 import { MediatorClient } from '@o/mediator'
 
 import { Mediator } from './Mediator'
 
-const isBrowser = typeof window !== 'undefined'
+const Config = getGlobalConfig()
+const hasCommands = !!Config && typeof window !== 'undefined'
 
-export const command: MediatorClient['command'] = isBrowser
+export const command: MediatorClient['command'] = hasCommands
   ? Mediator.command.bind(Mediator)
   : undefined
 
-export const observeMany: MediatorClient['observeMany'] = isBrowser
+export const observeMany: MediatorClient['observeMany'] = hasCommands
   ? Mediator.observeMany.bind(Mediator)
   : undefined
 
-export const observeOne: MediatorClient['observeOne'] = isBrowser
+export const observeOne: MediatorClient['observeOne'] = hasCommands
   ? Mediator.observeOne.bind(Mediator)
   : undefined
 
-export const observeCount: MediatorClient['observeCount'] = isBrowser
+export const observeCount: MediatorClient['observeCount'] = hasCommands
   ? Mediator.observeCount.bind(Mediator)
   : undefined
 
-export const loadMany: MediatorClient['loadMany'] = isBrowser
+export const loadMany: MediatorClient['loadMany'] = hasCommands
   ? Mediator.loadMany.bind(Mediator)
   : undefined
 
-export const loadOne: MediatorClient['loadOne'] = isBrowser
+export const loadOne: MediatorClient['loadOne'] = hasCommands
   ? Mediator.loadOne.bind(Mediator)
   : undefined
 
-export const loadCount: MediatorClient['loadCount'] = isBrowser
+export const loadCount: MediatorClient['loadCount'] = hasCommands
   ? Mediator.loadCount.bind(Mediator)
   : undefined
 
-export const save: MediatorClient['save'] = isBrowser ? Mediator.save.bind(Mediator) : undefined
+export const save: MediatorClient['save'] = hasCommands ? Mediator.save.bind(Mediator) : undefined
 
-export const remove: MediatorClient['remove'] = isBrowser
+export const remove: MediatorClient['remove'] = hasCommands
   ? Mediator.remove.bind(Mediator)
   : undefined

@@ -1,17 +1,21 @@
 import { command } from '@o/bridge'
-import { getGlobalConfig } from '@o/config'
 import { AppDefinition } from '@o/kit'
-import { InstallAppToWorkspaceCommand, OpenCommand, SetupProxyCommand } from '@o/models'
+import { AuthAppCommand, InstallAppToWorkspaceCommand } from '@o/models'
 
-export async function installApp(app: AppDefinition) {
-  const res = await command(InstallAppToWorkspaceCommand, { identifier: app.id })
+export async function installApp(def: AppDefinition) {
+  if (def.auth) {
+    const res = await command(AuthAppCommand, { authKey: def.auth })
+
+    if (res.type === 'error') {
+      console.error('Error, TODO show banner!')
+      alert(`Error authenticating app: ${res.message}`)
+      return
+    }
+  }
+
+  const res = await command(InstallAppToWorkspaceCommand, { identifier: def.id })
   if (res.type === 'error') {
     return res
-  }
-  if (await command(SetupProxyCommand)) {
-    const url = `${getGlobalConfig().urls.auth}/auth/${app.id}`
-    console.log('proxy setup success, opening...', url)
-    await command(OpenCommand, { url })
   }
   return {
     type: 'success' as const,

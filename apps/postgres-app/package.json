@@ -1,7 +1,7 @@
 {
   "name": "@o/postgres-app",
   "description": "Plug in Postgres SQL database and query it",
-  "version": "2.5.11",
+  "version": "2.5.12",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "scripts": {
@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@o/kit": "^2.5.6",
-    "@o/sync-kit": "^2.5.2",
     "@o/ui": "^2.5.6",
+    "@o/worker-kit": "^2.5.2",
     "apollo-link": "^1.2.11",
     "graphql": "^14.2.1",
     "pg": "^7.11.0",

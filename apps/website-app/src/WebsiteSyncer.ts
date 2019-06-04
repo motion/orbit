@@ -1,12 +1,12 @@
+import { createWorker } from '@o/worker-kit'
+
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
-import { createSyncer } from '@o/sync-kit'
 
 /**
  * Syncs crawled websites.
  */
-export const WebsiteSyncer = createSyncer(async ({ app, log, utils }) => {
-
+export const WebsiteSyncer = createWorker(async ({ app, log, utils }) => {
   const crawler = new WebsiteCrawler(log)
   const bitFactory = new WebsiteBitFactory(app, utils)
 
@@ -24,7 +24,6 @@ export const WebsiteSyncer = createSyncer(async ({ app, log, utils }) => {
     deep: true,
     handler: async data => {
       await utils.isAborted()
-
       const bit = bitFactory.create(data)
       utils.saveBit(bit)
       return true
@@ -33,5 +32,4 @@ export const WebsiteSyncer = createSyncer(async ({ app, log, utils }) => {
 
   // close browser
   await crawler.close()
-  
 })

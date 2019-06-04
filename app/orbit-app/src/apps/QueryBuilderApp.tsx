@@ -12,7 +12,7 @@ import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavi
 export default createApp({
   id: 'query-builder',
   name: 'Query Builder',
-  icon: '',
+  icon: 'layers',
   app: QueryBuilder,
 })
 
@@ -53,6 +53,7 @@ export function QueryBuilderIndex({
   return (
     <>
       <TreeList
+        use={treeList}
         getItemProps={item => {
           const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
           if (treeItem) {
@@ -69,7 +70,6 @@ export function QueryBuilderIndex({
         sortable
         editable
         deletable
-        use={treeList}
       />
       <Dock>
         <DockButton

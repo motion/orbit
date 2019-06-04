@@ -1,123 +1,77 @@
-import { AppBit } from '@o/models'
-import { IconProps, SVG, toColor, useTheme, View } from '@o/ui'
-import React, { forwardRef } from 'react'
+import { IconProps, IconShape, SVG, toColor, useTheme } from '@o/ui'
+import { ThemeObject } from 'gloss'
+import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
-import { appIcons } from './icons'
 
-export type AppIconProps = Partial<IconProps> & { app: AppBit }
+type BaseIconProps = Omit<Partial<IconProps>, 'icon' | 'color'>
 
-// const idReplace = / id="([a-z0-9-_]+)"/gi
-
-export const AppIconInner = ({
-  background = '#222',
-  size = 32,
-  style,
-  forwardRef,
-  ...props
-}: Partial<AppIconProps> & { forwardRef?: any }) => {
-  const theme = useTheme()
-  let name = props.name
-  const def = useAppDefinition(name)
-  let fill
-  try {
-    fill = toColor(props.color || theme.color).hex()
-  } catch {
-    fill = props.color || 'currentColor'
-  }
-
-  // translate inherit to currentColor
-  fill = fill === 'inherit' ? 'currentColor' : fill
-
-  let iconSrc
-  let svgProps
-
-  if (!appIcons[name]) {
-    if (def) {
-      iconSrc = theme.background.isDark() ? def.iconLight || def.icon : def.icon
-    } else {
-      name = name.indexOf('full') > 0 ? 'orbit-custom-full' : 'orbit-custom'
-    }
-  }
-
-  if (!iconSrc) {
-    svgProps = { cleanup: true }
-    iconSrc = `${appIcons[name]}`
-    // colorize
-    // warning: not having a string here literally causes a node level error....
-    // async hook stack has become corrupted
-    // let bg = toColor(background)
-    // iconSrc = replaceAppBackground(iconSrc, bg)
-  }
-
-  return (
-    <View
-      ref={forwardRef}
-      style={{
-        width: size,
-        height: size,
-        ...style,
-      }}
-      {...props}
-    >
-      <SVG fill={`${fill}`} svg={iconSrc} width={`${size}px`} height={`${size}px`} {...svgProps} />
-    </View>
-  )
+export type AppIconProps = BaseIconProps & {
+  identifier?: string
+  icon?: string
+  colors?: string[]
 }
 
-// hacky customize the background color
-// function replaceAppBackground(iconSrc, bg) {
-//   const adjust = bg.isDark() ? 0.12 : 0.05
-//   const bgLight = (bg.lightness() === 100 ? bg : bg.lighten(adjust)).hex()
-//   const bgDark = bg.darken(adjust).hex()
+export const AppIcon = memo(
+  forwardRef((props: AppIconProps, ref) => {
+    let icon = props.icon || ''
+    let iconLight = ''
+    let colors = props.colors || ['black', 'black']
 
-//   const newID = bgLight.replace('#', '')
+    const identifier = typeof props.identifier === 'string' ? props.identifier : false
+    const definition = useAppDefinition(identifier)
 
-//   const matches = iconSrc.match(idReplace)
+    if (identifier && definition) {
+      icon = definition.icon
+      iconLight = definition.iconLight
+    }
 
-//   if (!matches) {
-//     console.warn('no matches', iconSrc)
-//     return iconSrc
-//   }
+    if (!icon) {
+      console.warn('no icon for', props, icon)
+      icon = 'home'
+    }
 
-//   for (const full of matches) {
-//     const id = full
-//       .replace(' id="', '')
-//       .replace('"', '')
-//       .trim()
-//     iconSrc = iconSrc.replace(new RegExp(id, 'g'), `${id}-${newID}`)
-//   }
+    const theme = useTheme()
+    const isSVGIcon =
+      icon
+        .trim()
+        .slice(0, 20)
+        .indexOf('<svg') > -1
+    const color = getIconColor(props, theme)
 
-//   // remove stroke
-//   iconSrc = iconSrc.replace(/ stroke-width="[0-9]+"/gi, '')
+    if (isSVGIcon) {
+      const iconSrc = theme.background.isDark() ? iconLight || icon : icon
+      return <SVG fill={color} svg={iconSrc} width={`${props.size}px`} height={`${props.size}px`} />
+    }
 
-//   iconSrc = iconSrc.replace(
-//     /stop-color="#323232" offset="0%"/g,
-//     `stop-color="${bgLight}" offset="0%"`,
-//   )
-//   iconSrc = iconSrc.replace(
-//     /stop-color="#121212" offset="100%"/g,
-//     `stop-color="${bgDark}" offset="100%"`,
-//   )
-
-//   return iconSrc
-// }
-
-export const AppIcon = forwardRef(({ app, ...props }: AppIconProps, ref) => {
-  return (
-    <AppIconInner
-      forwardRef={ref}
-      background={app.colors[0]}
-      color={app.colors[1]}
-      name={app.identifier}
-      size={48}
-      {...props}
-    />
-  )
-})
+    return (
+      <IconShape
+        ref={ref}
+        color={`linear-gradient(${colors[0]}, ${colors[1]})`}
+        size={48}
+        shape="squircle"
+        name={icon}
+        {...props}
+      />
+    )
+  }),
+)
 
 // @ts-ignore
 AppIcon.acceptsProps = {
   hover: true,
   icon: true,
+}
+
+const getIconColor = (props: AppIconProps, theme: ThemeObject) => {
+  let fill
+  try {
+    fill = toColor((props.colors && props.colors[0]) || theme.color).hex()
+  } catch (err) {
+    console.debug('error parsing color', err)
+    fill = 'currentColor'
+  }
+  // translate inherit to currentColor
+  fill = fill === 'inherit' ? 'currentColor' : fill
+  return `${fill}`
 }

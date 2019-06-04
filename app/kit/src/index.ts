@@ -77,7 +77,6 @@ export * from './views/AppView'
 export * from './views/BitStatusBar'
 export * from './views/customItems'
 export * from './views/HighlightActiveQuery'
-export * from './views/Icon'
 export * from './views/ItemView'
 export * from './views/LocationLink'
 export * from './views/ManageSyncStatus'
@@ -96,6 +95,7 @@ export * from './hooks/useNLP'
 export * from './hooks/useAppDefinition'
 export * from './hooks/useIsActive'
 export * from './views/ScopedState'
+export * from './views/icons'
 
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,

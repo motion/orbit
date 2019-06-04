@@ -1,18 +1,18 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
-import { SyncerOptions, SyncerUtils } from '@o/sync-kit'
+import { WorkerOptions, WorkerUtils } from '@o/worker-kit'
 import { getManager, getRepository } from 'typeorm'
+
 import { syncersRoot } from './OrbitSyncersRoot'
 import { checkCancelled } from './resolvers/AppForceCancelResolver'
-import Timer = NodeJS.Timer
 
 /**
  * Interval running in the Syncer.
  */
 interface SyncerInterval {
   app?: AppEntity
-  timer: Timer
+  timer: any // nodejs timer
   running?: Promise<any>
 }
 
@@ -31,13 +31,13 @@ interface SyncerInterval {
  */
 export class Syncer {
   name: string
-  options: SyncerOptions
+  options: WorkerOptions
 
   private log: Logger
   private intervals: SyncerInterval[] = []
   private subscription: Subscription
 
-  constructor(options: SyncerOptions) {
+  constructor(options: WorkerOptions) {
     this.options = options
     this.name = options.name
     this.log = new Logger('syncer:' + (options.appIdentifier || this.name))
@@ -55,9 +55,11 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = syncersRoot.mediatorClient.observeMany(AppModel, {
-          args: { where: { identifier: this.options.appIdentifier } },
-        }).subscribe(async apps => this.reactOnSettingsChanges(apps))
+        this.subscription = syncersRoot.mediatorClient
+          .observeMany(AppModel, {
+            args: { where: { identifier: this.options.appIdentifier } },
+          })
+          .subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {
       await this.runInterval(undefined, force)
@@ -251,7 +253,13 @@ export class Syncer {
         log,
         manager: getManager(),
         isAborted: async () => checkCancelled(app.id) && void 0,
-        utils: new SyncerUtils(app, log, getManager(), async () => !!checkCancelled(app.id), syncersRoot.mediatorClient),
+        utils: new WorkerUtils(
+          app,
+          log,
+          getManager(),
+          async () => !!checkCancelled(app.id),
+          syncersRoot.mediatorClient,
+        ),
       })
 
       // update our job (finish successfully)

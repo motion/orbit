@@ -19,6 +19,8 @@ export * from './AppDefinition'
 export * from './AppViewProps'
 export * from './ApiInfo'
 export * from './ApiSearchItem'
+export * from './AppWorker'
+export * from './AppWorkerUtils'
 
 // todo: find a good place for this function
 // TODO could return title/body separately when improving search

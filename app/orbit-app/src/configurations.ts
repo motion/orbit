@@ -1,4 +1,4 @@
-import { configureKit, customItems, Icon, useAppState, useUserState } from '@o/kit'
+import { configureKit, customItems, useAppState, useUserState } from '@o/kit'
 import { configureHotKeys, configureUI } from '@o/ui/config'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
@@ -32,7 +32,6 @@ function configure() {
 
   configureUI({
     customItems,
-    useIcon: Icon,
     StoreContext,
     useAppState,
     useUserState,

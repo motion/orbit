@@ -8,7 +8,7 @@ import {
   WebsiteBitData,
 } from '@o/kit'
 import { getRepository } from 'typeorm'
-import { BitSyncer } from '@o/sync-kit'
+import { BitSyncer } from '@o/worker-kit'
 import { WebsiteCrawledData } from '../../../../apps/src/apps/website/WebsiteCrawledData'
 import { WebsiteCrawler } from '../../../../apps/src/apps/website/WebsiteCrawler'
 

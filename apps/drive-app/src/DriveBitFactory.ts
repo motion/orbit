@@ -1,14 +1,13 @@
 import { Bit } from '@o/kit'
+import { WorkerUtilsInstance } from '@o/worker-kit'
+
 import { DriveLoadedFile, DriveUser } from './DriveModels'
-import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of drive models.
  */
 export class DriveBitFactory {
-
-  constructor(private utils: SyncerUtils) {
-  }
+  constructor(private utils: WorkerUtilsInstance) {}
 
   /**
    * Creates person entity from a given Drive user.
@@ -36,11 +35,11 @@ export class DriveBitFactory {
       webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
       location: file.parent
         ? {
-          id: file.parent.id,
-          name: file.parent.name,
-          webLink: file.file.webViewLink || file.parent.webContentLink,
-          desktopLink: '',
-        }
+            id: file.parent.id,
+            name: file.parent.name,
+            webLink: file.file.webViewLink || file.parent.webContentLink,
+            desktopLink: '',
+          }
         : undefined,
       bitCreatedAt: new Date(file.file.createdTime).getTime(),
       bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
@@ -50,5 +49,4 @@ export class DriveBitFactory {
       //     : undefined,
     })
   }
-
 }

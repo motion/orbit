@@ -1,5 +1,5 @@
 import { AppBit, Bit } from '@o/kit'
-import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
+import { sanitizeHtml, stripHtml, WorkerUtilsInstance } from '@o/worker-kit'
 
 import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
 
@@ -7,7 +7,7 @@ import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
  * Creates bits out of jira models.
  */
 export class JiraBitFactory {
-  constructor(private app: AppBit, private utils: SyncerUtils) {}
+  constructor(private app: AppBit, private utils: WorkerUtilsInstance) {}
 
   /**
    * Builds a bit from the given jira issue.

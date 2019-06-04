@@ -1,20 +1,14 @@
 import { Bit } from '@o/kit'
-import { SyncerUtils } from '@o/sync-kit'
+import { WorkerUtilsInstance } from '@o/worker-kit'
 import { uniqBy } from 'lodash'
-import {
-  GithubBitData,
-  GithubComment,
-  GithubCommit,
-  GithubIssue,
-  GithubPerson,
-  GithubPullRequest,
-} from './GithubModels'
+
+import { GithubBitData, GithubComment, GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from './GithubModels'
 
 /**
  * Creates bits out of github models.
  */
 export class GithubBitFactory {
-  constructor(private utils: SyncerUtils) {}
+  constructor(private utils: WorkerUtilsInstance) {}
 
   /**
    * Creates a new bit from a given Github issue.

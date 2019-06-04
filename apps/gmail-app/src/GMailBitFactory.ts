@@ -1,5 +1,5 @@
 import { Bit } from '@o/kit'
-import { SyncerUtils } from '@o/sync-kit'
+import { WorkerUtilsInstance } from '@o/worker-kit'
 
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModels'
@@ -8,7 +8,7 @@ import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModel
  * Creates bits out of gmail models.
  */
 export class GMailBitFactory {
-  constructor(private utils: SyncerUtils) {}
+  constructor(private utils: WorkerUtilsInstance) {}
 
   /**
    * Creates a new bit from a given GMail thread.

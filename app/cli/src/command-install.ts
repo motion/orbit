@@ -1,6 +1,7 @@
 import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reporter } from './reporter'
 import { getPackageId } from './util/getPackageId'
+import execa from 'execa'
 
 export type CommandInstallOptions = {
   directory: string
@@ -13,9 +14,31 @@ export async function commandInstall(options: CommandInstallOptions) {
 
   const command = await yarnOrNpm()
   const packageId = await getPackageId(options.identifier)
+
+  if (!packageId) {
+    console.warn('no package id found')
+    return
+  }
+
   const curVersion = await getRegistryLatestVersion(packageId)
+  const packageInstallKey = `${packageId}@${curVersion}`
+  reporter.info(`Installing ${packageInstallKey}`)
 
-  console.log('TODO INSTALL', command, curVersion, packageId)
+  try {
+    if (command === 'yarn') {
+      await execa(command, `add ${packageInstallKey}`)
+    } else {
+      await execa(command, `install --save ${packageInstallKey}`)
+    }
+  } catch (err) {
+    return {
+      type: 'error' as const,
+      message: `${err.message}`,
+    }
+  }
 
-  return
+  return {
+    type: 'success' as const,
+    message: 'Installed',
+  }
 }

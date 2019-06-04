@@ -7,7 +7,7 @@ Error.stackTraceLimit = Infinity
 // so lets avoid clutter unless absolutely wanted
 
 const {
-  DISABLE_SYNCERS,
+  DISABLE_WORKERS,
   DEBUG_ELECTRON,
   DEBUG_ELECTRON_MAIN = 'true',
   DEBUG_ELECTRON_APPS,
@@ -24,7 +24,7 @@ async function start() {
     // node processes
     { port: '9000' }, // desktop
     (debugElectron || debugElectronMain) && { port: '9001' }, // electron
-    !DISABLE_SYNCERS && { port: '9003' }, // syncers
+    !DISABLE_WORKERS && { port: '9003' }, // syncers
 
     // remote processes
     { port: '9002' }, // electron remote

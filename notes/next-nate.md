@@ -1,5 +1,8 @@
-- [ ] installs app into workspace when you click oauth/setup
-- fix app icons
+install apps / app bundles
+  - [ ] need to fix app icons completely
+  - [ ] new app setup pane with "create new app" as well
+  - [ ] installs app into workspace when you click oauth/setup
+
 - opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit

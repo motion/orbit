@@ -1,8 +1,8 @@
 import { useModels } from '@o/bridge'
-import { Icon, OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
+import { OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
+import { Avatar, Col, GlobalHotKeys, Icon, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 

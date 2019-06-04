@@ -54,9 +54,12 @@ export function getSearchAppDefinitions(query: string | false): ApiSearchItem | 
   return ApiDefSearch.read(query)
 }
 
-export function useAppDefinition(identifier?: string): AppDefinition {
+export function useAppDefinition(identifier?: string | false): AppDefinition {
   useReloadAppDefinitions()
   const { appStore } = useStores()
+  if (identifier === false) {
+    return null
+  }
   return getAppDefinition(identifier || appStore.identifier)
 }
 
@@ -71,7 +74,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): AppDefin
         description: searchedApp.description,
         api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
-        sync: !!searchedApp.features.some(x => x === 'sync') ? true : false,
+        workers: !!searchedApp.features.some(x => x === 'workers') ? [] : undefined,
         setup: searchedApp.setup,
       }
 }

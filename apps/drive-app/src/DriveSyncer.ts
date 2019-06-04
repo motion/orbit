@@ -1,13 +1,13 @@
-import { createSyncer } from '@o/sync-kit'
-import { DriveLoader } from './DriveLoader'
+import { createWorker } from '@o/worker-kit'
+
 import { DriveBitFactory } from './DriveBitFactory'
+import { DriveLoader } from './DriveLoader'
 import { DriveAppData } from './DriveModels'
 
 /**
  * Syncs Google Drive files.
  */
-export const DriveSyncer = createSyncer(async ({ app, log, utils }) => {
-
+export const DriveSyncer = createWorker(async ({ app, log, utils }) => {
   const factory = new DriveBitFactory(utils)
   const loader = new DriveLoader(app, log, () => utils.updateAppData())
 
@@ -74,5 +74,4 @@ export const DriveSyncer = createSyncer(async ({ app, log, utils }) => {
 
     return true
   })
-
 })

@@ -8,4 +8,5 @@ export type ApiSearchItem = {
   search: string[]
   installs: number
   setup: Object
+  author: string
 }

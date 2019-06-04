@@ -1,4 +1,4 @@
-import { AppDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
 import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useEffect, useState } from 'react'
 
@@ -35,6 +35,7 @@ export function AppsMainAddAppContent({
   // only download full definition once necessary
   const [shouldLoadFullDef, setShouldLoadFullDef] = useState(false)
   const localDef = useAppDefinition(identifier)
+  const searchApp = getSearchAppDefinitions(!localDef && identifier)
   const simpleSearchDef = useAppDefinitionFromStore(!localDef && identifier)
   const fullSetupDef = useAppStoreInstalledAppDefinition(
     !localDef && shouldLoadFullDef && identifier,
@@ -68,41 +69,43 @@ export function AppsMainAddAppContent({
   }
 
   const hasSetup = !!def.setup
-  console.log('def', def)
+
   return (
     <Section
       pad="lg"
       space
-      icon={identifier}
+      icon={<AppIcon icon={def.icon} identifier={identifier} />}
       title={def.name}
       titlePad
       titleBorder
       afterTitle={
         <>
-          {!hasSetup && def.sync && (
+          {!hasSetup && def.auth && (
             <Button alt="confirm" icon="lock" onClick={() => installApp(def)}>
               Authenticate and add
             </Button>
           )}
-          {!def.sync && !def.setup && (
-            <Button alt="confirm" icon="plus" iconAfter>
+          {!def.auth && !def.setup && (
+            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def)}>
               Install
             </Button>
           )}
         </>
       }
       belowTitle={
-        <Row space>
-          <SubItem>{def['author'] || 'anonymous'}</SubItem>
-          <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
-        </Row>
+        !!searchApp && (
+          <Row space>
+            <SubItem>{searchApp.author || 'anonymous'}</SubItem>
+            <SubItem icon="download">{searchApp.installs || '11,129'}</SubItem>
+          </Row>
+        )
       }
     >
       {!!error && <Message alt="error">{error}</Message>}
 
       {hasSetup && (
         <Section space>
-          <Section bordered pad title="Setup" titleSize={0.85}>
+          <Section bordered pad title="Setup" titlePad titleSize={0.85}>
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)

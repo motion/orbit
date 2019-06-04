@@ -2587,10 +2587,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@11.13.2", "@types/node@^10.1.0", "@types/node@^10.12.18", "@types/node@^10.5.1", "@types/node@^8.0.24", "@types/node@^8.0.53":
-  version "11.13.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.2.tgz#dc85dde46aa8740bb4aed54b8104250f8f849503"
-  integrity sha512-HOtU5KqROKT7qX/itKHuTtt5fV0iXbheQvrgbLNXFJQBY/eh+VS5vmmTAVlo3qIGMsypm0G4N1t2AXjy1ZicaQ==
+"@types/node@*", "@types/node@10.5.1", "@types/node@^10.1.0", "@types/node@^10.12.18", "@types/node@^10.5.1", "@types/node@^8.0.24", "@types/node@^8.0.53":
+  version "10.5.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.1.tgz#d578446f4abff5c0b49ade9b4e5274f6badaadfc"
+  integrity sha512-AFLl1IALIuyt6oK4AYZsgWVJ/5rnyzQWud7IebaZWWV3YmgtPZkQmYio9R5Ze/2pdd7XfqF5bP+hWS11mAKoOQ==
 
 "@types/pg-types@*":
   version "1.11.4"
@@ -20497,6 +20497,11 @@ svg-inline-loader@0.8.0, svg-inline-loader@^0.8.0:
     loader-utils "^0.2.11"
     object-assign "^4.0.1"
     simple-html-tokenizer "^0.1.1"
+
+svg.js@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/svg.js/-/svg.js-2.7.1.tgz#eb977ed4737001eab859949b4a398ee1bb79948d"
+  integrity sha512-ycbxpizEQktk3FYvn/8BH+6/EuWXg7ZpQREJvgacqn46gIddG24tNNe4Son6omdXCnSOaApnpZw6MPCBA1dODA==
 
 svgo@^0.7.0:
   version "0.7.2"

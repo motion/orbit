@@ -188,7 +188,7 @@ export const List = memo((allProps: ListProps) => {
                 chromeless
                 circular
                 icon="cross"
-                opacity={0.75}
+                opacity={0.65}
                 onMouseDown={e => {
                   e.stopPropagation()
                 }}

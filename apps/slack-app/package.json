@@ -1,7 +1,7 @@
 {
   "name": "@o/slack-app",
   "description": "Query, explore and sync the full Slack API",
-  "version": "2.5.9",
+  "version": "2.5.10",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "scripts": {
@@ -12,8 +12,8 @@
   "dependencies": {
     "@o/kit": "^2.5.6",
     "@o/swagger-to-graphql": "1.4.10",
-    "@o/sync-kit": "^2.5.2",
     "@o/ui": "^2.5.6",
+    "@o/worker-kit": "^2.5.2",
     "autolinker": "^1.7.1",
     "express-graphql": "0.8.0",
     "graphql": "14.2.1",

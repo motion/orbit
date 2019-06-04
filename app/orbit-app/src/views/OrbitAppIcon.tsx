@@ -32,7 +32,7 @@ export const OrbitAppIcon = memo(
             {...contextMenuProps}
             label={app.name}
             subTitle={app.identifier}
-            icon={<AppIcon app={app} size={58} />}
+            icon={<AppIcon identifier={app.identifier} colors={app.colors} size={58} />}
             {...props}
           />
         </AppIconContainer>

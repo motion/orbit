@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@o/kit": "^2.5.6",
-    "@o/sync-kit": "^2.5.2",
+    "@o/worker-kit": "^2.5.2",
     "@o/ui": "^2.5.6",
     "get-urls": "^8.0.0",
     "immer": "1.7.2",

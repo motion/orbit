@@ -2,6 +2,7 @@ import { FormErrors, FormFieldsObj } from '@o/ui'
 import { FunctionComponent } from 'react'
 
 import { AppViewProps } from './AppViewProps'
+import { AppWorker } from './AppWorker'
 import { AppBit } from './interfaces/AppBit'
 import { ItemType } from './interfaces/ItemType'
 
@@ -38,8 +39,18 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
     app: AppBit<AppData>,
   ) => FormErrors<FormErrors<SetupFields>> | Promise<FormErrors<SetupFields>>
 
-  /** Define a syncer [TODO] allow oauth config here */
-  sync?: boolean
+  /** Define OAuth authentication */
+  auth?: string
+
+  /** Validate authentication and add anything you need to AppBit */
+  finishAuth?: (
+    app: AppBit<AppData>,
+    authValues: any,
+    oauthInfo: { credentials: { clientSecret: string; clientID: string; callbackURL?: string } },
+  ) => Promise<AppBit<AppData>>
+
+  /** Define a background process */
+  workers?: AppWorker[]
 
   /** Define a public node API for app */
   api?: (app: AppBit<AppData>) => any

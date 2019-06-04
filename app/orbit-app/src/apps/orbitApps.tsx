@@ -1,7 +1,6 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, decorate, react, useAppDefinitions } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
-import { reaction } from 'mobx'
 import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -14,6 +13,24 @@ import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
+
+export function startAppLoadWatch() {
+  console.log('Watching for updated apps...')
+
+  @decorate
+  class WatchAppIdentifiers {
+    watcher = react(
+      () => Desktop.state.workspaceState.appIdentifiers,
+      async appIdentifiers => {
+        dynamicApps = requireDynamicApps()
+        console.log('appIdentifiers updated', appIdentifiers, dynamicApps)
+        __SERIOUSLY_SECRET.reloadAppDefinitions()
+      },
+    )
+  }
+
+  new WatchAppIdentifiers()
+}
 
 const LoadingApp = createApp({
   name: 'Loading...',
@@ -69,15 +86,6 @@ export function useUserVisualAppDefinitions() {
 export function useUserDataAppDefinitions() {
   return useUserAppDefinitions().filter(x => !!(x.api || x.graph))
 }
-
-reaction(
-  () => Desktop.state.workspaceState.appIdentifiers,
-  async appIdentifiers => {
-    console.log('appIdentifiers updated', appIdentifiers, requireDynamicApps())
-    dynamicApps = requireDynamicApps()
-    __SERIOUSLY_SECRET.reloadAppDefinitions()
-  },
-)
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {

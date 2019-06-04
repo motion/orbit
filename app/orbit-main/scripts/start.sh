@@ -30,7 +30,7 @@ fi
 
 if [[ "$FLAGS" =~ "--no-syncers" ]]; then
   echo "DISABLE SYNCERS"
-  export DISABLE_SYNCERS="true"
+  export DISABLE_WORKERS="true"
 fi
 
 if [[ "$FLAGS" =~ "--no-logging" ]]; then

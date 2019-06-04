@@ -9,7 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
-    { "path": "../sync-kit" },
+    { "path": "../worker-kit" },
     { "path": "../config" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/mediator" },

@@ -2,11 +2,27 @@ import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import { DriveApi } from './api.node'
+import { DriveLoader } from './DriveLoader'
 import { DriveSettings } from './DriveSettings'
+import { DriveSyncer } from './DriveSyncer'
 
 export default createApp({
   id: 'drive',
   name: 'Drive',
+  auth: 'drive',
+  finishAuth: async (app, _values, oauth) => {
+    const loader = new DriveLoader(app)
+    const about = await loader.loadAbout()
+    app.name = about.user.emailAddress
+    app.data.values.oauth.secret = oauth.credentials.clientSecret
+    app.data.values.oauth.clientId = oauth.credentials.clientID
+    return app
+  },
+  itemType: 'task',
+  settings: DriveSettings,
+  workers: [DriveSyncer],
+  api: createApi(DriveApi),
+  graph,
   icon: `
   <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512">
     <polygon style="fill:#28B446;" points="165.891,334.343 161.611,419.266 82.713,479.21 0,333.399 172.602,32.79 253.414,88.26
@@ -19,9 +35,4 @@ export default createApp({
     <polygon style="fill:#FBBB00;" points="512,333.399 322.76,294.31 345.204,333.851 "/>
   </svg>
   `,
-  itemType: 'task',
-  settings: DriveSettings,
-  sync: true,
-  api: createApi<typeof DriveApi>(),
-  graph,
 })

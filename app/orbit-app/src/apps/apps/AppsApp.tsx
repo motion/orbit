@@ -1,6 +1,29 @@
-import { App, AppDefinition, AppMainView, AppViewProps, createApp, Icon, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import {
+  App,
+  AppDefinition,
+  AppIcon,
+  AppMainView,
+  AppViewProps,
+  createApp,
+  isDataDefinition,
+  removeApp,
+  useActiveAppsWithDefinition,
+  useActiveDataAppsWithDefinition,
+  useAppDefinitions,
+  useAppWithDefinition,
+} from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, FormField, List, ListItemProps, Section, SubSection } from '@o/ui'
+import {
+  Button,
+  Col,
+  FormField,
+  Icon,
+  List,
+  ListItemProps,
+  Section,
+  SubSection,
+  SubTitle,
+} from '@o/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -34,12 +57,12 @@ export function useDataAppDefinitions() {
   return useAppDefinitions().filter(x => isDataDefinition(x))
 }
 
-export const appDefToItem = (def: AppDefinition): ListItemProps => {
+export const appDefToListItem = (def: AppDefinition): ListItemProps => {
   return {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
     title: def.name,
-    icon: def.id,
+    icon: <AppIcon identifier={def.id} colors={['black', 'red']} />,
     subTitle: getDescription(def) || 'No Description',
     after: sourceIcon,
     identifier: 'apps',
@@ -51,7 +74,7 @@ export const appDefToItem = (def: AppDefinition): ListItemProps => {
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
   subTitle: item.description.slice(0, 300),
-  icon: item.icon,
+  icon: <AppIcon icon={item.icon} colors={['pink', 'orange']} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
@@ -96,6 +119,15 @@ export function AppsIndex() {
     }
   }, [])
 
+  const myApps = [
+    ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
+    ...dataApps.map(getAppListItem).map(x => ({
+      ...x,
+      subType: 'settings',
+      after: sourceIcon,
+    })),
+  ]
+
   return (
     <List
       title="Manage Apps"
@@ -106,9 +138,9 @@ export function AppsIndex() {
       }}
       items={[
         {
-          title: 'Apps',
-          icon: 'orbit-apps',
-          subTitle: 'Manage apps',
+          title: 'Organize',
+          icon: 'apps',
+          subTitle: 'View and organize installed apps',
           subType: 'manage-apps',
         },
         {
@@ -117,16 +149,35 @@ export function AppsIndex() {
           subTitle: 'Explore all GraphQL app APIs',
           subType: 'explorer-graph',
         },
-        ...clientApps
-          .map(getAppListItem)
-          .map(x => ({ ...x, groupName: 'Settings', subType: 'settings' })),
-        ...dataApps.map(getAppListItem).map(x => ({
-          ...x,
-          groupName: 'Settings',
-          subType: 'settings',
-          after: sourceIcon,
-        })),
-        ...useDataAppDefinitions().map(appDefToItem),
+
+        {
+          selectable: false,
+          pad: false,
+          children: (
+            <Col padding={[38, 8, 16]}>
+              <SubTitle>My Apps</SubTitle>
+            </Col>
+          ),
+        },
+        ...(myApps.length
+          ? myApps
+          : [
+              {
+                selectable: false,
+                title: 'No apps installed, yet!',
+              },
+            ]),
+
+        {
+          selectable: false,
+          pad: false,
+          children: (
+            <Col padding={[38, 8, 16]}>
+              <SubTitle>Install Apps</SubTitle>
+            </Col>
+          ),
+        },
+        ...useDataAppDefinitions().map(appDefToListItem),
         ...topApps,
         ...searchResults,
       ]}

@@ -1,6 +1,6 @@
 import { CSSPropertySetStrict } from '@o/css'
 import { HighlightOptions, highlightText, on } from '@o/utils'
-import { alphaColorTheme, CSSPropertySet, getTextSizeTheme, gloss, propStyleTheme, ThemeFn } from 'gloss'
+import { alphaColorTheme, CSSPropertySet, getTextSizeTheme, gloss, propStyleTheme } from 'gloss'
 import keycode from 'keycode'
 import * as React from 'react'
 
@@ -206,18 +206,13 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
     const size = scale * getTextSize(this.props.size)
-    const textStyle = getTextSizeTheme(
-      {
-        sizeLineHeight: this.props.sizeLineHeight,
-        lineHeight: this.props.lineHeight,
-        fontSize: this.props.fontSize,
-        size,
-        sizeMethod: this.props.sizeMethod,
-      },
-      {
-        scale,
-      },
-    )
+    const textStyle = getTextSizeTheme({
+      sizeLineHeight: this.props.sizeLineHeight,
+      lineHeight: this.props.lineHeight,
+      fontSize: this.props.fontSize,
+      size,
+      sizeMethod: this.props.sizeMethod,
+    })
     const numLinesToShow = doClamp && Math.floor(textHeight / textStyle.lineHeightNum)
     const maxHeight =
       typeof ellipse === 'number' && textStyle.lineHeightNum
@@ -345,7 +340,7 @@ export function selectableTheme(props) {
 const TextEllipse = gloss({
   display: 'inline',
   maxWidth: '100%',
-}).theme(propStyleTheme, ellipseTheme as ThemeFn)
+}).theme(propStyleTheme, ellipseTheme)
 
 function ellipseTheme({ ellipse, doClamp, maxHeight }) {
   if (ellipse === 1 || ellipse === true)
@@ -354,7 +349,7 @@ function ellipseTheme({ ellipse, doClamp, maxHeight }) {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-    }
+    } as const
   if (ellipse > 1)
     return {
       WebkitLineClamp: ellipse,
@@ -365,5 +360,5 @@ function ellipseTheme({ ellipse, doClamp, maxHeight }) {
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-    }
+    } as const
 }

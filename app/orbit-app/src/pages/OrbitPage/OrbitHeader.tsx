@@ -1,7 +1,7 @@
 import { invertLightness } from '@o/color'
-import { Icon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, IconShape, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -23,7 +23,7 @@ export const headerButtonProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
-  iconSize: 14,
+  iconSize: 12,
   activeStyle: false,
 }
 
@@ -104,13 +104,14 @@ export const OrbitHeader = memo(() => {
                   icon="layers"
                   tooltip="Query Builder"
                 />
-                <Space size="xs" />
+                <Space size="sm" />
                 <Button
                   {...om.state.router.appId === 'apps' && activeStyle}
                   {...useLocationLink('/app/apps')}
                   icon="layout-grid"
                   tooltip="Manage apps"
                 />
+                <Space size="sm" />
                 <OrbitSpaceSwitch />
               </HeaderButtonPassProps>
             )}
@@ -127,7 +128,7 @@ export const OrbitHeader = memo(() => {
             )}
           </HeaderSide>
         </HeaderTop>
-        {!isEditing && <HeaderFade />}
+
         {/* this stays slightly below the active tab and looks nice */}
         <BorderBottom
           borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
@@ -187,7 +188,7 @@ const HomeButton = memo(
 
     return (
       <View ref={ref} {...props}>
-        <Icon
+        <IconShape
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
@@ -195,8 +196,8 @@ const HomeButton = memo(
             opacity: 1,
           }}
           color={invertLightness(theme.color, 0.5)}
-          name={state.navHovered || state.navVisible ? 'orbit-home' : `orbit-${icon}`}
-          size={22}
+          name={state.navHovered || state.navVisible ? 'home' : icon}
+          size={28}
           onMouseUp={e => {
             e.stopPropagation()
             actions.router.showHomePage()
@@ -312,16 +313,6 @@ const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Box, {
     ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
     : 'none',
 }))
-
-const HeaderFade = gloss(FullScreen, {
-  zIndex: -1,
-}).theme((_, theme) => {
-  if (theme.headerFadeBackground) {
-    return {
-      background: theme.headerFadeBackground,
-    }
-  }
-})
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

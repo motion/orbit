@@ -1,5 +1,6 @@
-import { createSyncer, sleep } from '@o/sync-kit'
+import { createWorker, sleep } from '@o/worker-kit'
 import { chunk } from 'lodash'
+
 import { GMailBitFactory } from './GMailBitFactory'
 import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
@@ -8,7 +9,7 @@ import { GmailAppData, GmailBitDataParticipant, GMailThread } from './GMailModel
 /**
  * Syncs GMail.
  */
-export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
+export const GMailSyncer = createWorker(async ({ app, log, utils }) => {
   const data: GmailAppData = app.data
   const loader = new GMailLoader(app, log, () => utils.updateAppData())
   const factory = new GMailBitFactory(utils)

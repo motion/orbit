@@ -11,6 +11,6 @@
   "dependencies": {
     "@o/fast-compare": "^2.5.2",
     "@o/kit": "^2.5.6",
-    "@o/sync-kit": "^2.5.2"
+    "@o/worker-kit": "^2.5.2"
   }
 }

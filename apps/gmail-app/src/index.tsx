@@ -3,10 +3,17 @@ import { createApp } from '@o/kit'
 import { graph } from './api.graph.node'
 import { GmailApi } from './api.node'
 import { GmailSettings } from './GmailSettings'
+import { GMailSyncer } from './GMailSyncer'
 
 export default createApp({
   id: 'gmail',
   name: 'Gmail',
+  itemType: 'thread',
+  auth: 'gmail',
+  settings: GmailSettings,
+  workers: [GMailSyncer],
+  api: GmailApi,
+  graph,
   icon: `
   <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;">
     <g>
@@ -22,9 +29,4 @@ export default createApp({
     <polygon style="fill:#D32E2A;" points="59.712,155.493 0,146.235 0,111.967 "/>
   </svg>
   `,
-  itemType: 'thread',
-  settings: GmailSettings,
-  sync: true,
-  api: GmailApi,
-  graph,
 })

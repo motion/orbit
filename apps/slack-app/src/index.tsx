@@ -5,12 +5,19 @@ import { createApi, createApp } from '@o/kit'
 import { graph } from './api.graph.node'
 import { SlackApi } from './api.node'
 import { SlackSettings } from './SlackSettings'
+import { SlackSyncer } from './SlackSyncer'
 
 export * from './SlackConversation'
 
 export default createApp({
   id: 'slack',
   name: 'Slack',
+  auth: 'slack',
+  itemType: 'conversation',
+  settings: SlackSettings,
+  workers: [SlackSyncer],
+  api: createApi(SlackApi),
+  graph,
   icon: `
   <svg width="124px" height="124px" viewBox="0 0 124 124" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -35,9 +42,4 @@ export default createApp({
       </g>
   </svg>
   `,
-  itemType: 'conversation',
-  settings: SlackSettings,
-  sync: true,
-  api: createApi<typeof SlackApi>(),
-  graph,
 })

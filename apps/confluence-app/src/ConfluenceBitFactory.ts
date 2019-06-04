@@ -1,5 +1,5 @@
 import { AppBit, Bit } from '@o/kit'
-import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
+import { sanitizeHtml, stripHtml, WorkerUtilsInstance } from '@o/worker-kit'
 
 import { ConfluenceAppData, ConfluenceBitData, ConfluenceContent, ConfluenceUser } from './ConfluenceModels'
 
@@ -7,7 +7,7 @@ import { ConfluenceAppData, ConfluenceBitData, ConfluenceContent, ConfluenceUser
  * Creates bits out of confluence models.
  */
 export class ConfluenceBitFactory {
-  constructor(private app: AppBit, private utils: SyncerUtils) {}
+  constructor(private app: AppBit, private utils: WorkerUtilsInstance) {}
 
   /**
    * Builds a document bit from the given confluence content.

@@ -1,15 +1,13 @@
 import { AppBit, Bit } from '@o/kit'
+import { WorkerUtilsInstance } from '@o/worker-kit'
+
 import { WebsiteBitData, WebsiteCrawledData } from './WebsiteModels'
-import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates a website Bit.
  */
 export class WebsiteBitFactory {
-
-  constructor(private app: AppBit,
-              private utils: SyncerUtils) {
-  }
+  constructor(private app: AppBit, private utils: WorkerUtilsInstance) {}
 
   /**
    * Builds a bit from the given crawled data.

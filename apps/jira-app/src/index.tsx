@@ -4,6 +4,7 @@ import { graph } from './api.graph.node'
 import { JiraApi } from './api.node'
 import { JiraLoader } from './JiraLoader'
 import { JiraAppData } from './JiraModels'
+import { JiraSyncer } from './JiraSyncer'
 
 export default createApp<JiraAppData>({
   id: 'jira',
@@ -30,8 +31,8 @@ export default createApp<JiraAppData>({
   </svg>
   `,
   itemType: 'markdown',
-  sync: true,
-  api: createApi<typeof JiraApi>(),
+  workers: [JiraSyncer],
+  api: createApi(JiraApi),
   graph,
   setupValidate: async app => {
     const loader = new JiraLoader(app)

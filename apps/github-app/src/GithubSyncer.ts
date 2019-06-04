@@ -1,7 +1,8 @@
-import { createSyncer } from '@o/sync-kit'
-import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
-import { GithubLoader } from './GithubLoader'
+import { createWorker } from '@o/worker-kit'
+
 import { GithubBitFactory } from './GithubBitFactory'
+import { GithubLoader } from './GithubLoader'
+import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
 
 /**
  * Syncs Github.
@@ -10,8 +11,7 @@ import { GithubBitFactory } from './GithubBitFactory'
  * which means we never remove github bits during regular sync.
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
-
+export const GithubSyncer = createWorker(async ({ app, log, utils }) => {
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
   const factory = new GithubBitFactory(utils)
@@ -71,7 +71,8 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
       await utils.updateAppData()
     }
 
-    const comments = issueOrPullRequest.comments.totalCount > 0
+    const comments =
+      issueOrPullRequest.comments.totalCount > 0
         ? await loader.loadComments(organization, repositoryName, issueOrPullRequest.number)
         : []
 
@@ -164,7 +165,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-          } repository issues from our last sync, skipping`,
+        } repository issues from our last sync, skipping`,
       )
     } else {
       // load repository issues and sync them in a stream
@@ -194,12 +195,12 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
       lastSyncPullRequests.lastSyncedDate &&
       repository.pullRequests.nodes.length &&
       new Date(repository.pullRequests.nodes[0].updatedAt).getTime() ===
-      lastSyncPullRequests.lastSyncedDate
+        lastSyncPullRequests.lastSyncedDate
     ) {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-          } repository PRs from our last sync, skipping`,
+        } repository PRs from our last sync, skipping`,
       )
     } else {
       // load repository pull requests and sync them in a stream
@@ -224,5 +225,4 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
     }
   }
   log.timer('load api bits and people')
-  
 })

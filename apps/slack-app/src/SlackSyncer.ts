@@ -1,14 +1,14 @@
-import { createSyncer } from '@o/sync-kit'
-import { SlackAppData, SlackBitData } from './SlackModels'
-import { SlackLoader } from './SlackLoader'
+import { AppWorker } from '@o/models/_/AppWorker'
+
 import { SlackBitFactory } from './SlackBitFactory'
+import { SlackLoader } from './SlackLoader'
+import { SlackAppData, SlackBitData } from './SlackModels'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
 
 /**
  * Syncs Slack messages.
  */
-export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
-
+export const SlackSyncer: AppWorker = async ({ app, log, utils }) => {
   const appData: SlackAppData = app.data
   const loader = new SlackLoader(app, log)
   const factory = new SlackBitFactory(app, utils)
@@ -65,7 +65,6 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
 
     // sync messages if we found them
     if (messages.length && lastMessageTz) {
-
       // group messages into special "conversations" to avoid insertion of multiple bits for each message
       const conversations = createConversation(messages)
       log.info(`created conversations: ${conversations.length}`, conversations)
@@ -96,7 +95,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
               bit.title = (await utils.loadTextTopWords(flatBody, 6)).join(' ')
             }
           }
-        }
+        },
       })
 
       // update last message sync app
@@ -105,5 +104,4 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
       await utils.updateAppData()
     }
   }
-
-})
+}

@@ -1,14 +1,14 @@
 import { Bit } from '@o/kit'
-import { createSyncer } from '@o/sync-kit'
-import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './ConfluenceModels'
-import { ConfluenceLoader } from './ConfluenceLoader'
+import { createWorker } from '@o/worker-kit'
+
 import { ConfluenceBitFactory } from './ConfluenceBitFactory'
+import { ConfluenceLoader } from './ConfluenceLoader'
+import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './ConfluenceModels'
 
 /**
  * Syncs Confluence pages and blogs.
  */
-export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
-
+export const ConfluenceSyncer = createWorker(async ({ app, log, utils }) => {
   const factory = new ConfluenceBitFactory(app, utils)
   const loader = new ConfluenceLoader(app, log)
   const appData: ConfluenceAppData = app.data
@@ -80,7 +80,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
       await utils.updateAppData()
-   }
+    }
 
     return true
   }
@@ -106,14 +106,15 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
     'page',
     pageLastSync.lastCursor || 0,
     pageLastSync.lastCursorLoadedCount || 0,
-    (content, cursor, loadedCount, isLast) => handleContent({
-      content,
-      cursor,
-      loadedCount,
-      isLast,
-      lastSyncInfo: pageLastSync,
-      allDbPeople,
-    })
+    (content, cursor, loadedCount, isLast) =>
+      handleContent({
+        content,
+        cursor,
+        loadedCount,
+        isLast,
+        lastSyncInfo: pageLastSync,
+        allDbPeople,
+      }),
   )
 
   // sync content - blogs
@@ -121,14 +122,14 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
     'blogpost',
     blogLastSync.lastCursor || 0,
     blogLastSync.lastCursorLoadedCount || 0,
-    (content, cursor, loadedCount, isLast) => handleContent({
-      content,
-      cursor,
-      loadedCount,
-      isLast,
-      lastSyncInfo: blogLastSync,
-      allDbPeople,
-    })
+    (content, cursor, loadedCount, isLast) =>
+      handleContent({
+        content,
+        cursor,
+        loadedCount,
+        isLast,
+        lastSyncInfo: blogLastSync,
+        allDbPeople,
+      }),
   )
-
 })

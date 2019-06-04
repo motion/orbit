@@ -1,5 +1,5 @@
 {
-  "name": "@o/sync-kit",
+  "name": "@o/worker-kit",
   "version": "2.5.2",
   "main": "_/index.js",
   "ts:main": "src/index.ts",

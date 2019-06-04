@@ -1,2 +1,2 @@
 export * from '@o/kit'
-export * from '@o/sync-kit'
+export * from '@o/worker-kit'

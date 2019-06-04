@@ -74,7 +74,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): AppDefin
         description: searchedApp.description,
         api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
-        sync: !!searchedApp.features.some(x => x === 'sync') ? true : false,
+        workers: !!searchedApp.features.some(x => x === 'workers') ? [] : undefined,
         setup: searchedApp.setup,
       }
 }

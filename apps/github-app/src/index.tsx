@@ -2,11 +2,17 @@ import { createApi, createApp } from '@o/kit'
 
 import { GithubApi } from './api.node'
 import { GithubSettings } from './GithubSettings'
+import { GithubSyncer } from './GithubSyncer'
 import { graph } from './graph.node'
 
 export default createApp({
   id: 'github',
   name: 'Github',
+  itemType: 'task',
+  settings: GithubSettings,
+  api: createApi(GithubApi),
+  workers: [GithubSyncer],
+  graph,
   icon: `
   <svg version="1.1" id="Capa_1" x="0px" y="0px" width="438.549px" height="438.549px" viewBox="0 0 438.549 438.549" style="enable-background:new 0 0 438.549 438.549;">
     <g>
@@ -40,9 +46,4 @@ export default createApp({
     </g>
   </svg>
   `,
-  itemType: 'task',
-  settings: GithubSettings,
-  api: createApi<typeof GithubApi>(),
-  sync: true,
-  graph,
 })

@@ -4,10 +4,8 @@ import { useActiveAppsWithDefinition } from './useActiveAppsWithDefinition'
 
 export const hasGraph = (x: AppDefinition) => !!Object.keys(x).some(x => x === 'graph')
 
-export const isDataDefinition = (x: AppDefinition) =>
-  !!x.sync ||
-  // for now just check if key exists, .node.ts is filtered out webpack but key remains
-  hasGraph(x)
+// imperfect, for now
+export const isDataDefinition = (x: AppDefinition) => !x.app
 
 export function useActiveDataApps(type?: string) {
   return useActiveAppsWithDefinition(type)

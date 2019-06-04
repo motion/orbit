@@ -6,5 +6,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../kit" }, { "path": "../sync-kit" }]
+  "references": [{ "path": "../kit" }, { "path": "../worker-kit" }]
 }

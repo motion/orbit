@@ -33,10 +33,16 @@ export async function requireAppDefinition({
     }
   }
 
-  reporter.info(`got def ${definition.name}`)
+  if (definition) {
+    reporter.info(`got def ${definition.name}`)
+    return {
+      type: 'success' as const,
+      definition,
+    }
+  }
 
   return {
-    type: 'success' as const,
-    definition,
+    type: 'error' as const,
+    message: 'No definition found',
   }
 }

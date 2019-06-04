@@ -14,7 +14,7 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 root['WebSocket'] = WebSocket
 Error.stackTraceLimit = Infinity
 
-const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_SYNCERS, DISABLE_ELECTRON } = process.env
+const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env
 
 export async function main() {
   console.log(`starting ${PROCESS_NAME}`)
@@ -133,7 +133,7 @@ export async function main() {
   }
 
   // syncers
-  if (!DISABLE_SYNCERS) {
+  if (!DISABLE_WORKERS) {
     await new Promise(res => setTimeout(res, 1000))
     setupProcess({
       name: 'syncers',

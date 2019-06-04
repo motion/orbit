@@ -1,3 +1,4 @@
+import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
 import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
@@ -20,9 +21,9 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
   const user = await getRepository(UserEntity).findOne({})
   const space = await getRepository(SpaceEntity).findOne({ where: { id: user.activeSpace } })
-  const app: AppBit = {
+  let app: AppBit = {
     target: 'app',
-    // todo: we need to receive space id instead of hard codding it
+    name: '',
     spaces: [space],
     spaceId: space.id,
     identifier: type,
@@ -30,9 +31,29 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     data: {
       values: {
         oauth: { ...values },
-      } as any,
+      },
     },
   }
+
+  const downloaded = await downloadAppDefinition({
+    packageId: '',
+    directory: '',
+  })
+
+  if (downloaded.type === 'error') {
+    throw new Error(`Couldn't download app definition: ${downloaded.message}`)
+  }
+
+  const required = await requireAppDefinition({
+    packageId: '',
+    directory: '',
+  })
+
+  if (required.type === 'error') {
+    throw new Error(`Couldn't load app definition: ${required.message}`)
+  }
+
+  app = await required.definition.finishAuth(app, values)
 
   // if (app.identifier === 'slack') {
   //   const loader = new SlackLoader(app)
@@ -69,23 +90,5 @@ export const finishAuth = async (type: string, values: OauthValues) => {
   //     OAuthStrategies.gmail.config.credentials.clientID
   // }
 
-  // TODO @umed i think this got a bit confusing in refactor
-  // I made AppBit.identifier, but its doing something different
-  // it's now the "package" identifier basically, so if i publish app its "myapp.someid"
-  // I added a AppBit.sourceIdentifier to be like the old Source.identifier, but
-  // need to redo this area (and probably other areas) finish migration
-
-  // check if we already have a source with the same name and type - then just ignore it
-  const sourceWithSameName = await getRepository(AppEntity).findOne({
-    name: app.name,
-    identifier: app.identifier,
-  })
-
-  if (sourceWithSameName) {
-    console.warn('we have source with same name')
-  }
-
-  if (!sourceWithSameName) {
-    await getRepository(AppEntity).save(app)
-  }
+  await getRepository(AppEntity).save(app)
 }

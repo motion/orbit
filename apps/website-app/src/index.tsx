@@ -1,8 +1,18 @@
 import { createApp } from '@o/kit'
 
+import { WebsiteSyncer } from './WebsiteSyncer'
+
 export default createApp({
   id: 'website',
   name: 'Website',
+  itemType: 'task',
+  workers: [WebsiteSyncer],
+  setup: {
+    url: {
+      name: 'URL',
+      required: true,
+    },
+  },
   icon: `<svg version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 58 58">
     <rect style="fill:#ECF0F1;" width="58" height="58" />
     <rect style="fill:#546A79;" width="58" height="12" />
@@ -43,12 +53,4 @@ export default createApp({
       d="M54,53H40c-0.553,0-1-0.447-1-1s0.447-1,1-1h14c0.553,0,1,0.447,1,1S54.553,53,54,53z"
     />
   </svg>`,
-  itemType: 'task',
-  setup: {
-    url: {
-      name: 'URL',
-      required: true,
-    },
-  },
-  sync: true,
 })

@@ -1,22 +1,15 @@
 import { AppBit, Bit } from '@o/kit'
-import { SyncerUtils } from '@o/sync-kit'
+import { WorkerUtilsInstance } from '@o/worker-kit'
 import { uniqBy } from 'lodash'
-import {
-  SlackAppData,
-  SlackAttachment,
-  SlackBitData,
-  SlackChannel,
-  SlackMessage,
-  SlackTeam,
-  SlackUser,
-} from './SlackModels'
+
+import { SlackAppData, SlackAttachment, SlackBitData, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
 
 /**
  * Creates bits out of slack models.
  */
 export class SlackBitFactory {
-  constructor(private app: AppBit, private utils: SyncerUtils) {}
+  constructor(private app: AppBit, private utils: WorkerUtilsInstance) {}
 
   /**
    * Creates a single app person from given Slack user.

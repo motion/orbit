@@ -7,6 +7,7 @@ import { Button } from './buttons/Button'
 import { Message } from './text/Message'
 import { Row } from './View/Row'
 import { View } from './View/View'
+import { useOnUnmount } from './hooks/useOnUnmount'
 
 type BannerProps = {
   message: string
@@ -95,6 +96,13 @@ export function useBanner(): BannerHandle {
   const show = (props: BannerProps) => {
     banner.current = bannerStore.show(props)
   }
+
+  useOnUnmount(() => {
+    if (banner.current) {
+      banner.current.close()
+    }
+  })
+
   return {
     show,
     setMessage(message: string) {
@@ -104,7 +112,7 @@ export function useBanner(): BannerHandle {
         banner.current.setMessage(message)
       }
     },
-    onClose() {
+    close() {
       if (banner.current) {
         banner.current.onClose()
       }

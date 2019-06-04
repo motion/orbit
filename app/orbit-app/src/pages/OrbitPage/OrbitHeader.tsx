@@ -295,7 +295,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Row, {
+const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
   flex: 20,

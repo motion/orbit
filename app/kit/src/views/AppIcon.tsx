@@ -3,8 +3,9 @@ import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
+import { Omit } from '../types'
 
-type BaseIconProps = Omit<Partial<IconProps>, 'icon' | 'color'>
+type BaseIconProps = Omit<Partial<IconProps>, 'color' | 'name'>
 
 export type AppIconProps = BaseIconProps & {
   identifier?: string

@@ -257,8 +257,8 @@ export class Syncer {
           app,
           log,
           getManager(),
-          async () => !!checkCancelled(app.id),
           syncersRoot.mediatorClient,
+          async () => !!checkCancelled(app.id),
         ),
       })
 

@@ -12,6 +12,7 @@ import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
+import { selectDefined } from '@o/utils'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {
@@ -83,6 +84,7 @@ export const TitleRow = themeable(
         title,
         children,
         titleProps,
+        space,
         selectable,
         ...allProps
       }: TitleRowProps,
@@ -90,7 +92,7 @@ export const TitleRow = themeable(
     ) => {
       const scale = useScale()
       const iconSize = 32 * scale
-      const spaceSize = getSpaceSize(size)
+      const spaceSize = getSpaceSize(selectDefined(space, size))
       const [collapseProps, rowProps] = splitCollapseProps(allProps)
       const collapse = useCollapse(collapseProps)
       const titleElement =
@@ -103,11 +105,13 @@ export const TitleRow = themeable(
           </Title>
         ))
 
+      console.log('spaceSize', size, spaceSize)
       return (
         <TitleRowChrome
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}
           background={backgrounded ? titleRowBg : null}
           ref={ref}
+          space={space}
           {...rowProps}
         >
           {above}

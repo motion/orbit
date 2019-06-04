@@ -520,7 +520,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     padding: 0,
   },
 }).theme((props, theme) => {
-  const fontStyle = scaledTextSizeTheme(props)
+  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || {}
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const marginStyle = getMargin(props)
@@ -573,8 +573,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
           ...propStyles['&:hover'],
         },
     ...styles,
+    fontSize,
+    lineHeight,
     ...marginStyle,
-    ...fontStyle,
   }
 })
 

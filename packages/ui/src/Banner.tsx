@@ -114,7 +114,7 @@ export function useBanner(): BannerHandle {
     },
     close() {
       if (banner.current) {
-        banner.current.onClose()
+        banner.current.close()
       }
     },
   }

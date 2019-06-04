@@ -18,6 +18,6 @@ export const colors = colorize({
   yellow: '#E2EB53',
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
-  gray: 'rgba(125, 125, 125, 0.4)',
-  lightGray: 'rgba(125, 125, 125, 0.24)',
+  gray: 'rgba(125, 125, 125, 0.35)',
+  lightGray: 'rgba(125, 125, 125, 0.1)',
 })

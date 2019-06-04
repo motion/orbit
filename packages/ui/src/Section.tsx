@@ -224,7 +224,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           pad={innerPad}
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
-          overflow="hidden"
           suspense={<Loading />}
           {...viewProps}
         >

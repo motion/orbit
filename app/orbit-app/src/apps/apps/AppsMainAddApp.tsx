@@ -18,7 +18,7 @@ import {
   SubTitle,
   useBanner,
 } from '@o/ui'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
 import { AppSetupForm } from './AppSetupForm'
@@ -34,7 +34,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
 }
 
 function SubItem(props: ButtonProps) {
-  return <Button chromeless {...props} />
+  return <Button padding={0} chromeless {...props} />
 }
 
 export function AppsMainAddAppContent({
@@ -85,7 +85,7 @@ export function AppsMainAddAppContent({
   return (
     <Section
       pad="lg"
-      space="lg"
+      space="xxl"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
       title={def.name}
       titlePad
@@ -117,7 +117,15 @@ export function AppsMainAddAppContent({
 
       {hasSetup && (
         <Section space>
-          <Section bordered pad title="Setup" titlePad titleSize={0.85}>
+          <Section
+            bordered
+            elevation={3}
+            pad
+            title="Setup"
+            subTitle="This app has required configuration"
+            titlePad
+            titleSize={0.85}
+          >
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)

@@ -105,7 +105,6 @@ export const TitleRow = themeable(
           </Title>
         ))
 
-      console.log('spaceSize', size, spaceSize)
       return (
         <TitleRowChrome
           onDoubleClick={(collapse.isCollapsable && collapse.toggle) || undefined}

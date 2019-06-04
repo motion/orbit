@@ -81,10 +81,12 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
 async function isInstalled(packageId: string, directory: string, version: string) {
   try {
     const pkg = await readJSON(join(directory, 'package.json'))
+    reporter.info(`isInstalled -- checking dependencies`)
     if (!pkg.dependencies[packageId]) {
       return false
     }
     const packagePath = findPackage(packageId, directory)
+    reporter.info(`isInstalled -- checking package.json exists at ${packagePath}`)
     if (!packagePath) {
       return false
     }

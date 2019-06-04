@@ -39,6 +39,7 @@ import {
   AppDevOpenCommand,
   CloseAppCommand,
   AppMetaCommand,
+  AuthAppCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -87,6 +88,7 @@ import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
+import { FinishAuthQueue } from './auth-server/finishAuth'
 
 const log = new Logger('desktop')
 
@@ -367,20 +369,40 @@ export class OrbitDesktopRoot {
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
+
+        resolveCommand(AuthAppCommand, async ({ authKey }) => {
+          const success = (await checkAuthProxy()) || (await startAuthProxy())
+
+          if (!success) {
+            return {
+              type: 'error' as const,
+              message: `Error setting up local authentication proxy.`,
+            }
+          }
+
+          const url = `${getGlobalConfig().urls.auth}/auth/${authKey}`
+          const didOpenAuthUrl = await openUrl({ url })
+
+          if (!didOpenAuthUrl) {
+            return {
+              type: 'error' as const,
+              message: `Couldn't open the authentication url: ${url}`,
+            }
+          }
+
+          // wait for finish from finishAuth()
+          // TODO orTimeout?
+          const finish = new Promise(res => res)
+          FinishAuthQueue.set(authKey, finish)
+          return await finish
+        }),
+
         resolveCommand(SetupProxyCommand, async () => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
           console.log('finishing setup proxy', success)
           return success
         }),
-        resolveCommand(OpenCommand, async ({ url }) => {
-          try {
-            open(url)
-            return true
-          } catch (err) {
-            console.log('error opening', err)
-            return false
-          }
-        }),
+        resolveCommand(OpenCommand, openUrl),
       ],
     })
 
@@ -392,5 +414,15 @@ export class OrbitDesktopRoot {
     log.info(`mediatorServer listening at ${mediatorServerPort}`)
 
     return mediatorServerPort
+  }
+}
+
+async function openUrl({ url }: { url: string }) {
+  try {
+    open(url)
+    return true
+  } catch (err) {
+    console.log('error opening', err)
+    return false
   }
 }

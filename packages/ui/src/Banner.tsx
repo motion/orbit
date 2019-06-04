@@ -11,12 +11,11 @@ import { View } from './View/View'
 type BannerProps = {
   message: string
   type?: 'warn' | 'success' | 'fail'
-
   /** This is the callback you can pass in optionally to do things when it closes */
   onClose?: () => void
 }
 
-type BannerItem = BannerProps & {
+type BannerItem = Pick<BannerProps, 'message' | 'type'> & {
   key: number
   setMessage: (message: string) => void
   close: () => void
@@ -46,7 +45,7 @@ class BannerStore {
   hide(key: number) {
     const toRemove = this.banners.find(x => x.key === key)
     if (toRemove) {
-      toRemove.onClose()
+      toRemove.close()
       this.banners = filter(this.banners, x => x.key !== key)
     }
   }

@@ -2,6 +2,7 @@ import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import { DriveApi } from './api.node'
+import { DriveLoader } from './DriveLoader'
 import { DriveSettings } from './DriveSettings'
 import { DriveSyncer } from './DriveSyncer'
 
@@ -9,6 +10,14 @@ export default createApp({
   id: 'drive',
   name: 'Drive',
   auth: 'drive',
+  finishAuth: async (app, _values, oauth) => {
+    const loader = new DriveLoader(app)
+    const about = await loader.loadAbout()
+    app.name = about.user.emailAddress
+    app.data.values.oauth.secret = oauth.credentials.clientSecret
+    app.data.values.oauth.clientId = oauth.credentials.clientID
+    return app
+  },
   itemType: 'task',
   settings: DriveSettings,
   workers: [DriveSyncer],

@@ -80,13 +80,13 @@ export function AppsMainAddAppContent({
       titleBorder
       afterTitle={
         <>
-          {!hasSetup && def.sync && (
+          {!hasSetup && def.auth && (
             <Button alt="confirm" icon="lock" onClick={() => installApp(def)}>
               Authenticate and add
             </Button>
           )}
-          {!def.sync && !def.setup && (
-            <Button alt="confirm" icon="plus" iconAfter>
+          {!def.auth && !def.setup && (
+            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def)}>
               Install
             </Button>
           )}

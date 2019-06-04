@@ -1,11 +1,12 @@
 import { getGlobalConfig } from '@o/config'
 import { Strategy as GithubStrategy } from 'passport-github'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+
 import SlackStrategy from './passportSlack'
 
 const Config = getGlobalConfig()
 
-export default {
+export const OAuthStrategies = {
   slack: {
     strategy: SlackStrategy,
     config: {

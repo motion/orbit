@@ -43,7 +43,11 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   auth?: string
 
   /** Validate authentication and add anything you need to AppBit */
-  finishAuth?: (app: AppBit<AppData>, authValues: any) => AppBit
+  finishAuth?: (
+    app: AppBit<AppData>,
+    authValues: any,
+    oauthInfo: { credentials: { clientSecret: string; clientID: string; callbackURL?: string } },
+  ) => Promise<AppBit<AppData>>
 
   /** Define a background process */
   workers?: AppWorker[]

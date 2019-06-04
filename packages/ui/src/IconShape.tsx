@@ -44,6 +44,7 @@ export const IconShape = memo(
           width={28}
           height={28}
           style={{
+            transformOrigin: 'top left',
             transform: `scale(${scale})`,
           }}
         >

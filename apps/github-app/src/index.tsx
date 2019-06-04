@@ -9,6 +9,11 @@ export default createApp({
   id: 'github',
   name: 'Github',
   itemType: 'task',
+  auth: 'github',
+  finishAuth: async (app, values) => {
+    app.name = values.info.username
+    return app
+  },
   settings: GithubSettings,
   api: createApi(GithubApi),
   workers: [GithubSyncer],

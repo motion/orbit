@@ -13,6 +13,11 @@ export const UserOnboardFinishCommand = new Command<void, void>('user-onboard-fi
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
 
+export const AuthAppCommand = new Command<
+  { type: 'error'; message: string } | { type: 'success' },
+  { authKey: string }
+>('AuthAppCommand')
+
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
 
 export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')

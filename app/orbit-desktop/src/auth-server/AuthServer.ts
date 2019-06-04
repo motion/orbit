@@ -11,7 +11,7 @@ import * as Path from 'path'
 
 import { finishAuth } from './finishAuth'
 import OAuth from './oauth'
-import OAuthStrategies from './oauthStrategies'
+import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
 
 const Config = getGlobalConfig()

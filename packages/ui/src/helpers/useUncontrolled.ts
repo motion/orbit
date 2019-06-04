@@ -3,6 +3,8 @@ import { useCallback, useRef, useState } from 'react'
 
 // allows you to automatically handle uncontrolled props for a component
 
+// taken from unconstrollable, changed to add types
+
 export function useUncontrolled<A extends Object>(props: A, config: { [key: string]: any }) {
   const prevProps = useRef({})
   const next = Object.keys(config).reduce(

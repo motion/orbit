@@ -67,6 +67,10 @@ class FormStore {
     } else if (typeof value === 'string') {
       this.globalError = value
     } else if (value && Object.keys(value).length) {
+      // handle a general object describing a global error
+      if (value.type === 'error' && typeof value.message === 'string') {
+        this.globalError = value.message
+      }
       this.errors = value
     } else {
       this.errors = null
@@ -175,6 +179,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
             continue
           }
         }
+
         if (Object.keys(fieldErrors).length) {
           formStore.setErrors(fieldErrors)
           return
@@ -185,6 +190,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
         if (nextErrors instanceof Promise) {
           nextErrors = await nextErrors
         }
+
         formStore.setErrors(nextErrors)
       }
     },

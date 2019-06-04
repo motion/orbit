@@ -1,4 +1,13 @@
-import { AppBit, AppDefinition, AppModel, command, save, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
+import {
+  AppBit,
+  AppDefinition,
+  AppModel,
+  command,
+  save,
+  selectDefined,
+  useActiveSpace,
+  useAppBit,
+} from '@o/kit'
 import { AppDefinitionSetupVerifyCommand } from '@o/models'
 import { Form, FormProps } from '@o/ui'
 import React from 'react'
@@ -36,10 +45,8 @@ export function AppSetupForm({
           app,
         })
 
-        console.log('res is', res)
-
         if (res.type === 'error') {
-          return res.errors
+          return res
         }
 
         // TODO show banner here

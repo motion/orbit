@@ -1,7 +1,18 @@
 import { invertLightness } from '@o/color'
 import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, IconShape, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  IconShape,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -303,7 +314,7 @@ const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Box, {
   alignItems: 'center',
   flexFlow: 'row',
   flex: 20,
-  maxWidth: 600,
+  maxWidth: 900,
   padding: [0, 12],
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({

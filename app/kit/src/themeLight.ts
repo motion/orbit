@@ -40,7 +40,7 @@ export const light = {
     borderColorActive: [230, 230, 230],
     borderColorHover: [230, 230, 230],
     borderColorLight: [215, 215, 215, 0.5],
-    headerBackground: linearGradient([245, 245, 245, 0.75], [245, 245, 245, 0.85]),
+    headerBackground: linearGradient([255, 255, 255, 0.85], [255, 255, 255, 0.9]),
     sidebarBackground: '#f5f7f9',
     sidebarBackgroundTransparent: [255, 255, 255, 0.8],
     tabBackgroundHover: [0, 0, 0, 0.1],

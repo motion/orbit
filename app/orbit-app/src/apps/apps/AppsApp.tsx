@@ -45,9 +45,9 @@ export default createApp({
 })
 
 function getDescription(def: AppDefinition) {
-  const hasSync = !!def.sync
+  const hasData = isDataDefinition(def)
   const hasClient = !!def.app
-  const titles = [hasSync ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
+  const titles = [hasData ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
   return titles.join(', ')
 }
 
@@ -155,7 +155,7 @@ export function AppsIndex() {
           pad: false,
           children: (
             <Col padding={[38, 8, 16]}>
-              <SubTitle>My Apps</SubTitle>
+              <SubTitle>App Settings</SubTitle>
             </Col>
           ),
         },

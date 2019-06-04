@@ -19,6 +19,7 @@ type BannerItem = Pick<BannerProps, 'message' | 'type'> & {
   key: number
   setMessage: (message: string) => void
   close: () => void
+  onClose?: () => void
 }
 
 class BannerStore {
@@ -45,7 +46,9 @@ class BannerStore {
   hide(key: number) {
     const toRemove = this.banners.find(x => x.key === key)
     if (toRemove) {
-      toRemove.close()
+      if (toRemove.onClose) {
+        toRemove.onClose()
+      }
       this.banners = filter(this.banners, x => x.key !== key)
     }
   }
@@ -101,9 +104,9 @@ export function useBanner(): BannerHandle {
         banner.current.setMessage(message)
       }
     },
-    close() {
+    onClose() {
       if (banner.current) {
-        banner.current.close()
+        banner.current.onClose()
       }
     },
   }

@@ -1,5 +1,23 @@
-import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import {
+  AppDefinition,
+  AppIcon,
+  getSearchAppDefinitions,
+  useAppDefinition,
+  useAppDefinitionFromStore,
+  useAppStoreInstalledAppDefinition,
+} from '@o/kit'
+import {
+  BannerHandle,
+  Button,
+  ButtonProps,
+  Loading,
+  Message,
+  Paragraph,
+  Row,
+  Section,
+  SubTitle,
+  useBanner,
+} from '@o/ui'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
@@ -7,12 +25,6 @@ import { AppSetupForm } from './AppSetupForm'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
-
-  useEffect(() => {
-    return () => {
-      banner.close()
-    }
-  }, [])
 
   return (
     <Suspense fallback={<Loading />}>
@@ -73,7 +85,7 @@ export function AppsMainAddAppContent({
   return (
     <Section
       pad="lg"
-      space
+      space="lg"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
       title={def.name}
       titlePad

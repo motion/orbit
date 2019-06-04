@@ -19,4 +19,5 @@ export const colors = colorize({
   lightYellow: '#EFE5B7',
   darkYellow: '#8F7B1C',
   gray: 'rgba(125, 125, 125, 0.4)',
+  lightGray: 'rgba(125, 125, 125, 0.24)',
 })

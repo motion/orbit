@@ -10,9 +10,9 @@ const colorThemes: ThemeSet = {
     glintColor: transparent,
     color: '#444',
     iconColor: '#444',
-    background: colors.gray.alpha(0.2),
-    backgroundHover: colors.gray.alpha(0.2),
-    backgroundActive: colors.gray.alpha(0.2),
+    background: colors.lightGray.alpha(0.2),
+    backgroundHover: colors.lightGray.alpha(0.2),
+    backgroundActive: colors.lightGray.alpha(0.2),
   }),
   lightRed: fromStyles({
     glintColorBottom: transparent,

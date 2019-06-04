@@ -2,6 +2,7 @@ import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reporter } from './reporter'
 import { getPackageId } from './util/getPackageId'
 import execa from 'execa'
+import { Logger } from '@o/logger'
 
 export type CommandInstallOptions = {
   directory: string
@@ -26,9 +27,13 @@ export async function commandInstall(options: CommandInstallOptions) {
 
   try {
     if (command === 'yarn') {
-      await execa(command, `add ${packageInstallKey}`)
+      await runCommand(command, `add ${packageInstallKey}`, {
+        cwd: options.directory,
+      })
     } else {
-      await execa(command, `install --save ${packageInstallKey}`)
+      await runCommand(command, `install --save ${packageInstallKey}`, {
+        cwd: options.directory,
+      })
     }
   } catch (err) {
     return {
@@ -41,4 +46,16 @@ export async function commandInstall(options: CommandInstallOptions) {
     type: 'success' as const,
     message: 'Installed',
   }
+}
+
+const log = new Logger('runCommand')
+
+export async function runCommand(command: string, args: string, env?: Object) {
+  log.info(`${command} ${args}`)
+  const proc = execa(command, args.split(' '), env)
+  if (process.env.NODE_ENV !== 'production') {
+    proc.stdout.pipe(process.stdout)
+    proc.stderr.pipe(process.stderr)
+  }
+  return await proc
 }

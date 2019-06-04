@@ -3,6 +3,7 @@ import { Space } from '@o/models'
 import { join } from 'path'
 
 import { getWorkspaceAppMeta } from './getWorkspaceAppMeta'
+import { pathExists } from 'fs-extra'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
@@ -21,7 +22,7 @@ export async function getWorkspaceAppDefs(
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       try {
-        const nodeEntry = requireAppNodeEntry(directory)
+        const nodeEntry = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
         if (nodeEntry.type === 'error') {
           console.error('no node definition')
           return
@@ -44,17 +45,30 @@ export async function getWorkspaceAppDefs(
   }
 }
 
-export function requireAppNodeEntry(
-  directory: string,
-): { type: 'success'; definition: AppDefinition } | { type: 'error'; message: string } {
-  const nodeEntryPath = join(directory, 'dist', 'index.node.js')
-  log.info(`Importing entry ${nodeEntryPath}`)
-  const nodeEntry = require(nodeEntryPath)
-  if (!nodeEntry || !nodeEntry.default) {
-    log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
+export async function requireAppEntry(
+  entryPath: string,
+): Promise<{ type: 'success'; definition: AppDefinition } | { type: 'error'; message: string }> {
+  let nodeEntry
+  log.info(`Importing entry ${entryPath}`)
+  try {
+    if (!(await pathExists(entryPath))) {
+      return {
+        type: 'error' as const,
+        message: 'No entry file',
+      }
+    }
+    const nodeEntry = require(entryPath)
+    if (!nodeEntry || !nodeEntry.default) {
+      log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
+      return {
+        type: 'error' as const,
+        message: `No export default found on node entry.`,
+      }
+    }
+  } catch (err) {
     return {
       type: 'error' as const,
-      message: `No node entry found`,
+      message: `Error requiring entry ${err.message} ${err.stack}`,
     }
   }
   return {

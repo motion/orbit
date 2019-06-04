@@ -49,6 +49,9 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
+  // TODO app bit? we handle this in two ways: `installApp`  and then `ensureAppBitsForAppDefinitions`
+  // but it may be better to avoid ensureAppBitsForAppDefinitions and just have it here
+
   // re-open this workspace to trigger loading newly installed app definition
   await reloadAppDefinitions(options.directory)
 

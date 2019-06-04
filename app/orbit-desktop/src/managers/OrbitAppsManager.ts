@@ -33,7 +33,7 @@ export async function ensureAppBitsForAppDefinitions(definitions: AppDefinition[
         },
       }))
     ) {
-      log.info(`No app bit found for definition ${def.id}`)
+      log.info(`No app bit found for definition, adding ${def.id}`)
       // TODO we need this to be available as a direct call from install command
       // it also needs to be here to pick up actions from adding to package.json
       await getRepository(AppEntity).create({

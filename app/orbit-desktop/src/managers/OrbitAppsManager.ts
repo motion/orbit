@@ -4,7 +4,6 @@ import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { getActiveSpace } from '../helpers/getActiveSpace'
 import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
 
@@ -20,37 +19,6 @@ export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'colors',
   'token',
 ]
-
-export async function ensureAppBitsForAppDefinitions(definitions: AppDefinition[]) {
-  const space = await getActiveSpace()
-  log.info(`Ensuring app bits for definitions ${definitions.length}`)
-  for (const def of definitions) {
-    // downloaded definition, create new AppBit for it
-    if (
-      !(await getRepository(AppEntity).findOne({
-        where: {
-          identifier: def.id,
-        },
-      }))
-    ) {
-      log.info(`No app bit found for definition, adding ${def.id}`)
-      // TODO we need this to be available as a direct call from install command
-      // it also needs to be here to pick up actions from adding to package.json
-      await getRepository(AppEntity).create({
-        target: 'app',
-        name: `${def.name}`,
-        identifier: `${def.id}`,
-        itemType: def.itemType,
-        spaces: [space],
-        spaceId: space.id,
-        tabDisplay: 'plain',
-        colors: ['black', 'black'],
-        token: '',
-        data: {},
-      })
-    }
-  }
-}
 
 @decorate
 export class OrbitAppsManager {
@@ -106,7 +74,7 @@ export class OrbitAppsManager {
   updateAppDefinitions = async (space: Space) => {
     log.info(`Updaing app definitions for space ${space.id}`)
     const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
-    await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
+    // await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
     this.packageIdToIdentifier = {
       ...this.packageIdToIdentifier,
       ...packageIdToIdentifier,

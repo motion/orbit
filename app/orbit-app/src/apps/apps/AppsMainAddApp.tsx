@@ -81,7 +81,7 @@ export function AppsMainAddAppContent({
           )}
           {!def.auth && !def.setup && (
             <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def, true)}>
-              Install
+              Add
             </Button>
           )}
         </>

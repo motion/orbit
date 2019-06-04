@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
+import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
@@ -106,8 +107,8 @@ export function AppsIndex() {
     })),
   ]
 
-  const dataAppDefinitions = useDataAppDefinitions()
-  console.log('dataAppDefinitions', dataAppDefinitions)
+  const localApps = useUserAppDefinitions()
+  console.log('localApps', localApps)
 
   return (
     <List
@@ -158,7 +159,7 @@ export function AppsIndex() {
             </Col>
           ),
         },
-        ...dataAppDefinitions.map(appDefToListItem),
+        ...localApps.map(appDefToListItem),
         ...topApps,
         ...searchResults,
       ]}

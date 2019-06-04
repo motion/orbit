@@ -24,8 +24,10 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   const packageId = await getPackageId(options.identifier)
 
   if (!packageId) {
-    console.warn('no package id found')
-    return
+    return {
+      type: 'error' as const,
+      message: `No packageId found locally or in app store`,
+    }
   }
 
   const curVersion = await getRegistryLatestVersion(packageId)

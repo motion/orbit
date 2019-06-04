@@ -34,7 +34,7 @@ export const headerButtonProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
-  iconSize: 12,
+  iconSize: 14,
   activeStyle: false,
 }
 
@@ -61,14 +61,14 @@ export const OrbitHeader = memo(() => {
         <OrbitHeaderEditingBg isActive={isEditing} />
 
         <HeaderTop height={isEditing ? 46 : 56}>
-          <HeaderSide spaceAround>
-            <HeaderButtonPassProps>
+          <HeaderButtonPassProps>
+            <HeaderSide space="sm" spaceAround>
               <BackButton />
               <OrbitHeaderMenu />
-            </HeaderButtonPassProps>
-          </HeaderSide>
+            </HeaderSide>
+          </HeaderButtonPassProps>
 
-          <HeaderContain isActive={false} isEditing={isEditing}>
+          <HeaderContain space="sm" isActive={false} isEditing={isEditing}>
             {!isEditing && (
               <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                 <OrbitNavPopover target={<HomeButton id="home-button" />}>
@@ -95,49 +95,47 @@ export const OrbitHeader = memo(() => {
             )}
           </HeaderContain>
 
-          <HeaderSide spaceAround rightSide>
-            {isEditing && (
-              <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+          <HeaderButtonPassProps>
+            <HeaderSide space="sm" spaceAround justifyContent="flex-start">
+              {isEditing && (
+                <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+                  <>
+                    <Button circular icon="edit" tooltip="Open in VSCode" />
+                    <Space size="sm" />
+                    <Button tooltip="Deploy to space">Publish</Button>
+                    <Space size="sm" />
+                  </>
+                </SurfacePassProps>
+              )}
+
+              {!isEditing && (
                 <>
-                  <Button circular icon="edit" tooltip="Open in VSCode" />
-                  <Space size="sm" />
-                  <Button tooltip="Deploy to space">Publish</Button>
-                  <Space size="sm" />
+                  <Button
+                    {...om.state.router.appId === 'query-builder' && activeStyle}
+                    {...useLocationLink('/app/query-builder')}
+                    icon="layers"
+                    tooltip="Query Builder"
+                  />
+                  <Button
+                    {...om.state.router.appId === 'apps' && activeStyle}
+                    {...useLocationLink('/app/apps')}
+                    icon="layout-grid"
+                    tooltip="Manage apps"
+                  />
+                  <OrbitSpaceSwitch />
                 </>
-              </SurfacePassProps>
-            )}
+              )}
 
-            {!isEditing && (
-              <HeaderButtonPassProps>
-                <Button
-                  {...om.state.router.appId === 'query-builder' && activeStyle}
-                  {...useLocationLink('/app/query-builder')}
-                  icon="layers"
-                  tooltip="Query Builder"
-                />
-                <Space size="sm" />
-                <Button
-                  {...om.state.router.appId === 'apps' && activeStyle}
-                  {...useLocationLink('/app/apps')}
-                  icon="layout-grid"
-                  tooltip="Manage apps"
-                />
-                <Space size="sm" />
-                <OrbitSpaceSwitch />
-              </HeaderButtonPassProps>
-            )}
-
-            {isEditing && (
-              <HeaderButtonPassProps>
+              {isEditing && (
                 <Button
                   icon="cog"
                   onClick={() => {
                     console.log('got to app specific settings')
                   }}
                 />
-              </HeaderButtonPassProps>
-            )}
-          </HeaderSide>
+              )}
+            </HeaderSide>
+          </HeaderButtonPassProps>
         </HeaderTop>
 
         {/* this stays slightly below the active tab and looks nice */}
@@ -293,13 +291,10 @@ const OrbitNavHiddenBarInner = gloss(Box, {
 const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
+  minWidth: '20%',
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  minWidth: 'max-content',
-  rightSide: {
-    justifyContent: 'flex-start',
-  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
@@ -309,13 +304,11 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Box, {
+const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
-  flexFlow: 'row',
   flex: 20,
   maxWidth: 900,
-  padding: [0, 12],
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing
@@ -365,10 +358,9 @@ const BackButton = memo(() => {
   const { state, actions } = useOm()
   return (
     <Button
-      circular
       icon="chevron-left"
       opacity={state.router.history.length ? 0.5 : 0.4}
-      iconSize={22}
+      iconSize={18}
       onClick={actions.router.back}
     />
   )

@@ -11,7 +11,7 @@ export async function isInstalled(packageId: string, directory: string, version:
     if (!pkg.dependencies[packageId]) {
       return false
     }
-    const packagePath = findPackage(packageId, directory)
+    const packagePath = findPackage({ packageId, directory })
     reporter.info(`isInstalled -- checking package.json exists at ${packagePath}`)
     if (!packagePath) {
       return false

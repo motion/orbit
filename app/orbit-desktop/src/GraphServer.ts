@@ -15,12 +15,12 @@ import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-async function getWorkspaceAppPaths(workspace: string) {
-  const workspaceRoot = join(require.resolve(workspace), '..')
-  const packageJSON = join(workspaceRoot, 'package.json')
+async function getWorkspaceAppPaths(workspaceEntry: string) {
+  const directory = join(require.resolve(workspaceEntry), '..')
+  const packageJSON = join(directory, 'package.json')
   const packages = (await readJSON(packageJSON)).dependencies
-  return Object.keys(packages).map(pkgName => {
-    return findPackage(workspaceRoot, pkgName)
+  return Object.keys(packages).map(packageId => {
+    return findPackage({ directory, packageId })
   })
 }
 

@@ -1,13 +1,11 @@
 import { Logger } from '@o/logger'
 import execa from 'execa'
-import { readJSON } from 'fs-extra'
-import { join } from 'path'
 
 import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reloadAppDefinitions } from './command-ws'
 import { reporter } from './reporter'
-import { findPackage } from './util/findPackage'
 import { getPackageId } from './util/getPackageId'
+import { isInstalled } from './util/isInstalled'
 
 export type CommandInstallOptions = {
   directory: string
@@ -75,27 +73,6 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   return {
     type: 'success' as const,
     message: 'Installed',
-  }
-}
-
-async function isInstalled(packageId: string, directory: string, version: string) {
-  try {
-    const pkg = await readJSON(join(directory, 'package.json'))
-    reporter.info(`isInstalled -- checking dependencies`)
-    if (!pkg.dependencies[packageId]) {
-      return false
-    }
-    const packagePath = findPackage(packageId, directory)
-    reporter.info(`isInstalled -- checking package.json exists at ${packagePath}`)
-    if (!packagePath) {
-      return false
-    }
-    const packageInfo = await readJSON(packagePath)
-    reporter.info(`Got packageInfo ${packagePath} ${packageInfo.version}`)
-    return packageInfo.version === version
-  } catch (err) {
-    reporter.error(err.message, err)
-    return false
   }
 }
 

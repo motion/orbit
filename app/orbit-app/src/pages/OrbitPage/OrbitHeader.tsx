@@ -1,19 +1,7 @@
 import { invertLightness } from '@o/color'
 import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  IconShape,
-  Popover,
-  PopoverProps,
-  Row,
-  RowProps,
-  Space,
-  SurfacePassProps,
-  View,
-  SizedSurfaceProps,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, IconShape, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -72,7 +60,7 @@ export const OrbitHeader = memo(() => {
             </HeaderSide>
           </HeaderButtonPassProps>
 
-          <HeaderContain space="sm" isActive={false} isEditing={isEditing}>
+          <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
             {!isEditing && (
               <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                 <OrbitNavPopover target={<HomeButton id="home-button" />}>
@@ -92,7 +80,7 @@ export const OrbitHeader = memo(() => {
                     </HeaderButtonPassProps>
                   </ExtraButtonsChrome>
                 )}
-                {!isEditing && <OpenButton sizeRadius={1.2} sizePadding={1.2} fontWeight={500} />}
+                {!isEditing && <OpenButton />}
               </>
             )}
           </HeaderContain>
@@ -293,7 +281,8 @@ const OrbitNavHiddenBarInner = gloss(Box, {
 const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
-  minWidth: '20%',
+  width: '18%',
+  minWidth: 180,
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -310,7 +299,7 @@ const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
   flex: 20,
-  maxWidth: 900,
+  maxWidth: 980,
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing
@@ -333,7 +322,7 @@ const ExtraButtonsChrome = gloss(Box, {
   borderLeftRadius: 12,
 })
 
-const OpenButton = memo(() => {
+const OpenButton = memo((props: ButtonProps) => {
   const { effects } = useOm()
 
   if (App.isEditing) {
@@ -350,6 +339,7 @@ const OpenButton = memo(() => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}
+      {...props}
     >
       Open
     </Button>

@@ -62,6 +62,10 @@ Yargs.scriptName('orbit')
         .option('verbose', {
           type: 'boolean',
           default: false,
+        })
+        .option('force-install', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
@@ -72,6 +76,7 @@ Yargs.scriptName('orbit')
         identifier: argv.id,
         directory,
         verbose: !!argv.verbose,
+        forceInstall: !!argv['force-install'],
       })
     },
   )
@@ -209,6 +214,7 @@ Yargs.scriptName('orbit')
 export * from './util/downloadAppDefinition'
 export * from './util/requireAppDefinition'
 export * from './util/getPackageId'
+export * from './util/findPackage'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 

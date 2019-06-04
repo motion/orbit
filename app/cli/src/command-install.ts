@@ -1,15 +1,19 @@
 import { Logger } from '@o/logger'
 import execa from 'execa'
+import { readJSON } from 'fs-extra'
+import { join } from 'path'
 
 import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reloadAppDefinitions } from './command-ws'
 import { reporter } from './reporter'
+import { findPackage } from './util/findPackage'
 import { getPackageId } from './util/getPackageId'
 
 export type CommandInstallOptions = {
   directory: string
   identifier: string
   verbose?: boolean
+  forceInstall?: boolean
 }
 
 export type CommandInstallRes = {
@@ -31,6 +35,17 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   }
 
   const curVersion = await getRegistryLatestVersion(packageId)
+
+  // check if already installed and avoid work
+  if (await isInstalled(packageId, options.directory, curVersion)) {
+    if (!options.forceInstall) {
+      return {
+        type: 'success' as const,
+        message: `Already installed this version, use --force-install or options.forceInstall to force update`,
+      }
+    }
+  }
+
   const packageInstallKey = `${packageId}@${curVersion}`
   reporter.info(`Installing ${packageInstallKey}`)
 
@@ -60,6 +75,25 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   return {
     type: 'success' as const,
     message: 'Installed',
+  }
+}
+
+async function isInstalled(packageId: string, directory: string, version: string) {
+  try {
+    const pkg = await readJSON(join(directory, 'package.json'))
+    if (!pkg.dependencies[packageId]) {
+      return false
+    }
+    const packagePath = findPackage(packageId, directory)
+    if (!packagePath) {
+      return false
+    }
+    const packageInfo = await readJSON(packagePath)
+    reporter.info(`Got packageInfo ${packagePath} ${packageInfo.version}`)
+    return packageInfo.version === version
+  } catch (err) {
+    reporter.error(err.message, err)
+    return false
   }
 }
 

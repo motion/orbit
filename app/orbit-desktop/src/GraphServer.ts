@@ -1,3 +1,4 @@
+import { findPackage } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { AppDefinition } from '@o/kit'
@@ -19,24 +20,7 @@ async function getWorkspaceAppPaths(workspace: string) {
   const packageJSON = join(workspaceRoot, 'package.json')
   const packages = (await readJSON(packageJSON)).dependencies
   return Object.keys(packages).map(pkgName => {
-    let cur = workspaceRoot
-    let path
-    while (!path && path !== '/') {
-      try {
-        path = require.resolve(join(cur, 'node_modules', pkgName))
-        // found "compiled out" path so lets make sure we go up to name
-        const baseName = pkgName.replace(/@[a-zA-Z0-9_\-\.]+\//, '') // remove any namespace
-        const packageRootIndex = path.split('/').findIndex(x => x === baseName) // find root index
-        const packageRoot = path
-          .split('/')
-          .slice(0, packageRootIndex + 1)
-          .join('/')
-        path = packageRoot
-      } catch {
-        cur = join(cur, '..')
-      }
-    }
-    return path
+    return findPackage(workspaceRoot, pkgName)
   })
 }
 

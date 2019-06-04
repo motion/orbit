@@ -14,7 +14,6 @@ import { CommandPublishOptions } from './command-publish'
 import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 
-
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
 const packageJson = require('../package.json')
@@ -67,9 +66,11 @@ Yargs.scriptName('orbit')
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
+      let directory = resolve(cwd, argv.ws)
       require('./command-install').commandInstall({
         workspace: argv.ws,
         identifier: argv.id,
+        directory,
         verbose: !!argv.verbose,
       })
     },

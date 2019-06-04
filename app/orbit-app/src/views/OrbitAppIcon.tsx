@@ -1,7 +1,7 @@
-import { AppBit, AppIcon } from '@o/kit'
+import { AppBit, AppIcon, removeApp } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import { Button, IconLabeled, IconLabeledProps, SegmentedRow, useContextMenu, View } from '@o/ui'
-import { Box, gloss, Theme } from 'gloss'
+import { Button, IconLabeled, IconLabeledProps, useContextMenu, SurfacePassProps } from '@o/ui'
+import { Box, gloss, Theme, Row } from 'gloss'
 import React, { memo } from 'react'
 
 export const OrbitAppIcon = memo(
@@ -17,17 +17,22 @@ export const OrbitAppIcon = memo(
     return (
       <Theme alt={isSelected ? 'selected' : undefined}>
         <AppIconContainer isSelected={isSelected}>
-          <View position="absolute" top={20} left={20}>
-            <SegmentedRow chromeless iconSize={12} opacity={0.5}>
+          <SurfacePassProps chromeless iconSize={12} opacity={0.5}>
+            <Row position="absolute" top={10} right={10}>
               {app.tabDisplay === 'permanent' && <Button icon="lock" />}
               {app.tabDisplay === 'pinned' && (
                 <Button hoverStyle={{ opacity: 1 }} tooltip="Unpin" icon="pin" />
               )}
               {app.tabDisplay !== 'permanent' && (
-                <Button hoverStyle={{ opacity: 1 }} tooltip="Remove" icon="uiremove" />
+                <Button
+                  hoverStyle={{ opacity: 1 }}
+                  tooltip="Remove"
+                  icon="cross"
+                  onClick={() => removeApp(app)}
+                />
               )}
-            </SegmentedRow>
-          </View>
+            </Row>
+          </SurfacePassProps>
           <IconLabeled
             {...contextMenuProps}
             label={app.name}

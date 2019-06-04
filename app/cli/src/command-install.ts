@@ -1,8 +1,9 @@
+import { Logger } from '@o/logger'
+import execa from 'execa'
+
 import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
 import { reporter } from './reporter'
 import { getPackageId } from './util/getPackageId'
-import execa from 'execa'
-import { Logger } from '@o/logger'
 
 export type CommandInstallOptions = {
   directory: string
@@ -10,7 +11,12 @@ export type CommandInstallOptions = {
   verbose?: boolean
 }
 
-export async function commandInstall(options: CommandInstallOptions) {
+export type CommandInstallRes = {
+  type: 'success' | 'error'
+  message: string
+}
+
+export async function commandInstall(options: CommandInstallOptions): Promise<CommandInstallRes> {
   reporter.info(`Installing ${options.identifier} into ${options.directory}`)
 
   const command = await yarnOrNpm()
@@ -41,6 +47,8 @@ export async function commandInstall(options: CommandInstallOptions) {
       message: `${err.message}`,
     }
   }
+
+  // TODO send command to desktop to AppOpenWorkspaceCommand
 
   return {
     type: 'success' as const,

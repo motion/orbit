@@ -1,9 +1,9 @@
 import { AppDefinition, Logger } from '@o/kit'
 import { Space } from '@o/models'
+import { pathExists } from 'fs-extra'
 import { join } from 'path'
 
 import { getWorkspaceAppMeta } from './getWorkspaceAppMeta'
-import { pathExists } from 'fs-extra'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
@@ -57,7 +57,7 @@ export async function requireAppEntry(
         message: 'No entry file',
       }
     }
-    const nodeEntry = require(entryPath)
+    nodeEntry = require(entryPath)
     if (!nodeEntry || !nodeEntry.default) {
       log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
       return {

@@ -1,8 +1,9 @@
 import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
 import { Logger } from '@o/kit'
-import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@o/models'
+import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
+import { getActiveSpace } from '../helpers/getActiveSpace'
 import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
 
@@ -21,8 +22,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       throw new Error(`No token returned ${JSON.stringify(values)}`)
     }
 
-    const user = await getRepository(UserEntity).findOne({})
-    const space = await getRepository(SpaceEntity).findOne({ where: { id: user.activeSpace } })
+    const space = await getActiveSpace()
     let app: AppBit = {
       target: 'app',
       name: '',

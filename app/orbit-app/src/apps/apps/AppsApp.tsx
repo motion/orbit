@@ -1,29 +1,6 @@
-import {
-  App,
-  AppDefinition,
-  AppIcon,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  isDataDefinition,
-  removeApp,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useAppDefinitions,
-  useAppWithDefinition,
-} from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import {
-  Button,
-  Col,
-  FormField,
-  Icon,
-  List,
-  ListItemProps,
-  Section,
-  SubSection,
-  SubTitle,
-} from '@o/ui'
+import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle } from '@o/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -82,7 +59,8 @@ const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
 })
 
 export function AppsIndex() {
-  const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
+  const allApps = useActiveAppsWithDefinition()
+  const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
   const [topApps, setTopApps] = useState<ListItemProps[]>([])
   const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
@@ -127,6 +105,9 @@ export function AppsIndex() {
       after: sourceIcon,
     })),
   ]
+
+  const dataAppDefinitions = useDataAppDefinitions()
+  console.log('dataAppDefinitions', dataAppDefinitions)
 
   return (
     <List
@@ -177,7 +158,7 @@ export function AppsIndex() {
             </Col>
           ),
         },
-        ...useDataAppDefinitions().map(appDefToListItem),
+        ...dataAppDefinitions.map(appDefToListItem),
         ...topApps,
         ...searchResults,
       ]}

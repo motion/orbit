@@ -9,8 +9,9 @@ export type AppWithDefinition = {
 }
 
 export function useActiveAppsWithDefinition(type?: string): AppWithDefinition[] {
+  const activeApps = useActiveApps(type)
   return (
-    useActiveApps(type)
+    activeApps
       .map(app => ({
         definition: getAppDefinition(app.identifier),
         app,

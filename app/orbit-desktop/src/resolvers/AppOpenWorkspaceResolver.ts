@@ -34,7 +34,8 @@ export const AppOpenWorkspaceResolver = resolveCommand(
     user.activeSpace = space.id
     await getRepository(UserEntity).save(user)
 
-    // see OrbitAppsManager for other app related sync
+    // ensure app bits
+    // TODO add orbitAppsManager.updateAppDefinitions()
 
     return true
   },

@@ -12,6 +12,7 @@ import {
   Space,
   SurfacePassProps,
   View,
+  SizedSurfaceProps,
 } from '@o/ui'
 import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
@@ -25,7 +26,7 @@ import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
 // import { clipboard } from 'electron'
-export const headerButtonProps = {
+export const headerButtonProps: SizedSurfaceProps = {
   circular: true,
   background: 'transparent',
   glint: false,
@@ -34,6 +35,9 @@ export const headerButtonProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
+  tooltipProps: {
+    distance: 18,
+  },
   iconSize: 14,
   activeStyle: false,
 }
@@ -88,9 +92,7 @@ export const OrbitHeader = memo(() => {
                     </HeaderButtonPassProps>
                   </ExtraButtonsChrome>
                 )}
-                <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                  {!isEditing && <OpenButton />}
-                </SurfacePassProps>
+                {!isEditing && <OpenButton sizeRadius={1.2} sizePadding={1.2} fontWeight={500} />}
               </>
             )}
           </HeaderContain>

@@ -1,9 +1,10 @@
 import { AppDefinition, decorate, ensure, react } from '@o/kit'
 import { AppBit, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
-import { FSWatcher, watch } from 'chokidar'
+import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
+import { getActiveSpace } from '../helpers/getActiveSpace'
 import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
 
@@ -11,13 +12,41 @@ export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
   'itemType',
   'identifier',
-  'sourceIdentifier',
   'spaceId',
   'name',
   'tabDisplay',
   'colors',
   'token',
 ]
+
+export async function ensureAppBitsForAppDefinitions(definitions: AppDefinition[]) {
+  const space = await getActiveSpace()
+  for (const def of definitions) {
+    // downloaded definition, create new AppBit for it
+    if (
+      !(await getRepository(AppEntity).findOne({
+        where: {
+          identifier: def.id,
+        },
+      }))
+    ) {
+      // TODO we need this to be available as a direct call from install command
+      // it also needs to be here to pick up actions from adding to package.json
+      await getRepository(AppEntity).create({
+        target: 'app',
+        name: `${def.name}`,
+        identifier: `${def.id}`,
+        itemType: def.itemType,
+        spaces: [space],
+        spaceId: space.id,
+        tabDisplay: 'plain',
+        colors: ['black', 'black'],
+        token: '',
+        data: {},
+      })
+    }
+  }
+}
 
 @decorate
 export class OrbitAppsManager {
@@ -26,8 +55,7 @@ export class OrbitAppsManager {
   apps: AppBit[] = []
   user: User = null
   spaceFolders: { [id: number]: string } = {}
-  packageWatcher: FSWatcher = null
-  packageRefresh = 0
+  packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   appDefinitions: { [identifier: string]: AppDefinition } = {}
   packageIdToIdentifier = {}
@@ -63,21 +91,26 @@ export class OrbitAppsManager {
     return this.spaces.find(x => x.id === this.user.activeSpace)
   }
 
-  updateAppDefinitions = react(
-    () => [this.activeSpace, this.packageRefresh],
-    async ([space]) => {
+  updateAppDefinitionsReaction = react(
+    () => [this.activeSpace, this.packageJsonUpdate],
+    ([space]) => {
       ensure('space', !!space)
-      const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
-      this.packageIdToIdentifier = {
-        ...this.packageIdToIdentifier,
-        ...packageIdToIdentifier,
-      }
-      this.appDefinitions = {
-        ...this.appDefinitions,
-        ...definitions,
-      }
+      this.updateAppDefinitions(space)
     },
   )
+
+  updateAppDefinitions = async (space: Space) => {
+    const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
+    await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
+    this.packageIdToIdentifier = {
+      ...this.packageIdToIdentifier,
+      ...packageIdToIdentifier,
+    }
+    this.appDefinitions = {
+      ...this.appDefinitions,
+      ...definitions,
+    }
+  }
 
   updateAppMeta = react(
     () => this.appDefinitions,
@@ -94,17 +127,21 @@ export class OrbitAppsManager {
 
   syncFromActiveSpacePackageJSON = react(
     () => this.activeSpace,
-    space => {
+    (space, { useEffect }) => {
       ensure('space', !!space)
-      if (this.packageWatcher) {
-        this.packageWatcher.close()
-      }
       const pkg = join(space.directory, 'package.json')
-      this.packageWatcher = watch(pkg, {
-        persistent: true,
-      })
-      this.packageWatcher.on('change', () => {
-        this.packageRefresh++
+      console.log('watching package.json for changes', pkg)
+      useEffect(() => {
+        let watcher = watch(pkg, {
+          persistent: true,
+        })
+        watcher.on('change', () => {
+          console.log('got package.json change')
+          this.packageJsonUpdate = Math.random()
+        })
+        return () => {
+          watcher.close()
+        }
       })
     },
   )

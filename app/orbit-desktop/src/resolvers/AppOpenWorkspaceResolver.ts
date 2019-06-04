@@ -6,15 +6,16 @@ import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
+import { OrbitAppsManager } from '../managers/OrbitAppsManager'
+
 const log = new Logger('AppOpenWorkspaceResolver')
 
 type WorkspaceInfo = {
   identifier: string
 }
 
-export const AppOpenWorkspaceResolver = resolveCommand(
-  AppOpenWorkspaceCommand,
-  async ({ path, appIdentifiers }) => {
+export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
+  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, appIdentifiers }) => {
     Desktop.setState({
       workspaceState: {
         path,
@@ -23,11 +24,11 @@ export const AppOpenWorkspaceResolver = resolveCommand(
     })
 
     const { identifier } = await loadWorkspace(path)
-    console.log('got', identifier)
+    log.info('got', identifier)
 
     // ensure/find space
     const space = await findOrCreateSpace(identifier, path)
-    console.log('got space', space)
+    log.info('got space', space)
 
     // set active space
     const user = await getRepository(UserEntity).findOne({})
@@ -35,11 +36,11 @@ export const AppOpenWorkspaceResolver = resolveCommand(
     await getRepository(UserEntity).save(user)
 
     // ensure app bits
-    // TODO add orbitAppsManager.updateAppDefinitions()
+    await appsManager.updateAppDefinitions(space)
 
     return true
-  },
-)
+  })
+}
 
 async function loadWorkspace(path: string): Promise<WorkspaceInfo> {
   const pkg = await readJSON(join(path, 'package.json'))

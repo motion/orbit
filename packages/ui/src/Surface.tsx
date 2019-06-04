@@ -503,6 +503,11 @@ const chromelessStyle = {
   background: 'transparent',
 }
 
+const defaultTextTheme = {
+  fontSize: undefined,
+  lineHeight: undefined,
+}
+
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   display: 'flex', // in case they change tagName
@@ -520,7 +525,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     padding: 0,
   },
 }).theme((props, theme) => {
-  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || {}
+  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const marginStyle = getMargin(props)

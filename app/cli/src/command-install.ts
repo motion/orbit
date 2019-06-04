@@ -2,6 +2,7 @@ import { Logger } from '@o/logger'
 import execa from 'execa'
 
 import { getRegistryLatestVersion, yarnOrNpm } from './command-publish'
+import { reloadAppDefinitions } from './command-ws'
 import { reporter } from './reporter'
 import { getPackageId } from './util/getPackageId'
 
@@ -48,7 +49,8 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  // TODO send command to desktop to AppOpenWorkspaceCommand
+  // re-open this workspace to trigger loading newly installed app definition
+  await reloadAppDefinitions(options.directory)
 
   return {
     type: 'success' as const,

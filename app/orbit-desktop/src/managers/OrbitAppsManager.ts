@@ -1,4 +1,4 @@
-import { AppDefinition, decorate, ensure, react } from '@o/kit'
+import { AppDefinition, decorate, ensure, Logger, react } from '@o/kit'
 import { AppBit, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { watch } from 'chokidar'
 import { join } from 'path'
@@ -7,6 +7,8 @@ import { getRepository } from 'typeorm'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
+
+const log = new Logger('OrbitAppsManager')
 
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
@@ -100,6 +102,7 @@ export class OrbitAppsManager {
   )
 
   updateAppDefinitions = async (space: Space) => {
+    log.info(`Updaing app definitions for space ${space.id}`)
     const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
     await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
     this.packageIdToIdentifier = {

@@ -94,5 +94,13 @@ export function ManageApps() {
 }
 
 function AppSortableGrid<A>(props: SortableGridProps<A>) {
-  return <SortableGrid itemMinWidth={180} itemMaxWidth={220} distance={10} {...props} />
+  return (
+    <SortableGrid
+      itemMinWidth={180}
+      itemMaxWidth={220}
+      itemMinHeight={220}
+      distance={10}
+      {...props}
+    />
+  )
 }

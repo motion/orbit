@@ -30,14 +30,7 @@ export const IconLabeled = memo(
     return (
       <Scale size={size}>
         <Col flex={1} pad space alignItems="center" justifyContent="center" {...restProps}>
-          <Col
-            marginTop="md"
-            marginBottom="sm"
-            alignItems="center"
-            position="relative"
-            width={size * 48}
-            height={size * 48}
-          >
+          <Col marginTop="md" marginBottom="sm" alignItems="center" position="relative">
             {typeof icon === 'string' ? (
               <Icon name={icon} size={sizeNum * 48} {...iconProps} />
             ) : (

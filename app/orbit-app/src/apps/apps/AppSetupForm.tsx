@@ -1,16 +1,9 @@
-import {
-  AppBit,
-  AppDefinition,
-  AppModel,
-  command,
-  save,
-  selectDefined,
-  useActiveSpace,
-  useAppBit,
-} from '@o/kit'
+import { AppBit, AppDefinition, command, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
 import { AppDefinitionSetupVerifyCommand } from '@o/models'
 import { Form, FormProps } from '@o/ui'
 import React from 'react'
+
+import { installApp } from '../../helpers/installApp'
 
 export function createNewApp(def: AppDefinition): AppBit {
   return {
@@ -61,7 +54,12 @@ export function AppSetupForm({
 
         // attempt save
         try {
-          await save(AppModel, app)
+          const next = await installApp(def, app)
+          if (next.type === 'error') {
+            return next
+          }
+
+          // success!
           return true
         } catch (err) {
           return err.message

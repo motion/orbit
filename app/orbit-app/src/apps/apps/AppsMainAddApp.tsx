@@ -1,23 +1,5 @@
-import {
-  AppDefinition,
-  AppIcon,
-  getSearchAppDefinitions,
-  useAppDefinition,
-  useAppDefinitionFromStore,
-  useAppStoreInstalledAppDefinition,
-} from '@o/kit'
-import {
-  BannerHandle,
-  Button,
-  ButtonProps,
-  Loading,
-  Message,
-  Paragraph,
-  Row,
-  Section,
-  SubTitle,
-  useBanner,
-} from '@o/ui'
+import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
@@ -98,7 +80,7 @@ export function AppsMainAddAppContent({
             </Button>
           )}
           {!def.auth && !def.setup && (
-            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def)}>
+            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def, true)}>
               Install
             </Button>
           )}

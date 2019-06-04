@@ -23,6 +23,7 @@ export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
 
 export async function ensureAppBitsForAppDefinitions(definitions: AppDefinition[]) {
   const space = await getActiveSpace()
+  log.info(`Ensuring app bits for definitions ${definitions.length}`)
   for (const def of definitions) {
     // downloaded definition, create new AppBit for it
     if (
@@ -32,6 +33,7 @@ export async function ensureAppBitsForAppDefinitions(definitions: AppDefinition[
         },
       }))
     ) {
+      log.info(`No app bit found for definition ${def.id}`)
       // TODO we need this to be available as a direct call from install command
       // it also needs to be here to pick up actions from adding to package.json
       await getRepository(AppEntity).create({

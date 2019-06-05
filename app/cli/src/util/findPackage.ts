@@ -2,6 +2,10 @@ import { join } from 'path'
 
 import { reporter } from '../reporter'
 
+/**
+ * Finds a package root directory (where package.json is) given id and current directory
+ * Traverses upwards as necessary to find node_modules
+ */
 export function findPackage({ packageId, directory }: { packageId: string; directory: string }) {
   let cur = directory
   let path = ''

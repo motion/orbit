@@ -1,4 +1,4 @@
-import { findPackage } from '@o/cli'
+import { getWorkspaceAppPaths } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { Logger } from '@o/logger'
@@ -7,22 +7,13 @@ import { partition } from '@o/utils'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
-import { pathExistsSync, readJSON } from 'fs-extra'
+import { pathExistsSync } from 'fs-extra'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
 import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
-
-async function getWorkspaceAppPaths(workspaceEntry: string) {
-  const directory = join(require.resolve(workspaceEntry), '..')
-  const packageJSON = join(directory, 'package.json')
-  const packages = (await readJSON(packageJSON)).dependencies
-  return Object.keys(packages).map(packageId => {
-    return findPackage({ directory, packageId })
-  })
-}
 
 const entryFileNames = {
   node: 'index.node.js',

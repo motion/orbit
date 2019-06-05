@@ -1,4 +1,4 @@
-import { commandInstall, getPackageId, requireAppDefinition } from '@o/cli'
+import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
@@ -36,6 +36,7 @@ function resolveInstallAppToWorkspace() {
     if (res.type === 'error') {
       return res
     }
+    await updateWorkspacePackageIds(directory)
     return {
       type: 'success' as const,
       message: `Installed ${identifier} successfully`,

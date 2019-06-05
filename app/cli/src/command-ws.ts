@@ -5,6 +5,7 @@ import { join } from 'path'
 
 import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
+import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 export type CommandWsOptions = {
   workspaceRoot: string
@@ -33,6 +34,8 @@ export async function commandWs(options: CommandWsOptions) {
   }
 
   const appIdentifiers = await watchBuildWorkspace(options)
+
+  await updateWorkspacePackageIds(options.workspaceRoot)
 
   let orbitDesktop = await getOrbitDesktop()
 

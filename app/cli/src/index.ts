@@ -215,6 +215,8 @@ export * from './util/downloadAppDefinition'
 export * from './util/requireAppDefinition'
 export * from './util/getPackageId'
 export * from './util/findPackage'
+export * from './util/getWorkspaceAppPaths'
+export * from './util/updateWorkspacePackageIds'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 

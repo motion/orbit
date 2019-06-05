@@ -30,7 +30,7 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
     const theme = selectThemeSubset(props.themeSelect, themeIn)
     const themeStyle = psuedoStyleTheme(props, theme)
     return {
-      padding: [scale * 4, scale * 8],
+      padding: [scale * 5, scale * 8],
       ...themeStyle,
     }
   },

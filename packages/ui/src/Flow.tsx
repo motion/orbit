@@ -90,6 +90,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
       minHeight={300}
       height={height}
       flex={1}
+      titlePad={['lg', true, false]}
       belowTitle={
         <SurfacePassProps
           background="transparent"

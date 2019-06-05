@@ -47,6 +47,9 @@ export function getSpaceSize(space: Sizes) {
   if (typeof space === 'number') {
     return space
   }
+  if (space === false) {
+    return 0
+  }
   if (!space || space === true) {
     space = 'md'
   }

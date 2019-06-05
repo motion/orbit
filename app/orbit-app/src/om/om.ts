@@ -31,13 +31,11 @@ const config = merge(
 
 export type Om = Overmind<typeof config>
 
-export const om: Overmind<typeof config> =
-  window['om'] ||
-  createOvermind(config, {
-    logProxies: true,
-  })
+export const om: Overmind<typeof config> = createOvermind(config, {
+  logProxies: true,
+})
 
-export const useOm = createHook(om)
+export const useOm = createHook<typeof config>()
 
 window['om'] = om
 

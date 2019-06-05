@@ -40,7 +40,7 @@
     "graphql": "14.2.1"
   },
   "devDependencies": {
-    "overmind-devtools": "18.1.0",
+    "overmind-devtools": "19.0.0",
     "typescript": "3.5.1",
     "@babel/runtime": "^7.4.4",
     "@babel/cli": "^7.4.4",

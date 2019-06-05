@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle } from '@o/ui'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn } from '@o/ui'
+import React, { useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
@@ -59,12 +59,19 @@ const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   subId: item.identifier,
 })
 
+export async function searchApps(query: string): Promise<ApiSearchItem[]> {
+  query = query.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
+  return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
+}
+
 export function AppsIndex() {
   const allApps = useActiveAppsWithDefinition()
   const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
   const [topApps, setTopApps] = useState<ListItemProps[]>([])
-  const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
+  const [searchResults, search] = useAsyncFn(searchApps)
+
+  console.log('searchResults', searchResults)
 
   useEffect(() => {
     fetch(`https://tryorbit.com/api/apps`)
@@ -78,24 +85,6 @@ export function AppsIndex() {
           })),
         )
       })
-  }, [])
-
-  const handleQuery = useCallback(next => {
-    let cancel = false
-    const query = next.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
-    console.log('search', next, 'query', query)
-
-    fetch(`https://tryorbit.com/api/search/${query}`)
-      .then(res => res.json())
-      .then((res: ApiSearchItem[]) => {
-        if (!cancel) {
-          setSearchResults(res.slice(0, 200).map(appSearchToListItem))
-        }
-      })
-
-    return () => {
-      cancel = true
-    }
   }, [])
 
   const myApps = [
@@ -113,7 +102,7 @@ export function AppsIndex() {
     <List
       title="Manage Apps"
       subTitle="Use search to find new apps."
-      onQueryChange={handleQuery}
+      onQueryChange={search}
       itemProps={{
         iconBefore: true,
       }}
@@ -160,7 +149,9 @@ export function AppsIndex() {
         },
         ...localApps.map(appDefToListItem),
         ...topApps,
-        ...searchResults,
+        ...(searchResults.value
+          ? searchResults.value.map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
+          : []),
       ]}
     />
   )

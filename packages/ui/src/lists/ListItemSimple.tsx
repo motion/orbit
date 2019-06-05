@@ -109,6 +109,9 @@ export type ListItemSpecificProps = ListItemHide & {
   /** Disable selection */
   disableSelect?: boolean
 
+  /** Disable filtering this item */
+  disableFilter?: boolean
+
   /** Event used on selection */
   onSelect?: HandleSelection
 

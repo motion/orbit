@@ -17,7 +17,7 @@ export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
-    let colors = props.colors || ['black', 'black']
+    let colors = props.colors || ['#000', '#111']
 
     const identifier = typeof props.identifier === 'string' ? props.identifier : false
     const definition = useAppDefinition(identifier)

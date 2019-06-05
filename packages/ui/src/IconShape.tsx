@@ -58,6 +58,7 @@ export const IconShape = memo(
           style={{
             transformOrigin: 'top left',
             transform: `scale(${scale})`,
+            overflow: 'visible',
           }}
         >
           {!!gradient && (

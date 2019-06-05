@@ -5,7 +5,7 @@ import { Button, ButtonProps, Icon, IconProps, memoIsEqualDeep, MenuTemplate, Ro
 import { Box, gloss, useTheme } from 'gloss'
 import * as React from 'react'
 
-export const tabHeight = 28
+export const tabHeight = 32
 const inactiveOpacity = 0.45
 const borderSize = 8
 

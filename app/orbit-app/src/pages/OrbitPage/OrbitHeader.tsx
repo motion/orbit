@@ -1,7 +1,7 @@
 import { invertLightness } from '@o/color'
-import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, IconShape, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -160,6 +160,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onHover={actions.setNavVisible}
         onChangeVisibility={actions.setNavVisible}
         open={state.router.isOnSetupApp ? true : state.navVisible}
+        open
         maxWidth="80vw"
         padding={4}
         elevation={10}
@@ -184,18 +185,18 @@ const HomeButton = memo(
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-
+    const color = invertLightness(theme.color, 0.5)
     return (
       <View ref={ref} {...props}>
-        <IconShape
+        <AppIcon
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
           hoverStyle={{
             opacity: 1,
           }}
-          color={invertLightness(theme.color, 0.5)}
-          name={state.navHovered || state.navVisible ? 'home' : icon}
+          colors={[color, color]}
+          identifier={state.navHovered || state.navVisible ? 'home' : icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()

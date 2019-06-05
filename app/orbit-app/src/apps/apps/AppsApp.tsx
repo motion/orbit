@@ -40,7 +40,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
     title: def.name,
-    icon: <AppIcon identifier={def.id} colors={['black', 'red']} />,
+    icon: <AppIcon identifier={def.id} />,
     subTitle: getDescription(def) || 'No Description',
     after: sourceIcon,
     identifier: 'apps',
@@ -52,7 +52,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
   subTitle: item.description.slice(0, 300),
-  icon: <AppIcon icon={item.icon} colors={['pink', 'orange']} />,
+  icon: <AppIcon icon={item.icon} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
@@ -64,12 +64,20 @@ export async function searchApps(query: string): Promise<ApiSearchItem[]> {
   return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
 }
 
+export function useSearchApps() {
+  const [searchResults, search] = useAsyncFn(searchApps)
+  const results: ListItemProps[] = searchResults.value
+    ? searchResults.value.map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
+    : []
+  return [results, search] as const
+}
+
 export function AppsIndex() {
   const allApps = useActiveAppsWithDefinition()
   const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
   const [topApps, setTopApps] = useState<ListItemProps[]>([])
-  const [searchResults, search] = useAsyncFn(searchApps)
+  const [searchItems, search] = useSearchApps()
 
   useEffect(() => {
     fetch(`https://tryorbit.com/api/apps`)
@@ -147,9 +155,7 @@ export function AppsIndex() {
         },
         ...localApps.map(appDefToListItem),
         ...topApps,
-        ...(searchResults.value
-          ? searchResults.value.map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
-          : []),
+        ...searchItems,
       ]}
     />
   )

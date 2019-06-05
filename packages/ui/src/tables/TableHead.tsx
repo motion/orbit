@@ -4,7 +4,6 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-import { linearGradient } from '@o/color'
 import { Box, gloss, Row } from 'gloss'
 import invariant from 'invariant'
 import * as React from 'react'
@@ -40,14 +39,7 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-}).theme((_, theme) => ({
-  '&:hover': {
-    background: theme.backgroundHover.alpha(x => x * 0.25),
-  },
-  '&:active': {
-    background: theme.backgroundHover,
-  },
-}))
+})
 
 const TableHeaderColumnContainer = gloss(Box, {
   flexFlow: 'row',
@@ -80,7 +72,7 @@ const TableHeadColumnContainer = gloss(Box, {
     content: '" "',
     right: 0,
     top: '15%',
-    height: '60%',
+    height: '75%',
     width: 1,
   },
   '&:last-child::after': {
@@ -89,8 +81,7 @@ const TableHeadColumnContainer = gloss(Box, {
 }).theme(({ width, height }, theme) => ({
   lineHeight: height || `${DEFAULT_ROW_HEIGHT}px`,
   height: height || DEFAULT_ROW_HEIGHT,
-  background:
-    theme.tableHeadBackground || linearGradient(theme.background, theme.background.darken(0.05)),
+  background: theme.tableHeadBackground || theme.backgroundStrong,
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
   '&:after': {

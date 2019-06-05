@@ -4,7 +4,7 @@ import React from 'react'
 import { useLocationLink } from '../hooks/useLocationLink'
 
 export function LocationLink({ url, ...rest }: { url: string } & BlockProps) {
-  return <LinkChrome {...useLocationLink(url)} {...rest} />
+  return <LinkChrome onClick={useLocationLink(url)} {...rest} />
 }
 
 const LinkChrome = gloss(Block, {

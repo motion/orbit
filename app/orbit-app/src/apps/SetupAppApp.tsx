@@ -1,4 +1,4 @@
-import { AppIcon, createApp } from '@o/kit'
+import { AppIcon, createApp, useLocationLink } from '@o/kit'
 import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
 import React, { useState } from 'react'
 
@@ -136,9 +136,10 @@ function SetupAppHome() {
         background="transparent"
         margin="auto"
         height="80%"
-        title="New visual app"
+        title="New app"
         bordered
-        subTitle="Choose from installed apps, or search for more."
+        subTitle="Add app to your workspace."
+        afterTitle={<Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>}
       >
         <List
           searchable
@@ -146,6 +147,9 @@ function SetupAppHome() {
           selectable
           alwaysSelected
           onSelect={rows => setSelected(rows[0])}
+          itemProps={{
+            iconBefore: true,
+          }}
           items={[...installedApps, ...searchedApps, ...topApps]}
         />
       </Section>

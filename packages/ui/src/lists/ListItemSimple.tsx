@@ -450,7 +450,7 @@ function getIcon(props: ListItemSimpleProps) {
     ...props.iconProps,
   }
   if (!props.iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${3}px)` }
+    iconPropsFinal['style'] = { transform: `translateY(${1}px)` }
   }
   let element = props.icon
   if (React.isValidElement(props.icon)) {

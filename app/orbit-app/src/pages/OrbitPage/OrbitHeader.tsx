@@ -102,13 +102,13 @@ export const OrbitHeader = memo(() => {
                 <>
                   <Button
                     {...om.state.router.appId === 'query-builder' && activeStyle}
-                    {...useLocationLink('/app/query-builder')}
+                    onClick={useLocationLink('/app/query-builder')}
                     icon="layers"
                     tooltip="Query Builder"
                   />
                   <Button
                     {...om.state.router.appId === 'apps' && activeStyle}
-                    {...useLocationLink('/app/apps')}
+                    onClick={useLocationLink('/app/apps')}
                     icon="layout-grid"
                     tooltip="Manage apps"
                   />

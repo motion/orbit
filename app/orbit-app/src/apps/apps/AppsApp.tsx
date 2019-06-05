@@ -71,8 +71,6 @@ export function AppsIndex() {
   const [topApps, setTopApps] = useState<ListItemProps[]>([])
   const [searchResults, search] = useAsyncFn(searchApps)
 
-  console.log('searchResults', searchResults)
-
   useEffect(() => {
     fetch(`https://tryorbit.com/api/apps`)
       .then(res => res.json())

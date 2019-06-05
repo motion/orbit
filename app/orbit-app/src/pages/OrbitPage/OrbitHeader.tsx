@@ -160,7 +160,6 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onHover={actions.setNavVisible}
         onChangeVisibility={actions.setNavVisible}
         open={state.router.isOnSetupApp ? true : state.navVisible}
-        open
         maxWidth="80vw"
         padding={4}
         elevation={10}

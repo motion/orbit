@@ -19,7 +19,7 @@ export function AppsMainNew({ app }: { app: AppBit }) {
   return (
     <Col space>
       <FormField label="Icon">
-        <Row space>
+        <Row space alignItems="center">
           <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
           <Col space>
             <ColorPicker
@@ -28,6 +28,7 @@ export function AppsMainNew({ app }: { app: AppBit }) {
               }}
               activeColor={state.setupApp.app.colors[0]}
             />
+            {/* TODO icon picker */}
             <ColorPicker
               onChangeColor={colors => {
                 actions.setupApp.update({ colors })

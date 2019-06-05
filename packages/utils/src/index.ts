@@ -112,8 +112,10 @@ export const selectObject = (x: any) => {
   return x
 }
 
-// splits an object into two based on the filterFn return value
-// returns two-arity array of objects
+/**
+ * splits an object into two based on the filterFn return value.
+ * returns two-arity array of objects
+ */
 export function partitionObject<A extends Object>(
   obj: A,
   filterFn: (key: string) => boolean,
@@ -125,6 +127,31 @@ export function partitionObject<A extends Object>(
       a[key] = obj[key]
     } else {
       b[key] = obj[key]
+    }
+  }
+  return [a, b]
+}
+
+/**
+ * A typed partition function for lists
+ */
+
+export function partition<T, U extends T>(
+  list: T[],
+  predicate: (v: T) => v is U,
+): [U[], Exclude<T, U>[]]
+export function partition<T>(list: T[], predicate: (x: T) => boolean): [T[], T[]]
+export function partition<T, U extends T>(
+  list: T[],
+  predicate: (v: T) => boolean,
+): [U[], Exclude<T, U>[]] {
+  let a: any[] = []
+  let b: any[] = []
+  for (const x of list) {
+    if (predicate(x)) {
+      a.push(x)
+    } else {
+      b.push(x)
     }
   }
   return [a, b]

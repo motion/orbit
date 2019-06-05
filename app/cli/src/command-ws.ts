@@ -87,7 +87,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
   }
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
-    console.log('building apps DLL once...')
+    console.log('building all apps once...')
     await webpackPromise([getAppConfig(appsConf)])
   }
 
@@ -142,8 +142,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
         },
         extraConfig[name],
       )
-
-      console.log(name, extraEntries[name])
+      reporter.info(`extra entry: ${name}`)
     }
   }
 

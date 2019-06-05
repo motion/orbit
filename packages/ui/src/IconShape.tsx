@@ -63,7 +63,7 @@ export const IconShape = memo(
             bottom={0}
             left={0}
             zIndex={0}
-            borderRadius={size / 3}
+            borderRadius={size / 3.5}
             boxShadow={[[0, 0, 0, 3, theme.alternates.selected['background']]]}
           />
         )}

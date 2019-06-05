@@ -124,7 +124,6 @@ export const OrbitNav = memo(
               tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
               thicc
               icon={isOnSetupApp ? 'remove' : 'add'}
-              iconAdjustOpacity={-0.2}
               onClick={actions.router.toggleSetupAppPage}
             />
             {permanentItems.map(props => (

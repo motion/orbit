@@ -1,5 +1,5 @@
 import { AppIcon, createApp, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -128,31 +128,38 @@ function SetupAppHome() {
   )
 
   const [selected, setSelected] = useState<ListItemProps>(null)
+  const flow = useFlow({
+    initialData: {
+      selectedApp: null,
+    },
+  })
 
   return (
     <>
-      <Section
-        width="70%"
-        background="transparent"
-        margin="auto"
-        height="80%"
-        title="New app"
-        bordered
-        subTitle="Add app to your workspace."
-        afterTitle={<Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>}
-      >
-        <List
-          searchable
-          onQueryChange={search}
-          selectable
-          alwaysSelected
-          onSelect={rows => setSelected(rows[0])}
-          itemProps={{
-            iconBefore: true,
-          }}
-          items={[...installedApps, ...searchedApps, ...topApps]}
-        />
-      </Section>
+      <Col width="70%" height="70%" margin="auto">
+        <Flow
+          useFlow={flow}
+          afterTitle={<Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>}
+        >
+          <Flow.Step title="Pick app" subTitle="Choose type of app.">
+            <List
+              searchable
+              onQueryChange={search}
+              selectable
+              alwaysSelected
+              onSelect={rows => setSelected(rows[0])}
+              itemProps={{
+                iconBefore: true,
+              }}
+              items={[...installedApps, ...searchedApps, ...topApps]}
+            />
+          </Flow.Step>
+
+          <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
+            <div>hi</div>
+          </Flow.Step>
+        </Flow>
+      </Col>
 
       <Scale size="lg">
         <Toolbar>
@@ -170,8 +177,8 @@ function SetupAppHome() {
           </Button>
           <View flex={1} />
           {selected && (
-            <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
-              <Text ellipse alpha={0.6} size={1.25}>
+            <View>
+              <Text ellipse alpha={0.65} size={1.2}>
                 {selected.title}
               </Text>
             </View>
@@ -183,9 +190,8 @@ function SetupAppHome() {
               actions.setupApp.create(selected.identifier)
             }}
             icon="chevron-right"
-            tooltip="Create new custom app"
           >
-            Add
+            Configure
           </Button>
         </Toolbar>
       </Scale>

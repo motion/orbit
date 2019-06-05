@@ -2,13 +2,15 @@ import { createStoreContext } from '@o/use-store'
 import React, { Children, FunctionComponent, memo, useEffect, useState } from 'react'
 
 import { Button } from './buttons/Button'
-import { Section } from './Section'
+import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
 import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
 
-export type FlowPropsBase = {
+type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
+
+export type FlowPropsBase = FlowSectionProps & {
   children: any
   renderLayout?: (props: FlowLayoutProps) => React.ReactNode
   Toolbar?: FunctionComponent<FlowLayoutProps>
@@ -25,7 +27,7 @@ export type FlowProps =
       useFlow: FlowStore
     }
 
-type FlowStepProps = {
+type FlowStepProps = FlowSectionProps & {
   title?: string
   subTitle?: string
   children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
@@ -36,7 +38,7 @@ type FlowStep = FlowStepProps & {
   key: string
 }
 
-export type FlowLayoutProps = {
+export type FlowLayoutProps = FlowSectionProps & {
   Toolbar: FlowProps['Toolbar']
   children: React.ReactChild
   index: number
@@ -73,6 +75,7 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
         icon="chevron-right"
         onClick={props.currentStep.next}
       />
+      {props.afterTitle}
     </Row>
   )
 }
@@ -141,6 +144,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
     height,
     Toolbar = DefaultFlowToolbar,
     renderLayout = DefaultFlowLayout,
+    afterTitle,
     ...props
   }: FlowProps) => {
     const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
@@ -196,6 +200,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
           steps,
           currentStep: stepProps,
           height,
+          afterTitle,
         })}
       </>
     )

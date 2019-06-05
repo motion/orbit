@@ -190,7 +190,7 @@ function AppSettings(props: { appId: number }) {
     <Section
       flex={1}
       titleBorder
-      titlePad="xxl"
+      titlePad="lg"
       pad
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
@@ -204,7 +204,7 @@ function AppSettings(props: { appId: number }) {
         )
       }
     >
-      {!!definition.app && <AppsMainNew app={app} />}
+      {!!definition.app && <AppsMainNew customizeColor app={app} />}
 
       {!!definition.settings && (
         <Section title="Settings">

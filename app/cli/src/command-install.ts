@@ -20,7 +20,7 @@ export type CommandInstallRes = {
 }
 
 export async function commandInstall(options: CommandInstallOptions): Promise<CommandInstallRes> {
-  reporter.info(`Installing ${options.identifier} into ${options.directory}`)
+  reporter.info(`Checking for installation ${options.identifier} into ${options.directory}`)
 
   const command = await yarnOrNpm()
   const packageId = await getPackageId(options.identifier)
@@ -36,6 +36,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
 
   // check if already installed and avoid work
   if (await isInstalled(packageId, options.directory, curVersion)) {
+    reporter.info(`Definition is already installed ${packageId}`)
     if (!options.forceInstall) {
       return {
         type: 'success' as const,

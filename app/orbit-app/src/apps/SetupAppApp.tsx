@@ -186,13 +186,12 @@ function SetupAppHome() {
             </View>
           )}
           {flow.index === 0 && (
-            <Button size={1.4} alt="confirm" onClick={flow.next} icon="chevron-right">
+            <Button alt="confirm" onClick={flow.next} icon="chevron-right">
               Configure
             </Button>
           )}
           {flow.index === 1 && (
             <Button
-              size={1.4}
               alt="confirm"
               onClick={async () => {
                 const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
@@ -200,7 +199,7 @@ function SetupAppHome() {
               }}
               icon="chevron-right"
             >
-              {flow.index === 0 ? 'Configure' : 'Finish'}
+              Finish
             </Button>
           )}
         </Toolbar>

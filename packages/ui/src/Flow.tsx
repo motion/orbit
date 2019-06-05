@@ -28,12 +28,21 @@ export type FlowProps =
       useFlow: FlowStore
     }
 
-export type FlowStepProps = FlowSectionProps & {
-  title?: string
-  subTitle?: string
-  children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
-  validateFinished?: (a: any) => true | any
+type StepProps = {
+  data: any
+  setData: (a: any) => void
+  next: () => void
+  prev: () => void
+  setStepIndex: (index: number) => void
 }
+
+export type FlowStepProps = FlowSectionProps &
+  StepProps & {
+    title?: string
+    subTitle?: string
+    children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
+    validateFinished?: (a: any) => true | any
+  }
 
 type FlowStep = FlowStepProps & {
   key: string
@@ -49,14 +58,6 @@ export type FlowLayoutProps = FlowSectionProps &
     steps: FlowStep[]
     height?: number
   }
-
-type StepProps = {
-  data: any
-  setData: (a: any) => void
-  next: () => void
-  prev: () => void
-  setStepIndex: (index: number) => void
-}
 
 const DefaultFlowToolbar = (props: FlowLayoutProps) => {
   const isOnFirstStep = props.index === 0

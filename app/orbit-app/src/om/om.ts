@@ -7,7 +7,6 @@ import * as apps from './apps'
 import * as effects from './effects'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
-import * as setupApp from './setupApp'
 import * as spaces from './spaces'
 import { state } from './state'
 import * as user from './user'
@@ -22,7 +21,6 @@ const config = merge(
   },
   namespaced({
     router,
-    setupApp,
     apps,
     spaces,
     user,

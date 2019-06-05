@@ -1,13 +1,8 @@
 import { AppBit } from '@o/models'
+
 import { getUserApps } from '../apps/orbitApps'
 
 export class NewAppStore {
-  showCreateNew = false
-
-  setShowCreateNew = (val: boolean) => {
-    this.showCreateNew = val
-  }
-
   app: AppBit = {
     target: 'app',
     identifier: 'custom',
@@ -22,6 +17,7 @@ export class NewAppStore {
   }
 
   setApp(identifier: string) {
+    this.reset()
     const userApps = getUserApps()
     const nextApp = userApps.find(x => x.id === identifier)
     console.log('next app', nextApp)

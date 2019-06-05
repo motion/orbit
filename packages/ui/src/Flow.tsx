@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'

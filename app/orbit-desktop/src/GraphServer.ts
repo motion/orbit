@@ -136,7 +136,9 @@ export class GraphServer {
 
         const allWorkspaceDefs = await getWorkspaceAppDefinitions('@o/example-workspace', 'node')
         const [errors, nonErrors] = partition(allWorkspaceDefs, x => x.type === 'error')
-        const appDefs = nonErrors.filter(x => x.type === 'success').map(x => x.definition)
+        const appDefs = nonErrors
+          .filter(x => x.type === 'success')
+          .map(x => x.type === 'success' && x.definition)
 
         if (errors.length) {
           // TODO should have a build process here where we automatically build un-built things, but requires work

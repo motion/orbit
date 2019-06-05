@@ -1,9 +1,9 @@
-import { AppIcon, createApp, useLocationLink } from '@o/kit'
+import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
 import { Button, Col, Flow, FlowStepProps, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 
-import { useNewAppBit } from '../helpers/installApp'
-import { useOm } from '../om/om'
+import { installApp, useNewAppBit } from '../helpers/installApp'
+import { newAppStore, useNewAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
 import { useUserVisualAppDefinitions } from './orbitApps'
@@ -33,8 +33,8 @@ function SetupAppMain() {
 }
 
 function SetupAppCustom() {
+  const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
-  const { actions } = useOm()
   const flow = useFlow({
     initialData: {
       selectedTemplate: null,
@@ -96,7 +96,7 @@ function SetupAppCustom() {
             size={1.4}
             alt="confirm"
             onClick={() => {
-              actions.setupApp.create(flow.data.identifier)
+              newAppStore.setApp(flow.data.identifier)
             }}
             icon="chevron-right"
           >
@@ -185,9 +185,24 @@ function SetupAppHome() {
               </Text>
             </View>
           )}
-          <Button size={1.4} alt="confirm" onClick={flow.next} icon="chevron-right">
-            {flow.index === 0 ? 'Configure' : 'Finish'}
-          </Button>
+          {flow.index === 0 && (
+            <Button size={1.4} alt="confirm" onClick={flow.next} icon="chevron-right">
+              Configure
+            </Button>
+          )}
+          {flow.index === 1 && (
+            <Button
+              size={1.4}
+              alt="confirm"
+              onClick={async () => {
+                const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+                installApp(definition, newAppStore.app)
+              }}
+              icon="chevron-right"
+            >
+              {flow.index === 0 ? 'Configure' : 'Finish'}
+            </Button>
+          )}
         </Toolbar>
       </Scale>
     </>
@@ -198,7 +213,9 @@ const FlowStepSetup = memo(({ data }: FlowStepProps) => {
   const appBit = useNewAppBit(data.selectedAppIdentifier)
   return (
     <Col pad flex={1} scrollable="y">
-      <AppsMainNew customizeColor customizeIcon app={appBit} />
+      <Scale size={1.2}>
+        <AppsMainNew customizeColor app={appBit} />
+      </Scale>
     </Col>
   )
 })

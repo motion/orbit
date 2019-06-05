@@ -1,9 +1,9 @@
 import { AppBit, AppIcon } from '@o/kit'
-import { allIcons, Col, FormField, IconShape, Input, Row } from '@o/ui'
+import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
 import memoize from 'memoize-weak'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { useOm } from '../../om/om'
+import { useNewAppStore } from '../../om/stores'
 import { ColorPicker } from '../../views/ColorPicker'
 
 export function AppsMainNew({
@@ -15,9 +15,12 @@ export function AppsMainNew({
   customizeColor?: boolean
   customizeIcon?: boolean
 }) {
-  const { state, actions } = useOm()
+  const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
+  const updateName = useThrottledFn(e => newAppStore.update({ name: e.target.value }), {
+    amount: 100,
+  })
 
   useEffect(() => {
     if (inputRef.current) {
@@ -34,26 +37,21 @@ export function AppsMainNew({
           size={1.5}
           placeholder={app.name}
           margin={['auto', 0]}
-          value={state.setupApp.app.name}
-          onFocus={e => {
-            e.target.select()
-          }}
-          onChange={e => {
-            actions.setupApp.update({ name: e.target.value })
-          }}
+          defaultValue={newAppStore.app.name}
+          onChange={updateName}
         />
       </FormField>
       {(customizeColor || customizeIcon) && (
         <FormField label="Icon">
           <Row space alignItems="center" overflow="hidden">
-            <AppIcon identifier={app.identifier} colors={state.setupApp.app.colors} size={48} />
+            <AppIcon identifier={app.identifier} colors={newAppStore.app.colors} size={48} />
             <Col flex={1}>
               {customizeColor && (
                 <ColorPicker
                   onChangeColor={colors => {
-                    actions.setupApp.update({ colors })
+                    newAppStore.update({ colors })
                   }}
-                  activeColor={state.setupApp.app.colors[0]}
+                  activeColor={newAppStore.app.colors[0]}
                 />
               )}
               {customizeIcon && <IconPicker active={activeIcon} onChange={setActiveIcon} />}

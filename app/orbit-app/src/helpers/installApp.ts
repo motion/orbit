@@ -2,7 +2,7 @@ import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
 import { AppBit, AppModel, AuthAppCommand, InstallAppToWorkspaceCommand, SpaceModel, UserModel } from '@o/models'
 
-import { newAppStore, useNewAppStore } from '../om/stores'
+import { newAppStore } from '../om/stores'
 
 export function createNewAppBit(definition: AppDefinition): AppBit {
   return {
@@ -19,13 +19,10 @@ export function createNewAppBit(definition: AppDefinition): AppBit {
 
 export function useNewAppBit(identifier: string) {
   const definition = useAppDefinition(identifier)
-  const newAppStore = useNewAppStore()
   const [activeSpace] = useActiveSpace()
   return {
     ...createNewAppBit(definition),
     spaceId: activeSpace.id,
-    name: newAppStore.app.name || definition.name,
-    colors: newAppStore.app.colors,
   }
 }
 

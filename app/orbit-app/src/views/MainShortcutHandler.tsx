@@ -16,6 +16,8 @@ const rootShortcuts = {
   ESCAPE: 'esc',
   DOWN: 'down',
   UP: 'up',
+  BACK: 'command+[',
+  FORWARD: 'command+[',
   LEFT_TAB: 'command+shift+[',
   RIGHT_TAB: 'command+shift+]',
   LEFT: 'left',
@@ -86,6 +88,8 @@ export default memo(function MainShortcutHandler(props: {
     if (paneManagerStore) {
       res = {
         ...res,
+        BACK: () => actions.router.back(),
+        FORWARD: () => actions.router.forward(),
         RIGHT_TAB: () => paneManagerStore.move(Direction.right),
         LEFT_TAB: () => paneManagerStore.move(Direction.left),
         COMMAND_1: () => paneManagerStore.setNextPaneKeyableIndex(0),

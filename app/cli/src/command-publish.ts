@@ -160,7 +160,7 @@ export async function commandPublish(options: CommandPublishOptions) {
         name: app.name,
         icon: app.icon,
         features: Object.keys(app).filter(
-          x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync',
+          x => x === 'graph' || x === 'app' || x === 'api' || x === 'sync' || x === 'workers',
         ),
         fullDescription,
         setup: app.setup,

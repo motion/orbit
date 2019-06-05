@@ -3,6 +3,7 @@ import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdject
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
+import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { useUserVisualAppDefinitions } from './orbitApps'
 import { StackNavigator, useStackNavigator } from './StackNavigator'
 
@@ -107,9 +108,10 @@ function SetupAppCustom() {
 function SetupAppHome() {
   const { actions } = useOm()
   const stackNav = useStackNavigator()
-  const items: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
+  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
     identifier: app.id,
+    groupName: 'Installed apps',
     subTitle: app.description || 'No description',
     icon: <AppIcon identifier={app.id} />,
     iconBefore: true,
@@ -117,6 +119,11 @@ function SetupAppHome() {
       size: 44,
     },
   }))
+  const [searchedApps, search] = useSearchAppStoreApps(results =>
+    results.filter(res => res.features.some('app')),
+  )
+  const topApps = useTopAppStoreApps(results => results.filter(res => res.features.some('app')))
+
   const [selected, setSelected] = useState<ListItemProps>(null)
 
   return (
@@ -126,17 +133,17 @@ function SetupAppHome() {
         background="transparent"
         margin="auto"
         height="80%"
-        titleSize={0.85}
-        title="Add app to workspace"
+        title="New visual app"
         bordered
-        subTitle="Choose from your installed apps."
+        subTitle="Choose from installed apps, or search for more."
       >
         <List
           searchable
+          onQueryChange={search}
           selectable
           alwaysSelected
           onSelect={rows => setSelected(rows[0])}
-          items={items}
+          items={[...installedApps, ...searchedApps, ...topApps]}
         />
       </Section>
 

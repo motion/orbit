@@ -7793,10 +7793,10 @@ electron@*:
     electron-download "^4.1.0"
     extract-zip "^1.0.3"
 
-electron@6.0.0-beta.3:
-  version "6.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.0-beta.3.tgz#4ab6c36ddf0ec925fb98cfacef0763a1da8adf9d"
-  integrity sha512-mwZjpDtstv54drLGF4/c5eOfrj/1LccRY1H8otNM4jwuvCq76JcRXqQtRAarJJMUKOm/lFTDpQvryxY5Cv0LuA==
+electron@6.0.0-beta.6:
+  version "6.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.0-beta.6.tgz#11b8395b9dd25f9ecf79beaac726e18031b71c0d"
+  integrity sha512-w09md+UPBd7p20divMi91cOYYvIYtfOYFjc4Gm+ki8HVRTQlHpnhq752Suzie2NyGKIJYoK5MZbF06HIyPxO4g==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"

@@ -16,6 +16,7 @@ type Params = { [key: string]: string }
 type HistoryItem = { name: RouteName; path: string; params?: Params }
 
 export type RouterState = {
+  historyIndex: number
   history: HistoryItem[]
   pageName: string
   appId: string
@@ -50,6 +51,7 @@ const getItem = (name: RouteName, params?: Params): HistoryItem => ({
 // state
 
 export const state: RouterState = {
+  historyIndex: -1,
   history: [],
   pageName: 'home',
   appId: 'search',
@@ -106,8 +108,18 @@ const ignoreNextPush: Action = om => {
   om.state.router.ignoreNextPush = true
 }
 
-const back: Action = () => {
-  history.back()
+const back: Action = om => {
+  if (om.state.router.historyIndex > -1) {
+    om.state.router.historyIndex--
+    history.back()
+  }
+}
+
+const forward: Action = om => {
+  if (om.state.router.historyIndex < om.state.router.history.length - 1) {
+    om.state.router.historyIndex++
+    history.forward()
+  }
 }
 
 export const actions = {
@@ -118,6 +130,7 @@ export const actions = {
   toggleSetupAppPage,
   ignoreNextPush,
   back,
+  forward,
 }
 
 // effects

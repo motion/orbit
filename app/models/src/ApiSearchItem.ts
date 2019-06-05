@@ -3,7 +3,7 @@ export type ApiSearchItem = {
   identifier: string
   packageId: string
   description: string
-  features: string[]
+  features: ('graph' | 'app' | 'api' | 'sync' | 'workers')[]
   icon: string
   search: string[]
   installs: number

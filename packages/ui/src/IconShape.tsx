@@ -64,7 +64,7 @@ export const IconShape = memo(
             left={0}
             zIndex={0}
             borderRadius={size / 3}
-            boxShadow={[[0, 0, 0, 3, theme.alternates.selected.background]]}
+            boxShadow={[[0, 0, 0, 3, theme.alternates.selected['background']]]}
           />
         )}
         <svg

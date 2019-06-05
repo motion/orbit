@@ -1,6 +1,6 @@
 import { useModel } from '@o/bridge'
 import { UserModel } from '@o/models'
-import { selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { useEffect } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
@@ -33,10 +33,10 @@ export function useEnsureDefaultUserState<A>(uid: string, ensure: A) {
   const [user, update] = useModel(UserModel)
   useEffect(() => {
     if (!user) return
-    if (user.appState[uid]) return
+    if (isDefined(user.appState[uid])) return
     // ensure default
     update(next => {
-      console.log('settiing default', ensure)
+      console.log('user default state, set', ensure)
       next.appState[uid] = ensure
     })
   }, [user, uid])

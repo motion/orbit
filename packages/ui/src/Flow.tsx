@@ -1,7 +1,8 @@
-import { createStoreContext } from '@o/use-store'
-import React, { Children, FunctionComponent, memo, useEffect, useState } from 'react'
+import { createStoreContext, useHooks, useStore } from '@o/use-store'
+import React, { Children, FunctionComponent, memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { Button } from './buttons/Button'
+import { Config } from './helpers/configureUI'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
@@ -12,7 +13,7 @@ type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
 export type FlowPropsBase = FlowSectionProps & {
   children: any
-  renderLayout?: (props: FlowLayoutProps) => React.ReactNode
+  Layout?: FunctionComponent<FlowLayoutProps>
   Toolbar?: FunctionComponent<FlowLayoutProps>
   height?: number
 }
@@ -38,16 +39,16 @@ type FlowStep = FlowStepProps & {
   key: string
 }
 
-export type FlowLayoutProps = FlowSectionProps & {
-  Toolbar: FlowProps['Toolbar']
-  children: React.ReactChild
-  index: number
-  total: number
-  step: FlowStep
-  steps: FlowStep[]
-  currentStep: StepProps
-  height?: number
-}
+export type FlowLayoutProps = FlowSectionProps &
+  StepProps & {
+    Toolbar: FlowProps['Toolbar']
+    children: React.ReactChild
+    index: number
+    total: number
+    step: FlowStep
+    steps: FlowStep[]
+    height?: number
+  }
 
 type StepProps = {
   data: any
@@ -63,18 +64,8 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
 
   return (
     <Row space="sm">
-      <Button
-        disabled={isOnFirstStep}
-        iconAfter
-        icon="chevron-left"
-        onClick={props.currentStep.prev}
-      />
-      <Button
-        disabled={isOnLastStep}
-        iconAfter
-        icon="chevron-right"
-        onClick={props.currentStep.next}
-      />
+      <Button disabled={isOnFirstStep} iconAfter icon="chevron-left" onClick={props.prev} />
+      <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.next} />
       {props.afterTitle}
     </Row>
   )
@@ -109,7 +100,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
                 key={stp.key}
                 alt={steps[index].key === stp.key ? 'selected' : null}
                 active={steps[index].key === stp.key}
-                onClick={() => props.currentStep.setStepIndex(stepIndex)}
+                onClick={() => props.setStepIndex(stepIndex)}
               >
                 {stp.title || 'No title'}
               </Button>
@@ -130,11 +121,33 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 
 class FlowStore {
   props: FlowDataProps
-  data = this.props.initialData || null
+  total = 0
 
-  setData(next: any) {
-    this.data = next
+  private hooks = useHooks({
+    data: () => Config.useUserState('flow-data', this.props.initialData),
+    index: () => Config.useUserState('flow-index', 0),
+  })
+
+  get data() {
+    return this.hooks.data[0]
   }
+
+  get index() {
+    return this.hooks.index[0]
+  }
+
+  setData = this.hooks.data[1]
+  setStep = this.hooks.index[1]
+
+  setStepIndex = (x: number) => {
+    this.setStep(_ => {
+      console.log('setting to', x)
+      return x
+    })
+  }
+
+  next = () => this.setStepIndex(Math.min(this.total - 1, this.index + 1))
+  prev = () => this.setStepIndex(Math.max(0, this.index - 1))
 }
 
 const FlowStoreContext = createStoreContext(FlowStore)
@@ -144,40 +157,37 @@ export const Flow: FlowComponent<FlowProps> = memo(
   ({
     height,
     Toolbar = DefaultFlowToolbar,
-    renderLayout = DefaultFlowLayout,
+    Layout = DefaultFlowLayout,
     afterTitle,
     ...props
   }: FlowProps) => {
     const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
-    const flowStore = 'useFlow' in props ? props.useFlow : flowStoreInternal
-    const [index, setIndex] = useState(0)
-    const [data, setDataDumb] = useState(flowStore.props.initialData)
+    const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
     // make it  merge by default
-    const setData = x => setDataDumb({ ...data, ...x })
     const total = Children.count(props.children)
-    const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
-      (child, idx) => ({
-        key: `${idx}`,
-        ...child,
-      }),
+    const steps: FlowStep[] = useMemo(
+      () =>
+        Children.map(props.children, child => child.props).map((child, idx) => ({
+          key: `${idx}`,
+          ...child,
+        })),
+      [props.children],
     )
-    const next = () => setIndex(Math.min(total - 1, index + 1))
-    const prev = () => setIndex(Math.max(0, index - 1))
+
+    useLayoutEffect(() => {
+      flowStore.total = total
+    }, [total])
+
     const stepProps = {
-      data,
-      setData,
-      next,
-      prev,
-      setStepIndex: setIndex,
+      data: flowStore.data,
+      setData: flowStore.setData,
+      next: flowStore.next,
+      prev: flowStore.prev,
+      setStepIndex: flowStore.setStepIndex,
     }
 
-    // update store
-    useEffect(() => {
-      flowStore.setData(data)
-    }, [flowStore, data])
-
     const contents = (
-      <Slider fixHeightToParent curFrame={index}>
+      <Slider fixHeightToParent curFrame={flowStore.index}>
         {Children.map(props.children, (child, idx) => {
           const step = child.props
           const ChildView = step.children
@@ -191,19 +201,18 @@ export const Flow: FlowComponent<FlowProps> = memo(
     )
 
     return (
-      <>
-        {renderLayout({
-          Toolbar,
-          children: contents,
-          index: index,
-          total,
-          step: steps[index],
-          steps,
-          currentStep: stepProps,
-          height,
-          afterTitle,
-        })}
-      </>
+      <Layout
+        Toolbar={Toolbar}
+        total={total}
+        height={height}
+        afterTitle={afterTitle}
+        step={steps[flowStore.index]}
+        steps={steps}
+        index={flowStore.index}
+        {...stepProps}
+      >
+        {contents}
+      </Layout>
     )
   },
 ) as any

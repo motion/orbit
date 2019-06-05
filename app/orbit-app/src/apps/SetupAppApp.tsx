@@ -183,14 +183,7 @@ function SetupAppHome() {
               </Text>
             </View>
           )}
-          <Button
-            size={1.4}
-            alt="confirm"
-            onClick={() => {
-              actions.setupApp.create(selected.identifier)
-            }}
-            icon="chevron-right"
-          >
+          <Button size={1.4} alt="confirm" onClick={flow.nextStep} icon="chevron-right">
             Configure
           </Button>
         </Toolbar>

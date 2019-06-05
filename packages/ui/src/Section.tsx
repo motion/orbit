@@ -140,11 +140,12 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
 
     const titlePadFinal = selectDefined(
       selectDefined(
-        titlePad === false || typeof titlePad === 'number' ? titlePad : undefined,
+        titlePad === false || typeof titlePad === 'number' || Array.isArray(titlePad)
+          ? titlePad
+          : undefined,
         titlePad || pad ? defaultTitlePad : undefined,
         bordered ? selectDefined(pad, true) : undefined,
         titleBorder ? selectDefined(pad, defaultTitlePad) : undefined,
-        null,
       ),
     )
 

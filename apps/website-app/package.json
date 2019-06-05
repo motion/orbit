@@ -14,7 +14,7 @@
     "@o/worker-kit": "^2.5.2",
     "@o/ui": "^2.5.6",
     "get-urls": "^8.0.0",
-    "immer": "1.7.2",
+    "immer": "^3.1.2",
     "lodash": "4.17.11",
     "node-readability": "3.0.0",
     "puppeteer": "1.13.0",

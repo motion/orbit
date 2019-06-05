@@ -1,4 +1,4 @@
-import { observeMany, loadMany } from '@o/kit'
+import { loadMany, observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
@@ -33,19 +33,20 @@ const setUser: Action<User> = (om, user) => {
   om.state.spaces.activeUser = user
 }
 
+const start: Action = async om => {
+  const args = { args: {} }
+  om.actions.spaces.setSpaces(await loadMany(SpaceModel, args))
+  observeMany(SpaceModel, args).subscribe(spaces => {
+    om.actions.spaces.setSpaces(spaces)
+  })
+}
+
 export const actions = {
+  start,
   setSpaces,
   setUser,
 }
 
 export const effects = {
-  async start(om) {
-    const args = { args: {} }
-    om.actions.spaces.setSpaces(await loadMany(SpaceModel, args))
-    observeMany(SpaceModel, args).subscribe(spaces => {
-      om.actions.spaces.setSpaces(spaces)
-    })
-  },
-
   updatePaneSort,
 }

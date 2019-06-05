@@ -122,7 +122,28 @@ const forward: Action = om => {
   }
 }
 
+const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' }> = (
+  om,
+  { action, url },
+) => {
+  page(url, ({ params, querystring }) => {
+    om.actions.router.ignoreNextPush()
+    om.actions.router[action]({
+      ...params,
+      ...queryString.parse(querystring),
+    })
+  })
+}
+
+const routeListenNotFound: Action = () => {
+  page('*', ctx => {
+    console.log('Not found!', ctx)
+  })
+}
+
 export const actions = {
+  routeListenNotFound,
+  routeListen,
   showPage,
   showAppPage,
   showHomePage,
@@ -136,22 +157,6 @@ export const actions = {
 // effects
 
 export const effects = {
-  routeListenNotFound() {
-    page('*', ctx => {
-      console.log('Not found!', ctx)
-    })
-  },
-
-  routeListen(route, actions, pageAction) {
-    page(route, ({ params, querystring }) => {
-      actions.router.ignoreNextPush()
-      pageAction({
-        ...params,
-        ...queryString.parse(querystring),
-      })
-    })
-  },
-
   start: () => {
     page.start()
   },

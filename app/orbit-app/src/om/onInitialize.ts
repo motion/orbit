@@ -5,19 +5,20 @@ import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
   const { actions, effects } = om
-  effects.router.routeListen(urls.home, actions, actions.router.showHomePage)
-  effects.router.routeListen(urls.app, actions, actions.router.showAppPage)
-  effects.router.routeListen(urls.appSub, actions, actions.router.showAppPage)
-  effects.router.routeListenNotFound()
+
+  actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
+  actions.router.routeListen({ url: urls.app, action: 'showAppPage' })
+  actions.router.routeListen({ url: urls.appSub, action: 'showAppPage' })
+  actions.router.routeListenNotFound()
 
   // load user before spaces so we have activeSpace
-  await effects.user.start(om)
+  await actions.user.start()
 
   // load spaces before app so we have active space
-  await effects.spaces.start(om)
+  await actions.spaces.start()
 
   // load apps once before loading rest of app
-  await effects.apps.start(om)
+  await actions.apps.start()
 
   // start watching for updated app ids
   startAppLoadWatch()

@@ -2,11 +2,13 @@ import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
 import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
+import { Provider } from 'overmind-react'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
 
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
+import { om } from './om/om'
 import { useThemeStore } from './om/stores'
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
@@ -37,21 +39,23 @@ export const OrbitRoot = hot(() => {
   })
 
   return (
-    <ContextMenuProvider
-      onContextMenu={items => {
-        if (IS_ELECTRON) {
-          ContextMenu.update({ prepend: items })
-        }
-      }}
-    >
-      <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
-        <ErrorBoundary name="Root">
-          <React.Suspense fallback={null}>
-            <OrbitPage />
-          </React.Suspense>
-        </ErrorBoundary>
-      </ProvideUI>
-    </ContextMenuProvider>
+    <Provider value={om}>
+      <ContextMenuProvider
+        onContextMenu={items => {
+          if (IS_ELECTRON) {
+            ContextMenu.update({ prepend: items })
+          }
+        }}
+      >
+        <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
+          <ErrorBoundary name="Root">
+            <React.Suspense fallback={null}>
+              <OrbitPage />
+            </React.Suspense>
+          </ErrorBoundary>
+        </ProvideUI>
+      </ContextMenuProvider>
+    </Provider>
   )
 })
 

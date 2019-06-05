@@ -19,9 +19,9 @@ export function AppsMainNew({ app }: { app: AppBit }) {
   return (
     <Col space>
       <FormField label="Icon">
-        <Row space alignItems="center">
+        <Row space alignItems="center" overflow="hidden">
           <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
-          <Col space>
+          <Col space flex={1}>
             <ColorPicker
               onChangeColor={colors => {
                 actions.setupApp.update({ colors })

@@ -118,7 +118,7 @@ export const ColorPicker = memo(function ColorPicker({
 } & ViewProps) {
   const combos = niceColors.slice(0, count)
   return (
-    <Row space scrollable="x" hideScrollbars justifyContent="space-around">
+    <Row space scrollable="x" hideScrollbars flex={1}>
       {combos.map((colors, i) => (
         <IconShape
           key={i}

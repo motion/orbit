@@ -122,7 +122,7 @@ export const ColorPicker = memo(function ColorPicker({
       {combos.map((colors, i) => (
         <IconShape
           key={i}
-          gradient={['red', 'pink']}
+          gradient={colors}
           width={size}
           height={size}
           onClick={() => {

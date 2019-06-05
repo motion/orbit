@@ -21,7 +21,8 @@ const shapes = {
 export const IconShape = memo(
   forwardRef(({ shape = 'squircle', gradient, ...props }: IconShapeProps, ref: any) => {
     let iconPath = ''
-    const id = useRef(`icon-${Math.round(Math.random() * 100000)}`)
+    const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
+    const gradientId = `gradient-${id}`
 
     if (props.name) {
       const name = findName(props.name)
@@ -34,7 +35,7 @@ export const IconShape = memo(
 
     useEffect(() => {
       if (!iconPath) return
-      const draw = SVG(id.current).size(28, 28)
+      const draw = SVG(id).size(28, 28)
       const icon = draw.path(iconPath)
       const out = icon
         // TODO if its not a perfect square we need to adjust here
@@ -44,13 +45,13 @@ export const IconShape = memo(
         .toString()
 
       setSVGPath(`${shapes[shape]} ${out}`)
-    }, [iconPath])
+    }, [id, iconPath])
 
     const scale = props.size / 28
 
     return (
       <View ref={ref} width={props.size} height={props.size} {...props}>
-        <div style={{ display: 'none' }} id={id.current} />
+        <div style={{ display: 'none' }} id={id} />
         <svg
           width={28}
           height={28}
@@ -61,7 +62,7 @@ export const IconShape = memo(
         >
           {!!gradient && (
             <defs>
-              <linearGradient id="gradient" gradientTransform="rotate(90)">
+              <linearGradient id={gradientId} gradientTransform="rotate(90)">
                 {gradient.map((color, index) => (
                   <stop
                     key={`${color}${index}`}
@@ -75,7 +76,7 @@ export const IconShape = memo(
           <g>
             <path
               d={`${svgPath}`}
-              fill={!!gradient ? `url(#gradient)` : `${props.color || '#999'}`}
+              fill={!!gradient ? `url(#${gradientId})` : `${props.color || '#999'}`}
             />
           </g>
         </svg>
@@ -83,8 +84,3 @@ export const IconShape = memo(
     )
   }),
 )
-
-// @ts-ignore
-IconShape.defaultProps = {
-  shape: 'squircle',
-}

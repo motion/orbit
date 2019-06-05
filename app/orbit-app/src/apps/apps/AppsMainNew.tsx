@@ -1,5 +1,5 @@
 import { AppBit, AppIcon } from '@o/kit'
-import { Col, FormField, Input } from '@o/ui'
+import { Col, FormField, Input, Row } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
@@ -19,13 +19,23 @@ export function AppsMainNew({ app }: { app: AppBit }) {
   return (
     <Col space>
       <FormField label="Icon">
-        <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
-        <ColorPicker
-          onChangeColor={colors => {
-            actions.setupApp.update({ colors })
-          }}
-          activeColor={state.setupApp.app.colors[0]}
-        />
+        <Row space>
+          <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
+          <Col space>
+            <ColorPicker
+              onChangeColor={colors => {
+                actions.setupApp.update({ colors })
+              }}
+              activeColor={state.setupApp.app.colors[0]}
+            />
+            <ColorPicker
+              onChangeColor={colors => {
+                actions.setupApp.update({ colors })
+              }}
+              activeColor={state.setupApp.app.colors[0]}
+            />
+          </Col>
+        </Row>
       </FormField>
       <FormField label="Name">
         <Input

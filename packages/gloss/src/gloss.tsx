@@ -286,14 +286,14 @@ function addStyles(
   const keys = Object.keys(styles).sort(pseudoSort)
   let classNames: string[] | null = null
   for (const key of keys) {
-    const cur = styles[key]
+    const rules = styles[key]
     // they may return falsy, conditional '&:hover': active ? hoverStyle : null
-    if (!cur) continue
+    if (!rules) continue
 
     // add the stylesheets and classNames
     // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, cur, key, tagName)
+    const className = addRules(displayName, rules, key, tagName)
     classNames = classNames || []
     classNames.push(className)
 
@@ -327,7 +327,7 @@ function addDynamicStyles(
   tagName?: string,
 ) {
   const dynStyles = {}
-  let parentClassNames
+  let parentClassNames: string[] | undefined = undefined
 
   // if passed any classes from a parent gloss view
   // merge in their classname and track it
@@ -337,7 +337,8 @@ function addDynamicStyles(
       const info = tracker.get(className)
       if (info) {
         parentClassNames = parentClassNames || []
-        parentClassNames.push(info.className)
+        // -specific is our more important selector, so we ensure parent styles override child
+        parentClassNames.push(`specific-${info.className}`)
         gc.registerClassUse(info.className)
       }
     }
@@ -556,9 +557,9 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
 
 function getSelector(className: string, namespace: string, tagName: string = '') {
   if (namespace[0] === '@') {
-    return tagName + '.' + className
+    return `${tagName}.${className}, ${tagName}.specific-${className}`
   }
-  const classSelect = `.${className}`
+  const classSelect = `.specific-${className}, .${className}`
   if (namespace.indexOf('&') !== -1) {
     return namespace.replace(/&/g, classSelect)
   }

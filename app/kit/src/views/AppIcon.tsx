@@ -15,7 +15,7 @@ export type AppIconProps = BaseIconProps & {
 
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
-    let icon = props.icon || ''
+    let icon = props.icon || props.identifier || ''
     let iconLight = ''
     let colors = props.colors || ['black', 'black']
 
@@ -46,14 +46,7 @@ export const AppIcon = memo(
     }
 
     return (
-      <IconShape
-        ref={ref}
-        color={`linear-gradient(${colors[0]}, ${colors[1]})`}
-        size={48}
-        shape="squircle"
-        name={icon}
-        {...props}
-      />
+      <IconShape ref={ref} gradient={colors} size={48} shape="squircle" name={icon} {...props} />
     )
   }),
 )

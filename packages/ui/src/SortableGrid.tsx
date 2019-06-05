@@ -38,7 +38,7 @@ const SortableGridInner = SortableContainer(
       <Grid autoFitRows autoFitColumns {...props}>
         {items.map((value, index) => (
           <SortableItem
-            key={`item-${value.id}`}
+            key={`item-${value.id || index}`}
             index={index}
             realIndex={index}
             value={value}

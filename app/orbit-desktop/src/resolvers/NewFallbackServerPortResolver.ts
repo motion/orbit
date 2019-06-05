@@ -1,5 +1,5 @@
 // import { Logger } from '@o/logger'
-import { getGlobalConfig } from '@o/kit'
+import { getGlobalConfig } from '@o/config'
 import { MediatorServer, resolveCommand, WebSocketClientTransport } from '@o/mediator'
 import { NewFallbackServerPortCommand } from '@o/models'
 import root from 'global'

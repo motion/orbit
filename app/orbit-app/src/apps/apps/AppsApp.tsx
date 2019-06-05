@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
@@ -214,7 +214,7 @@ export function AppsMain(props: AppViewProps) {
       {!!definition.setup && (
         <Section>
           <SubSection title="App Settings">
-            <AppSetupForm id={app ? app.id : undefined} def={definition} />
+            <AppSetupForm id={app ? app.id : false} def={definition} />
           </SubSection>
         </Section>
       )}

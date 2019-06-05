@@ -12,8 +12,26 @@ export type CommandWsOptions = {
   mode: 'development' | 'production'
 }
 
+export const isOrbitWs = async (rootDir: string) => {
+  try {
+    const pkg = await readJSON(join(rootDir, 'package.json'))
+    return pkg.config && pkg.config.orbitWorkspace === true
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
+  return false
+}
+
 export async function commandWs(options: CommandWsOptions) {
   reporter.info('Running orbit ws')
+
+  if (!(await isOrbitWs(options.workspaceRoot))) {
+    console.log(
+      `\nNot inside orbit workspace, must have "config": { "orbitWorkspace": true } } in package.json`,
+    )
+    return
+  }
+
   const appIdentifiers = await watchBuildWorkspace(options)
 
   let orbitDesktop = await getOrbitDesktop()

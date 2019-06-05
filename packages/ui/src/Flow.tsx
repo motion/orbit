@@ -1,4 +1,5 @@
-import React, { Children, FunctionComponent, memo, useState } from 'react'
+import { createStoreContext } from '@o/use-store'
+import React, { Children, FunctionComponent, memo, useEffect, useState } from 'react'
 
 import { Button } from './buttons/Button'
 import { Section } from './Section'
@@ -7,13 +8,22 @@ import { SliderPane } from './SliderPane'
 import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
 
-export type FlowProps = {
-  initialData?: any
+export type FlowPropsBase = {
   children: any
   renderLayout?: (props: FlowLayoutProps) => React.ReactNode
   Toolbar?: FunctionComponent<FlowLayoutProps>
   height?: number
 }
+
+export type FlowDataProps = {
+  initialData?: any
+}
+
+export type FlowProps =
+  | FlowPropsBase & FlowDataProps
+  | FlowPropsBase & {
+      useFlow: FlowStore
+    }
 
 type FlowStepProps = {
   title?: string
@@ -114,6 +124,18 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
   Step: FunctionComponent<FlowStepProps>
 }
 
+class FlowStore {
+  props: FlowDataProps
+  data = this.props.initialData || null
+
+  setData(next: any) {
+    this.data = next
+  }
+}
+
+const FlowStoreContext = createStoreContext(FlowStore)
+export const useFlow = FlowStoreContext.useCreateStore
+
 export const Flow: FlowComponent<FlowProps> = memo(
   ({
     height,
@@ -121,8 +143,10 @@ export const Flow: FlowComponent<FlowProps> = memo(
     renderLayout = DefaultFlowLayout,
     ...props
   }: FlowProps) => {
+    const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
+    const flowStore = 'useFlow' in props ? props.useFlow : flowStoreInternal
     const [index, setIndex] = useState(0)
-    const [data, setDataDumb] = useState(props.initialData)
+    const [data, setDataDumb] = useState(flowStore.props.initialData)
     // make it  merge by default
     const setData = x => setDataDumb({ ...data, ...x })
     const total = Children.count(props.children)
@@ -141,6 +165,11 @@ export const Flow: FlowComponent<FlowProps> = memo(
       prev,
       setStepIndex: setIndex,
     }
+
+    // update store
+    useEffect(() => {
+      flowStore.setData(data)
+    }, [flowStore, data])
 
     const contents = (
       <Slider fixHeightToParent curFrame={index}>

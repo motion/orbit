@@ -1,5 +1,5 @@
 import { AppIcon, createApp } from '@o/kit'
-import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, View } from '@o/ui'
+import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
 import React, { useState } from 'react'
 
 import { useOm } from '../om/om'
@@ -33,14 +33,15 @@ function SetupAppMain() {
 function SetupAppCustom() {
   const stackNav = useStackNavigator()
   const { actions } = useOm()
+  const flow = useFlow({
+    initialData: {
+      selectedTemplate: null,
+    },
+  })
   return (
     <>
       <Col width="70%" margin="auto">
-        <Flow
-          initialData={{
-            selectedTemplate: null,
-          }}
-        >
+        <Flow useFlow={flow}>
           <Flow.Step title="Template" subTitle="Choose template">
             {({ setData }) => {
               return (
@@ -93,7 +94,7 @@ function SetupAppCustom() {
             size={1.4}
             alt="confirm"
             onClick={() => {
-              actions.setupApp.create(selected.identifier)
+              actions.setupApp.create(flow.data.identifier)
             }}
             icon="chevron-right"
           >
@@ -120,9 +121,11 @@ function SetupAppHome() {
     },
   }))
   const [searchedApps, search] = useSearchAppStoreApps(results =>
-    results.filter(res => res.features.some('app')),
+    results.filter(res => res.features.some(x => x === 'app')),
   )
-  const topApps = useTopAppStoreApps(results => results.filter(res => res.features.some('app')))
+  const topApps = useTopAppStoreApps(results =>
+    results.filter(res => res.features.some(x => x === 'app')),
+  )
 
   const [selected, setSelected] = useState<ListItemProps>(null)
 

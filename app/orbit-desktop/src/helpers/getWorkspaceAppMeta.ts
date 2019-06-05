@@ -1,4 +1,4 @@
-import { Logger } from '@o/kit'
+import { Logger } from '@o/logger'
 import { AppMeta, Space } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'

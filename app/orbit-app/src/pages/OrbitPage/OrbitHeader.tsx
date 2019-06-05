@@ -216,7 +216,7 @@ HomeButton.acceptsProps = {
 const OrbitNavHiddenBar = props => {
   const apps = useActiveAppsSorted().slice(0, 20)
   const { paneManagerStore } = useStores()
-  const { paneId } = paneManagerStore
+  // const { paneId } = paneManagerStore
 
   if (!apps.length) {
     return null

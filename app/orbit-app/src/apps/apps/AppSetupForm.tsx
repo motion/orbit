@@ -18,7 +18,7 @@ export function AppSetupForm({
   def,
   id,
   ...rest
-}: FormProps<any> & { id?: number; def: AppDefinition }) {
+}: Omit<FormProps<any>, 'id'> & { id?: number | false; def: AppDefinition }) {
   const [activeSpace] = useActiveSpace()
   const [existingApp] = useAppBit(selectDefined(id, false))
   const app: AppBit = existingApp || createNewApp(def)

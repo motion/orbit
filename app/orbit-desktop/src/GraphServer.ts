@@ -1,9 +1,8 @@
 import { findPackage } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
-import { AppDefinition } from '@o/kit'
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
+import { AppBit, AppDefinition, AppEntity, Space, SpaceEntity } from '@o/models'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
@@ -24,10 +23,20 @@ async function getWorkspaceAppPaths(workspaceEntry: string) {
   })
 }
 
-async function getWorkspaceAppDefinitions(workspace: string): Promise<AppDefinition[]> {
+const entryFileNames = {
+  node: 'index.node.js',
+  web: 'index.js',
+  appInfo: 'appInfo.js',
+}
+
+async function getWorkspaceAppDefinitions(
+  workspace: string,
+  type: 'node' | 'web' | 'appInfo',
+): Promise<AppDefinition[]> {
   const paths = await getWorkspaceAppPaths(workspace)
   return paths.map(name => {
-    return require(name).default
+    const path = join(require.resolve(name), '..', entryFileNames[type])
+    return require(path).default
   })
 }
 
@@ -107,7 +116,7 @@ export class GraphServer {
 
         let schemas = []
 
-        const appDefs = await getWorkspaceAppDefinitions('@o/example-workspace')
+        const appDefs = await getWorkspaceAppDefinitions('@o/example-workspace', 'node')
 
         for (const app of apps) {
           const appDef = appDefs.find(def => def.id === app.identifier)

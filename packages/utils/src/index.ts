@@ -1,5 +1,6 @@
 export * from './highlightText'
 export * from './on'
+export * from './randomWords'
 
 /**
  * Remove last X items from array (without mutating).

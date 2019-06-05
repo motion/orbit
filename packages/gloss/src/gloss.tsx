@@ -555,13 +555,21 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
   return className
 }
 
+// has to return a .specific-id and .id selector for use in parents passing down styles
 function getSelector(className: string, namespace: string, tagName: string = '') {
   if (namespace[0] === '@') {
     return `${tagName}.${className}, ${tagName}.specific-${className}`
   }
-  const classSelect = `.specific-${className}, .${className}`
   if (namespace.indexOf('&') !== -1) {
-    return namespace.replace(/&/g, classSelect)
+    // namespace === '&:hover, &:focus, & > div'
+    const namespacedSelectors = namespace
+      .split(',')
+      .flatMap(part => {
+        const selector = part.replace('&', className).trim()
+        return [`.specific-${selector}`, `.${selector}`]
+      })
+      .join(',')
+    return namespacedSelectors
   }
-  return classSelect
+  return `.specific-${className}, .${className}`
 }

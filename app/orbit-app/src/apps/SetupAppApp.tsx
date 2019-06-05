@@ -147,7 +147,9 @@ function SetupAppHome() {
               onQueryChange={search}
               selectable
               alwaysSelected
-              onSelect={rows => flow.setData({ selectedAppIdentifier: rows[0].identifier })}
+              onSelect={rows =>
+                rows[0] && flow.setData({ selectedAppIdentifier: rows[0].identifier })
+              }
               itemProps={{
                 iconBefore: true,
               }}

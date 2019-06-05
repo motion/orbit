@@ -1,5 +1,5 @@
 import { AppBit, AppIcon } from '@o/kit'
-import { Col, FormField, Input, Row } from '@o/ui'
+import { allIcons, Col, FormField, IconShape, Input, Row } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { useOm } from '../../om/om'
@@ -28,13 +28,7 @@ export function AppsMainNew({ app }: { app: AppBit }) {
               }}
               activeColor={state.setupApp.app.colors[0]}
             />
-            {/* TODO icon picker */}
-            <ColorPicker
-              onChangeColor={colors => {
-                actions.setupApp.update({ colors })
-              }}
-              activeColor={state.setupApp.app.colors[0]}
-            />
+            <IconPicker />
           </Col>
         </Row>
       </FormField>
@@ -54,5 +48,15 @@ export function AppsMainNew({ app }: { app: AppBit }) {
         />
       </FormField>
     </Col>
+  )
+}
+
+function IconPicker() {
+  return (
+    <Row space scrollable="x" hideScrollbars flex={1}>
+      {allIcons.map(icon => (
+        <IconShape key={icon.iconName} name={icon.iconName} />
+      ))}
+    </Row>
   )
 }

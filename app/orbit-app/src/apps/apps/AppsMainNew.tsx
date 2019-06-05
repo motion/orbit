@@ -1,6 +1,7 @@
 import { AppBit, AppIcon } from '@o/kit'
 import { allIcons, Col, FormField, IconShape, Input, Row } from '@o/ui'
-import React, { useEffect, useRef } from 'react'
+import memoize from 'memoize-weak'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useOm } from '../../om/om'
 import { ColorPicker } from '../../views/ColorPicker'
@@ -8,6 +9,7 @@ import { ColorPicker } from '../../views/ColorPicker'
 export function AppsMainNew({ app }: { app: AppBit }) {
   const { state, actions } = useOm()
   const inputRef = useRef(null)
+  const [activeIcon, setActiveIcon] = useState('')
 
   useEffect(() => {
     if (inputRef.current) {
@@ -21,14 +23,14 @@ export function AppsMainNew({ app }: { app: AppBit }) {
       <FormField label="Icon">
         <Row space alignItems="center" overflow="hidden">
           <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
-          <Col space flex={1}>
+          <Col flex={1}>
             <ColorPicker
               onChangeColor={colors => {
                 actions.setupApp.update({ colors })
               }}
               activeColor={state.setupApp.app.colors[0]}
             />
-            <IconPicker />
+            <IconPicker active={activeIcon} onChange={setActiveIcon} />
           </Col>
         </Row>
       </FormField>
@@ -51,12 +53,29 @@ export function AppsMainNew({ app }: { app: AppBit }) {
   )
 }
 
-function IconPicker() {
+type IconPickerProps = {
+  active?: string
+  onChange?: (icon: string) => any
+}
+
+function IconPicker(props: IconPickerProps) {
+  const setupOnClick = memoize(icon => () => {
+    props.onChange && props.onChange(icon.iconName)
+  })
+
   return (
-    <Row space scrollable="x" hideScrollbars flex={1}>
-      {allIcons.map(icon => (
-        <IconShape key={icon.iconName} name={icon.iconName} />
-      ))}
+    <Row space pad="sm" scrollable="x" hideScrollbars flex={1}>
+      {allIcons.map(icon => {
+        return (
+          <IconShape
+            key={icon.iconName}
+            active={props.active === icon.iconName}
+            onClick={setupOnClick(icon)}
+            name={icon.iconName}
+            size={32}
+          />
+        )
+      })}
     </Row>
   )
 }

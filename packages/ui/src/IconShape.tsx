@@ -1,11 +1,13 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
+import { useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
 import { View } from './View/View'
 
-export type IconShapeProps = IconProps & {
+export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
+  active?: boolean
   shape?: 'circle' | 'squircle'
   gradient?: string[]
 }
@@ -19,7 +21,7 @@ const shapes = {
 }
 
 export const IconShape = memo(
-  forwardRef(({ shape = 'squircle', gradient, ...props }: IconShapeProps, ref: any) => {
+  forwardRef(({ shape = 'squircle', gradient, size = 28, ...props }: IconShapeProps, ref: any) => {
     let iconPath = ''
     const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
     const gradientId = `gradient-${id}`
@@ -35,7 +37,7 @@ export const IconShape = memo(
 
     useEffect(() => {
       if (!iconPath) return
-      const draw = SVG(id).size(28, 28)
+      const draw = SVG(id).size(diameter, diameter)
       const icon = draw.path(iconPath)
       const out = icon
         // TODO if its not a perfect square we need to adjust here
@@ -47,11 +49,24 @@ export const IconShape = memo(
       setSVGPath(`${shapes[shape]} ${out}`)
     }, [id, iconPath])
 
-    const scale = props.size / 28
+    const scale = size / 28
+    const theme = useTheme()
 
     return (
-      <View ref={ref} width={props.size} height={props.size} {...props}>
+      <View ref={ref} width={size} height={size} position="relative" {...props}>
         <div style={{ display: 'none' }} id={id} />
+        {props.active && (
+          <View
+            position="absolute"
+            top={0}
+            right={0}
+            bottom={0}
+            left={0}
+            zIndex={0}
+            borderRadius={size / 3}
+            boxShadow={[[0, 0, 0, 3, theme.alternates.selected.background]]}
+          />
+        )}
         <svg
           width={28}
           height={28}
@@ -59,6 +74,8 @@ export const IconShape = memo(
             transformOrigin: 'top left',
             transform: `scale(${scale})`,
             overflow: 'visible',
+            position: 'relative',
+            zIndex: 1,
           }}
         >
           {!!gradient && (

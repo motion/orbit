@@ -1,47 +1,49 @@
-import { command } from '@o/bridge'
-import { TearAppCommand } from '@o/models'
-import { App } from '@o/stores'
-import { last } from 'lodash'
+// import { command } from '@o/bridge'
+// import { TearAppCommand } from '@o/models'
+// import { App } from '@o/stores'
+// import { last } from 'lodash'
 
-import { paneManagerStore } from '../stores'
+// import { paneManagerStore } from '../stores'
 
 export async function openCurrentApp() {
-  const { type, id } = paneManagerStore.activePane
-  const { allApps } = App.state
+  console.log('TODO')
 
-  console.log('Tearing away app', type)
-  const previousApps = allApps.slice(0, allApps.length - 1)
+  // const { type, id } = paneManagerStore.activePane
+  // const { allApps } = App.state
 
-  // update current app to persist the type
-  const currentApp = {
-    ...last(allApps),
-    appId: id,
-    type,
-  }
+  // console.log('Tearing away app', type)
+  // const previousApps = allApps.slice(0, allApps.length - 1)
 
-  const nextId = allApps.length
+  // // update current app to persist the type
+  // const currentApp = {
+  //   ...last(allApps),
+  //   appId: id,
+  //   type,
+  // }
 
-  App.setState({
-    allApps: [
-      ...previousApps,
-      currentApp,
-      {
-        type: 'root',
-        id: nextId,
-      },
-    ],
-  })
+  // const nextId = allApps.length
 
-  await command(TearAppCommand, {
-    appType: type,
-    appId: nextId,
-  })
+  // App.setState({
+  //   allApps: [
+  //     ...previousApps,
+  //     currentApp,
+  //     {
+  //       type: 'root',
+  //       id: nextId,
+  //     },
+  //   ],
+  // })
 
-  // set App.state.showOrbitMain false so next orbit window is hidden on start
-  // TODO clean up tearing a bit, including this settimeout
-  // for now its just happening becuase i dont want to deal with having a proper system
-  // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
-  setTimeout(() => {
-    App.setState({ showOrbitMain: false })
-  }, 100)
+  // await command(TearAppCommand, {
+  //   appType: type,
+  //   appId: nextId,
+  // })
+
+  // // set App.state.showOrbitMain false so next orbit window is hidden on start
+  // // TODO clean up tearing a bit, including this settimeout
+  // // for now its just happening becuase i dont want to deal with having a proper system
+  // // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
+  // setTimeout(() => {
+  //   App.setState({ showOrbitMain: false })
+  // }, 100)
 }

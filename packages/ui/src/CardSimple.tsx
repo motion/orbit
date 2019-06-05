@@ -4,6 +4,7 @@ import React, { forwardRef } from 'react'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { Tag, TagProps } from './Tag'
 import { SimpleText } from './text/SimpleText'
+import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
 export type CardSimpleProps = SizedSurfaceSpecificProps &

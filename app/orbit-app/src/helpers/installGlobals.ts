@@ -20,6 +20,7 @@ import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 import { AppActions } from '../actions/AppActions'
+import * as OrbitApps from '../apps/orbitApps'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
 import { log } from './log'
@@ -68,6 +69,7 @@ global.stringify = JSON.stringify.bind(JSON)
 global.AppActions = AppActions
 global.Models = Models
 global.Themes = themes
+global.OrbitApps = OrbitApps
 
 const { isEqual } = require('@o/fast-compare')
 global.isEqualDebug = (a, b) => {

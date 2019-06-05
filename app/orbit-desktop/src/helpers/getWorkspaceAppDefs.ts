@@ -1,5 +1,6 @@
 import { AppDefinition, Logger } from '@o/kit'
 import { Space } from '@o/models'
+import { pathExists } from 'fs-extra'
 import { join } from 'path'
 
 import { getWorkspaceAppMeta } from './getWorkspaceAppMeta'
@@ -21,16 +22,15 @@ export async function getWorkspaceAppDefs(
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       try {
-        const nodeEntryPath = join(directory, 'dist', 'index.node.js')
-        log.info(`Importing entry ${nodeEntryPath}`)
-        const nodeEntry = require(nodeEntryPath)
-        if (!nodeEntry || !nodeEntry.default) {
-          log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
+        const nodeEntry = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
+        if (nodeEntry.type === 'error') {
+          console.error('no node definition')
           return
         }
-        const id = nodeEntry.default.id
-        log.info('got an app def', id, !!nodeEntry.default)
-        definitions[id] = nodeEntry.default
+        const { definition } = nodeEntry
+        const id = definition.id
+        log.info('got an app def', id, !!definition)
+        definitions[id] = definition
         packageIdToIdentifier[packageId] = id
       } catch (err) {
         log.error(`Error finding package definition: ${packageId}, message: ${err.message}`)
@@ -42,5 +42,37 @@ export async function getWorkspaceAppDefs(
   return {
     definitions,
     packageIdToIdentifier,
+  }
+}
+
+export async function requireAppEntry(
+  entryPath: string,
+): Promise<{ type: 'success'; definition: AppDefinition } | { type: 'error'; message: string }> {
+  let nodeEntry
+  log.info(`Importing entry ${entryPath}`)
+  try {
+    if (!(await pathExists(entryPath))) {
+      return {
+        type: 'error' as const,
+        message: 'No entry file',
+      }
+    }
+    nodeEntry = require(entryPath)
+    if (!nodeEntry || !nodeEntry.default) {
+      log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
+      return {
+        type: 'error' as const,
+        message: `No export default found on node entry.`,
+      }
+    }
+  } catch (err) {
+    return {
+      type: 'error' as const,
+      message: `Error requiring entry ${err.message} ${err.stack}`,
+    }
+  }
+  return {
+    type: 'success' as const,
+    definition: nodeEntry.default,
   }
 }

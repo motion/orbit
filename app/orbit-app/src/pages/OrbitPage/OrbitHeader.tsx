@@ -1,8 +1,8 @@
 import { invertLightness } from '@o/color'
-import { useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, IconShape, Popover, PopoverProps, Row, RowProps, Space, SurfacePassProps, View } from '@o/ui'
-import { Block, Box, FullScreen, gloss, useTheme } from 'gloss'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -14,7 +14,7 @@ import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
 // import { clipboard } from 'electron'
-export const headerButtonProps = {
+export const headerButtonProps: SizedSurfaceProps = {
   circular: true,
   background: 'transparent',
   glint: false,
@@ -23,7 +23,10 @@ export const headerButtonProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
-  iconSize: 12,
+  tooltipProps: {
+    distance: 18,
+  },
+  iconSize: 14,
   activeStyle: false,
 }
 
@@ -50,14 +53,14 @@ export const OrbitHeader = memo(() => {
         <OrbitHeaderEditingBg isActive={isEditing} />
 
         <HeaderTop height={isEditing ? 46 : 56}>
-          <HeaderSide spaceAround>
-            <HeaderButtonPassProps>
+          <HeaderButtonPassProps>
+            <HeaderSide space="sm" spaceAround>
               <BackButton />
               <OrbitHeaderMenu />
-            </HeaderButtonPassProps>
-          </HeaderSide>
+            </HeaderSide>
+          </HeaderButtonPassProps>
 
-          <HeaderContain isActive={false} isEditing={isEditing}>
+          <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
             {!isEditing && (
               <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                 <OrbitNavPopover target={<HomeButton id="home-button" />}>
@@ -77,56 +80,52 @@ export const OrbitHeader = memo(() => {
                     </HeaderButtonPassProps>
                   </ExtraButtonsChrome>
                 )}
-                <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                  {!isEditing && <OpenButton />}
-                </SurfacePassProps>
+                {!isEditing && <OpenButton />}
               </>
             )}
           </HeaderContain>
 
-          <HeaderSide spaceAround rightSide>
-            {isEditing && (
-              <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+          <HeaderButtonPassProps>
+            <HeaderSide space="sm" spaceAround justifyContent="flex-start">
+              {isEditing && (
+                <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+                  <>
+                    <Button circular icon="edit" tooltip="Open in VSCode" />
+                    <Space size="sm" />
+                    <Button tooltip="Deploy to space">Publish</Button>
+                    <Space size="sm" />
+                  </>
+                </SurfacePassProps>
+              )}
+
+              {!isEditing && (
                 <>
-                  <Button circular icon="edit" tooltip="Open in VSCode" />
-                  <Space size="sm" />
-                  <Button tooltip="Deploy to space">Publish</Button>
-                  <Space size="sm" />
+                  <Button
+                    {...om.state.router.appId === 'query-builder' && activeStyle}
+                    {...useLocationLink('/app/query-builder')}
+                    icon="layers"
+                    tooltip="Query Builder"
+                  />
+                  <Button
+                    {...om.state.router.appId === 'apps' && activeStyle}
+                    {...useLocationLink('/app/apps')}
+                    icon="layout-grid"
+                    tooltip="Manage apps"
+                  />
+                  <OrbitSpaceSwitch />
                 </>
-              </SurfacePassProps>
-            )}
+              )}
 
-            {!isEditing && (
-              <HeaderButtonPassProps>
-                <Button
-                  {...om.state.router.appId === 'query-builder' && activeStyle}
-                  {...useLocationLink('/app/query-builder')}
-                  icon="layers"
-                  tooltip="Query Builder"
-                />
-                <Space size="sm" />
-                <Button
-                  {...om.state.router.appId === 'apps' && activeStyle}
-                  {...useLocationLink('/app/apps')}
-                  icon="layout-grid"
-                  tooltip="Manage apps"
-                />
-                <Space size="sm" />
-                <OrbitSpaceSwitch />
-              </HeaderButtonPassProps>
-            )}
-
-            {isEditing && (
-              <HeaderButtonPassProps>
+              {isEditing && (
                 <Button
                   icon="cog"
                   onClick={() => {
                     console.log('got to app specific settings')
                   }}
                 />
-              </HeaderButtonPassProps>
-            )}
-          </HeaderSide>
+              )}
+            </HeaderSide>
+          </HeaderButtonPassProps>
         </HeaderTop>
 
         {/* this stays slightly below the active tab and looks nice */}
@@ -160,7 +159,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         openOnHover
         onHover={actions.setNavVisible}
         onChangeVisibility={actions.setNavVisible}
-        open={state.router.isOnSetupApp ? true : state.navVisible}
+        open={state.navVisible}
         maxWidth="80vw"
         padding={4}
         elevation={10}
@@ -185,18 +184,18 @@ const HomeButton = memo(
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-
+    const color = invertLightness(theme.color, 0.5)
     return (
       <View ref={ref} {...props}>
-        <IconShape
+        <AppIcon
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
           hoverStyle={{
             opacity: 1,
           }}
-          color={invertLightness(theme.color, 0.5)}
-          name={state.navHovered || state.navVisible ? 'home' : icon}
+          colors={[color, color]}
+          identifier={state.navHovered || state.navVisible ? 'home' : icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()
@@ -225,7 +224,7 @@ const OrbitNavHiddenBar = props => {
   return (
     <OrbitNavHiddenBarChrome {...props}>
       <OrbitNavHiddenBarInner>
-        {apps.map(app => {
+        {/* {apps.map(app => {
           const isActive = paneId === `${app.id}`
           return (
             <Block
@@ -240,7 +239,7 @@ const OrbitNavHiddenBar = props => {
               }}
             />
           )
-        })}
+        })} */}
       </OrbitNavHiddenBarInner>
     </OrbitNavHiddenBarChrome>
   )
@@ -282,13 +281,11 @@ const OrbitNavHiddenBarInner = gloss(Box, {
 const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
+  width: '18%',
+  minWidth: 180,
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  minWidth: 'max-content',
-  rightSide: {
-    justifyContent: 'flex-start',
-  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
@@ -298,13 +295,11 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const HeaderContain = gloss<{ isActive?: boolean; isEditing: boolean }>(Box, {
+const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean }>(Row, {
   margin: ['auto', 0],
   alignItems: 'center',
-  flexFlow: 'row',
   flex: 20,
-  maxWidth: 600,
-  padding: [0, 12],
+  maxWidth: 980,
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing
@@ -327,7 +322,7 @@ const ExtraButtonsChrome = gloss(Box, {
   borderLeftRadius: 12,
 })
 
-const OpenButton = memo(() => {
+const OpenButton = memo((props: ButtonProps) => {
   const { effects } = useOm()
 
   if (App.isEditing) {
@@ -344,6 +339,7 @@ const OpenButton = memo(() => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}
+      {...props}
     >
       Open
     </Button>
@@ -354,10 +350,9 @@ const BackButton = memo(() => {
   const { state, actions } = useOm()
   return (
     <Button
-      circular
       icon="chevron-left"
       opacity={state.router.history.length ? 0.5 : 0.4}
-      iconSize={22}
+      iconSize={18}
       onClick={actions.router.back}
     />
   )

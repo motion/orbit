@@ -1,17 +1,18 @@
-import { AppDefinition, decorate, ensure, react } from '@o/kit'
+import { AppDefinition, decorate, ensure, Logger, react } from '@o/kit'
 import { AppBit, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
-import { FSWatcher, watch } from 'chokidar'
+import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
 
+const log = new Logger('OrbitAppsManager')
+
 export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
   'id',
   'itemType',
   'identifier',
-  'sourceIdentifier',
   'spaceId',
   'name',
   'tabDisplay',
@@ -26,8 +27,7 @@ export class OrbitAppsManager {
   apps: AppBit[] = []
   user: User = null
   spaceFolders: { [id: number]: string } = {}
-  packageWatcher: FSWatcher = null
-  packageRefresh = 0
+  packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   appDefinitions: { [identifier: string]: AppDefinition } = {}
   packageIdToIdentifier = {}
@@ -63,21 +63,27 @@ export class OrbitAppsManager {
     return this.spaces.find(x => x.id === this.user.activeSpace)
   }
 
-  updateAppDefinitions = react(
-    () => [this.activeSpace, this.packageRefresh],
-    async ([space]) => {
+  updateAppDefinitionsReaction = react(
+    () => [this.activeSpace, this.packageJsonUpdate],
+    ([space]) => {
       ensure('space', !!space)
-      const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
-      this.packageIdToIdentifier = {
-        ...this.packageIdToIdentifier,
-        ...packageIdToIdentifier,
-      }
-      this.appDefinitions = {
-        ...this.appDefinitions,
-        ...definitions,
-      }
+      this.updateAppDefinitions(space)
     },
   )
+
+  updateAppDefinitions = async (space: Space) => {
+    log.info(`Updaing app definitions for space ${space.id}`)
+    const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
+    // await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
+    this.packageIdToIdentifier = {
+      ...this.packageIdToIdentifier,
+      ...packageIdToIdentifier,
+    }
+    this.appDefinitions = {
+      ...this.appDefinitions,
+      ...definitions,
+    }
+  }
 
   updateAppMeta = react(
     () => this.appDefinitions,
@@ -94,17 +100,21 @@ export class OrbitAppsManager {
 
   syncFromActiveSpacePackageJSON = react(
     () => this.activeSpace,
-    space => {
+    (space, { useEffect }) => {
       ensure('space', !!space)
-      if (this.packageWatcher) {
-        this.packageWatcher.close()
-      }
       const pkg = join(space.directory, 'package.json')
-      this.packageWatcher = watch(pkg, {
-        persistent: true,
-      })
-      this.packageWatcher.on('change', () => {
-        this.packageRefresh++
+      console.log('watching package.json for changes', pkg)
+      useEffect(() => {
+        let watcher = watch(pkg, {
+          persistent: true,
+        })
+        watcher.on('change', () => {
+          console.log('got package.json change')
+          this.packageJsonUpdate = Math.random()
+        })
+        return () => {
+          watcher.close()
+        }
       })
     },
   )

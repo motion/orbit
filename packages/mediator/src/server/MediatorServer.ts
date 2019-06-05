@@ -32,7 +32,7 @@ export class MediatorServer {
 
   sendRemoteCommand<Args, ReturnType>(command: Command<ReturnType, Args> | string, args?: Args) {
     const name = typeof command === 'string' ? command : command.name
-    this.options.fallbackClient.command(name, args, 100)
+    this.options.fallbackClient.command(name, args, { timeout: 200 })
   }
 
   private async handleMessage(data: TransportRequest) {
@@ -82,7 +82,7 @@ export class MediatorServer {
         if (this.options.fallbackClient) {
           log.verbose(`command ${data.command} was not found, trying fallback clients`, data)
           this.options.fallbackClient
-            .command(data.command, data.args, 100)
+            .command(data.command, data.args, { timeout: 150 })
             .then(onSuccess)
             .catch(onError)
         } else {

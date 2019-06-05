@@ -2555,15 +2555,15 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
-"@types/lodash@4.14.123":
-  version "4.14.123"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.123.tgz#39be5d211478c8dd3bdae98ee75bb7efe4abfe4d"
-  integrity sha512-pQvPkc4Nltyx7G1Ww45OjVqUsJP4UsZm+GWJpigXgkikZqJgRm4c48g027o6tdgubWHwFRF15iFd+Y4Pmqv6+Q==
-
 "@types/lodash@^4.14.104", "@types/lodash@^4.14.34":
   version "4.14.132"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.132.tgz#8ce45ca8745ff2e004fac0de0ab46f61e390ffa0"
   integrity sha512-RNUU1rrh85NgUJcjOOr96YXr+RHwInGbaQCZmlitqOaCKXffj8bh+Zxwuq5rjDy5OgzFldDVoqk4pyLEDiwxIw==
+
+"@types/lodash@^4.14.133":
+  version "4.14.133"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.133.tgz#430721c96da22dd1694443e68e6cec7ba1c1003d"
+  integrity sha512-/3JqnvPnY58GLzG3Y7fpphOhATV1DDZ/Ak3DQufjlRK5E4u+s0CfClfNFtAGBabw+jDGtRFbOZe+Z02ZMWCBNQ==
 
 "@types/long@^4.0.0":
   version "4.0.0"
@@ -17884,10 +17884,10 @@ react-hot-loader@^4.8.7:
     shallowequal "^1.0.2"
     source-map "^0.7.3"
 
-react-hotkeys@2.0.0-pre6:
-  version "2.0.0-pre6"
-  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-2.0.0-pre6.tgz#5c3c69fd8e7055c33f3a04c1ad2182a20426b31e"
-  integrity sha512-pZcNCMl/gQzWORFaBUeyqfrlTHyLYCfOUuP/ZDGUiPnIiLkr2mGo83SbgQzDC1aibi3eDkUzgDmN/NheCmYV7w==
+react-hotkeys@2.0.0-pre7:
+  version "2.0.0-pre7"
+  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-2.0.0-pre7.tgz#01905d88d4cb249b5320d8537f88ca427dd5307c"
+  integrity sha512-GeoxK5ACbB9NIh8uX9j/mCNjFOSw0/62Ci+nIW+HqHUSDHGHNkLMLEEShboy1ene5XzedsXFT1Z8kL97+AnfKw==
   dependencies:
     prop-types "^15.6.1"
 
@@ -21523,7 +21523,12 @@ unist-util-stringify-position@^1.0.0, unist-util-stringify-position@^1.1.1:
   resolved "https://registry.yarnpkg.com/unist-util-stringify-position/-/unist-util-stringify-position-1.1.2.tgz#3f37fcf351279dcbca7480ab5889bb8a832ee1c6"
   integrity sha512-pNCVrk64LZv1kElr0N1wPiHEUoXNVFERp+mlTg/s9R5Lwg87f9bM/3sQB99w+N9D/qnM9ar3+AKDBwo/gm/iQQ==
 
-unist-util-visit-parents@1.1.2, unist-util-visit-parents@2.0.1, unist-util-visit-parents@^2.0.0:
+unist-util-visit-parents@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/unist-util-visit-parents/-/unist-util-visit-parents-1.1.2.tgz#f6e3afee8bdbf961c0e6f028ea3c0480028c3d06"
+  integrity sha512-yvo+MMLjEwdc3RhhPYSximset7rwjMrdt9E41Smmvg25UQIenzrN83cRnF1JMzoMi9zZOQeYXHSDf7p+IQkW3Q==
+
+unist-util-visit-parents@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/unist-util-visit-parents/-/unist-util-visit-parents-2.0.1.tgz#63fffc8929027bee04bfef7d2cce474f71cb6217"
   integrity sha512-6B0UTiMfdWql4cQ03gDTCSns+64Zkfo2OCbK31Ov0uMizEz+CJeAp0cgZVb5Fhmcd7Bct2iRNywejT0orpbqUA==

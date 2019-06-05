@@ -153,6 +153,20 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
   return appsInfo.map(x => x.id)
 }
 
+export async function reloadAppDefinitions(directory: string) {
+  let orbitDesktop = await getOrbitDesktop()
+  if (orbitDesktop) {
+    const { appsInfo } = await getAppsInfo(directory)
+    const appIdentifiers = appsInfo.map(x => x.id)
+    await orbitDesktop.command(AppOpenWorkspaceCommand, {
+      path: directory,
+      appIdentifiers,
+    })
+  } else {
+    reporter.info('No orbit desktop running, didnt reload active app definitions...')
+  }
+}
+
 async function getAppsInfo(spaceDirectory: string) {
   reporter.info(`read space spaceDirectory ${spaceDirectory}`)
   const pkg = await readJSON(join(spaceDirectory, 'package.json'))

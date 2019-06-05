@@ -120,6 +120,7 @@ function TabsControlled({
       if (!keys.includes(id)) {
         keys.push(id)
       }
+
       const isActive: boolean = active == id
 
       const childrenElement =
@@ -241,7 +242,7 @@ const controlledConfig = {
 
 export function Tabs(props: TabsProps) {
   const cProps = useUncontrolled(props, controlledConfig)
-  return <TabsControlled {...cProps} active={selectDefined(cProps.active, props.defaultActive)} />
+  return <TabsControlled {...cProps} active={selectDefined(props.active, cProps.active)} />
 }
 
 const HideScrollbarRow = gloss(Box, {

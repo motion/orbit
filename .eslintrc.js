@@ -77,6 +77,7 @@ module.exports = {
     },
   },
   globals: {
+    name: false, // causes so many bugs...
     require: true,
     module: true,
     process: true,

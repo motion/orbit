@@ -1,18 +1,13 @@
 import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
 import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
 import { AppSetupForm } from './AppSetupForm'
+import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const banner = useBanner()
-
-  useEffect(() => {
-    return () => {
-      banner.close()
-    }
-  }, [])
 
   return (
     <Suspense fallback={<Loading />}>
@@ -22,7 +17,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
 }
 
 function SubItem(props: ButtonProps) {
-  return <Button chromeless {...props} />
+  return <Button padding={0} chromeless {...props} />
 }
 
 export function AppsMainAddAppContent({
@@ -73,9 +68,10 @@ export function AppsMainAddAppContent({
   return (
     <Section
       pad="lg"
-      space
+      space="xxl"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
-      title={def.name}
+      title="Add app"
+      subTitle={`Setup ${def.name} app`}
       titlePad
       titleBorder
       afterTitle={
@@ -86,8 +82,8 @@ export function AppsMainAddAppContent({
             </Button>
           )}
           {!def.auth && !def.setup && (
-            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def)}>
-              Install
+            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def, true)}>
+              Add
             </Button>
           )}
         </>
@@ -103,23 +99,34 @@ export function AppsMainAddAppContent({
     >
       {!!error && <Message alt="error">{error}</Message>}
 
-      {hasSetup && (
-        <Section space>
-          <Section bordered pad title="Setup" titlePad titleSize={0.85}>
+      <Section
+        bordered
+        elevation={3}
+        pad
+        title="Setup"
+        subTitle="Customize and add app to workspace"
+        titlePad
+        titleSize={0.85}
+        space
+      >
+        <AppsMainNew app={{ target: 'app', name: def.name, identifier: def.id }} />
+
+        {hasSetup && (
+          <>
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)
               }}
               def={def}
             />
-          </Section>
-          <Message alt="lightGray" icon="warn">
-            This app stores data privately, only on your device. If your team enables decentralized
-            key-sharing, it syncs private keys securely, <strong>only directly</strong> to others
-            users in this space.
-          </Message>
-        </Section>
-      )}
+            <Message alt="lightGray" icon="warn">
+              This app stores data privately, only on your device. If your team enables
+              decentralized key-sharing, it syncs private keys securely,{' '}
+              <strong>only directly</strong> to others users in this space.
+            </Message>
+          </>
+        )}
+      </Section>
 
       <Section space>
         <SubTitle>Description</SubTitle>

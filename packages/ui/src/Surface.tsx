@@ -2,7 +2,6 @@ import { ColorLike } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
-import { isObject } from 'lodash'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
 import { Badge } from './Badge'
@@ -445,7 +444,9 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     theme.color ||
     ''}`
   const iconColorHover =
-    (isObject(props.hoverStyle) && props.hoverStyle.color) || theme.colorHover || 'inherit'
+    (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
+    theme.colorHover ||
+    'inherit'
 
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
@@ -502,6 +503,11 @@ const chromelessStyle = {
   background: 'transparent',
 }
 
+const defaultTextTheme = {
+  fontSize: undefined,
+  lineHeight: undefined,
+}
+
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   display: 'flex', // in case they change tagName
@@ -519,7 +525,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     padding: 0,
   },
 }).theme((props, theme) => {
-  const fontStyle = scaledTextSizeTheme(props)
+  const { fontSize, lineHeight } = scaledTextSizeTheme(props) || defaultTextTheme
   const themeStyle = psuedoStyleTheme(props, theme)
   const propStyles = propsToStyles(props, theme)
   const marginStyle = getMargin(props)
@@ -572,8 +578,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
           ...propStyles['&:hover'],
         },
     ...styles,
+    fontSize,
+    lineHeight,
     ...marginStyle,
-    ...fontStyle,
   }
 })
 

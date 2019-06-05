@@ -2,7 +2,7 @@ import { getAppDefinition, isDataDefinition, Templates, useActiveAppsSorted } fr
 import { Button, Center, Section, SortableGrid, SortableGridProps, SubTitle, View } from '@o/ui'
 import { partition } from 'lodash'
 import pluralize from 'pluralize'
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import { useUserVisualAppDefinitions } from '../apps/orbitApps'
 import { useAppSortHandler } from '../hooks/useAppSortHandler'
@@ -94,5 +94,13 @@ export function ManageApps() {
 }
 
 function AppSortableGrid<A>(props: SortableGridProps<A>) {
-  return <SortableGrid minWidth={180} maxWidth={220} distance={10} {...props} />
+  return (
+    <SortableGrid
+      itemMinWidth={180}
+      itemMaxWidth={220}
+      itemMinHeight={220}
+      distance={10}
+      {...props}
+    />
+  )
 }

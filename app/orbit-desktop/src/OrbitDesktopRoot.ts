@@ -86,9 +86,9 @@ import { GraphServer } from './GraphServer'
 import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
-import { AppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 import { FinishAuthQueue } from './auth-server/finishAuth'
+import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 
 const log = new Logger('desktop')
 
@@ -352,7 +352,7 @@ export class OrbitDesktopRoot {
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
         }),
-        AppOpenWorkspaceResolver,
+        createAppOpenWorkspaceResolver(this.orbitAppsManager),
         AppRemoveResolver,
         NewFallbackServerPortResolver,
         createCallAppBitApiMethodResolver(props.orbitAppsManager),

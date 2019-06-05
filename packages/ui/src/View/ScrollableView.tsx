@@ -106,8 +106,8 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',
-  width: '100%',
-  height: '100%',
+  // width: '100%',
+  // height: '100%',
 }).theme(({ scrollable, hideScrollbars }) => ({
   ...(hideScrollbars && hideScrollbarsStyle),
   overflow: 'hidden',

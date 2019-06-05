@@ -2,6 +2,8 @@
 
 . $(dirname $0)/__/common
 
+echo "you may want to just run this with vscode directly (cmd+ctrl+b > tsc: watch)"
+
 if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
   if [ "$1" = "--watch" ]; then

@@ -61,7 +61,7 @@ export const Col = forwardRef((colProps: ColProps, ref) => {
 
   // scrollable
   return (
-    <ScrollableView ref={ref} flexDirection="column" parentSpacing={space} {...props}>
+    <ScrollableView data-is="Col" ref={ref} flexDirection="column" parentSpacing={space} {...props}>
       {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
     </ScrollableView>
   )

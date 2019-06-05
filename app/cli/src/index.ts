@@ -8,12 +8,11 @@ import Yargs from 'yargs'
 import { CommandBuildOptions } from './command-build'
 import { CommandDevOptions } from './command-dev'
 import { CommandGenTypesOptions } from './command-gen-types'
-import { CommandInstallOptions } from './command-install'
+import { CommandInstallOptions, CommandInstallRes } from './command-install'
 import { CommandNewOptions } from './command-new'
 import { CommandPublishOptions } from './command-publish'
 import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
-
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
@@ -63,14 +62,21 @@ Yargs.scriptName('orbit')
         .option('verbose', {
           type: 'boolean',
           default: false,
+        })
+        .option('force-install', {
+          type: 'boolean',
+          default: false,
         }),
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
+      let directory = resolve(cwd, argv.ws)
       require('./command-install').commandInstall({
         workspace: argv.ws,
         identifier: argv.id,
+        directory,
         verbose: !!argv.verbose,
+        forceInstall: !!argv['force-install'],
       })
     },
   )
@@ -208,6 +214,9 @@ Yargs.scriptName('orbit')
 export * from './util/downloadAppDefinition'
 export * from './util/requireAppDefinition'
 export * from './util/getPackageId'
+export * from './util/findPackage'
+
+// these require inside fn because we want to avoid long startup time requiring everything
 
 export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
 export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)
@@ -217,5 +226,5 @@ export const commandPublish = (x: CommandPublishOptions) =>
 export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
 export const commandGenTypes = (x: CommandGenTypesOptions) =>
   require('./command-gen-types').commandGenTypes(x)
-export const commandInstall = (x: CommandInstallOptions) =>
+export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
   require('./command-install').commandInstall(x)

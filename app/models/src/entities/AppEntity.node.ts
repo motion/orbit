@@ -1,14 +1,5 @@
-import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+
 import { AppBit } from '../interfaces/AppBit'
 import { ItemType } from '../interfaces/ItemType'
 import { Space } from '../interfaces/SpaceInterface'
@@ -23,9 +14,6 @@ export class AppEntity extends BaseEntity implements AppBit {
 
   @Column({ type: String })
   identifier?: string
-
-  @Column({ default: '' })
-  sourceIdentifier?: string
 
   @Column({ default: '' })
   token?: string

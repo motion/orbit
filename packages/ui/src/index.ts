@@ -4,6 +4,14 @@ export { default as allIcons } from './icons'
 
 export { ImmutableUpdateFn } from './types'
 export * from '@o/color'
+
+export { default as useAsync } from 'react-use/esm/useAsync'
+export { default as useAsyncFn } from 'react-use/esm/useAsyncFn'
+export { default as useAsyncRetry } from 'react-use/esm/useAsyncRetry'
+export { default as useEffectOnce } from 'react-use/esm/useEffectOnce'
+export { default as useBattery } from 'react-use/esm/useBattery'
+export { default as useScroll } from 'react-use/esm/useScroll'
+
 export {
   Absolute,
   AbsoluteProps,

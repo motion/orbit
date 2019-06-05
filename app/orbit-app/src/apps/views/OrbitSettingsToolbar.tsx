@@ -8,6 +8,8 @@ export function OrbitSettingsToolbar() {
   const om = useOm()
   const appId = om.state.router.appId
 
+  console.log('appId', appId)
+
   if (App.isEditing) {
     return null
   }
@@ -20,8 +22,8 @@ export function OrbitSettingsToolbar() {
       active={appId}
       onChange={id => om.actions.router.showAppPage({ id })}
     >
-      <Tab id="spaces" icon="layer" label="Spaces" />
-      <Tab id="settings" icon="cog" label="Settings" />
+      <Tab id="spaces" key="spaces" icon="layer" label="Spaces" />
+      <Tab id="settings" key="settings" icon="cog" label="Settings" />
     </Tabs>
   )
 }

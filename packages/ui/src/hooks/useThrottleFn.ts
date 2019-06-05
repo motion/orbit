@@ -1,5 +1,7 @@
 import { useCallback, useRef } from 'react'
 
+import { useOnUnmount } from './useOnUnmount'
+
 export function useThrottledFn<Args extends any[], Returns extends any>(
   fn: (...args: Args) => Returns,
   props: { amount: number; ignoreFirst?: boolean },
@@ -19,5 +21,10 @@ export function useThrottledFn<Args extends any[], Returns extends any>(
       tm.current = setTimeout(() => fn(...args), since)
     }
   }
+
+  useOnUnmount(() => {
+    clearTimeout(tm.current)
+  })
+
   return useCallback(throttledFn as any, mountArgs || [fn])
 }

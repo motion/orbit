@@ -61,8 +61,8 @@ export const OrbitNav = memo(
             // stretch: !isPinned,
             thicc: isPinned,
             isActive,
-            icon: <AppIcon app={app} />,
-            iconSize: 24,
+            icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
+            iconSize: tabHeight - 6,
             getContext() {
               return [
                 {

@@ -67,6 +67,10 @@ class FormStore {
     } else if (typeof value === 'string') {
       this.globalError = value
     } else if (value && Object.keys(value).length) {
+      // handle a general object describing a global error
+      if (value.type === 'error' && typeof value.message === 'string') {
+        this.globalError = value.message
+      }
       this.errors = value
     } else {
       this.errors = null
@@ -175,6 +179,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
             continue
           }
         }
+
         if (Object.keys(fieldErrors).length) {
           formStore.setErrors(fieldErrors)
           return
@@ -185,6 +190,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
         if (nextErrors instanceof Promise) {
           nextErrors = await nextErrors
         }
+
         formStore.setErrors(nextErrors)
       }
     },
@@ -202,14 +208,18 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
         <Section background="transparent" flex={1} {...sectionProps}>
           {formStore.globalError && (
             <>
-              <Message alt="error">{formStore.globalError}</Message>
-              <Space />
+              <Message key={0} alt="error">
+                {formStore.globalError}
+              </Message>
+              <Space key={1} />
             </>
           )}
           {formStore.errors && (
             <>
-              <Message alt="warn">Form has errors, please check.</Message>
-              <Space />
+              <Message key={2} alt="warn">
+                Form has errors, please check.
+              </Message>
+              <Space key={3} />
             </>
           )}
 

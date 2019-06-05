@@ -1,33 +1,11 @@
-import {
-  App,
-  AppDefinition,
-  AppIcon,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  isDataDefinition,
-  removeApp,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useAppDefinitions,
-  useAppWithDefinition,
-} from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import {
-  Button,
-  Col,
-  FormField,
-  Icon,
-  List,
-  ListItemProps,
-  Section,
-  SubSection,
-  SubTitle,
-} from '@o/ui'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn } from '@o/ui'
+import React, { useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
+import { useUserAppDefinitions } from '../orbitApps'
 import { AppSetupForm } from './AppSetupForm'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
@@ -45,9 +23,9 @@ export default createApp({
 })
 
 function getDescription(def: AppDefinition) {
-  const hasSync = !!def.sync
+  const hasData = isDataDefinition(def)
   const hasClient = !!def.app
-  const titles = [hasSync ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
+  const titles = [hasData ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
   return titles.join(', ')
 }
 
@@ -62,7 +40,7 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
     key: `install-${def.id}`,
     groupName: 'Setup (Local)',
     title: def.name,
-    icon: <AppIcon identifier={def.id} colors={['black', 'red']} />,
+    icon: <AppIcon identifier={def.id} />,
     subTitle: getDescription(def) || 'No Description',
     after: sourceIcon,
     identifier: 'apps',
@@ -74,18 +52,32 @@ export const appDefToListItem = (def: AppDefinition): ListItemProps => {
 const appSearchToListItem = (item: ApiSearchItem): ListItemProps => ({
   title: item.name,
   subTitle: item.description.slice(0, 300),
-  icon: <AppIcon icon={item.icon} colors={['pink', 'orange']} />,
+  icon: <AppIcon icon={item.icon} />,
   groupName: 'Search (App Store)',
   after: item.features.some(x => x === 'graph' || x === 'sync' || x === 'api') ? sourceIcon : null,
   subType: 'add-app',
   subId: item.identifier,
 })
 
+export async function searchApps(query: string): Promise<ApiSearchItem[]> {
+  query = query.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
+  return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
+}
+
+export function useSearchApps() {
+  const [searchResults, search] = useAsyncFn(searchApps)
+  const results: ListItemProps[] = searchResults.value
+    ? searchResults.value.map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
+    : []
+  return [results, search] as const
+}
+
 export function AppsIndex() {
-  const clientApps = useActiveAppsWithDefinition().filter(x => !!x.definition.app)
+  const allApps = useActiveAppsWithDefinition()
+  const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
   const [topApps, setTopApps] = useState<ListItemProps[]>([])
-  const [searchResults, setSearchResults] = useState<ListItemProps[]>([])
+  const [searchItems, search] = useSearchApps()
 
   useEffect(() => {
     fetch(`https://tryorbit.com/api/apps`)
@@ -101,24 +93,6 @@ export function AppsIndex() {
       })
   }, [])
 
-  const handleQuery = useCallback(next => {
-    let cancel = false
-    const query = next.replace(/[^a-z]/gi, '-').replace(/--{1,}/g, '-')
-    console.log('search', next, 'query', query)
-
-    fetch(`https://tryorbit.com/api/search/${query}`)
-      .then(res => res.json())
-      .then((res: ApiSearchItem[]) => {
-        if (!cancel) {
-          setSearchResults(res.slice(0, 200).map(appSearchToListItem))
-        }
-      })
-
-    return () => {
-      cancel = true
-    }
-  }, [])
-
   const myApps = [
     ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
     ...dataApps.map(getAppListItem).map(x => ({
@@ -128,11 +102,13 @@ export function AppsIndex() {
     })),
   ]
 
+  const localApps = useUserAppDefinitions()
+
   return (
     <List
       title="Manage Apps"
       subTitle="Use search to find new apps."
-      onQueryChange={handleQuery}
+      onQueryChange={search}
       itemProps={{
         iconBefore: true,
       }}
@@ -155,7 +131,7 @@ export function AppsIndex() {
           pad: false,
           children: (
             <Col padding={[38, 8, 16]}>
-              <SubTitle>My Apps</SubTitle>
+              <SubTitle>App Settings</SubTitle>
             </Col>
           ),
         },
@@ -177,9 +153,9 @@ export function AppsIndex() {
             </Col>
           ),
         },
-        ...useDataAppDefinitions().map(appDefToListItem),
+        ...localApps.map(appDefToListItem),
         ...topApps,
-        ...searchResults,
+        ...searchItems,
       ]}
     />
   )

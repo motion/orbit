@@ -22,7 +22,11 @@ const FormRow = gloss(Row, {
   alignItems: 'center',
 })
 
-const FormLabel = ({ children }) => <FormItem width="30%">{children}</FormItem>
+const FormLabel = ({ children }) => (
+  <FormItem width="30%" maxWidth={120}>
+    {children}
+  </FormItem>
+)
 
 export const FormValue = ({ children }) => <FormItem width="70%">{children}</FormItem>
 

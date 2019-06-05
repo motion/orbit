@@ -36,7 +36,6 @@
     "@types/react-dom": "16.8.4",
     "@types/node": "10.5.1",
     "@types/ws": "5.1.2",
-    "unist-util-visit-parents": "2.0.1",
     "date-fns": "2.0.0-alpha.7",
     "graphql": "14.2.1"
   },
@@ -46,7 +45,7 @@
     "@babel/runtime": "^7.4.4",
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
-    "@types/lodash": "4.14.123",
+    "@types/lodash": "^4.14.133",
     "@types/event-kit": "2.4.0",
     "@types/reconnectingwebsocket": "1.0.1",
     "@types/ws": "5.1.2",

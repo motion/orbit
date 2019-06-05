@@ -111,7 +111,7 @@ function SetupAppHome() {
     title: app.name,
     identifier: app.id,
     subTitle: app.description || 'No description',
-    icon: <AppIcon app={{ identifier: app.id, colors: ['red', 'pink'] }} />,
+    icon: <AppIcon identifier={app.id} />,
     iconBefore: true,
     iconProps: {
       size: 44,

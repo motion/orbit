@@ -5,7 +5,7 @@ import { Sizes, Space } from './Space'
 export type SpaceGroupProps = {
   children?: React.ReactNode
   space?: Sizes
-  spaceAround?: boolean
+  spaceAround?: Sizes
   separator?: React.ReactNode
   beforeSpace?: React.ReactNode
   afterSpace?: React.ReactNode
@@ -67,11 +67,13 @@ export function createSpacedChildren({
   }
 
   const spaceElement = separator || <Space size={space} />
+  const spaceAroundElement =
+    separator || spaceAround === true ? spaceElement : <Space size={spaceAround} />
 
   return (
     <>
       {beforeSpace}
-      {spaceAround && spaceElement}
+      {spaceAround && spaceAroundElement}
       {childs.map((child, index) => {
         const isSpace = child && child.type && child.type.isSpace
         const isNextSpace =
@@ -85,7 +87,7 @@ export function createSpacedChildren({
           </Fragment>
         )
       })}
-      {spaceAround && spaceElement}
+      {spaceAround && spaceAroundElement}
       {afterSpace}
     </>
   )

@@ -10,9 +10,6 @@ export interface AppBit<Data = any> {
 
   identifier?: string
 
-  // For validating if we're re-adding the same source (oauth id)
-  sourceIdentifier?: string
-
   space?: Space
 
   spaceId?: number

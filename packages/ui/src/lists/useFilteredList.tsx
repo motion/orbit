@@ -1,13 +1,19 @@
 import { selectDefined } from '@o/utils'
+import fuzzySort from 'fuzzysort'
 import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { fuzzyFilter } from '../helpers/fuzzyFilter'
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 import { UseFilterProps } from '../hooks/useFilter'
 import { useSearch } from '../Search'
+import { ListItemSimpleProps } from './ListItemSimple'
 
-export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProps<any>) {
+export function useFilteredList({
+  // TODO multiple filter keys...
+  // can be done once table filter merges with this
+  filterKey = 'title',
+  ...props
+}: UseFilterProps<ListItemSimpleProps>) {
   const items = props.items || []
   const searchStore = useSearch()
   const initialQuery = useRef(true)
@@ -31,14 +37,39 @@ export function useFilteredList({ filterKey = 'title', ...props }: UseFilterProp
       ? removePrefixIfExists(query || '', props.removePrefix)
       : query || ''
 
-  // cache the sort before we do the rest
-  let sortedItems = useMemo(() => (props.sortBy ? sortBy(items, props.sortBy) : items), [
+  // FIRST SORT
+
+  // memo per-items
+  const sortedItems = useMemo(() => (props.sortBy ? sortBy(items, props.sortBy) : items), [
     items,
     props.sortBy,
   ])
+  const searchIndex = useMemo(() => {
+    return items.map(item => item[filterKey])
+  }, [sortedItems])
 
-  // handle search
-  const filteredItems = query ? fuzzyFilter(search, sortedItems, { key: filterKey }) : sortedItems
+  // THEN FILTER
+
+  // memo per-query
+  const filteredItems = useMemo(() => {
+    if (search) {
+      let next = []
+      // filter in a loop so we can do disableFilter checks
+      for (const [index, item] of sortedItems.entries()) {
+        if (item.disableFilter) {
+          next.push(item)
+          continue
+        }
+        const res = fuzzySort.single(search, searchIndex[index])
+        if (res && res.score > -50) {
+          next.push(item)
+        }
+      }
+      return next
+    } else {
+      return sortedItems
+    }
+  }, [sortedItems, searchIndex, search])
 
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 

@@ -5,7 +5,7 @@ export type ElevatableProps = {
   boxShadow?: CSSPropertySetResolved['boxShadow']
 }
 
-const round = (x: number) => Math.round(x * 20) / 20
+const round = (x: number) => Math.round(x * 30) / 30
 const smoother = (base: number, amt = 1) =>
   round((Math.log(Math.max(1, base + 0.2)) + 0.75) * amt * 2)
 
@@ -15,9 +15,9 @@ const elevatedShadow = (x: number) => [
   // y
   smoother(x, 1),
   // spread
-  smoother(x, 2),
+  smoother(x, 2.5),
   // color
-  [0, 0, 0, round(0.025 * smoother(x))],
+  [0, 0, 0, round(0.02 * smoother(x))],
 ]
 
 export function getElevation(props: ElevatableProps) {

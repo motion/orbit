@@ -19,7 +19,6 @@ export async function insertDevelopmentPostgres() {
     createdAt: new Date(),
     identifier: 'postgres',
     name: 'Postgres on docker',
-    sourceIdentifier: '',
     tabDisplay: 'plain',
     target: 'app',
     token: '',

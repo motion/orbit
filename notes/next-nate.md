@@ -1,3 +1,5 @@
+next
+
 install apps / app bundles
   - [ ] need to fix app icons completely
   - [ ] new app setup pane with "create new app" as well

@@ -6,7 +6,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useOm } from '../../om/om'
 import { ColorPicker } from '../../views/ColorPicker'
 
-export function AppsMainNew({ app }: { app: AppBit }) {
+export function AppsMainNew({
+  app,
+  customizeColor,
+  customizeIcon,
+}: {
+  app: AppBit
+  customizeColor?: boolean
+  customizeIcon?: boolean
+}) {
   const { state, actions } = useOm()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
@@ -20,25 +28,11 @@ export function AppsMainNew({ app }: { app: AppBit }) {
 
   return (
     <Col space>
-      <FormField label="Icon">
-        <Row space alignItems="center" overflow="hidden">
-          <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
-          <Col flex={1}>
-            <ColorPicker
-              onChangeColor={colors => {
-                actions.setupApp.update({ colors })
-              }}
-              activeColor={state.setupApp.app.colors[0]}
-            />
-            <IconPicker active={activeIcon} onChange={setActiveIcon} />
-          </Col>
-        </Row>
-      </FormField>
       <FormField label="Name">
         <Input
           ref={inputRef}
           size={1.5}
-          placeholder="Name..."
+          placeholder={app.name}
           margin={['auto', 0]}
           value={state.setupApp.app.name}
           onFocus={e => {
@@ -49,6 +43,24 @@ export function AppsMainNew({ app }: { app: AppBit }) {
           }}
         />
       </FormField>
+      {(customizeColor || customizeIcon) && (
+        <FormField label="Icon">
+          <Row space alignItems="center" overflow="hidden">
+            <AppIcon identifier={app.identifier} colors={state.setupApp.app.colors} size={48} />
+            <Col flex={1}>
+              {customizeColor && (
+                <ColorPicker
+                  onChangeColor={colors => {
+                    actions.setupApp.update({ colors })
+                  }}
+                  activeColor={state.setupApp.app.colors[0]}
+                />
+              )}
+              {customizeIcon && <IconPicker active={activeIcon} onChange={setActiveIcon} />}
+            </Col>
+          </Row>
+        </FormField>
+      )}
     </Col>
   )
 }

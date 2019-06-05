@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'
@@ -28,7 +28,7 @@ export type FlowProps =
       useFlow: FlowStore
     }
 
-type FlowStepProps = FlowSectionProps & {
+export type FlowStepProps = FlowSectionProps & {
   title?: string
   subTitle?: string
   children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
@@ -137,14 +137,7 @@ class FlowStore {
   }
 
   setData = this.hooks.data[1]
-  setStep = this.hooks.index[1]
-
-  setStepIndex = (x: number) => {
-    this.setStep(_ => {
-      console.log('setting to', x)
-      return x
-    })
-  }
+  setStepIndex = this.hooks.index[1]
 
   next = () => this.setStepIndex(Math.min(this.total - 1, this.index + 1))
   prev = () => this.setStepIndex(Math.max(0, this.index - 1))
@@ -165,11 +158,12 @@ export const Flow: FlowComponent<FlowProps> = memo(
     const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
     // make it  merge by default
     const total = Children.count(props.children)
+    const children = Children.toArray(props.children)
     const steps: FlowStep[] = useMemo(
       () =>
-        Children.map(props.children, child => child.props).map((child, idx) => ({
+        children.map((child, idx) => ({
           key: `${idx}`,
-          ...child,
+          ...child.props,
         })),
       [props.children],
     )
@@ -188,12 +182,11 @@ export const Flow: FlowComponent<FlowProps> = memo(
 
     const contents = (
       <Slider fixHeightToParent curFrame={flowStore.index}>
-        {Children.map(props.children, (child, idx) => {
-          const step = child.props
-          const ChildView = step.children
+        {children.map((child, idx) => {
+          const ChildView = child.props.children
           return (
             <SliderPane key={idx}>
-              {typeof step.children === 'function' ? <ChildView {...stepProps} /> : step.children}
+              {isValidElement(ChildView) ? ChildView : <ChildView {...stepProps} />}
             </SliderPane>
           )
         })}

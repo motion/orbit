@@ -1,8 +1,33 @@
 import { command, loadOne, save } from '@o/bridge'
-import { AppDefinition } from '@o/kit'
+import { AppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
 import { AppBit, AppModel, AuthAppCommand, InstallAppToWorkspaceCommand, SpaceModel, UserModel } from '@o/models'
 
-import { newAppStore } from '../om/stores'
+import { newAppStore, useNewAppStore } from '../om/stores'
+
+export function createNewAppBit(definition: AppDefinition): AppBit {
+  return {
+    target: 'app',
+    identifier: definition.id,
+    itemType: definition.itemType,
+    name: definition.name,
+    tabDisplay: 'plain',
+    colors: ['#000', '#111'],
+    token: '',
+    data: {},
+  }
+}
+
+export function useNewAppBit(identifier: string) {
+  const definition = useAppDefinition(identifier)
+  const newAppStore = useNewAppStore()
+  const [activeSpace] = useActiveSpace()
+  return {
+    ...createNewAppBit(definition),
+    spaceId: activeSpace.id,
+    name: newAppStore.app.name || definition.name,
+    colors: newAppStore.app.colors,
+  }
+}
 
 export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit> | true) {
   if (def.auth) {
@@ -24,25 +49,14 @@ export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit>
     console.log('Creating a new app bit')
     try {
       const activeSpace = await getActiveSpace()
-      let bit: AppBit = {
-        target: 'app',
-        identifier: def.id,
+      const bit = {
+        ...createNewAppBit(def),
         spaceId: activeSpace.id,
         space: activeSpace,
         name: newAppStore.app.name || def.name,
-        colors: newAppStore.app.colors || ['black', 'black'],
-        tabDisplay: 'plain',
-        itemType: def.itemType,
-        token: '',
-        data: {},
+        colors: newAppStore.app.colors,
+        ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
-      if (typeof newAppBit === 'object') {
-        bit = {
-          ...bit,
-          ...newAppBit,
-        }
-      }
-
       console.log('Saving new app', bit)
       await save(AppModel, bit)
 

@@ -1,9 +1,11 @@
 import { AppIcon, createApp, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
-import React, { useState } from 'react'
+import { Button, Col, Flow, FlowStepProps, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
+import React, { memo, useMemo } from 'react'
 
+import { useNewAppBit } from '../helpers/installApp'
 import { useOm } from '../om/om'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
+import { AppsMainNew } from './apps/AppsMainNew'
 import { useUserVisualAppDefinitions } from './orbitApps'
 import { StackNavigator, useStackNavigator } from './StackNavigator'
 
@@ -107,7 +109,6 @@ function SetupAppCustom() {
 }
 
 function SetupAppHome() {
-  const { actions } = useOm()
   const stackNav = useStackNavigator()
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
@@ -127,10 +128,9 @@ function SetupAppHome() {
     results.filter(res => res.features.some(x => x === 'app')),
   )
 
-  const [selected, setSelected] = useState<ListItemProps>(null)
   const flow = useFlow({
     initialData: {
-      selectedApp: null,
+      selectedAppIdentifier: null,
     },
   })
 
@@ -147,7 +147,7 @@ function SetupAppHome() {
               onQueryChange={search}
               selectable
               alwaysSelected
-              onSelect={rows => setSelected(rows[0])}
+              onSelect={rows => flow.setData({ selectedAppIdentifier: rows[0].identifier })}
               itemProps={{
                 iconBefore: true,
               }}
@@ -156,7 +156,7 @@ function SetupAppHome() {
           </Flow.Step>
 
           <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
-            <div>hi</div>
+            {FlowStepSetup}
           </Flow.Step>
         </Flow>
       </Col>
@@ -176,18 +176,27 @@ function SetupAppHome() {
             Create Custom App
           </Button>
           <View flex={1} />
-          {selected && (
+          {flow.data.selected && (
             <View>
               <Text ellipse alpha={0.65} size={1.2}>
-                {selected.title}
+                {flow.data.selected.title}
               </Text>
             </View>
           )}
-          <Button size={1.4} alt="confirm" onClick={flow.nextStep} icon="chevron-right">
-            Configure
+          <Button size={1.4} alt="confirm" onClick={flow.next} icon="chevron-right">
+            {flow.index === 0 ? 'Configure' : 'Finish'}
           </Button>
         </Toolbar>
       </Scale>
     </>
   )
 }
+
+const FlowStepSetup = memo(({ data }: FlowStepProps) => {
+  const appBit = useNewAppBit(data.selectedAppIdentifier)
+  return (
+    <Col pad flex={1} scrollable="y">
+      <AppsMainNew customizeColor customizeIcon app={appBit} />
+    </Col>
+  )
+})

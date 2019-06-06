@@ -16,7 +16,7 @@ export async function webpackPromise(
             // make it a bit quieter
             chunks: false,
             builtAt: false,
-            children: false,
+            // children: false,
             moduleTrace: false,
             colors: true,
           }),

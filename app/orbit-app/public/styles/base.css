@@ -11,6 +11,12 @@
   pointer-events: auto;
 }
 
+.hide-scrollbars {
+  -webkit-overflow-scrolling: initial;
+  -moz-scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .hide-scrollbars::-webkit-scrollbar {
   height: 0 !important;
   width: 0 !important;

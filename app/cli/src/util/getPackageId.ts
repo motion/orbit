@@ -13,3 +13,7 @@ export async function getPackageId(identifier: string) {
   const searchApp: ApiSearchItem = await fetch(`${apiUrl}/apps/${identifier}`).then(x => x.json())
   return searchApp.packageId
 }
+
+export function getIdentifierFromPackageId(packageId: string) {
+  return Object.keys(identifierToPackageId).find(x => identifierToPackageId[x] === packageId)[0]
+}

@@ -9,12 +9,7 @@ type AppDefinitions = { [id: string]: AppDefinition }
 
 const log = new Logger('getWorkspaceNodeApis')
 
-export async function getWorkspaceNodeApis(
-  space: Space,
-): Promise<{
-  definitions: AppDefinitions | null
-  packageIdToIdentifier: { [key: string]: string }
-}> {
+export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinitions> {
   const appsMeta = await getWorkspaceAppMeta(space)
   const definitions: AppDefinitions = {}
   const packageIdToIdentifier = {}
@@ -39,10 +34,7 @@ export async function getWorkspaceNodeApis(
     }),
   )
 
-  return {
-    definitions,
-    packageIdToIdentifier,
-  }
+  return definitions
 }
 
 export async function requireAppEntry(

@@ -16,7 +16,7 @@ import { getRepository } from 'typeorm'
 
 import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
-import { updateWorkspacePackageIds } from '@o/cli'
+import { updateWorkspacePackageIds, getIdentifierFromPackageId } from '@o/cli'
 
 const log = new Logger('OrbitAppsManager')
 
@@ -41,7 +41,6 @@ export class OrbitAppsManager {
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
-  packageIdToIdentifier = {}
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
@@ -86,12 +85,7 @@ export class OrbitAppsManager {
 
   updateAppDefinitions = async (space: Space) => {
     log.info(`Updaing app definitions for space ${space.id}`)
-    const { definitions, packageIdToIdentifier } = await getWorkspaceNodeApis(space)
-    // await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
-    this.packageIdToIdentifier = {
-      ...this.packageIdToIdentifier,
-      ...packageIdToIdentifier,
-    }
+    const definitions = await getWorkspaceNodeApis(space)
     this.nodeAppDefinitions = {
       ...this.nodeAppDefinitions,
       ...definitions,
@@ -105,7 +99,7 @@ export class OrbitAppsManager {
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
-        const identifier = this.packageIdToIdentifier[meta.packageId]
+        const identifier = getIdentifierFromPackageId(meta.packageId)
         this.appMeta[identifier] = meta
       }
     },

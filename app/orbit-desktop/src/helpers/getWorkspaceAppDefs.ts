@@ -22,12 +22,12 @@ export async function getWorkspaceAppDefs(
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       try {
-        const nodeEntry = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
-        if (nodeEntry.type === 'error') {
+        const appInfo = await requireAppEntry(join(directory, 'dist', 'appInfo.js'))
+        if (appInfo.type === 'error') {
           console.error('no node definition')
           return
         }
-        const { definition } = nodeEntry
+        const { definition } = appInfo
         const id = definition.id
         log.info('got an app def', id, !!definition)
         definitions[id] = definition
@@ -48,7 +48,7 @@ export async function getWorkspaceAppDefs(
 export async function requireAppEntry(
   entryPath: string,
 ): Promise<{ type: 'success'; definition: AppDefinition } | { type: 'error'; message: string }> {
-  let nodeEntry
+  let entry
   log.info(`Importing entry ${entryPath}`)
   try {
     if (!(await pathExists(entryPath))) {
@@ -57,9 +57,9 @@ export async function requireAppEntry(
         message: 'No entry file',
       }
     }
-    nodeEntry = require(entryPath)
-    if (!nodeEntry || !nodeEntry.default) {
-      log.info(`App must \`export default\` an AppDefinition, got ${typeof nodeEntry}`)
+    entry = require(entryPath)
+    if (!entry || !entry.default) {
+      log.info(`App must \`export default\` an AppDefinition, got ${typeof entry}`)
       return {
         type: 'error' as const,
         message: `No export default found on node entry.`,
@@ -73,6 +73,6 @@ export async function requireAppEntry(
   }
   return {
     type: 'success' as const,
-    definition: nodeEntry.default,
+    definition: entry.default,
   }
 }

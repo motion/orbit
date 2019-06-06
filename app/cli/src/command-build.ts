@@ -89,6 +89,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   reporter.info(`Reading appInfo`)
   const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+  reporter.info(`apiInfo: ${Object.keys(appInfo).join(',')}`)
 
   if (appInfo.app) {
     reporter.info(`Found web app, building`)
@@ -146,15 +147,6 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
 }
 
 async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
-  // for now just check harcoded file
-  const nodeEntry = join(options.projectRoot, 'src', 'api.node.ts')
-  if (!(await pathExists(nodeEntry))) {
-    console.log(`No node api found at: ${nodeEntry}`)
-    return
-  }
-  // TODO
-  // seems like this is still picking up imports from index.ts,
-  // ignore loader should still remove all things besides direct .node.ts imports
   return getAppConfig(
     {
       name: pkg.name,

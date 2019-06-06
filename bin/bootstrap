@@ -23,6 +23,8 @@ ensure-dep "tsc" -- npm i -g typescript
 echo "installing dependencies"
 yarn install --ignore-engines
 
+ensure-dep "orbit" -- (cd app/cli && yarn link)
+
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
   bin/build

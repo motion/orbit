@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'The easier, faster app platform',
-  medium: 'The easier, faster app platform',
-  small: 'The easier, faster app platform',
+  large: 'Create small, fun apps that work together.',
+  medium: 'Create small, fun apps that work together.',
+  small: 'Create small, fun apps that work together.',
 }
 
 let allTexts = {
   large: [
-    `Create, collaborate on apps with incredible ease.`,
-    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
+    `Strangely easy to build, powerful & collaborative cross-platform apps.`,
+    `Open source. Plug in amazing functionality with the open app store.`,
   ],
   medium: [
-    `Create, collaborate on apps with incredible ease.`,
-    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
+    `Strangely easy to build, powerful & collaborative cross-platform apps.`,
+    `Open source. Plug in amazing functionality with the open app store.`,
   ],
   small: [
-    `Create, collaborate on apps with incredible ease.`,
-    `Easy data plugins, easy collaboration & no infrastructure necessary.`,
+    `Collaborate on apps more easily than ever.`,
+    `Open source. Plug in amazing functionality with the open app store.`,
   ],
 }
 
@@ -222,20 +222,19 @@ export function HeadSection() {
           </Col>
           <Space size={40} />
           <Row space="xl" pad={[0, 'xl']} marginBottom={-90} scrollable="x" maxWidth="100vw">
-            <SubSection index={0} title="Rich desktop apps">
-              Not just a UI kit: complete patterns that let you build common interfaces with ease.
+            <SubSection index={0} title="Easy">
+              Comes with complete patterns for building many types of apps.
             </SubSection>
 
-            <SubSection index={2} title="Desktop first">
-              Virtualization, static analysis and powerful APIs give you incredible power and speed.
+            <SubSection index={2} title="Powerful">
+              Powerful views, optimization and APIs give you incredible new abilities.
             </SubSection>
 
-            <SubSection index={1} title="An ecosystem">
-              Use the App Store to plug in data from Slack to Postgres. Add apps and views with a
-              click.
+            <SubSection index={1} title="Connected">
+              The Open App Store with apps that work together, providing data to each other.
             </SubSection>
 
-            <SubSection index={3} title="Serverless, private">
+            <SubSection index={3} title="Serverless">
               True peer-to-peer, so you can build securely without infrastructure.
             </SubSection>
           </Row>
@@ -251,11 +250,11 @@ const SubSection = memo(({ title, children, index }: any) => {
   return (
     <Col flex={1} minWidth={180}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title color={colors.orange} selectable size={0.7}>
+        <Title textAlign="center" color={'#fff'} selectable size={0.7}>
           {title}
         </Title>
         <Space size="sm" />
-        <SimpleText selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
+        <SimpleText textAlign="center" selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
           {children}
         </SimpleText>
       </FadeChild>

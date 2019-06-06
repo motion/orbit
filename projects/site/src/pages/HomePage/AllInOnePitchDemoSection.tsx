@@ -1,4 +1,15 @@
-import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import {
+  Button,
+  Col,
+  FullScreen,
+  gloss,
+  Image,
+  Row,
+  Space,
+  useGetFn,
+  useIntersectionObserver,
+  View,
+} from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -8,7 +19,14 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
-import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
+import {
+  FadeChild,
+  fadeLeftProps,
+  fadeRightProps,
+  fadeUpProps,
+  slowConfigLessBounce,
+  useFadePage,
+} from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -225,15 +243,18 @@ export default function NeckSection() {
           header={
             <>
               <FadeChild delay={0}>
-                <PillButton>Unify</PillButton>
+                <PillButton>How</PillButton>
               </FadeChild>
               <FadeChild delay={200}>
-                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>
+                  An app platform for us.
+                </TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={300}>
-                  Pull in data and collaborate with incredible simplicity.
+                  Create apps, add data, code, deploy, and collaborate with just a .app.
                 </FadeChild>
+                <FadeChild delay={400}>Everything included. No servers necessary.</FadeChild>
               </TitleTextSub>
             </>
           }
@@ -246,8 +267,9 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Plug in data sources like{' '}
-                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> with a click.
+                      Apps talk to each other - get the{' '}
+                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> app with a click
+                      in the app store.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -256,8 +278,8 @@ export default function NeckSection() {
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Pulling data from queries into views, and moving between views is easy. They
-                      all work together.
+                      Orbit aims to make building apps so easy it's fun. You own the code and the
+                      data! Make internal tools for your team in minutes.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -266,7 +288,7 @@ export default function NeckSection() {
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Built-in select & share to other apps, like{' '}
+                      Because every app API is typed, easily have your app export to your team's{' '}
                       <Inline color="#F14336">{elements[cur].afterName}</Inline>.
                     </CenterText>
                   </FadeChild>

@@ -90,10 +90,10 @@ export default memo(function DataAppKitFeaturesSection() {
             >
               {apps.map((app, index) => {
                 let pivot = Math.round(apps.length / 2) - 1
-                let offset = index * 25
+                let offset = index * 20
                 if (index >= pivot) {
                   let i = index - pivot
-                  offset = pivot * 25 - i * 25
+                  offset = pivot * 20 - i * 20
                 }
                 return (
                   <Integration
@@ -107,7 +107,7 @@ export default memo(function DataAppKitFeaturesSection() {
               })}
             </Row>
 
-            <Space />
+            <Space size="lg" />
 
             <FadeChild delay={0}>
               <Row space margin={[0, 'auto']}>

@@ -14,7 +14,26 @@ export type CommandBuildOptions = {
   verbose?: boolean
 }
 
+export const isOrbitApp = async (rootDir: string) => {
+  try {
+    const pkg = await readJSON(join(rootDir, 'package.json'))
+    return pkg.config && pkg.config.orbitApp === true
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
+  return false
+}
+
 export async function commandBuild(options: CommandBuildOptions) {
+  reporter.info(`Running build`)
+
+  if (!(await isOrbitApp(options.projectRoot))) {
+    reporter.panic(
+      `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+    )
+    return
+  }
+
   try {
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     if (!pkg) {

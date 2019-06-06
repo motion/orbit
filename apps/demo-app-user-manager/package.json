@@ -5,8 +5,7 @@
   "ts:main": "src/index.tsx",
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish"
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

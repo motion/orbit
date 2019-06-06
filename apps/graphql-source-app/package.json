@@ -4,10 +4,12 @@
   "version": "2.5.6",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
+  "config": {
+    "orbitApp": true
+  },
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish"
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/kit": "*",

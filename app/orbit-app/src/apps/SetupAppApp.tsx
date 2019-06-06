@@ -1,5 +1,22 @@
 import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowStepProps, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
+import {
+  Button,
+  Col,
+  Flow,
+  FlowStepProps,
+  Form,
+  IconLabeled,
+  List,
+  ListItemProps,
+  randomAdjective,
+  randomNoun,
+  Scale,
+  SelectableGrid,
+  Text,
+  Toolbar,
+  useFlow,
+  View,
+} from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -109,6 +126,7 @@ function SetupAppCustom() {
 }
 
 function SetupAppHome() {
+  console.log('rendering me')
   const stackNav = useStackNavigator()
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,

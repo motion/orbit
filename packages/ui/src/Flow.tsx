@@ -15,6 +15,7 @@ import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
 import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
+import { Center } from './Center'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
@@ -199,6 +200,14 @@ export const Flow: FlowComponent<FlowProps> = memo(
         })}
       </Slider>
     )
+
+    if (!steps[flowStore.index]) {
+      return (
+        <Center>
+          No step at index: {flowStore.index}, steps: {steps.length}
+        </Center>
+      )
+    }
 
     return (
       <Layout

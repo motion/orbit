@@ -65,6 +65,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       providedExports: true,
       sideEffects: true,
       concatenateModules: true,
+      // this helps runtime/loadtime
       splitChunks: {
         chunks: 'async',
         name: false,

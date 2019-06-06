@@ -90,7 +90,11 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   // in debug-build, do one by one, if theres a memory/build issue this will fail clearly
   if (options.debugBuild) {
     for (const config of configs) {
-      reporter.info(`Building config ${JSON.stringify(config.entry)} for mode ${config.mode}`)
+      reporter.info(
+        `Building config ${JSON.stringify(config.entry)} target ${config.target} for mode ${
+          config.mode
+        }`,
+      )
       await webpackPromise([config], {
         loud: true,
       })

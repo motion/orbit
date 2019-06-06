@@ -27,7 +27,6 @@ import {
 } from '@o/ui'
 import React from 'react'
 
-import { useOm } from '../../om/om'
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'

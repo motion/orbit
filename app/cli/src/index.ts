@@ -41,8 +41,6 @@ let cwd = process.cwd()
 let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
-console.log(process.env)
-
 function main() {
   require('./processDispose')
 
@@ -244,6 +242,9 @@ function main() {
 // if were running from electron app something like /path/to/Orbit.app/electron
 // if were running directly from the cli, like /usr/local/node_modules/orbit
 // in the last case we want to run it immediately
-if (process.env._.indexOf('orbit') === process.env._.length - 1) {
+const bin = process.env._
+const cliName = 'orbit'
+const isCli = bin.slice(bin.length - cliName.length) === cliName
+if (isCli) {
   main()
 }

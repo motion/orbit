@@ -12,6 +12,8 @@ export type CommandBuildOptions = {
   watch?: boolean
   force?: boolean
   verbose?: boolean
+  // we can do more careful building for better errors
+  debugBuild?: boolean
 }
 
 export const isOrbitApp = async (rootDir: string) => {
@@ -25,7 +27,7 @@ export const isOrbitApp = async (rootDir: string) => {
 }
 
 export async function commandBuild(options: CommandBuildOptions) {
-  reporter.info(`Running build`)
+  reporter.info(`Running build in ${options.projectRoot}`)
 
   if (!(await isOrbitApp(options.projectRoot))) {
     reporter.panic(
@@ -85,9 +87,19 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   reporter.info(`Building ${configs.length} bundles, running...`)
 
-  await webpackPromise(configs, {
-    loud: options.verbose,
-  })
+  // in debug-build, do one by one, if theres a memory/build issue this will fail clearly
+  if (options.debugBuild) {
+    for (const config of configs) {
+      reporter.info(`Building config ${JSON.stringify(config.entry)}`)
+      await webpackPromise([config], {
+        loud: true,
+      })
+    }
+  } else {
+    await webpackPromise(configs, {
+      loud: options.verbose,
+    })
+  }
 
   const buildId = Date.now()
 

@@ -14,6 +14,28 @@ import { CommandPublishOptions } from './command-publish'
 import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 
+// programmatic API
+
+export * from './util/downloadAppDefinition'
+export * from './util/requireAppDefinition'
+export * from './util/getPackageId'
+export * from './util/findPackage'
+export * from './util/getWorkspaceAppPaths'
+export * from './util/updateWorkspacePackageIds'
+
+// these require inside fn because we want to avoid long startup time requiring everything
+
+export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
+export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)
+export const commandBuild = (x: CommandBuildOptions) => require('./command-build').commandBuild(x)
+export const commandPublish = (x: CommandPublishOptions) =>
+  require('./command-publish').commandPublish(x)
+export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
+export const commandGenTypes = (x: CommandGenTypesOptions) =>
+  require('./command-gen-types').commandGenTypes(x)
+export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
+  require('./command-install').commandInstall(x)
+
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
 const packageJson = require('../package.json')
@@ -41,7 +63,7 @@ Yargs.scriptName('orbit')
     async argv => {
       reporter.setVerbose(!!argv.verbose)
       let projectRoot = resolve(cwd, argv.app)
-      require('./command-dev').commandDev({ projectRoot })
+      await commandDev({ projectRoot })
     },
   )
   .command(
@@ -71,8 +93,7 @@ Yargs.scriptName('orbit')
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
       let directory = resolve(cwd, argv.ws)
-      require('./command-install').commandInstall({
-        workspace: argv.ws,
+      await commandInstall({
         identifier: argv.id,
         directory,
         verbose: !!argv.verbose,
@@ -98,6 +119,10 @@ Yargs.scriptName('orbit')
           type: 'boolean',
           default: false,
         })
+        .option('debug-build', {
+          type: 'boolean',
+          default: false,
+        })
         .option('verbose', {
           type: 'boolean',
           default: false,
@@ -106,11 +131,12 @@ Yargs.scriptName('orbit')
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
       let projectRoot = resolve(cwd, argv.app)
-      await require('./command-build').commandBuild({
+      await commandBuild({
         projectRoot,
         watch: !!argv.watch,
         force: !!argv.force,
         verbose: !!argv.verbose,
+        debugBuild: !!argv['debug-build'],
       })
     },
   )
@@ -144,12 +170,11 @@ Yargs.scriptName('orbit')
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
       let projectRoot = resolve(cwd, argv.app)
-      await require('./command-publish').commandPublish({
+      await commandPublish({
         projectRoot,
-        verbose: !!argv.verbose,
         ignoreBuild: !!argv['ignore-build'],
         ignoreVersion: !!argv['ignore-version'],
-        bumpVersion: argv['bump-version'],
+        bumpVersion: argv['bump-version'] as CommandPublishOptions['bumpVersion'],
       })
     },
   )
@@ -175,7 +200,7 @@ Yargs.scriptName('orbit')
       reporter.setVerbose(!!argv.verbose)
       reporter.info(`argv ${JSON.stringify(argv)}`)
       let workspaceRoot = resolve(cwd, argv.workspace)
-      await require('./command-ws').commandWs({
+      await commandWs({
         workspaceRoot,
         clean: !!argv.clean,
         mode: argv.production ? 'production' : 'development',
@@ -195,7 +220,7 @@ Yargs.scriptName('orbit')
         // ts:main?
         (await readJSON(join(projectRoot, 'package.json')))['ts:main'],
       )
-      require('./command-gen-types').commandGenTypes({
+      await commandGenTypes({
         projectRoot,
         projectEntry,
         out: argv.out ? `${argv.out}` : undefined,
@@ -208,25 +233,3 @@ Yargs.scriptName('orbit')
   .version('version', 'Show version', description)
   .showHelpOnFail(true)
   .help().argv
-
-// programmatic API
-
-export * from './util/downloadAppDefinition'
-export * from './util/requireAppDefinition'
-export * from './util/getPackageId'
-export * from './util/findPackage'
-export * from './util/getWorkspaceAppPaths'
-export * from './util/updateWorkspacePackageIds'
-
-// these require inside fn because we want to avoid long startup time requiring everything
-
-export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
-export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)
-export const commandBuild = (x: CommandBuildOptions) => require('./command-build').commandBuild(x)
-export const commandPublish = (x: CommandPublishOptions) =>
-  require('./command-publish').commandPublish(x)
-export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
-export const commandGenTypes = (x: CommandGenTypesOptions) =>
-  require('./command-gen-types').commandGenTypes(x)
-export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
-  require('./command-install').commandInstall(x)

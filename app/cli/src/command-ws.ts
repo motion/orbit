@@ -30,7 +30,7 @@ export const isOrbitWs = async (rootDir: string) => {
 }
 
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info('Running orbit ws')
+  reporter.info(`Running orbit ws in ${options.workspaceRoot}`)
 
   if (!(await isOrbitWs(options.workspaceRoot))) {
     reporter.panic(

@@ -17,7 +17,7 @@
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && npm start)",
     "build:app": "cd app/build-orbit && npm run build-app",
     "build:app:resume": "cd app/build-orbit && npm run build-app-resume",
-    "build:apps": "lerna exec --scope '@o/*-app' --no-bail -- orbit build",
+    "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --verbose",
     "publish:app": "cd app/build-orbit && npm run publish",
     "publish:packages": "bin/publish",
     "publish:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- yarn orbit:publish --ignore-version",

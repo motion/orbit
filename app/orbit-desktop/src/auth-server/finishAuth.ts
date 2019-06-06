@@ -1,5 +1,5 @@
 import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
-import { Logger } from '@o/kit'
+import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 

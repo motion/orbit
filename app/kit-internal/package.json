@@ -20,7 +20,7 @@
     "@o/use-store": "^2.5.2",
     "@o/utils": "^2.5.2",
     "gloss": "^2.5.6",
-    "immer": "1.7.2"
+    "immer": "^3.1.2"
   },
   "peerDependencies": {
     "electron": "*",

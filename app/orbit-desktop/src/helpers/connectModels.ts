@@ -1,4 +1,4 @@
-import { sleep } from '@o/kit'
+import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 

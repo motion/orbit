@@ -62,7 +62,7 @@ const getActions = (
       update(next => {
         const id = item.id || Math.random()
         next.items[Actions.curId()].children.push(id)
-        next.items[id] = { children: [], ...item, id }
+        next.items[id] = { name: '', children: [], ...item, id }
       })
     },
     addFolder(name?: string) {

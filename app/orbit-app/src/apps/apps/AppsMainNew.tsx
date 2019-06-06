@@ -1,13 +1,26 @@
 import { AppBit, AppIcon } from '@o/kit'
-import { Col, FormField, Input, Row } from '@o/ui'
-import React, { useEffect, useRef } from 'react'
+import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
+import memoize from 'memoize-weak'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { useOm } from '../../om/om'
+import { useNewAppStore } from '../../om/stores'
 import { ColorPicker } from '../../views/ColorPicker'
 
-export function AppsMainNew({ app }: { app: AppBit }) {
-  const { state, actions } = useOm()
+export function AppsMainNew({
+  app,
+  customizeColor,
+  customizeIcon,
+}: {
+  app: AppBit
+  customizeColor?: boolean
+  customizeIcon?: boolean
+}) {
+  const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
+  const [activeIcon, setActiveIcon] = useState('')
+  const updateName = useThrottledFn(e => newAppStore.update({ name: e.target.value }), {
+    amount: 100,
+  })
 
   useEffect(() => {
     if (inputRef.current) {
@@ -18,41 +31,61 @@ export function AppsMainNew({ app }: { app: AppBit }) {
 
   return (
     <Col space>
-      <FormField label="Icon">
-        <Row space alignItems="center">
-          <AppIcon identifier={app.identifier} colors={app.colors} size={48} />
-          <Col space>
-            <ColorPicker
-              onChangeColor={colors => {
-                actions.setupApp.update({ colors })
-              }}
-              activeColor={state.setupApp.app.colors[0]}
-            />
-            {/* TODO icon picker */}
-            <ColorPicker
-              onChangeColor={colors => {
-                actions.setupApp.update({ colors })
-              }}
-              activeColor={state.setupApp.app.colors[0]}
-            />
-          </Col>
-        </Row>
-      </FormField>
       <FormField label="Name">
         <Input
           ref={inputRef}
           size={1.5}
-          placeholder="Name..."
+          placeholder={app.name}
           margin={['auto', 0]}
-          value={state.setupApp.app.name}
-          onFocus={e => {
-            e.target.select()
-          }}
-          onChange={e => {
-            actions.setupApp.update({ name: e.target.value })
-          }}
+          defaultValue={newAppStore.app.name}
+          onChange={updateName}
         />
       </FormField>
+      {(customizeColor || customizeIcon) && (
+        <FormField label="Icon">
+          <Row space alignItems="center" overflow="hidden">
+            <AppIcon identifier={app.identifier} colors={newAppStore.app.colors} size={48} />
+            <Col flex={1}>
+              {customizeColor && (
+                <ColorPicker
+                  onChangeColor={colors => {
+                    newAppStore.update({ colors })
+                  }}
+                  activeColor={newAppStore.app.colors[0]}
+                />
+              )}
+              {customizeIcon && <IconPicker active={activeIcon} onChange={setActiveIcon} />}
+            </Col>
+          </Row>
+        </FormField>
+      )}
     </Col>
+  )
+}
+
+type IconPickerProps = {
+  active?: string
+  onChange?: (icon: string) => any
+}
+
+function IconPicker(props: IconPickerProps) {
+  const setupOnClick = memoize(icon => () => {
+    props.onChange && props.onChange(icon.iconName)
+  })
+
+  return (
+    <Row space pad="sm" scrollable="x" hideScrollbars flex={1}>
+      {allIcons.slice(20, 100).map(icon => {
+        return (
+          <IconShape
+            key={icon.iconName}
+            active={props.active === icon.iconName}
+            onClick={setupOnClick(icon)}
+            name={icon.iconName}
+            size={32}
+          />
+        )
+      })}
+    </Row>
   )
 }

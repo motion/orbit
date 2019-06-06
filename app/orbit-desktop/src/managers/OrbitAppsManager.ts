@@ -1,5 +1,6 @@
-import { AppDefinition, decorate, ensure, Logger, react } from '@o/kit'
-import { AppBit, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { Logger } from '@o/logger'
+import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'

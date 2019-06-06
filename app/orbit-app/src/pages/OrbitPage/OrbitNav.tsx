@@ -12,7 +12,7 @@ import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useOm } from '../../om/om'
-import { newAppStore, usePaneManagerStore } from '../../om/stores'
+import { useNewAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
@@ -124,7 +124,6 @@ export const OrbitNav = memo(
               tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
               thicc
               icon={isOnSetupApp ? 'remove' : 'add'}
-              iconAdjustOpacity={-0.2}
               onClick={actions.router.toggleSetupAppPage}
             />
             {permanentItems.map(props => (
@@ -162,31 +161,37 @@ export const OrbitNav = memo(
               overflowX="auto"
               overflowY="hidden"
             />
-            {isOnSetupApp && (
-              <OrbitTab
-                width={tabWidth}
-                stretch
-                iconSize={18}
-                icon={<AppIcon app={newAppStore.app} />}
-                isActive
-                label={'New app'}
-                after={
-                  <OrbitTabButton
-                    icon="cross"
-                    onClick={flow(
-                      preventDefault,
-                      actions.router.back,
-                    )}
-                  />
-                }
-              />
-            )}
+            {isOnSetupApp && <OrbitNewAppTab tabWidth={tabWidth} />}
           </Row>
         </OrbitNavChrome>
       </OrbitNavClip>
     )
   }),
 )
+
+const OrbitNewAppTab = ({ tabWidth }) => {
+  const newAppStore = useNewAppStore()
+  const { actions } = useOm()
+  return (
+    <OrbitTab
+      width={tabWidth}
+      stretch
+      iconSize={18}
+      icon={<AppIcon identifier={newAppStore.app.identifier} colors={newAppStore.app.colors} />}
+      isActive
+      label={'New app'}
+      after={
+        <OrbitTabButton
+          icon="cross"
+          onClick={flow(
+            preventDefault,
+            actions.router.back,
+          )}
+        />
+      }
+    />
+  )
+}
 
 const OrbitNavClip = gloss(Box, {
   padding: [20, 40],

@@ -14,11 +14,12 @@ export function createNewApp(def: AppDefinition): AppBit {
   }
 }
 
-export function AppSetupForm({
-  def,
-  id,
-  ...rest
-}: FormProps<any> & { id?: number; def: AppDefinition }) {
+type AppSetupFormProps = Omit<FormProps<any>, 'id'> & {
+  id?: number | false
+  def: AppDefinition
+}
+
+export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
   const [activeSpace] = useActiveSpace()
   const [existingApp] = useAppBit(selectDefined(id, false))
   const app: AppBit = existingApp || createNewApp(def)

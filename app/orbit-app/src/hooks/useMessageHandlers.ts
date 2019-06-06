@@ -8,7 +8,7 @@ import { useStores } from './useStores'
 
 export function useMessageHandlers() {
   const { paneManagerStore } = useStores()
-  const props = useLocationLink('/app/settings?id=settings&itemId=account')
+  const goToAccount = useLocationLink('/app/settings?id=settings&itemId=account')
 
   useEffect(() => {
     const subscription = Mediator.onData().subscribe(async ({ name, value }) => {
@@ -26,7 +26,7 @@ export function useMessageHandlers() {
           return
         case 'APP_URL_OPENED':
           await AppActions.finishAuthorization(value)
-          props.onClick()
+          goToAccount()
           return
       }
     })

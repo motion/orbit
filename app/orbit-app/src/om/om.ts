@@ -7,7 +7,6 @@ import * as apps from './apps'
 import * as effects from './effects'
 import { onInitialize } from './onInitialize'
 import * as router from './router'
-import * as setupApp from './setupApp'
 import * as spaces from './spaces'
 import { state } from './state'
 import * as user from './user'
@@ -22,7 +21,6 @@ const config = merge(
   },
   namespaced({
     router,
-    setupApp,
     apps,
     spaces,
     user,
@@ -37,7 +35,7 @@ export const om: Overmind<typeof config> =
     logProxies: true,
   })
 
-export const useOm = createHook(om)
+export const useOm = createHook<typeof config>()
 
 window['om'] = om
 

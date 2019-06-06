@@ -40,7 +40,7 @@ function PeopleAppIndex() {
             <LocationLink url="/apps/apps">workspace settings</LocationLink>.
           </Paragraph>
           <Center>
-            <Button {...useLocationLink('/')} size={1.2}>
+            <Button onClick={useLocationLink('/')} size={1.2}>
               Search all
             </Button>
           </Center>

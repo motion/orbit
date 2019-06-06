@@ -28,7 +28,11 @@ const FormLabel = ({ children }) => (
   </FormItem>
 )
 
-export const FormValue = ({ children }) => <FormItem width="70%">{children}</FormItem>
+export const FormValue = ({ children }) => (
+  <FormItem minWidth="70%" flex={1}>
+    {children}
+  </FormItem>
+)
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 

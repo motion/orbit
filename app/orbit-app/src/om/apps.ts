@@ -28,7 +28,15 @@ const setActiveSpace: Action<Space> = (om, space) => {
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
 }
 
+const start: Action = async om => {
+  om.actions.apps.setApps(await loadMany(AppModel, allAppsArgs))
+  observeMany(AppModel, allAppsArgs).subscribe(apps => {
+    om.actions.apps.setApps(apps)
+  })
+}
+
 export const actions = {
+  start,
   setApps,
   setActiveSpace,
 }
@@ -40,12 +48,5 @@ const allAppsArgs = {
 }
 
 export const effects = {
-  async start(om) {
-    om.actions.apps.setApps(await loadMany(AppModel, allAppsArgs))
-    observeMany(AppModel, allAppsArgs).subscribe(apps => {
-      om.actions.apps.setApps(apps)
-    })
-  },
-
   updatePaneManagerPanes,
 }

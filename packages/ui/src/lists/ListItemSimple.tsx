@@ -382,23 +382,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   )
 })
 
-// basing this on getIconSize is actually nice, it keeps it always in sync with icon
-const getHeightSize = (props: ListItemSimpleProps) => {
-  return Math.round(getIconSize(props) / 24)
-}
 // we scale padX more than padY, depending on height of list item
 const getListItemPadding = (props: ListItemSimpleProps) => {
-  const padXScale = getHeightSize(props)
   const padding = getPadding(props)
   if (!padding) {
     return []
   }
-  return [
-    padding.paddingTop,
-    padding.paddingRight * padXScale,
-    padding.paddingBottom,
-    padding.paddingLeft * padXScale,
-  ]
+  return [padding.paddingTop, padding.paddingRight, padding.paddingBottom, padding.paddingLeft]
 }
 
 const ListItemTitleBar = gloss(View, {
@@ -450,7 +440,7 @@ function getIcon(props: ListItemSimpleProps) {
     ...props.iconProps,
   }
   if (!props.iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${3}px)` }
+    iconPropsFinal['style'] = { transform: `translateY(${1}px)` }
   }
   let element = props.icon
   if (React.isValidElement(props.icon)) {

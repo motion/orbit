@@ -1,8 +1,9 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, FormField, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
+import React from 'react'
 
+import { useOm } from '../../om/om'
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
@@ -64,34 +65,34 @@ export async function searchApps(query: string): Promise<ApiSearchItem[]> {
   return await fetch(`https://tryorbit.com/api/search/${query}`).then(res => res.json())
 }
 
-export function useSearchApps() {
+type FilterSearchItems = (items: ApiSearchItem[]) => ApiSearchItem[]
+
+export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
   const [searchResults, search] = useAsyncFn(searchApps)
   const results: ListItemProps[] = searchResults.value
-    ? searchResults.value.map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
+    ? filterFn(searchResults.value).map(x => ({ ...appSearchToListItem(x), disableFilter: true }))
     : []
   return [results, search] as const
+}
+
+export function useTopAppStoreApps(filterFn: FilterSearchItems = _ => _): ListItemProps[] {
+  const topApps = useAsync<ApiSearchItem[]>(() =>
+    fetch(`https://tryorbit.com/api/apps`).then(res => res.json()),
+  )
+  return !topApps.value
+    ? []
+    : filterFn(topApps.value).map(x => ({
+        ...appSearchToListItem(x),
+        groupName: 'Trending (App Store)',
+      }))
 }
 
 export function AppsIndex() {
   const allApps = useActiveAppsWithDefinition()
   const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()
-  const [topApps, setTopApps] = useState<ListItemProps[]>([])
-  const [searchItems, search] = useSearchApps()
-
-  useEffect(() => {
-    fetch(`https://tryorbit.com/api/apps`)
-      .then(res => res.json())
-      .then((apps: ApiSearchItem[]) => {
-        console.log('top apps', apps)
-        setTopApps(
-          apps.map(x => ({
-            ...appSearchToListItem(x),
-            groupName: 'Trending (App Store)',
-          })),
-        )
-      })
-  }, [])
+  const topApps = useTopAppStoreApps()
+  const [searchItems, search] = useSearchAppStoreApps()
 
   const myApps = [
     ...clientApps.map(getAppListItem).map(x => ({ ...x, subType: 'settings' })),
@@ -162,8 +163,6 @@ export function AppsIndex() {
 }
 
 export function AppsMain(props: AppViewProps) {
-  const [app, definition] = useAppWithDefinition(+props.subId)
-
   if (props.subType === 'explorer-graph') {
     return <GraphExplorer />
   }
@@ -180,30 +179,32 @@ export function AppsMain(props: AppViewProps) {
     return <AppsMainAddApp identifier={props.subId} />
   }
 
+  return <AppSettings appId={+props.subId} />
+}
+
+function AppSettings(props: { appId: number }) {
+  const [app, definition] = useAppWithDefinition(props.appId)
+  const { state, actions } = useOm()
+
   return (
     <Section
-      backgrounded
       flex={1}
       titleBorder
-      titlePad="xxl"
+      titlePad="lg"
       pad
-      icon="cog"
+      icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
-      title={props.title}
+      title={app.name}
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (
-          <Button icon="cross" tooltip={`Remove ${props.title}`} onClick={() => removeApp(app)} />
+          <Button icon="cross" tooltip={`Remove ${app.name}`} onClick={() => removeApp(app)}>
+            Remove
+          </Button>
         )
       }
     >
-      {!!definition.app && (
-        <Section>
-          <FormField label="Name and Icon">
-            <AppsMainNew app={app} />
-          </FormField>
-        </Section>
-      )}
+      {!!definition.app && <AppsMainNew customizeColor app={app} />}
 
       {!!definition.settings && (
         <Section title="Settings">
@@ -212,18 +213,9 @@ export function AppsMain(props: AppViewProps) {
       )}
 
       {!!definition.setup && (
-        <Section>
-          <SubSection title="App Settings">
-            <AppSetupForm id={app ? app.id : undefined} def={definition} />
-          </SubSection>
-        </Section>
-      )}
-
-      {!!definition.app && (
-        <Section bordered title="Preview" minHeight={200}>
-          preview
-          {/* <PreviewApp app={app} /> */}
-        </Section>
+        <SubSection title="App Settings">
+          <AppSetupForm id={app ? app.id : false} def={definition} />
+        </SubSection>
       )}
     </Section>
   )

@@ -5,6 +5,7 @@ import { join } from 'path'
 
 import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
+import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 export type CommandWsOptions = {
   workspaceRoot: string
@@ -12,9 +13,29 @@ export type CommandWsOptions = {
   mode: 'development' | 'production'
 }
 
+export const isOrbitWs = async (rootDir: string) => {
+  try {
+    const pkg = await readJSON(join(rootDir, 'package.json'))
+    return pkg.config && pkg.config.orbitWorkspace === true
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
+  return false
+}
+
 export async function commandWs(options: CommandWsOptions) {
   reporter.info('Running orbit ws')
+
+  if (!(await isOrbitWs(options.workspaceRoot))) {
+    console.log(
+      `\nNot inside orbit workspace, must have "config": { "orbitWorkspace": true } } in package.json`,
+    )
+    return
+  }
+
   const appIdentifiers = await watchBuildWorkspace(options)
+
+  await updateWorkspacePackageIds(options.workspaceRoot)
 
   let orbitDesktop = await getOrbitDesktop()
 
@@ -69,7 +90,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
   }
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
-    console.log('building apps DLL once...')
+    console.log('building all apps once...')
     await webpackPromise([getAppConfig(appsConf)])
   }
 
@@ -124,8 +145,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
         },
         extraConfig[name],
       )
-
-      console.log(name, extraEntries[name])
+      reporter.info(`extra entry: ${name}`)
     }
   }
 

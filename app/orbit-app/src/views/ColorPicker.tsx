@@ -1,105 +1,39 @@
-import { IconShape, Row, View, ViewProps } from '@o/ui'
+import { IconShape, Row, toColor, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
+import memoize from 'memoize-weak'
 import React, { memo } from 'react'
 
+const niceColorsSingle = [
+  'rgb(127, 219, 255)',
+  'rgb(0, 116, 217)',
+  'rgb(1, 255, 112)',
+  'rgb(57, 204, 204)',
+  'rgb(61, 153, 112)',
+  'rgb(46, 204, 64)',
+  'rgb(255, 65, 54)',
+  'rgb(255, 133, 27)',
+  'rgb(177, 13, 201)',
+  'rgb(255, 220, 0)',
+  'rgb(240, 18, 190)',
+  'rgb(170, 170, 170)',
+  'rgb(133, 20, 75)',
+  '#386798',
+  '#297297',
+  '#EADEAD',
+]
+
 const niceColors = [
-  ['rgb(17, 17, 17)', 'rgb(127, 219, 255)'],
-  ['rgb(17, 17, 17)', 'rgb(0, 116, 217)'],
-  ['rgb(17, 17, 17)', 'rgb(1, 255, 112)'],
-  ['rgb(17, 17, 17)', 'rgb(57, 204, 204)'],
-  ['rgb(17, 17, 17)', 'rgb(61, 153, 112)'],
-  ['rgb(17, 17, 17)', 'rgb(46, 204, 64)'],
-  ['rgb(17, 17, 17)', 'rgb(255, 65, 54)'],
-  ['rgb(17, 17, 17)', 'rgb(255, 133, 27)'],
-  ['rgb(17, 17, 17)', 'rgb(177, 13, 201)'],
-  ['rgb(17, 17, 17)', 'rgb(255, 220, 0)'],
-  ['rgb(17, 17, 17)', 'rgb(240, 18, 190)'],
-  ['rgb(17, 17, 17)', 'rgb(170, 170, 170)'],
-  ['rgb(17, 17, 17)', 'rgb(255, 255, 255)'],
-  ['rgb(17, 17, 17)', 'rgb(221, 221, 221)'],
-  ['rgb(255, 255, 255)', 'rgb(0, 116, 217)'],
-  ['rgb(255, 255, 255)', 'rgb(0, 31, 63)'],
-  ['rgb(255, 255, 255)', 'rgb(61, 153, 112)'],
-  ['rgb(255, 255, 255)', 'rgb(255, 65, 54)'],
-  ['rgb(255, 255, 255)', 'rgb(133, 20, 75)'],
-  ['rgb(255, 255, 255)', 'rgb(177, 13, 201)'],
-  ['rgb(255, 255, 255)', 'rgb(240, 18, 190)'],
-  ['rgb(255, 255, 255)', 'rgb(17, 17, 17)'],
-  ['rgb(221, 221, 221)', 'rgb(0, 116, 217)'],
-  ['rgb(221, 221, 221)', 'rgb(0, 31, 63)'],
-  ['rgb(221, 221, 221)', 'rgb(133, 20, 75)'],
-  ['rgb(221, 221, 221)', 'rgb(255, 255, 255)'],
-  ['rgb(221, 221, 221)', 'rgb(17, 17, 17)'],
-  ['rgb(170, 170, 170)', 'rgb(0, 31, 63)'],
-  ['rgb(170, 170, 170)', 'rgb(133, 20, 75)'],
-  ['rgb(170, 170, 170)', 'rgb(17, 17, 17)'],
-  ['rgb(240, 18, 190)', 'rgb(0, 31, 63)'],
-  ['rgb(240, 18, 190)', 'rgb(255, 255, 255)'],
-  ['rgb(240, 18, 190)', 'rgb(17, 17, 17)'],
-  ['rgb(255, 220, 0)', 'rgb(177, 13, 201)'],
-  ['rgb(255, 220, 0)', 'rgb(133, 20, 75)'],
-  ['rgb(255, 220, 0)', 'rgb(0, 31, 63)'],
-  ['rgb(255, 220, 0)', 'rgb(0, 116, 217)'],
-  ['rgb(255, 220, 0)', 'rgb(17, 17, 17)'],
-  ['rgb(177, 13, 201)', 'rgb(1, 255, 112)'],
-  ['rgb(177, 13, 201)', 'rgb(221, 221, 221)'],
-  ['rgb(177, 13, 201)', 'rgb(17, 17, 17)'],
-  ['rgb(177, 13, 201)', 'rgb(255, 255, 255)'],
-  ['rgb(177, 13, 201)', 'rgb(255, 220, 0)'],
-  ['rgb(255, 133, 27)', 'rgb(133, 20, 75)'],
-  ['rgb(255, 133, 27)', 'rgb(0, 31, 63)'],
-  ['rgb(255, 133, 27)', 'rgb(17, 17, 17)'],
-  ['rgb(133, 20, 75)', 'rgb(1, 255, 112)'],
-  ['rgb(133, 20, 75)', 'rgb(127, 219, 255)'],
-  ['rgb(133, 20, 75)', 'rgb(46, 204, 64)'],
-  ['rgb(133, 20, 75)', 'rgb(255, 133, 27)'],
-  ['rgb(133, 20, 75)', 'rgb(255, 220, 0)'],
-  ['rgb(133, 20, 75)', 'rgb(170, 170, 170)'],
-  ['rgb(133, 20, 75)', 'rgb(255, 255, 255)'],
-  ['rgb(133, 20, 75)', 'rgb(221, 221, 221)'],
-  ['rgb(255, 65, 54)', 'rgb(0, 31, 63)'],
-  ['rgb(255, 65, 54)', 'rgb(255, 255, 255)'],
-  ['rgb(255, 65, 54)', 'rgb(17, 17, 17)'],
-  ['rgb(127, 219, 255)', 'rgb(0, 31, 63)'],
-  ['rgb(127, 219, 255)', 'rgb(133, 20, 75)'],
-  ['rgb(127, 219, 255)', 'rgb(240, 18, 190)'],
-  ['rgb(127, 219, 255)', 'rgb(17, 17, 17)'],
-  ['rgb(0, 116, 217)', 'rgb(1, 255, 112)'],
-  ['rgb(0, 116, 217)', 'rgb(0, 31, 63)'],
-  ['rgb(0, 116, 217)', 'rgb(255, 220, 0)'],
-  ['rgb(0, 116, 217)', 'rgb(255, 255, 255)'],
-  ['rgb(0, 116, 217)', 'rgb(17, 17, 17)'],
-  ['rgb(0, 116, 217)', 'rgb(221, 221, 221)'],
-  ['rgb(0, 31, 63)', 'rgb(0, 116, 217)'],
-  ['rgb(0, 31, 63)', 'rgb(127, 219, 255)'],
-  ['rgb(0, 31, 63)', 'rgb(61, 153, 112)'],
-  ['rgb(0, 31, 63)', 'rgb(46, 204, 64)'],
-  ['rgb(0, 31, 63)', 'rgb(1, 255, 112)'],
-  ['rgb(0, 31, 63)', 'rgb(255, 65, 54)'],
-  ['rgb(0, 31, 63)', 'rgb(255, 133, 27)'],
-  ['rgb(0, 31, 63)', 'rgb(255, 220, 0)'],
-  ['rgb(0, 31, 63)', 'rgb(240, 18, 190)'],
-  ['rgb(0, 31, 63)', 'rgb(170, 170, 170)'],
-  ['rgb(0, 31, 63)', 'rgb(221, 221, 221)'],
-  ['rgb(0, 31, 63)', 'rgb(255, 255, 255)'],
-  ['rgb(57, 204, 204)', 'rgb(0, 31, 63)'],
-  ['rgb(57, 204, 204)', 'rgb(133, 20, 75)'],
-  ['rgb(57, 204, 204)', 'rgb(17, 17, 17)'],
-  ['rgb(1, 255, 112)', 'rgb(0, 116, 217)'],
-  ['rgb(1, 255, 112)', 'rgb(0, 31, 63)'],
-  ['rgb(1, 255, 112)', 'rgb(133, 20, 75)'],
-  ['rgb(1, 255, 112)', 'rgb(240, 18, 190)'],
-  ['rgb(1, 255, 112)', 'rgb(17, 17, 17)'],
-  ['rgb(61, 153, 112)', 'rgb(0, 31, 63)'],
-  ['rgb(61, 153, 112)', 'rgb(255, 255, 255)'],
-  ['rgb(61, 153, 112)', 'rgb(17, 17, 17)'],
-  ['rgb(46, 204, 64)', 'rgb(0, 31, 63)'],
-  ['rgb(46, 204, 64)', 'rgb(17, 17, 17)'],
-  ['rgb(46, 204, 64)', 'rgb(133, 20, 75)'],
+  ...niceColorsSingle.map(x => [x, toColor(x).darken(0.15)]),
+  ...niceColorsSingle.map((x, i) => [niceColorsSingle[i + 2] || niceColorsSingle[0], x]),
+  ...niceColorsSingle.map((x, i) => [niceColorsSingle[i - 2] || niceColorsSingle[0], x]),
+  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 1] || niceColorsSingle[0]]),
+  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 1] || niceColorsSingle[0]]),
+  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 2] || niceColorsSingle[0]]),
+  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 2] || niceColorsSingle[0]]),
 ]
 
 export const ColorPicker = memo(function ColorPicker({
-  count = 40,
+  count = Infinity,
   luminosity = 'dark',
   hue,
   onChangeColor,
@@ -117,17 +51,19 @@ export const ColorPicker = memo(function ColorPicker({
   onChangeColor?: (colors: [string, string]) => any
 } & ViewProps) {
   const combos = niceColors.slice(0, count)
+  const setupOnClick = memoize(colors => () => {
+    onChangeColor([colors[0], colors[1]])
+  })
+
   return (
-    <Row space scrollable="x" hideScrollbars justifyContent="space-around">
+    <Row pad="sm" space scrollable="x" hideScrollbars flex={1}>
       {combos.map((colors, i) => (
         <IconShape
           key={i}
           gradient={colors}
-          width={size}
-          height={size}
-          onClick={() => {
-            onChangeColor([colors[0], colors[1]])
-          }}
+          size={size}
+          active={activeColor === colors[0]}
+          onClick={setupOnClick(colors)}
           {...viewProps}
         />
       ))}

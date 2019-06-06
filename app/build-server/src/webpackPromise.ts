@@ -18,7 +18,7 @@ export async function webpackPromise(
             builtAt: false,
             children: false,
             moduleTrace: false,
-
+            warnings: false,
             colors: true,
           }),
         )

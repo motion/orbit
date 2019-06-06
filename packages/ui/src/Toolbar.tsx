@@ -3,7 +3,6 @@ import React from 'react'
 
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Sizes } from './Space'
-import { SpaceGroup } from './SpaceGroup'
 import { SurfacePassProps } from './Surface'
 import { Omit } from './types'
 import { Row, RowProps } from './View/Row'
@@ -45,15 +44,15 @@ export function Toolbar({
       glint={false}
       borderPosition="outside"
     >
-      <ToolbarChrome elevation={elevation} pad={size} {...props}>
+      <ToolbarRow space={size} elevation={elevation} pad={size} {...props}>
         {border !== false && borderElement[attach]}
-        <SpaceGroup space={size}>{children}</SpaceGroup>
-      </ToolbarChrome>
+        {children}
+      </ToolbarRow>
     </SurfacePassProps>
   )
 }
 
-const ToolbarChrome = gloss<ToolbarProps>(Row, {
+const ToolbarRow = gloss<ToolbarProps>(Row, {
   flexFlow: 'row',
   alignItems: 'center',
   width: '100%',

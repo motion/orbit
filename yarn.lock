@@ -2128,11 +2128,6 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/react-devtools@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@o/react-devtools/-/react-devtools-2.4.1.tgz#dfab1fdbf80773499788b325f40f21c4b0e28e26"
-  integrity sha512-UlKoN+6RGhLbVgXRS4G6nyHsK53Dn0X5bp/xeOFVZl1YCaK7GOVug1pP7S/3PjA2J11ohWGC2gS34iepJQ3f7Q==
-
 "@o/react-sortable-hoc@*", "@o/react-sortable-hoc@1.6.5":
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/@o/react-sortable-hoc/-/react-sortable-hoc-1.6.5.tgz#7c49e2177dee2a67d812a299c04e55ae1045b03a"
@@ -2141,15 +2136,6 @@
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"
     prop-types "^15.5.7"
-
-"@o/router@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@o/router/-/router-2.4.1.tgz#c9f5ae7fb32087716c7ef51a74e24eccb8fdca9f"
-  integrity sha512-LnPT8ca2Tv3VF4D8yybNpCV/w1e1B75WpMInidLjm0XTDG15+g999KdpbkepuK8ID6j6iu0jErxIIHWyvoo2NA==
-  dependencies:
-    history "4.7.2"
-    resolve-pathname "^2.2.0"
-    url-pattern "1.0.3"
 
 "@o/swagger-to-graphql@1.4.10":
   version "1.4.10"
@@ -7793,10 +7779,10 @@ electron@*:
     electron-download "^4.1.0"
     extract-zip "^1.0.3"
 
-electron@6.0.0-beta.3:
-  version "6.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.0-beta.3.tgz#4ab6c36ddf0ec925fb98cfacef0763a1da8adf9d"
-  integrity sha512-mwZjpDtstv54drLGF4/c5eOfrj/1LccRY1H8otNM4jwuvCq76JcRXqQtRAarJJMUKOm/lFTDpQvryxY5Cv0LuA==
+electron@6.0.0-beta.6:
+  version "6.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-6.0.0-beta.6.tgz#11b8395b9dd25f9ecf79beaac726e18031b71c0d"
+  integrity sha512-w09md+UPBd7p20divMi91cOYYvIYtfOYFjc4Gm+ki8HVRTQlHpnhq752Suzie2NyGKIJYoK5MZbF06HIyPxO4g==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"
@@ -10614,17 +10600,6 @@ highlight.js@^9.6.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.15.6.tgz#72d4d8d779ec066af9a17cb14360c3def0aa57c4"
   integrity sha512-zozTAWM1D6sozHo8kqhfYgsac+B+q0PmsjXeyDrYIHHcBN0zTVT66+s2GW1GZv7DbyaROdLXKdabwS/WqPyIdQ==
 
-history@4.7.2:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/history/-/history-4.7.2.tgz#22b5c7f31633c5b8021c7f4a8a954ac139ee8d5b"
-  integrity sha512-1zkBRWW6XweO0NBcjiphtVJVsIQ+SXF29z9DVkceeaSLVMFXHool+fdCZD4spDCfZJCILPILc3bm7Bc+HRi0nA==
-  dependencies:
-    invariant "^2.2.1"
-    loose-envify "^1.2.0"
-    resolve-pathname "^2.2.0"
-    value-equal "^0.4.0"
-    warning "^3.0.0"
-
 history@^4.7.2:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/history/-/history-4.9.0.tgz#84587c2068039ead8af769e9d6a6860a14fa1bca"
@@ -11157,20 +11132,10 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immer@1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-1.7.2.tgz#a51e9723c50b27e132f6566facbec1c85fc69547"
-  integrity sha512-4Urocwu9+XLDJw4Tc6ZCg7APVjjLInCFvO4TwGsAYV5zT6YYSor14dsZR0+0tHlDIN92cFUOq+i7fC00G5vTxA==
-
-immer@^1.7.2:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-1.12.1.tgz#40c6e5b292c00560836c2993bda3a24379d466f5"
-  integrity sha512-3fmKM6ovaqDt0CdC9daXpNi5x/YCYS3i4cwLdTVkhJdk5jrDXoPs7lCm3IqM3yhfSnz4tjjxbRG2CziQ7m8ztg==
-
-immer@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-3.1.1.tgz#eddd2c28403f494df604992c554eade8d9e5c2bb"
-  integrity sha512-8mH3vMqkvCy0jADoJGJR/+RNsIJOsrVhN1/8NBSLGV+Y4S8bSQ5i2VsDHu+1fm+IFhd8cZFX0shms2nsTBJUbA==
+immer@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-3.1.2.tgz#1f24f2e25433f5ff168a1ff6c8c6366d2106e61a"
+  integrity sha512-pi8JuvJ9c+98DlpDms/o0YLLg5khP8Qzjd8CtIGc4qVm2eoLdQGivJL266nWccofKT/oBSxnhAh/o+nmOXtLXw==
 
 import-cwd@^2.0.0, import-cwd@^2.1.0:
   version "2.1.0"
@@ -15410,10 +15375,10 @@ output-file-sync@^2.0.0:
     is-plain-obj "^1.1.0"
     mkdirp "^0.5.1"
 
-overmind-devtools@18.1.0:
-  version "18.1.0"
-  resolved "https://registry.yarnpkg.com/overmind-devtools/-/overmind-devtools-18.1.0.tgz#250a5200e927c684aabde4bd3564ba26333ff154"
-  integrity sha512-72tVboeN9to6oNzQAPICsMS0qV8g6CMrFlS6+ZgYA8vKKMApSLL/Vak3zEcmeNxEiejQkDjib1xRhQiZ0QDOqA==
+overmind-devtools@19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/overmind-devtools/-/overmind-devtools-19.0.0.tgz#2e8cb9a68c9009e5442d0f9a1604010ad2b81f12"
+  integrity sha512-8aOZ7F5BeLBdf9rzVSkq+nSHzH70aNoYJLRGbaLc1jAXpbwCnNXn5EOkBu+SFm1PR0l8zzspyxXaFOPxPZAHdw==
   dependencies:
     "@types/node" "^10.5.1"
     color "^3.0.0"
@@ -15421,19 +15386,19 @@ overmind-devtools@18.1.0:
     electron "^2.0.8"
     electron-json-storage "^4.1.0"
     emotion "^9.2.12"
-    overmind-react "18.1.0"
+    overmind-react "19.0.0"
     overmind-themes "1.0.2"
     react "16.8.1"
     react-dom "16.8.1"
     ws "^5.2.1"
 
-overmind-react@18.1.0:
-  version "18.1.0"
-  resolved "https://registry.yarnpkg.com/overmind-react/-/overmind-react-18.1.0.tgz#55bbfb447e1eef82fdae5e20772ed8d3f813898f"
-  integrity sha512-VRd2anIztxAgguJtaxmRGY8QPksB4ZOj3JrjZ3mWlEV/SEtr5rDI3UfmTsctWOrKkGwEcvgycA2IhTFuiBKq2A==
+overmind-react@19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/overmind-react/-/overmind-react-19.0.0.tgz#9abe8703604c00208d227f3c1d560336e254388d"
+  integrity sha512-k1FOe5JEntU2pPYNkFZDLdBReEH2H7AHI3Vkj0wAX4ILOvDKM8abt2lztOIXOMMix+xUw+/27m8Of7jlhN2Sdg==
   dependencies:
     "@types/node" "^10.5.1"
-    overmind "17.1.0"
+    overmind "18.0.0"
     tslib "^1.9.3"
 
 overmind-themes@1.0.2:
@@ -15445,15 +15410,15 @@ overmind-themes@1.0.2:
     color "^3.0.0"
     tslib "^1.9.3"
 
-overmind@17.1.0:
-  version "17.1.0"
-  resolved "https://registry.yarnpkg.com/overmind/-/overmind-17.1.0.tgz#4aef6b9da90114f38803b17e6a18edaf1464b0b4"
-  integrity sha512-5fbzc960slsNidfJjn8u8bgogPYNg7qHk2HMwTwagA5/airV+0ooKpIyE2flgHvNfV7xJr8lNbCO7tqU99sHSQ==
+overmind@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/overmind/-/overmind-18.0.0.tgz#4d0de3c738c54a738c924ba463f7c5b5b8224960"
+  integrity sha512-3yLVJkyu+pq2vAxNGNRRv3DrDMUQaBYkaS/pq6sM55ndkBCrffM7o90lYuoEY9vh4w/1cvk0BhfOYc/P5O3zUg==
   dependencies:
     "@types/node" "^10.5.1"
     betsy "1.0.2"
     is-plain-obj "^1.1.0"
-    proxy-state-tree "4.3.0"
+    proxy-state-tree "4.4.0"
     tslib "^1.9.3"
 
 p-cancelable@^0.3.0:
@@ -17378,10 +17343,10 @@ proxy-from-env@^1.0.0:
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.0.0.tgz#33c50398f70ea7eb96d21f7b817630a55791c7ee"
   integrity sha1-M8UDmPcOp+uW0h97gXYwpVeRx+4=
 
-proxy-state-tree@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/proxy-state-tree/-/proxy-state-tree-4.3.0.tgz#2107a2a4b85898eeceb32321867b704f9d0b6503"
-  integrity sha512-z46Qt0IL6Ifne0TUS0mo6kA6bN075aAR96g+7mEETiLyO2OXUs61JV2tE10keivt4gqxDelk1JSBcfMjQawrvg==
+proxy-state-tree@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/proxy-state-tree/-/proxy-state-tree-4.4.0.tgz#c8642a3b4b2083fec0aa6e9565b70db7d1eaff98"
+  integrity sha512-/eiDWlILQBQJNKUBxeSo+DNn7C06K5JI7Z9lRjRVDA4V2hyhgYSiWFT/cFLtMVM/N6yOBRgBDrEKDEBNY/+pNA==
   dependencies:
     is-plain-obj "^1.1.0"
 
@@ -21702,11 +21667,6 @@ url-parse@^1.4.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url-pattern@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/url-pattern/-/url-pattern-1.0.3.tgz#0409292471b24f23c50d65a47931793d2b5acfc1"
-  integrity sha1-BAkpJHGyTyPFDWWkeTF5PStaz8E=
-
 url-regex@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/url-regex/-/url-regex-4.1.1.tgz#a5617b22e15e26dac57ce74c3f52088bcdfec995"
@@ -22100,13 +22060,6 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
-
-warning@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-3.0.0.tgz#32e5377cb572de4ab04753bdf8821c01ed605b7c"
-  integrity sha1-MuU3fLVy3kqwR1O9+IIcAe1gW3w=
-  dependencies:
-    loose-envify "^1.0.0"
 
 warpjs@1.0.8:
   version "1.0.8"

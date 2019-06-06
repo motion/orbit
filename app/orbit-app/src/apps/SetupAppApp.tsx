@@ -1,8 +1,28 @@
-import { AppIcon, createApp } from '@o/kit'
-import { Button, Col, Flow, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, Section, SelectableGrid, Text, Toolbar, View } from '@o/ui'
-import React, { useState } from 'react'
+import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
+import {
+  Button,
+  Col,
+  Flow,
+  FlowStepProps,
+  Form,
+  IconLabeled,
+  List,
+  ListItemProps,
+  randomAdjective,
+  randomNoun,
+  Scale,
+  SelectableGrid,
+  Text,
+  Toolbar,
+  useFlow,
+  View,
+} from '@o/ui'
+import React, { memo } from 'react'
 
-import { useOm } from '../om/om'
+import { installApp, useNewAppBit } from '../helpers/installApp'
+import { newAppStore, useNewAppStore } from '../om/stores'
+import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
+import { AppsMainNew } from './apps/AppsMainNew'
 import { useUserVisualAppDefinitions } from './orbitApps'
 import { StackNavigator, useStackNavigator } from './StackNavigator'
 
@@ -30,16 +50,17 @@ function SetupAppMain() {
 }
 
 function SetupAppCustom() {
+  const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
-  const { actions } = useOm()
+  const flow = useFlow({
+    initialData: {
+      selectedTemplate: null,
+    },
+  })
   return (
     <>
       <Col width="70%" margin="auto">
-        <Flow
-          initialData={{
-            selectedTemplate: null,
-          }}
-        >
+        <Flow useFlow={flow}>
           <Flow.Step title="Template" subTitle="Choose template">
             {({ setData }) => {
               return (
@@ -92,7 +113,7 @@ function SetupAppCustom() {
             size={1.4}
             alt="confirm"
             onClick={() => {
-              actions.setupApp.create(selected.identifier)
+              newAppStore.setApp(flow.data.identifier)
             }}
             icon="chevron-right"
           >
@@ -105,11 +126,12 @@ function SetupAppCustom() {
 }
 
 function SetupAppHome() {
-  const { actions } = useOm()
+  console.log('rendering me')
   const stackNav = useStackNavigator()
-  const items: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
+  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
     identifier: app.id,
+    groupName: 'Installed apps',
     subTitle: app.description || 'No description',
     icon: <AppIcon identifier={app.id} />,
     iconBefore: true,
@@ -117,28 +139,47 @@ function SetupAppHome() {
       size: 44,
     },
   }))
-  const [selected, setSelected] = useState<ListItemProps>(null)
+  const [searchedApps, search] = useSearchAppStoreApps(results =>
+    results.filter(res => res.features.some(x => x === 'app')),
+  )
+  const topApps = useTopAppStoreApps(results =>
+    results.filter(res => res.features.some(x => x === 'app')),
+  )
+
+  const flow = useFlow({
+    initialData: {
+      selectedAppIdentifier: null,
+    },
+  })
 
   return (
     <>
-      <Section
-        width="70%"
-        background="transparent"
-        margin="auto"
-        height="80%"
-        titleSize={0.85}
-        title="Add app to workspace"
-        bordered
-        subTitle="Choose from your installed apps."
-      >
-        <List
-          searchable
-          selectable
-          alwaysSelected
-          onSelect={rows => setSelected(rows[0])}
-          items={items}
-        />
-      </Section>
+      <Col width="70%" height="70%" margin="auto">
+        <Flow
+          useFlow={flow}
+          afterTitle={<Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>}
+        >
+          <Flow.Step title="Pick app" subTitle="Choose type of app.">
+            <List
+              searchable
+              onQueryChange={search}
+              selectable
+              alwaysSelected
+              onSelect={rows =>
+                rows[0] && flow.setData({ selectedAppIdentifier: rows[0].identifier })
+              }
+              itemProps={{
+                iconBefore: true,
+              }}
+              items={[...installedApps, ...searchedApps, ...topApps]}
+            />
+          </Flow.Step>
+
+          <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
+            {FlowStepSetup}
+          </Flow.Step>
+        </Flow>
+      </Col>
 
       <Scale size="lg">
         <Toolbar>
@@ -155,26 +196,43 @@ function SetupAppHome() {
             Create Custom App
           </Button>
           <View flex={1} />
-          {selected && (
-            <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
-              <Text ellipse alpha={0.6} size={1.25}>
-                {selected.title}
+          {flow.data.selected && (
+            <View>
+              <Text ellipse alpha={0.65} size={1.2}>
+                {flow.data.selected.title}
               </Text>
             </View>
           )}
-          <Button
-            size={1.4}
-            alt="confirm"
-            onClick={() => {
-              actions.setupApp.create(selected.identifier)
-            }}
-            icon="chevron-right"
-            tooltip="Create new custom app"
-          >
-            Add
-          </Button>
+          {flow.index === 0 && (
+            <Button alt="confirm" onClick={flow.next} icon="chevron-right">
+              Configure
+            </Button>
+          )}
+          {flow.index === 1 && (
+            <Button
+              alt="confirm"
+              onClick={async () => {
+                const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+                installApp(definition, newAppStore.app)
+              }}
+              icon="chevron-right"
+            >
+              Finish
+            </Button>
+          )}
         </Toolbar>
       </Scale>
     </>
   )
 }
+
+const FlowStepSetup = memo(({ data }: FlowStepProps) => {
+  const appBit = useNewAppBit(data.selectedAppIdentifier)
+  return (
+    <Col pad flex={1} scrollable="y">
+      <Scale size={1.2}>
+        <AppsMainNew customizeColor app={appBit} />
+      </Scale>
+    </Col>
+  )
+})

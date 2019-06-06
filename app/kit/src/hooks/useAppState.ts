@@ -42,7 +42,10 @@ export function useImmutableUpdateFn(
       }
       update(draft => {
         if (typeof val === 'function') {
-          val(draft[subKey][uid])
+          const next = val(draft[subKey][uid])
+          if (typeof next !== 'undefined') {
+            draft[subKey][uid] = next
+          }
         } else {
           draft[subKey][uid] = val
         }

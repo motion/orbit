@@ -1,5 +1,5 @@
-import { AppDefinition, Logger } from '@o/kit'
-import { Space } from '@o/models'
+import { Logger } from '@o/logger'
+import { AppDefinition, Space } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 

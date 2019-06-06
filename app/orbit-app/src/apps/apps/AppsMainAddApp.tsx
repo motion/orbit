@@ -109,7 +109,7 @@ export function AppsMainAddAppContent({
         titleSize={0.85}
         space
       >
-        <AppsMainNew app={{ target: 'app', name: def.name, identifier: def.id }} />
+        <AppsMainNew customizeColor app={{ target: 'app', name: def.name, identifier: def.id }} />
 
         {hasSetup && (
           <>

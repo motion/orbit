@@ -1,4 +1,4 @@
-import { Logger } from '@o/kit'
+import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppEntity, CallAppBitApiMethodCommand } from '@o/models'
 import { getRepository } from 'typeorm'

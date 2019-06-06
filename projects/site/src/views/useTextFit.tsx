@@ -1,4 +1,4 @@
-import { useMutationObserver, useResizeObserver, useThrottleFn } from '@o/ui'
+import { useMutationObserver, useResizeObserver, useThrottledFn } from '@o/ui'
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 export type UseTextFitProps = {
@@ -30,7 +30,7 @@ export function useTextFit({
     },
     [min, max, height],
   )
-  const setScaleSlow = useThrottleFn(setScaleBounded, { amount: throttle })
+  const setScaleSlow = useThrottledFn(setScaleBounded, { amount: throttle })
   const measure = () => updateScale(scale, ref.current, setScaleSlow)
 
   useResizeObserver(

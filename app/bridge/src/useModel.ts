@@ -7,8 +7,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
-type UpdateFn<A> = (draft: A) => A
-export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | any) => void
+type UpdateFn<A> = (draft: A) => A | void
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A>) => any
 
 export type UseModelOptions = {
   defaultValue?: any

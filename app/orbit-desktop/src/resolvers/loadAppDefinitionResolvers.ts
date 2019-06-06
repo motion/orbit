@@ -1,5 +1,7 @@
-import { commandInstall, getPackageId, requireAppDefinition } from '@o/cli'
-import { getGlobalConfig, Logger, resolveCommand } from '@o/kit'
+import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
 import { AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand, InstallAppToWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
@@ -34,6 +36,7 @@ function resolveInstallAppToWorkspace() {
     if (res.type === 'error') {
       return res
     }
+    await updateWorkspacePackageIds(directory)
     return {
       type: 'success' as const,
       message: `Installed ${identifier} successfully`,

@@ -1,34 +1,57 @@
-import { findPackage } from '@o/cli'
+import { getWorkspaceAppPaths } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
-import { AppDefinition } from '@o/kit'
 import { Logger } from '@o/logger'
-import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
+import { AppBit, AppDefinition, AppEntity, Space, SpaceEntity } from '@o/models'
+import { partition } from '@o/utils'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
-import { readJSON } from 'fs-extra'
+import { pathExistsSync } from 'fs-extra'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
+import {
+  introspectSchema,
+  makeExecutableSchema,
+  makeRemoteExecutableSchema,
+  mergeSchemas,
+} from 'graphql-tools'
 import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-async function getWorkspaceAppPaths(workspaceEntry: string) {
-  const directory = join(require.resolve(workspaceEntry), '..')
-  const packageJSON = join(directory, 'package.json')
-  const packages = (await readJSON(packageJSON)).dependencies
-  return Object.keys(packages).map(packageId => {
-    return findPackage({ directory, packageId })
-  })
+const entryFileNames = {
+  node: 'index.node.js',
+  web: 'index.js',
+  appInfo: 'appInfo.js',
 }
 
-async function getWorkspaceAppDefinitions(workspace: string): Promise<AppDefinition[]> {
+async function getWorkspaceAppDefinitions(
+  workspace: string,
+  type: 'node' | 'web' | 'appInfo',
+): Promise<
+  ({ type: 'success'; definition: AppDefinition } | { type: 'error'; message: string })[]
+> {
   const paths = await getWorkspaceAppPaths(workspace)
-  return paths.map(name => {
-    return require(name).default
-  })
+  return paths
+    .map(name => {
+      try {
+        const path = join(require.resolve(name.directory), '..', entryFileNames[type])
+        if (!pathExistsSync(path)) {
+          return null
+        }
+        return {
+          type: 'success' as const,
+          definition: require(path).default,
+        }
+      } catch (err) {
+        return {
+          type: 'error' as const,
+          message: `Error importing app, has it been built? ${err.message}`,
+        }
+      }
+    })
+    .filter(x => !!x)
 }
 
 const log = new Logger('graphServer')
@@ -107,7 +130,20 @@ export class GraphServer {
 
         let schemas = []
 
-        const appDefs = await getWorkspaceAppDefinitions('@o/example-workspace')
+        const allWorkspaceDefs = await getWorkspaceAppDefinitions('@o/example-workspace', 'node')
+        const [errors, nonErrors] = partition(allWorkspaceDefs, x => x.type === 'error')
+        const appDefs = nonErrors
+          .filter(x => x.type === 'success')
+          .map(x => x.type === 'success' && x.definition)
+
+        if (errors.length) {
+          // TODO should have a build process here where we automatically build un-built things, but requires work
+          log.error(
+            `errors in app definitions ${errors
+              .map(x => x.type === 'error' && x.message)
+              .join('\n')}`,
+          )
+        }
 
         for (const app of apps) {
           const appDef = appDefs.find(def => def.id === app.identifier)

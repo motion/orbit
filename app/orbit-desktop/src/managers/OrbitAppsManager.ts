@@ -14,7 +14,7 @@ import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
+import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
 import { updateWorkspacePackageIds } from '@o/cli'
 
@@ -40,7 +40,7 @@ export class OrbitAppsManager {
   spaceFolders: { [id: number]: string } = {}
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
-  appDefinitions: { [identifier: string]: AppDefinition } = {}
+  nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
   packageIdToIdentifier = {}
 
   async start() {
@@ -86,20 +86,20 @@ export class OrbitAppsManager {
 
   updateAppDefinitions = async (space: Space) => {
     log.info(`Updaing app definitions for space ${space.id}`)
-    const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
+    const { definitions, packageIdToIdentifier } = await getWorkspaceNodeApis(space)
     // await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
     this.packageIdToIdentifier = {
       ...this.packageIdToIdentifier,
       ...packageIdToIdentifier,
     }
-    this.appDefinitions = {
-      ...this.appDefinitions,
+    this.nodeAppDefinitions = {
+      ...this.nodeAppDefinitions,
       ...definitions,
     }
   }
 
   updateAppMeta = react(
-    () => this.appDefinitions,
+    () => this.nodeAppDefinitions,
     async appDefs => {
       ensure('appDefs', !!appDefs)
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)

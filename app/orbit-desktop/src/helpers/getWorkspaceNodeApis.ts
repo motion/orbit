@@ -7,9 +7,9 @@ import { getWorkspaceAppMeta } from './getWorkspaceAppMeta'
 
 type AppDefinitions = { [id: string]: AppDefinition }
 
-const log = new Logger('getWorkspaceAppDefs')
+const log = new Logger('getWorkspaceNodeApis')
 
-export async function getWorkspaceAppDefs(
+export async function getWorkspaceNodeApis(
   space: Space,
 ): Promise<{
   definitions: AppDefinitions | null
@@ -22,7 +22,7 @@ export async function getWorkspaceAppDefs(
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       try {
-        const appInfo = await requireAppEntry(join(directory, 'dist', 'appInfo.js'))
+        const appInfo = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
         if (appInfo.type === 'error') {
           console.error('no node definition')
           return

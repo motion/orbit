@@ -1,3 +1,5 @@
+const confusingGlobals = require('confusing-browser-globals')
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -20,6 +22,7 @@ module.exports = {
   ],
   plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   rules: {
+    'no-restricted-globals': confusingGlobals,
     indent: 'off',
     'no-param-reassign': 'off',
     '@typescript-eslint/no-object-literal-type-assertion': 'off',

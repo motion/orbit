@@ -4,9 +4,6 @@
   "version": "2.5.10",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
-  "config": {
-    "orbitApp": true
-  },
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"

@@ -6,6 +6,8 @@
   "references": [
     // apps (main entries)
     { "path": "./app/orbit" },
+    { "path": "./app/orbit-desktop" },
+    { "path": "./app/orbit-electron" },
     { "path": "./app/orbit-main" },
     { "path": "./app/orbit-repl" },
     { "path": "./app/orbit-dotapp" },

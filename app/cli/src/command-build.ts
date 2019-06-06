@@ -127,6 +127,12 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   })
 }
 
+const orbitPackageExternals = {
+  '@o/ui': '@o/ui',
+  '@o/kit': '@o/kit',
+  '@o/worker-kit': '@o/worker-kit',
+}
+
 function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   return getAppConfig({
     name: pkg.name,
@@ -149,14 +155,22 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
   // TODO
   // seems like this is still picking up imports from index.ts,
   // ignore loader should still remove all things besides direct .node.ts imports
-  return getAppConfig({
-    name: pkg.name,
-    context: options.projectRoot,
-    entry: [entry],
-    target: 'node',
-    outputFile: 'index.node.js',
-    watch: options.watch,
-  })
+  return getAppConfig(
+    {
+      name: pkg.name,
+      context: options.projectRoot,
+      entry: [entry],
+      target: 'node',
+      outputFile: 'index.node.js',
+      watch: options.watch,
+      mode: 'development',
+    },
+    {
+      externals: {
+        ...orbitPackageExternals,
+      },
+    },
+  )
 }
 
 // used just to get the information like id/name from the entry file
@@ -167,7 +181,7 @@ async function getEntryAppConfig(entry: string, pkg: any, options: CommandBuildO
       context: options.projectRoot,
       entry: [entry],
       target: 'node',
-      mode: 'production',
+      mode: 'development',
       minify: false,
       outputFile: 'appInfo.js',
       watch: options.watch,

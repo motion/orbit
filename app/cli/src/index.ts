@@ -22,7 +22,7 @@ export * from './util/updateWorkspacePackageIds'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 
-export const commandWs = (x: CommandWsOptions) => require('./command-ws').commantdWs(x)
+export const commandWs = (x: CommandWsOptions) => require('./command-ws').commandWs(x)
 export const commandDev = (x: CommandDevOptions) => require('./command-dev').commandDev(x)
 export const commandBuild = (x: CommandBuildOptions) => require('./command-build').commandBuild(x)
 export const commandPublish = (x: CommandPublishOptions) =>

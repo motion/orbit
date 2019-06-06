@@ -123,7 +123,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       ...externals,
     },
     resolve: {
-      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields:
         mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']

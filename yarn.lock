@@ -2128,11 +2128,6 @@
     codemirror-graphql "^0.8.3"
     markdown-it "^8.4.2"
 
-"@o/react-devtools@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@o/react-devtools/-/react-devtools-2.4.1.tgz#dfab1fdbf80773499788b325f40f21c4b0e28e26"
-  integrity sha512-UlKoN+6RGhLbVgXRS4G6nyHsK53Dn0X5bp/xeOFVZl1YCaK7GOVug1pP7S/3PjA2J11ohWGC2gS34iepJQ3f7Q==
-
 "@o/react-sortable-hoc@*", "@o/react-sortable-hoc@1.6.5":
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/@o/react-sortable-hoc/-/react-sortable-hoc-1.6.5.tgz#7c49e2177dee2a67d812a299c04e55ae1045b03a"
@@ -2141,15 +2136,6 @@
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"
     prop-types "^15.5.7"
-
-"@o/router@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@o/router/-/router-2.4.1.tgz#c9f5ae7fb32087716c7ef51a74e24eccb8fdca9f"
-  integrity sha512-LnPT8ca2Tv3VF4D8yybNpCV/w1e1B75WpMInidLjm0XTDG15+g999KdpbkepuK8ID6j6iu0jErxIIHWyvoo2NA==
-  dependencies:
-    history "4.7.2"
-    resolve-pathname "^2.2.0"
-    url-pattern "1.0.3"
 
 "@o/swagger-to-graphql@1.4.10":
   version "1.4.10"

@@ -71,6 +71,11 @@ type BuildInfo = {
   orbitVersion: string
   buildId: number
   identifier: string
+  name: string
+  api: boolean
+  app: boolean
+  graph: boolean
+  workers: boolean
 }
 
 function getOrbitVersion() {
@@ -93,7 +98,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   const hasKey = (...keys: string[]) => Object.keys(appInfo).some(x => keys.some(key => x === key))
 
-  if (hasKey(appInfo, 'app')) {
+  if (hasKey('app')) {
     reporter.info(`Found web app, building`)
     const webConf = getWebAppConfig(entry, pkg, options)
     await webpackPromise([webConf], {
@@ -101,7 +106,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
     })
   }
 
-  if (hasKey(appInfo, 'graph', 'workers', 'api')) {
+  if (hasKey('graph', 'workers', 'api')) {
     reporter.info(`Found node app, building`)
     const nodeConf = await getNodeAppConfig(entry, pkg, options)
     await webpackPromise([nodeConf], {
@@ -115,9 +120,14 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   await setBuildInfo(options.projectRoot, {
     identifier: appInfo.id,
+    name: appInfo.name,
     buildId,
     appVersion: pkg.version,
     orbitVersion: getOrbitVersion(),
+    api: hasKey('api'),
+    app: hasKey('app'),
+    graph: hasKey('graph'),
+    workers: hasKey('workers'),
   })
 
   const appBuildInfo = configStore.appBuildInfo.get() || {}

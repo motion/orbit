@@ -139,12 +139,6 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   })
 }
 
-const orbitPackageExternals = {
-  '@o/ui': '@o/ui',
-  '@o/kit': '@o/kit',
-  '@o/worker-kit': '@o/worker-kit',
-}
-
 function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   return getAppConfig({
     name: pkg.name,
@@ -170,9 +164,17 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
       mode: 'development',
     },
     {
-      externals: {
-        ...orbitPackageExternals,
-      },
+      externals: [
+        // externalize everything but local files
+        function(_context, request, callback) {
+          const isLocal = request[0] === '.' || request === entry
+          if (!isLocal) {
+            return callback(null, 'commonjs ' + request)
+          }
+          // @ts-ignore
+          callback()
+        },
+      ],
     },
   )
 }

@@ -1,7 +1,6 @@
 import { getAppConfig, makeWebpackConfig, webpackPromise } from '@o/build-server'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
-import webpack from 'webpack'
 
 import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
@@ -80,27 +79,29 @@ function getOrbitVersion() {
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
   reporter.info(`Running orbit build`)
-  const entryConf = await getEntryAppConfig(entry, pkg, options)
-  const nodeConf = await getNodeAppConfig(entry, pkg, options)
-  const webConf = getWebAppConfig(entry, pkg, options)
-  const configs: webpack.Configuration[] = [entryConf, nodeConf, webConf].filter(Boolean)
 
-  reporter.info(`Building ${configs.length} bundles, running...`)
+  // build appInfo first, we can then use it to determine if we need to build web/node
+  reporter.info(`Building appInfo`)
+  const appInfoConf = await getAppInfoConfig(entry, pkg, options)
+  await webpackPromise([appInfoConf], {
+    loud: options.verbose,
+  })
 
-  // in debug-build, do one by one, if theres a memory/build issue this will fail clearly
-  if (options.debugBuild) {
-    for (const config of configs) {
-      reporter.info(
-        `Building config ${JSON.stringify(config.entry)} target ${config.target} for mode ${
-          config.mode
-        }`,
-      )
-      await webpackPromise([config], {
-        loud: true,
-      })
-    }
-  } else {
-    await webpackPromise(configs, {
+  reporter.info(`Reading appInfo`)
+  const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+
+  if (appInfo.app) {
+    reporter.info(`Found web app, building`)
+    const webConf = getWebAppConfig(entry, pkg, options)
+    await webpackPromise([webConf], {
+      loud: options.verbose,
+    })
+  }
+
+  if (appInfo.graph || appInfo.workers || appInfo.api) {
+    reporter.info(`Found node app, building`)
+    const nodeConf = await getNodeAppConfig(entry, pkg, options)
+    await webpackPromise([nodeConf], {
       loud: options.verbose,
     })
   }
@@ -109,10 +110,8 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
 
   reporter.info(`Writing out app build information`)
 
-  const app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
-
   await setBuildInfo(options.projectRoot, {
-    identifier: app.id,
+    identifier: appInfo.id,
     buildId,
     appVersion: pkg.version,
     orbitVersion: getOrbitVersion(),
@@ -142,6 +141,7 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
     outputFile: 'index.js',
     watch: options.watch,
     mode: 'production',
+    minify: false,
   })
 }
 
@@ -174,7 +174,7 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
 }
 
 // used just to get the information like id/name from the entry file
-async function getEntryAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+async function getAppInfoConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   return await makeWebpackConfig(
     {
       name: pkg.name,

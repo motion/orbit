@@ -6,12 +6,12 @@ export { ImmutableUpdateFn } from './types'
 export * from '@o/color'
 export * from '@o/utils'
 
-export { default as useAsync } from 'react-use/esm/useAsync'
-export { default as useAsyncFn } from 'react-use/esm/useAsyncFn'
-export { default as useAsyncRetry } from 'react-use/esm/useAsyncRetry'
-export { default as useEffectOnce } from 'react-use/esm/useEffectOnce'
-export { default as useBattery } from 'react-use/esm/useBattery'
-export { default as useScroll } from 'react-use/esm/useScroll'
+export { default as useAsync } from 'react-use/lib/useAsync'
+export { default as useAsyncFn } from 'react-use/lib/useAsyncFn'
+export { default as useAsyncRetry } from 'react-use/lib/useAsyncRetry'
+export { default as useEffectOnce } from 'react-use/lib/useEffectOnce'
+export { default as useBattery } from 'react-use/lib/useBattery'
+export { default as useScroll } from 'react-use/lib/useScroll'
 
 export {
   Absolute,

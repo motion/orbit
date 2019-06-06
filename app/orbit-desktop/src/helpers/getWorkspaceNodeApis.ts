@@ -19,7 +19,7 @@ export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinitions
       try {
         const appInfo = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
         if (appInfo.type === 'error') {
-          console.error('no node definition')
+          log.error(`no node definition ${packageId}: ${appInfo.message}`)
           return
         }
         const { definition } = appInfo

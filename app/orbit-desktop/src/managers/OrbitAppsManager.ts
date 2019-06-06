@@ -84,8 +84,8 @@ export class OrbitAppsManager {
   )
 
   updateAppDefinitions = async (space: Space) => {
-    log.info(`Updaing app definitions for space ${space.id}`)
     const definitions = await getWorkspaceNodeApis(space)
+    log.info(`Got definitions for ${Object.keys(definitions)}`)
     this.nodeAppDefinitions = {
       ...this.nodeAppDefinitions,
       ...definitions,

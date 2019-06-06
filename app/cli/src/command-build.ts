@@ -91,7 +91,9 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
   const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
   reporter.info(`apiInfo: ${Object.keys(appInfo).join(',')}`)
 
-  if (appInfo.app) {
+  const hasKey = (...keys: string[]) => Object.keys(appInfo).some(x => keys.some(key => x === key))
+
+  if (hasKey(appInfo, 'app')) {
     reporter.info(`Found web app, building`)
     const webConf = getWebAppConfig(entry, pkg, options)
     await webpackPromise([webConf], {
@@ -99,7 +101,7 @@ async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) 
     })
   }
 
-  if (appInfo.graph || appInfo.workers || appInfo.api) {
+  if (hasKey(appInfo, 'graph', 'workers', 'api')) {
     reporter.info(`Found node app, building`)
     const nodeConf = await getNodeAppConfig(entry, pkg, options)
     await webpackPromise([nodeConf], {

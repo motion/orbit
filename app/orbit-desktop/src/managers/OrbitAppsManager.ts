@@ -1,5 +1,14 @@
 import { Logger } from '@o/logger'
-import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import {
+  AppBit,
+  AppDefinition,
+  AppEntity,
+  AppMeta,
+  Space,
+  SpaceEntity,
+  User,
+  UserEntity,
+} from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
@@ -7,6 +16,7 @@ import { getRepository } from 'typeorm'
 
 import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
+import { updateWorkspacePackageIds } from '@o/cli'
 
 const log = new Logger('OrbitAppsManager')
 
@@ -69,6 +79,8 @@ export class OrbitAppsManager {
     ([space]) => {
       ensure('space', !!space)
       this.updateAppDefinitions(space)
+      // have cli update its cache of packageId => identifier for use installing
+      updateWorkspacePackageIds(space.directory)
     },
   )
 

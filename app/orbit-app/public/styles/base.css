@@ -12,8 +12,13 @@
 }
 
 .hide-scrollbars::-webkit-scrollbar {
-  height: 0px;
-  width: 0px;
+  height: 0 !important;
+  width: 0 !important;
+  background: transparent;
+  display: none;
+}
+
+.hide-scrollbars::-webkit-scrollbar-thumb {
   background: transparent;
 }
 
@@ -87,16 +92,6 @@
 .rendered-content a:hover {
   color: #13a8c2;
   text-decoration: underline;
-}
-
-.hideScrollBar::-webkit-scrollbar {
-  height: 0px;
-  width: 0px;
-  background: transparent;
-}
-
-.hideScrollBar::-webkit-scrollbar-thumb {
-  background: transparent;
 }
 
 .calendar-dom *,

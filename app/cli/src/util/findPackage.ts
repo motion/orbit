@@ -14,7 +14,7 @@ export function findPackage({ packageId, directory }: { packageId: string; direc
     iter++
     try {
       const nextPath = join(cur, 'node_modules', packageId)
-      reporter.info(`checking path ${nextPath}`)
+      reporter.verbose(`checking path ${nextPath}`)
       path = require.resolve(nextPath)
       // found "compiled out" path so lets make sure we go up to name
       const baseName = packageId.replace(/@[a-zA-Z0-9_\-\.]+\//, '') // remove any namespace

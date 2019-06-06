@@ -31,7 +31,15 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     return <>{props.children}</>
   }
 
-  const { children, pad, padding, scrollable, parentSpacing, ...viewPropsRaw } = props
+  const {
+    children,
+    pad,
+    padding,
+    scrollable,
+    parentSpacing,
+    hideScrollbars,
+    ...viewPropsRaw
+  } = props
   let content = children
   const controlPad = typeof pad !== 'undefined'
 
@@ -67,11 +75,12 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   return (
     <ScrollableChrome
-      className="ui-scrollable"
       ref={ref}
       scrollable={scrollable}
       {...viewProps}
       {...props}
+      className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||
+        ''}`}
       padding={0}
     >
       {content}
@@ -79,13 +88,14 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   )
 })
 
-const hideScrollbarsStyle = {
-  '&::-webkit-scrollbar': {
-    height: 0,
-    width: 0,
-    background: 'transparent',
-  },
-}
+// for some reason this wouldn't apply through styles
+// const hideScrollbarsStyle = {
+//   '&::-webkit-scrollbar': {
+//     height: 0,
+//     width: 0,
+//     background: 'transparent',
+//   },
+// }
 
 const ScrollableInner = gloss<any & { parentSpacing: any; isWrapped?: boolean }>(Col, {
   flexDirection: 'inherit',
@@ -108,8 +118,7 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   flexWrap: 'inherit',
   // width: '100%',
   // height: '100%',
-}).theme(({ scrollable, hideScrollbars }) => ({
-  ...(hideScrollbars && hideScrollbarsStyle),
+}).theme(({ scrollable }) => ({
   overflow: 'hidden',
   ...(scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
   ...(scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),

@@ -4,6 +4,7 @@
 cd $(dirname $0)/..
 
 if [ ! -d ./pata-postgres ]; then
+    mkdir ./data
     mkdir ./data/postgres
 fi
 

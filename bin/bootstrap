@@ -18,13 +18,14 @@ ensure-dep "yarn" -- npm i -g yarn &
 ensure-dep "python3" -- pyenv install 3.6.6 || brew install python3 &
 # ensure-dep "carthage" -- brew install carthage &
 wait
-ensure-dep "tsc" -- npm i -g typescript
-ensure-dep "pg_config" -- brew install postgresql
+ensure-dep "tsc" -- npm i -g typescript &
+ensure-dep "pg_config" -- brew install postgresql &
+wait
 
 echo "installing dependencies"
 yarn install --ignore-engines
 
-ensure-dep "orbit" -- (cd app/cli && yarn link)
+ensure-dep "orbit" -- in cli yarn link
 
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then

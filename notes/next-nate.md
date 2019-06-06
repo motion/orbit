@@ -2,6 +2,10 @@ next
 
 install apps / app bundles
 
+TODO: make webpack just turn every import in appInfo.js into an external, then you can require it
+during command-build and all the packages are there already, then can write out all the important
+details to buildInfo.json. solves some of our issues
+
 - [ ] need to fix app icons completely
 - [ ] new app setup pane with "create new app" as well
 - [ ] installs app into workspace when you click oauth/setup

@@ -1,5 +1,12 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo } from 'react'
+import React, {
+  Children,
+  FunctionComponent,
+  isValidElement,
+  memo,
+  useLayoutEffect,
+  useMemo,
+} from 'react'
 
 import { Button } from './buttons/Button'
 import { Config } from './helpers/configureUI'
@@ -36,13 +43,12 @@ type StepProps = {
   setStepIndex: (index: number) => void
 }
 
-export type FlowStepProps = FlowSectionProps &
-  StepProps & {
-    title?: string
-    subTitle?: string
-    children?: React.ReactNode | ((props: StepProps) => React.ReactNode)
-    validateFinished?: (a: any) => true | any
-  }
+export type FlowStepProps = FlowSectionProps & {
+  title?: string
+  subTitle?: string
+  children?: React.ReactNode | ((props: StepProps) => any)
+  validateFinished?: (a: any) => true | any
+}
 
 type FlowStep = FlowStepProps & {
   key: string

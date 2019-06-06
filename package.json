@@ -15,6 +15,7 @@
     "clean:packages": "source .env && clean --all",
     "start": "cd app/example-workspace && orbit ws",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && npm start)",
+    "start:example-workspace": "(cd app/example-workspace && orbit ws --verbose)",
     "build:app": "cd app/build-orbit && npm run build-app",
     "build:app:resume": "cd app/build-orbit && npm run build-app-resume",
     "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --verbose",

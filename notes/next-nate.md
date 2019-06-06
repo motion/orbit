@@ -1,9 +1,10 @@
-# next
+next
 
 install apps / app bundles
-  - [ ] need to fix app icons completely
-  - [ ] new app setup pane with "create new app" as well
-  - [ ] installs app into workspace when you click oauth/setup
+
+- [ ] need to fix app icons completely
+- [ ] new app setup pane with "create new app" as well
+- [ ] installs app into workspace when you click oauth/setup
 
 - opening app windows into own space
 - edit apps from within orbit
@@ -11,7 +12,6 @@ install apps / app bundles
 - querybuilder => dock
 - dock => views (`<QueryCard />` or similar)
 - dock => views (drag and drop, see if beautiful-dnd is ready for virtualized)
-
 
 June Goals:
 
@@ -135,7 +135,6 @@ hire......... so someone can do "Really be able to develop an app"
 
 me: "Really be able to sync config between"
 
-
 Sep
 
 "Have good demo apps"
@@ -163,7 +162,8 @@ Dec
 
 ## Good enough demo to Ken Wheeler / et al:
 
-- Easy way to pull in any app "data explorer" and have it visually show light config to let you set up a query.
+- Easy way to pull in any app "data explorer" and have it visually show light config to let you set
+  up a query.
   - Perhaps as a generic cardview that "flips around" for config.
 - Editable grid that persists (with add/remove)
 - Drag/drop for tables/lists
@@ -175,8 +175,12 @@ Dec
   - JSONPlaceholder + Albums, etc
 - A full multi-pane app with:
   - FBFlipper type inspector that hooks into system calls
-- `<QueryApp app={app} />` that we can let users use in apps to generically explore any apps interface
-- Slack/Gmail demo app: <Grid />, and <QueryApp />, put together a demo that shows a nice way - to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
+- `<QueryApp app={app} />` that we can let users use in apps to generically explore any apps
+  interface
+- Slack/Gmail demo app: <Grid />, and <QueryApp />, put together a demo that shows a nice way - to
+  take slack messages, query them, then select a vew, see those in a different grid item as a stack,
+  edit a few of them, then send them over to Gmail in a third grid item that has some configuration
+  options for where to send them in gmail
 
 ## Better demo:
 
@@ -215,15 +219,16 @@ Beta:
 - Banner
   - alt="warn" etc states
 - Bonus demo apps:
+
   - People app (shows custom content type app)
   - Search app (shows Search API features)
     - Simplify and improve content views
     - Remove the grouping and use virtual lists
     - Fix cosal search
     - Bonus Home
-       - making the home more clear for launcher, show the grid by default,
-       - make the grid actually search able in the main area instead of apps in search/index
-       - adding app from home
+      - making the home more clear for launcher, show the grid by default,
+      - make the grid actually search able in the main area instead of apps in search/index
+      - adding app from home
 
 - DataExplorerApp
   - Needs to allow for basic REPL + persisting user state
@@ -241,8 +246,8 @@ Beta:
 
 - document for apps + apis
 
-- a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways
-
+- a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one
+  that lets users edit it to flex in different ways
 
 ---
 
@@ -250,9 +255,8 @@ Month 1:
 
 "Make apps work for initially closing the loop"
 
-Week 1: Making some p2p and app install/settings stuff work
-Week 2: Making Space management and Account signup work
-Week 4: Fixing onboard/productionization issues, perhaps simple site for alpha
+Week 1: Making some p2p and app install/settings stuff work Week 2: Making Space management and
+Account signup work Week 4: Fixing onboard/productionization issues, perhaps simple site for alpha
 
 ---
 
@@ -260,10 +264,9 @@ Month 2:
 
 "Make a great demo for the website"
 
-Week 1: Working on various apps to make them work better
-Week 2: Putting together a app demos and documentation
-Week 3: Get a rough first pass at website stood up by end of week
-Week 4: Get a nice website with mobile + start on docs
+Week 1: Working on various apps to make them work better Week 2: Putting together a app demos and
+documentation Week 3: Get a rough first pass at website stood up by end of week Week 4: Get a nice
+website with mobile + start on docs
 
 ---
 
@@ -290,7 +293,8 @@ view Main {
 ---
 
 make gloss work with shadow-root; not too hard:
-  1. <ThemeConfig rootElement={shadowRootRef} />
-  2. GlossView(props)
-     1. => glossify(styles, context.rootElement)
-     2. => sheet.addStyles(rootElement)
+
+1. <ThemeConfig rootElement={shadowRootRef} />
+2. GlossView(props)
+   1. => glossify(styles, context.rootElement)
+   2. => sheet.addStyles(rootElement)

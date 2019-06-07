@@ -1,13 +1,10 @@
-import { IconProps, IconShape, SVG, toColor, useTheme } from '@o/ui'
+import { IconShape, SVG, toColor, useTheme, IconShapeProps } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
-import { Omit } from '../types'
 
-type BaseIconProps = Omit<Partial<IconProps>, 'color' | 'name'>
-
-export type AppIconProps = BaseIconProps & {
+export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
   identifier?: string
   icon?: string
   colors?: string[]

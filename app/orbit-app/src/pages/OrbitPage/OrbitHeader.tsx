@@ -1,7 +1,19 @@
 import { invertLightness } from '@o/color'
 import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  SizedSurfaceProps,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -184,17 +196,17 @@ const HomeButton = memo(
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-    const color = invertLightness(theme.color, 0.5)
     return (
       <View ref={ref} {...props}>
         <AppIcon
+          cutout
+          background={invertLightness(theme.color, 0.5)}
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
           hoverStyle={{
             opacity: 1,
           }}
-          colors={[color, color]}
           identifier={state.navHovered || state.navVisible ? 'home' : icon}
           size={28}
           onMouseUp={e => {

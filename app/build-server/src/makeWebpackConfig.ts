@@ -123,7 +123,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
         electron: '{}',
       },
       externals,
-    ],
+    ].filter(Boolean),
     resolve: {
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields:

@@ -65,7 +65,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
           () => ({
             cursor: resizingSides ? getResizeCursor(resizingSides) : 'inherit',
             pointerEvents: (isHoveringResize ? 'auto' : 'none') as any,
-            opacity: isHoveringResize ? 1 : 0,
+            opacity: isHoveringResize ? 1 : 0.5,
           }),
           [isHoveringResize, resizingSides],
         )}

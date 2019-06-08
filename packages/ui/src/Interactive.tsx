@@ -154,7 +154,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  onMouseDown = event => {
+  startAction = event => {
     if (isRightClick(event)) return
     if (!this.state.cursor) return
     event.stopPropagation()
@@ -502,7 +502,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   lastMeasure = Date.now()
   getCurrentRect() {
     // force update every so often in case things animate
-    if (Date.now() - this.lastMeasure > 3000) {
+    if (Date.now() - this.lastMeasure > 1000) {
       this.currentRect = this.ref.current.getBoundingClientRect()
       this.lastMeasure = Date.now()
     }
@@ -579,7 +579,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  last = Date.now()
+
   onLocalMouseMove = event => {
+    // throttle but no need for event.persist() and .cancel() on unmount
+    // const { last } = this
+    // this.last = Date.now()
+    // if (Date.now() - last < 100) {
+    //   return
+    // }
     if (!this.globalMouse) {
       this.onMouseMove(event)
     }
@@ -634,30 +642,22 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const resizable = this.getResizable()
     const listenerProps = {
-      onMouseDown: this.onMouseDown,
+      onMouseDown: this.startAction,
       onMouseMove: this.onLocalMouseMove,
       onMouseLeave: this.onMouseLeave,
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
 
-    if (typeof zIndex !== 'number') {
-      debugger
-    }
-
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
         <Col
-          className={this.props.className}
           {...{
+            className: this.props.className,
             position,
             cursor,
             left,
             top,
             right,
-            bottom: null,
-            transform: null,
-            width: null,
-            height: null,
             minWidth,
             maxHeight,
             maxWidth,

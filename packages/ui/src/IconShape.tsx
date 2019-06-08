@@ -1,11 +1,11 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
+import { linearGradient } from '@o/color'
 import { useTheme } from 'gloss'
 import React, { forwardRef, memo, useEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
 import { View } from './View/View'
-import { linearGradient } from '@o/color'
 
 export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
   active?: boolean
@@ -62,7 +62,7 @@ export const IconShape = memo(
       if (cutout) {
         backgroundFill = !!gradient ? `url(#${gradientId})` : `${background || '#999'}`
       } else {
-        backgroundFill = theme.color.toString()
+        backgroundFill = (theme.iconFillColor || theme.color).toString()
       }
 
       return (

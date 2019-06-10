@@ -23,40 +23,35 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
       identifier,
     },
   })
-  console.log('got app state', state)
-  const updateFn = useImmutableUpdateFn(state, update, identifier, 'data')
+  const updateFn = useImmutableUpdateFn(state, update, 'data')
 
   if (!identifier) {
     return [null, idFn]
   }
 
+  console.log('got', state)
   // scopes state down
-  return [selectDefined(state && state.data[identifier], defaultState), updateFn]
+  return [selectDefined(state && state.data, defaultState), updateFn]
 }
 
-export function useImmutableUpdateFn(
-  state: any,
-  update: ImmutableUpdateFn<any>,
-  uid: string,
-  subKey: string,
-) {
+export function useImmutableUpdateFn(state: any, update: ImmutableUpdateFn<any>, subKey: string) {
   return useCallback(
     val => {
-      if (!state || !uid) {
+      if (!state || !subKey) {
         console.error('State not loaded / not found yet, or no uid!')
         return
       }
       update(draft => {
         if (typeof val === 'function') {
-          const next = val(draft[subKey][uid])
+          const next = val(draft[subKey])
           if (typeof next !== 'undefined') {
-            draft[subKey][uid] = next
+            draft[subKey] = next
           }
         } else {
-          draft[subKey][uid] = val
+          draft[subKey] = val
         }
       })
     },
-    [uid, subKey],
+    [subKey],
   )
 }

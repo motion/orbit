@@ -181,9 +181,16 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
-    subSelect,
-    props ? pick(props, 'rootItemID', 'items') : defaultState,
+    subSelect === false ? subSelect : `treelist-${subSelect}`,
+    {
+      ...defaultState,
+      ...(props && pick(props, 'rootItemID', 'items')),
+    },
   )
+  console.log('ts', ts)
+  if (!ts[0].items) {
+    debugger
+  }
   const us = useUserState(`${subSelect}-tree-state`, defaultUserState)
   const getTs = useGet(ts)
   const getUs = useGet(us)
@@ -225,7 +232,8 @@ const findAttribute = (item: TreeItem, key: string) =>
 
 export function TreeList(props: TreeListProps) {
   const { use, query, ...rest } = props
-  const useTree = use || useTreeList(false, props)
+  const internal = useTreeList(use ? false : 'state', props)
+  const useTree = use || internal
   const { rootItemID, items } = useTree.state
   const [loadedItems, setLoadedItems] = useState<ListItemProps[]>([])
 

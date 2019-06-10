@@ -59,9 +59,15 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
   }, [orbitStore, appStore, isActive, hasShownOnce])
 
   return (
-    <Suspense fallback={<div>error loading app {identifier} {id}</div>}>
+    <Suspense
+      fallback={
+        <div>
+          error loading app {identifier} {id}
+        </div>
+      }
+    >
       <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
-        <ScopedState id={`app-${identifier}-${id}-`}>
+        <ScopedState id={`orbit-${identifier}-${id}-`}>
           <ProvideStores stores={{ appStore }}>
             <Visibility visible={isActive}>
               <OrbitAppRender

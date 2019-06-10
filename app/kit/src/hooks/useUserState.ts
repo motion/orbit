@@ -1,7 +1,6 @@
 import { loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
 import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
-import { useEffect } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
 import { ScopedAppState, useImmutableUpdateFn } from './useAppState'
@@ -28,7 +27,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
       identifier,
     },
   })
-  const updateFn = useImmutableUpdateFn(state, update, identifier, 'data')
+  const updateFn = useImmutableUpdateFn(state, update, 'data')
 
   // scopes user down
   return [selectDefined(state && state.data, defaultState), updateFn]
@@ -38,7 +37,9 @@ const cache = {}
 
 // has to be suspense style
 export function useEnsureDefaultState<A>(identifier: string, type: string, data: A) {
-  console.log('ensuring default state', identifier, type, data)
+  if (process.env.NODE_ENV === 'development') {
+    console.debug('ensuring default state', identifier, type, data)
+  }
 
   const key = `${identifier}${type}`
 

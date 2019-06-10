@@ -60,7 +60,11 @@ export const IconShape = memo(
       }, [id, iconPath])
 
       const scale = size / 28
-      const theme = useTheme()
+      const theme = useTheme({
+        ignoreAlternate: true,
+      })
+
+      console.log('theme', theme)
 
       let backgroundFill = ''
       if (cutout) {

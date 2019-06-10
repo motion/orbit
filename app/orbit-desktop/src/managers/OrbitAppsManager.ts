@@ -1,4 +1,4 @@
-import { getIdentifierFromPackageId, updateWorkspacePackageIds } from '@o/cli'
+import { getIdentifierFromPackageId, identifierToPackageId, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -32,6 +32,9 @@ export class OrbitAppsManager {
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+
+  // for easier debugging
+  identifierToPackageId = identifierToPackageId
 
   async start() {
     const appsSubscription = getRepository(AppEntity)

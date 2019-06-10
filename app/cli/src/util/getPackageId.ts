@@ -16,5 +16,5 @@ export async function getPackageId(identifier: string): Promise<string> {
 
 export function getIdentifierFromPackageId(packageId: string) {
   const found = Object.keys(identifierToPackageId).find(x => identifierToPackageId[x] === packageId)
-  return found ? found[0] : null
+  return found || null
 }

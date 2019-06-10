@@ -175,18 +175,14 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   return (
     <MainShortcutHandler handlers={handlers}>
-      <Suspense fallback={<div>header suspense err</div>}>
-        <OrbitHeader />
-        <OrbitDock />
-      </Suspense>
-      <Suspense fallback={<div>body suspense err</div>}>
-        <InnerChrome torn={isEditing}>
-          <OrbitContentArea>
-            <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
-            <OrbitAppSettingsSidebar />
-          </OrbitContentArea>
-        </InnerChrome>
-      </Suspense>
+      <OrbitHeader />
+      <OrbitDock />
+      <InnerChrome torn={isEditing}>
+        <OrbitContentArea>
+          <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
+          <OrbitAppSettingsSidebar />
+        </OrbitContentArea>
+      </InnerChrome>
     </MainShortcutHandler>
   )
 })

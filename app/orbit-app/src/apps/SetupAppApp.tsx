@@ -128,13 +128,11 @@ function SetupAppHome() {
     results.filter(res => res.features.some(x => x === 'app')),
   )
 
-  const flow = useFlow({
+  const flow = useCreateFlow({
     initialData: {
       selectedAppIdentifier: null,
     },
   })
-
-  console.log('rendering me')
 
   return (
     <>

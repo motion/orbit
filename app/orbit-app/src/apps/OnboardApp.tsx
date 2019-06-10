@@ -1,10 +1,10 @@
 import { command, loadOne, save } from '@o/bridge'
 import { App, createApp, useActiveDataAppsWithDefinition } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
-import { Button, Icon, List, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
+import { Button, Col, Icon, List, Paragraph, Slider, SliderPane, Space, SubTitle, Text, Theme, Title, View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
-import { Box, gloss } from 'gloss'
+import { gloss } from 'gloss'
 import React from 'react'
 
 import { installApp } from '../helpers/installApp'
@@ -101,8 +101,7 @@ export function OnboardMain() {
       <Slider curFrame={store.curFrame} framePad={30} verticalPad={50}>
         <SliderPane>
           {store.accepted === null && (
-            <Centered>
-              <br />
+            <Centered space>
               <Text size={2.8} fontWeight={500}>
                 Hello.
               </Text>
@@ -124,26 +123,21 @@ export function OnboardMain() {
             </Centered>
           )}
           {store.accepted === false && (
-            <Centered>
-              <Text size={1.5} alpha={0.5}>
-                Error setting up proxy
-              </Text>
-              <View height={20} />
-              <Text selectable textAlign="left" size={1.1} sizeLineHeight={0.9}>
+            <Centered space>
+              <Title>Error setting up proxy</Title>
+              <SubTitle>
                 Orbit had a problem setting up a proxy on your machine. Feel free to get in touch
                 with us if you are having issues:
-                <br />
-                <br />
+              </SubTitle>
+              <Paragraph>
                 <strong>
                   <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
                 </strong>
-                .<br />
-                <br />
+              </Paragraph>
+              <Paragraph>
                 <strong>Error message:</strong>
-                <br />
-                <br />
                 {store.acceptedMessage}
-              </Text>
+              </Paragraph>
             </Centered>
           )}
           {store.accepted === true && (
@@ -234,7 +228,7 @@ export function OnboardMain() {
   )
 }
 
-const Centered = gloss(Box, {
+const Centered = gloss(Col, {
   margin: 'auto',
   alignItems: 'center',
   justifyContent: 'center',

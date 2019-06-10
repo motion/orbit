@@ -84,15 +84,8 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
       }
 
       load
-        .then(state => {
-          console.log('state', state)
-          debugger
-          if (isDefined(state.data)) {
-            finish()
-            return
-          }
-          if (!state) {
-            debugger
+        .then(row => {
+          if (!row || !isDefined(row.data)) {
             return create()
           }
         })

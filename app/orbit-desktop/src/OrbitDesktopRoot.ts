@@ -332,7 +332,7 @@ export class OrbitDesktopRoot {
         ]),
         ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          return this.orbitAppsManager.appMeta[identifier]
+          return this.orbitAppsManager.appMeta[identifier] || null
         }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid

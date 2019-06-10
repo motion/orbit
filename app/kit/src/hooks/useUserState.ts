@@ -37,10 +37,6 @@ const cache = {}
 
 // has to be suspense style
 export function useEnsureDefaultState<A>(identifier: string, type: string, data: A) {
-  if (process.env.NODE_ENV === 'development') {
-    console.debug('ensuring default state', identifier, type, data)
-  }
-
   const key = `${identifier}${type}`
 
   if (cache[key]) {

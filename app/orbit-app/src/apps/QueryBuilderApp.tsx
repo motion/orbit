@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -267,7 +267,14 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
 })
 
 function useAppMeta(identifier: string) {
-  return useCommand(AppMetaCommand, { identifier })
+  return (
+    useCommand(AppMetaCommand, { identifier }) || {
+      packageId: '',
+      directory: '',
+      packageJson: {},
+      apiInfo: {},
+    }
+  )
 }
 
 const defaultValues = {
@@ -347,7 +354,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const allMethods = Object.keys(meta.apiInfo)
   const [method, setMethod] = useState(meta.apiInfo[allMethods[0]])
   const queryBuilder = useStore(QueryBuilderStore, {
-    method: method.name,
+    method: method ? method.name : '',
     appId: app.id,
     appIdentifier: def.id,
   })
@@ -355,6 +362,16 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
+  }
+
+  if (!method) {
+    return (
+      <Col flex={1}>
+        <Center>
+          <SubTitle>No API methods found</SubTitle>
+        </Center>
+      </Col>
+    )
   }
 
   return (

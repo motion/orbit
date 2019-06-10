@@ -29,7 +29,6 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
     return [null, idFn]
   }
 
-  console.log('got', state)
   // scopes state down
   return [selectDefined(state && state.data, defaultState), updateFn]
 }

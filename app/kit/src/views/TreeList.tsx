@@ -187,10 +187,6 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
       ...(props && pick(props, 'rootItemID', 'items')),
     },
   )
-  console.log('ts', ts)
-  if (!ts[0].items) {
-    debugger
-  }
   const us = useUserState(`${subSelect}-tree-state`, defaultUserState)
   const getTs = useGet(ts)
   const getUs = useGet(us)

@@ -91,6 +91,7 @@ export class OrbitAppsManager {
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)
+        console.log('setting apps meta2', meta.packageId, identifier, meta)
         if (identifier !== null) {
           this.appMeta[identifier] = meta
         } else {

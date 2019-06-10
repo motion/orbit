@@ -3,9 +3,9 @@ import { ApiSearchItem } from '@o/models'
 import { apiUrl } from '../command-publish'
 import { reporter } from '../reporter'
 
-export const identifierToPackageId = {}
+export const identifierToPackageId: { [key: string]: string } = {}
 
-export async function getPackageId(identifier: string) {
+export async function getPackageId(identifier: string): Promise<string> {
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]
   }

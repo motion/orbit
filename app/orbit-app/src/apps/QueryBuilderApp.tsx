@@ -531,7 +531,7 @@ const ArgumentField = memo(
             noGutter
             value={queryBuilder.arguments[index]}
             onChange={val => {
-              setIsActive(true)
+              setIsActive(() => true)
               setNumLines(val.split('\n').length)
               queryBuilder.setArg(index, val)
             }}

@@ -66,7 +66,7 @@ function resolveAppSetupVerify() {
     }
 
     // run definition
-    const loadedDef = await requireAppDefinition(packageId)
+    const loadedDef = await requireAppDefinition({ packageId, directory: tempPackageDir })
 
     if (loadedDef.type === 'error') {
       return loadedDef

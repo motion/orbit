@@ -40,6 +40,7 @@ import {
   CloseAppCommand,
   AppMetaCommand,
   AuthAppCommand,
+  StateModel,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -307,6 +308,7 @@ export class OrbitDesktopRoot {
         SearchPinnedResultModel,
         SearchByTopicModel,
         SpaceModel,
+        StateModel,
         TrendingTopicsModel,
         TrendingTermsModel,
         PeopleNearTopicModel,

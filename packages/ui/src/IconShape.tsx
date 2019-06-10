@@ -35,11 +35,15 @@ export const IconShape = memo(
       if (props.name) {
         const name = findName(props.name)
         if (IconSvgPaths20[name]) {
-          iconPath = IconSvgPaths20[name].join(' ')
+          iconPath = (IconSvgPaths20[name] || IconSvgPaths20.dot).join(' ')
         }
       }
 
       const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
+
+      if (props.name && !iconPath) {
+        console.log('no icon path', props.name, iconPath)
+      }
 
       useEffect(() => {
         if (!iconPath) return

@@ -1,22 +1,5 @@
-import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
-import {
-  Button,
-  Col,
-  Flow,
-  FlowStepProps,
-  Form,
-  IconLabeled,
-  List,
-  ListItemProps,
-  randomAdjective,
-  randomNoun,
-  Scale,
-  SelectableGrid,
-  Text,
-  Toolbar,
-  useFlow,
-  View,
-} from '@o/ui'
+import { AppIcon, createApp, getAppDefinition, useLocationLink, useStore } from '@o/kit'
+import { Button, Col, Flow, FlowStepProps, FlowStore, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -126,8 +109,6 @@ function SetupAppCustom() {
 }
 
 function SetupAppHome() {
-  console.log('rendering me')
-  const stackNav = useStackNavigator()
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
     identifier: app.id,
@@ -152,6 +133,8 @@ function SetupAppHome() {
     },
   })
 
+  console.log('rendering me')
+
   return (
     <>
       <Col width="70%" height="70%" margin="auto">
@@ -165,9 +148,12 @@ function SetupAppHome() {
               onQueryChange={search}
               selectable
               alwaysSelected
-              onSelect={rows =>
-                rows[0] && flow.setData({ selectedAppIdentifier: rows[0].identifier })
-              }
+              onSelect={rows => {
+                if (rows[0]) {
+                  console.log('setting data', rows[0].identifier)
+                  flow.setData({ selectedAppIdentifier: rows[0].identifier })
+                }
+              }}
               itemProps={{
                 iconBefore: true,
               }}
@@ -181,48 +167,57 @@ function SetupAppHome() {
         </Flow>
       </Col>
 
-      <Scale size="lg">
-        <Toolbar>
-          <Button
-            alt="action"
-            onClick={() => {
-              stackNav.navigate({
-                id: 'SetupAppCustom',
-              })
-            }}
-            icon="plus"
-            tooltip="Create new custom app"
-          >
-            Create Custom App
-          </Button>
-          <View flex={1} />
-          {flow.data.selected && (
-            <View>
-              <Text ellipse alpha={0.65} size={1.2}>
-                {flow.data.selected.title}
-              </Text>
-            </View>
-          )}
-          {flow.index === 0 && (
-            <Button alt="confirm" onClick={flow.next} icon="chevron-right">
-              Configure
-            </Button>
-          )}
-          {flow.index === 1 && (
-            <Button
-              alt="confirm"
-              onClick={async () => {
-                const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-                installApp(definition, newAppStore.app)
-              }}
-              icon="chevron-right"
-            >
-              Finish
-            </Button>
-          )}
-        </Toolbar>
-      </Scale>
+      <SetupAppHomeToolbar flow={flow} />
     </>
+  )
+}
+
+function SetupAppHomeToolbar(props: { flow: FlowStore }) {
+  const flow = useStore(props.flow)
+  console.log('flow', flow.data.selected)
+  const stackNav = useStackNavigator()
+  return (
+    <Scale size="lg">
+      <Toolbar>
+        <Button
+          alt="action"
+          onClick={() => {
+            stackNav.navigate({
+              id: 'SetupAppCustom',
+            })
+          }}
+          icon="plus"
+          tooltip="Create new custom app"
+        >
+          Create Custom App
+        </Button>
+        <View flex={1} />
+        {flow.data.selected && (
+          <View>
+            <Text ellipse alpha={0.65} size={1.2}>
+              {flow.data.selected.title}
+            </Text>
+          </View>
+        )}
+        {flow.index === 0 && (
+          <Button alt="confirm" onClick={flow.next} icon="chevron-right">
+            Configure
+          </Button>
+        )}
+        {flow.index === 1 && (
+          <Button
+            alt="confirm"
+            onClick={async () => {
+              const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+              installApp(definition, newAppStore.app)
+            }}
+            icon="chevron-right"
+          >
+            Finish
+          </Button>
+        )}
+      </Toolbar>
+    </Scale>
   )
 }
 

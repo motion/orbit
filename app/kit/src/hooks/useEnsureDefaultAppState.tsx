@@ -1,19 +1,23 @@
-import { isEqual } from '@o/fast-compare'
+import { useModel } from '@o/bridge'
+import { StateModel } from '@o/models'
+import { isDefined } from '@o/utils'
 import { useEffect } from 'react'
 
-import { useAppBit } from './useAppBit'
-
-export function useEnsureDefaultAppState<A>(uid: string | false, ensure: A) {
-  const [state, update] = useAppBit()
+export function useEnsureDefaultAppState<A>(identifier: string | false, ensure: A) {
+  const [state, update] = useModel(StateModel, {
+    where: {
+      type: 'app',
+      identifier,
+    },
+  })
   useEffect(() => {
-    if (!uid) return
+    if (!identifier) return
     if (!state) return
-    if (state.data[uid]) return
-    if (typeof ensure === 'undefined') return
-    if (isEqual(state.data[uid], ensure)) return
+    if (!isDefined(state.data[identifier])) return
+    if (!isDefined(ensure)) return
     update(next => {
       // ensure default
-      next.data[uid] = ensure
+      next.data = ensure
     })
-  }, [state, uid])
+  }, [state])
 }

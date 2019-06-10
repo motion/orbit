@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { UserModel } from '@o/models'
+import { StateModel } from '@o/models'
 import { isDefined, selectDefined } from '@o/utils'
 import { useEffect } from 'react'
 
@@ -16,28 +16,38 @@ export type ScopedUserState<A> = ScopedAppState<A>
 export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A> {
   // scope state id
   const scopedId = useScopedStateId()
-  const uid = `${scopedId}${id}`
+  const identifier = `${scopedId}${id}`
 
   // ensure default state
-  useEnsureDefaultUserState<A>(uid, defaultState)
+  useEnsureDefaultUserState<A>(identifier, defaultState)
 
   // state
-  const [state, update] = useModel(UserModel)
-  const updateFn = useImmutableUpdateFn(state, update, uid, 'appState')
+  const [state, update] = useModel(StateModel, {
+    where: {
+      type: 'user',
+      identifier,
+    },
+  })
+  const updateFn = useImmutableUpdateFn(state, update, identifier, 'data')
 
   // scopes user down
-  return [selectDefined(state && state.appState[uid], defaultState), updateFn]
+  return [selectDefined(state && state.data, defaultState), updateFn]
 }
 
-export function useEnsureDefaultUserState<A>(uid: string, ensure: A) {
-  const [user, update] = useModel(UserModel)
+export function useEnsureDefaultUserState<A>(identifier: string, ensure: A) {
+  const [user, update] = useModel(StateModel, {
+    where: {
+      type: 'user',
+      identifier,
+    },
+  })
   useEffect(() => {
     if (!user) return
-    if (isDefined(user.appState[uid])) return
+    if (isDefined(user.data)) return
     // ensure default
     update(next => {
       console.log('user default state, set', ensure)
-      next.appState[uid] = ensure
+      next.data = ensure
     })
-  }, [user, uid])
+  }, [user])
 }

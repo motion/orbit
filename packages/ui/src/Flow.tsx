@@ -1,21 +1,14 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, {
-  Children,
-  FunctionComponent,
-  isValidElement,
-  memo,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
+import { Center } from './Center'
 import { Config } from './helpers/configureUI'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
 import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
-import { Center } from './Center'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
@@ -127,13 +120,13 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
   Step: FunctionComponent<FlowStepProps>
 }
 
-class FlowStore {
+export class FlowStore {
   props: FlowDataProps
   total = 0
 
   private hooks = useHooks({
-    data: () => Config.useUserState('flow-data', this.props.initialData),
-    index: () => Config.useUserState('flow-index', 0),
+    data: () => Config.useUserState('Flow-data', this.props.initialData),
+    index: () => Config.useUserState('Flow-index', 0),
   })
 
   get data() {
@@ -152,7 +145,8 @@ class FlowStore {
 }
 
 const FlowStoreContext = createStoreContext(FlowStore)
-export const useFlow = FlowStoreContext.useCreateStore
+export const useFlow = (props: FlowDataProps) =>
+  FlowStoreContext.useCreateStore(props, { react: false })
 
 export const Flow: FlowComponent<FlowProps> = memo(
   ({

@@ -113,16 +113,17 @@ type ObjectFns = { [key: string]: Fn }
 
 type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
 
-export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
-  const getValues = () => {
-    let res: any = {}
-    for (const key in hooks) {
-      res[key] = hooks[key]()
-    }
-    return res
+const getValues = (hooks) => {
+  let res: any = {}
+  for (const key in hooks) {
+    res[key] = hooks[key]()
   }
+  return res
+}
+
+export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
   captureHooks = shallow({
-    ...getValues(),
+    ...getValues(hooks),
     __getHooksValues: getValues,
   })
   return captureHooks
@@ -162,17 +163,19 @@ type ReactiveStoreState = {
   hasProps: boolean | null
 }
 
+const initialStoreState ={
+  store: null,
+  initialState: null,
+  hooks: null,
+  hasProps: null,
+} as const
+
 function useReactiveStore<A extends any>(
   Store: new () => A | false,
   props?: any,
 ): { store: A; hasChangedSource: boolean } | null {
   const forceUpdate = useForceUpdate()
-  const state = useRef<ReactiveStoreState>({
-    store: null,
-    initialState: null,
-    hooks: null,
-    hasProps: null,
-  })
+  const state = useRef<ReactiveStoreState>(initialStoreState)
   let store = state.current.store
   const hasChangedSource = store && !isSourceEqual(store, Store)
 
@@ -204,6 +207,7 @@ function useReactiveStore<A extends any>(
     const hooks = state.current.hooks
     if (hooks) {
       let next = hooks['__getHooksValues']()
+      console.log('got hooks', next)
       for (const key in hooks) {
         if (key === '__getHooksValues') continue
         if (next[key] !== hooks[key]) {

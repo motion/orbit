@@ -64,6 +64,7 @@ export const ColorPicker = memo(function ColorPicker({
           size={size}
           active={activeColor === colors[0]}
           onClick={setupOnClick(colors)}
+          name="dot"
           {...viewProps}
         />
       ))}

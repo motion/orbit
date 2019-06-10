@@ -1,9 +1,9 @@
-import { ImmutableUpdateFn } from '@o/bridge'
+import { ImmutableUpdateFn, useModel } from '@o/bridge'
+import { StateModel } from '@o/models'
 import { selectDefined } from '@o/utils'
 import { useCallback } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
-import { useAppBit } from './useAppBit'
 import { useEnsureDefaultAppState } from './useEnsureDefaultAppState'
 
 export type ScopedAppState<A> = [A, ImmutableUpdateFn<A>]
@@ -12,20 +12,25 @@ const idFn = _ => _
 
 export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppState<A> {
   const scopedId = useScopedStateId()
-  const uid = `${scopedId}${id}`
+  const identifier = `${scopedId}${id}`
 
   // ensure defaults
-  useEnsureDefaultAppState<A>(uid, defaultState)
+  useEnsureDefaultAppState<A>(identifier, defaultState)
 
-  const [state, update] = useAppBit()
-  const updateFn = useImmutableUpdateFn(state, update, uid, 'data')
+  const [state, update] = useModel(StateModel, {
+    where: {
+      type: 'app',
+      identifier,
+    },
+  })
+  const updateFn = useImmutableUpdateFn(state, update, identifier, 'data')
 
-  if (!uid) {
+  if (!identifier) {
     return [null, idFn]
   }
 
   // scopes state down
-  return [selectDefined(state && state.data[uid], defaultState), updateFn]
+  return [selectDefined(state && state.data[identifier], defaultState), updateFn]
 }
 
 export function useImmutableUpdateFn(

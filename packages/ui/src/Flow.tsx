@@ -145,8 +145,9 @@ export class FlowStore {
 }
 
 const FlowStoreContext = createStoreContext(FlowStore)
-export const useFlow = (props: FlowDataProps) =>
-  FlowStoreContext.useCreateStore(props, { react: false })
+
+export const useCreateFlow = FlowStoreContext.useCreateStore
+export const useFlow = FlowStoreContext.useStore
 
 export const Flow: FlowComponent<FlowProps> = memo(
   ({
@@ -204,18 +205,20 @@ export const Flow: FlowComponent<FlowProps> = memo(
     }
 
     return (
-      <Layout
-        Toolbar={Toolbar}
-        total={total}
-        height={height}
-        afterTitle={afterTitle}
-        step={steps[flowStore.index]}
-        steps={steps}
-        index={flowStore.index}
-        {...stepProps}
-      >
-        {contents}
-      </Layout>
+      <FlowStoreContext.SimpleProvider value={flowStore}>
+        <Layout
+          Toolbar={Toolbar}
+          total={total}
+          height={height}
+          afterTitle={afterTitle}
+          step={steps[flowStore.index]}
+          steps={steps}
+          index={flowStore.index}
+          {...stepProps}
+        >
+          {contents}
+        </Layout>
+      </FlowStoreContext.SimpleProvider>
     )
   },
 ) as any

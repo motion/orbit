@@ -59,20 +59,22 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
   }, [orbitStore, appStore, isActive, hasShownOnce])
 
   return (
-    <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
-      <ScopedState id={`app-${identifier}-${id}-`}>
-        <ProvideStores stores={{ appStore }}>
-          <Visibility visible={isActive}>
-            <OrbitAppRender
-              id={id}
-              identifier={identifier}
-              hasShownOnce={hasShownOnce || shown}
-              appDef={appDef}
-            />
-          </Visibility>
-        </ProvideStores>
-      </ScopedState>
-    </View>
+    <Suspense fallback={<div>error loading app {identifier} {id}</div>}>
+      <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
+        <ScopedState id={`app-${identifier}-${id}-`}>
+          <ProvideStores stores={{ appStore }}>
+            <Visibility visible={isActive}>
+              <OrbitAppRender
+                id={id}
+                identifier={identifier}
+                hasShownOnce={hasShownOnce || shown}
+                appDef={appDef}
+              />
+            </Visibility>
+          </ProvideStores>
+        </ScopedState>
+      </View>
+    </Suspense>
   )
 }
 
@@ -136,11 +138,11 @@ export const OrbitAppRenderOfDefinition = ({
   }, [isAppWrapped, AppDefMain])
 
   return (
-    <ProvideShare onChange={onChangeShare}>
-      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
-          <ErrorBoundary name={identifier}>
-            <Suspense fallback={<Loading />}>
+    <ErrorBoundary name={identifier}>
+      <Suspense fallback={<Loading />}>
+        <ProvideShare onChange={onChangeShare}>
+          <AppLoadContext.Provider value={{ id, identifier, appDef }}>
+            <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
               {hasShownOnce && (
                 <FadeIn>
                   <FinalAppView
@@ -150,11 +152,11 @@ export const OrbitAppRenderOfDefinition = ({
                   />
                 </FadeIn>
               )}
-            </Suspense>
-          </ErrorBoundary>
-        </AppViewsContext.Provider>
-      </AppLoadContext.Provider>
-    </ProvideShare>
+            </AppViewsContext.Provider>
+          </AppLoadContext.Provider>
+        </ProvideShare>
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 

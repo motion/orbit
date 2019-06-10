@@ -1,6 +1,5 @@
-import { gloss } from 'gloss'
-import * as UI from '@o/ui'
 import { Row } from '@o/ui'
+import { Col, gloss } from 'gloss'
 
 export const HorizontalScroll = gloss(Row, {
   overflowX: 'scroll',
@@ -12,8 +11,7 @@ export const HorizontalScroll = gloss(Row, {
   },
 })
 
-export const AppWrapper = gloss(UI.Col, {
-  // background: [0, 0, 0, 0.1],
+export const AppWrapper = gloss(Col, {
   maxWidth: '100%',
   maxHeight: '100%',
   overflow: 'hidden',

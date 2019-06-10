@@ -15,8 +15,6 @@ export function useAppBit(
     // use id for non-static apps
     conditions = { where: { id: appId || currentAppId } }
   } else {
-    // TODO this may be legacy now
-    debugger
     // use identifier for static apps (theres only one)
     conditions = { where: { identifier: currentAppIdentifier } }
   }

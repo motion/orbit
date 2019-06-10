@@ -1,22 +1,13 @@
+import { getIdentifierFromPackageId, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
-import {
-  AppBit,
-  AppDefinition,
-  AppEntity,
-  AppMeta,
-  Space,
-  SpaceEntity,
-  User,
-  UserEntity,
-} from '@o/models'
+import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
-import { updateWorkspacePackageIds, getIdentifierFromPackageId } from '@o/cli'
+import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 
 const log = new Logger('OrbitAppsManager')
 
@@ -100,7 +91,11 @@ export class OrbitAppsManager {
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)
-        this.appMeta[identifier] = meta
+        if (identifier !== null) {
+          this.appMeta[identifier] = meta
+        } else {
+          console.log('no identifier found')
+        }
       }
     },
   )

@@ -7,7 +7,6 @@ export function querySourcesEffect() {
   const { queryStore } = useStoresSimple()
   const syncApps = useActiveDataApps()
   useEffect(() => {
-    debugger
     queryStore.setSources(
       syncApps.map(x => ({
         name: x.name,

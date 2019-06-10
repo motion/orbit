@@ -4,7 +4,7 @@ import { selectDefined } from '@o/utils'
 import { useCallback } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
-import { useEnsureDefaultAppState } from './useEnsureDefaultAppState'
+import { useEnsureDefaultState } from './useUserState'
 
 export type ScopedAppState<A> = [A, ImmutableUpdateFn<A>]
 
@@ -15,7 +15,7 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
   const identifier = `${scopedId}${id}`
 
   // ensure defaults
-  useEnsureDefaultAppState<A>(identifier, defaultState)
+  useEnsureDefaultState(identifier, 'app', defaultState)
 
   const [state, update] = useModel(StateModel, {
     where: {
@@ -23,6 +23,7 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
       identifier,
     },
   })
+  console.log('got app state', state)
   const updateFn = useImmutableUpdateFn(state, update, identifier, 'data')
 
   if (!identifier) {

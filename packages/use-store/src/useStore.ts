@@ -113,17 +113,16 @@ type ObjectFns = { [key: string]: Fn }
 
 type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
 
-const getValues = (hooks) => {
-  let res: any = {}
-  for (const key in hooks) {
-    res[key] = hooks[key]()
-  }
-  return res
-}
-
 export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
+  const getValues = () => {
+    let res: any = {}
+    for (const key in hooks) {
+      res[key] = hooks[key]()
+    }
+    return res
+  }
   captureHooks = shallow({
-    ...getValues(hooks),
+    ...getValues(),
     __getHooksValues: getValues,
   })
   return captureHooks
@@ -163,7 +162,7 @@ type ReactiveStoreState = {
   hasProps: boolean | null
 }
 
-const initialStoreState ={
+const initialStoreState = {
   store: null,
   initialState: null,
   hooks: null,
@@ -207,7 +206,6 @@ function useReactiveStore<A extends any>(
     const hooks = state.current.hooks
     if (hooks) {
       let next = hooks['__getHooksValues']()
-      console.log('got hooks', next)
       for (const key in hooks) {
         if (key === '__getHooksValues') continue
         if (next[key] !== hooks[key]) {
@@ -241,10 +239,24 @@ export function useStore<A extends ReactiveStore<any> | any>(
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
-  const isInstantiated = Store && Store['constructor'].name !== 'Function'
+  const shouldReactVal = !options || options.react !== false
+  const shouldReact = useRef(shouldReactVal)
+  const isInstantiatedVal = Store && Store['constructor'].name !== 'Function'
+  const isInstantiated = useRef(isInstantiatedVal)
   let store: any = null
 
-  if (isInstantiated) {
+  if (process.env.NODE_ENV === 'development') {
+    if (shouldReact.current !== shouldReactVal) {
+      console.warn(`You're changing { react: true }, this is not allowed.`)
+    }
+    if (isInstantiated.current !== isInstantiatedVal) {
+      console.warn(
+        `You're changing the instantiation of a store passed to useStore, this is not allowed.`,
+      )
+    }
+  }
+
+  if (isInstantiated.current) {
     // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
     const shouldUpdate = lastStore.current !== Store
     if (shouldUpdate && lastStore.current) {
@@ -260,7 +272,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
   } else {
     const res = useReactiveStore(Store as any, props)
     store = res && res.store
-    if (!options || options.react !== false) {
+    if (shouldReact) {
       store = useTrackableStore(store, rerender, {
         ...options,
         component,
@@ -271,12 +283,12 @@ export function useStore<A extends ReactiveStore<any> | any>(
 
   // dispose on unmount
   useEffect(() => {
-    if (!isInstantiated) {
+    if (!isInstantiated.current) {
       return () => {
         store && disposeStore(store, component)
       }
     }
-  }, [store, isInstantiated])
+  }, [store, isInstantiated.current])
 
   return store
 }

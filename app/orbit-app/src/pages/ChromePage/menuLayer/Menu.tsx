@@ -3,8 +3,8 @@ import { App, Desktop, Electron } from '@o/stores'
 import { MergeContext, View } from '@o/ui'
 import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
-import * as React from 'react'
 import { createRef } from 'react'
+import * as React from 'react'
 
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../StoreContext'
@@ -536,7 +536,7 @@ const MenuLayerContent = React.memo(() => {
   // const { menuStore, queryStore } = useStores()
   const menuApps = useMenuApps()
   return (
-    <View className="app-parent-bounds">
+    <View>
       {menuApps.map(app => (
         <MenuApp identifier={app.id} index={app.index} key={app.id} viewType="index" />
       ))}

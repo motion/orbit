@@ -1,5 +1,5 @@
 import { AppIcon, createApp, getAppDefinition, useLocationLink, useStore } from '@o/kit'
-import { Button, Col, Flow, FlowStepProps, FlowStore, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowStore, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -35,11 +35,12 @@ function SetupAppMain() {
 function SetupAppCustom() {
   const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
-  const flow = useFlow({
+  const flow = useCreateFlow({
     initialData: {
       selectedTemplate: null,
     },
   })
+
   return (
     <>
       <Col width="70%" margin="auto">
@@ -221,8 +222,9 @@ function SetupAppHomeToolbar(props: { flow: FlowStore }) {
   )
 }
 
-const FlowStepSetup = memo(({ data }: FlowStepProps) => {
-  const appBit = useNewAppBit(data.selectedAppIdentifier)
+const FlowStepSetup = memo(() => {
+  const flow = useFlow()
+  const appBit = useNewAppBit(flow.data.selectedAppIdentifier)
   return (
     <Col pad flex={1} scrollable="y">
       <Scale size={1.2}>

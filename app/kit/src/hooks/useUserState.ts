@@ -1,6 +1,6 @@
-import { useModel } from '@o/bridge'
+import { loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
-import { isDefined, selectDefined } from '@o/utils'
+import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
 import { useEffect } from 'react'
 
 import { useScopedStateId } from '../views/ScopedState'
@@ -19,7 +19,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
   const identifier = `${scopedId}${id}`
 
   // ensure default state
-  useEnsureDefaultUserState<A>(identifier, defaultState)
+  useEnsureDefaultState<A>(identifier, 'user', defaultState)
 
   // state
   const [state, update] = useModel(StateModel, {
@@ -34,20 +34,69 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
   return [selectDefined(state && state.data, defaultState), updateFn]
 }
 
-export function useEnsureDefaultUserState<A>(identifier: string, ensure: A) {
-  const [user, update] = useModel(StateModel, {
-    where: {
-      type: 'user',
-      identifier,
-    },
-  })
-  useEffect(() => {
-    if (!user) return
-    if (isDefined(user.data)) return
-    // ensure default
-    update(next => {
-      console.log('user default state, set', ensure)
-      next.data = ensure
-    })
-  }, [user])
+const cache = {}
+
+// has to be suspense style
+export function useEnsureDefaultState<A>(identifier: string, type: string, data: A) {
+  console.log('ensuring default state', identifier, type, data)
+
+  const key = `${identifier}${type}`
+
+  if (cache[key]) {
+    if (cache[key].resolved) {
+      return
+    }
+    throw cache[key].read
+  }
+
+  if (!isDefined(data)) {
+    throw new Error(
+      `Must defined a default data object that isn't undefined for ${identifier} ${type}`,
+    )
+  }
+
+  cache[key] = {
+    resolved: false,
+    read: new Promise(res => {
+      const finish = () => {
+        cache[key].resolved = true
+        res()
+      }
+
+      const load = orTimeout(
+        loadOne(StateModel, {
+          args: {
+            where: {
+              type,
+              identifier,
+            },
+          },
+        }),
+        1000,
+      )
+
+      load
+        .then(state => {
+          if (isDefined(state.data)) {
+            finish()
+            return
+          }
+          if (!state) {
+            return save(StateModel, {
+              type,
+              identifier,
+              data,
+            })
+          }
+        })
+        .catch(err => {
+          if (err === OR_TIMED_OUT) {
+            console.error('timed out loading query', identifier, type, data)
+          } else {
+            console.error(err)
+          }
+        })
+        .finally(finish)
+    }),
+  }
 }

@@ -15,8 +15,6 @@ import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
 
 export function startAppLoadWatch() {
-  console.log('Watching for updated apps...')
-
   @decorate
   class WatchAppIdentifiers {
     watcher = react(

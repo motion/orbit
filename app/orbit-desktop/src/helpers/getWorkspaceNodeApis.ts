@@ -17,7 +17,9 @@ export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinitions
   await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       try {
-        const appInfo = await requireAppEntry(join(directory, 'dist', 'index.node.js'))
+        const entryPath = join(directory, 'dist', 'index.node.js')
+        log.info('importing entry path', entryPath)
+        const appInfo = await requireAppEntry(entryPath)
         if (appInfo.type === 'error') {
           log.error(`no node definition ${packageId}: ${appInfo.message}`)
           return
@@ -60,7 +62,7 @@ export async function requireAppEntry(
   } catch (err) {
     return {
       type: 'error' as const,
-      message: `Error requiring entry ${err.message} ${err.stack}`,
+      message: `Error requiring entry ${err.message}`,
     }
   }
   return {

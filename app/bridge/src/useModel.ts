@@ -94,12 +94,6 @@ function use<ModelType, Args>(
       if (next === valueRef.current) return
       if (next === undefined) return
       valueRef.current = next
-      console.log(
-        'updating from subscription',
-        `${JSON.stringify(valueRef.current, null, 2)}
-      ${JSON.stringify(next, null, 2)}
-      `,
-      )
       forceUpdate(Math.random())
     }
 

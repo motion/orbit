@@ -144,11 +144,11 @@ export const OrbitAppRenderOfDefinition = ({
   }, [isAppWrapped, AppDefMain])
 
   return (
-    <ErrorBoundary name={identifier}>
-      <Suspense fallback={<Loading />}>
-        <ProvideShare onChange={onChangeShare}>
-          <AppLoadContext.Provider value={{ id, identifier, appDef }}>
-            <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
+    <ProvideShare onChange={onChangeShare}>
+      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
+        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
+          <ErrorBoundary name={identifier}>
+            <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
                   <FinalAppView
@@ -158,11 +158,11 @@ export const OrbitAppRenderOfDefinition = ({
                   />
                 </FadeIn>
               )}
-            </AppViewsContext.Provider>
-          </AppLoadContext.Provider>
-        </ProvideShare>
-      </Suspense>
-    </ErrorBoundary>
+            </Suspense>
+          </ErrorBoundary>
+        </AppViewsContext.Provider>
+      </AppLoadContext.Provider>
+    </ProvideShare>
   )
 }
 

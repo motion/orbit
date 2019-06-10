@@ -41,6 +41,7 @@ import {
   AppMetaCommand,
   AuthAppCommand,
   StateModel,
+  StateEntity,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -327,6 +328,7 @@ export class OrbitDesktopRoot {
           { entity: BitEntity, models: [BitModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
+          { entity: StateEntity, models: [StateModel] },
         ]),
         ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {

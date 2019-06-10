@@ -75,23 +75,31 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
         1000,
       )
 
+      const create = () => {
+        return save(StateModel, {
+          type,
+          identifier,
+          data,
+        })
+      }
+
       load
         .then(state => {
+          console.log('state', state)
+          debugger
           if (isDefined(state.data)) {
             finish()
             return
           }
           if (!state) {
-            return save(StateModel, {
-              type,
-              identifier,
-              data,
-            })
+            debugger
+            return create()
           }
         })
         .catch(err => {
           if (err === OR_TIMED_OUT) {
             console.error('timed out loading query', identifier, type, data)
+            return create()
           } else {
             console.error(err)
           }

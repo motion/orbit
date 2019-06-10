@@ -1,7 +1,7 @@
 import { command, loadOne, save } from '@o/bridge'
-import { App, createApp, useActiveDataAppsWithDefinition } from '@o/kit'
+import { createApp, useActiveDataAppsWithDefinition, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
-import { Button, Col, Icon, List, Paragraph, Slider, SliderPane, Space, SubTitle, Text, Theme, Title, View } from '@o/ui'
+import { Button, Col, Icon, List, Paragraph, Section, Slider, SliderPane, Space, SubTitle, Text, Theme, Title, View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
 import { gloss } from 'gloss'
@@ -12,16 +12,13 @@ import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
 import { appDefToListItem, useDataAppDefinitions } from './apps/AppsApp'
+import { SpaceEdit } from './spaces/SpaceEdit'
 
 export default createApp({
   id: 'onboard',
   icon: '',
   name: 'Onboard',
-  app: () => (
-    <App>
-      <OnboardMain />
-    </App>
-  ),
+  app: OnboardMain,
 })
 
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
@@ -94,6 +91,7 @@ export function OnboardMain() {
   const dataDefs = useDataAppDefinitions()
   const active = useActiveDataAppsWithDefinition()
   const isInstalled = (id: string) => active.some(x => x.definition.id === id)
+  const [space] = useActiveSpace()
 
   return (
     <>
@@ -152,18 +150,11 @@ export function OnboardMain() {
             </Centered>
           )}
         </SliderPane>
-        {/* <SliderPane>
-          <Title size={1.4} fontWeight={500}>
-            Insider: unlock with email.
-          </Title>
-
-          <Space />
-
-          <InputRow label="Email Address" />
-
-          <Space />
-          <Space />
-        </SliderPane> */}
+        <SliderPane>
+          <Section title="Setup workspace" titleBorder titlePad pad>
+            <SpaceEdit id={space.id} />
+          </Section>
+        </SliderPane>
         <SliderPane space>
           <Title>Add a few data apps</Title>
           <List

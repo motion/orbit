@@ -58,6 +58,8 @@ export const Slider = memo((props: SliderProps) => {
     setNumMounted(React.Children.count(getProps().children))
   }, [])
 
+  console.log('numMounted', numMounted, curFrame)
+
   useParentNodeSize({
     ref: frameRef,
     disable: !visible,
@@ -84,16 +86,13 @@ export const Slider = memo((props: SliderProps) => {
         if (!isValidElement(child)) {
           throw new Error(`Must pass <SliderPane /> to <Slider />`)
         }
-
         const isMounting = index > numMounted - 1
         const isActive = !isMounting && curFrame === index
-
         const onChangeHeight = (next: number) => {
           heights[index] = next
           setHeights(heights)
         }
-
-        const props = {
+        return cloneElement(child, {
           framePad: framePad as any,
           verticalPad,
           fixHeightToTallest,
@@ -105,9 +104,7 @@ export const Slider = memo((props: SliderProps) => {
           index,
           onChangeHeight,
           onMountChange: handleDidMount,
-        }
-
-        return cloneElement(child, props)
+        })
       })}
     </SliderContainer>
   )

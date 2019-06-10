@@ -131,3 +131,15 @@ Talked to Alex Kolicich, Ted, Anand, Jan
 - ++ better peek windows with light exploration
 - ++ better profiles
 - ++ need to do more up front design thinking over OCR use cases
+
+# Jun 1st
+
+Talked to Adam
+
+- Brought up:
+  - Apple Marzipan/SwiftUI/Catalyst
+  - Mulesoft / Retool
+
+# Jun 2nd
+
+Talked to Liron

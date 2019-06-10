@@ -1,5 +1,6 @@
 import { IconShape, Row, toColor, View, ViewProps } from '@o/ui'
 import { gloss } from 'gloss'
+import { uniqBy } from 'lodash'
 import memoize from 'memoize-weak'
 import React, { memo } from 'react'
 
@@ -15,33 +16,26 @@ const niceColorsSingle = [
   'rgb(177, 13, 201)',
   'rgb(255, 220, 0)',
   'rgb(240, 18, 190)',
-  'rgb(170, 170, 170)',
   'rgb(133, 20, 75)',
   '#386798',
   '#297297',
   '#EADEAD',
 ]
 
-const niceColors = [
-  ...niceColorsSingle.map(x => [x, toColor(x).darken(0.15)]),
-  ...niceColorsSingle.map((x, i) => [niceColorsSingle[i + 2] || niceColorsSingle[0], x]),
-  ...niceColorsSingle.map((x, i) => [niceColorsSingle[i - 2] || niceColorsSingle[0], x]),
-  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 1] || niceColorsSingle[0]]),
-  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 1] || niceColorsSingle[0]]),
-  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 2] || niceColorsSingle[0]]),
-  ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 2] || niceColorsSingle[0]]),
-]
+const niceColors = uniqBy(
+  [
+    ...niceColorsSingle.map(x => [x, toColor(x).darken(0.15)]),
+    ...niceColorsSingle.map((x, i) => [niceColorsSingle[i + 2] || niceColorsSingle[0], x]),
+    ...niceColorsSingle.map((x, i) => [niceColorsSingle[i - 2] || niceColorsSingle[0], x]),
+    ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 1] || niceColorsSingle[0]]),
+    ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 1] || niceColorsSingle[0]]),
+    ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i - 2] || niceColorsSingle[0]]),
+    ...niceColorsSingle.map((x, i) => [x, niceColorsSingle[i + 2] || niceColorsSingle[0]]),
+  ],
+  x => JSON.stringify(x),
+)
 
-export const ColorPicker = memo(function ColorPicker({
-  count = Infinity,
-  luminosity = 'dark',
-  hue,
-  onChangeColor,
-  activeColor,
-  size = 32,
-  className,
-  ...viewProps
-}: {
+type ColorPickerProps = ViewProps & {
   activeColor?: string
   count?: number
   seed?: number
@@ -49,28 +43,41 @@ export const ColorPicker = memo(function ColorPicker({
   hue?: string
   size?: number
   onChangeColor?: (colors: [string, string]) => any
-} & ViewProps) {
-  const combos = niceColors.slice(0, count)
-  const setupOnClick = memoize(colors => () => {
-    onChangeColor([colors[0], colors[1]])
-  })
+}
 
-  return (
-    <Row pad="sm" space scrollable="x" hideScrollbars flex={1}>
-      {combos.map((colors, i) => (
-        <IconShape
-          key={i}
-          gradient={colors}
-          size={size}
-          active={activeColor === colors[0]}
-          onClick={setupOnClick(colors)}
-          name="dot"
-          {...viewProps}
-        />
-      ))}
-    </Row>
-  )
-})
+export const ColorPicker = memo(
+  ({
+    count = Infinity,
+    luminosity = 'dark',
+    hue,
+    onChangeColor,
+    activeColor,
+    size = 32,
+    className,
+    ...viewProps
+  }: ColorPickerProps) => {
+    const combos = niceColors.slice(0, count)
+    const setupOnClick = memoize(colors => () => {
+      onChangeColor([colors[0], colors[1]])
+    })
+
+    return (
+      <Row pad="sm" space scrollable="x" hideScrollbars flex={1}>
+        {combos.map((colors, i) => (
+          <IconShape
+            key={`${JSON.stringify(colors)}${i}`}
+            gradient={colors}
+            size={size}
+            active={activeColor === colors[0]}
+            onClick={setupOnClick(colors)}
+            name="dot"
+            {...viewProps}
+          />
+        ))}
+      </Row>
+    )
+  },
+)
 
 const SVG = gloss(View)
 SVG.defaultProps = {

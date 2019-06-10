@@ -1,14 +1,7 @@
-import {
-  App,
-  AppFilterButton,
-  AppMainView,
-  AppViewProps,
-  useSearchState,
-  useStore,
-  useStores,
-} from '@o/kit'
+import { App, AppFilterButton, AppMainView, AppViewProps, useSearchState, useStore, useStores } from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
 import React from 'react'
+
 import { SearchStore } from './SearchStore'
 
 export function SearchApp(props: AppViewProps) {

@@ -15,7 +15,7 @@
   "references": [
     { "path": "../bridge" },
     { "path": "../config" },
-    { "path": "../../apps" },
+    { "path": "../../apps/search-app" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/react-textfit" },
     { "path": "../../packages/color" }

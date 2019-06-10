@@ -334,9 +334,19 @@ function addDynamicStyles(
   const dynStyles = {}
   let classNames: string[] = []
 
+  // applies styles most important to least important
+  // that saves us some processing time (no need to set multiple times)
+  // note that means the topmost `mergeStyles` will apply as most important
+
   // if passed any classes from a parent gloss view, merge them, ignore classname and track
   if (props.className) {
     const propClassNames = props.className.trim().split(whiteSpaceRegex)
+    // note this reverse: this is a bit odd
+    // right now we have conditionalStyles applied as their own className (so base: .1, conditional: .2)
+    // then we pass className="1 2" if we have a parent that the conditional style === true
+    // what we probably want is to merge them all into their own single className
+    // until then, we need to preserve the important order, so we reverse to make sure conditional applies first
+    propClassNames.reverse()
     for (const className of propClassNames) {
       const info = tracker.get(className)
       if (info) {
@@ -356,7 +366,7 @@ function addDynamicStyles(
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles[id] = dynStyles[id] || {}
-    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next), true)
+    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
     if (themePropStyles) {
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }
@@ -558,21 +568,21 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
 
   return className
 }
-
+// has to return a .specific-id and .id selector for use in parents passing down styles
 function getSelector(className: string, namespace: string, tagName: string = '') {
   if (namespace[0] === '@') {
-    return `${tagName}.${className}`
+    return `${tagName}.${className}, ${tagName}.specific-${className}`
   }
   if (namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
     const namespacedSelectors = namespace
       .split(',')
-      .map(part => {
+      .flatMap(part => {
         const selector = part.replace('&', className).trim()
-        return `.${selector}`
+        return [`.specific-${selector}`, `.${selector}`]
       })
       .join(',')
     return namespacedSelectors
   }
-  return `.${className}`
+  return `.specific-${className}, .${className}`
 }

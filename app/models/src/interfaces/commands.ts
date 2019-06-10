@@ -2,6 +2,7 @@ import { Command } from '@o/mediator'
 
 import { ApiInfo } from '../ApiInfo'
 import { AppBit } from './AppBit'
+import { Space } from './SpaceInterface'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
@@ -60,7 +61,7 @@ export const AppMetaCommand = new Command<
   {
     identifier: string
   }
->('app-meta')
+>('AppMetaCommand')
 
 export const AppOpenWindowCommand = new Command<
   boolean,
@@ -68,7 +69,7 @@ export const AppOpenWindowCommand = new Command<
     appId: number
     isEditing?: boolean
   }
->('app-open-window')
+>('AppOpenWindowCommand')
 
 export const AppDevOpenCommand = new Command<
   number,
@@ -77,7 +78,13 @@ export const AppDevOpenCommand = new Command<
     path: string
     entry: string
   }
->('app-dev-open')
+>('AppDevOpenCommand')
+
+// workspace
+
+export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
+  'AppCreateWorkspaceCommand',
+)
 
 export const AppOpenWorkspaceCommand = new Command<
   boolean,
@@ -86,7 +93,7 @@ export const AppOpenWorkspaceCommand = new Command<
     path: string
     appIdentifiers: string[]
   }
->('app-workspace-open')
+>('AppOpenWorkspaceCommand')
 
 export const AppDevCloseCommand = new Command<undefined, { appId: number }>('app-dev-close')
 

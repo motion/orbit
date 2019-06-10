@@ -11,7 +11,7 @@ import { installApp } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
-import { appDefToItem, useDataAppDefinitions } from './apps/AppsApp'
+import { appDefToListItem, useDataAppDefinitions } from './apps/AppsApp'
 
 export default createApp({
   id: 'onboard',
@@ -177,7 +177,7 @@ export function OnboardMain() {
               iconBefore: true,
               iconSize: 36,
             }}
-            items={dataDefs.map(appDefToItem)}
+            items={dataDefs.map(appDefToListItem)}
             getItemProps={(_, i) => ({
               onClick: () => installApp(dataDefs[i]),
               after: (

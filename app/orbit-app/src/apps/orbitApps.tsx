@@ -6,7 +6,6 @@ import { createElement } from 'react'
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
-import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
@@ -48,7 +47,6 @@ export const orbitStaticApps: AppDefinition[] = [
   OnboardApp,
   SetupAppApp,
   MessageApp,
-  HomeApp,
   LoadingApp,
 ]
 

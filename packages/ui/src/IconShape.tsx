@@ -64,14 +64,9 @@ export const IconShape = memo(
         ignoreAlternate: true,
       })
 
-      console.log('theme', theme)
-
-      let backgroundFill = ''
-      if (cutout) {
-        backgroundFill = !!gradient ? `url(#${gradientId})` : `${background || '#999'}`
-      } else {
-        backgroundFill = (theme.iconFillColor || theme.color).toString()
-      }
+      let color = !!gradient
+        ? `url(#${gradientId})`
+        : `${(theme.iconFillColor || theme.color).toString()}`
 
       return (
         <View ref={ref} width={size} height={size} position="relative" {...props}>
@@ -97,7 +92,7 @@ export const IconShape = memo(
               left={1}
               zIndex={0}
               borderRadius={size / 3.2}
-              background={linearGradient(...gradient)}
+              background={theme.background}
             />
           )}
           <svg
@@ -125,7 +120,7 @@ export const IconShape = memo(
               </defs>
             )}
             <g>
-              <path d={`${svgPath}`} fill={backgroundFill} />
+              <path d={`${svgPath}`} fill={color} />
             </g>
           </svg>
         </View>

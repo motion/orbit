@@ -58,6 +58,10 @@ export const SliderPane = memo(
       },
     })
 
+    if (isActive) {
+      console.log('i am active')
+    }
+
     return (
       <Visibility visible={isActive}>
         <SliderPaneChrome
@@ -67,6 +71,7 @@ export const SliderPane = memo(
           padding={[verticalPad, framePad, verticalPad]}
           isActive={isActive}
           display={display}
+          debug
           {...props}
         >
           {children}

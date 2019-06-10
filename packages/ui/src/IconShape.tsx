@@ -1,7 +1,7 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
 import { linearGradient } from '@o/color'
 import { useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
@@ -45,7 +45,7 @@ export const IconShape = memo(
         console.log('no icon path', props.name, iconPath)
       }
 
-      useEffect(() => {
+      useLayoutEffect(() => {
         if (!iconPath) return
         const draw = SVG(id).size(diameter, diameter)
         const icon = draw.path(iconPath)

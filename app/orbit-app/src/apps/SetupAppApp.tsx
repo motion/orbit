@@ -171,9 +171,8 @@ function SetupAppHome() {
   )
 }
 
-function SetupAppHomeToolbar(props: { flow: FlowStore }) {
+const SetupAppHomeToolbar = memo((props: { flow: FlowStore }) => {
   const flow = useStore(props.flow)
-  console.log('flow', flow.data.selected)
   const stackNav = useStackNavigator()
   return (
     <Scale size="lg">
@@ -218,7 +217,7 @@ function SetupAppHomeToolbar(props: { flow: FlowStore }) {
       </Toolbar>
     </Scale>
   )
-}
+})
 
 const FlowStepSetup = memo(() => {
   const flow = useFlow()

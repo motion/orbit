@@ -1,19 +1,7 @@
 import { invertLightness } from '@o/color'
 import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  RowProps,
-  SizedSurfaceProps,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -98,7 +86,7 @@ export const OrbitHeader = memo(() => {
           </HeaderContain>
 
           <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround justifyContent="flex-start">
+            <HeaderSide space="sm" spaceAround justifyContent="flex-start" debug>
               {isEditing && (
                 <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
                   <>
@@ -290,7 +278,7 @@ const OrbitNavHiddenBarInner = gloss(Box, {
   background: theme.backgroundStrongest.alpha(0.5),
 }))
 
-const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
+const HeaderSide = gloss(Row, {
   flexFlow: 'row',
   flex: 1,
   width: '18%',

@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateWorkspaceCommand, SpaceEntity } from '@o/models'
+import { AppCreateWorkspaceCommand, SpaceEntity, AppEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { getRepository } from 'typeorm'
 
@@ -30,11 +30,25 @@ export async function findOrCreateWorkspace(props) {
     return ws
   }
 
-  return await getRepository(SpaceEntity).save({
+  const space = await getRepository(SpaceEntity).save({
     name: `${randomAdjective()} ${randomNoun()}`,
     colors: ['orange', 'pink'],
     paneSort: [],
     onboarded: false,
     ...props,
   })
+
+  // ensure default home app
+  await getRepository(AppEntity).save({
+    target: 'app',
+    identifier: 'search',
+    name: 'Home',
+    icon: '',
+    space,
+    colors: ['orange', 'red'],
+    tabDisplay: 'permanent',
+    editable: false,
+  })
+
+  return space
 }

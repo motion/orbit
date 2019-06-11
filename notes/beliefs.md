@@ -144,43 +144,5 @@ Talked to Adam
 
 Talked to Liron
 
----
-
-market fit research:
-
-- Big pain points in building apps around internal company processes?
-- Do you use airtable or a similar spreadsheet++ type app?
-- Do you have any internal apps or dashboards?
-- If you could rebuild them in a few days, and save 100s of hours of maintenance cost a year, would you commit to purchase Orbit?
-- How many people use the dashboards?
-- Do you use them while on the phone?
-- Orbit lets you build internal apps easily, what would you build if it was 10x easier?
-- Do you fear building certain things because of:
-  - performance?
-  - ease of development?
-  - ease of connecting data?
-  - cloud lock-in?
-  - toolkit included (ui, libraries, build system)?
-- You already have dashboards and tools you've built, so Orbit may not be a great fit initially, do you agree? What would change that?
-
----
-
-data gathering
-
-- Which would you prefer to be easy to do:
-  - Large sortable, filterable tables
-  - Importing data from many sources, using within an app, exporting again
-- Which data sources would you need?
-
----
-
-ask:
-
-- $750/seat/year, 2+ seats, alpha version delivered by end of the month
-- pay for the year up front for 3 seats
-
-ask:
-
-- Structured idea for an app you need to build and requirements
-
-
+- -- need for desktop app
+- ++ need for plugging into your existing app

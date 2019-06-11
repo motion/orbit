@@ -1,6 +1,21 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Paragraph, Scale, Text, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
+import {
+  Button,
+  Card,
+  Col,
+  Flow,
+  FlowProvide,
+  gloss,
+  Paragraph,
+  Scale,
+  Text,
+  Toolbar,
+  useCreateFlow,
+  useFlow,
+  useOnMount,
+  View,
+} from '@o/ui'
 import React from 'react'
 
 import { om } from '../om/om'
@@ -49,7 +64,7 @@ export function OnboardApp() {
     <Onboard.SimpleProvider value={onboardStore}>
       <FlowProvide value={flow}>
         <BlurryGuys />
-        <Col width="80%" margin="auto" height="90%">
+        <Col width="80%" margin="auto" height="80%">
           <Flow useFlow={flow}>
             <Flow.Step title="Welcome" validateFinished={onboardStore.setupProxy}>
               {OnboardStepProxy}

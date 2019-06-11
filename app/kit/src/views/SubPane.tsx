@@ -58,6 +58,7 @@ export const SubPane = memo(function SubPane(props: Props) {
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner ref={subPaneStore.innerPaneRef}>
         <Pane
+          debug
           isActive={isActive}
           isLeft={isLeft}
           style={style}

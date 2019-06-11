@@ -1,4 +1,11 @@
-import { CSSPropertySet, CSSPropertySetResolved, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
+import {
+  CSSPropertySet,
+  CSSPropertySetResolved,
+  cssString,
+  styleToClassName,
+  ThemeObject,
+  validCSSAttr,
+} from '@o/css'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -366,7 +373,7 @@ function addDynamicStyles(
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles[id] = dynStyles[id] || {}
-    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next))
+    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next), true)
     if (themePropStyles) {
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }

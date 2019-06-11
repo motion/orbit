@@ -48,9 +48,9 @@ export function OnboardApp() {
           </Flow.Step>
           <Flow.Step title="Workspace">{OnboardStepProxy}</Flow.Step>
           <Flow.Step validateFinished={finishOnboard}>final setp</Flow.Step>
+          <OnboardToolbar />
         </Flow>
       </Col>
-      <OnboardToolbar />
     </>
   )
 }

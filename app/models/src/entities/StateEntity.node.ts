@@ -14,5 +14,5 @@ export class StateEntity extends BaseEntity implements State {
   type?: string
 
   @Column({ type: 'simple-json' })
-  data: State['data']
+  data?: State['data']
 }

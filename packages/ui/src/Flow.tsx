@@ -175,10 +175,12 @@ export const Flow: FlowComponent<FlowProps> = memo(
     const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
     // make it  merge by default
     const total = Children.count(props.children)
-    const children = Children.toArray(props.children)
+    const stepChildren = Children.toArray(props.children).filter(
+      x => x && x.type && x.type === FlowStep,
+    )
     const steps: FlowStep[] = useMemo(
       () =>
-        children.map((child, idx) => ({
+        stepChildren.map((child, idx) => ({
           key: `${idx}`,
           ...child.props,
         })),
@@ -203,11 +205,16 @@ export const Flow: FlowComponent<FlowProps> = memo(
 
     const contents = (
       <Slider fixHeightToParent curFrame={flowStore.index}>
-        {children.map((child, idx) => {
+        {stepChildren.map((child, idx) => {
+          console.log('child', child)
           const ChildView = child.props.children
           return (
             <SliderPane key={idx}>
-              {isValidElement(ChildView) ? ChildView : <ChildView {...stepProps} />}
+              {typeof ChildView === 'string' || isValidElement(ChildView) ? (
+                ChildView
+              ) : (
+                <ChildView {...stepProps} />
+              )}
             </SliderPane>
           )
         })}

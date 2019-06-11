@@ -108,6 +108,7 @@ Object.assign(
     buttonGlintColorBottom: [0, 0, 0, 0.3],
     colorBlur: '#bbb',
     colorActive: '#fff',
+    tabColorActive: darkAlternates.selected.background.lighten(0.5),
     tabBackgroundHover: [255, 255, 255, 0.1],
     tabBackgroundActive: [255, 255, 255, 0.125],
     tabBackgroundSelected: dark.backgroundStronger,

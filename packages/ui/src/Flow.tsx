@@ -1,4 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
@@ -78,7 +79,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
     <Section
       bordered
       title={step.title}
-      subTitle={step.subTitle || `${index + 1}/${total}`}
+      subTitle={selectDefined(step.subTitle, `${index + 1}/${total}`)}
       minHeight={300}
       height={height}
       flex={1}
@@ -89,7 +90,6 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
           borderWidth={0}
           glint={false}
           borderBottom={[3, 'transparent']}
-          color={theme => theme.background}
           borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
           sizeRadius={0}
           sizeHeight={1.2}
@@ -206,7 +206,6 @@ export const Flow: FlowComponent<FlowProps> = memo(
     const contents = (
       <Slider fixHeightToParent curFrame={flowStore.index}>
         {stepChildren.map((child, idx) => {
-          console.log('child', child)
           const ChildView = child.props.children
           return (
             <SliderPane key={idx}>

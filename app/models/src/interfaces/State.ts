@@ -17,5 +17,5 @@ export interface State {
   /**
    * User email.
    */
-  data?: { [key: string]: any }
+  data?: { data: { [key: string]: any } }
 }

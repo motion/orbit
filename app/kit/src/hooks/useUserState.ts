@@ -18,7 +18,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
   const identifier = `${scopedId}${id}`
 
   // ensure default state
-  useEnsureDefaultState<A>(identifier, 'user', defaultState)
+  useEnsureDefaultState<{ data: A }>(identifier, 'user', { data: defaultState })
 
   // state
   const [state, update] = useModel(StateModel, {
@@ -27,10 +27,12 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
       identifier,
     },
   })
-  const updateFn = useImmutableUpdateFn(state, update, 'data')
 
-  // scopes user down
-  return [selectDefined(state && state.data, defaultState), updateFn]
+  // scope it to .data
+  return [
+    selectDefined(state && state.data, defaultState),
+    useImmutableUpdateFn(state && state.data, update, 'data'),
+  ]
 }
 
 const cache = {}

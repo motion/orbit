@@ -8,14 +8,12 @@ import { useEnsureDefaultState } from './useUserState'
 
 export type ScopedAppState<A> = [A, ImmutableUpdateFn<A>]
 
-const idFn = _ => _
-
 export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppState<A> {
   const scopedId = useScopedStateId()
   const identifier = `${scopedId}${id}`
 
   // ensure defaults
-  useEnsureDefaultState(identifier, 'app', defaultState)
+  useEnsureDefaultState(identifier, 'app', { data: defaultState })
 
   const [state, update] = useModel(StateModel, {
     where: {
@@ -23,14 +21,12 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
       identifier,
     },
   })
-  const updateFn = useImmutableUpdateFn(state, update, 'data')
-
-  if (!identifier) {
-    return [null, idFn]
-  }
 
   // scopes state down
-  return [selectDefined(state && state.data, defaultState), updateFn]
+  return [
+    selectDefined(state && state.data, defaultState),
+    useImmutableUpdateFn(state && state.data, update, 'data'),
+  ]
 }
 
 export function useImmutableUpdateFn(state: any, update: ImmutableUpdateFn<any>, subKey: string) {

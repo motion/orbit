@@ -13,6 +13,6 @@ export class StateEntity extends BaseEntity implements State {
   @Column()
   type?: string
 
-  @Column({ type: 'simple-json' })
+  @Column({ type: 'simple-json', default: '{}' })
   data?: State['data']
 }

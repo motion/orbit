@@ -19,7 +19,7 @@ class OnboardStore {
     return await command(CheckProxyCommand)
   }
 
-  async validateProxy() {
+  async setupProxy() {
     return await command(SetupProxyCommand)
   }
 
@@ -51,7 +51,7 @@ export function OnboardApp() {
         <BlurryGuys />
         <Col width="80%" margin="auto" height="90%">
           <Flow useFlow={flow}>
-            <Flow.Step title="Proxy" validateFinished={onboardStore.validateProxy}>
+            <Flow.Step title="Welcome" validateFinished={onboardStore.setupProxy}>
               {OnboardStepProxy}
             </Flow.Step>
             <Flow.Step title="Workspace">{OnboardSetupWorkspace}</Flow.Step>
@@ -89,18 +89,16 @@ function OnboardSetupWorkspace() {
 const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {...props} />
 
 function OnboardStepProxy() {
+  const onboardStore = Onboard.useStore()
   return (
-    <Centered space scrollable="y" flex={1}>
-      <Text size={2.8} fontWeight={500}>
-        Hello.
-      </Text>
-      <Text size={1.75} alpha={0.5}>
-        Welcome to Orbit
-      </Text>
-      <IntroPara>Orbit is your team knowledge manager.</IntroPara>
-      It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
-      company without exposing any of your team data to us. To do so it runs privately each persons
-      computer.
+    <Centered space pad scrollable="y" flex={1}>
+      <Text size="xxl">Welcome to Orbit</Text>
+      <IntroPara alpha={0.5}>Orbit is your team knowledge manager.</IntroPara>
+      <IntroPara>
+        It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
+        company without exposing any of your team data to us. To do so it runs privately each
+        persons computer.
+      </IntroPara>
       <IntroPara>
         Orbit will set up a local proxy now to enable private sync and the access quick URLs you can
         access in your browser.
@@ -111,7 +109,7 @@ function OnboardStepProxy() {
           subTitle="Orbit had a problem setting up a proxy on your machine."
           pad
           margin="auto"
-          afterTitle={<Button icon="refresh" />}
+          afterTitle={<Button onClick={onboardStore.setupProxy} icon="refresh" />}
           width={400}
           height={160}
           textAlign="left"

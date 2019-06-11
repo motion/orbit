@@ -1,5 +1,4 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import { selectDefined } from '@o/utils'
 import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
@@ -74,12 +73,12 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
 }
 
 export const DefaultFlowLayout = (props: FlowLayoutProps) => {
-  const { Toolbar, children, index, total, step, steps, height } = props
+  const { Toolbar, children, index, step, steps, height } = props
   return (
     <Section
       bordered
       title={step.title}
-      subTitle={selectDefined(step.subTitle, `${index + 1}/${total}`)}
+      subTitle={step.subTitle}
       minHeight={300}
       height={height}
       flex={1}
@@ -145,10 +144,10 @@ export class FlowStore {
   setData = this.hooks.data[1]
   setStepIndex = this.hooks.index[1]
 
-  next = () => {
+  next = async () => {
     const nextIndex = Math.min(this.total - 1, this.index + 1)
     const nextStep = this.steps[nextIndex]
-    if (nextStep && nextStep.validateFinished(this.data)) {
+    if (nextStep && (!nextStep.validateFinished || (await nextStep.validateFinished(this.data)))) {
       this.setStepIndex(nextIndex)
     }
   }

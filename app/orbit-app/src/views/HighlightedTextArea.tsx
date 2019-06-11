@@ -188,7 +188,7 @@ export class HighlightedTextArea extends React.Component<Props> {
           color="transparent"
           overflowX="scroll"
           overflowY="hidden"
-          className="hideScrollBar"
+          className="hide-scrollbars"
         />
         {/* actual input layer */}
         <SelectableBlock
@@ -200,7 +200,7 @@ export class HighlightedTextArea extends React.Component<Props> {
           onScroll={this.handleScroll}
           value={this.state.value}
           ref={forwardRef}
-          className="hideScrollBar"
+          className="hide-scrollbars"
         />
       </TextAreaOuter>
     )

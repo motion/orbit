@@ -24,4 +24,9 @@ export const onInitialize: OnInitialize = async om => {
   startAppLoadWatch()
 
   effects.router.start()
+
+  if (!om.state.spaces.activeSpace.onboarded) {
+    console.log(`hasn't onboarded, showing pane`)
+    om.actions.router.showAppPage({ id: 'onboard' })
+  }
 }

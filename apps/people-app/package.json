@@ -1,13 +1,15 @@
 {
   "name": "@o/people-app",
   "description": "A contact manager across all bits synced of type person.",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
+  "config": {
+    "orbitApp": true
+  },
   "scripts": {
     "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish"
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

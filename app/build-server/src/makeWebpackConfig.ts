@@ -24,6 +24,7 @@ export type WebpackParams = {
   devServer?: boolean
   hot?: boolean
   minify?: boolean
+  noChunking?: boolean
 }
 
 export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
@@ -44,6 +45,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     devServer,
     hot,
     name,
+    noChunking,
   } = params
 
   const entryDir = __dirname
@@ -65,11 +67,12 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       providedExports: true,
       sideEffects: true,
       concatenateModules: true,
+      // this helps runtime/loadtime
       splitChunks: {
         chunks: 'async',
         name: false,
       },
-      ...(target === 'node' && {
+      ...((target === 'node' || noChunking) && {
         splitChunks: false,
       }),
     },
@@ -117,12 +120,14 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       // hotUpdateMainFilename: `hot-update.json`,
     },
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
-    externals: {
-      electron: '{}',
-      ...externals,
-    },
+    externals: [
+      {
+        electron: '{}',
+      },
+      externals,
+    ].filter(Boolean),
     resolve: {
-      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.wasm', '.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields:
         mode === 'production'
           ? ['ts:main', 'module', 'browser', 'main']

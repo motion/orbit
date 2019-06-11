@@ -40,6 +40,8 @@ import {
   CloseAppCommand,
   AppMetaCommand,
   AuthAppCommand,
+  StateModel,
+  StateEntity,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -307,6 +309,7 @@ export class OrbitDesktopRoot {
         SearchPinnedResultModel,
         SearchByTopicModel,
         SpaceModel,
+        StateModel,
         TrendingTopicsModel,
         TrendingTermsModel,
         PeopleNearTopicModel,
@@ -325,10 +328,11 @@ export class OrbitDesktopRoot {
           { entity: BitEntity, models: [BitModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
+          { entity: StateEntity, models: [StateModel] },
         ]),
         ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          return this.orbitAppsManager.appMeta[identifier]
+          return this.orbitAppsManager.appMeta[identifier] || null
         }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
@@ -402,6 +406,7 @@ export class OrbitDesktopRoot {
           console.log('finishing setup proxy', success)
           return success
         }),
+
         resolveCommand(OpenCommand, openUrl),
       ],
     })

@@ -1,18 +1,9 @@
-import { App, createApp } from '@o/kit'
-import { Title } from '@o/ui'
-import React from 'react'
-
-function HomeMain() {
-  return <Title>hi</Title>
-}
+import { createApp } from '@o/kit'
+import SearchApp from '@o/search-app'
 
 export default createApp({
-  id: 'onboard',
-  icon: '',
-  name: 'Onboard',
-  app: () => (
-    <App>
-      <HomeMain />
-    </App>
-  ),
+  id: 'home',
+  icon: 'home',
+  name: 'Home',
+  app: SearchApp.app,
 })

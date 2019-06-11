@@ -1,13 +1,13 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import { AppOpenWorkspaceCommand, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
-import { randomAdjective, randomNoun } from '@o/utils'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { OrbitAppsManager } from '../managers/OrbitAppsManager'
+import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 
@@ -28,7 +28,10 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
     log.info('got', identifier)
 
     // ensure/find space
-    const space = await findOrCreateSpace(identifier, path)
+    const space = await findOrCreateWorkspace({
+      identifier,
+      directory: path,
+    })
     log.info('got space', space)
 
     // set active space
@@ -48,31 +51,4 @@ async function loadWorkspace(path: string): Promise<WorkspaceInfo> {
   return {
     identifier: pkg.name,
   }
-}
-
-async function findOrCreateSpace(identifier: string, directory: string) {
-  const ws = await getRepository(SpaceEntity).findOne({
-    where: {
-      identifier,
-    },
-  })
-
-  log.info('Find or create space', identifier, 'found?', !!ws)
-
-  if (ws) {
-    // moved!
-    if (ws.directory !== directory) {
-      console.log('directory seems to have moved, we should prompt and allow choice')
-    }
-
-    return ws
-  }
-
-  return await getRepository(SpaceEntity).save({
-    identifier,
-    name: `${randomAdjective()} ${randomNoun()}`,
-    colors: ['orange', 'pink'],
-    paneSort: [],
-    directory,
-  })
 }

@@ -20,7 +20,7 @@ export async function getOrbitDesktop() {
     reporter.info('Starting orbit desktop process')
     // run desktop and try again
     if (await runOrbitDesktop()) {
-      port = await findBonjourService('orbitDesktop', 10000)
+      port = await findBonjourService('orbitDesktop', 25000)
       // adding some sleep so it connects
       await sleep(1000)
     }

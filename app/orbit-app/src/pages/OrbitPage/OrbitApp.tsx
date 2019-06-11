@@ -1,8 +1,8 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, ScopedState, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, useGet, useThrottledFn, useVisibility, View, Visibility } from '@o/ui'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ScopedState, useGet, useThrottledFn, useVisibility, View, Visibility } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -59,20 +59,28 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
   }, [orbitStore, appStore, isActive, hasShownOnce])
 
   return (
-    <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
-      <ScopedState id={`appstate-${identifier}-${id}-`}>
-        <ProvideStores stores={{ appStore }}>
-          <Visibility visible={isActive}>
-            <OrbitAppRender
-              id={id}
-              identifier={identifier}
-              hasShownOnce={hasShownOnce || shown}
-              appDef={appDef}
-            />
-          </Visibility>
-        </ProvideStores>
-      </ScopedState>
-    </View>
+    <Suspense
+      fallback={
+        <div>
+          error loading app {identifier} {id}
+        </div>
+      }
+    >
+      <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
+        <ScopedState id={`or-${identifier}-${id}-`}>
+          <ProvideStores stores={{ appStore }}>
+            <Visibility visible={isActive}>
+              <OrbitAppRender
+                id={id}
+                identifier={identifier}
+                hasShownOnce={hasShownOnce || shown}
+                appDef={appDef}
+              />
+            </Visibility>
+          </ProvideStores>
+        </ScopedState>
+      </View>
+    </Suspense>
   )
 }
 

@@ -33,6 +33,7 @@ function resolveInstallAppToWorkspace() {
   return resolveCommand(InstallAppToWorkspaceCommand, async ({ identifier }) => {
     const directory = await getWorkspaceDirectory()
     const res = await commandInstall({ identifier, directory })
+    log.info(`Got response from install command ${JSON.stringify(res)}`)
     if (res.type === 'error') {
       return res
     }
@@ -66,7 +67,7 @@ function resolveAppSetupVerify() {
     }
 
     // run definition
-    const loadedDef = await requireAppDefinition(packageId)
+    const loadedDef = await requireAppDefinition({ packageId, directory: tempPackageDir })
 
     if (loadedDef.type === 'error') {
       return loadedDef

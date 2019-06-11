@@ -54,7 +54,6 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
         width={42}
         height={42}
         marginLeft={15}
-        {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         circular
         iconSize={18}
         elevation={4}
@@ -63,6 +62,7 @@ export function DockButton({ visible = true, id, ...buttonProps }: DockButtonPro
         }}
         zIndex={100000000}
         opacity={1}
+        {...!show && { marginRight: -(50 + 15), opacity: 0 }}
         {...buttonProps}
       />
     </Flipped>

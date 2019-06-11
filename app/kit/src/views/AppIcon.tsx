@@ -1,13 +1,10 @@
-import { IconProps, IconShape, SVG, toColor, useTheme } from '@o/ui'
+import { IconShape, IconShapeProps, SVG, toColor, useTheme } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
-import { Omit } from '../types'
 
-type BaseIconProps = Omit<Partial<IconProps>, 'color' | 'name'>
-
-export type AppIconProps = BaseIconProps & {
+export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
   identifier?: string
   icon?: string
   colors?: string[]
@@ -17,7 +14,7 @@ export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
-    let colors = props.colors || ['#000', '#111']
+    let colors = props.colors || ['red', 'blue']
 
     const identifier = typeof props.identifier === 'string' ? props.identifier : false
     const definition = useAppDefinition(identifier)

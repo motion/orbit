@@ -1,4 +1,4 @@
-import { Dock, DockButton, PopoverMenu } from '@o/ui'
+import { Badge, Dock, DockButton, PopoverMenu } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -9,36 +9,38 @@ export const OrbitDock = memo(() => {
   const isOnStaticApp = useIsOnStaticApp()
 
   return (
-    <Dock
-      transition="all ease 300ms"
-      transform={{ y: isOnStaticApp ? 100 : 0 }}
-      className="orbit-dock"
-    >
+    <Dock transition="all ease 300ms" className="orbit-dock">
       <OrbitDockShare />
       <OrbitDockSearch />
-      <OrbitDockAppMenu />
+      <OrbitDockMenu />
     </Dock>
   )
 })
 
-const OrbitDockAppMenu = () => {
+const useActiveAppMenuItems = () => {
   const { orbitStore } = useStores()
   if (!orbitStore.activeAppStore) {
-    return null
+    return []
   }
-  const { menuItems } = orbitStore.activeAppStore
-  if (!menuItems || !menuItems.length) {
-    return null
-  }
-  console.log('menuItems', menuItems, orbitStore.activeAppStore)
+  return orbitStore.activeAppStore.menuItems || []
+}
+
+const OrbitDockMenu = () => {
+  const menuItems = useActiveAppMenuItems()
   return (
     <PopoverMenu
       target={<DockButton id="app-menu" icon="menu" />}
-      items={menuItems.map(item => ({
-        title: item.title,
-        subTitle: item.subTitle,
-        icon: item.icon,
-      }))}
+      items={[
+        {
+          title: 'Errors',
+          before: <Badge>2</Badge>,
+        },
+        ...menuItems.map(item => ({
+          title: item.title,
+          subTitle: item.subTitle,
+          icon: item.icon,
+        })),
+      ]}
     />
   )
 }

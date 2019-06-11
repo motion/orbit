@@ -1,7 +1,7 @@
 import { AppBit, AppIcon } from '@o/kit'
 import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
 import memoize from 'memoize-weak'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useNewAppStore } from '../../om/stores'
 import { ColorPicker } from '../../views/ColorPicker'
@@ -18,7 +18,7 @@ export function AppsMainNew({
   const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
-  const updateName = useThrottledFn(e => newAppStore.update({ name: e.target.value }), {
+  const updateName = useThrottledFn(name => newAppStore.update({ name }), {
     amount: 100,
   })
 
@@ -38,7 +38,7 @@ export function AppsMainNew({
           placeholder={app.name}
           margin={['auto', 0]}
           defaultValue={newAppStore.app.name}
-          onChange={updateName}
+          onChange={useCallback(e => updateName(e.target.value), [])}
         />
       </FormField>
       {(customizeColor || customizeIcon) && (
@@ -76,12 +76,14 @@ function IconPicker(props: IconPickerProps) {
   return (
     <Row space pad="sm" scrollable="x" hideScrollbars flex={1}>
       {allIcons.slice(20, 100).map(icon => {
+        console.log('icon, icon', icon)
         return (
           <IconShape
             key={icon.iconName}
             active={props.active === icon.iconName}
             onClick={setupOnClick(icon)}
             name={icon.iconName}
+            // gradient={['#555', '#555']}
             size={32}
           />
         )

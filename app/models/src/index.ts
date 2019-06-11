@@ -13,6 +13,7 @@ export * from './interfaces/JobType'
 export * from './interfaces/Location'
 export * from './interfaces/SpaceInterface'
 export * from './interfaces/User'
+export * from './interfaces/State'
 export * from './models'
 
 export * from './AppDefinition'

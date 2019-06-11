@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
-import { AppProps, AppViewProps, createStoreContext, ensure, useReaction, useStore, useUserState } from '@o/kit'
-import { ImmutableUpdateFn, Loading, Slider, SliderPane } from '@o/ui'
+import { AppViewProps, createStoreContext, ensure, useHooks, useReaction, useStore, useUserState } from '@o/kit'
+import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
 import React, { forwardRef, FunctionComponent, Suspense, useEffect, useMemo } from 'react'
@@ -22,22 +22,24 @@ type BaseProps = {
   defaultItem?: StackItem
   onNavigate?: (next: StackItem) => any
   items: {
-    [key: string]: FunctionComponent<AppProps & NavigatorProps>
+    [key: string]: FunctionComponent<NavigatorProps & { [key: string]: any }>
   }
 }
 
-export type StackNavigatorProps =
-  | BaseProps & {
-      stateId: string
-    }
+type StackNavProps = BaseProps & {
+  id: string
+}
+
+export type StackNavViewProps =
+  | StackNavProps
   | BaseProps & {
       useNavigator?: StackNavigatorStore
     }
 
-export const StackNavigator = forwardRef<StackNavigatorStore, StackNavigatorProps>((props, ref) => {
+export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>((props, ref) => {
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
   const stackNavInternal = useCreateStackNavigator(
-    !stackNavParent && { id: 'stateId' in props ? props.stateId : 'default' },
+    'useNavigator' in props ? false : { id: props['id'] || 'default', ...props },
   )
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal
@@ -105,17 +107,21 @@ type StackNavState = {
   stack: StackNavStateItem[]
 }
 
-type StackNavUseProps = {
-  state: StackNavState
-  setState: ImmutableUpdateFn<StackNavState>
-}
-
 export class StackNavigatorStore {
-  props: StackNavUseProps
+  props: StackNavProps
   next = null
 
+  private hooks = useHooks({
+    state: () =>
+      useUserState<StackNavState>(`sn-${this.props.id}`, {
+        stack: [],
+      }),
+  })
+
+  private setState = this.hooks.state[1]
+
   get stack() {
-    return this.props.state.stack || []
+    return this.hooks.state[0].stack || []
   }
 
   get currentItem() {
@@ -125,13 +131,14 @@ export class StackNavigatorStore {
   navigate(item: StackItem, forcePush = false) {
     const props = filterSimpleValues(item.props)
     // dont update stack if already on same item, unless explicitly asking
-    this.props.setState(next => {
+    this.setState(next => {
+      console.log('next', JSON.stringify(next))
       if (!next || !next.stack) {
         return
       }
       if (next.stack.length) {
         const prev = last(next.stack)
-        if (item.id === prev.id && isEqual(props, prev.props)) {
+        if (prev && item.id === prev.id && isEqual(props, prev.props)) {
           if (forcePush === false) {
             return
           }
@@ -148,7 +155,7 @@ export class StackNavigatorStore {
   }
 
   back() {
-    this.props.setState(next => {
+    this.setState(next => {
       next.stack = removeLast(next.stack)
     })
   }
@@ -158,15 +165,5 @@ const filterSimpleValues = obj =>
   pickBy(obj, val => typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean')
 
 const StackNavContext = createStoreContext(StackNavigatorStore)
-
-export const useCreateStackNavigator = (props: { id: string }) => {
-  const [state, setState] = useUserState<StackNavState>(`StackNavigator-${props.id}`, {
-    stack: [],
-  })
-  return StackNavContext.useCreateStore({
-    state,
-    setState,
-  })
-}
-
+export const useCreateStackNavigator = StackNavContext.useCreateStore
 export const useStackNavigator = StackNavContext.useStore

@@ -47,7 +47,7 @@ async function getWorkspaceAppDefinitions(
       } catch (err) {
         return {
           type: 'error' as const,
-          message: `Error importing app, has it been built? ${err.message}`,
+          message: `Error importing app, has it been built? ${err.message}\n${err.stack}`,
         }
       }
     })

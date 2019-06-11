@@ -1,6 +1,6 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
 import { useTheme } from 'gloss'
-import React, { forwardRef, memo, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, memo, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
@@ -10,6 +10,7 @@ export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
   active?: boolean
   shape?: 'circle' | 'squircle'
   gradient?: string[]
+  cutout?: boolean
 }
 
 const diameter = 28
@@ -21,84 +22,108 @@ const shapes = {
 }
 
 export const IconShape = memo(
-  forwardRef(({ shape = 'squircle', gradient, size = 28, ...props }: IconShapeProps, ref: any) => {
-    let iconPath = ''
-    const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
-    const gradientId = `gradient-${id}`
+  forwardRef(
+    (
+      { shape = 'squircle', gradient, size = 28, cutout, background, ...props }: IconShapeProps,
+      ref: any,
+    ) => {
+      let iconPath = ''
+      const id = useRef(`icon-${Math.round(Math.random() * 100000)}`).current
+      const gradientId = `gradient-${id}`
 
-    if (props.name) {
-      const name = findName(props.name)
-      if (IconSvgPaths20[name]) {
-        iconPath = IconSvgPaths20[name].join(' ')
+      if (props.name) {
+        const name = findName(props.name)
+        if (IconSvgPaths20[name]) {
+          iconPath = (IconSvgPaths20[name] || IconSvgPaths20.dot).join(' ')
+        }
       }
-    }
 
-    const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
+      const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
 
-    useEffect(() => {
-      if (!iconPath) return
-      const draw = SVG(id).size(diameter, diameter)
-      const icon = draw.path(iconPath)
-      const out = icon
-        // TODO if its not a perfect square we need to adjust here
-        .size(16, 16)
-        .move(6, 6)
-        .array()
-        .toString()
+      if (props.name && !iconPath) {
+        console.log('no icon path', props.name, iconPath)
+      }
 
-      setSVGPath(`${shapes[shape]} ${out}`)
-    }, [id, iconPath])
+      useLayoutEffect(() => {
+        if (!iconPath) return
+        const draw = SVG(id).size(diameter, diameter)
+        const icon = draw.path(iconPath)
+        const out = icon
+          // TODO if its not a perfect square we need to adjust here
+          .size(16, 16)
+          .move(6, 6)
+          .array()
+          .toString()
 
-    const scale = size / 28
-    const theme = useTheme()
+        setSVGPath(`${shapes[shape]} ${out}`)
+      }, [id, iconPath])
 
-    return (
-      <View ref={ref} width={size} height={size} position="relative" {...props}>
-        <div style={{ display: 'none' }} id={id} />
-        {props.active && (
-          <View
-            position="absolute"
-            top={1}
-            right={1}
-            bottom={1}
-            left={1}
-            zIndex={0}
-            borderRadius={size / 3.2}
-            boxShadow={[[0, 0, 0, 3, theme.alternates.selected['background']]]}
-          />
-        )}
-        <svg
-          width={28}
-          height={28}
-          style={{
-            transformOrigin: 'top left',
-            transform: `scale(${scale})`,
-            overflow: 'visible',
-            position: 'relative',
-            zIndex: 1,
-          }}
-        >
-          {!!gradient && (
-            <defs>
-              <linearGradient id={gradientId} gradientTransform="rotate(90)">
-                {gradient.map((color, index) => (
-                  <stop
-                    key={`${color}${index}`}
-                    offset={`${index / (gradient.length - 1)}`}
-                    stopColor={`${color}`}
-                  />
-                ))}
-              </linearGradient>
-            </defs>
-          )}
-          <g>
-            <path
-              d={`${svgPath}`}
-              fill={!!gradient ? `url(#${gradientId})` : `${props.color || '#999'}`}
+      const scale = size / 28
+      const theme = useTheme({
+        ignoreAlternate: true,
+      })
+
+      let color = !!gradient
+        ? `url(#${gradientId})`
+        : `${(theme.iconFillColor || theme.color).toString()}`
+
+      return (
+        <View ref={ref} width={size} height={size} position="relative" {...props}>
+          <div style={{ display: 'none' }} id={id} />
+          {props.active && (
+            <View
+              position="absolute"
+              top={1}
+              right={1}
+              bottom={1}
+              left={1}
+              zIndex={0}
+              borderRadius={size / 3.2}
+              boxShadow={[[0, 0, 0, 3, theme.alternates.selected['background']]]}
             />
-          </g>
-        </svg>
-      </View>
-    )
-  }),
+          )}
+          {!cutout && (
+            <View
+              position="absolute"
+              top={1}
+              right={1}
+              bottom={1}
+              left={1}
+              zIndex={0}
+              borderRadius={size / 3.2}
+              background={theme.background}
+            />
+          )}
+          <svg
+            width={28}
+            height={28}
+            style={{
+              transformOrigin: 'top left',
+              transform: `scale(${scale})`,
+              overflow: 'visible',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            {!!gradient && (
+              <defs>
+                <linearGradient id={gradientId} gradientTransform="rotate(90)">
+                  {gradient.map((color, index) => (
+                    <stop
+                      key={`${color}${index}`}
+                      offset={`${index / (gradient.length - 1)}`}
+                      stopColor={`${color}`}
+                    />
+                  ))}
+                </linearGradient>
+              </defs>
+            )}
+            <g>
+              <path d={`${svgPath}`} fill={color} />
+            </g>
+          </svg>
+        </View>
+      )
+    },
+  ),
 )

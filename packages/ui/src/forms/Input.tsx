@@ -159,7 +159,7 @@ const SimpleInput = gloss(
         alignItems="center"
         flexDirection="row"
         themeSelect="input"
-        pointerEvents={visible ? 'auto' : 'none'}
+        pointerEvents={visible ? 'inherit' : 'none'}
         sizeFont={0.9}
         sizePadding
         sizeHeight

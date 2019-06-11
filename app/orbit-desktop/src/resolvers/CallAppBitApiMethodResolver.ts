@@ -12,7 +12,7 @@ export const createCallAppBitApiMethodResolver = (appsManager: OrbitAppsManager)
     CallAppBitApiMethodCommand,
     async ({ appId, appIdentifier, method, args }) => {
       const app = await getRepository(AppEntity).findOneOrFail(appId)
-      const api = appsManager.appDefinitions[appIdentifier].api(app)
+      const api = appsManager.nodeAppDefinitions[appIdentifier].api(app)
       if (!api) throw new Error(`API for app "${appId}" is invalid`)
       if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
 

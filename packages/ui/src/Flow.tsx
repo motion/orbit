@@ -1,21 +1,15 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, {
-  Children,
-  FunctionComponent,
-  isValidElement,
-  memo,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
+import { Center } from './Center'
 import { Config } from './helpers/configureUI'
+import { ScopedState } from './helpers/ScopedState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
 import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
-import { Center } from './Center'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
 
@@ -46,6 +40,7 @@ type StepProps = {
 
 export type FlowStepProps = FlowSectionProps & {
   title?: string
+  buttonTitle?: string
   subTitle?: string
   children?: React.ReactNode | ((props: StepProps) => any)
   validateFinished?: (a: any) => true | any
@@ -80,12 +75,12 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
 }
 
 export const DefaultFlowLayout = (props: FlowLayoutProps) => {
-  const { Toolbar, children, index, total, step, steps, height } = props
+  const { Toolbar, children, index, step, steps, height } = props
   return (
     <Section
       bordered
       title={step.title}
-      subTitle={step.subTitle || `${index + 1}/${total}`}
+      subTitle={step.subTitle}
       minHeight={300}
       height={height}
       flex={1}
@@ -96,11 +91,11 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
           borderWidth={0}
           glint={false}
           borderBottom={[3, 'transparent']}
-          color={theme => theme.background}
           borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
           sizeRadius={0}
           sizeHeight={1.2}
           sizePadding={1.5}
+          opacity={(_, props) => (props.active ? 1 : 0.2)}
         >
           <Row>
             {steps.map((stp, stepIndex) => (
@@ -110,7 +105,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
                 active={steps[index].key === stp.key}
                 onClick={() => props.setStepIndex(stepIndex)}
               >
-                {stp.title || 'No title'}
+                {stp.buttonTitle || stp.title || 'No title'}
               </Button>
             ))}
           </Row>
@@ -127,13 +122,13 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
   Step: FunctionComponent<FlowStepProps>
 }
 
-class FlowStore {
+export class FlowStore {
   props: FlowDataProps
-  total = 0
+  steps: FlowStepProps[] = []
 
   private hooks = useHooks({
-    data: () => Config.useUserState('flow-data', this.props.initialData),
-    index: () => Config.useUserState('flow-index', 0),
+    data: () => Config.useUserState('flowdata', (this.props && this.props.initialData) || null),
+    index: () => Config.useUserState('flowindex', 0),
   })
 
   get data() {
@@ -144,15 +139,42 @@ class FlowStore {
     return this.hooks.index[0]
   }
 
+  get total() {
+    return this.steps.length
+  }
+
+  get step() {
+    return this.steps[this.index]
+  }
+
   setData = this.hooks.data[1]
   setStepIndex = this.hooks.index[1]
 
-  next = () => this.setStepIndex(Math.min(this.total - 1, this.index + 1))
-  prev = () => this.setStepIndex(Math.max(0, this.index - 1))
+  next = async () => {
+    const nextIndex = Math.min(this.total - 1, this.index + 1)
+    const { step } = this
+    const nextStep = this.steps[nextIndex]
+    if (!nextStep) return
+    const isValid = !step.validateFinished || (await step.validateFinished(this.data))
+    if (isValid) {
+      this.setStepIndex(nextIndex)
+    }
+  }
+
+  prev = () => {
+    this.setStepIndex(Math.max(0, this.index - 1))
+  }
+
+  setStepsInternal(steps: FlowStepProps[]) {
+    this.steps = steps
+  }
 }
 
 const FlowStoreContext = createStoreContext(FlowStore)
-export const useFlow = FlowStoreContext.useCreateStore
+
+export const useCreateFlow = FlowStoreContext.useCreateStore
+export const useFlow = FlowStoreContext.useStore
+export const FlowProvide = FlowStoreContext.SimpleProvider
 
 export const Flow: FlowComponent<FlowProps> = memo(
   ({
@@ -164,21 +186,24 @@ export const Flow: FlowComponent<FlowProps> = memo(
   }: FlowProps) => {
     const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
     const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
-    // make it  merge by default
-    const total = Children.count(props.children)
-    const children = Children.toArray(props.children)
+    const stepChildren = Children.toArray(props.children).filter(
+      x => x && x.type && x.type === FlowStep,
+    )
+
     const steps: FlowStep[] = useMemo(
       () =>
-        children.map((child, idx) => ({
+        stepChildren.map((child, idx) => ({
           key: `${idx}`,
           ...child.props,
         })),
       [props.children],
     )
 
+    const total = stepChildren.length
+
     useLayoutEffect(() => {
-      flowStore.total = total
-    }, [total])
+      flowStore.setStepsInternal(steps)
+    }, [flowStore, steps])
 
     const stepProps = {
       data: flowStore.data,
@@ -190,11 +215,15 @@ export const Flow: FlowComponent<FlowProps> = memo(
 
     const contents = (
       <Slider fixHeightToParent curFrame={flowStore.index}>
-        {children.map((child, idx) => {
+        {stepChildren.map((child, idx) => {
           const ChildView = child.props.children
           return (
             <SliderPane key={idx}>
-              {isValidElement(ChildView) ? ChildView : <ChildView {...stepProps} />}
+              {typeof ChildView === 'string' || isValidElement(ChildView) ? (
+                ChildView
+              ) : (
+                <ChildView {...stepProps} />
+              )}
             </SliderPane>
           )
         })}
@@ -210,18 +239,20 @@ export const Flow: FlowComponent<FlowProps> = memo(
     }
 
     return (
-      <Layout
-        Toolbar={Toolbar}
-        total={total}
-        height={height}
-        afterTitle={afterTitle}
-        step={steps[flowStore.index]}
-        steps={steps}
-        index={flowStore.index}
-        {...stepProps}
-      >
-        {contents}
-      </Layout>
+      <FlowStoreContext.SimpleProvider value={flowStore}>
+        <Layout
+          Toolbar={Toolbar}
+          total={total}
+          height={height}
+          afterTitle={afterTitle}
+          step={steps[flowStore.index]}
+          steps={steps}
+          index={flowStore.index}
+          {...stepProps}
+        >
+          <ScopedState id="flow">{contents}</ScopedState>
+        </Layout>
+      </FlowStoreContext.SimpleProvider>
     )
   },
 ) as any

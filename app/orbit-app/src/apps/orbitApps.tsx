@@ -1,4 +1,12 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, decorate, react, useAppDefinitions } from '@o/kit'
+import {
+  __SERIOUSLY_SECRET,
+  AppDefinition,
+  configureKit,
+  createApp,
+  decorate,
+  react,
+  useAppDefinitions,
+} from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { createElement } from 'react'
@@ -6,17 +14,15 @@ import { createElement } from 'react'
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
-import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
+import HomeApp from './HomeApp'
 
 export function startAppLoadWatch() {
-  console.log('Watching for updated apps...')
-
   @decorate
   class WatchAppIdentifiers {
     watcher = react(
@@ -50,8 +56,8 @@ export const orbitStaticApps: AppDefinition[] = [
   OnboardApp,
   SetupAppApp,
   MessageApp,
-  HomeApp,
   LoadingApp,
+  HomeApp,
 ]
 
 const requireDynamicApps = () => {

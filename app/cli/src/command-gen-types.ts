@@ -32,7 +32,7 @@ export async function commandGenTypes(options: CommandGenTypesOptions) {
   const defaultExportSymbol = exprts.find(x => x.escapedName === 'default')
 
   if (!defaultExportSymbol) {
-    reporter.info('No default export symbol, no api found')
+    reporter.info('gen-types no default export symbol found, not exporting node api types.')
     return
   }
 

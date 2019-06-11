@@ -1,3 +1,4 @@
+import { getIdentifierFromPackageId, identifierToPackageId, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -5,8 +6,8 @@ import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { getWorkspaceAppDefs } from '../helpers/getWorkspaceAppDefs'
 import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
+import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 
 const log = new Logger('OrbitAppsManager')
 
@@ -30,12 +31,14 @@ export class OrbitAppsManager {
   spaceFolders: { [id: number]: string } = {}
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
-  appDefinitions: { [identifier: string]: AppDefinition } = {}
-  packageIdToIdentifier = {}
+  nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+
+  // for easier debugging
+  identifierToPackageId = identifierToPackageId
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
-      .observe({ select: appSelectAllButDataAndTimestamps })
+      .observe({})
       .subscribe(next => {
         this.apps = next as any
       })
@@ -69,32 +72,34 @@ export class OrbitAppsManager {
     ([space]) => {
       ensure('space', !!space)
       this.updateAppDefinitions(space)
+      // have cli update its cache of packageId => identifier for use installing
+      updateWorkspacePackageIds(space.directory)
     },
   )
 
   updateAppDefinitions = async (space: Space) => {
-    log.info(`Updaing app definitions for space ${space.id}`)
-    const { definitions, packageIdToIdentifier } = await getWorkspaceAppDefs(space)
-    // await ensureAppBitsForAppDefinitions(Object.keys(definitions).map(x => definitions[x]))
-    this.packageIdToIdentifier = {
-      ...this.packageIdToIdentifier,
-      ...packageIdToIdentifier,
-    }
-    this.appDefinitions = {
-      ...this.appDefinitions,
+    const definitions = await getWorkspaceNodeApis(space)
+    log.info(`Got definitions for ${Object.keys(definitions)}`)
+    this.nodeAppDefinitions = {
+      ...this.nodeAppDefinitions,
       ...definitions,
     }
   }
 
   updateAppMeta = react(
-    () => this.appDefinitions,
+    () => this.nodeAppDefinitions,
     async appDefs => {
       ensure('appDefs', !!appDefs)
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
-        const identifier = this.packageIdToIdentifier[meta.packageId]
-        this.appMeta[identifier] = meta
+        const identifier = getIdentifierFromPackageId(meta.packageId)
+        console.log('setting apps meta2', meta.packageId, identifier, meta)
+        if (identifier !== null) {
+          this.appMeta[identifier] = meta
+        } else {
+          console.log('no identifier found')
+        }
       }
     },
   )

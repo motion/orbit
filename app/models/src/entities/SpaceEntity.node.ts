@@ -18,6 +18,9 @@ export class SpaceEntity extends BaseEntity implements Space {
   @Column()
   directory?: string
 
+  @Column({ default: false })
+  onboarded?: boolean
+
   @Column({ type: 'simple-json' })
   colors?: string[]
 

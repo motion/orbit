@@ -5,7 +5,7 @@ import { useDebounceValue } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
 import { Col, ColProps } from './View/Col'
-import { useVisibility } from './Visibility'
+import { useVisibility, Visibility } from './Visibility'
 
 type SliderPaneProps = ColProps &
   Partial<SliderProps> & {
@@ -36,8 +36,6 @@ export const SliderPane = memo(
     const shouldHide = useDebounceValue(!isActive, 300)
     const display = 'inherit' || (shouldHide && !isActive ? 'none' : 'inherit')
 
-    // console.log('shouldHide', isActive, shouldHide, display)
-
     useLayoutEffect(() => {
       if (onMountChange) {
         onMountChange(true)
@@ -59,17 +57,19 @@ export const SliderPane = memo(
     })
 
     return (
-      <SliderPaneChrome
-        width={width}
-        height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
-        ref={ref}
-        padding={[verticalPad, framePad, verticalPad]}
-        isActive={isActive}
-        display={display}
-        {...props}
-      >
-        {children}
-      </SliderPaneChrome>
+      <Visibility visible={isActive}>
+        <SliderPaneChrome
+          width={width}
+          height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
+          ref={ref}
+          padding={[verticalPad, framePad, verticalPad]}
+          isActive={isActive}
+          display={display}
+          {...props}
+        >
+          {children}
+        </SliderPaneChrome>
+      </Visibility>
     )
   },
 )

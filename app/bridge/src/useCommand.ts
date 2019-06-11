@@ -34,16 +34,27 @@ export function useCommand<Args, ReturnType>(
     }
   }, [])
 
-  if (cache[key] && isDefined(cache[key].value)) {
-    return cache[key].value
-  }
-
   if (command === false) {
     return null
   }
 
+  if (cache[key]) {
+    if (isDefined(cache[key].value)) {
+      return cache[key].value
+    }
+    throw cache[key].read
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.debug('useCommand', command, args)
+  }
+
   cache[key] = {
     read: Mediator.command(command, args).then(res => {
+      if (typeof res === 'undefined') {
+        console.warn('this command returned undefined, will cause infinite loop, setting to null')
+        res = null
+      }
       cache[key].value = res
     }),
     value: undefined,

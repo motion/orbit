@@ -28,6 +28,9 @@ export class AppStore {
   }
 
   get showSidebar() {
+    if (!this.hooks.stores) {
+      return false
+    }
     return this.hooks.stores.themeStore.showSidebar
   }
 

@@ -3,7 +3,6 @@ import { ApiSearchItem } from '@o/models'
 import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
 import React from 'react'
 
-import { useOm } from '../../om/om'
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
 import { useUserAppDefinitions } from '../orbitApps'
@@ -75,16 +74,22 @@ export function useSearchAppStoreApps(filterFn: FilterSearchItems = _ => _) {
   return [results, search] as const
 }
 
-export function useTopAppStoreApps(filterFn: FilterSearchItems = _ => _): ListItemProps[] {
+export function useTopAppStoreApps(
+  filterFn: FilterSearchItems = _ => _,
+  fallback: ListItemProps = {
+    selectable: false,
+    children: <SubTitle>Loading app store</SubTitle>,
+  },
+): ListItemProps[] {
   const topApps = useAsync<ApiSearchItem[]>(() =>
     fetch(`https://tryorbit.com/api/apps`).then(res => res.json()),
   )
-  return !topApps.value
-    ? []
-    : filterFn(topApps.value).map(x => ({
-        ...appSearchToListItem(x),
-        groupName: 'Trending (App Store)',
-      }))
+  const filtered = filterFn(topApps.value || [])
+  const withFallback = filtered.length ? filtered.map(appSearchToListItem) : [fallback]
+  return withFallback.map(x => ({
+    ...x,
+    groupName: 'Trending (App Store)',
+  }))
 }
 
 export function AppsIndex() {
@@ -107,6 +112,7 @@ export function AppsIndex() {
 
   return (
     <List
+      className="hello-world"
       title="Manage Apps"
       subTitle="Use search to find new apps."
       onQueryChange={search}
@@ -171,10 +177,6 @@ export function AppsMain(props: AppViewProps) {
     return <ManageApps />
   }
 
-  if (!app) {
-    return <>hi</>
-  }
-
   if (props.subType === 'add-app') {
     return <AppsMainAddApp identifier={props.subId} />
   }
@@ -184,7 +186,6 @@ export function AppsMain(props: AppViewProps) {
 
 function AppSettings(props: { appId: number }) {
   const [app, definition] = useAppWithDefinition(props.appId)
-  const { state, actions } = useOm()
 
   return (
     <Section

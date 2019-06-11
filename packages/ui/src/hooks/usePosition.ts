@@ -4,6 +4,7 @@ import { useVisibility } from '../Visibility'
 import { useDebounce } from './useDebounce'
 import { useGet } from './useGet'
 import { useIntersectionObserver } from './useIntersectionObserver'
+import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
 export type Rect = {
@@ -69,12 +70,12 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     }
   }, [])
 
-  // useMutationObserver({
-  //   disable,
-  //   ref,
-  //   options: { attributes: true },
-  //   onChange: measure,
-  // })
+  useMutationObserver({
+    disable,
+    ref,
+    options: { attributes: true, childList: true },
+    onChange: measure,
+  })
 
   useIntersectionObserver({
     disable,

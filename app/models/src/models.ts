@@ -1,10 +1,12 @@
 import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
+
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
 import { Space } from './interfaces/SpaceInterface'
+import { State } from './interfaces/State'
 import { User } from './interfaces/User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
@@ -16,6 +18,8 @@ export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<
 export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<AppBit>>('App')
 
 export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
+
+export const StateModel = new Model<State, FindOptions<State>, FindOptionsWhere<State>>('State')
 
 export const SearchPinnedResultModel = new Model<Bit, { query: string }>('SearchPinnedResultModel')
 

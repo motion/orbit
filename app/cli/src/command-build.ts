@@ -1,7 +1,6 @@
 import { getAppConfig, makeWebpackConfig, webpackPromise } from '@o/build-server'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
-import webpack from 'webpack'
 
 import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
@@ -12,9 +11,30 @@ export type CommandBuildOptions = {
   watch?: boolean
   force?: boolean
   verbose?: boolean
+  // we can do more careful building for better errors
+  debugBuild?: boolean
+}
+
+export const isOrbitApp = async (rootDir: string) => {
+  try {
+    const pkg = await readJSON(join(rootDir, 'package.json'))
+    return pkg.config && pkg.config.orbitApp === true
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
+  return false
 }
 
 export async function commandBuild(options: CommandBuildOptions) {
+  reporter.info(`Running build in ${options.projectRoot}`)
+
+  if (!(await isOrbitApp(options.projectRoot))) {
+    reporter.panic(
+      `\nNot inside an orbit app, add "config": { "orbitApp": true } } to the package.json`,
+    )
+    return
+  }
+
   try {
     const pkg = await readJSON(join(options.projectRoot, 'package.json'))
     if (!pkg) {
@@ -51,6 +71,11 @@ type BuildInfo = {
   orbitVersion: string
   buildId: number
   identifier: string
+  name: string
+  api: boolean
+  app: boolean
+  graph: boolean
+  workers: boolean
 }
 
 function getOrbitVersion() {
@@ -59,28 +84,50 @@ function getOrbitVersion() {
 
 async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
   reporter.info(`Running orbit build`)
-  const entryConf = await getEntryAppConfig(entry, pkg, options)
-  const nodeConf = await getNodeAppConfig(entry, pkg, options)
-  const webConf = getWebAppConfig(entry, pkg, options)
-  const configs: webpack.Configuration[] = [entryConf, nodeConf, webConf].filter(Boolean)
 
-  reporter.info(`Building ${configs.length} bundles, running...`)
-
-  await webpackPromise(configs, {
+  // build appInfo first, we can then use it to determine if we need to build web/node
+  reporter.info(`Building appInfo`)
+  const appInfoConf = await getAppInfoConfig(entry, pkg, options)
+  await webpackPromise([appInfoConf], {
     loud: options.verbose,
   })
+
+  reporter.info(`Reading appInfo`)
+  const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+  reporter.info(`apiInfo: ${Object.keys(appInfo).join(',')}`)
+
+  const hasKey = (...keys: string[]) => Object.keys(appInfo).some(x => keys.some(key => x === key))
+
+  if (hasKey('app')) {
+    reporter.info(`Found web app, building`)
+    const webConf = getWebAppConfig(entry, pkg, options)
+    await webpackPromise([webConf], {
+      loud: options.verbose,
+    })
+  }
+
+  if (hasKey('graph', 'workers', 'api')) {
+    reporter.info(`Found node app, building`)
+    const nodeConf = await getNodeAppConfig(entry, pkg, options)
+    await webpackPromise([nodeConf], {
+      loud: options.verbose,
+    })
+  }
 
   const buildId = Date.now()
 
   reporter.info(`Writing out app build information`)
 
-  const app = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
-
   await setBuildInfo(options.projectRoot, {
-    identifier: app.id,
+    identifier: appInfo.id,
+    name: appInfo.name,
     buildId,
     appVersion: pkg.version,
     orbitVersion: getOrbitVersion(),
+    api: hasKey('api'),
+    app: hasKey('app'),
+    graph: hasKey('graph'),
+    workers: hasKey('workers'),
   })
 
   const appBuildInfo = configStore.appBuildInfo.get() || {}
@@ -101,39 +148,48 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
     outputFile: 'index.js',
     watch: options.watch,
     mode: 'production',
+    minify: false,
   })
 }
 
 async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
-  // for now just check harcoded file
-  const nodeEntry = join(options.projectRoot, 'src', 'api.node.ts')
-  if (!(await pathExists(nodeEntry))) {
-    console.log(`No node api found at: ${nodeEntry}`)
-    return
-  }
-  // TODO
-  // seems like this is still picking up imports from index.ts,
-  // ignore loader should still remove all things besides direct .node.ts imports
-  return getAppConfig({
-    name: pkg.name,
-    context: options.projectRoot,
-    entry: [entry],
-    target: 'node',
-    outputFile: 'index.node.js',
-    watch: options.watch,
-  })
+  return getAppConfig(
+    {
+      name: pkg.name,
+      context: options.projectRoot,
+      entry: [entry],
+      target: 'node',
+      outputFile: 'index.node.js',
+      watch: options.watch,
+      mode: 'development',
+    },
+    {
+      externals: [
+        // externalize everything but local files
+        function(_context, request, callback) {
+          const isLocal = request[0] === '.' || request === entry
+          if (!isLocal) {
+            return callback(null, 'commonjs ' + request)
+          }
+          // @ts-ignore
+          callback()
+        },
+      ],
+    },
+  )
 }
 
 // used just to get the information like id/name from the entry file
-async function getEntryAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+async function getAppInfoConfig(entry: string, pkg: any, options: CommandBuildOptions) {
   return await makeWebpackConfig(
     {
       name: pkg.name,
       context: options.projectRoot,
       entry: [entry],
       target: 'node',
-      mode: 'production',
+      mode: 'development',
       minify: false,
+      noChunking: true,
       outputFile: 'appInfo.js',
       watch: options.watch,
       output: {

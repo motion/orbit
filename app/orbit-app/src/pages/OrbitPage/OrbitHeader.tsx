@@ -23,6 +23,7 @@ export const headerButtonProps: SizedSurfaceProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
+  transition: 'all ease 200ms',
   tooltipProps: {
     distance: 18,
   },
@@ -57,18 +58,17 @@ export const OrbitHeader = memo(() => {
             <HeaderSide space="sm" spaceAround>
               <BackButton />
               <OrbitHeaderMenu />
+              {!isEditing && (
+                <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+                  <OrbitNavPopover target={<HomeButton id="home-button" />}>
+                    <OrbitNav />
+                  </OrbitNavPopover>
+                </View>
+              )}
             </HeaderSide>
           </HeaderButtonPassProps>
 
           <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
-            {!isEditing && (
-              <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-                <OrbitNavPopover target={<HomeButton id="home-button" />}>
-                  <OrbitNav />
-                </OrbitNavPopover>
-              </View>
-            )}
-
             <OrbitHeaderInput />
 
             {isOnTearablePane && (
@@ -184,17 +184,17 @@ const HomeButton = memo(
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
-    const color = invertLightness(theme.color, 0.5)
     return (
       <View ref={ref} {...props}>
         <AppIcon
+          cutout
+          background={invertLightness(theme.color, 0.5)}
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
           opacity={0.65}
           hoverStyle={{
             opacity: 1,
           }}
-          colors={[color, color]}
           identifier={state.navHovered || state.navVisible ? 'home' : icon}
           size={28}
           onMouseUp={e => {
@@ -278,7 +278,7 @@ const OrbitNavHiddenBarInner = gloss(Box, {
   background: theme.backgroundStrongest.alpha(0.5),
 }))
 
-const HeaderSide = gloss<RowProps & { rightSide?: boolean }>(Row, {
+const HeaderSide = gloss(Row, {
   flexFlow: 'row',
   flex: 1,
   width: '18%',

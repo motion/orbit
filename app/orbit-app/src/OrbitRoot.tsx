@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { themes } from '@o/kit'
 import { OpenCommand } from '@o/models'
-import { ContextMenuProvider, ErrorBoundary, ProvideUI } from '@o/ui'
+import { ContextMenuProvider, ErrorBoundary, Loading, ProvideUI } from '@o/ui'
 import { Provider } from 'overmind-react'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { hot } from 'react-hot-loader/root'
@@ -49,7 +49,7 @@ export const OrbitRoot = hot(() => {
       >
         <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
           <ErrorBoundary name="Root">
-            <React.Suspense fallback={null}>
+            <React.Suspense fallback={<Loading />}>
               <OrbitPage />
             </React.Suspense>
           </ErrorBoundary>

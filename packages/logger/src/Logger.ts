@@ -25,8 +25,16 @@ let log = {
 //   }
 // }
 
-// electron doesnt have console.debug...
-const debug = (...args) => (console.debug ? console.debug(...args) : console.info(...args))
+// for now just log because its not being output anywhere
+const debug = (...args) => {
+  if (typeof window !== 'undefined') {
+    console.debug(...args)
+  } else {
+    console.log(...args)
+  }
+  // electron doesnt have console.debug...
+  // (console.debug ? console.debug(...args) : console.info(...args))
+}
 
 type LoggerOpts = {
   trace?: boolean
@@ -272,7 +280,8 @@ export class Logger {
   }
 }
 
-const isNode = typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
+const isNode =
+  typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
 const colored = (ns: string, style: string) => {
   return isNode === false ? [`%c${ns}`, style] : [ns]
 }

@@ -34,7 +34,7 @@ export function isDefined(...args: any) {
  * Simple way to do something async, or timeout.
  */
 export const OR_TIMED_OUT = Symbol('OR_TIMED_OUT')
-export function orTimeout<T>(promise: Promise<T>, timeout): Promise<T> {
+export function orTimeout<T>(promise: Promise<T>, timeout: number): Promise<T> {
   let waitForTimeout = new Promise<any>((_, reject) => {
     setTimeout(() => {
       reject(OR_TIMED_OUT)

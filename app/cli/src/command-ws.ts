@@ -1,4 +1,10 @@
-import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
+import {
+  BuildServer,
+  getAppConfig,
+  makeWebpackConfig,
+  WebpackParams,
+  webpackPromise,
+} from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -24,11 +30,11 @@ export const isOrbitWs = async (rootDir: string) => {
 }
 
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info('Running orbit ws')
+  reporter.info(`Running orbit ws in ${options.workspaceRoot}`)
 
   if (!(await isOrbitWs(options.workspaceRoot))) {
-    console.log(
-      `\nNot inside orbit workspace, must have "config": { "orbitWorkspace": true } } in package.json`,
+    reporter.panic(
+      `\nNot inside orbit workspace, add "config": { "orbitWorkspace": true } } to the package.json`,
     )
     return
   }

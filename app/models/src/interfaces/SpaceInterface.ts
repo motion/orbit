@@ -29,4 +29,9 @@ export interface Space {
    * Local path on filesystem.
    */
   directory?: string
+
+  /**
+   * Whether to show onboarding.
+   */
+  onboarded?: boolean
 }

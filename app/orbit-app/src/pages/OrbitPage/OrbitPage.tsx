@@ -5,7 +5,7 @@ import { App } from '@o/stores'
 import { ListPassProps, Loading, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
@@ -35,10 +35,7 @@ export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
   return (
     <ProvideStores stores={Stores}>
-      <AppWrapper
-        className={`theme-${themeStore.themeColor} app-parent-bounds`}
-        color={themeStore.theme.color}
-      >
+      <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
         <OrbitPageInner />
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />

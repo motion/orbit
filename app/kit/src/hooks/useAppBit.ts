@@ -7,19 +7,16 @@ export function useAppBit(
   appId?: number | false,
   extraConditions?,
 ): [AppBit, ImmutableUpdateFn<AppBit>] {
-  const { appStore } = useStoresSimple()
-  if (!appStore) {
-    console.warn('no app store?')
-    return [null, null]
-  }
+  const currentAppId = useCurrentAppId()
+  const currentAppIdentifier = useCurrentAppIdentifier()
   let conditions = extraConditions || null
 
-  if (appId || +appStore.id === +appStore.id) {
+  if (appId) {
     // use id for non-static apps
-    conditions = { where: { id: appId || +appStore.id } }
+    conditions = { where: { id: appId || currentAppId } }
   } else {
     // use identifier for static apps (theres only one)
-    conditions = { where: { identifier: appStore.identifier } }
+    conditions = { where: { identifier: currentAppIdentifier } }
   }
   const [app, update] = useModel(AppModel, conditions)
 
@@ -28,4 +25,14 @@ export function useAppBit(
   }
 
   return [app, update]
+}
+
+export function useCurrentAppId() {
+  const { appStore } = useStoresSimple()
+  return +appStore.id
+}
+
+export function useCurrentAppIdentifier() {
+  const { appStore } = useStoresSimple()
+  return appStore.identifier
 }

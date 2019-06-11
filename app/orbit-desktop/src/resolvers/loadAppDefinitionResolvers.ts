@@ -33,6 +33,7 @@ function resolveInstallAppToWorkspace() {
   return resolveCommand(InstallAppToWorkspaceCommand, async ({ identifier }) => {
     const directory = await getWorkspaceDirectory()
     const res = await commandInstall({ identifier, directory })
+    log.info(`Got response from install command ${JSON.stringify(res)}`)
     if (res.type === 'error') {
       return res
     }

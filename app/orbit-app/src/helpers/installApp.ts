@@ -37,6 +37,9 @@ export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit>
     return res
   }
   const res = await command(InstallAppToWorkspaceCommand, { identifier: def.id })
+
+  console.log('got response from install app command', res)
+
   if (res.type === 'error') {
     return res
   }
@@ -64,6 +67,8 @@ export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit>
         message: `Error saving AppBit ${err.message} ${err.stack}`,
       }
     }
+  } else {
+    console.log('no new app bit, not adding app to workspace just did install')
   }
 
   return {

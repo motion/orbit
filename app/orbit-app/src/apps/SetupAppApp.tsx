@@ -1,5 +1,5 @@
 import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -138,35 +138,39 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   return (
     <FlowProvide value={flow}>
       <Col width="70%" height="70%" margin="auto">
-        <Flow
-          useFlow={flow}
-          afterTitle={
-            !props.isEmbedded && <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>
-          }
-        >
-          <Flow.Step title="Pick app" subTitle="Choose type of app.">
-            <List
-              searchable
-              onQueryChange={search}
-              selectable
-              alwaysSelected
-              onSelect={rows => {
-                if (rows[0]) {
-                  console.log('setting data', rows[0].identifier)
-                  flow.setData({ selectedAppIdentifier: rows[0].identifier })
-                }
-              }}
-              itemProps={{
-                iconBefore: true,
-              }}
-              items={[...installedApps, ...searchedApps, ...topApps]}
-            />
-          </Flow.Step>
+        <SectionPassProps elevation={10}>
+          <Flow
+            useFlow={flow}
+            afterTitle={
+              !props.isEmbedded && (
+                <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>
+              )
+            }
+          >
+            <Flow.Step title="Pick app" subTitle="Choose type of app.">
+              <List
+                searchable
+                onQueryChange={search}
+                selectable
+                alwaysSelected
+                onSelect={rows => {
+                  if (rows[0]) {
+                    console.log('setting data', rows[0].identifier)
+                    flow.setData({ selectedAppIdentifier: rows[0].identifier })
+                  }
+                }}
+                itemProps={{
+                  iconBefore: true,
+                }}
+                items={[...installedApps, ...searchedApps, ...topApps]}
+              />
+            </Flow.Step>
 
-          <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
-            {FlowStepSetup}
-          </Flow.Step>
-        </Flow>
+            <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
+              {FlowStepSetup}
+            </Flow.Step>
+          </Flow>
+        </SectionPassProps>
       </Col>
 
       <SetupAppHomeToolbar {...props} />

@@ -58,18 +58,17 @@ export const OrbitHeader = memo(() => {
             <HeaderSide space="sm" spaceAround>
               <BackButton />
               <OrbitHeaderMenu />
+              {!isEditing && (
+                <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+                  <OrbitNavPopover target={<HomeButton id="home-button" />}>
+                    <OrbitNav />
+                  </OrbitNavPopover>
+                </View>
+              )}
             </HeaderSide>
           </HeaderButtonPassProps>
 
           <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
-            {!isEditing && (
-              <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-                <OrbitNavPopover target={<HomeButton id="home-button" />}>
-                  <OrbitNav />
-                </OrbitNavPopover>
-              </View>
-            )}
-
             <OrbitHeaderInput />
 
             {isOnTearablePane && (

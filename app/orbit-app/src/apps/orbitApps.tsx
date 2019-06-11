@@ -1,4 +1,12 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, decorate, react, useAppDefinitions } from '@o/kit'
+import {
+  __SERIOUSLY_SECRET,
+  AppDefinition,
+  configureKit,
+  createApp,
+  decorate,
+  react,
+  useAppDefinitions,
+} from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { createElement } from 'react'
@@ -12,6 +20,7 @@ import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
+import HomeApp from './HomeApp'
 
 export function startAppLoadWatch() {
   @decorate
@@ -48,6 +57,7 @@ export const orbitStaticApps: AppDefinition[] = [
   SetupAppApp,
   MessageApp,
   LoadingApp,
+  HomeApp,
 ]
 
 const requireDynamicApps = () => {

@@ -55,7 +55,9 @@ export function OnboardApp() {
               {OnboardStepProxy}
             </Flow.Step>
             <Flow.Step title="Workspace">{OnboardSetupWorkspace}</Flow.Step>
-            <Flow.Step validateFinished={onboardStore.finishOnboard}>final setp</Flow.Step>
+            <Flow.Step title="Tutorial" validateFinished={onboardStore.finishOnboard}>
+              final setp
+            </Flow.Step>
           </Flow>
         </Col>
         <OnboardToolbar />
@@ -91,7 +93,7 @@ const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {.
 function OnboardStepProxy() {
   const onboardStore = Onboard.useStore()
   return (
-    <Centered space pad scrollable="y" flex={1}>
+    <Centered space="lg" pad="xxl" scrollable="y" flex={1}>
       <Text size="xxl">Welcome to Orbit</Text>
       <IntroPara alpha={0.5}>Orbit is your team knowledge manager.</IntroPara>
       <IntroPara>

@@ -1,14 +1,10 @@
-import { createApp, useActiveDataAppsWithDefinition, useActiveSpace } from '@o/kit'
-import { Button, Col, Icon, List, Paragraph, Section, Slider, SliderPane, Space, SubTitle, Text, Theme, Title, View } from '@o/ui'
-import { useStore } from '@o/use-store'
-import { gloss } from 'gloss'
+import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
+import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
+import { Button, Card, Col, Flow, FlowProvide, gloss, Paragraph, Scale, Text, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
 import React from 'react'
 
-import { installApp } from '../helpers/installApp'
+import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
-import { BottomControls } from '../views/BottomControls'
-import { appDefToListItem, useDataAppDefinitions } from './apps/AppsApp'
-import { OnboardApp } from './OnboardApp2'
 import { SpaceEdit } from './spaces/SpaceEdit'
 
 export default createApp({
@@ -18,138 +14,118 @@ export default createApp({
   app: OnboardApp,
 })
 
-const buttonText = ['Start Local Proxy', 'Next', 'Done!']
+class OnboardStore {
+  async checkProxy() {
+    return await command(CheckProxyCommand)
+  }
 
-export function OnboardMain() {
-  const store = useStore(OnboardStore)
-  const dataDefs = useDataAppDefinitions()
-  const active = useActiveDataAppsWithDefinition()
-  const isInstalled = (id: string) => active.some(x => x.definition.id === id)
-  const [space] = useActiveSpace()
+  async validateProxy() {
+    return await command(SetupProxyCommand)
+  }
+
+  async finishOnboard(space: Space) {
+    om.actions.router.showHomePage()
+    await save(SpaceModel, {
+      ...space,
+      onboarded: true,
+    })
+  }
+}
+
+const Onboard = createStoreContext(OnboardStore)
+
+export function OnboardApp() {
+  const flow = useCreateFlow()
+  const onboardStore = Onboard.useCreateStore()
+
+  useOnMount(async () => {
+    if (flow.index === 0) {
+      const valid = await onboardStore.checkProxy()
+      valid && flow.next()
+    }
+  })
 
   return (
-    <>
-      <BlurryGuys />
-      <Slider curFrame={store.curFrame} framePad={30} verticalPad={50}>
-        <SliderPane>
-          {store.accepted === null && (
-            <Centered space>
-              <Text size={2.8} fontWeight={500}>
-                Hello.
-              </Text>
-              <View height={10} />
-              <Text size={1.75} alpha={0.5}>
-                Welcome to Orbit
-              </Text>
-              <View height={30} />
-              <Text selectable textAlign="left" size={1.2} sizeLineHeight={1.025} alpha={0.9}>
-                Orbit is your team knowledge manager.
-                <Space />
-                It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b>{' '}
-                within your company without exposing any of your team data to us. To do so it runs
-                privately each persons computer.
-                <Space />
-                Orbit will set up a local proxy now to enable private sync and the access quick URLs
-                you can access in your browser.
-              </Text>
-            </Centered>
-          )}
-          {store.accepted === false && (
-            <Centered space>
-              <Title>Error setting up proxy</Title>
-              <SubTitle>
-                Orbit had a problem setting up a proxy on your machine. Feel free to get in touch
-                with us if you are having issues:
-              </SubTitle>
-              <Paragraph>
-                <strong>
-                  <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
-                </strong>
-              </Paragraph>
-              <Paragraph>
-                <strong>Error message:</strong>
-                {store.acceptedMessage}
-              </Paragraph>
-            </Centered>
-          )}
-          {store.accepted === true && (
-            <Centered>
-              <Text size={2.2} fontWeight={600}>
-                Success!
-              </Text>
-              <Space />
-              <Text size={1.5} alpha={0.5}>
-                Lets set you up...
-              </Text>
-            </Centered>
-          )}
-        </SliderPane>
-        <SliderPane>
-          <Section title="Setup workspace" titleBorder titlePad pad>
-            <SpaceEdit id={space.id} />
-          </Section>
-        </SliderPane>
-        <SliderPane space>
-          <Title>Add a few data apps</Title>
-          <List
-            itemProps={{
-              iconBefore: true,
-              iconSize: 36,
-            }}
-            items={dataDefs.map(appDefToListItem)}
-            getItemProps={(_, i) => ({
-              onClick: () => installApp(dataDefs[i]),
-              after: (
-                <AddButton size={0.9} disabled={isInstalled(dataDefs[i].id)}>
-                  {isInstalled(dataDefs[i].id) ? (
-                    <Icon size={16} name="tick" color="green" />
-                  ) : (
-                    'Add'
-                  )}
-                </AddButton>
-              ),
-            })}
-          />
-        </SliderPane>
-        <SliderPane>
-          <Centered>
-            <Text size={2.5} fontWeight={600}>
-              All set!
-            </Text>
-            <Space />
-            <Text size={1.5} alpha={0.5}>
-              Toggle Orbit with the shortcut:
-            </Text>
-            <Space />
-            <Space />
-            <Text size={2.2}>Option + Space</Text>
-            <Space />
-            <Space />
-            <Text size={1.5} alpha={0.5}>
-              Orbit has many keyboard controls, try using your arrow keys from the home screen!
-            </Text>
-          </Centered>
-        </SliderPane>
-      </Slider>
-      <BottomControls disabled={store.disableButtons}>
-        <View width={10} flex={1} />
-        {store.curFrame > 1 && (
-          <Button chromeless onClick={store.prevFrame}>
-            Back
-          </Button>
-        )}
-        <Button
-          alt="action"
-          disabled={store.pendingMove}
-          opacity={store.pendingMove ? 0.5 : 1}
-          size={1.1}
-          fontWeight={600}
-          onClick={store.nextFrame}
+    <Onboard.SimpleProvider value={onboardStore}>
+      <FlowProvide value={flow}>
+        <BlurryGuys />
+        <Col width="80%" margin="auto" height="90%">
+          <Flow useFlow={flow}>
+            <Flow.Step title="Proxy" validateFinished={onboardStore.validateProxy}>
+              {OnboardStepProxy}
+            </Flow.Step>
+            <Flow.Step title="Workspace">{OnboardSetupWorkspace}</Flow.Step>
+            <Flow.Step validateFinished={onboardStore.finishOnboard}>final setp</Flow.Step>
+          </Flow>
+        </Col>
+        <OnboardToolbar />
+      </FlowProvide>
+    </Onboard.SimpleProvider>
+  )
+}
+
+function OnboardToolbar() {
+  const flow = useFlow()
+
+  const buttons = [<>ok</>]
+
+  return (
+    <Scale size="lg">
+      <Toolbar>
+        {flow.index > 0 && <Button onClick={flow.prev}>Prev</Button>}
+        <View flex={1} />
+        {buttons[flow.index]}
+        {flow.index < flow.steps.length - 1 && <Button onClick={flow.next}>Next</Button>}
+      </Toolbar>
+    </Scale>
+  )
+}
+
+function OnboardSetupWorkspace() {
+  const [space] = useActiveSpace()
+  return <SpaceEdit id={space.id} />
+}
+
+const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {...props} />
+
+function OnboardStepProxy() {
+  return (
+    <Centered space scrollable="y" flex={1}>
+      <Text size={2.8} fontWeight={500}>
+        Hello.
+      </Text>
+      <Text size={1.75} alpha={0.5}>
+        Welcome to Orbit
+      </Text>
+      <IntroPara>Orbit is your team knowledge manager.</IntroPara>
+      It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
+      company without exposing any of your team data to us. To do so it runs privately each persons
+      computer.
+      <IntroPara>
+        Orbit will set up a local proxy now to enable private sync and the access quick URLs you can
+        access in your browser.
+      </IntroPara>
+      {false === false && (
+        <Card
+          title="Error setting up proxy"
+          subTitle="Orbit had a problem setting up a proxy on your machine."
+          pad
+          margin="auto"
+          afterTitle={<Button icon="refresh" />}
+          width={400}
+          height={160}
+          textAlign="left"
         >
-          {buttonText[store.curFrame]}
-        </Button>
-      </BottomControls>
-    </>
+          <Paragraph>
+            To submit the error log to us,{' '}
+            <Button size="sm" display="inline-flex">
+              open this file
+            </Button>{' '}
+            and send it to: <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
+          </Paragraph>
+        </Card>
+      )}
+    </Centered>
   )
 }
 
@@ -159,12 +135,3 @@ const Centered = gloss(Col, {
   justifyContent: 'center',
   textAlign: 'center',
 })
-
-const AddButton = ({ disabled, ...props }) =>
-  disabled ? (
-    <Button chromeless disabled {...props} />
-  ) : (
-    <Theme theme={{ background: 'green', color: '#fff' }}>
-      <Button fontWeight={700} {...props} />
-    </Theme>
-  )

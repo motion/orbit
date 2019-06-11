@@ -24,7 +24,7 @@ export function useAppState<A>(id: string | false, defaultState?: A): ScopedAppS
 
   // scopes state down
   return [
-    selectDefined(state && state.data, defaultState),
+    selectDefined(state && state.data.data, defaultState),
     useImmutableUpdateFn(state && state.data, update, 'data'),
   ]
 }

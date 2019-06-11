@@ -30,7 +30,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
 
   // scope it to .data
   return [
-    selectDefined(state && state.data, defaultState),
+    selectDefined(state && state.data.data, defaultState),
     useImmutableUpdateFn(state && state.data, update, 'data'),
   ]
 }

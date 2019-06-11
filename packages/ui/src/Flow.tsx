@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
 import { Center } from './Center'
@@ -123,9 +123,10 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 export class FlowStore {
   props: FlowDataProps
   total = 0
+  private steps: FlowStepProps[] = []
 
   private hooks = useHooks({
-    data: () => Config.useUserState('Flow-data', this.props.initialData),
+    data: () => Config.useUserState('Flow-data', (this.props && this.props.initialData) || null),
     index: () => Config.useUserState('Flow-index', 0),
   })
 
@@ -140,8 +141,21 @@ export class FlowStore {
   setData = this.hooks.data[1]
   setStepIndex = this.hooks.index[1]
 
-  next = () => this.setStepIndex(Math.min(this.total - 1, this.index + 1))
-  prev = () => this.setStepIndex(Math.max(0, this.index - 1))
+  next = () => {
+    const nextIndex = Math.min(this.total - 1, this.index + 1)
+    const nextStep = this.steps[nextIndex]
+    if (nextStep && nextStep.validateFinished(this.data)) {
+      this.setStepIndex(nextIndex)
+    }
+  }
+
+  prev = () => {
+    this.setStepIndex(Math.max(0, this.index - 1))
+  }
+
+  setStepsInternal(steps: FlowStepProps[]) {
+    this.steps = steps
+  }
 }
 
 const FlowStoreContext = createStoreContext(FlowStore)
@@ -170,6 +184,10 @@ export const Flow: FlowComponent<FlowProps> = memo(
         })),
       [props.children],
     )
+
+    useEffect(() => {
+      flowStore.setStepsInternal(steps)
+    }, [flowStore, steps])
 
     useLayoutEffect(() => {
       flowStore.total = total

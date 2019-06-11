@@ -12,13 +12,14 @@ import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
 import { appDefToListItem, useDataAppDefinitions } from './apps/AppsApp'
+import { OnboardApp } from './OnboardApp2'
 import { SpaceEdit } from './spaces/SpaceEdit'
 
 export default createApp({
   id: 'onboard',
   icon: '',
   name: 'Onboard',
-  app: OnboardMain,
+  app: OnboardApp,
 })
 
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']

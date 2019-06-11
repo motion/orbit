@@ -36,8 +36,6 @@ export const SliderPane = memo(
     const shouldHide = useDebounceValue(!isActive, 300)
     const display = 'inherit' || (shouldHide && !isActive ? 'none' : 'inherit')
 
-    // console.log('shouldHide', isActive, shouldHide, display)
-
     useLayoutEffect(() => {
       if (onMountChange) {
         onMountChange(true)
@@ -58,10 +56,6 @@ export const SliderPane = memo(
       },
     })
 
-    if (isActive) {
-      console.log('i am active')
-    }
-
     return (
       <Visibility visible={isActive}>
         <SliderPaneChrome
@@ -71,7 +65,6 @@ export const SliderPane = memo(
           padding={[verticalPad, framePad, verticalPad]}
           isActive={isActive}
           display={display}
-          debug
           {...props}
         >
           {children}

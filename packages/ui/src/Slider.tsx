@@ -58,8 +58,6 @@ export const Slider = memo((props: SliderProps) => {
     setNumMounted(React.Children.count(getProps().children))
   }, [])
 
-  console.log('numMounted', numMounted, curFrame)
-
   useParentNodeSize({
     ref: frameRef,
     disable: !visible,

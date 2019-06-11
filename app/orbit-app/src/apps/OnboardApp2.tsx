@@ -1,6 +1,6 @@
 import { command, save } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Col, Flow, gloss, Paragraph, Space, SubTitle, Text, Title, useCreateFlow, useOnMount } from '@o/ui'
+import { Button, Col, Flow, gloss, Paragraph, SubTitle, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount } from '@o/ui'
 import React from 'react'
 
 import { om } from '../om/om'
@@ -50,12 +50,25 @@ export function OnboardApp() {
           <Flow.Step validateFinished={finishOnboard}>final setp</Flow.Step>
         </Flow>
       </Col>
+      <OnboardToolbar />
     </>
   )
 }
 
+function OnboardToolbar() {
+  const flow = useFlow()
+
+  const buttons = [
+    <>
+      <Button>hi</Button>
+    </>,
+  ]
+
+  return <Toolbar size="lg">{buttons[flow.index]}</Toolbar>
+}
+
 const IntroPara = props => (
-  <Paragraph textAlign="left" alpha={0.9} size={1.2} sizeLineHeight={1.025} />
+  <Paragraph textAlign="left" alpha={0.9} size={1.2} sizeLineHeight={1.025} {...props} />
 )
 
 function OnboardStepProxy() {

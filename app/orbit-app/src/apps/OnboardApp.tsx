@@ -1,14 +1,10 @@
-import { command, loadOne, save } from '@o/bridge'
 import { createApp, useActiveDataAppsWithDefinition, useActiveSpace } from '@o/kit'
-import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Col, Icon, List, Paragraph, Section, Slider, SliderPane, Space, SubTitle, Text, Theme, Title, View } from '@o/ui'
-import { react, useStore } from '@o/use-store'
-import { sleep } from '@o/utils'
+import { useStore } from '@o/use-store'
 import { gloss } from 'gloss'
 import React from 'react'
 
 import { installApp } from '../helpers/installApp'
-import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../views/BottomControls'
 import { appDefToListItem, useDataAppDefinitions } from './apps/AppsApp'
@@ -23,69 +19,6 @@ export default createApp({
 })
 
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
-
-class OnboardStore {
-  acceptedMessage = ''
-  accepted = null
-  curFrame = 0
-  pendingMove = false
-
-  mount = react(
-    () => 1,
-    async () => {
-      this.accepted = await command(CheckProxyCommand)
-      if (this.accepted && this.curFrame === 0) {
-        this.nextFrame()
-      }
-    },
-  )
-
-  get disableButtons() {
-    const isShowingSuccessMessage = this.accepted && this.curFrame === 0
-    return isShowingSuccessMessage
-  }
-
-  stateActions = {
-    0: async () => {
-      if (this.accepted !== true) {
-        try {
-          this.accepted = await command(SetupProxyCommand)
-        } catch (err) {
-          this.acceptedMessage = err
-        }
-        if (this.accepted) {
-          // show message for a sec
-          this.acceptedMessage = 'Successfully setup proxy'
-          await sleep(1500)
-        }
-      }
-    },
-    1: () => {},
-    2: async () => {
-      om.actions.router.showHomePage()
-      // save setting
-      const user = await loadOne(UserModel, {})
-      save(UserModel, {
-        ...user,
-        settings: {
-          ...user.settings,
-          hasOnboarded: true,
-        },
-      })
-    },
-  }
-
-  prevFrame = () => {
-    this.curFrame--
-  }
-
-  nextFrame = async () => {
-    this.pendingMove = true
-    await this.stateActions[this.curFrame]()
-    this.curFrame++
-    this.pendingMove = false
-  }
-}
 
 export function OnboardMain() {
   const store = useStore(OnboardStore)

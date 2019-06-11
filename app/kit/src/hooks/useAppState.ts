@@ -1,9 +1,9 @@
 import { ImmutableUpdateFn, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
+import { useScopedStateId } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import { useCallback } from 'react'
 
-import { useScopedStateId } from '../views/ScopedState'
 import { useEnsureDefaultState } from './useUserState'
 
 export type ScopedAppState<A> = [A, ImmutableUpdateFn<A>]

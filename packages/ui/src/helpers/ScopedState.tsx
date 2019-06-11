@@ -1,5 +1,11 @@
-import { createContextualProps } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
+
+import { createContextualProps } from './createContextualProps'
+
+/**
+ * Useful for having a scoped id that nests as it goes downwards
+ * See useUserState/useAppState for good examples using it
+ */
 
 type ScopedStateProps = {
   id: string
@@ -14,12 +20,11 @@ export const useScopedStateId = () => {
   return (val && val.id) || ''
 }
 
-// nests downwards...
-export const ScopedState = (props: ScopedStateProps & { children?: any }) => {
+export const ScopedState = memo((props: ScopedStateProps & { children?: any }) => {
   const existing = Context.useProps()
   return (
     <Context.PassProps id={`${existing ? existing.id : ''}${props.id}`}>
       {props.children}
     </Context.PassProps>
   )
-}
+})

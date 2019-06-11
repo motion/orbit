@@ -1,17 +1,10 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, {
-  Children,
-  FunctionComponent,
-  isValidElement,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useEffect, useLayoutEffect, useMemo } from 'react'
 
 import { Button } from './buttons/Button'
 import { Center } from './Center'
 import { Config } from './helpers/configureUI'
+import { ScopedState } from './helpers/ScopedState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
@@ -47,6 +40,7 @@ type StepProps = {
 
 export type FlowStepProps = FlowSectionProps & {
   title?: string
+  buttonTitle?: string
   subTitle?: string
   children?: React.ReactNode | ((props: StepProps) => any)
   validateFinished?: (a: any) => true | any
@@ -111,7 +105,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
                 active={steps[index].key === stp.key}
                 onClick={() => props.setStepIndex(stepIndex)}
               >
-                {stp.title || 'No title'}
+                {stp.buttonTitle || stp.title || 'No title'}
               </Button>
             ))}
           </Row>
@@ -256,7 +250,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
           index={flowStore.index}
           {...stepProps}
         >
-          {contents}
+          <ScopedState id="flow">{contents}</ScopedState>
         </Layout>
       </FlowStoreContext.SimpleProvider>
     )

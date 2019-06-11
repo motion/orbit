@@ -1,8 +1,8 @@
 import { loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
+import { useScopedStateId } from '@o/ui'
 import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
 
-import { useScopedStateId } from '../views/ScopedState'
 import { ScopedAppState, useImmutableUpdateFn, wrapDataObject } from './useAppState'
 
 // for storage of UI state that is per-user and not per-workspace

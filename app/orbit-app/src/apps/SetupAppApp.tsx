@@ -1,5 +1,5 @@
-import { AppIcon, createApp, getAppDefinition, useLocationLink, useStore } from '@o/kit'
-import { Button, Col, Flow, FlowStore, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
+import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -109,7 +109,9 @@ function SetupAppCustom() {
   )
 }
 
-function SetupAppHome() {
+type SetupAppHomeProps = { isEmbedded?: boolean }
+
+export function SetupAppHome(props: SetupAppHomeProps) {
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
     title: app.name,
     identifier: app.id,
@@ -135,11 +137,13 @@ function SetupAppHome() {
   })
 
   return (
-    <>
+    <FlowProvide value={flow}>
       <Col width="70%" height="70%" margin="auto">
         <Flow
           useFlow={flow}
-          afterTitle={<Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>}
+          afterTitle={
+            !props.isEmbedded && <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>
+          }
         >
           <Flow.Step title="Pick app" subTitle="Choose type of app.">
             <List
@@ -166,29 +170,31 @@ function SetupAppHome() {
         </Flow>
       </Col>
 
-      <SetupAppHomeToolbar flow={flow} />
-    </>
+      <SetupAppHomeToolbar {...props} />
+    </FlowProvide>
   )
 }
 
-const SetupAppHomeToolbar = memo((props: { flow: FlowStore }) => {
-  const flow = useStore(props.flow)
+const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
+  const flow = useFlow()
   const stackNav = useStackNavigator()
   return (
     <Scale size="lg">
       <Toolbar>
-        <Button
-          alt="action"
-          onClick={() => {
-            stackNav.navigate({
-              id: 'SetupAppCustom',
-            })
-          }}
-          icon="plus"
-          tooltip="Create new custom app"
-        >
-          Create Custom App
-        </Button>
+        {!props.isEmbedded && (
+          <Button
+            alt="action"
+            onClick={() => {
+              stackNav.navigate({
+                id: 'SetupAppCustom',
+              })
+            }}
+            icon="plus"
+            tooltip="Create new custom app"
+          >
+            Create Custom App
+          </Button>
+        )}
         <View flex={1} />
         {flow.data.selected && (
           <View>
@@ -211,7 +217,7 @@ const SetupAppHomeToolbar = memo((props: { flow: FlowStore }) => {
             }}
             icon="chevron-right"
           >
-            Finish
+            Add
           </Button>
         )}
       </Toolbar>

@@ -1,27 +1,12 @@
-import { command, createApp, createStoreContext, save, useActiveSpace, themes } from '@o/kit'
+import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import {
-  Button,
-  Card,
-  Col,
-  Flow,
-  FlowProvide,
-  gloss,
-  Paragraph,
-  Scale,
-  Text,
-  Toolbar,
-  useCreateFlow,
-  useFlow,
-  useOnMount,
-  View,
-  Title,
-  Icon,
-} from '@o/ui'
+import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
 import React from 'react'
 
+import { getActiveSpace } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
+import { SetupAppHome } from './SetupAppApp'
 import { SpaceEdit } from './spaces/SpaceEdit'
 
 export default createApp({
@@ -33,6 +18,10 @@ export default createApp({
 
 class OnboardStore {
   proxyStatus: 'waiting' | 'valid' | 'error' = 'waiting'
+  space: Partial<Space> = {
+    name: '',
+    colors: ['red', 'orange'],
+  }
 
   async checkProxy() {
     const next = await command(CheckProxyCommand)
@@ -46,10 +35,12 @@ class OnboardStore {
     return next
   }
 
-  async finishOnboard(space: Space) {
+  async finishOnboard() {
     om.actions.router.showHomePage()
+    const activeSpace = await getActiveSpace()
     await save(SpaceModel, {
-      ...space,
+      ...activeSpace,
+      ...this.space,
       onboarded: true,
     })
   }
@@ -74,12 +65,22 @@ export function OnboardApp() {
         <BlurryGuys />
         <Col width="80%" maxWidth={600} margin="auto" height="80%">
           <Flow useFlow={flow}>
-            <Flow.Step title="Welcome" validateFinished={onboardStore.setupProxy}>
+            <Flow.Step
+              title="Welcome to Orbit"
+              buttonTitle="Welcome"
+              validateFinished={onboardStore.setupProxy}
+            >
               {OnboardStepProxy}
             </Flow.Step>
-            <Flow.Step title="Workspace">{OnboardSetupWorkspace}</Flow.Step>
-            <Flow.Step title="Tutorial" validateFinished={onboardStore.finishOnboard}>
-              final setp
+            <Flow.Step title="Customize Workspace" buttonTitle="Workspace">
+              {OnboardSetupWorkspace}
+            </Flow.Step>
+            <Flow.Step
+              title="Add your first app"
+              buttonTitle="Add app"
+              validateFinished={onboardStore.finishOnboard}
+            >
+              <SetupAppHome isEmbedded />
             </Flow.Step>
           </Flow>
         </Col>
@@ -91,6 +92,7 @@ export function OnboardApp() {
 
 function OnboardToolbar() {
   const flow = useFlow()
+  const onboardStore = Onboard.useStore()
 
   const buttons = [<>ok</>]
 
@@ -101,6 +103,9 @@ function OnboardToolbar() {
         <View flex={1} />
         {buttons[flow.index]}
         {flow.index < flow.total - 1 && <Button onClick={flow.next}>Next</Button>}
+        {flow.index === flow.total - 1 && (
+          <Button onClick={onboardStore.finishOnboard}>Go Home</Button>
+        )}
       </Toolbar>
     </Scale>
   )

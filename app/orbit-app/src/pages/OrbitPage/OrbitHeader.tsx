@@ -1,19 +1,7 @@
 import { invertLightness } from '@o/color'
 import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  RowProps,
-  SizedSurfaceProps,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
@@ -35,6 +23,7 @@ export const headerButtonProps: SizedSurfaceProps = {
   margin: [-1, 2],
   opacity: 0.75,
   hoverStyle: { opacity: 1, background: theme => theme.backgroundStronger },
+  transition: 'all ease 200ms',
   tooltipProps: {
     distance: 18,
   },

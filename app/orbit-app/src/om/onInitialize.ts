@@ -1,4 +1,4 @@
-import { OnInitialize } from 'overmind'
+import { Config, IContext, OnInitialize } from 'overmind'
 
 import { startAppLoadWatch } from '../apps/orbitApps'
 import { urls } from './router'
@@ -25,8 +25,16 @@ export const onInitialize: OnInitialize = async om => {
 
   effects.router.start()
 
+  goToInitialApp(om)
+}
+
+function goToInitialApp(om: IContext<Config>) {
   if (!om.state.spaces.activeSpace.onboarded) {
     console.log(`hasn't onboarded, showing pane`)
     om.actions.router.showAppPage({ id: 'onboard' })
+    return
+  }
+  if (window.location.pathname === '/') {
+    om.actions.router.showHomePage()
   }
 }

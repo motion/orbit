@@ -12,7 +12,7 @@ export const OrbitDock = memo(() => {
     <Dock transition="all ease 300ms" className="orbit-dock">
       <OrbitDockShare />
       <OrbitDockSearch />
-      <OrbitDockMenu />
+      {!isOnStaticApp && <OrbitDockMenu />}
     </Dock>
   )
 })

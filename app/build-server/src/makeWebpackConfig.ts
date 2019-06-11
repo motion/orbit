@@ -24,6 +24,7 @@ export type WebpackParams = {
   devServer?: boolean
   hot?: boolean
   minify?: boolean
+  noChunking?: boolean
 }
 
 export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
@@ -44,6 +45,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     devServer,
     hot,
     name,
+    noChunking,
   } = params
 
   const entryDir = __dirname
@@ -70,7 +72,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
         chunks: 'async',
         name: false,
       },
-      ...(target === 'node' && {
+      ...((target === 'node' || noChunking) && {
         splitChunks: false,
       }),
     },

@@ -189,6 +189,7 @@ async function getAppInfoConfig(entry: string, pkg: any, options: CommandBuildOp
       target: 'node',
       mode: 'development',
       minify: false,
+      noChunking: true,
       outputFile: 'appInfo.js',
       watch: options.watch,
       output: {

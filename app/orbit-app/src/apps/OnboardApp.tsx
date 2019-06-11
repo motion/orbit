@@ -140,7 +140,11 @@ function OnboardStepProxy() {
         subTitle={status.subTitle}
         pad
         margin="auto"
-        afterTitle={<Button onClick={onboardStore.setupProxy} icon="refresh" />}
+        afterTitle={
+          onboardStore.proxyStatus !== 'valid' && (
+            <Button onClick={onboardStore.setupProxy} icon="refresh" />
+          )
+        }
         width={400}
         height={160}
         textAlign="left"

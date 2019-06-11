@@ -101,6 +101,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
           sizeRadius={0}
           sizeHeight={1.2}
           sizePadding={1.5}
+          opacity={(_, props) => (props.active ? 1 : 0.2)}
         >
           <Row>
             {steps.map((stp, stepIndex) => (
@@ -129,12 +130,11 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 
 export class FlowStore {
   props: FlowDataProps
-  total = 0
   steps: FlowStepProps[] = []
 
   private hooks = useHooks({
-    data: () => Config.useUserState('Flow-data', (this.props && this.props.initialData) || null),
-    index: () => Config.useUserState('Flow-index', 0),
+    data: () => Config.useUserState('flowdata', (this.props && this.props.initialData) || null),
+    index: () => Config.useUserState('flowindex', 0),
   })
 
   get data() {
@@ -145,8 +145,12 @@ export class FlowStore {
     return this.hooks.index[0]
   }
 
+  get total() {
+    return this.steps.length
+  }
+
   get step() {
-    return this.index
+    return this.steps[this.index]
   }
 
   setData = this.hooks.data[1]
@@ -154,8 +158,11 @@ export class FlowStore {
 
   next = async () => {
     const nextIndex = Math.min(this.total - 1, this.index + 1)
+    const { step } = this
     const nextStep = this.steps[nextIndex]
-    if (nextStep && (!nextStep.validateFinished || (await nextStep.validateFinished(this.data)))) {
+    if (!nextStep) return
+    const isValid = !step.validateFinished || (await step.validateFinished(this.data))
+    if (isValid) {
       this.setStepIndex(nextIndex)
     }
   }
@@ -185,11 +192,10 @@ export const Flow: FlowComponent<FlowProps> = memo(
   }: FlowProps) => {
     const flowStoreInternal = FlowStoreContext.useCreateStore('useFlow' in props ? false : props)
     const flowStore = useStore('useFlow' in props ? props.useFlow : flowStoreInternal)
-    // make it  merge by default
-    const total = Children.count(props.children)
     const stepChildren = Children.toArray(props.children).filter(
       x => x && x.type && x.type === FlowStep,
     )
+
     const steps: FlowStep[] = useMemo(
       () =>
         stepChildren.map((child, idx) => ({
@@ -199,13 +205,11 @@ export const Flow: FlowComponent<FlowProps> = memo(
       [props.children],
     )
 
-    useEffect(() => {
-      flowStore.setStepsInternal(steps)
-    }, [flowStore, steps])
+    const total = stepChildren.length
 
     useLayoutEffect(() => {
-      flowStore.total = total
-    }, [total])
+      flowStore.setStepsInternal(steps)
+    }, [flowStore, steps])
 
     const stepProps = {
       data: flowStore.data,

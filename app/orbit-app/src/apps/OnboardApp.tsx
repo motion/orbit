@@ -100,7 +100,7 @@ function OnboardToolbar() {
         {flow.index > 0 && <Button onClick={flow.prev}>Prev</Button>}
         <View flex={1} />
         {buttons[flow.index]}
-        {flow.index < flow.steps.length - 1 && <Button onClick={flow.next}>Next</Button>}
+        {flow.index < flow.total - 1 && <Button onClick={flow.next}>Next</Button>}
       </Toolbar>
     </Scale>
   )

@@ -3,7 +3,7 @@ import { StateModel } from '@o/models'
 import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
 
 import { useScopedStateId } from '../views/ScopedState'
-import { ScopedAppState, useImmutableUpdateFn } from './useAppState'
+import { ScopedAppState, useImmutableUpdateFn, wrapDataObject } from './useAppState'
 
 // for storage of UI state that is per-user and not per-workspace
 // if you want to store data that is shared between everyone, use useScopedAppState
@@ -31,7 +31,7 @@ export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A
   // scope it to .data
   return [
     selectDefined(state && state.data.data, defaultState),
-    useImmutableUpdateFn(state && state.data, update, 'data'),
+    useImmutableUpdateFn(update, 'data', wrapDataObject),
   ]
 }
 

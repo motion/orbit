@@ -1,129 +1,124 @@
-import { command, save } from '@o/kit'
+import { command, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Col, Flow, gloss, Paragraph, Scale, SubTitle, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
+import { Button, Card, Col, Flow, FlowProvide, gloss, Paragraph, Scale, Text, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
 import React from 'react'
 
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
+import { SpaceEdit } from './spaces/SpaceEdit'
 
-async function checkProxy() {
-  return await command(CheckProxyCommand)
+class OnboardStore {
+  async checkProxy() {
+    return await command(CheckProxyCommand)
+  }
+
+  async validateProxy() {
+    return await command(SetupProxyCommand)
+  }
+
+  async finishOnboard(space: Space) {
+    om.actions.router.showHomePage()
+    await save(SpaceModel, {
+      ...space,
+      onboarded: true,
+    })
+  }
 }
 
-async function validateProxy() {
-  return await command(SetupProxyCommand)
-}
-
-async function finishOnboard(space: Space) {
-  om.actions.router.showHomePage()
-  await save(SpaceModel, {
-    ...space,
-    onboarded: true,
-  })
-}
+const Onboard = createStoreContext(OnboardStore)
 
 export function OnboardApp() {
   const flow = useCreateFlow()
+  const onboardStore = Onboard.useCreateStore()
 
-  useOnMount(() => {
+  useOnMount(async () => {
     if (flow.index === 0) {
-      let tm = setTimeout(() => {
-        checkProxy().then(res => {
-          res && flow.next()
-        })
-      }, 1000)
-      return () => {
-        clearTimeout(tm)
-      }
+      const valid = await onboardStore.checkProxy()
+      valid && flow.next()
     }
   })
 
   return (
-    <>
-      <BlurryGuys />
-      <Col width="80%" margin="auto" height="90%">
-        <Flow useFlow={flow}>
-          <Flow.Step title="Proxy" validateFinished={validateProxy}>
-            {OnboardStepProxy}
-          </Flow.Step>
-          <Flow.Step title="Workspace">{OnboardStepProxy}</Flow.Step>
-          <Flow.Step validateFinished={finishOnboard}>final setp</Flow.Step>
-        </Flow>
-      </Col>
-      <OnboardToolbar flow={flow} />
-    </>
+    <Onboard.SimpleProvider value={onboardStore}>
+      <FlowProvide value={flow}>
+        <BlurryGuys />
+        <Col width="80%" margin="auto" height="90%">
+          <Flow useFlow={flow}>
+            <Flow.Step title="Proxy" validateFinished={onboardStore.validateProxy}>
+              {OnboardStepProxy}
+            </Flow.Step>
+            <Flow.Step title="Workspace">{OnboardSetupWorkspace}</Flow.Step>
+            <Flow.Step validateFinished={onboardStore.finishOnboard}>final setp</Flow.Step>
+          </Flow>
+        </Col>
+        <OnboardToolbar />
+      </FlowProvide>
+    </Onboard.SimpleProvider>
   )
 }
 
-function OnboardToolbar({ flow }) {
-  const buttons = [
-    <>
-      <Button>hi</Button>
-      <View flex={1} />
-      <Button>hi</Button>
-    </>,
-  ]
+function OnboardToolbar() {
+  const flow = useFlow()
+
+  const buttons = [<>ok</>]
 
   return (
     <Scale size="lg">
-      <Toolbar>{buttons[flow.index]}</Toolbar>
+      <Toolbar>
+        {flow.index > 0 && <Button onClick={flow.prev}>Prev</Button>}
+        <View flex={1} />
+        {buttons[flow.index]}
+        {flow.index < flow.steps.length - 1 && <Button onClick={flow.next}>Next</Button>}
+      </Toolbar>
     </Scale>
   )
 }
 
-const IntroPara = props => (
-  <Paragraph textAlign="left" alpha={0.9} size={1.2} sizeLineHeight={1.025} {...props} />
-)
+function OnboardSetupWorkspace() {
+  const [space] = useActiveSpace()
+  return <SpaceEdit id={space.id} />
+}
+
+const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {...props} />
 
 function OnboardStepProxy() {
   return (
-    <>
-      {false === null && (
-        <Centered space>
-          <Text size={2.8} fontWeight={500}>
-            Hello.
-          </Text>
-          <Text size={1.75} alpha={0.5}>
-            Welcome to Orbit
-          </Text>
-          <IntroPara>Orbit is your team knowledge manager.</IntroPara>
-          It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
-          company without exposing any of your team data to us. To do so it runs privately each
-          persons computer.
-          <IntroPara>
-            Orbit will set up a local proxy now to enable private sync and the access quick URLs you
-            can access in your browser.
-          </IntroPara>
-        </Centered>
-      )}
+    <Centered space scrollable="y" flex={1}>
+      <Text size={2.8} fontWeight={500}>
+        Hello.
+      </Text>
+      <Text size={1.75} alpha={0.5}>
+        Welcome to Orbit
+      </Text>
+      <IntroPara>Orbit is your team knowledge manager.</IntroPara>
+      It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
+      company without exposing any of your team data to us. To do so it runs privately each persons
+      computer.
+      <IntroPara>
+        Orbit will set up a local proxy now to enable private sync and the access quick URLs you can
+        access in your browser.
+      </IntroPara>
       {false === false && (
-        <Centered space>
-          <Title>Error setting up proxy</Title>
-          <SubTitle>
-            Orbit had a problem setting up a proxy on your machine. Feel free to get in touch with
-            us if you are having issues:
-          </SubTitle>
-          <IntroPara>
-            <strong>
-              <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
-            </strong>
-          </IntroPara>
-          <IntroPara>
-            <strong>Error message:</strong>
-          </IntroPara>
-        </Centered>
+        <Card
+          title="Error setting up proxy"
+          subTitle="Orbit had a problem setting up a proxy on your machine."
+          pad
+          margin="auto"
+          afterTitle={<Button icon="refresh" />}
+          width={400}
+          height={160}
+          textAlign="left"
+        >
+          <Paragraph>
+            To submit the error log to us,{' '}
+            <Button size="sm" display="inline-flex">
+              open this file
+            </Button>{' '}
+            and send it to: <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
+          </Paragraph>
+        </Card>
       )}
-      {false === true && (
-        <Centered space>
-          <Text size={2.2} fontWeight={600}>
-            Success!
-          </Text>
-          <Text size={1.5} alpha={0.5}>
-            Lets set you up...
-          </Text>
-        </Centered>
-      )}
-    </>
+    </Centered>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useReaction } from '@o/use-store'
-import { selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import React from 'react'
@@ -17,6 +17,7 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
+import { Col } from '../View/Col'
 import { getPadding } from '../View/pad'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
@@ -261,6 +262,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     </>
   )
 
+  const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
+
   return (
     <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
       {above}
@@ -292,84 +295,89 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         {...surfaceProps}
       >
         <ListItemMainContent oneLine={oneLine}>
-          {showTitle && (
-            <ListItemTitleBar alignItems={alignItems}>
-              {showIcon && !iconBefore && (
-                <>
-                  {iconElement}
-                  <Space size={spaceSize} />
-                </>
-              )}
-              <HighlightText
-                autoselect
-                editable={editable}
-                onFinishEdit={onEdit}
-                onCancelEdit={onCancelEdit}
-                onStartEdit={onStartEdit}
-                flex={1}
-                ellipse
-                fontWeight={theme.fontWeight || 400}
-                {...titleProps}
+          <Col flex={1}>
+            {showTitle && (
+              <ListItemTitleBar space={spaceSize} alignItems={alignItems}>
+                {showIcon && !iconBefore && iconElement}
+                <HighlightText
+                  autoselect
+                  editable={editable}
+                  onFinishEdit={onEdit}
+                  onCancelEdit={onCancelEdit}
+                  onStartEdit={onStartEdit}
+                  flex={1}
+                  ellipse
+                  fontWeight={theme.fontWeight || 400}
+                  {...titleProps}
+                >
+                  {title}
+                </HighlightText>
+              </ListItemTitleBar>
+            )}
+            {showSubtitle && (
+              <>
+                <Space size={spaceSize / 2} />
+                <ListItemSubtitle>
+                  {!!location && locationElement}
+                  {!!subTitle &&
+                    (typeof subTitle === 'string' ? (
+                      <HighlightText alpha={subTextOpacity} size={0.9} ellipse {...subTitleProps}>
+                        {subTitle}
+                      </HighlightText>
+                    ) : (
+                      subTitle
+                    ))}
+                  {!subTitle && (
+                    <>
+                      <div style={{ display: 'flex', flex: showPreviewInSubtitle ? 0 : 1 }} />
+                    </>
+                  )}
+                  {!showTitle && (
+                    <>
+                      <Space />
+                      {afterHeaderElement}
+                    </>
+                  )}
+                </ListItemSubtitle>
+              </>
+            )}
+            {!showSubtitle && !showTitle && (
+              <View
+                position="absolute"
+                right={Array.isArray(padding) ? padding[0] : padding}
+                top={Array.isArray(padding) ? padding[1] : padding}
               >
-                {title}
-              </HighlightText>
-              {!!(props.afterTitle || afterHeaderElement) && <Space size={pad} />}
-              {props.afterTitle}
-              {afterHeaderElement}
-            </ListItemTitleBar>
-          )}
-          {showSubtitle && (
-            <>
-              <Space size={spaceSize / 2} />
-              <ListItemSubtitle>
-                {!!location && locationElement}
-                {!!subTitle &&
-                  (typeof subTitle === 'string' ? (
-                    <HighlightText alpha={subTextOpacity} size={0.9} ellipse {...subTitleProps}>
-                      {subTitle}
+                {afterHeaderElement}
+              </View>
+            )}
+            {/* vertical space only if needed */}
+            {showSubtitle && !!(children || showPreview) && (
+              <div style={{ flex: 1, maxHeight: 4 }} />
+            )}
+            {showPreview && (
+              <>
+                {locationElement}
+                <Preview>
+                  {typeof preview !== 'string' && preview}
+                  {typeof preview === 'string' && (
+                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
+                      {preview}
                     </HighlightText>
-                  ) : (
-                    subTitle
-                  ))}
-                {!subTitle && (
-                  <>
-                    <div style={{ display: 'flex', flex: showPreviewInSubtitle ? 0 : 1 }} />
-                  </>
-                )}
-                {!showTitle && (
-                  <>
-                    <Space />
-                    {afterHeaderElement}
-                  </>
-                )}
-              </ListItemSubtitle>
-            </>
-          )}
-          {!showSubtitle && !showTitle && (
-            <View
-              position="absolute"
-              right={Array.isArray(padding) ? padding[0] : padding}
-              top={Array.isArray(padding) ? padding[1] : padding}
-            >
-              {afterHeaderElement}
-            </View>
-          )}
-          {/* vertical space only if needed */}
-          {showSubtitle && !!(children || showPreview) && <div style={{ flex: 1, maxHeight: 4 }} />}
-          {showPreview && (
+                  )}
+                </Preview>
+              </>
+            )}
+            {childrenElement}
+          </Col>
+          {hasAfterTitle && (
             <>
-              {locationElement}
-              <Preview>
-                {typeof preview !== 'string' && preview}
-                {typeof preview === 'string' && (
-                  <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
-                    {preview}
-                  </HighlightText>
-                )}
-              </Preview>
+              <Space size={spaceSize} />
+              <Col space={spaceSize}>
+                {props.afterTitle}
+                {afterHeaderElement}
+              </Col>
             </>
           )}
-          {childrenElement}
         </ListItemMainContent>
         {!!after && (
           <>
@@ -391,12 +399,13 @@ const getListItemPadding = (props: ListItemSimpleProps) => {
   return [padding.paddingTop, padding.paddingRight, padding.paddingBottom, padding.paddingLeft]
 }
 
-const ListItemTitleBar = gloss(View, {
+const ListItemTitleBar = gloss(Row, {
   width: '100%',
   flex: 1,
   flexFlow: 'row',
   justifyContent: 'space-between',
   alignItems: 'flex-start',
+  textAlign: 'left',
 })
 
 const Preview = gloss({
@@ -421,11 +430,7 @@ const AfterHeader = gloss(Box, {
 const ListItemMainContent = gloss<{ oneLine?: boolean }>(Box, {
   flex: 1,
   margin: ['auto', 0],
-  oneLine: {
-    flexFlow: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
+  flexFlow: 'row',
 })
 
 const getIconSize = props =>

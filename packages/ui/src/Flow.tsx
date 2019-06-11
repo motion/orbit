@@ -123,7 +123,7 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 export class FlowStore {
   props: FlowDataProps
   total = 0
-  private steps: FlowStepProps[] = []
+  steps: FlowStepProps[] = []
 
   private hooks = useHooks({
     data: () => Config.useUserState('Flow-data', (this.props && this.props.initialData) || null),
@@ -136,6 +136,10 @@ export class FlowStore {
 
   get index() {
     return this.hooks.index[0]
+  }
+
+  get step() {
+    return this.index
   }
 
   setData = this.hooks.data[1]
@@ -162,6 +166,7 @@ const FlowStoreContext = createStoreContext(FlowStore)
 
 export const useCreateFlow = FlowStoreContext.useCreateStore
 export const useFlow = FlowStoreContext.useStore
+export const FlowProvide = FlowStoreContext.SimpleProvider
 
 export const Flow: FlowComponent<FlowProps> = memo(
   ({

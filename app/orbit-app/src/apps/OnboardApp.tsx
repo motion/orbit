@@ -1,4 +1,4 @@
-import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
+import { command, createApp, createStoreContext, save, useActiveSpace, themes } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
 import {
   Button,
@@ -15,6 +15,8 @@ import {
   useFlow,
   useOnMount,
   View,
+  Title,
+  Icon,
 } from '@o/ui'
 import React from 'react'
 
@@ -30,12 +32,18 @@ export default createApp({
 })
 
 class OnboardStore {
+  proxyStatus: 'waiting' | 'valid' | 'error' = 'waiting'
+
   async checkProxy() {
-    return await command(CheckProxyCommand)
+    const next = await command(CheckProxyCommand)
+    this.proxyStatus = next ? 'valid' : 'error'
+    return next
   }
 
   async setupProxy() {
-    return await command(SetupProxyCommand)
+    const next = await command(SetupProxyCommand)
+    this.proxyStatus = next ? 'valid' : 'error'
+    return next
   }
 
   async finishOnboard(space: Space) {
@@ -64,7 +72,7 @@ export function OnboardApp() {
     <Onboard.SimpleProvider value={onboardStore}>
       <FlowProvide value={flow}>
         <BlurryGuys />
-        <Col width="80%" margin="auto" height="80%">
+        <Col width="80%" maxWidth={600} margin="auto" height="80%">
           <Flow useFlow={flow}>
             <Flow.Step title="Welcome" validateFinished={onboardStore.setupProxy}>
               {OnboardStepProxy}
@@ -107,41 +115,74 @@ const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {.
 
 function OnboardStepProxy() {
   const onboardStore = Onboard.useStore()
+  const status = setupContent[onboardStore.proxyStatus]
+
   return (
-    <Centered space="lg" pad="xxl" scrollable="y" flex={1}>
+    <Centered space="xl" pad="xxl" scrollable="y" flex={1}>
       <Text size="xxl">Welcome to Orbit</Text>
-      <IntroPara alpha={0.5}>Orbit is your team knowledge manager.</IntroPara>
+      <IntroPara alpha={0.5}>Orbit is a private app platform.</IntroPara>
       <IntroPara>
-        It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b> within your
-        company without exposing any of your team data to us. To do so it runs privately each
-        persons computer.
+        Orbit lowers the bar to building apps in many ways. It makes it easy to build them, easy to
+        plug in data, and easy to then collaborate on them with your team.
       </IntroPara>
       <IntroPara>
-        Orbit will set up a local proxy now to enable private sync and the access quick URLs you can
-        access in your browser.
+        Importantly, Orbit is <b>fully open source and runs entirely privately on your desktop</b>,
+        not in the cloud. To do this, it runs a private local server that acts as your own
+        authentication handler.
       </IntroPara>
-      {false === false && (
-        <Card
-          title="Error setting up proxy"
-          subTitle="Orbit had a problem setting up a proxy on your machine."
-          pad
-          margin="auto"
-          afterTitle={<Button onClick={onboardStore.setupProxy} icon="refresh" />}
-          width={400}
-          height={160}
-          textAlign="left"
-        >
-          <Paragraph>
-            To submit the error log to us,{' '}
-            <Button size="sm" display="inline-flex">
-              open this file
-            </Button>{' '}
-            and send it to: <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
-          </Paragraph>
-        </Card>
-      )}
+
+      <View height={10} />
+
+      <Title size="sm">Set up permissions</Title>
+
+      <Card
+        title={status.title}
+        subTitle={status.subTitle}
+        pad
+        margin="auto"
+        afterTitle={<Button onClick={onboardStore.setupProxy} icon="refresh" />}
+        width={400}
+        height={160}
+        textAlign="left"
+      >
+        {status.children}
+      </Card>
     </Centered>
   )
+}
+
+const setupContent = {
+  waiting: {
+    title: `Checking for existing...`,
+    subTitle: `Orbit is checking if you've already set up.`,
+    children: (
+      <Col flex={1} alignItems="center" justifyContent="center">
+        <Icon name="time" size={32} />
+      </Col>
+    ),
+  },
+  error: {
+    title: `Error setting up permissions`,
+    subTitle: `Orbit had a problem setting up permissions.`,
+    children: (
+      <Paragraph>
+        To investigate or send the error to us,{' '}
+        <Button size="sm" display="inline-flex">
+          open this file
+        </Button>{' '}
+        and send it to: <a href="mailto:help@tryorbit.com">help@tryorbit.com</a>
+      </Paragraph>
+    ),
+  },
+  valid: {
+    title: `Success, your permissions are valid`,
+    subTitle: `You are all set up.`,
+    children: (
+      <Col flex={1} alignItems="center" justifyContent="center">
+        <Icon name="tick" size={32} />
+      </Col>
+    ),
+  },
 }
 
 const Centered = gloss(Col, {

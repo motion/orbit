@@ -9,7 +9,7 @@ export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove
 export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
 export const AppForceCancelCommand = new Command<void, { appId: number }>('app-force-cancel')
 
-export const UserOnboardFinishCommand = new Command<void, void>('user-onboard-finish')
+export const UserOnboardFinishCommand = new Command<void, void>('UserOnboardFinishCommand')
 
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')

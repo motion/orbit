@@ -1,5 +1,4 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
-import { linearGradient } from '@o/color'
 import { useTheme } from 'gloss'
 import React, { forwardRef, memo, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'

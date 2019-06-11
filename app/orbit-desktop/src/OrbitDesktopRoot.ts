@@ -406,6 +406,7 @@ export class OrbitDesktopRoot {
           console.log('finishing setup proxy', success)
           return success
         }),
+
         resolveCommand(OpenCommand, openUrl),
       ],
     })

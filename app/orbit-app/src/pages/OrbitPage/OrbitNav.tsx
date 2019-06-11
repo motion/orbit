@@ -28,9 +28,8 @@ export const OrbitNav = memo(
     const isOnSetupApp = state.router.isOnSetupApp
     const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
-    const activeAppsSorted = useActiveAppsSorted().filter(x =>
-      panes.some(pane => pane.id === `${x.id}`),
-    )
+    const allActiveApps = useActiveAppsSorted()
+    const activeAppsSorted = allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`))
     const handleSortEnd = useAppSortHandler()
 
     if (isEditing) {

@@ -41,7 +41,7 @@ export async function findOrCreateWorkspace(props) {
   // ensure default home app
   await getRepository(AppEntity).save({
     target: 'app',
-    identifier: 'search',
+    identifier: 'home',
     name: 'Home',
     icon: '',
     space,

@@ -12,6 +12,7 @@ export type CommandInstallOptions = {
   identifier: string
   verbose?: boolean
   forceInstall?: boolean
+  upgrade?: boolean
 }
 
 export type CommandInstallRes = {
@@ -32,7 +33,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  const curVersion = await getRegistryLatestVersion(packageId)
+  const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : undefined
 
   // check if already installed and avoid work
   if (await isInstalled(packageId, options.directory, curVersion)) {

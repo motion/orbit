@@ -90,6 +90,10 @@ function main() {
           .option('force-install', {
             type: 'boolean',
             default: false,
+          })
+          .option('upgrade', {
+            type: 'boolean',
+            default: false,
           }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)
@@ -100,6 +104,7 @@ function main() {
           directory,
           verbose: !!argv.verbose,
           forceInstall: !!argv['force-install'],
+          upgrade: !!argv.upgrade,
         })
       },
     )

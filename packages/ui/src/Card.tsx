@@ -113,6 +113,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
                   ...titleProps,
                 }}
                 hoverStyle={hasTitleClick ? true : false}
+                activeStyle={hasTitleClick ? true : false}
                 afterTitle={afterTitle}
                 title={title}
                 subTitle={subTitle}

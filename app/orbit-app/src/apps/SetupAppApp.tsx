@@ -19,7 +19,6 @@ export default createApp({
 function SetupAppMain() {
   return (
     <StackNavigator
-      key={Math.random()}
       defaultItem={{
         id: 'SetupAppHome',
         props: {},

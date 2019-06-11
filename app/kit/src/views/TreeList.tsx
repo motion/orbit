@@ -180,14 +180,11 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
-  const ts = useAppState<TreeStateStatic>(
-    subSelect === false ? subSelect : `treelist-${subSelect}`,
-    {
-      ...defaultState,
-      ...(props && pick(props, 'rootItemID', 'items')),
-    },
-  )
-  const us = useUserState(`${subSelect}-tree-state`, defaultUserState)
+  const ts = useAppState<TreeStateStatic>(subSelect === false ? subSelect : `tlist-${subSelect}`, {
+    ...defaultState,
+    ...(props && pick(props, 'rootItemID', 'items')),
+  })
+  const us = useUserState(`tlist-${subSelect}`, defaultUserState)
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])

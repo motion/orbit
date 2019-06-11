@@ -1,44 +1,48 @@
-import { loadOne, save, useModel } from '@o/bridge'
+import { ImmutableUpdateFn, loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
 import { useScopedStateId } from '@o/ui'
 import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
-
-import { ScopedAppState, useImmutableUpdateFn, wrapDataObject } from './useAppState'
+import { useCallback } from 'react'
 
 // for storage of UI state that is per-user and not per-workspace
 // if you want to store data that is shared between everyone, use useScopedAppState
 // if you want to store data just for the individual user,
 //   (like positional state, where they are in the UI), use this
 
-export type ScopedUserState<A> = ScopedAppState<A>
+export type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
-export function useUserState<A>(id: string, defaultState?: A): ScopedUserState<A> {
+export function useUserState<A>(id: string | false, defaultState?: A): ScopedState<A> {
+  return usePersistedScopedState('user', id, defaultState)
+}
+
+export function usePersistedScopedState<A>(
+  type: string,
+  id: string | false,
+  defaultState?: A,
+): ScopedState<A> {
   // scope state id
   const scopedId = useScopedStateId()
   const identifier = `${scopedId}${id}`
 
   // ensure default state
-  useEnsureDefaultState<{ data: A }>(identifier, 'user', { data: defaultState })
+  useEnsureDefaultState<A>(identifier, type, defaultState)
 
   // state
   const [state, update] = useModel(StateModel, {
     where: {
-      type: 'user',
+      type,
       identifier,
     },
   })
 
   // scope it to .data
-  return [
-    selectDefined(state && state.data.data, defaultState),
-    useImmutableUpdateFn(update, 'data', wrapDataObject),
-  ]
+  return [selectDefined(state.data.dataValue, defaultState), useImmutableUpdateFn(update)]
 }
 
 const cache = {}
 
 // has to be suspense style
-export function useEnsureDefaultState<A>(identifier: string, type: string, data: A) {
+function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
   const key = `${identifier}${type}`
 
   if (cache[key]) {
@@ -48,10 +52,8 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
     throw cache[key].read
   }
 
-  if (!isDefined(data)) {
-    throw new Error(
-      `Must defined a default data object that isn't undefined for ${identifier} ${type}`,
-    )
+  if (!isDefined(value)) {
+    throw new Error(`Must define a default value that isn't undefined for ${identifier} ${type}`)
   }
 
   cache[key] = {
@@ -78,7 +80,7 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
         return save(StateModel, {
           type,
           identifier,
-          data,
+          data: { dataValue: value },
         })
       }
 
@@ -90,7 +92,7 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
         })
         .catch(err => {
           if (err === OR_TIMED_OUT) {
-            console.error('timed out loading query', identifier, type, data)
+            console.error('timed out loading query', identifier, type, value)
             return create()
           } else {
             console.error(err)
@@ -99,4 +101,20 @@ export function useEnsureDefaultState<A>(identifier: string, type: string, data:
         .finally(finish)
     }),
   }
+}
+
+function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {
+  return useCallback(val => {
+    update(draft => {
+      const innerState = draft.data.dataValue
+      if (typeof val === 'function') {
+        const next = val(innerState)
+        if (typeof next !== 'undefined') {
+          draft.data.dataValue = next
+        }
+      } else {
+        draft.data.dataValue = val
+      }
+    })
+  }, [])
 }

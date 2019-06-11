@@ -5,7 +5,7 @@ import { useActiveAppsWithDefinition } from './useActiveAppsWithDefinition'
 export const hasGraph = (x: AppDefinition) => !!Object.keys(x).some(x => x === 'graph')
 
 // imperfect, for now
-export const isDataDefinition = (x: AppDefinition) => !x.app
+export const isDataDefinition = (x: AppDefinition) => x && !x.app
 
 export function useActiveDataApps(type?: string) {
   return useActiveAppsWithDefinition(type)

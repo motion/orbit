@@ -67,7 +67,7 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
       }
     >
       <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
-        <ScopedState id={`orbit-${identifier}-${id}-`}>
+        <ScopedState id={`or-${identifier}-${id}-`}>
           <ProvideStores stores={{ appStore }}>
             <Visibility visible={isActive}>
               <OrbitAppRender

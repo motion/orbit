@@ -18,6 +18,7 @@ export const PopoverMenu = forwardRef(
     return (
       <Popover
         ref={ref}
+        popoverTheme="tooltip"
         openOnClick
         closeOnClickAway
         closeOnClick

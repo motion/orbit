@@ -38,7 +38,7 @@ export class OrbitAppsManager {
 
   async start() {
     const appsSubscription = getRepository(AppEntity)
-      .observe({ select: appSelectAllButDataAndTimestamps })
+      .observe({})
       .subscribe(next => {
         this.apps = next as any
       })

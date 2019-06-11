@@ -13,7 +13,6 @@ export function useActiveApps(type?: string): AppBit[] {
   const [apps] = useModels(AppModel, {
     where,
   })
-  console.log('apps', apps)
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 

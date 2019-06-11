@@ -15,7 +15,9 @@ export interface State {
   type?: string
 
   /**
-   * User email.
+   * Data stored on this row
+   * We wrap it in { dataValue: any } because it can't be null in SQLite
+   * So we ensure there's always an object
    */
-  data?: { data: { [key: string]: any } }
+  data?: { dataValue: any }
 }

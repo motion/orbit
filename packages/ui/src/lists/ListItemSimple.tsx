@@ -285,6 +285,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         before={
           <>
             {before}
+            {!!before && <Space size={spaceSize} />}
             {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
           </>
         }

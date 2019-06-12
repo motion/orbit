@@ -58,7 +58,7 @@ export const ColorPicker = memo(
   }: ColorPickerProps) => {
     const combos = niceColors.slice(0, count)
     const setupOnClick = memoize(colors => () => {
-      onChangeColor([colors[0], colors[1]])
+      onChangeColor([`${colors[0]}`, `${colors[1]}`])
     })
 
     return (

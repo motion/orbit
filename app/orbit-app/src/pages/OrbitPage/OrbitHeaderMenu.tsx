@@ -3,12 +3,12 @@ import { App } from '@o/stores'
 import { Button, ListItem, PopoverMenu } from '@o/ui'
 import React, { memo } from 'react'
 
-import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
+import { usePaneManagerStore } from '../../om/stores'
 
 export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
   const { effects, state } = useOm()
-  const { paneManagerStore } = useStores()
+  const paneManagerStore = usePaneManagerStore()
   const { activePane } = paneManagerStore
   const manageAppLink = useLocationLink(`/app/apps?itemId=${activePane.id}`)
 
@@ -33,7 +33,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
 function OrbitEditAppItem() {
   const { isEditing } = useStore(App)
   const { effects } = useOm()
-  const { paneManagerStore, orbitStore } = useStores()
+  const paneManagerStore = usePaneManagerStore()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
@@ -49,7 +49,6 @@ function OrbitEditAppItem() {
       icon="code"
       onClick={async () => {
         effects.openCurrentApp()
-        orbitStore.setEditing()
       }}
     />
   )

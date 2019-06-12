@@ -9,7 +9,7 @@ import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
-import { usePaneManagerStore } from '../../om/stores'
+import { useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -23,7 +23,7 @@ type OrbitAppProps = {
 }
 
 export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
-  const { orbitStore } = useStoresSimple()
+  const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === id
   const appStore = useStoreSimple(AppStore, {

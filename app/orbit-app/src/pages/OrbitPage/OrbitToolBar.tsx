@@ -4,7 +4,7 @@ import { useReaction } from '@o/use-store'
 import { Block, gloss, Row, RowProps } from 'gloss'
 import React, { memo, useContext } from 'react'
 
-import { useStoresSimple } from '../../hooks/useStores'
+import { usePaneManagerStore } from '../../om/stores'
 
 const toolbarHeight = 36
 
@@ -18,7 +18,8 @@ const opts = {
 
 export const OrbitToolBar = memo((props: AppMainViewProps) => {
   const { id, appDef } = useContext(AppLoadContext)
-  const { paneManagerStore } = useStoresSimple()
+  const paneManagerStore = usePaneManagerStore({ react: false })
+  console.log('TODO check if we need this useReaction')
   const isActive = useReaction(() => paneManagerStore.activePane.id === id, opts)
   return (
     <OrbitToolbarChrome transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}>

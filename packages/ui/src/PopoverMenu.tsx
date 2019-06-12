@@ -5,7 +5,8 @@ import { Popover, PopoverProps } from './Popover'
 import { Col, ColProps } from './View/Col'
 
 export type PopoverMenuProps = PopoverProps & {
-  items: ListItemProps[]
+  /** Pass in ListItemProps to determine the items in the popover. For full control you can use children instead */
+  items?: ListItemProps[]
   scrollable?: ColProps['scrollable']
 }
 

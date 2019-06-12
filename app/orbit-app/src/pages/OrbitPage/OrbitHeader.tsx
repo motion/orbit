@@ -1,12 +1,14 @@
 import { invertLightness } from '@o/color'
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
-import { App } from '@o/stores'
+import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { createUsableStore, ensure, react } from '@o/use-store'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
+import { createRef } from 'react'
 
-import { useStores } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
+import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { useIsOnStaticApp } from './OrbitDockShare'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
@@ -37,9 +39,78 @@ const activeStyle = {
   opacity: 1,
 }
 
+const moveCursorToEndOfTextarea = el => {
+  el.setSelectionRange(el.value.length, el.value.length)
+}
+const selectTextarea = el => {
+  el.setSelectionRange(0, el.value.length)
+}
+
+class HeaderStore {
+  mouseUpAt = 0
+  inputRef = createRef<HTMLDivElement>()
+  iconHovered = false
+
+  get highlightWords() {
+    const { activeMarks } = queryStore.queryFilters
+    if (!activeMarks) {
+      return null
+    }
+    const markPositions = activeMarks.map(x => [x[0], x[1]])
+    return () => markPositions
+  }
+
+  onInput = () => {
+    if (!this.inputRef.current) {
+      return
+    }
+    queryStore.onChangeQuery(this.inputRef.current.innerText)
+  }
+
+  focus = () => {
+    if (!this.inputRef || !this.inputRef.current) {
+      return
+    }
+    if (document.activeElement === this.inputRef.current) {
+      return
+    }
+    this.inputRef.current.focus()
+    moveCursorToEndOfTextarea(this.inputRef.current)
+  }
+
+  focusInputOnVisible = react(
+    () => Electron.state.showOrbitMain,
+    async (shown, { sleep }) => {
+      ensure('shown', shown)
+      ensure('ref', !!this.inputRef.current)
+      // wait for after it shows
+      await sleep(40)
+      this.focus()
+      selectTextarea(this.inputRef.current)
+    },
+  )
+
+  focusInputOnClearQuery = react(
+    () => queryStore.hasQuery,
+    query => {
+      ensure('no query', !query)
+      this.focus()
+    },
+  )
+
+  handleMouseUp = async () => {
+    window['requestIdleCallback'](() => {
+      this.focus()
+    })
+  }
+}
+
+export const headerStore = createUsableStore(HeaderStore)
+export const useHeaderStore = headerStore.useStore
+
 export const OrbitHeader = memo(() => {
   const om = useOm()
-  const { orbitStore, headerStore } = useStores()
+  const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const { isEditing } = useStore(App)
@@ -180,7 +251,8 @@ const HomeButton = memo(
   forwardRef((props: any, ref) => {
     const { state, actions } = useOm()
     const theme = useTheme()
-    const { newAppStore, paneManagerStore } = useStores()
+    const newAppStore = useNewAppStore()
+    const paneManagerStore = usePaneManagerStore()
     const { activePane } = paneManagerStore
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
@@ -213,38 +285,6 @@ HomeButton.acceptsProps = {
   hover: true,
 }
 
-// const OrbitNavHiddenBar = props => {
-//   const apps = useActiveAppsSorted().slice(0, 20)
-//   const { paneManagerStore } = useStores()
-//   // const { paneId } = paneManagerStore
-
-//   if (!apps.length) {
-//     return null
-//   }
-//   return (
-//     <OrbitNavHiddenBarChrome {...props}>
-//       <OrbitNavHiddenBarInner>
-//         {/* {apps.map(app => {
-//           const isActive = paneId === `${app.id}`
-//           return (
-//             <Block
-//               key={app.id}
-//               style={{
-//                 background: app.colors ? app.colors[0] : 'black',
-//                 width: `${100 / apps.length}%`,
-//                 height: '100%',
-//                 // opacity: isActive ? 1 : 0.2,
-//                 transform: `translateY(${isActive ? 0 : 2}px)`,
-//                 transition: 'all ease 400ms',
-//               }}
-//             />
-//           )
-//         })} */}
-//       </OrbitNavHiddenBarInner>
-//     </OrbitNavHiddenBarChrome>
-//   )
-// }
-
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
   overflow: 'hidden',
@@ -254,28 +294,6 @@ const OrbitHeaderContainer = gloss<any>(View, {
     (props.isEditing && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
     theme.background.alpha(a => a * 0.65),
-}))
-
-const OrbitNavHiddenBarChrome = gloss(Box, {
-  position: 'absolute',
-  bottom: -6,
-  left: 0,
-  right: 0,
-  padding: 6,
-}).theme(() => ({
-  '&:hover': {
-    background: [255, 255, 255, 0.05],
-  },
-}))
-
-const OrbitNavHiddenBarInner = gloss(Box, {
-  flexFlow: 'row',
-  height: 3,
-  borderRadius: 3,
-  padding: [0, '20%'],
-  width: '100%',
-}).theme((_, theme) => ({
-  background: theme.backgroundStrongest.alpha(0.5),
 }))
 
 const HeaderSide = gloss(Row, {

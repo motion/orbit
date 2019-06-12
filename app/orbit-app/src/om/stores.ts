@@ -20,17 +20,17 @@ export const useOrbitWindowStore = orbitWindowStore.useStore
 export const newAppStore = createUsableStore(NewAppStore)
 export const useNewAppStore = newAppStore.useStore
 
-const loadingPane = {
-  id: 'loading',
-  name: 'Loading',
-  type: 'loading',
-  isHidden: true,
-  keyable: true,
-}
-
 export const paneManagerStore = createUsableStore(PaneManagerStore, {
   defaultPaneId: 'loading',
-  defaultPanes: [loadingPane],
+  defaultPanes: [
+    {
+      id: 'loading',
+      name: 'Loading',
+      type: 'loading',
+      isHidden: true,
+      keyable: true,
+    },
+  ],
 })
 export const usePaneManagerStore = paneManagerStore.useStore
 
@@ -40,7 +40,6 @@ export const useSpaceStore = spaceStore.useStore
 export const Stores = {
   themeStore,
   orbitStore,
-  headerStore,
   queryStore,
   orbitWindowStore,
   newAppStore,

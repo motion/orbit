@@ -8,7 +8,6 @@ import { join } from 'path'
 
 import { ROOT } from '../constants'
 import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
-import { orbitShortcutsStore } from '../orbit/OrbitShortcutsStore'
 
 const log = new Logger('TearAppResolver')
 
@@ -23,6 +22,5 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
     app.dock.setIcon(iconPath)
   }
   Electron.setIsTorn()
-  orbitShortcutsStore.dispose()
   forkAndStartOrbitApp({ appId })
 })

@@ -8,6 +8,7 @@ const log = new Logger('ShortcutsManager')
 
 class OrbitShortcutsStore {
   start() {
+    log.info(`start OrbitShortcutsStore`)
     this.globalShortcut.registerShortcuts()
   }
 
@@ -46,3 +47,5 @@ class OrbitShortcutsStore {
 }
 
 export const orbitShortcutsStore = createUsableStore(OrbitShortcutsStore)
+
+orbitShortcutsStore.start()

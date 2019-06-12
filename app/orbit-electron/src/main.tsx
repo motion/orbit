@@ -3,7 +3,12 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
+import {
+  AppOpenWindowCommand,
+  NewFallbackServerPortCommand,
+  SendClientDataCommand,
+  ToggleOrbitMainCommand,
+} from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -38,6 +43,9 @@ export async function main() {
   if (IS_MAIN_ORBIT) {
     // register app schema
     const { app } = require('electron')
+
+    // start shortcuts listening on main process
+    require('./stores/OrbitShortcutsStore')
 
     if (app.isDefaultProtocolClient('orbit') === false) {
       app.setAsDefaultProtocolClient('orbit')

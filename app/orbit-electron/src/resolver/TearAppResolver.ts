@@ -8,11 +8,10 @@ import { join } from 'path'
 
 import { ROOT } from '../constants'
 import { forkAndStartOrbitApp } from '../helpers/forkAndStartOrbitApp'
-import { getOrbitShortcutsStore } from '../orbit/OrbitMainWindow'
+import { orbitShortcutsStore } from '../orbit/OrbitShortcutsStore'
 
 const log = new Logger('TearAppResolver')
 
-// TODO umed can we make this type not bread
 export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appType, appId }) => {
   log.info('Tearing app', appType, appId)
   const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
@@ -24,6 +23,6 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
     app.dock.setIcon(iconPath)
   }
   Electron.setIsTorn()
-  getOrbitShortcutsStore().dispose()
+  orbitShortcutsStore.dispose()
   forkAndStartOrbitApp({ appId })
 })

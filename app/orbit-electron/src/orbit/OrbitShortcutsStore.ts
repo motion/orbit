@@ -23,7 +23,7 @@ class OrbitShortcutsStore {
     },
     onShortcut: () => {
       Electron.setState({
-        showMain: !Electron.state.showMain,
+        showOrbitMain: !Electron.state.showOrbitMain,
       })
     },
   })

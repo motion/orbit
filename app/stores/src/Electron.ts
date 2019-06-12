@@ -51,11 +51,12 @@ class ElectronStore {
   source = 'Electron'
 
   lastAction = null
-  // TODO make this way more legit, for now this works...
+
+  // This indicates if this instance of Electron is "main"
   isTorn = false
 
   state = deep({
-    showMain: false,
+    showOrbitMain: false,
     pinKey: { name: '' as PinKeyType, at: Date.now() },
     focusedAppId: 'app',
     screenSize: [0, 0],

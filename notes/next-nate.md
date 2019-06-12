@@ -259,3 +259,7 @@ make gloss work with shadow-root; not too hard:
 2. GlossView(props)
    1. => glossify(styles, context.rootElement)
    2. => sheet.addStyles(rootElement)
+
+---
+
+make a big table of all the state/alternates for button/tag/etc

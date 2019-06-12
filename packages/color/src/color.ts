@@ -295,7 +295,7 @@ export class Color {
     return rgb
   }
 
-  lighten(ratio) {
+  lighten(ratio: number) {
     var hsl = this.hsl()
     hsl.color[2] += hsl.color[2] * ratio
     return hsl

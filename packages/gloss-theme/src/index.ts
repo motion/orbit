@@ -7,12 +7,16 @@ const darken = (color, amt) => {
 
 export const increaseContrast = (color, amt) => {
   const adjustAmt = amt(color)
-  return color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
+  color = color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
+  color = color.isLight() ? color.desaturate(adjustAmt) : color.saturate(adjustAmt)
+  return color
 }
 
 export const decreaseContrast = (color, amt) => {
   const adjustAmt = amt(color)
-  return color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
+  color = color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
+  color = color.isLight() ? color.saturate(adjustAmt) : color.desaturate(adjustAmt)
+  return color
 }
 
 const roundToExtreme = (color, pct = 20) => {
@@ -36,6 +40,7 @@ export const smallAmount = color => {
 }
 
 export const largeAmount = color => smallAmount(color) * 1.25
+export const xSmallAmount = color => smallAmount(color) * 0.75
 
 const opposite = color => {
   return color.isDark()
@@ -44,8 +49,6 @@ const opposite = color => {
 }
 
 const isPlainObj = o => typeof o == 'object' && o.constructor == Object
-
-const cache = {}
 
 export const colorize = (obj: SimpleStyleObject | ThemeObject): ThemeObject => {
   const res: Partial<ThemeObject> = {}
@@ -73,9 +76,6 @@ export const fromColor = (bgName: string): ThemeObject | null => {
   if (typeof bgName !== 'string') {
     return null
   }
-  if (cache[bgName]) {
-    return cache[bgName]
-  }
   let background: Color
   try {
     background = toColor(bgName)
@@ -94,10 +94,6 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
   if (!s.background && !s.color) {
     throw new Error('Themes require at least background or color')
   }
-  const key = JSON.stringify(s)
-  if (cache[key]) {
-    return cache[key]
-  }
   const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color))
   // some handy basic styles
   const base = colorize({
@@ -105,14 +101,16 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
     color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmount)),
     borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmount),
   })
-  // flattened
+
   const res: ThemeObject = {
     ...colorize({
       // for buttons/surfaces, we generate a nice set of themes
       colorHover: s.colorHover || base.color.lighten(0.1),
       backgroundHover:
         s.backgroundHover ||
-        base.background.lighten((100 / (base.background.lightness() + 1)) * 0.04),
+        // for some reason this isnt immutable
+        // try removing toColor() and running base.background = toColor('#363165').lighten(0.2)
+        toColor(base.background).lighten(base.background.isLight() ? 0.25 : 0.15),
       borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmount),
       backgroundActiveHover:
         s.backgroundActiveHover || increaseContrast(base.background, largeAmount),
@@ -133,7 +131,6 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
       ...base,
     }),
   }
-  cache[key] = res
 
   return res as any
 }

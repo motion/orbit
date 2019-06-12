@@ -1,6 +1,6 @@
 import { useActiveApps, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Button, ListItem, PassProps, Popover } from '@o/ui'
+import { Button, ListItem, PopoverMenu } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -13,30 +13,20 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
   const manageAppLink = useLocationLink(`/app/apps?itemId=${activePane.id}`)
 
   return (
-    <Popover
-      openOnClick
-      closeOnClickAway
-      closeOnClick
-      width={260}
-      background
-      elevation={5}
+    <PopoverMenu
       target={
         <Button tooltip="App menu" icon="more" iconProps={{ transform: { rotate: '90deg' } }} />
       }
     >
-      <PassProps>
-        <ListItem
-          {...{
-            title: 'Permalink',
-            subTitle: state.router.urlString,
-            icon: 'link',
-            onClick: effects.copyAppLink,
-          }}
-        />
-        <OrbitEditAppItem />
-        <ListItem title="App Settings" icon="cog" onClick={manageAppLink} />
-      </PassProps>
-    </Popover>
+      <ListItem
+        title="Permalink"
+        subTitle={state.router.urlString}
+        icon="link"
+        onClick={effects.copyAppLink}
+      />
+      <OrbitEditAppItem />
+      <ListItem title="App Settings" icon="cog" onClick={manageAppLink} />
+    </PopoverMenu>
   )
 })
 

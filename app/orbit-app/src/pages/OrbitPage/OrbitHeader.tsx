@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { AppIcon, useActiveAppsSorted, useLocationLink, useStore } from '@o/kit'
+import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
@@ -148,10 +148,10 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 
   return (
     <>
-      <OrbitNavHiddenBar
+      {/* <OrbitNavHiddenBar
         isVisible={state.navVisible}
         onClick={() => actions.setNavVisible(!state.navVisible)}
-      />
+      /> */}
       <Popover
         openKey="orbit-nav"
         target={target}
@@ -213,37 +213,37 @@ HomeButton.acceptsProps = {
   hover: true,
 }
 
-const OrbitNavHiddenBar = props => {
-  const apps = useActiveAppsSorted().slice(0, 20)
-  const { paneManagerStore } = useStores()
-  // const { paneId } = paneManagerStore
+// const OrbitNavHiddenBar = props => {
+//   const apps = useActiveAppsSorted().slice(0, 20)
+//   const { paneManagerStore } = useStores()
+//   // const { paneId } = paneManagerStore
 
-  if (!apps.length) {
-    return null
-  }
-  return (
-    <OrbitNavHiddenBarChrome {...props}>
-      <OrbitNavHiddenBarInner>
-        {/* {apps.map(app => {
-          const isActive = paneId === `${app.id}`
-          return (
-            <Block
-              key={app.id}
-              style={{
-                background: app.colors ? app.colors[0] : 'black',
-                width: `${100 / apps.length}%`,
-                height: '100%',
-                // opacity: isActive ? 1 : 0.2,
-                transform: `translateY(${isActive ? 0 : 2}px)`,
-                transition: 'all ease 400ms',
-              }}
-            />
-          )
-        })} */}
-      </OrbitNavHiddenBarInner>
-    </OrbitNavHiddenBarChrome>
-  )
-}
+//   if (!apps.length) {
+//     return null
+//   }
+//   return (
+//     <OrbitNavHiddenBarChrome {...props}>
+//       <OrbitNavHiddenBarInner>
+//         {/* {apps.map(app => {
+//           const isActive = paneId === `${app.id}`
+//           return (
+//             <Block
+//               key={app.id}
+//               style={{
+//                 background: app.colors ? app.colors[0] : 'black',
+//                 width: `${100 / apps.length}%`,
+//                 height: '100%',
+//                 // opacity: isActive ? 1 : 0.2,
+//                 transform: `translateY(${isActive ? 0 : 2}px)`,
+//                 transition: 'all ease 400ms',
+//               }}
+//             />
+//           )
+//         })} */}
+//       </OrbitNavHiddenBarInner>
+//     </OrbitNavHiddenBarChrome>
+//   )
+// }
 
 const OrbitHeaderContainer = gloss<any>(View, {
   position: 'relative',
@@ -339,10 +339,9 @@ const OpenButton = memo((props: ButtonProps) => {
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}
+      icon="chevron-right"
       {...props}
-    >
-      Open
-    </Button>
+    />
   )
 })
 

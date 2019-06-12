@@ -38,7 +38,7 @@ const darkAlternates: ThemeSet = {
   approve: darkAltLight.lightGreen,
   success: darkAltLight.lightGreen,
   action: fromStyles({
-    glintColor: [255, 255, 255, 0.25],
+    debug: true,
     background: selectedColor.lighten(0.2),
     color: '#fff',
   }),

@@ -14,7 +14,6 @@ import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
 import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
-import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useOm } from '../../om/om'
 import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
@@ -48,7 +47,6 @@ const OrbitEffects = memo(() => {
   useEnsureStaticAppBits()
   useUserEffects()
   querySourcesEffect()
-  useMessageHandlers()
   return null
 })
 

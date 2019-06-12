@@ -126,7 +126,7 @@ class OrbitMainWindowStore {
     if (Electron.isTorn) {
       return true
     }
-    return this.isVisible ? App.state.showOrbitMain : false
+    return this.isVisible ? Electron.state.showOrbitMain : false
   }
 
   setIsVisible = (next: boolean) => {

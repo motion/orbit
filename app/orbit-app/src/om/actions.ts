@@ -1,5 +1,7 @@
-import { Action } from 'overmind'
 import { filterCleanObject } from '@o/ui'
+import { Action } from 'overmind'
+
+export * from './actions'
 
 export const setNavVisible: Action<boolean> = ({ state }, x) => {
   state.navVisible = x

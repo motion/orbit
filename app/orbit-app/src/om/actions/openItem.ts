@@ -1,7 +1,8 @@
 import { command } from '@o/bridge'
 import { Bit, OpenCommand } from '@o/models'
+import { Action } from 'overmind'
 
-export async function open(item: Bit | string) {
+export const openItem: Action<Bit | string> = async (_, item) => {
   let url = ''
 
   if (typeof item === 'string') {

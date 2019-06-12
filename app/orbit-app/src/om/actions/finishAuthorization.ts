@@ -1,8 +1,9 @@
 import { loadOne, save } from '@o/bridge'
 import { UserModel } from '@o/models'
 import * as firebase from 'firebase/app'
+import { Action } from 'overmind'
 
-export const finishAuthorization = async (path: string) => {
+export const finishAuthorization: Action<{ path: string }> = async (_, { path }) => {
   console.log('finishAuthorization path', path)
   if (firebase.auth().isSignInWithEmailLink(path)) {
     try {

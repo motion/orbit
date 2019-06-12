@@ -20,7 +20,6 @@ import page from 'page'
 import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import { AppActions } from '../actions/AppActions'
 import * as OrbitApps from '../apps/orbitApps'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
@@ -67,7 +66,6 @@ global.dateFns = dateFns
 global.LoggerSettings = LoggerSettings
 global.toJS = toJS
 global.stringify = JSON.stringify.bind(JSON)
-global.AppActions = AppActions
 global.Models = Models
 global.Themes = themes
 global.OrbitApps = OrbitApps

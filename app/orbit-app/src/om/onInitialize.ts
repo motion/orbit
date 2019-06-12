@@ -1,6 +1,7 @@
 import { Config, IContext, OnInitialize } from 'overmind'
 
 import { startAppLoadWatch } from '../apps/orbitApps'
+import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
@@ -24,6 +25,8 @@ export const onInitialize: OnInitialize = async om => {
   startAppLoadWatch()
 
   effects.router.start()
+
+  handleMediatorMessages()
 
   goToInitialApp(om)
 }

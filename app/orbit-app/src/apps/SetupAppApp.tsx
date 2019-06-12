@@ -42,7 +42,7 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="70%" margin="auto">
+      <Col width="70%" height="80%" margin="auto">
         <Flow useFlow={flow}>
           <Flow.Step title="Template" subTitle="Choose template">
             {({ setData }) => {
@@ -100,7 +100,7 @@ function SetupAppCustom() {
             }}
             icon="chevron-right"
           >
-            Start
+            Create
           </Button>
         </Toolbar>
       </Scale>

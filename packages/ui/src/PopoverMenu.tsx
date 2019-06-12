@@ -15,7 +15,7 @@ export const PopoverMenu = forwardRef(
     {
       items,
       borderRadius = 8,
-      maxHeight = 300,
+      maxHeight = 250,
       scrollable = 'y',
       children,
       ...props

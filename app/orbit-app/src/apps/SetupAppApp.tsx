@@ -135,7 +135,6 @@ export function SetupAppHome(props: SetupAppHomeProps) {
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
         <Flow
-          Layout={FlowSimpleLayout}
           useFlow={flow}
           afterTitle={
             !props.isEmbedded && <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>

@@ -181,7 +181,11 @@ export function AppsMain(props: AppViewProps) {
     return <AppsMainAddApp identifier={props.subId} />
   }
 
-  return <AppSettings key={props.subId} appId={+props.subId} />
+  if (props.subType === 'settings') {
+    return <AppSettings key={props.subId} appId={+props.subId} />
+  }
+
+  return null
 }
 
 function AppSettings(props: { appId: number }) {

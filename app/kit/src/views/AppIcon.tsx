@@ -21,7 +21,7 @@ export const AppIcon = memo(
     const definition = useAppDefinition(identifier)
 
     if (identifier && definition) {
-      icon = definition.icon
+      icon = definition.icon || props.identifier
       iconLight = definition.iconLight
     }
 
@@ -32,8 +32,8 @@ export const AppIcon = memo(
 
     const isSVGIcon =
       icon
-        .trim()
         .slice(0, 20)
+        .trim()
         .indexOf('<svg') > -1
     const color = getIconColor(props, theme)
 

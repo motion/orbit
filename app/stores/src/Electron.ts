@@ -55,11 +55,10 @@ class ElectronStore {
   isTorn = false
 
   state = deep({
+    showMain: false,
     pinKey: { name: '' as PinKeyType, at: Date.now() },
-    realTime: false,
     focusedAppId: 'app',
     screenSize: [0, 0],
-    settingsPosition: [], // todo: settingsState.position
     updateState: {
       downloading: false,
       percent: 0,

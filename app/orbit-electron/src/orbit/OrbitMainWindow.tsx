@@ -41,7 +41,7 @@ class OrbitMainWindowStore {
   orbitRef: BrowserWindow
   alwaysOnTop = true
   hasMoved = false
-  initialShow = false
+  isVisible = false
   size = [0, 0]
   position = [0, 0]
   vibrancy = 'light'
@@ -135,11 +135,11 @@ class OrbitMainWindowStore {
     if (Electron.isTorn) {
       return true
     }
-    return this.initialShow ? App.state.showOrbitMain : false
+    return this.isVisible ? App.state.showOrbitMain : false
   }
 
-  setInitialShow = () => {
-    this.initialShow = true
+  setIsVisible = (next: boolean) => {
+    this.isVisible = next
   }
 
   get showDevTools() {
@@ -186,7 +186,7 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       id="app"
       show={store.show}
-      onReadyToShow={store.setInitialShow}
+      onReadyToShow={() => store.setIsVisible(true)}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       forwardRef={store.handleRef}

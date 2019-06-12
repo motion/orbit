@@ -1,25 +1,27 @@
 import { Color, LinearGradient, toColor } from '@o/color'
 import { SimpleStyleObject, ThemeObject } from 'gloss'
 
-const darken = (color, amt) => {
+type Adjuster = (fn: Color) => number
+
+const darken = (color: Color, amt: Adjuster) => {
   return color.darken(amt(color))
 }
 
-export const increaseContrast = (color, amt) => {
+export const increaseContrast = (color: Color, amt: Adjuster) => {
   const adjustAmt = amt(color)
   color = color.isLight() ? color.darken(adjustAmt) : color.lighten(adjustAmt)
   color = color.isLight() ? color.desaturate(adjustAmt) : color.saturate(adjustAmt)
   return color
 }
 
-export const decreaseContrast = (color, amt) => {
+export const decreaseContrast = (color: Color, amt: Adjuster) => {
   const adjustAmt = amt(color)
   color = color.isLight() ? color.lighten(adjustAmt) : color.darken(adjustAmt)
   color = color.isLight() ? color.saturate(adjustAmt) : color.desaturate(adjustAmt)
   return color
 }
 
-const roundToExtreme = (color, pct = 20) => {
+const roundToExtreme = (color: Color, pct = 20) => {
   const lightness = color.lightness()
   if (lightness <= pct) {
     return '#000'
@@ -110,7 +112,7 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
         s.backgroundHover ||
         // for some reason this isnt immutable
         // try removing toColor() and running base.background = toColor('#363165').lighten(0.2)
-        toColor(base.background).lighten(base.background.isLight() ? 0.25 : 0.15),
+        toColor(base.background).lighten(base.background.isLight() ? 0.1 : 0.15),
       borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmount),
       backgroundActiveHover:
         s.backgroundActiveHover || increaseContrast(base.background, largeAmount),

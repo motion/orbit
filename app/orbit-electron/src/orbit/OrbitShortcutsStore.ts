@@ -1,24 +1,18 @@
 import { Logger } from '@o/logger'
-import { App, Desktop, Electron } from '@o/stores'
-import { react } from '@o/use-store'
+import { App, Electron } from '@o/stores'
+import { createUsableStore, react } from '@o/use-store'
+
 import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
 
 const log = new Logger('ShortcutsManager')
 
-const peekTriggers = 'abcdefghijzlmnopqrstuvwxyz0123456789'
-
-export class OrbitShortcutsStore {
-  props: {
-    onToggleOpen?: Function
-  }
-
+class OrbitShortcutsStore {
   start() {
     this.globalShortcut.registerShortcuts()
   }
 
   dispose() {
     this.globalShortcut.unregisterShortcuts()
-    this.peekShortcuts.unregisterShortcuts()
   }
 
   // global shortcuts
@@ -28,9 +22,9 @@ export class OrbitShortcutsStore {
       toggleApp: 'Option+Space',
     },
     onShortcut: () => {
-      if (this.props.onToggleOpen) {
-        this.props.onToggleOpen()
-      }
+      Electron.setState({
+        showMain: !Electron.state.showMain,
+      })
     },
   })
 
@@ -49,44 +43,6 @@ export class OrbitShortcutsStore {
       deferFirstRun: true,
     },
   )
-
-  // these are basically unused until/if we bring back peek:
-
-  peekShortcuts = new ElectronShortcutManager({
-    shortcuts: {
-      optionAndDown: 'Option+Down',
-      optionAndLeft: 'Option+Left',
-      optionAndRight: 'Option+Right',
-      optionAndUp: 'Option+Up',
-      ...peekTriggers.split('').reduce(
-        (acc, letter) => ({
-          ...acc,
-          [`optionAnd${letter}`]: `Option+${letter}`,
-        }),
-        {},
-      ),
-    },
-    onShortcut: shortcut => {
-      console.log('got shortcut', shortcut)
-      if (shortcut.indexOf('optionAnd') === 0) {
-        const name = shortcut.replace('optionAnd', '').toLowerCase()
-        Electron.setState({ pinKey: { name, at: Date.now() } })
-      }
-    },
-  })
-
-  enablePeekShortcutsWhenHoldingOption = react(
-    () => Desktop.keyboardState.isHoldingOption,
-    async (optionDown, { sleep }) => {
-      if (optionDown) {
-        await sleep(500)
-        this.peekShortcuts.registerShortcuts()
-      } else {
-        this.peekShortcuts.unregisterShortcuts()
-      }
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 }
+
+export const orbitShortcutsStore = createUsableStore(OrbitShortcutsStore)

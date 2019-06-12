@@ -2,7 +2,6 @@ import { PaneManagerStore, QueryStore, SpaceStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
-import { HeaderStore } from '../stores/HeaderStore'
 import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 
@@ -14,9 +13,6 @@ export const useOrbitStore = orbitStore.useStore
 
 export const queryStore = createUsableStore(QueryStore)
 export const useQueryStore = queryStore.useStore
-
-export const headerStore = createUsableStore(HeaderStore)
-export const useHeaderStore = headerStore.useStore
 
 export const orbitWindowStore = createUsableStore(OrbitWindowStore, { queryStore })
 export const useOrbitWindowStore = orbitWindowStore.useStore

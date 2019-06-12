@@ -1,6 +1,5 @@
-import { join } from 'path'
-
 import { reporter } from '../reporter'
+import { findPackage } from './findPackage'
 import { setIdentifierToPackageId } from './getPackageId'
 import { loadAppEntry } from './loadAppEntry'
 
@@ -11,13 +10,13 @@ export async function requireAppDefinition({
   directory: string
   packageId: string
 }) {
-  const appRoot = join(directory, 'node_modules', ...packageId.split('/'))
-  reporter.info(`Importing app definition at appRoot ${appRoot}`)
+  const packageRoot = findPackage({ packageId, directory })
+  reporter.info(`Importing app definition at appRoot ${packageRoot}`)
 
   // try web, then node, for now...
-  let definition = await loadAppEntry(appRoot, 'web')
+  let definition = await loadAppEntry(packageRoot, 'web')
   if (!definition) {
-    definition = await loadAppEntry(appRoot, 'node')
+    definition = await loadAppEntry(packageRoot, 'node')
   }
 
   if (definition) {

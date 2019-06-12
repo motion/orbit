@@ -162,15 +162,20 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
     async e => {
       e.preventDefault()
       if (onSubmit) {
-        // first do any field validation
+        // collect errors
         let fieldErrors = {}
-        const values = { ...formStore.values }
-        for (const key in values) {
-          const field = values[key]
+        // extract flat values here for callback
+        const values = {}
+
+        // validate
+        for (const key in formStore.values) {
+          const field = formStore.values[key]
+
           if (field.required && !field.value) {
             fieldErrors[name] = 'is required.'
             continue
           }
+
           if (typeof field.validate === 'function') {
             const err = field.validate(field.value)
             if (err) {
@@ -178,6 +183,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
             }
             continue
           }
+
+          // set final value to callback
+          values[field.name] = field.value
         }
 
         if (Object.keys(fieldErrors).length) {

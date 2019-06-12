@@ -196,6 +196,7 @@ function AppSettings(props: { appId: number }) {
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       title={app.name}
+      subTitle="Update app settings"
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (

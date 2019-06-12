@@ -1,4 +1,4 @@
-import { AppBit, AppIcon, removeApp } from '@o/kit'
+import { AppBit, AppIcon, removeApp, useAppDefinition } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
 import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useContextMenu } from '@o/ui'
 import { Box, gloss, Row, Theme } from 'gloss'
@@ -12,6 +12,7 @@ export type OrbitAppIconProps = IconLabeledProps & {
 
 export const OrbitAppIcon = memo(
   ({ app, isSelected, size = 58, removable, ...props }: OrbitAppIconProps) => {
+    const definition = useAppDefinition(app.identifier)
     const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
     return (
       <Theme alt={isSelected ? 'selected' : undefined}>
@@ -35,7 +36,7 @@ export const OrbitAppIcon = memo(
           <IconLabeled
             {...contextMenuProps}
             label={app.name}
-            subTitle={app.identifier}
+            subTitle={definition ? definition.name : app.identifier}
             icon={<AppIcon identifier={app.identifier} colors={app.colors} size={size} />}
             {...props}
           />
@@ -53,7 +54,7 @@ export const AppIconContainer = gloss<any>(Box, {
   position: 'relative',
   borderRadius: 10,
 }).theme(({ isSelected }, theme) => ({
-  background: theme.background,
+  background: 'transparent' || theme.background,
   '&:hover': {
     background: isSelected ? theme.background : theme.backgroundStrong,
   },

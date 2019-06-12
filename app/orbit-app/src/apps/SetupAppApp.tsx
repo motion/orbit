@@ -1,5 +1,5 @@
-import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowLayoutProps, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Toolbar, useBanner, useCreateFlow, useFlow, View } from '@o/ui'
+import { AppIcon, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
+import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Toolbar, useBanner, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -134,37 +134,41 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Flow
-          useFlow={flow}
-          afterTitle={
-            !props.isEmbedded && <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>
-          }
-        >
-          <Flow.Step title="Pick app" subTitle="Choose type of app.">
-            <List
-              searchable
-              onQueryChange={search}
-              selectable
-              alwaysSelected
-              onSelect={rows => {
-                if (rows[0]) {
-                  console.log('setting data', rows[0].identifier)
-                  flow.setData({ selectedAppIdentifier: rows[0].identifier })
-                }
-              }}
-              itemProps={{
-                iconBefore: true,
-                iconProps: {
-                  size: 44,
-                },
-              }}
-              items={[...installedApps, ...searchedApps, ...topApps]}
-            />
-          </Flow.Step>
-          <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
-            {FlowStepSetup}
-          </Flow.Step>
-        </Flow>
+        <Col width="70%" height="80%" margin="auto">
+          <Flow
+            useFlow={flow}
+            afterTitle={
+              !props.isEmbedded && (
+                <Button onClick={useLocationLink('/app/apps')}>Manage apps</Button>
+              )
+            }
+          >
+            <Flow.Step title="Pick app" subTitle="Choose type of app.">
+              <List
+                searchable
+                onQueryChange={search}
+                selectable
+                alwaysSelected
+                onSelect={rows => {
+                  if (rows[0]) {
+                    console.log('setting data', rows[0].identifier)
+                    flow.setData({ selectedAppIdentifier: rows[0].identifier })
+                  }
+                }}
+                itemProps={{
+                  iconBefore: true,
+                  iconProps: {
+                    size: 44,
+                  },
+                }}
+                items={[...installedApps, ...searchedApps, ...topApps]}
+              />
+            </Flow.Step>
+            <Flow.Step title="Customize" subTitle="Give it a name, theme and setup any options.">
+              {FlowStepSetup}
+            </Flow.Step>
+          </Flow>
+        </Col>
       </SectionPassProps>
 
       <SetupAppHomeToolbar {...props} />
@@ -172,14 +176,11 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   )
 }
 
-function FlowSimpleLayout(props: FlowLayoutProps) {
-  return <>{props.children}</>
-}
-
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
   const banner = useBanner()
   const flow = useFlow()
   const stackNav = useStackNavigator()
+  const definition = useAppDefinition(flow.data.selectedAppIdentifier)
   return (
     <Scale size="lg">
       <Toolbar>
@@ -205,18 +206,19 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        {flow.index === 0 && (
-          <Button
-            alt="confirm"
-            onClick={async () => {
-              const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-              installApp(definition, newAppStore.app, banner)
-            }}
-            icon="chevron-right"
-          >
-            Add
-          </Button>
-        )}
+        <Button onClick={flow.next}>
+          Customize: <small>{definition.name}</small>
+        </Button>
+        <Button
+          alt="confirm"
+          onClick={async () => {
+            const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+            installApp(definition, newAppStore.app, banner)
+          }}
+          icon="chevron-right"
+        >
+          Add
+        </Button>
       </Toolbar>
     </Scale>
   )

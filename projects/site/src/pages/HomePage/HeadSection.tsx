@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Create small, fun apps that work together.',
-  medium: 'Create small, fun apps that work together.',
-  small: 'Create small, fun apps that work together.',
+  large: 'A fresh start for building apps.',
+  medium: 'A fresh start for building apps.',
+  small: 'A fresh start for building apps.',
 }
 
 let allTexts = {
   large: [
-    `Strangely easy to build, powerful & collaborative cross-platform apps.`,
-    `Open source. Plug in amazing functionality with the open app store.`,
+    `Lets make apps ours - easy to build, use, and control.`,
+    `Open source, with amazing collaboration and an open app store.`,
   ],
   medium: [
-    `Strangely easy to build, powerful & collaborative cross-platform apps.`,
-    `Open source. Plug in amazing functionality with the open app store.`,
+    `Lets make apps ours - easy to build, use, and control.`,
+    `Open source, with amazing collaboration and an open app store.`,
   ],
   small: [
-    `Collaborate on apps more easily than ever.`,
-    `Open source. Plug in amazing functionality with the open app store.`,
+    `Lets make apps ours - easy to build, use, and control.`,
+    `Open source, with amazing collaboration and an open app store.`,
   ],
 }
 
@@ -73,7 +73,7 @@ const HeadContent = memo(() => {
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>
 
-      <Space size={useScreenVal('md', 'lg', 'xxxl')} />
+      <Space size={useScreenVal('md', 'xl', 'xxxl')} />
 
       {isSmall && (
         <Paragraph
@@ -167,6 +167,7 @@ const HeadJoin = () => (
               boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
               flexFlow="row"
               group
+              space={false}
               margin={[0, '-2%']}
             />
           </Scale>
@@ -222,23 +223,24 @@ export function HeadSection() {
           </Col>
           <Space size={40} />
           <Row space="xl" pad={[0, 'xl']} marginBottom={-90} scrollable="x" maxWidth="100vw">
-            <SubSection index={0} title="Easy">
-              Comes with complete patterns for building many types of apps.
+            <SubSection index={0} title="Easy" titleColor={colors.orange}>
+              A complete and easy toolkit designed for building apps, batteries included.
             </SubSection>
 
-            <SubSection index={2} title="Powerful">
+            <SubSection index={2} title="Powerful" titleColor={colors.red}>
               Powerful views, optimization and APIs give you incredible new abilities.
             </SubSection>
 
-            <SubSection index={1} title="Connected">
-              The Open App Store with apps that work together, providing data to each other.
+            <SubSection index={1} title="Connected" titleColor={colors.purple}>
+              An Open App Store, apps that work together, and easy collaboration.
             </SubSection>
 
-            <SubSection index={3} title="Serverless">
-              True peer-to-peer, so you can build securely without infrastructure.
+            <SubSection index={3} title="Private" titleColor={colors.orange}>
+              You control all the data, offline first, and peer to peer.
             </SubSection>
           </Row>
-          <Space size={120} />
+          <Space size="xxxl" />
+          <View flex={1} />
           <HeadJoin />
         </Col>
       </Page.Content>
@@ -246,11 +248,11 @@ export function HeadSection() {
   )
 }
 
-const SubSection = memo(({ title, children, index }: any) => {
+const SubSection = memo(({ title, children, index, titleColor }: any) => {
   return (
     <Col flex={1} minWidth={180}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title textAlign="center" color={'#fff'} selectable size={0.7}>
+        <Title textAlign="center" color={'#fff'} selectable size={0.7} color={titleColor}>
           {title}
         </Title>
         <Space size="sm" />

@@ -1,15 +1,4 @@
-import {
-  Button,
-  Col,
-  FullScreen,
-  gloss,
-  Image,
-  Row,
-  Space,
-  useGetFn,
-  useIntersectionObserver,
-  View,
-} from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -19,14 +8,7 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
-import {
-  FadeChild,
-  fadeLeftProps,
-  fadeRightProps,
-  fadeUpProps,
-  slowConfigLessBounce,
-  useFadePage,
-} from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -246,15 +228,15 @@ export default function NeckSection() {
                 <PillButton>How</PillButton>
               </FadeChild>
               <FadeChild delay={200}>
-                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>
-                  An app platform for us.
-                </TitleText>
+                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={300}>
-                  Create apps, add data, code, deploy, and collaborate with just a .app.
+                  Create apps that work together in a workspace, sharing data & code.
                 </FadeChild>
-                <FadeChild delay={400}>Everything included. No servers necessary.</FadeChild>
+                <FadeChild delay={450}>
+                  Collaborate without a cloud - it runs privately on your desktop.
+                </FadeChild>
               </TitleTextSub>
             </>
           }
@@ -267,9 +249,8 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Apps talk to each other - get the{' '}
-                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> app with a click
-                      in the app store.
+                      Apps that talk to each other - plug in{' '}
+                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> data with a click.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -278,8 +259,8 @@ export default function NeckSection() {
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
                     <CenterText maxWidth={400} margin={[0, 'auto']}>
-                      Orbit aims to make building apps so easy it's fun. You own the code and the
-                      data! Make internal tools for your team in minutes.
+                      Develop using powerful, simple views built on React and Typescript, all
+                      without setting up a build environment.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -288,8 +269,8 @@ export default function NeckSection() {
                     <PillButtonDark>Export</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Because every app API is typed, easily have your app export to your team's{' '}
-                      <Inline color="#F14336">{elements[cur].afterName}</Inline>.
+                      Install <Inline color="#F14336">{elements[cur].afterName}</Inline>, use it's
+                      simple API to send your results out.
                     </CenterText>
                   </FadeChild>
                 </SubSection>

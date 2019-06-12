@@ -8,9 +8,9 @@ export const TitleTextSub = gloss((props: TextProps) => (
   <View maxWidth={800} minWidth={300} textAlign="center">
     <TitleText
       size="sm"
-      sizeLineHeight={1.3}
+      sizeLineHeight={1.35}
       fontWeight={300}
-      alpha={0.72}
+      alpha={0.65}
       {...fontProps.Nunito}
       {...props}
     />

@@ -97,12 +97,17 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
     throw new Error('Themes require at least background or color')
   }
   const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color))
+
   // some handy basic styles
   const base = colorize({
     background: backgroundColored,
     color: s.color || roundToExtreme(decreaseContrast(opposite(backgroundColored), largeAmount)),
     borderColor: s.borderColor || increaseContrast(backgroundColored, smallAmount),
-  })
+  }) as {
+    background: Color
+    color: Color
+    borderColor: Color
+  }
 
   const res: ThemeObject = {
     ...colorize({

@@ -21,6 +21,10 @@ export const AuthAppCommand = new Command<
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
 
+export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined>(
+  'ToggleOrbitMainCommand',
+)
+
 export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')
 export const CloseAppCommand = new Command<void, { appId: number }>('close-app')
 export const RestartAppCommand = new Command<void, void>('restart-app')

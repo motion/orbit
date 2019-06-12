@@ -108,7 +108,7 @@ class OrbitMainWindowStore {
   )
 
   handleShowOrbitMain = react(
-    () => Electron.state.showMain,
+    () => Electron.state.showOrbitMain,
     shown => {
       ensure('not torn', !Electron.isTorn)
       focusApp(shown)

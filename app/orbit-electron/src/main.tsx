@@ -3,11 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppOpenWindowCommand,
-  NewFallbackServerPortCommand,
-  SendClientDataCommand,
-} from '@o/models'
+import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -42,9 +38,11 @@ export async function main() {
   if (IS_MAIN_ORBIT) {
     // register app schema
     const { app } = require('electron')
+
     if (app.isDefaultProtocolClient('orbit') === false) {
       app.setAsDefaultProtocolClient('orbit')
     }
+
     app.on('open-url', (_options, path) => {
       console.log(`open-url emitted`, path)
       Mediator.command(SendClientDataCommand, {
@@ -80,6 +78,11 @@ export async function main() {
         TearAppResolver,
         CloseAppResolver,
         RestartAppResolver,
+
+        resolveCommand(ToggleOrbitMainCommand, async next => {
+          const showOrbitMain = typeof next === 'boolean' ? next : !Electron.state.showOrbitMain
+          Electron.setState({ showOrbitMain })
+        }),
       ],
     })
     mediatorServer.bootstrap()

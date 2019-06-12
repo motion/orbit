@@ -61,8 +61,6 @@ import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-import { KeyboardManager } from './managers/KeyboardManager'
-import { MousePositionManager } from './managers/MousePositionManager'
 // import { OCRManager } from './managers/OCRManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
@@ -115,10 +113,7 @@ export class OrbitDesktopRoot {
   private orbitDataManager: OrbitDataManager
   private oracleManager: OracleManager
   private cosalManager: CosalManager
-  // private ocrManager: OCRManager
-  // private screenManager: ScreenManager
   private generalSettingManager: GeneralSettingManager
-  private keyboardManager: KeyboardManager
   private topicsManager: TopicsManager
   private operatingSystemManager: OperatingSystemManager
   private orbitAppsManager: OrbitAppsManager
@@ -218,17 +213,10 @@ export class OrbitDesktopRoot {
       await this.oracleManager.start()
     }
 
-    // this.ocrManager = new OCRManager({ cosal: this.cosal })
-    // this.screenManager = new ScreenManager({ screen: this.screen })
-    this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
 
     new ContextManager({ screen: this.screen })
-    new MousePositionManager({
-      screen: this.screen,
-      onMouseMove: this.keyboardManager.onMouseMove,
-    })
 
     this.registerREPLGlobals()
 

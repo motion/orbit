@@ -15,7 +15,7 @@ export const AppIcon = memo(
     const theme = useTheme({ ignoreAlternate: true })
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
-    let colors = props.colors || [theme.color, theme.colorBlur]
+    let colors = props.colors || [theme.color, theme.colorBlur].map(x => `${x}`)
 
     const identifier = typeof props.identifier === 'string' ? props.identifier : false
     const definition = useAppDefinition(identifier)

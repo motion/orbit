@@ -19,6 +19,9 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   /** Optional light icon SVG */
   iconLight?: string
 
+  /** Set default colors for the icon */
+  iconColors?: string[]
+
   /** Description of app */
   description?: string
 

@@ -1,6 +1,7 @@
 import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
 import { AppBit, AppModel, AuthAppCommand, InstallAppToWorkspaceCommand, SpaceModel, UserModel } from '@o/models'
+import { BannerHandle } from '@o/ui'
 
 import { newAppStore } from '../om/stores'
 
@@ -26,8 +27,19 @@ export function useNewAppBit(identifier: string) {
   }
 }
 
-export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit> | true) {
+export async function installApp(
+  def: AppDefinition,
+  newAppBit?: Partial<AppBit> | true,
+  banner?: BannerHandle,
+) {
+  banner &&
+    banner.show({
+      message: `Installing app ${def.name}`,
+    })
+
   if (def.auth) {
+    banner && banner.setMessage(`Waiting for authentication...`)
+
     const res = await command(AuthAppCommand, { authKey: def.auth })
     if (res.type === 'error') {
       console.error('Error, TODO show banner!')
@@ -41,6 +53,11 @@ export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit>
   console.log('got response from install app command', res)
 
   if (res.type === 'error') {
+    banner &&
+      banner.show({
+        type: 'fail',
+        message: res.message,
+      })
     return res
   }
 
@@ -62,18 +79,32 @@ export async function installApp(def: AppDefinition, newAppBit?: Partial<AppBit>
 
       newAppStore.reset()
     } catch (err) {
+      const message = `Error saving AppBit ${err.message} ${err.stack}`
+      banner &&
+        banner.show({
+          type: 'fail',
+          message,
+        })
       return {
         type: 'error' as const,
-        message: `Error saving AppBit ${err.message} ${err.stack}`,
+        message,
       }
     }
   } else {
     console.log('no new app bit, not adding app to workspace just did install')
   }
 
+  const message = `Installed app!`
+
+  banner &&
+    banner.show({
+      type: 'success',
+      message,
+    })
+
   return {
     type: 'success' as const,
-    message: `Installed app!`,
+    message,
   }
 }
 

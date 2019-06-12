@@ -7,12 +7,7 @@ export default createApp({
   name: 'Search',
   icon: 'search',
   app: SearchApp,
-  // setup: {
-  //   date: {
-  //     name: 'Date',
-  //     type: 'date',
-  //   },
-  // },
+  iconColors: ['#386798', '#095647'],
   viewConfig: {
     transparentBackground: true,
   },

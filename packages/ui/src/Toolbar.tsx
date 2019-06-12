@@ -38,15 +38,17 @@ export function Toolbar({
   return (
     <SurfacePassProps
       borderWidth={0}
-      sizeRadius={1.2}
+      sizeRadius={1.25}
       iconAfter
       tooltipProps={{ towards: opposite[attach] as any }}
       glint={false}
       borderPosition="outside"
     >
-      <ToolbarRow space={size} elevation={elevation} pad={size} {...props}>
+      <ToolbarRow elevation={elevation} pad={size} {...props}>
         {border !== false && borderElement[attach]}
-        {children}
+        <Row flex={1} space={size}>
+          {children}
+        </Row>
       </ToolbarRow>
     </SurfacePassProps>
   )

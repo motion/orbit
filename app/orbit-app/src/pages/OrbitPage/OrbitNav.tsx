@@ -102,8 +102,7 @@ export const OrbitNav = memo(
     const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
     const plainItems = items.filter(x => x.tabDisplay === 'plain')
 
-    const pinnedItemsWidth =
-      pinWidth * (pinnedItems.length + permanentItems.length + (isOnSetupApp ? 1 : 0))
+    const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
     const epad = isOnSetupApp ? 0 : 3
 
@@ -119,12 +118,6 @@ export const OrbitNav = memo(
             flex={1}
             opacity={onSettings ? 0.5 : 1}
           >
-            <OrbitTab
-              tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
-              thicc
-              icon={isOnSetupApp ? 'remove' : 'add'}
-              onClick={actions.router.toggleSetupAppPage}
-            />
             {permanentItems.map(props => (
               <OrbitTab key={props.app.id} {...props} />
             ))}
@@ -161,6 +154,14 @@ export const OrbitNav = memo(
               overflowY="hidden"
             />
             {isOnSetupApp && <OrbitNewAppTab tabWidth={tabWidth} />}
+            {!isOnSetupApp && (
+              <OrbitTab
+                tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
+                thicc
+                icon={isOnSetupApp ? 'remove' : 'add'}
+                onClick={actions.router.toggleSetupAppPage}
+              />
+            )}
           </Row>
         </OrbitNavChrome>
       </OrbitNavClip>

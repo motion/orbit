@@ -6,6 +6,11 @@ import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
 export const identifierToPackageId: { [key: string]: string } = {}
 
+export function setIdentifierToPackageId(identifier: string, packageId: string) {
+  reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
+  identifierToPackageId[identifier] = packageId
+}
+
 export async function getPackageId(
   identifier: string,
   options: { search?: boolean; rescanWorkspacePath?: string } = {},

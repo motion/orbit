@@ -1,4 +1,4 @@
-import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
+import { commandInstall, getPackageId, identifierToPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
@@ -6,6 +6,8 @@ import { AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand, Insta
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
+
+import { getCurrentWorkspace } from './AppOpenWorkspaceResolver'
 
 const log = new Logger('app-store-definition-resolvers')
 
@@ -49,31 +51,15 @@ function resolveAppSetupVerify() {
   return resolveCommand(AppDefinitionSetupVerifyCommand, async ({ identifier, app }) => {
     log.info(`Verifying app ${identifier}`)
 
-    const packageId = await getPackageId(identifier)
+    const loadDef = await getAppDefinitionOrDownloadTemporary(identifier)
 
-    if (!packageId) {
-      return {
-        type: 'error' as const,
-        message: `No package id found for identifier ${identifier}`,
-      }
+    if (loadDef.type === 'error') {
+      return loadDef
     }
 
-    const appPath = join(tempPackageDir, 'node_modules', ...packageId.split('/'))
-    if (!(await pathExists(appPath))) {
-      return {
-        type: 'error' as const,
-        message: 'No app definition downloaded',
-      }
-    }
+    const { definition } = loadDef
 
-    // run definition
-    const loadedDef = await requireAppDefinition({ packageId, directory: tempPackageDir })
-
-    if (loadedDef.type === 'error') {
-      return loadedDef
-    }
-
-    if (!loadedDef.definition.setupValidate) {
+    if (!definition.setupValidate) {
       return {
         type: 'success' as const,
         message: 'Success, no validation defined',
@@ -83,7 +69,7 @@ function resolveAppSetupVerify() {
     let res
 
     try {
-      res = await loadedDef.definition.setupValidate(app)
+      res = await definition.setupValidate(app)
     } catch (err) {
       console.log('error running validate', err)
       return {
@@ -111,6 +97,36 @@ function resolveAppSetupVerify() {
       errors: res,
     }
   })
+}
+
+async function getAppDefinitionOrDownloadTemporary(identifier: string) {
+  // existing definition
+  if (identifierToPackageId[identifier]) {
+    const packageId = identifierToPackageId[identifier]
+    const directory = (await getCurrentWorkspace()).directory
+    return await requireAppDefinition({ packageId, directory })
+  }
+
+  // donwload temporary
+  const packageId = await getPackageId(identifier)
+
+  if (!packageId) {
+    return {
+      type: 'error' as const,
+      message: `No package id found for identifier ${identifier}`,
+    }
+  }
+
+  const appPath = join(tempPackageDir, 'node_modules', ...packageId.split('/'))
+  if (!(await pathExists(appPath))) {
+    return {
+      type: 'error' as const,
+      message: 'No app definition downloaded',
+    }
+  }
+
+  // run definition
+  return await requireAppDefinition({ packageId, directory: tempPackageDir })
 }
 
 function resolveGetAppStoreDefinition() {

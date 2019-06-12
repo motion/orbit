@@ -24,7 +24,7 @@ export async function insertDevelopmentPostgres() {
     token: '',
     spaceId: activeSpace.id,
     data: {
-      credentials: {
+      setup: {
         hostname: 'localhost',
         database: 'test',
         username: 'postgres',

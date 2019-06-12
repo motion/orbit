@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppOpenWorkspaceCommand, UserEntity } from '@o/models'
+import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -43,6 +43,15 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
     await appsManager.updateAppDefinitions(space)
 
     return true
+  })
+}
+
+export async function getCurrentWorkspace() {
+  const user = await getRepository(UserEntity).findOne({})
+  return await getRepository(SpaceEntity).findOne({
+    where: {
+      id: user.activeSpace,
+    },
   })
 }
 

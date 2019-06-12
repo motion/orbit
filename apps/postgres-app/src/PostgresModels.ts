@@ -1,6 +1,5 @@
-
 export interface PostgresAppData {
-  credentials: {
+  setup: {
     url?: string
     hostname?: string
     username?: string

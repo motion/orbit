@@ -8,7 +8,7 @@ import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext 
 import { PostgresAppData } from './PostgresModels'
 
 export async function graph(app: AppBit<PostgresAppData>) {
-  const c = app.data.credentials
+  const c = app.data.setup
   const pool = new Pool({
     user: c.username,
     host: c.hostname,

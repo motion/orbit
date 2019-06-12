@@ -150,6 +150,7 @@ export class OrbitDesktopRoot {
 
     // search index
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
 
     // manage apps/apis
     this.orbitAppsManager = new OrbitAppsManager()

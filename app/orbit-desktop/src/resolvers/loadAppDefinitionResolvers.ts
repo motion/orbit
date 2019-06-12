@@ -1,4 +1,4 @@
-import { commandInstall, getPackageId, identifierToPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
+import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
@@ -100,15 +100,18 @@ function resolveAppSetupVerify() {
 }
 
 async function getAppDefinitionOrDownloadTemporary(identifier: string) {
+  const directory = (await getCurrentWorkspace()).directory
+  let packageId = await getPackageId(identifier, {
+    rescanWorkspacePath: directory,
+  })
+
   // existing definition
-  if (identifierToPackageId[identifier]) {
-    const packageId = identifierToPackageId[identifier]
-    const directory = (await getCurrentWorkspace()).directory
+  if (packageId) {
     return await requireAppDefinition({ packageId, directory })
   }
 
   // donwload temporary
-  const packageId = await getPackageId(identifier)
+  packageId = await getPackageId(identifier)
 
   if (!packageId) {
     return {

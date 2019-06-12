@@ -22,7 +22,7 @@ type BaseProps = {
   defaultItem?: StackItem
   onNavigate?: (next: StackItem) => any
   items: {
-    [key: string]: FunctionComponent<NavigatorProps & { [key: string]: any }>
+    [key: string]: FunctionComponent<NavigatorProps & any>
   }
 }
 

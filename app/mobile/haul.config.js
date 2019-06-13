@@ -1,4 +1,5 @@
 import { createWebpackConfig } from 'haul'
+import { join } from 'path'
 
 export default {
   webpack: env => {
@@ -6,28 +7,46 @@ export default {
       entry: './index.js',
     })(env)
 
-    config.resolve.mainFields.push('ts:main')
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react-native': join(__dirname, 'node_modules/react-native'),
+    }
 
-    config.resolve.extensions.push('ts')
-    config.resolve.extensions.push('tsx')
+    config.resolve.mainFields = [...config.resolve.mainFields, 'ts:main']
 
-    config.module.rules.push({
-      test: /\.tsx?$/,
-      use: [
-        {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@o/babel-preset-motion'],
+    config.resolve.extensions = [...config.resolve.extensions, 'ts', 'tsx']
+
+    config.module.rules = [
+      ...config.module.rules,
+      {
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@o/babel-preset-motion'],
+            },
           },
-        },
-        'react-hot-loader/webpack',
-      ],
-    })
+          'react-hot-loader/webpack',
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: 'ignore-loader',
+      },
+    ]
 
-    config.module.rules.push({
-      test: /\.css$/,
-      use: 'ignore-loader',
-    })
+    config.node = {
+      ...(config.node || null),
+      fs: 'empty',
+    }
+
+    config.externals = [
+      ...(config.externals || []),
+      {
+        electron: '{}',
+      },
+    ]
 
     config.module.rules.some(rule => {
       if (rule.test && rule.test.source.includes('js')) {

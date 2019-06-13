@@ -10,7 +10,10 @@
     ]
   },
   "scripts": {
-    "start": "react-native start",
+    "start": "echo 'start ios once with yarn start:rn-ios' && yarn start:haul",
+    "start:haul": "haul start -- --platform ios",
+    "start:rn-ios": "react-native run-ios",
+    "start:rn": "react-native start",
     "test": "jest",
     "haul": "haul"
   },

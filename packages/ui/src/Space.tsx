@@ -3,9 +3,9 @@ import { Box, gloss } from 'gloss'
 import { isBrowser } from './constants'
 import { useScale } from './Scale'
 
-// we need just a touch of css
+// we need just a touch of css to collapse multiple spaces nicely
 if (isBrowser) {
-  require('./Space.css')
+  // require('./Space.css')
 }
 
 export type Size =

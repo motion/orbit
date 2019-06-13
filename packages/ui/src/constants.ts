@@ -1,7 +1,7 @@
 export const isNode =
   typeof process !== 'undefined' && process['release'] && process['release'].name === 'node'
 
-export const isNative = navigator.product === 'ReactNative'
+export const isNative = typeof navigator !== 'undefined' && navigator.product === 'ReactNative'
 
 export const isBrowser = !isNode && !isNative
 

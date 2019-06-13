@@ -7,7 +7,7 @@ import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
 
 if (isBrowser) {
-  require('./SelectableStore.css')
+  // require('./SelectableStore.css')
 }
 
 const key = (item: any) => Config.getItemKey(item)

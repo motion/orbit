@@ -13,7 +13,7 @@
     "watch": "source .env && build --watch",
     "clean": "source .env && clean",
     "clean:packages": "source .env && clean --all",
-    "start": "cd app/example-workspace && orbit ws",
+    "start": "cd app/example-workspace && orbit ws --verbose",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
     "start:example-workspace": "(cd app/example-workspace && orbit ws --verbose)",

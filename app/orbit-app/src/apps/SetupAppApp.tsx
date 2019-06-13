@@ -1,5 +1,5 @@
 import { AppIcon, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Toolbar, useBanner, useCreateFlow, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -31,6 +31,13 @@ function SetupAppMain() {
   )
 }
 
+export const SelectableView = gloss<any>(View).theme(({ isSelected }, theme) => ({
+  background: isSelected ? theme.background : 'transparent',
+  '&:hover': {
+    background: isSelected ? theme.background : 'transparent',
+  },
+}))
+
 function SetupAppCustom() {
   const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
@@ -44,11 +51,13 @@ function SetupAppCustom() {
     <>
       <Col width="70%" height="80%" margin="auto">
         <Flow useFlow={flow}>
-          <Flow.Step title="Template" subTitle="Choose template">
+          <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
               return (
                 <Col pad>
                   <SelectableGrid
+                    alwaysSelected
+                    defaultSelected={0}
                     items={[
                       {
                         label: 'Blank',
@@ -56,7 +65,13 @@ function SetupAppCustom() {
                         subTitle: 'Empty app template',
                       },
                     ]}
-                    getItem={props => <IconLabeled {...props} />}
+                    getItem={(props, { isSelected, select }) => (
+                      <Theme alt={isSelected ? 'selected' : undefined}>
+                        <SelectableView isSelected={isSelected} onClick={select} borderRadius={10}>
+                          <IconLabeled {...props} />
+                        </SelectableView>
+                      </Theme>
+                    )}
                     onSelect={item => {
                       setData(item)
                     }}

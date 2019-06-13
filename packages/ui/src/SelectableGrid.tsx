@@ -1,5 +1,5 @@
 import { useStore } from '@o/use-store'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 
 import { SelectableProps, SelectableStore, useSelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
@@ -12,32 +12,41 @@ type SelectableGridProps<A> = SortableGridProps<A> &
 
 export function SelectableGrid(props: SelectableGridProps<any>) {
   const store = useSelectableStore(props)
-
-  const itemViews = useMemo(() => {
-    return props.items.map((item, index) => {
-      // this is complex so we can do single updates on selection move
-      return function GridItem() {
-        const x = useStore(store)
-        const isSelected = x.isActiveIndex(index)
-        return props.getItem(item, {
-          isSelected,
-          select: () => {
-            x.setRowMouseDown(index)
-          },
-        })
-      }
-    })
-  }, [props.items])
-
   const getItem = useCallback(
     (_, index) => {
-      const ItemView = itemViews[index]
-      return <ItemView />
+      return (
+        <SelectableGridItem
+          getItem={props.getItem}
+          selectableStore={store}
+          index={index}
+          item={props.items[index]}
+        />
+      )
     },
-    [itemViews],
+    [props.items],
   )
-
   return <SortableGrid {...props} getItem={getItem} />
+}
+
+type SelectableGridItemProps = Pick<SelectableGridProps<any>, 'getItem' | 'selectableStore'> & {
+  index: number
+  item: any
+}
+
+/**
+ * Reactive view to selection
+ */
+function SelectableGridItem(props: SelectableGridItemProps) {
+  const store = useStore(props.selectableStore)
+  const isSelected = store.isActiveIndex(props.index)
+  console.log('isSelected', props.selectableStore, isSelected)
+  const select = useCallback(() => {
+    store.setRowMouseDown(props.index)
+  }, [])
+  return props.getItem(props.item, {
+    isSelected,
+    select,
+  })
 }
 
 SelectableGrid.defaultProps = {

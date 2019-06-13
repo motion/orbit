@@ -1,5 +1,5 @@
 import { AppIcon, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { installApp, useNewAppBit } from '../helpers/installApp'
@@ -41,11 +41,28 @@ export const SelectableView = gloss<any>(View).theme(({ isSelected }, theme) => 
 function SetupAppCustom() {
   const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
+
   const flow = useCreateFlow({
     initialData: {
       selectedTemplate: null,
     },
   })
+
+  const form = useForm({
+    fields: {
+      name: {
+        name: 'Name',
+        type: 'string',
+      },
+      identifier: {
+        name: 'identifier',
+        type: 'string',
+        value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
+      },
+    },
+  })
+
+  console.log('form', form, form.getValue('name'))
 
   return (
     <>
@@ -83,19 +100,7 @@ function SetupAppCustom() {
 
           <Flow.Step title="Setup" subTitle="Give it a name and icon">
             <Col pad>
-              <Form
-                fields={{
-                  name: {
-                    name: 'Name',
-                    type: 'string',
-                  },
-                  identifier: {
-                    name: 'identifier',
-                    type: 'string',
-                    value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
-                  },
-                }}
-              />
+              <Form useForm={form} />
             </Col>
           </Flow.Step>
         </Flow>
@@ -107,8 +112,9 @@ function SetupAppCustom() {
             Back
           </Button>
           <View flex={1} />
+          {/* {flow.step === 0 && <Button onClick={flow.next}>Next</Button>} */}
           <Button
-            size={1.4}
+            disabled={!form.getValue('name')}
             alt="confirm"
             onClick={() => {
               newAppStore.setApp(flow.data.identifier)

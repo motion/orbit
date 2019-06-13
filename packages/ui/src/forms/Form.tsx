@@ -145,8 +145,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   ref,
 ) {
   const formStore = parentUseForm ? useStore(parentUseForm) : useForm({ fields, errors })
+  const finalFields = formStore.props.fields
 
-  if (fields && children) {
+  if (finalFields && children) {
     throw new Error(
       `Can't pass both fields and children, Form accepts one or the other. See docs: `,
     )
@@ -154,8 +155,8 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 
   let elements = children
 
-  if (fields) {
-    elements = generateFields(fields)
+  if (finalFields) {
+    elements = generateFields(finalFields)
   }
 
   const onSubmitInner = useCallback(

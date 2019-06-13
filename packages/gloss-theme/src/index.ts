@@ -131,7 +131,8 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
       // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
       // ensure rest is last so they can override anything
 
-      colorDisabled: decreaseContrast(base.color, largeAmount),
+      backgroundDisabled: base.background.desaturate(0.85),
+      colorDisabled: base.color.alpha(0.5),
 
       ...s,
       // except for base which is already using the right order

@@ -6,6 +6,24 @@ export default {
       entry: './index.js',
     })(env)
 
+    config.resolve.mainFields.push('ts:main')
+
+    config.resolve.extensions.push('ts')
+    config.resolve.extensions.push('tsx')
+
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@o/babel-preset-motion'],
+          },
+        },
+        'react-hot-loader/webpack',
+      ],
+    })
+
     config.module.rules.push({
       test: /\.css$/,
       use: 'ignore-loader',

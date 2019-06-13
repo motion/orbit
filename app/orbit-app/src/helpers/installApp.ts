@@ -1,11 +1,11 @@
 import { command, loadOne, save } from '@o/bridge'
-import { AppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
+import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
 import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
 import { BannerHandle } from '@o/ui'
 
 import { newAppStore } from '../om/stores'
 
-export function createNewAppBit(definition: AppDefinition): AppBit {
+export function newEmptyAppBit(definition: AppDefinition): AppBit {
   return {
     target: 'app',
     identifier: definition.id,
@@ -22,9 +22,26 @@ export function useNewAppBit(identifier: string) {
   const definition = useAppDefinition(identifier)
   const [activeSpace] = useActiveSpace()
   return {
-    ...createNewAppBit(definition),
+    ...newEmptyAppBit(definition),
     spaceId: activeSpace.id,
   }
+}
+
+export async function createAppBitInActiveSpace(
+  appBit: Partial<AppBit> & Pick<AppBit, 'identifier'>,
+) {
+  const activeSpace = await getActiveSpace()
+  const def = await getAppDefinition(appBit.identifier)
+  const bit = {
+    ...newEmptyAppBit(def),
+    spaceId: activeSpace.id,
+    space: activeSpace,
+    name: newAppStore.app.name || def.name,
+    colors: newAppStore.app.colors,
+    ...appBit,
+  }
+  console.log('Saving new app', bit)
+  await save(AppModel, bit)
 }
 
 export async function installApp(
@@ -67,7 +84,7 @@ export async function installApp(
     try {
       const activeSpace = await getActiveSpace()
       const bit = {
-        ...createNewAppBit(def),
+        ...newEmptyAppBit(def),
         spaceId: activeSpace.id,
         space: activeSpace,
         name: newAppStore.app.name || def.name,

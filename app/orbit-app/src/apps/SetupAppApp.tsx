@@ -1,8 +1,9 @@
-import { AppIcon, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
+import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { installApp, useNewAppBit } from '../helpers/installApp'
+import { createAppBitInActiveSpace, installApp, useNewAppBit } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
@@ -39,6 +40,7 @@ export const SelectableView = gloss<any>(View).theme(({ isSelected }, theme) => 
 }))
 
 function SetupAppCustom() {
+  const banner = useBanner()
   const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
 
@@ -116,7 +118,35 @@ function SetupAppCustom() {
           <Button
             disabled={!form.getValue('name')}
             alt="confirm"
-            onClick={() => {}}
+            onClick={async () => {
+              const template = flow.data.selectedTemplate
+              const name = form.getValue('name')
+              const identifier = form.getValue('identifier')
+
+              banner.show({
+                message: `Creating app ${name} with template ${template}`,
+              })
+
+              const res = await command(AppCreateNewCommand, {
+                template,
+                name,
+                identifier,
+              })
+
+              if (res.type === 'error') {
+                banner.show({
+                  type: 'fail',
+                  message: res.message,
+                })
+                return
+              }
+
+              // go to app
+              console.warn('should go to app')
+              createAppBitInActiveSpace({
+                identifier,
+              })
+            }}
             icon="chevron-right"
           >
             Create

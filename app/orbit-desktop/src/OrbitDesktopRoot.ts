@@ -89,6 +89,8 @@ import { remove } from 'lodash'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
+import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
+import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 
 const log = new Logger('desktop')
 
@@ -346,6 +348,8 @@ export class OrbitDesktopRoot {
           log.info('Closed app', appId)
         }),
         createAppOpenWorkspaceResolver(this.orbitAppsManager),
+        AppCreateNewResolver,
+        AppCreateWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,
         createCallAppBitApiMethodResolver(props.orbitAppsManager),
@@ -362,7 +366,6 @@ export class OrbitDesktopRoot {
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
-
         resolveCommand(AuthAppCommand, async ({ authKey }) => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
 

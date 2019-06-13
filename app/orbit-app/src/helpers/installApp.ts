@@ -1,6 +1,6 @@
 import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
-import { AppBit, AppModel, AuthAppCommand, InstallAppToWorkspaceCommand, SpaceModel, UserModel } from '@o/models'
+import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
 import { BannerHandle } from '@o/ui'
 
 import { newAppStore } from '../om/stores'
@@ -48,7 +48,7 @@ export async function installApp(
     }
     return res
   }
-  const res = await command(InstallAppToWorkspaceCommand, { identifier: def.id })
+  const res = await command(AppInstallToWorkspaceCommand, { identifier: def.id })
 
   console.log('got response from install app command', res)
 

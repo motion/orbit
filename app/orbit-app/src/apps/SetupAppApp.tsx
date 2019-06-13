@@ -62,8 +62,6 @@ function SetupAppCustom() {
     },
   })
 
-  console.log('form', form, form.getValue('name'))
-
   return (
     <>
       <Col width="70%" height="80%" margin="auto">
@@ -90,6 +88,8 @@ function SetupAppCustom() {
                       </Theme>
                     )}
                     onSelect={item => {
+                      console.log('set item', item)
+                      newAppStore.setApp(flow.data.identifier)
                       setData(item)
                     }}
                   />
@@ -116,9 +116,7 @@ function SetupAppCustom() {
           <Button
             disabled={!form.getValue('name')}
             alt="confirm"
-            onClick={() => {
-              newAppStore.setApp(flow.data.identifier)
-            }}
+            onClick={() => {}}
             icon="chevron-right"
           >
             Create

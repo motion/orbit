@@ -2,7 +2,7 @@ import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePack
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppDefinitionSetupVerifyCommand, GetAppStoreAppDefinitionCommand, InstallAppToWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import { AppDefinitionSetupVerifyCommand, AppInstallToWorkspaceCommand, GetAppStoreAppDefinitionCommand, SpaceEntity, UserEntity } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -32,7 +32,7 @@ async function getWorkspaceDirectory() {
 }
 
 function resolveInstallAppToWorkspace() {
-  return resolveCommand(InstallAppToWorkspaceCommand, async ({ identifier }) => {
+  return resolveCommand(AppInstallToWorkspaceCommand, async ({ identifier }) => {
     const directory = await getWorkspaceDirectory()
     const res = await commandInstall({ identifier, directory })
     log.info(`Got response from install command ${JSON.stringify(res)}`)

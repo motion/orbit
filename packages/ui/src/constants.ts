@@ -3,8 +3,6 @@ export const isNode =
 
 export const isNative = navigator.product === 'ReactNative'
 
-console.log('ok', navigator.product)
-
 export const isBrowser = !isNode && !isNative
 
 export const isWebkit =

@@ -6,6 +6,11 @@ export default {
       entry: './index.js',
     })(env)
 
+    config.module.rules.push({
+      test: /\.css$/,
+      use: 'ignore-loader',
+    })
+
     config.module.rules.some(rule => {
       if (rule.test && rule.test.source.includes('js')) {
         rule.use = [
@@ -20,6 +25,7 @@ export default {
         return true
       }
     })
+
     return config
   },
 }

@@ -1,4 +1,3 @@
-import { invertLightness } from '@o/color'
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
@@ -260,14 +259,14 @@ const HomeButton = memo(
       <View ref={ref} {...props}>
         <AppIcon
           cutout
-          background={invertLightness(theme.color, 0.5)}
+          colors={[theme.color.toString(), theme.color.toString()]}
           onMouseEnter={() => actions.setNavHovered(true)}
           onMouseLeave={() => actions.setNavHovered(false)}
-          opacity={0.65}
+          opacity={0.5}
           hoverStyle={{
             opacity: 1,
           }}
-          identifier={state.navHovered || state.navVisible ? 'home' : icon}
+          identifier={state.navHovered ? 'home' : icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()

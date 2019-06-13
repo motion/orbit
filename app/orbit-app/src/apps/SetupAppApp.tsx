@@ -150,9 +150,11 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 selectable
                 alwaysSelected
                 onSelect={rows => {
-                  if (rows[0]) {
-                    console.log('setting data', rows[0].identifier)
-                    flow.setData({ selectedAppIdentifier: rows[0].identifier })
+                  const row = rows[0]
+                  if (row) {
+                    console.log('setting data', row)
+                    flow.setData({ selectedAppIdentifier: row.identifier })
+                    newAppStore.update({ name: row.title })
                   }
                 }}
                 itemProps={{
@@ -226,11 +228,12 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
 
 const FlowStepSetup = memo(() => {
   const flow = useFlow()
+  const identifier = flow.data.selectedAppIdentifier
   const appBit = useNewAppBit(flow.data.selectedAppIdentifier)
   return (
     <Col pad flex={1} scrollable="y">
       <Scale size={1.2}>
-        <AppsMainNew customizeColor app={appBit} />
+        <AppsMainNew key={identifier} customizeColor app={appBit} />
       </Scale>
     </Col>
   )

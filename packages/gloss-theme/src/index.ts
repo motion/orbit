@@ -109,10 +109,12 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
     borderColor: Color
   }
 
+  const baseColor = toColor(base.color)
+
   const res: ThemeObject = {
     ...colorize({
       // for buttons/surfaces, we generate a nice set of themes
-      colorHover: s.colorHover || toColor(base.color).lighten(0.1),
+      colorHover: s.colorHover || baseColor.lighten(0.1),
       backgroundHover:
         s.backgroundHover ||
         // for some reason this isnt immutable
@@ -131,8 +133,8 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
       // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
       // ensure rest is last so they can override anything
 
-      backgroundDisabled: backgroundColored.desaturate(0.85),
-      colorDisabled: toColor(base.color).alpha(0.5),
+      backgroundDisabled: backgroundColored.desaturate(0.85).alpha(0.2),
+      colorDisabled: baseColor.alpha(baseColor.valpha * 0.25),
 
       ...s,
       // except for base which is already using the right order

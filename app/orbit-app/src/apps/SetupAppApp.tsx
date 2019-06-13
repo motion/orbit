@@ -98,7 +98,7 @@ function SetupAppCustom() {
             }}
           </Flow.Step>
 
-          <Flow.Step title="Setup" subTitle="Give it a name and icon">
+          <Flow.Step title="Customize" subTitle="Give it a name and icon">
             <Col pad>
               <Form useForm={form} />
             </Col>

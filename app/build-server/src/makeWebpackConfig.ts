@@ -2,6 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
+import console = require('console')
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
@@ -93,6 +94,9 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     },
   }
 
+  // include the cli node modules as backup
+  const cliNodeModules = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
+
   let config: webpack.Configuration = {
     watch,
     context: context,
@@ -113,11 +117,6 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
-
-      // this makes the first entry fail but not hard reload
-      // comment it out for hard reloads, so far no fix seen
-      // hotUpdateChunkFilename: `hot-update.js`,
-      // hotUpdateMainFilename: `hot-update.json`,
     },
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
     externals: [
@@ -135,6 +134,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       alias: {
         'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
       },
+      modules: ['node_modules', cliNodeModules],
     },
     resolveLoader: {
       modules: buildNodeModules,

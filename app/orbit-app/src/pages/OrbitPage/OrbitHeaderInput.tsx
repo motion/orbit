@@ -3,8 +3,9 @@ import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback } from 'react'
 
-import { useStores } from '../../hooks/useStores'
+import { useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { useHeaderStore } from './OrbitHeader'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -15,13 +16,15 @@ const handleKeyDown = e => {
 }
 
 function useActivePane() {
-  const { paneManagerStore } = useStores()
+  const paneManagerStore = usePaneManagerStore()
   return paneManagerStore.activePane
 }
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
   const search = useSearch()
-  const { orbitWindowStore, queryStore, headerStore } = useStores()
+  const queryStore = useQueryStore()
+  const orbitWindowStore = useOrbitWindowStore()
+  const headerStore = useHeaderStore()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()

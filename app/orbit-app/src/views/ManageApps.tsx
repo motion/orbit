@@ -54,6 +54,7 @@ export function ManageApps() {
           getItem={item => {
             return (
               <OrbitAppIcon
+                removable
                 app={item.app}
                 onDoubleClick={() => {
                   om.actions.router.showAppPage({ id: `${x.id}` })
@@ -85,7 +86,7 @@ export function ManageApps() {
           margin={[16, 0]}
           items={dataApps}
           getItem={item => {
-            return <OrbitAppIcon app={item.app} />
+            return <OrbitAppIcon removable app={item.app} />
           }}
         />
       </Section>

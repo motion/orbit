@@ -10,7 +10,11 @@ import { getWorkspaceAppPaths } from './getWorkspaceAppPaths'
  */
 export async function updateWorkspacePackageIds(workspaceRoot: string) {
   const paths = await getWorkspaceAppPaths(workspaceRoot)
-  reporter.info(`Updating workspace package ids: ${workspaceRoot}, got ${paths.length} paths`)
+  reporter.info(
+    `Updating workspace package ids: ${workspaceRoot}, got ${paths
+      .map(x => x.packageId)
+      .join(', ')}`,
+  )
   for (const { packageId, directory } of paths) {
     const buildInfoPath = join(directory, 'dist', 'buildInfo.json')
     if (await pathExists(buildInfoPath)) {

@@ -22,7 +22,7 @@ export interface AppBit<Data = any> {
   name?: string
 
   /**
-   * permament = fixed to the front of the pinned tabs
+   * permanent = fixed to the front of the pinned tabs
    * pinned = smaller, sorts to the front
    * plain = shows as normal tab
    * hidden = not used in main navigation, system/orbit-level tabs
@@ -38,4 +38,6 @@ export interface AppBit<Data = any> {
   token?: string
 
   data?: Data
+
+  icon?: string
 }

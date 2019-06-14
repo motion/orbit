@@ -1,10 +1,9 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@o/models'
+import { ChangeDesktopThemeCommand } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
-import { ensure, react, useStore } from '@o/use-store'
+import { createUsableStore, ensure, react } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
-import root from 'global'
 import { join } from 'path'
 import * as React from 'react'
 
@@ -13,7 +12,6 @@ import { getScreenSize } from '../helpers/getScreenSize'
 import { Mediator } from '../mediator'
 import { getDefaultAppBounds } from './getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
-import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -30,18 +28,11 @@ function focusApp(shown: boolean) {
   }
 }
 
-// this is just temporary to get TearAppResolver to work
-// @nate please help to fix it if following approach won't work
-let orbitShortcutsStore
-export const getOrbitShortcutsStore = () => {
-  return orbitShortcutsStore
-}
-
 class OrbitMainWindowStore {
   orbitRef: BrowserWindow
   alwaysOnTop = true
   hasMoved = false
-  initialShow = false
+  isVisible = false
   size = [0, 0]
   position = [0, 0]
   vibrancy = 'light'
@@ -117,7 +108,7 @@ class OrbitMainWindowStore {
   )
 
   handleShowOrbitMain = react(
-    () => App.state.showOrbitMain,
+    () => Electron.state.showOrbitMain,
     shown => {
       ensure('not torn', !Electron.isTorn)
       focusApp(shown)
@@ -135,11 +126,11 @@ class OrbitMainWindowStore {
     if (Electron.isTorn) {
       return true
     }
-    return this.initialShow ? App.state.showOrbitMain : false
+    return this.isVisible ? Electron.state.showOrbitMain : false
   }
 
-  setInitialShow = () => {
-    this.initialShow = true
+  setIsVisible = (next: boolean) => {
+    this.isVisible = next
   }
 
   get showDevTools() {
@@ -147,30 +138,17 @@ class OrbitMainWindowStore {
   }
 }
 
-const onToggleOpen = () => {
-  const shown = App.state.showOrbitMain
-  console.log('TOGGLE', shown)
-  focusApp(shown)
-  Mediator.command(SendClientDataCommand, {
-    name: shown ? 'HIDE' : 'SHOW',
-  })
-}
+export const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore)
 
 export function OrbitMainWindow() {
-  const store = useStore(OrbitMainWindowStore, null)
-  root['OrbitMainWindowStore'] = store // helper for dev
+  const store = orbitMainWindowStore.useStore()
   const url = `${Config.urls.server}`
 
   log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size} ${store.vibrancy}`)
 
-  orbitShortcutsStore = useStore(OrbitShortcutsStore, {
-    onToggleOpen,
-  })
-
   // onMount
   React.useEffect(() => {
     store.start()
-    orbitShortcutsStore.start()
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
@@ -186,7 +164,7 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       id="app"
       show={store.show}
-      onReadyToShow={store.setInitialShow}
+      onReadyToShow={() => store.setIsVisible(true)}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       forwardRef={store.handleRef}

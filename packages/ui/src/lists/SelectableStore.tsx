@@ -7,7 +7,7 @@ import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
 
 if (isBrowser) {
-  require('./SelectableStore.css')
+  // require('./SelectableStore.css')
 }
 
 const key = (item: any) => Config.getItemKey(item)
@@ -69,10 +69,17 @@ export class SelectableStore {
     return this.props.items || []
   }
 
-  resetKeyToIndex = react(
-    () => always(this.rows),
-    () => {
-      this.keyToIndex = {}
+  // async so we have time to render the active state first
+  callbackOnSelect = react(
+    () => always(this.active),
+    async (_, { sleep }) => {
+      ensure('this.props.onSelect', !!this.props.onSelect)
+      await sleep(16)
+      const { rows, indices } = this.getSelectedState()
+      this.props.onSelect(rows, indices)
+    },
+    {
+      deferFirstRun: true,
     },
   )
 
@@ -103,17 +110,6 @@ export class SelectableStore {
     },
   )
 
-  // async so we have time to render the active state first
-  callbackOnSelect = react(
-    () => always(this.active),
-    async (_, { sleep }) => {
-      ensure('this.props.onSelect', !!this.props.onSelect)
-      await sleep(16)
-      const { rows, indices } = this.getSelectedState()
-      this.props.onSelect(rows, indices)
-    },
-  )
-
   private removeUnselectable = (keys: string[]) => {
     return keys.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
@@ -136,6 +132,9 @@ export class SelectableStore {
         const idx = this.rows.findIndex(r => key(r) === rowKey)
         if (idx >= 0) {
           this.keyToIndex[rowKey] = idx
+        } else {
+          console.error(`no row found of key ${rowKey}`)
+          debugger
         }
       }
     }

@@ -1,11 +1,5 @@
 next
 
-install apps / app bundles
-
-TODO: make webpack just turn every import in appInfo.js into an external, then you can require it
-during command-build and all the packages are there already, then can write out all the important
-details to buildInfo.json. solves some of our issues
-
 - [ ] need to fix app icons completely
 - [ ] new app setup pane with "create new app" as well
 - [ ] installs app into workspace when you click oauth/setup
@@ -255,44 +249,7 @@ Beta:
 
 ---
 
-Month 1:
-
-"Make apps work for initially closing the loop"
-
-Week 1: Making some p2p and app install/settings stuff work Week 2: Making Space management and
-Account signup work Week 4: Fixing onboard/productionization issues, perhaps simple site for alpha
-
----
-
-Month 2:
-
-"Make a great demo for the website"
-
-Week 1: Working on various apps to make them work better Week 2: Putting together a app demos and
-documentation Week 3: Get a rough first pass at website stood up by end of week Week 4: Get a nice
-website with mobile + start on docs
-
----
-
 large rows filter/search in browser (https://github.com/nextapps-de/flexsearch)
-
----
-
-```
-view Main {
-  x = 0
-  y = 1
-  inc = () => x++
-  z = x + y
-  abc = x >> x + 1
-
-  <div onClick={inc} />
-}
-```
-
----
-
-- oleksy has some ml referrals
 
 ---
 
@@ -302,3 +259,7 @@ make gloss work with shadow-root; not too hard:
 2. GlossView(props)
    1. => glossify(styles, context.rootElement)
    2. => sheet.addStyles(rootElement)
+
+---
+
+make a big table of all the state/alternates for button/tag/etc

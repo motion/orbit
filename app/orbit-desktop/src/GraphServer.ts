@@ -10,12 +10,7 @@ import express from 'express'
 import { pathExistsSync } from 'fs-extra'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import {
-  introspectSchema,
-  makeExecutableSchema,
-  makeRemoteExecutableSchema,
-  mergeSchemas,
-} from 'graphql-tools'
+import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { join } from 'path'
 import { getRepository } from 'typeorm'

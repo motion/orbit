@@ -3,7 +3,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { introspectSchema } from 'graphql-tools'
 
 export async function graph(app: AppBit) {
-  return sourceNodes(app.data.credentials)
+  return sourceNodes(app.data.setup)
 }
 
 export async function sourceNodes({ createLink, createSchema, ...options }) {

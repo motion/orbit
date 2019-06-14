@@ -8,8 +8,6 @@ export function OrbitSettingsToolbar() {
   const om = useOm()
   const appId = om.state.router.appId
 
-  console.log('appId', appId)
-
   if (App.isEditing) {
     return null
   }

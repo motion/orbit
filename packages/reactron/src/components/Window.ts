@@ -38,6 +38,7 @@ export class Window extends BaseComponent {
 
   mount() {
     const { props } = this
+
     this.options = filterUndefined({
       show: props.show === undefined ? true : props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
@@ -53,6 +54,14 @@ export class Window extends BaseComponent {
       kiosk: !!props.kiosk,
       fullScreen: !!props.fullScreen,
       icon: props.icon,
+      ...(props.defaultSize && {
+        width: props.defaultSize[0],
+        height: props.defaultSize[1],
+      }),
+      ...(props.defaultPosition && {
+        x: props.defaultPosition[0],
+        y: props.defaultPosition[1],
+      }),
     })
 
     this.window = new BrowserWindow(this.options)
@@ -90,10 +99,8 @@ export class Window extends BaseComponent {
         }
       },
       size: this.updateSize,
-      defaultSize: this.updateSize,
       onResize: this.updateSize,
       position: this.updatePosition,
-      defaultPosition: this.updatePosition,
       onMove: this.updatePosition,
       onMoved: this.updatePosition,
       animatePosition: this.updatePosition,
@@ -160,11 +167,11 @@ function configureFile(this: Window, { file }) {
   }
 }
 
-function configureSize(this: Window, { size: oSize, onResize, defaultSize, animateSize }) {
+function configureSize(this: Window, { size: oSize, onResize, animateSize }) {
   if (this.unmounted) {
     return
   }
-  console.log('configure size', oSize, defaultSize)
+  console.log('configure size', oSize)
   let size = oSize
   if (Array.isArray(oSize)) {
     size = size.map(x => Math.round(x))
@@ -177,12 +184,7 @@ function configureSize(this: Window, { size: oSize, onResize, defaultSize, anima
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {
       rawHandler(this.window.getSize())
     })
-    if (!size && defaultSize) {
-      this.window.setSize(...defaultSize)
-      this.window.setResizable(true)
-      return
-    }
-    if (!size && !defaultSize) {
+    if (!size) {
       this.window.setResizable(true)
       return
     }

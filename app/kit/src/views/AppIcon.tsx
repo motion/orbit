@@ -12,15 +12,16 @@ export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
 
 export const AppIcon = memo(
   forwardRef((props: AppIconProps, ref) => {
+    const theme = useTheme({ ignoreAlternate: true })
     let icon = props.icon || props.identifier || ''
     let iconLight = ''
-    let colors = props.colors || ['red', 'blue']
+    let colors = props.colors || [theme.color, theme.colorBlur].map(x => `${x}`)
 
     const identifier = typeof props.identifier === 'string' ? props.identifier : false
     const definition = useAppDefinition(identifier)
 
     if (identifier && definition) {
-      icon = definition.icon
+      icon = definition.icon || props.identifier
       iconLight = definition.iconLight
     }
 
@@ -29,11 +30,10 @@ export const AppIcon = memo(
       icon = 'home'
     }
 
-    const theme = useTheme()
     const isSVGIcon =
       icon
-        .trim()
         .slice(0, 20)
+        .trim()
         .indexOf('<svg') > -1
     const color = getIconColor(props, theme)
 

@@ -1,5 +1,5 @@
-import { AppDefinition, AppIcon, getSearchAppDefinitions, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { installApp } from '../../helpers/installApp'
@@ -70,8 +70,8 @@ export function AppsMainAddAppContent({
       pad="lg"
       space="xxl"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
-      title="Add app"
-      subTitle={`Setup ${def.name} app`}
+      title={def.name}
+      subTitle={`Add ${def.name} app.`}
       titlePad
       titleBorder
       afterTitle={
@@ -109,24 +109,31 @@ export function AppsMainAddAppContent({
         titleSize={0.85}
         space
       >
-        <AppsMainNew customizeColor app={{ target: 'app', name: def.name, identifier: def.id }} />
+        <AppsMainNew
+          customizeColor={!isDataDefinition(def)}
+          app={{ target: 'app', name: def.name, identifier: def.id }}
+        />
 
         {hasSetup && (
           <>
+            <Divider />
             <AppSetupForm
               onFocus={() => {
                 setShouldLoadFullDef(true)
               }}
               def={def}
             />
-            <Message alt="lightGray" icon="warn">
-              This app stores data privately, only on your device. If your team enables
-              decentralized key-sharing, it syncs private keys securely,{' '}
-              <strong>only directly</strong> to others users in this space.
-            </Message>
           </>
         )}
       </Section>
+
+      {hasSetup && (
+        <Message alt="lightGray" icon="warn">
+          This app stores data privately, only on your device. If your team enables decentralized
+          key-sharing, it syncs private keys securely, <strong>only directly</strong> to others
+          users in this space.
+        </Message>
+      )}
 
       <Section space>
         <SubTitle>Description</SubTitle>

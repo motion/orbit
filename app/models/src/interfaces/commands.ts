@@ -21,6 +21,10 @@ export const AuthAppCommand = new Command<
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
 
+export const ToggleOrbitMainCommand = new Command<undefined, boolean | undefined>(
+  'ToggleOrbitMainCommand',
+)
+
 export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')
 export const CloseAppCommand = new Command<void, { appId: number }>('close-app')
 export const RestartAppCommand = new Command<void, void>('restart-app')
@@ -29,10 +33,15 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
-export const InstallAppToWorkspaceCommand = new Command<
+export const AppCreateNewCommand = new Command<
+  { type: 'error'; message: string } | { type: 'success'; message: string },
+  { template: string; name: string; icon: string; identifier: string }
+>('AppCreateNewCommand')
+
+export const AppInstallToWorkspaceCommand = new Command<
   { type: 'error'; message: string } | { type: 'success'; message: string },
   { identifier: string }
->('InstallAppToWorkspaceCommand')
+>('AppInstallToWorkspaceCommand')
 
 // download app definition from registry
 export const GetAppStoreAppDefinitionCommand = new Command<

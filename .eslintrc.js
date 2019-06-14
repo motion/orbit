@@ -22,7 +22,7 @@ module.exports = {
   ],
   plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   rules: {
-    'no-restricted-globals': confusingGlobals,
+    'no-restricted-globals': ['error'].concat(confusingGlobals),
     indent: 'off',
     'no-param-reassign': 'off',
     '@typescript-eslint/no-object-literal-type-assertion': 'off',

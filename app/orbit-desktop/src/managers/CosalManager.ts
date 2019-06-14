@@ -36,8 +36,10 @@ export class CosalManager {
 
     // heavy startup
     setTimeout(() => {
+      console.log('Starting cosal...')
       this.cosal.start()
-    }, 2000)
+      console.log('Finished starting cosal...')
+    }, 8000)
 
     // sleep a bit, this is a heavy-ish operation and we can do it after things startup
     // TODO make this a bit better so its controlled above

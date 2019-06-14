@@ -1,4 +1,4 @@
-import { AppBit, AppIcon, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { AppBit, AppIcon, ensure, getAppDefinition, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -83,8 +83,8 @@ export class SearchStore {
       groupName: 'Apps',
       extraData: {
         id: `${app.id}`,
-        icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
+        icon: getAppDefinition(app.identifier) ? getAppDefinition(app.identifier).icon : '',
         title: `Open ${app.name}`,
         subTitle: 'Command: ⮐',
       },
@@ -157,10 +157,6 @@ export class SearchStore {
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
-
-      if (this.stores.paneManagerStore) {
-        await when(() => this.stores.paneManagerStore.activePane.type === 'search')
-      }
 
       await sleep(120)
 

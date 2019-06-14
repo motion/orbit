@@ -181,7 +181,11 @@ export function AppsMain(props: AppViewProps) {
     return <AppsMainAddApp identifier={props.subId} />
   }
 
-  return <AppSettings appId={+props.subId} />
+  if (props.subType === 'settings') {
+    return <AppSettings key={props.subId} appId={+props.subId} />
+  }
+
+  return null
 }
 
 function AppSettings(props: { appId: number }) {
@@ -196,6 +200,7 @@ function AppSettings(props: { appId: number }) {
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       title={app.name}
+      subTitle="Update app settings"
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (

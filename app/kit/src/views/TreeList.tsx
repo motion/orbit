@@ -5,8 +5,8 @@ import { Button, List, ListItemProps, ListProps, TreeItem, useGet } from '@o/ui'
 import { pick } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { ScopedAppState, useAppState } from '../hooks/useAppState'
-import { ScopedUserState, useUserState } from '../hooks/useUserState'
+import { useAppState } from '../hooks/useAppState'
+import { useUserState, ScopedState } from '../hooks/useUserState'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 
@@ -52,8 +52,8 @@ const defaultState: TreeStateStatic = {
 }
 
 const getActions = (
-  treeState: () => ScopedAppState<TreeStateStatic>,
-  userState: () => ScopedUserState<TreeUserState>,
+  treeState: () => ScopedState<TreeStateStatic>,
+  userState: () => ScopedState<TreeUserState>,
   // stores: KitStores,
 ) => {
   const Actions = {

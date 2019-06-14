@@ -1,8 +1,7 @@
-import { AppDefinition } from '@o/models'
-import { join } from 'path'
-
 import { reporter } from '../reporter'
-import { identifierToPackageId } from './getPackageId'
+import { findPackage } from './findPackage'
+import { setIdentifierToPackageId } from './getPackageId'
+import { loadAppEntry } from './loadAppEntry'
 
 export async function requireAppDefinition({
   directory,
@@ -11,30 +10,19 @@ export async function requireAppDefinition({
   directory: string
   packageId: string
 }) {
-  const appPath = join(directory, 'node_modules', ...packageId.split('/'))
+  const packageRoot = findPackage({ packageId, directory })
+  reporter.info(`Importing app definition at appRoot ${packageRoot}`)
 
-  // load full web app for validation
-  const appDefPath = join(appPath, 'dist', 'index.js')
-
-  reporter.info(`Importing app definition at ${appDefPath}`)
-
-  let definition: AppDefinition
-
-  try {
-    definition = require(appDefPath).default
-
-    // update cache
-    identifierToPackageId[definition.id] = packageId
-  } catch (err) {
-    console.log('error with app def', err)
-    return {
-      type: 'error' as const,
-      message: `${err.message}`,
-    }
+  // try web, then node, for now...
+  let definition = await loadAppEntry(packageRoot, 'web')
+  if (!definition) {
+    definition = await loadAppEntry(packageRoot, 'node')
   }
 
   if (definition) {
     reporter.info(`got def ${definition.name}`)
+    // update cache
+    setIdentifierToPackageId(definition.id, packageId)
     return {
       type: 'success' as const,
       definition,

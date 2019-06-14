@@ -3,7 +3,7 @@ import { ThemeProvide } from 'gloss'
 import React, { memo, useMemo } from 'react'
 
 import { ProvideBanner } from './Banner'
-import { ProvideFocus } from './Focus'
+import { ProvideFocus, ProvideFocusManager } from './Focus'
 import { ProvideSearch } from './Search'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
@@ -33,7 +33,9 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
             <Visibility visible={true}>
               <ProvideFocus focused={true}>
                 <ProvideShortcut>
-                  <ProvideShare>{props.children}</ProvideShare>
+                  <ProvideFocusManager>
+                    <ProvideShare>{props.children}</ProvideShare>
+                  </ProvideFocusManager>
                 </ProvideShortcut>
               </ProvideFocus>
             </Visibility>

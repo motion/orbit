@@ -14,12 +14,12 @@ import { PopoverState } from '@o/ui'
 import * as dateFns from 'date-fns'
 import global from 'global'
 import { css } from 'gloss'
+import * as GlossTheme from 'gloss-theme'
 import * as Mobx from 'mobx'
 import page from 'page'
 import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-import { AppActions } from '../actions/AppActions'
 import * as OrbitApps from '../apps/orbitApps'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
@@ -66,10 +66,10 @@ global.dateFns = dateFns
 global.LoggerSettings = LoggerSettings
 global.toJS = toJS
 global.stringify = JSON.stringify.bind(JSON)
-global.AppActions = AppActions
 global.Models = Models
 global.Themes = themes
 global.OrbitApps = OrbitApps
+global.GlossTheme = GlossTheme
 
 const { isEqual } = require('@o/fast-compare')
 global.isEqualDebug = (a, b) => {

@@ -1,7 +1,7 @@
 import { Badge, Dock, DockButton, PopoverMenu } from '@o/ui'
 import React, { memo } from 'react'
 
-import { useStores } from '../../hooks/useStores'
+import { useOrbitStore } from '../../om/stores'
 import { OrbitDockSearch } from './OrbitDockSearch'
 import { OrbitDockShare, useIsOnStaticApp } from './OrbitDockShare'
 
@@ -12,13 +12,13 @@ export const OrbitDock = memo(() => {
     <Dock transition="all ease 300ms" className="orbit-dock">
       <OrbitDockShare />
       <OrbitDockSearch />
-      <OrbitDockMenu />
+      {!isOnStaticApp && <OrbitDockMenu />}
     </Dock>
   )
 })
 
 const useActiveAppMenuItems = () => {
-  const { orbitStore } = useStores()
+  const orbitStore = useOrbitStore()
   if (!orbitStore.activeAppStore) {
     return []
   }

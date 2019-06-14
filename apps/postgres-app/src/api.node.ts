@@ -6,12 +6,12 @@ const connect = (appData: PostgresAppData) => {
   return createConnection({
     name: 'postgres',
     type: 'postgres',
-    url: appData.credentials.url,
-    host: appData.credentials.hostname,
-    username: appData.credentials.username,
-    password: appData.credentials.password,
-    database: appData.credentials.database,
-    port: appData.credentials.port ? parseInt(appData.credentials.port) : undefined,
+    url: appData.setup.url,
+    host: appData.setup.hostname,
+    username: appData.setup.username,
+    password: appData.setup.password,
+    database: appData.setup.database,
+    port: appData.setup.port ? parseInt(appData.setup.port) : undefined,
   })
 }
 

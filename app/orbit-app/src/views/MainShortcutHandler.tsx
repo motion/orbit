@@ -1,4 +1,5 @@
-import { App } from '@o/stores'
+import { command } from '@o/kit'
+import { Electron } from '@o/stores'
 import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
@@ -75,8 +76,8 @@ export default memo(function MainShortcutHandler(props: {
           return queryStore.setQuery('')
         }
         // then orbit itself
-        if (App.state.showOrbitMain) {
-          App.setState({ showOrbitMain: false })
+        if (Electron.state.showOrbitMain) {
+          command()
         }
       },
       UP: () => shortcutStore.emit(Direction.up),

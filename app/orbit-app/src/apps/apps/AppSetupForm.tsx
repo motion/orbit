@@ -1,6 +1,7 @@
 import { AppBit, AppDefinition, command, selectDefined, useActiveSpace, useAppBit } from '@o/kit'
 import { AppDefinitionSetupVerifyCommand } from '@o/models'
-import { Form, FormProps } from '@o/ui'
+import { Form, FormFieldsObj, FormProps } from '@o/ui'
+import produce from 'immer'
 import React from 'react'
 
 import { installApp } from '../../helpers/installApp'
@@ -22,18 +23,20 @@ type AppSetupFormProps = Omit<FormProps<any>, 'id'> & {
 export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
   const [activeSpace] = useActiveSpace()
   const [existingApp] = useAppBit(selectDefined(id, false))
-  const app: AppBit = existingApp || createNewApp(def)
+  const newApp = createNewApp(def)
+  const app: AppBit = existingApp || newApp
+
+  console.log('app', app)
 
   return (
     <Form
       {...rest}
-      submitButton
-      fields={def.setup}
+      submitButton={existingApp ? 'Update' : 'Add app'}
+      fields={fillFields(def.setup, app.data.setup)}
       onSubmit={async (_, values) => {
         app.data.setup = values
 
-        console.log('sending app for validation', app)
-
+        console.log('sending app for validation', app, values)
         const res = await command(AppDefinitionSetupVerifyCommand, {
           identifier: def.id,
           app,
@@ -47,6 +50,7 @@ export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
         console.log('success validating', res)
 
         // add to space if not added
+        // TODO why does it need two ways to fill in...
         app.spaces = app.spaces || []
         if (!app.spaces.find(space => space.id === activeSpace.id)) {
           app.spaces.push(activeSpace)
@@ -68,4 +72,14 @@ export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
       }}
     />
   )
+}
+
+function fillFields(fields: FormFieldsObj, values: Object) {
+  return produce(fields, next => {
+    for (const key in fields) {
+      if (values && values[key]) {
+        next[key].value = values[key]
+      }
+    }
+  })
 }

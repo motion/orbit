@@ -1,7 +1,7 @@
-import { AppBit, AppIcon } from '@o/kit'
+import { AppBit, AppIcon, AppModel, save } from '@o/kit'
 import { allIcons, Col, FormField, IconShape, Input, Row, useThrottledFn } from '@o/ui'
 import memoize from 'memoize-weak'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useNewAppStore } from '../../om/stores'
 import { ColorPicker } from '../../views/ColorPicker'
@@ -18,9 +18,26 @@ export function AppsMainNew({
   const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
-  const updateName = useThrottledFn(name => newAppStore.update({ name }), {
-    amount: 100,
-  })
+  const updateName = useThrottledFn(
+    name => {
+      if (!name) {
+        name = 'No title'
+      }
+      newAppStore.update({ name })
+      app.name = name
+      save(AppModel, app)
+    },
+    {
+      amount: 500,
+    },
+  )
+
+  useLayoutEffect(() => {
+    newAppStore.update({
+      name: app.name,
+      colors: app.colors,
+    })
+  }, [app])
 
   useEffect(() => {
     if (inputRef.current) {
@@ -37,7 +54,7 @@ export function AppsMainNew({
           size={1.5}
           placeholder={app.name}
           margin={['auto', 0]}
-          defaultValue={newAppStore.app.name}
+          defaultValue={app.name || newAppStore.app.name}
           onChange={useCallback(e => updateName(e.target.value), [])}
         />
       </FormField>
@@ -50,6 +67,8 @@ export function AppsMainNew({
                 <ColorPicker
                   onChangeColor={colors => {
                     newAppStore.update({ colors })
+                    app.colors = colors
+                    save(AppModel, app)
                   }}
                   activeColor={newAppStore.app.colors[0]}
                 />

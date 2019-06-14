@@ -37,6 +37,11 @@ const darkAlternates: ThemeSet = {
   warn: darkAltLight.lightYellow,
   approve: darkAltLight.lightGreen,
   success: darkAltLight.lightGreen,
+  action: fromStyles({
+    debug: true,
+    background: selectedColor.lighten(0.2),
+    color: '#fff',
+  }),
   selected: colorize({
     color: '#fff',
     borderColor,

@@ -31,6 +31,9 @@ export class AppEntity extends BaseEntity implements AppBit {
   @Column()
   name?: string
 
+  @Column()
+  icon?: string
+
   @Column({ default: '' })
   itemType?: ItemType
 

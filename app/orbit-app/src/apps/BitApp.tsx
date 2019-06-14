@@ -5,7 +5,7 @@ import { Button, Col, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View 
 import { gloss, Row } from 'gloss'
 import * as React from 'react'
 
-import { AppActions } from '../actions/AppActions'
+import { om } from '../om/om'
 
 export default createApp({
   id: 'bit',
@@ -61,7 +61,7 @@ export class BitTitleBar extends React.Component<{
             circular
             iconSize={16}
             onClick={() => {
-              AppActions.open(normalizedItem.locationLink)
+              om.actions.openItem(normalizedItem.locationLink)
             }}
             icon={normalizedItem.icon}
           >
@@ -70,7 +70,7 @@ export class BitTitleBar extends React.Component<{
           <Button
             alt="flat"
             onClick={() => {
-              AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
+              om.actions.openItem(normalizedItem.desktopLink || normalizedItem.webLink)
             }}
             icon="share"
             tooltip="Open"

@@ -1,8 +1,9 @@
-import { AppIcon, createApp, getAppDefinition, useLocationLink } from '@o/kit'
-import { Button, Col, Flow, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
+import { AppCreateNewCommand } from '@o/models'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { installApp, useNewAppBit } from '../helpers/installApp'
+import { createAppBitInActiveSpace, installApp, useNewAppBit } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
@@ -31,24 +32,49 @@ function SetupAppMain() {
   )
 }
 
+export const SelectableView = gloss<any>(View).theme(({ isSelected }, theme) => ({
+  background: isSelected ? theme.background : 'transparent',
+  '&:hover': {
+    background: isSelected ? theme.background : 'transparent',
+  },
+}))
+
 function SetupAppCustom() {
+  const banner = useBanner()
   const newAppStore = useNewAppStore()
   const stackNav = useStackNavigator()
+
   const flow = useCreateFlow({
     initialData: {
       selectedTemplate: null,
     },
   })
 
+  const form = useForm({
+    fields: {
+      name: {
+        name: 'Name',
+        type: 'string',
+      },
+      identifier: {
+        name: 'identifier',
+        type: 'string',
+        value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
+      },
+    },
+  })
+
   return (
     <>
-      <Col width="70%" margin="auto">
+      <Col width="70%" height="80%" margin="auto">
         <Flow useFlow={flow}>
-          <Flow.Step title="Template" subTitle="Choose template">
+          <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
               return (
                 <Col pad>
                   <SelectableGrid
+                    alwaysSelected
+                    defaultSelected={0}
                     items={[
                       {
                         label: 'Blank',
@@ -56,8 +82,16 @@ function SetupAppCustom() {
                         subTitle: 'Empty app template',
                       },
                     ]}
-                    getItem={props => <IconLabeled {...props} />}
+                    getItem={(props, { isSelected, select }) => (
+                      <Theme alt={isSelected ? 'selected' : undefined}>
+                        <SelectableView isSelected={isSelected} onClick={select} borderRadius={10}>
+                          <IconLabeled {...props} />
+                        </SelectableView>
+                      </Theme>
+                    )}
                     onSelect={item => {
+                      console.log('set item', item)
+                      newAppStore.setApp(flow.data.identifier)
                       setData(item)
                     }}
                   />
@@ -66,21 +100,9 @@ function SetupAppCustom() {
             }}
           </Flow.Step>
 
-          <Flow.Step title="Setup" subTitle="Give it a name and icon">
+          <Flow.Step title="Customize" subTitle="Give it a name and icon">
             <Col pad>
-              <Form
-                fields={{
-                  name: {
-                    name: 'Name',
-                    type: 'string',
-                  },
-                  identifier: {
-                    name: 'identifier',
-                    type: 'string',
-                    value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
-                  },
-                }}
-              />
+              <Form useForm={form} />
             </Col>
           </Flow.Step>
         </Flow>
@@ -92,15 +114,42 @@ function SetupAppCustom() {
             Back
           </Button>
           <View flex={1} />
+          {/* {flow.step === 0 && <Button onClick={flow.next}>Next</Button>} */}
           <Button
-            size={1.4}
+            disabled={!form.getValue('name')}
             alt="confirm"
-            onClick={() => {
-              newAppStore.setApp(flow.data.identifier)
+            onClick={async () => {
+              const template = flow.data.selectedTemplate
+              const name = form.getValue('name')
+              const identifier = form.getValue('identifier')
+
+              banner.show({
+                message: `Creating app ${name} with template ${template}`,
+              })
+
+              const res = await command(AppCreateNewCommand, {
+                template,
+                name,
+                identifier,
+              })
+
+              if (res.type === 'error') {
+                banner.show({
+                  type: 'fail',
+                  message: res.message,
+                })
+                return
+              }
+
+              // go to app
+              console.warn('should go to app')
+              createAppBitInActiveSpace({
+                identifier,
+              })
             }}
             icon="chevron-right"
           >
-            Start
+            Create
           </Button>
         </Toolbar>
       </Scale>
@@ -111,16 +160,12 @@ function SetupAppCustom() {
 type SetupAppHomeProps = { isEmbedded?: boolean }
 
 export function SetupAppHome(props: SetupAppHomeProps) {
-  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(app => ({
-    title: app.name,
-    identifier: app.id,
+  const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(def => ({
+    title: def.name,
+    identifier: def.id,
     groupName: 'Installed apps',
-    subTitle: app.description || 'No description',
-    icon: <AppIcon identifier={app.id} />,
-    iconBefore: true,
-    iconProps: {
-      size: 44,
-    },
+    subTitle: def.description || 'No description',
+    icon: <AppIcon identifier={def.id} colors={def.iconColors} />,
   }))
   const [searchedApps, search] = useSearchAppStoreApps(results =>
     results.filter(res => res.features.some(x => x === 'app')),
@@ -137,8 +182,8 @@ export function SetupAppHome(props: SetupAppHomeProps) {
 
   return (
     <FlowProvide value={flow}>
-      <Col width="70%" height="70%" margin="auto">
-        <SectionPassProps elevation={10}>
+      <SectionPassProps elevation={10}>
+        <Col width="70%" height="80%" margin="auto">
           <Flow
             useFlow={flow}
             afterTitle={
@@ -154,24 +199,28 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 selectable
                 alwaysSelected
                 onSelect={rows => {
-                  if (rows[0]) {
-                    console.log('setting data', rows[0].identifier)
-                    flow.setData({ selectedAppIdentifier: rows[0].identifier })
+                  const row = rows[0]
+                  if (row) {
+                    console.log('setting data', row)
+                    flow.setData({ selectedAppIdentifier: row.identifier })
+                    newAppStore.update({ name: row.title })
                   }
                 }}
                 itemProps={{
                   iconBefore: true,
+                  iconProps: {
+                    size: 44,
+                  },
                 }}
                 items={[...installedApps, ...searchedApps, ...topApps]}
               />
             </Flow.Step>
-
-            <Flow.Step title="Configure" subTitle="Give it a name, theme and setup any options.">
+            <Flow.Step title="Customize" subTitle="Give it a name, theme and setup any options.">
               {FlowStepSetup}
             </Flow.Step>
           </Flow>
-        </SectionPassProps>
-      </Col>
+        </Col>
+      </SectionPassProps>
 
       <SetupAppHomeToolbar {...props} />
     </FlowProvide>
@@ -179,8 +228,10 @@ export function SetupAppHome(props: SetupAppHomeProps) {
 }
 
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
+  const banner = useBanner()
   const flow = useFlow()
   const stackNav = useStackNavigator()
+  const definition = useAppDefinition(flow.data.selectedAppIdentifier)
   return (
     <Scale size="lg">
       <Toolbar>
@@ -206,23 +257,19 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        {flow.index === 0 && (
-          <Button alt="confirm" onClick={flow.next} icon="chevron-right">
-            Configure
-          </Button>
-        )}
-        {flow.index === 1 && (
-          <Button
-            alt="confirm"
-            onClick={async () => {
-              const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-              installApp(definition, newAppStore.app)
-            }}
-            icon="chevron-right"
-          >
-            Add
-          </Button>
-        )}
+        <Button onClick={flow.next}>
+          Customize: <small>{definition.name}</small>
+        </Button>
+        <Button
+          alt="confirm"
+          onClick={async () => {
+            const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+            installApp(definition, newAppStore.app, banner)
+          }}
+          icon="chevron-right"
+        >
+          Add
+        </Button>
       </Toolbar>
     </Scale>
   )
@@ -230,11 +277,12 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
 
 const FlowStepSetup = memo(() => {
   const flow = useFlow()
+  const identifier = flow.data.selectedAppIdentifier
   const appBit = useNewAppBit(flow.data.selectedAppIdentifier)
   return (
     <Col pad flex={1} scrollable="y">
       <Scale size={1.2}>
-        <AppsMainNew customizeColor app={appBit} />
+        <AppsMainNew key={identifier} customizeColor app={appBit} />
       </Scale>
     </Col>
   )

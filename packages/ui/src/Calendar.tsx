@@ -6,8 +6,8 @@ import { isBrowser } from './constants'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 
 if (isBrowser) {
-  require('./Calendar.css')
-  require('./CalendarThemeLight.css')
+  // require('./Calendar.css')
+  // require('./CalendarThemeLight.css')
 }
 
 export const Calendar = memoIsEqualDeep(props => {

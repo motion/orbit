@@ -9,7 +9,7 @@ import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
-import { usePaneManagerStore } from '../../om/stores'
+import { useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -23,7 +23,7 @@ type OrbitAppProps = {
 }
 
 export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
-  const { orbitStore } = useStoresSimple()
+  const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === id
   const appStore = useStoreSimple(AppStore, {
@@ -114,6 +114,7 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
+    console.log('onChangeShare', location, items)
     items = !items || Object.keys(items).length === 0 ? null : items
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null

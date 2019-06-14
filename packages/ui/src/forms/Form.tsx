@@ -145,8 +145,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   ref,
 ) {
   const formStore = parentUseForm ? useStore(parentUseForm) : useForm({ fields, errors })
+  const finalFields = formStore.props.fields
 
-  if (fields && children) {
+  if (finalFields && children) {
     throw new Error(
       `Can't pass both fields and children, Form accepts one or the other. See docs: `,
     )
@@ -154,23 +155,28 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
 
   let elements = children
 
-  if (fields) {
-    elements = generateFields(fields)
+  if (finalFields) {
+    elements = generateFields(finalFields)
   }
 
   const onSubmitInner = useCallback(
     async e => {
       e.preventDefault()
       if (onSubmit) {
-        // first do any field validation
+        // collect errors
         let fieldErrors = {}
-        const values = { ...formStore.values }
-        for (const key in values) {
-          const field = values[key]
+        // extract flat values here for callback
+        const values = {}
+
+        // validate
+        for (const key in formStore.values) {
+          const field = formStore.values[key]
+
           if (field.required && !field.value) {
             fieldErrors[name] = 'is required.'
             continue
           }
+
           if (typeof field.validate === 'function') {
             const err = field.validate(field.value)
             if (err) {
@@ -178,6 +184,9 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
             }
             continue
           }
+
+          // set final value to callback
+          values[field.name] = field.value
         }
 
         if (Object.keys(fieldErrors).length) {

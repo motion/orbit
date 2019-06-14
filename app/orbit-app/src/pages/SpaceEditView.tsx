@@ -4,7 +4,6 @@ import * as UI from '@o/ui'
 import { Form, InputField, Message, Space as UISpace } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'
-import { AppActions } from '../actions/AppActions'
 
 type Props = {
   space?: Space

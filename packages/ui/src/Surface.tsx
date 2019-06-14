@@ -304,7 +304,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   } else {
     showElement = !!(hasChildren(children) || elementProps)
-    const spaceElement = <Space size={selectDefined(spaceSize, size * 8)} />
+    const spaceElement = <Space size={selectDefined(spaceSize, size * 6)} />
 
     const innerElements = (
       <PassProps

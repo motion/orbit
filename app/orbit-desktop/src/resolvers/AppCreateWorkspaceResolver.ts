@@ -1,12 +1,12 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateWorkspaceCommand, SpaceEntity, AppEntity } from '@o/models'
+import { AppCreateWorkspaceCommand, AppEntity, SpaceEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('createWorkspace')
 
-export const ChangeDesktopThemeResolver = resolveCommand(
+export const AppCreateWorkspaceResolver = resolveCommand(
   AppCreateWorkspaceCommand,
   findOrCreateWorkspace,
 )

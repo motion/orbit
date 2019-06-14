@@ -8,6 +8,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/logger": "*",
     "@hot-loader/react-dom": "^16.8.6",
     "babel-loader": "^8.0.6",
     "cache-loader": "^3.0.1",

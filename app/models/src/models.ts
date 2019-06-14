@@ -21,8 +21,6 @@ export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<Use
 
 export const StateModel = new Model<State, FindOptions<State>, FindOptionsWhere<State>>('State')
 
-export const SearchPinnedResultModel = new Model<Bit, { query: string }>('SearchPinnedResultModel')
-
 export type SearchQuery = {
   query: string
   contentType?: BitContentType
@@ -41,6 +39,18 @@ export type SearchQuery = {
 }
 
 export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
+
+/**
+ * For communicating things like: build status, startup status, upgrading, etc
+ * Allows for observeMany() which should give us a streaming list of current status messages
+ */
+export type AppStatus = {
+  type: 'error' | 'success' | 'processing'
+  message: string
+  appId?: number
+}
+
+export const AppStatusModel = new Model<AppStatus, void>('AppStatusModel')
 
 export type GroupResult = {
   title: string
@@ -74,17 +84,4 @@ export const CosalSaliencyModel = new Model<SalientWord, { words: string }>('cos
 
 export const CosalTopicsModel = new Model<string, { query: string; count: number }>(
   'cosal-topics-model',
-)
-
-// Language app
-
-export type TrendingItem = { name: string; direction: 'up' | 'neutral' | 'down' }
-export const TrendingTopicsModel = new Model<TrendingItem, void>('trending-topics')
-export const TrendingTermsModel = new Model<TrendingItem, void>('trending-terms')
-
-export const PeopleNearTopicModel = new Model<Bit, { topic: string; count: number }>(
-  'people-near-topic',
-)
-export const BitsNearTopicModel = new Model<Bit, { topic: string; count: number }>(
-  'bits-near-topic',
 )

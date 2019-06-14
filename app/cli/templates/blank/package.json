@@ -3,6 +3,7 @@
   "description": "",
   "version": "0.1.0",
   "main": "dist/index.js",
+  "ts:main": "main",
   "scripts": {
     "start": "orbit dev",
     "build": "orbit build",

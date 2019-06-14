@@ -67,8 +67,10 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
 
   return (
     <Row space="sm">
-      <Button disabled={isOnFirstStep} iconAfter icon="chevron-left" onClick={props.prev} />
-      <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.next} />
+      <Button disabled={isOnFirstStep} icon="chevron-left" onClick={props.prev} />
+      <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.next}>
+        Next
+      </Button>
       {props.afterTitle}
     </Row>
   )

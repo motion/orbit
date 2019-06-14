@@ -33,8 +33,7 @@ export const commandGenTypes = (x: CommandGenTypesOptions) =>
 export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
   require('./command-install').commandInstall(x)
 
-// XXX(andreypopp): using require here because it's outside of ts's rootDir and
-// ts complains otherwise
+// using require here because it's outside of ts's rootDir and ts complains otherwise
 const packageJson = require('../package.json')
 
 let cwd = process.cwd()
@@ -48,6 +47,36 @@ function main() {
 
   Yargs.scriptName('orbit')
     .usage('$0 <cmd> [args]')
+    .command(
+      'new [app] [template]',
+      'Create a new orbit app',
+      p =>
+        p
+          .positional('app', {
+            type: 'string',
+            describe: 'The name of the folder to create for your new app.',
+          })
+          .positional('template', {
+            type: 'string',
+            describe:
+              'Choose from pre-defined starter app templates, or give an identifier of an existing orbit app, or a shorthand to a github repository.',
+            default: 'blank',
+          })
+          .option('verbose', {
+            type: 'boolean',
+            default: false,
+          }),
+      async argv => {
+        reporter.setVerbose(!!argv.verbose)
+        reporter.info(`argv ${JSON.stringify(argv)}`)
+        let projectRoot = resolve(cwd, argv.app)
+        await commandNew({
+          projectRoot,
+          name: argv.name,
+          template: argv.template,
+        })
+      },
+    )
     .command(
       'dev [app]',
       'Run an Orbit app in development mode',

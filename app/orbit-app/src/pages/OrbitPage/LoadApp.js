@@ -4,6 +4,7 @@
 import * as React from 'react'
 
 export let LoadApp = ({ bundleURL, RenderApp }) => {
+  console.debug(`Loading app at url ${bundleURL}`)
   let Lazy = React.useMemo(
     () =>
       React.lazy(async () => {

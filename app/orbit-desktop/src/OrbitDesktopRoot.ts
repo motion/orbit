@@ -109,7 +109,7 @@ export class OrbitDesktopRoot {
   private webServer: WebServer
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
-  private buildServer: AppMiddleware
+  private appMiddleware: AppMiddleware
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -158,13 +158,13 @@ export class OrbitDesktopRoot {
       this.orbitAppsManager.start(),
     ])
 
-    this.buildServer = new AppMiddleware()
+    this.appMiddleware = new AppMiddleware()
 
     const cosal = this.cosalManager.cosal
 
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer({
-      buildServer: this.buildServer,
+      buildServer: this.appMiddleware,
       cosal,
       orbitAppsManager: this.orbitAppsManager,
     })
@@ -180,7 +180,7 @@ export class OrbitDesktopRoot {
 
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
-    this.webServer = new WebServer(this.buildServer)
+    this.webServer = new WebServer(this.appMiddleware)
     await this.webServer.start()
 
     this.authServer = new AuthServer()

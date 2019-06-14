@@ -10,13 +10,13 @@ const Dot = gloss({
   borderStyle: 'solid',
   borderTopWidth: 0,
   transform: 'translate(50%, 50%)',
-}).theme((_, { size, x, y, color }) => ({
+}).theme(({ size, x, y, color }) => ({
   borderBottomColor: color,
-  borderRightWidth: `${size / 2}px`,
-  borderBottomWidth: `${size / 2}px`,
-  borderLeftWidth: `${size / 2}px`,
-  marginLeft: `${x}px`,
-  marginTop: `${y}px`,
+  borderRightWidth: size / 2,
+  borderBottomWidth: size / 2,
+  borderLeftWidth: size / 2,
+  marginLeft: x,
+  marginTop: y,
 }))
 
 export default Dot

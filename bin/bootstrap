@@ -23,10 +23,6 @@ ensure-dep "pg_config" -- brew install postgresql &
 ensure-dep "firebase" -- npm i -g firebase-tools &
 wait
 
-# fix for mediator typeorm bug
-rm -r ./packages/mediator/node_modules || true
-rm -r ./packages/mobx-bridge/node_modules || true
-
 echo "installing dependencies"
 yarn install --ignore-engines
 

@@ -3,6 +3,8 @@ import View from './View'
 import { gloss } from 'gloss'
 
 const Box = gloss(View, {
+  flexDirection: 'column',
+
   outer: {
     alignSelf: 'flex-start',
     padding: 4,

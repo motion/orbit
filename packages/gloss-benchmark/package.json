@@ -2,9 +2,6 @@
   "private": true,
   "name": "@o/gloss-benchmarks",
   "version": "0.8.6",
-  "workspaces": {
-    "nohoist": ["**", "*"]
-  },
   "scripts": {
     "build": "mkdir -p dist && cp -f index.html dist/index.html && ./node_modules/.bin/webpack-cli --config ./webpack.config.js"
   },
@@ -17,8 +14,6 @@
     "fela": "^6.1.9",
     "glamor": "2.20.40",
     "radium": "^0.24.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
     "react-fela": "^7.3.1",
     "react-jss": "^8.6.1",
     "react-native-web": "0.11.4",
@@ -44,6 +39,10 @@
     "webpack": "^4.16.5",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^3.1.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "sideEffects": false
 }

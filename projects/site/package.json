@@ -27,7 +27,7 @@
     "jsonp": "^0.2.1",
     "lodash": "4.17.11",
     "memoize-weak": "1.0.2",
-    "mobx": "5.9.4",
+    "mobx": "^5.10.1",
     "navi": "0.12.4",
     "prism-react-renderer": "0.1.6",
     "query-string": "6.2.0",

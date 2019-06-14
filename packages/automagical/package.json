@@ -19,7 +19,7 @@
     "@types/webpack-env": "*"
   },
   "peerDependencies": {
-    "mobx": "5.9.4"
+    "mobx": "*"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

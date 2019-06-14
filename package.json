@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "overmind-devtools": "19.0.0",
-    "typescript": "3.5.1",
+    "typescript": "3.5.2",
     "@babel/runtime": "^7.4.4",
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
@@ -78,7 +78,7 @@
     "@typescript-eslint/parser": "1.5.0",
     "@typescript-eslint/eslint-plugin": "1.5.0",
     "lerna": "3.13.3",
-    "mobx": "5.9.4",
+    "mobx": "5.10.1",
     "prettier": "1.17.0",
     "sb-promisify": "^2.0.2",
     "verdaccio": "3.10.1",

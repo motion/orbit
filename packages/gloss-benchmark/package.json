@@ -3,7 +3,9 @@
   "name": "@o/gloss-benchmarks",
   "version": "0.8.6",
   "scripts": {
-    "build": "mkdir -p dist && cp -f index.html dist/index.html && ./node_modules/.bin/webpack-cli --config ./webpack.config.js"
+    "build": "mkdir -p dist && cp -f index.html dist/index.html && ./node_modules/.bin/webpack-cli --config ./webpack.config.js",
+    "benchmark:headless": "node ./run-headless",
+    "benchmark": "open ./dist/index.html"
   },
   "dependencies": {
     "gloss": "^2.5.6",

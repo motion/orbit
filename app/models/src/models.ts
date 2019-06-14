@@ -44,13 +44,13 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
  * For communicating things like: build status, startup status, upgrading, etc
  * Allows for observeMany() which should give us a streaming list of current status messages
  */
-export type AppStatus = {
+export type AppStatusMessage = {
   type: 'error' | 'success' | 'processing'
   message: string
   appId?: number
 }
 
-export const AppStatusModel = new Model<AppStatus, void>('AppStatusModel')
+export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('AppStatusModel')
 
 export type GroupResult = {
   title: string

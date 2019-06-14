@@ -1,6 +1,7 @@
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
+import { AppStatusMessage } from '@o/models'
 import { Logger } from '@o/logger'
 
 import { makeWebpackConfig } from './makeWebpackConfig'
@@ -14,12 +15,7 @@ export type AppDesc = {
   publicPath: string
 }
 
-type StatusMessage =
-  | { type: 'error'; message: string }
-  | { type: 'processing' }
-  | { type: 'success'; message: string }
-
-export type AppBuildStatusListener = (appId: number, status: StatusMessage) => any
+export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
 export class AppMiddleware {
   middlewares = []
@@ -47,9 +43,9 @@ export class AppMiddleware {
     }
   }
 
-  private sendStatus(appId: number, message: StatusMessage) {
+  private sendStatus(message: AppStatusMessage) {
     ;[...this.statusListeners].forEach(listener => {
-      listener(appId, message)
+      listener(message)
     })
   }
 
@@ -62,14 +58,14 @@ export class AppMiddleware {
     // report our own errors
     const { state, stats } = options
     if (!state) {
-      this.sendStatus(appId, { type: 'processing' })
+      this.sendStatus({ appId, type: 'processing', message: `Compiling...` })
       return
     }
     if (stats.hasErrors()) {
-      this.sendStatus(appId, { type: 'error', message: stats.toString(middlewareOptions.stats) })
+      this.sendStatus({ appId, type: 'error', message: stats.toString(middlewareOptions.stats) })
       return
     }
-    this.sendStatus(appId, { type: 'success', message: stats.toString(middlewareOptions.stats) })
+    this.sendStatus({ appId, type: 'success', message: stats.toString(middlewareOptions.stats) })
   }
 
   async setApps(apps: AppDesc[]) {

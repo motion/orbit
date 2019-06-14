@@ -9,7 +9,7 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
-  resolveObserveMany,
+  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
@@ -319,7 +319,7 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
-        resolveObserveMany(AppStatusModel, args => {
+        resolveObserveOne(AppStatusModel, args => {
           return props.appStatusManager.observe(args.appId)
         }),
         ...loadAppDefinitionResolvers(),

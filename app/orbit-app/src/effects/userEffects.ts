@@ -7,6 +7,9 @@ export function useUserEffects() {
   useUserSyncSettings()
 }
 
+// TODO we should be able to get rid of this
+// just make electron observeOne(UserModel) instead
+
 function useUserSyncSettings() {
   const [user] = useActiveUser()
 

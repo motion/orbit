@@ -11,7 +11,7 @@ import { useOnUnmount } from './hooks/useOnUnmount'
 
 type BannerProps = {
   message: string
-  type?: 'warn' | 'success' | 'fail'
+  type?: 'warn' | 'success' | 'error' | 'info'
   /** This is the callback you can pass in optionally to do things when it closes */
   onClose?: () => void
 }
@@ -130,7 +130,7 @@ export function Banner(props: BannerViewProps) {
         sizeRadius={0}
         pointerEvents="auto"
         position="relative"
-        alt={props.type || 'lightBlue'}
+        alt={props.type === 'info' ? 'lightBlue' : props.type || 'lightBlue'}
         width="100%"
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">

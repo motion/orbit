@@ -1,6 +1,13 @@
 import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
-import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
+import {
+  AppBit,
+  AppInstallToWorkspaceCommand,
+  AppModel,
+  AuthAppCommand,
+  SpaceModel,
+  UserModel,
+} from '@o/models'
 import { BannerHandle } from '@o/ui'
 
 import { newAppStore } from '../om/stores'
@@ -72,7 +79,7 @@ export async function installApp(
   if (res.type === 'error') {
     banner &&
       banner.show({
-        type: 'fail',
+        type: 'error',
         message: res.message,
       })
     return res
@@ -99,7 +106,7 @@ export async function installApp(
       const message = `Error saving AppBit ${err.message} ${err.stack}`
       banner &&
         banner.show({
-          type: 'fail',
+          type: 'error',
           message,
         })
       return {

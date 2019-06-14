@@ -45,6 +45,8 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
  * Allows for observeMany() which should give us a streaming list of current status messages
  */
 export type AppStatusMessage = {
+  // id per-message to determine if it changes
+  id: string
   type: 'error' | 'success' | 'processing'
   message: string
   appId?: number

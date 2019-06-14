@@ -43,9 +43,12 @@ export class AppMiddleware {
     }
   }
 
-  private sendStatus(message: AppStatusMessage) {
+  private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
     ;[...this.statusListeners].forEach(listener => {
-      listener(message)
+      listener({
+        id: `${message.appId}-build-status`,
+        ...message,
+      })
     })
   }
 

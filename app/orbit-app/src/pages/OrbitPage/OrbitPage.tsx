@@ -1,8 +1,8 @@
-import { command } from '@o/bridge'
+import { command, useModel } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
-import { CloseAppCommand } from '@o/models'
+import { CloseAppCommand, AppStatusModel } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, View, ViewProps, useBanner } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
@@ -23,6 +23,7 @@ import { OrbitApp } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
+import { APP_ID } from '../../constants'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -38,11 +39,33 @@ export const OrbitPage = memo(() => {
         <OrbitPageInner />
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />
+        <OrbitStatusMessages />
       </AppWrapper>
     </ProvideStores>
   )
 })
 
+const OrbitStatusMessages = memo(() => {
+  // TODO we need to upgrade banners soon:
+  //   1. make re-usable banner to change its type/message
+  //   2. banner show/update better api
+  const banner = useBanner()
+  const [statusMessage] = useModel(AppStatusModel, {
+    appId: APP_ID,
+  })
+
+  useEffect(() => {
+    banner.show({
+      type: statusMessage.type === 'processing' ? 'info' : statusMessage.type,
+      message: statusMessage.message,
+    })
+  }, [statusMessage])
+
+  return null
+})
+
+// TODO these effects are a bad pattern, was testing them
+// we should move them into another area, either in `om` or just directly onto their stores
 const OrbitEffects = memo(() => {
   useEnsureStaticAppBits()
   useUserEffects()

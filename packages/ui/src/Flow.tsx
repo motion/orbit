@@ -21,7 +21,7 @@ export type FlowPropsBase = FlowSectionProps & {
 }
 
 export type FlowDataProps = {
-  initialData?: any
+  data?: any
 }
 
 export type FlowProps =
@@ -129,7 +129,7 @@ export class FlowStore {
   steps: FlowStepProps[] = []
 
   private hooks = useHooks({
-    data: () => Config.useUserState('flowdata', (this.props && this.props.initialData) || null),
+    data: () => Config.useUserState('flowdata', (this.props && this.props.data) || null),
     index: () => Config.useUserState('flowindex', 0),
   })
 

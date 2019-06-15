@@ -17,7 +17,7 @@ export function TestMiniApps() {
 export function CustomApp2() {
   return (
     <Flow
-      initialData={{
+      data={{
         selected: [],
       }}
     >

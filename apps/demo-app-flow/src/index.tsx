@@ -13,7 +13,7 @@ export default createApp({
 function DemoAppFlow() {
   return (
     <Flow
-      initialData={{
+      data={{
         selected: [],
       }}
     >

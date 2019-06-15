@@ -45,7 +45,7 @@ function SetupAppCustom() {
   const stackNav = useStackNavigator()
 
   const flow = useCreateFlow({
-    initialData: {
+    data: {
       selectedTemplate: null,
     },
   })
@@ -175,7 +175,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   )
 
   const flow = useCreateFlow({
-    initialData: {
+    data: {
       selectedAppIdentifier: null,
     },
   })

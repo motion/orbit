@@ -27,8 +27,10 @@ export class AppMiddleware {
         return next()
       }
       if (!this.middlewares.length || req.pathname) {
+        log.verbose(`no middleware or empty req pathname`)
         return next()
       }
+      log.verbose(`handle request ${req.pathname}`)
       for (const middleware of this.middlewares) {
         // have to disable next because for some reason they were sending next
         middleware(req, res, () => {})

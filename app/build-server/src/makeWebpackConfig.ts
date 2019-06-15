@@ -98,8 +98,9 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
   const cliPath = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
   let modules = ['node_modules', cliPath]
 
+  // if in monorepo add monorepo hoisted modules
   try {
-    const monoRepoModules = Path.join(cliPath, '..', '..')
+    const monoRepoModules = Path.join(cliPath, '..', '..', '..')
     const monoRepoPackageJson = Path.join(monoRepoModules, 'package.json')
     const isInMonoRepo =
       pathExistsSync(monoRepoPackageJson) &&
@@ -107,7 +108,9 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     if (isInMonoRepo) {
       modules = [...modules, Path.join(monoRepoModules, 'node_modules')]
     }
-  } catch {}
+  } catch (err) {
+    console.log('err testing monorepo', err)
+  }
 
   let config: webpack.Configuration = {
     watch,

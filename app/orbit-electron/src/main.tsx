@@ -34,6 +34,11 @@ export async function main() {
 
   await waitOn({ resources: [desktopServerUrl], interval: 50 })
 
+  // start Electron state store
+  await Electron.start({
+    waitForInitialState: false,
+  })
+
   // we can have a different mediator if we want for child windows
   if (IS_MAIN_ORBIT) {
     // register app schema
@@ -106,13 +111,6 @@ export async function main() {
 
   // why not make it a bit easier in prod mode too
   electronDebug()
-
-  // start Electron state store
-  console.log('Starting Electron store')
-  await Electron.start({
-    waitForInitialState: false,
-  })
-  console.log('Started Electron store')
 
   //
   // START THE PROCESSES

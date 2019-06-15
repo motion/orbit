@@ -14,13 +14,13 @@ type AppBuildInfo = {
   }
 }
 
-const emptyWorkspaceDir = join(__dirname, '..', '..', 'ws-empty')
+export const baseWorkspaceDir = join(conf.path, '..', 'base-orbit-workspace')
 
 export const configStore = {
   packageManager: createConfig<string>('packageManager'),
   orbitMainPath: createConfig<string>('orbitMainPath'),
   appBuildInfo: createConfig<AppBuildInfo>('appBuildInfo'),
-  lastActiveWorkspace: createConfig<string>('lastActiveWorkspace2', emptyWorkspaceDir),
+  lastActiveWorkspace: createConfig<string>('lastActiveWorkspace2', baseWorkspaceDir),
 }
 
 export const promptPackageManager = async () => {

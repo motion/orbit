@@ -1,29 +1,50 @@
 import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
-import { readJSON } from 'fs-extra'
+import { copy, pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { watchBuildWorkspace } from './command-ws'
+import { isInWorkspace, watchBuildWorkspace, WsPackages } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
-import { configStore } from './util/configStore'
+import { baseWorkspaceDir, configStore } from './util/configStore'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 export type CommandDevOptions = { projectRoot: string }
 
 export async function commandDev(options: CommandDevOptions) {
-  let { mediator, didStartOrbit } = await getOrbitDesktop()
+  const { mediator, didStartOrbit } = await getOrbitDesktop()
 
   if (!mediator) {
     process.exit(0)
   }
 
   if (didStartOrbit && (await getIsInMonorepo())) {
-    await watchBuildWorkspace({
-      workspaceRoot: configStore.lastActiveWorkspace.get(),
-      mode: 'development',
-      clean: false,
-    })
+    reporter.info(`Starting workspace from command: dev`)
+    const baseWorkspace = await ensureBaseWorkspace()
+    const lastWorkspace = configStore.lastActiveWorkspace.get()
+    const workspaceRoot = (await isInWorkspace(options.projectRoot, lastWorkspace))
+      ? lastWorkspace
+      : baseWorkspace
+    reporter.info(`Using workspace: ${workspaceRoot}`)
+
+    // we pass this in the case where you have are editing a standalone app
+    let workspacePackages: WsPackages | undefined = undefined
+
+    if (workspaceRoot === baseWorkspaceDir) {
+      workspacePackages = {
+        appsInfo: [],
+        appsRootDir: options.projectRoot,
+      }
+    }
+
+    await watchBuildWorkspace(
+      {
+        workspaceRoot,
+        mode: 'development',
+        clean: false,
+      },
+      workspacePackages,
+    )
   }
 
   const pkg = await readJSON(join(options.projectRoot, 'package.json'))
@@ -49,4 +70,15 @@ export async function commandDev(options: CommandDevOptions) {
     console.log('Error opening app for dev', err.message, err.stack)
   }
   return
+}
+
+/**
+ * Copy an empty workspace somewhere so we can use it for developing apps outside a workspace
+ */
+async function ensureBaseWorkspace() {
+  if (await pathExists(baseWorkspaceDir)) {
+    return baseWorkspaceDir
+  }
+  await copy(join(__dirname, '..', 'base-workspace'), baseWorkspaceDir)
+  return baseWorkspaceDir
 }

@@ -51,6 +51,8 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
 
   const entryDir = __dirname
   const target = params.target || 'electron-renderer'
+
+  // TODO isnt set for production
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
     Path.join(__dirname, '..', '..', '..', 'node_modules'),
@@ -114,7 +116,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
 
   let config: webpack.Configuration = {
     watch,
-    context: context,
+    context,
     target,
     mode,
     entry: {
@@ -196,7 +198,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
               options: {
                 presets: [
                   [
-                    '@o/babel-preset-motion',
+                    require.resolve('@o/babel-preset-motion'),
                     {
                       disable: target === 'node' ? ['react-hot-loader/babel'] : [],
                     },
@@ -289,7 +291,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context: context,
+          context,
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),

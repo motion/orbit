@@ -116,14 +116,19 @@ export class BridgeManager {
     })
 
     this.port = getGlobalConfig().ports.bridge
+
+    log.info(`Starting store ${this.source} on port ${this.port}`)
+
     // ensure only start once
     if (this.started) {
       throw new Error('Already started this store...')
     }
+
     this.source = store.source
     this.store = store
     this.options = options
     this.started = true
+
     if (options.master) {
       await this.setupMaster()
     } else {
@@ -134,20 +139,26 @@ export class BridgeManager {
       })
       this.setupClientSocket()
     }
+
     // set initial state synchronously before
     this.initialState = JSON.parse(JSON.stringify(initialState))
+
     if (initialState) {
       this.setState(initialState, true)
     }
+
     // setup start/quit actions
     if (typeof window !== 'undefined' && window.addEventListener instanceof Function) {
       window.addEventListener('beforeunload', this.dispose)
     }
+
+    log.info(`Waiting for initial state`)
+
     // wait for initial state
     if (!this.options.master && !this.options.waitForInitialState) {
       let failTm = setTimeout(() => {
         console.error('get initial state timeout!')
-      }, 10000)
+      }, 2000)
       await this.afterInitialState
       clearTimeout(failTm)
     }

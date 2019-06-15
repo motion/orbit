@@ -23,7 +23,7 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
     return null
   }
 
-  log.info('found packages', packages)
+  log.info('found packages', Object.keys(packages).join(', '))
 
   return await Promise.all(
     Object.keys(packages).map(async packageId => {

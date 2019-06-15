@@ -1,5 +1,6 @@
-import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import webpack = require('webpack')
+
+import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
 export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack.Configuration>) {
   return makeWebpackConfig(

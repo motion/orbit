@@ -9,30 +9,26 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
+  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
   AppModel,
   BitEntity,
   BitModel,
-  BitsNearTopicModel,
   CheckProxyCommand,
   CosalSaliencyModel,
   CosalTopicsModel,
   GetPIDCommand,
   CosalTopWordsModel,
   OpenCommand,
-  PeopleNearTopicModel,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
-  SearchPinnedResultModel,
   SearchResultModel,
   SetupProxyCommand,
   SpaceEntity,
   SpaceModel,
-  TrendingTermsModel,
-  TrendingTopicsModel,
   UserEntity,
   UserModel,
   AppDevCloseCommand,
@@ -42,6 +38,7 @@ import {
   AuthAppCommand,
   StateModel,
   StateEntity,
+  AppStatusModel,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -69,16 +66,12 @@ import { OrbitDataManager } from './managers/OrbitDataManager'
 // import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
-import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
-import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { ResetDataResolver } from './resolvers/ResetDataResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
-import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
-import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
@@ -91,6 +84,7 @@ import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
+import { AppStatusManager } from './managers/AppStatusManager'
 
 const log = new Logger('desktop')
 
@@ -109,7 +103,7 @@ export class OrbitDesktopRoot {
   private webServer: WebServer
   private bonjour: bonjour.Bonjour
   private bonjourService: bonjour.Service
-  private buildServer: AppMiddleware
+  private appMiddleware: AppMiddleware
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -119,6 +113,7 @@ export class OrbitDesktopRoot {
   private topicsManager: TopicsManager
   private operatingSystemManager: OperatingSystemManager
   private orbitAppsManager: OrbitAppsManager
+  private appStatusManager: AppStatusManager
 
   start = async () => {
     await Desktop.start({
@@ -158,15 +153,21 @@ export class OrbitDesktopRoot {
       this.orbitAppsManager.start(),
     ])
 
-    this.buildServer = new AppMiddleware()
+    this.appStatusManager = new AppStatusManager()
+    this.appMiddleware = new AppMiddleware()
+
+    this.appMiddleware.onStatus(status => {
+      this.appStatusManager.sendMessage(status)
+    })
 
     const cosal = this.cosalManager.cosal
 
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer({
-      buildServer: this.buildServer,
+      appMiddleware: this.appMiddleware,
       cosal,
       orbitAppsManager: this.orbitAppsManager,
+      appStatusManager: this.appStatusManager,
     })
 
     // start announcing on bonjour
@@ -180,7 +181,7 @@ export class OrbitDesktopRoot {
 
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
-    this.webServer = new WebServer(this.buildServer)
+    this.webServer = new WebServer(this.appMiddleware)
     await this.webServer.start()
 
     this.authServer = new AuthServer()
@@ -274,7 +275,8 @@ export class OrbitDesktopRoot {
   private registerMediatorServer(props: {
     cosal: Cosal
     orbitAppsManager: OrbitAppsManager
-    buildServer: AppMiddleware
+    appMiddleware: AppMiddleware
+    appStatusManager: AppStatusManager
   }) {
     const syncersTransport = new WebSocketClientTransport(
       'syncers',
@@ -297,17 +299,13 @@ export class OrbitDesktopRoot {
         SearchResultModel,
         SalientWordsModel,
         SearchLocationsModel,
-        SearchPinnedResultModel,
         SearchByTopicModel,
         SpaceModel,
         StateModel,
-        TrendingTopicsModel,
-        TrendingTermsModel,
-        PeopleNearTopicModel,
-        BitsNearTopicModel,
         CosalTopicsModel,
         CosalSaliencyModel,
         CosalTopWordsModel,
+        AppStatusModel,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -321,6 +319,9 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
+        resolveObserveOne(AppStatusModel, args => {
+          return props.appStatusManager.observe(args.appId)
+        }),
         ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
           return this.orbitAppsManager.appMeta[identifier] || null
@@ -336,13 +337,13 @@ export class OrbitDesktopRoot {
             path,
             publicPath: `/appServer/${appId}`,
           })
-          props.buildServer.setApps(developingApps)
+          props.appMiddleware.setApps(developingApps)
           return appId
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
           log.info('Removing build server', appId)
           developingApps = remove(developingApps, x => x.appId === appId)
-          props.buildServer.setApps(developingApps)
+          props.appMiddleware.setApps(developingApps)
           log.info('Removing process', appId)
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
@@ -354,14 +355,10 @@ export class OrbitDesktopRoot {
         NewFallbackServerPortResolver,
         createCallAppBitApiMethodResolver(props.orbitAppsManager),
         ...getCosalResolvers(props.cosal),
-        getBitNearTopicsResolver(props.cosal),
-        getPeopleNearTopicsResolver(props.cosal),
         resolveMany(SearchResultModel, async args => {
           return await new SearchResultResolver(props.cosal, args).resolve()
         }),
         getSalientWordsResolver(props.cosal),
-        SearchLocationsResolver,
-        SearchPinnedResolver,
         ResetDataResolver,
         SendClientDataResolver,
         ChangeDesktopThemeResolver,

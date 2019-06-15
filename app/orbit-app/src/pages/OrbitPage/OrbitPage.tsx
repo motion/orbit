@@ -1,14 +1,15 @@
-import { command } from '@o/bridge'
+import { command, useModel } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
-import { CloseAppCommand } from '@o/models'
+import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
+import { APP_ID } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
 import { useUserEffects } from '../../effects/userEffects'
@@ -32,17 +33,41 @@ window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
+
   return (
     <ProvideStores stores={Stores}>
       <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
         <OrbitPageInner />
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />
+        {/* TODO: this wont load if no messages are in queue i think */}
+        {/* <OrbitStatusMessages /> */}
       </AppWrapper>
     </ProvideStores>
   )
 })
 
+const OrbitStatusMessages = memo(() => {
+  // TODO we need to upgrade banners soon:
+  //   1. make re-usable banner to change its type/message
+  //   2. banner show/update better api
+  const banner = useBanner()
+  const [statusMessage] = useModel(AppStatusModel, {
+    appId: APP_ID,
+  })
+
+  useEffect(() => {
+    banner.show({
+      type: statusMessage.type === 'processing' ? 'info' : statusMessage.type,
+      message: statusMessage.message,
+    })
+  }, [statusMessage])
+
+  return null
+})
+
+// TODO these effects are a bad pattern, was testing them
+// we should move them into another area, either in `om` or just directly onto their stores
 const OrbitEffects = memo(() => {
   useEnsureStaticAppBits()
   useUserEffects()
@@ -52,7 +77,6 @@ const OrbitEffects = memo(() => {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
-  const paneManagerStore = usePaneManagerStore()
   const { actions } = useOm()
   const forceUpdate = useForceUpdate()
 
@@ -111,21 +135,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
-  const allApps = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    identifier: pane.type,
-  }))
-
-  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
-
-  const stableSortedApps = useStableSort(allApps.map(x => x.id))
-    .map(id => allApps.find(x => x.id === id))
-    .filter(Boolean)
-    .map(x => ({
-      id: x.id,
-      definition: appDefsWithViews[x.identifier],
-    }))
-
   let contentArea = null
 
   useEffect(() => {
@@ -138,29 +147,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }, [App.appConf.appId])
 
   if (isEditing) {
+    const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
+
+    console.log(
+      `%cEditing app id: ${App.appConf.appId} at url ${bundleUrl}`,
+      'color: green; background: lightgreen; font-weight: bold;',
+    )
+
     contentArea = (
-      <Suspense fallback={<Loading />}>
-        <LoadApp
-          key={0}
-          RenderApp={RenderDevApp}
-          bundleURL={`${App.bundleUrl}?cacheKey=${Math.random()}`}
-        />
+      <Suspense fallback={<Loading message={`Loading app ${App.appConf.appId}`} />}>
+        <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
       </Suspense>
     )
   } else {
-    // load all apps
-    contentArea = (
-      <>
-        {stableSortedApps.map(app => (
-          <OrbitApp
-            key={app.id}
-            id={app.id}
-            identifier={app.definition.id}
-            appDef={app.definition}
-          />
-        ))}
-      </>
-    )
+    contentArea = <OrbitWorkspaceApps />
   }
 
   const onOpen = useCallback(rows => {
@@ -182,6 +182,34 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         </OrbitContentArea>
       </InnerChrome>
     </MainShortcutHandler>
+  )
+})
+
+const OrbitWorkspaceApps = memo(() => {
+  const paneManagerStore = usePaneManagerStore()
+
+  // load all apps
+  const allApps = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    identifier: pane.type,
+  }))
+
+  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
+
+  const stableSortedApps = useStableSort(allApps.map(x => x.id))
+    .map(id => allApps.find(x => x.id === id))
+    .filter(Boolean)
+    .map(x => ({
+      id: x.id,
+      definition: appDefsWithViews[x.identifier],
+    }))
+
+  return (
+    <>
+      {stableSortedApps.map(app => (
+        <OrbitApp key={app.id} id={app.id} identifier={app.definition.id} appDef={app.definition} />
+      ))}
+    </>
   )
 })
 

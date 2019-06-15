@@ -1,3 +1,4 @@
+import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
@@ -50,6 +51,8 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
 
   const entryDir = __dirname
   const target = params.target || 'electron-renderer'
+
+  // TODO isnt set for production
   const buildNodeModules = [
     Path.join(__dirname, '..', 'node_modules'),
     Path.join(__dirname, '..', '..', '..', 'node_modules'),
@@ -93,9 +96,27 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     },
   }
 
+  // include the cli node modules as backup
+  const cliPath = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
+  let modules = ['node_modules', cliPath]
+
+  // if in monorepo add monorepo hoisted modules
+  try {
+    const monoRepoModules = Path.join(cliPath, '..', '..', '..')
+    const monoRepoPackageJson = Path.join(monoRepoModules, 'package.json')
+    const isInMonoRepo =
+      pathExistsSync(monoRepoPackageJson) &&
+      readJSONSync(monoRepoPackageJson).name === 'orbit-monorepo'
+    if (isInMonoRepo) {
+      modules = [...modules, Path.join(monoRepoModules, 'node_modules')]
+    }
+  } catch (err) {
+    console.log('err testing monorepo', err)
+  }
+
   let config: webpack.Configuration = {
     watch,
-    context: context,
+    context,
     target,
     mode,
     entry: {
@@ -113,11 +134,6 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
-
-      // this makes the first entry fail but not hard reload
-      // comment it out for hard reloads, so far no fix seen
-      // hotUpdateChunkFilename: `hot-update.js`,
-      // hotUpdateMainFilename: `hot-update.json`,
     },
     devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
     externals: [
@@ -135,6 +151,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       alias: {
         'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
       },
+      modules,
     },
     resolveLoader: {
       modules: buildNodeModules,
@@ -181,7 +198,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
               options: {
                 presets: [
                   [
-                    '@o/babel-preset-motion',
+                    require.resolve('@o/babel-preset-motion'),
                     {
                       disable: target === 'node' ? ['react-hot-loader/babel'] : [],
                     },
@@ -274,7 +291,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context: context,
+          context,
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),

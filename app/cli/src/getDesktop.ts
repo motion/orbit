@@ -2,7 +2,6 @@ import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { OR_TIMED_OUT, orTimeout, randomString, sleep } from '@o/utils'
 import bonjour from 'bonjour'
 import execa from 'execa'
-import { pathExists, readJSON } from 'fs-extra'
 import killPort from 'kill-port'
 import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -10,17 +9,20 @@ import WebSocket from 'ws'
 
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
+import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 let tries = 0
 
 export async function getOrbitDesktop() {
   let port = await findBonjourService('orbitDesktop', 500)
+  let didStartOrbit = false
 
   if (!port) {
     reporter.info('Starting orbit desktop process')
     // run desktop and try again
     if (await runOrbitDesktop()) {
       port = await findBonjourService('orbitDesktop', 25000)
+      didStartOrbit = true
       // adding some sleep so it connects
       await sleep(1000)
     }
@@ -68,7 +70,10 @@ export async function getOrbitDesktop() {
     transports: [new WebSocketClientTransport('cli-client-' + randomString(5), socket)],
   })
 
-  return mediator
+  return {
+    mediator,
+    didStartOrbit,
+  }
 }
 
 async function findBonjourService(type: string, timeout: number): Promise<number | false> {
@@ -136,9 +141,4 @@ export async function runOrbitDesktop(): Promise<boolean> {
   }
 
   return false
-}
-
-export async function getIsInMonorepo() {
-  const monorepoPkg = join(__dirname, '..', '..', '..', 'package.json')
-  return (await pathExists(monorepoPkg)) && (await readJSON(monorepoPkg)).name === 'orbit-monorepo'
 }

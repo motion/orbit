@@ -4,7 +4,7 @@ import execa from 'execa'
 import fs, { pathExistsSync } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
-import sysPath from 'path'
+import sysPath, { join } from 'path'
 import url from 'url'
 
 import { reporter } from './reporter'
@@ -50,8 +50,21 @@ export async function commandNew(options: CommandNewOptions) {
   const hostedInfo = hostedGitInfo.fromUrl(options.template)
 
   trackCli(`NEW_PROJECT`, { templateName: options.template })
-  if (hostedInfo) await clone(hostedInfo, projectRoot)
-  else await copy(options.template, projectRoot)
+
+  if (hostedInfo) {
+    reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
+    await clone(hostedInfo, projectRoot)
+    return
+  }
+
+  const templatePath = join(__dirname, '..', 'templates', options.template)
+
+  if (!pathExistsSync(templatePath)) {
+    reporter.panic(`Couldn't find local template with name ${options.template} at ${templatePath}`)
+    return
+  }
+
+  await copy(templatePath, projectRoot)
 }
 
 const spawn = (cmd: string, options?: any) => {
@@ -143,7 +156,7 @@ const copy = async (templatePath: string, projectRoot: string) => {
   await fs.ensureDir(projectRoot, { mode: 493 })
 
   if (!pathExistsSync(templatePath)) {
-    throw new Error(`template ${templatePath} doesn't exist`)
+    throw new Error(`template doesn't exist at: ${templatePath}`)
   }
 
   if (templatePath === `.`) {

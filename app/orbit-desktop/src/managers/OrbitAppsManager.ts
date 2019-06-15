@@ -94,11 +94,11 @@ export class OrbitAppsManager {
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)
-        console.log('setting apps meta2', meta.packageId, identifier, meta)
+        log.info('setting apps meta2', meta.packageId, identifier)
         if (identifier !== null) {
           this.appMeta[identifier] = meta
         } else {
-          console.log('no identifier found')
+          log.info('no identifier found')
         }
       }
     },
@@ -109,13 +109,13 @@ export class OrbitAppsManager {
     (space, { useEffect }) => {
       ensure('space', !!space)
       const pkg = join(space.directory, 'package.json')
-      console.log('watching package.json for changes', pkg)
+      log.info('watching package.json for changes', pkg)
       useEffect(() => {
         let watcher = watch(pkg, {
           persistent: true,
         })
         watcher.on('change', () => {
-          console.log('got package.json change')
+          log.info('got package.json change')
           this.packageJsonUpdate = Math.random()
         })
         return () => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 import { Center } from '../Center'
 import { Spinner } from '../Spinner'
@@ -7,7 +7,7 @@ import { Col } from '../View/Col'
 
 export type LoadingProps = { message?: string }
 
-export function Loading(props: LoadingProps) {
+export const Loading = memo((props: LoadingProps) => {
   return (
     <Center>
       <Col space>
@@ -16,4 +16,4 @@ export function Loading(props: LoadingProps) {
       </Col>
     </Center>
   )
-}
+})

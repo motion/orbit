@@ -19,6 +19,7 @@ function getAppId() {
 }
 
 const appId = getAppId()
+console.log('appId', appId)
 
 export type AppState = {
   id: number

@@ -27,12 +27,12 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor(private buildServer: AppMiddleware) {
+  constructor(private appMiddleware: AppMiddleware) {
     this.server = express()
     this.server.set('port', Config.ports.server)
 
     // use build server, must be before cors
-    this.server.use(this.buildServer.getMiddleware())
+    this.server.use(this.appMiddleware.getMiddleware())
 
     this.server.use(cors())
     // fixes bug with 304 errors sometimes

@@ -3,12 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppOpenWindowCommand,
-  NewFallbackServerPortCommand,
-  SendClientDataCommand,
-  ToggleOrbitMainCommand,
-} from '@o/models'
+import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -38,6 +33,11 @@ export async function main() {
   )
 
   await waitOn({ resources: [desktopServerUrl], interval: 50 })
+
+  // start Electron state store
+  await Electron.start({
+    waitForInitialState: false,
+  })
 
   // we can have a different mediator if we want for child windows
   if (IS_MAIN_ORBIT) {
@@ -79,7 +79,12 @@ export async function main() {
           })
           // setTimeout so command doesnt take forever to run
           setTimeout(() => {
-            forkAndStartOrbitApp({ appId })
+            forkAndStartOrbitApp(
+              { appId },
+              {
+                WAIT_FOR_ORBIT: 'false',
+              },
+            )
           })
           return true
         }),
@@ -101,24 +106,17 @@ export async function main() {
     require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/monitorResourceUsage')
-    await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
+    await waitPort({ port: 3999 })
   }
 
   // why not make it a bit easier in prod mode too
   electronDebug()
 
-  // start Electron state store
-  console.log('Starting Electron store')
-  await Electron.start({
-    waitForInitialState: false,
-  })
-  console.log('Started Electron store')
-
   //
   // START THE PROCESSES
   //
 
-  if (process.env.SINGLE_APP_MODE) {
+  if (process.env.SINGLE_APP_MODE && process.env.WAIT_FOR_ORBIT !== 'false') {
     console.log('Running from cli, wait to start up the main process for a bit for speed')
     await sleep(3000)
   }

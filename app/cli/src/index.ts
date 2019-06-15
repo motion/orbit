@@ -19,6 +19,7 @@ export * from './util/getPackageId'
 export * from './util/findPackage'
 export * from './util/getWorkspaceAppPaths'
 export * from './util/updateWorkspacePackageIds'
+export * from './util/getIsInMonorepo'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 
@@ -277,6 +278,7 @@ function main() {
 // if were running directly from the cli, like /usr/local/node_modules/orbit
 // in the last case we want to run it immediately
 const bin = process.env._
+
 const cliName = 'orbit'
 const isCli = bin.slice(bin.length - cliName.length) === cliName
 if (isCli) {

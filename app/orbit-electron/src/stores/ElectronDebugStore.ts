@@ -37,6 +37,7 @@ export class ElectronDebugStore {
 
   handleQuit = () => {
     console.log('handling quit...')
+    // 😱
     root.handleExit()
   }
 }

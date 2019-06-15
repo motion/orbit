@@ -135,7 +135,7 @@ function SetupAppCustom() {
 
               if (res.type === 'error') {
                 banner.show({
-                  type: 'fail',
+                  type: 'error',
                   message: res.message,
                 })
                 return

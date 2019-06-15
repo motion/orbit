@@ -1,4 +1,4 @@
-import Observable = require('zen-observable')
+import Observable from 'zen-observable'
 import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
 
 export interface ClientTransport {

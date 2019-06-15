@@ -4,7 +4,7 @@
 import * as React from 'react'
 
 export let LoadApp = ({ bundleURL, RenderApp }) => {
-  console.debug(`Loading app at url ${bundleURL}`)
+  console.log(`Loading app at url ${bundleURL}`)
   let Lazy = React.useMemo(
     () =>
       React.lazy(async () => {
@@ -12,6 +12,7 @@ export let LoadApp = ({ bundleURL, RenderApp }) => {
         // TODO(andreypopp): this is hacky, find a way to expose app via bundle
         // eval result
         let appDef = window['OrbitAppToRun']
+        console.log(`imported app at ${bundleURL} got appDef`, appDef)
         return { default: () => React.createElement(RenderApp, { appDef }) }
       }),
     [bundleURL, RenderApp],

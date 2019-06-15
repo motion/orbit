@@ -27,10 +27,9 @@ export class AppMiddleware {
         return next()
       }
       if (!this.middlewares.length || req.pathname) {
-        log.verbose(`no middleware or empty req pathname`)
+        console.log(`no middleware or empty req pathname`)
         return next()
       }
-      log.verbose(`handle request ${req.pathname}`)
       for (const middleware of this.middlewares) {
         // have to disable next because for some reason they were sending next
         middleware(req, res, () => {})
@@ -86,6 +85,7 @@ export class AppMiddleware {
         mode: 'development',
         publicPath,
         entry: [app.entry],
+        outputFile: 'bundle.js',
         output: {
           // TODO(andreypopp): sort this out, we need some custom symbol here which
           // we will communicate to Orbit
@@ -101,6 +101,10 @@ export class AppMiddleware {
         },
         ignore: ['electron-log'],
       })
+
+      log.info(
+        `Compiling app at url ${publicPath} to ${config.output.path} ${config.output.filename}`,
+      )
 
       let compiler = Webpack(config)
 
@@ -131,7 +135,7 @@ function webpackDevReporter(middlewareOptions, options) {
 
     if (displayStats) {
       if (stats.hasErrors()) {
-        log.error(stats.toString('verbose'))
+        log.error(stats.toString(middlewareOptions.stats))
       } else if (stats.hasWarnings()) {
         log.warn(stats.toString(middlewareOptions.stats))
       } else {
@@ -139,15 +143,15 @@ function webpackDevReporter(middlewareOptions, options) {
       }
     }
 
-    let message = 'Compiled successfully.'
+    let message = 'App compiled successfully.'
 
     if (stats.hasErrors()) {
       message = 'Failed to compile.'
     } else if (stats.hasWarnings()) {
-      message = 'Compiled with warnings.'
+      message = 'App compiled with warnings.'
     }
     log.info(message)
   } else {
-    log.info('Compiling...')
+    log.info('App compiling...')
   }
 }

@@ -33,13 +33,15 @@ window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
+
   return (
     <ProvideStores stores={Stores}>
       <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
         <OrbitPageInner />
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />
-        <OrbitStatusMessages />
+        {/* TODO: this wont load if no messages are in queue i think */}
+        {/* <OrbitStatusMessages /> */}
       </AppWrapper>
     </ProvideStores>
   )
@@ -75,7 +77,6 @@ const OrbitEffects = memo(() => {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
-  const paneManagerStore = usePaneManagerStore()
   const { actions } = useOm()
   const forceUpdate = useForceUpdate()
 
@@ -134,21 +135,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
-  const allApps = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    identifier: pane.type,
-  }))
-
-  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
-
-  const stableSortedApps = useStableSort(allApps.map(x => x.id))
-    .map(id => allApps.find(x => x.id === id))
-    .filter(Boolean)
-    .map(x => ({
-      id: x.id,
-      definition: appDefsWithViews[x.identifier],
-    }))
-
   let contentArea = null
 
   useEffect(() => {
@@ -169,24 +155,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     )
 
     contentArea = (
-      <Suspense fallback={<Loading />}>
-        <LoadApp key={0} RenderApp={RenderDevApp} bundleURL={bundleUrl} />
+      <Suspense fallback={<Loading message={`Loading app ${App.appConf.appId}`} />}>
+        <LoadApp RenderApp={RenderDevApp} bundleURL={bundleUrl} />
       </Suspense>
     )
   } else {
-    // load all apps
-    contentArea = (
-      <>
-        {stableSortedApps.map(app => (
-          <OrbitApp
-            key={app.id}
-            id={app.id}
-            identifier={app.definition.id}
-            appDef={app.definition}
-          />
-        ))}
-      </>
-    )
+    contentArea = <OrbitWorkspaceApps />
   }
 
   const onOpen = useCallback(rows => {
@@ -208,6 +182,34 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         </OrbitContentArea>
       </InnerChrome>
     </MainShortcutHandler>
+  )
+})
+
+const OrbitWorkspaceApps = memo(() => {
+  const paneManagerStore = usePaneManagerStore()
+
+  // load all apps
+  const allApps = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    identifier: pane.type,
+  }))
+
+  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
+
+  const stableSortedApps = useStableSort(allApps.map(x => x.id))
+    .map(id => allApps.find(x => x.id === id))
+    .filter(Boolean)
+    .map(x => ({
+      id: x.id,
+      definition: appDefsWithViews[x.identifier],
+    }))
+
+  return (
+    <>
+      {stableSortedApps.map(app => (
+        <OrbitApp key={app.id} id={app.id} identifier={app.definition.id} appDef={app.definition} />
+      ))}
+    </>
   )
 })
 

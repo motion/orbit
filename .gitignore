@@ -25,6 +25,8 @@ kubeconfig
 tsconfig.tsbuildinfo
 .firebase
 
+**/appDefinitions.js
+
 common/temp/**
 
 app/build-orbit/stage-app/package-lock.json

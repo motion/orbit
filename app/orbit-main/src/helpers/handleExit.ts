@@ -13,14 +13,13 @@ export const handleExit = once(async () => {
     log.info('Electron handle exit...', processes.length)
     for (const proc of processes) {
       try {
-        cleanupChildren(proc.pid)
-      } catch {
-        log.info('error killing children for', proc.pid)
-      }
-      try {
         process.kill(proc.pid)
-      } catch {
-        log.info('error killing', proc.pid)
+      } catch (err) {
+        try {
+          cleanupChildren(proc.pid)
+        } catch {
+          log.info('error killing children for', proc.pid)
+        }
       }
     }
     log.info('bye!')

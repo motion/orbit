@@ -277,6 +277,7 @@ function main() {
 // if were running directly from the cli, like /usr/local/node_modules/orbit
 // in the last case we want to run it immediately
 const bin = process.env._
+
 const cliName = 'orbit'
 const isCli = bin.slice(bin.length - cliName.length) === cliName
 if (isCli) {

@@ -22,6 +22,7 @@ export function useEnsureStaticAppBits() {
             target: 'app',
             identifier: appDef.id,
             spaceId: space.id,
+            icon: appDef.icon,
             colors: ['black', 'white'],
             tabDisplay: 'hidden',
           })

@@ -1,14 +1,15 @@
 import { command, useModel } from '@o/bridge'
 import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
-import { CloseAppCommand, AppStatusModel } from '@o/models'
+import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, View, ViewProps, useBanner } from '@o/ui'
+import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { getApps } from '../../apps/orbitApps'
+import { APP_ID } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
 import { useUserEffects } from '../../effects/userEffects'
@@ -23,7 +24,6 @@ import { OrbitApp } from './OrbitApp'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
-import { APP_ID } from '../../constants'
 
 // temp: used by cli as we integrate it
 window['React'] = (window as any).React = React
@@ -161,13 +161,16 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }, [App.appConf.appId])
 
   if (isEditing) {
+    const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
+
+    console.log(
+      `%cEditing app id: ${App.appConf.appId} at url ${bundleUrl}`,
+      'color: green; background: lightgreen; font-weight: bold;',
+    )
+
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp
-          key={0}
-          RenderApp={RenderDevApp}
-          bundleURL={`${App.bundleUrl}?cacheKey=${Math.random()}`}
-        />
+        <LoadApp key={0} RenderApp={RenderDevApp} bundleURL={bundleUrl} />
       </Suspense>
     )
   } else {

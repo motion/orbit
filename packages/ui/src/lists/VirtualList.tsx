@@ -75,7 +75,7 @@ const ListRow = memo(
     return (
       <VirtualListItem
         forwardRef={ref}
-        key={Config.getItemKey(item)}
+        key={Config.getItemKey(item, index)}
         ItemView={ItemView}
         onClick={useCallback(e => onSelect(index, e), [])}
         onDoubleClick={useCallback(e => onOpen(index, e), [])}

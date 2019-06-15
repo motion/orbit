@@ -136,7 +136,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const defaultTitlePad = defaultTitlePadAmount.map(x => x * titleSizePx)
 
   if (!titleElement && hasTitle) {
-    const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
+    const adjustPadProps = !bordered && !titleBorder && !titlePad && { paddingBottom: 0 }
 
     const titlePadFinal = selectDefined(
       selectDefined(

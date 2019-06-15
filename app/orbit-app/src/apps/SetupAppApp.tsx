@@ -1,36 +1,6 @@
-import {
-  AppIcon,
-  command,
-  createApp,
-  getAppDefinition,
-  useAppDefinition,
-  useLocationLink,
-} from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import {
-  Button,
-  Col,
-  Flow,
-  FlowProvide,
-  Form,
-  gloss,
-  IconLabeled,
-  List,
-  ListItemProps,
-  randomAdjective,
-  randomNoun,
-  Scale,
-  SectionPassProps,
-  SelectableGrid,
-  Text,
-  Theme,
-  Toolbar,
-  useBanner,
-  useCreateFlow,
-  useFlow,
-  useForm,
-  View,
-} from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { createAppBitInActiveSpace, installApp, useNewAppBit } from '../helpers/installApp'

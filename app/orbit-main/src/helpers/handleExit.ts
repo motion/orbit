@@ -1,30 +1,31 @@
+import { Logger } from '@o/logger'
 import { cleanupChildren } from '@o/orbit-fork-process'
-import { ChildProcess, exec } from 'child_process'
+import { ChildProcess } from 'child_process'
 import root from 'global'
 import { once } from 'lodash'
 
 let processes: ChildProcess[] = []
 
+const log = new Logger('handleExit')
+
 export const handleExit = once(async () => {
   try {
-    console.log('Electron handle exit...')
+    log.info('Electron handle exit...', processes.length)
     for (const proc of processes) {
       try {
         cleanupChildren(proc.pid)
       } catch {
-        console.log('error killing children for', proc.pid)
+        log.info('error killing children for', proc.pid)
       }
       try {
         process.kill(proc.pid)
       } catch {
-        console.log('error killing', proc.pid)
+        log.info('error killing', proc.pid)
       }
     }
-    console.log('for now brute force killing..')
-    exec('pkill -9 screen')
-    console.log('bye!')
+    log.info('bye!')
   } catch (err) {
-    console.log('error exiting', err)
+    log.info('error exiting', err)
   }
   process.exit(0)
 })

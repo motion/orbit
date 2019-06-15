@@ -101,7 +101,7 @@ export async function main() {
     require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/monitorResourceUsage')
-    await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
+    await waitPort({ port: 3999 })
   }
 
   // why not make it a bit easier in prod mode too

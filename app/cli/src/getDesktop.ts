@@ -15,12 +15,14 @@ let tries = 0
 
 export async function getOrbitDesktop() {
   let port = await findBonjourService('orbitDesktop', 500)
+  let didStartOrbit = false
 
   if (!port) {
     reporter.info('Starting orbit desktop process')
     // run desktop and try again
     if (await runOrbitDesktop()) {
       port = await findBonjourService('orbitDesktop', 25000)
+      didStartOrbit = true
       // adding some sleep so it connects
       await sleep(1000)
     }
@@ -68,7 +70,10 @@ export async function getOrbitDesktop() {
     transports: [new WebSocketClientTransport('cli-client-' + randomString(5), socket)],
   })
 
-  return mediator
+  return {
+    mediator,
+    didStartOrbit,
+  }
 }
 
 async function findBonjourService(type: string, timeout: number): Promise<number | false> {

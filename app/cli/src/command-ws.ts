@@ -5,6 +5,7 @@ import { join } from 'path'
 
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
+import { configStore } from './util/configStore'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
@@ -27,26 +28,17 @@ export const isOrbitWs = async (rootDir: string) => {
 export async function commandWs(options: CommandWsOptions) {
   reporter.info(`Running orbit ws in ${options.workspaceRoot}`)
 
-  if (!(await isOrbitWs(options.workspaceRoot))) {
-    reporter.panic(
-      `\nNot inside orbit workspace, add "config": { "orbitWorkspace": true } } to the package.json`,
-    )
-    return
-  }
-
   const appIdentifiers = await watchBuildWorkspace(options)
 
-  await updateWorkspacePackageIds(options.workspaceRoot)
+  const { mediator } = await getOrbitDesktop()
 
-  let orbitDesktop = await getOrbitDesktop()
-
-  if (!orbitDesktop) {
+  if (!mediator) {
     process.exit(0)
   }
 
   try {
     reporter.info('Sending open workspace command')
-    await orbitDesktop.command(AppOpenWorkspaceCommand, {
+    await mediator.command(AppOpenWorkspaceCommand, {
       path: options.workspaceRoot,
       appIdentifiers,
     })
@@ -58,10 +50,21 @@ export async function commandWs(options: CommandWsOptions) {
   return
 }
 
-async function watchBuildWorkspace(options: CommandWsOptions) {
+export async function watchBuildWorkspace(options: CommandWsOptions) {
   reporter.info(`Running command ws in mode ${options.mode}`)
 
+  if (!(await isOrbitWs(options.workspaceRoot))) {
+    reporter.panic(
+      `\nNot inside orbit workspace, add "config": { "orbitWorkspace": true } } to the package.json`,
+    )
+    return
+  }
+
   const directory = options.workspaceRoot
+
+  // update last active ws
+  configStore.lastActiveWorkspace.set(directory)
+
   const { appsInfo, appsRootDir } = await getAppsInfo(directory)
   if (!appsInfo || !appsInfo.length) {
     console.log('No apps found')
@@ -89,6 +92,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
     },
     dll: dllFile,
   }
+
   // we have to build apps once
   if (options.clean || !(await pathExists(dllFile))) {
     console.log('building all apps once...')
@@ -128,6 +132,7 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
   `,
   )
 
+  // we pass in extra webpack config for main app
   let extraEntries = {}
   let extraMainConfig = null
 
@@ -171,9 +176,15 @@ async function watchBuildWorkspace(options: CommandWsOptions) {
 
   await server.start()
 
+  await updateWorkspacePackageIds(options.workspaceRoot)
+
   return appsInfo.map(x => x.id)
 }
 
+/**
+ * Sends command to open workspace with latest appIdentifiers
+ * Gets appIdentifiers by reading current workspace directory
+ */
 export async function reloadAppDefinitions(directory: string) {
   let orbitDesktop = await getOrbitDesktop()
   if (orbitDesktop) {
@@ -188,7 +199,21 @@ export async function reloadAppDefinitions(directory: string) {
   }
 }
 
-async function getAppsInfo(spaceDirectory: string) {
+type AppInfo = {
+  id: string
+  directory: string
+  entry: string
+}
+
+/**
+ * Look for package.json of apps in directory and return information on each
+ */
+async function getAppsInfo(
+  spaceDirectory: string,
+): Promise<null | {
+  appsRootDir: string
+  appsInfo: AppInfo[]
+}> {
   reporter.info(`read space spaceDirectory ${spaceDirectory}`)
   const pkg = await readJSON(join(spaceDirectory, 'package.json'))
   if (!pkg) {

@@ -2,35 +2,46 @@ import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
 
+import { watchBuildWorkspace } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
+import { configStore } from './util/configStore'
+import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 export type CommandDevOptions = { projectRoot: string }
 
 export async function commandDev(options: CommandDevOptions) {
-  let orbitDesktop = await getOrbitDesktop()
+  let { mediator, didStartOrbit } = await getOrbitDesktop()
 
-  if (!orbitDesktop) {
+  if (!mediator) {
     process.exit(0)
+  }
+
+  if (didStartOrbit && (await getIsInMonorepo())) {
+    await watchBuildWorkspace({
+      workspaceRoot: configStore.lastActiveWorkspace.get(),
+      mode: 'development',
+      clean: false,
+    })
   }
 
   const pkg = await readJSON(join(options.projectRoot, 'package.json'))
   const entry = pkg['ts:main'] || pkg.main
 
   try {
-    const appId = await orbitDesktop.command(AppDevOpenCommand, {
+    const appId = await mediator.command(AppDevOpenCommand, {
       path: options.projectRoot,
       entry: join(options.projectRoot, entry),
     })
-    await orbitDesktop.command(AppOpenWindowCommand, {
+    await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
     })
 
     addProcessDispose(async () => {
       reporter.info('Disposing orbit dev process...')
-      await orbitDesktop.command(AppDevCloseCommand, {
+      await mediator.command(AppDevCloseCommand, {
         appId,
       })
     })

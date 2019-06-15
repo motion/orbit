@@ -1,22 +1,26 @@
 import { isDefined } from '@o/utils'
 import ConfigStore from 'configstore'
+import { join } from 'path'
 import prompts from 'prompts'
 
 import { reporter } from '../reporter'
 
 const conf = new ConfigStore(`orbit`, {}, { globalConfigPath: true })
 
+/** { [fullpath]: info } */
 type AppBuildInfo = {
   [key: string]: {
     buildId: number
   }
 }
 
+const emptyWorkspaceDir = join(__dirname, '..', '..', 'ws-empty')
+
 export const configStore = {
   packageManager: createConfig<string>('packageManager'),
   orbitMainPath: createConfig<string>('orbitMainPath'),
-  /** { [fullpath]: info } */
   appBuildInfo: createConfig<AppBuildInfo>('appBuildInfo'),
+  lastActiveWorkspace: createConfig<string>('lastActiveWorkspace2', emptyWorkspaceDir),
 }
 
 export const promptPackageManager = async () => {
@@ -36,20 +40,15 @@ export const promptPackageManager = async () => {
   return response
 }
 
-function createConfig<A extends any>(key: string) {
+function createConfig<A extends any>(key: string, defaultValue?: A) {
+  if (isDefined(defaultValue) && !isDefined(conf.get(key))) {
+    conf.set(key, defaultValue)
+  }
   return {
     get: (): A => conf.get(key),
     set: (val: A) => {
       conf.set(key, val)
       reporter.info(`configStore.set ${key} ${JSON.stringify(val)}`)
-    },
-    getOrDefault: (val: A): A => {
-      let cur = conf.get(key)
-      if (!isDefined(cur)) {
-        cur = val
-        conf.set(key, val)
-      }
-      return cur
     },
   }
 }

@@ -1,8 +1,8 @@
+import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
-import console = require('console')
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
@@ -95,7 +95,19 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
   }
 
   // include the cli node modules as backup
-  const cliNodeModules = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
+  const cliPath = Path.join(require.resolve('@o/cli'), '..', '..', 'node_modules')
+  let modules = ['node_modules', cliPath]
+
+  try {
+    const monoRepoModules = Path.join(cliPath, '..', '..')
+    const monoRepoPackageJson = Path.join(monoRepoModules, 'package.json')
+    const isInMonoRepo =
+      pathExistsSync(monoRepoPackageJson) &&
+      readJSONSync(monoRepoPackageJson).name === 'orbit-monorepo'
+    if (isInMonoRepo) {
+      modules = [...modules, Path.join(monoRepoModules, 'node_modules')]
+    }
+  } catch {}
 
   let config: webpack.Configuration = {
     watch,
@@ -134,7 +146,7 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
       alias: {
         'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
       },
-      modules: ['node_modules', cliNodeModules],
+      modules,
     },
     resolveLoader: {
       modules: buildNodeModules,

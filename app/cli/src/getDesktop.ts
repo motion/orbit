@@ -2,7 +2,6 @@ import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { OR_TIMED_OUT, orTimeout, randomString, sleep } from '@o/utils'
 import bonjour from 'bonjour'
 import execa from 'execa'
-import { pathExists, readJSON } from 'fs-extra'
 import killPort from 'kill-port'
 import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -10,6 +9,7 @@ import WebSocket from 'ws'
 
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
+import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 let tries = 0
 
@@ -136,9 +136,4 @@ export async function runOrbitDesktop(): Promise<boolean> {
   }
 
   return false
-}
-
-export async function getIsInMonorepo() {
-  const monorepoPkg = join(__dirname, '..', '..', '..', 'package.json')
-  return (await pathExists(monorepoPkg)) && (await readJSON(monorepoPkg)).name === 'orbit-monorepo'
 }

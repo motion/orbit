@@ -1,8 +1,8 @@
+import { Logger } from '@o/logger'
+import { AppStatusMessage } from '@o/models'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
-import { AppStatusMessage } from '@o/models'
-import { Logger } from '@o/logger'
 
 import { makeWebpackConfig } from './makeWebpackConfig'
 
@@ -129,7 +129,7 @@ function webpackDevReporter(middlewareOptions, options) {
 
     if (displayStats) {
       if (stats.hasErrors()) {
-        log.error(stats.toString(middlewareOptions.stats))
+        log.error(stats.toString('verbose'))
       } else if (stats.hasWarnings()) {
         log.warn(stats.toString(middlewareOptions.stats))
       } else {

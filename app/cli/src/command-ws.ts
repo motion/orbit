@@ -1,16 +1,11 @@
-import {
-  BuildServer,
-  getAppConfig,
-  makeWebpackConfig,
-  WebpackParams,
-  webpackPromise,
-} from '@o/build-server'
+import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 
-import { getIsInMonorepo, getOrbitDesktop } from './getDesktop'
+import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
+import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 export type CommandWsOptions = {

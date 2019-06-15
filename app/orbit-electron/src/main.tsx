@@ -3,12 +3,7 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppOpenWindowCommand,
-  NewFallbackServerPortCommand,
-  SendClientDataCommand,
-  ToggleOrbitMainCommand,
-} from '@o/models'
+import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -79,7 +74,12 @@ export async function main() {
           })
           // setTimeout so command doesnt take forever to run
           setTimeout(() => {
-            forkAndStartOrbitApp({ appId })
+            forkAndStartOrbitApp(
+              { appId },
+              {
+                WAIT_FOR_ORBIT: 'false',
+              },
+            )
           })
           return true
         }),
@@ -118,7 +118,7 @@ export async function main() {
   // START THE PROCESSES
   //
 
-  if (process.env.SINGLE_APP_MODE) {
+  if (process.env.SINGLE_APP_MODE && process.env.WAIT_FOR_ORBIT !== 'false') {
     console.log('Running from cli, wait to start up the main process for a bit for speed')
     await sleep(3000)
   }

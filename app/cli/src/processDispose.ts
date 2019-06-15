@@ -38,7 +38,7 @@ async function dispose() {
             return dispose()
           }),
         ),
-        1000,
+        250,
       )
       clearTimeout(finaltm)
       reporter.info(`done disposing all, bye`)

@@ -37,7 +37,6 @@ export function startChildProcess({
   console.log(`Starting process ${name}:`, Config.paths.nodeBinary, args)
   const child = spawn(isNode || Config.isProd ? Config.paths.nodeBinary : 'electron', args, {
     env: {
-      ...process.env,
       PROCESS_NAME: name,
       SUB_PROCESS: name,
       STACK_FILTER: name,

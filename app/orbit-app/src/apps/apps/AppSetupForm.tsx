@@ -4,7 +4,7 @@ import { Form, FormFieldsObj, FormProps } from '@o/ui'
 import produce from 'immer'
 import React from 'react'
 
-import { installApp } from '../../helpers/installApp'
+import { useInstallApp } from '../../helpers/installApp'
 
 export function createNewApp(def: AppDefinition): AppBit {
   return {
@@ -25,8 +25,7 @@ export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
   const [existingApp] = useAppBit(selectDefined(id, false))
   const newApp = createNewApp(def)
   const app: AppBit = existingApp || newApp
-
-  console.log('app', app)
+  const installApp = useInstallApp()
 
   return (
     <Form

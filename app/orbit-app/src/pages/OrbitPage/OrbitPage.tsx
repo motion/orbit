@@ -41,7 +41,9 @@ export const OrbitPage = memo(() => {
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />
         {/* TODO: this wont load if no messages are in queue i think */}
-        {/* <OrbitStatusMessages /> */}
+        <Suspense fallback={null}>
+          <OrbitStatusMessages />
+        </Suspense>
       </AppWrapper>
     </ProvideStores>
   )
@@ -57,6 +59,7 @@ const OrbitStatusMessages = memo(() => {
   })
 
   useEffect(() => {
+    if (!statusMessage) return
     banner.show({
       type: statusMessage.type === 'processing' ? 'info' : statusMessage.type,
       message: statusMessage.message,

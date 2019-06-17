@@ -7,6 +7,7 @@ import util from 'util'
 import { getErrorFormatter } from './errors'
 import { ActivityArgs, ActivityTracker, Reporter } from './types'
 import reporterInstance from './yurnalist'
+import { config } from '../config'
 
 const tracer = globalTracer()
 const errorFormatter = getErrorFormatter()
@@ -70,6 +71,7 @@ export const reporter: Reporter = {
     reporterInstance.error(message)
     if (error) this.log(errorFormatter.render(error))
   },
+
   /**
    * Set prefix on uptime.
    * @param {string} prefix - A string to prefix uptime with.

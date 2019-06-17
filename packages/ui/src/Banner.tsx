@@ -4,10 +4,11 @@ import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useRef } from 'react'
 
 import { Button } from './buttons/Button'
+import { useOnUnmount } from './hooks/useOnUnmount'
 import { Message } from './text/Message'
+import { SimpleText } from './text/SimpleText'
 import { Row } from './View/Row'
 import { View } from './View/View'
-import { useOnUnmount } from './hooks/useOnUnmount'
 
 type BannerProps = {
   message: string
@@ -134,8 +135,14 @@ export function Banner(props: BannerViewProps) {
         width="100%"
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">
-          {props.message}
-          <Button chromeless icon="cross" iconSize={20} onClick={props.close} />
+          <SimpleText whiteSpace="pre">{props.message}</SimpleText>
+          <Button
+            alignSelf="flex-start"
+            chromeless
+            icon="cross"
+            iconSize={20}
+            onClick={props.close}
+          />
         </Row>
       </Message>
     </View>

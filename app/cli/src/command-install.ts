@@ -35,7 +35,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : undefined
+  const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : 'latest'
 
   // check if already installed and avoid work
   if (await isInstalled(packageId, options.directory, curVersion)) {

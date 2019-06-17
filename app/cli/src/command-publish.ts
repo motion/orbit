@@ -130,14 +130,15 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     if (shouldPublish) {
-      reporter.info(`Publishing app to our registry for search update`)
-      let err = await publishApp()
+      // npm first so if it fails we dont udpate search
+      reporter.info(`Publishing app to npm registry`)
+      let err = await publishApp(`https://registry.npmjs.org`)
       if (err) {
         reporter.error(err.message, err.error)
         return err
       }
-      reporter.info(`Publishing app to npm registry`)
-      err = await publishApp(`https://registry.npmjs.org`)
+      reporter.info(`Publishing app to our registry for search update`)
+      err = await publishApp()
       if (err) {
         reporter.error(err.message, err.error)
         return err

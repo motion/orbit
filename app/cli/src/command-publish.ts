@@ -130,11 +130,17 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     if (shouldPublish) {
-      reporter.info(`Publishing app to registry`)
-      try {
-        await publishApp()
-      } catch (err) {
-        console.log('Error publishing', err.message)
+      reporter.info(`Publishing app to our registry for search update`)
+      let err = await publishApp()
+      if (err) {
+        reporter.error(err.message, err.error)
+        return err
+      }
+      reporter.info(`Publishing app to npm registry`)
+      err = await publishApp(`https://registry.npmjs.org`)
+      if (err) {
+        reporter.error(err.message, err.error)
+        return err
       }
     }
 
@@ -174,8 +180,16 @@ export async function commandPublish(options: CommandPublishOptions) {
   }
 }
 
-async function publishApp() {
-  return await npmCommand(`publish --registry ${registryUrl}`)
+async function publishApp(registry?: string) {
+  try {
+    await npmCommand(`publish --registry ${registry || registryUrl}`)
+  } catch (err) {
+    return {
+      type: 'error' as const,
+      message: `${err.message}`,
+      error: err,
+    }
+  }
 }
 
 export async function npmCommand(args: string) {

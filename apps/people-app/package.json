@@ -1,7 +1,7 @@
 {
   "name": "@o/people-app",
   "description": "A contact manager across all bits synced of type person.",
-  "version": "2.5.7",
+  "version": "2.5.9",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",
   "config": {

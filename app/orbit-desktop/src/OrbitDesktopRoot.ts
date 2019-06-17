@@ -84,7 +84,7 @@ import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
-import { AppStatusManager } from './managers/AppStatusManager'
+import { appStatusManager } from './managers/AppStatusManager'
 
 const log = new Logger('desktop')
 
@@ -113,7 +113,6 @@ export class OrbitDesktopRoot {
   private topicsManager: TopicsManager
   private operatingSystemManager: OperatingSystemManager
   private orbitAppsManager: OrbitAppsManager
-  private appStatusManager: AppStatusManager
 
   start = async () => {
     await Desktop.start({
@@ -153,11 +152,10 @@ export class OrbitDesktopRoot {
       this.orbitAppsManager.start(),
     ])
 
-    this.appStatusManager = new AppStatusManager()
     this.appMiddleware = new AppMiddleware()
 
     this.appMiddleware.onStatus(status => {
-      this.appStatusManager.sendMessage(status)
+      appStatusManager.sendMessage(status)
     })
 
     const cosal = this.cosalManager.cosal
@@ -167,7 +165,6 @@ export class OrbitDesktopRoot {
       appMiddleware: this.appMiddleware,
       cosal,
       orbitAppsManager: this.orbitAppsManager,
-      appStatusManager: this.appStatusManager,
     })
 
     // start announcing on bonjour
@@ -276,7 +273,6 @@ export class OrbitDesktopRoot {
     cosal: Cosal
     orbitAppsManager: OrbitAppsManager
     appMiddleware: AppMiddleware
-    appStatusManager: AppStatusManager
   }) {
     const syncersTransport = new WebSocketClientTransport(
       'syncers',
@@ -320,7 +316,7 @@ export class OrbitDesktopRoot {
           { entity: StateEntity, models: [StateModel] },
         ]),
         resolveObserveOne(AppStatusModel, args => {
-          return props.appStatusManager.observe(args.appId)
+          return appStatusManager.observe(args.appId)
         }),
         ...loadAppDefinitionResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {

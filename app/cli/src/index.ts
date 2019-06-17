@@ -191,6 +191,11 @@ function main() {
             type: 'boolean',
             default: false,
           })
+          // .option('registry', {
+          //   type: 'string',
+          //   describe: `Publish to your own internal registry`,
+          //   default: false,
+          // })
           .option('verbose', {
             type: 'boolean',
             default: false,

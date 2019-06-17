@@ -55,12 +55,12 @@ async function installApp(
   newAppBit?: Partial<AppBit> | true,
   banner?: BannerHandle,
 ) {
-  banner.show({
+  banner.set({
     message: `Installing app ${def.name}`,
   })
 
   if (def.auth) {
-    banner.setMessage(`Waiting for authentication...`)
+    banner.set({ message: `Waiting for authentication...` })
 
     const res = await command(AuthAppCommand, { authKey: def.auth })
     if (res.type === 'error') {
@@ -75,7 +75,7 @@ async function installApp(
   console.log('got response from install app command', res)
 
   if (res.type === 'error') {
-    banner.show({
+    banner.set({
       type: 'error',
       message: res.message,
     })
@@ -101,7 +101,7 @@ async function installApp(
       newAppStore.reset()
     } catch (err) {
       const message = `Error saving AppBit ${err.message} ${err.stack}`
-      banner.show({
+      banner.set({
         type: 'error',
         message,
       })
@@ -116,7 +116,7 @@ async function installApp(
 
   const message = `Installed app!`
 
-  banner.show({
+  banner.set({
     type: 'success',
     message,
   })

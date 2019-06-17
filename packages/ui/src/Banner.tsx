@@ -1,7 +1,7 @@
 import { createStoreContext } from '@o/use-store'
 import { FullScreen } from 'gloss'
 import { filter } from 'lodash'
-import React, { FunctionComponent, memo, useRef } from 'react'
+import React, { FunctionComponent, memo, useCallback, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { useOnUnmount } from './hooks/useOnUnmount'
@@ -17,9 +17,11 @@ type BannerProps = {
   onClose?: () => void
 }
 
-type BannerItem = Pick<BannerProps, 'message' | 'type'> & {
+type BannerContent = Pick<BannerProps, 'message' | 'type'>
+
+type BannerItem = BannerContent & {
   key: number
-  setMessage: (message: string) => void
+  set: (props: Partial<BannerProps>) => void
   close: () => void
   onClose?: () => void
 }
@@ -27,9 +29,9 @@ type BannerItem = Pick<BannerProps, 'message' | 'type'> & {
 class BannerStore {
   banners: BannerItem[] = []
 
-  setMessage(key: number, message: string) {
+  set(key: number, props: Partial<BannerProps>) {
     const banner = this.banners.find(x => x.key === key)
-    banner.message = message
+    Object.assign(banner, props)
     this.banners = [...this.banners]
   }
 
@@ -38,7 +40,7 @@ class BannerStore {
     const bannerItem: BannerItem = {
       ...banner,
       key,
-      setMessage: this.setMessage.bind(null, key),
+      set: this.set.bind(null, key),
       close: this.hide.bind(null, key),
     }
     this.banners = [...this.banners, bannerItem]
@@ -87,16 +89,11 @@ export const ProvideBanner = memo(
   },
 )
 
-export type BannerHandle = Pick<BannerItem, 'close' | 'setMessage'> & {
-  show: (props: BannerProps) => void
-}
+export type BannerHandle = Pick<BannerItem, 'close' | 'set'>
 
 export function useBanner(): BannerHandle {
   const bannerStore = BannerManager.useStore()
   const banner = useRef<BannerItem>(null)
-  const show = (props: BannerProps) => {
-    banner.current = bannerStore.show(props)
-  }
 
   useOnUnmount(() => {
     if (banner.current) {
@@ -105,19 +102,21 @@ export function useBanner(): BannerHandle {
   })
 
   return {
-    show,
-    setMessage(message: string) {
-      if (!banner.current) {
-        show({ message })
+    set: useCallback((props: Partial<BannerProps>) => {
+      if (banner.current) {
+        banner.current.set(props)
       } else {
-        banner.current.setMessage(message)
+        banner.current = bannerStore.show({
+          message: '',
+          ...props,
+        })
       }
-    },
-    close() {
+    }, []),
+    close: useCallback(() => {
       if (banner.current) {
         banner.current.close()
       }
-    },
+    }, []),
   }
 }
 

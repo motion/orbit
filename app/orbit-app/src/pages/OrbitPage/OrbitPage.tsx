@@ -50,9 +50,6 @@ export const OrbitPage = memo(() => {
 })
 
 const OrbitStatusMessages = memo(() => {
-  // TODO we need to upgrade banners soon:
-  //   1. make re-usable banner to change its type/message
-  //   2. banner show/update better api
   const banner = useBanner()
   const [statusMessage] = useModel(AppStatusModel, {
     appId: APP_ID,
@@ -60,8 +57,8 @@ const OrbitStatusMessages = memo(() => {
 
   useEffect(() => {
     if (!statusMessage) return
-    banner.show({
-      type: statusMessage.type === 'processing' ? 'info' : statusMessage.type,
+    banner.set({
+      type: statusMessage.type,
       message: statusMessage.message,
     })
   }, [statusMessage])

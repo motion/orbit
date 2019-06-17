@@ -123,7 +123,7 @@ function SetupAppCustom() {
               const name = form.getValue('name')
               const identifier = form.getValue('identifier')
 
-              banner.show({
+              banner.set({
                 message: `Creating app ${name} with template ${template}`,
               })
 
@@ -134,7 +134,7 @@ function SetupAppCustom() {
               })
 
               if (res.type === 'error') {
-                banner.show({
+                banner.set({
                   type: 'error',
                   message: res.message,
                 })

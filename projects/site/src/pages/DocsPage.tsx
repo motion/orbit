@@ -177,7 +177,7 @@ const DocsPage = memo((props: { children?: any }) => {
                 elevation={25}
                 width={280}
                 pointerEvents="auto"
-                background={theme => theme.background}
+                background={useCallback(theme => theme.background, [])}
               >
                 {sidebarChildren}
               </Sidebar>

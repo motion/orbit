@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { getSpaceSize, Sizes } from './Space'
+import { getSpaceSize, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -183,6 +183,15 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         </Base>
       )
     }
+  }
+
+  if (!isDefined(titlePad, pad)) {
+    titleEl = (
+      <>
+        {titleEl}
+        <Space />
+      </>
+    )
   }
 
   return (

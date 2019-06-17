@@ -59,6 +59,7 @@ export function SizedSurface(direct: SizedSurfaceProps) {
     ...rest
   } = props
   const size = scale * getSize(ogSize)
+  if (props['debug']) debugger
   // sizes
   let height =
     typeof props.height === 'number'

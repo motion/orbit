@@ -3,7 +3,7 @@ import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 
-import { Header } from '../Layout'
+import { Header } from '../Header'
 import { ContentSection } from '../views/ContentSection'
 import { FadeParent } from '../views/FadeIn'
 import { MDX } from '../views/MDX'

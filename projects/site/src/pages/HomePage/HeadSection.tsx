@@ -24,14 +24,17 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Build an intranet of apps that feel and run like native.`,
-    `Open source, decentralized, with an open app store.`,
+    `Develop your intranet using apps that feel and run like native.`,
+    `An open source, decentralized platform with an open app store.`,
   ],
   medium: [
-    `Build an intranet of apps that feel and run like native.`,
-    `Open source, decentralized, with an open app store.`,
+    `Develop your intranet using apps that feel and run like native.`,
+    `An open source, decentralized platform with an open app store.`,
   ],
-  small: [`Create intranet apps easily.`, `Open source, decentralized, with an open app store.`],
+  small: [
+    `Create intranet apps easily.`,
+    `An open source, decentralized platform with an open app store.`,
+  ],
 }
 
 const HeadContent = memo(() => {
@@ -150,7 +153,7 @@ const HeadContent = memo(() => {
 })
 
 const HeadJoin = () => (
-  <View flex={1} width="100%" maxWidth={1000} position="absolute" bottom={5} alignItems="center">
+  <View flex={1} width="100%" position="absolute" bottom={5} alignItems="center">
     <FadeChild {...fadeUpProps} delay={500}>
       <SurfacePassProps elevation={5} fontFamily="GT Eesti">
         <Theme name="orbitOneDark">

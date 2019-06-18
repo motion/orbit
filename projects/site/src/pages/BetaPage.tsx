@@ -2,7 +2,7 @@ import { Space, Theme, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { Header } from '../Layout'
+import { Header } from '../Header'
 import { FadeChild, FadeParent } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
 import { EarlyAccessContent } from './HomePage/EarlyAccessContent'

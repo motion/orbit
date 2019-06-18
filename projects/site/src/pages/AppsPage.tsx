@@ -4,7 +4,7 @@ import { mount, route } from 'navi'
 import React, { memo, useCallback, useMemo } from 'react'
 
 import { fontProps } from '../constants'
-import { Header } from '../Layout'
+import { Header } from '../Header'
 import { Paragraph } from '../views/Paragraph'
 import { PillButton } from '../views/PillButton'
 import { SearchInput } from '../views/SearchInput'

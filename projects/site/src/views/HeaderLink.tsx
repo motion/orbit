@@ -21,12 +21,14 @@ export const HeaderLink = ({ delay, children, ...props }: any) => {
     </Link>
   )
 }
+
 const linkDelay = 80
+
 export const LinksLeft = props => {
   return (
     <>
       <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
-        Start
+        Guides
       </HeaderLink>
       <HeaderLink delay={linkDelay * 2} {...props} href="/docs">
         Docs
@@ -37,6 +39,7 @@ export const LinksLeft = props => {
     </>
   )
 }
+
 export const LinksRight = props => (
   <>
     <HeaderLink delay={linkDelay * 4} {...props} href="/beta">

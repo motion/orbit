@@ -222,7 +222,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const scale = useScale()
   const listItemAdjustedPadding = getListItemPadding({
     ...props,
-    pad: selectDefined(surfaceProps.pad, 'md'),
+    pad: selectDefined(surfaceProps.pad, 13),
   }).map(x => x * scale)
   const spaceSize = listItemAdjustedPadding[1]
 

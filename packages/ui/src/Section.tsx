@@ -73,7 +73,7 @@ export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
 // more padded above title
-const defaultTitlePadAmount = [1.5, 1, 1]
+const defaultTitlePadAmount = [1.5, 1, 0]
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -159,7 +159,12 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={belowTitle}
+            below={
+              <>
+                {belowTitle}
+                <Space size={selectDefined(space, size)} />
+              </>
+            }
             icon={icon}
             userSelect="none"
             space="sm"
@@ -183,15 +188,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         </Base>
       )
     }
-  }
-
-  if (!isDefined(titlePad, pad)) {
-    titleEl = (
-      <>
-        {titleEl}
-        <Space />
-      </>
-    )
   }
 
   return (

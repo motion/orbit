@@ -402,6 +402,7 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 //  because its used on initial mount AND during renders
 //  which is actually useful, yes, because you want the logic the same
 //  BUT its also used nested! See themeFn => mergePropStyles
+//  likely can be refactored, but just need to study it a bit before you do
 //
 function mergeStyles(
   id: string,

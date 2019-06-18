@@ -125,7 +125,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           ref={store.popoverContentRef}
           borderRadius={borderRadius}
           flex={1}
-          maxHeight={300}
+          maxHeight={window.innerHeight - 120}
         >
           {user ? (
             <ListItem

@@ -1,5 +1,5 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
-import { fromEntries } from '@o/utils'
+import { fromEntries, isDefined } from '@o/utils'
 import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
@@ -69,8 +69,8 @@ export let Config: ConfigureUIProps = {
       return `${Math.random()}`
     }
     const item = x.item || x
-    const key = item.id || item.key || item.identifier || item.email
-    if (key) {
+    const key = item.id || item.key || item.identifier
+    if (isDefined(key)) {
       return `${key}`
     }
     if (typeof index === 'undefined') {

@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
@@ -12,7 +13,6 @@ import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
-import { selectDefined } from '@o/utils'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {

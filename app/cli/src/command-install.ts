@@ -35,7 +35,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : 'latest'
+  const curVersion = options.upgrade ? await getRegistryLatestVersion(packageId) : undefined
 
   // check if already installed and avoid work
   if (await isInstalled(packageId, options.directory, curVersion)) {
@@ -48,7 +48,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  const packageInstallKey = `${packageId}@${curVersion}`
+  const packageInstallKey = `${packageId}@${curVersion || 'latest'}`
   reporter.info(`Installing ${packageInstallKey}`)
 
   try {

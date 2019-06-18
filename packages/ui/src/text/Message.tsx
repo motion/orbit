@@ -14,7 +14,6 @@ type MessageView = FunctionComponent<SizedSurfaceProps> & {
 const MessageTitle = (props: TitleProps) => <SubTitle {...props} />
 
 export const Message: MessageView = (props: SizedSurfaceProps & { title?: string }) => {
-  console.log('MessageChrome', props.title)
   if (isDefined(props.title)) {
     return (
       <MessageChrome {...props}>

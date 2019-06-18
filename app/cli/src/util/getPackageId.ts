@@ -4,7 +4,7 @@ import { apiUrl } from '../command-publish'
 import { reporter } from '../reporter'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
-export const identifierToPackageId: { [key: string]: string } = {}
+const identifierToPackageId: { [key: string]: string } = {}
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
   reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
@@ -19,7 +19,11 @@ export async function getPackageId(
     await updateWorkspacePackageIds(options.rescanWorkspacePath)
   }
 
-  reporter.info(`Loaded app identifiers: ${Object.keys(identifierToPackageId).join(', ')}`)
+  reporter.info(
+    `getPackageId ${identifier}, checking loaded app identifiers: ${Object.keys(
+      identifierToPackageId,
+    ).join(', ')}`,
+  )
 
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]

@@ -2,7 +2,7 @@ import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
 import { reporter } from '../reporter'
-import { identifierToPackageId } from './getPackageId'
+import { setIdentifierToPackageId } from './getPackageId'
 import { getWorkspaceAppPaths } from './getWorkspaceAppPaths'
 
 /**
@@ -20,7 +20,7 @@ export async function updateWorkspacePackageIds(workspaceRoot: string) {
     if (await pathExists(buildInfoPath)) {
       const buildInfo = await readJSON(buildInfoPath)
       if (buildInfo.identifier) {
-        identifierToPackageId[buildInfo.identifier] = packageId
+        setIdentifierToPackageId(buildInfo.identifier, packageId)
       } else {
         reporter.info(`No identifier in buildInfo.json ${JSON.stringify(buildInfo)}`)
       }

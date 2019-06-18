@@ -70,6 +70,7 @@ async function installApp(
     }
     return res
   }
+
   const res = await command(AppInstallToWorkspaceCommand, { identifier: def.id })
 
   console.log('got response from install app command', res)

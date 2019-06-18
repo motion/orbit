@@ -35,7 +35,7 @@ export function AppsMainNew({
   useLayoutEffect(() => {
     newAppStore.update({
       name: app.name,
-      colors: app.colors,
+      colors: app.colors || ['orange', 'red'],
     })
   }, [app])
 

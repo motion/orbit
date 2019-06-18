@@ -6,10 +6,10 @@ import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
 import { Col, ColProps } from '../View/Col'
-import { CheckBoxField } from './CheckboxField'
-import { useFormError } from './Form'
 import { InputField } from './InputField'
 import { Label } from './Label'
+import { ToggleField } from './ToggleField'
+import { useFormError } from './Form'
 
 type RowProps = {
   label?: React.ReactNode
@@ -123,7 +123,7 @@ export function FormField(props: FormFieldProps) {
 
   switch (type) {
     case DataType.boolean:
-      return <CheckBoxField name={name} {...props as any} />
+      return <ToggleField name={name} {...props as any} />
     case DataType.date:
       // TODO calendar after input
       return <InputField name={name} type={type} {...props} />

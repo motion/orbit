@@ -1,5 +1,5 @@
 import { ThemeObject, useTheme } from 'gloss'
-import React from 'react'
+import React, { useMemo } from 'react'
 import Switch, { ReactSwitchProps } from 'react-switch'
 
 import { useToggle } from '../hooks/useToggle'
@@ -9,7 +9,7 @@ import { getSize } from '../Sizes'
 import { Sizes } from '../Space'
 import { Tooltip } from '../Tooltip'
 
-type ToggleProps = Partial<ReactSwitchProps> & {
+export type ToggleProps = Partial<ReactSwitchProps> & {
   defaultChecked?: boolean
   boxShadow?: string
   type?: 'checkbox'
@@ -17,6 +17,7 @@ type ToggleProps = Partial<ReactSwitchProps> & {
   theme?: Object
   size?: Sizes
   tooltip?: string
+  opacity?: number // todo make this whole switch native element
 }
 
 export function Toggle(props: ToggleProps) {

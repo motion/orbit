@@ -210,8 +210,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const showTitle = !!title && !props.hideTitle
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  let padDefault = 'sm'
-  let pad = props.iconBefore ? 13 : padDefault
+  // 13 instead of 12px here fixed a very odd clipping bug
   const iconBefore = iconBeforeProp || !showTitle
   const hasMouseDownEvent = !!surfaceProps.onMouseDown
   const disablePsuedoProps = selectable === false && {
@@ -223,7 +222,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const scale = useScale()
   const listItemAdjustedPadding = getListItemPadding({
     ...props,
-    pad: selectDefined(surfaceProps.pad, pad),
+    pad: selectDefined(surfaceProps.pad, 'md'),
   }).map(x => x * scale)
   const spaceSize = listItemAdjustedPadding[1]
 
@@ -441,7 +440,7 @@ const ListItemMainContent = gloss<{ oneLine?: boolean }>(Box, {
 const getIconSize = props =>
   props.iconSize ||
   (props.iconProps && props.iconProps.size) ||
-  (props.iconBefore ? (!(props.subTitle || props.children) ? 20 : 28) : 14)
+  (props.iconBefore ? (!(props.subTitle || props.children) ? 20 : 24) : 14)
 
 function getIcon(props: ListItemSimpleProps) {
   const size = getIconSize(props)

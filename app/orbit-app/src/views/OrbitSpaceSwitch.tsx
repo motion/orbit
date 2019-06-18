@@ -2,7 +2,17 @@ import { useModels } from '@o/bridge'
 import { OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, GlobalHotKeys, Icon, ListItem, Popover, View } from '@o/ui'
+import {
+  Avatar,
+  Col,
+  GlobalHotKeys,
+  Icon,
+  ListItem,
+  ListSeparator,
+  Popover,
+  Toggle,
+  View,
+} from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 
@@ -41,7 +51,7 @@ class SpaceSwitchStore {
 
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const store = useStore(SpaceSwitchStore)
-  const [user] = useActiveUser()
+  const [user, updateUser] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
@@ -75,9 +85,10 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           handlers={handlers}
         />
       )}
+
       <Popover
         ref={store.spaceSwitcherRef}
-        delay={1000}
+        delay={500}
         openOnHover
         closeOnClickAway
         closeOnClick
@@ -120,15 +131,14 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             <div>No spaces</div>
           )}
 
-          {spaces.map((space, index) => {
+          <ListSeparator>Recent Spaces</ListSeparator>
+          {spaces.slice(0, 3).map((space, index) => {
             return (
               <ListItem
                 key={space.id}
                 icon={<SpaceIcon space={space} />}
                 iconBefore
-                after={
-                  activeSpaceId === space.id && <Icon name="check" color="#449878" size={12} />
-                }
+                after={activeSpaceId === space.id && <Icon name="tick" color="#449878" size={12} />}
                 onClick={() => {
                   console.warn('ok')
                 }}
@@ -138,6 +148,26 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
               />
             )
           })}
+
+          <ListSeparator>Settings</ListSeparator>
+
+          <ListItem
+            title="Dark mode"
+            icon="moon"
+            after={
+              <View opacity={user.settings.theme === 'automatic' ? 0.5 : 1}>
+                <Toggle
+                  defaultChecked={user.settings.theme === 'dark' ? true : false}
+                  onChange={next => {
+                    console.log('next', next)
+                    updateUser(user => {
+                      user.settings.theme = next ? 'dark' : 'light'
+                    })
+                  }}
+                />
+              </View>
+            }
+          />
 
           <ListItem
             title="Space Settings"

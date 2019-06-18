@@ -21,20 +21,21 @@ export default function WaistSection() {
           header={
             <>
               <PillButton>Security</PillButton>
-              <TitleText textAlign="center" maxWidth={400}>
+              <TitleText textAlign="center" maxWidth={520}>
                 Tell Security they can firewall Orbit completely.
               </TitleText>
             </>
           }
         >
           <View flex={1} />
-          <Row space={useScreenVal(20, 'xl', 'xxxl')}>
+          <Row flex={1} space={useScreenVal(20, 'xl', 'xxxl')}>
             <Col flex={3} space="lg">
-              <Pitch alpha={1} size="md">
-                Orbit never sends single bit of data outside your firewall.
+              <Pitch alpha={1} size="xxs">
+                Unlike just about every other platform, Orbit never sends single bit of data outside
+                your firewall.
               </Pitch>
 
-              <Pitch fontWeight={200} alpha={0.7} size="xs" sizeLineHeight={1.3}>
+              <Pitch fontWeight={200} alpha={0.7} size={0.5} sizeLineHeight={1.3}>
                 Get incredibly powerful internal tools without setting up infrastructure or having
                 to trust a startup with any of your data -- interface with sensitive internal
                 databases with ease, Orbit gives you complete control.
@@ -42,8 +43,8 @@ export default function WaistSection() {
             </Col>
 
             {screen !== 'small' && (
-              <Col flex={1} padding={0}>
-                <Image userSelect="none" maxWidth={300} margin="auto" src={people} />
+              <Col flex={2} padding={0}>
+                <Image userSelect="none" width="100%" maxWidth={300} margin="auto" src={people} />
               </Col>
             )}
           </Row>

@@ -201,15 +201,6 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      {/* <Page.Background background="linear-gradient(#000, #222)" /> */}
-      {/* <Page.Parallax>
-        <Center>
-          <View transform={{ scale: 30 }}>
-            <BrandMark />
-          </View>
-        </Center>
-      </Page.Parallax> */}
-
       <Page.Content>
         <Col
           right={useScreenHeightVal(40, 0)}
@@ -222,7 +213,14 @@ export function HeadSection() {
             <HeadContent />
           </Col>
           <Space size={40} />
-          <Row space="xl" pad={[0, 'xl']} marginBottom={-90} scrollable="x" maxWidth="100vw">
+          <Row
+            space="xl"
+            pad={[0, 'xl']}
+            marginBottom={-90}
+            scrollable="x"
+            maxWidth="100vw"
+            justifyContent="space-between"
+          >
             <SubSection index={0} title="Easy" titleColor={colors.orange}>
               A complete and easy toolkit designed for building apps, batteries included.
             </SubSection>
@@ -250,9 +248,9 @@ export function HeadSection() {
 
 const SubSection = memo(({ title, children, index, titleColor }: any) => {
   return (
-    <Col flex={1} minWidth={180}>
+    <Col flex={1} minWidth={160} maxWidth={220}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title textAlign="center" color={'#fff'} selectable size={0.7} color={titleColor}>
+        <Title textAlign="center" selectable size={0.5} color={titleColor || '#fff'}>
           {title}
         </Title>
         <Space size="sm" />

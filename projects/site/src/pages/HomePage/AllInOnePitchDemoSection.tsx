@@ -228,14 +228,14 @@ export default function NeckSection() {
                 <PillButton>How</PillButton>
               </FadeChild>
               <FadeChild delay={200}>
-                <TitleText size={useScreenVal('lg', 'xxxl', 'xxxl')}>All together.</TitleText>
+                <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
                 <FadeChild delay={300}>
                   Create apps that work together in a workspace, sharing data & code.
                 </FadeChild>
                 <FadeChild delay={450}>
-                  Collaborate without a cloud - it runs privately on your desktop.
+                  Collaborate without servers - apps run privately on your desktop.
                 </FadeChild>
               </TitleTextSub>
             </>

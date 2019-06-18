@@ -2,7 +2,7 @@ import { useReaction } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
-import React from 'react'
+import React, { isValidElement } from 'react'
 
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
@@ -300,19 +300,23 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
             {showTitle && (
               <ListItemTitleBar space={spaceSize} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText
-                  autoselect
-                  editable={editable}
-                  onFinishEdit={onEdit}
-                  onCancelEdit={onCancelEdit}
-                  onStartEdit={onStartEdit}
-                  flex={1}
-                  ellipse
-                  fontWeight={theme.fontWeight || 400}
-                  {...titleProps}
-                >
-                  {title}
-                </HighlightText>
+                {isValidElement(title) ? (
+                  title
+                ) : (
+                  <HighlightText
+                    autoselect
+                    editable={editable}
+                    onFinishEdit={onEdit}
+                    onCancelEdit={onCancelEdit}
+                    onStartEdit={onStartEdit}
+                    flex={1}
+                    ellipse
+                    fontWeight={theme.fontWeight || 400}
+                    {...titleProps}
+                  >
+                    {title}
+                  </HighlightText>
+                )}
               </ListItemTitleBar>
             )}
             {showSubtitle && (
@@ -404,7 +408,7 @@ const ListItemTitleBar = gloss(Row, {
   width: '100%',
   flex: 1,
   flexFlow: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-start',
   alignItems: 'flex-start',
   textAlign: 'left',
 })

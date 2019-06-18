@@ -55,7 +55,7 @@ export default function ShoulderSection() {
               </FadeChild>
               <FadeChild delay={300}>
                 <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
-                  Designed for privacy & control.
+                  Designed for privacy & control
                 </TitleText>
               </FadeChild>
             </>

@@ -1,4 +1,4 @@
-import { Col, FullScreen, gloss, Grid, Space, SpaceGroup, TextProps, Theme, View } from '@o/ui'
+import { Col, FullScreen, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
 import React from 'react'
 
 import earth from '../../../public/images/earth.jpg'
@@ -48,7 +48,9 @@ export default function LegsSection() {
   )
 }
 
-const Item = gloss(SubParagraph)
+const Item = props => (
+  <ListItem title={<SimpleText flex={1} size="lg" alpha={0.75} {...props} />} icon="tick" />
+)
 
 const dly = 120
 
@@ -63,35 +65,32 @@ export function AboutSection() {
             <FadeChild>
               <PillButton>About</PillButton>
             </FadeChild>
-            <Space size="sm" />
             <FadeChild delay={dly * 1}>
-              <TitleText textAlign="center" size="xl">
-                A better deal for apps.
-              </TitleText>
+              <TitleText textAlign="center">A better deal for developers.</TitleText>
             </FadeChild>
           </>
         }
       >
+        <View flex={1} />
         <Grid space="10%" itemMinWidth={340} height="70%">
           <Col space="lg">
             <FadeChild delay={dly * 2}>
               <TitleTextSub textAlign="left" alpha={1}>
-                It's too hard to build apps.
+                It's way too hard to build a decent application that gives you control, and lets you
+                deploy where you want.
               </TitleTextSub>
             </FadeChild>
 
             <FadeChild delay={dly * 3}>
               <SubParagraph>
-                We want to give developers more control, and users a better experience out of the
-                box.
+                Let's give developers more control and users a better experience out of the box.
               </SubParagraph>
             </FadeChild>
 
             <FadeChild delay={dly * 4}>
               <SubParagraph>
-                It starts by making apps to share data with each other, and creating an open
-                platform. And a commitment to making apps easier to realize our ideas on a
-                sustainable platform.
+                It starts with apps that are easier to build and are built to last: open source, and
+                cross-platform by default.
               </SubParagraph>
             </FadeChild>
 
@@ -123,7 +122,7 @@ export function AboutSection() {
           )}
         </Grid>
 
-        <View minHeight={80} />
+        <View flex={1} minHeight={80} />
       </SpacedPageContent>
     </FadeParent>
   )

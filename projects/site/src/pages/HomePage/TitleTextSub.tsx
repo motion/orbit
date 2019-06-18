@@ -7,7 +7,7 @@ import { TitleText } from '../../views/TitleText'
 export const TitleTextSub = gloss((props: TextProps) => (
   <View maxWidth={800} minWidth={300} textAlign="center">
     <TitleText
-      size="sm"
+      size="xxs"
       sizeLineHeight={1.35}
       fontWeight={300}
       alpha={0.65}

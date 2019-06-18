@@ -7,9 +7,9 @@ import { View, ViewProps } from './View'
 export const PaddedView = gloss<ViewProps & PadProps>(View, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
-  flex: 'none',
+  flex: 1,
   alignItems: 'inherit',
   justifyContent: 'inherit',
   overflow: 'inherit',
-  maxWidth: '100%',
+  minWidth: '100%',
 }).theme(getPadding)

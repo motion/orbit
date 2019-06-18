@@ -72,13 +72,13 @@ export class Join extends React.Component<any> {
             id="mce-EMAIL"
             placeholder="Email address..."
             flex={1}
-            size={2}
+            size={1.5}
             sizeRadius={5}
             sizePadding={1.5}
             {...inputProps}
           />
           <Button
-            size={2}
+            size={1.5}
             sizeRadius={5}
             sizeFont={0.8}
             sizePadding={2}

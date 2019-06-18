@@ -62,7 +62,7 @@ export class AppMiddleware {
     // report our own errors
     const { state, stats } = options
     if (!state) {
-      this.sendStatus({ appId, type: 'processing', message: `Compiling...` })
+      this.sendStatus({ appId, type: 'info', message: `Compiling...` })
       return
     }
     if (stats.hasErrors()) {

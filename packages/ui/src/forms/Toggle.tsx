@@ -1,5 +1,5 @@
 import { ThemeObject, useTheme } from 'gloss'
-import React, { useMemo } from 'react'
+import React from 'react'
 import Switch, { ReactSwitchProps } from 'react-switch'
 
 import { useToggle } from '../hooks/useToggle'

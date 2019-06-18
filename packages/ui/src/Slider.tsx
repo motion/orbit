@@ -90,8 +90,8 @@ export const Slider = memo((props: SliderProps) => {
           heights[index] = next
           setHeights(heights)
         }
-        return cloneElement(child, {
-          framePad: framePad as any,
+        return cloneElement(child as any, {
+          framePad,
           verticalPad,
           fixHeightToTallest,
           currentHeight: height,

@@ -11,6 +11,7 @@ export function newEmptyAppBit(definition: AppDefinition): AppBit {
     target: 'app',
     identifier: definition.id,
     itemType: definition.itemType,
+    icon: definition.icon,
     name: definition.name,
     tabDisplay: 'plain',
     colors: ['#000', '#111'],
@@ -94,6 +95,7 @@ async function installApp(
         space: activeSpace,
         name: newAppStore.app.name || def.name,
         colors: newAppStore.app.colors,
+        icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
       console.log('Saving new app', bit)

@@ -120,7 +120,7 @@ export const TitleRow = themeable(
             {typeof icon === 'string' ? (
               <Icon alignSelf="center" name={icon} size={iconSize} />
             ) : React.isValidElement(icon) ? (
-              React.cloneElement(icon, { size: iconSize })
+              React.cloneElement(icon as any, { size: iconSize })
             ) : (
               icon || null
             )}

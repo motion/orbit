@@ -57,7 +57,7 @@ export function ManageApps() {
                 removable
                 app={item.app}
                 onDoubleClick={() => {
-                  om.actions.router.showAppPage({ id: `${x.id}` })
+                  om.actions.router.showAppPage({ id: `${item.app.id}` })
                 }}
               />
             )

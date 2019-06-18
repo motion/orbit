@@ -66,7 +66,7 @@ export function AboutSection() {
               <PillButton>About</PillButton>
             </FadeChild>
             <FadeChild delay={dly * 1}>
-              <TitleText textAlign="center">A better deal for developers.</TitleText>
+              <TitleText textAlign="center">A better deal for developers</TitleText>
             </FadeChild>
           </>
         }

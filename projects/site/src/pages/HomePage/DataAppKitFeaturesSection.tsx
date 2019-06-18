@@ -136,7 +136,7 @@ export default memo(function DataAppKitFeaturesSection() {
                   </FadeChild>
                   <FadeChild delay={100}>
                     <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
-                      Batteries Included.
+                      Batteries Included
                     </TitleText>
                   </FadeChild>
                   <TitleTextSub>

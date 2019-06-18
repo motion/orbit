@@ -22,7 +22,7 @@ export default function WaistSection() {
             <>
               <PillButton>Security</PillButton>
               <TitleText textAlign="center" maxWidth={520}>
-                Tell Security they can firewall Orbit completely.
+                Tell Security they can firewall Orbit completely
               </TitleText>
             </>
           }

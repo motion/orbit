@@ -16,10 +16,8 @@ export const EarlyAccessContent = () => {
       header={
         <>
           <PillButton>Beta</PillButton>
-          <TitleText size="xxl">Early Access.</TitleText>
-          <TitleTextSub>
-            Join orbit insiders for early access.
-          </TitleTextSub>
+          <TitleText size="xxl">Early Access</TitleText>
+          <TitleTextSub>Join orbit insiders for early access.</TitleTextSub>
         </>
       }
     >

@@ -39,7 +39,8 @@ class BannerStore {
       await Promise.all(
         banners.map(async banner => {
           if (isDefined(banner.timeout)) {
-            await sleep(banner.timeout)
+            console.log('wait for tm', banner.timeout)
+            await sleep(banner.timeout * 1000)
             banner.close()
           }
         }),
@@ -48,17 +49,17 @@ class BannerStore {
   )
 
   set(key: number, props: Partial<BannerProps>) {
-    const banner = this.banners.find(x => x.key === key)
-    if (banner) {
-      Object.assign(banner, props)
-      this.banners = [...this.banners]
+    let banner = this.banners.find(x => x.key === key)
+    console.log('what', this.banners, props, banner)
+    if (!!banner) {
+      this.banners = this.banners.map(x => (x === banner ? { ...x, ...props } : x))
     } else {
-      this.show({ ...props, message: props.message })
+      this.show({ ...props, message: props.message }, key)
     }
   }
 
-  show(banner: BannerProps) {
-    const key = Math.random()
+  show(banner: BannerProps, prevKey?: number) {
+    const key = prevKey || Math.random()
     const bannerItem: BannerItem = {
       ...banner,
       key,

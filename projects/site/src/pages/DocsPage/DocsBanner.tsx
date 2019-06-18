@@ -1,23 +1,16 @@
-import { BannerProps, Button, Col, Row, useBanner } from '@o/ui'
+import { Button, Col, Row, useBanner } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 export let Basic = () => {
   const banner = useBanner()
-  const [props, setProps] = useState<BannerProps>({
-    title: 'Empty',
-  })
-
-  useEffect(() => {
-    if (props.title === 'Empty') return
-    banner.set(props)
-  }, [props])
 
   return (
     <Col space>
       <Row group flexWrap="wrap">
         <Button
           onClick={() => {
-            setProps({
+            console.log('call with info')
+            banner.set({
               title: 'Info',
               message: `Lorem ipsum dolor sit info`,
               type: 'info',
@@ -28,7 +21,7 @@ export let Basic = () => {
         </Button>
         <Button
           onClick={() => {
-            setProps({
+            banner.set({
               title: 'Warning',
               message: `Lorem ipsum dolor sit warning`,
               type: 'warn',
@@ -40,7 +33,7 @@ export let Basic = () => {
         </Button>
         <Button
           onClick={() => {
-            setProps({
+            banner.set({
               title: 'Error',
               message: `Lorem ipsum dolor sit error`,
               type: 'error',
@@ -54,7 +47,7 @@ export let Basic = () => {
       <Row space flexWrap="wrap">
         <Button
           onClick={() => {
-            setProps({
+            banner.set({
               title: 'I will timeout',
               message: `Lorem ipsum dolor sit error`,
               type: 'info',

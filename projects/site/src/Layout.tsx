@@ -84,7 +84,7 @@ export const Layout = memo((props: any) => {
   }, [theme])
 
   return (
-    <ProvideUI themes={themes} activeTheme="light">
+    <ProvideUI themes={themes} activeTheme={theme}>
       <PageLoading />
       <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
       <View

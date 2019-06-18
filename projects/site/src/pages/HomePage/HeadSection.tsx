@@ -17,9 +17,9 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Create apps that work together.',
-  medium: 'Create apps that work together.',
-  small: 'Create apps that work together.',
+  large: 'Easy and powerful apps for work.',
+  medium: 'Easy and powerful apps for work.',
+  small: 'Easy and powerful apps for work.',
 }
 
 let allTexts = {
@@ -219,19 +219,22 @@ export function HeadSection() {
             justifyContent="space-between"
           >
             <SubSection index={0} title="Easy" titleColor={colors.orange}>
-              A complete and easy toolkit designed for building apps, batteries included.
+              Everything needed for managing data, syncing from many sources, all in a few lines of
+              code.
             </SubSection>
 
             <SubSection index={2} title="Powerful" titleColor={colors.red}>
-              Powerful views, optimization and APIs give you incredible new abilities.
+              A complete toolkit designed for managing large data, workflows and common patterns.
             </SubSection>
 
-            <SubSection index={1} title="Connected" titleColor={colors.purple}>
-              An Open App Store, apps that work together, and easy collaboration.
+            <SubSection index={1} title="Controlled" titleColor={colors.purple}>
+              Share a single repo with your team to collaborate on many apps w/o configuration or
+              servers.
             </SubSection>
 
-            <SubSection index={3} title="Private" titleColor={colors.orange}>
-              You control all the data, offline first, and peer to peer.
+            <SubSection index={3} title="Secure" titleColor={colors.orange}>
+              Everything runs behind the firewall, so plugging in a database is secure. Sync using
+              p2p.
             </SubSection>
           </Row>
           <Space size="xxxl" />

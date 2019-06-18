@@ -231,11 +231,9 @@ export default function NeckSection() {
                 <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref} margin="auto" minWidth={320}>
-                <FadeChild delay={300}>
-                  Create apps that work together in a workspace, sharing data & code.
-                </FadeChild>
+                <FadeChild delay={300}>A new way to build apps: without a server.</FadeChild>
                 <FadeChild delay={450}>
-                  Collaborate without servers - apps run privately on your desktop.
+                  When ready, deploy to your intranet with a command.
                 </FadeChild>
               </TitleTextSub>
             </>

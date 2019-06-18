@@ -14,9 +14,13 @@ import { Row } from './View/Row'
 import { View } from './View/View'
 
 export type BannerProps = {
+  /** Give the banner a title */
   title?: string
+  /** The main content of the banner, can have multiple lines using a newline */
   message: string
+  /** The theme of the banner */
   type?: 'warn' | 'success' | 'error' | 'info'
+  /** In seconds, hide the banner automatically after this time */
   timeout?: number
   /** This is the callback you can pass in optionally to do things when it closes */
   onClose?: () => void
@@ -52,7 +56,6 @@ class BannerStore {
 
   set(key: number, props: Partial<BannerProps>) {
     let banner = this.banners.find(x => x.key === key)
-    console.log('what', this.banners, props, banner)
     if (!!banner) {
       this.banners = this.banners.map(x => (x === banner ? { ...x, ...props } : x))
     } else {
@@ -118,6 +121,9 @@ export const ProvideBanner = memo(
 
 export type BannerHandle = Pick<BannerItem, 'close' | 'set'>
 
+/**
+ * Use a single banner with helpers to manage it in the view its used
+ */
 export function useBanner(): BannerHandle {
   const bannerStore = BannerManager.useStore()
   const banner = useRef<BannerItem>(null)

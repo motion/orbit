@@ -19,7 +19,7 @@ let lgSpace = <Space size="xxxl" />
 let allTitles = {
   large: 'A fresh start for building apps.',
   medium: 'A fresh start for building apps.',
-  small: 'A fresh start for building apps.',
+  small: 'A fresh start for apps.',
 }
 
 let allTexts = {
@@ -32,7 +32,7 @@ let allTexts = {
     `Open source, with amazing collaboration and an open app store.`,
   ],
   small: [
-    `Lets make apps ours - easy to build, use, and control.`,
+    `Create apps easily.`,
     `Open source, with amazing collaboration and an open app store.`,
   ],
 }

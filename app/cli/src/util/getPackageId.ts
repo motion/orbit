@@ -11,6 +11,10 @@ export function setIdentifierToPackageId(identifier: string, packageId: string) 
   identifierToPackageId[identifier] = packageId
 }
 
+export function getIdentifierToPackageId() {
+  return { ...identifierToPackageId }
+}
+
 export async function getPackageId(
   identifier: string,
   options: { search?: boolean; rescanWorkspacePath?: string } = {},
@@ -19,11 +23,8 @@ export async function getPackageId(
     await updateWorkspacePackageIds(options.rescanWorkspacePath)
   }
 
-  reporter.info(
-    `getPackageId ${identifier}, checking loaded app identifiers: ${Object.keys(
-      identifierToPackageId,
-    ).join(', ')}`,
-  )
+  const info = JSON.stringify(identifierToPackageId, null, 2)
+  reporter.info(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
 
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]

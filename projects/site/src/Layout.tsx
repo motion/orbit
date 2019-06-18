@@ -84,27 +84,25 @@ export const Layout = memo((props: any) => {
   }, [theme])
 
   return (
-    <ProvideUI themes={themes}>
-      <Theme name={theme}>
-        <PageLoading />
-        <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
-        <View
-          className={`theme-${theme}`}
-          minHeight="100vh"
-          minWidth="100vw"
-          maxHeight={maxHeight}
-          overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
-          transition={transition}
-          transform={{
-            x: siteStore.showSidebar ? -sidebarWidth : 'none',
-          }}
-        >
-          <ErrorBoundary name="Site Error">
-            <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
-          </ErrorBoundary>
-        </View>
-        <LayoutSidebar />
-      </Theme>
+    <ProvideUI themes={themes} activeTheme="light">
+      <PageLoading />
+      <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
+      <View
+        className={`theme-${theme}`}
+        minHeight="100vh"
+        minWidth="100vw"
+        maxHeight={maxHeight}
+        overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+        transition={transition}
+        transform={{
+          x: siteStore.showSidebar ? -sidebarWidth : 'none',
+        }}
+      >
+        <ErrorBoundary name="Site Error">
+          <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
+        </ErrorBoundary>
+      </View>
+      <LayoutSidebar />
     </ProvideUI>
   )
 })

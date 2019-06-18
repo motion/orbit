@@ -1,9 +1,11 @@
-import { createStoreContext } from '@o/use-store'
+import { createStoreContext, react } from '@o/use-store'
+import { isDefined } from '@o/utils'
 import { FullScreen } from 'gloss'
 import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useCallback, useRef } from 'react'
 
 import { Button } from './buttons/Button'
+import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { Message } from './text/Message'
 import { SimpleText } from './text/SimpleText'
@@ -13,6 +15,7 @@ import { View } from './View/View'
 export type BannerProps = {
   message: string
   type?: 'warn' | 'success' | 'error' | 'info'
+  timeout?: number
   /** This is the callback you can pass in optionally to do things when it closes */
   onClose?: () => void
 }
@@ -21,6 +24,7 @@ type BannerContent = Pick<BannerProps, 'message' | 'type'>
 
 type BannerItem = BannerContent & {
   key: number
+  timeout?: number
   set: (props: Partial<BannerProps>) => void
   close: () => void
   onClose?: () => void
@@ -29,10 +33,28 @@ type BannerItem = BannerContent & {
 class BannerStore {
   banners: BannerItem[] = []
 
+  timeoutBanner = react(
+    () => this.banners,
+    async (banners, { sleep }) => {
+      await Promise.all(
+        banners.map(async banner => {
+          if (isDefined(banner.timeout)) {
+            await sleep(banner.timeout)
+            banner.close()
+          }
+        }),
+      )
+    },
+  )
+
   set(key: number, props: Partial<BannerProps>) {
     const banner = this.banners.find(x => x.key === key)
-    Object.assign(banner, props)
-    this.banners = [...this.banners]
+    if (banner) {
+      Object.assign(banner, props)
+      this.banners = [...this.banners]
+    } else {
+      this.show({ ...props, message: props.message })
+    }
   }
 
   show(banner: BannerProps) {
@@ -75,15 +97,17 @@ export const ProvideBanner = memo(
         {children}
 
         {/* default to a bottom fixed position, we can make this customizable */}
-        <FullScreen pointerEvents="none" top="auto" zIndex={1000000000}>
-          {bannerStore.banners.map(banner => (
-            <BannerView
-              key={JSON.stringify(banner)}
-              {...banner}
-              close={() => bannerStore.hide(banner.key)}
-            />
-          ))}
-        </FullScreen>
+        <Portal>
+          <FullScreen position="fixed" pointerEvents="none" top="auto" zIndex={1000000000}>
+            {bannerStore.banners.map(banner => (
+              <BannerView
+                key={JSON.stringify(banner)}
+                {...banner}
+                close={() => bannerStore.hide(banner.key)}
+              />
+            ))}
+          </FullScreen>
+        </Portal>
       </BannerManager.SimpleProvider>
     )
   },
@@ -130,7 +154,7 @@ export function Banner(props: BannerViewProps) {
         sizeRadius={0}
         pointerEvents="auto"
         position="relative"
-        alt={props.type}
+        alt={props.type === 'info' ? undefined : props.type}
         width="100%"
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">

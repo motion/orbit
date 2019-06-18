@@ -315,6 +315,7 @@ export default compose(
             source={examplesSource}
             id={req.params.subid}
             sourceBelow
+            pad
           />
         ),
       }

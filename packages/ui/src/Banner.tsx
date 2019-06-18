@@ -130,7 +130,7 @@ export function Banner(props: BannerViewProps) {
         sizeRadius={0}
         pointerEvents="auto"
         position="relative"
-        alt={props.type === 'info' ? 'lightBlue' : props.type || 'lightBlue'}
+        alt={props.type}
         width="100%"
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">

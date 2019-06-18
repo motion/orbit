@@ -122,6 +122,7 @@ async function installApp(
   banner.set({
     type: 'success',
     message,
+    timeout: 2500,
   })
 
   return {

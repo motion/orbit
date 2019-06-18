@@ -159,15 +159,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={
-              <>
-                {belowTitle}
-                <Space size={selectDefined(space, size)} />
-              </>
-            }
+            below={belowTitle || <Space size={selectDefined(space, size)} />}
             icon={icon}
             userSelect="none"
-            space="sm"
+            space={selectDefined(space, size, 'sm')}
             pad={titlePadFinal}
             // avoid double pad between content/title padding
             paddingBottom={pad === true && titlePad === undefined ? 0 : undefined}

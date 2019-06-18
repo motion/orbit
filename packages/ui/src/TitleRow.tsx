@@ -124,7 +124,7 @@ export const TitleRow = themeable(
             ) : (
               icon || null
             )}
-            <Col space={spaceSize / 2} flex={1} alignItems="flex-start">
+            <Col space={spaceSize} flex={1} alignItems="flex-start">
               {titleElement}
               {!!subTitle && (
                 <SubTitle selectable={selectable} ellipse marginBottom={0}>

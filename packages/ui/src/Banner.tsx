@@ -5,9 +5,10 @@ import { filter } from 'lodash'
 import React, { FunctionComponent, memo, useCallback, useRef } from 'react'
 
 import { Button } from './buttons/Button'
+import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
-import { Message } from './text/Message'
+import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
@@ -34,6 +35,7 @@ type BannerItem = BannerContent & {
   set: (props: Partial<BannerProps>) => void
   close: () => void
   onClose?: () => void
+  isClosing?: boolean
 }
 
 class BannerStore {
@@ -75,7 +77,7 @@ class BannerStore {
     return bannerItem
   }
 
-  hide(key: number) {
+  async hide(key: number) {
     const toRemove = this.banners.find(x => x.key === key)
     if (toRemove) {
       if (toRemove.onClose) {
@@ -98,6 +100,7 @@ export const ProvideBanner = memo(
   }) => {
     const bannerStore = BannerManager.useCreateStore()
     const BannerView = template
+
     return (
       <BannerManager.SimpleProvider value={bannerStore}>
         {children}
@@ -105,13 +108,22 @@ export const ProvideBanner = memo(
         {/* default to a bottom fixed position, we can make this customizable */}
         <Portal>
           <FullScreen position="fixed" pointerEvents="none" top="auto" zIndex={1000000000}>
-            {bannerStore.banners.map(banner => (
-              <BannerView
-                key={JSON.stringify(banner)}
-                {...banner}
-                close={() => bannerStore.hide(banner.key)}
-              />
-            ))}
+            <FlipAnimate>
+              {bannerStore.banners.map(banner => {
+                const id = JSON.stringify(banner)
+                return (
+                  <FlipAnimateItem id={id} key={id}>
+                    {show => (
+                      <BannerView
+                        opacity={show ? 1 : 0}
+                        {...banner}
+                        close={() => bannerStore.hide(banner.key)}
+                      />
+                    )}
+                  </FlipAnimateItem>
+                )
+              })}
+            </FlipAnimate>
           </FullScreen>
         </Portal>
       </BannerManager.SimpleProvider>
@@ -153,9 +165,9 @@ export function useBanner(): BannerHandle {
   }
 }
 
-export type BannerViewProps = BannerProps & { close: () => void }
+export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
-export function Banner(props: BannerViewProps) {
+export const Banner = ({ type, title, message, close, ...rest }: BannerViewProps) => {
   return (
     <View width="100%" overflow="hidden" background={theme => theme.background}>
       <Message
@@ -163,21 +175,16 @@ export function Banner(props: BannerViewProps) {
         sizeRadius={0}
         pointerEvents="auto"
         position="relative"
-        alt={props.type}
+        alt={type}
         width="100%"
+        {...rest}
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">
           <Col space="xs">
-            <Message.Title>{props.title}</Message.Title>
-            <SimpleText whiteSpace="pre">{props.message}</SimpleText>
+            <Message.Title>{title}</Message.Title>
+            <SimpleText whiteSpace="pre">{message}</SimpleText>
           </Col>
-          <Button
-            alignSelf="flex-start"
-            chromeless
-            icon="cross"
-            iconSize={16}
-            onClick={props.close}
-          />
+          <Button alignSelf="flex-start" chromeless icon="cross" iconSize={16} onClick={close} />
         </Row>
       </Message>
     </View>

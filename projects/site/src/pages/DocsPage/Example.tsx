@@ -2,8 +2,8 @@ import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View }
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
+import { linkProps } from '../../LinkState'
 import { CodeBlock } from '../../views/CodeBlock'
-import { linkProps } from "../../LinkState";
 
 export type ExampleProps = {
   source: string
@@ -44,12 +44,6 @@ export const Example = memo(
 
     const contents = (
       <Col space flexDirection={sourceBelow ? 'column-reverse' : 'column'}>
-        {showSource && (
-          <SubCard>
-            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-          </SubCard>
-        )}
-
         {!onlySource && (
           <SubCard
             minHeight={20}
@@ -75,6 +69,12 @@ export const Example = memo(
                 </View>
               </AccidentalScrollPrevent>
             )}
+          </SubCard>
+        )}
+
+        {showSource && (
+          <SubCard>
+            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
           </SubCard>
         )}
       </Col>

@@ -59,6 +59,12 @@ export const DocsContents = memo(
       </>
     )
 
+    const pad = useScreenVal(
+      ['xxl', 'md', true, 'md'],
+      ['xxl', 'md', true, 'md'],
+      ['xxxl', 'xl', true, 'xl'],
+    )
+
     return (
       <ThemeProvide themes={themes}>
         <MDX
@@ -72,16 +78,8 @@ export const DocsContents = memo(
             maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
-            pad={useScreenVal(
-              ['xxl', 'md', true, 'md'],
-              ['xxl', 'md', true, 'md'],
-              ['xxxl', 'xl', true, 'xl'],
-            )}
-            padInner={useScreenVal(
-              ['xl', 'md', true, 'md'],
-              ['xl', 'md', true, 'md'],
-              ['xl', 'xl', true, 'xl'],
-            )}
+            pad={pad}
+            titlePad={pad}
             titleBorder
             space
             title={

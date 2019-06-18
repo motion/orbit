@@ -10,7 +10,7 @@ import { SimpleText } from './text/SimpleText'
 import { Row } from './View/Row'
 import { View } from './View/View'
 
-type BannerProps = {
+export type BannerProps = {
   message: string
   type?: 'warn' | 'success' | 'error' | 'info'
   /** This is the callback you can pass in optionally to do things when it closes */

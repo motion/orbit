@@ -96,6 +96,7 @@ const uikit = [
   { id: 'masterdetail', title: 'MasterDetail', icon: 'list-detail-view', group: 'Templates' },
   { id: 'flow', title: 'Flow', icon: 'layout' },
   { id: 'message', title: 'Message', icon: 'chat' },
+  { id: 'banner', title: 'Banner', icon: 'chat' },
 
   { id: 'calendar', title: 'Calendar', icon: 'calendar', group: 'Date & Time' },
   { id: 'date-format', title: 'DateFormat', icon: 'event' },
@@ -323,5 +324,12 @@ export const docsViews = {
     examplesSource: () => import('!raw-loader!./DocsPage/DocsGridLayout'),
     source: () => import('!raw-loader!@o/ui/src/layout/GridLayout'),
     types: () => import('../../tmp/GridLayout.json'),
+  },
+  banner: {
+    page: () => import('./DocsPage/DocsBanner.mdx'),
+    examples: () => import('./DocsPage/DocsBanner'),
+    examplesSource: () => import('!raw-loader!./DocsPage/DocsBanner'),
+    source: () => import('!raw-loader!@o/ui/src/Banner'),
+    types: () => import('../../tmp/Banner.json'),
   },
 }

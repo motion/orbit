@@ -175,9 +175,9 @@ const DocsPage = memo((props: { children?: any }) => {
                 hidden={!showSidebar}
                 zIndex={10000000}
                 elevation={25}
-                width={280}
+                width={260}
                 pointerEvents="auto"
-                background={useCallback(theme => theme.background, [])}
+                background={theme => theme.background}
               >
                 {sidebarChildren}
               </Sidebar>
@@ -189,13 +189,7 @@ const DocsPage = memo((props: { children?: any }) => {
           <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-              <Col
-                ref={Fade.ref}
-                flex={1}
-                overflow="hidden"
-                padding={isSmall ? 0 : [0, 0, 0, 24]}
-                className="content"
-              >
+              <Col ref={Fade.ref} flex={1} overflow="hidden" className="content">
                 <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
               </Col>
             </Row>
@@ -222,7 +216,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Col id="sidebar" width={280} pointerEvents="auto" height={window.innerHeight}>
+    <Col id="sidebar" width={250} pointerEvents="auto" height={window.innerHeight}>
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}

@@ -1,4 +1,4 @@
-import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, Title, View } from '@o/ui'
+import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -17,24 +17,21 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A fresh start for building apps.',
-  medium: 'A fresh start for building apps.',
-  small: 'A fresh start for apps.',
+  large: 'Create apps that work together.',
+  medium: 'Create apps that work together.',
+  small: 'Create apps that work together.',
 }
 
 let allTexts = {
   large: [
-    `Lets make apps ours - easy to build, use, and control.`,
-    `Open source, with amazing collaboration and an open app store.`,
+    `Build an intranet of apps that feel and run like native.`,
+    `Open source, decentralized, with an open app store.`,
   ],
   medium: [
-    `Lets make apps ours - easy to build, use, and control.`,
-    `Open source, with amazing collaboration and an open app store.`,
+    `Build an intranet of apps that feel and run like native.`,
+    `Open source, decentralized, with an open app store.`,
   ],
-  small: [
-    `Create apps easily.`,
-    `Open source, with amazing collaboration and an open app store.`,
-  ],
+  small: [`Create intranet apps easily.`, `Open source, decentralized, with an open app store.`],
 }
 
 const HeadContent = memo(() => {
@@ -250,11 +247,17 @@ const SubSection = memo(({ title, children, index, titleColor }: any) => {
   return (
     <Col flex={1} minWidth={160} maxWidth={220}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title textAlign="center" selectable size={0.5} color={titleColor || '#fff'}>
+        <Paragraph
+          textAlign="center"
+          textTransform="uppercase"
+          alpha={0.65}
+          color={titleColor}
+          size={1.15}
+        >
           {title}
-        </Title>
+        </Paragraph>
         <Space size="sm" />
-        <SimpleText textAlign="center" selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
+        <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
           {children}
         </SimpleText>
       </FadeChild>

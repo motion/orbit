@@ -220,6 +220,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       )}
       pad={!showTitleAbove ? padSized : false}
       size={size}
+      fontSize="inherit"
+      lineHeight="inherit"
     >
       {showTitleAbove && titleEl}
       <Reset>

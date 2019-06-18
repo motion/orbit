@@ -7,6 +7,7 @@ export const ContentSection = (props: ColProps) => {
   const theme = useTheme()
   return (
     <Col
+      className="content-section"
       pad={['xxxl', useScreenVal('sm', 'xxl', 'xxxl')]}
       width="100%"
       maxWidth={760}

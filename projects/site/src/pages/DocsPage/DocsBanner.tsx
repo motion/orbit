@@ -8,6 +8,7 @@ export let Basic = () => {
     <Col space>
       <Row group flexWrap="wrap">
         <Button
+          alt="info"
           onClick={() => {
             console.log('call with info')
             banner.set({
@@ -20,6 +21,7 @@ export let Basic = () => {
           Show Info Banner
         </Button>
         <Button
+          alt="warn"
           onClick={() => {
             banner.set({
               title: 'Warning',
@@ -27,11 +29,11 @@ export let Basic = () => {
               type: 'warn',
             })
           }}
-          alt="warn"
         >
           Show Warning Banner
         </Button>
         <Button
+          alt="error"
           onClick={() => {
             banner.set({
               title: 'Error',
@@ -39,7 +41,6 @@ export let Basic = () => {
               type: 'error',
             })
           }}
-          alt="error"
         >
           Show Error Banner
         </Button>

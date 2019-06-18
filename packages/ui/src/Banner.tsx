@@ -9,10 +9,12 @@ import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
 import { Message } from './text/Message'
 import { SimpleText } from './text/SimpleText'
+import { Col } from './View/Col'
 import { Row } from './View/Row'
 import { View } from './View/View'
 
 export type BannerProps = {
+  title?: string
   message: string
   type?: 'warn' | 'success' | 'error' | 'info'
   timeout?: number
@@ -20,7 +22,7 @@ export type BannerProps = {
   onClose?: () => void
 }
 
-type BannerContent = Pick<BannerProps, 'message' | 'type'>
+type BannerContent = Pick<BannerProps, 'title' | 'message' | 'type'>
 
 type BannerItem = BannerContent & {
   key: number
@@ -155,16 +157,19 @@ export function Banner(props: BannerViewProps) {
         sizeRadius={0}
         pointerEvents="auto"
         position="relative"
-        alt={props.type === 'info' ? undefined : props.type}
+        alt={props.type}
         width="100%"
       >
         <Row flex={1} justifyContent="space-between" alignItems="center">
-          <SimpleText whiteSpace="pre">{props.message}</SimpleText>
+          <Col space="xs">
+            <Message.Title>{props.title}</Message.Title>
+            <SimpleText whiteSpace="pre">{props.message}</SimpleText>
+          </Col>
           <Button
             alignSelf="flex-start"
             chromeless
             icon="cross"
-            iconSize={20}
+            iconSize={16}
             onClick={props.close}
           />
         </Row>

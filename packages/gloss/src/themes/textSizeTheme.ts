@@ -21,12 +21,12 @@ type TextSizeExtraProps = {
   scale?: number
 }
 
-export function getTextSizeTheme(props: TextSizeProps, extraProps: TextSizeExtraProps = {}) {
-  const scale = extraProps.scale || 1
+export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtraProps) {
+  const scale = (extraProps && extraProps.scale) || 1
   const size = (props.size || 1) * scale
   const sizeLineHeight = (props.sizeLineHeight === true ? 1 : props.sizeLineHeight || 1) * scale
   let fontSize = props.fontSize
-  if (typeof fontSize === 'undefined' && props.size) {
+  if (typeof fontSize === 'undefined') {
     fontSize = size * 14
   }
   let styles: TextStyles | null = null
@@ -75,6 +75,8 @@ export function getTextSizeTheme(props: TextSizeProps, extraProps: TextSizeExtra
     // CONST of lineHeight seems to be the proper amount to avoid the extra spacing
     styles.marginTop = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
     styles.marginBottom = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
+  } else {
+    debugger
   }
   return styles
 }

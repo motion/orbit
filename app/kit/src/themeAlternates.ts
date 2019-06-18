@@ -130,6 +130,7 @@ const colorThemes: ThemeSet = {
 
 export const alternates: ThemeSet = {
   ...colorThemes,
+  info: colorThemes.lightBlue,
   error: colorThemes.lightRed,
   fail: colorThemes.lightRed,
   failure: colorThemes.lightRed,

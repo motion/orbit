@@ -1,11 +1,4 @@
-import {
-  CSSPropertySet,
-  CSSPropertySetResolved,
-  cssString,
-  styleToClassName,
-  ThemeObject,
-  validCSSAttr,
-} from '@o/css'
+import { CSSPropertySet, CSSPropertySetResolved, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -63,15 +56,15 @@ type GlossInternals<Props> = {
 
 export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
-  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
+  (props: Props, context?: any): React.ReactElement<any> | null
   propTypes?: React.ValidationMap<Props>
   contextTypes?: React.ValidationMap<any>
   defaultProps?: Partial<Props>
   displayName?: string
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: GlossViewOptions<Props>) => GlossView<Props>
+  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<RawProps>
+  withConfig: (config: GlossViewOptions<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
 }
 

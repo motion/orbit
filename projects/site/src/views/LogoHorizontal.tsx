@@ -20,7 +20,7 @@ export const LogoHorizontal = memo((props: ViewProps & { slim?: boolean }) => {
       padding={[0, 20]}
       margin={[0, 0]}
       transform={{
-        x: -2,
+        x: 2,
         y: -2,
         scale: scaleDown,
       }}

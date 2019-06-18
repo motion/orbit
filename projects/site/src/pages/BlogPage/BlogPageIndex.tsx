@@ -2,9 +2,9 @@ import { Avatar, gloss, Row, Space, View } from '@o/ui'
 import React from 'react'
 
 import { colors } from '../../constants'
+import { linkProps } from '../../LinkState'
 import { FadeChild } from '../../views/FadeIn'
 import { TitleText } from '../../views/TitleText'
-import { linkProps } from "../../LinkState";
 import { useScreenVal } from '../HomePage/SpacedPageContent'
 import { BlogLayout } from './BlogLayout'
 import { posts } from './posts'
@@ -35,7 +35,7 @@ export function BlogPageIndex() {
               color={colors.purple}
               selectable={false}
               textAlign="left"
-              size="lg"
+              size="md"
             >
               {post.title}
             </TitleText>

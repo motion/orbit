@@ -185,7 +185,7 @@ export const DocsContents = memo(
 
                   {!!source && (
                     <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
-                      <CodeBlock className="language-typescript">{source}</CodeBlock>
+                      <CodeBlock>{source}</CodeBlock>
                     </Section>
                   )}
                 </MetaSection>

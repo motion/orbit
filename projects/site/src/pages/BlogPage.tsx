@@ -67,7 +67,7 @@ function PostPage(props: { post: PostEntry; children?: any }) {
       <BlogTitle paddingTop={50} />
       <SectionContent>
         <ContentSection>
-          <TitleText size="xxxl">{props.post.title}</TitleText>
+          <TitleText size="xxl">{props.post.title}</TitleText>
           <Space />
           <PostMeta post={props.post} />
           <Space />

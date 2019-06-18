@@ -9,7 +9,7 @@ import { SignupForm } from './SignupForm'
 import { SpacedPageContent } from './SpacedPageContent'
 import { TitleTextSub } from './TitleTextSub'
 
-export const EarlyAccessContent = () => {
+export const EarlyAccessContent = (props: { theme?: string }) => {
   return (
     <SpacedPageContent
       alignItems="center"
@@ -21,7 +21,7 @@ export const EarlyAccessContent = () => {
         </>
       }
     >
-      <Theme name="darkAlt">
+      <Theme name={props.theme || 'darkAlt'}>
         <SignupForm />
       </Theme>
       <Paragraph margin={[0, 'auto']}>

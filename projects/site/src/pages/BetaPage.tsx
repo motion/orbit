@@ -1,4 +1,4 @@
-import { Space, Theme } from '@o/ui'
+import { Space, Theme, View } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
@@ -21,17 +21,18 @@ export function BetaPage() {
     <FadeParent>
       <Theme name={BetaPage.theme}>
         <Header slim noBorder background="transparent" />
-        <FadeChild fullscreen style={{ pointerEvents: 'none' }}>
-          <LineSep opacity={0.2} noOverlay top={30} />
-        </FadeChild>
 
-        <FadeChild delay={200}>
-          <EarlyAccessContent />
-        </FadeChild>
+        <Space size="xxl" />
 
-        <FadeChild delay={400} fullscreen style={{ pointerEvents: 'none' }}>
-          <LineSep opacity={0.2} noOverlay top="auto" bottom={20} transform={{ scaleX: -1 }} />
-        </FadeChild>
+        <View position="relative">
+          <FadeChild delay={200}>
+            <EarlyAccessContent theme={BetaPage.theme} />
+          </FadeChild>
+
+          <FadeChild delay={400} fullscreen style={{ pointerEvents: 'none' }}>
+            <LineSep opacity={0.2} noOverlay top="auto" bottom={-70} transform={{ scaleX: -1 }} />
+          </FadeChild>
+        </View>
 
         <FadeChild delay={600}>
           <SectionContent minHeight={450} position="relative" padding={[100, 32]}>

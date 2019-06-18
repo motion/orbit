@@ -10,6 +10,7 @@ import { Header, usePageTheme } from '../Layout'
 import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
+import { ContentSection } from '../views/ContentSection'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
@@ -186,11 +187,19 @@ const DocsPage = memo((props: { children?: any }) => {
         )}
 
         <main className="main-contents">
-          <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
+          <SectionContent>
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
-              <Col ref={Fade.ref} flex={1} overflow="hidden" className="content">
-                <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+              <Col
+                ref={Fade.ref}
+                flex={1}
+                overflow="hidden"
+                className="content"
+                padding={isSmall ? 0 : [0, 0, 0, 24]}
+              >
+                <ContentSection>
+                  <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+                </ContentSection>
               </Col>
             </Row>
 

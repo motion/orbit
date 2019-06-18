@@ -47,7 +47,11 @@ export const getPadding = (
   }
   if (props.pad) {
     let padding = getSizableValue(props.pad)
-    padding = Array.isArray(padding) ? padding.map(x => x * scale) : padding * scale
+    padding = Array.isArray(padding)
+      ? padding.map(x => (typeof x === 'number' ? x * scale : x))
+      : typeof padding === 'number'
+      ? padding * scale
+      : padding
 
     const paddingObj = {
       paddingTop: selectDefined(props.paddingTop, padding[0], padding),

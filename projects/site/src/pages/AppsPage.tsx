@@ -96,7 +96,7 @@ export function AppsPage() {
             >
               <PillButton>FAQ</PillButton>
 
-              <Space />
+              <Space size="xxxl" />
 
               <FAQItem
                 question="What exactly is an Orbit app?"
@@ -104,19 +104,25 @@ export function AppsPage() {
               data, with permission."
                 paragraphs={[
                   <>
-                    This is a new way to think about apps: as small services that can talk to each
-                    other.
+                    This is a new way to think about apps: as small components and services that can
+                    display each other and use each others APIs, all in a shared workspace.
                   </>,
                   <>
-                    For example, the Slack app has a `getMessagesInRoom()` method on it's API, along
-                    with every other one from the public Slack API.
+                    A small example would be the Slack app. It has all the methods from the Slack
+                    API, like getMessagesInRoom() and getRooms(), as well as GraphQL endpoints. It
+                    also has a view that will automatically display any slack conversation as a
+                    formatted list of messages.
+                  </>,
+                  <>
+                    So once you install the Slack app to your workspace you can create a new app to
+                    leverage these APIs and views to build your own custom apps.
                   </>,
                 ]}
               />
 
               <FAQItem
                 question="How do apps communicate?"
-                main="There are two ways: either they sync data in, or expose an API."
+                main="There are two ways: syncing data in, or expose an API."
                 paragraphs={[
                   <>
                     The API is used for "one time only" access. Any app can use another API to and
@@ -199,12 +205,12 @@ const AppDescription = () => {
 const FAQItem = ({ main, paragraphs, question }) => {
   return (
     <>
-      <Col space="xl">
-        <Title selectable size={1} fontWeight={600}>
+      <Col space="lg">
+        <Title selectable size="xxs" fontWeight={500}>
           {question}
         </Title>
 
-        <Title selectable size={2.5} sizeLineHeight={1.3} fontWeight={100}>
+        <Title selectable size="sm" sizeLineHeight={1.3} fontWeight={100}>
           {main}
         </Title>
 
@@ -212,7 +218,7 @@ const FAQItem = ({ main, paragraphs, question }) => {
           <Title
             key={i}
             selectable
-            size={1.35}
+            size="xxxs"
             alpha={0.65}
             fontWeight={100}
             sizeLineHeight={1.25}
@@ -255,7 +261,7 @@ const AppSearch = memo(() => {
       <View margin={[0, 'auto']}>
         <SearchInput
           width={450}
-          size={2.75}
+          size={1.75}
           placeholder={`Search all apps...`}
           onChange={onChange}
         />

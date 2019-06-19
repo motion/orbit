@@ -29,9 +29,6 @@ export function useAppBit(
 
 export function useCurrentAppId() {
   const { appStore } = useStoresSimple()
-  if (!appStore) {
-    debugger
-  }
   return +appStore.id
 }
 

@@ -7,6 +7,9 @@ import { useCallback } from 'react'
 import { newAppStore } from '../om/stores'
 
 export function newEmptyAppBit(definition: AppDefinition): AppBit {
+  if (!definition) {
+    debugger
+  }
   return {
     target: 'app',
     identifier: definition.id,
@@ -86,7 +89,6 @@ async function installApp(
 
   // create AppBit
   if (newAppBit) {
-    console.log('Creating a new app bit')
     try {
       const activeSpace = await getActiveSpace()
       const bit = {
@@ -98,7 +100,7 @@ async function installApp(
         icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
-      console.log('Saving new app', bit)
+      console.log('Saving new app', newAppBit, bit)
       await save(AppModel, bit)
 
       newAppStore.reset()

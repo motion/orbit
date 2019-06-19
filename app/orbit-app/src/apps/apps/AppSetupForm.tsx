@@ -36,6 +36,7 @@ export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
         app.data.setup = values
 
         console.log('sending app for validation', app, values)
+
         const res = await command(AppDefinitionSetupVerifyCommand, {
           identifier: def.id,
           app,
@@ -44,9 +45,6 @@ export function AppSetupForm({ def, id, ...rest }: AppSetupFormProps) {
         if (res.type === 'error') {
           return res
         }
-
-        // TODO show banner here
-        console.log('success validating', res)
 
         // add to space if not added
         // TODO why does it need two ways to fill in...

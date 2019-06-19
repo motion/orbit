@@ -203,7 +203,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                   if (row) {
                     console.log('setting data', row)
                     flow.setData({ selectedAppIdentifier: row.identifier })
-                    newAppStore.update({ name: row.title })
+                    newAppStore.setApp(row.identifier)
                   }
                 }}
                 itemProps={{

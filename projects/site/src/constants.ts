@@ -20,7 +20,7 @@ export const colors = {
 export const widths = {
   tiny: 420,
   small: 700,
-  medium: 800,
+  medium: 860,
   large: 1180,
 }
 

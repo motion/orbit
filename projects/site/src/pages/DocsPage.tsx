@@ -5,9 +5,9 @@ import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
+import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { usePageTheme } from '../Layout'
-import { Header } from '../Header'
 import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
@@ -59,7 +59,7 @@ const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
   return (
     <List
-      search={docsStore.search}
+      query={docsStore.search}
       selectable
       alwaysSelected
       defaultSelected={docsStore.initialIndex}

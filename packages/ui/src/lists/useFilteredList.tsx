@@ -14,6 +14,7 @@ export function useFilteredList({
   filterKey = 'title',
   ...props
 }: UseFilterProps<ListItemSimpleProps>) {
+  console.log('ok', props.search)
   const items = props.items || []
   const searchStore = useSearch()
   const initialQuery = useRef(true)
@@ -55,12 +56,14 @@ export function useFilteredList({
     if (search) {
       let next = []
       // filter in a loop so we can do disableFilter checks
+      console.log('has search', sortedItems)
       for (const [index, item] of sortedItems.entries()) {
         if (item.disableFilter) {
           next.push(item)
           continue
         }
         const res = fuzzySort.single(search, searchIndex[index])
+        console.log('res', res)
         if (res && res.score > -50) {
           next.push(item)
         }

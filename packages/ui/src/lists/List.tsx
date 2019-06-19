@@ -37,9 +37,6 @@ export type ListProps = SectionSpecificProps &
     /** Make list expand to parent height */
     flex?: number
 
-    /** Filter by search string */
-    search?: string
-
     /** Callback on selection change with an array of rows */
     onSelect?: (rows: any[], indices: number[]) => any
 

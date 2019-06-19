@@ -119,7 +119,7 @@ export function TestList() {
         <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       </FloatingCard>
       <List
-        search={search}
+        query={search}
         selectable="multi"
         onSelect={i => (store.selected['x'] = items[i])}
         items={items}

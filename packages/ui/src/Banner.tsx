@@ -180,7 +180,7 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
       background={theme => theme.background}
       {...rest}
     >
-      <Row flex={1} justifyContent="space-between" alignItems="center" space>
+      <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>
         <Col space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>

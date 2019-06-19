@@ -4,6 +4,7 @@ import { Logger } from '@o/logger'
 import { existsSync } from 'fs'
 import { userInfo } from 'os'
 import * as Path from 'path'
+
 import { checkAuthProxy } from './checkAuthProxy'
 
 const log = new Logger('startAuthProxy')
@@ -46,7 +47,9 @@ export function startAuthProxy() {
         p.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
         // DONT resolve or fail here, for some reason sometimes stdout comes as stderr
         // but thats fine, we have a fail timeout anyways...
-        p.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
+        p.stderr.on('data', x => {
+          console.log(`OrbitProxyErr: ${x}`)
+        })
       })
       .catch(err => {
         log.error('error spawning', err)

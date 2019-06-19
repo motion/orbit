@@ -192,7 +192,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
               )
             }
           >
-            <Flow.Step title="Pick app" subTitle="Choose type of app.">
+            <Flow.Step title="Add app" subTitle="Add a visual app to workspace.">
               <List
                 searchable
                 onQueryChange={search}

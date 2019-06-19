@@ -35,6 +35,7 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
         return !!(def && def.app)
       })
       .map(appToPane)
+    console.log('123', apps, appPanes)
     return [...defaultPanes, ...appPanes]
   }
 }

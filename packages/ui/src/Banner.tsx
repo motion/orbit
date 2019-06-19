@@ -102,7 +102,12 @@ export const ProvideBanner = memo(
               {bannerStore.banners.map(banner => {
                 const id = JSON.stringify(banner)
                 return (
-                  <FlipAnimateItem id={id} key={id} animateKey={banner.type}>
+                  <FlipAnimateItem
+                    id={id}
+                    key={id}
+                    animateKey={banner.type}
+                    onAppear={appearAnimate}
+                  >
                     <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
                   </FlipAnimateItem>
                 )
@@ -114,6 +119,11 @@ export const ProvideBanner = memo(
     )
   },
 )
+
+const appearAnimate = (el, _index, finish) => {
+  el.style.background = 'green'
+  setTimeout(finish, 1000)
+}
 
 export type BannerHandle = Pick<BannerItem, 'close' | 'set'>
 

@@ -1,11 +1,19 @@
 import { Config, IContext, OnInitialize } from 'overmind'
 
-import { startAppLoadWatch } from '../apps/orbitApps'
+import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
+import { runConfigurations } from '../configurations'
 import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
   const { actions, effects } = om
+
+  // start watching for updated app ids
+  startAppLoadWatch()
+
+  runConfigurations({
+    getLoadedApps: getAllAppDefinitions,
+  })
 
   actions.router.routeListen({ url: urls.home, action: 'showHomePage' })
   actions.router.routeListen({ url: urls.app, action: 'showAppPage' })
@@ -20,9 +28,6 @@ export const onInitialize: OnInitialize = async om => {
 
   // load apps once before loading rest of app
   await actions.apps.start()
-
-  // start watching for updated app ids
-  startAppLoadWatch()
 
   effects.router.start()
 

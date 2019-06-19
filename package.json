@@ -28,7 +28,8 @@
     "publish:apps:patch:ignore-build": "lerna exec --scope '@o/*-app' --no-bail -- orbit publish --bump-version patch --ignore-version --ignore-build",
     "test:built:app": "cd app/build-orbit && yarn run test-built-app",
     "postinstall": "patch-package",
-    "open:dev:datafolder": "open ~/Library/Application\\ Support/Electron",
+    "dev:open:datafolder": "open ~/Library/Application\\ Support/Electron",
+    "dev:open:db": "open ~/Library/Application\\ Support/Electron/development_database.sqlite",
     "test": "jest"
   },
   "dependencies": {

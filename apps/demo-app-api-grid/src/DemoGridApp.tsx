@@ -6,7 +6,6 @@ import React, { useState } from 'react'
 export function DemoGridApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
-  console.log('re render custom app')
   return (
     <GridLayout>
       <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>

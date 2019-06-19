@@ -8,7 +8,7 @@ import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
-import { getApps } from '../../apps/orbitApps'
+import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
@@ -194,11 +194,11 @@ const OrbitWorkspaceApps = memo(() => {
     identifier: pane.type,
   }))
 
-  const appDefsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
+  const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
 
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
     .map(id => allApps.find(x => x.id === id))
-    .filter(Boolean)
+    .filter(x => !!x && !!appDefsWithViews[x.identifier])
     .map(x => ({
       id: x.id,
       definition: appDefsWithViews[x.identifier],

@@ -60,7 +60,6 @@ export const orbitStaticApps: AppDefinition[] = [
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
-  console.log('get all', dynamicApps)
   return [...orbitStaticApps, ...dynamicApps]
 }
 

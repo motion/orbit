@@ -201,7 +201,6 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 onSelect={rows => {
                   const row = rows[0]
                   if (row) {
-                    console.log('setting data', row)
                     flow.setData({ selectedAppIdentifier: row.identifier })
                     newAppStore.setApp(row.identifier)
                   }

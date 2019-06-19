@@ -1,24 +1,27 @@
-import { Button, Col, Row, useBanner } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import { Button, Col, Row, useBanner, useBanners } from '@o/ui'
+import React, { useRef } from 'react'
 
 export let Basic = () => {
+  // single banner that replaces
   const banner = useBanner()
+  // create as many as you need
+  const banners = useBanners()
+  const count = useRef(0)
 
   return (
     <Col space>
-      <Row group flexWrap="wrap">
+      <Row space flexWrap="wrap">
         <Button
           alt="info"
           onClick={() => {
             console.log('call with info')
             banner.set({
-              title: 'Info',
-              message: `Lorem ipsum dolor sit info`,
+              message: `I don't have a title`,
               type: 'info',
             })
           }}
         >
-          Show Info Banner
+          Replace Info Banner
         </Button>
         <Button
           alt="warn"
@@ -30,7 +33,7 @@ export let Basic = () => {
             })
           }}
         >
-          Show Warning Banner
+          Replace Warning Banner
         </Button>
         <Button
           alt="error"
@@ -42,21 +45,22 @@ export let Basic = () => {
             })
           }}
         >
-          Show Error Banner
+          Replace Error Banner
         </Button>
       </Row>
       <Row space flexWrap="wrap">
         <Button
           onClick={() => {
-            banner.set({
+            count.current++
+            banners.show({
               title: 'I will timeout',
-              message: `Lorem ipsum dolor sit error`,
+              message: `I am banner number ${count.current}`,
               type: 'info',
               timeout: 2,
             })
           }}
         >
-          Show Timeout Banner (2s)
+          Add Timeout Banner (2s)
         </Button>
       </Row>
     </Col>

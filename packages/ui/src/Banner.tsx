@@ -1,8 +1,8 @@
-import { createStoreContext, react } from '@o/use-store'
+import { createStoreContext } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { FullScreen } from 'gloss'
 import { filter } from 'lodash'
-import React, { FunctionComponent, memo, useCallback, useRef } from 'react'
+import React, { FunctionComponent, memo, useCallback, useEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
@@ -40,21 +40,6 @@ type BannerItem = BannerContent & {
 
 class BannerStore {
   banners: BannerItem[] = []
-
-  timeoutBanner = react(
-    () => this.banners,
-    async (banners, { sleep }) => {
-      await Promise.all(
-        banners.map(async banner => {
-          if (isDefined(banner.timeout)) {
-            console.log('wait for tm', banner.timeout)
-            await sleep(banner.timeout * 1000)
-            banner.close()
-          }
-        }),
-      )
-    },
-  )
 
   set(key: number, props: Partial<BannerProps>) {
     let banner = this.banners.find(x => x.key === key)
@@ -165,9 +150,23 @@ export function useBanner(): BannerHandle {
   }
 }
 
+export function useBanners() {
+  const bannerStore = BannerManager.useStore()
+  return {
+    show: bannerStore.show,
+  }
+}
+
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
-export const Banner = ({ type, title, message, close, ...rest }: BannerViewProps) => {
+export const Banner = ({ type, title, message, close, timeout, ...rest }: BannerViewProps) => {
+  useEffect(() => {
+    if (isDefined(timeout)) {
+      let tm = setTimeout(close, timeout * 1000)
+      return () => clearTimeout(tm)
+    }
+  }, [timeout])
+
   return (
     <View width="100%" overflow="hidden" background={theme => theme.background}>
       <Message

@@ -15,16 +15,13 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
 
-let dynamicApps: AppDefinition[] = []
+let dynamicApps: AppDefinition[] = requireDynamicApps()
 
 function updateDefinitions() {
   dynamicApps = requireDynamicApps()
 }
 
 export function startAppLoadWatch() {
-  // once on load
-  updateDefinitions()
-
   // watch for updates
   reaction(
     () => Desktop.state.workspaceState.appIdentifiers,
@@ -63,6 +60,7 @@ export const orbitStaticApps: AppDefinition[] = [
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
+  console.log('get all', dynamicApps)
   return [...orbitStaticApps, ...dynamicApps]
 }
 

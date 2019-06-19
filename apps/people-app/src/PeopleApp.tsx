@@ -1,30 +1,5 @@
-import {
-  AppViewProps,
-  Bit,
-  LocationLink,
-  useBit,
-  useBits,
-  useBitSearch,
-  useLocationLink,
-  useNLPTopics,
-  useStores,
-} from '@o/kit'
-import {
-  Avatar,
-  Button,
-  Center,
-  Col,
-  gloss,
-  List,
-  ListItem,
-  Paragraph,
-  RoundButton,
-  Row,
-  Section,
-  Space,
-  SubTitle,
-  TitleRow,
-} from '@o/ui'
+import { AppViewProps, Bit, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {
@@ -33,7 +8,6 @@ export function PeopleAppIndex() {
     excludeData: true,
     where: { title: { $not: { $equal: '' } } },
   })
-  console.log('people222', people)
   return (
     <List
       shareable
@@ -44,7 +18,7 @@ export function PeopleAppIndex() {
       groupByLetter
       groupMinimum={12}
       placeholder={
-        <Section pad space flex={1} title="Directory empty">
+        <Section pad space titleScale={0.75} flex={1} title="Directory empty">
           <Paragraph>
             To see your contacts, add an app that syncs people from your{' '}
             <LocationLink url="/apps/apps">workspace settings</LocationLink>.

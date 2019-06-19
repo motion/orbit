@@ -12,7 +12,6 @@ import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
-import { View } from './View/View'
 
 export type BannerProps = {
   /** Give the banner a title */
@@ -92,19 +91,19 @@ export const ProvideBanner = memo(
 
         {/* default to a bottom fixed position, we can make this customizable */}
         <Portal>
-          <FullScreen position="fixed" pointerEvents="none" top="auto" zIndex={1000000000}>
+          <FullScreen
+            position="fixed"
+            pointerEvents="none"
+            top="auto"
+            zIndex={1000000000}
+            alignItems="flex-end"
+          >
             <FlipAnimate>
               {bannerStore.banners.map(banner => {
                 const id = JSON.stringify(banner)
                 return (
                   <FlipAnimateItem id={id} key={id}>
-                    {show => (
-                      <BannerView
-                        opacity={show ? 1 : 0}
-                        {...banner}
-                        close={() => bannerStore.hide(banner.key)}
-                      />
-                    )}
+                    <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
                   </FlipAnimateItem>
                 )
               })}
@@ -168,24 +167,26 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
   }, [timeout])
 
   return (
-    <View width="100%" overflow="hidden" background={theme => theme.background}>
-      <Message
-        className="ui-banner"
-        sizeRadius={0}
-        pointerEvents="auto"
-        position="relative"
-        alt={type}
-        width="100%"
-        {...rest}
-      >
-        <Row flex={1} justifyContent="space-between" alignItems="center">
-          <Col space="xs">
-            <Message.Title>{title}</Message.Title>
-            <SimpleText whiteSpace="pre">{message}</SimpleText>
-          </Col>
-          <Button alignSelf="flex-start" chromeless icon="cross" iconSize={16} onClick={close} />
-        </Row>
-      </Message>
-    </View>
+    <Message
+      className="ui-banner"
+      pointerEvents="auto"
+      position="relative"
+      alt={type}
+      sizeRadius
+      margin="md"
+      marginTop={0}
+      overflow="hidden"
+      elevation={3}
+      background={theme => theme.background}
+      {...rest}
+    >
+      <Row flex={1} justifyContent="space-between" alignItems="center" space>
+        <Col space="xs">
+          <Message.Title>{title}</Message.Title>
+          <SimpleText whiteSpace="pre">{message}</SimpleText>
+        </Col>
+        <Button alignSelf="flex-start" chromeless icon="cross" iconSize={14} onClick={close} />
+      </Row>
+    </Message>
   )
 }

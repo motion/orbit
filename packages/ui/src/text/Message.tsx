@@ -32,7 +32,6 @@ Message.Title = MessageTitle
 const MessageChrome = gloss(SizedSurface, {
   userSelect: 'text',
   cursor: 'text',
-  width: '100%',
 })
 
 MessageChrome.defaultProps = {

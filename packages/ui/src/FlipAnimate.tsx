@@ -1,5 +1,4 @@
 import { createStoreContext, useStore } from '@o/use-store'
-import { selectDefined } from '@o/utils'
 import React, { memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
@@ -31,18 +30,17 @@ export const FlipAnimate = memo((props: { children: any }) => {
 type FlipAnimateItemProps = {
   visible?: boolean
   id: string
-  children: (visible: boolean) => React.ReactNode
+  children: React.ReactNode
 }
 
 export const FlipAnimateItem = memo(({ visible = true, id, children }: FlipAnimateItemProps) => {
   const flipAnimateStore = FlipAnimateStoreContext.useStore()
   const cleanId = id.replace(/[^a-z0-9]+/gi, '')
-  const show = selectDefined(flipAnimateStore.items[cleanId], visible)
 
   useLayoutEffect(() => {
     flipAnimateStore.next[cleanId] = visible
     flipAnimateStore.rerender()
   }, [visible])
 
-  return <Flipped flipId={cleanId}>{children(show)}</Flipped>
+  return <Flipped flipId={cleanId}>{children}</Flipped>
 })

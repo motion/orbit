@@ -1,10 +1,11 @@
+import applicationConfigPath from 'application-config-path'
 import eol from 'eol'
 import { readFileSync as readFile, unlinkSync as rm, writeFileSync as writeFile } from 'fs'
 import { template as makeTemplate } from 'lodash'
 import { sync as mkdirp } from 'mkdirp'
 import path from 'path'
+
 import { mktmp } from './utils'
-import applicationConfigPath = require('application-config-path')
 
 // Platform shortcuts
 export const isMac = process.platform === 'darwin'

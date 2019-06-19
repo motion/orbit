@@ -34,6 +34,8 @@ export function startAuthProxy() {
       resolve(success)
     }
 
+    let errors = []
+
     // run proxy server in secure sub-process
     sudoer
       .spawn(Config.paths.nodeBinary, command.split(' '), {
@@ -45,10 +47,13 @@ export function startAuthProxy() {
       .then(proc => {
         let p = proc as any
         p.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
+        // TODO we should report this up to app using AppStatusModel
+        // in fact we should probably just report all errors up automatically through logger?
         // DONT resolve or fail here, for some reason sometimes stdout comes as stderr
         // but thats fine, we have a fail timeout anyways...
         p.stderr.on('data', x => {
           console.log(`OrbitProxyErr: ${x}`)
+          errors.push(x)
         })
       })
       .catch(err => {
@@ -67,9 +72,10 @@ export function startAuthProxy() {
 
     // fail after a bit
     failTimeout = setTimeout(() => {
-      log.info('timed out setting up proxy')
+      log.error(`Timed out setting up proxy: ${errors.join(', ')}`)
       finish(false)
     }, 8000)
+
     checkInterval = setInterval(checkAndFinish, 100)
     checkAndFinish()
   })

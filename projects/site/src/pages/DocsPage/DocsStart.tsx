@@ -1,8 +1,8 @@
-import { Button, CardProps, Col, Grid, Icon, Section, TiltCard } from '@o/ui'
+import { Button, CardProps, Col, Divider, Grid, Icon, Section, Space, TiltCard } from '@o/ui'
 import React from 'react'
 
+import { linkProps } from '../../LinkState'
 import { themes } from '../../themes'
-import { linkProps } from "../../LinkState";
 
 const examples = [
   { title: 'Building an App', subTitle: 'Something', colors: themes.lightOrange, icon: 'home' },
@@ -13,11 +13,7 @@ const examples = [
 const FeatureCard = (props: CardProps) => (
   <TiltCard
     size="xl"
-    titleProps={{ size: 'xs' }}
     titlePad="md"
-    subTitleProps={{
-      size: 'xxs',
-    }}
     cursor="pointer"
     tagName="a"
     textDecoration="none"
@@ -31,14 +27,14 @@ export const LatestUpdates = () => (
     {examples.map(example => (
       <FeatureCard key={example.title} subTitle={example.subTitle} title={example.title}>
         <Col
-          height={180}
+          minHeight={200}
           background={example.colors.background}
           alignItems="center"
           justifyContent="center"
           pad
           flex={1}
         >
-          <Icon color={example.colors.color} size={40} name={example.icon} />
+          <Icon color={example.colors.color} size={52} name={example.icon} />
         </Col>
       </FeatureCard>
     ))}
@@ -77,43 +73,48 @@ const datalinks = [
 
 export const HelpfulLinks = () => {
   return (
-    <Col space="lg">
-      <Section title="User Interface" titleSize="xs" space titleProps={{ fontWeight: 300 }}>
-        <Grid space="xl" itemMinWidth={100}>
-          {interfacelinks.map(link => (
-            <Button
-              alt="bordered"
-              size={1.2}
-              sizeHeight={2}
-              key={link.href}
-              {...linkProps(link.href)}
-            >
-              {link.name}
-            </Button>
-          ))}
-        </Grid>
-      </Section>
+    <>
+      <Space size="lg" />
+      <Divider />
+      <Space size="lg" />
+      <Col space="xl">
+        <Section title="User Interface" titleSize="xxs" space titleProps={{ fontWeight: 300 }}>
+          <Grid space="xl" itemMinWidth={100}>
+            {interfacelinks.map(link => (
+              <Button
+                alt="bordered"
+                size={1.2}
+                sizeHeight={2}
+                key={link.href}
+                {...linkProps(link.href)}
+              >
+                {link.name}
+              </Button>
+            ))}
+          </Grid>
+        </Section>
 
-      <Section
-        title="Data Management & Syncing"
-        titleSize="xs"
-        space
-        titleProps={{ fontWeight: 300 }}
-      >
-        <Grid space="xl" itemMinWidth={100}>
-          {datalinks.map(link => (
-            <Button
-              alt="bordered"
-              size={1.2}
-              sizeHeight={2}
-              key={link.href}
-              {...linkProps(link.href)}
-            >
-              {link.name}
-            </Button>
-          ))}
-        </Grid>
-      </Section>
-    </Col>
+        <Section
+          title="Data Management & Syncing"
+          titleSize="xxs"
+          space
+          titleProps={{ fontWeight: 300 }}
+        >
+          <Grid space="xl" itemMinWidth={100}>
+            {datalinks.map(link => (
+              <Button
+                alt="bordered"
+                size={1.2}
+                sizeHeight={2}
+                key={link.href}
+                {...linkProps(link.href)}
+              >
+                {link.name}
+              </Button>
+            ))}
+          </Grid>
+        </Section>
+      </Col>
+    </>
   )
 }

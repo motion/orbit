@@ -5,11 +5,13 @@ import { compose, mount, route, withView } from 'navi'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NotFoundBoundary, View } from 'react-navi'
 
+import { Header } from '../Header'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Header, usePageTheme } from '../Layout'
+import { usePageTheme } from '../Layout'
 import { linkProps } from '../LinkState'
 import { Navigation } from '../Navigation'
 import { useSiteStore } from '../SiteStore'
+import { ContentSection } from '../views/ContentSection'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
@@ -57,7 +59,7 @@ const DocsList = memo(() => {
   const docsStore = DocsStoreContext.useStore()
   return (
     <List
-      search={docsStore.search}
+      query={docsStore.search}
       selectable
       alwaysSelected
       defaultSelected={docsStore.initialIndex}
@@ -175,7 +177,7 @@ const DocsPage = memo((props: { children?: any }) => {
                 hidden={!showSidebar}
                 zIndex={10000000}
                 elevation={25}
-                width={280}
+                width={260}
                 pointerEvents="auto"
                 background={theme => theme.background}
               >
@@ -186,17 +188,19 @@ const DocsPage = memo((props: { children?: any }) => {
         )}
 
         <main className="main-contents">
-          <SectionContent fontSize={16} lineHeight={26} fontWeight={400} whiteSpace="normal">
+          <SectionContent>
             <Row id="main" className="main">
               {!isSmall && <DocsPageSidebar>{sidebarChildren}</DocsPageSidebar>}
               <Col
                 ref={Fade.ref}
                 flex={1}
                 overflow="hidden"
-                padding={isSmall ? 0 : [0, 0, 0, 24]}
                 className="content"
+                padding={isSmall ? 0 : [0, 0, 0, 24]}
               >
-                <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+                <ContentSection>
+                  <NotFoundBoundary render={NotFoundPage}>{props.children}</NotFoundBoundary>
+                </ContentSection>
               </Col>
             </Row>
 
@@ -222,7 +226,7 @@ const DocsPageSidebar = memo(({ children }: any) => {
   })
 
   return (
-    <Col id="sidebar" width={280} pointerEvents="auto" height={window.innerHeight}>
+    <Col id="sidebar" width={250} pointerEvents="auto" height={window.innerHeight}>
       <Col position="relative" className="sidebar__inner" flex={1}>
         <Col margin={[25, 0, 0]} flex={1} position="relative">
           {children}
@@ -321,6 +325,7 @@ export default compose(
             source={examplesSource}
             id={req.params.subid}
             sourceBelow
+            pad
           />
         ),
       }

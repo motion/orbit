@@ -2,7 +2,7 @@ import { command } from '@o/bridge'
 import { AppViewProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Button, CheckBoxField, Divider, FormField, Input, Section, Space } from '@o/ui'
+import { Button, Divider, FormField, Input, Section, Space, ToggleField } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 
@@ -56,16 +56,6 @@ export function SettingsAppGeneral(_props: AppViewProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user || { settings: {} }
 
-  const updateSettings = (updateFn: Function) => {
-    console.log('update setting', settings)
-    updateFn(user.settings)
-    const next = user.settings
-    App.setState({ userSettings: next })
-    updateUser(user => {
-      user.settings = next
-    })
-  }
-
   const handleClearAllData = async () => {
     if (
       showConfirmDialog({
@@ -85,31 +75,31 @@ export function SettingsAppGeneral(_props: AppViewProps) {
 
   return (
     <Section titleBorder margin pad title="General Settings">
-      <CheckBoxField
+      <ToggleField
         label="Start on Login"
         checked={settings.autoLaunch}
-        onChange={autoLaunch =>
-          updateSettings(x => {
-            x.autoLaunch = autoLaunch
+        onChange={value => {
+          updateUser(x => {
+            x.settings.autoLaunch = value
           })
-        }
+        }}
       />
-      <CheckBoxField
+      <ToggleField
         label="Auto Update"
         checked={settings.autoUpdate}
-        onChange={autoUpdate =>
-          updateSettings(x => {
-            x.autoUpdate = autoUpdate
+        onChange={autoUpdate => {
+          updateUser(x => {
+            x.settings.autoUpdate = autoUpdate
           })
-        }
+        }}
       />
 
       <FormField label="Theme">
         <select
           value={settings.theme}
           onChange={e =>
-            updateSettings(x => {
-              x.theme = e.target.value
+            updateUser(x => {
+              x.settings.theme = e.target.value as any
             })
           }
         >
@@ -125,8 +115,8 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         <select
           value={settings.vibrancy}
           onChange={e =>
-            updateSettings(x => {
-              x.vibrancy = e.target.value
+            updateUser(x => {
+              x.settings.vibrancy = e.target.value as any
             })
           }
         >
@@ -146,8 +136,8 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         <ShortcutCapture
           defaultValue={electronToNiceChars(settings.openShortcut)}
           onUpdate={val => {
-            updateSettings(x => {
-              x.openShortcut = niceCharsToElectronChars(val)
+            updateUser(x => {
+              x.settings.openShortcut = niceCharsToElectronChars(val)
             })
           }}
           modifierChars={eventCharsToNiceChars}

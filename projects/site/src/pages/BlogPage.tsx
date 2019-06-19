@@ -3,7 +3,7 @@ import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
 
-import { Header } from '../Layout'
+import { Header } from '../Header'
 import { ContentSection } from '../views/ContentSection'
 import { FadeParent } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
@@ -67,7 +67,7 @@ function PostPage(props: { post: PostEntry; children?: any }) {
       <BlogTitle paddingTop={50} />
       <SectionContent>
         <ContentSection>
-          <TitleText size="xxxl">{props.post.title}</TitleText>
+          <TitleText size="xxl">{props.post.title}</TitleText>
           <Space />
           <PostMeta post={props.post} />
           <Space />

@@ -2,7 +2,7 @@ import { Space } from '@o/ui'
 import { mount, route } from 'navi'
 import React from 'react'
 
-import { Header } from '../Layout'
+import { Header } from '../Header'
 import { ContentSection } from '../views/ContentSection'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'

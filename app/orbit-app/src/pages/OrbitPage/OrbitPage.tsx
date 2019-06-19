@@ -41,24 +41,24 @@ export const OrbitPage = memo(() => {
         {/* Inside provide stores to capture all our relevant stores */}
         <OrbitEffects />
         {/* TODO: this wont load if no messages are in queue i think */}
-        {/* <OrbitStatusMessages /> */}
+        <Suspense fallback={null}>
+          <OrbitStatusMessages />
+        </Suspense>
       </AppWrapper>
     </ProvideStores>
   )
 })
 
 const OrbitStatusMessages = memo(() => {
-  // TODO we need to upgrade banners soon:
-  //   1. make re-usable banner to change its type/message
-  //   2. banner show/update better api
   const banner = useBanner()
   const [statusMessage] = useModel(AppStatusModel, {
     appId: APP_ID,
   })
 
   useEffect(() => {
-    banner.show({
-      type: statusMessage.type === 'processing' ? 'info' : statusMessage.type,
+    if (!statusMessage) return
+    banner.set({
+      type: statusMessage.type,
       message: statusMessage.message,
     })
   }, [statusMessage])

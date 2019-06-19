@@ -30,8 +30,8 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
               WebkitBackgroundClip: 'text',
             }}
             {...titleFont}
-            size={1.75}
-            sizeLineHeight={1}
+            size={1.5}
+            sizeLineHeight={1.2}
             textAlign="left"
             flex={1}
             fontWeight={200}
@@ -70,6 +70,7 @@ export const SectionIcon = gloss(props => <Icon size={42} {...props} />, {
 
 const SectionTitle = gloss(Row, {
   flex: 1,
+  maxWidth: '80%',
 })
 
 const Badge = gloss(View, {

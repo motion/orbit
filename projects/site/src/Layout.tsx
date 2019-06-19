@@ -1,23 +1,18 @@
-import { BorderBottom, Button, ErrorBoundary, FullScreen, Portal, ProvideUI, Row, RowProps, Theme, Title, View } from '@o/ui'
+import { Button, ErrorBoundary, FullScreen, Portal, ProvideUI, Theme, Title, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { isDefined } from '@o/utils'
-import { Box, gloss, useTheme } from 'gloss'
 import { throttle } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { NotFoundBoundary, useCurrentRoute, useLoadingRoute } from 'react-navi'
 
 import { scrollTo } from './etc/helpers'
-import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
-import { LinkState } from './LinkState'
+import { Header } from './Header'
+import { useScreenSize } from './hooks/useScreenSize'
 import { useSiteStore } from './SiteStore'
 import { themes } from './themes'
 import { BusyIndicator } from './views/BusyIndicator'
-import { defaultConfig, FadeChild, fastStatticConfig, useFadePage } from './views/FadeIn'
-import { HeaderContain, LinkSection } from './views/HeaderContain'
-import { HeaderContext } from './views/HeaderContext'
+import { useFadePage } from './views/FadeIn'
 import { HeaderLink, LinksLeft, LinksRight } from './views/HeaderLink'
-import { LogoHorizontal } from './views/LogoHorizontal'
-import { LogoVertical } from './views/LogoVertical'
 
 const transition = 'transform ease 300ms'
 
@@ -84,27 +79,25 @@ export const Layout = memo((props: any) => {
   }, [theme])
 
   return (
-    <ProvideUI themes={themes}>
-      <Theme name={theme}>
-        <PageLoading />
-        <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
-        <View
-          className={`theme-${theme}`}
-          minHeight="100vh"
-          minWidth="100vw"
-          maxHeight={maxHeight}
-          overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
-          transition={transition}
-          transform={{
-            x: siteStore.showSidebar ? -sidebarWidth : 'none',
-          }}
-        >
-          <ErrorBoundary name="Site Error">
-            <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
-          </ErrorBoundary>
-        </View>
-        <LayoutSidebar />
-      </Theme>
+    <ProvideUI themes={themes} activeTheme={theme}>
+      <PageLoading />
+      <PeekHeader isActive={route.views.some(x => x.type && x.type.showPeekHeader)} />
+      <View
+        className={`theme-${theme}`}
+        minHeight="100vh"
+        minWidth="100vw"
+        maxHeight={maxHeight}
+        overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
+        transition={transition}
+        transform={{
+          x: siteStore.showSidebar ? -sidebarWidth : 'none',
+        }}
+      >
+        <ErrorBoundary name="Site Error">
+          <NotFoundBoundary render={NotFound}>{props.children}</NotFoundBoundary>
+        </ErrorBoundary>
+      </View>
+      <LayoutSidebar />
     </ProvideUI>
   )
 })
@@ -230,118 +223,3 @@ const PeekHeader = memo((props: { isActive?: boolean }) => {
     </Theme>
   )
 })
-const LinkRow = gloss(Box, {
-  flexFlow: 'row',
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 1000000000,
-  position: 'relative',
-})
-
-export const Header = memo(
-  ({ slim, noBorder, ...rest }: { slim?: boolean; noBorder?: boolean } & RowProps) => {
-    const isTiny = useIsTiny()
-    const size = useScreenSize()
-    const theme = useTheme()
-    const siteStore = useSiteStore()
-    const [shown, setShown] = useState(true)
-    const Fade = useFadePage({ shown, threshold: 0 })
-
-    let before = null
-    let after = null
-
-    if (size !== 'small') {
-      before = (
-        <LinkRow>
-          <LinksLeft />
-        </LinkRow>
-      )
-      after = (
-        <LinkRow>
-          <LinksRight />
-        </LinkRow>
-      )
-    }
-
-    let children
-    const menuElement = size === 'small' && (
-      <Button
-        position="fixed"
-        top={3}
-        right={10}
-        zIndex={1000000000}
-        icon="menu"
-        iconSize={16}
-        size={2}
-        chromeless
-        onClick={siteStore.toggleSidebar}
-      />
-    )
-
-    if (slim) {
-      children = (
-        <Fade.FadeProvide>
-          {menuElement}
-          <Row
-            ref={Fade.ref}
-            pointerEvents="auto"
-            background={theme.background.lighten(0.05)}
-            position="relative"
-            zIndex={1000000}
-            {...rest}
-          >
-            <HeaderContain height={50}>
-              <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild
-                off={!LinkState.didAnimateOut}
-                config={shown ? defaultConfig : fastStatticConfig}
-                delay={shown ? 0 : 0}
-              >
-                <LogoHorizontal slim />
-              </FadeChild>
-              <LinkSection>{after}</LinkSection>
-            </HeaderContain>
-            {!noBorder && <BorderBottom opacity={0.5} />}
-          </Row>
-        </Fade.FadeProvide>
-      )
-    } else {
-      children = (
-        <Fade.FadeProvide>
-          {menuElement}
-          <Row
-            ref={Fade.ref}
-            position={isTiny ? 'relative' : 'absolute'}
-            top={0}
-            left={0}
-            right={0}
-            zIndex={1000000}
-            alignItems="center"
-            justifyContent="space-around"
-            padding={[30, 0]}
-            {...rest}
-          >
-            <HeaderContain>
-              <LinkSection alignRight>{before}</LinkSection>
-              <FadeChild
-                off={!LinkState.didAnimateOut}
-                config={shown ? defaultConfig : fastStatticConfig}
-                delay={shown ? 100 : 0}
-              >
-                <LogoVertical />
-              </FadeChild>
-              <LinkSection>{after}</LinkSection>
-            </HeaderContain>
-          </Row>
-        </Fade.FadeProvide>
-      )
-    }
-
-    return (
-      <HeaderContext.PassProps setShown={setShown} shown={shown}>
-        {children}
-      </HeaderContext.PassProps>
-    )
-  },
-)

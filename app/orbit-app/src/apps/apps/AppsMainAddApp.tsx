@@ -2,7 +2,7 @@ import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useA
 import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
-import { installApp } from '../../helpers/installApp'
+import { useInstallApp } from '../../helpers/installApp'
 import { AppSetupForm } from './AppSetupForm'
 import { AppsMainNew } from './AppsMainNew'
 
@@ -28,6 +28,7 @@ export function AppsMainAddAppContent({
   banner: BannerHandle
 }) {
   // only download full definition once necessary
+  const installApp = useInstallApp()
   const [shouldLoadFullDef, setShouldLoadFullDef] = useState(false)
   const localDef = useAppDefinition(identifier)
   const searchApp = getSearchAppDefinitions(!localDef && identifier)
@@ -39,7 +40,7 @@ export function AppsMainAddAppContent({
         if (message === false) {
           banner.close()
         } else {
-          banner.setMessage(message)
+          banner.set({ message })
         }
       },
     },

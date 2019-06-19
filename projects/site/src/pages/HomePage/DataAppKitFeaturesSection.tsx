@@ -63,11 +63,11 @@ export default memo(function DataAppKitFeaturesSection() {
                   <PillButton>Apps</PillButton>
                 </FadeChild>
                 <FadeChild delay={100}>
-                  <TitleText textAlign="center" size="xxxl">
-                    A new way to build apps.
+                  <TitleText textAlign="center" size="xl">
+                    An ecosystem of apps & data
                   </TitleText>
                 </FadeChild>
-                <TitleTextSub size={0.9}>
+                <TitleTextSub>
                   <FadeChild delay={200}>
                     Every app exposes data - in GraphQL and TypeScript.
                     {screen !== 'small' && <br />}
@@ -111,7 +111,7 @@ export default memo(function DataAppKitFeaturesSection() {
 
             <FadeChild delay={0}>
               <Row space margin={[0, 'auto']}>
-                <BodyButton {...linkProps('/apps')} size={2}>
+                <BodyButton {...linkProps('/apps')} size="lg">
                   Explore apps
                 </BodyButton>
               </Row>
@@ -125,7 +125,6 @@ export default memo(function DataAppKitFeaturesSection() {
 
           <Fade.FadeProvide>
             <SpacedPageContent
-              ref={Fade.ref}
               maxHeight={100000}
               height="auto"
               flex={1}
@@ -137,14 +136,12 @@ export default memo(function DataAppKitFeaturesSection() {
                   </FadeChild>
                   <FadeChild delay={100}>
                     <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
-                      Batteries Included.
+                      Batteries Included
                     </TitleText>
                   </FadeChild>
                   <TitleTextSub>
                     <FadeChild delay={200}>
-                      Internal tools share patterns.
-                      <br />
-                      Orbit makes building those types of apps easy.
+                      Orbit makes building common types of apps easy.
                     </FadeChild>
                   </TitleTextSub>
                 </>
@@ -153,6 +150,7 @@ export default memo(function DataAppKitFeaturesSection() {
 
             <View flex={1} />
             <Grid
+              ref={Fade.ref}
               alignItems="start"
               space={screen === 'small' ? '0 15%' : '20% 15%'}
               itemMinWidth={260}
@@ -205,7 +203,7 @@ export default memo(function DataAppKitFeaturesSection() {
                   </SectionP>
                 </SimpleSection>
 
-                <SimpleSection delay={dly * 4} title="Native-level UI Kit.">
+                <SimpleSection delay={dly * 4} title="Cross-platform, fast interface.">
                   <SectionP>
                     <SectionIcon name="widget" />A desktop-class UI kit with views that work
                     together both in composition and shared prop types.

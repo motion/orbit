@@ -20235,10 +20235,10 @@ react-fela@^7.3.1:
     fela-dom "^7.0.9"
     prop-types "^15.5.8"
 
-react-flip-toolkit@6.5.9, react-flip-toolkit@^6.5.9:
-  version "6.5.9"
-  resolved "https://registry.yarnpkg.com/react-flip-toolkit/-/react-flip-toolkit-6.5.9.tgz#c8ad78a8cf651f98526c15a51d2f4d63e722090e"
-  integrity sha512-0im7XXPBQIS4jiXQTfc5huDEYyNeWtCAZjkytJPMT3P8qroul/ii9SX5ijqHwPUIblttZUYrOSKkdFdPHHHZcw==
+react-flip-toolkit@6.6.4, react-flip-toolkit@^6.6.4:
+  version "6.6.4"
+  resolved "https://registry.yarnpkg.com/react-flip-toolkit/-/react-flip-toolkit-6.6.4.tgz#a5cf54329e39a42c517997d77e3d648b20f0cc16"
+  integrity sha512-DMPvPdKRBjnINf8bt3Zr/CK2D//6PV3ehRPTHJQU08HD2Sxp3Pkg50VniXX4k039KUzVo0LnMsgVHaqr6E6yZQ==
   dependencies:
     rematrix "0.2.2"
 
@@ -20262,6 +20262,21 @@ react-helmet@^5.2.0:
     prop-types "^15.5.4"
     react-fast-compare "^2.0.2"
     react-side-effect "^1.1.0"
+
+react-hot-loader@^4.11.0:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.11.1.tgz#2cabbd0f1c8a44c28837b86d6ce28521e6d9a8ac"
+  integrity sha512-HAC0UedYzM3mD+ZaQHesntFO0yi2ftOV4ZMMRTj43E4GvW5sQqYTPvur+6J7EaH3MDr/RqjDKXyCqKepV8+y7w==
+  dependencies:
+    fast-levenshtein "^2.0.6"
+    global "^4.3.0"
+    hoist-non-react-statics "^3.3.0"
+    loader-utils "^1.1.0"
+    lodash "^4.17.11"
+    prop-types "^15.6.1"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.0.2"
+    source-map "^0.7.3"
 
 react-hot-loader@^4.3.6:
   version "4.11.0"

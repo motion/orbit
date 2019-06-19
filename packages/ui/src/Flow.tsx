@@ -21,7 +21,7 @@ export type FlowPropsBase = FlowSectionProps & {
 }
 
 export type FlowDataProps = {
-  initialData?: any
+  data?: any
 }
 
 export type FlowProps =
@@ -93,11 +93,13 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
           borderWidth={0}
           glint={false}
           borderBottom={[3, 'transparent']}
+          color={theme => theme.background}
+          colorHover="red"
           borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
           sizeRadius={0}
           sizeHeight={1.2}
           sizePadding={1.5}
-          opacity={(_, props) => (props.active ? 1 : 0.2)}
+          opacity={(_, props) => (props.active ? 1 : 0.4)}
         >
           <Row>
             {steps.map((stp, stepIndex) => (
@@ -129,7 +131,7 @@ export class FlowStore {
   steps: FlowStepProps[] = []
 
   private hooks = useHooks({
-    data: () => Config.useUserState('flowdata', (this.props && this.props.initialData) || null),
+    data: () => Config.useUserState('flowdata', (this.props && this.props.data) || null),
     index: () => Config.useUserState('flowindex', 0),
   })
 

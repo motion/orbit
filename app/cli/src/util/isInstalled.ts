@@ -10,7 +10,9 @@ import { findPackage } from './findPackage'
 export async function isInstalled(packageId: string, directory: string, version?: string) {
   try {
     const pkg = await readJSON(join(directory, 'package.json'))
-    reporter.info(`isInstalled -- checking dependencies`)
+    reporter.info(
+      `isInstalled -- checking ${packageId} in ${directory} at version ${version || 'any'}`,
+    )
     if (!pkg.dependencies[packageId]) {
       return false
     }

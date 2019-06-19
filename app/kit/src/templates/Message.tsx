@@ -11,8 +11,8 @@ export function Message({
 }: AppViewProps & { children?: React.ReactNode }) {
   return (
     <Col flex={1} pad="lg" space="lg" alignItems="center" justifyContent="center">
-      <Col space="sm" alignItems="center" justifyContent="center">
-        {!!title && <Title size={title.length > 40 ? 1.4 : 2.2}>{title}</Title>}
+      <Col space alignItems="center" justifyContent="center">
+        {!!title && <Title size={title.length > 40 ? 1 : 1.2}>{title}</Title>}
         {!!subTitle && <SubTitle>{subTitle}</SubTitle>}
         {!!subType && <SubTitle>{subType}</SubTitle>}
       </Col>

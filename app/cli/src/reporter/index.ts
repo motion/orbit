@@ -70,6 +70,7 @@ export const reporter: Reporter = {
     reporterInstance.error(message)
     if (error) this.log(errorFormatter.render(error))
   },
+
   /**
    * Set prefix on uptime.
    * @param {string} prefix - A string to prefix uptime with.

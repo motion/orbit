@@ -59,7 +59,7 @@ export const Table = (tableProps: TableProps) => {
     afterTitle,
     titleBorder,
     searchable,
-    titlePad,
+    titlePad = true,
     titleElement,
     shareable,
     maxHeight,
@@ -115,7 +115,6 @@ export const Table = (tableProps: TableProps) => {
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
-      padding={0}
       maxHeight={selectDefined(
         maxHeight,
         parentNodeSize.height === 0 ? undefined : parentNodeSize.height,

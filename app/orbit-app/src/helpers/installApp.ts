@@ -1,14 +1,8 @@
 import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
-import {
-  AppBit,
-  AppInstallToWorkspaceCommand,
-  AppModel,
-  AuthAppCommand,
-  SpaceModel,
-  UserModel,
-} from '@o/models'
-import { BannerHandle } from '@o/ui'
+import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
+import { BannerHandle, useBanner } from '@o/ui'
+import { useCallback } from 'react'
 
 import { newAppStore } from '../om/stores'
 
@@ -17,6 +11,7 @@ export function newEmptyAppBit(definition: AppDefinition): AppBit {
     target: 'app',
     identifier: definition.id,
     itemType: definition.itemType,
+    icon: definition.icon,
     name: definition.name,
     tabDisplay: 'plain',
     colors: ['#000', '#111'],
@@ -51,18 +46,22 @@ export async function createAppBitInActiveSpace(
   await save(AppModel, bit)
 }
 
-export async function installApp(
+export function useInstallApp() {
+  const banner = useBanner()
+  return useCallback((a: AppDefinition, b?: Partial<AppBit> | true) => installApp(a, b, banner), [])
+}
+
+async function installApp(
   def: AppDefinition,
   newAppBit?: Partial<AppBit> | true,
   banner?: BannerHandle,
 ) {
-  banner &&
-    banner.show({
-      message: `Installing app ${def.name}`,
-    })
+  banner.set({
+    message: `Installing app ${def.name}`,
+  })
 
   if (def.auth) {
-    banner && banner.setMessage(`Waiting for authentication...`)
+    banner.set({ message: `Waiting for authentication...` })
 
     const res = await command(AuthAppCommand, { authKey: def.auth })
     if (res.type === 'error') {
@@ -72,16 +71,16 @@ export async function installApp(
     }
     return res
   }
+
   const res = await command(AppInstallToWorkspaceCommand, { identifier: def.id })
 
   console.log('got response from install app command', res)
 
   if (res.type === 'error') {
-    banner &&
-      banner.show({
-        type: 'error',
-        message: res.message,
-      })
+    banner.set({
+      type: 'error',
+      message: res.message,
+    })
     return res
   }
 
@@ -96,6 +95,7 @@ export async function installApp(
         space: activeSpace,
         name: newAppStore.app.name || def.name,
         colors: newAppStore.app.colors,
+        icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
       console.log('Saving new app', bit)
@@ -104,11 +104,10 @@ export async function installApp(
       newAppStore.reset()
     } catch (err) {
       const message = `Error saving AppBit ${err.message} ${err.stack}`
-      banner &&
-        banner.show({
-          type: 'error',
-          message,
-        })
+      banner.set({
+        type: 'error',
+        message,
+      })
       return {
         type: 'error' as const,
         message,
@@ -120,11 +119,11 @@ export async function installApp(
 
   const message = `Installed app!`
 
-  banner &&
-    banner.show({
-      type: 'success',
-      message,
-    })
+  banner.set({
+    type: 'success',
+    message,
+    timeout: 2500,
+  })
 
   return {
     type: 'success' as const,

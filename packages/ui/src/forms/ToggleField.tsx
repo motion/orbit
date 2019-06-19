@@ -1,19 +1,21 @@
-import React, { HTMLProps } from 'react'
+import React from 'react'
 
 import { SimpleFormField, SimpleFormFieldProps } from './FormField'
+import { Toggle, ToggleProps } from './Toggle'
 
-export function CheckBoxField({
+export function ToggleField({
   label,
   children,
   layout,
+  name,
   ...props
-}: SimpleFormFieldProps & HTMLProps<HTMLInputElement>) {
+}: SimpleFormFieldProps & ToggleProps) {
   if (children) {
     console.warn('no children allowed for checkbox', children)
   }
   return (
     <SimpleFormField label={label} layout={layout}>
-      <input id={name} name={name} style={{ margin: `auto 4px` }} type="checkbox" {...props} />
+      <Toggle id={name} name={name} {...props} />
     </SimpleFormField>
   )
 }

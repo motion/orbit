@@ -1,4 +1,4 @@
-import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, Title, View } from '@o/ui'
+import { Col, Row, Scale, SimpleText, Space, SurfacePassProps, Theme, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { memo } from 'react'
 
@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'A fresh start for building apps.',
-  medium: 'A fresh start for building apps.',
-  small: 'A fresh start for building apps.',
+  large: 'Easy and powerful apps for work.',
+  medium: 'Easy and powerful apps for work.',
+  small: 'Easy and powerful apps for work.',
 }
 
 let allTexts = {
   large: [
-    `Lets make apps ours - easy to build, use, and control.`,
-    `Open source, with amazing collaboration and an open app store.`,
+    `Develop your intranet using apps that feel and run like native.`,
+    `An open source, decentralized platform with an open app store.`,
   ],
   medium: [
-    `Lets make apps ours - easy to build, use, and control.`,
-    `Open source, with amazing collaboration and an open app store.`,
+    `Develop your intranet using apps that feel and run like native.`,
+    `An open source, decentralized platform with an open app store.`,
   ],
   small: [
-    `Lets make apps ours - easy to build, use, and control.`,
-    `Open source, with amazing collaboration and an open app store.`,
+    `Create intranet apps easily.`,
+    `An open source, decentralized platform with an open app store.`,
   ],
 }
 
@@ -153,7 +153,7 @@ const HeadContent = memo(() => {
 })
 
 const HeadJoin = () => (
-  <View flex={1} width="100%" maxWidth={1000} position="absolute" bottom={5} alignItems="center">
+  <View flex={1} width="100%" position="absolute" bottom={5} alignItems="center">
     <FadeChild {...fadeUpProps} delay={500}>
       <SurfacePassProps elevation={5} fontFamily="GT Eesti">
         <Theme name="orbitOneDark">
@@ -201,15 +201,6 @@ export function HeadSection() {
 
   return (
     <Fade.FadeProvide>
-      {/* <Page.Background background="linear-gradient(#000, #222)" /> */}
-      {/* <Page.Parallax>
-        <Center>
-          <View transform={{ scale: 30 }}>
-            <BrandMark />
-          </View>
-        </Center>
-      </Page.Parallax> */}
-
       <Page.Content>
         <Col
           right={useScreenHeightVal(40, 0)}
@@ -222,21 +213,31 @@ export function HeadSection() {
             <HeadContent />
           </Col>
           <Space size={40} />
-          <Row space="xl" pad={[0, 'xl']} marginBottom={-90} scrollable="x" maxWidth="100vw">
+          <Row
+            space="xl"
+            pad={[0, 'xl']}
+            marginBottom={-90}
+            scrollable="x"
+            maxWidth="100vw"
+            justifyContent="space-between"
+          >
             <SubSection index={0} title="Easy" titleColor={colors.orange}>
-              A complete and easy toolkit designed for building apps, batteries included.
+              Everything needed for managing data, syncing from many sources, all in a few lines of
+              code.
             </SubSection>
 
             <SubSection index={2} title="Powerful" titleColor={colors.red}>
-              Powerful views, optimization and APIs give you incredible new abilities.
+              A complete toolkit designed for managing large data, workflows and common patterns.
             </SubSection>
 
-            <SubSection index={1} title="Connected" titleColor={colors.purple}>
-              An Open App Store, apps that work together, and easy collaboration.
+            <SubSection index={1} title="Controlled" titleColor={colors.purple}>
+              Share a single repo with your team to collaborate on many apps w/o configuration or
+              servers.
             </SubSection>
 
-            <SubSection index={3} title="Private" titleColor={colors.orange}>
-              You control all the data, offline first, and peer to peer.
+            <SubSection index={3} title="Secure" titleColor={colors.orange}>
+              Everything runs behind the firewall, so plugging in a database is secure. Sync using
+              p2p.
             </SubSection>
           </Row>
           <Space size="xxxl" />
@@ -250,13 +251,19 @@ export function HeadSection() {
 
 const SubSection = memo(({ title, children, index, titleColor }: any) => {
   return (
-    <Col flex={1} minWidth={180}>
+    <Col flex={1} minWidth={160} maxWidth={220}>
       <FadeChild {...fadeUpProps} delay={200 + index * 200}>
-        <Title textAlign="center" color={'#fff'} selectable size={0.7} color={titleColor}>
+        <Paragraph
+          textAlign="center"
+          textTransform="uppercase"
+          alpha={0.65}
+          color={titleColor}
+          size={1.15}
+        >
           {title}
-        </Title>
+        </Paragraph>
         <Space size="sm" />
-        <SimpleText textAlign="center" selectable alpha={0.5} size={1.1} sizeLineHeight={1.1}>
+        <SimpleText textAlign="center" selectable alpha={0.75} size={1} sizeLineHeight={1.1}>
           {children}
         </SimpleText>
       </FadeChild>

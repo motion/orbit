@@ -1,5 +1,5 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
-import { fromEntries } from '@o/utils'
+import { fromEntries, isDefined } from '@o/utils'
 import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
@@ -16,7 +16,7 @@ export type ConfigureUIProps = {
   useIcon: any
 
   // set a custom item key getter for lists/tables
-  getItemKey: (item: any) => string
+  getItemKey: (item: any, index: number) => string
 
   // set a custom persistence function for appState
   useAppState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
@@ -51,8 +51,6 @@ export type CustomItemDescription = {
 const hash = x =>
   sum(fromEntries(Object.entries(x).map(x => (isValidElement(x[1]) ? [x[0], x[1].key] : x))))
 
-const KeyCache = new WeakMap<Object, string>()
-
 let hasSet = false
 
 export let Config: ConfigureUIProps = {
@@ -65,23 +63,20 @@ export let Config: ConfigureUIProps = {
   useAppState: useState,
 
   StoreContext: createContext(null),
-  getItemKey: x => {
+  getItemKey: (x, index) => {
     if (!x) {
       console.warn('NO ITEM', x)
       return `${Math.random()}`
     }
     const item = x.item || x
-    const key = item.id || item.key || item.identifier || item.email
-    if (key) {
+    const key = item.id || item.key || item.identifier
+    if (isDefined(key)) {
       return `${key}`
     }
-    let backupKey = KeyCache.get(x)
-    if (backupKey) {
-      return backupKey
+    if (typeof index === 'undefined') {
+      return `${hash(x)}`
     }
-    backupKey = `${hash(x)}`
-    KeyCache.set(x, backupKey)
-    return backupKey
+    return `${index}`
   },
 }
 

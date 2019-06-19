@@ -1,11 +1,4 @@
-import {
-  CSSPropertySet,
-  CSSPropertySetResolved,
-  cssString,
-  styleToClassName,
-  ThemeObject,
-  validCSSAttr,
-} from '@o/css'
+import { CSSPropertySet, CSSPropertySetResolved, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -63,15 +56,15 @@ type GlossInternals<Props> = {
 
 export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
-  (props: GlossProps<Props>, context?: any): React.ReactElement<any> | null
+  (props: Props, context?: any): React.ReactElement<any> | null
   propTypes?: React.ValidationMap<Props>
   contextTypes?: React.ValidationMap<any>
   defaultProps?: Partial<Props>
   displayName?: string
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<Props>
-  withConfig: (config: GlossViewOptions<Props>) => GlossView<Props>
+  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<RawProps>
+  withConfig: (config: GlossViewOptions<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
 }
 
@@ -294,6 +287,7 @@ function addStyles(
   displayName?: string,
   tagName?: string,
   prevClassNames?: string[] | null,
+  moreSpecific?: boolean,
 ) {
   const keys = Object.keys(styles).sort(pseudoSort)
   let classNames: string[] | null = null
@@ -305,7 +299,7 @@ function addStyles(
     // add the stylesheets and classNames
     // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
     // it would likely help things like when you animate based on mousemove, may be slower in default case
-    const className = addRules(displayName, rules, key, tagName)
+    const className = addRules(displayName, rules, key, tagName, moreSpecific)
     classNames = classNames || []
     classNames.push(className)
 
@@ -327,6 +321,8 @@ function mergePropStyles(baseId: string, styles: Object, propStyles: Object, pro
     }
   }
 }
+
+const SPECIFIC_PREFIX = 's'
 
 function addDynamicStyles(
   id: string,
@@ -355,11 +351,11 @@ function addDynamicStyles(
     // until then, we need to preserve the important order, so we reverse to make sure conditional applies first
     propClassNames.reverse()
     for (const className of propClassNames) {
-      const info = tracker.get(className)
+      const cn = className[0] === SPECIFIC_PREFIX ? className.slice(1) : className
+      const info = tracker.get(cn)
       if (info) {
         dynStyles[id] = dynStyles[id] || {}
         mergeStyles(id, dynStyles, info.rules)
-        gc.registerClassUse(info.className)
       } else {
         classNames.push(className)
       }
@@ -380,7 +376,7 @@ function addDynamicStyles(
   }
 
   // add dyn styles
-  const dynClassNames = addStyles(dynStyles, displayName, tagName, prevClassNames)
+  const dynClassNames = addStyles(dynStyles, displayName, tagName, prevClassNames, true)
   if (dynClassNames) {
     classNames = [...classNames, ...dynClassNames]
   }
@@ -406,6 +402,7 @@ const isSubStyle = (x: string) => x[0] === '&' || x[0] === '@'
 //  because its used on initial mount AND during renders
 //  which is actually useful, yes, because you want the logic the same
 //  BUT its also used nested! See themeFn => mergePropStyles
+//  likely can be refactored, but just need to study it a bit before you do
 //
 function mergeStyles(
   id: string,
@@ -538,7 +535,13 @@ function compileTheme(viewOG: GlossView<any>) {
 }
 
 // adds rules to stylesheet and returns classname
-function addRules(displayName = '_', rules: BaseRules, namespace: string, tagName?: string) {
+function addRules(
+  displayName = '_',
+  rules: BaseRules,
+  namespace: string,
+  tagName?: string,
+  moreSpecific?: boolean,
+) {
   // if these rules have been cached to a className then retrieve it
   const cachedClass = rulesToClass.get(rules)
   if (cachedClass) {
@@ -573,12 +576,12 @@ function addRules(displayName = '_', rules: BaseRules, namespace: string, tagNam
     rulesToClass.set(rules, className)
   }
 
-  return className
+  return moreSpecific ? `${SPECIFIC_PREFIX}${className}` : className
 }
-// has to return a .specific-id and .id selector for use in parents passing down styles
+// has to return a .s-id and .id selector for use in parents passing down styles
 function getSelector(className: string, namespace: string, tagName: string = '') {
   if (namespace[0] === '@') {
-    return `${tagName}.${className}, ${tagName}.specific-${className}`
+    return `${tagName}.${className}, body ${tagName}.${SPECIFIC_PREFIX}${className}`
   }
   if (namespace.indexOf('&') !== -1) {
     // namespace === '&:hover, &:focus, & > div'
@@ -586,10 +589,10 @@ function getSelector(className: string, namespace: string, tagName: string = '')
       .split(',')
       .flatMap(part => {
         const selector = part.replace('&', className).trim()
-        return [`.specific-${selector}`, `.${selector}`]
+        return [`body .${SPECIFIC_PREFIX}${selector}`, `.${selector}`]
       })
       .join(',')
     return namespacedSelectors
   }
-  return `.specific-${className}, .${className}`
+  return `body .${SPECIFIC_PREFIX}${className}, .${className}`
 }

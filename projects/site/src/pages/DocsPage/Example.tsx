@@ -2,8 +2,8 @@ import { Button, Card, Col, gloss, Icon, Loading, Row, SimpleText, Space, View }
 import { capitalize } from 'lodash'
 import React, { createElement, isValidElement, memo, Suspense, useRef, useState } from 'react'
 
+import { linkProps } from '../../LinkState'
 import { CodeBlock } from '../../views/CodeBlock'
-import { linkProps } from "../../LinkState";
 
 export type ExampleProps = {
   source: string
@@ -16,6 +16,8 @@ export type ExampleProps = {
   chromeless?: boolean
   parentId?: string
   sourceBelow?: boolean
+  // col props
+  pad?: boolean
 }
 
 export const Example = memo(
@@ -29,6 +31,7 @@ export const Example = memo(
     onlySource,
     chromeless,
     sourceBelow,
+    children,
     ...props
   }: ExampleProps) => {
     // const route = useCurrentRoute()
@@ -37,19 +40,13 @@ export const Example = memo(
     const tm = useRef(null)
 
     if (!source || !id) {
-      return props.children || null
+      return children || null
     }
 
     const exampleElement = isValidElement(examples[id]) ? examples[id] : createElement(examples[id])
 
     const contents = (
-      <Col space flexDirection={sourceBelow ? 'column-reverse' : 'column'}>
-        {showSource && (
-          <SubCard>
-            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
-          </SubCard>
-        )}
-
+      <Col space {...props}>
         {!onlySource && (
           <SubCard
             minHeight={20}
@@ -75,6 +72,12 @@ export const Example = memo(
                 </View>
               </AccidentalScrollPrevent>
             )}
+          </SubCard>
+        )}
+
+        {showSource && (
+          <SubCard>
+            <CodeBlock language="typescript">{parseSource(source, id) || ''}</CodeBlock>
           </SubCard>
         )}
       </Col>

@@ -1,26 +1,5 @@
-import {
-  App,
-  AppMainView,
-  AppViewProps,
-  getTargetValue,
-  TreeList,
-  useBitSearch,
-  useTreeList,
-} from '@o/kit'
-import {
-  Breadcrumb,
-  Breadcrumbs,
-  Button,
-  List,
-  ListItemProps,
-  Pane,
-  preventDefault,
-  SearchableTopBar,
-  StatusBarText,
-  TitleRow,
-  useToggle,
-  View,
-} from '@o/ui'
+import { App, AppMainView, AppViewProps, getTargetValue, TreeList, useBitSearch, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, Button, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, TitleRow, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import pluralize from 'pluralize'
 import React, { useEffect, useState } from 'react'
@@ -81,7 +60,7 @@ export function ListsAppIndex() {
         title={results ? `Search Results (${results.length})` : 'Search Results'}
         maxHeight={600}
       >
-        <List search={addQuery} items={results || []} />
+        <List query={addQuery} items={results || []} />
       </Pane>
     </>
   )

@@ -59,6 +59,12 @@ export const DocsContents = memo(
       </>
     )
 
+    const pad = useScreenVal(
+      ['xxl', 'md', true, 'md'],
+      ['xxl', 'md', true, 'md'],
+      ['xxxl', 'xl', true, 'xl'],
+    )
+
     return (
       <ThemeProvide themes={themes}>
         <MDX
@@ -72,21 +78,13 @@ export const DocsContents = memo(
             maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
-            pad={useScreenVal(
-              ['xxl', 'md', true, 'md'],
-              ['xxl', 'md', true, 'md'],
-              ['xxxl', 'xl', true, 'xl'],
-            )}
-            padInner={useScreenVal(
-              ['xl', 'md', true, 'md'],
-              ['xl', 'md', true, 'md'],
-              ['xl', 'xl', true, 'xl'],
-            )}
+            pad={pad}
+            titlePad={pad}
             titleBorder
             space
             title={
               <FadeChild>
-                <Title size={(title || '').length > 22 ? 4 : 5}>{title || 'No title'}</Title>
+                <Title size={(title || '').length > 22 ? 2 : 3}>{title || 'No title'}</Title>
               </FadeChild>
             }
             belowTitle={
@@ -187,7 +185,7 @@ export const DocsContents = memo(
 
                   {!!source && (
                     <Section titleBorder size="sm" title={`${title} Source`} id="component-source">
-                      <CodeBlock className="language-typescript">{source}</CodeBlock>
+                      <CodeBlock>{source}</CodeBlock>
                     </Section>
                   )}
                 </MetaSection>

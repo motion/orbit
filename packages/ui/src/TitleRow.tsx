@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import { gloss } from 'gloss'
 import React, { forwardRef, isValidElement } from 'react'
 
@@ -12,7 +13,6 @@ import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
-import { selectDefined } from '@o/utils'
 
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {
@@ -120,11 +120,11 @@ export const TitleRow = themeable(
             {typeof icon === 'string' ? (
               <Icon alignSelf="center" name={icon} size={iconSize} />
             ) : React.isValidElement(icon) ? (
-              React.cloneElement(icon, { size: iconSize })
+              React.cloneElement(icon as any, { size: iconSize })
             ) : (
               icon || null
             )}
-            <Col space={spaceSize / 2} flex={1} alignItems="flex-start">
+            <Col space={spaceSize} flex={1} alignItems="flex-start">
               {titleElement}
               {!!subTitle && (
                 <SubTitle selectable={selectable} ellipse marginBottom={0}>

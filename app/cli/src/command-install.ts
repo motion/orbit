@@ -48,7 +48,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
     }
   }
 
-  const packageInstallKey = `${packageId}@${curVersion}`
+  const packageInstallKey = `${packageId}@${curVersion || 'latest'}`
   reporter.info(`Installing ${packageInstallKey}`)
 
   try {

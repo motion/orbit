@@ -4,11 +4,15 @@ import { apiUrl } from '../command-publish'
 import { reporter } from '../reporter'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
-export const identifierToPackageId: { [key: string]: string } = {}
+const identifierToPackageId: { [key: string]: string } = {}
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
   reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
   identifierToPackageId[identifier] = packageId
+}
+
+export function getIdentifierToPackageId() {
+  return { ...identifierToPackageId }
 }
 
 export async function getPackageId(
@@ -19,7 +23,8 @@ export async function getPackageId(
     await updateWorkspacePackageIds(options.rescanWorkspacePath)
   }
 
-  reporter.info(`Loaded app identifiers: ${Object.keys(identifierToPackageId).join(', ')}`)
+  const info = JSON.stringify(identifierToPackageId, null, 2)
+  reporter.info(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
 
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]

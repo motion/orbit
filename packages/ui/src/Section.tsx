@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { getSpaceSize, Sizes } from './Space'
+import { getSpaceSize, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -73,7 +73,7 @@ export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
 // more padded above title
-const defaultTitlePadAmount = [1.5, 1, 1]
+const defaultTitlePadAmount = [1.5, 1, 0]
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -136,7 +136,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const defaultTitlePad = defaultTitlePadAmount.map(x => x * titleSizePx)
 
   if (!titleElement && hasTitle) {
-    const adjustPadProps = !bordered && !titleBorder && !backgrounded && { paddingBottom: 0 }
+    const adjustPadProps = !bordered && !titleBorder && !titlePad && { paddingBottom: 0 }
 
     const titlePadFinal = selectDefined(
       selectDefined(
@@ -159,10 +159,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={belowTitle}
+            below={belowTitle || <Space size={selectDefined(space, size)} />}
             icon={icon}
             userSelect="none"
-            space="sm"
+            space={selectDefined(space, size, 'sm')}
             pad={titlePadFinal}
             // avoid double pad between content/title padding
             paddingBottom={pad === true && titlePad === undefined ? 0 : undefined}
@@ -211,6 +211,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       )}
       pad={!showTitleAbove ? padSized : false}
       size={size}
+      fontSize="inherit"
+      lineHeight="inherit"
     >
       {showTitleAbove && titleEl}
       <Reset>

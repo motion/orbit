@@ -42,17 +42,20 @@ export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 
 /**
  * For communicating things like: build status, startup status, upgrading, etc
- * Allows for observeMany() which should give us a streaming list of current status messages
+ * Allows for observeOne() which should give us a streaming bus of status messages
  */
 export type AppStatusMessage = {
   // id per-message to determine if it changes
   id: string
-  type: 'error' | 'success' | 'processing'
+  type: 'error' | 'warn' | 'success' | 'info'
   message: string
   appId?: number
 }
 
 export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('AppStatusModel')
+export const AppStatusId = {
+  install: (identifier: string) => `install-${identifier}`,
+}
 
 export type GroupResult = {
   title: string

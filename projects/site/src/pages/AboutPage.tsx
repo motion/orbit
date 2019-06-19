@@ -6,11 +6,11 @@ import React from 'react'
 import confettiImage from '../../public/images/confetti.jpg'
 import { scrollTo } from '../etc/helpers'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { Header } from '../Layout'
+import { Header } from '../Header'
+import { linkProps } from '../LinkState'
 import { FadeChild, useFadePage } from '../views/FadeIn'
 import { SectionContent } from '../views/SectionContent'
 import { BlogFooter } from './BlogPage/BlogLayout'
-import { linkProps } from "../LinkState";
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { useStickySidebar } from './useStickySidebar'
 
@@ -96,7 +96,7 @@ export function AboutPage() {
                   overflow="hidden"
                   className="content"
                 >
-                  <BigTitle size={5}>
+                  <BigTitle size={2.5}>
                     Making it easy to build beautiful apps that work for the user first.
                   </BigTitle>
 
@@ -167,9 +167,9 @@ export function AboutPage() {
 }
 
 const BigParagraph = (props: TextProps) => (
-  <Title selectable size={1.5} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
+  <Title selectable size={1.1} alpha={0.6} fontWeight={100} sizeLineHeight={1.35} {...props} />
 )
 
-const BigTitle = (props: TextProps) => <Title selectable size={3.5} fontWeight={100} {...props} />
+const BigTitle = (props: TextProps) => <Title selectable size={2.25} fontWeight={100} {...props} />
 
 AboutPage.theme = 'dark'

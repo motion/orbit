@@ -46,7 +46,7 @@ function ErrorHandler(props: { error: string; children: any; onClose: () => void
   const banner = useBanner()
 
   useEffect(() => {
-    banner.show({
+    banner.set({
       message: props.error,
       onClose: props.onClose,
     })

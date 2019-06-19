@@ -114,6 +114,7 @@ export function AppsIndex() {
     <List
       className="hello-world"
       title="Manage Apps"
+      titleScale={0.75}
       subTitle="Use search to find new apps."
       onQueryChange={search}
       itemProps={{

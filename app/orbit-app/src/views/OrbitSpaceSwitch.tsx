@@ -2,9 +2,9 @@ import { useModels } from '@o/bridge'
 import { OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, GlobalHotKeys, Icon, ListItem, Popover, View } from '@o/ui'
+import { Avatar, Col, GlobalHotKeys, Icon, ListItem, ListSeparator, Popover, Toggle, View } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 // @ts-ignore
 const avatar = require('../../public/images/nate.jpg')
@@ -39,14 +39,32 @@ class SpaceSwitchStore {
   )
 }
 
+const useEffectIgnoreFirst = (fn: Function, args: any[]) => {
+  const hasRunOnce = useRef(false)
+  useEffect(() => {
+    if (!hasRunOnce) {
+      hasRunOnce.current = true
+    } else {
+      fn()
+    }
+  }, [args])
+}
+
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const store = useStore(SpaceSwitchStore)
-  const [user] = useActiveUser()
+  const [user, updateUser] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
   const accountLink = useLocationLink('/app/settings/account')
   const settingsLink = useLocationLink('/app/settings')
+  const [dark, setDark] = useState(user.settings.theme === 'dark')
+
+  useEffectIgnoreFirst(() => {
+    updateUser(user => {
+      user.settings.theme = dark ? 'dark' : 'light'
+    })
+  }, [dark])
 
   if (!activeSpace) {
     return null
@@ -75,9 +93,10 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           handlers={handlers}
         />
       )}
+
       <Popover
         ref={store.spaceSwitcherRef}
-        delay={1000}
+        delay={500}
         openOnHover
         closeOnClickAway
         closeOnClick
@@ -106,7 +125,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           ref={store.popoverContentRef}
           borderRadius={borderRadius}
           flex={1}
-          maxHeight={300}
+          maxHeight={window.innerHeight - 120}
         >
           {user ? (
             <ListItem
@@ -120,15 +139,14 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             <div>No spaces</div>
           )}
 
-          {spaces.map((space, index) => {
+          <ListSeparator>Recent Spaces</ListSeparator>
+          {spaces.slice(0, 3).map((space, index) => {
             return (
               <ListItem
                 key={space.id}
                 icon={<SpaceIcon space={space} />}
                 iconBefore
-                after={
-                  activeSpaceId === space.id && <Icon name="check" color="#449878" size={12} />
-                }
+                after={activeSpaceId === space.id && <Icon name="tick" color="#449878" size={12} />}
                 onClick={() => {
                   console.warn('ok')
                 }}
@@ -138,6 +156,19 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
               />
             )
           })}
+
+          <ListSeparator>Settings</ListSeparator>
+
+          <ListItem
+            onClick={e => e.stopPropagation()}
+            title="Dark mode"
+            icon="moon"
+            after={
+              <View opacity={user.settings.theme === 'automatic' ? 0.5 : 1}>
+                <Toggle defaultChecked={dark ? true : false} onChange={setDark} />
+              </View>
+            }
+          />
 
           <ListItem
             title="Space Settings"

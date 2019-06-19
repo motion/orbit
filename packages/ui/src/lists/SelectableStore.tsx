@@ -7,10 +7,10 @@ import { Config } from '../helpers/configureUI'
 import { DynamicListControlled } from './DynamicList'
 
 if (isBrowser) {
-  // require('./SelectableStore.css')
+  require('./SelectableStore.css')
 }
 
-const key = (item: any) => Config.getItemKey(item)
+const key = (item: any, index: number) => Config.getItemKey(item, index)
 
 export enum Direction {
   up = 'up',
@@ -129,7 +129,7 @@ export class SelectableStore {
     // update keyToIndex
     for (const rowKey of next) {
       if (!this.keyToIndex[rowKey]) {
-        const idx = this.rows.findIndex(r => key(r) === rowKey)
+        const idx = this.rows.findIndex((r, i) => key(r, i) === rowKey)
         if (idx >= 0) {
           this.keyToIndex[rowKey] = idx
         } else {
@@ -235,7 +235,7 @@ export class SelectableStore {
 
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
-    const rowKey = key(row)
+    const rowKey = key(row, index)
     let next = []
     const { active } = this
     const modifiers = this.getModifiers(e)
@@ -334,7 +334,7 @@ export class SelectableStore {
     }
 
     const row = this.rows[index]
-    const rowKey = key(row)
+    const rowKey = key(row, index)
     if (!this.props.selectable) {
       return false
     }
@@ -378,7 +378,7 @@ export class SelectableStore {
   }
 
   private getIndexKey(index: number) {
-    return key(this.rows[index])
+    return key(this.rows[index], index)
   }
 
   private scrollToIndex(index: number) {

@@ -3,7 +3,7 @@ import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
 import React, { memo } from 'react'
 
-import { createAppBitInActiveSpace, installApp, useNewAppBit } from '../helpers/installApp'
+import { createAppBitInActiveSpace, useInstallApp, useNewAppBit } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
@@ -45,7 +45,7 @@ function SetupAppCustom() {
   const stackNav = useStackNavigator()
 
   const flow = useCreateFlow({
-    initialData: {
+    data: {
       selectedTemplate: null,
     },
   })
@@ -123,7 +123,7 @@ function SetupAppCustom() {
               const name = form.getValue('name')
               const identifier = form.getValue('identifier')
 
-              banner.show({
+              banner.set({
                 message: `Creating app ${name} with template ${template}`,
               })
 
@@ -134,7 +134,7 @@ function SetupAppCustom() {
               })
 
               if (res.type === 'error') {
-                banner.show({
+                banner.set({
                   type: 'error',
                   message: res.message,
                 })
@@ -175,7 +175,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   )
 
   const flow = useCreateFlow({
-    initialData: {
+    data: {
       selectedAppIdentifier: null,
     },
   })
@@ -228,10 +228,10 @@ export function SetupAppHome(props: SetupAppHomeProps) {
 }
 
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
-  const banner = useBanner()
   const flow = useFlow()
   const stackNav = useStackNavigator()
   const definition = useAppDefinition(flow.data.selectedAppIdentifier)
+  const installApp = useInstallApp()
   return (
     <Scale size="lg">
       <Toolbar>
@@ -264,7 +264,7 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
           alt="confirm"
           onClick={async () => {
             const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-            installApp(definition, newAppStore.app, banner)
+            installApp(definition, newAppStore.app)
           }}
           icon="chevron-right"
         >

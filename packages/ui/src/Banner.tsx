@@ -102,7 +102,7 @@ export const ProvideBanner = memo(
               {bannerStore.banners.map(banner => {
                 const id = JSON.stringify(banner)
                 return (
-                  <FlipAnimateItem id={id} key={id}>
+                  <FlipAnimateItem id={id} key={id} animateKey={banner.type}>
                     <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
                   </FlipAnimateItem>
                 )
@@ -149,6 +149,9 @@ export function useBanner(): BannerHandle {
   }
 }
 
+/**
+ * For showing many banners
+ */
 export function useBanners() {
   const bannerStore = BannerManager.useStore()
   return {
@@ -177,7 +180,8 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
       marginTop={0}
       overflow="hidden"
       elevation={3}
-      background={theme => theme.background}
+      alignSelf="flex-end"
+      background={useCallback(theme => theme.background, [])}
       {...rest}
     >
       <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>

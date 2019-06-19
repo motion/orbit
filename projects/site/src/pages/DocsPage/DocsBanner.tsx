@@ -14,7 +14,6 @@ export let Basic = () => {
         <Button
           alt="info"
           onClick={() => {
-            console.log('call with info')
             banner.set({
               message: `I don't have a title`,
               type: 'info',

@@ -1,46 +1,41 @@
-import { createStoreContext, useStore } from '@o/use-store'
-import React, { memo, useLayoutEffect } from 'react'
-import { Flipped, Flipper } from 'react-flip-toolkit'
+import { useForceUpdate } from '@o/use-store'
+import React, { createContext, memo, useContext, useLayoutEffect } from 'react'
+import { Flipped, FlippedProps, Flipper } from 'react-flip-toolkit'
 
-// lets you do flip animations in any type of deep tree
-
-class FlipAnimateStore {
-  key = 0
-  items = {}
-  next = {}
-  rerender = () => {
-    this.items = { ...this.next }
-    this.key = Math.random()
-  }
-}
-
-const FlipAnimateStoreContext = createStoreContext(FlipAnimateStore)
+const FlipContext = createContext<Function>(null)
 
 export const FlipAnimate = memo((props: { children: any }) => {
-  const flipAnimateStore = useStore(FlipAnimateStore)
+  const update = useForceUpdate()
   return (
-    <FlipAnimateStoreContext.SimpleProvider value={flipAnimateStore}>
-      <Flipper flipKey={flipAnimateStore.key}>{props.children}</Flipper>
-    </FlipAnimateStoreContext.SimpleProvider>
+    <FlipContext.Provider value={update}>
+      <Flipper spring="gentle" flipKey={`${Math.random()}`}>
+        {props.children}
+      </Flipper>
+    </FlipContext.Provider>
   )
 })
 
 // FlipAnimateItem
 
-type FlipAnimateItemProps = {
-  visible?: boolean
+type FlipAnimateItemProps = FlippedProps & {
+  animateKey?: any
   id: string
   children: React.ReactNode
 }
 
-export const FlipAnimateItem = memo(({ visible = true, id, children }: FlipAnimateItemProps) => {
-  const flipAnimateStore = FlipAnimateStoreContext.useStore()
-  const cleanId = id.replace(/[^a-z0-9]+/gi, '')
+export const FlipAnimateItem = memo(
+  ({ animateKey, id, children, ...flippedProps }: FlipAnimateItemProps) => {
+    const update = useContext(FlipContext)
+    const cleanId = id.replace(/[^a-z0-9]+/gi, '')
 
-  useLayoutEffect(() => {
-    flipAnimateStore.next[cleanId] = visible
-    flipAnimateStore.rerender()
-  }, [visible])
+    useLayoutEffect(() => {
+      update()
+    }, [animateKey])
 
-  return <Flipped flipId={cleanId}>{children}</Flipped>
-})
+    return (
+      <Flipped flipId={cleanId} {...flippedProps}>
+        {children}
+      </Flipped>
+    )
+  },
+)

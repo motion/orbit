@@ -1,4 +1,5 @@
 import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
+import { newEmptyAppBit } from '@o/helpers'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
@@ -20,21 +21,6 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     if (!values.token) {
       throw new Error(`No token returned ${JSON.stringify(values)}`)
-    }
-
-    const space = await getActiveSpace()
-    let app: AppBit = {
-      target: 'app',
-      name: '',
-      spaces: [space],
-      spaceId: space.id,
-      identifier: type,
-      token: values.token,
-      data: {
-        values: {
-          oauth: { ...values },
-        },
-      },
     }
 
     log.info(`Downloading and loading app definition`)
@@ -59,7 +45,28 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     log.info(`Call finishAuth callback on app definition`)
 
-    app = await required.definition.finishAuth(app, values, OAuthStrategies[type].config)
+    const space = await getActiveSpace()
+    let app: AppBit = {
+      ...newEmptyAppBit(required.definition),
+      spaces: [space],
+      spaceId: space.id,
+      token: values.token,
+      data: {
+        values: {
+          oauth: { ...values },
+        },
+      },
+    }
+
+    if (required.definition.finishAuth) {
+      app = await required.definition.finishAuth(app, values, OAuthStrategies[type].config)
+      if (!app || typeof app !== 'object') {
+        return {
+          type: 'error' as const,
+          message: `App.finishAuth does not return an AppBit`,
+        }
+      }
+    }
 
     await getRepository(AppEntity).save(app)
 

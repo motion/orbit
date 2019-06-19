@@ -8,6 +8,16 @@ import { requireAppDefinition } from './requireAppDefinition'
 
 export async function downloadAppDefinition(options: { directory: string; packageId: string }) {
   const { directory, packageId } = options
+
+  // if exists already just return it
+  const existing = await requireAppDefinition(options)
+  if (existing.type === 'success') {
+    return {
+      type: 'success' as const,
+      identifier: existing.definition.id,
+    }
+  }
+
   await ensureDir(directory)
 
   const packageJsonPath = join(directory, 'package.json')

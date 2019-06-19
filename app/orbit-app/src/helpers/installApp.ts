@@ -1,27 +1,11 @@
 import { command, loadOne, save } from '@o/bridge'
+import { newEmptyAppBit } from '@o/helpers'
 import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
 import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
 import { BannerHandle, useBanner } from '@o/ui'
 import { useCallback } from 'react'
 
 import { newAppStore } from '../om/stores'
-
-export function newEmptyAppBit(definition: AppDefinition): AppBit {
-  if (!definition) {
-    debugger
-  }
-  return {
-    target: 'app',
-    identifier: definition.id,
-    itemType: definition.itemType,
-    icon: definition.icon,
-    name: definition.name,
-    tabDisplay: 'plain',
-    colors: ['#000', '#111'],
-    token: '',
-    data: {},
-  }
-}
 
 export function useNewAppBit(identifier: string) {
   const definition = useAppDefinition(identifier)
@@ -72,6 +56,8 @@ async function installApp(
       alert(`Error authenticating app: ${res.message}`)
       return res
     }
+
+    banner.set({ message: `Authenticated!` })
     return res
   }
 

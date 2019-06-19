@@ -13,6 +13,7 @@
     { "path": "../screen" },
     { "path": "../oracle" },
     { "path": "../config" },
+    { "path": "../helpers" },
     { "path": "../cli" },
     { "path": "../build-server" },
     { "path": "../../apps" },

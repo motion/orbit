@@ -1,0 +1,13 @@
+{
+  "name": "@o/helpers",
+  "version": "2.5.2",
+  "main": "_/helpers.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@o/models": "*"
+  }
+}

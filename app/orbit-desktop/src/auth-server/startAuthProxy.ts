@@ -37,6 +37,7 @@ export function startAuthProxy() {
     let errors = []
 
     // run proxy server in secure sub-process
+    console.log('home', process.env['HOME'])
     sudoer
       .spawn(Config.paths.nodeBinary, command.split(' '), {
         env: {

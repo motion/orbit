@@ -380,11 +380,14 @@ export class OrbitDesktopRoot {
           }
 
           // wait for finish from finishAuth()
-          const finish = new Promise(res => res)
+          let finish
+          const promise = new Promise(res => {
+            finish = res
+          })
 
           FinishAuthQueue.set(authKey, { identifier, finish })
 
-          return await finish
+          return await promise
         }),
 
         resolveCommand(SetupProxyCommand, async () => {

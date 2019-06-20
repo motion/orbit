@@ -16,7 +16,7 @@ export const FinishAuthQueue = new Map<
   string,
   {
     identifier: string
-    finish: Function
+    finish: (res: boolean) => any
   }
 >()
 
@@ -93,19 +93,15 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     // finish in the queue
     log.info(`Call back to command`)
-
-    if (cb) {
-      FinishAuthQueue.delete(type)
-      cb(true)
-    } else {
-      throw new Error(`No callback found for type ${type}`)
-    }
+    FinishAuthQueue.delete(type)
+    info.finish(true)
   } catch (err) {
     log.error(`Error in finishAuth: ${err.message} ${err.stack}`)
-    const cb = FinishAuthQueue.get(type)
-    if (cb) {
+
+    const info = FinishAuthQueue.get(type)
+    if (info) {
       FinishAuthQueue.delete(type)
-      cb(false)
+      info.finish(false)
     } else {
       log.info(`And no callback either..`)
     }

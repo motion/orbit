@@ -10,21 +10,24 @@ reaction(
   () => orbitAppsManager.nodeAppDefinitions,
   nodeDefinitions => {
     console.log('i see nodeDefinitions, update syncers', nodeDefinitions)
+    for (const identifier in nodeDefinitions) {
+      const definition = nodeDefinitions[identifier]
+      const workers = definition.workers || []
+      for (const worker of workers) {
+        Syncers.push(
+          new Syncer({
+            id: worker.id,
+            name: worker.name,
+            appIdentifier: worker.id,
+            runner: worker.runner,
+            interval: worker.interval,
+          }),
+        )
+      }
+    }
   },
 )
 
 export const syncers: WorkerOptions[] = []
 
 export const Syncers = []
-
-syncers.forEach(app => {
-  Syncers.push(
-    new Syncer({
-      id: app.id,
-      name: app.name,
-      appIdentifier: app.id,
-      runner: app.runner,
-      interval: app.interval,
-    }),
-  )
-})

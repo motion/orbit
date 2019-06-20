@@ -139,6 +139,9 @@ export async function main() {
       name: 'syncers',
       inspectPort: 9003,
       isNode: true,
+      env: {
+        RUN_MEDIATOR: 'true',
+      },
     })
   } else {
     console.log(`Workers disabled`)

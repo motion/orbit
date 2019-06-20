@@ -1,7 +1,7 @@
+import { loadOne } from '@o/bridge'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppEntity, AppForceSyncCommand } from '@o/models'
-import { getRepository } from 'typeorm'
+import { AppForceSyncCommand, AppModel } from '@o/models'
 
 import { Syncer } from '../Syncer'
 import { Syncers } from '../Syncers'
@@ -9,7 +9,7 @@ import { Syncers } from '../Syncers'
 const log = new Logger('command:app-force-sync')
 
 export const AppForceSyncResolver = resolveCommand(AppForceSyncCommand, async ({ appId }) => {
-  const app = await getRepository(AppEntity).findOne({ where: { id: appId } })
+  const app = await loadOne(AppModel, { args: { where: { id: appId } } })
   if (!app) {
     log.error('cannot find requested app', { appId })
     return

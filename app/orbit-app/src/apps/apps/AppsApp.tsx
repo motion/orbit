@@ -199,7 +199,6 @@ function AppSettings(props: { appId: number }) {
   return (
     <Section
       flex={1}
-      debug
       titleBorder
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space

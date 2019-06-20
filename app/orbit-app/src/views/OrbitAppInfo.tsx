@@ -16,7 +16,7 @@ export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
   const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
 
   if (!appId) {
-    return null
+    return <>no app id</>
   }
 
   if (bitsCount !== 0) {

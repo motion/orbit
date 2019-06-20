@@ -4,15 +4,7 @@ import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import {
-  loadCount,
-  loadMany,
-  loadOne,
-  observeCount,
-  observeMany,
-  observeOne,
-  save,
-} from './bridgeCommands'
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
 type UpdateFn<A> = (draft: A) => A | void
@@ -143,10 +135,23 @@ function use<ModelType, Args>(
       if (!cache) {
         let resolve
         let resolved = false
-        const promise = new Promise(res => {
+        const promise = new Promise((res, rej) => {
           yallReadyKnow.current = true
+
+          // timeout
+          let tm = setTimeout(() => {
+            console.log('timed out foo')
+            rej(`Query timed out ${JSON.stringify(query)}`)
+          }, 1000)
+
           subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
-            if (!isDefined(next)) return
+            clearTimeout(tm)
+            if (!isDefined(next)) {
+              // i'm seeing this on useJobs() where none exist
+              // so lets assume this means "emtpy" and return default value
+              next = defaultValues[type]
+              console.log('setting default value', next)
+            }
             if (!resolved) {
               valueRef.current = next
               cache.current = next

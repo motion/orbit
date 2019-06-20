@@ -359,7 +359,7 @@ export class OrbitDesktopRoot {
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
-        resolveCommand(AuthAppCommand, async ({ authKey }) => {
+        resolveCommand(AuthAppCommand, async ({ authKey, identifier }) => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
 
           if (!success) {
@@ -380,9 +380,10 @@ export class OrbitDesktopRoot {
           }
 
           // wait for finish from finishAuth()
-          // TODO orTimeout?
           const finish = new Promise(res => res)
-          FinishAuthQueue.set(authKey, finish)
+
+          FinishAuthQueue.set(authKey, { identifier, finish })
+
           return await finish
         }),
 

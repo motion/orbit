@@ -1,4 +1,4 @@
-import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
+import { downloadAppDefinition, requireAppDefinition, getPackageId } from '@o/cli'
 import { newEmptyAppBit } from '@o/helpers'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
@@ -7,9 +7,18 @@ import { getRepository } from 'typeorm'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
+import { getCurrentWorkspace } from '../resolvers/AppOpenWorkspaceResolver'
 
 const log = new Logger('finishAuth')
-export const FinishAuthQueue = new Map()
+
+// maps authKey to information needed for finishing creating AppBit
+export const FinishAuthQueue = new Map<
+  string,
+  {
+    identifier: string
+    finish: Function
+  }
+>()
 
 export const finishAuth = async (type: string, values: OauthValues) => {
   try {
@@ -23,11 +32,23 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       throw new Error(`No token returned ${JSON.stringify(values)}`)
     }
 
-    log.info(`Downloading and loading app definition`)
+    const info = FinishAuthQueue.get(type)
+
+    if (!info) {
+      return {
+        type: 'error' as const,
+        message: `No information found for this app, an error in Orbit occured for authKey: ${type}`,
+      }
+    }
+
+    const packageId = await getPackageId(info.identifier)
+    const { directory } = await getCurrentWorkspace()
+
+    log.info(`Downloading (if necessary) and loading app definition`)
 
     const downloaded = await downloadAppDefinition({
-      packageId: '',
-      directory: '',
+      packageId,
+      directory,
     })
 
     if (downloaded.type === 'error') {
@@ -35,8 +56,8 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     }
 
     const required = await requireAppDefinition({
-      packageId: '',
-      directory: '',
+      packageId,
+      directory,
     })
 
     if (required.type === 'error') {
@@ -73,7 +94,6 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     // finish in the queue
     log.info(`Call back to command`)
 
-    const cb = FinishAuthQueue.get(type)
     if (cb) {
       FinishAuthQueue.delete(type)
       cb(true)

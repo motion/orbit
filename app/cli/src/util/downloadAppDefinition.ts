@@ -9,6 +9,13 @@ import { requireAppDefinition } from './requireAppDefinition'
 export async function downloadAppDefinition(options: { directory: string; packageId: string }) {
   const { directory, packageId } = options
 
+  if (!directory || !packageId) {
+    return {
+      type: 'error' as const,
+      message: `No directory/packageId given`,
+    }
+  }
+
   // if exists already just return it
   const existing = await requireAppDefinition(options)
   if (existing.type === 'success') {

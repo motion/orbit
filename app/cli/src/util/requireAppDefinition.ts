@@ -10,7 +10,22 @@ export async function requireAppDefinition({
   directory: string
   packageId: string
 }) {
+  if (!directory || !packageId) {
+    return {
+      type: 'error' as const,
+      message: `No directory/packageId given`,
+    }
+  }
+
   const packageRoot = findPackage({ packageId, directory })
+
+  if (!packageRoot) {
+    return {
+      type: 'error' as const,
+      message: `No package found (packageId: ${packageId}, directory: ${directory})`,
+    }
+  }
+
   reporter.info(`Importing app definition at appRoot ${packageRoot}`)
 
   // try web, then node, for now...

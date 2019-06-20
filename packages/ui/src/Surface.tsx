@@ -531,9 +531,10 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   const marginStyle = getMargin(props)
 
   let styles: CSSPropertySet = {}
-  let boxShadow = props.boxShadow || theme.boxShadow || []
+  let boxShadow = props.boxShadow || theme.boxShadow || null
 
-  // we should only ever get this in really weird error cases (i'm seeing it during a componentDidCatch)
+  // we should only ever get this in really weird error cases
+  // (i've seen in two odd cases, once in componentDidCatch)
   if (!themeStyle) {
     debugger
     return null
@@ -547,7 +548,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   if (borderColor && !props.chromeless) {
     if (props.borderPosition === 'inside') {
       // inside
-      boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor]]
+      boxShadow = [...(boxShadow || []), ['inset', 0, 0, 0, borderWidth, borderColor]]
       styles.borderWidth = 0
     } else {
       // outside
@@ -556,7 +557,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...boxShadow, getElevation(props).boxShadow]
+    boxShadow = [...(boxShadow || []), getElevation(props).boxShadow]
   }
 
   return {
@@ -571,16 +572,17 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     ...(props.circular && {
       width: props.height,
     }),
+    ...styles,
+    fontSize,
+    lineHeight,
+    ...marginStyle,
+    ...propStyles,
     '&:hover': props.active
       ? null
       : {
           ...(!props.chromeless && themeStyle['&:hover']),
           ...propStyles['&:hover'],
         },
-    ...styles,
-    fontSize,
-    lineHeight,
-    ...marginStyle,
   }
 })
 

@@ -1,31 +1,6 @@
-import {
-  App,
-  AppDefinition,
-  AppIcon,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  isDataDefinition,
-  removeApp,
-  useActiveAppsWithDefinition,
-  useActiveDataAppsWithDefinition,
-  useAppDefinitions,
-  useAppWithDefinition,
-  CurrentAppBitContext,
-} from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import {
-  Button,
-  Col,
-  Icon,
-  List,
-  ListItemProps,
-  Section,
-  SubSection,
-  SubTitle,
-  useAsync,
-  useAsyncFn,
-} from '@o/ui'
+import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
 import React from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -224,6 +199,7 @@ function AppSettings(props: { appId: number }) {
   return (
     <Section
       flex={1}
+      debug
       titleBorder
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
@@ -241,7 +217,7 @@ function AppSettings(props: { appId: number }) {
       {!!definition.app && <AppsMainNew customizeColor app={app} />}
 
       {!!definition.settings && (
-        <SubSection minHeight={150} title="Settings">
+        <SubSection minHeight={150} title="Settings" padInner={0}>
           <AppMainView identifier={definition.id} id={props.appId} viewType="settings" />
         </SubSection>
       )}

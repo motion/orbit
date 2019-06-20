@@ -10,7 +10,7 @@ export const SVG = forwardRef<SVGElement, any>(function SVG(
 ) {
   const [styles, rest] = partitionObject(props, x => validCSSAttr[x])
   if (typeof svg !== 'string') {
-    debugger
+    throw new Error(`Invalid svg given: ${svg}`)
   }
   return (
     <SVGInline

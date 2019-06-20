@@ -337,6 +337,10 @@ function addDynamicStyles(
   const dynStyles = {}
   let classNames: string[] = []
 
+  if (props['debug']) {
+    debugger
+  }
+
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
   // note that means the topmost `mergeStyles` will apply as most important

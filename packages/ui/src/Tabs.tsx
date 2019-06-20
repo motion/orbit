@@ -157,7 +157,6 @@ function TabsControlled({
                 }
               : undefined
           }
-          debug={label === 'Tree To Inspector' ? true : false}
           icon={icon}
         >
           {label}

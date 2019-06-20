@@ -1,4 +1,4 @@
-import { SettingManageRow, useAppState, useWhiteList, useAppBit } from '@o/kit'
+import { SettingManageRow, useAppBit, useAppState, useWhiteList } from '@o/kit'
 import { DataType, Table, View } from '@o/ui'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -35,8 +35,6 @@ export function SlackSettings() {
     }
   })
 
-  console.log('items', items)
-
   return (
     <>
       <SettingManageRow app={app} whitelist={whitelist} />
@@ -46,7 +44,6 @@ export function SlackSettings() {
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <Table
-          maxHeight={800}
           columns={{
             name: 'Name',
             topic: 'Topic',

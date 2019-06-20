@@ -1,6 +1,19 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, updateWorkspacePackageIds } from '@o/cli'
+import {
+  getIdentifierFromPackageId,
+  getIdentifierToPackageId,
+  updateWorkspacePackageIds,
+} from '@o/cli'
 import { Logger } from '@o/logger'
-import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import {
+  AppBit,
+  AppDefinition,
+  AppEntity,
+  AppMeta,
+  Space,
+  SpaceEntity,
+  User,
+  UserEntity,
+} from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
@@ -98,7 +111,7 @@ export class OrbitAppsManager {
         if (identifier !== null) {
           this.appMeta[identifier] = meta
         } else {
-          log.info('no identifier found')
+          log.error(`no identifier found for ${meta.packageId}`)
         }
       }
     },

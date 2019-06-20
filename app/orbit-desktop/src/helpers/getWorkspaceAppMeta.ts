@@ -25,29 +25,36 @@ export async function getWorkspaceAppMeta(space: Space): Promise<AppMeta[]> {
 
   log.info('found packages', Object.keys(packages).join(', '))
 
-  return await Promise.all(
+  const response = await Promise.all(
     Object.keys(packages).map(async packageId => {
-      const directory = await findNodeModuleDir(spaceDir, packageId)
-      const packageJsonPath = join(directory, 'package.json')
-      let packageJson = null
-      if (!(await pathExists(packageJsonPath))) {
-        log.error(`No package.json for app ${packageId}`)
-      } else {
-        packageJson = await readJSON(packageJsonPath)
-      }
-      const apiInfoPath = join(directory, 'dist', 'api.json')
-      let apiInfo = null
-      if (await pathExists(apiInfoPath)) {
-        apiInfo = await readJSON(apiInfoPath)
-      }
-      return {
-        packageId,
-        packageJson,
-        directory,
-        apiInfo,
+      try {
+        const directory = await findNodeModuleDir(spaceDir, packageId)
+        const packageJsonPath = join(directory, 'package.json')
+        let packageJson = null
+        if (!(await pathExists(packageJsonPath))) {
+          log.error(`No package.json for app ${packageId}`)
+        } else {
+          packageJson = await readJSON(packageJsonPath)
+        }
+        const apiInfoPath = join(directory, 'dist', 'api.json')
+        let apiInfo = null
+        if (await pathExists(apiInfoPath)) {
+          apiInfo = await readJSON(apiInfoPath)
+        }
+        return {
+          packageId,
+          packageJson,
+          directory,
+          apiInfo,
+        }
+      } catch (err) {
+        log.error(`Error loading appMeta`, err.message, err.stack)
+        return null
       }
     }),
   )
+
+  return response.filter(Boolean)
 }
 
 // TODO this fn shared by cli

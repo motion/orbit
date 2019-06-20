@@ -44,7 +44,14 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     const packageId = await getPackageId(info.identifier)
     const { directory } = await getCurrentWorkspace()
 
-    log.info(`Downloading (if necessary) and loading app definition`)
+    if (!packageId || !directory) {
+      return {
+        type: 'error' as const,
+        message: `No packageId or directory, error in Orbit: (${packageId}, ${directory})`,
+      }
+    }
+
+    log.info(`Downloading (if necessary) and loading app definition (packageId: ${packageId})`)
 
     const downloaded = await downloadAppDefinition({
       packageId,

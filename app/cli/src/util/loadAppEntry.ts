@@ -16,7 +16,7 @@ export async function loadAppEntry(
 ): Promise<AppDefinition | null> {
   try {
     const path = join(directory, 'dist', entryFileNames[entryType])
-    reporter.info(`loadAppEntry path ${path}`)
+    reporter.info(`loadAppEntry type ${entryType} path ${path}`)
     if (await pathExists(path)) {
       return require(path).default
     }

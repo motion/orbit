@@ -65,6 +65,8 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     const required = await requireAppDefinition({
       packageId,
       directory,
+      // since were running it here in node
+      types: ['node'],
     })
 
     if (required.type === 'error') {

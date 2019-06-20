@@ -1,8 +1,20 @@
-import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
+import {
+  commandInstall,
+  getPackageId,
+  requireAppDefinition,
+  updateWorkspacePackageIds,
+} from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppDefinitionSetupVerifyCommand, AppInstallToWorkspaceCommand, AppStatusId, GetAppStoreAppDefinitionCommand, SpaceEntity, UserEntity } from '@o/models'
+import {
+  AppDefinitionSetupVerifyCommand,
+  AppInstallToWorkspaceCommand,
+  AppStatusId,
+  GetAppStoreAppDefinitionCommand,
+  SpaceEntity,
+  UserEntity,
+} from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -110,7 +122,11 @@ async function getAppDefinitionOrDownloadTemporary(identifier: string) {
 
   // existing definition
   if (packageId) {
-    return await requireAppDefinition({ packageId, directory })
+    return await requireAppDefinition({
+      packageId,
+      directory,
+      types: ['node', 'web'],
+    })
   }
 
   // donwload temporary

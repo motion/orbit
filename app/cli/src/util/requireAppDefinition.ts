@@ -2,13 +2,16 @@ import { reporter } from '../reporter'
 import { findPackage } from './findPackage'
 import { setIdentifierToPackageId } from './getPackageId'
 import { loadAppEntry } from './loadAppEntry'
+import { AppDefinition } from '@o/models'
 
 export async function requireAppDefinition({
   directory,
   packageId,
+  types,
 }: {
   directory: string
   packageId: string
+  types: ('node' | 'web')[]
 }) {
   if (!directory || !packageId) {
     return {
@@ -28,10 +31,11 @@ export async function requireAppDefinition({
 
   reporter.info(`Importing app definition at appRoot ${packageRoot}`)
 
-  // try web, then node, for now...
-  let definition = await loadAppEntry(packageRoot, 'web')
-  if (!definition) {
-    definition = await loadAppEntry(packageRoot, 'node')
+  // can specify preferred definition
+  let definition: AppDefinition | null = null
+  for (const type of types) {
+    definition = await loadAppEntry(packageRoot, type)
+    if (definition) break
   }
 
   if (definition) {

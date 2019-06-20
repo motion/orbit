@@ -17,7 +17,10 @@ export async function downloadAppDefinition(options: { directory: string; packag
   }
 
   // if exists already just return it
-  const existing = await requireAppDefinition(options)
+  const existing = await requireAppDefinition({
+    ...options,
+    types: ['node', 'web'],
+  })
   if (existing.type === 'success') {
     return {
       type: 'success' as const,

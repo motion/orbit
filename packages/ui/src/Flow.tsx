@@ -76,6 +76,19 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
   )
 }
 
+const tabButtonProps = {
+  background: 'transparent',
+  borderWidth: 0,
+  glint: false,
+  borderBottom: [3, 'transparent'],
+  color: theme => theme.background,
+  borderColor: (theme, props) => (props.active ? theme.borderColor : null),
+  opacity: (_, props) => (props.active ? 1 : 0.4),
+  sizeRadius: 0,
+  sizeHeight: 1.2,
+  sizePadding: 1.5,
+}
+
 export const DefaultFlowLayout = (props: FlowLayoutProps) => {
   const { Toolbar, children, index, step, steps, height } = props
   return (
@@ -88,19 +101,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
       flex={1}
       titlePad={['lg', true, false]}
       belowTitle={
-        <SurfacePassProps
-          background="transparent"
-          borderWidth={0}
-          glint={false}
-          borderBottom={[3, 'transparent']}
-          color={theme => theme.background}
-          colorHover="red"
-          borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
-          sizeRadius={0}
-          sizeHeight={1.2}
-          sizePadding={1.5}
-          opacity={(_, props) => (props.active ? 1 : 0.4)}
-        >
+        <SurfacePassProps {...tabButtonProps}>
           <Row>
             {steps.map((stp, stepIndex) => (
               <Button

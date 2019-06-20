@@ -14,7 +14,6 @@ export function useFilteredList({
   filterKey = 'title',
   ...props
 }: UseFilterProps<ListItemSimpleProps>) {
-  console.log('ok', props.search)
   const items = props.items || []
   const searchStore = useSearch()
   const initialQuery = useRef(true)

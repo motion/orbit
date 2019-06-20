@@ -40,6 +40,7 @@ import {
   StateEntity,
   AppStatusModel,
 } from '@o/models'
+import { OrbitAppsManager } from '@o/libs-node'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
@@ -76,7 +77,6 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
-import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'

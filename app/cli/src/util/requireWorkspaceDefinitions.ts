@@ -1,7 +1,8 @@
-import { getWorkspaceAppPaths, requireAppDefinition } from '@o/cli'
 import { AppDefinition } from '@o/models'
 
 import { reporter } from '../reporter'
+import { getWorkspaceAppPaths } from './getWorkspaceAppPaths'
+import { requireAppDefinition } from './requireAppDefinition'
 
 export async function requireWorkspaceDefinitions(
   directory: string,

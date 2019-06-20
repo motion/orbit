@@ -1,3 +1,4 @@
+import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
@@ -6,7 +7,6 @@ import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { OrbitAppsManager } from '../managers/OrbitAppsManager'
 import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
 
 const log = new Logger('AppOpenWorkspaceResolver')

@@ -1,9 +1,8 @@
+import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppEntity, CallAppBitApiMethodCommand } from '@o/models'
 import { getRepository } from 'typeorm'
-
-import { OrbitAppsManager } from '../managers/OrbitAppsManager'
 
 const log = new Logger('command:call-app-bit-api-method')
 

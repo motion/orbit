@@ -135,13 +135,13 @@ function use<ModelType, Args>(
       if (!cache) {
         let resolve
         let resolved = false
-        const promise = new Promise((res, rej) => {
+        const promise = new Promise(res => {
           yallReadyKnow.current = true
 
           // timeout
           let tm = setTimeout(() => {
-            console.log('timed out foo')
-            rej(`Query timed out ${JSON.stringify(query)}`)
+            console.error(`Query timed out ${JSON.stringify(query)}`)
+            res(defaultValues[type])
           }, 1000)
 
           subscription.current = runUseQuery(model, type, query, observeEnabled, next => {

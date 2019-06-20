@@ -67,7 +67,7 @@
     "@types/react": "16.8.18",
     "@types/react-dom": "16.8.4",
     "babel-eslint": "^8.2.3",
-    "electron": "6.0.0-beta.6",
+    "electron": "6.0.0-beta.9",
     "eslint": "5.16.0",
     "eslint-plugin-react-hooks": "1.6.0",
     "eslint-config-prettier": "4.1.0",

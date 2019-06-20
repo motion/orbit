@@ -11,7 +11,7 @@ import { useCallback } from 'react'
 
 export type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
-export function useUserState<A>(id: string | false, defaultState?: A): ScopedState<A> {
+export function useUserState<A>(id: string | false, defaultState: A): ScopedState<A> {
   return usePersistedScopedState('user', id, defaultState)
 }
 

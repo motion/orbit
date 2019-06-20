@@ -163,7 +163,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={belowTitle || <Space size={defaultTitlePadAmount[2] || spaceSizePx / 2} />}
+            below={belowTitle || <Space size={defaultTitlePadAmount[2] || spaceSizePx} />}
             icon={icon}
             userSelect="none"
             space={spaceSize}

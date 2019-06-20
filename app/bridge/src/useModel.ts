@@ -4,7 +4,15 @@ import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
+import {
+  loadCount,
+  loadMany,
+  loadOne,
+  observeCount,
+  observeMany,
+  observeOne,
+  save,
+} from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
 type UpdateFn<A> = (draft: A) => A | void
@@ -138,7 +146,6 @@ function use<ModelType, Args>(
         const promise = new Promise(res => {
           yallReadyKnow.current = true
           subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
-            // TODO why is this coming back undefined
             if (!isDefined(next)) return
             if (!resolved) {
               valueRef.current = next

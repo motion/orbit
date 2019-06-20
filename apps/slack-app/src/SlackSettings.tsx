@@ -1,4 +1,4 @@
-import { SettingManageRow, useApp, useAppState, useWhiteList } from '@o/kit'
+import { SettingManageRow, useAppState, useWhiteList, useAppBit } from '@o/kit'
 import { DataType, Table, View } from '@o/ui'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -8,8 +8,8 @@ import { SlackLoader } from './SlackLoader'
 
 export function SlackSettings() {
   // setup state
-  const app = useApp()
-  const [channels, setChannels] = useAppState('channels')
+  const [app] = useAppBit()
+  const [channels, setChannels] = useAppState('channels', [])
   const [, setHighlightedItems] = useState([])
   const whitelist = useWhiteList(`${app.id}-whitelist`, {
     getAll: () => (channels || []).map(channel => channel.id),
@@ -21,7 +21,6 @@ export function SlackSettings() {
     // to make sure we always have a fresh channels we load them from API
     const loader = new SlackLoader(app)
     loader.loadChannels().then(freshApiChannels => {
-      console.log('loaded channels')
       setChannels(() => orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc']))
     })
   }, [app && app.token])

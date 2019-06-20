@@ -1,6 +1,6 @@
 import { command, loadOne, save } from '@o/bridge'
-import { newEmptyAppBit } from '@o/helpers'
 import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
+import { newEmptyAppBit } from '@o/libs'
 import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
 import { BannerHandle, useBanner } from '@o/ui'
 import { useCallback } from 'react'

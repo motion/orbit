@@ -1,5 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
+import { OrbitAppsManager } from '@o/libs-node'
 import {
   MediatorClient,
   MediatorServer,
@@ -23,10 +24,14 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
   mediatorClient: MediatorClient
 
+  orbitAppsManager: OrbitAppsManager
+
   async start() {
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
+
+    this.orbitAppsManager = new OrbitAppsManager()
 
     this.mediatorClient = new MediatorClient({
       transports: [

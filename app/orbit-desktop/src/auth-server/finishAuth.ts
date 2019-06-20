@@ -1,13 +1,13 @@
-import { downloadAppDefinition, requireAppDefinition, getPackageId } from '@o/cli'
-import { newEmptyAppBit } from '@o/helpers'
+import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/cli'
+import { newEmptyAppBit } from '@o/libs'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
 import { getActiveSpace } from '../helpers/getActiveSpace'
+import { getCurrentWorkspace } from '../resolvers/AppOpenWorkspaceResolver'
 import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
-import { getCurrentWorkspace } from '../resolvers/AppOpenWorkspaceResolver'
 
 const log = new Logger('finishAuth')
 

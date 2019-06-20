@@ -138,13 +138,7 @@ function use<ModelType, Args>(
         const promise = new Promise(res => {
           yallReadyKnow.current = true
 
-          // timeout
-          let tm = setTimeout(() => {
-            console.error(`Query timed out ${JSON.stringify(query)}`)
-            res(defaultValues[type])
-          }, 1000)
-
-          subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
+          const finish = next => {
             clearTimeout(tm)
             if (!isDefined(next)) {
               // i'm seeing this on useJobs() where none exist
@@ -160,7 +154,15 @@ function use<ModelType, Args>(
               }, 50)
               res()
             }
-          })
+          }
+
+          // timeout
+          let tm = setTimeout(() => {
+            console.error(`Query timed out ${JSON.stringify(query)}`)
+            finish(defaultValues[type])
+          }, 1000)
+
+          subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })
         cache = PromiseCache[key] = {
           read: promise,

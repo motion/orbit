@@ -7,7 +7,7 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import { Entities, JobEntity, JobModel, AppModel } from '@o/models'
+import { Entities, JobEntity, JobModel, AppModel, AppEntity } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -104,7 +104,10 @@ export class OrbitSyncersRoot {
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
-        ...typeormResolvers(this.connection, [{ entity: JobEntity, models: [JobModel] }]),
+        ...typeormResolvers(this.connection, [
+          { entity: AppEntity, models: [AppModel] },
+          { entity: JobEntity, models: [JobModel] },
+        ]),
         AppForceSyncResolver,
         AppForceCancelResolver,
       ],

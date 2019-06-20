@@ -148,7 +148,11 @@ async function getAppDefinitionOrDownloadTemporary(identifier: string) {
   }
 
   // run definition
-  return await requireAppDefinition({ packageId, directory: tempPackageDir })
+  return await requireAppDefinition({
+    packageId,
+    directory: tempPackageDir,
+    types: ['node', 'web'],
+  })
 }
 
 function resolveGetAppStoreDefinition() {

@@ -19,7 +19,7 @@ export async function downloadAppDefinition(options: { directory: string; packag
   // if exists already just return it
   const existing = await requireAppDefinition({
     ...options,
-    types: ['node', 'web'],
+    types: ['appInfo'],
   })
   if (existing.type === 'success') {
     return {
@@ -60,7 +60,10 @@ export async function downloadAppDefinition(options: { directory: string; packag
     // get app definition
     console.log('got app, need to provide app definition')
 
-    const loadedDef = await requireAppDefinition(options)
+    const loadedDef = await requireAppDefinition({
+      ...options,
+      types: ['appInfo'],
+    })
 
     if (loadedDef.type === 'error') {
       return loadedDef

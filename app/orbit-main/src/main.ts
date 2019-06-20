@@ -140,6 +140,8 @@ export async function main() {
       inspectPort: 9003,
       isNode: true,
     })
+  } else {
+    console.log(`Workers disabled`)
   }
 
   console.log('Started everything!')

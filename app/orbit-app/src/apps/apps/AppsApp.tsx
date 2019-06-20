@@ -217,7 +217,7 @@ function AppSettings(props: { appId: number }) {
 
       {!!definition.settings && (
         <SubSection minHeight={150} title="Settings" padInner={0}>
-          <AppMainView identifier={definition.id} id={props.appId} viewType="settings" />
+          <AppMainView identifier={definition.id} viewType="settings" />
         </SubSection>
       )}
 

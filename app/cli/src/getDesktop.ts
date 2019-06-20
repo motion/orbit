@@ -123,8 +123,6 @@ export async function runOrbitDesktop(): Promise<boolean> {
         env: {
           HIDE_ON_START: 'true',
           DISABLE_LOGGING: 'true',
-          DISABLE_WORKERS: 'true',
-          DISABLE_MENU: 'true',
           SINGLE_APP_MODE: 'true',
         },
       })

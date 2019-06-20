@@ -18,6 +18,7 @@ export async function insertDevelopmentPostgres() {
     colors: [],
     createdAt: new Date(),
     identifier: 'postgres',
+    icon: '',
     name: 'Postgres on docker',
     tabDisplay: 'plain',
     target: 'app',

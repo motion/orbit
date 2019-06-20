@@ -7,7 +7,7 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import { Entities, JobEntity, JobModel } from '@o/models'
+import { Entities, JobEntity, JobModel, AppModel } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -99,7 +99,7 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [JobModel],
+      models: [AppModel, JobModel],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),

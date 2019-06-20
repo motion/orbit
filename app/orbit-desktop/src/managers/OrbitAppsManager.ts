@@ -45,6 +45,7 @@ export class OrbitAppsManager {
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+  updatePackagesVersion = 0
 
   // for easier debugging
   getIdentifierToPackageId = getIdentifierToPackageId
@@ -82,11 +83,12 @@ export class OrbitAppsManager {
 
   updateAppDefinitionsReaction = react(
     () => [this.activeSpace, this.packageJsonUpdate],
-    ([space]) => {
+    async ([space]) => {
       ensure('space', !!space)
       this.updateAppDefinitions(space)
       // have cli update its cache of packageId => identifier for use installing
-      updateWorkspacePackageIds(space.directory)
+      await updateWorkspacePackageIds(space.directory)
+      this.updatePackagesVersion = Math.random()
     },
   )
 
@@ -100,8 +102,8 @@ export class OrbitAppsManager {
   }
 
   updateAppMeta = react(
-    () => this.nodeAppDefinitions,
-    async appDefs => {
+    () => [this.nodeAppDefinitions, this.updatePackagesVersion],
+    async ([appDefs]) => {
       ensure('appDefs', !!appDefs)
       const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
       ensure('appsMeta', !!appsMeta)

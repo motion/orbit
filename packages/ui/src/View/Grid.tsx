@@ -2,12 +2,12 @@ import { px } from '@o/css'
 import { Base } from 'gloss'
 import { isDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
-import { getSpaceSize, Sizes } from '../Space'
+import { getSpaceSize, Size } from '../Space'
 import { Col, ColProps } from './Col'
 
 export type GridProps = ColProps & {
-  columnSpace?: Sizes
-  rowSpace?: Sizes
+  columnSpace?: Size
+  rowSpace?: Size
   itemMinWidth?: number | string
   itemMaxWidth?: number | string
   itemMinHeight?: number | string

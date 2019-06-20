@@ -1,15 +1,15 @@
 import { isDefined, selectDefined } from '@o/utils'
 
 import { useScale } from '../Scale'
-import { getSpaceSize, Sizes } from '../Space'
+import { getSpaceSize, Sizes, getSpacesSize, Size } from '../Space'
 
 export type SizesObject = {
-  top?: Sizes
-  left?: Sizes
-  bottom?: Sizes
-  right?: Sizes
-  x?: Sizes
-  y?: Sizes
+  top?: Size
+  left?: Size
+  bottom?: Size
+  right?: Size
+  x?: Size
+  y?: Size
 }
 
 // Padded
@@ -72,12 +72,12 @@ export const getSizableValue = (
       return
     }
     if (Array.isArray(value)) {
-      return getSpaceSize(value)
+      return getSpacesSize(value)
     }
     if (typeof value === 'object') {
       const { top, left, right, bottom, x, y } = value
       if (isDefined(x) || isDefined(y)) {
-        return [x, y, x, y].map(getSpaceSize)
+        return [x, y, x, y].map(x => getSpaceSize(x))
       }
       return [top, right, bottom, left].map(side => getSpaceSize(side || 0))
     }

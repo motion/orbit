@@ -2,7 +2,7 @@ import { isDefined } from '@o/utils'
 import { Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 
-import { getSpaceSize, Sizes } from '../Space'
+import { getSpaceSize, Size } from '../Space'
 import { Omit } from '../types'
 import { getPadding } from './pad'
 import { PaddedView } from './PaddedView'
@@ -13,7 +13,7 @@ import { ViewProps } from './View'
 export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
   scrollable?: boolean | 'x' | 'y'
-  parentSpacing?: Sizes
+  parentSpacing?: Size
 }
 
 const isOnlyChildrenDefined = props => {
@@ -97,7 +97,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 //   },
 // }
 
-const ScrollableInner = gloss<any & { parentSpacing: any; isWrapped?: boolean }>(Col, {
+const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }>(Col, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
 }).theme(props => {

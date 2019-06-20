@@ -2,14 +2,14 @@ import { gloss } from 'gloss'
 import React from 'react'
 
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
-import { Sizes } from './Space'
+import { Size } from './Space'
 import { SurfacePassProps } from './Surface'
 import { Omit } from './types'
 import { Row, RowProps } from './View/Row'
 
 export type ToolbarProps = Omit<RowProps, 'size'> & {
   attach?: 'bottom' | 'left' | 'right' | 'top'
-  size?: Sizes
+  size?: Size
 }
 
 const borderElement = {

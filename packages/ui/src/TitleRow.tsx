@@ -7,7 +7,7 @@ import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from
 import { themeable, ThemeableProps } from './helpers/themeable'
 import { Icon } from './Icon'
 import { useScale } from './Scale'
-import { getSpaceSize, Sizes } from './Space'
+import { getSpaceSize, Size } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
 import { Omit } from './types'
@@ -17,7 +17,7 @@ import { Row, RowProps } from './View/Row'
 export type TitleRowSpecificProps = ThemeableProps &
   Partial<CollapsableProps> & {
     /** Size the title and subtitle */
-    size?: Sizes
+    size?: Size
 
     /** Add an icon before title */
     icon?: React.ReactNode

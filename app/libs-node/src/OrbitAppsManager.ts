@@ -1,26 +1,10 @@
-import {
-  getIdentifierFromPackageId,
-  getIdentifierToPackageId,
-  updateWorkspacePackageIds,
-} from '@o/cli'
+import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
-import {
-  AppBit,
-  AppDefinition,
-  AppEntity,
-  AppMeta,
-  Space,
-  SpaceEntity,
-  User,
-  UserEntity,
-} from '@o/models'
+import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
-
-import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
-import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
 
 const log = new Logger('OrbitAppsManager')
 
@@ -85,19 +69,24 @@ export class OrbitAppsManager {
     () => [this.activeSpace, this.packageJsonUpdate],
     async ([space]) => {
       ensure('space', !!space)
-      this.updateAppDefinitions(space)
-      // have cli update its cache of packageId => identifier for use installing
-      await updateWorkspacePackageIds(space.directory)
-      this.updatePackagesVersion = Math.random()
+      if (space) {
+        this.updateAppDefinitions(space)
+        // have cli update its cache of packageId => identifier for use installing
+        await updateWorkspacePackageIds(space.directory)
+        this.updatePackagesVersion = Math.random()
+      }
     },
   )
 
   updateAppDefinitions = async (space: Space) => {
-    const definitions = await getWorkspaceNodeApis(space)
+    const definitions = await requireWorkspaceDefinitions(space.directory, 'node')
     log.info(`Got definitions for ${Object.keys(definitions)}`)
     this.nodeAppDefinitions = {
       ...this.nodeAppDefinitions,
-      ...definitions,
+      ...definitions.reduce((acc, def) => {
+        acc[def.id] = def
+        return acc
+      }, {}),
     }
   }
 
@@ -105,7 +94,7 @@ export class OrbitAppsManager {
     () => [this.nodeAppDefinitions, this.updatePackagesVersion],
     async ([appDefs]) => {
       ensure('appDefs', !!appDefs)
-      const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
+      const appsMeta = await getWorkspaceAppPaths(this.activeSpace.directory)
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)

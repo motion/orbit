@@ -15,6 +15,7 @@ import { reporter } from './reporter'
 
 export * from './util/downloadAppDefinition'
 export * from './util/requireAppDefinition'
+export * from './util/requireWorkspaceDefinitions'
 export * from './util/getPackageId'
 export * from './util/findPackage'
 export * from './util/getWorkspaceAppPaths'

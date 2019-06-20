@@ -1,7 +1,7 @@
 {
-  "name": "@o/helpers",
+  "name": "@o/libs",
   "version": "2.5.2",
-  "main": "_/helpers.js",
+  "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
     "build": "tsc || true",

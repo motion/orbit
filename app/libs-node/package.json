@@ -1,0 +1,20 @@
+{
+  "name": "@o/libs-node",
+  "version": "2.5.2",
+  "main": "_/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "@o/models": "*",
+    "@o/cli": "*",
+    "@o/logger": "*",
+    "@o/use-store": "*",
+    "chokidar": "^3.0.0"
+  },
+  "peerDependencies": {
+    "typeorm": "*"
+  }
+}

@@ -34,7 +34,7 @@
     "@o/ui": "^2.5.6",
     "@o/use-store": "^2.5.2",
     "@o/utils": "^2.5.2",
-    "@o/helpers": "^2.5.2",
+    "@o/libs": "^2.5.2",
     "@welldone-software/why-did-you-render": "3.0.9",
     "animejs": "3.0.1",
     "date-fns": "2.0.0-alpha.7",

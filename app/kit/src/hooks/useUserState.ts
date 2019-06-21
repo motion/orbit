@@ -35,6 +35,8 @@ export function usePersistedScopedState<A>(
     },
   })
 
+  console.log('state', state)
+
   // scope it to .data
   return [selectDefined(state.data.dataValue, defaultState), useImmutableUpdateFn(update)]
 }

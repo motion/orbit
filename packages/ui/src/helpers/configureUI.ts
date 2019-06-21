@@ -13,7 +13,10 @@ import { Bit } from './BitLike'
 
 export type ConfigureUIProps = {
   // configure a custom icon for all surfaces
+  // this could be made generic for any part of the ui kit to override
   useIcon: any
+
+  getIconForBit: (bit: Bit) => React.ReactNode
 
   // set a custom item key getter for lists/tables
   getItemKey: (item: any, index: number) => string
@@ -55,6 +58,7 @@ let hasSet = false
 
 export let Config: ConfigureUIProps = {
   useIcon: null,
+  getIconForBit: _ => _,
   defaultProps: {},
   customItems: {},
 

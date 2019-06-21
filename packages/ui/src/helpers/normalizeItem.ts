@@ -1,5 +1,7 @@
 import * as React from 'react'
+
 import { Bit } from './BitLike'
+import { Config } from './configureUI'
 
 // we have a concept of a "bit", which we can use in various UI items automatically
 // this helper just noramlizes the bit into something standard, and could be extended.
@@ -15,7 +17,7 @@ export type ItemResolverExtraProps = {
 
 export type NormalItem = {
   id?: string
-  icon?: string
+  icon?: React.ReactNode
   title?: string
   type?: string
   subType?: string
@@ -43,7 +45,7 @@ const normalizers = {
       type: 'bit',
       id: `${bit.id}`,
       title: bit.title,
-      icon: bit.appIdentifier,
+      icon: Config.getIconForBit(bit),
       webLink: bit.webLink,
       people: bit.people,
       location: bit.location ? bit.location.name : '',

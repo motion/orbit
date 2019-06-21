@@ -32,8 +32,8 @@ export class SearchResultResolver {
     this.log.vtimer('search', this.args)
     this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()
-    const [bits, bitsTotalCount] = await this.searchBits()
-    this.log.vtimer('search', bitsTotalCount)
+    const bits = await this.searchBits()
+    this.log.vtimer('search', bits.length)
     return bits
   }
 
@@ -60,7 +60,7 @@ export class SearchResultResolver {
   /**
    * Performs a database search on bits.
    */
-  private async searchBits(): Promise<[Bit[], number]> {
+  private async searchBits(): Promise<Bit[]> {
     const appIds = this.apps.map(app => app.id)
     this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
@@ -102,6 +102,6 @@ export class SearchResultResolver {
 
     // lastly return bits
     const allBits = uniqBy([...matchedBits, ...restBits, ...cosalBits], 'id')
-    return [allBits, allBits.length]
+    return allBits
   }
 }

@@ -62,7 +62,7 @@ export class SearchResultResolver {
    */
   private async searchBits(): Promise<[Bit[], number]> {
     const appIds = this.apps.map(app => app.id)
-    this.log.verbose(`search`, this.apps, this.args)
+    this.log.verbose(`search, num apps`, this.apps.length, this.args)
 
     // parallel search both fts and cosal
     const [ftsResults, cosalResults] = await Promise.all([

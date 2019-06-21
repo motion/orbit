@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
-import { getManager, getRepository, EntityManager } from 'typeorm'
+import { EntityManager, getManager, getRepository } from 'typeorm'
 
 import { mediatorClient } from './mediatorClient'
 import { SyncerUtils } from './SyncerUtils'
@@ -78,9 +78,9 @@ export interface SyncerOptions {
   /**
    * App identifier.
    * Used to get worker settings.
-   * If type is not specified then worker will be executed once without any setting specified.
+   * If type is not specified then syncer will be executed once without any setting specified.
    */
-  appIdentifier?: string
+  appIdentifier: string
 
   /**
    * Worker runner.
@@ -124,7 +124,9 @@ export class Syncer {
    * Starts a process of active syncronization (runs interval).
    */
   async start(force = false) {
-    if (this.options.appIdentifier) {
+    if (!this.options.appIdentifier) {
+      throw new Error(`Must have appIdentifier`)
+    } else {
       // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
         const apps = await getRepository(AppEntity).find({ identifier: this.options.appIdentifier })
@@ -138,8 +140,6 @@ export class Syncer {
           })
           .subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
-    } else {
-      await this.runInterval(undefined, force)
     }
   }
 
@@ -235,18 +235,17 @@ export class Syncer {
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
           log.info(
-            `found job for ${jobName} but it left uncompleted ` +
-              '(probably app was closed before job completion). ' +
-              'Removing stale job and run synchronization again',
+            `found job for ${jobName} but it left uncompleted (probably app was closed before job completion). Removing stale job and run synchronization again`,
           )
           await getRepository(JobEntity).remove(lastJob)
         } else {
           if (needToWait > 0) {
-            log.info(
-              `found last executed job for ${jobName} and we should wait ` +
-                'until enough interval time will pass before we execute a new job',
-              { jobTime, currentTime, needToWait, lastJob },
-            )
+            log.info(`found last job ${jobName} should wait until enough interval time will pass`, {
+              jobTime,
+              currentTime,
+              needToWait,
+              lastJob,
+            })
             setTimeout(() => this.runInterval(app), needToWait)
             return
           }

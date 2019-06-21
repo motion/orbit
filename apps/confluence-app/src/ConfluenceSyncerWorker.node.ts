@@ -5,6 +5,7 @@ import { ConfluenceSyncer } from './ConfluenceSyncer.node'
 export const ConfluenceSyncerWorker: AppWorker = async () => {
   const syncer = new Syncer({
     id: 'confluence',
+    appIdentifier: 'confluence',
     name: 'Confluence',
     runner: ConfluenceSyncer,
     interval: 1000 * 60 * 5, // 5 minutes

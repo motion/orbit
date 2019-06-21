@@ -32,8 +32,6 @@ const debug = (...args) => {
   } else {
     console.log(...args)
   }
-  // electron doesnt have console.debug...
-  // (console.debug ? console.debug(...args) : console.info(...args))
 }
 
 type LoggerOpts = {

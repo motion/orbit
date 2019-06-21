@@ -1,12 +1,14 @@
+import { Syncer } from '@o/worker-kit'
+
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
-import { Syncer } from '@o/worker-kit'
 
 /**
  * Syncs crawled websites.
  */
 const websiteSyncer = new Syncer({
   id: 'website',
+  appIdentifier: 'website',
   name: 'Website',
   interval: 100000,
   runner: async ({ app, log, utils }) => {

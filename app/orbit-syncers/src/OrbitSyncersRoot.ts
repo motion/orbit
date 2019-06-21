@@ -54,16 +54,13 @@ export class OrbitSyncersRoot {
 
     __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS.setMediatorClient(this.mediatorClient)
 
-    // setup proper instances to use inside sync-kit package
-    setTimeout(() => {
-      this.startSyncers()
-    }, 10000)
+    await this.workersManager.start()
   }
 
   async dispose() {
     if (this.connection) {
       await this.connection.close()
-      await this.stopSyncers()
+      await this.workersManager.stop()
     }
     return true
   }
@@ -100,11 +97,7 @@ export class OrbitSyncersRoot {
     root.root = this
     root.Logger = Logger
     root.mediatorServer = this.mediatorServer
-    console.log('syncers...')
-    // root.Syncers = Syncers.reduce((map, syncer) => {
-    //   map[syncer.name] = syncer
-    //   return map
-    // }, {})
+    root.Entities = Entities
   }
 
   /**
@@ -127,29 +120,6 @@ export class OrbitSyncersRoot {
       ],
     })
     this.mediatorServer.bootstrap()
-  }
-
-  /**
-   * Starts all the syncers.
-   * We start syncers with a small timeout to prevent app-overload.
-   */
-  private async startSyncers() {
-    // await Promise.all(
-    //   Syncers.map(syncer => {
-    //     return syncer.start()
-    //   }),
-    // )
-  }
-
-  /**
-   * Stops all the syncers.
-   */
-  private async stopSyncers() {
-    // await Promise.all(
-    //   Syncers.map(syncer => {
-    //     return syncer.stop()
-    //   }),
-    // )
   }
 }
 

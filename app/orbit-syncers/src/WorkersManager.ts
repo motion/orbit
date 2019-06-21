@@ -6,6 +6,14 @@ export class WorkersManager {
   workers: WorkerOptions[] = []
   orbitAppsManager = new OrbitAppsManager()
 
+  async start() {
+    await this.orbitAppsManager.start()
+  }
+
+  async stop() {
+    // todo stop
+  }
+
   updateAppDefinitions = react(
     () => this.orbitAppsManager.nodeAppDefinitions,
     nodeDefinitions => {

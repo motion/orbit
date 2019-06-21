@@ -123,16 +123,7 @@ export class SearchStore {
     }
 
     // TODO recent history
-    return fuzzyFilter(query, [
-      // {
-      //   key: 'app-home',
-      //   title: `${this.stores.spaceStore.activeSpace.name} Home`,
-      //   subTitle: `10 apps`,
-      //   icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-      //   subType: 'home',
-      // },
-      ...this.getApps(query, all),
-    ])
+    return fuzzyFilter(query, [...this.getApps(query, all)])
   }
 
   get results() {

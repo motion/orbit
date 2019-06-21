@@ -163,7 +163,7 @@ export class Syncer {
    * Reacts on app changes - manages apps lifecycle and how syncer deals with it.
    */
   private async reactOnSettingsChanges(apps: AppBit[]) {
-    this.log.info('got apps in syncer', apps)
+    this.log.info('got apps in syncer', apps.length)
 
     const intervalSettings = this.intervals
       .filter(interval => !!interval.app)
@@ -210,9 +210,6 @@ export class Syncer {
     if (app) {
       interval = this.intervals.find(interval => interval.app.id === app.id)
     }
-    const log = new Logger(
-      'syncer:' + (app ? app.identifier + ':' + app.id : '') + (force ? ' (force)' : ''),
-    )
 
     // get the last run job
     if (force === false) {
@@ -234,22 +231,25 @@ export class Syncer {
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
-          log.info(
+          this.log.info(
             `found job for ${jobName} but it left uncompleted (probably app was closed before job completion). Removing stale job and run synchronization again`,
           )
           await getRepository(JobEntity).remove(lastJob)
         } else {
           if (needToWait > 0) {
-            log.info(`found last job ${jobName} should wait until enough interval time will pass`, {
-              jobTime,
-              currentTime,
-              needToWait,
-              lastJob,
-            })
+            this.log.info(
+              `found last job ${jobName} should wait until enough interval time will pass`,
+              {
+                jobTime,
+                currentTime,
+                needToWait,
+                lastJob,
+              },
+            )
             setTimeout(() => this.runInterval(app), needToWait)
             return
           }
-          log.info(
+          this.log.info(
             `found last executed job for ${this.name} and its okay to execute a new job`,
             lastJob,
           )
@@ -259,7 +259,7 @@ export class Syncer {
 
     // clear previously run interval if exist
     if (interval) {
-      log.info('clearing previous interval', interval)
+      this.log.info('clearing previous interval', interval)
       if (interval.running)
         // if its running await it
         await interval.running
@@ -318,7 +318,7 @@ export class Syncer {
       message: '',
     }
     await getRepository(JobEntity).save(job)
-    log.info('created a new job', job)
+    log.info('created a new job', job.id)
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
@@ -341,7 +341,7 @@ export class Syncer {
       // update our job (finish successfully)
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
-      log.info('job updated', job)
+      log.info('job updated', job.id)
       log.timer(`${this.options.name} sync`)
     } catch (error) {
       log.error(`${this.options.name} sync err`, error)

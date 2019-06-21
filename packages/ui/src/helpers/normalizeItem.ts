@@ -17,7 +17,7 @@ export type NormalItem = {
   subType?: string
   identifier?: string
   preview?: React.ReactNode
-  content?: any
+  children?: any
   location?: string
   locationLink?: string
   webLink?: string
@@ -40,6 +40,7 @@ const normalizers = {
       id: `${bit.id}`,
       title: bit.title,
       icon: Config.getIconForBit(bit),
+      subTitle: bit.body,
       webLink: bit.webLink,
       people: bit.people,
       location: bit.location ? bit.location.name : '',

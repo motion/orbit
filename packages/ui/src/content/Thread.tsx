@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { HighlightText } from '../text/HighlightText'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { ThreadMessage, ThreadMessageLike } from './ThreadMessage'

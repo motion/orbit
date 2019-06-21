@@ -167,9 +167,9 @@ export class SlackLoader {
     }
 
     // load messages
-    this.log.timer(`loading #${channelId} API messages`, { oldestMessageId })
+    this.log.vtimer(`loading #${channelId} API messages`, { oldestMessageId })
     const messages = await loadRecursively(oldestMessageId)
-    this.log.timer(`loading #${channelId} API messages`, messages.length)
+    this.log.vtimer(`loading #${channelId} API messages`, messages.length)
 
     // left only messages we need - real user messages, no system or bot messages
     const filteredMessages = messages.filter(message => {

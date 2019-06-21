@@ -2,39 +2,14 @@ import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 
-import { DATABASE_PATH } from '../constants'
-import { migrations } from '../migrations'
-
-function buildOptions(models): ConnectionOptions {
-  return {
-    name: 'default',
-    type: 'sqlite',
-    database: DATABASE_PATH,
-    migrations,
-    // location: 'default',
-    entities: models,
-    logging: ['error'],
-    logger: 'simple-console',
-    synchronize: true,
-    migrationsRun: true,
-    busyErrorRetry: 1000,
-    maxQueryExecutionTime: 3000,
-    // disabling this fixed database re-creation
-    // enableWAL: true,
-  }
+export type ConnectModelsProps = {
+  name: string
+  models: any[]
+  databasePath: string
+  migrations?: any
 }
 
-const closeConnection = async (connection?: Connection) => {
-  if (!connection) return
-  try {
-    await connection.close()
-  } catch (err) {
-    // fine, just in case something odd kept it open
-    console.log('err closing connection', err)
-  }
-}
-
-export default async function connectModels(models) {
+export async function connectModels(props: ConnectModelsProps) {
   // if we cannot create connection it usually means we have some unhandled database schema changes
   // this case must be gracefully handled. We are trying here to drop everything in the database
   // except spaces and apps. Right, this means user is going to loose all its synced data
@@ -43,14 +18,16 @@ export default async function connectModels(models) {
   // to make this schema to work properly its recommended to keep space and app entities simple
   // todo: we need to reset app setting values
 
-  let connection: Connection
+  let connection: Connection | null = null
 
   try {
-    connection = await createConnection(buildOptions(models))
+    connection = await createConnection(buildOptions(props))
     return connection
   } catch (err1) {
     console.error(`\n\nerror during connection create: `, err1)
-    await closeConnection(connection)
+    if (connection) {
+      await closeConnection(connection)
+    }
 
     // if its going to fail this time again we have no choice - we drop all apps and spaces as well
     // and user will have to add spaces, apps and settings from scratch again
@@ -58,7 +35,7 @@ export default async function connectModels(models) {
     try {
       // create connection without synchronizations and migrations running to execute raw SQL queries
       connection = await createConnection({
-        ...buildOptions(models),
+        ...buildOptions(props),
         migrations: [],
         synchronize: false,
         migrationsRun: false,
@@ -72,7 +49,7 @@ export default async function connectModels(models) {
         console.log('No database found, re-creating...')
         await queryRunner.createDatabase('default', true)
         await closeConnection(connection)
-        return await createConnection(buildOptions(models))
+        return await createConnection(buildOptions(props))
       }
 
       // execute drop queries
@@ -88,7 +65,7 @@ export default async function connectModels(models) {
       await closeConnection(connection)
 
       connection = await createConnection({
-        ...buildOptions(models),
+        ...buildOptions(props),
         synchronize: true,
         migrationsRun: false,
       })
@@ -97,7 +74,7 @@ export default async function connectModels(models) {
       await closeConnection(connection)
 
       // create create connection again
-      connection = await createConnection(buildOptions(models))
+      connection = await createConnection(buildOptions(props))
       return connection
     } catch (err2) {
       console.error(
@@ -105,11 +82,13 @@ export default async function connectModels(models) {
         err2,
       )
 
-      await closeConnection(connection)
+      if (connection) {
+        await closeConnection(connection)
+      }
 
       // create connection without synchronizations and migrations running to execute raw SQL queries
       connection = await createConnection({
-        ...buildOptions(models),
+        ...buildOptions(props),
         synchronize: false,
         migrationsRun: false,
       })
@@ -138,20 +117,49 @@ export default async function connectModels(models) {
         // close connection
         await closeConnection(connection)
 
-        return await createConnection(buildOptions(models))
+        return await createConnection(buildOptions(props))
       } catch (err) {
         console.log('step 4 failed..........', err)
       }
 
       // holy shit things went wrong. fucking hell... lets nuke.
       console.log('going nuclear!')
-      await remove(DATABASE_PATH)
+      await remove(props.databasePath)
       await sleep(500)
       await closeConnection(connection)
 
       console.log('now re-connect from scratch')
 
-      return await createConnection(buildOptions(models))
+      return await createConnection(buildOptions(props))
     }
+  }
+}
+
+function buildOptions(props: ConnectModelsProps): ConnectionOptions {
+  return {
+    name: 'default',
+    type: 'sqlite',
+    database: props.databasePath,
+    migrations: props.migrations || [],
+    // location: 'default',
+    entities: props.models,
+    logging: ['error'],
+    logger: 'simple-console',
+    synchronize: true,
+    migrationsRun: true,
+    busyErrorRetry: 1000,
+    maxQueryExecutionTime: 3000,
+    // disabling this fixed database re-creation
+    // enableWAL: true,
+  }
+}
+
+const closeConnection = async (connection?: Connection) => {
+  if (!connection) return
+  try {
+    await connection.close()
+  } catch (err) {
+    // fine, just in case something odd kept it open
+    console.log('err closing connection', err)
   }
 }

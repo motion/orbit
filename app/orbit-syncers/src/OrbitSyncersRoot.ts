@@ -12,12 +12,13 @@ import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-// import { Syncers } from './Syncers'
 import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS } from '@o/worker-kit'
 import { WorkersManager } from './WorkersManager'
+
+const log = new Logger('WorkersRoot')
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -29,6 +30,8 @@ export class OrbitSyncersRoot {
   workersManager = new WorkersManager()
 
   async start() {
+    log.info(`Starting Orbit Workers`)
+
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
@@ -67,14 +70,17 @@ export class OrbitSyncersRoot {
 
   private async createDbConnection(): Promise<void> {
     const Config = getGlobalConfig()
-    const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
-    const DATABASE_PATH = Path.join(Config.paths.userData, `${env}_database.sqlite`)
+
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    const DATABASE_PATH = Path.join(
+      Config.paths.userData,
+      isDevelopment ? `development_database.sqlite` : `orbit_database.sqlite`,
+    )
 
     this.connection = await createConnection({
       name: 'default',
       type: 'sqlite',
       database: DATABASE_PATH,
-      // location: 'default',
       entities: Entities,
       logging: ['error'],
       logger: 'simple-console',

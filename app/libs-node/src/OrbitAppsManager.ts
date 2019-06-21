@@ -1,6 +1,21 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
+import {
+  getIdentifierFromPackageId,
+  getIdentifierToPackageId,
+  getWorkspaceAppPaths,
+  requireWorkspaceDefinitions,
+  updateWorkspacePackageIds,
+} from '@o/cli'
 import { Logger } from '@o/logger'
-import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import {
+  AppBit,
+  AppDefinition,
+  AppEntity,
+  AppMeta,
+  Space,
+  SpaceEntity,
+  User,
+  UserEntity,
+} from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'

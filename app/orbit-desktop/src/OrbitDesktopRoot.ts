@@ -83,6 +83,7 @@ import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceReso
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
+import { orTimeout } from '@o/utils'
 
 const log = new Logger('desktop')
 
@@ -231,7 +232,11 @@ export class OrbitDesktopRoot {
       return
     }
     console.log('writing orbit config...')
-    await writeJSON(this.config.paths.orbitConfig, this.config)
+    try {
+      await orTimeout(writeJSON(this.config.paths.orbitConfig, this.config), 200)
+    } catch (err) {
+      console.log('error writing config', err.message, err.stack)
+    }
     console.log('dispose desktop...')
     Desktop.dispose()
     // await this.ocrManager.dispose()

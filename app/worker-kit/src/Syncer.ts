@@ -33,6 +33,36 @@ interface SyncerInterval {
 }
 
 /**
+ * Options to be passed to Worker.
+ */
+export interface SyncerOptions {
+  id: string
+
+  /**
+   * Worker name.
+   * By default equals to implementation constructor name.
+   */
+  name?: string
+
+  /**
+   * App identifier.
+   * Used to get worker settings.
+   * If type is not specified then worker will be executed once without any setting specified.
+   */
+  appIdentifier?: string
+
+  /**
+   * Worker runner.
+   */
+  runner: AppWorker
+
+  /**
+   * Interval during which workers should be executed.
+   */
+  interval: number
+}
+
+/**
  * Runs given app syncer.
  * Sync is interval-based, it sync data each x period of times.
  *
@@ -47,7 +77,7 @@ interface SyncerInterval {
  */
 export class Syncer {
   name: string
-  options: WorkerOptions
+  options: SyncerOptions
 
   private log: Logger
   private intervals: SyncerInterval[] = []

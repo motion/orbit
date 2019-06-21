@@ -7,6 +7,7 @@ export * from '@o/logger'
 export * from '@o/models'
 export * from './BitUtils'
 export * from './WorkerUtils'
+export * from './Syncer'
 
 export const createWorker: CreateAppWorker = fn => fn
 

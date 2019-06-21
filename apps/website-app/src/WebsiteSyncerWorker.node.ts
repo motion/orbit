@@ -15,11 +15,6 @@ const websiteSyncer = new Syncer({
     const crawler = new WebsiteCrawler(log)
     const bitFactory = new WebsiteBitFactory(app, utils)
 
-    // load database data
-    // log.timer('load bits from the database')
-    // const dbBits = await syncerRepository.loadBits({ idsOnly: true })
-    // log.timer('load bits from the database', { dbBits })
-
     // launch browser to start crawl
     await crawler.start()
 

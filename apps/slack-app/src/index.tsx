@@ -2,10 +2,9 @@ import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import { SlackApi } from './api.node'
-import { SlackSyncer } from './SlackSyncer.node'
 import { SlackLoader } from './SlackLoader'
 import { SlackSettings } from './SlackSettings'
-import { Syncer } from '@o/worker-kit'
+import { SlackSyncerWorker } from './SlackSyncerWorker.node'
 
 export * from './SlackConversation'
 
@@ -15,17 +14,7 @@ export default createApp({
   auth: 'slack',
   itemType: 'conversation',
   settings: SlackSettings,
-  workers: [
-    async () => {
-      const syncer = new Syncer({
-        id: 'slack',
-        name: 'Slack',
-        runner: SlackSyncer,
-        interval: 1000 * 60 * 5, // 5 minutes
-      })
-      await syncer.start()
-    },
-  ],
+  workers: [SlackSyncerWorker],
   finishAuth: async app => {
     const loader = new SlackLoader(app)
     const team = await loader.loadTeam()

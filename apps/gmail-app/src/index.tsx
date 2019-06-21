@@ -4,8 +4,7 @@ import { graph } from './api.graph.node'
 import { GmailApi } from './api.node'
 import { GMailLoader } from './GMailLoader'
 import { GmailSettings } from './GmailSettings'
-import { GMailSyncer } from './GMailSyncer.node'
-import { Syncer } from '@o/worker-kit'
+import { GmailSyncerWorker } from './GmailSyncerWorker.node'
 
 export default createApp({
   id: 'gmail',
@@ -21,17 +20,7 @@ export default createApp({
     return app
   },
   settings: GmailSettings,
-  workers: [
-    async () => {
-      const syncer = new Syncer({
-        id: 'gmail',
-        name: 'Gmail',
-        runner: GMailSyncer,
-        interval: 1000 * 60 * 5, // 5 minutes
-      })
-      await syncer.start()
-    },
-  ],
+  workers: [GmailSyncerWorker],
   api: GmailApi,
   graph,
   icon: `

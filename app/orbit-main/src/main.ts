@@ -17,7 +17,7 @@ Error.stackTraceLimit = Infinity
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env
 
 export async function main() {
-  console.log(`starting ${PROCESS_NAME}`)
+  console.log(`starting ${PROCESS_NAME || 'orbit-main'}`)
 
   // setup config
   if (SUB_PROCESS) {

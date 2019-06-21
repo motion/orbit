@@ -5,7 +5,7 @@ import { Syncer } from '@o/worker-kit'
 /**
  * Syncs crawled websites.
  */
-const WebsiteSyncer = new Syncer({
+const websiteSyncer = new Syncer({
   id: 'website',
   name: 'Website',
   interval: 100000,
@@ -39,6 +39,5 @@ const WebsiteSyncer = new Syncer({
 })
 
 export const WebsiteSyncerWorker = async () => {
-  const syncer = new WebsiteSyncer()
-  await syncer.start()
+  await websiteSyncer.start()
 }

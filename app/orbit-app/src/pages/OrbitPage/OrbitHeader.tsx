@@ -335,12 +335,10 @@ const OpenButton = memo((props: ButtonProps) => {
   return (
     <Button
       alt="action"
-      size={1.2}
+      size={1}
       iconSize={18}
       sizeRadius={1.6}
       borderWidth={0}
-      glint={false}
-      circular
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}

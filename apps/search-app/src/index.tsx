@@ -1,14 +1,5 @@
-import {
-  App,
-  AppFilterButton,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  useSearchState,
-  useStore,
-  useStores,
-} from '@o/kit'
-import { Button, Calendar, FloatingCard, List, Popover, Scale, View } from '@o/ui'
+import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores } from '@o/kit'
+import { Button, Calendar, FloatingCard, List, Popover, Row, Scale, View } from '@o/ui'
 import React from 'react'
 
 import { SearchStore } from './SearchStore'
@@ -66,7 +57,7 @@ function SearchActions() {
   const { queryStore } = useStores()
   const { queryFilters } = queryStore
   return (
-    <>
+    <Row group>
       <Button
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
@@ -94,6 +85,6 @@ function SearchActions() {
       </Popover>
 
       <AppFilterButton />
-    </>
+    </Row>
   )
 }

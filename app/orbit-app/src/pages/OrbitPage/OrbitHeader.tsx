@@ -2,7 +2,7 @@ import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
-import { Box, FullScreen, gloss, useTheme } from 'gloss'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 import { createRef } from 'react'
 
@@ -143,13 +143,7 @@ export const OrbitHeader = memo(() => {
 
             {isOnTearablePane && (
               <>
-                {!!orbitStore.activeActions && (
-                  <ExtraButtonsChrome>
-                    <HeaderButtonPassProps iconSize={16}>
-                      {orbitStore.activeActions || null}
-                    </HeaderButtonPassProps>
-                  </ExtraButtonsChrome>
-                )}
+                {orbitStore.activeActions}
                 {!isEditing && <OpenButton />}
               </>
             )}
@@ -329,14 +323,6 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',
   position: 'relative',
-})
-
-const ExtraButtonsChrome = gloss(Box, {
-  flexFlow: 'row',
-  paddingRight: 22,
-  paddingLeft: 12,
-  marginRight: -10,
-  borderLeftRadius: 12,
 })
 
 const OpenButton = memo((props: ButtonProps) => {

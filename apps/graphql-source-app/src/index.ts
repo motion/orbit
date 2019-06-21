@@ -5,11 +5,24 @@ import { graph } from './graph.node'
 export default createApp({
   id: 'graphQL',
   name: 'GraphQL',
+  graph,
+  setup: {
+    url: {
+      name: 'URL',
+      required: true,
+      defaultValue: 'https://api.graphcms.com/simple/v1/swapi',
+    },
+    headers: {
+      name: 'Headers',
+      type: 'object',
+    },
+    fetchOptions: {
+      name: 'Fetch Options',
+      type: 'object',
+    },
+  },
   icon: `
-  <svg version="1.1" id="GraphQL_Logo"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-     y="0px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" xml:space="preserve">
+  <svg version="1.1" id="GraphQL_Logo" y="0px" viewBox="0 0 400 400" enable-background="new 0 0 400 400">
     <g>
       <g>
         <g>
@@ -70,20 +83,4 @@ export default createApp({
       C234.9,58.4,219.3,74,200,74"/>
     </g>
   </svg>`,
-  graph,
-  setup: {
-    url: {
-      name: 'URL',
-      required: true,
-      defaultValue: 'https://api.graphcms.com/simple/v1/swapi',
-    },
-    headers: {
-      name: 'Headers',
-      type: 'object',
-    },
-    fetchOptions: {
-      name: 'Fetch Options',
-      type: 'object',
-    },
-  },
 })

@@ -68,7 +68,7 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
       props.onNavigate(stackItem)
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 

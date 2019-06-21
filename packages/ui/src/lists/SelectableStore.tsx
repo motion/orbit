@@ -79,7 +79,7 @@ export class SelectableStore {
       this.props.onSelect(rows, indices)
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 

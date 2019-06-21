@@ -17,12 +17,16 @@ import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS } from '@o/worker-kit'
+import { WorkersManager } from './WorkersManager'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
   connection: Connection
   mediatorServer: MediatorServer
   mediatorClient: MediatorClient
+
+  // managers
+  workersManager = new WorkersManager()
 
   async start() {
     this.registerREPLGlobals()

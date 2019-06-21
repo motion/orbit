@@ -41,7 +41,6 @@ import {
   AppStatusModel,
 } from '@o/models'
 import { OrbitAppsManager } from '@o/libs-node'
-import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSON } from 'fs-extra'
@@ -54,17 +53,16 @@ import { getConnection } from 'typeorm'
 import { AuthServer } from './auth-server/AuthServer'
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
-import { COSAL_DB, screenOptions } from './constants'
-import { ContextManager } from './managers/ContextManager'
+import { COSAL_DB } from './constants'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+// import { Screen } from '@o/screen'
 // import { OCRManager } from './managers/OCRManager'
+// import { ScreenManager } from './managers/ScreenManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
-import { OracleManager } from './managers/OracleManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
-// import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
 import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
@@ -95,7 +93,6 @@ export class OrbitDesktopRoot {
   mediatorServer: MediatorServer
 
   private config = getGlobalConfig()
-  private screen: Screen
   private authServer: AuthServer
   private graphServer: GraphServer
   private onboardManager: OnboardManager
@@ -107,7 +104,6 @@ export class OrbitDesktopRoot {
 
   // managers
   private orbitDataManager: OrbitDataManager
-  private oracleManager: OracleManager
   private cosalManager: CosalManager
   private generalSettingManager: GeneralSettingManager
   private topicsManager: TopicsManager
@@ -193,30 +189,32 @@ export class OrbitDesktopRoot {
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
 
-    // setup screen before we pass into managers...
-    this.screen = new Screen({
-      ...screenOptions,
-      showTray: true,
-    })
+    // DISABLED: OCR/screen stuff
 
-    this.screen.onError(err => {
-      if (err.indexOf('Could not watch application') >= 0) {
-        return
-      }
-      console.log('Screen error', err)
-    })
+    // setup screen before we pass into managers...
+    // this.screen = new Screen({
+    //   ...screenOptions,
+    //   showTray: true,
+    // })
+
+    // this.screen.onError(err => {
+    //   if (err.indexOf('Could not watch application') >= 0) {
+    //     return
+    //   }
+    //   console.log('Screen error', err)
+    // })
 
     // start managers...
 
-    if (!process.env.DISABLE_MENU) {
-      this.oracleManager = new OracleManager()
-      await this.oracleManager.start()
-    }
+    // if (!process.env.DISABLE_MENU) {
+    //   this.oracleManager = new OracleManager()
+    //   await this.oracleManager.start()
+    // }
+
+    // new ContextManager({ screen: this.screen })
 
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
-
-    new ContextManager({ screen: this.screen })
 
     this.registerREPLGlobals()
 

@@ -1,4 +1,4 @@
-import { JiraSyncer } from './JiraSyncer'
+import { JiraSyncer } from './JiraSyncer.node'
 
 export default {
   id: 'jira',

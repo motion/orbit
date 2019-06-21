@@ -2,8 +2,9 @@ import { createApi, createApp } from '@o/kit'
 
 import { GithubApi } from './api.node'
 import { GithubSettings } from './GithubSettings'
-import { GithubSyncer } from './GithubSyncer'
+import { GithubSyncer } from './GithubSyncer.node'
 import { graph } from './graph.node'
+import { Syncer } from '@o/worker-kit'
 
 export default createApp({
   id: 'github',
@@ -16,7 +17,17 @@ export default createApp({
   },
   settings: GithubSettings,
   api: createApi(GithubApi),
-  workers: [GithubSyncer],
+  workers: [
+    async () => {
+      const syncer = new Syncer({
+        id: 'slack',
+        name: 'Slack',
+        runner: GithubSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
+  ],
   graph,
   icon: `
   <svg version="1.1" id="Capa_1" x="0px" y="0px" width="438.549px" height="438.549px" viewBox="0 0 438.549 438.549" style="enable-background:new 0 0 438.549 438.549;">

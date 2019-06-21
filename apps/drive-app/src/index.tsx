@@ -4,7 +4,8 @@ import { graph } from './api.graph.node'
 import { DriveApi } from './api.node'
 import { DriveLoader } from './DriveLoader'
 import { DriveSettings } from './DriveSettings'
-import { DriveSyncer } from './DriveSyncer'
+import { DriveSyncer } from './DriveSyncer.node'
+import { Syncer } from '@o/worker-kit'
 
 export default createApp({
   id: 'drive',
@@ -20,7 +21,17 @@ export default createApp({
   },
   itemType: 'task',
   settings: DriveSettings,
-  workers: [DriveSyncer],
+  workers: [
+    async () => {
+      const syncer = new Syncer({
+        id: 'slack',
+        name: 'Slack',
+        runner: DriveSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
+  ],
   api: createApi(DriveApi),
   graph,
   icon: `

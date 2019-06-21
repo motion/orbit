@@ -22,12 +22,15 @@ export default createApp({
   },
   settings: GmailSettings,
   workers: [
-    new Syncer({
-      id: 'gmail',
-      name: 'Gmail',
-      runner: GMailSyncer,
-      interval: 1000 * 60 * 5, // 5 minutes
-    }),
+    async () => {
+      const syncer = new Syncer({
+        id: 'gmail',
+        name: 'Gmail',
+        runner: GMailSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
   ],
   api: GmailApi,
   graph,

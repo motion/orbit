@@ -4,7 +4,8 @@ import { graph } from './api.graph.node'
 import { JiraApi } from './api.node'
 import { JiraLoader } from './JiraLoader'
 import { JiraAppData } from './JiraModels'
-import { JiraSyncer } from './JiraSyncer'
+import { JiraSyncer } from './JiraSyncer.node'
+import { Syncer } from '@o/worker-kit'
 
 export default createApp<JiraAppData>({
   id: 'jira',
@@ -31,7 +32,17 @@ export default createApp<JiraAppData>({
   </svg>
   `,
   itemType: 'markdown',
-  workers: [JiraSyncer],
+  workers: [
+    async () => {
+      const syncer = new Syncer({
+        id: 'slack',
+        name: 'Slack',
+        runner: JiraSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
+  ],
   api: createApi(JiraApi),
   graph,
   setupValidate: async app => {

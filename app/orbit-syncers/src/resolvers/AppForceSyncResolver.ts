@@ -3,8 +3,8 @@ import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppForceSyncCommand, AppModel } from '@o/models'
 
-import { Syncer } from '../Syncer'
-import { Syncers } from '../Syncers'
+// import { Syncer } from '../Syncer'
+// import { Syncers } from '../Syncers'
 
 const log = new Logger('command:app-force-sync')
 
@@ -16,13 +16,17 @@ export const AppForceSyncResolver = resolveCommand(AppForceSyncCommand, async ({
   }
 
   log.info('force syncing app', app)
-  for (let syncer of Syncers) {
-    if (syncer instanceof Syncer) {
-      if (syncer.options.appIdentifier === app.identifier) {
-        const syncerLogger = new Logger(`command:app-force-sync:${app.identifier}:${app.id}`)
-        await syncer.runSyncer(syncerLogger, app)
-      }
-    }
-  }
+
+  console.log(
+    'need to finish workers refractor, this should be done differently... (send command to file)?',
+  )
+  // for (let syncer of Syncers) {
+  //   if (syncer instanceof Syncer) {
+  //     if (syncer.options.appIdentifier === app.identifier) {
+  //       const syncerLogger = new Logger(`command:app-force-sync:${app.identifier}:${app.id}`)
+  //       await syncer.runSyncer(syncerLogger, app)
+  //     }
+  //   }
+  // }
   log.info('force syncing is finished')
 })

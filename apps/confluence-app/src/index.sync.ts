@@ -1,4 +1,4 @@
-import { ConfluenceSyncer } from './ConfluenceSyncer'
+import { ConfluenceSyncer } from './ConfluenceSyncer.node'
 
 export default {
   id: 'confluence',

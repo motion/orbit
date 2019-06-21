@@ -12,7 +12,7 @@ import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { Syncers } from './Syncers'
+// import { Syncers } from './Syncers'
 import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -90,10 +90,11 @@ export class OrbitSyncersRoot {
     root.root = this
     root.Logger = Logger
     root.mediatorServer = this.mediatorServer
-    root.Syncers = Syncers.reduce((map, syncer) => {
-      map[syncer.name] = syncer
-      return map
-    }, {})
+    console.log('syncers...')
+    // root.Syncers = Syncers.reduce((map, syncer) => {
+    //   map[syncer.name] = syncer
+    //   return map
+    // }, {})
   }
 
   /**
@@ -123,22 +124,22 @@ export class OrbitSyncersRoot {
    * We start syncers with a small timeout to prevent app-overload.
    */
   private async startSyncers() {
-    await Promise.all(
-      Syncers.map(syncer => {
-        return syncer.start()
-      }),
-    )
+    // await Promise.all(
+    //   Syncers.map(syncer => {
+    //     return syncer.start()
+    //   }),
+    // )
   }
 
   /**
    * Stops all the syncers.
    */
   private async stopSyncers() {
-    await Promise.all(
-      Syncers.map(syncer => {
-        return syncer.stop()
-      }),
-    )
+    // await Promise.all(
+    //   Syncers.map(syncer => {
+    //     return syncer.stop()
+    //   }),
+    // )
   }
 }
 

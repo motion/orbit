@@ -1,11 +1,10 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
-import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
-import { WorkerOptions, WorkerUtils } from '@o/worker-kit'
+import { AppBit, AppEntity, AppModel, Job, JobEntity, AppWorker } from '@o/models'
 import { getManager, getRepository } from 'typeorm'
 
-// import { syncersRoot } from './OrbitSyncersRoot'
 import { mediatorClient } from './mediatorClient'
+import { WorkerUtils } from './WorkerUtils'
 
 const cancelCommands = new Set()
 
@@ -83,7 +82,7 @@ export class Syncer {
   private intervals: SyncerInterval[] = []
   private subscription: Subscription
 
-  constructor(options: WorkerOptions) {
+  constructor(options: SyncerOptions) {
     this.options = options
     this.name = options.name
     this.log = new Logger('syncer:' + (options.appIdentifier || this.name))
@@ -101,7 +100,7 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = syncersRoot.mediatorClient
+        this.subscription = mediatorClient
           .observeMany(AppModel, {
             args: { where: { identifier: this.options.appIdentifier } },
           })

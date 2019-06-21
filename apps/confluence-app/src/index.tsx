@@ -3,13 +3,24 @@ import { createApi, createApp } from '@o/kit'
 import { ConfluenceApi } from './api.node'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
-import { ConfluenceSyncer } from './ConfluenceSyncer'
+import { ConfluenceSyncer } from './ConfluenceSyncer.node'
+import { Syncer } from '@o/worker-kit'
 
 export default createApp<ConfluenceAppData>({
   id: 'confluence',
   name: 'Confluence',
   itemType: 'markdown',
-  workers: [ConfluenceSyncer],
+  workers: [
+    async () => {
+      const syncer = new Syncer({
+        id: 'slack',
+        name: 'Slack',
+        runner: ConfluenceSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
+  ],
   api: createApi(ConfluenceApi),
   setupValidate: async app => {
     const loader = new ConfluenceLoader(app)

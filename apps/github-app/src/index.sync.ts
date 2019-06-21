@@ -1,4 +1,4 @@
-import { GithubSyncer } from './GithubSyncer'
+import { GithubSyncer } from './GithubSyncer.node'
 
 export default {
   id: 'github',

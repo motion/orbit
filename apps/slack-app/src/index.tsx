@@ -16,12 +16,15 @@ export default createApp({
   itemType: 'conversation',
   settings: SlackSettings,
   workers: [
-    new Syncer({
-      id: 'slack',
-      name: 'Slack',
-      runner: SlackSyncer,
-      interval: 1000 * 60 * 5, // 5 minutes
-    }),
+    async () => {
+      const syncer = new Syncer({
+        id: 'slack',
+        name: 'Slack',
+        runner: SlackSyncer,
+        interval: 1000 * 60 * 5, // 5 minutes
+      })
+      await syncer.start()
+    },
   ],
   finishAuth: async app => {
     const loader = new SlackLoader(app)

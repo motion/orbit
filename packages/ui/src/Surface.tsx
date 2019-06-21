@@ -572,11 +572,11 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     ...(props.circular && {
       width: props.height,
     }),
-    ...styles,
     fontSize,
     lineHeight,
-    ...marginStyle,
     ...propStyles,
+    ...marginStyle,
+    ...styles,
     '&:hover': props.active
       ? null
       : {

@@ -110,7 +110,7 @@ export class ServiceLoader {
     this.log.vtimer(`request to ${url}`)
     const result = await fetch(url, fetchOptions)
     const responseBody: any = options.plain ? await result.text() : await result.json()
-    this.log.vtimer(`request to ${url}`, result)
+    this.log.vtimer(`request to ${url}`, !!result)
 
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {

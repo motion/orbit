@@ -37,7 +37,7 @@ export const SlackSyncer: SyncerRunner = async ({ app, log, utils }) => {
 
   // filter out channels based on user apps
   const activeChannels = filterChannelsBySettings(appData, allChannels)
-  log.info('filtering only selected channels', activeChannels)
+  log.info('filtering only selected channels', activeChannels.length)
 
   // go through all channels
   const lastMessageSync = appData.values.lastMessageSync || {}
@@ -67,7 +67,7 @@ export const SlackSyncer: SyncerRunner = async ({ app, log, utils }) => {
     if (messages.length && lastMessageTz) {
       // group messages into special "conversations" to avoid insertion of multiple bits for each message
       const conversations = createConversation(messages)
-      log.info(`created conversations: ${conversations.length}`, conversations)
+      log.info(`created conversations: ${conversations.length}`)
 
       // create bits from conversations
       const apiBits = conversations.map(messages =>
@@ -84,7 +84,10 @@ export const SlackSyncer: SyncerRunner = async ({ app, log, utils }) => {
           }
         }
       }
-      log.info(`${apiBits.length} bits were created from conversations and websites`, apiBits)
+      log.info(
+        `${apiBits.length} bits were created from conversations and websites`,
+        apiBits.length,
+      )
 
       // sync all the bits we have
       await utils.syncBits(apiBits, dbBits, {

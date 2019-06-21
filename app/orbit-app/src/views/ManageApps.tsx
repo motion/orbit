@@ -51,6 +51,7 @@ export function ManageApps() {
           margin={[16, 0]}
           sortable
           items={viewApps}
+          itemMinWidth={220}
           getItem={item => {
             return (
               <OrbitAppIcon

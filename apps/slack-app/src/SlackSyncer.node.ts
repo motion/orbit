@@ -1,9 +1,8 @@
-import { AppWorker } from '@o/models/_/AppWorker'
-
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackLoader } from './SlackLoader'
 import { SlackAppData, SlackBitData } from './SlackModels'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
+import { AppWorker } from '@o/models'
 
 /**
  * Syncs Slack messages.

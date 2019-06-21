@@ -24,8 +24,8 @@ export default createApp({
   workers: [
     async () => {
       const syncer = new Syncer({
-        id: 'slack',
-        name: 'Slack',
+        id: 'drive',
+        name: 'Drive',
         runner: DriveSyncer,
         interval: 1000 * 60 * 5, // 5 minutes
       })

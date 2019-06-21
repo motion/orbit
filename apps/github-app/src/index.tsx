@@ -20,8 +20,8 @@ export default createApp({
   workers: [
     async () => {
       const syncer = new Syncer({
-        id: 'slack',
-        name: 'Slack',
+        id: 'github',
+        name: 'Github',
         runner: GithubSyncer,
         interval: 1000 * 60 * 5, // 5 minutes
       })

@@ -35,8 +35,8 @@ export default createApp<JiraAppData>({
   workers: [
     async () => {
       const syncer = new Syncer({
-        id: 'slack',
-        name: 'Slack',
+        id: 'jira',
+        name: 'Jira',
         runner: JiraSyncer,
         interval: 1000 * 60 * 5, // 5 minutes
       })

@@ -13,8 +13,8 @@ export default createApp<ConfluenceAppData>({
   workers: [
     async () => {
       const syncer = new Syncer({
-        id: 'slack',
-        name: 'Slack',
+        id: 'confluence',
+        name: 'Confluence',
         runner: ConfluenceSyncer,
         interval: 1000 * 60 * 5, // 5 minutes
       })

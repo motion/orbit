@@ -69,8 +69,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     }
   }
 
-  const icon =
-    props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
+  const icon = props.icon || (normalized ? normalized.icon : null)
 
   const getIsSelected = useCallback((index: number) => {
     if (visStore && visStore.visible === false) {

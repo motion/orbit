@@ -40,7 +40,6 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
     getIconForBit: (bit: Bit) => {
       const def = getAppDefinition(bit.appIdentifier)
       const app = om.state.apps.activeApps.find(app => app.id === bit.appId)
-      console.log('get', bit, def, app)
       if (def && app) {
         return <AppIcon identifier={bit.appIdentifier} colors={app.colors} />
       }

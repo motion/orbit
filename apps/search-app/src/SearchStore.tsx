@@ -213,7 +213,7 @@ export class SearchStore {
           return false
         }
         const next: ListItemProps[] = nextResults.map(item => ({
-          ...bitToListItem(item),
+          item,
           groupName: 'Search Results',
         }))
         results = [...results, ...next]

@@ -269,7 +269,7 @@ export class Syncer {
     }
 
     // run syncer
-    const syncerPromise = this.runSyncer(log, app) // note: don't await it
+    const syncerPromise = this.runSyncer(this.log, app) // note: don't await it
 
     // create interval to run syncer periodically
     if (this.options.interval && force === false) {
@@ -279,7 +279,7 @@ export class Syncer {
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
           if (interval.running) {
-            log.info(
+            this.log.info(
               `tried to run ${
                 this.name
               } based on interval, but synchronization is already running, skipping`,
@@ -290,7 +290,7 @@ export class Syncer {
           // re-load app again just to make sure we have a new version of it
           const latestApp = app ? await getRepository(AppEntity).findOne({ id: app.id }) : undefined
           interval.app = latestApp
-          interval.running = this.runSyncer(log, latestApp as AppBit)
+          interval.running = this.runSyncer(this.log, latestApp as AppBit)
           await interval.running
           interval.running = undefined
         }, this.options.interval),

@@ -256,12 +256,7 @@ export class Logger {
           defaultLog(this.namespace, delta, ...messages)
           this.timers.splice(this.timers.indexOf(existTimer), 1)
         } else {
-          consoleLog(
-            `%c${this.namespace}%cstarted`,
-            `color: ${color}; font-weight: bold`,
-            'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
-            ...messages,
-          )
+          consoleLog(`${this.namespace}`, ...messages)
           defaultLog(this.namespace, 'started', ...messages)
           this.timers.push({ time: Date.now(), message: messages[0] })
         }

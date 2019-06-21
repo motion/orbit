@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { Server } from 'ws'
 
-const log = new Logger('scrn')
+const log = new Logger('mobx-bridge SocketManager')
 
 export class SocketManager {
   activeSockets = []

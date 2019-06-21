@@ -1,13 +1,14 @@
+import { SyncerRunner } from '@o/worker-kit'
+
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackLoader } from './SlackLoader'
 import { SlackAppData, SlackBitData } from './SlackModels'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
-import { AppWorker } from '@o/models'
 
 /**
  * Syncs Slack messages.
  */
-export const SlackSyncer: AppWorker = async ({ app, log, utils }) => {
+export const SlackSyncer: SyncerRunner = async ({ app, log, utils }) => {
   const appData: SlackAppData = app.data
   const loader = new SlackLoader(app, log)
   const factory = new SlackBitFactory(app, utils)

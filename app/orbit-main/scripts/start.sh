@@ -33,11 +33,6 @@ if [[ "$FLAGS" =~ "--no-syncers" ]]; then
   export DISABLE_WORKERS="true"
 fi
 
-if [[ "$FLAGS" =~ "--no-logging" ]]; then
-  echo "DISABLE LOGGING"
-  export DISABLE_LOGGING="true"
-fi
-
 if [[ "$FLAGS" =~ "--no-electron" ]]; then
   echo "DISABLE ELECTRON"
   export DISABLE_ELECTRON="true"

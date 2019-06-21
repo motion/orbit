@@ -121,8 +121,8 @@ export async function runOrbitDesktop(): Promise<boolean> {
         detached: !isInMonoRepo,
         cwd,
         env: {
+          ...process.env,
           HIDE_ON_START: 'true',
-          DISABLE_LOGGING: 'true',
           SINGLE_APP_MODE: 'true',
         },
       })

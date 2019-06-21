@@ -149,10 +149,10 @@ export class Logger {
 
     const isDevelopment = process.env.NODE_ENV === 'development'
     const isTrace = this.opts.trace && isDevelopment
-    const verboeLoggingEnabled = !process.env.DISABLE_LOGGING && isDevelopment
+    const verboseLogging = process.env.LOG_LEVEL === 'verbose'
 
     // for syncer process with no-logging mode we do not log objects in messages
-    if (verboeLoggingEnabled === false) {
+    if (verboseLogging === false) {
       messages = messages.filter(message => {
         return typeof message !== 'object'
       })
@@ -223,7 +223,7 @@ export class Logger {
       )
       log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
-      if (verboeLoggingEnabled) {
+      if (verboseLogging) {
         debug(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
         log.debug(this.namespace, ...messages)
       }
@@ -237,7 +237,7 @@ export class Logger {
       )
       log.info(this.namespace, ...messages)
     } else if (level === 'timer' || level === 'vtimer') {
-      if (verboeLoggingEnabled || level === 'timer') {
+      if (verboseLogging || level === 'timer') {
         const consoleLog =
           level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
         const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
@@ -267,7 +267,7 @@ export class Logger {
         }
       }
     } else {
-      if (verboeLoggingEnabled) {
+      if (verboseLogging) {
         console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
         log.info(this.namespace, ...messages)
       }

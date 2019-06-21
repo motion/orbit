@@ -117,7 +117,7 @@ export class SlackLoader {
 
     this.log.timer('load API channels')
     const loadedChannels = await recursiveLoad()
-    this.log.timer('load API channels', loadedChannels)
+    this.log.timer('load API channels', loadedChannels.length)
     return loadedChannels
   }
 
@@ -149,7 +149,7 @@ export class SlackLoader {
       }
       this.log.verbose('request to channels.history', options)
       const response = await channels.history(options)
-      this.log.verbose('request to channels.history response', response)
+      this.log.verbose('request to channels.history response', !!response)
 
       if (response.has_more === true) {
         const latest = response.messages[0].ts
@@ -169,13 +169,13 @@ export class SlackLoader {
     // load messages
     this.log.timer(`loading #${channelId} API messages`, { oldestMessageId })
     const messages = await loadRecursively(oldestMessageId)
-    this.log.timer(`loading #${channelId} API messages`, messages)
+    this.log.timer(`loading #${channelId} API messages`, messages.length)
 
     // left only messages we need - real user messages, no system or bot messages
     const filteredMessages = messages.filter(message => {
       return message.type === 'message' && !message.subtype && !message.bot_id && message.user
     })
-    this.log.info('filtered messages (no bots and others)', filteredMessages)
+    this.log.info('filtered messages (no bots and others)', filteredMessages.length)
 
     return {
       messages: filteredMessages,

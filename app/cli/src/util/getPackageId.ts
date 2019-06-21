@@ -41,5 +41,13 @@ export async function getPackageId(
 
 export function getIdentifierFromPackageId(packageId: string) {
   const found = Object.keys(identifierToPackageId).find(x => identifierToPackageId[x] === packageId)
-  return found || null
+  if (found) {
+    return found
+  }
+  reporter.info(
+    `getIdentifierFromPackageId failed to find ${packageId} ${JSON.stringify(
+      identifierToPackageId,
+    )}`,
+  )
+  return null
 }

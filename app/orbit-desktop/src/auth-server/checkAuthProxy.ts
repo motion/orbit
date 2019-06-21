@@ -10,7 +10,8 @@ export async function checkAuthProxy() {
     // temporarily dont care about our weird generated ssl
     const last = process.env['NODE_TLS_REJECT_UNAUTHORIZED']
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
-    const res = await fetch(`${getGlobalConfig().urls.auth}/hello`, {
+    const proxyTestUrl = `${getGlobalConfig().urls.auth}/hello`
+    const res = await fetch(proxyTestUrl, {
       signal: controller.signal,
     })
     process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = last

@@ -1,13 +1,13 @@
 import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit'
-import { GMailQueries } from './GMailQueries'
+
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailModels'
+import { GMailQueries } from './GMailQueries'
 
 /**
  * Defines a loading throttling.
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before history list load.
    */
@@ -22,7 +22,6 @@ const THROTTLING = {
    * Delay before messages load.
    */
   messages: 100,
-
 }
 
 /**
@@ -43,7 +42,7 @@ export class GMailLoader {
         Authorization: `Bearer ${this.app.token}`,
         'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
         'Access-Control-Allow-Methods': 'GET',
-      }
+      },
     })
   }
 
@@ -136,8 +135,12 @@ export class GMailLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean
   }): Promise<void> {
-    const loadRecursively = async (count: number, filteredIds?: string[], pageToken?: string, loadedCount?: number) => {
-
+    const loadRecursively = async (
+      count: number,
+      filteredIds?: string[],
+      pageToken?: string,
+      loadedCount?: number,
+    ) => {
       await sleep(THROTTLING.threads)
       let { queryFilter, handler } = options
 
@@ -151,7 +154,7 @@ export class GMailLoader {
 
       this.log.info(
         `${result.threads.length} threads were loaded (${loadedCount +
-        result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`,
+          result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`,
         result,
       )
 
@@ -215,12 +218,22 @@ export class GMailLoader {
           return
         }
 
-        await loadRecursively(count, filteredIds, result.nextPageToken, loadedCount + threads.length)
+        await loadRecursively(
+          count,
+          filteredIds,
+          result.nextPageToken,
+          loadedCount + threads.length,
+        )
       }
     }
 
     this.log.timer('sync all threads')
-    await loadRecursively(options.count, options.filteredIds, options.pageToken, options.loadedCount)
+    await loadRecursively(
+      options.count,
+      options.filteredIds,
+      options.pageToken,
+      options.loadedCount,
+    )
     this.log.timer('sync all threads')
   }
 

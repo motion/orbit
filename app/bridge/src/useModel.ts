@@ -137,9 +137,15 @@ function use<ModelType, Args>(
         let resolved = false
         const promise = new Promise(res => {
           yallReadyKnow.current = true
-          subscription.current = runUseQuery(model, type, query, observeEnabled, next => {
-            // TODO why is this coming back undefined
-            if (!isDefined(next)) return
+
+          const finish = next => {
+            clearTimeout(tm)
+            if (!isDefined(next)) {
+              // i'm seeing this on useJobs() where none exist
+              // so lets assume this means "emtpy" and return default value
+              next = defaultValues[type]
+              console.log('setting default value', next)
+            }
             if (!resolved) {
               valueRef.current = next
               cache.current = next
@@ -148,7 +154,15 @@ function use<ModelType, Args>(
               }, 50)
               res()
             }
-          })
+          }
+
+          // timeout
+          let tm = setTimeout(() => {
+            console.error(`Query timed out ${JSON.stringify(query)}`)
+            finish(defaultValues[type])
+          }, 1000)
+
+          subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })
         cache = PromiseCache[key] = {
           read: promise,

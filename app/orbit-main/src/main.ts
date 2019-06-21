@@ -1,4 +1,5 @@
 import { getGlobalConfig, setGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
 import { ChildProcess } from 'child_process'
 import root from 'global'
@@ -16,8 +17,10 @@ Error.stackTraceLimit = Infinity
 
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env
 
+const log = new Logger('orbit-main')
+
 export async function main() {
-  console.log(`starting ${PROCESS_NAME}`)
+  log.info(`starting ${PROCESS_NAME || 'orbit-main'}`)
 
   // setup config
   if (SUB_PROCESS) {
@@ -33,22 +36,16 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (process.env.FIRST_RUN === 'true') {
-    // 🐛 for some reason you'll get "directv-tick" consistently on a port
-    // EVEN IF port was found to be empty.... killing again helps
-    try {
-      const ports = Object.values(config.ports)
-      console.log('Ensuring all ports clear...', ports)
-      const killPort = require('kill-port')
-      await Promise.all(ports.map(port => killPort(port)))
-    } catch {
-      // errors just show the ports empty
-    }
-  }
+  // 🐛 for some reason you'll get "directv-tick" consistently on a port
+  // EVEN IF port was found to be empty.... killing again helps
+  const ports = Object.values(config.ports)
+  log.info('Ensuring all ports clear...', ports.join(','))
+  const killPort = require('kill-port')
+  await Promise.all(ports.map(port => killPort(port).catch(err => err)))
 
   // if we are in a forked sub-process, we go off and run them
   if (SUB_PROCESS) {
-    console.log('starting sub process', SUB_PROCESS)
+    log.info('starting sub process', SUB_PROCESS)
     switch (SUB_PROCESS) {
       // we run another orbit sub-process for each app you persist
       case 'orbit':
@@ -108,7 +105,7 @@ export async function main() {
   })
 
   if (DISABLE_ELECTRON !== 'true') {
-    console.log('Starting electron...')
+    log.info('Starting electron...')
 
     // start main electron process inside this thread (no forking)
     require('./startElectron').startElectron({ mainProcess: true })
@@ -139,10 +136,15 @@ export async function main() {
       name: 'syncers',
       inspectPort: 9003,
       isNode: true,
+      env: {
+        RUN_MEDIATOR: 'true',
+      },
     })
+  } else {
+    log.info(`Workers disabled`)
   }
 
-  console.log('Started everything!')
+  log.info('Started everything!')
 }
 
 if (SUB_PROCESS || process.env.FIRST_RUN === 'true') {

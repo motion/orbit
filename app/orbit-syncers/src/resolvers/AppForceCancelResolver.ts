@@ -2,19 +2,9 @@ import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppForceCancelCommand, JobEntity } from '@o/models'
 import { getRepository } from 'typeorm'
+import { __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS } from '@o/worker-kit'
 
 const log = new Logger('SourceForceCancelResolver')
-const cancelCommands = new Set()
-
-export class AppCancelError extends Error {}
-
-export function checkCancelled(appId: number) {
-  if (cancelCommands.has(appId)) {
-    cancelCommands.delete(appId)
-    throw new AppCancelError(`Cancelled: ${appId}`)
-  }
-  return true
-}
 
 export const AppForceCancelResolver: any = resolveCommand(
   AppForceCancelCommand,
@@ -33,14 +23,7 @@ export const AppForceCancelResolver: any = resolveCommand(
 
     if (lastJob) {
       await getRepository(JobEntity).remove(lastJob)
-      // send cancel to the running syncer so it exits...
-      cancelCommands.add(appId)
-      // prevent weird states, say they click cancel right as it finishes
-      // this ensures it wont stick around for too long
-      // not the ideal solution but lets see how it does...
-      setTimeout(() => {
-        cancelCommands.delete(appId)
-      }, 500)
+      __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS.cancelSyncer(appId)
     }
   },
 )

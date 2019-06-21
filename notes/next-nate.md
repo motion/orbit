@@ -1,9 +1,6 @@
 next
 
-- [ ] need to fix app icons completely
-- [ ] new app setup pane with "create new app" as well
-- [ ] installs app into workspace when you click oauth/setup
-
+- fix syncers: get them loading dynamic apps stuff
 - opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit
@@ -16,7 +13,6 @@ June Goals:
 QueryBuilder:
 
 - Fix layout issues:
-  - Resize handles overlap content sometimes
   - On mount it shows the sidebar large, then resizes it down
 - Error/Success messages:
   - Show an error message on errors
@@ -35,23 +31,9 @@ Visual Fixes:
 
 - Lists search+select seems to have regressed, could be new react-window
 - Fix GraphQL Explorer interface small glitches
-- Fix general settings not showing selected item anymore
-- Fix settings pane tabs not showing active
-- Fix settings > Spaces pane not loading
-
-App Icons:
-
-- Redo app icons so you can choose any blueprint icon for your app
-- Simplify them a bit
 
 Install apps:
 
-- Fix search apps to be more reliable
-- Get install working from remote
-- Get install command working from cli
-- Have workspace update with new app
-- Fix apps showing icons in topbar
-- Fix show home app by default on load
 - Test loading multiple different workspaces and apps
 
 Edit apps from interface:
@@ -73,10 +55,6 @@ App Settings:
 
 - Fix app settings various bugs that have come up
 - Make CRUD of settings work wel
-
-Home:
-
-- Make all workspaces have a search/home app by default
 
 Demo apps:
 

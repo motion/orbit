@@ -1,12 +1,12 @@
 import { createApp } from '@o/kit'
 
-import { WebsiteSyncer } from './WebsiteSyncer'
+import { WebsiteSyncerWorker } from './WebsiteSyncerWorker.node'
 
 export default createApp({
   id: 'website',
   name: 'Website',
   itemType: 'task',
-  workers: [WebsiteSyncer],
+  workers: [WebsiteSyncerWorker],
   setup: {
     url: {
       name: 'URL',

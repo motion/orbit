@@ -24,7 +24,7 @@ export type Size =
 export type Sizes = Size | Size[]
 
 export type SpaceProps = {
-  size?: Sizes
+  size?: Size
   flex?: number
 }
 
@@ -40,28 +40,29 @@ export const spaceSizes = {
   xxxl: 48,
 }
 
-export function getSpaceSize(space: Sizes) {
-  if (space === 0) {
-    return 0
-  }
+export function getSpaceSize(space: Size, scale: number = 1): number {
   if (typeof space === 'number') {
-    return space
+    return space * scale
   }
   if (space === false) {
     return 0
   }
-  if (!space || space === true) {
-    space = 'md'
+  if (typeof space === 'string') {
+    return (spaceSizes[space] || 0) * scale
   }
+  return spaceSizes.md * scale
+}
+
+export function getSpacesSize(space: Sizes, scale: number = 1) {
   if (Array.isArray(space)) {
-    return space.map(getSpaceSize)
+    return space.map(x => +getSpaceSize(x, scale))
   }
-  return spaceSizes[space] || space || 0
+  return getSpaceSize(space)
 }
 
 export const Space = gloss<SpaceProps>(Box)
   .theme(({ size, ...rest }: SpaceProps) => {
-    const dim = getSpaceSize(size) * useScale()
+    const dim = getSpaceSize(size, useScale())
     return {
       width: dim,
       height: dim,

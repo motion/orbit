@@ -8,14 +8,16 @@ export function styleVal(val: any, theme: ThemeObject, props?: Object) {
 
 // resolves props into styles for valid css
 
-export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet {
-  let styles: CSSPropertySet = {
-    ...props.style,
-  }
+export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet | null {
+  let styles: CSSPropertySet | null = null
   // loop over props turning into styles
   for (let key in props) {
     if (validCSSAttr[key]) {
-      styles[key] = styleVal(props[key], theme, props)
+      const next = styleVal(props[key], theme, props)
+      if (next !== undefined) {
+        styles = styles || {}
+        styles[key] = next
+      }
       continue
     }
     // &:hover, etc
@@ -23,12 +25,16 @@ export function propStyleTheme(props: any, theme: ThemeObject): CSSPropertySet {
     if (abbrev || key[0] === '&') {
       const psuedoKey = abbrev || key
       const subStyle = props[key]
-      const val = {}
+      let val: CSSPropertySet | undefined
       // theme functions for sub objects
       for (const subKey in subStyle) {
+        val = val || {}
         val[subKey] = styleVal(subStyle[subKey], theme, props)
       }
-      styles[psuedoKey] = val
+      if (val) {
+        styles = styles || {}
+        styles[psuedoKey] = val
+      }
     }
   }
   return styles

@@ -20,7 +20,6 @@ export class NewAppStore {
     this.reset()
     const userApps = getUserApps()
     const nextApp = userApps.find(x => x.id === identifier)
-    console.log('next app', nextApp)
     if (!nextApp) {
       console.warn('no app', nextApp)
       return

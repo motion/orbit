@@ -1,5 +1,5 @@
 import { isColorLike, toColor, toColorString } from '@o/color'
-import { fromEntries, isDefined } from '@o/utils'
+import { fromEntries, isDefined, selectDefined } from '@o/utils'
 import { configureCSS, configureGloss } from 'gloss'
 import sum from 'hash-sum'
 import { Context, createContext, FunctionComponent, isValidElement, useState } from 'react'
@@ -66,7 +66,7 @@ export let Config: ConfigureUIProps = {
   getItemKey: (x, index) => {
     if (!x) {
       console.warn('NO ITEM', x)
-      return `${Math.random()}`
+      return selectDefined(index, `${Math.random()}`)
     }
     const item = x.item || x
     const key = item.id || item.key || item.identifier

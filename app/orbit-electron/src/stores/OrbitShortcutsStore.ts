@@ -41,7 +41,7 @@ class OrbitShortcutsStore {
       }
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 }

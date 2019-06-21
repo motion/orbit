@@ -1,4 +1,4 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, updateWorkspacePackageIds } from '@o/cli'
+import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -6,32 +6,19 @@ import { watch } from 'chokidar'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { getWorkspaceAppMeta } from '../helpers/getWorkspaceAppMeta'
-import { getWorkspaceNodeApis } from '../helpers/getWorkspaceNodeApis'
-
 const log = new Logger('OrbitAppsManager')
-
-export const appSelectAllButDataAndTimestamps: (keyof AppBit)[] = [
-  'id',
-  'itemType',
-  'identifier',
-  'spaceId',
-  'name',
-  'tabDisplay',
-  'colors',
-  'token',
-]
 
 @decorate
 export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
   spaces: Space[] = []
   apps: AppBit[] = []
-  user: User = null
+  user: User | null = null
   spaceFolders: { [id: number]: string } = {}
   packageJsonUpdate = 0
   appMeta: { [identifier: string]: AppMeta } = {}
   nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+  updatePackagesVersion = 0
 
   // for easier debugging
   getIdentifierToPackageId = getIdentifierToPackageId
@@ -46,13 +33,13 @@ export class OrbitAppsManager {
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({})
       .subscribe(next => {
-        this.spaces = next
+        this.spaces = next as Space[]
       })
 
     const userSubscription = getRepository(UserEntity)
       .observeOne({})
       .subscribe(next => {
-        this.user = next
+        this.user = next as User
       })
 
     this.subscriptions.add(userSubscription)
@@ -61,44 +48,53 @@ export class OrbitAppsManager {
   }
 
   get activeSpace() {
-    if (!this.user) {
+    const user = this.user
+    if (!user) {
       return null
     }
-    return this.spaces.find(x => x.id === this.user.activeSpace)
+    return this.spaces.find(x => x.id === user.activeSpace)
   }
 
   updateAppDefinitionsReaction = react(
     () => [this.activeSpace, this.packageJsonUpdate],
-    ([space]) => {
+    async ([space]) => {
       ensure('space', !!space)
-      this.updateAppDefinitions(space)
-      // have cli update its cache of packageId => identifier for use installing
-      updateWorkspacePackageIds(space.directory)
+      if (space) {
+        this.updateAppDefinitions(space)
+        // have cli update its cache of packageId => identifier for use installing
+        await updateWorkspacePackageIds(space.directory || '')
+        this.updatePackagesVersion = Math.random()
+      }
     },
   )
 
   updateAppDefinitions = async (space: Space) => {
-    const definitions = await getWorkspaceNodeApis(space)
+    const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
     log.info(`Got definitions for ${Object.keys(definitions)}`)
     this.nodeAppDefinitions = {
       ...this.nodeAppDefinitions,
-      ...definitions,
+      ...definitions.reduce((acc, def) => {
+        acc[def.id] = def
+        return acc
+      }, {}),
     }
   }
 
   updateAppMeta = react(
-    () => this.nodeAppDefinitions,
-    async appDefs => {
+    () => [this.nodeAppDefinitions, this.updatePackagesVersion],
+    async ([appDefs]) => {
       ensure('appDefs', !!appDefs)
-      const appsMeta = await getWorkspaceAppMeta(this.activeSpace)
+      const activeSpace = this.activeSpace
+      if (!activeSpace) return
+      const appsMeta = await getWorkspaceAppPaths(activeSpace.directory || '')
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)
-        log.info('setting apps meta2', meta.packageId, identifier)
+        log.verbose('setting apps meta', meta.packageId, identifier)
         if (identifier !== null) {
           this.appMeta[identifier] = meta
         } else {
-          log.info('no identifier found')
+          log.error(`no identifier found for ${meta.packageId}`)
         }
       }
     },
@@ -108,20 +104,22 @@ export class OrbitAppsManager {
     () => this.activeSpace,
     (space, { useEffect }) => {
       ensure('space', !!space)
-      const pkg = join(space.directory, 'package.json')
-      log.info('watching package.json for changes', pkg)
-      useEffect(() => {
-        let watcher = watch(pkg, {
-          persistent: true,
+      if (space) {
+        const pkg = join(space.directory || '', 'package.json')
+        log.info('watching package.json for changes', pkg)
+        useEffect(() => {
+          let watcher = watch(pkg, {
+            persistent: true,
+          })
+          watcher.on('change', () => {
+            log.info('got package.json change')
+            this.packageJsonUpdate = Math.random()
+          })
+          return () => {
+            watcher.close()
+          }
         })
-        watcher.on('change', () => {
-          log.info('got package.json change')
-          this.packageJsonUpdate = Math.random()
-        })
-        return () => {
-          watcher.close()
-        }
-      })
+      }
     },
   )
 

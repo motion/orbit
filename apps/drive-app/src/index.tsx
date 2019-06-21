@@ -4,7 +4,7 @@ import { graph } from './api.graph.node'
 import { DriveApi } from './api.node'
 import { DriveLoader } from './DriveLoader'
 import { DriveSettings } from './DriveSettings'
-import { DriveSyncer } from './DriveSyncer'
+import { DriverSyncerWorker } from './DriveSyncerWorker.node'
 
 export default createApp({
   id: 'drive',
@@ -20,7 +20,7 @@ export default createApp({
   },
   itemType: 'task',
   settings: DriveSettings,
-  workers: [DriveSyncer],
+  workers: [DriverSyncerWorker],
   api: createApi(DriveApi),
   graph,
   icon: `

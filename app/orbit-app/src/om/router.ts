@@ -1,4 +1,4 @@
-import { Action, Derive, mutate, Operator, pipe, run } from 'overmind'
+import { Action, catchError, Derive, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -62,8 +62,14 @@ export const state: RouterState = {
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
 }
 
+class AlreadyOnPageError extends Error {}
+
 const showPage: Operator<HistoryItem> = pipe(
   mutate((om, item) => {
+    const alreadyOnPage = JSON.stringify(item) === JSON.stringify(om.state.router.curPage)
+    if (alreadyOnPage) {
+      throw new AlreadyOnPageError()
+    }
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
   }),
@@ -74,6 +80,13 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
   mutate(om => {
     om.state.router.ignoreNextPush = false
+  }),
+  catchError((_, error) => {
+    if (error instanceof AlreadyOnPageError) {
+      return
+    } else {
+      console.error(error)
+    }
   }),
 )
 
@@ -111,14 +124,14 @@ const ignoreNextPush: Action = om => {
 const back: Action = om => {
   if (om.state.router.historyIndex > -1) {
     om.state.router.historyIndex--
-    history.back()
+    window.history.back()
   }
 }
 
 const forward: Action = om => {
   if (om.state.router.historyIndex < om.state.router.history.length - 1) {
     om.state.router.historyIndex++
-    history.forward()
+    window.history.forward()
   }
 }
 

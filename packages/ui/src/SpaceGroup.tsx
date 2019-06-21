@@ -1,11 +1,11 @@
 import React, { Fragment, isValidElement } from 'react'
 
-import { Sizes, Space } from './Space'
+import { Space, Size } from './Space'
 
 export type SpaceGroupProps = {
   children?: React.ReactNode
-  space?: Sizes
-  spaceAround?: Sizes
+  space?: Size
+  spaceAround?: Size
   separator?: React.ReactNode
   beforeSpace?: React.ReactNode
   afterSpace?: React.ReactNode

@@ -13,6 +13,8 @@
     { "path": "../screen" },
     { "path": "../oracle" },
     { "path": "../config" },
+    { "path": "../libs" },
+    { "path": "../libs-node" },
     { "path": "../cli" },
     { "path": "../build-server" },
     { "path": "../../apps" },

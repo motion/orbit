@@ -7,15 +7,18 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import { Entities, JobEntity, JobModel } from '@o/models'
+import { Entities, JobEntity, JobModel, AppModel, AppEntity } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { Syncers } from './Syncers'
 import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS } from '@o/worker-kit'
+import { WorkersManager } from './WorkersManager'
+
+const log = new Logger('WorkersRoot')
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -23,7 +26,12 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
   mediatorClient: MediatorClient
 
+  // managers
+  workersManager = new WorkersManager()
+
   async start() {
+    log.info(`Starting Orbit Workers`)
+
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
@@ -44,30 +52,32 @@ export class OrbitSyncersRoot {
       ],
     })
 
-    // setup proper instances to use inside sync-kit package
-    setTimeout(() => {
-      this.startSyncers()
-    }, 10000)
+    __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS.setMediatorClient(this.mediatorClient)
+
+    await this.workersManager.start()
   }
 
   async dispose() {
     if (this.connection) {
       await this.connection.close()
-      await this.stopSyncers()
+      await this.workersManager.stop()
     }
     return true
   }
 
   private async createDbConnection(): Promise<void> {
     const Config = getGlobalConfig()
-    const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'
-    const DATABASE_PATH = Path.join(Config.paths.userData, `${env}_database.sqlite`)
+
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    const DATABASE_PATH = Path.join(
+      Config.paths.userData,
+      isDevelopment ? `development_database.sqlite` : `orbit_database.sqlite`,
+    )
 
     this.connection = await createConnection({
       name: 'default',
       type: 'sqlite',
       database: DATABASE_PATH,
-      // location: 'default',
       entities: Entities,
       logging: ['error'],
       logger: 'simple-console',
@@ -87,10 +97,7 @@ export class OrbitSyncersRoot {
     root.root = this
     root.Logger = Logger
     root.mediatorServer = this.mediatorServer
-    root.Syncers = Syncers.reduce((map, syncer) => {
-      map[syncer.name] = syncer
-      return map
-    }, {})
+    root.Entities = Entities
   }
 
   /**
@@ -99,40 +106,20 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [JobModel],
+      models: [AppModel, JobModel],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
-        ...typeormResolvers(this.connection, [{ entity: JobEntity, models: [JobModel] }]),
+        ...typeormResolvers(this.connection, [
+          { entity: AppEntity, models: [AppModel] },
+          { entity: JobEntity, models: [JobModel] },
+        ]),
         AppForceSyncResolver,
         AppForceCancelResolver,
       ],
     })
     this.mediatorServer.bootstrap()
-  }
-
-  /**
-   * Starts all the syncers.
-   * We start syncers with a small timeout to prevent app-overload.
-   */
-  private async startSyncers() {
-    await Promise.all(
-      Syncers.map(syncer => {
-        return syncer.start()
-      }),
-    )
-  }
-
-  /**
-   * Stops all the syncers.
-   */
-  private async stopSyncers() {
-    await Promise.all(
-      Syncers.map(syncer => {
-        return syncer.stop()
-      }),
-    )
   }
 }
 

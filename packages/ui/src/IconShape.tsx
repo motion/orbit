@@ -41,10 +41,6 @@ export const IconShape = memo(
 
       const [svgPath, setSVGPath] = useState(`${shapes[shape]}`)
 
-      if (props.name && !iconPath) {
-        console.log('no icon path', props.name, iconPath)
-      }
-
       useLayoutEffect(() => {
         if (!iconPath) return
         const draw = SVG(id).size(diameter, diameter)

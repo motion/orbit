@@ -3,13 +3,13 @@ import { createApi, createApp } from '@o/kit'
 import { ConfluenceApi } from './api.node'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
-import { ConfluenceSyncer } from './ConfluenceSyncer'
+import { ConfluenceSyncerWorker } from './ConfluenceSyncerWorker.node'
 
 export default createApp<ConfluenceAppData>({
   id: 'confluence',
   name: 'Confluence',
   itemType: 'markdown',
-  workers: [ConfluenceSyncer],
+  workers: [ConfluenceSyncerWorker],
   api: createApi(ConfluenceApi),
   setupValidate: async app => {
     const loader = new ConfluenceLoader(app)

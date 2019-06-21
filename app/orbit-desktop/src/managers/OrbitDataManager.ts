@@ -6,7 +6,6 @@ import { homedir } from 'os'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { appSelectAllButDataAndTimestamps } from './OrbitAppsManager'
 import { ensureHomeDir } from './OrbitDataManager/helpers'
 
 // this manages the user configuration and data
@@ -111,15 +110,10 @@ export class OrbitDataManager {
       persist()
     })
 
-    addObserveMany(
-      this.subscriptions,
-      AppEntity,
-      { where: { spaceId: space.id }, select: appSelectAllButDataAndTimestamps },
-      apps => {
-        state.apps = apps
-        persist()
-      },
-    )
+    addObserveMany(this.subscriptions, AppEntity, { where: { spaceId: space.id } }, apps => {
+      state.apps = apps
+      persist()
+    })
 
     return subscribers
   }

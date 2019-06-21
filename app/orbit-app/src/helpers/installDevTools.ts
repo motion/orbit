@@ -59,20 +59,19 @@ function lightLog(val: any) {
   if (
     type === 'object' &&
     (type.constructor.name === 'Object' || type.constructor.name === 'Array') &&
-    Object.keys(type).length < 20
+    Object.keys(type).length < 30
   ) {
     try {
-      let x = Date.now()
       const str = JSON.stringify(val)
-      if (Date.now() - x > 10) {
-        debugger
-      }
       if (str.length < 200) {
         return `(${str})`
       }
     } catch {}
   }
-  return `(type: ${type})`
+  if (type === 'object') {
+    return `(type object, keys: ${Object.keys(type)})`
+  }
+  return `(type: ${type}`
 }
 
 function logMobxEvent(event) {
@@ -87,13 +86,17 @@ function logMobxEvent(event) {
       break
     case 'update':
       if (!event.object) {
-        console.log(`%c ${event.name} = ${lightLog(event.newValue)}`, 'color:red;')
+        console.groupCollapsed(`%c ${event.name} = ${lightLog(event.newValue)}`, 'color:red;')
+        console.log(event)
+        console.groupEnd()
       } else {
         let name = `${event.object.constructor.name}.${event.key}`
         if (event.object.constructor.name === 'Object') {
           name = event.name
         }
-        console.log(`%c ${name} = ${lightLog(event.newValue)}`, 'color:red;')
+        console.groupCollapsed(`%c ${name} = ${lightLog(event.newValue)}`, 'color:red;')
+        console.log(event)
+        console.groupEnd()
       }
       break
     case 'reaction':

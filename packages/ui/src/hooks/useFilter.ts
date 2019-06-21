@@ -4,8 +4,8 @@ import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
+import { ListItemSimpleProps } from '../lists/ListItemSimple'
 import { useSearch } from '../Search'
-import { ListItemSimpleProps } from './ListItemSimple'
 
 export type UseFilterProps<A> = {
   /** Toggle to enable/disable search filtering */

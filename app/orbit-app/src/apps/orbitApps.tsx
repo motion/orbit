@@ -1,6 +1,7 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, decorate, react, useAppDefinitions } from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
+import { reaction } from 'mobx'
 import { createElement } from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -14,20 +15,26 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './spaces/SpacesApp'
 
-export function startAppLoadWatch() {
-  @decorate
-  class WatchAppIdentifiers {
-    watcher = react(
-      () => Desktop.state.workspaceState.appIdentifiers,
-      async appIdentifiers => {
-        dynamicApps = requireDynamicApps()
-        console.debug('appIdentifiers updated', appIdentifiers, dynamicApps)
-        __SERIOUSLY_SECRET.reloadAppDefinitions()
-      },
-    )
-  }
+let dynamicApps: AppDefinition[] = requireDynamicApps()
 
-  new WatchAppIdentifiers()
+function updateDefinitions() {
+  dynamicApps = requireDynamicApps()
+}
+
+export function startAppLoadWatch() {
+  // watch for updates
+  reaction(
+    () => Desktop.state.workspaceState.appIdentifiers,
+    () => {
+      updateDefinitions()
+      __SERIOUSLY_SECRET.reloadAppDefinitions()
+    },
+  )
+}
+
+function requireDynamicApps() {
+  const rawApps = require('../../appDefinitions')
+  return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
 
 const LoadingApp = createApp({
@@ -52,14 +59,7 @@ export const orbitStaticApps: AppDefinition[] = [
   HomeApp,
 ]
 
-const requireDynamicApps = () => {
-  const rawApps = require('../../appDefinitions')
-  return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
-}
-
-let dynamicApps = requireDynamicApps()
-
-export function getApps(): AppDefinition[] {
+export const getAllAppDefinitions = (): AppDefinition[] => {
   return [...orbitStaticApps, ...dynamicApps]
 }
 
@@ -94,7 +94,7 @@ if (module['hot']) {
     if (status === 'apply') {
       configureKit({
         StoreContext,
-        getLoadedApps: getApps,
+        getLoadedApps: getAllAppDefinitions,
       })
     }
   })

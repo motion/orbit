@@ -1,11 +1,58 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
-import { WorkerOptions, WorkerUtils } from '@o/worker-kit'
-import { getManager, getRepository } from 'typeorm'
+import { EntityManager, getManager, getRepository } from 'typeorm'
 
-import { syncersRoot } from './OrbitSyncersRoot'
-import { checkCancelled } from './resolvers/AppForceCancelResolver'
+import { mediatorClient } from './mediatorClient'
+import { SyncerUtils } from './SyncerUtils'
+
+const cancelCommands = new Set()
+
+export class AppCancelError extends Error {}
+
+export function cancelSyncer(appId: number) {
+  cancelCommands.add(appId)
+}
+
+function checkCancelled(appId: number) {
+  if (cancelCommands.has(appId)) {
+    cancelCommands.delete(appId)
+    throw new AppCancelError(`Cancelled: ${appId}`)
+  }
+  return true
+}
+
+/**
+ * Helpers passed to the worker runner.
+ */
+export type SyncerHelpers = {
+  /**
+   * App bit.
+   */
+  app: AppBit
+
+  /**
+   * Logger used to log worker operations.
+   */
+  log: Logger
+
+  /**
+   * Database entity manager.
+   */
+  manager: EntityManager
+
+  /**
+   * Used to check if sync is aborted.
+   */
+  isAborted: () => Promise<void>
+
+  /**
+   * Set of utils help write custom workers.
+   */
+  utils: SyncerUtils
+}
+
+export type SyncerRunner = (helpers: SyncerHelpers) => any
 
 /**
  * Interval running in the Syncer.
@@ -14,6 +61,36 @@ interface SyncerInterval {
   app?: AppEntity
   timer: any // nodejs timer
   running?: Promise<any>
+}
+
+/**
+ * Options to be passed to Worker.
+ */
+export interface SyncerOptions {
+  id: string
+
+  /**
+   * Worker name.
+   * By default equals to implementation constructor name.
+   */
+  name?: string
+
+  /**
+   * App identifier.
+   * Used to get worker settings.
+   * If type is not specified then syncer will be executed once without any setting specified.
+   */
+  appIdentifier: string
+
+  /**
+   * Worker runner.
+   */
+  runner: SyncerRunner
+
+  /**
+   * Interval during which workers should be executed.
+   */
+  interval: number
 }
 
 /**
@@ -31,13 +108,13 @@ interface SyncerInterval {
  */
 export class Syncer {
   name: string
-  options: WorkerOptions
+  options: SyncerOptions
 
   private log: Logger
   private intervals: SyncerInterval[] = []
   private subscription: Subscription
 
-  constructor(options: WorkerOptions) {
+  constructor(options: SyncerOptions) {
     this.options = options
     this.name = options.name
     this.log = new Logger('syncer:' + (options.appIdentifier || this.name))
@@ -47,7 +124,9 @@ export class Syncer {
    * Starts a process of active syncronization (runs interval).
    */
   async start(force = false) {
-    if (this.options.appIdentifier) {
+    if (!this.options.appIdentifier) {
+      throw new Error(`Must have appIdentifier`)
+    } else {
       // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
         const apps = await getRepository(AppEntity).find({ identifier: this.options.appIdentifier })
@@ -55,14 +134,12 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = syncersRoot.mediatorClient
+        this.subscription = mediatorClient
           .observeMany(AppModel, {
             args: { where: { identifier: this.options.appIdentifier } },
           })
           .subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
-    } else {
-      await this.runInterval(undefined, force)
     }
   }
 
@@ -86,7 +163,7 @@ export class Syncer {
    * Reacts on app changes - manages apps lifecycle and how syncer deals with it.
    */
   private async reactOnSettingsChanges(apps: AppBit[]) {
-    this.log.info('got apps in syncer', apps)
+    this.log.info('got apps in syncer', apps.length)
 
     const intervalSettings = this.intervals
       .filter(interval => !!interval.app)
@@ -133,9 +210,6 @@ export class Syncer {
     if (app) {
       interval = this.intervals.find(interval => interval.app.id === app.id)
     }
-    const log = new Logger(
-      'syncer:' + (app ? app.identifier + ':' + app.id : '') + (force ? ' (force)' : ''),
-    )
 
     // get the last run job
     if (force === false) {
@@ -157,23 +231,25 @@ export class Syncer {
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
-          log.info(
-            `found job for ${jobName} but it left uncompleted ` +
-              '(probably app was closed before job completion). ' +
-              'Removing stale job and run synchronization again',
+          this.log.info(
+            `found job for ${jobName} but it left uncompleted (probably app was closed before job completion). Removing stale job and run synchronization again`,
           )
           await getRepository(JobEntity).remove(lastJob)
         } else {
           if (needToWait > 0) {
-            log.info(
-              `found last executed job for ${jobName} and we should wait ` +
-                'until enough interval time will pass before we execute a new job',
-              { jobTime, currentTime, needToWait, lastJob },
+            this.log.info(
+              `found last job ${jobName} should wait until enough interval time will pass`,
+              {
+                jobTime,
+                currentTime,
+                needToWait,
+                lastJob,
+              },
             )
             setTimeout(() => this.runInterval(app), needToWait)
             return
           }
-          log.info(
+          this.log.info(
             `found last executed job for ${this.name} and its okay to execute a new job`,
             lastJob,
           )
@@ -183,7 +259,7 @@ export class Syncer {
 
     // clear previously run interval if exist
     if (interval) {
-      log.info('clearing previous interval', interval)
+      this.log.info('clearing previous interval', interval)
       if (interval.running)
         // if its running await it
         await interval.running
@@ -193,7 +269,7 @@ export class Syncer {
     }
 
     // run syncer
-    const syncerPromise = this.runSyncer(log, app) // note: don't await it
+    const syncerPromise = this.runSyncer(this.log, app) // note: don't await it
 
     // create interval to run syncer periodically
     if (this.options.interval && force === false) {
@@ -203,7 +279,7 @@ export class Syncer {
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
           if (interval.running) {
-            log.info(
+            this.log.info(
               `tried to run ${
                 this.name
               } based on interval, but synchronization is already running, skipping`,
@@ -214,7 +290,7 @@ export class Syncer {
           // re-load app again just to make sure we have a new version of it
           const latestApp = app ? await getRepository(AppEntity).findOne({ id: app.id }) : undefined
           interval.app = latestApp
-          interval.running = this.runSyncer(log, latestApp as AppBit)
+          interval.running = this.runSyncer(this.log, latestApp as AppBit)
           await interval.running
           interval.running = undefined
         }, this.options.interval),
@@ -242,7 +318,7 @@ export class Syncer {
       message: '',
     }
     await getRepository(JobEntity).save(job)
-    log.info('created a new job', job)
+    log.info('created a new job', job.id)
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
@@ -253,11 +329,11 @@ export class Syncer {
         log,
         manager: getManager(),
         isAborted: async () => checkCancelled(app.id) && void 0,
-        utils: new WorkerUtils(
+        utils: new SyncerUtils(
           app,
           log,
           getManager(),
-          syncersRoot.mediatorClient,
+          mediatorClient,
           async () => !!checkCancelled(app.id),
         ),
       })
@@ -265,7 +341,7 @@ export class Syncer {
       // update our job (finish successfully)
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
-      log.info('job updated', job)
+      log.info('job updated', job.id)
       log.timer(`${this.options.name} sync`)
     } catch (error) {
       log.error(`${this.options.name} sync err`, error)

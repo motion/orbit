@@ -1,14 +1,24 @@
-import { downloadAppDefinition, requireAppDefinition } from '@o/cli'
+import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/cli'
+import { newEmptyAppBit } from '@o/libs'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
 import { getActiveSpace } from '../helpers/getActiveSpace'
+import { getCurrentWorkspace } from '../resolvers/AppOpenWorkspaceResolver'
 import { OAuthStrategies } from './oauthStrategies'
 import { OauthValues } from './oauthTypes'
 
 const log = new Logger('finishAuth')
-export const FinishAuthQueue = new Map()
+
+// maps authKey to information needed for finishing creating AppBit
+export const FinishAuthQueue = new Map<
+  string,
+  {
+    identifier: string
+    finish: (res: boolean) => any
+  }
+>()
 
 export const finishAuth = async (type: string, values: OauthValues) => {
   try {
@@ -22,26 +32,30 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       throw new Error(`No token returned ${JSON.stringify(values)}`)
     }
 
-    const space = await getActiveSpace()
-    let app: AppBit = {
-      target: 'app',
-      name: '',
-      spaces: [space],
-      spaceId: space.id,
-      identifier: type,
-      token: values.token,
-      data: {
-        values: {
-          oauth: { ...values },
-        },
-      },
+    const info = FinishAuthQueue.get(type)
+
+    if (!info) {
+      return {
+        type: 'error' as const,
+        message: `No information found for this app, an error in Orbit occured for authKey: ${type}`,
+      }
     }
 
-    log.info(`Downloading and loading app definition`)
+    const packageId = await getPackageId(info.identifier)
+    const { directory } = await getCurrentWorkspace()
+
+    if (!packageId || !directory) {
+      return {
+        type: 'error' as const,
+        message: `No packageId or directory, error in Orbit: (${packageId}, ${directory})`,
+      }
+    }
+
+    log.info(`Downloading (if necessary) and loading app definition (packageId: ${packageId})`)
 
     const downloaded = await downloadAppDefinition({
-      packageId: '',
-      directory: '',
+      packageId,
+      directory,
     })
 
     if (downloaded.type === 'error') {
@@ -49,8 +63,10 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     }
 
     const required = await requireAppDefinition({
-      packageId: '',
-      directory: '',
+      packageId,
+      directory,
+      // since were running it here in node
+      types: ['node'],
     })
 
     if (required.type === 'error') {
@@ -59,26 +75,42 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     log.info(`Call finishAuth callback on app definition`)
 
-    app = await required.definition.finishAuth(app, values, OAuthStrategies[type].config)
+    const space = await getActiveSpace()
+    let app: AppBit = {
+      ...newEmptyAppBit(required.definition),
+      spaces: [space],
+      spaceId: space.id,
+      token: values.token,
+      data: {
+        values: {
+          oauth: { ...values },
+        },
+      },
+    }
+
+    if (required.definition.finishAuth) {
+      app = await required.definition.finishAuth(app, values, OAuthStrategies[type].config)
+      if (!app || typeof app !== 'object') {
+        return {
+          type: 'error' as const,
+          message: `App.finishAuth does not return an AppBit`,
+        }
+      }
+    }
 
     await getRepository(AppEntity).save(app)
 
     // finish in the queue
     log.info(`Call back to command`)
-
-    const cb = FinishAuthQueue.get(type)
-    if (cb) {
-      FinishAuthQueue.delete(type)
-      cb(true)
-    } else {
-      throw new Error(`No callback found for type ${type}`)
-    }
+    FinishAuthQueue.delete(type)
+    info.finish(true)
   } catch (err) {
     log.error(`Error in finishAuth: ${err.message} ${err.stack}`)
-    const cb = FinishAuthQueue.get(type)
-    if (cb) {
+
+    const info = FinishAuthQueue.get(type)
+    if (info) {
       FinishAuthQueue.delete(type)
-      cb(false)
+      info.finish(false)
     } else {
       log.info(`And no callback either..`)
     }

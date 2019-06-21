@@ -2,7 +2,7 @@ import { createApi, createApp } from '@o/kit'
 
 import { GithubApi } from './api.node'
 import { GithubSettings } from './GithubSettings'
-import { GithubSyncer } from './GithubSyncer'
+import { GithubSyncerWorker } from './GithubSyncerWorker.node'
 import { graph } from './graph.node'
 
 export default createApp({
@@ -16,7 +16,7 @@ export default createApp({
   },
   settings: GithubSettings,
   api: createApi(GithubApi),
-  workers: [GithubSyncer],
+  workers: [GithubSyncerWorker],
   graph,
   icon: `
   <svg version="1.1" id="Capa_1" x="0px" y="0px" width="438.549px" height="438.549px" viewBox="0 0 438.549 438.549" style="enable-background:new 0 0 438.549 438.549;">

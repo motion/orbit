@@ -25,7 +25,7 @@ export const syncToProp = (store: any, key: string, propKey: string) => {
       store.props[propKey](val)
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 }

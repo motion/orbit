@@ -1,4 +1,4 @@
-import { AppBit, AppIcon, ensure, getAppDefinition, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { always, AppBit, AppIcon, ensure, getAppDefinition, getAppDefinitions, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -91,29 +91,20 @@ export class SearchStore {
     }
   }
 
-  staticApps(): AppBit[] {
-    return [
-      {
-        identifier: 'settings',
-        name: 'Settings',
-        colors: ['black', 'white'],
-        target: 'app',
-      },
-      {
-        identifier: 'apps',
-        name: 'Manage Apps',
-        colors: ['black', 'white'],
-        target: 'app',
-      },
-    ]
-  }
+  staticApps = react(
+    () => always(this.hooks.apps),
+    () => {
+      console.log(getAppDefinitions())
+      return []
+    },
+  )
 
   get isHome() {
     return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
   }
 
   get allApps() {
-    return [...this.hooks.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps()].map(
+    return [...this.hooks.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps].map(
       this.appToResult,
     )
   }
@@ -132,16 +123,7 @@ export class SearchStore {
     }
 
     // TODO recent history
-    return fuzzyFilter(query, [
-      // {
-      //   key: 'app-home',
-      //   title: `${this.stores.spaceStore.activeSpace.name} Home`,
-      //   subTitle: `10 apps`,
-      //   icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
-      //   subType: 'home',
-      // },
-      ...this.getApps(query, all),
-    ])
+    return fuzzyFilter(query, [...this.getApps(query, all)])
   }
 
   get results() {

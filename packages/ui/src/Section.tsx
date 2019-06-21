@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { getSpaceSize, Sizes, Space } from './Space'
+import { getSpaceSize, Size, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -28,10 +28,10 @@ export type SectionSpecificProps = Partial<
   titlePad?: Sizes
 
   /** Size the section: title, padding, border radius */
-  size?: Sizes
+  size?: Size
 
   /** Set the title size */
-  titleSize?: Sizes
+  titleSize?: Size
 
   /** Insert an element before, horizontally */
   beforeTitle?: React.ReactNode
@@ -126,8 +126,12 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padInner,
     !!(hasTitle || bordered || titleElement) ? padSized : undefined,
   )
-  const titleSizePx = getSpaceSize(selectDefined(titlePad, titleSize))
-  const spaceSize = selectDefined(space, size)
+  // this should always be a number were narrowing out array
+  const titleSizePx = +getSpaceSize(
+    selectDefined(Array.isArray(titlePad) ? undefined : titlePad, titleSize),
+  )
+  const spaceSize = selectDefined(space, size, 'sm')
+  const spaceSizePx = getSpaceSize(spaceSize)
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable, innerPad)
   const collapse = useCollapse(collapseProps)
 
@@ -159,10 +163,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={belowTitle || <Space size={selectDefined(space, size)} />}
+            below={belowTitle || <Space size={defaultTitlePadAmount[2] || spaceSizePx} />}
             icon={icon}
             userSelect="none"
-            space={selectDefined(space, size, 'sm')}
+            space={spaceSizePx / 2}
             pad={titlePadFinal}
             // avoid double pad between content/title padding
             paddingBottom={pad === true && titlePad === undefined ? 0 : undefined}
@@ -199,7 +203,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       flex={flex}
       background={background || 'transparent'}
       height={height}
-      // todo weird type issue
+      // todo type issue
       width={width as any}
       maxHeight={maxHeight}
       maxWidth={maxWidth}

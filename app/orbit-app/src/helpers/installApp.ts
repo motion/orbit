@@ -1,24 +1,11 @@
 import { command, loadOne, save } from '@o/bridge'
 import { AppDefinition, getAppDefinition, useActiveSpace, useAppDefinition } from '@o/kit'
+import { newEmptyAppBit } from '@o/libs'
 import { AppBit, AppInstallToWorkspaceCommand, AppModel, AuthAppCommand, SpaceModel, UserModel } from '@o/models'
 import { BannerHandle, useBanner } from '@o/ui'
 import { useCallback } from 'react'
 
 import { newAppStore } from '../om/stores'
-
-export function newEmptyAppBit(definition: AppDefinition): AppBit {
-  return {
-    target: 'app',
-    identifier: definition.id,
-    itemType: definition.itemType,
-    icon: definition.icon,
-    name: definition.name,
-    tabDisplay: 'plain',
-    colors: ['#000', '#111'],
-    token: '',
-    data: {},
-  }
-}
 
 export function useNewAppBit(identifier: string) {
   const definition = useAppDefinition(identifier)
@@ -63,12 +50,18 @@ async function installApp(
   if (def.auth) {
     banner.set({ message: `Waiting for authentication...` })
 
-    const res = await command(AuthAppCommand, { authKey: def.auth })
+    const res = await command(AuthAppCommand, {
+      authKey: def.auth,
+      identifier: def.id,
+    })
+
     if (res.type === 'error') {
       console.error('Error, TODO show banner!')
       alert(`Error authenticating app: ${res.message}`)
       return res
     }
+
+    banner.set({ message: `Authenticated!` })
     return res
   }
 
@@ -86,7 +79,6 @@ async function installApp(
 
   // create AppBit
   if (newAppBit) {
-    console.log('Creating a new app bit')
     try {
       const activeSpace = await getActiveSpace()
       const bit = {
@@ -98,7 +90,7 @@ async function installApp(
         icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }
-      console.log('Saving new app', bit)
+      console.log('Saving new app', newAppBit, bit)
       await save(AppModel, bit)
 
       newAppStore.reset()

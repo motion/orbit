@@ -32,7 +32,8 @@ export class SearchQueryExecutor {
       this.log.vtimer('loading bits')
       const [bitsQuery, bitsParameters] = this.buildDbQuery(args, false)
       bits = this.rawBitsToBits(await this.runDbQuery(bitsQuery, bitsParameters))
-      this.log.vtimer('loading bits', { bitsQuery, bitsParameters, bits })
+      const bitsLen = bits.length
+      this.log.vtimer('loading bits', { bitsQuery, bitsParameters, bitsLen })
     } else {
       this.log.verbose('skip loading bits since count is zero')
     }

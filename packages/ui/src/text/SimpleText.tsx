@@ -1,4 +1,4 @@
-import { Base, BaseProps, getTextSizeTheme, gloss } from 'gloss'
+import { Base, BaseProps, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
 import { useScale } from '../Scale'
@@ -23,7 +23,7 @@ export const SimpleText = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-}).theme(scaledTextSizeTheme)
+}).theme(propsToStyles, scaledTextSizeTheme)
 
 SimpleText.defaultProps = {
   ...Config.defaultProps.text,

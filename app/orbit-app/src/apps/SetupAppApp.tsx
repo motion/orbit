@@ -192,7 +192,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
               )
             }
           >
-            <Flow.Step title="Pick app" subTitle="Choose type of app.">
+            <Flow.Step title="Add app" subTitle="Add a visual app to workspace.">
               <List
                 searchable
                 onQueryChange={search}
@@ -201,9 +201,8 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 onSelect={rows => {
                   const row = rows[0]
                   if (row) {
-                    console.log('setting data', row)
                     flow.setData({ selectedAppIdentifier: row.identifier })
-                    newAppStore.update({ name: row.title })
+                    newAppStore.setApp(row.identifier)
                   }
                 }}
                 itemProps={{

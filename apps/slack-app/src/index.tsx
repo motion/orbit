@@ -4,7 +4,7 @@ import { graph } from './api.graph.node'
 import { SlackApi } from './api.node'
 import { SlackLoader } from './SlackLoader'
 import { SlackSettings } from './SlackSettings'
-import { SlackSyncer } from './SlackSyncer'
+import { SlackSyncerWorker } from './SlackSyncerWorker.node'
 
 export * from './SlackConversation'
 
@@ -14,7 +14,7 @@ export default createApp({
   auth: 'slack',
   itemType: 'conversation',
   settings: SlackSettings,
-  workers: [SlackSyncer],
+  workers: [SlackSyncerWorker],
   finishAuth: async app => {
     const loader = new SlackLoader(app)
     const team = await loader.loadTeam()

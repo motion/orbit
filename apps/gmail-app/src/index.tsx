@@ -4,7 +4,7 @@ import { graph } from './api.graph.node'
 import { GmailApi } from './api.node'
 import { GMailLoader } from './GMailLoader'
 import { GmailSettings } from './GmailSettings'
-import { GMailSyncer } from './GMailSyncer'
+import { GmailSyncerWorker } from './GmailSyncerWorker.node'
 
 export default createApp({
   id: 'gmail',
@@ -20,7 +20,7 @@ export default createApp({
     return app
   },
   settings: GmailSettings,
-  workers: [GMailSyncer],
+  workers: [GmailSyncerWorker],
   api: GmailApi,
   graph,
   icon: `
@@ -37,5 +37,5 @@ export default createApp({
     c0-13.327,10.812-24.139,24.139-24.139h13.975L256,219.792L473.886,60.983h13.962C501.188,60.983,512,71.794,512,85.122z"/>
   <polygon style="fill:#D32E2A;" points="59.712,155.493 0,146.235 0,111.967 "/>
 </svg>
-  `,
+  `.trim(),
 })

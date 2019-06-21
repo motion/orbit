@@ -22,7 +22,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
       suspenseBanner.current.clearError()
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 

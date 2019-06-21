@@ -1,12 +1,12 @@
 import { AppViewProps } from '@o/models'
-import { Loading } from '@o/ui'
+import { CenteredText } from '@o/ui'
 import React from 'react'
 
 import { AppView } from './AppView'
 
 export function AppMainView(props: AppViewProps) {
   if (!props.identifier) {
-    return <Loading />
+    return <CenteredText>No identifier passed to AppMainView</CenteredText>
   }
   return (
     <AppView

@@ -1,3 +1,4 @@
+import { connectModels } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { Entities, userDefaultValue, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
@@ -6,7 +7,7 @@ import { remove } from 'fs-extra'
 import { getConnection, getRepository } from 'typeorm'
 
 import { COSAL_DB, DATABASE_PATH } from '../constants'
-import connectModels from '../helpers/connectModels'
+import { migrations } from '../migrations'
 
 const log = new Logger('database')
 
@@ -19,7 +20,12 @@ export class DatabaseManager {
   async start() {
     // connect models next
     log.info('Connecting models...')
-    await connectModels(Entities)
+    await connectModels({
+      name: 'default',
+      models: Entities,
+      migrations,
+      databasePath: DATABASE_PATH,
+    })
 
     // setup default data
     await this.ensureDefaultUser()

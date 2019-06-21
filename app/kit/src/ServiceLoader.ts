@@ -107,10 +107,10 @@ export class ServiceLoader {
     }
 
     // execute query
-    this.log.vtimer(`request to ${url}`, fetchOptions)
+    this.log.vtimer(`request to ${url}`)
     const result = await fetch(url, fetchOptions)
     const responseBody: any = options.plain ? await result.text() : await result.json()
-    this.log.vtimer(`request to ${url}`, { response: result, body: responseBody })
+    this.log.vtimer(`request to ${url}`, !!result)
 
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {

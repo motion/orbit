@@ -40,7 +40,7 @@ import {
   StateEntity,
   AppStatusModel,
 } from '@o/models'
-import { Screen } from '@o/screen'
+import { OrbitAppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSON } from 'fs-extra'
@@ -53,17 +53,16 @@ import { getConnection } from 'typeorm'
 import { AuthServer } from './auth-server/AuthServer'
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
-import { COSAL_DB, screenOptions } from './constants'
-import { ContextManager } from './managers/ContextManager'
+import { COSAL_DB } from './constants'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
+// import { Screen } from '@o/screen'
 // import { OCRManager } from './managers/OCRManager'
+// import { ScreenManager } from './managers/ScreenManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
-import { OracleManager } from './managers/OracleManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
-// import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
 import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
@@ -76,7 +75,6 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
-import { OrbitAppsManager } from './managers/OrbitAppsManager'
 import { AppMiddleware, AppDesc } from '@o/build-server'
 import { remove } from 'lodash'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
@@ -85,6 +83,7 @@ import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceReso
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
+import { orTimeout } from '@o/utils'
 
 const log = new Logger('desktop')
 
@@ -95,7 +94,6 @@ export class OrbitDesktopRoot {
   mediatorServer: MediatorServer
 
   private config = getGlobalConfig()
-  private screen: Screen
   private authServer: AuthServer
   private graphServer: GraphServer
   private onboardManager: OnboardManager
@@ -107,7 +105,6 @@ export class OrbitDesktopRoot {
 
   // managers
   private orbitDataManager: OrbitDataManager
-  private oracleManager: OracleManager
   private cosalManager: CosalManager
   private generalSettingManager: GeneralSettingManager
   private topicsManager: TopicsManager
@@ -193,30 +190,32 @@ export class OrbitDesktopRoot {
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
 
-    // setup screen before we pass into managers...
-    this.screen = new Screen({
-      ...screenOptions,
-      showTray: true,
-    })
+    // DISABLED: OCR/screen stuff
 
-    this.screen.onError(err => {
-      if (err.indexOf('Could not watch application') >= 0) {
-        return
-      }
-      console.log('Screen error', err)
-    })
+    // setup screen before we pass into managers...
+    // this.screen = new Screen({
+    //   ...screenOptions,
+    //   showTray: true,
+    // })
+
+    // this.screen.onError(err => {
+    //   if (err.indexOf('Could not watch application') >= 0) {
+    //     return
+    //   }
+    //   console.log('Screen error', err)
+    // })
 
     // start managers...
 
-    if (!process.env.DISABLE_MENU) {
-      this.oracleManager = new OracleManager()
-      await this.oracleManager.start()
-    }
+    // if (!process.env.DISABLE_MENU) {
+    //   this.oracleManager = new OracleManager()
+    //   await this.oracleManager.start()
+    // }
+
+    // new ContextManager({ screen: this.screen })
 
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
-
-    new ContextManager({ screen: this.screen })
 
     this.registerREPLGlobals()
 
@@ -233,7 +232,11 @@ export class OrbitDesktopRoot {
       return
     }
     console.log('writing orbit config...')
-    await writeJSON(this.config.paths.orbitConfig, this.config)
+    try {
+      await orTimeout(writeJSON(this.config.paths.orbitConfig, this.config), 200)
+    } catch (err) {
+      console.log('error writing config', err.message, err.stack)
+    }
     console.log('dispose desktop...')
     Desktop.dispose()
     // await this.ocrManager.dispose()
@@ -359,7 +362,7 @@ export class OrbitDesktopRoot {
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
-        resolveCommand(AuthAppCommand, async ({ authKey }) => {
+        resolveCommand(AuthAppCommand, async ({ authKey, identifier }) => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
 
           if (!success) {
@@ -380,10 +383,14 @@ export class OrbitDesktopRoot {
           }
 
           // wait for finish from finishAuth()
-          // TODO orTimeout?
-          const finish = new Promise(res => res)
-          FinishAuthQueue.set(authKey, finish)
-          return await finish
+          let finish
+          const promise = new Promise(res => {
+            finish = res
+          })
+
+          FinishAuthQueue.set(authKey, { identifier, finish })
+
+          return await promise
         }),
 
         resolveCommand(SetupProxyCommand, async () => {

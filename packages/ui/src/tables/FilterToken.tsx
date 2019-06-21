@@ -1,9 +1,3 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { gloss, Theme, ThemeContext } from 'gloss'
 import { colorize } from 'gloss-theme'
 import { capitalize } from 'lodash'
@@ -16,6 +10,12 @@ import { Icon } from '../Icon'
 import { PopoverMenu } from '../PopoverMenu'
 import { TableFilter, TableFilterColumns } from './types'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
@@ -193,7 +193,6 @@ export class FilterToken extends PureComponent {
           popoverTheme={this.context.activeTheme._originalTheme}
           target={
             <Token
-              {...{ debug: true }}
               tagName="div"
               tabIndex={-1}
               onMouseDown={this.onMouseDown}

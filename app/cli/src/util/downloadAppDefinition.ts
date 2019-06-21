@@ -8,6 +8,26 @@ import { requireAppDefinition } from './requireAppDefinition'
 
 export async function downloadAppDefinition(options: { directory: string; packageId: string }) {
   const { directory, packageId } = options
+
+  if (!directory || !packageId) {
+    return {
+      type: 'error' as const,
+      message: `No directory/packageId given`,
+    }
+  }
+
+  // if exists already just return it
+  const existing = await requireAppDefinition({
+    ...options,
+    types: ['appInfo'],
+  })
+  if (existing.type === 'success') {
+    return {
+      type: 'success' as const,
+      identifier: existing.definition.id,
+    }
+  }
+
   await ensureDir(directory)
 
   const packageJsonPath = join(directory, 'package.json')
@@ -40,7 +60,10 @@ export async function downloadAppDefinition(options: { directory: string; packag
     // get app definition
     console.log('got app, need to provide app definition')
 
-    const loadedDef = await requireAppDefinition(options)
+    const loadedDef = await requireAppDefinition({
+      ...options,
+      types: ['appInfo'],
+    })
 
     if (loadedDef.type === 'error') {
       return loadedDef

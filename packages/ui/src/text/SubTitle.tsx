@@ -1,9 +1,11 @@
 import * as React from 'react'
 
 import { Config } from '../helpers/configureUI'
-import { Text } from './Text'
+import { Text, TextProps } from './Text'
 
-export function SubTitle({ verticalSpacing = 1, children, ...props }) {
+export type SubTitleProps = TextProps
+
+export function SubTitle(props: SubTitleProps) {
   return (
     <Text
       alpha={0.6}
@@ -13,8 +15,6 @@ export function SubTitle({ verticalSpacing = 1, children, ...props }) {
       flexFlow="row"
       {...Config.defaultProps.title}
       {...props}
-    >
-      {children}
-    </Text>
+    />
   )
 }

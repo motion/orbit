@@ -1,6 +1,6 @@
-import { FullScreen, gloss } from 'gloss'
 import { View } from '@o/ui'
 import { react, useStore } from '@o/use-store'
+import { FullScreen, gloss } from 'gloss'
 import { now } from 'mobx-utils'
 import * as React from 'react'
 
@@ -30,7 +30,7 @@ class BlurryStore {
       )
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 }

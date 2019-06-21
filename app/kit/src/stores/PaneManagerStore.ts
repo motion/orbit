@@ -83,6 +83,7 @@ export class PaneManagerStore {
       console.error(`Error moving ${e.message}`)
     }
   }
+
   setNextPaneKeyableIndex(index: number) {
     this.setPane(this.panes.filter(x => x.keyable && !x.isHidden)[index].id)
   }

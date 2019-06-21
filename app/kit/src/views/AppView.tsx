@@ -1,9 +1,23 @@
 import { isEqual } from '@o/fast-compare'
 import { AppViewProps } from '@o/models'
-import { ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
+import {
+  ItemPropsProviderSmall,
+  Loading,
+  memoIsEqualDeep,
+  ErrorBoundary,
+  CenteredText,
+} from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
-import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
+import React, {
+  createContext,
+  forwardRef,
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
@@ -64,14 +78,14 @@ export const AppView = memoIsEqualDeep(
 
     if (!props.identifier) {
       console.log('props for error', props)
-      throw new Error('No app identifier')
+      return <CenteredText>No identifier {props.identifier}</CenteredText>
     }
 
     let View = null
 
     if (!definition) {
       console.warn('no definition found', props)
-      return null
+      return <CenteredText>No definition found for identifier {props.identifier}</CenteredText>
     }
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {
@@ -100,9 +114,11 @@ export const AppView = memoIsEqualDeep(
     const element = (
       <AppViewContext.Provider value={props}>
         <Contents ref={rootRef}>
-          <Suspense fallback={<Loading />}>
-            <View {...props} {...appProps} />
-          </Suspense>
+          <ErrorBoundary name={`App: ${props.identifier}`}>
+            <Suspense fallback={<Loading />}>
+              <View {...props} {...appProps} />
+            </Suspense>
+          </ErrorBoundary>
         </Contents>
       </AppViewContext.Provider>
     )

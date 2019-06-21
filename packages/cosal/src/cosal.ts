@@ -1,5 +1,6 @@
 import { pathExists, readJSON, remove, writeJSON } from 'fs-extra'
 import { join } from 'path'
+
 import { annoyScan, annoySearch } from './annoy'
 import { getCovariance } from './getCovariance'
 import { getDefaultVectors } from './getDefaultVectors'
@@ -140,9 +141,9 @@ export class Cosal {
     }
   }
 
-  private ensureStarted() {
+  private async ensureStarted() {
     if (!this.started) {
-      throw new Error('You didnt start cosal: await cosal.start()')
+      await this.start()
     }
   }
 
@@ -166,7 +167,7 @@ export class Cosal {
 
   // incremental scan can add more documents
   scan = async (newRecords: Record[], db: DBType = 'records') => {
-    this.ensureStarted()
+    await this.ensureStarted()
 
     // this is incremental, passing in previous matrix
     this.state[db].covariance = getIncrementalCovariance(
@@ -225,7 +226,7 @@ export class Cosal {
   // goes through all vectors and sorts by smallest distance up to max
   // TODO better data structure?
   search = async (query: string, max = 10) => {
-    this.ensureStarted()
+    await this.ensureStarted()
     return await this.searchWithCovariance('records', query, {
       max,
     })
@@ -268,7 +269,7 @@ export class Cosal {
     text: string,
     { max = Infinity, sortByWeight, uniqueWords }: CosalWordOpts = {},
   ): Promise<Pair[] | null> => {
-    this.ensureStarted()
+    await this.ensureStarted()
 
     const cosal = await toCosal(
       text,
@@ -310,7 +311,7 @@ export class Cosal {
   }
 
   getTopWords = async (text: string, { max = 10, sortByWeight = true }: CosalWordOpts = {}) => {
-    this.ensureStarted()
+    await this.ensureStarted()
 
     const words = await this.getWordWeights(text, { max, sortByWeight, uniqueWords: true })
     if (!words) {

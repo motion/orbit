@@ -97,7 +97,7 @@ export class FocusManagerStore {
       this.setOrder()
     },
     {
-      deferFirstRun: true,
+      lazy: true,
     },
   )
 

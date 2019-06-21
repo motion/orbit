@@ -25,7 +25,7 @@ export type ReactionOptions = {
   delayValue?: boolean
   isIf?: boolean
   defaultValue?: any
-  deferFirstRun?: boolean
+  lazy?: boolean
   name?: string
 }
 

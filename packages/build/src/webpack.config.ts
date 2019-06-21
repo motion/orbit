@@ -92,7 +92,7 @@ const defines = {
   'process.env.RENDER_TARGET': JSON.stringify(target),
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
   'process.env.DISABLE_WORKERS': JSON.stringify(process.env.DISABLE_WORKERS || false),
-  'process.env.DISABLE_LOGGING': JSON.stringify(process.env.DISABLE_LOGGING || false),
+  'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 'info'),
 }
 
 console.log(

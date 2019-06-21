@@ -14,6 +14,7 @@
     "@o/models": "^2.5.2",
     "@o/worker-kit": "^2.5.2",
     "@o/utils": "^2.5.2",
+    "@o/libs-node": "^2.5.2",
     "global": "^4.3.2",
     "lodash": "4.17.11",
     "readability": "^0.1.0",

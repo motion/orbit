@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
-import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location, WorkerUtilsInstance } from '@o/models'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@o/models'
 import { sleep, stringHash } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
 import { EntityManager, In, MoreThan } from 'typeorm'
@@ -8,7 +8,7 @@ import { EntityManager, In, MoreThan } from 'typeorm'
 /**
  * Common utils for syncers.
  */
-export class WorkerUtils implements WorkerUtilsInstance {
+export class SyncerUtils {
   isAborted: () => Promise<boolean>
 
   constructor(
@@ -68,9 +68,9 @@ export class WorkerUtils implements WorkerUtilsInstance {
           : undefined,
       },
     }
-    this.log.timer('load bits from the database', options, findOptions)
+    this.log.vtimer('load bits from the database', options, findOptions)
     const bits = await this.manager.getRepository(BitEntity).find(findOptions)
-    this.log.timer('load bits from the database', bits)
+    this.log.vtimer('load bits from the database', bits)
     return bits
   }
 

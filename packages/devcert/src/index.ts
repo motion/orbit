@@ -1,19 +1,21 @@
-import { readFileSync as readFile, readdirSync as readdir, existsSync as exists } from 'fs'
-import createDebug from 'debug'
 import { sync as commandExists } from 'command-exists'
+import createDebug from 'debug'
+import { existsSync as exists, readdirSync as readdir, readFileSync, unlinkSync } from 'fs'
 import rimraf from 'rimraf'
-import { isMac, isLinux, isWindows, pathForDomain, domainsDir, rootCAKeyPath } from './constants'
-import currentPlatform from './platforms'
+
 import installCertificateAuthority from './certificate-authority'
 import generateDomainCertificate from './certificates'
+import { domainsDir, isLinux, isMac, isWindows, pathForDomain, rootCAKeyPath } from './constants'
+import currentPlatform from './platforms'
 import UI, { UserInterface } from './user-interface'
 
 const debug = createDebug('devcert')
 
 export interface Options {
-  skipCertutilInstall?: true
-  skipHostsFile?: true
-  skipFirefox?: true
+  forceRefreshCert?: boolean
+  skipCertutilInstall?: boolean
+  skipHostsFile?: boolean
+  skipFirefox?: boolean
   ui?: UserInterface
 }
 
@@ -29,7 +31,8 @@ export interface Options {
  * are Buffers with the contents of the certificate private key and certificate
  * file, respectively
  */
-export async function certificateFor(domain: string, options: Options = {}) {
+
+export async function certificateFor(domain: string, options: Options = {}, attemptNum = 0) {
   debug(
     `Certificate requested for ${domain}. Skipping certutil install: ${Boolean(
       options.skipCertutilInstall,
@@ -53,12 +56,23 @@ export async function certificateFor(domain: string, options: Options = {}) {
   let domainKeyPath = pathForDomain(domain, `private-key.key`)
   let domainCertPath = pathForDomain(domain, `certificate.crt`)
 
+  const reset = () => {
+    // remove files and attempt once more in case they had an issue
+    if (exists(domainKeyPath)) unlinkSync(domainKeyPath)
+    if (exists(domainCertPath)) unlinkSync(domainCertPath)
+    if (exists(rootCAKeyPath)) unlinkSync(rootCAKeyPath)
+  }
+
+  if (options.forceRefreshCert) {
+    reset()
+  }
+
   if (!exists(rootCAKeyPath)) {
     debug('Root CA is not installed yet, so it must be our first run. Installing root CA ...')
     await installCertificateAuthority(options)
   }
 
-  if (!exists(pathForDomain(domain, `certificate.crt`))) {
+  if (!exists(domainCertPath)) {
     debug(
       `Can't find certificate file for ${domain}, so it must be the first request for ${domain}. Generating and caching ...`,
     )
@@ -70,9 +84,22 @@ export async function certificateFor(domain: string, options: Options = {}) {
   }
 
   debug(`Returning domain certificate`)
-  return {
-    key: readFile(domainKeyPath),
-    cert: readFile(domainCertPath),
+  try {
+    return {
+      key: readFileSync(domainKeyPath),
+      cert: readFileSync(domainCertPath),
+    }
+  } catch (err) {
+    if (attemptNum === 0) {
+      debug(`error reading ${err.message}, trying again`)
+
+      // remove files and attempt once more in case they had an issue
+      reset()
+
+      return await certificateFor(domain, options, attemptNum + 1)
+    } else {
+      throw err
+    }
   }
 }
 

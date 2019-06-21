@@ -1,10 +1,8 @@
-import { getGlobalConfig } from '@o/config'
 import { MediatorClient } from '@o/mediator'
 
 import { Mediator } from './Mediator'
 
-const Config = getGlobalConfig()
-const hasCommands = !!Config && typeof window !== 'undefined'
+const hasCommands = !!Mediator
 
 export const command: MediatorClient['command'] = hasCommands
   ? Mediator.command.bind(Mediator)

@@ -1,8 +1,12 @@
-import { createWorker } from '@o/worker-kit'
-
 import { GithubBitFactory } from './GithubBitFactory'
 import { GithubLoader } from './GithubLoader'
-import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
+import {
+  GithubAppData,
+  GithubAppValuesLastSyncRepositoryInfo,
+  GithubIssue,
+  GithubPullRequest,
+} from './GithubModels'
+import { SyncerRunner } from '@o/worker-kit'
 
 /**
  * Syncs Github.
@@ -11,7 +15,7 @@ import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, Gith
  * which means we never remove github bits during regular sync.
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export const GithubSyncer = createWorker(async ({ app, log, utils }) => {
+export const GithubSyncer: SyncerRunner = async ({ app, log, utils }) => {
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
   const factory = new GithubBitFactory(utils)
@@ -225,4 +229,4 @@ export const GithubSyncer = createWorker(async ({ app, log, utils }) => {
     }
   }
   log.timer('load api bits and people')
-})
+}

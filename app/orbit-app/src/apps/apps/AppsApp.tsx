@@ -1,4 +1,4 @@
-import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
 import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
 import React from 'react'
@@ -183,7 +183,11 @@ export function AppsMain(props: AppViewProps) {
   }
 
   if (props.subType === 'settings') {
-    return <AppSettings key={props.subId} appId={+props.subId} />
+    return (
+      <CurrentAppBitContext.PassProps id={+props.subId}>
+        <AppSettings key={props.subId} appId={+props.subId} />
+      </CurrentAppBitContext.PassProps>
+    )
   }
 
   return null
@@ -196,12 +200,10 @@ function AppSettings(props: { appId: number }) {
     <Section
       flex={1}
       titleBorder
-      titlePad="lg"
-      pad
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
       title={app.name}
-      subTitle="Update app settings"
+      subTitle={`${definition.name}`}
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (
@@ -214,9 +216,9 @@ function AppSettings(props: { appId: number }) {
       {!!definition.app && <AppsMainNew customizeColor app={app} />}
 
       {!!definition.settings && (
-        <Section title="Settings">
-          <AppMainView {...props} viewType="settings" />
-        </Section>
+        <SubSection minHeight={150} title="Settings" padInner={0}>
+          <AppMainView identifier={definition.id} viewType="settings" />
+        </SubSection>
       )}
 
       {!!definition.setup && (

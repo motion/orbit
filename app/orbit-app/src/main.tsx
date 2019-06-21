@@ -60,8 +60,6 @@ async function main() {
   await App.start()
   console.timeEnd('loadStores')
 
-  require('./configurations')
-
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'

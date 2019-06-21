@@ -1,21 +1,6 @@
-import {
-  getIdentifierFromPackageId,
-  getIdentifierToPackageId,
-  getWorkspaceAppPaths,
-  requireWorkspaceDefinitions,
-  updateWorkspacePackageIds,
-} from '@o/cli'
+import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
-import {
-  AppBit,
-  AppDefinition,
-  AppEntity,
-  AppMeta,
-  Space,
-  SpaceEntity,
-  User,
-  UserEntity,
-} from '@o/models'
+import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
@@ -105,7 +90,7 @@ export class OrbitAppsManager {
       ensure('appsMeta', !!appsMeta)
       for (const meta of appsMeta) {
         const identifier = getIdentifierFromPackageId(meta.packageId)
-        log.info('setting apps meta2', meta.packageId, identifier)
+        log.verbose('setting apps meta', meta.packageId, identifier)
         if (identifier !== null) {
           this.appMeta[identifier] = meta
         } else {

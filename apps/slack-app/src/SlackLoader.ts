@@ -84,7 +84,7 @@ export class SlackLoader {
     const filteredMembers = members.filter(member => {
       return member.is_bot === false && member.profile.email
     })
-    this.log.info('filtered API users (non bots)', filteredMembers)
+    this.log.verbose('filtered API users (non bots)', filteredMembers)
 
     return filteredMembers
   }
@@ -175,7 +175,7 @@ export class SlackLoader {
     const filteredMessages = messages.filter(message => {
       return message.type === 'message' && !message.subtype && !message.bot_id && message.user
     })
-    this.log.info('filtered messages (no bots and others)', filteredMessages.length)
+    this.log.verbose('filtered messages (no bots and others)', filteredMessages.length)
 
     return {
       messages: filteredMessages,

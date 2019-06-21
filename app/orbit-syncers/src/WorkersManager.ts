@@ -1,6 +1,6 @@
 import { OrbitAppsManager } from '@o/libs-node'
-import { decorate, react } from '@o/use-store'
 import { Logger } from '@o/logger'
+import { decorate, react } from '@o/use-store'
 
 const log = new Logger('WorkersManager')
 
@@ -39,7 +39,7 @@ export class WorkersManager {
 
         const workers = nodeDefinitions[identifier].workers || []
         for (const worker of workers) {
-          console.log('i see worker', worker)
+          log.verbose('running worker', worker)
           try {
             worker()
           } catch (err) {

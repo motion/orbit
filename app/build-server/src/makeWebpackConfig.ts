@@ -158,6 +158,8 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     },
     module: {
       rules: [
+        // fixed graphql errors https://github.com/graphql/graphiql/issues/617
+        { test: /\.flow$/, loader: 'ignore-loader' },
         target !== 'node' && {
           test: /.worker\.[jt]sx?$/,
           use: ['workerize-loader'],

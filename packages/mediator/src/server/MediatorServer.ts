@@ -207,7 +207,7 @@ export class MediatorServer {
       // resolve a value
       let result = null
       try {
-        log.info(
+        log.verbose(
           `Resolving ${resolver.type}: ${
             'model' in resolver ? resolver.model.name : resolver.command.name
           }`,

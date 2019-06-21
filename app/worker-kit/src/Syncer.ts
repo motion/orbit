@@ -1,10 +1,10 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
-import { AppBit, AppEntity, AppModel, Job, JobEntity, AppWorker } from '@o/models'
-import { getManager, getRepository } from 'typeorm'
+import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
+import { getManager, getRepository, EntityManager } from 'typeorm'
 
 import { mediatorClient } from './mediatorClient'
-import { WorkerUtils } from './WorkerUtils'
+import { SyncerUtils } from './SyncerUtils'
 
 const cancelCommands = new Set()
 
@@ -21,6 +21,38 @@ function checkCancelled(appId: number) {
   }
   return true
 }
+
+/**
+ * Helpers passed to the worker runner.
+ */
+export type SyncerHelpers = {
+  /**
+   * App bit.
+   */
+  app: AppBit
+
+  /**
+   * Logger used to log worker operations.
+   */
+  log: Logger
+
+  /**
+   * Database entity manager.
+   */
+  manager: EntityManager
+
+  /**
+   * Used to check if sync is aborted.
+   */
+  isAborted: () => Promise<void>
+
+  /**
+   * Set of utils help write custom workers.
+   */
+  utils: SyncerUtils
+}
+
+export type SyncerRunner = (helpers: SyncerHelpers) => any
 
 /**
  * Interval running in the Syncer.
@@ -53,7 +85,7 @@ export interface SyncerOptions {
   /**
    * Worker runner.
    */
-  runner: AppWorker
+  runner: SyncerRunner
 
   /**
    * Interval during which workers should be executed.
@@ -298,7 +330,7 @@ export class Syncer {
         log,
         manager: getManager(),
         isAborted: async () => checkCancelled(app.id) && void 0,
-        utils: new WorkerUtils(
+        utils: new SyncerUtils(
           app,
           log,
           getManager(),

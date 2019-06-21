@@ -1,5 +1,5 @@
 import { Bit } from '@o/kit'
-import { createWorker } from '@o/worker-kit'
+import { SyncerRunner } from '@o/worker-kit'
 
 import { ConfluenceBitFactory } from './ConfluenceBitFactory'
 import { ConfluenceLoader } from './ConfluenceLoader'
@@ -8,7 +8,7 @@ import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './
 /**
  * Syncs Confluence pages and blogs.
  */
-export const ConfluenceSyncer = createWorker(async ({ app, log, utils }) => {
+export const ConfluenceSyncer: SyncerRunner = async ({ app, log, utils }) => {
   const factory = new ConfluenceBitFactory(app, utils)
   const loader = new ConfluenceLoader(app, log)
   const appData: ConfluenceAppData = app.data
@@ -132,4 +132,4 @@ export const ConfluenceSyncer = createWorker(async ({ app, log, utils }) => {
         allDbPeople,
       }),
   )
-})
+}

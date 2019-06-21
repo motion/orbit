@@ -1,13 +1,12 @@
-import { createWorker } from '@o/worker-kit'
-
 import { JiraBitFactory } from './JiraBitFactory'
 import { JiraLoader } from './JiraLoader'
 import { JiraAppData } from './JiraModels'
+import { SyncerRunner } from '@o/worker-kit'
 
 /**
  * Syncs Jira issues.
  */
-export const JiraSyncer = createWorker(async ({ app, log, utils }) => {
+export const JiraSyncer: SyncerRunner = async ({ app, log, utils }) => {
   const factory = new JiraBitFactory(app, utils)
   const loader = new JiraLoader(app, log)
   const appData: JiraAppData = app.data
@@ -87,4 +86,4 @@ export const JiraSyncer = createWorker(async ({ app, log, utils }) => {
       return true
     },
   )
-})
+}

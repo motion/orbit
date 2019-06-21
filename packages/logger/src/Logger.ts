@@ -247,12 +247,7 @@ export class Logger {
           const delta = (Date.now() - existTimer.time) / 1000
           // reset it so we can see time since last message each message
           existTimer.time = Date.now()
-          consoleLog(
-            `%c${this.namespace}%c${delta}ms`,
-            `color: ${color}; font-weight: bold`,
-            'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
-            ...messages,
-          )
+          consoleLog(`${this.namespace} ${delta}ms`, ...messages)
           defaultLog(this.namespace, delta, ...messages)
           this.timers.splice(this.timers.indexOf(existTimer), 1)
         } else {

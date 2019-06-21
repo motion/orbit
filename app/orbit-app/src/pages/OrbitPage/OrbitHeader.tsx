@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo } from 'react'
 import { createRef } from 'react'
+import React, { forwardRef, memo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -344,7 +344,9 @@ const OpenButton = memo((props: ButtonProps) => {
       onClick={effects.openCurrentApp}
       icon="chevron-right"
       {...props}
-    />
+    >
+      Open
+    </Button>
   )
 })
 

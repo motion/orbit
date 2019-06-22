@@ -7,7 +7,7 @@ import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType, Omit } from '../types'
 import { getElevation } from '../View/elevate'
 import { useVisibility } from '../Visibility'
-import { useFormContext } from './Form'
+import { useParentForm } from './Form'
 
 export type InputType =
   | 'text'
@@ -37,7 +37,7 @@ export const Input = React.forwardRef(function Input(
   { onEnter, type = 'text', ...props }: InputProps,
   ref,
 ) {
-  const formStore = useFormContext()
+  const formStore = useParentForm()
 
   // update form context every so often, avoid too many re-renders
   const updateFormContext = useThrottledFn(

@@ -1,6 +1,6 @@
 import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useFlow, useForm, View } from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp, useNewAppBit } from '../helpers/installApp'
@@ -50,7 +50,7 @@ function SetupAppCustom() {
     },
   })
 
-  const form = useForm({
+  const form = useCreateForm({
     fields: {
       name: {
         name: 'Name',

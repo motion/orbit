@@ -1,5 +1,5 @@
 import { createApp } from '@o/kit'
-import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, SearchInput, Section, Select, Tab, Table, Tabs, useFetch, useForm } from '@o/ui'
+import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, SearchInput, Section, Select, Tab, Table, Tabs, useCreateForm, useFetch } from '@o/ui'
 import React, { useState } from 'react'
 
 export default createApp({
@@ -16,7 +16,7 @@ const active = ['active', 'inactive']
 
 export function DemoAppUserManager() {
   const [highlighted, setHighlighted] = useState([])
-  const form = useForm()
+  const form = useCreateForm()
   const users = useFetch(`${endpoint}/users`).map((row, i) => ({
     ...row,
     type: type[i % (type.length - 1)],

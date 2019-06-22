@@ -125,8 +125,8 @@ class FormStore {
 }
 
 const FormContext = createStoreContext(FormStore)
-export const useForm = FormContext.useCreateStore
-export const useFormContext = FormContext.useStore
+export const useCreateForm = FormContext.useCreateStore
+export const useParentForm = FormContext.useStore
 
 export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(function Form(
   {
@@ -144,8 +144,8 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   },
   ref,
 ) {
-  const formStore = parentUseForm ? useStore(parentUseForm) : useForm({ fields, errors })
-  const finalFields = formStore.props.fields
+  const formStore = parentUseForm ? useStore(parentUseForm) : useCreateForm({ fields, errors })
+  const finalFields = formStore.props ? formStore.props.fields : undefined
 
   if (finalFields && children) {
     throw new Error(
@@ -267,7 +267,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
 }
 
 export function useFormError(name: string) {
-  const formStore = useFormContext()
+  const formStore = useParentForm()
   if (!formStore) return null
   return formStore.errors && formStore.errors[name]
 }

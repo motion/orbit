@@ -1,9 +1,9 @@
 next
 
-- fix syncers: get them loading dynamic apps stuff
 - opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit
+- create app from within orbit
 - querybuilder => dock
 - dock => views (`<QueryCard />` or similar)
 - dock => views (drag and drop, see if beautiful-dnd is ready for virtualized)

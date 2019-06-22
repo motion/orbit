@@ -53,7 +53,6 @@ function PersonMedia({ id }: { id: number }) {
       id,
     },
   })
-  console.log('got person', person, id)
   const [recentBits] = useBits(
     !!person && {
       where: {

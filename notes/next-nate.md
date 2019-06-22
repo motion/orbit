@@ -8,6 +8,8 @@ next
 - dock => views (`<QueryCard />` or similar)
 - dock => views (drag and drop, see if beautiful-dnd is ready for virtualized)
 
+- BUILD TO PRODUCTION
+
 June Goals:
 
 QueryBuilder:

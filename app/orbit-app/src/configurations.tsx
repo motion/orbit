@@ -1,9 +1,11 @@
-import { AppDefinition, configureKit, customItems, useAppState, useUserState } from '@o/kit'
+import { AppDefinition, AppIcon, Bit, configureKit, customItems, getAppDefinition, useAppState, useUserState } from '@o/kit'
 import { configureHotKeys, configureUI } from '@o/ui/config'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 import page from 'page'
+import React from 'react'
 
+import { om } from './om/om'
 import { StoreContext } from './StoreContext'
 
 export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }) {
@@ -35,6 +37,14 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
     StoreContext,
     useAppState,
     useUserState,
+    getIconForBit: (bit: Bit) => {
+      const def = getAppDefinition(bit.appIdentifier)
+      const app = om.state.apps.activeApps.find(app => app.id === bit.appId)
+      if (def && app) {
+        return <AppIcon identifier={bit.appIdentifier} colors={app.colors} />
+      }
+      return bit.appIdentifier
+    },
   })
 
   configureUseStore({

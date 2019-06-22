@@ -8,7 +8,7 @@ import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
 import { Omit } from '../types'
 import { View } from '../View/View'
-import { useFormContext } from './Form'
+import { useParentForm } from './Form'
 
 const selectStyles = {
   placeholder: provided => ({
@@ -101,7 +101,7 @@ export type SelectProps =
 export function Select({ minWidth, ...props }: SelectProps) {
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
-  const formStore = useFormContext()
+  const formStore = useParentForm()
 
   const onChange = useCallback(
     (items, action) => {

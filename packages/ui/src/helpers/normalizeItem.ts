@@ -1,11 +1,7 @@
 import * as React from 'react'
+
 import { Bit } from './BitLike'
-
-// we have a concept of a "bit", which we can use in various UI items automatically
-// this helper just noramlizes the bit into something standard, and could be extended.
-
-// TODO cleanup
-export type AppBitLike = { target: 'app-bit' } & any
+import { Config } from './configureUI'
 
 export type ItemResolverExtraProps = {
   beforeTitle?: React.ReactNode
@@ -15,13 +11,13 @@ export type ItemResolverExtraProps = {
 
 export type NormalItem = {
   id?: string
-  icon?: string
+  icon?: React.ReactNode
   title?: string
   type?: string
   subType?: string
   identifier?: string
   preview?: React.ReactNode
-  content?: any
+  children?: any
   location?: string
   locationLink?: string
   webLink?: string
@@ -43,7 +39,8 @@ const normalizers = {
       type: 'bit',
       id: `${bit.id}`,
       title: bit.title,
-      icon: bit.appIdentifier,
+      icon: Config.getIconForBit(bit),
+      subTitle: bit.body,
       webLink: bit.webLink,
       people: bit.people,
       location: bit.location ? bit.location.name : '',
@@ -55,21 +52,15 @@ const normalizers = {
       updatedAt: new Date(bit.bitUpdatedAt || bit.updatedAt),
     }
   },
-  app: (app: AppBitLike): NormalItem => ({
-    type: 'app',
-    id: `${app.id}`,
-    title: app.name,
-    icon: app.identifier,
-  }),
 }
 
-export const normalizeItem = (model: Bit | AppBitLike): NormalItem => {
+export const normalizeItem = (model: Bit): NormalItem => {
   if (!model) {
     throw new Error('Called normalize without a model')
   }
   if (!normalizers[model.target]) {
-    console.debug('no normalizer for model', model)
-    return model as any
+    console.warn('no normalizer for model', model)
+    return {}
   }
-  return (normalizers[model.target] as any)(model)
+  return normalizers[model.target](model)
 }

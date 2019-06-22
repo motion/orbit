@@ -58,6 +58,7 @@ const HeadContent = memo(() => {
       width={useScreenVal('95%', '88%', '85%')}
       maxWidth={960}
       textAlign="center"
+      alignItems="center"
     >
       <TitleText
         forwardRef={titleFit.ref}

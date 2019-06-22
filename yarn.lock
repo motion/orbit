@@ -10858,7 +10858,7 @@ fs-extra@^1.0.0:
     jsonfile "^2.1.0"
     klaw "^1.0.0"
 
-fs-extra@^4.0.1, fs-extra@^4.0.2, fs-extra@^4.0.3:
+fs-extra@^4.0.1, fs-extra@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-4.0.3.tgz#0d852122e5bc5beb453fb028e9c0c9bf36340c94"
   integrity sha512-q6rbdDd1o2mAnQreO7YADIxf/Whx4AHBiRf6d+/cVT8h44ss+lHgxf1FemcqDnQt9X3ct4McHr+JMGlYSsK7Cg==
@@ -20308,10 +20308,10 @@ react-hot-loader@^4.8.7:
     shallowequal "^1.0.2"
     source-map "^0.7.3"
 
-react-hotkeys@2.0.0-pre7:
-  version "2.0.0-pre7"
-  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-2.0.0-pre7.tgz#01905d88d4cb249b5320d8537f88ca427dd5307c"
-  integrity sha512-GeoxK5ACbB9NIh8uX9j/mCNjFOSw0/62Ci+nIW+HqHUSDHGHNkLMLEEShboy1ene5XzedsXFT1Z8kL97+AnfKw==
+react-hotkeys@2.0.0-pre8:
+  version "2.0.0-pre8"
+  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-2.0.0-pre8.tgz#d2004697eb6452137779613955cb7bd3bb687c52"
+  integrity sha512-73uTFx4xCiAxfPdFUjiz/D0rglsB9OvYiTsz/vmjcpwKsyUWV/SVQG4fFujz+3bYkoiePjxy5RQUkv08Sge16Q==
   dependencies:
     prop-types "^15.6.1"
 
@@ -20594,9 +20594,9 @@ react-wait@^0.3.0:
   resolved "https://registry.yarnpkg.com/react-wait/-/react-wait-0.3.0.tgz#0cdd4d919012451a5bc3ab0a16d00c6fd9a8c10b"
   integrity sha512-kB5x/kMKWcn0uVr9gBdNz21/oGbQwEQnF3P9p6E9yLfJ9DRcKS0fagbgYMFI0YFOoyKDj+2q6Rwax0kTYJF37g==
 
-"react-window@https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504":
+"react-window@https://github.com/natew/react-window#f93849b22bbe8118ceaeb43bb6cf76b9b7abc779":
   version "1.9.0-alpha.1"
-  resolved "https://github.com/bvaughn/react-window#0f3e857e0165f40b5dad26f13d9bdc2c09e6d504"
+  resolved "https://github.com/natew/react-window#f93849b22bbe8118ceaeb43bb6cf76b9b7abc779"
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"

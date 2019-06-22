@@ -1,6 +1,7 @@
 import { isEqual } from '@o/fast-compare'
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
+import { useGetVisibility } from '../Visibility'
 import { useResizeObserver } from './useResizeObserver'
 import { useThrottledFn } from './useThrottleFn'
 
@@ -12,9 +13,23 @@ export type UseNodeSizeProps = {
   ignoreFirst?: boolean
 }
 
+type SizeState = {
+  width: number
+  height: number
+}
+
 export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = []) {
-  const [state, setState] = useState({ width: 0, height: 0 })
-  const updateFn = props.onChange || setState
+  const getVisible = useGetVisibility()
+  const [state, setState] = useState<SizeState>({ width: 0, height: 0 })
+  const updateFn = (val: SizeState) => {
+    // avoid updates when not visible, it can return width: 0, height: 0
+    if (!getVisible()) {
+      console.warn('invisible avoiding')
+      return
+    }
+    const cb = props.onChange || setState
+    cb(val)
+  }
   const updateFnThrottled = useThrottledFn(updateFn, {
     amount: props.throttle || 0,
     ignoreFirst: props.ignoreFirst,
@@ -26,23 +41,19 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const disable = props.disable
   const cur = useRef(null)
 
-  const onChange = useCallback(
-    entries => {
-      const { width, height } = entries[0].contentRect
-      const next = { width, height }
-      if (!isEqual(next, cur.current)) {
-        cur.current = next
-        update(next)
-      }
-    },
-    [update],
-  )
-
   useResizeObserver(
     {
       ref,
       disable,
-      onChange,
+      onChange: entries => {
+        const { width, height } = entries[0].contentRect
+        const next = { width, height }
+        if (!isEqual(next, cur.current)) {
+          cur.current = next
+          if (props['debug']) console.log(next)
+          update(next)
+        }
+      },
     },
     [mountArgs],
   )
@@ -54,6 +65,7 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
         width: ref.current.clientWidth,
         height: ref.current.clientHeight,
       }
+      if (props['debug']) console.log(next)
       if (!isEqual(next, state)) {
         setState(next)
       }

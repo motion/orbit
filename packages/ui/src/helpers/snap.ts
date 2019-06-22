@@ -4,8 +4,8 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
-
 import { Rect } from './geometry'
+
 
 export const SNAP_SIZE = 16
 
@@ -14,7 +14,7 @@ export function snapGrid(val: number): number {
 }
 
 export function getPossibleSnappedPosition(
-  windows: Array<Rect>,
+  windows: Rect[],
   {
     getGap,
     getNew,
@@ -68,20 +68,11 @@ export function getDistanceTo(props: Rect, win: Rect): number {
   }
 }
 
-export function distance(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-): number {
+export function distance(x1: number, y1: number, x2: number, y2: number): number {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2)
 }
 
-export function maybeSnapLeft(
-  props: Rect,
-  windows: Array<Rect>,
-  left: number,
-): number {
+export function maybeSnapLeft(props: Rect, windows: Rect[], left: number): number {
   // snap right side to left
   // ┌─┬─┐
   // │A│B│
@@ -109,11 +100,7 @@ export function maybeSnapLeft(
   return snapGrid(left)
 }
 
-export function maybeSnapTop(
-  _: Rect,
-  windows: Array<Rect>,
-  top: number,
-): number {
+export function maybeSnapTop(_: Rect, windows: Rect[], top: number): number {
   // snap bottom to bottom
   // ┌─┐
   // │A├─┐

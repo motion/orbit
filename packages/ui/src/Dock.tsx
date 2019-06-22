@@ -1,6 +1,6 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
-import React, { memo, useLayoutEffect } from 'react'
+import React, { forwardRef, memo, useLayoutEffect, useRef } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
 import { Button, ButtonProps } from './buttons/Button'
@@ -20,16 +20,19 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 // Dock
 
-export const Dock = memo((props: any) => {
-  const dockStore = useStore(DockStore)
-  return (
-    <DockStoreContext.SimpleProvider value={dockStore}>
-      <Flipper flipKey={dockStore.key}>
-        <Row position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
-      </Flipper>
-    </DockStoreContext.SimpleProvider>
-  )
-})
+export const Dock = memo(
+  forwardRef((props: any, ref) => {
+    const dockStore = useStore(DockStore)
+
+    return (
+      <DockStoreContext.SimpleProvider value={dockStore}>
+        <Flipper flipKey={dockStore.key}>
+          <Row ref={ref} position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
+        </Flipper>
+      </DockStoreContext.SimpleProvider>
+    )
+  }),
+)
 
 // DockButton
 

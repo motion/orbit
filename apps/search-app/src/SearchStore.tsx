@@ -212,8 +212,11 @@ export class SearchStore {
         if (!nextResults.length) {
           return false
         }
-        // todo fix type
-        results = [...results, ...nextResults.map(item => ({ item, group: 'Search Results' }))]
+        const next: ListItemProps[] = nextResults.map(item => ({
+          item,
+          groupName: 'Search Results',
+        }))
+        results = [...results, ...next]
         setValue({
           results,
           query,

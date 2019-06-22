@@ -19,7 +19,7 @@ export function Badge({ children, size, ...props }: BadgeProps) {
       background="red"
       color="white"
       circular
-      size={0.65 * bSize}
+      size={0.5 * bSize}
       sizeFont={1 * bSize}
       borderWidth={0}
       glint={false}

@@ -150,7 +150,6 @@ class GridStore {
       this.enablePersist = false
 
       await sleep(50)
-      console.log('updateLayout', items, cols)
       // always re-calc from large and reset
       this.layouts = {
         lg: calculateLayout(items, cols['lg']),
@@ -226,8 +225,6 @@ export const GridLayoutChildren = memo((props: GridLayoutPropsControlled) => {
       )
     })
     .filter(Boolean)
-
-  console.log(items, gridStore.layouts)
 
   let children = null
   if (!gridStore.layouts) {

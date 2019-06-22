@@ -325,7 +325,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                   {!!location && locationElement}
                   {!!subTitle &&
                     (typeof subTitle === 'string' ? (
-                      <HighlightText alpha={subTextOpacity} size={0.9} ellipse {...subTitleProps}>
+                      <HighlightText
+                        className="ui-list-item-subtitle-text"
+                        alpha={subTextOpacity}
+                        size={0.9}
+                        ellipse
+                        {...subTitleProps}
+                      >
                         {subTitle}
                       </HighlightText>
                     ) : (
@@ -447,9 +453,6 @@ function getIcon(props: ListItemSimpleProps) {
   const iconPropsFinal = {
     size,
     ...props.iconProps,
-  }
-  if (!props.iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${1}px)` }
   }
   let element = props.icon
   if (React.isValidElement(props.icon)) {

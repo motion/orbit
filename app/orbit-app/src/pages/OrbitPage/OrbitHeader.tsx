@@ -2,9 +2,9 @@ import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
-import { Box, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo } from 'react'
+import { FullScreen, gloss, useTheme } from 'gloss'
 import { createRef } from 'react'
+import React, { forwardRef, memo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -143,13 +143,14 @@ export const OrbitHeader = memo(() => {
 
             {isOnTearablePane && (
               <>
-                {!!orbitStore.activeActions && (
-                  <ExtraButtonsChrome>
-                    <HeaderButtonPassProps iconSize={16}>
-                      {orbitStore.activeActions || null}
-                    </HeaderButtonPassProps>
-                  </ExtraButtonsChrome>
-                )}
+                <SurfacePassProps
+                  sizeRadius={1.5}
+                  sizeHeight={0.9}
+                  sizeIcon={1.1}
+                  sizePadding={1.2}
+                >
+                  {orbitStore.activeActions}
+                </SurfacePassProps>
                 {!isEditing && <OpenButton />}
               </>
             )}
@@ -331,14 +332,6 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const ExtraButtonsChrome = gloss(Box, {
-  flexFlow: 'row',
-  paddingRight: 22,
-  paddingLeft: 12,
-  marginRight: -10,
-  borderLeftRadius: 12,
-})
-
 const OpenButton = memo((props: ButtonProps) => {
   const { effects } = useOm()
 
@@ -349,18 +342,18 @@ const OpenButton = memo((props: ButtonProps) => {
   return (
     <Button
       alt="action"
-      size={1.2}
+      size={1}
       iconSize={18}
       sizeRadius={1.6}
       borderWidth={0}
-      glint={false}
-      circular
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}
       icon="chevron-right"
       {...props}
-    />
+    >
+      Open
+    </Button>
   )
 })
 

@@ -5,7 +5,7 @@ import { useDebounceValue } from './hooks/useDebounce'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
 import { Col, ColProps } from './View/Col'
-import { useVisibility, Visibility } from './Visibility'
+import { ProvideVisibility, useVisibility } from './Visibility'
 
 type SliderPaneProps = ColProps &
   Partial<SliderProps> & {
@@ -57,7 +57,7 @@ export const SliderPane = memo(
     })
 
     return (
-      <Visibility visible={isActive}>
+      <ProvideVisibility visible={isActive}>
         <SliderPaneChrome
           width={width}
           height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
@@ -69,7 +69,7 @@ export const SliderPane = memo(
         >
           {children}
         </SliderPaneChrome>
-      </Visibility>
+      </ProvideVisibility>
     )
   },
 )

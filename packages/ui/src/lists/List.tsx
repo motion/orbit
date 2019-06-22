@@ -198,9 +198,11 @@ export const List = memo((allProps: ListProps) => {
         }
       : null
 
+    const onEditCb = useCallback(title => onEdit(a, title), [onEdit])
+
     const itemProps = {
       editable,
-      onEdit: onEdit ? title => onEdit(a, title) : undefined,
+      onEdit: onEdit ? onEditCb : undefined,
       ...normalized,
       ...itemExtraProps,
       ...filterExtraProps,
@@ -236,7 +238,6 @@ export const List = memo((allProps: ListProps) => {
     >
       {hasResults && (
         <VirtualList
-          disableMeasure={visibility === false}
           items={filtered.results}
           ItemView={ListItem}
           {...restProps}

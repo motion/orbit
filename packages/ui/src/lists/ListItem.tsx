@@ -9,7 +9,6 @@ import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
 import { Omit } from '../types'
 import { useVisibilityStore } from '../Visibility'
-import { ListItemBit } from './ListItemBit'
 import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
 import { ListItemViewProps } from './ListItemViewProps'
 import { SelectableStore, useSelectableStore } from './SelectableStore'
@@ -69,8 +68,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     }
   }
 
-  const icon =
-    props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
+  const icon = props.icon || (normalized ? normalized.icon : null)
 
   const getIsSelected = useCallback((index: number) => {
     if (visStore && visStore.visible === false) {
@@ -86,15 +84,11 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   }, [])
 
   const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
-  const showChildren = isBit || showPeople
+  const showChildren = (isBit && ItemView) || showPeople
   const childrenProps = showChildren && {
     children: (
       <>
-        {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
-        {/* if syncer doesn't sync any content type, we can still show a generic preview */}
-        {isBit && !ItemView && (
-          <ListItemBit item={item} normalizedItem={normalized} {...itemViewProps} />
-        )}
+        {<ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
         {showPeople && (
           <Bottom>
             <PersonRow people={people} />

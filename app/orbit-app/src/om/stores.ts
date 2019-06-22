@@ -28,7 +28,6 @@ export const paneManagerStore = createUsableStore(PaneManagerStore, {
       name: 'Loading',
       type: 'loading',
       isHidden: true,
-      keyable: true,
     },
   ],
 })

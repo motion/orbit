@@ -135,10 +135,13 @@ const createItemData = memoize(
   },
 )
 
-export function VirtualList(virtualProps: VirtualListProps) {
+// this memo seems to help most of the extraneous renders
+export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const props = useProps(virtualProps)
   const { onSortStart, onSortEnd } = props
   const selectableStore = useSelectableStore(props)
+
+  console.log('renering virtual list.......')
 
   return (
     <SortableList
@@ -167,7 +170,7 @@ export function VirtualList(virtualProps: VirtualListProps) {
       {ListRow as any}
     </SortableList>
   )
-}
+})
 
 const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click

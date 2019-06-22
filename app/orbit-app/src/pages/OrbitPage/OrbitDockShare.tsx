@@ -1,9 +1,9 @@
-import { DockButton, FloatingCard, List, Tabs, usePosition } from '@o/ui'
+import { DockButton, FloatingCard, List, Tabs, usePosition, useThrottledFn } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
 
-import { useOm } from '../../om/om'
 import { orbitStaticApps } from '../../apps/orbitApps'
+import { useOm } from '../../om/om'
 
 export const isStaticApp = (id: string) => !!orbitStaticApps.find(x => x.id === id)
 
@@ -12,60 +12,56 @@ export const useIsOnStaticApp = () => {
   return isStaticApp(om.state.router.appId)
 }
 
-export function OrbitDockShare({
-  width = 250,
-  height = 350,
-}: {
-  width?: number
-  height?: number
-  pad?: number
-}) {
-  const om = useOm()
-  const numClipboards = Object.keys(om.state.share).length
+export const OrbitDockShare = memo(
+  ({ width = 250, height = 350 }: { width?: number; height?: number; pad?: number }) => {
+    const om = useOm()
+    const numClipboards = Object.keys(om.state.share).length
 
-  const buttonRef = useRef(null)
-  const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
+    const buttonRef = useRef(null)
+    const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
 
-  const [hovered, setHovered] = useState(false)
-  const [hoveredMenu, setHoveredMenu] = useState(false)
-  const showMenu = hovered || hoveredMenu
-  const isStatic = useIsOnStaticApp()
+    const [hovered, setHoveredRaw] = useState(false)
+    const setHovered = useThrottledFn(setHoveredRaw, { amount: 200 })
+    const [hoveredMenu, setHoveredMenu] = useState(false)
+    const showMenu = hovered || hoveredMenu
+    const isStatic = useIsOnStaticApp()
 
-  return (
-    <>
-      <DockButton
-        id="share"
-        visible={!isStatic}
-        icon="clip"
-        forwardRef={buttonRef}
-        badge={numClipboards}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      />
-      {nodePosition && nodePosition.rect && (
-        <FloatingCard
-          title="Selected"
-          subTitle={`Share ${numClipboards} ${pluralize('item', numClipboards)}`}
-          defaultWidth={width}
-          defaultHeight={height}
-          defaultTop={nodePosition.rect.top - height + 20}
-          defaultLeft={nodePosition.rect.left - width + 20}
-          padding={0}
-          zIndex={10000000}
-          visible={showMenu}
-          onMouseEnter={() => setHoveredMenu(true)}
-          onMouseLeave={() => setHoveredMenu(false)}
-        >
-          <Tabs>
-            {Object.keys(om.state.share).map(id => {
-              return <Clipboard key={id} id={id} />
-            })}
-          </Tabs>
-        </FloatingCard>
-      )}
-    </>
-  )
-}
+    return (
+      <>
+        <DockButton
+          id="share"
+          visible={!isStatic}
+          icon="clip"
+          forwardRef={buttonRef}
+          badge={numClipboards}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        />
+        {nodePosition && nodePosition.rect && (
+          <FloatingCard
+            title="Selected"
+            subTitle={`Share ${numClipboards} ${pluralize('item', numClipboards)}`}
+            defaultWidth={width}
+            defaultHeight={height}
+            defaultTop={nodePosition.rect.top - height + 20}
+            defaultLeft={nodePosition.rect.left - width + 20}
+            padding={0}
+            zIndex={10000000}
+            visible={showMenu}
+            onMouseEnter={() => setHoveredMenu(true)}
+            onMouseLeave={() => setHoveredMenu(false)}
+          >
+            <Tabs>
+              {Object.keys(om.state.share).map(id => {
+                return <Clipboard key={id} id={id} />
+              })}
+            </Tabs>
+          </FloatingCard>
+        )}
+      </>
+    )
+  },
+)
 
 const Clipboard = memo(({ id }: { id: string }) => {
   const om = useOm()

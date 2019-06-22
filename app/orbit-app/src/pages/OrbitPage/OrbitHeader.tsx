@@ -143,7 +143,14 @@ export const OrbitHeader = memo(() => {
 
             {isOnTearablePane && (
               <>
-                {orbitStore.activeActions}
+                <SurfacePassProps
+                  sizeRadius={1.5}
+                  sizeHeight={0.9}
+                  sizeIcon={1.1}
+                  sizePadding={1.2}
+                >
+                  {orbitStore.activeActions}
+                </SurfacePassProps>
                 {!isEditing && <OpenButton />}
               </>
             )}

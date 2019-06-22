@@ -1,5 +1,5 @@
-import { Badge, Dock, DockButton, PopoverMenu } from '@o/ui'
-import React, { memo } from 'react'
+import { Badge, Dock, DockButton, PopoverMenu, useNodeSize } from '@o/ui'
+import React, { memo, useRef, useState } from 'react'
 
 import { useOrbitStore } from '../../om/stores'
 import { OrbitDockSearch } from './OrbitDockSearch'
@@ -7,12 +7,37 @@ import { OrbitDockShare, useIsOnStaticApp } from './OrbitDockShare'
 
 export const OrbitDock = memo(() => {
   const isOnStaticApp = useIsOnStaticApp()
+  const dockRef = useRef<HTMLElement>(null)
+  const [open, setOpen] = useState(false)
+  const size = useNodeSize({
+    ref: dockRef,
+    throttle: 200,
+  })
 
   return (
-    <Dock transition="all ease 300ms" className="orbit-dock">
+    <Dock
+      ref={dockRef}
+      onMouseEnter={() => {
+        setOpen(true)
+      }}
+      onMouseLeave={() => {
+        setOpen(false)
+      }}
+      transform={
+        open
+          ? {
+              x: 0,
+            }
+          : {
+              x: size.width - 20,
+            }
+      }
+      transition="all ease 300ms"
+      className="orbit-dock"
+    >
+      {!isOnStaticApp && <OrbitDockMenu />}
       <OrbitDockShare />
       <OrbitDockSearch />
-      {!isOnStaticApp && <OrbitDockMenu />}
     </Dock>
   )
 })

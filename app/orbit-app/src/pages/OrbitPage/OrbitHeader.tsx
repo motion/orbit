@@ -1,9 +1,9 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef } from 'react'
+import { createRef, useRef } from 'react'
 import React, { forwardRef, memo } from 'react'
 
 import { useOm } from '../../om/om'
@@ -108,6 +108,11 @@ export const headerStore = createUsableStore(HeaderStore)
 export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
+  const containerRef = useRef()
+  const { width } = useNodeSize({
+    ref: containerRef,
+    throttle: 200,
+  })
   const om = useOm()
   const orbitStore = useOrbitStore()
   const theme = useTheme()
@@ -117,6 +122,7 @@ export const OrbitHeader = memo(() => {
   return (
     <>
       <OrbitHeaderContainer
+        ref={containerRef}
         isEditing={isEditing}
         className="draggable"
         onMouseUp={headerStore.handleMouseUp}
@@ -151,7 +157,7 @@ export const OrbitHeader = memo(() => {
                 >
                   {orbitStore.activeActions}
                 </SurfacePassProps>
-                {!isEditing && <OpenButton />}
+                {!isEditing && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
               </>
             )}
           </HeaderContain>
@@ -300,7 +306,7 @@ const HeaderSide = gloss(Row, {
   flexFlow: 'row',
   flex: 1,
   width: '18%',
-  minWidth: 180,
+  minWidth: 150,
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -351,9 +357,7 @@ const OpenButton = memo((props: ButtonProps) => {
       onClick={effects.openCurrentApp}
       icon="chevron-right"
       {...props}
-    >
-      Open
-    </Button>
+    />
   )
 })
 

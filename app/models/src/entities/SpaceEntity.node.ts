@@ -24,7 +24,7 @@ export class SpaceEntity extends BaseEntity implements Space {
   @Column({ type: 'simple-json' })
   colors?: string[]
 
-  @Column({ type: 'simple-json' })
+  @Column({ type: 'simple-json', default: '[]' })
   paneSort?: number[]
 
   @OneToMany(() => AppEntity, app => app.space)

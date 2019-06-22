@@ -699,7 +699,6 @@ export class Popover extends React.Component<PopoverProps, State> {
           x => x instanceof HTMLDivElement && x.classList.contains('popover-portal'),
         ) > -1
       if (closeOnClickAway && !clickedTarget && !clickedInPopover) {
-        console.log('close on away', clickedInPopover)
         this.forceClose()
         e.stopPropagation()
         return

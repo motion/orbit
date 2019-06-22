@@ -76,7 +76,7 @@ const themeKeys: KeyMap = [
 
 const SubThemeKeys: { [key: string]: KeyMap } = {}
 
-const applyPsuedoTheme = (props, theme, previous, useTheme = false) => {
+const applyPsuedoTheme = (props: any, theme: ThemeObject, previous: any, useTheme = false) => {
   if (!theme) {
     throw new Error('No theme passed to psuedoStyleTheme')
   }
@@ -142,9 +142,7 @@ function getPsuedoStyles(props: Object, theme: ThemeObject, keyMap: KeyMap, useT
       styles[mapName] = val
       overrides = overrides || {}
       overrides[mapName] = val
-      continue
-    }
-    if (useTheme && isDefined(theme[name])) {
+    } else if (useTheme && isDefined(theme[name])) {
       styles = styles || {}
       styles[mapName] = theme[name]
     }

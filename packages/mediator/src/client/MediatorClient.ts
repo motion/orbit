@@ -103,6 +103,7 @@ export class MediatorClient {
     values: SaveOptions<ModelType>,
   ): Promise<ModelType> {
     const modelName = typeof model === 'string' ? model : model.name
+    log.info(`Saving`, modelName, values)
     ObserverCache.updateModels(modelName, Array.isArray(values) ? values : [values])
 
     for (let transport of this.options.transports) {

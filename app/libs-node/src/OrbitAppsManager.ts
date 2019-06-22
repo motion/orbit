@@ -1,6 +1,6 @@
 import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
-import { AppBit, AppDefinition, AppEntity, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
+import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { join } from 'path'
@@ -8,32 +8,28 @@ import { getRepository } from 'typeorm'
 
 const log = new Logger('OrbitAppsManager')
 
+type PartialSpace = Pick<Space, 'id' | 'directory'>
+
 @decorate
 export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
-  spaces: Space[] = []
-  apps: AppBit[] = []
-  user: User | null = null
-  spaceFolders: { [id: number]: string } = {}
-  packageJsonUpdate = 0
-  appMeta: { [identifier: string]: AppMeta } = {}
-  nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
-  updatePackagesVersion = 0
+  private spaces: PartialSpace[] = []
+  private user: User | null = null
+  private packageJsonUpdate = 0
+  private appMeta: { [identifier: string]: AppMeta } = {}
+  private nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+  private updatePackagesVersion = 0
 
   // for easier debugging
   getIdentifierToPackageId = getIdentifierToPackageId
 
   async start() {
-    const appsSubscription = getRepository(AppEntity)
-      .observe({})
-      .subscribe(next => {
-        this.apps = next as any
-      })
-
     const spacesSubscription = getRepository(SpaceEntity)
-      .observe({})
+      .observe({
+        select: ['id', 'directory'],
+      })
       .subscribe(next => {
-        this.spaces = next as Space[]
+        this.spaces = next as PartialSpace[]
       })
 
     const userSubscription = getRepository(UserEntity)
@@ -43,7 +39,6 @@ export class OrbitAppsManager {
       })
 
     this.subscriptions.add(userSubscription)
-    this.subscriptions.add(appsSubscription)
     this.subscriptions.add(spacesSubscription)
   }
 

@@ -141,8 +141,6 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const { onSortStart, onSortEnd } = props
   const selectableStore = useSelectableStore(props)
 
-  console.log('renering virtual list.......')
-
   return (
     <SortableList
       selectableStore={selectableStore}

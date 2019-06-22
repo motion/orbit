@@ -89,13 +89,11 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         elevation={7}
         onChangeVisibility={store.setOpen}
         target={
-          <View position="relative" margin={[0, 6, 0, 18]} onClick={accountLink}>
+          <View marginLeft={5} position="relative" justifyContent="center" onClick={accountLink}>
             <Avatar className="undraggable" src={avatar} width={20} height={20} />
             <OrbitOrb
+              transform={{ x: -5 }}
               position="absolute"
-              top="50%"
-              marginTop={-12 / 2}
-              left={-8}
               size={12}
               colors={activeSpace.colors}
             />

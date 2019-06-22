@@ -1,4 +1,5 @@
 import { IconSvgPaths20 } from '@blueprintjs/icons'
+import { toColor } from '@o/color'
 import { useTheme } from 'gloss'
 import React, { forwardRef, memo, useLayoutEffect, useRef, useState } from 'react'
 import SVG from 'svg.js'
@@ -12,6 +13,7 @@ export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {
   shape?: 'circle' | 'squircle'
   gradient?: string[]
   cutout?: boolean
+  shapeColor?: string
 }
 
 const diameter = 28
@@ -25,7 +27,15 @@ const shapes = {
 export const IconShape = memo(
   forwardRef(
     (
-      { shape = 'squircle', gradient, size = 28, cutout, background, ...props }: IconShapeProps,
+      {
+        shape = 'squircle',
+        gradient,
+        size = 28,
+        cutout,
+        background,
+        shapeColor,
+        ...props
+      }: IconShapeProps,
       ref: any,
     ) => {
       let iconPath = ''
@@ -60,9 +70,10 @@ export const IconShape = memo(
         ignoreAlternate: true,
       })
 
-      let color = !!gradient
-        ? `url(#${gradientId})`
-        : `${(theme.iconFillColor || theme.color).toString()}`
+      const themeColor = theme.iconFillColor || theme.color
+      const colorLightness = toColor(gradient[0] || themeColor).lightness()
+
+      let color = !!gradient ? `url(#${gradientId})` : `${themeColor.toString()}`
 
       return (
         <View ref={ref} width={size} height={size} position="relative" {...props}>
@@ -88,7 +99,7 @@ export const IconShape = memo(
               left={1}
               zIndex={0}
               borderRadius={size / 3.2}
-              background={theme.background}
+              background={shapeColor || (colorLightness > 40 ? '#000' : '#fff')}
             />
           )}
           <svg

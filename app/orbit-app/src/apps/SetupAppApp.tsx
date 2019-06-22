@@ -114,7 +114,6 @@ function SetupAppCustom() {
             Back
           </Button>
           <View flex={1} />
-          {/* {flow.step === 0 && <Button onClick={flow.next}>Next</Button>} */}
           <Button
             disabled={!form.getValue('name')}
             alt="confirm"

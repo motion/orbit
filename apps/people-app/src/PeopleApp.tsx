@@ -35,7 +35,7 @@ export function PeopleAppIndex() {
 }
 
 export function PeopleAppMain(props: AppViewProps) {
-  if (props.identifier === 'people') {
+  if (!props.id) {
     return (
       <Center>
         <SubTitle>No person selected</SubTitle>
@@ -53,6 +53,7 @@ function PersonMedia({ id }: { id: number }) {
       id,
     },
   })
+  console.log('got person', person, id)
   const [recentBits] = useBits(
     !!person && {
       where: {
@@ -63,7 +64,7 @@ function PersonMedia({ id }: { id: number }) {
       order: {
         bitUpdatedAt: 'DESC',
       },
-      take: 10,
+      take: 20,
     },
   )
   const query = getBitTexts(recentBits)

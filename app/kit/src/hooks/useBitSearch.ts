@@ -91,6 +91,7 @@ export function useBitSearch({
 }
 
 export const bitSelectAllButData: (keyof Bit)[] = [
+  'id',
   'appIdentifier',
   'appId',
   'author',

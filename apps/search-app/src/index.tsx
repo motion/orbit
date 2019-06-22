@@ -103,6 +103,7 @@ function SearchActions(props: { showFloating: boolean; setShowFloating: Function
 
       <Row group>
         <Button
+          chromeless
           onClick={() => props.setShowFloating(!props.showFloating)}
           tooltip={`Toggle large view`}
           icon="zoom-to-fit"

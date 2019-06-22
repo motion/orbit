@@ -33,7 +33,7 @@
     "raven": "2.6.4",
     "wait-on": "3.3.0-beta.0",
     "wait-port": "^0.2.2",
-    "ws": "7.0.0"
+    "ws": "^7.0.0"
   },
   "devDependencies": {
     "@types/electron": "*",

@@ -12,7 +12,7 @@
   "dependencies": {
     "bonjour": "*",
     "reconnecting-websocket": "4.1.10",
-    "ws": "7.0.0",
+    "ws": "^7.0.0",
     "@o/utils": "*",
     "@o/mediator": "*"
   },

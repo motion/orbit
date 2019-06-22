@@ -19,7 +19,7 @@
     "@o/models": "*",
     "@babel/code-frame": "^7.0.0",
     "reconnecting-websocket": "4.1.10",
-    "ws": "7.0.0",
+    "ws": "^7.0.0",
     "bonjour": "*",
     "chalk": "^2.4.2",
     "common-tags": "^1.8.0",

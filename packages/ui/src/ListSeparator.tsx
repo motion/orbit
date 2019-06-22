@@ -5,13 +5,17 @@ import { BorderBottom, BorderTop } from './Border'
 import { useScale } from './Scale'
 import { scaledTextSizeTheme, SimpleText, SimpleTextProps } from './text/SimpleText'
 
-export type ListSeparatorProps = SimpleTextProps & { themeSelect?: ThemeSelect }
+export type ListSeparatorProps = SimpleTextProps & {
+  themeSelect?: ThemeSelect
+  hideBorderTop?: boolean
+  hideBorderBottom?: boolean
+}
 
 export const ListSeparator = (props: ListSeparatorProps) => {
   return (
     <ListSeparatorChrome>
-      <BorderTop />
-      <BorderBottom />
+      {!props.hideBorderTop && <BorderTop />}
+      {!props.hideBorderBottom && <BorderBottom />}
       <ListSeparatorText {...props} />
     </ListSeparatorChrome>
   )

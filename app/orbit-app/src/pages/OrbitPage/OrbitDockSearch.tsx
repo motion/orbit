@@ -1,5 +1,5 @@
 import { AppMainView, useActiveAppDefinition, useStore } from '@o/kit'
-import { DockButton, Input, Modal, Visibility } from '@o/ui'
+import { DockButton, Input, Modal, ProvideVisibility } from '@o/ui'
 import React from 'react'
 
 class OrbitSearch {
@@ -23,9 +23,9 @@ export function OrbitDockSearch() {
         onClickBackground={store.toggleOpen}
       >
         <Input borderWidth={0} size={2} placeholder="Search everything..." />
-        <Visibility visible={store.open}>
+        <ProvideVisibility visible={store.open}>
           <AppMainView identifier="search" />
-        </Visibility>
+        </ProvideVisibility>
       </Modal>
     </>
   )

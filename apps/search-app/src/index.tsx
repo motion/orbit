@@ -1,6 +1,6 @@
 import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores, useUserState } from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Row, Scale, View } from '@o/ui'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { SearchStore } from './SearchStore'
 
@@ -26,15 +26,20 @@ export function SearchApp(props: AppViewProps) {
   const width = 500
   const height = 350
 
+  console.log('render saerch app index', searchStore.results)
+
   const listElement = (
     <List
       alwaysSelected
       shareable
       selectable
-      itemProps={{
-        iconBefore: true,
-        iconSize: 42,
-      }}
+      itemProps={useMemo(
+        () => ({
+          iconBefore: true,
+          iconSize: 42,
+        }),
+        [],
+      )}
       items={searchStore.results}
     />
   )

@@ -1,7 +1,8 @@
-import { isEqual } from '@o/fast-compare'
 import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
 
+import { memoDebug } from '../helpers/memoDebug'
+import { rowItemCompare } from '../helpers/rowItemCompare'
 import { GenericComponent } from '../types'
 import { ListItem } from './ListItem'
 
@@ -31,7 +32,9 @@ export type VirtualListItemProps<Item> = {
 
 export class VirtualListItemInner extends React.Component<VirtualListItemProps<any>> {
   shouldComponentUpdate(prev) {
-    return isEqual(prev, this.props) === false
+    memoDebug(prev, this.props)
+    // console.log(rowItemCompare(prev, this.props), isEqual(prev, this.props))
+    return rowItemCompare(prev, this.props) === false
   }
 
   render() {

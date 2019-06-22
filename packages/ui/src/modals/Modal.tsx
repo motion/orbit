@@ -8,7 +8,7 @@ import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { SurfaceProps } from '../Surface'
 import { View, ViewProps } from '../View/View'
-import { Visibility } from '../Visibility'
+import { ProvideVisibility } from '../Visibility'
 
 export type SimpleModalProps = SectionProps &
   SizedSurfaceProps & {
@@ -84,7 +84,7 @@ function SimpleModal({
   ...props
 }: SimpleModalProps) {
   return (
-    <Visibility visible={!!open}>
+    <ProvideVisibility visible={!!open}>
       <ModalSizedSurface
         sizeRadius={1}
         hoverStyle={null}
@@ -116,7 +116,7 @@ function SimpleModal({
           {children}
         </Section>
       </ModalSizedSurface>
-    </Visibility>
+    </ProvideVisibility>
   )
 }
 

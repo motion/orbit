@@ -2,7 +2,7 @@ import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ScopedState, useGet, useThrottledFn, useVisibility, View, Visibility } from '@o/ui'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -69,14 +69,14 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
       <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
         <ScopedState id={`or-${identifier}-${id}-`}>
           <ProvideStores stores={{ appStore }}>
-            <Visibility visible={isActive}>
+            <ProvideVisibility visible={isActive}>
               <OrbitAppRender
                 id={id}
                 identifier={identifier}
                 hasShownOnce={hasShownOnce || shown}
                 appDef={appDef}
               />
-            </Visibility>
+            </ProvideVisibility>
           </ProvideStores>
         </ScopedState>
       </View>

@@ -54,7 +54,7 @@ export function QueryBuilderIndex({
     <>
       <TreeList
         use={treeList}
-        getItemProps={item => {
+        getItemProps={useCallback(item => {
           const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
           if (treeItem) {
             const definition = getAppDefinition(`${treeItem.data.identifier}`)
@@ -65,7 +65,7 @@ export function QueryBuilderIndex({
             }
           }
           return null
-        }}
+        }, [])}
         title="Queries"
         sortable
         editable
@@ -351,14 +351,15 @@ class QueryBuilderStore {
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [app, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def.id)
-  const allMethods = Object.keys(meta.apiInfo)
-  const [method, setMethod] = useState(meta.apiInfo[allMethods[0]])
+  const apiInfo = meta.apiInfo || {}
+  const allMethods = Object.keys(apiInfo)
+  const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const queryBuilder = useStore(QueryBuilderStore, {
     method: method ? method.name : '',
     appId: app.id,
     appIdentifier: def.id,
   })
-  const hasApiInfo = !!meta && !!meta.apiInfo
+  const hasApiInfo = !!meta && !!apiInfo
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />

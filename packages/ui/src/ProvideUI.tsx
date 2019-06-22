@@ -8,7 +8,7 @@ import { ProvideSearch } from './Search'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
 import { HighlightsContext } from './text/HighlightText'
-import { Visibility } from './Visibility'
+import { ProvideVisibility } from './Visibility'
 
 export type ProvideUIProps = {
   activeTheme?: string
@@ -30,7 +30,7 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
       <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
         <ProvideBanner>
           <ProvideSearch query="">
-            <Visibility visible={true}>
+            <ProvideVisibility visible={true}>
               <ProvideFocus focused={true}>
                 <ProvideShortcut>
                   <ProvideFocusManager>
@@ -38,7 +38,7 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
                   </ProvideFocusManager>
                 </ProvideShortcut>
               </ProvideFocus>
-            </Visibility>
+            </ProvideVisibility>
           </ProvideSearch>
         </ProvideBanner>
       </ThemeProvide>

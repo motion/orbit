@@ -43,7 +43,7 @@ function appToPane(app: AppBit): PaneManagerPane {
   return {
     type: app.identifier,
     id: `${app.id}`,
-    keyable: true,
+    keyable: app.tabDisplay !== 'hidden' ? true : false,
     subType: 'app',
     name: app.name,
   }
@@ -54,7 +54,6 @@ export const settingsPane = {
   name: 'Settings',
   type: 'settings',
   isHidden: true,
-  keyable: true,
 }
 
 export const defaultPanes: PaneManagerPane[] = [

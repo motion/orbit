@@ -26,8 +26,6 @@ export function SearchApp(props: AppViewProps) {
   const width = 500
   const height = 350
 
-  console.log('render saerch app index', searchStore.results)
-
   const listElement = (
     <List
       alwaysSelected

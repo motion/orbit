@@ -130,7 +130,6 @@ export function Select({ minWidth, ...props }: SelectProps) {
       minWidth={minWidth || 100}
       flex={1}
       margin={1}
-      className="reset"
     >
       <SimpleText tagName="div">
         <ReactSelect

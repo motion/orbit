@@ -2,14 +2,15 @@ import { invertLightness } from '@o/color'
 import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Button, ButtonProps, Icon, IconProps, memoIsEqualDeep, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
-import { Box, gloss, useTheme } from 'gloss'
+import { gloss, useTheme } from 'gloss'
 import * as React from 'react'
 
 export const tabHeight = 36
 const inactiveOpacity = 0.45
 const borderSize = 8
 
-export type TabProps = ViewProps & {
+export type TabProps = Omit<ViewProps, 'width'> & {
+  width: number
   app?: AppBit
   tabDisplay?: string
   separator?: boolean
@@ -18,7 +19,6 @@ export type TabProps = ViewProps & {
   stretch?: boolean
   sidePad?: number
   tooltip?: string
-  thicc?: boolean
   icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
@@ -37,31 +37,29 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   tooltip,
   label,
   isActive = false,
-  thicc,
   className = '',
   getContext,
   after,
   location,
   app,
+  width,
   ...props
 }: TabProps) {
-  const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
   const iconSize = iconSizeProp || 16
   const link = useLocationLink(location)
 
   const button = (
     <NavButtonChrome
-      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
-        thicc ? 'pinned' : 'unpinned'
-      } undraggable ${className || ''}`}
+      width={width}
+      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} undraggable ${className ||
+        ''}`}
       isActive={isActive}
-      thicc={thicc}
       onClick={link}
       {...contextMenuProps}
       {...props}
     >
-      <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
+      <NavButtonChromeInner isActive={isActive}>
         <Tooltip label={app ? app.name : undefined}>
           <Row space="sm" alignItems="center">
             {React.isValidElement(icon) ? (
@@ -70,8 +68,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               <OrbitTabIcon
                 isActive={isActive}
                 name={`${icon}`}
-                marginRight={!!label ? sidePad * 0.7 : 0}
-                thicc={thicc}
+                marginRight={!!label ? width * 0.2 : 0}
                 size={iconSize}
                 iconAdjustOpacity={iconAdjustOpacity}
                 {...iconProps}
@@ -109,15 +106,13 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 function OrbitTabIcon(props: Omit<IconProps, 'label'> & TabProps) {
   const theme = useTheme()
-  let opacity = props.isActive ? 1 : props.thicc ? 0.5 : 0.3
+  let opacity = props.isActive ? 1 : 0.5
   opacity += props.iconAdjustOpacity || 0
   return (
     <Icon
       color={invertLightness(theme.color, 0.8)}
       opacity={opacity}
-      className={`tab-icon-${props.thicc ? 'pinned' : 'unpinned'} tab-icon-${
-        props.isActive ? 'active' : 'inactive'
-      }`}
+      className={`tab-icon-${props.isActive ? 'active' : 'inactive'}`}
       {...props}
     />
   )
@@ -140,15 +135,12 @@ export function OrbitTabButton(props: ButtonProps) {
 
 const tabTransition = 'all ease-out 350ms'
 
-const NavButtonChromeInner = gloss<any>(Box, {
-  flexFlow: 'row',
+const NavButtonChromeInner = gloss<any>(Row, {
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,
   height: '100%',
-}).theme(({ sidePad }) => ({
-  padding: [0, sidePad],
-}))
+})
 
 const NavButtonChrome = gloss<TabProps>(View, {
   position: 'relative',
@@ -164,7 +156,6 @@ const NavButtonChrome = gloss<TabProps>(View, {
   const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover
   const backgroundActive = isActive ? tabBackgroundSelected : tabBackgroundActive
   return {
-    width: stretch ? width || 150 : 'auto',
     background,
     '&:hover': {
       background: backgroundHover,
@@ -173,16 +164,6 @@ const NavButtonChrome = gloss<TabProps>(View, {
     '&:active': {
       background: backgroundActive,
       transition: isActive ? 'none' : tabTransition,
-    },
-    '& .tab-icon-inactive.tab-icon-unpinned': {
-      opacity: '0.4 !important',
-      transition: isActive ? 'none' : tabTransition,
-    },
-    '&:hover .tab-icon-inactive.tab-icon-unpinned': {
-      opacity: '1 !important',
-    },
-    '&:hover .tab-icon-inactive.tab-icon-pinned': {
-      opacity: '1 !important',
     },
     '&:hover .tab-label': {
       opacity: 1,

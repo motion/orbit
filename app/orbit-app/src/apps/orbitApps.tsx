@@ -13,7 +13,7 @@ import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
-import SpacesApp from './spaces/SpacesApp'
+import SpacesApp from './SpacesApp'
 
 let dynamicApps: AppDefinition[] = requireDynamicApps()
 

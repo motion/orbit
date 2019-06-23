@@ -61,11 +61,6 @@ function SetupAppCustom() {
         type: 'string',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
-      location: {
-        name: 'Location',
-        type: 'custom',
-        children: <input type="file" defaultValue={'/'} />,
-      },
     },
   })
 

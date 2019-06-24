@@ -37,6 +37,7 @@ type AutomagicDecription = {
 }
 
 export type AutomagicStore<Props> = {
+  props: Props
   dispose: Function
   __automagic: AutomagicDecription
 }

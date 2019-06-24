@@ -1,3 +1,4 @@
+import { isDefined } from '@o/utils'
 import { Base, BaseProps, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
@@ -35,6 +36,6 @@ SimpleText.defaultProps = {
 
 export function scaledTextSizeTheme(props: any) {
   const scale = useScale()
-  const size = getTextSize(props.size) + 0.75
+  const size = isDefined(props.size) ? getTextSize(props.size) : undefined
   return getTextSizeTheme(props, { scale, size })
 }

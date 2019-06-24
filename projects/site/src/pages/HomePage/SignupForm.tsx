@@ -15,6 +15,7 @@ export function SignupForm(props: ViewProps) {
       overflow="hidden"
       elevation={4}
       background={theme => theme.backgroundStrong}
+      alignSelf="center"
       {...props}
     >
       <View pad="lg">

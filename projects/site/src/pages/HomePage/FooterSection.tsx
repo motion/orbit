@@ -9,7 +9,7 @@ import { blackWavePattern } from './purpleWaveUrl'
 export default memo(function FeetSection() {
   return (
     <>
-      <Page.Content pad="xxl" justifyContent="space-between">
+      <Page.Content pad="xxl" justifyContent="space-between" alignItems="center">
         <Space size="xl" />
         <AboveFooter />
         <View flex={1} />

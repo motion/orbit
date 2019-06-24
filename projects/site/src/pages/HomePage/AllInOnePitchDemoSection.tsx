@@ -509,4 +509,4 @@ const Flex = gloss(View, {
   flex: 1,
 })
 
-const SubSection = gloss(props => <Flex minWidth={200} pad {...props} />)
+const SubSection = gloss(props => <Flex minWidth={200} alignItems="center" pad {...props} />)

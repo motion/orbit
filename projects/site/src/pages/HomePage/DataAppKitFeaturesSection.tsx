@@ -153,7 +153,7 @@ export default memo(function DataAppKitFeaturesSection() {
               ref={Fade.ref}
               alignItems="start"
               space={screen === 'small' ? '0 15%' : '20% 15%'}
-              itemMinWidth={260}
+              itemMinWidth={280}
               maxWidth={800}
               margin="auto"
             >

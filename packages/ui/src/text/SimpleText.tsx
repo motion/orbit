@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { Base, BaseProps, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
+import { alphaColorTheme, Base, BaseProps, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
 import { useScale } from '../Scale'
@@ -27,7 +27,7 @@ export const SimpleText = gloss<SimpleTextProps>(Base, {
   pointable: {
     cursor: 'pointer',
   },
-}).theme(propsToStyles, scaledTextSizeTheme)
+}).theme(propsToStyles, alphaColorTheme, scaledTextSizeTheme)
 
 SimpleText.defaultProps = {
   ...Config.defaultProps.text,

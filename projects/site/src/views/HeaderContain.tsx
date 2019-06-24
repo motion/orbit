@@ -1,4 +1,4 @@
-import { Box, gloss } from 'gloss'
+import { Box, BoxProps, gloss } from 'gloss'
 import React from 'react'
 
 import { useScreenVal } from '../pages/HomePage/SpacedPageContent'
@@ -15,7 +15,7 @@ export function HeaderContain(props) {
     />
   )
 }
-export const LinkSection = gloss(Box, {
+export const LinkSection = gloss<BoxProps & { alignRight?: boolean }>(Box, {
   flex: 4,
   flexFlow: 'row',
   justifyContent: 'space-between',

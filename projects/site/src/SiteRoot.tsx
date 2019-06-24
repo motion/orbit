@@ -1,4 +1,5 @@
 import { ErrorBoundary } from '@o/ui'
+import { useForceUpdate } from '@o/use-store'
 import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
 import { Router, View } from 'react-navi'
@@ -7,7 +8,13 @@ import { Layout } from './Layout'
 import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
 
+let forceUpdate
+
 export const SiteRoot = hot(() => {
+  const disableScrolling = window['recentHMR']
+  // to be sure we get the disableScrolling
+  forceUpdate = useForceUpdate()
+  console.log('disableScrolling', disableScrolling)
   return (
     <ErrorBoundary name="Site Root">
       <SiteStoreContext.Provider>
@@ -18,7 +25,7 @@ export const SiteRoot = hot(() => {
         >
           <Layout>
             <Suspense fallback={null}>
-              <View disableScrolling={window['recentHMR']} hashScrollBehavior="smooth" />
+              <View disableScrolling={disableScrolling} hashScrollBehavior="smooth" />
             </Suspense>
           </Layout>
         </Router>
@@ -33,6 +40,7 @@ if (module['hot']) {
   let tm
   module['hot'].addStatusHandler(() => {
     window['recentHMR'] = true
+    forceUpdate()
     clearTimeout(tm)
     tm = setTimeout(() => {
       window['recentHMR'] = false

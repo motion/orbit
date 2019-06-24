@@ -1,4 +1,4 @@
-import { Col, FullScreen, Image, Row, toColor, View } from '@o/ui'
+import { Col, FullScreen, Image, Row, Space, toColor, View } from '@o/ui'
 import React from 'react'
 
 import appScreenshot from '../../../public/images/app-screenshot.jpg'
@@ -54,13 +54,14 @@ export default function ShoulderSection() {
                 <PillButton>Trust</PillButton>
               </FadeChild>
               <FadeChild delay={300}>
-                <TitleText textAlign="center" size={useScreenVal('lg', 'xl', 'xxl')}>
+                <TitleText textAlign="center" size={useScreenVal('lg', 'lg', 'xl')}>
                   Designed for privacy & control
                 </TitleText>
               </FadeChild>
             </>
           }
         >
+          <Space size={60} />
           <Row space={60} margin={[0, '-180%']}>
             <Col flex={2} alignItems="flex-end" justifyContent="center">
               <FadeChild {...fadeLeftProps} delay={450}>

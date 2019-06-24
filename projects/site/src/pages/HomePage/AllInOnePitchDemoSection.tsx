@@ -234,7 +234,7 @@ export default function NeckSection() {
                 <FadeChild delay={300}>
                   The all in one app platform that feels like native.
                 </FadeChild>
-                <FadeChild delay={450}>Runs on your desktop, deploy to your intranet.</FadeChild>
+                <FadeChild delay={450}>Runs on your desktop, deploys to your intranet.</FadeChild>
               </TitleTextSub>
             </>
           }
@@ -448,11 +448,11 @@ export default function NeckSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0.4} zIndex={-1}>
+      <Page.Parallax speed={0.24} zIndex={-1}>
         <FullScreen
           opacity={0.22}
           transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
-          background="radial-gradient(circle closest-side, #F64097, #F27B81, transparent)"
+          background="radial-gradient(circle closest-side, #F64097, transparent)"
         />
       </Page.Parallax>
 
@@ -460,7 +460,7 @@ export default function NeckSection() {
         <FullScreen
           opacity={0.25}
           transform={{ y: '30%', x: '40%', scale: 1.68 }}
-          background="radial-gradient(circle closest-side, #00E5FF, #009A4C, transparent)"
+          background="radial-gradient(circle closest-side, #00E5FF, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

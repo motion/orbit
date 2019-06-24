@@ -13,7 +13,7 @@
     "@o/config": "^2.5.2",
     "@o/logger": "^2.5.2",
     "@o/utils": "^2.5.2",
-    "ws": "7.0.0",
+    "ws": "^7.0.0",
     "zen-observable": "0.8.13"
   },
   "devDependencies": {

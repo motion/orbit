@@ -1,4 +1,4 @@
-import { Badge, Dock, DockButton, PopoverMenu, useNodeSize } from '@o/ui'
+import { Badge, Dock, DockButton, DockButtonPassProps, PopoverMenu, useNodeSize } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 
 import { useOrbitStore } from '../../om/stores'
@@ -35,9 +35,11 @@ export const OrbitDock = memo(() => {
       transition="all ease 300ms"
       className="orbit-dock"
     >
-      {!isOnStaticApp && <OrbitDockMenu />}
-      <OrbitDockShare />
-      <OrbitDockSearch />
+      <DockButtonPassProps sizePadding={2.2}>
+        {!isOnStaticApp && <OrbitDockMenu />}
+        <OrbitDockShare />
+        <OrbitDockSearch />
+      </DockButtonPassProps>
     </Dock>
   )
 })
@@ -50,7 +52,7 @@ const useActiveAppMenuItems = () => {
   return orbitStore.activeAppStore.menuItems || []
 }
 
-const OrbitDockMenu = () => {
+const OrbitDockMenu = memo(() => {
   const menuItems = useActiveAppMenuItems()
   return (
     <PopoverMenu
@@ -68,6 +70,6 @@ const OrbitDockMenu = () => {
       ]}
     />
   )
-}
+})
 
 // {/* <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}

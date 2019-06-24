@@ -1,6 +1,6 @@
 import dedent from 'dedent'
 
-import { transform } from '../transform'
+import { transform } from '../src/transform'
 
 it('works', async () => {
   const { cssText } = await transform(

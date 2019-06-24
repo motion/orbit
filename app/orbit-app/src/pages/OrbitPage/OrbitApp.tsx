@@ -114,7 +114,6 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
-    console.log('onChangeShare', location, items)
     items = !items || Object.keys(items).length === 0 ? null : items
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null

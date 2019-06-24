@@ -1,10 +1,11 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
-import React, { forwardRef, memo, useLayoutEffect, useRef } from 'react'
+import React, { forwardRef, memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
 import { Button, ButtonProps } from './buttons/Button'
-import { Row } from './View/Row'
+import { createContextualProps } from './helpers/createContextualProps'
+import { Row, RowProps } from './View/Row'
 
 class DockStore {
   key = 0
@@ -20,8 +21,10 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 // Dock
 
+export type DockProps = RowProps
+
 export const Dock = memo(
-  forwardRef((props: any, ref) => {
+  forwardRef((props: DockProps, ref) => {
     const dockStore = useStore(DockStore)
 
     return (
@@ -36,12 +39,16 @@ export const Dock = memo(
 
 // DockButton
 
-type DockButtonProps = ButtonProps & {
+export type DockButtonProps = ButtonProps & {
   visible?: boolean
   id: string
 }
 
-export function DockButton({ visible = true, id, ...buttonProps }: DockButtonProps) {
+const DockButtonPropsContext = createContextualProps<DockButtonProps>()
+export const DockButtonPassProps = DockButtonPropsContext.PassProps
+
+export function DockButton(props: DockButtonProps) {
+  const { visible = true, id, ...buttonProps } = DockButtonPropsContext.useProps(props)
   const dockStore = DockStoreContext.useStore()
   const show = selectDefined(dockStore.items[id], visible)
 

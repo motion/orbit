@@ -76,7 +76,9 @@ export function getTextSizeTheme(props: TextSizeProps, extraProps?: TextSizeExtr
     styles.marginTop = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
     styles.marginBottom = -sizeLineHeight * 14 * LINE_HEIGHT_EXTRA_SCALE
   } else {
-    debugger
+    console.log(
+      'inherited, can we either do negative margin using relative units, or contextually pass down inherited font size',
+    )
   }
   return styles
 }

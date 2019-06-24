@@ -3,7 +3,7 @@ import { AppIcon, PaneManagerPane, useActiveAppsSorted, useStore } from '@o/kit'
 import { AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
-import { isRightClick } from '@o/ui'
+import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
 import React, { forwardRef, memo } from 'react'
@@ -36,8 +36,8 @@ export const OrbitNav = memo(
       return null
     }
 
-    const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
-    const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 150 : 120
+    const tabWidth = 54
+    const tabWidthPinned = 66
 
     const items = activeAppsSorted
       .map(
@@ -49,16 +49,8 @@ export const OrbitNav = memo(
           const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
           return {
             app,
-            width: tabWidth,
+            width: isPinned ? tabWidthPinned : tabWidth,
             tabDisplay: app.tabDisplay,
-            // separator: !isActive && !isLast && !nextIsActive,
-            // label: isPinned
-            //   ? ''
-            //   : app.identifier === 'search' && index === 0
-            //   ? activeSpaceName
-            //   : app.name,
-            // stretch: !isPinned,
-            thicc: isPinned,
             isActive,
             icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
             iconSize: tabHeight - 6,
@@ -95,7 +87,8 @@ export const OrbitNav = memo(
       .filter(x => !!x)
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
-    const isOnSetupAppWidth = isOnSetupApp ? tabWidth : 0
+    const setupWidth = 120
+    const isOnSetupAppWidth = isOnSetupApp ? setupWidth : tabWidthPinned
     const extraButtonsWidth = isOnSetupAppWidth
 
     const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
@@ -104,7 +97,9 @@ export const OrbitNav = memo(
 
     const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
-    const epad = isOnSetupApp ? 0 : 3
+    const epad = 3
+    const sidePad = 26 // corresponds to OrbitNavClip side padding
+    const maxWidth = pinnedItemsWidth + extraButtonsWidth + sidePad
 
     return (
       <OrbitNavClip ref={ref}>
@@ -130,9 +125,6 @@ export const OrbitNav = memo(
               items={pinnedItems}
               shouldCancelStart={isRightClick}
               onSortEnd={handleSortEnd}
-              // let shadows from tabs go up above
-              padding={epad}
-              margin={-epad}
               height={tabHeight + 20}
               overflowX="auto"
               overflowY="hidden"
@@ -142,22 +134,20 @@ export const OrbitNav = memo(
               axis="x"
               lockAxis="x"
               distance={8}
-              maxWidth={`calc(100% - ${pinnedItemsWidth + extraButtonsWidth - epad * 2}px)`}
+              maxWidth={`calc(100% - ${maxWidth}px)`}
               items={plainItems}
               shouldCancelStart={isRightClick}
               onSortEnd={handleSortEnd}
-              // let shadows from tabs go up above
-              padding={epad}
-              margin={-epad}
               height={tabHeight + 20}
               overflowX="auto"
               overflowY="hidden"
             />
-            {isOnSetupApp && <OrbitNewAppTab tabWidth={tabWidth} />}
+            <Space size={epad} />
+            {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
             {!isOnSetupApp && (
               <OrbitTab
                 tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
-                thicc
+                width={tabWidthPinned}
                 icon={isOnSetupApp ? 'remove' : 'add'}
                 onClick={actions.router.toggleSetupAppPage}
               />
@@ -169,12 +159,11 @@ export const OrbitNav = memo(
   }),
 )
 
-const OrbitNewAppTab = ({ tabWidth }) => {
+const OrbitNewAppTab = props => {
   const newAppStore = useNewAppStore()
   const { actions } = useOm()
   return (
     <OrbitTab
-      width={tabWidth}
       stretch
       iconSize={18}
       icon={<AppIcon identifier={newAppStore.app.identifier} colors={newAppStore.app.colors} />}
@@ -189,12 +178,13 @@ const OrbitNewAppTab = ({ tabWidth }) => {
           )}
         />
       }
+      {...props}
     />
   )
 }
 
 const OrbitNavClip = gloss(Box, {
-  padding: [20, 40],
+  padding: [20, 20],
   margin: [-20, 0],
 })
 

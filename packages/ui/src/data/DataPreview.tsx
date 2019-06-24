@@ -1,5 +1,6 @@
 import { gloss } from 'gloss'
 import React, { PureComponent } from 'react'
+
 import { DataDescription } from './DataDescription'
 import { DataValueExtractor, InspectorName } from './DataInspectorControlled'
 import { getSortedKeys } from './utils'
@@ -48,7 +49,7 @@ export class DataPreview extends PureComponent<{
               }
 
               const { type, value } = res
-              return <DataDescription key={index} type={type} value={value} setValue={null} />
+              return <DataDescription key={index} type={type} value={value} />
             }),
             ', ',
           )}
@@ -58,7 +59,7 @@ export class DataPreview extends PureComponent<{
     } else if (type === 'date') {
       return <span>{value.toString()}</span>
     } else if (type === 'object') {
-      const propertyNodes = []
+      const propertyNodes: React.ReactElement[] = []
 
       const keys = getSortedKeys(value)
       let i = 0

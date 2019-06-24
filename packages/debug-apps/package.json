@@ -22,7 +22,7 @@
     "puppeteer": "^1.16.0",
     "request": "^2.67.0",
     "socket.io": "^2.0.4",
-    "ws": "7.0.0",
+    "ws": "^7.0.0",
     "isomorphic-fetch": "^2.2.1"
   }
 }

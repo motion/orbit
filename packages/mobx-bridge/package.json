@@ -14,7 +14,7 @@
     "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",
     "stringify-object": "^3.2.2",
-    "ws": "7.0.0"
+    "ws": "^7.0.0"
   },
   "peerDependencies": {
     "mobx": "*"

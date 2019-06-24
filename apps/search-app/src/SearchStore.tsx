@@ -1,4 +1,4 @@
-import { always, AppBit, AppIcon, ensure, getAppDefinition, getAppDefinitions, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { AppBit, AppIcon, ensure, getAppDefinition, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -91,22 +91,12 @@ export class SearchStore {
     }
   }
 
-  staticApps = react(
-    () => always(this.hooks.apps),
-    () => {
-      console.log(getAppDefinitions())
-      return []
-    },
-  )
-
   get isHome() {
     return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
   }
 
   get allApps() {
-    return [...this.hooks.apps.filter(x => x.tabDisplay !== 'permanent'), ...this.staticApps].map(
-      this.appToResult,
-    )
+    return this.hooks.apps.filter(x => x.tabDisplay !== 'permanent').map(this.appToResult)
   }
 
   getApps(query: string, all = false): ListItemProps[] {

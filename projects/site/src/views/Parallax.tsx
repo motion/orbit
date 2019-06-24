@@ -1,289 +1,313 @@
-import { throttle } from 'lodash'
-import PropTypes from 'prop-types'
-import React from 'react'
-import { animated, config, Controller, Globals } from 'react-spring/renderprops'
+import { createAnimatedComponent as animated } from '@react-spring/animated'
+import { config as configs, Controller, SpringConfig } from '@react-spring/core'
+import { useOnce } from '@react-spring/shared'
+import { defaultElement as View, requestAnimationFrame } from '@react-spring/shared/globals'
+import React, { CSSProperties, useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
+import { useMemoOne } from 'use-memo-one'
 
-// @ts-ignore
-const El = Globals.defaultElement
-const AnimatedDiv = animated(El)
-const { Provider, Consumer } = React.createContext(null)
+const AnimatedView = animated(View)
+const ParentContext = React.createContext<any>(null)
 
-function getScrollType(horizontal) {
+function getScrollType(horizontal: boolean) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
-export class ParallaxLayer extends React.PureComponent<any> {
-  static propTypes = {
-    /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
-    factor: PropTypes.number,
-    /** Determines where the layer will be at when scrolled to (0=start, 1=1st page, ...) */
-    offset: PropTypes.number,
-    /** shifts the layer in accordance to its offset, values can be positive or negative */
-    speed: PropTypes.number,
-  }
+interface IParallaxLayer {
+  setHeight(height: number, immediate?: boolean): void
+  setPosition(height: number, scrollTop: number, immediate?: boolean): void
+}
 
-  static defaultProps = {
-    factor: 1,
-    offset: 0,
-    speed: 0,
-  }
+interface IParallax {
+  config: ConfigProp
+  busy: boolean
+  space: number
+  offset: number
+  current: number
+  controller: Controller<{ scroll: number }>
+  layers: Set<IParallaxLayer>
+  scrollTo(offset: number): void
+  update(): void
+  stop(): void
+}
 
-  parent: any
-  controller: any
+type ViewProps = React.ComponentPropsWithoutRef<'div'>
 
-  componentDidMount() {
-    const parent = this.parent
-    if (parent) {
-      parent.layers = parent.layers.concat(this)
-      parent.update()
-    }
-  }
+interface ParallaxLayerProps extends ViewProps {
+  horizontal?: boolean
+  /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
+  factor?: number
+  /** Determines where the layer will be at when scrolled to (0=start, 1=1st page, ...) */
+  offset?: number
+  /** Shifts the layer in accordance to its offset, values can be positive or negative */
+  speed?: number
+}
 
-  componentWillUnmount() {
-    const parent = this.parent
-    if (parent) {
-      parent.layers = parent.layers.filter(layer => layer !== this)
-      parent.update()
-    }
-  }
+export const ParallaxLayer = React.memo(
+  ({ horizontal, factor = 1, offset = 0, speed = 0, ...rest }: ParallaxLayerProps) => {
+    // Our parent controls our height and position.
+    const parent = useContext<IParallax>(ParentContext)
 
-  setPosition(height, scrollTop, immediate = false) {
-    const { config: conf } = this.parent.props
-    const targetScroll = Math.floor(this.props.offset) * height
-    const offset = height * this.props.offset + targetScroll * this.props.speed
-    // @ts-ignore
-    const to = parseFloat(-(scrollTop * this.props.speed) + offset)
-    this.controller.update({ translate: to, config: conf, immediate })
-  }
+    // This is how we animate.
+    const ctrl = useMemoOne(() => {
+      const targetScroll = Math.floor(offset) * parent.space
+      const distance = parent.space * offset + targetScroll * speed
+      return new Controller({
+        space: parent.space * factor,
+        translate: -(parent.current * speed) + distance,
+      })
+    }, [])
 
-  setHeight(height, immediate = false) {
-    const { config: conf } = this.parent.props
-    // @ts-ignore
-    const to = parseFloat(height * this.props.factor)
-    this.controller.update({ space: to, config: conf, immediate })
-  }
+    // Create the layer.
+    const layer = useMemoOne<IParallaxLayer>(
+      () => ({
+        setPosition(height, scrollTop, immediate = false) {
+          const targetScroll = Math.floor(offset) * height
+          const distance = height * offset + targetScroll * speed
+          ctrl.start()
+          ctrl.update({
+            translate: -(scrollTop * speed) + distance,
+            config: parent.config,
+            immediate,
+          })
+        },
+        setHeight(height, immediate = false) {
+          ctrl.start()
+          ctrl.update({
+            space: height * factor,
+            config: parent.config,
+            immediate,
+          })
+        },
+      }),
+      [],
+    )
 
-  initialize() {
-    const props = this.props
-    const parent = this.parent
-    const targetScroll = Math.floor(props.offset) * parent.space
-    const offset = parent.space * props.offset + targetScroll * props.speed
-    // @ts-ignore
-    const to = parseFloat(-(parent.current * props.speed) + offset)
-    this.controller = new Controller({
-      space: parent.space * props.factor,
-      translate: to,
+    // Register the layer with our parent.
+    useOnce(() => {
+      if (parent) {
+        parent.layers.add(layer)
+        parent.update()
+        return () => {
+          parent.layers.delete(layer)
+          parent.update()
+        }
+      }
     })
-  }
 
-  renderLayer = () => {
-    const { style, children, offset, speed, factor, className, ...props } = this.props
-    const horizontal = this.parent && this.parent.props.horizontal
-
-    const translate3d = this.controller.interpolations.translate.interpolate(x =>
-      horizontal ? `translate3d(${x}px,0,0)` : `translate3d(0,${x}px,0)`,
+    const translate3d = ctrl.animated.translate.interpolate(
+      horizontal ? x => `translate3d(${x}px,0,0)` : y => `translate3d(0,${y}px,0)`,
     )
 
     return (
-      <AnimatedDiv
-        {...props}
-        className={className}
+      <AnimatedView
+        {...rest}
         style={{
           position: 'absolute',
           backgroundSize: 'auto',
           backgroundRepeat: 'no-repeat',
           willChange: 'transform',
           [horizontal ? 'height' : 'width']: '100%',
-          [horizontal ? 'width' : 'height']: this.controller.interpolations.space,
+          [horizontal ? 'width' : 'height']: ctrl.animated.space,
           WebkitTransform: translate3d,
           MsTransform: translate3d,
           transform: translate3d,
-          ...style,
+          ...rest.style,
         }}
-      >
-        {children}
-      </AnimatedDiv>
+      />
     )
-  }
+  },
+)
 
-  render() {
-    return (
-      <Consumer>
-        {parent => {
-          if (parent && !this.parent) {
-            this.parent = parent
-            this.initialize()
+type ConfigProp = SpringConfig | ((key: string) => SpringConfig)
+
+interface ParallaxProps extends ViewProps {
+  /** Determines the total space of the inner content where each page takes 100% of the visible container */
+  pages: number
+  config?: ConfigProp
+  enabled?: boolean
+  horizontal?: boolean
+  innerStyle?: CSSProperties
+  scrollingElement?: HTMLElement
+  showAbsolute?: boolean
+  container?: any
+  pageHeight?: number
+  disable?: boolean
+}
+
+export const Parallax = React.memo(
+  React.forwardRef<IParallax, ParallaxProps>(
+    (
+      {
+        pages,
+        config = configs.slow,
+        enabled = true,
+        horizontal = false,
+        innerStyle,
+        scrollingElement,
+        showAbsolute,
+        container,
+        pageHeight,
+        disable,
+        ...rest
+      },
+      ref,
+    ): any => {
+      const [ready, setReady] = useState(false)
+
+      let state: IParallax
+      state = useMemoOne(
+        () => ({
+          config,
+          busy: false,
+          space: 0,
+          current: 0,
+          offset: 0,
+          controller: new Controller({ scroll: 0 }),
+          layers: new Set<IParallaxLayer>(),
+          update: () => update(),
+          scrollTo: offset => scrollTo(offset),
+          stop: () => state.controller.stop(),
+        }),
+        [],
+      )
+
+      useImperativeHandle(ref, () => state, [])
+
+      useEffect(() => {
+        state.config = config
+      }, [config])
+
+      const containerRef = useRef<any>()
+      const contentRef = useRef<any>()
+
+      useLayoutEffect(() => {
+        if (pageHeight) {
+          state.space = pageHeight
+        }
+      }, [pageHeight])
+
+      useLayoutEffect(() => {
+        if (container) {
+          containerRef.current = container
+        }
+      }, [container])
+
+      useLayoutEffect(() => {
+        if (scrollingElement) {
+          const onScroll = () => {
+            if (!state.busy) {
+              state.busy = true
+              state.current = containerRef.current[getScrollType(horizontal)]
+              requestAnimationFrame(() => {
+                state.layers.forEach(layer => layer.setPosition(state.space, state.current))
+                state.busy = false
+              })
+            }
           }
-          return this.renderLayer()
-        }}
-      </Consumer>
-    )
-  }
-}
 
-export class Parallax extends React.PureComponent<any> {
-  // TODO keep until major release
-  static Layer = ParallaxLayer
+          scrollingElement.addEventListener('scroll', onScroll, { passive: true })
+          return () => {
+            scrollingElement.removeEventListener('scroll', onScroll)
+          }
+        }
+      }, [scrollingElement])
 
-  static propTypes = {
-    /** Determines the total space of the inner content where each page takes 100% of the visible container */
-    pages: PropTypes.number.isRequired,
-    /** Spring config (optional) */
-    config: PropTypes.object,
-    /** Allow content to be scrolled, or not */
-    scrolling: PropTypes.bool,
-    /** Scrolls horizontally or vertically */
-    horizontal: PropTypes.bool,
-  }
+      const update = () => {
+        const container = containerRef.current
+        if (!container) return
 
-  static defaultProps = {
-    config: config.slow,
-    scrolling: true,
-    horizontal: false,
-  }
+        const scrollType = getScrollType(horizontal)
+        if (enabled) {
+          state.current = container[scrollType]
+        } else {
+          container[scrollType] = state.current = state.offset * state.space
+        }
 
-  state = { ready: false }
-  layers = []
-  current = 0
-  offset = 0
-  busy = false
-  controller = new Controller({ scroll: 0 })
-  space: any
-  content: any
+        const content = contentRef.current
+        if (content) {
+          const sizeProp = horizontal ? 'width' : 'height'
+          content.style[sizeProp] = `${state.space * pages}px`
+        }
 
-  get container() {
-    return this.props.container
-  }
+        state.layers.forEach(layer => {
+          layer.setHeight(state.space, true)
+          layer.setPosition(state.space, state.current, true)
+        })
+      }
 
-  moveItems = () => {
-    this.layers.forEach(layer => layer.setPosition(this.space, this.current))
-    this.busy = false
-  }
+      const scrollTo = (offset: number) => {
+        const container = containerRef.current
+        const scrollType = getScrollType(horizontal)
+        state.offset = offset
+        state.controller.stop()
+        const scroll = offset * state.space
+        state.controller.update({
+          scroll,
+          config,
+          onFrame({ scroll }) {
+            container[scrollType] = scroll
+          },
+        })
+      }
 
-  scrollerRaf = () => Globals.requestFrame(this.moveItems)
+      useEffect(() => state.update())
 
-  onScroll = () => {
-    if (!this.busy) {
-      const { horizontal } = this.props
-      this.busy = true
-      this.scrollerRaf()
-      this.current = this.props.container[getScrollType(horizontal)]
-    }
-  }
+      useOnce(() => {
+        setReady(true)
 
-  update = () => {
-    const { scrolling, horizontal } = this.props
-    const scrollType = getScrollType(horizontal)
-    if (!this.container) return
-    if (scrolling) {
-      this.current = this.container[scrollType]
-    } else {
-      console.log('setting container scrolltop')
-      this.container[scrollType] = this.current = this.offset * this.space
-    }
-    if (this.content) {
-      this.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
-    }
-    this.layers.forEach(layer => {
-      layer.setHeight(this.space, true)
-      layer.setPosition(this.space, this.current, true)
-    })
-  }
+        const onResize = () => {
+          const update = () => state.update()
+          requestAnimationFrame(update)
+          setTimeout(update, 150) // Some browsers don't fire on maximize!
+        }
 
-  updateRaf = throttle(() => {
-    Globals.requestFrame(this.update)
-  }, 100)
+        window.addEventListener('resize', onResize, false)
+        return () => window.removeEventListener('resize', onResize, false)
+      })
 
-  scrollStop = () => this.controller.stop()
+      if (disable) {
+        return rest.children
+      }
 
-  scrollTo = (offset: number) => {
-    const { horizontal } = this.props
-    const scrollType = getScrollType(horizontal)
-    this.scrollStop()
-    this.offset = offset
-    const target = this.container
-
-    this.controller.update({
-      scroll: offset * this.space,
-      config: this.props.config,
-      onFrame: ({ scroll }) => (target[scrollType] = scroll),
-    })
-  }
-
-  componentDidMount() {
-    this.space = this.props.pageHeight
-    window.addEventListener('resize', this.updateRaf, { passive: true })
-    this.props.scrollingElement.addEventListener('scroll', this.onScroll, { passive: true })
-    this.update()
-    this.setState({ ready: true })
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateRaf)
-    this.props.scrollingElement.removeEventListener('scroll', this.onScroll)
-  }
-
-  inputFocus() {
-    this.space = this.props.pageHeight
-    this.update()
-  }
-
-  render() {
-    const {
-      style,
-      innerStyle,
-      pages,
-      id,
-      className,
-      scrolling,
-      children,
-      horizontal,
-      showAbsolute,
-      disable,
-    } = this.props
-
-    if (disable) {
-      return children
-    }
-
-    return (
-      <>
-        <El
-          // ref={node => (this.container = node)}
-          onWheel={scrolling ? this.scrollStop : null}
-          onTouchStart={scrolling ? this.scrollStop : null}
-          style={{
-            WebkitTransform: START_TRANSLATE,
-            MsTransform: START_TRANSLATE,
-            transform: START_TRANSLATE_3D,
-            ...style,
-          }}
-          id={id}
-          className={className}
-        >
-          {this.state.ready && (
-            <El
-              ref={node => (this.content = node)}
-              style={{
-                position: 'absolute',
-                [horizontal ? 'height' : 'width']: '100%',
-                WebkitTransform: START_TRANSLATE,
-                MsTransform: START_TRANSLATE,
-                transform: START_TRANSLATE_3D,
-                overflow: 'hidden',
-                [horizontal ? 'width' : 'height']: this.props.pageHeight * pages,
-                ...innerStyle,
-              }}
-            >
-              <Provider value={this}>{children}</Provider>
-            </El>
-          )}
-        </El>
-        {!showAbsolute && <div style={{ height: this.props.pageHeight * pages }} />}
-      </>
-    )
-  }
-}
+      return (
+        <>
+          <View
+            {...rest}
+            // ref={containerRef}
+            onWheel={enabled ? state.stop : null}
+            onTouchStart={enabled ? state.stop : null}
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              WebkitTransform: START_TRANSLATE,
+              MsTransform: START_TRANSLATE,
+              transform: START_TRANSLATE_3D,
+              ...rest.style,
+            }}
+          >
+            {ready && (
+              <View
+                ref={contentRef}
+                style={{
+                  [horizontal ? 'height' : 'width']: '100%',
+                  position: 'absolute',
+                  overflow: 'hidden',
+                  [horizontal ? 'width' : 'height']: state.space * pages,
+                  WebkitTransform: START_TRANSLATE,
+                  MsTransform: START_TRANSLATE,
+                  transform: START_TRANSLATE_3D,
+                  ...innerStyle,
+                }}
+              >
+                <ParentContext.Provider value={state}>{rest.children}</ParentContext.Provider>
+              </View>
+            )}
+          </View>
+          {!showAbsolute && <div style={{ height: state.space * pages }} />}
+        </>
+      )
+    },
+  ),
+)

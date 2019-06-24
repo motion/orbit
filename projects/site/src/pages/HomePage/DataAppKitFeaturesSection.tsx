@@ -12,7 +12,6 @@ import { PillButton } from '../../views/PillButton'
 import { TitleText } from '../../views/TitleText'
 import { apps } from './apps'
 import { BodyButton } from './BodyButton'
-import { GradientDown } from './GradientDown'
 import { blackWavePattern } from './purpleWaveUrl'
 import { SectionIcon, SectionP, SimpleSection } from './SimpleSection'
 import { SpacedPageContent, useScreenVal } from './SpacedPageContent'
@@ -47,7 +46,6 @@ export default memo(function DataAppKitFeaturesSection() {
                   backgroundRepeat="no-repeat"
                 />
               </FadeChild>
-              <GradientDown left={-100} right={-100} top="auto" height="50%" />
             </FullScreen>
           </Page.Parallax>
         )}
@@ -153,7 +151,7 @@ export default memo(function DataAppKitFeaturesSection() {
               ref={Fade.ref}
               alignItems="start"
               space={screen === 'small' ? '0 15%' : '20% 15%'}
-              itemMinWidth={260}
+              itemMinWidth={280}
               maxWidth={800}
               margin="auto"
             >

@@ -70,16 +70,19 @@ export class GMailLoader {
     this.log.verbose('history loaded', result)
 
     // collect from history list of added/changed and removed thread ids
-    let addedThreadIds: string[] = [],
-      deletedThreadIds: string[] = []
+    let addedThreadIds: string[] = []
+    let deletedThreadIds: string[] = []
 
     // find changes in history if it exist
     if (result.history) {
       result.history.forEach(history => {
-        if (history.messagesAdded) {
-          history.messagesAdded.forEach(action => {
+        if (history.labelsAdded) {
+          const trashedOrSpam = history.labelsAdded.filter(action => {
+            return action.labelIds.indexOf('TRASH') !== -1 && action.labelIds.indexOf('SPAM') !== -1
+          })
+          trashedOrSpam.forEach(action => {
             const threadId = action.message.threadId
-            if (addedThreadIds.indexOf(threadId) === -1) addedThreadIds.push(threadId)
+            if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
           })
         }
         if (history.messageDeleted) {
@@ -88,13 +91,15 @@ export class GMailLoader {
             if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
           })
         }
-        if (history.labelsAdded) {
-          const trashedOrSpam = history.labelsAdded.filter(action => {
-            return action.labelIds.indexOf('TRASH') !== -1 && action.labelIds.indexOf('SPAM') !== -1
-          })
-          trashedOrSpam.forEach(action => {
+        if (history.messagesAdded) {
+          history.messagesAdded.forEach(action => {
             const threadId = action.message.threadId
-            if (deletedThreadIds.indexOf(threadId) === -1) deletedThreadIds.push(threadId)
+            if (
+              deletedThreadIds.indexOf(threadId) === -1 &&
+              addedThreadIds.indexOf(threadId) === -1
+            ) {
+              addedThreadIds.push(threadId)
+            }
           })
         }
       })

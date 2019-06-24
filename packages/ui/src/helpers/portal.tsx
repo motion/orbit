@@ -10,11 +10,11 @@ type Props = {
 }
 
 export class Portal extends Component<Props> {
-  popup = null
+  popup: HTMLDivElement | null = null
 
   constructor(a, b) {
     super(a, b)
-    this.popup = document.createElement('div') as HTMLDivElement
+    this.popup = document.createElement('div')
     document.body[this.props.prepend ? 'prepend' : 'appendChild'](this.popup)
     if (this.props.style) {
       this.popup.setAttribute('style', cssString(this.props.style))
@@ -25,10 +25,13 @@ export class Portal extends Component<Props> {
   }
 
   componentWillUnmount() {
-    document.body.removeChild(this.popup)
+    this.popup && document.body.removeChild(this.popup)
   }
 
   render() {
-    return createPortal(this.props.children, this.popup)
+    if (this.popup) {
+      return createPortal(this.props.children, this.popup)
+    }
+    return null
   }
 }

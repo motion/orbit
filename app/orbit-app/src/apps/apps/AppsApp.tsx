@@ -202,6 +202,7 @@ function AppSettings(props: { appId: number }) {
       titleBorder
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
+      pad
       title={app.name}
       subTitle={`${definition.name}`}
       afterTitle={

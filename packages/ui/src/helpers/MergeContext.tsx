@@ -18,7 +18,7 @@ export function MergeContext<A>({ Context, value, children }: MergeContextProps<
     cur.current = value
   }
   const memoValue = useMemo(() => {
-    if (context && typeof context === 'object' && context.constructor.name === 'Object') {
+    if (context && typeof context === 'object' && context['constructor'].name === 'Object') {
       return { ...context, ...value }
     } else {
       return value

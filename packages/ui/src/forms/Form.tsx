@@ -7,7 +7,7 @@ import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
-import { Omit } from '../types'
+import { DataType, Omit } from '../types'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
@@ -38,7 +38,7 @@ export type FormErrors<A> = { [key in keyof A]: string } | string | null | true 
 type FormFieldType =
   | {
       name: string
-      type?: InputType | string
+      type?: InputType
       value?: any
       required?: boolean
       validate?: (val: any) => string
@@ -47,6 +47,14 @@ type FormFieldType =
       name: string
       type: 'select'
       value: { label: string; value: string }[]
+      required?: boolean
+      validate?: (val: any) => string
+    }
+  | {
+      name: string
+      type: 'custom'
+      children: React.ReactNode
+      value?: any
       required?: boolean
       validate?: (val: any) => string
     }
@@ -258,9 +266,9 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
         key={key}
         label={field.name}
         name={key}
-        // TODO type
-        type={(field.type || 'string') as any}
+        type={DataType[field.type]}
         defaultValue={field.value}
+        {...field.type === 'custom' && { children: field.children }}
       />
     )
   })

@@ -159,6 +159,7 @@ const Bottom = gloss(Box, {
 
 export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({
   title: normalized.title,
+  subTitle: normalized.subTitle,
   location: normalized.location,
   // webLink: normalized.webLink,
   // desktopLink: normalized.desktopLink,

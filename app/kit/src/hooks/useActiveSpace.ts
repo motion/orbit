@@ -7,7 +7,6 @@ export function useActiveSpace(query?) {
     SpaceModel,
     user && {
       where: { id: user.activeSpace },
-      select: ['id', 'name', 'colors'],
       ...query,
     },
   )

@@ -123,7 +123,6 @@ export class ItemMeasurer extends Component<ItemMeasurerProps, void> {
     if (this.context.visible === false) {
       return
     }
-    console.log('GOT RESIZE MEAUSRING')
     this._measureItem(false)
   }
 }

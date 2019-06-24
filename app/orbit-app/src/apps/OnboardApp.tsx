@@ -7,7 +7,7 @@ import { getActiveSpace } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { SetupAppHome } from './SetupAppApp'
-import { SpaceEdit } from './spaces/SpaceEdit'
+import { SpaceEdit } from './SpacesApp'
 
 export default createApp({
   id: 'onboard',

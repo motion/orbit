@@ -22,13 +22,10 @@ export default class LowPassFilter {
 
   push(value: number): number {
     let removed = 0
-
     if (this.hasFullBuffer()) {
-      removed = this.buffer.shift()
+      removed = this.buffer.shift() || 0
     }
-
     this.buffer.push(value)
-
     return removed
   }
 

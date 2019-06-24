@@ -12,7 +12,7 @@ export const sizes = {
   short: { maxHeight: 900 },
 }
 
-export function useIsTiny(): ScreenSize {
+export function useIsTiny(): boolean {
   return useMedia(sizes.tiny)
 }
 

@@ -21,9 +21,7 @@ export class MediatorServer {
   commands: Command<any, any>[] = []
 
   constructor(public options: MediatorServerOptions) {
-    this.commands = this.options.resolvers
-      .map(x => (x.type === 'command' ? x.command : null))
-      .filter(Boolean)
+    this.commands = this.options.resolvers.flatMap(x => (x.type === 'command' ? [x.command] : []))
   }
 
   bootstrap() {
@@ -32,7 +30,9 @@ export class MediatorServer {
 
   sendRemoteCommand<Args, ReturnType>(command: Command<ReturnType, Args> | string, args?: Args) {
     const name = typeof command === 'string' ? command : command.name
-    this.options.fallbackClient.command(name, args, { timeout: 200 })
+    if (this.options.fallbackClient) {
+      this.options.fallbackClient.command(name, args, { timeout: 200 })
+    }
   }
 
   private async handleMessage(data: TransportRequest) {
@@ -70,8 +70,8 @@ export class MediatorServer {
     }
 
     // find a command or a model
-    let command: Command<any, any>
-    let model: Model<any, any>
+    let command: Command<any, any> | undefined
+    let model: Model<any, any> | undefined
 
     if (data.type === 'command') {
       command = this.commands.find(command => {
@@ -81,10 +81,12 @@ export class MediatorServer {
       if (!command) {
         if (this.options.fallbackClient) {
           log.verbose(`command ${data.command} was not found, trying fallback clients`, data)
-          this.options.fallbackClient
-            .command(data.command, data.args, { timeout: 150 })
-            .then(onSuccess)
-            .catch(onError)
+          if (data.command) {
+            this.options.fallbackClient
+              .command(data.command, data.args, { timeout: 150 })
+              .then(onSuccess)
+              .catch(onError)
+          }
         } else {
           log.verbose(`command ${data.command} was not found, no fallback client, ignoring`, data)
           this.options.transport.send({
@@ -100,7 +102,7 @@ export class MediatorServer {
         return model.name === data.model
       })
       // simply ignore if model was not found - maybe some other server has it defined
-      if (!model) {
+      if (!model && data.model) {
         if (this.options.fallbackClient) {
           log.verbose(`model ${data.model} was not found, trying fallback clients`, data)
 
@@ -205,7 +207,7 @@ export class MediatorServer {
 
     if (resolver) {
       // resolve a value
-      let result = null
+      let result: any = null
       try {
         log.verbose(
           `Resolving ${resolver.type}: ${

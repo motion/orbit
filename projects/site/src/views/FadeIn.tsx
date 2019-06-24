@@ -1,6 +1,6 @@
 import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
 
 import { useIsTiny } from '../hooks/useScreenSize'
@@ -9,6 +9,9 @@ export type FadeInProps = UseSpringProps<any> & {
   delay?: number
   intersection?: IntersectionObserverInit['rootMargin']
   threshold?: number
+  disable?: boolean
+  shown?: boolean
+  spring?: UseSpringProps<any>
 }
 
 export const fadeUpProps = {
@@ -50,6 +53,9 @@ type FadeChildProps = UseSpringProps<any> & {
   disable?: boolean
   willAnimateOnHover?: boolean
   fullscreen?: boolean
+  children?: React.ReactNode
+  style?: any
+  off?: boolean
 }
 
 const fullscreenStyle = {
@@ -75,9 +81,11 @@ export const FadeChild = memo(
     const isTiny = useIsTiny()
     const props = FadeContext.useProps()
     const shown = !!useDebounceValue(!disable && props.shown, delay)
-    const off = selectDefined(springProps.off, props.off)
+    const off = selectDefined(springProps.off, props.off, false)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
     const styleFin = {
+      justifyContent: 'inherit',
+      alignItems: 'inherit',
       ...(typeof style === 'function' ? style(springStyle) : style),
       ...springStyle,
       ...(fullscreen && fullscreenStyle),
@@ -132,20 +140,15 @@ export const useSimpleFade = ({
   spring,
   ...rest
 }: UseFadePageProps) => {
-  const hasMounted = useRef(false)
-
-  useEffect(() => {}, [])
-
   // disable animations on recent hmr
-  const disable = hasMounted.current || window['recentHMR'] || off
-  return useSpring(
-    spring || {
-      from: disable ? to : from,
-      to: shown || disable ? to : from,
-      config: slowConfigLessBounce,
-      ...rest,
-    },
-  )
+  const disable = window['recentHMR'] || off
+  const config = spring || {
+    from: disable ? to : from,
+    to: shown || disable ? to : from,
+    config: slowConfigLessBounce,
+    ...rest,
+  }
+  return useSpring(config)
 }
 
 export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {

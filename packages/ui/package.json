@@ -38,8 +38,8 @@
     "react-grid-layout": "0.16.6",
     "react-hotkeys": "2.0.0-pre8",
     "react-markdown": "4.0.6",
-    "react-select": "^2.4.2",
-    "react-spring": "9.0.0-beta.7",
+    "react-select": "^3.0.4",
+    "react-spring": "9.0.0-beta.23",
     "react-svg-inline": "^2.1.1",
     "react-switch": "^4.1.0",
     "react-window": "https://github.com/natew/react-window#f93849b22bbe8118ceaeb43bb6cf76b9b7abc779",
@@ -55,7 +55,7 @@
   "devDependencies": {
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
-    "@types/react-select": "2.0.15",
+    "@types/react-select": "^2.0.19",
     "@types/react-window": "1.7.0"
   },
   "resolutions": {

@@ -39,7 +39,7 @@ export function ManageApps() {
 
   return (
     <Section title="Installed Apps" size="md" pad space="lg">
-      <SubSection title="View apps">
+      <SubSection pad={[true, 0]} title="View apps">
         {!viewApps.length && (
           <View height={200} position="relative">
             <Center>
@@ -48,7 +48,6 @@ export function ManageApps() {
           </View>
         )}
         <AppSortableGrid
-          margin={[16, 0]}
           sortable
           items={viewApps}
           itemMinWidth={220}
@@ -75,7 +74,7 @@ export function ManageApps() {
         />
       </SubSection>
 
-      <SubSection title="Data apps">
+      <SubSection pad={[true, 0]} title="Data apps">
         {!dataApps.length && (
           <View height={200} position="relative">
             <Center>
@@ -85,6 +84,7 @@ export function ManageApps() {
         )}
         <AppSortableGrid
           margin={[16, 0]}
+          itemMinWidth={220}
           items={dataApps}
           getItem={item => {
             return <OrbitAppIcon removable app={item.app} />

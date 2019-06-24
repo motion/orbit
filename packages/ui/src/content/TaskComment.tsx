@@ -1,5 +1,6 @@
 import { gloss, Row } from 'gloss'
 import * as React from 'react'
+
 import { BorderBottom } from '../Border'
 import { RoundButton } from '../buttons/RoundButton'
 import { Icon } from '../Icon'
@@ -15,7 +16,7 @@ export type TaskCommentLike = {
     login: string
   }
   createdAt: string
-  body?: string
+  body: string
 }
 
 export type TaskCommentProps = TaskCommentLike & {

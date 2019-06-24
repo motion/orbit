@@ -6,7 +6,6 @@
  */
 import { Rect } from './geometry'
 
-
 export const SNAP_SIZE = 16
 
 export function snapGrid(val: number): number {
@@ -22,7 +21,7 @@ export function getPossibleSnappedPosition(
     getNew: (win: Rect) => number
     getGap: (win: Rect) => number
   },
-): number | null {
+): number | undefined {
   for (const win of windows) {
     const gap = Math.abs(getGap(win))
     if (gap >= 0 && gap < SNAP_SIZE) {

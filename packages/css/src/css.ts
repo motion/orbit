@@ -20,18 +20,12 @@ export type CSSOptions = {
 
 const emptyObject = Object.freeze({})
 
-// since this is super perf sensitive, lets not pass so much around
-let curCSSFn
-let curOpts
-
 export function cssString(styles: Object, opts?: CSSOptions): string {
   if (!styles) return ''
-  curCSSFn = css
-  curOpts = opts
   const shouldSnake = !opts || opts.snakeCase !== false
   let toReturn = ''
   for (let key in styles) {
-    let value = cssValue(key, styles[key])
+    let value = cssValue(key, styles[key], opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -49,12 +43,10 @@ export function cssString(styles: Object, opts?: CSSOptions): string {
 
 export function css(styles: Object, opts?: CSSOptions): Object {
   if (!styles) return emptyObject
-  curCSSFn = css
-  curOpts = opts
   const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
   for (let key in styles) {
-    let value = cssValue(key, styles[key])
+    let value = cssValue(key, styles[key], opts)
     // shorthands
     if (value !== undefined) {
       if (SHORTHANDS[key]) {
@@ -70,7 +62,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   return toReturn
 }
 
-function cssValue(key: string, value: any) {
+function cssValue(key: string, value: any, options?: CSSOptions) {
   let valueType = typeof value
   // get real values
   if (value === false) {
@@ -102,7 +94,7 @@ function cssValue(key: string, value: any) {
     key === 'from' ||
     key === 'to'
   ) {
-    return curCSSFn(value, curOpts)
+    return css(value, options)
   } else if (valueType === 'object') {
     if (value.toCSS) {
       return value.toCSS()
@@ -117,7 +109,9 @@ function cssValue(key: string, value: any) {
   } else if (key === 'isolate') {
     return value
   }
-  console.debug(`Invalid style value for ${key}: ${JSON.stringify(value)}`)
+  if (process.env.NODE_ENV === 'development') {
+    console.debug(`Invalid style value for ${key}`, value)
+  }
 }
 
 export function styleToClassName(style: string): string {

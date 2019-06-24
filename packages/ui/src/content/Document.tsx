@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
+
 import { HighlightText } from '../text/HighlightText'
 import { Title } from '../text/Title'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 export type DocumentProps = Partial<ItemsPropsContextType> & {
-  body?: string
-  title?: string
+  body: string
+  title: string
 }
 
 export function Document(rawProps: DocumentProps) {

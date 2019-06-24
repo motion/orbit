@@ -50,7 +50,7 @@ function cachedObservable(
       if (cached.subscriptions.size === 0) {
         cached.removeTimeout = setTimeout(() => {
           cached.isActive = false
-          cached.onDispose()
+          cached.onDispose && cached.onDispose()
           ObserverCache.delete(cached)
         }, 5000)
       }
@@ -80,7 +80,7 @@ export class MediatorClient {
             command: name,
             args,
           }),
-          options.timeout,
+          options.timeout || 20000,
         )
 
         if (response && response.notFound === true) {
@@ -322,7 +322,7 @@ export class MediatorClient {
     const args = qm instanceof Query ? qm.args : options.args || {}
     const cached = ObserverCache.get({
       model: modelName,
-      query: args,
+      query: args || {},
       type: 'one',
     })
     return new Observable(
@@ -362,7 +362,7 @@ export class MediatorClient {
     const args = qm instanceof Query ? qm.args : options.args || {}
     const cached = ObserverCache.get({
       model: modelName,
-      query: args,
+      query: args || {},
       type: 'many',
     })
     return new Observable(
@@ -391,12 +391,11 @@ export class MediatorClient {
   ): Observable<[ModelType[], number]>
   observeManyAndCount<ModelType, Args, CountArgs>(
     qm: Query<ModelType, Args> | Model<ModelType, Args, CountArgs> | string,
-    options?: {
+    options: {
       args?: Args
       resolvers?: QueryOptions<ModelType>
-    },
+    } = {},
   ): Observable<[ModelType[], number]> {
-    if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const modelName = typeof model === 'string' ? model : model.name
 

@@ -81,7 +81,7 @@ const tabButtonProps = {
   borderWidth: 0,
   glint: false,
   borderBottom: [3, 'transparent'],
-  color: theme => theme.background,
+  color: (theme, props) => (props.active ? theme.color : theme.color.alpha(0.5)),
   borderColor: (theme, props) => (props.active ? theme.borderColor : null),
   opacity: (_, props) => (props.active ? 1 : 0.4),
   sizeRadius: 0,

@@ -5,7 +5,7 @@ import { TransportRequestType, TransportRequestValues, TransportResponse } from 
 import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
 
-let tm = null
+let tm
 
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
@@ -25,7 +25,7 @@ export class WebSocketClientTransport implements ClientTransport {
     this.websocket = websocket
 
     websocket.onopen = () => {
-      clearTimeout(tm)
+      clearTimeout(tm || 0)
       this.onConnectedCallbacks.forEach(callback => callback())
       this.onConnectedCallbacks = []
     }
@@ -78,7 +78,7 @@ export class WebSocketClientTransport implements ClientTransport {
       const subscription = {
         id,
         type,
-        name: values.model,
+        name: values.model || '',
         onSuccess(result) {
           subject.next(result)
         },
@@ -159,7 +159,7 @@ export class WebSocketClientTransport implements ClientTransport {
         this.subscriptions.push({
           id,
           type,
-          name: values.command,
+          name: values.command || '',
           onSuccess(result) {
             // remove subscription once command is done
             subscriptions.splice(subscriptions.indexOf(this), 1)

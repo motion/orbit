@@ -148,6 +148,9 @@ export type SurfaceSpecificProps = {
   /** Add an element between the icon and inner element */
   betweenIconElement?: React.ReactNode
 
+  /** Style as part of a group */
+  segment?: 'first' | 'last' | 'middle' | 'single'
+
   /** [Advanced] Add an extra theme to the inner element */
   elementTheme?: Gloss.ThemeFn
 }

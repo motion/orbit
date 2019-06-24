@@ -43,34 +43,29 @@ export const ObserverCache = {
 
   get(args: ObserverCacheArgs) {
     const key = ObserverCache.getKey(args)
-    let entry = ObserverCache.entries.get(key)
-
-    // create empty entry if not
-    if (!entry) {
-      entry = {
-        key,
-        args,
-        component: currentComponent(),
-        subscriptions: new Set(),
-        // store this so its quick to check for updates
-        denormalizedValues: {},
-        // store this so we keep the sort order
-        value: undefined,
-        // this is an update from the server side
-        // we only update denormalized values
-        update: value => {
-          // weird perf opt but works for our cases....
-          if (value && typeof value === 'object' && Object.keys(value).length < 50) {
-            if (isEqual(value, entry.value)) return
-          }
-          entry.value = value
-          for (const sub of entry.subscriptions) {
-            sub.next(value)
-          }
-        },
-      }
-      ObserverCache.entries.set(key, entry)
+    let entry = ObserverCache.entries.get(key) || {
+      key,
+      args,
+      component: currentComponent(),
+      subscriptions: new Set(),
+      // store this so its quick to check for updates
+      denormalizedValues: {},
+      // store this so we keep the sort order
+      value: undefined,
+      // this is an update from the server side
+      // we only update denormalized values
+      update: value => {
+        // weird perf opt but works for our cases....
+        if (value && typeof value === 'object' && Object.keys(value).length < 50) {
+          if (isEqual(value, entry.value)) return
+        }
+        entry.value = value
+        for (const sub of entry.subscriptions) {
+          sub.next(value)
+        }
+      },
     }
+    ObserverCache.entries.set(key, entry)
     return entry
   },
 

@@ -1,4 +1,4 @@
-import { selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import React from 'react'
 
 import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
@@ -42,13 +42,20 @@ const getInnerBorderOffsetStyle = (_props: SurfaceProps, item: BreadcrumbInfo) =
 
 const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
   const radius = selectDefined(props.borderRadius, 0)
-  if (item) {
-    if (item.isFirst && item.isLast) {
+  const isSegmented = isDefined(props.segment, item || undefined)
+
+  if (isSegmented) {
+    const propIsFirst = props.segment === 'first' || props.segment === 'single' ? true : undefined
+    const propIsLast = props.segment === 'last' || props.segment === 'single' ? true : undefined
+    const isFirst = selectDefined(propIsFirst, item && item.isFirst)
+    const isLast = selectDefined(propIsLast, item && item.isLast)
+
+    if (isFirst && isLast) {
       return {
         borderRadius: radius,
       }
     }
-    if (item.isFirst) {
+    if (isFirst) {
       return {
         ...(props.borderPosition !== 'inside' && {
           borderRightWidth: 0,
@@ -59,7 +66,7 @@ const getSegmentBorderRadius = (props: SurfaceProps, item: BreadcrumbInfo) => {
         borderRightRadius: 0,
         borderLeftRadius: radius,
       }
-    } else if (item.isLast) {
+    } else if (isLast) {
       return {
         borderLeftRadius: 0,
         borderRightRadius: radius,

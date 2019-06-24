@@ -1,6 +1,6 @@
 import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, FormField, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp, useNewAppBit } from '../helpers/installApp'
@@ -56,8 +56,8 @@ function SetupAppCustom() {
         name: 'Name',
         type: 'string',
       },
-      identifier: {
-        name: 'identifier',
+      packageId: {
+        name: 'Package ID',
         type: 'string',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
@@ -100,7 +100,7 @@ function SetupAppCustom() {
             }}
           </Flow.Step>
 
-          <Flow.Step title="Customize" subTitle="Give it a name and icon">
+          <Flow.Step title="Customize" subTitle="Your app settings.">
             <Col pad>
               <Form useForm={form} />
             </Col>
@@ -123,7 +123,7 @@ function SetupAppCustom() {
               const identifier = form.getValue('identifier')
 
               banner.set({
-                message: `Creating app ${name} with template ${template}`,
+                message: `Creating app "${name}" with template "${template}".`,
               })
 
               const res = await command(AppCreateNewCommand, {
@@ -144,6 +144,11 @@ function SetupAppCustom() {
               console.warn('should go to app')
               createAppBitInActiveSpace({
                 identifier,
+              })
+
+              banner.set({
+                type: 'success',
+                message: `Successfully created, opening...`,
               })
             }}
             icon="chevron-right"
@@ -213,7 +218,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 items={[...installedApps, ...searchedApps, ...topApps]}
               />
             </Flow.Step>
-            <Flow.Step title="Customize" subTitle="Give it a name, theme and setup any options.">
+            <Flow.Step title="Customize" subTitle="Name, theme and setup any options.">
               {FlowStepSetup}
             </Flow.Step>
           </Flow>
@@ -279,8 +284,15 @@ const FlowStepSetup = memo(() => {
   const appBit = useNewAppBit(flow.data.selectedAppIdentifier)
   return (
     <Col pad flex={1} scrollable="y">
+      123
       <Scale size={1.2}>
         <AppsMainNew key={identifier} customizeColor app={appBit} />
+
+        <Form>
+          <FormField label="Location">
+            <input type="file" webkitdirectory />
+          </FormField>
+        </Form>
       </Scale>
     </Col>
   )

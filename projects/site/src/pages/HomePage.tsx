@@ -4,8 +4,8 @@ import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
 import { requestIdleCallback } from '../etc/requestIdle'
-import { useIsTiny } from '../hooks/useScreenSize'
 import { Header } from '../Header'
+import { useIsTiny } from '../hooks/useScreenSize'
 import { useSiteStore } from '../SiteStore'
 import { Page } from '../views/Page'
 import { Parallax } from '../views/Parallax'
@@ -37,7 +37,8 @@ const EarlyAccessBetaSection = loadOnIntersect(
 
 export function HomePage() {
   const siteStore = useSiteStore()
-  const [parallax, setParallax] = useState<Parallax>(null)
+  const [parallax, setParallax] = useState(null)
+  const isTiny = useIsTiny()
 
   return (
     <ParallaxContext.PassProps value={parallax}>
@@ -45,10 +46,10 @@ export function HomePage() {
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
-          disable={useIsTiny()}
+          disable={isTiny}
           ref={setParallax}
           pages={9}
-          scrollingElement={window}
+          scrollingElement={(window as any) as HTMLElement}
           container={bodyElement}
           pageHeight={siteStore.sectionHeight}
         >

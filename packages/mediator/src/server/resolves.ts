@@ -1,11 +1,12 @@
+import Observable from 'zen-observable'
+
 import { Command, Model } from '../common'
 import { ResolveInterface } from './ResolveInterface'
-import Observable from 'zen-observable'
 
 export function resolveCommand<ModelType, Args>(
   command: Command<ModelType, Args>,
   resolve: (args: Args) => ModelType | Promise<ModelType>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'command',
     command,
@@ -16,7 +17,7 @@ export function resolveCommand<ModelType, Args>(
 export function resolveOne<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => ModelType | Promise<ModelType>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'one',
     model,
@@ -27,7 +28,7 @@ export function resolveOne<ModelType, Args>(
 export function resolveMany<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => ModelType[] | Promise<ModelType[]>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'many',
     model,
@@ -38,7 +39,7 @@ export function resolveMany<ModelType, Args>(
 export function resolveManyAndCount<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => [ModelType[], number] | Promise<[ModelType[], number]>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'manyAndCount',
     model,
@@ -49,7 +50,7 @@ export function resolveManyAndCount<ModelType, Args>(
 export function resolveCount<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => number | Promise<number>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'count',
     model,
@@ -73,7 +74,7 @@ export function resolveProperty<ModelType, Property extends keyof ModelType, Arg
 export function resolveSave<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: ModelType) => ModelType | Promise<ModelType>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'save',
     model,
@@ -84,7 +85,7 @@ export function resolveSave<ModelType, Args>(
 export function resolveRemove<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: ModelType) => boolean | Promise<boolean>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'remove',
     model,
@@ -95,7 +96,7 @@ export function resolveRemove<ModelType, Args>(
 export function resolveObserveOne<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => Observable<ModelType>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'observeOne',
     model,
@@ -106,7 +107,7 @@ export function resolveObserveOne<ModelType, Args>(
 export function resolveObserveMany<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => Observable<ModelType[]>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'observeMany',
     model,
@@ -117,7 +118,7 @@ export function resolveObserveMany<ModelType, Args>(
 export function resolveObserveManyAndCount<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => Observable<[ModelType[], number]>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'observeManyAndCount',
     model,
@@ -128,7 +129,7 @@ export function resolveObserveManyAndCount<ModelType, Args>(
 export function resolveObserveCount<ModelType, Args>(
   model: Model<ModelType, Args>,
   resolve: (args: Args) => Observable<number>,
-): ResolveInterface<ModelType, undefined, Args> {
+): ResolveInterface<ModelType, never, Args> {
   return {
     type: 'observeCount',
     model,

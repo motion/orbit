@@ -40,7 +40,7 @@ export const spaceSizes = {
   xxxl: 48,
 }
 
-export function getSpaceSize(space: Size, scale: number = 1): number {
+export function getSpaceSize(space: Size, scale: number = 1): number | string {
   if (typeof space === 'number') {
     return space * scale
   }
@@ -48,9 +48,16 @@ export function getSpaceSize(space: Size, scale: number = 1): number {
     return 0
   }
   if (typeof space === 'string') {
-    return (spaceSizes[space] || 0) * scale
+    if (spaceSizes[space]) {
+      return (spaceSizes[space] || 0) * scale
+    }
+    return space
   }
   return spaceSizes.md * scale
+}
+
+export function getSpaceSizeNum(space: Size, scale: number = 1): number {
+  return +getSpaceSize(space, scale)
 }
 
 export function getSpacesSize(space: Sizes, scale: number = 1) {

@@ -7,7 +7,7 @@ import * as React from 'react'
 import { Config } from '../helpers/configureUI'
 import { ScaleContext } from '../Scale'
 import { getTextSize } from '../Sizes'
-import { Sizes } from '../Space'
+import { Size } from '../Space'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
@@ -27,7 +27,7 @@ export type TextProps = CSSPropertySetStrict &
     alpha?: number
     onKeyDown?: Function
     opacity?: number
-    size?: Sizes
+    size?: Size
     placeholder?: string
     lineHeight?: number
     sizeLineHeight?: number | boolean
@@ -144,7 +144,7 @@ export class Text extends React.PureComponent<TextProps> {
     return (this.node && this.node.innerText) || ''
   }
 
-  finishEdit = (value: string) => {
+  finishEdit = (event, value: string) => {
     const { onFinishEdit } = this.props
     if (onFinishEdit) {
       onFinishEdit(value, event)
@@ -158,7 +158,7 @@ export class Text extends React.PureComponent<TextProps> {
       const code = keycode(event)
       if (code === 'enter') {
         event.preventDefault()
-        this.finishEdit(this.value)
+        this.finishEdit(event, this.value)
       }
       if (code === 'esc') {
         event.preventDefault()

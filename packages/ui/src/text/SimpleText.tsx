@@ -2,8 +2,11 @@ import { Base, BaseProps, getTextSizeTheme, gloss, propsToStyles } from 'gloss'
 
 import { Config } from '../helpers/configureUI'
 import { useScale } from '../Scale'
+import { getTextSize } from '../Sizes'
+import { Size } from '../Space'
 
 export type SimpleTextProps = BaseProps & {
+  size?: Size
   ellipse?: boolean
   selectable?: boolean
 }
@@ -32,5 +35,6 @@ SimpleText.defaultProps = {
 
 export function scaledTextSizeTheme(props: any) {
   const scale = useScale()
-  return getTextSizeTheme(props, { scale })
+  const size = getTextSize(props.size) + 0.75
+  return getTextSizeTheme(props, { scale, size })
 }

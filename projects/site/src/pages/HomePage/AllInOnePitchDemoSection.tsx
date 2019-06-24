@@ -231,10 +231,10 @@ export default function NeckSection() {
                 <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
-                <FadeChild delay={300}>A new way to build apps: without a server.</FadeChild>
-                <FadeChild delay={450}>
-                  When ready, deploy to your intranet with a command.
+                <FadeChild delay={300}>
+                  The all in one app platform that feels like native.
                 </FadeChild>
+                <FadeChild delay={450}>Runs on your desktop, deploy to your intranet.</FadeChild>
               </TitleTextSub>
             </>
           }
@@ -247,8 +247,8 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Apps that talk to each other - plug in{' '}
-                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> data with a click.
+                      Plug in the <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> data
+                      app with a click.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -439,7 +439,7 @@ export default function NeckSection() {
           transform={{ y: -180 }}
           minWidth={1000}
           margin={[0, '-5vw']}
-          opacity={0.25}
+          opacity={0.35}
           top={40}
           bottom="auto"
           className="head-line-sep"
@@ -450,16 +450,16 @@ export default function NeckSection() {
 
       <Page.Parallax speed={0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.12}
-          transform={{ y: '-35%', x: '-25%', scale: 1.35 }}
+          opacity={0.22}
+          transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
           background="radial-gradient(circle closest-side, #F64097, #F27B81, transparent)"
         />
       </Page.Parallax>
 
       <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.15}
-          transform={{ y: '30%', x: '40%', scale: 1.48 }}
+          opacity={0.25}
+          transform={{ y: '30%', x: '40%', scale: 1.68 }}
           background="radial-gradient(circle closest-side, #00E5FF, #009A4C, transparent)"
         />
       </Page.Parallax>

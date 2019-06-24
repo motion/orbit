@@ -221,7 +221,7 @@ export default memo(function DataAppKitFeaturesSection() {
             {screen === 'large' && height !== 'short' && (
               <>
                 <Space size="xxl" />
-                <BodyButton {...linkProps('/docs')} margin={[0, 'auto']} size="xl">
+                <BodyButton {...linkProps('/docs')} margin={[10, 'auto']} size="xl">
                   Read the feature overview
                 </BodyButton>
               </>

@@ -52,7 +52,7 @@ function ButtonInner(props: ButtonProps) {
       activeStyle={activeStyle}
       glowProps={glowProps}
       onClick={useCallback(() => {
-        if (isDefined(props.active)) {
+        if (isDefined(props.active) && props.onChangeActive) {
           props.onChangeActive(!props.active)
         }
       }, [props.onChangeActive, props.active])}

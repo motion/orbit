@@ -117,7 +117,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
   }
 
   unmounted = false
-  parentNode: HTMLDivElement
+  parentNode: HTMLDivElement | null = null
   rootRef = React.createRef<HTMLDivElement>()
 
   componentDidMount() {
@@ -170,9 +170,11 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
   }
 
   updateScrollParent = () => {
-    this.setState({
-      bounds: this.parentNode.getBoundingClientRect(),
-    })
+    if (this.parentNode) {
+      this.setState({
+        bounds: this.parentNode.getBoundingClientRect(),
+      })
+    }
   }
 
   updateScrollParentDebounced = debounce(this.updateScrollParent, 80)

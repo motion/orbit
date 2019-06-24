@@ -38,7 +38,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
   let previousWithinOneMinute = false
   if (previousMessage && person && previousMessage.person) {
     previousBySameAuthor = person.id === previousMessage.person.id
-    previousWithinOneMinute = message.time - previousMessage.time < 1000 * 60
+    previousWithinOneMinute = (message.time || 0) - (previousMessage.time || 0) < 1000 * 60
   }
   const hideHeader = previousBySameAuthor && previousWithinOneMinute
 
@@ -71,7 +71,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
               <div style={{ width: 6 }} />
               {(!previousMessage || !previousWithinOneMinute) && (
                 <Text selectable size={0.9} fontWeight={500} alpha={0.5}>
-                  {<DateFormat date={new Date(message.time)} />}
+                  {<DateFormat date={new Date(message.time || 0)} />}
                 </Text>
               )}
             </>

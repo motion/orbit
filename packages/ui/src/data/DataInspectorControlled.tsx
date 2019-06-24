@@ -402,7 +402,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     let value
     if (res) {
       if (!res.mutable) {
-        setValue = null
+        setValue = undefined
       }
       ;({ type, value } = res)
     } else {
@@ -438,9 +438,9 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
       }
     }
 
-    let propertyNodesContainer = null
+    let propertyNodesContainer: React.ReactElement[] = []
     if (isExpandable && isExpanded) {
-      const propertyNodes = []
+      const propertyNodes: React.ReactElement[] = []
 
       // ancestry of children, including its owner object
       const childAncestry = ancestry.concat([value])
@@ -495,7 +495,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     }
 
     // create name components
-    const nameElems = []
+    const nameElems: React.ReactElement[] = []
     if (typeof name !== 'undefined') {
       nameElems.push(
         <Tooltip label={tooltips != null && tooltips[name]} key="name">
@@ -543,7 +543,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
       }
     }
 
-    const contextMenuItems = []
+    const contextMenuItems: { label?: string; click?: Function; type?: string }[] = []
 
     if (isExpandable) {
       contextMenuItems.push(
@@ -560,7 +560,7 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     contextMenuItems.push(
       {
         label: 'Copy',
-        click: () => clipboard.writeText(window.getSelection().toString()),
+        click: () => clipboard.writeText((window.getSelection() || '').toString()),
       },
       {
         label: 'Copy value',

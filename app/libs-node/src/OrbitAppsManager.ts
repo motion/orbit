@@ -13,7 +13,7 @@ type PartialSpace = Pick<Space, 'id' | 'directory'>
 @decorate
 export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
-  nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+  nodeAppDefinitions: AppDefinition[] = []
 
   spaces: PartialSpace[] = []
   user: User | null = null
@@ -68,13 +68,7 @@ export class OrbitAppsManager {
   updateAppDefinitions = async (space: Space) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
     log.info(`Got definitions for ${Object.keys(definitions)}`)
-    this.nodeAppDefinitions = {
-      ...this.nodeAppDefinitions,
-      ...definitions.reduce((acc, def) => {
-        acc[def.id] = def
-        return acc
-      }, {}),
-    }
+    this.nodeAppDefinitions = definitions
   }
 
   updateAppMeta = react(

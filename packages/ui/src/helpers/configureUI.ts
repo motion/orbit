@@ -52,7 +52,11 @@ export type CustomItemDescription = {
 
 // safe for react components
 const hash = x =>
-  sum(fromEntries(Object.entries(x).map(x => (isValidElement(x[1]) ? [x[0], x[1].key] : x))))
+  sum(
+    fromEntries(
+      Object.entries(x).map(x => (isValidElement(x[1] as any) ? [x[0], (x[1] as any).key] : x)),
+    ),
+  )
 
 let hasSet = false
 

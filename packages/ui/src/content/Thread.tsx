@@ -5,7 +5,7 @@ import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { ThreadMessage, ThreadMessageLike } from './ThreadMessage'
 
 export type ThreadLike = {
-  body?: string
+  body: string
   messages: ThreadMessageLike[]
 }
 

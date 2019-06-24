@@ -3,11 +3,12 @@ import React, { createContext, useContext, useMemo } from 'react'
 import { Omit } from '../types'
 
 export function createContextualProps<A extends any>(defaults?: A) {
-  const Context = createContext<Partial<A>>(null)
+  const Context = createContext<Partial<A> | null>(null)
   const PassProps = ({ children, ...rest }: Partial<Omit<A, 'children'> & { children?: any }>) => {
     const memoVal = useMemo(() => {
       return { ...defaults, ...rest }
     }, [rest])
+    // @ts-ignore
     return <Context.Provider value={memoVal}>{children}</Context.Provider>
   }
   return {

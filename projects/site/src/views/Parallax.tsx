@@ -56,8 +56,6 @@ export const ParallaxLayer = React.memo(
     // Our parent controls our height and position.
     const parent = useContext<IParallax>(ParentContext)
 
-    console.log('parent', parent.space)
-
     // This is how we animate.
     const ctrl = useMemoOne(() => {
       const targetScroll = Math.floor(offset) * parent.space
@@ -74,6 +72,7 @@ export const ParallaxLayer = React.memo(
         setPosition(height, scrollTop, immediate = false) {
           const targetScroll = Math.floor(offset) * height
           const distance = height * offset + targetScroll * speed
+          console.log('updating', -(scrollTop * speed) + distance, parent.config)
           ctrl.update({
             translate: -(scrollTop * speed) + distance,
             config: parent.config,

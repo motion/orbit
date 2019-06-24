@@ -13,11 +13,13 @@ type PartialSpace = Pick<Space, 'id' | 'directory'>
 @decorate
 export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
-  private spaces: PartialSpace[] = []
-  private user: User | null = null
+  nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
+
+  spaces: PartialSpace[] = []
+  user: User | null = null
+  appMeta: { [identifier: string]: AppMeta } = {}
+
   private packageJsonUpdate = 0
-  private appMeta: { [identifier: string]: AppMeta } = {}
-  private nodeAppDefinitions: { [identifier: string]: AppDefinition } = {}
   private updatePackagesVersion = 0
 
   // for easier debugging

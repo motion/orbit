@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "composite": true,
-    "strictNullChecks": true,
+    // "strictNullChecks": true,
     "outDir": "_",
     "rootDir": "src"
   },

@@ -134,7 +134,7 @@ export function gloss<Props = any>(
     useEffect(() => {
       return () => {
         const x = dynClasses.current
-        if (x) x.forEach(gc.deregisterClassUse)
+        if (x) x.forEach(deregisterClassName)
       }
     }, [])
 
@@ -324,6 +324,11 @@ function mergePropStyles(baseId: string, styles: Object, propStyles: Object, pro
 
 const SPECIFIC_PREFIX = 's'
 
+function deregisterClassName(name: string) {
+  const nonSpecificClassName = name[0] === SPECIFIC_PREFIX ? name.slice(1) : name
+  gc.deregisterClassUse(nonSpecificClassName)
+}
+
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
@@ -336,10 +341,6 @@ function addDynamicStyles(
 ) {
   const dynStyles = {}
   let classNames: string[] = []
-
-  if (props['debug']) {
-    debugger
-  }
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -390,7 +391,7 @@ function addDynamicStyles(
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
       if (!classNames.includes(className)) {
-        gc.deregisterClassUse(className)
+        deregisterClassName(className)
       }
     }
   }

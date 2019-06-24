@@ -230,7 +230,7 @@ export default function NeckSection() {
               <FadeChild delay={200}>
                 <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
-              <TitleTextSub ref={ref} margin="auto" minWidth={320}>
+              <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
                 <FadeChild delay={300}>A new way to build apps: without a server.</FadeChild>
                 <FadeChild delay={450}>
                   When ready, deploy to your intranet with a command.

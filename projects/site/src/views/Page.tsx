@@ -38,7 +38,6 @@ Page.Parallax = ({
     return null
   }
   return (
-    // @ts-ignore
     <ParallaxLayer
       speed={0.2}
       offset={parallax.offset}

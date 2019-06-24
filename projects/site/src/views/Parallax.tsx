@@ -2,16 +2,10 @@ import { createAnimatedComponent as animated } from '@react-spring/animated'
 import { config as configs, Controller, SpringConfig } from '@react-spring/core'
 import { useOnce } from '@react-spring/shared'
 import { defaultElement as View, requestAnimationFrame } from '@react-spring/shared/globals'
-import { Box } from 'gloss'
 import React, { CSSProperties, useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 import { useMemoOne } from 'use-memo-one'
 
-declare const window: {
-  addEventListener(name: string, fn: (event: any) => void, capture?: boolean): void
-  removeEventListener(name: string, fn: (event: any) => void, capture?: boolean): void
-}
-
-const AnimatedView = animated(Box)
+const AnimatedView = animated(View)
 const ParentContext = React.createContext<any>(null)
 
 function getScrollType(horizontal: boolean) {
@@ -72,7 +66,7 @@ export const ParallaxLayer = React.memo(
         setPosition(height, scrollTop, immediate = false) {
           const targetScroll = Math.floor(offset) * height
           const distance = height * offset + targetScroll * speed
-          console.log('updating', -(scrollTop * speed) + distance, parent.config)
+          ctrl.start()
           ctrl.update({
             translate: -(scrollTop * speed) + distance,
             config: parent.config,
@@ -80,6 +74,7 @@ export const ParallaxLayer = React.memo(
           })
         },
         setHeight(height, immediate = false) {
+          ctrl.start()
           ctrl.update({
             space: height * factor,
             config: parent.config,
@@ -123,7 +118,6 @@ export const ParallaxLayer = React.memo(
         }}
       />
     )
-    return null
   },
 )
 
@@ -160,7 +154,7 @@ export const Parallax = React.memo(
         ...rest
       },
       ref,
-    ) => {
+    ): any => {
       const [ready, setReady] = useState(false)
 
       let state: IParallax
@@ -203,6 +197,17 @@ export const Parallax = React.memo(
 
       useLayoutEffect(() => {
         if (scrollingElement) {
+          const onScroll = () => {
+            if (!state.busy) {
+              state.busy = true
+              state.current = containerRef.current[getScrollType(horizontal)]
+              requestAnimationFrame(() => {
+                state.layers.forEach(layer => layer.setPosition(state.space, state.current))
+                state.busy = false
+              })
+            }
+          }
+
           scrollingElement.addEventListener('scroll', onScroll, { passive: true })
           return () => {
             scrollingElement.removeEventListener('scroll', onScroll)
@@ -236,27 +241,16 @@ export const Parallax = React.memo(
       const scrollTo = (offset: number) => {
         const container = containerRef.current
         const scrollType = getScrollType(horizontal)
-
         state.offset = offset
         state.controller.stop()
+        const scroll = offset * state.space
         state.controller.update({
-          scroll: offset * state.space,
+          scroll,
           config,
           onFrame({ scroll }) {
             container[scrollType] = scroll
           },
         })
-      }
-
-      const onScroll = () => {
-        if (!state.busy) {
-          state.busy = true
-          state.current = containerRef.current[getScrollType(horizontal)]
-          requestAnimationFrame(() => {
-            state.layers.forEach(layer => layer.setPosition(state.space, state.current))
-            state.busy = false
-          })
-        }
       }
 
       useEffect(() => state.update())
@@ -283,7 +277,6 @@ export const Parallax = React.memo(
           <View
             {...rest}
             // ref={containerRef}
-            onScroll={onScroll}
             onWheel={enabled ? state.stop : null}
             onTouchStart={enabled ? state.stop : null}
             style={{

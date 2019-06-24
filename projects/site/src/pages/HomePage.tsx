@@ -38,6 +38,7 @@ const EarlyAccessBetaSection = loadOnIntersect(
 export function HomePage() {
   const siteStore = useSiteStore()
   const [parallax, setParallax] = useState(null)
+  const isTiny = useIsTiny()
 
   return (
     <ParallaxContext.PassProps value={parallax}>
@@ -45,7 +46,7 @@ export function HomePage() {
       <Header />
       <main className="main-contents" style={{ position: 'relative', zIndex: 0 }}>
         <Parallax
-          disable={useIsTiny()}
+          disable={isTiny}
           ref={setParallax}
           pages={9}
           scrollingElement={(window as any) as HTMLElement}

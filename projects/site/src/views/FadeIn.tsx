@@ -1,4 +1,11 @@
-import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
+import {
+  Col,
+  createContextualProps,
+  useDebounce,
+  useDebounceValue,
+  useGet,
+  useIntersectionObserver,
+} from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
@@ -80,7 +87,8 @@ export const FadeChild = memo(
   }: FadeChildProps) => {
     const isTiny = useIsTiny()
     const props = FadeContext.useProps()
-    const shown = !!useDebounceValue(!disable && props.shown, delay)
+    const shown = !!useDebounceValue(!disable && selectDefined(props.shown, true), delay)
+    console.log('what the fucking fuck', props.shown, disable)
     const off = selectDefined(springProps.off, props.off, false)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
     const styleFin = {
@@ -132,16 +140,14 @@ export const FadeParent = memo(({ children, ...props }: UseFadePageProps & { chi
 export const useSimpleFade = ({
   off,
   shown,
-  from = {
-    opacity: 0,
-    transform: `translate3d(0,-15px,0)`,
-  },
-  to = { opacity: 1, transform: `translate3d(0,0,0)` },
+  from = fadeDownProps.from,
+  to = fadeDownProps.to,
   spring,
   ...rest
 }: UseFadePageProps) => {
   // disable animations on recent hmr
   const disable = window['recentHMR'] || off
+  console.log('ok', disable, off, shown)
   const config = spring || {
     from: disable ? to : from,
     to: shown || disable ? to : from,
@@ -151,33 +157,15 @@ export const useSimpleFade = ({
   return useSpring(config)
 }
 
-export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
-  const ref = useRef(null)
-  const [shown, setShown] = useState(false)
-  const setShownSlow = useDebounce(setShown, props.delay)
-  const hasShown = useRef(false)
-
-  useIntersectionObserver({
-    ref,
-    options: { threshold: props.threshold, rootMargin: props.intersection },
-    onChange(entries) {
-      // only run once
-      if (hasShown.current && shown) return
-
-      const isOffscreen = !entries || entries[0].isIntersecting === false
-      if (props.disable || isOffscreen) {
-        setShownSlow(false)
-      } else {
-        hasShown.current = true
-        setShownSlow(true)
-      }
-    },
-  })
-
-  return {
-    ref,
-    shown,
-  }
+export const fadeDownProps = {
+  from: {
+    opacity: 0,
+    transform: `translate3d(0,-15px,0)`,
+  },
+  to: {
+    opacity: 1,
+    transform: `translate3d(0,0,0)`,
+  },
 }
 
 export const fadeRightProps = {
@@ -212,4 +200,33 @@ export const fadeLeftProps = {
         `perspective(600px) translateX(${t}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
     ),
   }),
+}
+
+export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
+  const ref = useRef(null)
+  const [shown, setShown] = useState(false)
+  const setShownSlow = useDebounce(setShown, props.delay)
+  const hasShown = useRef(false)
+
+  useIntersectionObserver({
+    ref,
+    options: { threshold: props.threshold, rootMargin: props.intersection },
+    onChange(entries) {
+      // only run once
+      if (hasShown.current && shown) return
+
+      const isOffscreen = !entries || entries[0].isIntersecting === false
+      if (props.disable || isOffscreen) {
+        setShownSlow(false)
+      } else {
+        hasShown.current = true
+        setShownSlow(true)
+      }
+    },
+  })
+
+  return {
+    ref,
+    shown,
+  }
 }

@@ -85,7 +85,9 @@ export const HomePage = memo(() => {
   )
 })
 
+// @ts-ignore
 HomePage.theme = 'home'
+// @ts-ignore
 HomePage.showPeekHeader = true
 
 let allUpcoming = []

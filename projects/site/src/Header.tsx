@@ -1,6 +1,6 @@
 import { BorderBottom, Button, Row, RowProps } from '@o/ui'
 import { Box, gloss, useTheme } from 'gloss'
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useLayoutEffect } from 'react'
 
 import { useIsTiny, useScreenSize } from './hooks/useScreenSize'
 import { LinkState } from './LinkState'
@@ -24,6 +24,15 @@ export const Header = memo(({ slim, noBorder, ...rest }: HeaderProps) => {
   const siteStore = useSiteStore()
   const [shown, setShown] = useState(true)
   const Fade = useFadePage({ shown, threshold: 0 })
+
+  useLayoutEffect(() => {
+    if (size === 'small') {
+      setShown(siteStore.showSidebar)
+    } else {
+      setShown(true)
+    }
+  }, [size, siteStore.showSidebar])
+
   let before = null
   let after = null
   if (size !== 'small') {

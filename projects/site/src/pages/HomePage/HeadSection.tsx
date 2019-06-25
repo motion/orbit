@@ -200,7 +200,9 @@ const HeadJoin = memo(() => {
 
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const Fade = useFadePage()
+  const Fade = useFadePage({
+    threshold: 0,
+  })
   const size = useScreenSize()
 
   return (

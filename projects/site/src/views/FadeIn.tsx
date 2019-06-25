@@ -21,10 +21,6 @@ export type FadeInProps = UseSpringProps<any> & {
   spring?: UseSpringProps<any>
 }
 
-export const fadeUpProps = {
-  from: { transform: `translate3d(0,10px,0)`, opacity: 0 },
-}
-
 export const slowConfigLessBounce = {
   mass: 0.35,
   tension: 25,
@@ -78,7 +74,7 @@ export const FadeChild = memo(
     from,
     to,
     children,
-    style,
+    style = fadeDownProps.style,
     delay,
     disable,
     willAnimateOnHover,
@@ -155,6 +151,10 @@ export const useSimpleFade = ({
   return useSpring(config)
 }
 
+const transformYStyle = spring => ({
+  transform: spring.transformY ? spring.transformY.interpolate(y => `translateY(${y}px)`) : null,
+})
+
 export const fadeDownProps = {
   from: {
     opacity: 0,
@@ -164,9 +164,19 @@ export const fadeDownProps = {
     opacity: 1,
     transformY: 0,
   },
-  style: spring => ({
-    transform: spring.transformY.interpolate(y => `translateY(${y}px)`),
-  }),
+  style: transformYStyle,
+}
+
+export const fadeUpProps = {
+  from: {
+    opacity: 0,
+    transformY: 15,
+  },
+  to: {
+    opacity: 1,
+    transformY: 0,
+  },
+  style: transformYStyle,
 }
 
 export const fadeRightProps = {

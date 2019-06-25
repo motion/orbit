@@ -105,7 +105,7 @@ export type UseFadePageProps = FadeInProps & { off?: boolean }
 
 export const useFadePage = ({
   delay = 200,
-  threshold = 0.2,
+  threshold = 0.1,
   off,
   ...props
 }: UseFadePageProps = {}) => {
@@ -162,7 +162,7 @@ export const useDebouncedIntersection = (props: FadeInProps = { delay: 0 }) => {
     options: { threshold: props.threshold, rootMargin: props.intersection },
     onChange(entries) {
       // only run once
-      if (hasShown.current) return
+      if (hasShown.current && shown) return
 
       const isOffscreen = !entries || entries[0].isIntersecting === false
       if (props.disable || isOffscreen) {

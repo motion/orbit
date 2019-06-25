@@ -70,6 +70,7 @@ const HeadContent = memo(() => {
         selectable
         textAlign="center"
         whiteSpace="nowrap"
+        maxHeight={80}
       >
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>

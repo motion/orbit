@@ -85,10 +85,9 @@ const updateScale = (last: number, node: HTMLElement, update: Function) => {
   const parent = node.parentElement
   const pWidth = parent.clientWidth
   const width = node.clientWidth
-  // scale down or up
-  const maxScale = parent.clientWidth / width
-  const parentScale = Math.min(maxScale, pWidth / Math.max(width, 1))
+  const parentScale = pWidth / Math.max(width, 1)
   if (parentScale !== last) {
+    console.log('parentScale', parentScale, pWidth, width)
     update(parentScale)
   }
 }

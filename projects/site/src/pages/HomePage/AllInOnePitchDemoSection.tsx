@@ -232,9 +232,9 @@ export default function NeckSection() {
               </FadeChild>
               <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
                 <FadeChild delay={300}>
-                  The all in one app platform that feels like native.
+                  Beautiful, simple to write apps that feel like native.
                 </FadeChild>
-                <FadeChild delay={450}>Runs on your desktop, deploys to your intranet.</FadeChild>
+                <FadeChild delay={450}>Run on your desktop, deploy to your intranet.</FadeChild>
               </TitleTextSub>
             </>
           }

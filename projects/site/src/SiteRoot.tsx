@@ -15,7 +15,6 @@ export const SiteRoot = hot(() => {
   const disableScrolling = window['recentHMR']
   // to be sure we get the disableScrolling
   curForceUpdate = useForceUpdate()
-  console.log('disableScrolling', disableScrolling)
   return (
     <ErrorBoundary name="Site Root">
       <SiteStoreContext.Provider>

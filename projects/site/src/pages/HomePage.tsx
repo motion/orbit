@@ -1,6 +1,6 @@
 import { ErrorBoundary, Loading, Theme, useIntersectionObserver } from '@o/ui'
 import { once } from 'lodash'
-import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import React, { lazy, memo, Suspense, useEffect, useRef, useState } from 'react'
 
 import { bodyElement } from '../constants'
 import { requestIdleCallback } from '../etc/requestIdle'
@@ -35,7 +35,7 @@ const EarlyAccessBetaSection = loadOnIntersect(
   lazy(() => retry(() => import(/* webkitPreload: true */ './HomePage/EarlyAccessBetaSection'))),
 )
 
-export function HomePage() {
+export const HomePage = memo(() => {
   const siteStore = useSiteStore()
   const [parallax, setParallax] = useState(null)
   const isTiny = useIsTiny()
@@ -83,7 +83,7 @@ export function HomePage() {
       </main>
     </ParallaxContext.PassProps>
   )
-}
+})
 
 HomePage.theme = 'home'
 HomePage.showPeekHeader = true

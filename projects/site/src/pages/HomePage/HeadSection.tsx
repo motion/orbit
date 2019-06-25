@@ -18,7 +18,7 @@ let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
   large: 'Easy and powerful apps for work',
-  medium: 'Easy and powerful apps',
+  medium: 'Easy and powerful apps for work',
   small: 'Easy and powerful apps',
 }
 
@@ -155,7 +155,7 @@ const HeadContent = memo(() => {
 
 const HeadJoin = memo(() => {
   return (
-    <View flex={1} width="100%" position="absolute" bottom={5} alignItems="center">
+    <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
       <FadeChild {...fadeUpProps} delay={500}>
         <SurfacePassProps elevation={5} fontFamily="GT Eesti">
           <Theme name="orbitOneDark">
@@ -262,7 +262,8 @@ const SubSection = memo(({ title, children, index, titleColor }: any) => {
           textTransform="uppercase"
           alpha={0.65}
           color={titleColor}
-          size={1.15}
+          size={1}
+          fontWeight={600}
         >
           {title}
         </Paragraph>

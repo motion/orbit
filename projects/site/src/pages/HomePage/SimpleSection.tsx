@@ -10,7 +10,7 @@ import { TitleText } from '../../views/TitleText'
 const titleFont = {
   WebkitTextFillColor: 'transparent',
   background: 'linear-gradient(to right, #B65138, #BE0DBE)',
-  backgroundSize: 300,
+  backgroundSize: '300',
 }
 
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {

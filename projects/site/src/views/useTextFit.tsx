@@ -56,6 +56,7 @@ export function useTextFit({
       onChange: measure,
       options: {
         attributes: true,
+        subtree: true,
       },
     },
     [ref.current],
@@ -76,6 +77,9 @@ export function useTextFit({
       transform: `scale(${scale * extraScale})`,
       height: ref.current ? `${scale * height}px` : 'auto',
       width: 'max-content',
+      // this make sure it scales "down" when the parent container is smaller than text
+      // by ensuring the text containing node is always at least size of the text
+      minWidth: 'min-content',
     },
   }
 }

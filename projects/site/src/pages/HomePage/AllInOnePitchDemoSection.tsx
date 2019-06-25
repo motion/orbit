@@ -1,4 +1,15 @@
-import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import {
+  Button,
+  Col,
+  FullScreen,
+  gloss,
+  Image,
+  Row,
+  Space,
+  useGetFn,
+  useIntersectionObserver,
+  View,
+} from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -8,7 +19,14 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
-import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
+import {
+  FadeChild,
+  fadeLeftProps,
+  fadeRightProps,
+  fadeUpProps,
+  slowConfigLessBounce,
+  useFadePage,
+} from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -230,10 +248,12 @@ export default function NeckSection() {
                 <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
-                <FadeChild delay={300}>
-                  Beautiful, simple to write apps that feel like native.
+                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
+                  &nbsp;Beautiful, simple to write apps that feel native.&nbsp;
                 </FadeChild>
-                <FadeChild delay={450}>Run on your desktop, deploy to your intranet.</FadeChild>
+                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
+                  Runs on your desktop, deploys to your intranet.
+                </FadeChild>
               </TitleTextSub>
             </>
           }

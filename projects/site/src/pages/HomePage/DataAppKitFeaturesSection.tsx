@@ -133,7 +133,7 @@ export default memo(function DataAppKitFeaturesSection() {
                     <PillButton>App Kit</PillButton>
                   </FadeChild>
                   <FadeChild delay={100}>
-                    <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
+                    <TitleText textAlign="center" size={useScreenVal('lg', 'xxl', 'xxxl')}>
                       Batteries Included
                     </TitleText>
                   </FadeChild>
@@ -150,7 +150,7 @@ export default memo(function DataAppKitFeaturesSection() {
             <Grid
               ref={Fade.ref}
               alignItems="start"
-              space={screen === 'small' ? '0 15%' : '20% 15%'}
+              space={screen === 'small' ? 30 : '20% 15%'}
               itemMinWidth={280}
               maxWidth={800}
               margin="auto"
@@ -216,7 +216,7 @@ export default memo(function DataAppKitFeaturesSection() {
               </PassProps>
             </Grid>
 
-            <View flex={2} />
+            <View flex={useScreenVal(0, 1, 2)} />
 
             {screen === 'large' && height !== 'short' && (
               <>

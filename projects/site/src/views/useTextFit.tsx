@@ -30,8 +30,9 @@ export function useTextFit({
     },
     [min, max, height],
   )
-  const setScaleSlow = useThrottledFn(setScaleBounded, { amount: throttle })
-  const measure = () => updateScale(scale, ref.current, setScaleSlow)
+  const measure = useThrottledFn(() => updateScale(scale, ref.current, setScaleBounded), {
+    amount: throttle,
+  })
 
   useResizeObserver(
     {
@@ -54,7 +55,6 @@ export function useTextFit({
       ref,
       onChange: measure,
       options: {
-        subtree: true,
         attributes: true,
       },
     },
@@ -86,7 +86,8 @@ const updateScale = (last: number, node: HTMLElement, update: Function) => {
   const pWidth = parent.clientWidth
   const width = node.clientWidth
   // scale down or up
-  const parentScale = pWidth / Math.max(width, 1)
+  const maxScale = parent.clientWidth / width
+  const parentScale = Math.min(maxScale, pWidth / Math.max(width, 1))
   if (parentScale !== last) {
     update(parentScale)
   }

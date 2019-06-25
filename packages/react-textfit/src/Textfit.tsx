@@ -68,9 +68,7 @@ export default class TextFit extends React.Component<TextFitProps> {
     if (resizable) {
       this.ro.observe(this.parent.current)
     }
-
     this.process()
-
     const fonts = window
       .getComputedStyle(this.parent.current)
       .fontFamily.split(',')
@@ -275,7 +273,7 @@ export default class TextFit extends React.Component<TextFitProps> {
       ...style,
       fontSize,
       height: fontSize,
-      lineHeight: `${fontSize}px`,
+      lineHeight: fontSize,
     }
 
     const wrapperStyle = {

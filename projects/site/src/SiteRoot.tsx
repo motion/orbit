@@ -1,4 +1,4 @@
-import { ErrorBoundary } from '@o/ui'
+import { ErrorBoundary, idFn } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import React, { Suspense } from 'react'
 import { hot } from 'react-hot-loader/root'
@@ -8,12 +8,13 @@ import { Layout } from './Layout'
 import { Navigation } from './Navigation'
 import { SiteStoreContext } from './SiteStore'
 
-let forceUpdate
+let curForceUpdate = idFn as any
+const forceUpdate = () => curForceUpdate()
 
 export const SiteRoot = hot(() => {
   const disableScrolling = window['recentHMR']
   // to be sure we get the disableScrolling
-  forceUpdate = useForceUpdate()
+  curForceUpdate = useForceUpdate()
   console.log('disableScrolling', disableScrolling)
   return (
     <ErrorBoundary name="Site Root">

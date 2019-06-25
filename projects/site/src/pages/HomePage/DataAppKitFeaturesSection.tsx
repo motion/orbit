@@ -269,7 +269,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
         hoverStyle={{ opacity: 1 }}
       />
       <Space />
-      <Paragraph selectable={false} size="xl">
+      <Paragraph selectable={false} size="sm">
         {title}
       </Paragraph>
     </View>

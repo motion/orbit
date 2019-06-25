@@ -34,6 +34,9 @@ export function cssString(styles: Object, opts?: CSSOptions): string {
           toReturn += `${k}:${px(value)};`
         }
       } else {
+        if (process.env.NODE_ENV === 'development' && typeof value === 'number' && isNaN(value)) {
+          debugger
+        }
         toReturn += `${(shouldSnake && CAMEL_TO_SNAKE[key]) || key}:${value};`
       }
     }

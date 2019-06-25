@@ -132,7 +132,6 @@ export class StackNavigatorStore {
     const props = filterSimpleValues(item.props)
     // dont update stack if already on same item, unless explicitly asking
     this.setState(next => {
-      console.log('next', JSON.stringify(next))
       if (!next || !next.stack) {
         return
       }

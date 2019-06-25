@@ -109,7 +109,6 @@ const createSlideSpringTo: AnimateTo = (config, delay) => {
         await next(curStyle)
         return
       case 'next':
-        console.log('next')
         // await sleep(delay)
         // out
         await next({

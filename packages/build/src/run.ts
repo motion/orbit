@@ -1,12 +1,6 @@
 import execa from 'execa'
 import * as Path from 'path'
 
-import { getFlag } from './webpack.config'
-
-process.env.NODE_ENV = process.env.NODE_ENV || getFlag('--prod') ? 'production' : 'development'
-
-console.log('node env', process.env.NODE_ENV)
-
 process.env.IS_RUNNING = 'true'
 
 const configPath = require.resolve('./webpack.config')

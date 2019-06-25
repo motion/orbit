@@ -33,7 +33,7 @@ export default memo(function DataAppKitFeaturesSection() {
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen transform={{ y: '-80%', scale: 0.65 }} transformOrigin="bottom center">
+            <FullScreen transform={{ y: '-85%', scale: 0.5 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}

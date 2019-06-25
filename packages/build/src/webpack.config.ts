@@ -40,10 +40,10 @@ const readPackage = (key: string) => {
   }
 }
 
-const getFlag = flag => {
+export const getFlag = flag => {
   const matcher = new RegExp(`${flag} ([^ ]+)`, 'i')
   const found = process.argv.join(' ').match(matcher)
-  return (found && found.length >= 2 && found[1]) || null
+  return (found ? found.length >= 2 && found[1] : true) || null
 }
 
 const flags = {

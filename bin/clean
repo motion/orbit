@@ -22,8 +22,7 @@ if [[ "$1" = "--all" ]]; then
   rm -r packages/*/node_modules || true
 fi
 
-echo "re-installing with `yarn --check-files` to ensure everything installed"
+# echo "re-installing with `yarn --check-files` to ensure everything installed"
+# yarn install --check-files
 
-yarn install --check-files
-
-echo "run build once with `build`"
+echo "run bootstrap and build once with build"

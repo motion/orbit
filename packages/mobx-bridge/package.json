@@ -10,7 +10,7 @@
   "dependencies": {
     "@o/config": "^2.5.2",
     "@o/logger": "^2.5.2",
-    "html5-websocket": "^2.0.2",
+    "html5-websocket": "^2.0.4",
     "lodash": "4.17.11",
     "reconnecting-websocket": "4.1.10",
     "stringify-object": "^3.2.2",

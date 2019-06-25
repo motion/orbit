@@ -1,6 +1,6 @@
+import { Direction } from '@o/react-window'
 import { cloneElement, Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { Direction } from 'react-window'
 import ResizeObserver from 'resize-observer-polyfill'
 
 import { VisibilityContext } from '../Visibility'

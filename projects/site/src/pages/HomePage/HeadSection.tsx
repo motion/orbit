@@ -17,9 +17,9 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Easy and powerful apps for work.',
-  medium: 'Easy and powerful apps for work.',
-  small: 'Easy and powerful apps for work.',
+  large: 'Easy and powerful apps for work (and fun)',
+  medium: 'Easy and powerful apps for work (and fun)',
+  small: 'Easy and powerful apps for work (and fun)',
 }
 
 let allTexts = {
@@ -218,7 +218,6 @@ export function HeadSection() {
           <Row
             space="xl"
             pad={[0, 'xl']}
-            marginBottom={-90}
             scrollable="x"
             maxWidth="100vw"
             justifyContent="space-between"

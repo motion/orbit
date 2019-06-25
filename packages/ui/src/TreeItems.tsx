@@ -1,6 +1,7 @@
+import { FixedSizeList } from '@o/react-window'
 import { Col, gloss } from 'gloss'
 import * as React from 'react'
-import { FixedSizeList } from 'react-window'
+
 import { TreeItem, TreeItemID, TreeProps } from './Tree'
 import { TreeItemsRow } from './TreeItemsRow'
 

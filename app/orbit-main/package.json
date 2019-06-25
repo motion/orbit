@@ -21,7 +21,7 @@
     "@o/orbit-fork-process": "^2.5.2",
     "@o/orbit-syncers": "^2.5.6",
     "abortcontroller-polyfill": "1.2.1",
-    "electron": "6.0.0-beta.9",
+    "electron": "6.0.0-beta.10",
     "electron-util": "0.9.0",
     "fs-extra": "7.0.0",
     "get-port": "4.0.0",
@@ -33,10 +33,10 @@
     "raven": "2.6.4",
     "wait-on": "3.3.0-beta.0",
     "wait-port": "^0.2.2",
-    "ws": "^7.0.0"
+    "ws": "^7.0.0",
+    "opn": "^6.0.0"
   },
   "devDependencies": {
-    "@types/electron": "*",
     "ndb": "1.0.25",
     "ndb-inspect": "0.0.1",
     "nodemon": "1.18.4"

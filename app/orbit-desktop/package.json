@@ -71,7 +71,7 @@
     "macos-version": "4.1.0",
     "morgan": "1.9.0",
     "node-osascript": "~2.0.0",
-    "opn": "^5.2.0",
+    "opn": "^6.0.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "1.1.0",

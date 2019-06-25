@@ -1,0 +1,8 @@
+packages:
+  - '**'
+apps:
+  - '**'
+app:
+  - '**'
+projects:
+  - '**'

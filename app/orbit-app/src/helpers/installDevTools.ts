@@ -12,13 +12,6 @@ window['Fixtures'] = Fixtures
 
 window['enableLog'] = false
 
-// why-did-you-render
-// https://github.com/welldone-software/why-did-you-render
-// if (process.env.NODE_ENV !== 'production') {
-//   const whyDidYouRender = require('@welldone-software/why-did-you-render').default
-//   whyDidYouRender(require('React'))
-// }
-
 let spyOff = null
 function debug(level?: number) {
   let next = 0

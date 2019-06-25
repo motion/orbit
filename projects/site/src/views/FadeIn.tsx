@@ -86,10 +86,9 @@ export const FadeChild = memo(
     ...springProps
   }: FadeChildProps) => {
     const isTiny = useIsTiny()
-    const props = FadeContext.useProps()
-    const shown = !!useDebounceValue(!disable && selectDefined(props.shown, true), delay)
-    console.log('what the fucking fuck', props.shown, disable)
-    const off = selectDefined(springProps.off, props.off, false)
+    const fadeContext = FadeContext.useProps()
+    const shown = !!useDebounceValue(!disable && selectDefined(fadeContext.shown, true), delay)
+    const off = selectDefined(springProps.off, fadeContext.off, false)
     const springStyle = useSimpleFade({ shown, from, to, ...springProps, off })
     const styleFin = {
       justifyContent: 'inherit',

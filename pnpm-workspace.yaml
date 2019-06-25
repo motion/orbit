@@ -1,8 +1,0 @@
-packages:
-  - '**'
-apps:
-  - '**'
-app:
-  - '**'
-projects:
-  - '**'

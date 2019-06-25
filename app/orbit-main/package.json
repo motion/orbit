@@ -34,7 +34,7 @@
     "wait-on": "3.3.0-beta.0",
     "wait-port": "^0.2.2",
     "ws": "^7.0.0",
-    "opn": "^6.0.0"
+    "open": "^6.3.0"
   },
   "devDependencies": {
     "ndb": "1.0.25",

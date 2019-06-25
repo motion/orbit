@@ -146,7 +146,6 @@ export const useSimpleFade = ({
 }: UseFadePageProps) => {
   // disable animations on recent hmr
   const disable = window['recentHMR'] || off
-  console.log('ok', disable, off, shown)
   const config = spring || {
     from: disable ? to : from,
     to: shown || disable ? to : from,
@@ -159,12 +158,15 @@ export const useSimpleFade = ({
 export const fadeDownProps = {
   from: {
     opacity: 0,
-    transform: `translate3d(0,-15px,0)`,
+    transformY: -15,
   },
   to: {
     opacity: 1,
-    transform: `translate3d(0,0,0)`,
+    transformY: 0,
   },
+  style: spring => ({
+    transform: spring.transformY.interpolate(y => `translateY(${y}px)`),
+  }),
 }
 
 export const fadeRightProps = {

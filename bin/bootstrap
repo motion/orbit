@@ -24,10 +24,7 @@ ensure-dep "firebase" -- npm i -g firebase-tools &
 wait
 
 echo "installing dependencies"
-if [ ! -d "./node_modules" ]; then
-  npm install
-fi
-yarn install --skip
+yarn install --ignore-engines
 
 ensure-dep "orbit" -- in cli yarn link
 

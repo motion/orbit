@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import React, { memo, useCallback, useEffect, useMemo, useRef, useContext } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Button } from '../buttons/Button'

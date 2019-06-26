@@ -4,7 +4,7 @@ import { Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 
 import { ROOT } from './constants'
 import { getScreenSize } from './helpers/getScreenSize'
@@ -125,10 +125,7 @@ export function OrbitMainWindow() {
     enabled: isMainWindow,
   })
 
-  log.info(
-    `--- OrbitMainWindow ${Electron.appConf.appRole} ${appId} ${store.show}`,
-    store.initialState,
-  )
+  log.info(`${Electron.appConf.appRole} ${appId} ${store.show}`, store.initialState)
 
   useMainWindowEffects({ isMainWindow })
 

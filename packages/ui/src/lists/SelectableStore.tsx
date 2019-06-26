@@ -155,6 +155,11 @@ export class SelectableStore {
       return
     }
 
+    // dont update if not changed (simple empty check)
+    if (this.active.size === 0 && nextFiltered.length === 0) {
+      return
+    }
+
     this.active = new Set(nextFiltered)
   }
 

@@ -94,6 +94,7 @@ export class SelectableStore {
   resetActiveOnRowsChange = react(
     () => always(this.rows),
     () => {
+      this.keyToIndex = {}
       this.setActive([])
     },
   )
@@ -163,6 +164,7 @@ export class SelectableStore {
       console.warn('no selecatble row!', this.rows)
       return
     }
+    console.log('selecting first valid', firstValidIndex)
     this.setActiveIndex(firstValidIndex)
   }
 

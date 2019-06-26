@@ -3,15 +3,15 @@ import { AppBit, AppModel } from '@o/models'
 import { useMemo } from 'react'
 
 import { useActiveSpace } from './useActiveSpace'
+import { FindOptions } from 'typeorm'
 
-export function useActiveApps(type?: string): AppBit[] {
+export function useActiveApps(where?: FindOptions<AppBit>['where']): AppBit[] {
   const [activeSpace] = useActiveSpace()
-  let where = { spaceId: activeSpace.id }
-  if (type) {
-    where['type'] = type
-  }
   const [apps] = useModels(AppModel, {
-    where,
+    where: {
+      spaceId: activeSpace.id,
+      ...where,
+    },
   })
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }

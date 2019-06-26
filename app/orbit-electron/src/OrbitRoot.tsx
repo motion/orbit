@@ -15,13 +15,10 @@ export function OrbitRoot() {
   const debugStore = useStore(ElectronDebugStore)
   const { isMainWindow, appConf, appId } = useStore(Electron)
 
-  const isApp = appConf.type === 'app'
-
   log.info(`
     appId: ${appId} ${process.env.APP_ID}
     isMainWindow: ${isMainWindow}
-    appConf.type: ${appConf.type}
-    isApp: ${isApp}
+    appConf.type: ${appConf.appRole}
 `)
 
   if (debugStore.error) {

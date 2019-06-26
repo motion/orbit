@@ -83,7 +83,7 @@ class AppStore {
     return (
       Electron.state.appWindows[this.appId] || {
         appId: this.appId,
-        type: 'main',
+        appRole: 'main',
       }
     )
   }
@@ -93,11 +93,11 @@ class AppStore {
   }
 
   get isEditing() {
-    return !!this.appConf.isEditing
+    return this.appConf.appRole === 'editing'
   }
 
   get isTorn() {
-    return !!this.appConf.isTorn
+    return this.appConf.appRole === 'torn'
   }
 
   get isDark() {

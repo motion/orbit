@@ -47,7 +47,6 @@ class OrbitMainWindowStore {
     screenSize => {
       ensure('enabled', !!this.props.enabled)
       ensure('has size', screenSize[0] !== 0)
-      ensure('not torn', !Electron.isTorn)
       if (this.size[0] !== 0) {
         ensure('not been moved', !this.hasMoved)
       }
@@ -78,7 +77,6 @@ class OrbitMainWindowStore {
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
       ensure('enabled', !!this.props.enabled)
-      ensure('not torn', !Electron.isTorn)
       ensure('did move', !!moved)
       ensure('window', !!this.orbitRef)
       // wait for move to finish
@@ -93,7 +91,6 @@ class OrbitMainWindowStore {
     () => Electron.state.showOrbitMain,
     shown => {
       ensure('enabled', !!this.props.enabled)
-      ensure('not torn', !Electron.isTorn)
       focusApp(shown)
     },
   )

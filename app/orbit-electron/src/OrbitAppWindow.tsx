@@ -66,7 +66,7 @@ export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: { appId: n
         webSecurity: false,
       }}
       titleBarStyle="customButtonsOnHover"
-      ref={forwardRef || store.handleRef}
+      ref={forwardRef}
       file={url}
       defaultPosition={store.position.slice()}
       defaultSize={store.size.slice()}

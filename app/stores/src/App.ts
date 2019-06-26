@@ -92,12 +92,8 @@ class AppStore {
     return `/appServer/${this.appId}/bundle.js`
   }
 
-  get isEditing() {
-    return this.appConf.appRole === 'editing'
-  }
-
-  get isTorn() {
-    return this.appConf.appRole === 'torn'
+  get appRole() {
+    return this.appConf.appRole
   }
 
   get isDark() {

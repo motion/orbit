@@ -153,12 +153,14 @@ export const OrbitHeader = memo(() => {
             <HeaderSide space="sm" spaceAround slim={slim}>
               {!slim && <BackButton />}
               <OrbitHeaderMenu />
-              {!isEditing && !isTorn && (
+              {appRole === 'main' ? (
                 <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                   <OrbitNavPopover target={<HomeButton id="home-button" />}>
                     <OrbitNav />
                   </OrbitNavPopover>
                 </View>
+              ) : (
+                <HomeButton id="home-button" />
               )}
             </HeaderSide>
           </HeaderButtonPassProps>
@@ -237,10 +239,6 @@ export const OrbitHeader = memo(() => {
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   const appStore = useStore(App)
-
-  if (appStore.isEditing) {
-    return null
-  }
 
   return (
     <>

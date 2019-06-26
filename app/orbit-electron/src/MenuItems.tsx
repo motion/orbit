@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuItemsExtra, SubMenu } from '@o/reactron'
 import { Desktop, Electron } from '@o/stores'
 import * as React from 'react'
 
-import { Mediator } from '../mediator'
+import { Mediator } from './mediator'
 
 export class MenuItems extends React.Component<{ restart: Function }> {
   isClosing = false

@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
-import { devTools } from '../helpers/devTools'
-import { ElectronDebugStore } from '../stores/ElectronDebugStore'
+import { devTools } from './helpers/devTools'
+import { ElectronDebugStore } from './stores/ElectronDebugStore'
 import { MenuItems } from './MenuItems'
 import { OrbitAppWindow } from './OrbitAppWindow'
 import { OrbitMainWindow } from './OrbitMainWindow'
@@ -18,7 +18,7 @@ export function OrbitRoot() {
 
   const isApp = appConf.type === 'app'
 
-  log.info(`OrbitRoot isMainWindow: ${isMainWindow}, ${isApp} ${appId}`)
+  log.info(`${appId} isMainWindow: ${isMainWindow}, ${isApp}`)
 
   if (debugStore.error) {
     if (debugStore.error) {

@@ -7,10 +7,10 @@ import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
-import { ROOT } from '../constants'
-import { getScreenSize } from '../helpers/getScreenSize'
-import { Mediator } from '../mediator'
-import { getDefaultAppBounds } from './getDefaultAppBounds'
+import { ROOT } from './constants'
+import { getScreenSize } from './helpers/getScreenSize'
+import { Mediator } from './mediator'
+import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
 
 const log = new Logger('electron')

@@ -8,8 +8,8 @@ import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
-import { ROOT } from '../constants'
-import { getDefaultAppBounds } from './getDefaultAppBounds'
+import { ROOT } from './constants'
+import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()

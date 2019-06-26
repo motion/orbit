@@ -3,7 +3,12 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
+import {
+  AppOpenWindowCommand,
+  NewFallbackServerPortCommand,
+  SendClientDataCommand,
+  ToggleOrbitMainCommand,
+} from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import { sleep } from '@o/utils'
@@ -16,7 +21,7 @@ import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import { forkAndStartOrbitApp } from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
-import { OrbitRoot } from './orbit/OrbitRoot'
+import { OrbitRoot } from './OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'

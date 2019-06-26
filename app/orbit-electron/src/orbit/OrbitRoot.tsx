@@ -37,7 +37,15 @@ export function OrbitRoot() {
       devTools={devTools}
     >
       <MenuItems restart={debugStore.restart} />
-      {electronStore.isMainWindow ? <OrbitMainWindow /> : <OrbitAppWindow id={appId} appId={appId} showDevTools show /> : }
+      {/*
+        This changes: when you open an app window, the main window turns into an app window.
+        That lets the transition be seamless, we just launch a new main window in the background.
+      */}
+      {electronStore.isMainWindow ? (
+        <OrbitMainWindow />
+      ) : (
+        <OrbitAppWindow id={appId} appId={appId} showDevTools show />
+      )}
     </ReactronApp>
   )
 }

@@ -13,6 +13,7 @@ import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
 
 const log = new Logger('electron')
+const isFirstOrbitWindow = Electron.appId === 0
 
 const setScreenSize = () => {
   const screenSize = getScreenSize()
@@ -94,7 +95,7 @@ class OrbitMainWindowStore {
   )
 
   showOnNewSpace() {
-    console.log('Show on new space...')
+    log.info('Show on new space...')
     if (this.orbitRef) {
       this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
       this.orbitRef.focus() // focus the window up front on the active screen
@@ -111,7 +112,11 @@ class OrbitMainWindowStore {
   }
 
   setIsVisible = (next = true) => {
-    this.isVisible = next
+    log.info('setIsVisible', next)
+    // show main window on first load
+    if (isFirstOrbitWindow) {
+      this.isVisible = next
+    }
   }
 }
 

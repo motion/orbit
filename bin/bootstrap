@@ -26,7 +26,7 @@ wait
 echo "installing dependencies"
 yarn install --ignore-engines
 
-ensure-dep "orbit" -- in cli yarn link
+ensure-dep "orbit" -- in cli yarn link || true
 
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
@@ -34,6 +34,10 @@ if [ ! -d "./app/orbit-desktop/_" ]; then
 fi
 
 sh ./scripts/pg-database.sh
+
+# fixes bug where TS loses permissions every damn clean
+chmod ug+x app/cli/src/index.ts
+chmod ug+x app/cli/_/index.js
 
 printf "\n\n"
 printf "  🎉🎉🎉 bootstrapped! 🎉🎉🎉"

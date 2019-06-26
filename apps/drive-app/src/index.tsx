@@ -1,7 +1,7 @@
 import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
-import { DriveApi } from './api.node'
+import DriveApi from './api.node'
 import { DriveLoader } from './DriveLoader'
 import { DriveSettings } from './DriveSettings'
 import { DriverSyncerWorker } from './DriveSyncerWorker.node'

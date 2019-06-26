@@ -3,6 +3,8 @@ import { SimpleStyleObject, ThemeObject } from 'gloss'
 
 type Adjuster = (fn: Color) => number
 
+export { ThemeObject } from 'gloss'
+
 const darken = (color: Color, amt: Adjuster) => {
   return color.darken(amt(color))
 }

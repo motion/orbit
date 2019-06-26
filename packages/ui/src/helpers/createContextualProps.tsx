@@ -1,6 +1,16 @@
 import React, { createContext, useContext, useMemo } from 'react'
 
-export function createContextualProps<A extends any>(defaults?: A) {
+export type ContextualProps<A> = {
+  Context: React.Context<Partial<A>>
+  PassProps: ({
+    children,
+    ...rest
+  }: Partial<Pick<A, Exclude<keyof A, 'children'>> & { children?: any }>) => JSX.Element
+  useProps<B extends Partial<A>>(componentProps?: B): B extends undefined ? A : B & A
+  Reset(props: { children: any }): any
+}
+
+export function createContextualProps<A extends any>(defaults?: A): ContextualProps<A> {
   const Context = createContext<Partial<A> | null>(null)
   const PassProps = ({ children, ...rest }: Partial<Omit<A, 'children'> & { children?: any }>) => {
     const memoVal = useMemo(() => {

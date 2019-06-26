@@ -4,7 +4,7 @@ import { MethodOptions } from 'googleapis-common'
 
 const Config = getGlobalConfig()
 
-export const DriveApi = (app: AppBit) => {
+export default (app: AppBit) => {
   const oauth2Client = new google.auth.OAuth2(
     '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com',
     'LLXP2Vq36socQtgXy_XQqLOW',

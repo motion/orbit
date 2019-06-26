@@ -24,7 +24,10 @@ ensure-dep "firebase" -- npm i -g firebase-tools &
 wait
 
 echo "installing dependencies"
-yarn install --ignore-engines
+if [ ! -d "./node_modules" ]; then
+  npm install
+fi
+npx lerna bootstrap --hoist
 
 ensure-dep "orbit" -- in cli yarn link
 

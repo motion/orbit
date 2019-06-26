@@ -5,3 +5,13 @@
 2. Save a huge amount of developer time.
 
 3. Build small apps that work together without having to glue them together.
+
+
+---
+
+nearest neighbors
+
+ReTool - https://tryretool.com
+MuleSoft - https://mulesoft.com
+MS PowerApps - https://powerapps.microsoft.com/
+OpenFin - https://openfin.co

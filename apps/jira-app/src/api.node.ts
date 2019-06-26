@@ -1,6 +1,6 @@
 import { AppBit } from '@o/kit'
 import { JiraLoader } from './JiraLoader'
 
-export const JiraApi = (app: AppBit) => {
+export default (app: AppBit) => {
   return new JiraLoader(app)
 }

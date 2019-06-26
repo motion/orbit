@@ -3,37 +3,6 @@ import { decorate, deep } from '@o/use-store'
 
 export let Electron = null as ElectronStore
 
-export type PinKeyType =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z'
-  | 'left'
-  | 'right'
-  | 'down'
-
 export type AppWindow = {
   appId: number
   type: string
@@ -57,7 +26,6 @@ class ElectronStore {
 
   state = deep({
     showOrbitMain: false,
-    pinKey: { name: '' as PinKeyType, at: Date.now() },
     focusedAppId: 'app',
     screenSize: [0, 0],
     updateState: {

@@ -16,7 +16,7 @@ const Config = getGlobalConfig()
 
 class OrbitAppWindowStore {
   props: {
-    id: string
+    appId: string
   }
 
   win: BrowserWindow
@@ -44,7 +44,7 @@ class OrbitAppWindowStore {
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
   handleFocus = () => {
-    Electron.setState({ focusedAppId: this.props.id })
+    Electron.setState({ focusedAppId: this.props.appId })
   }
 
   setShown = () => {
@@ -52,17 +52,12 @@ class OrbitAppWindowStore {
   }
 
   get showDevTools() {
-    return Electron.state.showDevTools[this.props.id]
+    return Electron.state.showDevTools[this.props.appId]
   }
 }
 
-export function OrbitAppWindow({
-  id,
-  appId,
-  forwardRef,
-  ...windowProps
-}: { id: string; appId?: string } & any) {
-  const store = useStore(OrbitAppWindowStore, { id })
+export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: { appId: number } & any) {
+  const store = useStore(OrbitAppWindowStore, { appId })
   const appQuery = appId === 0 ? '' : `/?id=${appId}`
   const url = `${Config.urls.server}${appQuery}`
   const show = selectDefined(windowProps.show, store.show)

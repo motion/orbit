@@ -101,7 +101,6 @@ export default class DebugApps {
     const res = sessions.sort((a, b) =>
       `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`),
     )
-    console.log(sessions, res)
     return res
   }
 

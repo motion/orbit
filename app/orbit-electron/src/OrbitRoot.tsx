@@ -6,7 +6,6 @@ import * as React from 'react'
 import { devTools } from './helpers/devTools'
 import { ElectronDebugStore } from './stores/ElectronDebugStore'
 import { MenuItems } from './MenuItems'
-import { OrbitAppWindow } from './OrbitAppWindow'
 import { OrbitMainWindow } from './OrbitMainWindow'
 import { Logger } from '@o/logger'
 
@@ -43,11 +42,7 @@ export function OrbitRoot() {
         This changes: when you open an app window, the main window turns into an app window.
         That lets the transition be seamless, we just launch a new main window in the background.
       */}
-      {isMainWindow ? (
-        <OrbitMainWindow />
-      ) : (
-        <OrbitAppWindow id={appId} appId={appId} showDevTools show />
-      )}
+      <OrbitMainWindow />
     </ReactronApp>
   )
 }

@@ -2,10 +2,10 @@ import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
-import { createUsableStore, ensure, react } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
-import * as React from 'react'
+import React, { useEffect } from 'react'
 
 import { ROOT } from './constants'
 import { getScreenSize } from './helpers/getScreenSize'
@@ -31,7 +31,11 @@ function focusApp(shown: boolean) {
 }
 
 class OrbitMainWindowStore {
-  orbitRef: BrowserWindow
+  props: {
+    enabled: boolean
+  }
+
+  orbitRef: BrowserWindow | null = null
   alwaysOnTop = true
   hasMoved = false
   isVisible = false
@@ -41,6 +45,7 @@ class OrbitMainWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      ensure('enabled', !!this.props.enabled)
       ensure('has size', screenSize[0] !== 0)
       ensure('not torn', !Electron.isTorn)
       if (this.size[0] !== 0) {
@@ -72,6 +77,7 @@ class OrbitMainWindowStore {
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
+      ensure('enabled', !!this.props.enabled)
       ensure('not torn', !Electron.isTorn)
       ensure('did move', !!moved)
       ensure('window', !!this.orbitRef)
@@ -86,6 +92,7 @@ class OrbitMainWindowStore {
   handleShowOrbitMain = react(
     () => Electron.state.showOrbitMain,
     shown => {
+      ensure('enabled', !!this.props.enabled)
       ensure('not torn', !Electron.isTorn)
       focusApp(shown)
     },
@@ -93,9 +100,11 @@ class OrbitMainWindowStore {
 
   showOnNewSpace() {
     console.log('Show on new space...')
-    this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
-    this.orbitRef.focus() // focus the window up front on the active screen
-    this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+    if (this.orbitRef) {
+      this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
+      this.orbitRef.focus() // focus the window up front on the active screen
+      this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
+    }
   }
 
   get show() {
@@ -111,43 +120,16 @@ class OrbitMainWindowStore {
   }
 }
 
-export const orbitMainWindowStore = createUsableStore(OrbitMainWindowStore)
-
 export function OrbitMainWindow() {
-  const store = orbitMainWindowStore.useStore()
+  const { isMainWindow, appId } = useStore(Electron)
+  const store = useStore(OrbitMainWindowStore, {
+    enabled: isMainWindow,
+  })
   const url = `${Config.urls.server}`
 
   log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size}`)
 
-  React.useEffect(() => {
-    const setOSTheme = () => {
-      const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
-      Mediator.command(ChangeDesktopThemeCommand, { theme })
-    }
-    setOSTheme()
-    const id = systemPreferences.subscribeNotification(
-      'AppleInterfaceThemeChangedNotification',
-      setOSTheme,
-    )
-    return () => {
-      systemPreferences.unsubscribeNotification(id)
-    }
-  })
-
-  React.useEffect(() => {
-    setScreenSize()
-    screen.on('display-metrics-changed', setScreenSize)
-    return () => {
-      screen.removeListener('display-metrics-changed', setScreenSize)
-    }
-  }, [])
-
-  React.useEffect(() => {
-    // set orbit icon in dev
-    if (process.env.NODE_ENV === 'development') {
-      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
-    }
-  }, [])
+  useMainWindowEffects({ isMainWindow })
 
   // wait for screensize/measure
   if (!store.size[0]) {
@@ -156,7 +138,7 @@ export function OrbitMainWindow() {
 
   return (
     <OrbitAppWindow
-      id="app"
+      appId={appId}
       show={store.show}
       onReadyToShow={store.setIsVisible}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
@@ -172,4 +154,41 @@ export function OrbitMainWindow() {
       onMove={store.setPosition}
     />
   )
+}
+
+function useMainWindowEffects({ isMainWindow }) {
+  // follow theme
+  useEffect(() => {
+    if (!isMainWindow) return
+    const setOSTheme = () => {
+      const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
+      Mediator.command(ChangeDesktopThemeCommand, { theme })
+    }
+    setOSTheme()
+    const id = systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      setOSTheme,
+    )
+    return () => {
+      systemPreferences.unsubscribeNotification(id)
+    }
+  }, [isMainWindow])
+
+  // follow screen size
+  useEffect(() => {
+    if (!isMainWindow) return
+    setScreenSize()
+    screen.on('display-metrics-changed', setScreenSize)
+    return () => {
+      screen.removeListener('display-metrics-changed', setScreenSize)
+    }
+  }, [isMainWindow])
+
+  // set orbit icon in dev
+  useEffect(() => {
+    if (!isMainWindow) return
+    if (process.env.NODE_ENV === 'development') {
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
+    }
+  }, [isMainWindow])
 }

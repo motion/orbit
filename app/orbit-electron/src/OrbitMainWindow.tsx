@@ -11,6 +11,7 @@ import { getScreenSize } from './helpers/getScreenSize'
 import { Mediator } from './mediator'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
+import { moveWindowToCurrentSpace } from './helpers/moveWindowToCurrentSpace'
 
 const log = new Logger('OrbitMainWindow')
 const isFirstOrbitWindow = Electron.appId === 0
@@ -82,7 +83,9 @@ class OrbitMainWindowStore {
       await sleep(150)
       // wait for showing
       await when(() => Electron.state.showOrbitMain)
-      this.showOnNewSpace()
+      if (this.orbitRef) {
+        moveWindowToCurrentSpace(this.orbitRef)
+      }
     },
   )
 
@@ -93,15 +96,6 @@ class OrbitMainWindowStore {
       focusApp(shown)
     },
   )
-
-  showOnNewSpace() {
-    log.info('Show on new space...')
-    if (this.orbitRef) {
-      this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
-      this.orbitRef.focus() // focus the window up front on the active screen
-      this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
-    }
-  }
 
   get show() {
     if (Electron.appConf.appRole === 'main') {

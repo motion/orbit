@@ -166,7 +166,7 @@ export const OrbitHeader = memo(() => {
           </HeaderButtonPassProps>
 
           <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
-            <OrbitHeaderInput />
+            <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
             {isOnTearablePane && (
               <>
@@ -329,6 +329,7 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   justifyContent: 'flex-end',
 
   slim: {
+    flex: 'none',
     width: 'auto',
     minWidth: 'min-content',
   },

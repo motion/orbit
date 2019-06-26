@@ -2,6 +2,8 @@ import { forkProcess } from '@o/orbit-fork-process'
 
 import { addAppProcess } from '../resolver/CloseAppResolver'
 
+const lastUsedInspectPort = 9003
+
 export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVariables = null) {
   if (typeof appId !== 'number') {
     throw new Error('No appId given')
@@ -13,9 +15,8 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVa
       ...environmentVariables,
       APP_ID: appId,
     },
-    // TODO if we want to attach repl, increment for each new orbit sub-process, need a counter here
-    // inspectPort: 9006,
-    // inspectPortRemote: 9007,
+    inspectPort: lastUsedInspectPort + appId,
+    inspectPortRemote: lastUsedInspectPort + appId + 1,
   })
 
   addAppProcess({

@@ -125,7 +125,7 @@ export function OrbitMainWindow() {
     enabled: isMainWindow,
   })
 
-  log.info(`${Electron.appConf.appRole} ${appId} ${store.show}`, store.initialState)
+  log.info(`render ${Electron.appConf.appRole} ${appId} ${store.show}`, store.initialState)
 
   useMainWindowEffects({ isMainWindow })
 

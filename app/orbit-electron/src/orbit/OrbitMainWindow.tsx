@@ -17,7 +17,9 @@ const log = new Logger('electron')
 const Config = getGlobalConfig()
 
 const setScreenSize = () => {
-  Electron.setState({ screenSize: getScreenSize() })
+  const screenSize = getScreenSize()
+  log.info(`Updating screen size ${JSON.stringify(screenSize)}`)
+  Electron.setState({ screenSize })
 }
 
 function focusApp(shown: boolean) {
@@ -35,32 +37,6 @@ class OrbitMainWindowStore {
   isVisible = false
   size = [0, 0]
   position = [0, 0]
-  vibrancy = 'light'
-
-  start() {
-    // screen events
-    setScreenSize()
-    screen.on('display-metrics-changed', async () => {
-      log.info('got display metrics changed event')
-      setScreenSize()
-    })
-
-    // theme events
-    const setOSTheme = () => {
-      const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
-      Mediator.command(ChangeDesktopThemeCommand, { theme })
-    }
-    setOSTheme()
-    systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', setOSTheme)
-  }
-
-  // use reaction to allow us to modify it at runtime to test
-  updateVibrancy = react(
-    () => App.vibrancy,
-    next => {
-      this.vibrancy = next
-    },
-  )
 
   updateSize = react(
     () => Electron.state.screenSize,
@@ -102,7 +78,7 @@ class OrbitMainWindowStore {
       // wait for move to finish
       await sleep(150)
       // wait for showing
-      await when(() => App.state.showOrbitMain)
+      await when(() => Electron.state.showOrbitMain)
       this.showOnNewSpace()
     },
   )
@@ -129,12 +105,8 @@ class OrbitMainWindowStore {
     return this.isVisible ? Electron.state.showOrbitMain : false
   }
 
-  setIsVisible = (next: boolean) => {
+  setIsVisible = (next = true) => {
     this.isVisible = next
-  }
-
-  get showDevTools() {
-    return Electron.state.showDevTools.app
   }
 }
 
@@ -144,11 +116,32 @@ export function OrbitMainWindow() {
   const store = orbitMainWindowStore.useStore()
   const url = `${Config.urls.server}`
 
-  log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size} ${store.vibrancy}`)
+  log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size}`)
 
-  // onMount
   React.useEffect(() => {
-    store.start()
+    const setOSTheme = () => {
+      const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
+      Mediator.command(ChangeDesktopThemeCommand, { theme })
+    }
+    setOSTheme()
+    const id = systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      setOSTheme,
+    )
+    return () => {
+      systemPreferences.unsubscribeNotification('AppleInterfaceThemeChangedNotification', id)
+    }
+  })
+
+  React.useEffect(() => {
+    setScreenSize()
+    screen.on('display-metrics-changed', setScreenSize)
+    return () => {
+      screen.removeListener('display-metrics-changed', setScreenSize)
+    }
+  }, [])
+
+  React.useEffect(() => {
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
@@ -164,9 +157,11 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       id="app"
       show={store.show}
-      onReadyToShow={() => store.setIsVisible(true)}
+      onReadyToShow={store.setIsVisible}
+      // TODO i think i need to make this toggle on show for a few ms, then go back to normal
+      // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus
-      alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
+      alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}
@@ -174,9 +169,6 @@ export function OrbitMainWindow() {
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}
-      showDevTools={store.showDevTools}
-      vibrancy={store.vibrancy}
-      icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />
   )
 }

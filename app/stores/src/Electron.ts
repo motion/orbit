@@ -7,6 +7,7 @@ export type AppWindow = {
   appId: number
   type: string
   isEditing?: boolean
+  isTorn?: boolean
   path?: string
   bundleURL?: string
 }
@@ -32,7 +33,13 @@ class ElectronStore {
       downloading: false,
       percent: 0,
     },
-    appWindows: {} as { [id: string]: AppWindow },
+    appWindows: {
+      // starts with orbit main window
+      [0]: {
+        appId: 0,
+        type: 'main',
+      },
+    } as { [id: number]: AppWindow },
     showDevTools: {
       app: false,
       0: false,
@@ -41,12 +48,13 @@ class ElectronStore {
     },
   })
 
-  start = async (options?: BridgeOptions) => {
-    await Bridge.start(this, this.state, options)
+  get curMainWindow() {
+    const lastIndex = Object.keys(this.state.appWindows).length - 1
+    return this.state.appWindows[lastIndex]
   }
 
-  setIsTorn() {
-    this.isTorn = true
+  start = async (options?: BridgeOptions) => {
+    await Bridge.start(this, this.state, options)
   }
 }
 

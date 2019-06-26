@@ -1,6 +1,19 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  SizedSurfaceProps,
+  Space,
+  SurfacePassProps,
+  useNodeSize,
+  View,
+} from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
@@ -117,7 +130,7 @@ export const OrbitHeader = memo(() => {
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
-  const { isEditing } = useStore(App)
+  const { isEditing, isTorn } = useStore(App)
 
   return (
     <>
@@ -134,7 +147,7 @@ export const OrbitHeader = memo(() => {
             <HeaderSide space="sm" spaceAround>
               <BackButton />
               <OrbitHeaderMenu />
-              {!isEditing && (
+              {!isEditing && !isTorn && (
                 <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                   <OrbitNavPopover target={<HomeButton id="home-button" />}>
                     <OrbitNav />
@@ -157,7 +170,7 @@ export const OrbitHeader = memo(() => {
                 >
                   {orbitStore.activeActions}
                 </SurfacePassProps>
-                {!isEditing && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
+                {!isEditing && !isTorn && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
               </>
             )}
           </HeaderContain>
@@ -175,7 +188,7 @@ export const OrbitHeader = memo(() => {
                 </SurfacePassProps>
               )}
 
-              {!isEditing && (
+              {!isEditing && !isTorn && (
                 <>
                   <Button
                     {...om.state.router.appId === 'query-builder' && activeStyle}
@@ -193,7 +206,7 @@ export const OrbitHeader = memo(() => {
                 </>
               )}
 
-              {isEditing && (
+              {(isEditing || isTorn) && (
                 <Button
                   icon="cog"
                   onClick={() => {

@@ -8,14 +8,16 @@ import { AppWindow, Electron } from './Electron'
 export let App = null as AppStore
 
 function getAppId() {
-  if (process.env.APP_ID) return +process.env.APP_ID
+  if (process.env.APP_ID) {
+    return +process.env.APP_ID
+  }
   if (typeof window !== 'undefined' && window.location && window.location.search) {
     const match = window.location.search.match(/id=([0-9])+/)
     if (match) {
       return +match[1]
     }
   }
-  return -1
+  return 0
 }
 
 const appId = getAppId()
@@ -63,7 +65,6 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
-    showOrbitMain: false,
     orbitState: {
       orbitOnLeft: false,
       position: [0, 0],
@@ -89,11 +90,15 @@ class AppStore {
     showSpaceSwitcher: 0,
   })
 
+  get appId() {
+    return appId
+  }
+
   get appConf(): AppWindow {
     return (
       Electron.state.appWindows[appId] || {
         appId,
-        type: 'root',
+        type: 'main',
       }
     )
   }
@@ -104,6 +109,10 @@ class AppStore {
 
   get isEditing() {
     return !!this.appConf.isEditing
+  }
+
+  get isTorn() {
+    return !!this.appConf.isTorn
   }
 
   get isDark() {

@@ -20,6 +20,25 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   } else {
     app.dock.setIcon(iconPath)
   }
-  Electron.setIsTorn()
+
+  const currentWindow = Electron.curMainWindow
+
+  Electron.setState({
+    appWindows: {
+      ...Electron.state.appWindows,
+      // tear current window
+      [currentWindow.appId]: {
+        ...currentWindow,
+        isTorn: true,
+        type: 'app',
+      },
+      // launch new main window
+      [appId]: {
+        appId,
+        type: 'main',
+      },
+    },
+  })
+
   forkAndStartOrbitApp({ appId })
 })

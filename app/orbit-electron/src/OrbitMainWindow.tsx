@@ -125,9 +125,8 @@ export function OrbitMainWindow() {
   const store = useStore(OrbitMainWindowStore, {
     enabled: isMainWindow,
   })
-  const url = `${Config.urls.server}`
 
-  log.info(`--- OrbitMainWindow ${store.show} ${url} ${store.size}`)
+  log.info(`--- OrbitMainWindow ${store.show} ${store.size}`)
 
   useMainWindowEffects({ isMainWindow })
 
@@ -146,7 +145,6 @@ export function OrbitMainWindow() {
       focus
       // alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
-      file={url}
       defaultPosition={store.position.slice()}
       defaultSize={store.size.slice()}
       onResize={store.setSize}

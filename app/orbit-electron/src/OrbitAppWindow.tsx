@@ -3,15 +3,13 @@ import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
-import { selectDefined } from '@o/utils'
-import { BrowserWindow } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
 import { ROOT } from './constants'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 
-const log = new Logger('electron')
+const log = new Logger('OrbitAppWindow')
 const Config = getGlobalConfig()
 
 class OrbitAppWindowStore {
@@ -19,9 +17,6 @@ class OrbitAppWindowStore {
     appId: string
   }
 
-  win: BrowserWindow
-  alwaysOnTop = true
-  hasMoved = false
   show = false
   bounds = getDefaultAppBounds(Electron.state.screenSize)
   size = this.bounds.size
@@ -35,11 +30,6 @@ class OrbitAppWindowStore {
       this.vibrancy = next
     },
   )
-
-  handleRef = ref => {
-    if (!ref) return
-    this.win = ref.window
-  }
 
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
@@ -60,10 +50,9 @@ export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: { appId: n
   const store = useStore(OrbitAppWindowStore, { appId })
   const appQuery = appId === 0 ? '' : `/?id=${appId}`
   const url = `${Config.urls.server}${appQuery}`
-  const show = selectDefined(windowProps.show, store.show)
   const size = windowProps.size || store.size
 
-  log.info(`OrbitAppWindow ${appId} ${show} ${url} ${size} ${store.position}`)
+  log.info(`OrbitAppWindow ${appId} ${url} ${size} ${store.position}`)
 
   if (!size[0]) {
     return null
@@ -77,7 +66,6 @@ export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: { appId: n
         webSecurity: false,
       }}
       titleBarStyle="customButtonsOnHover"
-      onReadyToShow={store.setShown}
       ref={forwardRef || store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}

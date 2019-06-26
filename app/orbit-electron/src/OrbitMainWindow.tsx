@@ -12,7 +12,7 @@ import { Mediator } from './mediator'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
 
-const log = new Logger('electron')
+const log = new Logger('OrbitMainWindow')
 const isFirstOrbitWindow = Electron.appId === 0
 
 const setScreenSize = () => {
@@ -104,11 +104,10 @@ class OrbitMainWindowStore {
   }
 
   get show() {
-    if (Electron.appConf.appRole !== 'main') {
-      // return undefined? to allow manual control
-      return true
+    if (Electron.appConf.appRole === 'main') {
+      return this.isVisible ? Electron.state.showOrbitMain : false
     }
-    return this.isVisible ? Electron.state.showOrbitMain : false
+    return this.isVisible
   }
 
   setIsVisible = (next = true) => {
@@ -142,7 +141,7 @@ export function OrbitMainWindow() {
       onReadyToShow={store.setIsVisible}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
-      focus
+      focus={isMainWindow}
       // alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       defaultPosition={store.position.slice()}

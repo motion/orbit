@@ -1,12 +1,28 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
+import {
+  Button,
+  Card,
+  Col,
+  Flow,
+  FlowProvide,
+  gloss,
+  Icon,
+  Paragraph,
+  Scale,
+  Text,
+  Title,
+  Toolbar,
+  useCreateFlow,
+  useFlow,
+  useOnMount,
+  View,
+} from '@o/ui'
 import React from 'react'
 
 import { getActiveSpace } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
-import { SetupAppHome } from './SetupAppApp'
 import { SpaceEdit } from './SpacesApp'
 
 export default createApp({
@@ -35,8 +51,8 @@ class OnboardStore {
     return next
   }
 
-  async finishOnboard() {
-    om.actions.router.showHomePage()
+  finishOnboard = async () => {
+    om.actions.router.showAppPage({ id: 'apps' })
     const activeSpace = await getActiveSpace()
     await save(SpaceModel, {
       ...activeSpace,
@@ -76,11 +92,14 @@ export function OnboardApp() {
               {OnboardSetupWorkspace}
             </Flow.Step>
             <Flow.Step
-              title="Add your first app"
-              buttonTitle="Add app"
+              title="All finished"
+              buttonTitle="Done"
               validateFinished={onboardStore.finishOnboard}
             >
-              <SetupAppHome isEmbedded />
+              <Centered space="xl" pad="xxl" scrollable="y" flex={1}>
+                <Text size="xxl">All set</Text>
+                <IntroPara>To finish setup, click Finish to go to your app manager.</IntroPara>
+              </Centered>
             </Flow.Step>
           </Flow>
         </Col>
@@ -115,7 +134,7 @@ function OnboardToolbar() {
 
 function OnboardSetupWorkspace() {
   const [space] = useActiveSpace()
-  return <SpaceEdit id={space.id} />
+  return <SpaceEdit space={space} />
 }
 
 const IntroPara = props => <Paragraph textAlign="left" alpha={0.9} size={1.2} {...props} />

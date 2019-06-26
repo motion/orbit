@@ -12,7 +12,9 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 
-root['WebSocket'] = WebSocket
+root.WebSocket = WebSocket
+require('array.prototype.flatmap').shim()
+
 Error.stackTraceLimit = Infinity
 
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env

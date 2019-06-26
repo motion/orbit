@@ -1,5 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useContext } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Button } from '../buttons/Button'
@@ -86,6 +86,7 @@ const nullFn = () => null
 export const List = memo((allProps: ListProps) => {
   const [collapseProps, allListProps] = splitCollapseProps(allProps)
   const props = useListProps(allListProps)
+  console.log('onopen', props.onOpen, useContext(Context.Context))
   const {
     flex = 1,
     titleBorder = true,

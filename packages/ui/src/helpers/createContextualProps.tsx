@@ -13,9 +13,10 @@ export type ContextualProps<A> = {
 export function createContextualProps<A extends any>(defaults?: A): ContextualProps<A> {
   const Context = createContext<Partial<A> | null>(null)
   const PassProps = ({ children, ...rest }: Partial<Omit<A, 'children'> & { children?: any }>) => {
+    const parentProps = useContext(Context)
     const memoVal = useMemo(() => {
-      return { ...defaults, ...rest }
-    }, [rest])
+      return { ...defaults, ...parentProps, ...rest }
+    }, [parentProps, rest])
     // @ts-ignore
     return <Context.Provider value={memoVal}>{children}</Context.Provider>
   }

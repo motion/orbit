@@ -8,10 +8,13 @@ import { Mediator } from './mediator'
 export class MenuItems extends React.Component<{ restart: Function }> {
   isClosing = false
 
-  toggleDevTools = (id = Electron.state.focusedAppId) => () => {
+  toggleDevTools = () => {
+    const id = Electron.state.focusedAppId
+    const next = !Electron.state.showDevTools[id]
+    console.log('toggle dev tools', next)
     Electron.setState({
       showDevTools: {
-        [id]: !Electron.state.showDevTools[id],
+        [id]: next,
       },
     })
   }
@@ -73,7 +76,7 @@ export class MenuItems extends React.Component<{ restart: Function }> {
           <MenuItem
             label="Show Dev Tools [Focused Window]"
             accelerator="Command+Option+i"
-            onClick={this.toggleDevTools()}
+            onClick={this.toggleDevTools}
           />
         </SubMenu>
       </Menu>

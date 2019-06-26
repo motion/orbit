@@ -27,7 +27,9 @@ const SIZE = 5
 // so that outer panes will have their draggers "cover" inner ones
 // think of a <Pane> with a <TableHeadCol> inside, Pane should override
 // this achieves that by automatically tracking Interactive nesting
-const InteractiveNesting = createContext(0)
+const InteractiveNesting = createContext({
+  nesting: 0,
+})
 
 type CursorState = {
   top: number
@@ -618,7 +620,11 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
-    const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
+    const nesting = this.context ? this.context.nesting || 0 : 0
+    const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - nesting : props.zIndex
+    if (isNaN(zIndex)) {
+      debugger
+    }
     const style: any = {}
     if (movable === true || top != null || left != null) {
       if (fill === true) {
@@ -649,7 +655,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
 
     return (
-      <InteractiveNesting.Provider value={this.context.nesting + 1}>
+      <InteractiveNesting.Provider value={nesting + 1}>
         <Col
           {...{
             className: this.props.className,

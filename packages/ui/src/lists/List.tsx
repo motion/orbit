@@ -86,7 +86,6 @@ const nullFn = () => null
 export const List = memo((allProps: ListProps) => {
   const [collapseProps, allListProps] = splitCollapseProps(allProps)
   const props = useListProps(allListProps)
-  console.log('onopen', props.onOpen, useContext(Context.Context))
   const {
     flex = 1,
     titleBorder = true,
@@ -156,7 +155,6 @@ export const List = memo((allProps: ListProps) => {
       }
       switch (shortcut) {
         case 'open':
-          console.log('onOpen', onOpen)
           if (onOpen) {
             onOpen(...selection.current)
           }

@@ -91,10 +91,17 @@ export class SelectableStore {
     },
   )
 
-  ensureAlwaysSelected = react(
-    () => [always(this.rows), always(this.active), this.props.alwaysSelected],
+  resetActiveOnRowsChange = react(
+    () => always(this.rows),
     () => {
-      ensure('this.props.alwaysSelected', this.props.alwaysSelected)
+      this.setActive([])
+    },
+  )
+
+  ensureAlwaysSelected = react(
+    () => [this.props.alwaysSelected, always(this.rows), always(this.active)],
+    ([alwaysSelected]) => {
+      ensure('alwaysSelected', alwaysSelected)
       ensure('rowsLen', this.rows.length > 0)
       ensure('activeLen', this.active.size < 1)
       this.selectFirstValid()

@@ -1,4 +1,14 @@
-import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores, useUserState } from '@o/kit'
+import {
+  App,
+  AppFilterButton,
+  AppMainView,
+  AppViewProps,
+  createApp,
+  useSearchState,
+  useStore,
+  useStores,
+  useUserState,
+} from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Row, Scale, View } from '@o/ui'
 import React, { useMemo } from 'react'
 
@@ -42,7 +52,9 @@ export function SearchApp(props: AppViewProps) {
     />
   )
 
-  const actionsElement = <SearchActions {...{ showFloating, setShowFloating }} />
+  const actionsElement = useMemo(() => <SearchActions {...{ showFloating, setShowFloating }} />, [
+    showFloating,
+  ])
 
   if (showFloating) {
     return (

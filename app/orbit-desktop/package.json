@@ -9,7 +9,7 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@o/cli": "*",
     "@o/build-server": "*",
     "@o/config": "^2.5.2",

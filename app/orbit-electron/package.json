@@ -16,7 +16,7 @@
     "runtimeVersion": "2.0.2"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@o/config": "^2.5.2",
     "@o/constants": "^2.5.2",
     "@o/logger": "^2.5.2",

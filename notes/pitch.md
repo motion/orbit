@@ -14,4 +14,5 @@ nearest neighbors
 ReTool - https://tryretool.com
 MuleSoft - https://mulesoft.com
 MS PowerApps - https://powerapps.microsoft.com/
+Salesforce DX - https://developer.salesforce.com/platform/dx
 OpenFin - https://openfin.co

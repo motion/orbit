@@ -22,7 +22,7 @@
 	},
 	"dependencies": {
 		"@lerna/project": "^3.15.0",
-		"@babel/core": "7.4.4",
+		"@babel/core": "^7.4.4",
 		"@hot-loader/react-dom": "^16.8.6",
 		"@mdx-js/loader": "1.0.4",
 		"@o/babel-preset-motion": "^2.5.6",

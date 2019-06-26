@@ -6,9 +6,7 @@ export let Electron = null as ElectronStore
 
 export type AppWindow = {
   appId: number
-  type: string
-  isEditing?: boolean
-  isTorn?: boolean
+  appRole: 'main' | 'editing' | 'torn'
   path?: string
   bundleURL?: string
 }
@@ -23,9 +21,6 @@ class ElectronStore {
 
   lastAction = null
 
-  // This indicates if this instance of Electron is "main"
-  isTorn = false
-
   state = deep({
     showOrbitMain: false,
     focusedAppId: 'app',
@@ -38,7 +33,7 @@ class ElectronStore {
       // starts with orbit main window
       [0]: {
         appId: 0,
-        type: 'main',
+        appRole: 'main',
       },
     } as { [id: number]: AppWindow },
     showDevTools: {

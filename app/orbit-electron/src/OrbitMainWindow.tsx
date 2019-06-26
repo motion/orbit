@@ -99,7 +99,8 @@ class OrbitMainWindowStore {
   }
 
   get show() {
-    if (Electron.isTorn) {
+    if (Electron.appConf.appRole !== 'main') {
+      // return undefined? to allow manual control
       return true
     }
     return this.isVisible ? Electron.state.showOrbitMain : false

@@ -130,10 +130,12 @@ export const OrbitHeader = memo(() => {
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
-  const { isEditing, isTorn } = useStore(App)
+  const { appRole } = useStore(App)
   const queryBuilderLink = useLocationLink('/app/query-builder')
   const appsLink = useLocationLink('/app/apps')
 
+  const isEditing = appRole === 'editing'
+  const isTorn = appRole === 'torn'
   const slim = isEditing || isTorn
 
   return (

@@ -63,8 +63,8 @@ export function OrbitAppWindow({
   ...windowProps
 }: { id: string; appId?: string } & any) {
   const store = useStore(OrbitAppWindowStore, { id })
-  const appQuery = `/?id=${appId}`
-  const url = `${Config.urls.server}${appId ? appQuery : ''}`
+  const appQuery = appId === 0 ? '' : `/?id=${appId}`
+  const url = `${Config.urls.server}${appQuery}`
   const show = selectDefined(windowProps.show, store.show)
   const size = windowProps.size || store.size
 

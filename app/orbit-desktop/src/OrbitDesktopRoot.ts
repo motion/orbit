@@ -330,6 +330,18 @@ export class OrbitDesktopRoot {
         }),
         resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
           const appId = Object.keys(Electron.state.appWindows).length
+
+          // launch new app
+          Electron.setState({
+            appWindows: {
+              ...Electron.state.appWindows,
+              [appId]: {
+                appId,
+                appRole: 'editing',
+              },
+            },
+          })
+
           developingApps.push({
             entry,
             appId,

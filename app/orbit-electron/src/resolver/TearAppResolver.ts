@@ -29,13 +29,12 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
       // tear current window
       [currentWindow.appId]: {
         ...currentWindow,
-        isTorn: true,
-        type: 'app',
+        appRole: 'torn',
       },
       // launch new main window
       [appId]: {
         appId,
-        type: 'main',
+        appRole: 'main',
       },
     },
   })

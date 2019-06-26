@@ -105,17 +105,17 @@ class OrbitMainWindowStore {
 
   get show() {
     if (Electron.appConf.appRole === 'main') {
-      return this.isVisible ? Electron.state.showOrbitMain : false
+      return Electron.state.showOrbitMain
     }
-    return this.isVisible
+    if (isFirstOrbitWindow) {
+      return this.isVisible
+    }
+    return true
   }
 
   setIsVisible = (next = true) => {
     log.info('setIsVisible', next)
-    // show main window on first load
-    if (isFirstOrbitWindow) {
-      this.isVisible = next
-    }
+    this.isVisible = next
   }
 }
 

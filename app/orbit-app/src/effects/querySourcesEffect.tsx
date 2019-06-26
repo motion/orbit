@@ -6,12 +6,11 @@ import { useStoresSimple } from '../hooks/useStores'
 export function querySourcesEffect() {
   const { queryStore } = useStoresSimple()
   const syncApps = useActiveDataApps()
+  const sources = syncApps.map(x => ({
+    name: x.name,
+    type: x.identifier,
+  }))
   useEffect(() => {
-    queryStore.setSources(
-      syncApps.map(x => ({
-        name: x.name,
-        type: x.identifier,
-      })),
-    )
-  }, [syncApps])
+    queryStore.setSources(sources)
+  }, [JSON.stringify(sources)])
 }

@@ -1,7 +1,7 @@
 import { gloss, Box } from 'gloss'
 import * as UI from '@o/ui'
 import { useStore } from '@o/use-store'
-import { throttle } from 'lodash'
+import { throttle, pick } from 'lodash'
 import React, { memo, useEffect } from 'react'
 
 import { SubPaneStore } from '../stores/SubPaneStore'
@@ -34,7 +34,10 @@ export const SubPane = memo(function SubPane(props: Props) {
     zIndex,
     ...rest
   } = props
-  const subPaneStore = useStore(SubPaneStore, props)
+  const subPaneStore = useStore(
+    SubPaneStore,
+    pick(props, 'id', 'fullHeight', 'onChangeHeight', 'onScrollNearBottom'),
+  )
   const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
 

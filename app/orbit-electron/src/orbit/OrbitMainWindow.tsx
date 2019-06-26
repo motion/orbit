@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
-import { App, Desktop, Electron } from '@o/stores'
+import { Desktop, Electron } from '@o/stores'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
@@ -129,7 +129,7 @@ export function OrbitMainWindow() {
       setOSTheme,
     )
     return () => {
-      systemPreferences.unsubscribeNotification('AppleInterfaceThemeChangedNotification', id)
+      systemPreferences.unsubscribeNotification(id)
     }
   })
 

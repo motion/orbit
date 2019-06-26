@@ -13,7 +13,6 @@ debugUseStore(event => {
 
 export class ElectronDebugStore {
   error = null
-  appRef = null
   stores = null
   views = null
   clear = Date.now()
@@ -23,12 +22,6 @@ export class ElectronDebugStore {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(require('path').join(__dirname, '..', '..', '_', 'main.js'))
     }
-  }
-
-  handleAppRef = ref => {
-    if (!ref) return
-    this.appRef = ref.app
-    // this.appRef.dock.hide()
   }
 
   handleBeforeQuit = () => {

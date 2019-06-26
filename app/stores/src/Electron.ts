@@ -53,6 +53,14 @@ class ElectronStore {
     return this.state.appWindows[lastIndex]
   }
 
+  get appId() {
+    return process.env.APP_ID || 0
+  }
+
+  get isMainWindow() {
+    return this.appId === this.curMainWindow.appId
+  }
+
   start = async (options?: BridgeOptions) => {
     await Bridge.start(this, this.state, options)
   }

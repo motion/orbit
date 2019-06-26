@@ -1,5 +1,5 @@
 import { App as ReactronApp } from '@o/reactron'
-import { App } from '@o/stores'
+import { App, Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import * as React from 'react'
@@ -12,11 +12,12 @@ import { OrbitAppWindow } from './OrbitAppWindow'
 import { OrbitMainWindow } from './OrbitMainWindow'
 
 export function OrbitRoot() {
-  const store = useStore(ElectronDebugStore)
+  const debugStore = useStore(ElectronDebugStore)
+  const electronStore = useStore(Electron)
 
-  if (store.error) {
-    if (store.error) {
-      console.log('error is', store.error)
+  if (debugStore.error) {
+    if (debugStore.error) {
+      console.log('error is', debugStore.error)
     }
     return null
   }
@@ -31,13 +32,12 @@ export function OrbitRoot() {
 
   return (
     <ReactronApp
-      onBeforeQuit={store.handleBeforeQuit}
-      onWillQuit={store.handleQuit}
-      ref={store.handleAppRef}
+      onBeforeQuit={debugStore.handleBeforeQuit}
+      onWillQuit={debugStore.handleQuit}
       devTools={devTools}
     >
-      <MenuItems electronStore={store} />
-      {isApp ? <OrbitAppWindow id={appId} appId={appId} showDevTools show /> : <OrbitMainWindow />}
+      <MenuItems restart={debugStore.restart} />
+      {electronStore.isMainWindow ? <OrbitMainWindow /> : <OrbitAppWindow id={appId} appId={appId} showDevTools show /> : }
     </ReactronApp>
   )
 }

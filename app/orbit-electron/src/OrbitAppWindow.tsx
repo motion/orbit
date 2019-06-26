@@ -8,13 +8,14 @@ import * as React from 'react'
 
 import { ROOT } from './constants'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
+import { BrowserWindowConstructorOptions } from 'electron'
 
 const log = new Logger('OrbitAppWindow')
 const Config = getGlobalConfig()
 
 class OrbitAppWindowStore {
   props: {
-    appId: string
+    appId: number
   }
 
   show = false
@@ -46,7 +47,20 @@ class OrbitAppWindowStore {
   }
 }
 
-export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: { appId: number } & any) {
+type AppWindowProps = BrowserWindowConstructorOptions & {
+  forwardRef?: any
+  appId: number
+  size?: number[]
+  onReadyToShow?: Function
+  focus?: boolean
+  onResize?: Function
+  onMove?: Function
+  onPosition?: Function
+  defaultPosition: number[]
+  defaultSize: number[]
+}
+
+export function OrbitAppWindow({ appId, forwardRef, ...windowProps }: AppWindowProps) {
   const store = useStore(OrbitAppWindowStore, { appId })
   const appQuery = appId === 0 ? '' : `/?id=${appId}`
   const url = `${Config.urls.server}${appQuery}`

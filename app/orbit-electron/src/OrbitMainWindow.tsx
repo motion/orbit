@@ -123,7 +123,7 @@ export function OrbitMainWindow() {
     enabled: isMainWindow,
   })
 
-  log.info(`--- OrbitMainWindow ${store.show} ${store.size}`)
+  log.info(`--- OrbitMainWindow ${appId} ${store.show} ${store.size}`)
 
   useMainWindowEffects({ isMainWindow })
 

@@ -35,10 +35,6 @@ export function OrbitRoot() {
       devTools={devTools}
     >
       <MenuItems restart={debugStore.restart} />
-      {/*
-        This changes: when you open an app window, the main window turns into an app window.
-        That lets the transition be seamless, we just launch a new main window in the background.
-      */}
       <OrbitMainWindow />
     </ReactronApp>
   )

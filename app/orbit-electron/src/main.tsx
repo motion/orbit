@@ -76,9 +76,10 @@ export async function main() {
           Electron.setState({
             appWindows: {
               [appId]: {
-                type: 'root',
+                type: 'app',
                 appId,
-                isEditing: !!isEditing,
+                isEditing,
+                isTorn: true,
               },
             },
           })

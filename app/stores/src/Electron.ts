@@ -1,5 +1,6 @@
 import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
 import { decorate, deep } from '@o/use-store'
+import { getAppId } from './getAppId'
 
 export let Electron = null as ElectronStore
 
@@ -54,7 +55,7 @@ class ElectronStore {
   }
 
   get appId() {
-    return process.env.APP_ID || 0
+    return getAppId()
   }
 
   // to be used in electron processes

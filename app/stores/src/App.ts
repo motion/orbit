@@ -4,24 +4,9 @@ import { decorate, deep } from '@o/use-store'
 
 import { Desktop } from './Desktop'
 import { AppWindow, Electron } from './Electron'
+import { getAppId } from './getAppId'
 
 export let App = null as AppStore
-
-function getAppId() {
-  if (process.env.APP_ID) {
-    return +process.env.APP_ID
-  }
-  if (typeof window !== 'undefined' && window.location && window.location.search) {
-    const match = window.location.search.match(/id=([0-9])+/)
-    if (match) {
-      return +match[1]
-    }
-  }
-  return 0
-}
-
-const appId = getAppId()
-console.log('appId', appId)
 
 export type AppState = {
   id: number
@@ -91,20 +76,20 @@ class AppStore {
   })
 
   get appId() {
-    return appId
+    return getAppId()
   }
 
   get appConf(): AppWindow {
     return (
-      Electron.state.appWindows[appId] || {
-        appId,
+      Electron.state.appWindows[this.appId] || {
+        appId: this.appId,
         type: 'main',
       }
     )
   }
 
   get bundleUrl() {
-    return `/appServer/${appId}/bundle.js`
+    return `/appServer/${this.appId}/bundle.js`
   }
 
   get isEditing() {

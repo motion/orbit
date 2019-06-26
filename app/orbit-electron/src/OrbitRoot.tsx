@@ -1,5 +1,5 @@
 import { App as ReactronApp } from '@o/reactron'
-import { App, Electron } from '@o/stores'
+import { Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 
@@ -18,18 +18,18 @@ export function OrbitRoot() {
 
   const isApp = appConf.type === 'app'
 
-  log.info(`${appId} isMainWindow: ${isMainWindow}, ${isApp}`)
+  log.info(`
+    appId: ${appId} ${process.env.APP_ID}
+    isMainWindow: ${isMainWindow}
+    appConf.type: ${appConf.type}
+    isApp: ${isApp}
+`)
 
   if (debugStore.error) {
     if (debugStore.error) {
       log.info('error is', debugStore.error)
     }
     return null
-  }
-
-  if (isApp && appId === '') {
-    log.info(JSON.stringify(App.appConf.appId))
-    throw new Error('No app id found!')
   }
 
   return (

@@ -1,4 +1,3 @@
-import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
@@ -14,7 +13,6 @@ import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
 import { OrbitAppWindow } from './OrbitAppWindow'
 
 const log = new Logger('electron')
-const Config = getGlobalConfig()
 
 const setScreenSize = () => {
   const screenSize = getScreenSize()

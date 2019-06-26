@@ -161,7 +161,7 @@ export function OrbitMainWindow() {
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus
-      alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
+      // alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       file={url}
       defaultPosition={store.position.slice()}

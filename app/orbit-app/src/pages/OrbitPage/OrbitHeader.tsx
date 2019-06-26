@@ -131,6 +131,10 @@ export const OrbitHeader = memo(() => {
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const { isEditing, isTorn } = useStore(App)
+  const queryBuilderLink = useLocationLink('/app/query-builder')
+  const appsLink = useLocationLink('/app/apps')
+
+  const slim = isEditing || isTorn
 
   return (
     <>
@@ -142,10 +146,10 @@ export const OrbitHeader = memo(() => {
       >
         <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isEditing ? 46 : 56}>
+        <HeaderTop height={slim ? 46 : 56}>
           <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround>
-              <BackButton />
+            <HeaderSide space="sm" spaceAround slim={slim}>
+              {!slim && <BackButton />}
               <OrbitHeaderMenu />
               {!isEditing && !isTorn && (
                 <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
@@ -176,7 +180,7 @@ export const OrbitHeader = memo(() => {
           </HeaderContain>
 
           <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround justifyContent="flex-start">
+            <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
               {isEditing && (
                 <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
                   <>
@@ -192,13 +196,13 @@ export const OrbitHeader = memo(() => {
                 <>
                   <Button
                     {...om.state.router.appId === 'query-builder' && activeStyle}
-                    onClick={useLocationLink('/app/query-builder')}
+                    onClick={queryBuilderLink}
                     icon="layers"
                     tooltip="Query Builder"
                   />
                   <Button
                     {...om.state.router.appId === 'apps' && activeStyle}
-                    onClick={useLocationLink('/app/apps')}
+                    onClick={appsLink}
                     icon="layout-grid"
                     tooltip="Manage apps"
                   />
@@ -315,7 +319,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
     theme.background.alpha(a => a * 0.65),
 }))
 
-const HeaderSide = gloss(Row, {
+const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
   width: '18%',
@@ -323,6 +327,11 @@ const HeaderSide = gloss(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
+
+  slim: {
+    width: 'auto',
+    minWidth: 'min-content',
+  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {

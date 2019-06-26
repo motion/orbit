@@ -57,6 +57,12 @@ class ElectronStore {
     return process.env.APP_ID || 0
   }
 
+  // to be used in electron processes
+  // todo we could make this work across all proceses, for now its duplicated in App/Electron
+  get appConf() {
+    return this.state.appWindows[this.appId]
+  }
+
   get isMainWindow() {
     return this.appId === this.curMainWindow.appId
   }

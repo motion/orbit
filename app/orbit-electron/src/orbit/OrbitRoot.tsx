@@ -1,32 +1,34 @@
 import { App as ReactronApp } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { useStore } from '@o/use-store'
-import { selectDefined } from '@o/utils'
 import * as React from 'react'
 
-import { IS_MAIN_ORBIT } from '../constants'
 import { devTools } from '../helpers/devTools'
 import { ElectronDebugStore } from '../stores/ElectronDebugStore'
 import { MenuItems } from './MenuItems'
 import { OrbitAppWindow } from './OrbitAppWindow'
 import { OrbitMainWindow } from './OrbitMainWindow'
+import { Logger } from '@o/logger'
+
+const log = new Logger('OrbitRoot')
 
 export function OrbitRoot() {
   const debugStore = useStore(ElectronDebugStore)
-  const electronStore = useStore(Electron)
+  const { isMainWindow, appConf, appId } = useStore(Electron)
+
+  const isApp = appConf.type === 'app'
+
+  log.info(`OrbitRoot isMainWindow: ${isMainWindow}, ${isApp} ${appId}`)
 
   if (debugStore.error) {
     if (debugStore.error) {
-      console.log('error is', debugStore.error)
+      log.info('error is', debugStore.error)
     }
     return null
   }
 
-  const isApp = !IS_MAIN_ORBIT
-  const appId = `${selectDefined(App.appConf.appId, '')}`
-
   if (isApp && appId === '') {
-    console.log(JSON.stringify(App.appConf.appId))
+    log.info(JSON.stringify(App.appConf.appId))
     throw new Error('No app id found!')
   }
 
@@ -41,7 +43,7 @@ export function OrbitRoot() {
         This changes: when you open an app window, the main window turns into an app window.
         That lets the transition be seamless, we just launch a new main window in the background.
       */}
-      {electronStore.isMainWindow ? (
+      {isMainWindow ? (
         <OrbitMainWindow />
       ) : (
         <OrbitAppWindow id={appId} appId={appId} showDevTools show />

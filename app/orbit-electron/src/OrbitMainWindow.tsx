@@ -4,7 +4,7 @@ import { Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import { join } from 'path'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 import { ROOT } from './constants'
 import { getScreenSize } from './helpers/getScreenSize'
@@ -41,6 +41,10 @@ class OrbitMainWindowStore {
   isVisible = false
   size = [0, 0]
   position = [0, 0]
+  initialState = {
+    size: [0, 0],
+    position: [0, 0],
+  }
 
   updateSize = react(
     () => Electron.state.screenSize,
@@ -48,24 +52,26 @@ class OrbitMainWindowStore {
       ensure('enabled', !!this.props.enabled)
       ensure('has size', screenSize[0] !== 0)
       if (this.size[0] !== 0) {
-        ensure('not been moved', !this.hasMoved)
+        ensure('not been moved yet', !this.hasMoved)
       }
       const bounds = getDefaultAppBounds(screenSize)
       this.position = bounds.position
       this.size = bounds.size
+      this.initialState = {
+        size: this.size,
+        position: this.position,
+      }
     },
   )
 
   setSize = size => {
     this.hasMoved = true
-    size
-    // this.size = size
+    this.size = size
   }
 
   setPosition = position => {
     this.hasMoved = true
-    position
-    // this.position = position
+    this.position = position
   }
 
   handleRef = ref => {
@@ -119,12 +125,15 @@ export function OrbitMainWindow() {
     enabled: isMainWindow,
   })
 
-  log.info(`--- OrbitMainWindow ${appId} ${store.show} ${store.size}`)
+  log.info(
+    `--- OrbitMainWindow ${Electron.appConf.appRole} ${appId} ${store.show}`,
+    store.initialState,
+  )
 
   useMainWindowEffects({ isMainWindow })
 
   // wait for screensize/measure
-  if (!store.size[0]) {
+  if (!store.initialState.size[0]) {
     return null
   }
 
@@ -132,14 +141,14 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       appId={appId}
       show={store.show}
-      onReadyToShow={store.setIsVisible}
+      onReadyToShow={() => store.setIsVisible()}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus={isMainWindow}
       // alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
-      defaultPosition={store.position.slice()}
-      defaultSize={store.size.slice()}
+      defaultPosition={store.initialState.position}
+      defaultSize={store.initialState.size}
       onResize={store.setSize}
       onPosition={store.setPosition}
       onMove={store.setPosition}

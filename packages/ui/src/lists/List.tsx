@@ -188,7 +188,9 @@ export const List = memo((allProps: ListProps) => {
                   e.stopPropagation()
                 }}
                 onClick={() => {
-                  onDelete(a, b)
+                  if (window.confirm(`Are you sure you'd like to delete?`)) {
+                    onDelete(a, b)
+                  }
                 }}
               />
             </>

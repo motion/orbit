@@ -1,6 +1,6 @@
 import { produce } from '@o/kit'
 import { employees } from '@o/mock-data'
-import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Title, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Tree } from '@o/ui'
 import React, { useState } from 'react'
 
 const treeData = {

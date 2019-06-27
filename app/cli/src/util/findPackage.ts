@@ -1,12 +1,28 @@
 import { join } from 'path'
 
 import { reporter } from '../reporter'
+import { pathExistsSync, readFileSync } from 'fs-extra'
+import { isOrbitApp } from '../command-build'
 
 /**
  * Finds a package root directory (where package.json is) given id and current directory
- * Traverses upwards as necessary to find node_modules
+ * Traverses upwards as necessary to find node_modules.
+ *
+ * Also supports workspace style apps that are directly in current directory.
  */
 export function findPackage({ packageId, directory }: { packageId: string; directory: string }) {
+  // check if current directory is an orbit app already with packageId
+  try {
+    if (pathExistsSync(join(directory, 'package.json')) && isOrbitApp(directory)) {
+      const pkgInfo = JSON.parse(readFileSync(join(directory, 'package.json')).toString())
+      if (pkgInfo.name === packageId) {
+        return directory
+      }
+    }
+  } catch (err) {
+    console.log('err', err)
+  }
+
   let cur = directory
   let path = ''
   let iter = 0

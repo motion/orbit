@@ -16,8 +16,13 @@ export type CommandBuildOptions = {
 }
 
 export const isOrbitApp = async (rootDir: string) => {
+  const packagePath = join(rootDir, 'package.json')
+  reporter.verbose(`isOrbitApp ${packagePath}`)
+  if (!(await pathExists(packagePath))) {
+    return false
+  }
   try {
-    const pkg = await readJSON(join(rootDir, 'package.json'))
+    const pkg = await readJSON(packagePath)
     return pkg.config && pkg.config.orbitApp === true
   } catch (err) {
     reporter.error(err.message, err)

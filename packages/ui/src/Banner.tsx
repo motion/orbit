@@ -173,7 +173,9 @@ export function useBanners() {
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
 export const Banner = ({ type, title, message, close, timeout, ...rest }: BannerViewProps) => {
-  const [width, height] = useWindowSize()
+  const [width, height] = useWindowSize({
+    throttle: 50,
+  })
 
   useEffect(() => {
     if (isDefined(timeout)) {

@@ -1,13 +1,13 @@
-import { gloss, Row } from 'gloss'
+import { gloss } from 'gloss'
 import React from 'react'
 
 import { BorderTop } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Scale, useScale } from './Scale'
-import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
 import { View } from './View/View'
+import { Row } from './View/Row'
 
 export type PaneTitleRowProps = CollapsableProps &
   Omit<TextProps, 'children'> & {
@@ -26,15 +26,10 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
   const toggle = useCollapse(collapseProps)
   return (
     <Scale size={0.85}>
-      <PanelHeader onDoubleClick={toggle.toggle}>
+      <PanelHeader space="xs" onDoubleClick={toggle.toggle}>
         <BorderTop opacity={0.5} />
         {before}
-        {collapseProps.collapsable && (
-          <>
-            <CollapseArrow {...collapseProps} />
-            <Space />
-          </>
-        )}
+        {collapseProps.collapsable && <CollapseArrow {...collapseProps} />}
         <View flex={1}>
           <Text alpha={0.65} {...textProps}>
             {title}

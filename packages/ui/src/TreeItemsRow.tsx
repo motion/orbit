@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Box } from 'gloss'
+import { gloss, Box, BoxProps } from 'gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'
@@ -168,7 +168,7 @@ const backgroundColor = (props, theme) => {
   }
 }
 
-const TreeItemsRowContainer = gloss({
+const TreeItemsRowContainer = gloss<BoxProps & { selected?: boolean; level?: number }>(Box, {
   flexFlow: 'row',
   alignItems: 'center',
   flexShrink: 0,

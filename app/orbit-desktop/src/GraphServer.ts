@@ -171,7 +171,7 @@ export class GraphServer {
 
             schemas.push(schema)
           } catch (err) {
-            console.error(`\n\n Error loading graph ${err}`)
+            log.error(`\n\n Error loading graph for ${app.id}: ${err.message}\n${err.stack}`)
           }
         }
 

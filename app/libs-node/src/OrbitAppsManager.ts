@@ -1,4 +1,10 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceAppPaths, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
+import {
+  getIdentifierFromPackageId,
+  getIdentifierToPackageId,
+  getWorkspaceAppPaths,
+  requireWorkspaceDefinitions,
+  updateWorkspacePackageIds,
+} from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -68,7 +74,10 @@ export class OrbitAppsManager {
   updateAppDefinitions = async (space: Space) => {
     const definitions = await requireWorkspaceDefinitions((space && space.directory) || '', 'node')
     log.info(`Got definitions for ${Object.keys(definitions)}`)
+    // TODO WTF TYPESCRIPT YOU DONT NARROW TYPES?????
     this.nodeAppDefinitions = definitions
+      .map(x => x.type === 'success' && x.value)
+      .filter(Boolean) as any
   }
 
   updateAppMeta = react(

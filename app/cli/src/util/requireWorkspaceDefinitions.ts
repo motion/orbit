@@ -7,17 +7,23 @@ import { requireAppDefinition } from './requireAppDefinition'
 export async function requireWorkspaceDefinitions(
   directory: string,
   entry: 'node' | 'web',
-): Promise<AppDefinition[]> {
+): Promise<({ type: 'success'; value: AppDefinition } | { type: 'error'; value: string })[]> {
   const appsMeta = await getWorkspaceAppPaths(directory)
-
   return (await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       const res = await requireAppDefinition({ packageId, directory, types: [entry] })
       if (res.type === 'error') {
-        reporter.info(`No node api, error: ${res.message}`)
-        return null
+        const message = `No node api, error: ${res.message}`
+        reporter.error(message)
+        return {
+          type: 'error' as const,
+          value: message,
+        }
       }
-      return res.definition
+      return {
+        type: 'success' as const,
+        value: res.definition,
+      }
     }),
   )).filter(Boolean)
 }

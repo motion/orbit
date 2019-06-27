@@ -1,7 +1,6 @@
 import { getGlobalConfig, setGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
-import { ChildProcess } from 'child_process'
 import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
@@ -94,11 +93,9 @@ export async function main() {
 
   // our processes
   // each call pushes the process into the array and then gives them all over to setupHandleExit
-  let processes: ChildProcess[] = []
   const setupProcess = (opts: ChildProcessProps) => {
     const p = startChildProcess(opts)
-    processes.push(p)
-    setupHandleExit(processes)
+    setupHandleExit(p)
   }
 
   // start desktop before starting other processes (it runs the server)...

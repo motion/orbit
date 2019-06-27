@@ -43,7 +43,9 @@ export function getErrorFormatter() {
     }
 
     let rendered = baseRender.call(prettyError, err)
-    if (err && err['codeFrame']) rendered = `\n${err['codeFrame']}\n${rendered}`
+    if (err && err['codeFrame']) {
+      rendered = `\n${err['codeFrame']}\n${rendered}`
+    }
     return rendered
   }
   return prettyError

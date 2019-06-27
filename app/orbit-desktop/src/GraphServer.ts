@@ -1,53 +1,22 @@
-import { getWorkspaceAppPaths } from '@o/cli'
+import { requireWorkspaceDefinitions } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { Logger } from '@o/logger'
-import { AppBit, AppDefinition, AppEntity, Space, SpaceEntity } from '@o/models'
+import { AppBit, AppEntity, Space, SpaceEntity } from '@o/models'
 import { partition } from '@o/utils'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
-import { pathExistsSync } from 'fs-extra'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
+import {
+  introspectSchema,
+  makeExecutableSchema,
+  makeRemoteExecutableSchema,
+  mergeSchemas,
+} from 'graphql-tools'
 import killPort from 'kill-port'
-import { join } from 'path'
 import { getRepository } from 'typeorm'
-
-const entryFileNames = {
-  node: 'index.node.js',
-  web: 'index.js',
-  appInfo: 'appInfo.js',
-}
-
-async function getWorkspaceAppDefinitions(
-  workspace: string,
-  type: 'node' | 'web' | 'appInfo',
-): Promise<
-  ({ type: 'success'; definition: AppDefinition } | { type: 'error'; message: string })[]
-> {
-  const paths = await getWorkspaceAppPaths(workspace)
-  return paths
-    .map(name => {
-      try {
-        const path = join(require.resolve(name.directory), '..', entryFileNames[type])
-        if (!pathExistsSync(path)) {
-          return null
-        }
-        return {
-          type: 'success' as const,
-          definition: require(path).default,
-        }
-      } catch (err) {
-        return {
-          type: 'error' as const,
-          message: `Error importing app, has it been built? ${err.message}\n${err.stack}`,
-        }
-      }
-    })
-    .filter(x => !!x)
-}
 
 const log = new Logger('graphServer')
 const Config = getGlobalConfig()
@@ -108,16 +77,16 @@ export class GraphServer {
         let spaces: Space[] = _ as any
 
         for (const space of spaces) {
-          subs.push(this.watchAppsForSchemaSetup(space.id))
+          subs.push(this.watchAppsForSchemaSetup(space))
         }
       })
   }
 
-  private watchAppsForSchemaSetup(spaceId: number) {
+  private watchAppsForSchemaSetup(space: Space) {
     return getRepository(AppEntity)
       .observe({
         where: {
-          spaceId,
+          spaceId: space.id,
         },
       })
       .subscribe(async _ => {
@@ -125,17 +94,17 @@ export class GraphServer {
 
         let schemas = []
 
-        const allWorkspaceDefs = await getWorkspaceAppDefinitions('@o/example-workspace', 'node')
+        const allWorkspaceDefs = await requireWorkspaceDefinitions(space.directory, 'node')
         const [errors, nonErrors] = partition(allWorkspaceDefs, x => x.type === 'error')
         const appDefs = nonErrors
           .filter(x => x.type === 'success')
-          .map(x => x.type === 'success' && x.definition)
+          .map(x => x.type === 'success' && x.value)
 
         if (errors.length) {
           // TODO should have a build process here where we automatically build un-built things, but requires work
           log.error(
             `errors in app definitions ${errors
-              .map(x => x.type === 'error' && x.message)
+              .map(x => x.type === 'error' && x.value)
               .join('\n')}`,
           )
         }
@@ -206,7 +175,7 @@ export class GraphServer {
           }
         }
 
-        this.graphMiddleware[spaceId] = graphqlExpress({
+        this.graphMiddleware[space.id] = graphqlExpress({
           schema: mergeSchemas({ schemas }),
         })
       })

@@ -159,6 +159,11 @@ async function updateBuildInfo(appRoot: string) {
   })
 }
 
+async function setBuildInfo(projectRoot: string, next: BuildInfo) {
+  await ensureDir(join(projectRoot, 'dist'))
+  await writeJSON(join(projectRoot, 'dist', 'buildInfo.json'), next)
+}
+
 function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
   return getAppConfig({
     name,
@@ -235,9 +240,4 @@ async function getAppInfoConfig(entry: string, name: string, options: CommandBui
       },
     },
   )
-}
-
-async function setBuildInfo(projectRoot: string, next: BuildInfo) {
-  await ensureDir(join(projectRoot, 'dist'))
-  await writeJSON(join(projectRoot, 'dist', 'buildInfo.json'), next)
 }

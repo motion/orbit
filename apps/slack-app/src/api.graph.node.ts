@@ -4,6 +4,9 @@ import { join } from 'path'
 
 const proxyUrl = 'https://slack.com/api'
 const pathToSwaggerSchema = join(__dirname, '..', 'openapi.json')
+
+console.log('pathToSwaggerSchema', __dirname, pathToSwaggerSchema)
+
 export async function graph(app: AppBit) {
   return await graphQLSchema(
     pathToSwaggerSchema,

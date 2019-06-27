@@ -127,12 +127,12 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
 
     return (
       <TreeItemsRowContainer
-        buildItems={this.getContextMenu}
+        // buildItems={this.getContextMenu}
+        // matchingSearchQuery={matchingSearchQuery}
+        even={even}
         key={id}
         level={level}
         selected={selected}
-        matchingSearchQuery={matchingSearchQuery}
-        even={even}
         onClick={this.onClick}
         onDoubleClick={this.onDoubleClick}
         onMouseEnter={this.onMouseEnter}
@@ -168,7 +168,9 @@ const backgroundColor = (props, theme) => {
   }
 }
 
-const TreeItemsRowContainer = gloss<BoxProps & { selected?: boolean; level?: number }>(Box, {
+const TreeItemsRowContainer = gloss<
+  BoxProps & { selected?: boolean; level?: number; even?: boolean }
+>(Box, {
   flexFlow: 'row',
   alignItems: 'center',
   flexShrink: 0,

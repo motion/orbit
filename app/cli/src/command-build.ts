@@ -164,6 +164,10 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
       mode: 'development',
     },
     {
+      node: {
+        __dirname: false,
+        __filename: false,
+      },
       externals: [
         // externalize everything but local files
         function(_context, request, callback) {

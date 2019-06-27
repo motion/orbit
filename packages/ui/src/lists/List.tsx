@@ -116,13 +116,12 @@ export const List = memo((allProps: ListProps) => {
     pad,
     ...restProps
   } = listProps
-  items // ignore var
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const visibility = useVisibility()
   const getVisibility = useGet(visibility)
-  const filtered = useFilter(props)
+  const filtered = useFilter(props as any)
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
   const selection = useRef<[any[], number[]]>([[], []])
@@ -156,7 +155,6 @@ export const List = memo((allProps: ListProps) => {
       }
       switch (shortcut) {
         case 'open':
-          console.log('onOpen', onOpen)
           if (onOpen) {
             onOpen(...selection.current)
           }

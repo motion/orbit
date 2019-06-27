@@ -20,7 +20,7 @@ function useActivePane() {
   return paneManagerStore.activePane
 }
 
-export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
+export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   const search = useSearch()
   const queryStore = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
@@ -33,7 +33,6 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = 18
 
   const onChangeQuery = useCallback(e => {
     search.setQuery(e.target.value)

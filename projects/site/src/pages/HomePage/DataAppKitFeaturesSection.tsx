@@ -33,7 +33,7 @@ export default memo(function DataAppKitFeaturesSection() {
 
         {screen !== 'small' && (
           <Page.Parallax speed={-0.05} zIndex={-2}>
-            <FullScreen transform={{ y: '-80%', scale: 0.65 }} transformOrigin="bottom center">
+            <FullScreen transform={{ y: '-85%', scale: 0.5 }} transformOrigin="bottom center">
               <FadeChild delay={300} style={{ width: '100%', height: '100%' }}>
                 <FullScreen
                   left={-100}
@@ -133,7 +133,7 @@ export default memo(function DataAppKitFeaturesSection() {
                     <PillButton>App Kit</PillButton>
                   </FadeChild>
                   <FadeChild delay={100}>
-                    <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>
+                    <TitleText textAlign="center" size={useScreenVal('lg', 'xxl', 'xxxl')}>
                       Batteries Included
                     </TitleText>
                   </FadeChild>
@@ -150,7 +150,7 @@ export default memo(function DataAppKitFeaturesSection() {
             <Grid
               ref={Fade.ref}
               alignItems="start"
-              space={screen === 'small' ? '0 15%' : '20% 15%'}
+              space={screen === 'small' ? 30 : '20% 15%'}
               itemMinWidth={280}
               maxWidth={800}
               margin="auto"
@@ -216,12 +216,12 @@ export default memo(function DataAppKitFeaturesSection() {
               </PassProps>
             </Grid>
 
-            <View flex={2} />
+            <View flex={useScreenVal(0, 1, 2)} />
 
             {screen === 'large' && height !== 'short' && (
               <>
                 <Space size="xxl" />
-                <BodyButton {...linkProps('/docs')} margin={[0, 'auto']} size="xl">
+                <BodyButton {...linkProps('/docs')} margin={[10, 'auto']} size="xl">
                   Read the feature overview
                 </BodyButton>
               </>
@@ -269,7 +269,7 @@ const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
         hoverStyle={{ opacity: 1 }}
       />
       <Space />
-      <Paragraph selectable={false} size="xl">
+      <Paragraph selectable={false} size="sm">
         {title}
       </Paragraph>
     </View>

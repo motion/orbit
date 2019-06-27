@@ -7,7 +7,7 @@ import { ListItemProps } from './lists/ListItem'
 import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/ListItemSimple'
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
-import { getSpaceSize, Sizes } from './Space'
+import { getSpaceSizeNum, Sizes } from './Space'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
@@ -129,7 +129,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             className="ui-card-inner"
             scrollable={scrollable}
             flexDirection={flexDirection}
-            space={!!space && getSpaceSize(space) * getSize(size)}
+            space={!!space && getSpaceSizeNum(space) * getSize(size)}
             pad={pad}
             padding={padding}
             flex={1}

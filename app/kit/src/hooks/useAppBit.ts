@@ -2,11 +2,14 @@ import { ImmutableUpdateFn, useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 
 import { useStoresSimple } from './useStores'
-import { createContextualProps } from '@o/ui'
+import { createContextualProps, ContextualProps } from '@o/ui'
 import { isDefined, selectDefined } from '@o/utils'
 import { merge } from 'lodash'
 
-export const CurrentAppBitContext = createContextualProps<{ id: number; identifier: string }>({
+export const CurrentAppBitContext: ContextualProps<{
+  id: number
+  identifier: string
+}> = createContextualProps({
   id: undefined,
   identifier: undefined,
 })

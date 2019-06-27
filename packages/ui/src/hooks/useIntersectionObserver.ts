@@ -38,7 +38,7 @@ export function useIntersectionObserver(
       observer.disconnect()
     }
     return dispose.current
-  }, [ref, disable, JSON.stringify(options), ...(mountArgs || [])])
+  }, [ref.current, disable, JSON.stringify(options), ...(mountArgs || [])])
 
   if (!props.onChange) {
     return state

@@ -8,7 +8,7 @@ import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { getSpaceSize, Size, Sizes, Space } from './Space'
+import { getSpaceSize, getSpaceSizeNum, Size, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -131,7 +131,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     selectDefined(Array.isArray(titlePad) ? undefined : titlePad, titleSize),
   )
   const spaceSize = selectDefined(space, size, 'sm')
-  const spaceSizePx = getSpaceSize(spaceSize)
+  const spaceSizePx = getSpaceSizeNum(spaceSize)
   const showTitleAbove = isDefined(fixedTitle, pad, scrollable, innerPad)
   const collapse = useCollapse(collapseProps)
 

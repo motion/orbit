@@ -164,6 +164,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }
 
   const onOpen = useCallback(rows => {
+    console.log('ON OPEN', rows)
     if (rows.length) {
       if (rows[0].extraData) {
         actions.router.showAppPage({ id: rows[0].extraData.id })

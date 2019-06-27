@@ -1,4 +1,10 @@
-import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
+import {
+  BuildServer,
+  getAppConfig,
+  makeWebpackConfig,
+  WebpackParams,
+  webpackPromise,
+} from '@o/build-server'
 import { AppOpenWorkspaceCommand } from '@o/models'
 import { pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
@@ -246,6 +252,8 @@ async function getWorkspacePackagesInfo(
       if (directory) {
         appsRootDir = directory // can be last one
         return await getPackageInfo(directory)
+      } else {
+        reporter.error(`Not found ${id} in any node_modules ${spaceDirectory}`)
       }
     }),
   )
@@ -269,12 +277,12 @@ async function getPackageInfo(directory: string) {
 async function findNodeModuleDir(startDir: string, packageName: string) {
   let modulesDir = join(startDir, 'node_modules')
   // find parent node_modules
-  while (modulesDir !== '/') {
-    modulesDir = join(modulesDir, '..', '..', 'node_modules')
+  while (modulesDir !== '/node_modules') {
     const moduleDir = join(modulesDir, ...packageName.split('/'))
     if (await pathExists(moduleDir)) {
       return moduleDir
     }
+    modulesDir = join(modulesDir, '..', '..', 'node_modules')
   }
   return null
 }

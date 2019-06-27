@@ -1,6 +1,19 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  SizedSurfaceProps,
+  Space,
+  SurfacePassProps,
+  useNodeSize,
+  View,
+} from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
@@ -117,7 +130,13 @@ export const OrbitHeader = memo(() => {
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
-  const { isEditing } = useStore(App)
+  const { appRole } = useStore(App)
+  const queryBuilderLink = useLocationLink('/app/query-builder')
+  const appsLink = useLocationLink('/app/apps')
+
+  const isEditing = appRole === 'editing'
+  const isTorn = appRole === 'torn'
+  const slim = isEditing || isTorn
 
   return (
     <>
@@ -129,23 +148,25 @@ export const OrbitHeader = memo(() => {
       >
         <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={isEditing ? 46 : 56}>
+        <HeaderTop height={slim ? 46 : 56}>
           <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround>
-              <BackButton />
+            <HeaderSide space="sm" spaceAround slim={slim}>
+              {!slim && <BackButton />}
               <OrbitHeaderMenu />
-              {!isEditing && (
+              {appRole === 'main' ? (
                 <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
                   <OrbitNavPopover target={<HomeButton id="home-button" />}>
                     <OrbitNav />
                   </OrbitNavPopover>
                 </View>
+              ) : (
+                <HomeButton id="home-button" />
               )}
             </HeaderSide>
           </HeaderButtonPassProps>
 
           <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
-            <OrbitHeaderInput />
+            <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
             {isOnTearablePane && (
               <>
@@ -157,13 +178,13 @@ export const OrbitHeader = memo(() => {
                 >
                   {orbitStore.activeActions}
                 </SurfacePassProps>
-                {!isEditing && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
+                {!isEditing && !isTorn && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
               </>
             )}
           </HeaderContain>
 
           <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround justifyContent="flex-start">
+            <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
               {isEditing && (
                 <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
                   <>
@@ -175,17 +196,17 @@ export const OrbitHeader = memo(() => {
                 </SurfacePassProps>
               )}
 
-              {!isEditing && (
+              {!isEditing && !isTorn && (
                 <>
                   <Button
                     {...om.state.router.appId === 'query-builder' && activeStyle}
-                    onClick={useLocationLink('/app/query-builder')}
+                    onClick={queryBuilderLink}
                     icon="layers"
                     tooltip="Query Builder"
                   />
                   <Button
                     {...om.state.router.appId === 'apps' && activeStyle}
-                    onClick={useLocationLink('/app/apps')}
+                    onClick={appsLink}
                     icon="layout-grid"
                     tooltip="Manage apps"
                   />
@@ -193,7 +214,7 @@ export const OrbitHeader = memo(() => {
                 </>
               )}
 
-              {isEditing && (
+              {(isEditing || isTorn) && (
                 <Button
                   icon="cog"
                   onClick={() => {
@@ -218,10 +239,6 @@ export const OrbitHeader = memo(() => {
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   const appStore = useStore(App)
-
-  if (appStore.isEditing) {
-    return null
-  }
 
   return (
     <>
@@ -302,7 +319,7 @@ const OrbitHeaderContainer = gloss<any>(View, {
     theme.background.alpha(a => a * 0.65),
 }))
 
-const HeaderSide = gloss(Row, {
+const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
   width: '18%',
@@ -310,6 +327,12 @@ const HeaderSide = gloss(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
+
+  slim: {
+    flex: 'none',
+    width: 'auto',
+    minWidth: 'min-content',
+  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {

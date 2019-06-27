@@ -31,6 +31,10 @@ export const handleExit = once(async () => {
 
 root.handleExit = handleExit
 
-export const setupHandleExit = (x: ChildProcess[]) => {
-  processes = x
+export const setupHandleExit = (x: ChildProcess) => {
+  // exit main process if a child process exits unexpectedly
+  x.on('close', handleExit)
+  x.on('exit', handleExit)
+  // clean it up later when this process exits
+  processes.push(x)
 }

@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from 'gloss'
+import { gloss, Box } from 'gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'
@@ -247,7 +247,7 @@ class TreeItemsRowAttribute extends React.PureComponent<{
   }
 }
 
-const TreeItemsRowDecoration = gloss({
+const TreeItemsRowDecoration = gloss(Box, {
   flexFlow: 'row',
   flexShrink: 0,
   justifyContent: 'flex-end',
@@ -258,7 +258,7 @@ const TreeItemsRowDecoration = gloss({
   top: -1,
 })
 
-const TreeItemsLine = gloss<{ height: number; childrenCount: number }>({
+const TreeItemsLine = gloss<{ height: number; childrenCount: number }>(Box, {
   position: 'absolute',
   right: 3,
   zIndex: 2,
@@ -290,15 +290,15 @@ const TreeItemsRowAttributeContainer = gloss(NoShrinkText, {
   marginLeft: 5,
 })
 
-const TreeItemsRowAttributeKey = gloss({
+const TreeItemsRowAttributeKey = gloss(Box, {
   color: colors.tomato,
 })
 
-const TreeItemsRowAttributeValue = gloss({
+const TreeItemsRowAttributeValue = gloss(Box, {
   color: colors.slateDark3,
 })
 
-const HighlightedText = gloss().theme(({ selected }, theme) => ({
+const HighlightedText = gloss<any>(Box).theme(({ selected }, theme) => ({
   backgroundColor: theme.backgroundZebra,
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
 }))

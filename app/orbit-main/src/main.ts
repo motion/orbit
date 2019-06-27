@@ -1,7 +1,6 @@
 import { getGlobalConfig, setGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
-import { ChildProcess } from 'child_process'
 import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
@@ -12,7 +11,9 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 
-root['WebSocket'] = WebSocket
+root.WebSocket = WebSocket
+require('array.prototype.flatmap').shim()
+
 Error.stackTraceLimit = Infinity
 
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env
@@ -20,7 +21,7 @@ const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTR
 const log = new Logger('orbit-main')
 
 export async function main() {
-  log.info(`starting ${PROCESS_NAME || 'orbit-main'}`)
+  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`)
 
   // setup config
   if (SUB_PROCESS) {
@@ -36,12 +37,14 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  // 🐛 for some reason you'll get "directv-tick" consistently on a port
-  // EVEN IF port was found to be empty.... killing again helps
-  const ports = Object.values(config.ports)
-  log.info('Ensuring all ports clear...', ports.join(','))
-  const killPort = require('kill-port')
-  await Promise.all(ports.map(port => killPort(port).catch(err => err)))
+  if (!SUB_PROCESS) {
+    // 🐛 for some reason you'll get "directv-tick" consistently on a port
+    // EVEN IF port was found to be empty.... killing again helps
+    const ports = Object.values(config.ports)
+    log.info('Ensuring all ports clear...', ports.join(','))
+    const killPort = require('kill-port')
+    await Promise.all(ports.map(port => killPort(port).catch(err => err)))
+  }
 
   // if we are in a forked sub-process, we go off and run them
   if (SUB_PROCESS) {
@@ -90,11 +93,9 @@ export async function main() {
 
   // our processes
   // each call pushes the process into the array and then gives them all over to setupHandleExit
-  let processes: ChildProcess[] = []
   const setupProcess = (opts: ChildProcessProps) => {
     const p = startChildProcess(opts)
-    processes.push(p)
-    setupHandleExit(processes)
+    setupHandleExit(p)
   }
 
   // start desktop before starting other processes (it runs the server)...

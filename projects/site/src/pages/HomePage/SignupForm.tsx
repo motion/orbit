@@ -1,13 +1,14 @@
 import { View, ViewProps } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 import { Join } from './Join'
 import { TitleTextSmallCaps } from './TitleTextSmallCaps'
+import { useScreenVal } from './SpacedPageContent'
 
-export function SignupForm(props: ViewProps) {
+export const SignupForm = memo((props: ViewProps) => {
   return (
     <View
-      width="50%"
+      width={useScreenVal('100%', '50%', '50%')}
       maxWidth={600}
       minWidth={340}
       margin="auto"
@@ -30,4 +31,4 @@ export function SignupForm(props: ViewProps) {
       </View>
     </View>
   )
-}
+})

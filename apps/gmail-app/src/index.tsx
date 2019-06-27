@@ -1,7 +1,7 @@
 import { createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
-import { GmailApi } from './api.node'
+import GmailApi from './api.node'
 import { GMailLoader } from './GMailLoader'
 import { GmailSettings } from './GmailSettings'
 import { GmailSyncerWorker } from './GmailSyncerWorker.node'

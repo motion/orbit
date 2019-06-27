@@ -14,7 +14,7 @@ export function removeLast(arr: any[], num = 1) {
 /**
  * Returns what its given.
  */
-export function idFn<A>(a: A) {
+export function idFn<A>(a?: A) {
   return a
 }
 

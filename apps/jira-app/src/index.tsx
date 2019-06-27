@@ -1,7 +1,7 @@
 import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
-import { JiraApi } from './api.node'
+import JiraApi from './api.node'
 import { JiraLoader } from './JiraLoader'
 import { JiraAppData } from './JiraModels'
 import { JiraSyncerWorker } from './JiraSyncerWorker.node'

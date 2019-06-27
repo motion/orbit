@@ -4,9 +4,9 @@
  * LICENSE file in the root directory of this source tree.
  * @format
  */
+import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from '@o/react-window'
 import { gloss } from 'gloss'
 import React, { forwardRef, memo, RefObject } from 'react'
-import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-window'
 
 import { useNodeSize } from '../hooks/useNodeSize'
 import { Omit } from '../types'

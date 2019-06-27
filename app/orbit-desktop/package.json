@@ -9,7 +9,7 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@o/cli": "*",
     "@o/build-server": "*",
     "@o/config": "^2.5.2",
@@ -71,7 +71,7 @@
     "macos-version": "4.1.0",
     "morgan": "1.9.0",
     "node-osascript": "~2.0.0",
-    "opn": "^5.2.0",
+    "open": "^6.3.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "1.1.0",

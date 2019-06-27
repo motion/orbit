@@ -3,6 +3,7 @@ import { fromStyles } from 'gloss-theme'
 
 import { alternates } from './themeAlternates'
 import { colors } from './themeColors'
+import { ThemeObject } from 'gloss'
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
@@ -12,7 +13,7 @@ const backgroundStrong = lightBackground.darken(0.025)
 const backgroundStronger = lightBackground.darken(0.05)
 const backgroundStrongest = lightBackground.darken(0.075)
 
-export const light = {
+export const light: ThemeObject = {
   alternates,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],

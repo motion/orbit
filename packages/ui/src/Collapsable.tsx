@@ -4,7 +4,6 @@ import React, { useMemo } from 'react'
 
 import { Toggler, useToggle } from './hooks/useToggle'
 import { Icon } from './Icon'
-import { Omit } from './types'
 
 export type CollapsableProps = {
   /** Uncontrolled: set initial state as collapsed */

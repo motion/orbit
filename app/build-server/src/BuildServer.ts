@@ -67,11 +67,8 @@ export class BuildServer {
   }
 
   start() {
-    return new Promise((res, rej) => {
-      this.server.listen(3999, 'localhost', err => {
-        if (err) {
-          return rej(err)
-        }
+    return new Promise(res => {
+      this.server.listen(3999, 'localhost', () => {
         console.log('listening on 3999')
         res()
       })

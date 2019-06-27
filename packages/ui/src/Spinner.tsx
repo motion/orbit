@@ -1,5 +1,6 @@
 import { useTheme } from 'gloss'
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, memo } from 'react'
+
 import { useDefaultProps } from './hooks/useDefaultProps'
 
 // https://github.com/chantastic/react-svg-spinner
@@ -12,7 +13,7 @@ export type SpinnerProps = HTMLAttributes<SVGElement> & {
   size?: string
 }
 
-export function Spinner(directProps: SpinnerProps) {
+export const Spinner = memo((directProps: SpinnerProps) => {
   const theme = useTheme()
   const { color, gap, thickness, size, speed, ...rest } = useDefaultProps(
     {
@@ -66,7 +67,7 @@ export function Spinner(directProps: SpinnerProps) {
       />
     </svg>
   )
-}
+})
 
 function speedSwitch(speed) {
   if (speed === 'fast') return 600

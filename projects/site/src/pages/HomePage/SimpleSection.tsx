@@ -10,7 +10,7 @@ import { TitleText } from '../../views/TitleText'
 const titleFont = {
   WebkitTextFillColor: 'transparent',
   background: 'linear-gradient(to right, #B65138, #BE0DBE)',
-  backgroundSize: 300,
+  backgroundSize: '300',
 }
 
 export const SimpleSection = ({ delay = 100, index = undefined, title, children, ...rest }) => {
@@ -30,7 +30,7 @@ export const SimpleSection = ({ delay = 100, index = undefined, title, children,
               WebkitBackgroundClip: 'text',
             }}
             {...titleFont}
-            size={1.5}
+            size={1.25}
             sizeLineHeight={1.2}
             textAlign="left"
             flex={1}

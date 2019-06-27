@@ -1,10 +1,11 @@
+import { ThemeObject } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 
 import { alternates } from './themeAlternates'
 import { dark } from './themeDark'
 import { light } from './themeLight'
 
-export const themes = {
+export const themes: { [key: string]: ThemeObject } = {
   ...alternates,
   dark,
   light,

@@ -18,14 +18,14 @@
     "haul": "haul"
   },
   "dependencies": {
-    "react": "16.8.3",
+    "react": "16.8.6",
     "react-native": "^0.59.9"
   },
   "devDependencies": {
     "@o/kit": "*",
     "@o/ui": "*",
-    "@babel/core": "7.4.5",
-    "@babel/runtime": "7.4.5",
+    "@babel/core": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
     "babel-jest": "24.8.0",
     "haul": "^1.0.0-rc.12",
     "jest": "24.8.0",

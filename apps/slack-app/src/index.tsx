@@ -1,7 +1,7 @@
 import { createApi, createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
-import { SlackApi } from './api.node'
+import SlackApi from './api.node'
 import { SlackLoader } from './SlackLoader'
 import { SlackSettings } from './SlackSettings'
 import { SlackSyncerWorker } from './SlackSyncerWorker.node'

@@ -91,10 +91,18 @@ export class SelectableStore {
     },
   )
 
-  ensureAlwaysSelected = react(
-    () => [always(this.rows), always(this.active), this.props.alwaysSelected],
+  resetActiveOnRowsChange = react(
+    () => always(this.rows),
     () => {
-      ensure('this.props.alwaysSelected', this.props.alwaysSelected)
+      this.keyToIndex = {}
+      this.setActive([])
+    },
+  )
+
+  ensureAlwaysSelected = react(
+    () => [this.props.alwaysSelected, always(this.rows), always(this.active)],
+    ([alwaysSelected]) => {
+      ensure('alwaysSelected', alwaysSelected)
       ensure('rowsLen', this.rows.length > 0)
       ensure('activeLen', this.active.size < 1)
       this.selectFirstValid()
@@ -147,6 +155,11 @@ export class SelectableStore {
       return
     }
 
+    // dont update if not changed (simple empty check)
+    if (this.active.size === 0 && nextFiltered.length === 0) {
+      return
+    }
+
     this.active = new Set(nextFiltered)
   }
 
@@ -156,6 +169,7 @@ export class SelectableStore {
       console.warn('no selecatble row!', this.rows)
       return
     }
+    console.log('selecting first valid', firstValidIndex)
     this.setActiveIndex(firstValidIndex)
   }
 

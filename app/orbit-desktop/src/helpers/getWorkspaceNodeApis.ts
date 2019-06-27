@@ -6,7 +6,6 @@ const log = new Logger('getWorkspaceNodeApis')
 
 export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinition[]> {
   const appsMeta = await getWorkspaceAppPaths(space.directory)
-
   return (await Promise.all(
     appsMeta.map(async ({ packageId, directory }) => {
       const res = await requireAppDefinition({ packageId, directory, types: ['node'] })

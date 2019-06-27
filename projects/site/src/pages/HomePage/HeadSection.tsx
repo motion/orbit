@@ -17,23 +17,23 @@ let medSpc = <Space size="xxl" />
 let lgSpace = <Space size="xxxl" />
 
 let allTitles = {
-  large: 'Easy and powerful apps for work.',
-  medium: 'Easy and powerful apps for work.',
-  small: 'Easy and powerful apps for work.',
+  large: 'Easy and powerful apps for work',
+  medium: 'Easy and powerful apps for work',
+  small: 'Easy and powerful apps',
 }
 
 let allTexts = {
   large: [
     `Develop your intranet using apps that feel and run like native.`,
-    `An open source, decentralized platform with an open app store.`,
+    `The open source, decentralized app platform with an open app store.`,
   ],
   medium: [
     `Develop your intranet using apps that feel and run like native.`,
-    `An open source, decentralized platform with an open app store.`,
+    `The open source, decentralized app platform with an open app store.`,
   ],
   small: [
     `Create intranet apps easily.`,
-    `An open source, decentralized platform with an open app store.`,
+    `The open source, decentralized app platform with an open app store.`,
   ],
 }
 
@@ -42,7 +42,7 @@ const HeadContent = memo(() => {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
   const measured = fontsLoaded
   const titleFit = useTextFit({ min: 16, updateKey: fontsLoaded })
-  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded, extraScale: 1 })
+  const pFit = useTextFit({ min: 16, updateKey: fontsLoaded })
 
   const texts = allTexts[screen]
   const longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
@@ -61,15 +61,15 @@ const HeadContent = memo(() => {
       alignItems="center"
     >
       <TitleText
-        forwardRef={titleFit.ref}
+        ref={titleFit.ref}
         style={titleFit.style}
         fontWeight={100}
         alignSelf="center"
-        // transition="transform ease 160ms"
         transformOrigin="top center"
         selectable
         textAlign="center"
         whiteSpace="nowrap"
+        maxHeight={80}
       >
         <FadeChild disable={!measured}>{allTitles[screen]}</FadeChild>
       </TitleText>
@@ -153,29 +153,30 @@ const HeadContent = memo(() => {
   )
 })
 
-const HeadJoin = () => (
-  <View flex={1} width="100%" position="absolute" bottom={5} alignItems="center">
-    <FadeChild {...fadeUpProps} delay={500}>
-      <SurfacePassProps elevation={5} fontFamily="GT Eesti">
-        <Theme name="orbitOneDark">
-          <Scale size={1.1}>
-            <Join
-              inputProps={{
-                minWidth: useScreenVal('auto', 300, 300),
-                textAlign: 'left',
-              }}
-              borderRadius={1000}
-              boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
-              flexFlow="row"
-              group
-              space={false}
-              margin={[0, '-2%']}
-            />
-          </Scale>
-        </Theme>
-      </SurfacePassProps>
-    </FadeChild>
-    {/* <View
+const HeadJoin = memo(() => {
+  return (
+    <View flex={1} width="100%" position="absolute" bottom="15%" alignItems="center">
+      <FadeChild {...fadeUpProps} delay={500}>
+        <SurfacePassProps elevation={5} fontFamily="GT Eesti">
+          <Theme name="orbitOneDark">
+            <Scale size={useScreenVal(0.8, 1, 1.1)}>
+              <Join
+                inputProps={{
+                  minWidth: useScreenVal('auto', 300, 300),
+                  textAlign: 'left',
+                }}
+                borderRadius={1000}
+                boxShadow={[[0, 5, 40, [0, 0, 0, 0.15]]]}
+                flexFlow="row"
+                group
+                space={false}
+                margin={[0, '-2%']}
+              />
+            </Scale>
+          </Theme>
+        </SurfacePassProps>
+      </FadeChild>
+      {/* <View
         position="absolute"
         overflow="hidden"
         backgroundImage={`url(${appScreen})`}
@@ -189,16 +190,20 @@ const HeadJoin = () => (
         boxShadow={[[0, 0, 100, [0, 0, 0]]]}
         pointerEvents="auto"
       /> */}
-    {/* <DownloadButton
+      {/* <DownloadButton
           onMouseEnter={() => setHoverDownload(true)}
           onMouseLeave={() => setHoverDownload(false)}
         /> */}
-  </View>
-)
+    </View>
+  )
+})
 
 export function HeadSection() {
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const Fade = useFadePage()
+  const Fade = useFadePage({
+    threshold: 0,
+  })
+  const size = useScreenSize()
 
   return (
     <Fade.FadeProvide>
@@ -217,10 +222,10 @@ export function HeadSection() {
           <Row
             space="xl"
             pad={[0, 'xl']}
-            marginBottom={-90}
             scrollable="x"
             maxWidth="100vw"
             justifyContent="space-between"
+            display={size === 'small' ? 'none' : 'flex'}
           >
             <SubSection index={0} title="Easy" titleColor={colors.orange}>
               Everything needed for managing data, syncing from many sources, all in a few lines of
@@ -259,7 +264,8 @@ const SubSection = memo(({ title, children, index, titleColor }: any) => {
           textTransform="uppercase"
           alpha={0.65}
           color={titleColor}
-          size={1.15}
+          size={1}
+          fontWeight={600}
         >
           {title}
         </Paragraph>

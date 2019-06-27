@@ -21,7 +21,6 @@ export default function ElectronRoot(props: { children: any }) {
     <App
       onBeforeQuit={electronStore.handleBeforeQuit}
       onWillQuit={electronStore.handleQuit}
-      ref={electronStore.handleAppRef}
       devTools={devTools}
     >
       {props.children}

@@ -4,8 +4,8 @@
 cd $(dirname $0)/..
 
 if [ ! -d ./pata-postgres ]; then
-    mkdir ./data
-    mkdir ./data/postgres
+    mkdir ./data || true
+    mkdir ./data/postgres || true
 fi
 
 if [ ! -f ./data/postgres/1-pagila-schema.sql ]; then

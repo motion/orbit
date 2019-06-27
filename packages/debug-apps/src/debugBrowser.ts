@@ -98,7 +98,10 @@ export default class DebugApps {
 
   getSessions = async (): Promise<any> => {
     const sessions = flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(Boolean)
-    return sessions.sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
+    const res = sessions.sort((a, b) =>
+      `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`),
+    )
+    return res
   }
 
   lastRes = {}

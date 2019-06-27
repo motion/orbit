@@ -1,6 +1,5 @@
-import { Title } from '@o/ui'
-import { gloss } from 'gloss'
-import React from 'react'
+import { Title, TitleProps } from '@o/ui'
+import React, { forwardRef } from 'react'
 
 const titleProps = {
   size: 'lg',
@@ -8,11 +7,13 @@ const titleProps = {
   selectable: true,
 }
 
-export const TitleText = gloss(
-  props => (
-    <Title className="font-smooth" selectable sizeLineHeight={1.1} {...titleProps} {...props} />
-  ),
-  {
-    fontFamily: 'GT Eesti',
-  },
-)
+export const TitleText = forwardRef((props: TitleProps, ref) => (
+  <Title
+    ref={ref}
+    className="font-smooth"
+    selectable
+    sizeLineHeight={1.1}
+    {...titleProps}
+    {...props}
+  />
+))

@@ -27,7 +27,7 @@ export function ManageSyncStatus(props: { app: AppBit }) {
       {!!(activeJobs.length || removeJobs.length) && (
         <>
           <Text size={0.9} fontWeight={400}>
-            {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}{' '}
+            {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : props.app.name}{' '}
           </Text>
           {!removeJobs.length && (
             <>

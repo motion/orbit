@@ -8,5 +8,10 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../models" }]
+  "references": [
+    { "path": "../models" },
+    { "path": "../cli" },
+    { "path": "../../packages/logger" },
+    { "path": "../../packages/use-store" }
+  ]
 }

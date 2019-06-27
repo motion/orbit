@@ -1,5 +1,15 @@
-import { Col, FullScreen, Grid, ListItem, SimpleText, SpaceGroup, TextProps, Theme, View } from '@o/ui'
-import React from 'react'
+import {
+  Col,
+  FullScreen,
+  Grid,
+  ListItem,
+  SimpleText,
+  SpaceGroup,
+  TextProps,
+  Theme,
+  View,
+} from '@o/ui'
+import React, { memo } from 'react'
 
 import earth from '../../../public/images/earth.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -54,7 +64,7 @@ const Item = props => (
 
 const dly = 120
 
-export function AboutSection() {
+export const AboutSection = memo(() => {
   const screen = useScreenSize()
   return (
     <FadeParent>
@@ -126,4 +136,4 @@ export function AboutSection() {
       </SpacedPageContent>
     </FadeParent>
   )
-}
+})

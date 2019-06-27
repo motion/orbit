@@ -1,11 +1,43 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import {
+  App,
+  AppDefinition,
+  AppLoadContext,
+  AppStore,
+  AppViewProps,
+  AppViewsContext,
+  Bit,
+  getAppDefinition,
+  getAppDefinitions,
+  ProvideStores,
+  sleep,
+} from '@o/kit'
+import {
+  ErrorBoundary,
+  gloss,
+  ListItemProps,
+  Loading,
+  ProvideShare,
+  ProvideVisibility,
+  ScopedState,
+  useGet,
+  useThrottledFn,
+  useVisibility,
+  View,
+} from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, {
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -243,7 +275,7 @@ const FadeIn = (props: any) => {
   )
 }
 
-function OrbitActions(props: { children?: any }) {
+const OrbitActions = memo((props: { children?: any }) => {
   const stores = useStoresSimple()
   const isActive = useVisibility()
   useEffect(() => {
@@ -254,7 +286,7 @@ function OrbitActions(props: { children?: any }) {
     }
   }, [isActive, props.children])
   return null
-}
+})
 
 // if (module['hot']) {
 //   module['hot'].accept()

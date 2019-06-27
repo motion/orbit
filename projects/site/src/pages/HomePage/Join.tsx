@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Message, Scale, Space } from '@o/ui'
+import { Button, Col, Form, Input, Message, Space } from '@o/ui'
 import jsonp from 'jsonp'
 import React from 'react'
 
@@ -52,7 +52,7 @@ export class Join extends React.Component<any> {
     const { header, inputProps, ...props } = this.props
     const message = success || error || ''
     return (
-      <Scale size={1.1}>
+      <>
         <Form
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
@@ -104,7 +104,7 @@ export class Join extends React.Component<any> {
             />
           </Col>
         )}
-      </Scale>
+      </>
     )
   }
 }

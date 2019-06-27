@@ -23,7 +23,9 @@
     "styled-components": "5.0.0-beta.0",
     "styled-jsx": "^2.2.6",
     "styletron-engine-atomic": "^1.0.8",
-    "styletron-react": "^4.3.5"
+    "styletron-react": "^4.3.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -41,10 +43,6 @@
     "webpack": "^4.16.5",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^3.1.0"
-  },
-  "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
   },
   "sideEffects": false
 }

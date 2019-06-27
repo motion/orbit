@@ -6,7 +6,7 @@ export const ContentSection = (props: ColProps) => {
   return (
     <Col
       className="content-section"
-      pad="sm"
+      pad={['xxxl', 'sm']}
       width="100%"
       maxWidth={760}
       margin="auto"

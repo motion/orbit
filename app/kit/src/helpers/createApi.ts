@@ -6,16 +6,9 @@ export interface FunctionalAPI<X> {
   isClass?: undefined
 }
 
-export interface ClassAPI<X> {
-  new (app: AppBit): X
-  isClass: boolean
-}
-
-type APIReturn<X> = X extends ClassAPI<infer A> ? A : X extends FunctionalAPI<infer A> ? A : never
-
-export function createApi<T extends FunctionalAPI<any> | ClassAPI<any>>(
+export function createApi<T extends FunctionalAPI<any>>(
   _api: T,
-): (app: AppBit) => APIReturn<T> {
+): (app: AppBit) => FunctionalAPI<T> {
   const fn = (app: AppBit) =>
     new Proxy(
       {},

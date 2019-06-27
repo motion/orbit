@@ -1,6 +1,6 @@
 import { createApi, createApp } from '@o/kit'
 
-import { ConfluenceApi } from './api.node'
+import ConfluenceApi from './api.node'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
 import { ConfluenceSyncerWorker } from './ConfluenceSyncerWorker.node'

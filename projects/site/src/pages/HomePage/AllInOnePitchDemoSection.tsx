@@ -1,4 +1,15 @@
-import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
+import {
+  Button,
+  Col,
+  FullScreen,
+  gloss,
+  Image,
+  Row,
+  Space,
+  useGetFn,
+  useIntersectionObserver,
+  View,
+} from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -8,7 +19,14 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
-import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
+import {
+  FadeChild,
+  fadeLeftProps,
+  fadeRightProps,
+  fadeUpProps,
+  slowConfigLessBounce,
+  useFadePage,
+} from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -109,7 +127,6 @@ const createSlideSpringTo: AnimateTo = (config, delay) => {
         await next(curStyle)
         return
       case 'next':
-        console.log('next')
         // await sleep(delay)
         // out
         await next({
@@ -231,9 +248,11 @@ export default function NeckSection() {
                 <TitleText size={useScreenVal('lg', 'xxl', 'xxxl')}>All together</TitleText>
               </FadeChild>
               <TitleTextSub ref={ref as any} margin="auto" minWidth={320}>
-                <FadeChild delay={300}>A new way to build apps: without a server.</FadeChild>
-                <FadeChild delay={450}>
-                  When ready, deploy to your intranet with a command.
+                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={300}>
+                  &nbsp;Beautiful, simple to write apps that feel native.&nbsp;
+                </FadeChild>
+                <FadeChild style={screen === 'small' ? { display: 'inline' } : null} delay={450}>
+                  Runs on your desktop, deploys to your intranet.
                 </FadeChild>
               </TitleTextSub>
             </>
@@ -247,8 +266,8 @@ export default function NeckSection() {
                     <PillButtonDark>Import</PillButtonDark>
                     <Space />
                     <CenterText>
-                      Apps that talk to each other - plug in{' '}
-                      <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> data with a click.
+                      Plug in the <Inline color="#E01C5A">{elements[cur].beforeName}</Inline> data
+                      app with a click.
                     </CenterText>
                   </FadeChild>
                 </SubSection>
@@ -439,7 +458,7 @@ export default function NeckSection() {
           transform={{ y: -180 }}
           minWidth={1000}
           margin={[0, '-5vw']}
-          opacity={0.25}
+          opacity={0.35}
           top={40}
           bottom="auto"
           className="head-line-sep"
@@ -448,19 +467,19 @@ export default function NeckSection() {
         </FullScreen>
       </Page.Parallax>
 
-      <Page.Parallax speed={0.4} zIndex={-1}>
+      <Page.Parallax speed={0.24} zIndex={-1}>
         <FullScreen
-          opacity={0.12}
-          transform={{ y: '-35%', x: '-25%', scale: 1.35 }}
-          background="radial-gradient(circle closest-side, #F64097, #F27B81, transparent)"
+          opacity={0.22}
+          transform={{ y: '-45%', x: '-35%', scale: 1.5 }}
+          background="radial-gradient(circle closest-side, #F64097, transparent)"
         />
       </Page.Parallax>
 
       <Page.Parallax speed={-0.4} zIndex={-1}>
         <FullScreen
-          opacity={0.15}
-          transform={{ y: '30%', x: '40%', scale: 1.48 }}
-          background="radial-gradient(circle closest-side, #00E5FF, #009A4C, transparent)"
+          opacity={0.25}
+          transform={{ y: '30%', x: '40%', scale: 1.68 }}
+          background="radial-gradient(circle closest-side, #00E5FF, transparent)"
         />
       </Page.Parallax>
     </Fade.FadeProvide>

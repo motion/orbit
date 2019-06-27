@@ -40,19 +40,22 @@ const readPackage = (key: string) => {
   }
 }
 
-const getFlag = flag => {
+const getFlag = (flag, isBoolean = false) => {
+  if (isBoolean) {
+    return process.argv.some(x => x === flag)
+  }
   const matcher = new RegExp(`${flag} ([^ ]+)`, 'i')
   const found = process.argv.join(' ').match(matcher)
   return (found && found.length >= 2 && found[1]) || null
 }
 
 const flags = {
-  prod: getFlag('--prod'),
-  disableHMR: getFlag('--disable-hmr'),
+  prod: getFlag('--prod', true),
+  disableHMR: getFlag('--disable-hmr', true),
   entry: getFlag('--entry'),
   target: getFlag('--target'),
   devtool: getFlag('--devtool'),
-  executable: getFlag('--executable'),
+  executable: getFlag('--executable', true),
 }
 
 if (flags.prod) {

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. $(dirname $0)/__/common
-
-$ROOT/node_modules/.bin/tsc ${@:1}

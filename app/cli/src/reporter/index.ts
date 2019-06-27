@@ -50,6 +50,7 @@ export const reporter: Reporter = {
     // @ts-ignore
     this.error(...args)
     trackError(`GENERAL_PANIC`, { error: args })
+    console.trace('Exiting after error')
     process.exit(1)
   },
 

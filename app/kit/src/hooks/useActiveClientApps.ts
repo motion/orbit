@@ -1,7 +1,7 @@
 import { AppBit } from '@o/models'
 import { appDefinesClient } from '../helpers/appDefinesClient'
-import { useActiveApps } from './useActiveApps'
+import { useActiveApps, FindBitWhere } from './useActiveApps'
 
-export function useActiveClientApps(type?: string): AppBit[] {
-  return useActiveApps(type).filter(appDefinesClient)
+export function useActiveClientApps(where?: FindBitWhere): AppBit[] {
+  return useActiveApps(where).filter(appDefinesClient)
 }

@@ -35,7 +35,6 @@
     "@o/use-store": "^2.5.2",
     "@o/utils": "^2.5.2",
     "@o/libs": "^2.5.2",
-    "@welldone-software/why-did-you-render": "3.0.9",
     "animejs": "3.0.1",
     "date-fns": "2.0.0-alpha.7",
     "electron-context-menu": "0.11.0",
@@ -68,7 +67,7 @@
     "react-flip-toolkit": "6.6.4",
     "react-hot-loader": "^4.11.0",
     "react-shadow": "16.3.2",
-    "react-spring": "9.0.0-beta.23",
+    "react-spring": "9.0.0-beta.24",
     "react-svg-inline": "2.1.1",
     "reconnecting-websocket": "4.1.10",
     "simple-quadtree": "^0.1.3",
@@ -78,7 +77,8 @@
     "sockjs-client": "1.3.0",
     "monaco-editor": "^0.17.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
-    "resize-observer-polyfill": "^1.5.1"
+    "resize-observer-polyfill": "^1.5.1",
+    "raven": "^2.6.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

@@ -1,4 +1,23 @@
-import { AppBit, AppIcon, ensure, getAppDefinition, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import {
+  AppBit,
+  AppIcon,
+  ensure,
+  getAppDefinition,
+  getUser,
+  MarkType,
+  react,
+  saveUser,
+  searchBits,
+  SearchQuery,
+  SearchState,
+  SpaceIcon,
+  useActiveQuery,
+  useActiveSpace,
+  useAppBit,
+  useHooks,
+  useStoresSimple,
+  useActiveClientApps,
+} from '@o/kit'
 import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -13,7 +32,7 @@ export class SearchStore {
   hooks = useHooks({
     stores: useStoresSimple,
     activeQuery: useActiveQuery,
-    apps: useActiveApps,
+    apps: useActiveClientApps,
     app: () => useAppBit()[0],
     space: () => useActiveSpace()[0],
   })

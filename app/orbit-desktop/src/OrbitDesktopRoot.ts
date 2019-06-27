@@ -43,9 +43,9 @@ import {
 import { OrbitAppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
-import { writeJSON } from 'fs-extra'
+import { writeJSONSync } from 'fs-extra'
 import root from 'global'
-import open from 'opn'
+import open from 'open'
 import * as Path from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import * as typeorm from 'typeorm'
@@ -83,7 +83,6 @@ import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceReso
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
-import { orTimeout } from '@o/utils'
 
 const log = new Logger('desktop')
 
@@ -227,23 +226,20 @@ export class OrbitDesktopRoot {
   }
 
   dispose = async () => {
-    console.log('Disposing Desktop.Root')
+    log.info('Disposing Desktop.Root')
     if (this.disposed) {
       return
     }
-    console.log('writing orbit config...')
-    try {
-      await orTimeout(writeJSON(this.config.paths.orbitConfig, this.config), 200)
-    } catch (err) {
-      console.log('error writing config', err.message, err.stack)
-    }
-    console.log('dispose desktop...')
+    log.info('dispose desktop...')
     Desktop.dispose()
     // await this.ocrManager.dispose()
     if (this.authServer && this.authServer.isRunning()) {
-      console.log('stop auth server...')
+      log.info('stop auth server...')
       await this.authServer.stop()
     }
+    log.info('writing orbit config...', this.config.paths.orbitConfig)
+    writeJSONSync(this.config.paths.orbitConfig, this.config)
+    log.info('Stop bonjour')
     if (this.bonjourService) {
       this.bonjourService.stop(() => {})
       this.bonjourService = null
@@ -330,6 +326,18 @@ export class OrbitDesktopRoot {
         }),
         resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
           const appId = Object.keys(Electron.state.appWindows).length
+
+          // launch new app
+          Electron.setState({
+            appWindows: {
+              ...Electron.state.appWindows,
+              [appId]: {
+                appId,
+                appRole: 'editing',
+              },
+            },
+          })
+
           developingApps.push({
             entry,
             appId,

@@ -1,8 +1,6 @@
 import execa from 'execa'
 import * as Path from 'path'
 
-console.log('node env', process.env.NODE_ENV)
-
 process.env.IS_RUNNING = 'true'
 
 const configPath = require.resolve('./webpack.config')

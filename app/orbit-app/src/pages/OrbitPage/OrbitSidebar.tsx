@@ -8,7 +8,19 @@ import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitSidebar = memo((props: AppMainViewProps) => {
-  const { identifier, id } = useContext(AppLoadContext)
+  const { id } = useContext(AppLoadContext)
+  if (!props.hasSidebar) {
+    return null
+  }
+  return (
+    <SubPane id={id} fullHeight>
+      <OrbitSidebarContent {...props} />
+    </SubPane>
+  )
+})
+
+const OrbitSidebarContent = (props: AppMainViewProps) => {
+  const { id, identifier } = useContext(AppLoadContext)
   const { appStore } = useStores()
 
   useEffect(() => {
@@ -17,35 +29,29 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
     }
   }, [])
 
-  if (!props.hasSidebar) {
-    return null
-  }
-
   return (
-    <SubPane id={id} fullHeight>
-      <Sidebar
-        background="transparent"
-        width={appStore.showSidebar ? appStore.sidebarWidth : 0}
-        onResize={appStore.setSidebarWidth}
-        minWidth={appStore.showSidebar ? 200 : 0}
-        maxWidth={500}
-        noBorder
-      >
-        <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
-        <Col flex={1} position="relative" overflow="hidden">
-          {props.hasToolbar && <BorderTop />}
-          <ListPassProps
-            shareable
-            selectable
-            searchable
-            alwaysSelected
-            itemProps={{ iconBefore: true, iconSize: 26 }}
-          >
-            {props.children}
-          </ListPassProps>
-        </Col>
-        {props.hasStatusbar && statusbarPadElement}
-      </Sidebar>
-    </SubPane>
+    <Sidebar
+      background="transparent"
+      width={appStore.showSidebar ? appStore.sidebarWidth : 0}
+      onResize={appStore.setSidebarWidth}
+      minWidth={appStore.showSidebar ? 200 : 0}
+      maxWidth={500}
+      noBorder
+    >
+      <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
+      <Col flex={1} position="relative" overflow="hidden">
+        {props.hasToolbar && <BorderTop />}
+        <ListPassProps
+          shareable
+          selectable
+          searchable
+          alwaysSelected
+          itemProps={{ iconBefore: true, iconSize: 26 }}
+        >
+          {props.children}
+        </ListPassProps>
+      </Col>
+      {props.hasStatusbar && statusbarPadElement}
+    </Sidebar>
   )
-})
+}

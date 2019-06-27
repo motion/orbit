@@ -3,16 +3,18 @@ import { Menu, MenuItem, MenuItemsExtra, SubMenu } from '@o/reactron'
 import { Desktop, Electron } from '@o/stores'
 import * as React from 'react'
 
-import { Mediator } from '../mediator'
-import { ElectronDebugStore } from '../stores/ElectronDebugStore'
+import { Mediator } from './mediator'
 
-export class MenuItems extends React.Component<{ electronStore: ElectronDebugStore }> {
+export class MenuItems extends React.Component<{ restart: Function }> {
   isClosing = false
 
-  toggleDevTools = (id = Electron.state.focusedAppId) => () => {
+  toggleDevTools = () => {
+    const id = Electron.state.focusedAppId
+    const next = !Electron.state.showDevTools[id]
+    console.log('toggle dev tools', next)
     Electron.setState({
       showDevTools: {
-        [id]: !Electron.state.showDevTools[id],
+        [id]: next,
       },
     })
   }
@@ -43,7 +45,6 @@ export class MenuItems extends React.Component<{ electronStore: ElectronDebugSto
   }
 
   render() {
-    const { electronStore } = this.props
     return (
       <Menu>
         <SubMenu label="Orbit">
@@ -71,11 +72,11 @@ export class MenuItems extends React.Component<{ electronStore: ElectronDebugSto
           <MenuItemsExtra.ZoomOut />
           <MenuItemsExtra.Minimize onClick={this.handleMinimize} />
           <MenuItemsExtra.Close accelerator="Command+w" onClick={this.handleClose} />
-          <MenuItem label="Refresh" accelerator="Command+r" onClick={electronStore.restart} />
+          <MenuItem label="Refresh" accelerator="Command+r" onClick={this.props.restart} />
           <MenuItem
             label="Show Dev Tools [Focused Window]"
             accelerator="Command+Option+i"
-            onClick={this.toggleDevTools()}
+            onClick={this.toggleDevTools}
           />
         </SubMenu>
       </Menu>

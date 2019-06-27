@@ -7,12 +7,21 @@ rm -r apps/*/tsconfig.tsbuildinfo || true
 rm -r packages/*/tsconfig.tsbuildinfo || true
 
 rm -r app/*/npm-debug.log.* || true
+rm -r packages/*/npm-debug.log.* || true
 rm -r app/*/_ || true
 rm -r apps/*/_ || true
 rm -r projects-*/*/_ || true
 rm -r packages/*/_ || true
-rm -r packages/*/npm-debug.log.* || true
-rm -r packages/*/shrinkwrap.json || true
+
+rm -r app/*/shrinkwrap.yaml || true
+rm -r apps/*/shrinkwrap.yaml || true
+rm -r packages/*/shrinkwrap.yaml || true
+rm -r projects/*/shrinkwrap.yaml || true
+
+rm -r app/*/package-lock.json || true
+rm -r apps/*/package-lock.json || true
+rm -r packages/*/package-lock.json || true
+rm -r projects/*/package-lock.json || true
 
 if [[ "$1" = "--all" ]]; then
   rm -r node_modules || true
@@ -22,8 +31,7 @@ if [[ "$1" = "--all" ]]; then
   rm -r packages/*/node_modules || true
 fi
 
-echo "re-installing with `yarn --check-files` to ensure everything installed"
+# echo "re-installing with `yarn --check-files` to ensure everything installed"
+# yarn install --check-files
 
-yarn install --check-files
-
-echo "run build once with `build`"
+echo "run bootstrap and build once with build"

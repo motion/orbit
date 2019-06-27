@@ -4,22 +4,9 @@ import { decorate, deep } from '@o/use-store'
 
 import { Desktop } from './Desktop'
 import { AppWindow, Electron } from './Electron'
+import { getAppId } from './getAppId'
 
 export let App = null as AppStore
-
-function getAppId() {
-  if (process.env.APP_ID) return +process.env.APP_ID
-  if (typeof window !== 'undefined' && window.location && window.location.search) {
-    const match = window.location.search.match(/id=([0-9])+/)
-    if (match) {
-      return +match[1]
-    }
-  }
-  return -1
-}
-
-const appId = getAppId()
-console.log('appId', appId)
 
 export type AppState = {
   id: number
@@ -63,7 +50,6 @@ class AppStore {
   state = deep({
     // for use syncing them to electron
     userSettings: {} as User['settings'],
-    showOrbitMain: false,
     orbitState: {
       orbitOnLeft: false,
       position: [0, 0],
@@ -89,21 +75,25 @@ class AppStore {
     showSpaceSwitcher: 0,
   })
 
+  get appId() {
+    return getAppId()
+  }
+
   get appConf(): AppWindow {
     return (
-      Electron.state.appWindows[appId] || {
-        appId,
-        type: 'root',
+      Electron.state.appWindows[this.appId] || {
+        appId: this.appId,
+        appRole: 'main',
       }
     )
   }
 
   get bundleUrl() {
-    return `/appServer/${appId}/bundle.js`
+    return `/appServer/${this.appId}/bundle.js`
   }
 
-  get isEditing() {
-    return !!this.appConf.isEditing
+  get appRole() {
+    return this.appConf.appRole
   }
 
   get isDark() {

@@ -1,8 +1,7 @@
 import { AppBit } from '@o/models'
 import { appDefinesClient } from '../helpers/appDefinesClient'
-import { useActiveApps } from './useActiveApps'
-import { FindOptions } from 'typeorm'
+import { useActiveApps, FindBitWhere } from './useActiveApps'
 
-export function useActiveClientApps(where?: FindOptions<AppBit>['where']): AppBit[] {
+export function useActiveClientApps(where?: FindBitWhere): AppBit[] {
   return useActiveApps(where).filter(appDefinesClient)
 }

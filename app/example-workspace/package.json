@@ -1,7 +1,6 @@
 {
   "name": "@o/example-workspace",
   "version": "2.5.6",
-  "main": "index.ts",
   "private": true,
   "config": {
     "orbitWorkspace": true

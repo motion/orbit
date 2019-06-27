@@ -2,15 +2,15 @@ import { AppBit, AppDefinition } from '@o/models'
 import { useMemo } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { useActiveApps } from './useActiveApps'
+import { useActiveApps, FindBitWhere } from './useActiveApps'
 
 export type AppWithDefinition = {
   definition: AppDefinition
   app: AppBit
 }
 
-export function useActiveAppsWithDefinition(type?: string): AppWithDefinition[] {
-  const activeApps = useActiveApps(type)
+export function useActiveAppsWithDefinition(where?: FindBitWhere): AppWithDefinition[] {
+  const activeApps = useActiveApps(where)
   return useMemo(() => {
     return (
       activeApps

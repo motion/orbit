@@ -8,14 +8,13 @@ import { findPackage } from './findPackage'
  * Finds all valid orbit app package directories in a given workspace
  */
 export async function getWorkspaceAppPaths(workspacePath: string) {
-  const wsDir = join(require.resolve(workspacePath), '..')
-  const packageJson = join(wsDir, 'package.json')
+  const packageJson = join(workspacePath, 'package.json')
   const packages = (await readJSON(packageJson)).dependencies
   return (await Promise.all(
     Object.keys(packages).map(async packageId => {
-      const directory = findPackage({ directory: wsDir, packageId })
+      const directory = findPackage({ directory: workspacePath, packageId })
       if (!directory) {
-        reporter.error(`No directory found for package ${wsDir} ${packageId}`)
+        reporter.error(`No directory found for package ${workspacePath} ${packageId}`)
         return null
       }
       const apiInfoPath = join(directory, 'dist', 'api.json')

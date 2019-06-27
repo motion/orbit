@@ -5,7 +5,9 @@ import { useMemo } from 'react'
 import { useActiveSpace } from './useActiveSpace'
 import { FindOptions } from 'typeorm'
 
-export function useActiveApps(where?: FindOptions<AppBit>['where']): AppBit[] {
+export type FindBitWhere = FindOptions<AppBit>['where']
+
+export function useActiveApps(where?: FindBitWhere): AppBit[] {
   const [activeSpace] = useActiveSpace()
   const [apps] = useModels(AppModel, {
     where: {

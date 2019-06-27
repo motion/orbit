@@ -7,7 +7,7 @@ import { SearchItemShareContext } from './SearchItemProvide'
 
 export const ShareMenu = memo(function ShareMenu() {
   const itemAction = useContext(SearchItemShareContext)
-  const listApps = useActiveApps('lists')
+  const listApps = useActiveApps({ identifier: 'lists' })
 
   console.warn(
     'need to make this work generically to share between apps now, before was hardcoded to ListsApp',

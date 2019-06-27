@@ -1,7 +1,7 @@
 import {
   getIdentifierFromPackageId,
   getIdentifierToPackageId,
-  getWorkspaceAppPaths,
+  getWorkspaceApps,
   requireWorkspaceDefinitions,
   updateWorkspacePackageIds,
 } from '@o/cli'
@@ -86,15 +86,15 @@ export class OrbitAppsManager {
       ensure('appDefs', !!appDefs)
       const activeSpace = this.activeSpace
       if (!activeSpace) return
-      const appsMeta = await getWorkspaceAppPaths(activeSpace.directory || '')
-      ensure('appsMeta', !!appsMeta)
-      for (const meta of appsMeta) {
-        const identifier = getIdentifierFromPackageId(meta.packageId)
-        log.verbose('setting apps meta', meta.packageId, identifier)
+      const apps = await getWorkspaceApps(activeSpace.directory || '')
+      ensure('apps', !!apps)
+      for (const appInfo of apps) {
+        const identifier = getIdentifierFromPackageId(appInfo.packageId)
+        log.verbose('setting apps meta', appInfo.packageId, identifier)
         if (identifier !== null) {
-          this.appMeta[identifier] = meta
+          this.appMeta[identifier] = appInfo
         } else {
-          log.error(`no identifier found for ${meta.packageId}`)
+          log.error(`no identifier found for ${appInfo.packageId}`)
         }
       }
     },

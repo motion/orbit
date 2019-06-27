@@ -100,7 +100,7 @@ export const AppOpenWorkspaceCommand = new Command<
   {
     // Path to the workspace project in dev
     path: string
-    appIdentifiers: string[]
+    packageIds: string[]
   }
 >('AppOpenWorkspaceCommand')
 

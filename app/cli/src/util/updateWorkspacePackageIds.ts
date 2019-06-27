@@ -3,13 +3,13 @@ import { join } from 'path'
 
 import { reporter } from '../reporter'
 import { setIdentifierToPackageId } from './getPackageId'
-import { getWorkspaceAppPaths } from './getWorkspaceAppPaths'
+import { getWorkspaceApps } from './getWorkspaceApps'
 
 /**
  * Given a workspace, finds all packages, then updates our local cache of identifier => packageId
  */
 export async function updateWorkspacePackageIds(workspaceRoot: string) {
-  const paths = await getWorkspaceAppPaths(workspaceRoot)
+  const paths = await getWorkspaceApps(workspaceRoot)
   reporter.info(
     `Updating workspace package ids: ${workspaceRoot}, got ${paths
       .map(x => x.packageId)

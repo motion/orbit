@@ -16,11 +16,11 @@ type WorkspaceInfo = {
 }
 
 export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
-  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, appIdentifiers }) => {
+  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, packageIds }) => {
     Desktop.setState({
       workspaceState: {
         path,
-        appIdentifiers,
+        packageIds,
       },
     })
 

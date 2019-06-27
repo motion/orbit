@@ -1,4 +1,10 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import {
+  __SERIOUSLY_SECRET,
+  AppDefinition,
+  configureKit,
+  createApp,
+  useAppDefinitions,
+} from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -24,7 +30,7 @@ function updateDefinitions() {
 export function startAppLoadWatch() {
   // watch for updates
   reaction(
-    () => Desktop.state.workspaceState.appIdentifiers,
+    () => Desktop.state.workspaceState.packageIds,
     () => {
       updateDefinitions()
       __SERIOUSLY_SECRET.reloadAppDefinitions()

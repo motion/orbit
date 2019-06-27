@@ -14,6 +14,7 @@ import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
+import { getWorkspaceApps } from './util/getWorkspaceApps'
 
 export type CommandWsOptions = {
   workspaceRoot: string
@@ -30,7 +31,7 @@ type PackageInfo = {
 export async function commandWs(options: CommandWsOptions) {
   reporter.info(`Running command ws`)
 
-  const appIdentifiers = await watchBuildWorkspace(options)
+  const packageIds = await watchBuildWorkspace(options)
   const { mediator } = await getOrbitDesktop()
 
   if (!mediator) {
@@ -41,7 +42,7 @@ export async function commandWs(options: CommandWsOptions) {
     reporter.info('Sending open workspace command')
     await mediator.command(AppOpenWorkspaceCommand, {
       path: options.workspaceRoot,
-      appIdentifiers,
+      packageIds,
     })
   } catch (err) {
     console.log('Error opening app for dev', err.message, err.stack)
@@ -73,6 +74,14 @@ export async function watchBuildWorkspace(
 
   // update last active ws
   configStore.lastActiveWorkspace.set(directory)
+
+  //
+  // TODO we need to really improve this:
+  //   1. we need a way to just load in apps that you are developing
+  //   2. need to remove getWorkspacePackagesInfo in favor of getWorkspaceApps
+  //   3. need to build local apps and installed apps separately (solve #1 by just only ever loading app server for local apps)
+  //   4. that opens up forking apps
+  //
 
   const { appsInfo, appsRootDir } = workspacePackages || (await getWorkspacePackagesInfo(directory))
   if (!appsInfo || !appsInfo.length) {
@@ -192,17 +201,16 @@ export async function watchBuildWorkspace(
 }
 
 /**
- * Sends command to open workspace with latest appIdentifiers
- * Gets appIdentifiers by reading current workspace directory
+ * Sends command to open workspace with latest packageIds
+ * Gets packageIds by reading current workspace directory
  */
 export async function reloadAppDefinitions(directory: string) {
   let orbitDesktop = await getOrbitDesktop()
   if (orbitDesktop) {
-    const { appsInfo } = await getWorkspacePackagesInfo(directory)
-    const appIdentifiers = appsInfo.map(x => x.id)
+    const apps = await getWorkspaceApps(directory)
     await orbitDesktop.command(AppOpenWorkspaceCommand, {
       path: directory,
-      appIdentifiers,
+      packageIds: apps.map(x => x.packageId),
     })
   } else {
     reporter.info('No orbit desktop running, didnt reload active app definitions...')
@@ -212,9 +220,9 @@ export async function reloadAppDefinitions(directory: string) {
 export async function isInWorkspace(packagePath: string, workspacePath: string): Promise<boolean> {
   try {
     const packageInfo = await readJSON(join(packagePath, 'package.json'))
-    const workspaceInfo = await getWorkspacePackagesInfo(workspacePath)
+    const workspaceInfo = await getWorkspaceApps(workspacePath)
     if (packageInfo && workspaceInfo) {
-      return workspaceInfo.appsInfo.some(x => x.id === packageInfo.name)
+      return workspaceInfo.some(x => x.packageId === packageInfo.name)
     }
   } catch (err) {
     reporter.verbose(`Potential err ${err.message}`)

@@ -8,12 +8,13 @@ import { isOrbitApp } from '../command-build'
 type OrbitAppDirDesc = {
   packageId: string
   directory: string
+  isLocal: boolean
 }
 
 /**
  * Finds all valid orbit app package directories in a given workspace
  */
-export async function getWorkspaceAppPaths(workspaceRoot: string) {
+export async function getWorkspaceApps(workspaceRoot: string) {
   try {
     reporter.info(`getWorkspaceAppPaths ${workspaceRoot}`)
     const packageJson = join(workspaceRoot, 'package.json')
@@ -25,12 +26,12 @@ export async function getWorkspaceAppPaths(workspaceRoot: string) {
         reporter.error(`No directory found for package ${workspaceRoot} ${packageId}`)
         return null
       }
-      return { directory, packageId }
+      return { directory, packageId, isLocal: false }
     })
     const wsDirs = await getWorkspaceLocalPackageDirs(workspaceRoot)
     const allDirs = [...packageDirs, ...wsDirs]
     return (await Promise.all(
-      allDirs.map(async ({ directory, packageId }) => {
+      allDirs.map(async ({ directory, packageId, isLocal }) => {
         const apiInfoPath = join(directory, 'dist', 'api.json')
         let apiInfo = null
         if (await pathExists(apiInfoPath)) {
@@ -41,6 +42,7 @@ export async function getWorkspaceAppPaths(workspaceRoot: string) {
           packageJson,
           directory,
           apiInfo,
+          isLocal,
         }
       }),
     )).filter(Boolean)
@@ -58,6 +60,7 @@ async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<Orbi
       res.push({
         directory,
         packageId,
+        isLocal: true,
       })
     }
   }

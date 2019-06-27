@@ -1,6 +1,7 @@
 import { BuildServer, makeWebpackConfig, webpackPromise, getAppConfig } from '@o/build-server'
 import { reporter } from './reporter'
 import { pathExists } from 'fs-extra'
+import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 //
 // TODO we need to really improve this:
@@ -13,7 +14,7 @@ import { pathExists } from 'fs-extra'
 export class WorkspaceManager {
   directory = ''
 
-  setWorkspace(directory: string) {
+  setWorkspace(directory: string, packages?: any) {
     this.directory = directory
   }
 
@@ -21,15 +22,18 @@ export class WorkspaceManager {
     this.watchWorkspace()
   }
 
-  watchWorkspace() {
-    const server = new BuildServer()
-    await server.start()
-    await updateWorkspacePackageIds(options.workspaceRoot)
+  async watchWorkspace() {
+    this.watchWorkspaceApps(apps => {
+      const config = await this.getAppsConfig()
+      const server = new BuildServer(config)
+      await server.start()
+      await updateWorkspacePackageIds(this.directory)
+    })
   }
 
   async getAppsConfig() {
     const { appsInfo, appsRootDir } =
-      workspacePackages || (await getWorkspacePackagesInfo(directory))
+      workspacePackages || (await getWorkspacePackagesInfo(this.directory))
     if (!appsInfo || !appsInfo.length) {
       reporter.info('No apps found')
     }

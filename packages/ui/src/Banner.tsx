@@ -138,6 +138,10 @@ export function useBanner(): BannerHandle {
 
   return {
     set: useCallback((props: Partial<BannerProps>) => {
+      if (!bannerStore) {
+        console.error('No banner store!')
+        return
+      }
       if (banner.current) {
         banner.current.set(props)
       } else {

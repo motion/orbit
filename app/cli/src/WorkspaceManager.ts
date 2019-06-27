@@ -11,9 +11,9 @@ import { pathExists } from 'fs-extra'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 import { Logger } from '@o/logger'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
-import { debounce } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
-import { writeFile } from 'fs'
+import { writeFile } from 'fs-extra'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 //
@@ -49,6 +49,8 @@ export class WorkspaceManager {
   directory = ''
   options: WorkspaceManagerOpts
   disposables = new Set<{ id: string; dispose: Function }>()
+  buildConfig = null
+  buildServer: BuildServer | null = null
 
   setWorkspace(opts: WorkspaceManagerOpts) {
     this.directory = opts.directory
@@ -84,9 +86,15 @@ export class WorkspaceManager {
   onWorkspaceChange = debounce(async () => {
     log.info(`See workspace change`)
     const config = await this.getAppsConfig()
-    const server = new BuildServer(config)
-    await server.start()
-    await updateWorkspacePackageIds(this.directory)
+
+    if (!isEqual(this.buildConfig, config)) {
+      if (this.buildServer) {
+        this.buildServer.stop()
+      }
+      this.buildServer = new BuildServer(config)
+      await this.buildServer.start()
+      await updateWorkspacePackageIds(this.directory)
+    }
   }, 50)
 
   async getAppsConfig() {
@@ -145,17 +153,15 @@ export class WorkspaceManager {
     }
 
     if (entry) {
-      await writeFile(
-        join(entry, '..', '..', 'appDefinitions.js'),
-        `
-        // all apps
-        ${appsInfo
-          .map(app => {
-            return `export const ${app.id.replace(/[^a-zA-Z]/g, '')} = require('${app.id}')`
-          })
-          .join('\n')}
-      `,
-      )
+      const appDefinitionsSrc = `
+      // all apps
+      ${appsInfo
+        .map(app => {
+          return `export const ${app.id.replace(/[^a-zA-Z]/g, '')} = require('${app.id}')`
+        })
+        .join('\n')}
+    `
+      await writeFile(join(entry, '..', '..', 'appDefinitions.js'), appDefinitionsSrc)
     }
 
     // we pass in extra webpack config for main app

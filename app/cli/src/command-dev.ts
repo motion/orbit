@@ -52,9 +52,8 @@ export async function commandDev(options: CommandDevOptions) {
       })
     })
   } catch (err) {
-    console.log('Error opening app for dev', err.message, err.stack)
+    reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
-  return
 }
 
 /**

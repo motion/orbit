@@ -30,16 +30,16 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'he
 
 const useWindowAttachments = {
   'bottom right': memoize((px: number, py: number) => (width: number, height: number) =>
-    useWindowSize({ adjust: ([x, y]) => [x - width - px, y - height - py] }),
+    useWindowSize({ adjust: ([x, y]) => [x - width - px, y - height - py], throttle: 60 }),
   ),
   'bottom left': memoize((px: number, py: number) => (_, height: number) =>
-    useWindowSize({ adjust: ([x, y]) => [x + px, y - height - py] }),
+    useWindowSize({ adjust: ([x, y]) => [x + px, y - height - py], throttle: 60 }),
   ),
   'top left': memoize((px: number, py: number) => (_, _2) =>
-    useWindowSize({ adjust: ([x, y]) => [x + px, y + py] }),
+    useWindowSize({ adjust: ([x, y]) => [x + px, y + py], throttle: 60 }),
   ),
   'top right': memoize((px: number, py: number) => (width: number, _) =>
-    useWindowSize({ adjust: ([x, y]) => [x - width - px, y + py] }),
+    useWindowSize({ adjust: ([x, y]) => [x - width - px, y + py], throttle: 60 }),
   ),
 }
 

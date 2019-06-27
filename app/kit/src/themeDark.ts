@@ -20,8 +20,8 @@ const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes translucent
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background.alpha(0.25),
-      borderColor: alternates[key].borderColor.alpha(0.3),
+      background: alternates[key].background.darken(0.25),
+      borderColor: alternates[key].borderColor.darken(0.3),
       color: '#fff',
     })
   }

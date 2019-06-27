@@ -12,6 +12,7 @@ import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
+import { useWindowSize } from './hooks/useWindowSize'
 
 export type BannerProps = {
   /** Give the banner a title */
@@ -100,7 +101,7 @@ export const ProvideBanner = memo(
           >
             <FlipAnimate>
               {bannerStore.banners.map(banner => {
-                const id = JSON.stringify(banner)
+                const id = JSON.stringify(banner).slice(0, 100)
                 return (
                   <FlipAnimateItem id={id} key={id} animateKey={banner.type} onExit={exitAnimate}>
                     <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
@@ -172,6 +173,8 @@ export function useBanners() {
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
 export const Banner = ({ type, title, message, close, timeout, ...rest }: BannerViewProps) => {
+  const [width, height] = useWindowSize()
+
   useEffect(() => {
     if (isDefined(timeout)) {
       let tm = setTimeout(close, timeout * 1000)
@@ -191,11 +194,13 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
       overflow="hidden"
       elevation={3}
       alignSelf="flex-end"
+      maxWidth={width - 80}
+      maxHeight={height - 80}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
       <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>
-        <Col space="xs">
+        <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>
         </Col>

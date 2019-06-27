@@ -586,10 +586,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
         },
   }
 
-  if (props.flex === 1) {
-    console.log('res', res.flex)
-  }
-
   return res
 })
 

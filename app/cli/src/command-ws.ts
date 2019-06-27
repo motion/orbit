@@ -67,7 +67,6 @@ export async function watchBuildWorkspace(
     reporter.panic(
       `\nNot inside orbit workspace, add "config": { "orbitWorkspace": true } } to the package.json`,
     )
-    return
   }
 
   const directory = options.workspaceRoot

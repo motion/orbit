@@ -464,30 +464,32 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
+  const surfaceFrameProps = {
+    className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
+    ref: forwardRef,
+    themeSelect,
+    lineHeight,
+    pad,
+    padding,
+    borderWidth,
+    borderPosition,
+    alt,
+    applyPsuedoColors: true,
+    disabled,
+    ...(!showElement && elementProps),
+    ...throughProps,
+    ...viewProps,
+    ...segmentedStyle,
+    ...childrenProps,
+    ...(!noInnerElement && { tagName }),
+    opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+  }
+
   return (
     <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
-          <SurfaceFrame
-            className={`${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`}
-            ref={forwardRef}
-            themeSelect={themeSelect}
-            lineHeight={lineHeight}
-            pad={pad}
-            padding={padding}
-            borderWidth={borderWidth}
-            borderPosition={borderPosition}
-            alt={alt}
-            applyPsuedoColors
-            disabled={disabled}
-            {...!showElement && elementProps}
-            {...throughProps}
-            {...viewProps}
-            {...segmentedStyle}
-            {...childrenProps}
-            {...!noInnerElement && { tagName }}
-            opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
-          />
+          <SurfaceFrame {...surfaceFrameProps} />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
@@ -517,10 +519,6 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
-
-  '&:active .ui-glint-contain': {
-    opacity: 0,
-  },
 
   circular: {
     alignItems: 'center',
@@ -563,7 +561,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
     boxShadow = [...(boxShadow || []), getElevation(props).boxShadow]
   }
 
-  return {
+  const res = {
     boxShadow,
     fontWeight: props.fontWeight || theme.fontWeight,
     overflow: props.overflow || theme.overflow,
@@ -587,6 +585,12 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
           ...propStyles['&:hover'],
         },
   }
+
+  if (props.flex === 1) {
+    console.log('res', res.flex)
+  }
+
+  return res
 })
 
 const perfectCenterStyle = props => {

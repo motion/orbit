@@ -1,6 +1,31 @@
-import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
+import {
+  App,
+  AppDefinition,
+  AppIcon,
+  AppMainView,
+  AppViewProps,
+  createApp,
+  CurrentAppBitContext,
+  isDataDefinition,
+  removeApp,
+  useActiveAppsWithDefinition,
+  useActiveDataAppsWithDefinition,
+  useAppDefinitions,
+  useAppWithDefinition,
+} from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
+import {
+  Button,
+  Col,
+  Icon,
+  List,
+  ListItemProps,
+  Section,
+  SubSection,
+  SubTitle,
+  useAsync,
+  useAsyncFn,
+} from '@o/ui'
 import React from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -217,7 +242,7 @@ function AppSettings(props: { appId: number }) {
       {!!definition.app && <AppsMainNew customizeColor app={app} />}
 
       {!!definition.settings && (
-        <SubSection minHeight={150} title="Settings" padInner={0}>
+        <SubSection flex={1} title="Settings" padInner={0}>
           <AppMainView identifier={definition.id} viewType="settings" />
         </SubSection>
       )}

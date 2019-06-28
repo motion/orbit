@@ -8,11 +8,11 @@ import { Button } from './buttons/Button'
 import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
+import { useWindowSize } from './hooks/useWindowSize'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
-import { useWindowSize } from './hooks/useWindowSize'
 
 export type BannerProps = {
   /** Give the banner a title */
@@ -117,9 +117,9 @@ export const ProvideBanner = memo(
 )
 
 const exitAnimate = (el, _index, finish) => {
-  console.log('one exit', el)
-  el.style.background = 'green'
-  setTimeout(finish, 1000)
+  console.log('on exit banner, can animate here', el)
+  // el.style.background = 'green'
+  setTimeout(finish)
 }
 
 export type BannerHandle = Pick<BannerItem, 'close' | 'set'>

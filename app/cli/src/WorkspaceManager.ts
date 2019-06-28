@@ -8,7 +8,7 @@ import {
 import { Logger } from '@o/logger'
 import { AppMeta } from '@o/models'
 import { watch } from 'chokidar'
-import { ensureDir, ensureSymlink, pathExists } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
@@ -99,11 +99,12 @@ export class WorkspaceManager {
 
   private async getAppsConfig() {
     this.apps = await getWorkspaceApps(this.directory)
+
     if (!this.apps.length) {
       reporter.info('No apps found')
     }
 
-    const dllFile = join(__dirname, 'manifest.json')
+    const dllFile = join(this.directory, 'dist', 'manifest.json')
     log.info(`dllFile ${dllFile}`)
 
     // link local apps into local node_modules
@@ -127,9 +128,9 @@ export class WorkspaceManager {
       target: 'web',
       publicPath: '/',
       outputFile: '[name].apps.js',
-      // output: {
-      //   library: 'apps',
-      // },
+      output: {
+        library: 'apps',
+      },
       dll: dllFile,
     }
 
@@ -146,6 +147,9 @@ export class WorkspaceManager {
       hot: true,
     })
 
+    /**
+     * Get the monorepo in development mode and build orbit
+     */
     let entry = ''
     let extraConfig
     const isInMonoRepo = await getIsInMonorepo()
@@ -160,7 +164,42 @@ export class WorkspaceManager {
       }
     }
 
-    // we pass in extra webpack config for main app
+    /**
+     * Writes out a file webpack will understand and import properly
+     *
+     * Notes:
+     *
+     *  It seems that webpack doesn't like dynamic imports when dealing with DLLs.
+     *  So for now we do this. In production we'd need something different. My ideas
+     *  for running in prod:
+     *
+     *   1. We build orbit itself as a static dll, but without the apps part
+     *   2. We have it look for a global variable that has the apps
+     *   3. The apps are a DLL as they are now
+     *   4. Right now we build all of orbit (see isInMonoRepo above) in development mode,
+     *      this lets us develop all of orbit at once nicely in dev. But we'd instead
+     *      have the orbit DLL in production, and instead of importing orbit we'd have some
+     *      smaller webpack config just for improting the apps, and injecting them into orbit
+     *      via the global variable or similar.
+     *
+     */
+    const appDefinitionsSrc = `
+// all apps
+${this.apps
+  .map((app, index) => {
+    return `export const app_${index} = require('${app.packageId}')`
+  })
+  .join('\n')}`
+    const distDir = join(entry, '..', '..', 'appDefinitions.js')
+    await ensureDir(distDir)
+    const appDefsFile = join(distDir, 'appDefinitions.js')
+    reporter.info(`appDefsFile ${appDefsFile}`)
+    await writeFile(appDefsFile, appDefinitionsSrc)
+
+    /**
+     * Allows for our orbit app to define some extra configuration
+     * Could be used similarly in the future, if wanted, for apps too.
+     */
     let extraEntries = {}
     let extraMainConfig = null
 
@@ -183,6 +222,9 @@ export class WorkspaceManager {
       }
     }
 
+    /**
+     * The orbit main app config
+     */
     const wsConfig = await makeWebpackConfig(
       {
         name: 'main',

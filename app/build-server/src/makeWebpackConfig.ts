@@ -3,7 +3,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
@@ -290,21 +289,25 @@ export function makeWebpackConfig(
 
       !!dll &&
         new webpack.DllPlugin({
-          name: 'main',
+          name:
+            output.library ||
+            (() => {
+              throw new Error(`need output.library`)
+            })(),
           path: dll,
         }),
 
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context,
+          context: '.',
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-      }),
+      // new (require('bundle-analyzer-plugin').default)({
+      //   analyzerMode: 'static',
+      // })
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean) as webpack.Plugin[],

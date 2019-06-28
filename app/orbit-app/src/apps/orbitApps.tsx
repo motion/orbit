@@ -4,7 +4,6 @@ import {
   configureKit,
   createApp,
   useAppDefinitions,
-  command,
 } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
@@ -21,18 +20,19 @@ import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
-import { AppGetWorkspaceAppsCommand } from '@o/models'
 
 let dynamicApps: AppDefinition[] = []
 
 async function updateDefinitions() {
-  console.log('got app', require('@o/demo-app-api-grid'))
-
-  const apps = await command(AppGetWorkspaceAppsCommand)
-  const allApps = apps.map(app => {
-    return require(app.packageId).default
-  })
-  dynamicApps = allApps
+  const rawApps = require('../../appDefinitions.js')
+  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
+  // this doesn't work because dynamic require doesn't use manifest
+  // TODO we need to do something like this
+  // const apps = await command(AppGetWorkspaceAppsCommand)
+  // const allApps = apps.map(app => {
+  //   return require(app.packageId).default
+  // })
+  // dynamicApps = allApps
 }
 
 export async function startAppLoadWatch() {

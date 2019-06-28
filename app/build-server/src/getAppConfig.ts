@@ -18,11 +18,12 @@ export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack
         typeorm: 'typeorm',
       },
       ignore: ['electron-log', '@o/worker-kit'],
+      ...props,
       output: {
         library: '[name]',
         libraryTarget: 'umd',
+        ...props.output,
       },
-      ...props,
     },
     extraConfig,
   )

@@ -1,4 +1,11 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import {
+  __SERIOUSLY_SECRET,
+  AppDefinition,
+  configureKit,
+  createApp,
+  useAppDefinitions,
+  command,
+} from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -14,11 +21,17 @@ import QueryBuilderApp from './QueryBuilderApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
+import { AppGetWorkspaceAppsCommand } from '@o/models'
 
-let dynamicApps: AppDefinition[] = requireDynamicApps()
+let dynamicApps: AppDefinition[] = []
 
-function updateDefinitions() {
-  dynamicApps = requireDynamicApps()
+async function updateDefinitions() {
+  const apps = await command(AppGetWorkspaceAppsCommand)
+  const allApps = apps.map(app => {
+    console.log('requring', app.packageId)
+    return require(app.packageId).default
+  })
+  dynamicApps = allApps
 }
 
 export function startAppLoadWatch() {
@@ -30,13 +43,6 @@ export function startAppLoadWatch() {
       __SERIOUSLY_SECRET.reloadAppDefinitions()
     },
   )
-}
-
-function requireDynamicApps() {
-  // appDefinitions.js
-  const currentWorkspace = 
-  const rawApps = require('../../appDefinitions.js')
-  return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
 
 const LoadingApp = createApp({

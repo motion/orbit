@@ -1,5 +1,4 @@
 import { getGlobalConfig } from '@o/config'
-import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'

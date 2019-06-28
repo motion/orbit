@@ -107,13 +107,22 @@ export class WorkspaceManager {
     const dllFile = join(this.directory, 'dist', 'manifest.json')
     log.info(`dllFile ${dllFile}`)
 
+    const isInMonoRepo = await getIsInMonorepo()
+
     // link local apps into local node_modules
     await ensureDir(join(this.directory, 'node_modules'))
     await Promise.all(
       this.apps
         .filter(x => x.isLocal)
         .map(async app => {
-          const where = join(this.directory, 'node_modules', ...app.packageId.split('/'))
+          const where = join(
+            this.directory,
+            // FOR NOW lets link into monorepo root if need be
+            // need to figure out how to control dlls a bit better
+            ...(isInMonoRepo ? ['..', '..'] : []),
+            'node_modules',
+            ...app.packageId.split('/'),
+          )
           log.info(`Ensuring symlink from ${app.directory} to ${where}`)
           await ensureSymlink(app.directory, where)
         }),
@@ -152,7 +161,6 @@ export class WorkspaceManager {
      */
     let entry = ''
     let extraConfig
-    const isInMonoRepo = await getIsInMonorepo()
     if (isInMonoRepo) {
       // main entry for orbit-app
       const monoRoot = join(__dirname, '..', '..', '..')
@@ -190,9 +198,7 @@ ${this.apps
     return `export const app_${index} = require('${app.packageId}')`
   })
   .join('\n')}`
-    const distDir = join(entry, '..', '..', 'appDefinitions.js')
-    await ensureDir(distDir)
-    const appDefsFile = join(distDir, 'appDefinitions.js')
+    const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
     reporter.info(`appDefsFile ${appDefsFile}`)
     await writeFile(appDefsFile, appDefinitionsSrc)
 

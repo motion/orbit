@@ -25,6 +25,7 @@ let dynamicApps: AppDefinition[] = []
 
 async function updateDefinitions() {
   const rawApps = require('../../appDefinitions.js')
+  console.log('rawApps', rawApps)
   dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
   // this doesn't work because dynamic require doesn't use manifest
   // TODO we need to do something like this

@@ -4,6 +4,7 @@ import { CloseAppCommand } from '@o/models'
 import { forceKillProcess } from '@o/orbit-fork-process'
 import { ChildProcess } from 'child_process'
 import { remove } from 'lodash'
+import { Electron } from '@o/stores'
 
 const log = new Logger('command:close-app')
 
@@ -13,6 +14,12 @@ let appProcesses: AppProcess[] = []
 
 export const CloseAppResolver: any = resolveCommand(CloseAppCommand, async ({ appId }) => {
   killAppProcess(appId)
+  Electron.setState({
+    appWindows: {
+      // delete window
+      [appId]: null,
+    },
+  })
 })
 
 export function addAppProcess(info: AppProcess) {

@@ -96,6 +96,10 @@ class AppStore {
     return this.appConf.appRole
   }
 
+  get isMainApp() {
+    return this.appRole === 'main'
+  }
+
   get isEditing() {
     return this.appRole === 'editing'
   }

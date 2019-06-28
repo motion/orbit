@@ -94,7 +94,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
       console.log('unloading!', shouldCloseApp, shouldCloseTab)
 
-      if (isEditing) {
+      if (App.isMainApp === false) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
           command(CloseAppCommand, { appId: App.appConf.appId })

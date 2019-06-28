@@ -49,7 +49,7 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
     log.info(`starting cli workspace ${Config.paths.cli}`)
     const cli = require(Config.paths.cli)
 
-    const wsManager = cli.commandWs({
+    const wsManager = await cli.commandWs({
       workspaceRoot: path,
       daemon: true,
     })

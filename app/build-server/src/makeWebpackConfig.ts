@@ -3,6 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
@@ -300,6 +301,10 @@ export function makeWebpackConfig(
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
+
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+      }),
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean) as webpack.Plugin[],

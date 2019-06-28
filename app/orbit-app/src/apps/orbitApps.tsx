@@ -26,20 +26,23 @@ import { AppGetWorkspaceAppsCommand } from '@o/models'
 let dynamicApps: AppDefinition[] = []
 
 async function updateDefinitions() {
+  console.log('got app', require('@o/demo-app-api-grid'))
+
   const apps = await command(AppGetWorkspaceAppsCommand)
   const allApps = apps.map(app => {
-    console.log('requring', app.packageId)
     return require(app.packageId).default
   })
   dynamicApps = allApps
 }
 
-export function startAppLoadWatch() {
+export async function startAppLoadWatch() {
+  await updateDefinitions()
+
   // watch for updates
   reaction(
     () => Desktop.state.workspaceState.packageIds,
-    () => {
-      updateDefinitions()
+    async () => {
+      await updateDefinitions()
       __SERIOUSLY_SECRET.reloadAppDefinitions()
     },
   )

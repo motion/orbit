@@ -1,4 +1,10 @@
-import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
+import {
+  BuildServer,
+  getAppConfig,
+  makeWebpackConfig,
+  WebpackParams,
+  webpackPromise,
+} from '@o/build-server'
 import { Logger } from '@o/logger'
 import { AppMeta } from '@o/models'
 import { watch } from 'chokidar'
@@ -98,6 +104,7 @@ export class WorkspaceManager {
     }
 
     const dllFile = join(__dirname, 'manifest.json')
+    log.info(`dllFile ${dllFile}`)
 
     // link local apps into local node_modules
     await ensureDir(join(this.directory, 'node_modules'))
@@ -120,9 +127,9 @@ export class WorkspaceManager {
       target: 'web',
       publicPath: '/',
       outputFile: '[name].apps.js',
-      output: {
-        library: 'apps',
-      },
+      // output: {
+      //   library: 'apps',
+      // },
       dll: dllFile,
     }
 

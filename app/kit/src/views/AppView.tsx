@@ -1,23 +1,9 @@
 import { isEqual } from '@o/fast-compare'
 import { AppViewProps } from '@o/models'
-import {
-  ItemPropsProviderSmall,
-  Loading,
-  memoIsEqualDeep,
-  ErrorBoundary,
-  CenteredText,
-} from '@o/ui'
+import { CenteredText, ErrorBoundary, ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
-import React, {
-  createContext,
-  forwardRef,
-  Suspense,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { createContext, forwardRef, Suspense, useContext, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'

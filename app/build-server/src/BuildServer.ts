@@ -74,4 +74,8 @@ export class BuildServer {
       })
     })
   }
+
+  stop() {
+    this.server.removeAllListeners()
+  }
 }

@@ -1,6 +1,6 @@
 import { produce } from '@o/kit'
 import { employees } from '@o/mock-data'
-import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Title, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Tree } from '@o/ui'
 import React, { useState } from 'react'
 
 const treeData = {
@@ -80,7 +80,7 @@ export function DemoLayoutApp() {
   const [treeState, setTreeState] = useState(treeData)
   const [selected, setSelected] = useState(0)
   return (
-    <Scale size={1.1}>
+    <Scale size={1}>
       <Layout type="row">
         <Pane title="Select Items" resizable>
           <Tree
@@ -121,8 +121,7 @@ export function DemoLayoutApp() {
                 }}
               />
             </Pane>
-            <Pane title="Elements" flex={2} pad collapsable>
-              <Title>Description</Title>
+            <Pane title="Elements" flex={2} pad collapsable space>
               <SubTitle>Sub title</SubTitle>
               <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
             </Pane>

@@ -5,6 +5,8 @@ import { join } from 'path'
 import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
+import { AppDefinition } from '@o/models'
+import { getAppEntry } from './command-dev'
 
 export type CommandBuildOptions = {
   projectRoot: string
@@ -13,16 +15,8 @@ export type CommandBuildOptions = {
   verbose?: boolean
   // we can do more careful building for better errors
   debugBuild?: boolean
-}
-
-export const isOrbitApp = async (rootDir: string) => {
-  try {
-    const pkg = await readJSON(join(rootDir, 'package.json'))
-    return pkg.config && pkg.config.orbitApp === true
-  } catch (err) {
-    reporter.error(err.message, err)
-  }
-  return false
+  // if you dont want to build the whole thing in dev mode
+  onlyInfo?: boolean
 }
 
 export async function commandBuild(options: CommandBuildOptions) {
@@ -36,22 +30,23 @@ export async function commandBuild(options: CommandBuildOptions) {
   }
 
   try {
-    const pkg = await readJSON(join(options.projectRoot, 'package.json'))
+    const pkg = await readPackageJson(options.projectRoot)
     if (!pkg) {
-      console.error('No package found!')
+      reporter.error('No package found!')
       return null
     }
 
-    const entry = join(options.projectRoot, pkg['ts:main'] || pkg.main)
+    const entry = await getAppEntry(options.projectRoot)
 
     if (!entry || !(await pathExists(entry))) {
-      console.error(`No main entry found at ${entry}`)
-      return null
+      reporter.panic(
+        `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
+      )
     }
 
     await Promise.all([
       // bundle app
-      bundleApp(entry, pkg, options),
+      bundleApp(entry, options),
       // generate api types
       commandGenTypes({
         projectRoot: options.projectRoot,
@@ -78,70 +73,114 @@ type BuildInfo = {
   workers: boolean
 }
 
+export const isOrbitApp = async (rootDir: string) => {
+  const pkg = await readPackageJson(rootDir)
+  return pkg && pkg.config && pkg.config.orbitApp === true
+}
+
+async function readPackageJson(appRoot: string) {
+  const packagePath = join(appRoot, 'package.json')
+  reporter.verbose(`isOrbitApp ${packagePath}`)
+  if (!(await pathExists(packagePath))) {
+    return null
+  }
+  try {
+    return await readJSON(packagePath)
+  } catch (err) {
+    reporter.error(err.message, err)
+  }
+  return null
+}
+
 function getOrbitVersion() {
   return require('../package.json').version
 }
 
-async function bundleApp(entry: string, pkg: any, options: CommandBuildOptions) {
+export async function bundleApp(entry: string, options: CommandBuildOptions) {
   reporter.info(`Running orbit build`)
+  const pkg = await readPackageJson(options.projectRoot)
 
   // build appInfo first, we can then use it to determine if we need to build web/node
   reporter.info(`Building appInfo`)
-  const appInfoConf = await getAppInfoConfig(entry, pkg, options)
+  const appInfoConf = await getAppInfoConfig(entry, pkg.name, options)
   await webpackPromise([appInfoConf], {
     loud: options.verbose,
   })
 
   reporter.info(`Reading appInfo`)
-  const appInfo = require(join(options.projectRoot, 'dist', 'appInfo.js')).default
+  const appInfo = getAppInfo(options.projectRoot)
   reporter.info(`apiInfo: ${Object.keys(appInfo).join(',')}`)
 
-  const hasKey = (...keys: string[]) => Object.keys(appInfo).some(x => keys.some(key => x === key))
-
-  if (hasKey('app')) {
+  if (hasKey(appInfo, 'app')) {
     reporter.info(`Found web app, building`)
-    const webConf = getWebAppConfig(entry, pkg, options)
+    const webConf = getWebAppConfig(entry, pkg.name, options)
     await webpackPromise([webConf], {
       loud: options.verbose,
     })
   }
 
-  if (hasKey('graph', 'workers', 'api')) {
+  if (hasKey(appInfo, 'graph', 'workers', 'api')) {
     reporter.info(`Found node app, building`)
-    const nodeConf = await getNodeAppConfig(entry, pkg, options)
+    const nodeConf = await getNodeAppConfig(entry, pkg.name, options)
     await webpackPromise([nodeConf], {
       loud: options.verbose,
     })
   }
 
-  const buildId = Date.now()
-
   reporter.info(`Writing out app build information`)
 
-  await setBuildInfo(options.projectRoot, {
+  await updateBuildInfo(options.projectRoot)
+}
+
+const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
+  Object.keys(appInfo).some(x => keys.some(key => x === key))
+
+function getAppInfo(appRoot: string): AppDefinition {
+  return require(join(appRoot, 'dist', 'appInfo.js')).default
+}
+
+async function updateBuildInfo(appRoot: string) {
+  const appInfo = getAppInfo(appRoot)
+  const pkg = await readPackageJson(appRoot)
+  const buildId = Date.now()
+  await setBuildInfo(appRoot, {
     identifier: appInfo.id,
     name: appInfo.name,
     buildId,
-    appVersion: pkg.version,
+    appVersion: pkg ? pkg.version : '0.0.0',
     orbitVersion: getOrbitVersion(),
-    api: hasKey('api'),
-    app: hasKey('app'),
-    graph: hasKey('graph'),
-    workers: hasKey('workers'),
+    api: hasKey(appInfo, 'api'),
+    app: hasKey(appInfo, 'app'),
+    graph: hasKey(appInfo, 'graph'),
+    workers: hasKey(appInfo, 'workers'),
   })
-
   const appBuildInfo = configStore.appBuildInfo.get() || {}
   configStore.appBuildInfo.set({
     ...appBuildInfo,
-    [options.projectRoot]: {
+    [appRoot]: {
       buildId,
     },
   })
 }
 
-function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+const buildInfoDir = x => join(x, 'dist', 'buildInfo.json')
+
+async function setBuildInfo(projectRoot: string, next: BuildInfo) {
+  await ensureDir(join(projectRoot, 'dist'))
+  await writeJSON(buildInfoDir(projectRoot), next)
+}
+
+export async function getBuildInfo(projectRoot: string) {
+  const dir = buildInfoDir(projectRoot)
+  if (await pathExists(dir)) {
+    return await readJSON(dir)
+  }
+  return null
+}
+
+function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
   return getAppConfig({
-    name: pkg.name,
+    name,
     context: options.projectRoot,
     entry: [entry],
     target: 'web', // TODO electron-renderer
@@ -152,10 +191,10 @@ function getWebAppConfig(entry: string, pkg: any, options: CommandBuildOptions) 
   })
 }
 
-async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
   return getAppConfig(
     {
-      name: pkg.name,
+      name,
       context: options.projectRoot,
       entry: [entry],
       target: 'node',
@@ -164,6 +203,10 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
       mode: 'development',
     },
     {
+      node: {
+        __dirname: false,
+        __filename: false,
+      },
       externals: [
         // externalize everything but local files
         function(_context, request, callback) {
@@ -180,10 +223,10 @@ async function getNodeAppConfig(entry: string, pkg: any, options: CommandBuildOp
 }
 
 // used just to get the information like id/name from the entry file
-async function getAppInfoConfig(entry: string, pkg: any, options: CommandBuildOptions) {
+async function getAppInfoConfig(entry: string, name: string, options: CommandBuildOptions) {
   return await makeWebpackConfig(
     {
-      name: pkg.name,
+      name,
       context: options.projectRoot,
       entry: [entry],
       target: 'node',
@@ -212,23 +255,3 @@ async function getAppInfoConfig(entry: string, pkg: any, options: CommandBuildOp
     },
   )
 }
-
-async function setBuildInfo(projectRoot: string, next: BuildInfo) {
-  await ensureDir(join(projectRoot, 'dist'))
-  await writeJSON(join(projectRoot, 'dist', 'buildInfo.json'), next)
-}
-
-// async function isBuildUpToDate(options: CommandBuildOptions) {
-//   const config = configStore.appBuildInfo.get() || {}
-//   const configInfo = config[options.projectRoot]
-//   const buildInfo = await getBuildInfo(options.projectRoot)
-//   return configInfo && buildInfo && configInfo.buildId === buildInfo.buildId
-// }
-
-// async function getBuildInfo(projectRoot: string): Promise<BuildInfo | null> {
-//   const file = join(projectRoot, 'dist', 'buildInfo.json')
-//   if (await pathExists(file)) {
-//     return (await readJSON(file)) as BuildInfo
-//   }
-//   return null
-// }

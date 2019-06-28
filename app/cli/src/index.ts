@@ -18,7 +18,7 @@ export * from './util/requireAppDefinition'
 export * from './util/requireWorkspaceDefinitions'
 export * from './util/getPackageId'
 export * from './util/findPackage'
-export * from './util/getWorkspaceAppPaths'
+export * from './util/getWorkspaceApps'
 export * from './util/updateWorkspacePackageIds'
 export * from './util/getIsInMonorepo'
 

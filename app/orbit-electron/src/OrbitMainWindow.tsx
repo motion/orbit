@@ -14,7 +14,7 @@ import { OrbitAppWindow } from './OrbitAppWindow'
 import { moveWindowToCurrentSpace } from './helpers/moveWindowToCurrentSpace'
 
 const log = new Logger('OrbitMainWindow')
-const isFirstOrbitWindow = Electron.appId === 0
+// const isFirstOrbitWindow = Electron.appId === 0
 
 const setScreenSize = () => {
   const screenSize = getScreenSize()
@@ -38,7 +38,7 @@ class OrbitMainWindowStore {
   orbitRef: BrowserWindow | null = null
   alwaysOnTop = true
   hasMoved = false
-  isVisible = false
+  isReady = false
   size = [0, 0]
   position = [0, 0]
   initialState = {
@@ -99,23 +99,20 @@ class OrbitMainWindowStore {
     () => Electron.state.showOrbitMain,
     shown => {
       ensure('enabled', !!this.props.enabled)
+      ensure('Electron.isMainWindow', Electron.isMainWindow)
       focusApp(shown)
     },
   )
 
   get show() {
-    if (Electron.appConf.appRole === 'main') {
-      return Electron.state.showOrbitMain
-    }
-    if (isFirstOrbitWindow) {
-      return this.isVisible
+    if (Electron.isMainWindow) {
+      return this.isReady && Electron.state.showOrbitMain
     }
     return true
   }
 
-  setIsVisible = (next = true) => {
-    log.info('setIsVisible', next)
-    this.isVisible = next
+  setIsReady = () => {
+    this.isReady = true
   }
 }
 
@@ -138,11 +135,11 @@ export function OrbitMainWindow() {
     <OrbitAppWindow
       appId={appId}
       show={store.show}
-      onReadyToShow={() => store.setIsVisible()}
+      onReadyToShow={store.setIsReady}
       // TODO i think i need to make this toggle on show for a few ms, then go back to normal
       // or maybe simpler imperative API, basically need to bring it to front and then not have it hog the front
       focus={isMainWindow}
-      // alwaysOnTop={store.isVisible ? [store.alwaysOnTop, 'floating', 1] : false}
+      // alwaysOnTop={store.isReady ? [store.alwaysOnTop, 'floating', 1] : false}
       forwardRef={store.handleRef}
       defaultPosition={store.initialState.position}
       defaultSize={store.initialState.size}

@@ -11,7 +11,7 @@ type SuspenseProps = LoadingProps & {
   fallback?: NonNullable<React.ReactNode> | null
 }
 
-export class SuspenseWithBanner extends React.Component<SuspenseProps> {
+export class SuspenseWithBanner extends React.Component<SuspenseProps, { error: string }> {
   state = {
     error: null,
   }
@@ -22,7 +22,7 @@ export class SuspenseWithBanner extends React.Component<SuspenseProps> {
 
   componentDidCatch(error) {
     console.warn('catching error', error)
-    this.setState({ error })
+    this.setState({ error: `${error.message}\n${error.stack}` })
   }
 
   render() {
@@ -47,7 +47,8 @@ function ErrorHandler(props: { error: string; children: any; onClose: () => void
 
   useEffect(() => {
     banner.set({
-      message: props.error,
+      type: 'error',
+      message: `${props.error}`,
       onClose: props.onClose,
     })
   }, [props.error])

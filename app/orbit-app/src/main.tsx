@@ -100,7 +100,7 @@ async function startApp(forceRefresh = false) {
 
   let elements = <OrbitRoot />
 
-  if (location.search.indexOf('react.profile') > 0) {
+  if (window.location.search.indexOf('react.profile') > 0) {
     elements = (
       <React.unstable_Profiler id="Application" onRender={console.log.bind(console)}>
         {elements}

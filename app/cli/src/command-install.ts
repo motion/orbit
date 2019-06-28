@@ -26,6 +26,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   const command = await yarnOrNpm()
   const packageId = await getPackageId(options.identifier, {
     search: true,
+    rescanWorkspacePath: options.directory,
   })
 
   if (!packageId) {

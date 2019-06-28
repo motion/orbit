@@ -36,6 +36,7 @@ import {
   CloseAppCommand,
   AppMetaCommand,
   AuthAppCommand,
+  AppGetWorkspaceAppsCommand,
   StateModel,
   StateEntity,
   AppStatusModel,
@@ -83,6 +84,7 @@ import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceReso
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
+import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
 
 const log = new Logger('desktop')
 
@@ -92,23 +94,24 @@ export class OrbitDesktopRoot {
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
 
-  private config = getGlobalConfig()
-  private authServer: AuthServer
-  private graphServer: GraphServer
-  private onboardManager: OnboardManager
-  private disposed = false
-  private webServer: WebServer
-  private bonjour: bonjour.Bonjour
-  private bonjourService: bonjour.Service
-  private appMiddleware: AppMiddleware
+  config = getGlobalConfig()
+  authServer: AuthServer
+  graphServer: GraphServer
+  onboardManager: OnboardManager
+  disposed = false
+  webServer: WebServer
+  bonjour: bonjour.Bonjour
+  bonjourService: bonjour.Service
+  appMiddleware: AppMiddleware
 
   // managers
-  private orbitDataManager: OrbitDataManager
-  private cosalManager: CosalManager
-  private generalSettingManager: GeneralSettingManager
-  private topicsManager: TopicsManager
-  private operatingSystemManager: OperatingSystemManager
-  private orbitAppsManager: OrbitAppsManager
+  orbitDataManager: OrbitDataManager
+  cosalManager: CosalManager
+  generalSettingManager: GeneralSettingManager
+  topicsManager: TopicsManager
+  operatingSystemManager: OperatingSystemManager
+  orbitAppsManager: OrbitAppsManager
+  workspaceManager: WorkspaceManager | null = null
 
   start = async () => {
     await Desktop.start({
@@ -264,6 +267,10 @@ export class OrbitDesktopRoot {
     root.mediatorServer = this.mediatorServer
   }
 
+  setWorkspaceManager(wsManager: WorkspaceManager) {
+    this.workspaceManager = wsManager
+  }
+
   /**
    * Registers a mediator server which is responsible
    * for communication between processes.
@@ -355,7 +362,7 @@ export class OrbitDesktopRoot {
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
         }),
-        createAppOpenWorkspaceResolver(this.orbitAppsManager),
+        createAppOpenWorkspaceResolver(this),
         AppCreateNewResolver,
         AppCreateWorkspaceResolver,
         AppRemoveResolver,
@@ -399,6 +406,13 @@ export class OrbitDesktopRoot {
           FinishAuthQueue.set(authKey, { identifier, finish })
 
           return await promise
+        }),
+
+        resolveCommand(AppGetWorkspaceAppsCommand, async () => {
+          if (this.workspaceManager) {
+            return this.workspaceManager.apps
+          }
+          return []
         }),
 
         resolveCommand(SetupProxyCommand, async () => {

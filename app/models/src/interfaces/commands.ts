@@ -60,9 +60,16 @@ export const GetPIDCommand = new Command<number>('get-pid')
 export interface AppMeta {
   packageId: string
   directory: string
-  packageJson: Object
+  packageJson: {
+    name?: string
+    version?: string
+    dependencies?: any
+  }
   apiInfo: ApiInfo
+  isLocal: boolean
 }
+
+export const AppGetWorkspaceAppsCommand = new Command<AppMeta[], void>('AppGetWorkspaceAppsCommand')
 
 // return extra information about app
 export const AppMetaCommand = new Command<
@@ -100,7 +107,7 @@ export const AppOpenWorkspaceCommand = new Command<
   {
     // Path to the workspace project in dev
     path: string
-    appIdentifiers: string[]
+    packageIds?: string[]
   }
 >('AppOpenWorkspaceCommand')
 

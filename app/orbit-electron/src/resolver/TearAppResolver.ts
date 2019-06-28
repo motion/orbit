@@ -24,6 +24,9 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   const currentWindow = Electron.curMainWindow
 
   Electron.setState({
+    // hide the next window
+    showOrbitMain: false,
+    // tear a new window
     appWindows: {
       ...Electron.state.appWindows,
       // tear current window

@@ -1,43 +1,11 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import {
-  App,
-  AppDefinition,
-  AppLoadContext,
-  AppStore,
-  AppViewProps,
-  AppViewsContext,
-  Bit,
-  getAppDefinition,
-  getAppDefinitions,
-  ProvideStores,
-  sleep,
-} from '@o/kit'
-import {
-  ErrorBoundary,
-  gloss,
-  ListItemProps,
-  Loading,
-  ProvideShare,
-  ProvideVisibility,
-  ScopedState,
-  useGet,
-  useThrottledFn,
-  useVisibility,
-  View,
-} from '@o/ui'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
+import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
@@ -54,7 +22,7 @@ type OrbitAppProps = {
   hasShownOnce?: boolean
 }
 
-export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
+export const OrbitApp = memo(({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === id
@@ -114,7 +82,7 @@ export const OrbitApp = ({ id, identifier, appDef, hasShownOnce }: OrbitAppProps
       </View>
     </Suspense>
   )
-}
+})
 
 type AppRenderProps = OrbitAppProps
 
@@ -124,7 +92,11 @@ const OrbitAppRender = memo((props: AppRenderProps) => {
     console.warn('no app', props)
     return null
   }
-  return <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
+  return (
+    <Suspense fallback={<Loading />}>
+      <OrbitAppRenderOfDefinition appDef={appDef} {...props} />
+    </Suspense>
+  )
 })
 
 export const OrbitAppRenderOfDefinition = ({
@@ -160,8 +132,7 @@ export const OrbitAppRenderOfDefinition = ({
   let AppDefMain = appDef.app
 
   // test to see if they wrapped with <App>
-  const appChildEl = AppDefMain({})
-  const isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
+  const isAppWrapped = useIsAppWrapped(appDef)
 
   // must memo to avoid remounting
   const FinalAppView = useMemo(() => {
@@ -179,7 +150,7 @@ export const OrbitAppRenderOfDefinition = ({
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
-          <ErrorBoundary name={identifier}>
+          <ErrorBoundary name={`OrbitApp: ${identifier}`}>
             <Suspense fallback={<Loading />}>
               {hasShownOnce && (
                 <FadeIn>
@@ -196,6 +167,40 @@ export const OrbitAppRenderOfDefinition = ({
       </AppLoadContext.Provider>
     </ProvideShare>
   )
+}
+
+let isWrappedCache = {}
+
+const useIsAppWrapped = (appDef: AppDefinition) => {
+  let cache = isWrappedCache[appDef.id]
+  if (cache) {
+    if (isDefined(cache.res)) {
+      return cache.res
+    }
+    throw cache.promise
+  }
+  cache = isWrappedCache[appDef.id] = {
+    res: undefined,
+    promise: new Promise(res => {
+      // to avoid suspense running here from child view
+      setTimeout(() => {
+        let isAppWrapped = false
+        try {
+          const appChildEl = appDef.app({})
+          isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
+        } catch (err) {
+          if (err.message.indexOf('Invalid hook call') > -1) {
+            // ignore
+          } else {
+            console.error(err)
+          }
+        }
+        cache.res = isAppWrapped
+        res(isAppWrapped)
+      })
+    }),
+  }
+  throw isWrappedCache[appDef.id].promise
 }
 
 function getAppProps(props: ListItemProps): AppViewProps {

@@ -1,5 +1,30 @@
-import { AppViewProps, Bit, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
-import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
+import {
+  AppViewProps,
+  Bit,
+  LocationLink,
+  useBit,
+  useBits,
+  useBitSearch,
+  useLocationLink,
+  useNLPTopics,
+  useStores,
+} from '@o/kit'
+import {
+  Avatar,
+  Button,
+  Center,
+  Col,
+  gloss,
+  List,
+  ListItem,
+  Paragraph,
+  RoundButton,
+  Row,
+  Section,
+  Space,
+  SubTitle,
+  TitleRow,
+} from '@o/ui'
 import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {
@@ -71,9 +96,12 @@ function PersonMedia({ id }: { id: number }) {
     query,
     count: 10,
   })
-  if (!person) {
+
+  if (!person || !topics || !recentBits) {
+    console.warn('no', person, topics, recentBits)
     return null
   }
+
   return (
     <Section
       space
@@ -155,7 +183,7 @@ const getBitTexts = (bits: Bit[]) => {
     .map(x => {
       if (x.appIdentifier === 'slack') {
         const data = x.data as any // todo fix typing
-        return data.messages.map(m => m.text).join(' ')
+        return (data.messages || []).map(m => m.text).join(' ')
       }
       return `${x.title} ${x.body}`
     })

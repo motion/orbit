@@ -50,7 +50,7 @@ class DesktopStore {
   state = deep({
     workspaceState: {
       path: '',
-      appIdentifiers: [] as string[],
+      packageIds: [] as string[],
     },
     appState: {
       id: '',

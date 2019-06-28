@@ -46,10 +46,13 @@ export const reporter: Reporter = {
    * Log arguments and exit process with status 1.
    * @param {*} args
    */
-  panic(...args) {
+  panic(message: string, error?: any) {
     // @ts-ignore
-    this.error(...args)
-    trackError(`GENERAL_PANIC`, { error: args })
+    this.error(
+      `${message}\n\n If this looks like an Orbit issue, open an issue on https://github.com/motion/orbit/issues`,
+      error,
+    )
+    trackError(`GENERAL_PANIC`, { error })
     console.trace('Exiting after error')
     process.exit(1)
   },
@@ -63,7 +66,7 @@ export const reporter: Reporter = {
     }
   },
 
-  error(message, error: any) {
+  error(message: string, error?: any) {
     if (arguments.length === 1 && typeof message !== `string`) {
       error = message
       message = error.message

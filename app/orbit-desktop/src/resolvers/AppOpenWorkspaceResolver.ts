@@ -1,4 +1,4 @@
-import { OrbitAppsManager } from '@o/libs-node'
+import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
@@ -8,19 +8,22 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
+import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
 const log = new Logger('AppOpenWorkspaceResolver')
+const Config = getGlobalConfig()
 
 type WorkspaceInfo = {
   identifier: string
 }
 
-export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
-  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, appIdentifiers }) => {
+export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
+  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, packageIds }) => {
+    log.info(`Got command ${path} ${packageIds}`)
     Desktop.setState({
       workspaceState: {
         path,
-        appIdentifiers,
+        packageIds,
       },
     })
 
@@ -40,7 +43,18 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
     await getRepository(UserEntity).save(user)
 
     // ensure app bits
-    await appsManager.updateAppDefinitions(space)
+    await desktop.orbitAppsManager.updateAppDefinitions(space)
+
+    // run with cli
+    log.info(`starting cli workspace ${Config.paths.cli}`)
+    const cli = require(Config.paths.cli)
+
+    const wsManager = await cli.commandWs({
+      workspaceRoot: path,
+      daemon: true,
+    })
+
+    desktop.setWorkspaceManager(wsManager)
 
     return true
   })

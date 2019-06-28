@@ -5,7 +5,13 @@ import * as Path from 'path'
 
 import { findContiguousPorts } from './helpers/findContiguousPorts'
 
-export async function getInitialConfig({ appEntry }: { appEntry: string }): Promise<GlobalConfig> {
+export async function getInitialConfig({
+  appEntry,
+  cli,
+}: {
+  appEntry: string
+  cli: string
+}): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
 
   // find a bunch of ports for us to use
@@ -44,6 +50,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
   config = {
     isProd,
     paths: {
+      cli,
       appEntry,
       orbitConfig: Path.join(userData, 'orbit.json'),
       desktopRoot,

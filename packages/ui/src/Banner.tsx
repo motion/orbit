@@ -8,6 +8,7 @@ import { Button } from './buttons/Button'
 import { FlipAnimate, FlipAnimateItem } from './FlipAnimate'
 import { Portal } from './helpers/portal'
 import { useOnUnmount } from './hooks/useOnUnmount'
+import { useWindowSize } from './hooks/useWindowSize'
 import { Message, MessageProps } from './text/Message'
 import { SimpleText } from './text/SimpleText'
 import { Col } from './View/Col'
@@ -100,7 +101,7 @@ export const ProvideBanner = memo(
           >
             <FlipAnimate>
               {bannerStore.banners.map(banner => {
-                const id = JSON.stringify(banner)
+                const id = JSON.stringify(banner).slice(0, 100)
                 return (
                   <FlipAnimateItem id={id} key={id} animateKey={banner.type} onExit={exitAnimate}>
                     <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />
@@ -116,9 +117,9 @@ export const ProvideBanner = memo(
 )
 
 const exitAnimate = (el, _index, finish) => {
-  console.log('one exit', el)
-  el.style.background = 'green'
-  setTimeout(finish, 1000)
+  console.log('on exit banner, can animate here', el)
+  // el.style.background = 'green'
+  setTimeout(finish)
 }
 
 export type BannerHandle = Pick<BannerItem, 'close' | 'set'>
@@ -138,6 +139,10 @@ export function useBanner(): BannerHandle {
 
   return {
     set: useCallback((props: Partial<BannerProps>) => {
+      if (!bannerStore) {
+        console.error('No banner store!')
+        return
+      }
       if (banner.current) {
         banner.current.set(props)
       } else {
@@ -168,6 +173,10 @@ export function useBanners() {
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
 export const Banner = ({ type, title, message, close, timeout, ...rest }: BannerViewProps) => {
+  const [width, height] = useWindowSize({
+    throttle: 50,
+  })
+
   useEffect(() => {
     if (isDefined(timeout)) {
       let tm = setTimeout(close, timeout * 1000)
@@ -187,11 +196,13 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
       overflow="hidden"
       elevation={3}
       alignSelf="flex-end"
+      maxWidth={width - 80}
+      maxHeight={height - 80}
       background={useCallback(theme => theme.background, [])}
       {...rest}
     >
       <Row flex={1} justifyContent="space-between" alignItems="center" afterSpace>
-        <Col space="xs">
+        <Col flex={1} space="xs">
           <Message.Title>{title}</Message.Title>
           <SimpleText whiteSpace="pre">{message}</SimpleText>
         </Col>

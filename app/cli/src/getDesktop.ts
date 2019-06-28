@@ -7,13 +7,17 @@ import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from 'ws'
 
+import { cliPath } from './constants'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 let tries = 0
 
-export async function getOrbitDesktop() {
+export async function getOrbitDesktop(): Promise<{
+  mediator: MediatorClient
+  didStartOrbit: boolean
+}> {
   let port = await findBonjourService('orbitDesktop', 500)
   let didStartOrbit = false
 
@@ -28,8 +32,7 @@ export async function getOrbitDesktop() {
     }
   }
   if (!port) {
-    console.log(`Couldn't get Orbit to run, check troubleshooting: https://github.com/motion/orbit`)
-    return
+    reporter.panic(`Couldn't get Orbit to run`)
   }
   const socket = new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
     WebSocket,
@@ -50,10 +53,7 @@ export async function getOrbitDesktop() {
   } catch (err) {
     if (err === OR_TIMED_OUT) {
       if (tries >= 1) {
-        console.error(
-          `Couldn't connect to Orbit, please report an issue on https://github.com/motion/orbit/issues`,
-        )
-        return
+        reporter.panic(`Couldn't connect to Orbit`)
       }
       reporter.info(
         'Timed out waiting for socket to open, potentially stuck Orbit process, attempting restart.',
@@ -124,6 +124,7 @@ export async function runOrbitDesktop(): Promise<boolean> {
           ...process.env,
           HIDE_ON_START: 'true',
           SINGLE_APP_MODE: 'true',
+          CLI_PATH: cliPath,
         },
       })
 

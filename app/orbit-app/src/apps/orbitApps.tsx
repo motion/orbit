@@ -1,4 +1,10 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
+import {
+  __SERIOUSLY_SECRET,
+  AppDefinition,
+  configureKit,
+  createApp,
+  useAppDefinitions,
+} from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -15,26 +21,32 @@ import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
 
-let dynamicApps: AppDefinition[] = requireDynamicApps()
+let dynamicApps: AppDefinition[] = []
 
-function updateDefinitions() {
-  dynamicApps = requireDynamicApps()
+async function updateDefinitions() {
+  const rawApps = require('../../appDefinitions.js')
+  console.log('rawApps', rawApps)
+  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
+  // this doesn't work because dynamic require doesn't use manifest
+  // TODO we need to do something like this
+  // const apps = await command(AppGetWorkspaceAppsCommand)
+  // const allApps = apps.map(app => {
+  //   return require(app.packageId).default
+  // })
+  // dynamicApps = allApps
 }
 
-export function startAppLoadWatch() {
+export async function startAppLoadWatch() {
+  await updateDefinitions()
+
   // watch for updates
   reaction(
-    () => Desktop.state.workspaceState.appIdentifiers,
-    () => {
-      updateDefinitions()
+    () => Desktop.state.workspaceState.packageIds,
+    async () => {
+      await updateDefinitions()
       __SERIOUSLY_SECRET.reloadAppDefinitions()
     },
   )
-}
-
-function requireDynamicApps() {
-  const rawApps = require('../../appDefinitions')
-  return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
 
 const LoadingApp = createApp({

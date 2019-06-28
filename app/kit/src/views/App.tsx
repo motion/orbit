@@ -41,7 +41,7 @@ export type AppProps = {
   menuItems?: AppMenuItem[]
 }
 
-export const App = function App(props: AppProps) {
+export const App = (props: AppProps) => {
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)

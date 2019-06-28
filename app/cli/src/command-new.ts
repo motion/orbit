@@ -1,7 +1,7 @@
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
 import execa from 'execa'
-import fs, { pathExistsSync } from 'fs-extra'
+import fs, { pathExistsSync, remove } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
 import sysPath, { join } from 'path'
@@ -64,7 +64,14 @@ export async function commandNew(options: CommandNewOptions) {
     return
   }
 
-  await copy(templatePath, projectRoot)
+  try {
+    await copy(templatePath, projectRoot)
+  } catch (err) {
+    try {
+      await remove(projectRoot)
+    } catch {}
+    reporter.panic(`Error copying template ${err.message}`)
+  }
 }
 
 const spawn = (cmd: string, options?: any) => {

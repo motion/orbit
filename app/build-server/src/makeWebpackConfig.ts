@@ -28,7 +28,10 @@ export type WebpackParams = {
   noChunking?: boolean
 }
 
-export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
+export function makeWebpackConfig(
+  params: WebpackParams,
+  ...extraConfigs: webpack.Configuration[]
+): webpack.Configuration {
   let {
     outputFile,
     entry = [],
@@ -286,17 +289,25 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
 
       !!dll &&
         new webpack.DllPlugin({
-          name: 'main',
+          name:
+            output.library ||
+            (() => {
+              throw new Error(`need output.library`)
+            })(),
           path: dll,
         }),
 
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context,
+          context: '.',
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
+
+      // new (require('bundle-analyzer-plugin').default)({
+      //   analyzerMode: 'static',
+      // })
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean) as webpack.Plugin[],
@@ -316,10 +327,8 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     }
   }
 
-  // console.log('made config', config)
-
-  if (extraConfig) {
-    return merge.smart([config, extraConfig])
+  if (extraConfigs.some(Boolean)) {
+    config = merge.smart([config, ...extraConfigs])
   }
 
   return config

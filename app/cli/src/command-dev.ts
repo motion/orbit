@@ -2,12 +2,11 @@ import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/
 import { copy, pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { isInWorkspace, watchBuildWorkspace, WsPackages } from './command-ws'
+import { isInWorkspace, commandWs } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 import { baseWorkspaceDir, configStore } from './util/configStore'
-import { getIsInMonorepo } from './util/getIsInMonorepo'
 
 export type CommandDevOptions = { projectRoot: string }
 
@@ -18,7 +17,7 @@ export async function commandDev(options: CommandDevOptions) {
     process.exit(0)
   }
 
-  if (didStartOrbit && (await getIsInMonorepo())) {
+  if (didStartOrbit) {
     reporter.info(`Starting workspace from command: dev`)
     const baseWorkspace = await ensureBaseWorkspace()
     const lastWorkspace = configStore.lastActiveWorkspace.get()
@@ -27,39 +26,24 @@ export async function commandDev(options: CommandDevOptions) {
       : baseWorkspace
     reporter.info(`Using workspace: ${workspaceRoot}`)
 
-    // we pass this in the case where you have are editing a standalone app
-    let workspacePackages: WsPackages | undefined = undefined
-
-    if (workspaceRoot === baseWorkspaceDir) {
-      workspacePackages = {
-        appsInfo: [],
-        appsRootDir: options.projectRoot,
-      }
-    }
-
-    await watchBuildWorkspace(
-      {
-        workspaceRoot,
-        mode: 'development',
-        clean: false,
-      },
-      workspacePackages,
-    )
+    await commandWs({
+      workspaceRoot,
+      // TODO
+      mode: 'development',
+    })
   }
 
-  const pkg = await readJSON(join(options.projectRoot, 'package.json'))
-  const entry = pkg['ts:main'] || pkg.main
+  const entry = await getAppEntry(options.projectRoot)
 
   try {
     const appId = await mediator.command(AppDevOpenCommand, {
       path: options.projectRoot,
-      entry: join(options.projectRoot, entry),
+      entry,
     })
     await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
     })
-
     addProcessDispose(async () => {
       reporter.info('Disposing orbit dev process...')
       await mediator.command(AppDevCloseCommand, {
@@ -67,9 +51,13 @@ export async function commandDev(options: CommandDevOptions) {
       })
     })
   } catch (err) {
-    console.log('Error opening app for dev', err.message, err.stack)
+    reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
-  return
+}
+
+export async function getAppEntry(appRoot: string) {
+  const pkg = await readJSON(join(appRoot, 'package.json'))
+  return join(appRoot, `${pkg['ts:main'] || pkg.main}`)
 }
 
 /**

@@ -33,8 +33,7 @@ export async function commandDev(options: CommandDevOptions) {
     })
   }
 
-  const pkg = await readJSON(join(options.projectRoot, 'package.json'))
-  const entry = pkg['ts:main'] || pkg.main
+  const entry = await getAppEntry(options.projectRoot)
 
   try {
     const appId = await mediator.command(AppDevOpenCommand, {
@@ -54,6 +53,11 @@ export async function commandDev(options: CommandDevOptions) {
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
+}
+
+export async function getAppEntry(appRoot: string) {
+  const pkg = await readJSON(join(appRoot, 'package.json'))
+  return pkg['ts:main'] || pkg.main
 }
 
 /**

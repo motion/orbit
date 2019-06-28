@@ -17,6 +17,8 @@ import { reporter } from './reporter'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
+import { getAppEntry } from './command-dev'
+import { bundleApp } from './command-build'
 
 //
 // TODO we need to really improve this:
@@ -40,13 +42,19 @@ import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 const log = new Logger('WorkspaceManager')
 
+type Disposable = Set<{ id: string; dispose: Function }>
+
+const disposeAll = (x: Disposable) => x.forEach(x => x.dispose())
+const dispose = (x: Disposable, id: string) => x.forEach(x => x.id === id && x.dispose())
+
 export class WorkspaceManager {
   apps: AppMeta[] = []
   directory = ''
   options: CommandWsOptions
-  disposables = new Set<{ id: string; dispose: Function }>()
   buildConfig = null
   buildServer: BuildServer | null = null
+  wsWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
+  appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
 
   setWorkspace(opts: CommandWsOptions) {
     this.directory = opts.workspaceRoot
@@ -59,20 +67,19 @@ export class WorkspaceManager {
   }
 
   stop() {
-    ;[...this.disposables].forEach(x => x.dispose())
+    disposeAll(this.wsWatchers)
+    disposeAll(this.appWatchers)
   }
 
   private watchWorkspace() {
-    const last = [...this.disposables].find(x => x.id === 'watcher')
-    if (last) {
-      last.dispose()
-      this.disposables.delete(last)
-    }
+    dispose(this.wsWatchers, 'watcher')
     let watcher = watch(this.directory, {
       persistent: true,
+      // only watch top level
+      depth: 0,
     })
     watcher.on('change', this.onWorkspaceChange)
-    this.disposables.add({
+    this.wsWatchers.add({
       id: 'watcher',
       dispose: () => {
         watcher.close()
@@ -82,7 +89,13 @@ export class WorkspaceManager {
 
   private onWorkspaceChange = debounce(async () => {
     log.info(`See workspace change`)
+    await this.updateApps()
     const config = await this.getAppsConfig()
+
+    if (!config) {
+      reporter.error('No apps found')
+      return
+    }
 
     log.info(`workspace app config`, JSON.stringify(config, null, 2))
 
@@ -97,11 +110,63 @@ export class WorkspaceManager {
     }
   }, 50)
 
-  private async getAppsConfig() {
-    this.apps = await getWorkspaceApps(this.directory)
+  async updateApps() {
+    const next = await getWorkspaceApps(this.directory)
 
+    if (!isEqual(next, this.apps)) {
+      // remove old
+      for (const app of this.apps) {
+        if (next.some(x => x.packageId === app.packageId) === false) {
+          dispose(this.appWatchers, app.packageId)
+        }
+      }
+
+      // add new
+      for (const app of next) {
+        if (this.apps.some(x => x.packageId === app.packageId) === false) {
+          // watch app for changes to build buildInfo
+          this.addAppWatcher(app)
+        }
+      }
+
+      this.apps = next
+    }
+  }
+
+  /**
+   * For now, this just watches and builds the app
+   *
+   *   TODO really this shouldn't really be a watcher here, probably just put it in command-build
+   *        and have command-build just use webpack to watch and build everyting necessary.
+   *
+   */
+  private async addAppWatcher(app: AppMeta) {
+    const entry = await getAppEntry(app.directory)
+    log.info(`Adding app watcher ${app.packageId} ${entry}`)
+    // watch just the entry file to update buildInfo.json/appEntry.js
+    let watcher = watch(entry, {
+      persistent: true,
+      awaitWriteFinish: true,
+    })
+    watcher.on(
+      'change',
+      debounce(() => {
+        bundleApp(entry, {
+          projectRoot: app.directory,
+        })
+      }, 100),
+    )
+    this.appWatchers.add({
+      id: app.packageId,
+      dispose: () => {
+        watcher.close()
+      },
+    })
+  }
+
+  private async getAppsConfig() {
     if (!this.apps.length) {
-      reporter.info('No apps found')
+      return null
     }
 
     const dllFile = join(this.directory, 'dist', 'manifest.json')

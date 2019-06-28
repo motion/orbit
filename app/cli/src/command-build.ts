@@ -14,6 +14,8 @@ export type CommandBuildOptions = {
   verbose?: boolean
   // we can do more careful building for better errors
   debugBuild?: boolean
+  // if you dont want to build the whole thing in dev mode
+  onlyInfo?: boolean
 }
 
 export async function commandBuild(options: CommandBuildOptions) {
@@ -92,7 +94,7 @@ function getOrbitVersion() {
   return require('../package.json').version
 }
 
-async function bundleApp(entry: string, options: CommandBuildOptions) {
+export async function bundleApp(entry: string, options: CommandBuildOptions) {
   reporter.info(`Running orbit build`)
   const pkg = await readPackageJson(options.projectRoot)
 

@@ -4,14 +4,7 @@ import { join } from 'path'
 import { reporter } from '../reporter'
 import { findPackage } from './findPackage'
 import { isOrbitApp } from '../command-build'
-
-export type WorkspaceAppInfo = {
-  packageId: string
-  packageJson: Object
-  directory: string
-  apiInfo: Object
-  isLocal: boolean
-}
+import { AppMeta } from '@o/models'
 
 type OrbitAppDirDesc = {
   packageId: string
@@ -22,7 +15,7 @@ type OrbitAppDirDesc = {
 /**
  * Finds all valid orbit app package directories in a given workspace
  */
-export async function getWorkspaceApps(workspaceRoot: string): Promise<WorkspaceAppInfo[]> {
+export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
   try {
     reporter.info(`getWorkspaceAppPaths ${workspaceRoot}`)
     const packageJson = join(workspaceRoot, 'package.json')

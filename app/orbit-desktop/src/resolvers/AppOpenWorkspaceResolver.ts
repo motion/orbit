@@ -8,8 +8,10 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
+import { getGlobalConfig } from '@o/config'
 
 const log = new Logger('AppOpenWorkspaceResolver')
+const Config = getGlobalConfig()
 
 type WorkspaceInfo = {
   identifier: string
@@ -41,6 +43,15 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
 
     // ensure app bits
     await appsManager.updateAppDefinitions(space)
+
+    // run with cli
+    const cli = require(Config.paths.cli)
+    console.log('got cli, should now run workspace', cli)
+
+    cli.commandWs({
+      workspaceRoot: path,
+      daemon: true,
+    })
 
     return true
   })

@@ -5,14 +5,39 @@ import { join } from 'path'
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
+import { WorkspaceManager } from './WorkspaceManager'
 
 export type CommandWsOptions = {
   workspaceRoot: string
   mode: 'development' | 'production'
   clean?: boolean
+  daemon?: boolean
 }
 
+/**
+ * This is run either from the daemon (Orbit app process) or from the
+ * cli directly. The app process will then call *back* to here to run the
+ * WorkspaceManager. This gives us a lot of flexibility. It means we can update
+ * the cli independently of the app, because it lives outside. But, it also lets
+ * us keep a single .app process running that manages everything.
+ *
+ * Or more simply:
+ *
+ *   1. cli => run app or start app
+ *   2. app => call back to cli to start workspace
+ *
+ */
 export async function commandWs(options: CommandWsOptions) {
+  if (options.daemon) {
+    const wsManager = new WorkspaceManager()
+    wsManager.setWorkspace(options)
+    await wsManager.start()
+  } else {
+    await sendOrbitDesktopOpenWorkspace(options.workspaceRoot)
+  }
+}
+
+async function sendOrbitDesktopOpenWorkspace(workspaceRoot: string) {
   reporter.info(`Running command ws`)
   const { mediator } = await getOrbitDesktop()
   if (!mediator) {
@@ -23,7 +48,7 @@ export async function commandWs(options: CommandWsOptions) {
     // this will tell orbit to look for this workspace and re-run the cli
     // we centralize all commands through orbit so we don't want to do it directly here
     await mediator.command(AppOpenWorkspaceCommand, {
-      path: options.workspaceRoot,
+      path: workspaceRoot,
     })
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
@@ -35,16 +60,12 @@ export async function commandWs(options: CommandWsOptions) {
  * Gets packageIds by reading current workspace directory
  */
 export async function reloadAppDefinitions(directory: string) {
-  let orbitDesktop = await getOrbitDesktop()
-  if (orbitDesktop) {
-    const apps = await getWorkspaceApps(directory)
-    await orbitDesktop.command(AppOpenWorkspaceCommand, {
-      path: directory,
-      packageIds: apps.map(x => x.packageId),
-    })
-  } else {
-    reporter.info('No orbit desktop running, didnt reload active app definitions...')
-  }
+  let { mediator } = await getOrbitDesktop()
+  const apps = await getWorkspaceApps(directory)
+  await mediator.command(AppOpenWorkspaceCommand, {
+    path: directory,
+    packageIds: apps.map(x => x.packageId),
+  })
 }
 
 export async function isInWorkspace(packagePath: string, workspacePath: string): Promise<boolean> {

@@ -15,6 +15,7 @@ import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 import { writeFile } from 'fs-extra'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
+import { CommandWsOptions } from './command-ws'
 
 //
 // TODO we need to really improve this:
@@ -33,27 +34,20 @@ import { getIsInMonorepo } from './util/getIsInMonorepo'
  *     1. keep everything in the cli
  *     2. have orbit-desktop run the cli by requiring it
  *     3. have cli make a call to desktop to run everything so it goes through single place
- *     4. then desktop goes back to cli to actually run the WorkspaceManager
+ *     4. then desktop goes back to cli to actually run the WorkspaceManager, this lets us update cli independently
  */
 
 const log = new Logger('WorkspaceManager')
 
-type WorkspaceManagerOpts = {
-  directory: string
-  mode: 'development' | 'production'
-  packages?: any
-  clean?: boolean
-}
-
 export class WorkspaceManager {
   directory = ''
-  options: WorkspaceManagerOpts
+  options: CommandWsOptions
   disposables = new Set<{ id: string; dispose: Function }>()
   buildConfig = null
   buildServer: BuildServer | null = null
 
-  setWorkspace(opts: WorkspaceManagerOpts) {
-    this.directory = opts.directory
+  setWorkspace(opts: CommandWsOptions) {
+    this.directory = opts.workspaceRoot
     this.options = opts
   }
 

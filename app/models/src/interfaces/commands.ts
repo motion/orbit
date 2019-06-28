@@ -62,6 +62,7 @@ export interface AppMeta {
   directory: string
   packageJson: Object
   apiInfo: ApiInfo
+  isLocal: boolean
 }
 
 // return extra information about app
@@ -100,7 +101,7 @@ export const AppOpenWorkspaceCommand = new Command<
   {
     // Path to the workspace project in dev
     path: string
-    packageIds: string[]
+    packageIds?: string[]
   }
 >('AppOpenWorkspaceCommand')
 

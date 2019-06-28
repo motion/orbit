@@ -138,7 +138,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   let contentArea = null
 
   useEffect(() => {
-    if (App.appConf.appId === -1) {
+    if (App.appConf.appId === 0) {
       return
     }
     hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {

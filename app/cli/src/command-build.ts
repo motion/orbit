@@ -6,6 +6,7 @@ import { commandGenTypes } from './command-gen-types'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 import { AppDefinition } from '@o/models'
+import { getAppEntry } from './command-dev'
 
 export type CommandBuildOptions = {
   projectRoot: string
@@ -35,11 +36,12 @@ export async function commandBuild(options: CommandBuildOptions) {
       return null
     }
 
-    const entry = join(options.projectRoot, pkg['ts:main'] || pkg.main)
+    const entry = await getAppEntry(options.projectRoot)
 
     if (!entry || !(await pathExists(entry))) {
-      reporter.error(`No main entry found at ${entry}`)
-      return null
+      reporter.panic(
+        `Make sure your package.json "entry" specifies the full filename with extension, ie: main.tsx`,
+      )
     }
 
     await Promise.all([
@@ -161,9 +163,19 @@ async function updateBuildInfo(appRoot: string) {
   })
 }
 
+const buildInfoDir = x => join(x, 'dist', 'buildInfo.json')
+
 async function setBuildInfo(projectRoot: string, next: BuildInfo) {
   await ensureDir(join(projectRoot, 'dist'))
-  await writeJSON(join(projectRoot, 'dist', 'buildInfo.json'), next)
+  await writeJSON(buildInfoDir(projectRoot), next)
+}
+
+export async function getBuildInfo(projectRoot: string) {
+  const dir = buildInfoDir(projectRoot)
+  if (await pathExists(dir)) {
+    return await readJSON(dir)
+  }
+  return null
 }
 
 function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {

@@ -38,7 +38,7 @@ export async function commandDev(options: CommandDevOptions) {
   try {
     const appId = await mediator.command(AppDevOpenCommand, {
       path: options.projectRoot,
-      entry: join(options.projectRoot, entry),
+      entry,
     })
     await mediator.command(AppOpenWindowCommand, {
       appId,
@@ -57,7 +57,7 @@ export async function commandDev(options: CommandDevOptions) {
 
 export async function getAppEntry(appRoot: string) {
   const pkg = await readJSON(join(appRoot, 'package.json'))
-  return pkg['ts:main'] || pkg.main
+  return join(appRoot, `${pkg['ts:main'] || pkg.main}`)
 }
 
 /**

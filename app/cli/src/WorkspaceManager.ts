@@ -18,7 +18,7 @@ import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 import { getAppEntry } from './command-dev'
-import { bundleApp } from './command-build'
+import { bundleApp, getBuildInfo } from './command-build'
 
 //
 // TODO we need to really improve this:
@@ -148,14 +148,21 @@ export class WorkspaceManager {
       persistent: true,
       awaitWriteFinish: true,
     })
-    watcher.on(
-      'change',
-      debounce(() => {
-        bundleApp(entry, {
-          projectRoot: app.directory,
-        })
-      }, 100),
-    )
+
+    const buildAppInfo = () => {
+      log.info(`buildAppInfo ${app.packageId}`)
+      bundleApp(entry, {
+        projectRoot: app.directory,
+      })
+    }
+
+    watcher.on('change', debounce(buildAppInfo, 100))
+
+    // build once if not built yet
+    if (!(await getBuildInfo(app.directory))) {
+      buildAppInfo()
+    }
+
     this.appWatchers.add({
       id: app.packageId,
       dispose: () => {

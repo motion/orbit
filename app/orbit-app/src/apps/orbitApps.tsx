@@ -34,6 +34,7 @@ export function startAppLoadWatch() {
 
 function requireDynamicApps() {
   // appDefinitions.js
+  const currentWorkspace = 
   const rawApps = require('../../appDefinitions.js')
   return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }

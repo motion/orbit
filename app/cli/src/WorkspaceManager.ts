@@ -1,7 +1,8 @@
 import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
+import { AppMeta } from '@o/models'
 import { watch } from 'chokidar'
-import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
@@ -34,6 +35,7 @@ import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 const log = new Logger('WorkspaceManager')
 
 export class WorkspaceManager {
+  apps: AppMeta[] = []
   directory = ''
   options: CommandWsOptions
   disposables = new Set<{ id: string; dispose: Function }>()
@@ -90,8 +92,8 @@ export class WorkspaceManager {
   }, 50)
 
   private async getAppsConfig() {
-    const apps = await getWorkspaceApps(this.directory)
-    if (!apps.length) {
+    this.apps = await getWorkspaceApps(this.directory)
+    if (!this.apps.length) {
       reporter.info('No apps found')
     }
 
@@ -100,7 +102,7 @@ export class WorkspaceManager {
     // link local apps into local node_modules
     await ensureDir(join(this.directory, 'node_modules'))
     await Promise.all(
-      apps
+      this.apps
         .filter(x => x.isLocal)
         .map(async app => {
           const where = join(this.directory, 'node_modules', ...app.packageId.split('/'))
@@ -111,7 +113,7 @@ export class WorkspaceManager {
 
     const appsConfBase: WebpackParams = {
       name: 'apps',
-      entry: apps.map(x => x.packageId),
+      entry: this.apps.map(x => x.packageId),
       context: this.directory,
       watch: false,
       mode: this.options.mode,
@@ -150,21 +152,6 @@ export class WorkspaceManager {
         extraConfig = require(extraConfFile)
       }
     }
-
-    // write out the imports for orbit-desktop to use
-    const appDefinitionsSrc = `
-// all apps
-${apps
-  .map((app, index) => {
-    return `export const app_${index} = require('${app.packageId}')`
-  })
-  .join('\n')}`
-
-    const distDir = join(this.directory, 'dist')
-    await ensureDir(distDir)
-    const appDefsFile = join(distDir, 'appDefinitions.js')
-    reporter.info(`appDefsFile ${appDefsFile}`)
-    await writeFile(appDefsFile, appDefinitionsSrc)
 
     // we pass in extra webpack config for main app
     let extraEntries = {}

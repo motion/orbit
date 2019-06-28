@@ -9,6 +9,7 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
+import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 const Config = getGlobalConfig()
@@ -17,13 +18,7 @@ type WorkspaceInfo = {
   identifier: string
 }
 
-// TODO
-let wsManager
-export function getWorkspaceManager() {
-  return wsManager
-}
-
-export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
+export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
   return resolveCommand(AppOpenWorkspaceCommand, async ({ path, packageIds }) => {
     log.info(`Got command ${path} ${packageIds}`)
     Desktop.setState({
@@ -49,16 +44,18 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
     await getRepository(UserEntity).save(user)
 
     // ensure app bits
-    await appsManager.updateAppDefinitions(space)
+    await desktop.orbitAppsManager.updateAppDefinitions(space)
 
     // run with cli
     log.info(`starting cli workspace ${Config.paths.cli}`)
     const cli = require(Config.paths.cli)
 
-    wsManager = cli.commandWs({
+    const wsManager = cli.commandWs({
       workspaceRoot: path,
       daemon: true,
     })
+
+    desktop.setWorkspaceManager(wsManager)
 
     return true
   })

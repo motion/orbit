@@ -11,7 +11,7 @@ import { pathExists } from 'fs-extra'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 import { Logger } from '@o/logger'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
-import { debounce, isEqual } from 'lodash'
+import { debounce, isEqual, partition } from 'lodash'
 import { join } from 'path'
 import { writeFile } from 'fs-extra'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
@@ -59,7 +59,7 @@ export class WorkspaceManager {
     ;[...this.disposables].forEach(x => x.dispose())
   }
 
-  watchWorkspace() {
+  private watchWorkspace() {
     const last = [...this.disposables].find(x => x.id === 'watcher')
     if (last) {
       last.dispose()
@@ -77,11 +77,12 @@ export class WorkspaceManager {
     })
   }
 
-  onWorkspaceChange = debounce(async () => {
+  private onWorkspaceChange = debounce(async () => {
     log.info(`See workspace change`)
     const config = await this.getAppsConfig()
 
     if (!isEqual(this.buildConfig, config)) {
+      this.buildConfig = config
       if (this.buildServer) {
         this.buildServer.stop()
       }
@@ -91,25 +92,18 @@ export class WorkspaceManager {
     }
   }, 50)
 
-  async getAppsConfig() {
+  private async getAppsConfig() {
     const apps = await getWorkspaceApps(this.directory)
-    if (!apps || !apps.length) {
+    if (!apps.length) {
       reporter.info('No apps found')
     }
 
     const dllFile = join(__dirname, 'manifest.json')
 
-    const appEntries = []
-    for (const { packageId } of apps) {
-      appEntries.push(packageId)
-    }
-
-    const appsConf: WebpackParams = {
+    const appsConfBase: Partial<WebpackParams> = {
       name: 'apps',
       watch: false,
       mode: this.options.mode,
-      entry: appEntries,
-      context: appsRootDir,
       target: 'web',
       publicPath: '/',
       outputFile: '[name].apps.js',
@@ -119,18 +113,39 @@ export class WorkspaceManager {
       dll: dllFile,
     }
 
+    const [localApps, nodeApps] = partition(apps, x => x.isLocal)
+
+    const localAppsConf = {
+      ...appsConfBase,
+      entries: localApps.map(x => x.packageId),
+      context: '',
+    }
+
+    const nodeAppsConf = {
+      ...appsConfBase,
+      entries: nodeApps.map(x => x.packageId),
+      context: '',
+    }
+
     // we have to build apps once
     if (this.options.clean || !(await pathExists(dllFile))) {
-      console.log('building all apps once...')
-      await webpackPromise([getAppConfig(appsConf)])
+      reporter.info('building all apps once...')
+      await webpackPromise([getAppConfig(localAppsConf), getAppConfig(nodeAppsConf)])
     }
 
     // create app config now with `hot`
-    const appsConfig = getAppConfig({
-      ...appsConf,
-      watch: true,
-      hot: true,
-    })
+    const appsConfig = {
+      localApps: getAppConfig({
+        ...localAppsConf,
+        watch: true,
+        hot: true,
+      }),
+      nodeApps: getAppConfig({
+        ...nodeAppsConf,
+        watch: true,
+        hot: true,
+      }),
+    }
 
     let entry = ''
     let extraConfig
@@ -149,9 +164,11 @@ export class WorkspaceManager {
     if (entry) {
       const appDefinitionsSrc = `
       // all apps
-      ${appsInfo
+      ${apps
         .map(app => {
-          return `export const ${app.id.replace(/[^a-zA-Z]/g, '')} = require('${app.id}')`
+          return `export const ${app.packageId.replace(/[^a-zA-Z]/g, '')} = require('${
+            app.packageId
+          }')`
         })
         .join('\n')}
     `

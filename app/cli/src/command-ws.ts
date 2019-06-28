@@ -32,6 +32,7 @@ export async function commandWs(options: CommandWsOptions) {
     const wsManager = new WorkspaceManager()
     wsManager.setWorkspace(options)
     await wsManager.start()
+    return wsManager
   } else {
     await sendOrbitDesktopOpenWorkspace(options.workspaceRoot)
   }

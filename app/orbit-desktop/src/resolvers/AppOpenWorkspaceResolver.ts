@@ -17,6 +17,12 @@ type WorkspaceInfo = {
   identifier: string
 }
 
+// TODO
+let wsManager
+export function getWorkspaceManager() {
+  return wsManager
+}
+
 export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
   return resolveCommand(AppOpenWorkspaceCommand, async ({ path, packageIds }) => {
     Desktop.setState({
@@ -48,7 +54,7 @@ export function createAppOpenWorkspaceResolver(appsManager: OrbitAppsManager) {
     const cli = require(Config.paths.cli)
     console.log('got cli, should now run workspace', cli)
 
-    cli.commandWs({
+    wsManager = cli.commandWs({
       workspaceRoot: path,
       daemon: true,
     })

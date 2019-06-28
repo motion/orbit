@@ -92,23 +92,23 @@ export class OrbitDesktopRoot {
   databaseManager: DatabaseManager
   mediatorServer: MediatorServer
 
-  private config = getGlobalConfig()
-  private authServer: AuthServer
-  private graphServer: GraphServer
-  private onboardManager: OnboardManager
-  private disposed = false
-  private webServer: WebServer
-  private bonjour: bonjour.Bonjour
-  private bonjourService: bonjour.Service
-  private appMiddleware: AppMiddleware
+  config = getGlobalConfig()
+  authServer: AuthServer
+  graphServer: GraphServer
+  onboardManager: OnboardManager
+  disposed = false
+  webServer: WebServer
+  bonjour: bonjour.Bonjour
+  bonjourService: bonjour.Service
+  appMiddleware: AppMiddleware
 
   // managers
-  private orbitDataManager: OrbitDataManager
-  private cosalManager: CosalManager
-  private generalSettingManager: GeneralSettingManager
-  private topicsManager: TopicsManager
-  private operatingSystemManager: OperatingSystemManager
-  private orbitAppsManager: OrbitAppsManager
+  orbitDataManager: OrbitDataManager
+  cosalManager: CosalManager
+  generalSettingManager: GeneralSettingManager
+  topicsManager: TopicsManager
+  operatingSystemManager: OperatingSystemManager
+  orbitAppsManager: OrbitAppsManager
 
   start = async () => {
     await Desktop.start({
@@ -355,7 +355,7 @@ export class OrbitDesktopRoot {
           await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
           log.info('Closed app', appId)
         }),
-        createAppOpenWorkspaceResolver(this.orbitAppsManager),
+        createAppOpenWorkspaceResolver(this),
         AppCreateNewResolver,
         AppCreateWorkspaceResolver,
         AppRemoveResolver,

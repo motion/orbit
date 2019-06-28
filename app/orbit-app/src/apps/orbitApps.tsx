@@ -1,10 +1,4 @@
-import {
-  __SERIOUSLY_SECRET,
-  AppDefinition,
-  configureKit,
-  createApp,
-  useAppDefinitions,
-} from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
@@ -39,7 +33,8 @@ export function startAppLoadWatch() {
 }
 
 function requireDynamicApps() {
-  const rawApps = require('../../appDefinitions')
+  // appDefinitions.js
+  const rawApps = require('../../appDefinitions.js')
   return Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
 

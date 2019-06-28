@@ -65,6 +65,6 @@ async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<Orbi
       })
     }
   }
-  reporter.info(`getWorkspaceLocalPackageDirs ${res.join(', ')}`)
+  reporter.info(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
   return res
 }

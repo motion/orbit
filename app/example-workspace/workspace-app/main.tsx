@@ -14,7 +14,5 @@ export default createApp({
 })
 
 function AppMain() {
-  return (
-
-  )
+  return null
 }

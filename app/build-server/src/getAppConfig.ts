@@ -24,13 +24,6 @@ export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack
       },
       ...props,
     },
-    {
-      // resolve local apps too
-      // this adds current workspace directory as a module lookup directroy
-      resolve: {
-        modules: [props.context],
-      },
-    },
     extraConfig,
   )
 }

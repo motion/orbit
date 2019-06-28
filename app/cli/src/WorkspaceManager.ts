@@ -1,7 +1,7 @@
 import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
 import { watch } from 'chokidar'
-import { pathExists, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
@@ -97,6 +97,18 @@ export class WorkspaceManager {
 
     const dllFile = join(__dirname, 'manifest.json')
 
+    // link local apps into local node_modules
+    await ensureDir(join(this.directory, 'node_modules'))
+    await Promise.all(
+      apps
+        .filter(x => x.isLocal)
+        .map(async app => {
+          const where = join(this.directory, 'node_modules', ...app.packageId.split('/'))
+          log.info(`Ensuring symlink from ${app.directory} to ${where}`)
+          await ensureSymlink(app.directory, where)
+        }),
+    )
+
     const appsConfBase: WebpackParams = {
       name: 'apps',
       entry: apps.map(x => x.packageId),
@@ -139,21 +151,20 @@ export class WorkspaceManager {
       }
     }
 
-    if (entry) {
-      const appDefinitionsSrc = `
-      // all apps
-      ${apps
-        .map(app => {
-          return `export const ${app.packageId.replace(/[^a-zA-Z]/g, '')} = require('${
-            app.packageId
-          }')`
-        })
-        .join('\n')}`
+    // write out the imports for orbit-desktop to use
+    const appDefinitionsSrc = `
+// all apps
+${apps
+  .map((app, index) => {
+    return `export const app_${index} = require('${app.packageId}')`
+  })
+  .join('\n')}`
 
-      const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-      reporter.info(`appDefsFile ${appDefsFile}`)
-      await writeFile(appDefsFile, appDefinitionsSrc)
-    }
+    const distDir = join(this.directory, 'dist')
+    await ensureDir(distDir)
+    const appDefsFile = join(distDir, 'appDefinitions.js')
+    reporter.info(`appDefsFile ${appDefsFile}`)
+    await writeFile(appDefsFile, appDefinitionsSrc)
 
     // we pass in extra webpack config for main app
     let extraEntries = {}

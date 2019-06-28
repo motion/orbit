@@ -4,6 +4,7 @@ import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
 import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
+import { getInitialConfig } from './getInitialConfig'
 
 // sort order important
 require('isomorphic-fetch')
@@ -35,9 +36,9 @@ export async function main() {
 
     // first process, set up initial configuration
     setGlobalConfig(
-      await require('./getInitialConfig').getInitialConfig({
+      await getInitialConfig({
         appEntry: join(__dirname, '..', '_', 'main.js'),
-        cliPath: process.env.CLI_PATH,
+        cli: process.env.CLI_PATH,
       }),
     )
   }

@@ -1,21 +1,15 @@
-import { watch } from 'chokidar'
-import {
-  BuildServer,
-  makeWebpackConfig,
-  webpackPromise,
-  getAppConfig,
-  WebpackParams,
-} from '@o/build-server'
-import { reporter } from './reporter'
-import { pathExists } from 'fs-extra'
-import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
+import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
-import { getWorkspaceApps } from './util/getWorkspaceApps'
+import { watch } from 'chokidar'
+import { pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual, partition } from 'lodash'
 import { join } from 'path'
-import { writeFile } from 'fs-extra'
-import { getIsInMonorepo } from './util/getIsInMonorepo'
+
 import { CommandWsOptions } from './command-ws'
+import { reporter } from './reporter'
+import { getIsInMonorepo } from './util/getIsInMonorepo'
+import { getWorkspaceApps } from './util/getWorkspaceApps'
+import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
 
 //
 // TODO we need to really improve this:
@@ -53,6 +47,7 @@ export class WorkspaceManager {
 
   start() {
     this.watchWorkspace()
+    this.onWorkspaceChange()
   }
 
   stop() {
@@ -80,6 +75,8 @@ export class WorkspaceManager {
   private onWorkspaceChange = debounce(async () => {
     log.info(`See workspace change`)
     const config = await this.getAppsConfig()
+
+    log.verbose(JSON.stringify(config, null, 2))
 
     if (!isEqual(this.buildConfig, config)) {
       this.buildConfig = config
@@ -118,13 +115,14 @@ export class WorkspaceManager {
     const localAppsConf = {
       ...appsConfBase,
       entries: localApps.map(x => x.packageId),
-      context: '',
+      context: this.directory,
     }
 
     const nodeAppsConf = {
       ...appsConfBase,
       entries: nodeApps.map(x => x.packageId),
-      context: '',
+      // just use directory of first app they should app be in same node_modules folder
+      context: nodeApps[0].directory,
     }
 
     // we have to build apps once
@@ -170,9 +168,11 @@ export class WorkspaceManager {
             app.packageId
           }')`
         })
-        .join('\n')}
-    `
-      await writeFile(join(entry, '..', '..', 'appDefinitions.js'), appDefinitionsSrc)
+        .join('\n')}`
+
+      const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
+      reporter.info(`appDefsFile ${appDefsFile}`)
+      await writeFile(appDefsFile, appDefinitionsSrc)
     }
 
     // we pass in extra webpack config for main app
@@ -213,7 +213,7 @@ export class WorkspaceManager {
 
     return {
       main: wsConfig,
-      apps: appsConfig,
+      ...appsConfig,
       ...extraEntries,
     }
   }

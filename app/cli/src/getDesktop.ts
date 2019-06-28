@@ -7,10 +7,10 @@ import { join, relative } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from 'ws'
 
+import { cliPath } from './constants'
 import { reporter } from './reporter'
 import { configStore } from './util/configStore'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
-import { cliPath } from './constants'
 
 let tries = 0
 

@@ -23,11 +23,13 @@ export type CommandWsOptions = {
  *
  * Or more simply:
  *
- *   1. cli => run app or start app
- *   2. app => call back to cli to start workspace
+ *  when calling from cli:
+ *   1. cli => find running app or start app in own process
+ *   2. app => imports cli to start workspace with { daemon: true }
  *
  */
 export async function commandWs(options: CommandWsOptions) {
+  reporter.info(`Running command ws, daemon? ${options.daemon}`)
   if (options.daemon) {
     const wsManager = new WorkspaceManager()
     wsManager.setWorkspace(options)
@@ -39,7 +41,6 @@ export async function commandWs(options: CommandWsOptions) {
 }
 
 async function sendOrbitDesktopOpenWorkspace(workspaceRoot: string) {
-  reporter.info(`Running command ws`)
   const { mediator } = await getOrbitDesktop()
   if (!mediator) {
     reporter.panic(`Could not open orbit desktop`)

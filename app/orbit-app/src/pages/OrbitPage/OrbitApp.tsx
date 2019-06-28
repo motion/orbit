@@ -1,43 +1,11 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import {
-  App,
-  AppDefinition,
-  AppLoadContext,
-  AppStore,
-  AppViewProps,
-  AppViewsContext,
-  Bit,
-  getAppDefinition,
-  getAppDefinitions,
-  ProvideStores,
-  sleep,
-} from '@o/kit'
-import {
-  ErrorBoundary,
-  gloss,
-  ListItemProps,
-  Loading,
-  ProvideShare,
-  ProvideVisibility,
-  ScopedState,
-  useGet,
-  useThrottledFn,
-  useVisibility,
-  View,
-} from '@o/ui'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
+import { ErrorBoundary, gloss, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'

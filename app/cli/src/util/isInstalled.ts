@@ -1,31 +1,29 @@
-import { readJSON } from 'fs-extra'
-import { join } from 'path'
-
 import { reporter } from '../reporter'
-import { findPackage } from './findPackage'
+import { getWorkspaceApps } from './getWorkspaceApps'
 
 /**
  * Optionally pass a version to validate the version is installed
  */
 export async function isInstalled(packageId: string, directory: string, version?: string) {
   try {
-    const pkg = await readJSON(join(directory, 'package.json'))
     reporter.info(
       `isInstalled -- checking ${packageId} in ${directory} at version ${version || 'any'}`,
     )
-    if (!pkg.dependencies[packageId]) {
+
+    const apps = await getWorkspaceApps(directory)
+    const foundApp = apps.find(x => x.packageId === packageId)
+
+    if (!foundApp) {
       return false
     }
 
+    // avoid managing versions of local apps
+    if (foundApp.isLocal) {
+      return true
+    }
+
     if (version) {
-      const packagePath = findPackage({ packageId, directory })
-      reporter.info(`isInstalled -- checking package.json exists at ${packagePath}`)
-      if (!packagePath) {
-        return false
-      }
-      const packageInfo = await readJSON(join(packagePath, 'package.json'))
-      reporter.info(`Got packageInfo ${packagePath} ${packageInfo.version}`)
-      return packageInfo.version === version
+      return foundApp.packageJson.version === version
     } else {
       return true
     }

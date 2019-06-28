@@ -60,7 +60,11 @@ export const GetPIDCommand = new Command<number>('get-pid')
 export interface AppMeta {
   packageId: string
   directory: string
-  packageJson: Object
+  packageJson: {
+    name?: string
+    version?: string
+    dependencies?: any
+  }
   apiInfo: ApiInfo
   isLocal: boolean
 }

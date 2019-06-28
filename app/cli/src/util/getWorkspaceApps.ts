@@ -1,10 +1,10 @@
-import { pathExists, readJSON, readdir } from 'fs-extra'
+import { AppMeta } from '@o/models'
+import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
 
+import { isOrbitApp } from '../command-build'
 import { reporter } from '../reporter'
 import { findPackage } from './findPackage'
-import { isOrbitApp } from '../command-build'
-import { AppMeta } from '@o/models'
 
 type OrbitAppDirDesc = {
   packageId: string
@@ -53,7 +53,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
 }
 
 async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<OrbitAppDirDesc[]> {
-  const directories = await readdir(workspaceRoot)
+  const directories = (await readdir(workspaceRoot)).map(x => join(workspaceRoot, x))
   let res: OrbitAppDirDesc[] = []
   for (const directory of directories) {
     if (await isOrbitApp(directory)) {
@@ -65,6 +65,6 @@ async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<Orbi
       })
     }
   }
-  reporter.info('getWorkspaceLocalPackageDirs', res)
+  reporter.info(`getWorkspaceLocalPackageDirs ${res.join(', ')}`)
   return res
 }

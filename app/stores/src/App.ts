@@ -96,6 +96,10 @@ class AppStore {
     return this.appConf.appRole
   }
 
+  get isEditing() {
+    return this.appRole === 'editing'
+  }
+
   get isDark() {
     const preference = App.state.userSettings.theme
     const osTheme = Desktop.state.operatingSystem.theme

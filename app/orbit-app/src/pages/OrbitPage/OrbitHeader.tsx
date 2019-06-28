@@ -1,23 +1,10 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Popover,
-  PopoverProps,
-  Row,
-  RowProps,
-  SizedSurfaceProps,
-  Space,
-  SurfacePassProps,
-  useNodeSize,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -238,8 +225,6 @@ export const OrbitHeader = memo(() => {
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
-  const appStore = useStore(App)
-
   return (
     <>
       {/* <OrbitNavHiddenBar
@@ -363,8 +348,9 @@ const HeaderTop = gloss(View, {
 
 const OpenButton = memo((props: ButtonProps) => {
   const { effects } = useOm()
+  const { appRole } = useStore(App)
 
-  if (App.isEditing) {
+  if (appRole !== 'main') {
     return null
   }
 

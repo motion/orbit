@@ -1,8 +1,15 @@
-import webpack = require('webpack')
+import { Logger } from '@o/logger'
+import webpack from 'webpack'
 
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 
+const log = new Logger('BuildServer.getAppConfig')
+
 export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack.Configuration>) {
+  if (!props.entry.length) {
+    log.info(`No entries for ${props.name}`)
+    return null
+  }
   return makeWebpackConfig(
     {
       mode: 'development',
@@ -16,6 +23,13 @@ export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack
         libraryTarget: 'umd',
       },
       ...props,
+    },
+    {
+      // resolve local apps too
+      // this adds current workspace directory as a module lookup directroy
+      resolve: {
+        modules: [props.context],
+      },
     },
     extraConfig,
   )

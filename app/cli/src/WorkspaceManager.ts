@@ -2,7 +2,7 @@ import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPro
 import { Logger } from '@o/logger'
 import { watch } from 'chokidar'
 import { pathExists, writeFile } from 'fs-extra'
-import { debounce, isEqual, partition } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
 import { CommandWsOptions } from './command-ws'
@@ -76,7 +76,7 @@ export class WorkspaceManager {
     log.info(`See workspace change`)
     const config = await this.getAppsConfig()
 
-    log.verbose(JSON.stringify(config, null, 2))
+    log.info(`workspace app config`, JSON.stringify(config, null, 2))
 
     if (!isEqual(this.buildConfig, config)) {
       this.buildConfig = config
@@ -97,8 +97,10 @@ export class WorkspaceManager {
 
     const dllFile = join(__dirname, 'manifest.json')
 
-    const appsConfBase: Partial<WebpackParams> = {
+    const appsConfBase: WebpackParams = {
       name: 'apps',
+      entry: apps.map(x => x.packageId),
+      context: this.directory,
       watch: false,
       mode: this.options.mode,
       target: 'web',
@@ -110,40 +112,18 @@ export class WorkspaceManager {
       dll: dllFile,
     }
 
-    const [localApps, nodeApps] = partition(apps, x => x.isLocal)
-
-    const localAppsConf = {
-      ...appsConfBase,
-      entries: localApps.map(x => x.packageId),
-      context: this.directory,
-    }
-
-    const nodeAppsConf = {
-      ...appsConfBase,
-      entries: nodeApps.map(x => x.packageId),
-      // just use directory of first app they should app be in same node_modules folder
-      context: nodeApps[0].directory,
-    }
-
     // we have to build apps once
     if (this.options.clean || !(await pathExists(dllFile))) {
       reporter.info('building all apps once...')
-      await webpackPromise([getAppConfig(localAppsConf), getAppConfig(nodeAppsConf)])
+      await webpackPromise([getAppConfig(appsConfBase)])
     }
 
     // create app config now with `hot`
-    const appsConfig = {
-      localApps: getAppConfig({
-        ...localAppsConf,
-        watch: true,
-        hot: true,
-      }),
-      nodeApps: getAppConfig({
-        ...nodeAppsConf,
-        watch: true,
-        hot: true,
-      }),
-    }
+    const appsConfig = getAppConfig({
+      ...appsConfBase,
+      watch: true,
+      hot: true,
+    })
 
     let entry = ''
     let extraConfig
@@ -213,7 +193,7 @@ export class WorkspaceManager {
 
     return {
       main: wsConfig,
-      ...appsConfig,
+      apps: appsConfig,
       ...extraEntries,
     }
   }

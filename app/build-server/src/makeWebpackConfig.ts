@@ -28,7 +28,10 @@ export type WebpackParams = {
   noChunking?: boolean
 }
 
-export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): webpack.Configuration {
+export function makeWebpackConfig(
+  params: WebpackParams,
+  ...extraConfigs: webpack.Configuration[]
+): webpack.Configuration {
   let {
     outputFile,
     entry = [],
@@ -316,10 +319,8 @@ export function makeWebpackConfig(params: WebpackParams, extraConfig?: any): web
     }
   }
 
-  // console.log('made config', config)
-
-  if (extraConfig) {
-    return merge.smart([config, extraConfig])
+  if (extraConfigs.some(Boolean)) {
+    config = merge.smart([config, ...extraConfigs])
   }
 
   return config

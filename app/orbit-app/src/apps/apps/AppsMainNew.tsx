@@ -43,10 +43,13 @@ export function AppsMainNew({
   }
 
   useLayoutEffect(() => {
-    newAppStore.update({
-      name: app.name,
-      colors: app.colors || ['orange', 'red'],
-    })
+    if (app) {
+      newAppStore.update({
+        identifier: app.identifier,
+        name: app.name,
+        colors: app.colors || ['orange', 'red'],
+      })
+    }
   }, [app])
 
   useEffect(() => {
@@ -62,16 +65,20 @@ export function AppsMainNew({
         <Input
           ref={inputRef}
           size={1.5}
-          placeholder={app.name}
+          placeholder={app ? app.name : newAppStore.app.name}
           margin={['auto', 0]}
-          defaultValue={app.name || newAppStore.app.name}
+          defaultValue={app ? app.name : newAppStore.app.name}
           onChange={useCallback(e => updateName(e.target.value), [])}
         />
       </FormField>
       {(customizeColor || customizeIcon) && (
         <FormField label="Icon">
           <Row space alignItems="center" overflow="hidden">
-            <AppIcon identifier={app.identifier} colors={newAppStore.app.colors} size={48} />
+            <AppIcon
+              identifier={app ? app.identifier : newAppStore.app.identifier}
+              colors={newAppStore.app.colors}
+              size={48}
+            />
             <Col flex={1}>
               {customizeColor && (
                 <ColorPicker

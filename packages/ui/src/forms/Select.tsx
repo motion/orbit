@@ -18,7 +18,7 @@ const selectStyles = (theme: ThemeObject) => ({
   }),
   option: provided => ({
     ...provided,
-    padding: `3px 5px`,
+    padding: `4px 6px`,
     color: `${theme.color}`,
   }),
   menuPortal: provided => ({

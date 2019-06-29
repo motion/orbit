@@ -57,14 +57,16 @@ export const AppDefinitionSetupVerifyCommand = new Command<
 
 export const GetPIDCommand = new Command<number>('get-pid')
 
+export type PackageJSON = {
+  name?: string
+  version?: string
+  dependencies?: any
+}
+
 export interface AppMeta {
   packageId: string
   directory: string
-  packageJson: {
-    name?: string
-    version?: string
-    dependencies?: any
-  }
+  packageJson: PackageJSON
   apiInfo: ApiInfo
   isLocal: boolean
 }

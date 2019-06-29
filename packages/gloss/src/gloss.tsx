@@ -128,13 +128,15 @@ export function gloss<Props = any>(
       staticClasses || addStyles(Styles.styles, ThemedView.displayName, targetElementName)
 
     const theme = useTheme()
-    const dynClasses = useRef<string[] | null>(null)
+    const dynClasses = useRef<Set<string> | null>(null)
 
     // unmount
     useEffect(() => {
       return () => {
         const x = dynClasses.current
-        if (x) x.forEach(deregisterClassName)
+        if (x) {
+          x.forEach(deregisterClassName)
+        }
       }
     }, [])
 
@@ -206,7 +208,7 @@ export function gloss<Props = any>(
     }
 
     if (classNames) {
-      finalProps.className += ` ${classNames.join(' ')}`
+      finalProps.className += ` ${[...classNames].join(' ')}`
     }
 
     return createElement(element, finalProps, props.children)
@@ -286,7 +288,7 @@ function addStyles(
   styles: any,
   displayName?: string,
   tagName?: string,
-  prevClassNames?: string[] | null,
+  prevClassNames?: Set<string> | null,
   moreSpecific?: boolean,
 ) {
   const keys = Object.keys(styles).sort(pseudoSort)
@@ -304,7 +306,7 @@ function addStyles(
     classNames.push(className)
 
     // if this is the first mount render or we didn't previously have this class then add it as new
-    if (!prevClassNames || !prevClassNames.includes(className)) {
+    if (!prevClassNames || !prevClassNames.has(className)) {
       gc.registerClassUse(className)
     }
   }
@@ -333,14 +335,14 @@ function addDynamicStyles(
   id: string,
   displayName: string = 'g',
   conditionalStyles: Object | undefined,
-  prevClassNames: string[] | null,
+  prevClassNames: Set<string> | null,
   props: CSSPropertySet,
   themeFn?: ThemeFn | null,
   theme?: ThemeObject,
   tagName?: string,
 ) {
   const dynStyles = {}
-  let classNames: string[] = []
+  let classNames = new Set<string>()
 
   // applies styles most important to least important
   // that saves us some processing time (no need to set multiple times)
@@ -362,7 +364,7 @@ function addDynamicStyles(
         dynStyles[id] = dynStyles[id] || {}
         mergeStyles(id, dynStyles, info.rules)
       } else {
-        classNames.push(className)
+        classNames.add(className)
       }
     }
   }
@@ -383,14 +385,16 @@ function addDynamicStyles(
   // add dyn styles
   const dynClassNames = addStyles(dynStyles, displayName, tagName, prevClassNames, true)
   if (dynClassNames) {
-    classNames = [...classNames, ...dynClassNames]
+    for (const cn of dynClassNames) {
+      classNames.add(cn)
+    }
   }
 
   // check what classNames have been removed if this is a secondary render
   if (prevClassNames) {
     for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!classNames.includes(className)) {
+      if (!classNames.has(className)) {
         deregisterClassName(className)
       }
     }

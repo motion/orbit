@@ -39,7 +39,6 @@ type SelectableGridItemProps = Pick<SelectableGridProps<any>, 'getItem' | 'selec
 function SelectableGridItem(props: SelectableGridItemProps) {
   const store = useStore(props.selectableStore)
   const isSelected = store.isActiveIndex(props.index)
-  console.log('isSelected', props.selectableStore, isSelected)
   const select = useCallback(() => {
     store.setRowMouseDown(props.index)
   }, [])
@@ -52,6 +51,6 @@ function SelectableGridItem(props: SelectableGridItemProps) {
 SelectableGrid.defaultProps = {
   selectable: true,
   gridGap: 16,
-  minWidth: 150,
-  maxWidth: 250,
+  itemMinWidth: 150,
+  itemMaxWidth: 250,
 }

@@ -86,6 +86,7 @@ export function makeWebpackConfig(
       minimize: minify,
       noEmitOnErrors: true,
       removeAvailableModules: false,
+      concatenateModules: false,
       namedModules: true,
       splitChunks: false,
       // node can't keep around a ton of cruft to parse, but in web dev mode need hmr speed

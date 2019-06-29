@@ -11,32 +11,45 @@ export function AppsMainNew({
   customizeColor,
   customizeIcon,
 }: {
-  app: AppBit
+  // if you dont pass in app it will just update newAppStore
+  app?: AppBit
   customizeColor?: boolean
   customizeIcon?: boolean
 }) {
   const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
-  const updateName = useThrottledFn(
-    name => {
-      if (!name) {
-        name = 'No title'
+
+  // throttle callback to save
+  const persist = useThrottledFn(
+    () => {
+      if (app) {
+        save(AppModel, app)
       }
-      newAppStore.update({ name })
-      app.name = name
-      save(AppModel, app)
     },
-    {
-      amount: 500,
-    },
+    { amount: 500 },
+    [app],
   )
 
+  const updateName = name => {
+    if (!name) {
+      name = 'No title'
+    }
+    newAppStore.update({ name })
+    if (app) {
+      app.name = name
+      persist()
+    }
+  }
+
   useLayoutEffect(() => {
-    newAppStore.update({
-      name: app.name,
-      colors: app.colors || ['orange', 'red'],
-    })
+    if (app) {
+      newAppStore.update({
+        identifier: app.identifier,
+        name: app.name,
+        colors: app.colors || ['orange', 'red'],
+      })
+    }
   }, [app])
 
   useEffect(() => {
@@ -52,23 +65,29 @@ export function AppsMainNew({
         <Input
           ref={inputRef}
           size={1.5}
-          placeholder={app.name}
+          placeholder={app ? app.name : newAppStore.app.name}
           margin={['auto', 0]}
-          defaultValue={app.name || newAppStore.app.name}
+          defaultValue={app ? app.name : newAppStore.app.name}
           onChange={useCallback(e => updateName(e.target.value), [])}
         />
       </FormField>
       {(customizeColor || customizeIcon) && (
         <FormField label="Icon">
           <Row space alignItems="center" overflow="hidden">
-            <AppIcon identifier={app.identifier} colors={newAppStore.app.colors} size={48} />
+            <AppIcon
+              identifier={app ? app.identifier : newAppStore.app.identifier}
+              colors={newAppStore.app.colors}
+              size={48}
+            />
             <Col flex={1}>
               {customizeColor && (
                 <ColorPicker
                   onChangeColor={colors => {
                     newAppStore.update({ colors })
-                    app.colors = colors
-                    save(AppModel, app)
+                    if (app) {
+                      app.colors = colors
+                      persist()
+                    }
                   }}
                   activeColor={newAppStore.app.colors[0]}
                 />

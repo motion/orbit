@@ -65,7 +65,7 @@ export function useAppDefinition(identifier?: string | false): AppDefinition {
 
 export function useAppDefinitionFromStore(identifier?: string | false): AppDefinition {
   const searchedApp = getSearchAppDefinitions(identifier)
-  return !identifier
+  return !identifier || !searchedApp
     ? null
     : {
         id: searchedApp.identifier,

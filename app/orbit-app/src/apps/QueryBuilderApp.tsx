@@ -21,7 +21,13 @@ const treeId = 'query-build'
 function QueryBuilder(props: AppViewProps) {
   const om = useOm()
   const dataApps = useActiveDataApps()
-  const navigator = useCreateStackNavigator({ id: `query-builder-nav-${props.id}` })
+  const navigator = useCreateStackNavigator({
+    id: `query-builder-nav-${props.id}`,
+    items: {
+      SelectApp: QueryBuilderSelectApp,
+      QueryEdit: QueryBuilderQueryEdit,
+    },
+  })
   const treeList = useTreeList(treeId)
 
   if (!dataApps.length) {
@@ -115,10 +121,6 @@ function QueryBuilderMain({
           },
         })
       }}
-      items={{
-        SelectApp: QueryBuilderSelectApp,
-        QueryEdit: QueryBuilderQueryEdit,
-      }}
     />
   )
 }
@@ -138,8 +140,8 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
         <>
           <Button
             onClick={() => {
-              if (!selected.length) {
-                alert('Please select an item first')
+              if (!selected || !selected.length) {
+                window.alert('Please select an item first')
                 return
               }
               const item = selected[0]
@@ -458,7 +460,9 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
                   title={info.name}
                   onClick={() => {
                     if (
-                      confirm(`Change current method? This will clear your current query data.`)
+                      window.confirm(
+                        `Change current method? This will clear your current query data.`,
+                      )
                     ) {
                       setMethod(info)
                     }

@@ -1,16 +1,15 @@
-import { ThemeContext } from 'gloss'
-import React, { useCallback, useContext } from 'react'
+import { ThemeContext, ThemeObject, useTheme } from 'gloss'
+import React, { useCallback, useContext, useMemo } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
 import { ActionMeta } from 'react-select/lib/types'
 
 import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'
-import { Omit } from '../types'
 import { View } from '../View/View'
 import { useParentForm } from './Form'
 
-const selectStyles = {
+const selectStyles = (theme: ThemeObject) => ({
   placeholder: provided => ({
     ...provided,
     whiteSpace: 'nowrap',
@@ -19,7 +18,8 @@ const selectStyles = {
   }),
   option: provided => ({
     ...provided,
-    padding: 0,
+    padding: `4px 6px`,
+    color: `${theme.color}`,
   }),
   menuPortal: provided => ({
     ...provided,
@@ -55,7 +55,7 @@ const selectStyles = {
     ...provided,
     padding: `0px 4px`,
   }),
-}
+})
 
 const themes = {
   dark: theme => ({
@@ -83,22 +83,24 @@ const themes = {
 
 type SelectOption = { label: string; value: any }
 
-type BaseProps = Omit<Props<SelectOption>, 'onChange' | 'isMulti'> & {
+// copied from react-select because importing was not working
+type BaseProps<SelectOption> = Omit<Props<SelectOption>, 'onChange' | 'isMulti'> & {
   minWidth?: number
 }
 
 // split out multi vs regular so onChange isn't a pain
 export type SelectProps =
-  | BaseProps & {
+  | BaseProps<SelectOption> & {
       isMulti?: false
       onChange?: (value: SelectOption | null, action: ActionMeta) => any
     }
-  | BaseProps & {
+  | BaseProps<SelectOption> & {
       isMulti: true
       onChange?: (value: SelectOption[] | null, action: ActionMeta) => any
     }
 
 export function Select({ minWidth, ...props }: SelectProps) {
+  const theme = useTheme()
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
   const formStore = useParentForm()
@@ -122,6 +124,8 @@ export function Select({ minWidth, ...props }: SelectProps) {
     [props.name, props.onChange, formStore],
   )
 
+  const styles = useMemo(() => selectStyles(theme), [theme])
+
   return (
     <View
       // this is a very crude way to stop dragging in grids
@@ -133,7 +137,7 @@ export function Select({ minWidth, ...props }: SelectProps) {
     >
       <SimpleText tagName="div">
         <ReactSelect
-          styles={selectStyles}
+          styles={styles}
           theme={themes[activeThemeName]}
           minMenuHeight={20}
           menuPortalTarget={document.body}

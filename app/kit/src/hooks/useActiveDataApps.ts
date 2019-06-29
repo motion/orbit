@@ -1,7 +1,8 @@
 import { AppDefinition } from '@o/models'
+import { useMemo } from 'react'
 
-import { useActiveAppsWithDefinition } from './useActiveAppsWithDefinition'
 import { FindBitWhere } from './useActiveApps'
+import { useActiveAppsWithDefinition } from './useActiveAppsWithDefinition'
 
 export const hasGraph = (x: AppDefinition) => !!Object.keys(x).some(x => x === 'graph')
 
@@ -9,11 +10,13 @@ export const hasGraph = (x: AppDefinition) => !!Object.keys(x).some(x => x === '
 export const isDataDefinition = (x: AppDefinition) => x && !x.app
 
 export function useActiveDataApps(where?: FindBitWhere) {
-  return useActiveAppsWithDefinition(where)
-    .filter(x => isDataDefinition(x.definition))
-    .map(x => x.app)
+  const appsWithDefs = useActiveAppsWithDefinition(where)
+  return useMemo(() => appsWithDefs.filter(x => isDataDefinition(x.definition)).map(x => x.app), [
+    appsWithDefs,
+  ])
 }
 
 export function useActiveDataAppsWithDefinition(where?: FindBitWhere) {
-  return useActiveAppsWithDefinition(where).filter(x => isDataDefinition(x.definition))
+  const appsWithDefs = useActiveAppsWithDefinition(where)
+  return useMemo(() => appsWithDefs.filter(x => isDataDefinition(x.definition)), [appsWithDefs])
 }

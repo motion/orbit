@@ -100,8 +100,8 @@ export const ProvideBanner = memo(
             alignItems="flex-end"
           >
             <FlipAnimate>
-              {bannerStore.banners.map(banner => {
-                const id = JSON.stringify(banner).slice(0, 100)
+              {bannerStore.banners.map((banner, index) => {
+                const id = `${JSON.stringify(banner).slice(0, 20)}${index}`
                 return (
                   <FlipAnimateItem id={id} key={id} animateKey={banner.type} onExit={exitAnimate}>
                     <BannerView {...banner} close={() => bannerStore.hide(banner.key)} />

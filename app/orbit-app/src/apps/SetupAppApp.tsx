@@ -13,7 +13,6 @@ import {
   Flow,
   FlowProvide,
   Form,
-  FormField,
   gloss,
   IconLabeled,
   List,
@@ -32,7 +31,7 @@ import {
   useFlow,
   View,
 } from '@o/ui'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp, useNewAppBit } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
@@ -85,11 +84,11 @@ function SetupAppCustom() {
     fields: {
       name: {
         name: 'Name',
-        type: 'string',
+        type: 'text' as const,
       },
       packageId: {
         name: 'Package ID',
-        type: 'string',
+        type: 'text' as const,
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
     },
@@ -312,18 +311,15 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
 const FlowStepSetup = memo(() => {
   const flow = useFlow()
   const identifier = flow.data.selectedAppIdentifier
-  const appBit = useNewAppBit(flow.data.selectedAppIdentifier)
+
+  useLayoutEffect(() => {
+    newAppStore.update({ identifier: flow.data.selectedAppIdentifier })
+  }, [flow.data.selectedAppIdentifier])
+
   return (
     <Col pad flex={1} scrollable="y">
-      123
       <Scale size={1.2}>
-        <AppsMainNew key={identifier} customizeColor app={appBit} />
-
-        <Form>
-          <FormField label="Location">
-            <input type="file" webkitdirectory />
-          </FormField>
-        </Form>
+        <AppsMainNew key={identifier} customizeColor />
       </Scale>
     </Col>
   )

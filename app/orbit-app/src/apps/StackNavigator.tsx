@@ -21,13 +21,13 @@ type StackItem = {
 type BaseProps = {
   defaultItem?: StackItem
   onNavigate?: (next: StackItem) => any
-  items: {
-    [key: string]: FunctionComponent<NavigatorProps & any>
-  }
 }
 
 type StackNavProps = BaseProps & {
   id: string
+  items: {
+    [key: string]: FunctionComponent<NavigatorProps & any>
+  }
 }
 
 export type StackNavViewProps =
@@ -38,8 +38,11 @@ export type StackNavViewProps =
 
 export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>((props, ref) => {
   const stackNavParent = useStore('useNavigator' in props ? props.useNavigator : null)
+  // TODO our type intersections are odd
   const stackNavInternal = useCreateStackNavigator(
-    'useNavigator' in props ? false : { id: props['id'] || 'default', ...props },
+    'useNavigator' in props
+      ? false
+      : { id: props['id'] || 'default', items: props['items'], ...props },
   )
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal
@@ -56,7 +59,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   useEffect(() => {
     if (!stackNav) return
     if (!stackNav.stack.length && props.defaultItem) {
-      console.log('going to default item', props.defaultItem)
       stackNav.navigate(props.defaultItem)
     }
   }, [stackNav, props.defaultItem])
@@ -75,7 +77,7 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   const stackElements = useMemo(() => {
     return stackNav.stack
       .map((stackItem, i) => {
-        const View = props.items[stackItem.id]
+        const View = stackNav.items[stackItem.id]
         if (!View) {
           console.warn('no item found, id', stackItem.id, 'stack item', stackItem)
           return null
@@ -119,6 +121,10 @@ export class StackNavigatorStore {
   })
 
   private setState = this.hooks.state[1]
+
+  get items() {
+    return this.props.items
+  }
 
   get stack() {
     return this.hooks.state[0].stack || []

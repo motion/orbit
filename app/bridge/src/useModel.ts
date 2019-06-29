@@ -160,7 +160,7 @@ function use<ModelType, Args>(
           let tm = setTimeout(() => {
             console.error(`Query timed out ${JSON.stringify(query)}`)
             finish(defaultValues[type])
-          }, 1000)
+          }, 2000)
 
           subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })
@@ -178,7 +178,7 @@ function use<ModelType, Args>(
           throw cache.read
         } else {
           throw new Promise((res, rej) => {
-            orTimeout(cache.read, 1000)
+            orTimeout(cache.read, 2000)
               .then(res)
               .catch(err => {
                 if (err === OR_TIMED_OUT) {

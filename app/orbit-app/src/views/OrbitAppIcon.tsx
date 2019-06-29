@@ -14,6 +14,7 @@ export const OrbitAppIcon = memo(
   ({ app, isSelected, size = 58, removable, ...props }: OrbitAppIconProps) => {
     const definition = useAppDefinition(app.identifier)
     const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
+    console.log('ok;', app, isSelected)
     return (
       <Theme alt={isSelected ? 'selected' : undefined}>
         <AppIconContainer isSelected={isSelected}>
@@ -54,7 +55,8 @@ export const AppIconContainer = gloss<any>(Box, {
   position: 'relative',
   borderRadius: 10,
 }).theme(({ isSelected }, theme) => ({
-  background: 'transparent' || theme.background,
+  background: theme.background.toString(),
+  opacity: 2,
   '&:hover': {
     background: isSelected ? theme.background : theme.backgroundStrong,
   },

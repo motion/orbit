@@ -1,5 +1,6 @@
 import { App, createApp } from '@o/kit'
 import React from 'react'
+import { Title } from '@o/ui'
 
 export default createApp({
   id: 'workspace-app',
@@ -14,5 +15,5 @@ export default createApp({
 })
 
 function AppMain() {
-  return null
+  return <Title>Hello world22</Title>
 }

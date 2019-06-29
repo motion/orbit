@@ -10,20 +10,20 @@ export type MenuButtonProps = ButtonProps & Pick<MenuProps, 'items' | 'scrollabl
 
 export const MenuButton = ({ items, scrollable, ...rest }) => {
   return (
-    <Menu
-      items={items}
-      scrollable={scrollable}
-      target={
-        <Button
-          after={
-            <View position="relative" pad={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'sm']}>
+    <Button
+      after={
+        <Menu
+          items={items}
+          scrollable={scrollable}
+          target={
+            <View position="relative" pad={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'xs']}>
               <BorderLeft />
               <Icon name="chevron-down" />
             </View>
           }
-          {...rest}
         />
       }
+      {...rest}
     />
   )
 }

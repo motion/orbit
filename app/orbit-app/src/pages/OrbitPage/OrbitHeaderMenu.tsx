@@ -1,6 +1,6 @@
 import { useActiveApps, useLocationLink, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Button, ListItem, PopoverMenu } from '@o/ui'
+import { Button, ListItem, Menu } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useOm } from '../../om/om'
@@ -13,7 +13,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
   const manageAppLink = useLocationLink(`/app/apps?itemId=${activePane.id}`)
 
   return (
-    <PopoverMenu
+    <Menu
       target={
         <Button tooltip="App menu" icon="more" iconProps={{ transform: { rotate: '90deg' } }} />
       }
@@ -26,7 +26,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
       />
       <OrbitEditAppItem />
       <ListItem title="App Settings" icon="cog" onClick={manageAppLink} />
-    </PopoverMenu>
+    </Menu>
   )
 })
 

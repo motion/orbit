@@ -1,4 +1,4 @@
-import { Badge, Dock, DockButton, DockButtonPassProps, PopoverMenu, useNodeSize } from '@o/ui'
+import { Badge, Dock, DockButton, DockButtonPassProps, Menu, useNodeSize } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 
 import { useOrbitStore } from '../../om/stores'
@@ -55,7 +55,7 @@ const useActiveAppMenuItems = () => {
 const OrbitDockMenu = memo(() => {
   const menuItems = useActiveAppMenuItems()
   return (
-    <PopoverMenu
+    <Menu
       target={<DockButton id="app-menu" icon="menu" />}
       items={[
         {

@@ -100,7 +100,7 @@ export class FilterToken extends PureComponent {
       )
     }
     if (Electron.remote) {
-      // TODO make this automatic and move into <PopoverMenu />
+      // TODO make this automatic and move into <Menu />
       const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
       const { bottom, left } = this._ref
         ? this._ref.getBoundingClientRect()

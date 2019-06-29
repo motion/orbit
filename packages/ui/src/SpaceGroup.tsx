@@ -1,6 +1,6 @@
 import React, { Fragment, isValidElement } from 'react'
 
-import { Space, Size } from './Space'
+import { Size, Space } from './Space'
 
 export type SpaceGroupProps = {
   children?: React.ReactNode
@@ -79,7 +79,7 @@ export function createSpacedChildren({
         const isNextSpace =
           childs[index + 1] && childs[index + 1].type && childs[index + 1].type.isSpace
         return isSpace || isNextSpace ? (
-          child
+          <Fragment key={index}>{child}</Fragment>
         ) : (
           <Fragment key={index}>
             {child}

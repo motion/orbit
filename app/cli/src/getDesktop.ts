@@ -18,7 +18,7 @@ export async function getOrbitDesktop(): Promise<{
   mediator: MediatorClient
   didStartOrbit: boolean
 }> {
-  let port = await findBonjourService('orbitDesktop', 500)
+  let port = await findBonjourService('orbitDesktop', 120)
   let didStartOrbit = false
 
   if (!port) {

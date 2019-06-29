@@ -1,4 +1,4 @@
-import { Button, Col, RoundButton, Row, SubSection, SurfacePassProps } from '@o/ui'
+import { Button, Col, MenuButton, RoundButton, Row, SubSection, SurfacePassProps } from '@o/ui'
 import React from 'react'
 
 export let Basic = (
@@ -28,6 +28,39 @@ export let Alternates = (
       ))}
     </Row>
   </Col>
+)
+
+export let MenuButtonExample = (
+  <Row space flexWrap="wrap">
+    <MenuButton
+      alt="action"
+      icon="cog"
+      items={[
+        {
+          title: 'Item one',
+          onClick: () => alert('hi'),
+        },
+      ]}
+    >
+      Slim menu
+    </MenuButton>
+    <MenuButton
+      items={[
+        {
+          title: 'Item One',
+          subTitle: 'Lorem ipsum dolor.',
+          icon: 'cog',
+        },
+        {
+          title: 'Item Two',
+          subTitle: 'Lorem ipsum dolor.',
+          icon: 'moon',
+        },
+      ]}
+    >
+      Larger menu
+    </MenuButton>
+  </Row>
 )
 
 export let Sizing = (

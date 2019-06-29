@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
+/**
+ * Loading bar at top of browser
+ */
+
 const baseClass =
   'BusyIndicator-' +
   Math.random()
@@ -71,7 +75,8 @@ export function BusyIndicator({
   useEffect(() => {
     if (!hasRendered) {
       isActive = false
-      setTimeout(() => setHasRendered(true))
+      let tm = setTimeout(() => setHasRendered(true))
+      return () => clearTimeout(tm)
     }
   })
 

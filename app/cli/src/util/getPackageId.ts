@@ -7,8 +7,10 @@ import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 const identifierToPackageId: { [key: string]: string } = {}
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
-  reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
-  identifierToPackageId[identifier] = packageId
+  if (identifierToPackageId[identifier] !== packageId) {
+    reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
+    identifierToPackageId[identifier] = packageId
+  }
 }
 
 export function getIdentifierToPackageId() {

@@ -1,4 +1,4 @@
-import { AppMeta } from '@o/models'
+import { AppMeta, PackageJson } from '@o/models'
 import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
 
@@ -18,10 +18,8 @@ type OrbitAppDirDesc = {
 export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
   try {
     reporter.info(`getWorkspaceAppPaths ${workspaceRoot}`)
-    const packageJson = join(workspaceRoot, 'package.json')
-    const packageDirs: OrbitAppDirDesc[] = Object.keys(
-      (await readJSON(packageJson)).dependencies,
-    ).map(packageId => {
+    const packageJson: PackageJson = await readJSON(join(workspaceRoot, 'package.json'))
+    const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
       const directory = findPackage({ directory: workspaceRoot, packageId })
       if (!directory) {
         reporter.error(`No directory found for package ${workspaceRoot} ${packageId}`)

@@ -1,5 +1,25 @@
-import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import {
+  AppDefinition,
+  AppIcon,
+  getSearchAppDefinitions,
+  isDataDefinition,
+  useAppDefinition,
+  useAppDefinitionFromStore,
+  useAppStoreInstalledAppDefinition,
+} from '@o/kit'
+import {
+  BannerHandle,
+  Button,
+  ButtonProps,
+  Divider,
+  Loading,
+  Message,
+  Paragraph,
+  Row,
+  Section,
+  SubTitle,
+  useBanner,
+} from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { useInstallApp } from '../../helpers/installApp'

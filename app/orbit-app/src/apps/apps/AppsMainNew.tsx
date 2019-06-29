@@ -11,26 +11,36 @@ export function AppsMainNew({
   customizeColor,
   customizeIcon,
 }: {
-  app: AppBit
+  // if you dont pass in app it will just update newAppStore
+  app?: AppBit
   customizeColor?: boolean
   customizeIcon?: boolean
 }) {
   const newAppStore = useNewAppStore()
   const inputRef = useRef(null)
   const [activeIcon, setActiveIcon] = useState('')
-  const updateName = useThrottledFn(
-    name => {
-      if (!name) {
-        name = 'No title'
+
+  // throttle callback to save
+  const persist = useThrottledFn(
+    () => {
+      if (app) {
+        save(AppModel, app)
       }
-      newAppStore.update({ name })
-      app.name = name
-      save(AppModel, app)
     },
-    {
-      amount: 500,
-    },
+    { amount: 500 },
+    [app],
   )
+
+  const updateName = name => {
+    if (!name) {
+      name = 'No title'
+    }
+    newAppStore.update({ name })
+    if (app) {
+      app.name = name
+      persist()
+    }
+  }
 
   useLayoutEffect(() => {
     newAppStore.update({
@@ -67,8 +77,10 @@ export function AppsMainNew({
                 <ColorPicker
                   onChangeColor={colors => {
                     newAppStore.update({ colors })
-                    app.colors = colors
-                    save(AppModel, app)
+                    if (app) {
+                      app.colors = colors
+                      persist()
+                    }
                   }}
                   activeColor={newAppStore.app.colors[0]}
                 />

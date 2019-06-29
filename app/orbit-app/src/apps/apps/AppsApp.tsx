@@ -164,7 +164,7 @@ export function AppsIndex() {
           pad: false,
           children: (
             <Col padding={[38, 8, 16]}>
-              <SubTitle>App Settings</SubTitle>
+              <SubTitle>Installed Apps</SubTitle>
             </Col>
           ),
         },

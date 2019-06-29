@@ -400,10 +400,6 @@ function addDynamicStyles(
     }
   }
 
-  if (dynStyles[id] && dynStyles[id].opacity === 2) {
-    console.log('setting', classNames, tracker)
-  }
-
   return classNames
 }
 

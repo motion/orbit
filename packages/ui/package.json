@@ -50,7 +50,8 @@
     "react-flip-toolkit": "^6.6.4",
     "uncontrollable": "^6.1.0",
     "react-use": "^9.1.2",
-    "svg.js": "^2.7.1"
+    "svg.js": "^2.7.1",
+    "react-events": "^1.0.1"
   },
   "devDependencies": {
     "@types/react": "16.8.8",

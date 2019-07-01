@@ -40,7 +40,6 @@
     "requestidlecallback-polyfill": "1.0.2",
     "resize-observer-polyfill": "1.5.1",
     "sanitize-html": "^1.18.2",
-    "scheduler": "0.14.0",
     "static-mock-data": "4.0.0",
     "sticky-sidebar": "3.3.1",
     "zenscroll": "^4.0.2",

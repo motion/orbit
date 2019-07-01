@@ -14,7 +14,7 @@
     "electron": "*",
     "react": "^16.8.6",
     "react-dom": "^16.8.3",
-    "scheduler": "0.13.1"
+    "scheduler": "*"
   },
   "dependencies": {
     "@o/logger": "^2.5.2",

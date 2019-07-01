@@ -11,7 +11,7 @@
     "@o/logger": "*",
     "@o/models": "*",
     "@o/cli": "*",
-    "@hot-loader/react-dom": "^16.8.6",
+    "@hot-loader/react-dom": "16.9.0-alpha.0",
     "babel-loader": "^8.0.6",
     "cache-loader": "^3.0.1",
     "common-tags": "^1.8.0",

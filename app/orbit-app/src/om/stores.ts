@@ -21,12 +21,12 @@ export const newAppStore = createUsableStore(NewAppStore)
 export const useNewAppStore = newAppStore.useStore
 
 export const paneManagerStore = createUsableStore(PaneManagerStore, {
-  defaultPaneId: 'loading',
+  defaultPaneId: 'home',
   defaultPanes: [
     {
-      id: 'loading',
-      name: 'Loading',
-      type: 'loading',
+      id: 'home',
+      name: 'Home',
+      type: 'home',
       isHidden: true,
     },
   ],

@@ -17,6 +17,7 @@ const rootShortcuts = {
   SWITCH_SPACE: 'command+k',
   COPY_LINK: 'command+shift+c',
   ESCAPE: 'esc',
+  ENTER: 'enter',
   UP: 'up',
   DOWN: 'down',
   LEFT: 'left',
@@ -60,6 +61,12 @@ export default memo(function MainShortcutHandler(props: {
       COPY_LINK: async () => {
         console.log('COPY_LINK')
         require('electron').remote.clipboard.writeText('http://example.com')
+      },
+      ENTER: () => {
+        if (orbitAppsCarouselStore.zoomedOut) {
+          orbitAppsCarouselStore.zoomIntoApp()
+          return
+        }
       },
       ESCAPE: () => {
         if (orbitAppsCarouselStore.zoomedOut === false) {

@@ -5,13 +5,28 @@ import React, { memo, useCallback, useMemo } from 'react'
 
 import { useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { orbitAppsCarouselStore } from './OrbitAppsCarousel'
 import { useHeaderStore } from './OrbitHeader'
+
+const Keys = {
+  up: 38,
+  down: 40,
+  enter: 13,
+}
 
 const handleKeyDown = e => {
   // up/down/enter
   const { keyCode } = e
-  if (keyCode === 38 || keyCode === 40 || keyCode === 13) {
+  if (keyCode === Keys.up || keyCode === Keys.down || keyCode === Keys.enter) {
     e.preventDefault()
+  }
+
+  if (keyCode === Keys.enter) {
+    if (orbitAppsCarouselStore.zoomedOut) {
+      e.stopPropagation()
+      orbitAppsCarouselStore.zoomIntoApp()
+      return
+    }
   }
 }
 

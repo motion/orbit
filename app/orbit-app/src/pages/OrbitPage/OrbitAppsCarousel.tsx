@@ -72,6 +72,11 @@ class OrbitAppsCarouselStore {
     }
   }
 
+  zoomIntoApp(index = Math.round(curI)) {
+    this.setFocusedAppIndex(index, true)
+    this.setZoomedOut(false)
+  }
+
   zoomedOut = true
   setZoomedOut(next: boolean = true) {
     this.zoomedOut = next
@@ -258,9 +263,11 @@ const OrbitAppCard = ({
       overflow="hidden"
       title={app.name}
       animated
+      onClick={() => {
+        orbitAppsCarouselStore.setFocusedAppIndex(index)
+      }}
       onDoubleClick={() => {
-        orbitAppsCarouselStore.setFocusedAppIndex(index, true)
-        orbitAppsCarouselStore.setZoomedOut(false)
+        orbitAppsCarouselStore.zoomIntoApp(index)
       }}
       {...(isFocused
         ? {

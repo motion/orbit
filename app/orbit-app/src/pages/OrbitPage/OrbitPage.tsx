@@ -234,7 +234,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
     x: i * 30,
     y: 0,
-    z: -i * 50,
+    ry: -i * 50,
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
 
@@ -244,7 +244,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       return {
         x: offset * i * 20,
         y: 0,
-        z: offset * i * 10,
+        ry: offset * i * 10,
       }
     })
   }
@@ -282,6 +282,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       space
       padding
       ref={rowRef}
+      perspective="600px"
     >
       {apps.map(({ app, definition }, index) => (
         <Card
@@ -295,8 +296,9 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
           title={app.name}
           animated
           transform={interpolate(
-            [springs[index].x, springs[index].y, springs[index].z],
-            (x, y, z) => `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateZ(${z}deg)`,
+            Object.keys(springs[index]).map(k => springs[index][k]),
+            (x, y, ry) =>
+              `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateY(${ry}deg)`,
           )}
         >
           <OrbitApp id={app.id} identifier={definition.id} appDef={definition} />

@@ -470,7 +470,7 @@ export type paddingTop = number | string
 export type pageBreakAfter = 'auto' | 'always' | 'avoid' | 'left' | 'right'
 export type pageBreakBefore = 'auto' | 'always' | 'avoid' | 'left' | 'right'
 export type pageBreakInside = 'auto' | 'avoid'
-export type perspective = 'none' | number
+export type perspective = 'none' | string | number
 export type perspectiveOrigin = string
 export type pointerEvents =
   | 'auto'

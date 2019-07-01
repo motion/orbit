@@ -156,15 +156,13 @@ export function gloss<Props = any, ThemeProps = Props>(
       targetElementName,
     )
 
-    const classNames = staticClasses
-      ? dynClassNames
-        ? [...staticClasses, ...dynClassNames]
-        : staticClasses
-      : dynClassNames
-
-    if (props['debug']) {
-      window['tracker'] = tracker
-    }
+    const classNames = new Set<string>(
+      staticClasses
+        ? dynClassNames
+          ? [...staticClasses, ...dynClassNames]
+          : staticClasses
+        : dynClassNames,
+    )
 
     dynClasses.current = dynClassNames
 

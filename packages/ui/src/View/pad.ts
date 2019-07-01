@@ -18,7 +18,7 @@ export type PaddingProps = {
   padding?: Sizes | SizesObject | GlossPropertySet['padding']
 }
 
-export const getPadding = (
+export const usePadding = (
   props: PaddingProps & {
     paddingTop?: any
     paddingLeft?: any

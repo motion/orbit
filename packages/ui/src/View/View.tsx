@@ -5,7 +5,7 @@ import { SpringValue } from 'react-spring'
 import { Sizes } from '../Space'
 import { Omit } from '../types'
 import { ElevatableProps, getElevation } from './elevate'
-import { getPadding, getSizableValue, PaddingProps, SizesObject } from './pad'
+import { getSizableValue, PaddingProps, SizesObject, usePadding } from './pad'
 
 // TODO further simplify and standardize props, instead of using HTML props
 // so we can unify eventually with native
@@ -69,7 +69,7 @@ export type ViewCSSProps = GlossPropertySet
 
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',
-}).theme(getMargin, getPadding, getElevation)
+}).theme(getMargin, usePadding, getElevation)
 
 // margin
 

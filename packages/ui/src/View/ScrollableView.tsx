@@ -6,7 +6,7 @@ import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
 import { Omit } from '../types'
-import { getPadding } from './pad'
+import { usePadding } from './pad'
 import { View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
@@ -122,7 +122,7 @@ export const PaddedView = gloss<ViewProps>(View, {
   // otherwise it "shrinks to fit" vertically and overflow will cut off
   minWidth: '100%',
   minHeight: '100%',
-}).theme(getPadding)
+}).theme(usePadding)
 
 // TODO figure this out a bit better and cleanup this code
 // i have a feeling ScrollableInner and PaddedView and ScrollableChrome can be simplfiied/unified in some way

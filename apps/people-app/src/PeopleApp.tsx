@@ -80,7 +80,7 @@ function PersonMedia({ id }: { id: number }) {
   return (
     <Section
       space
-      pad
+      padding
       scrollable="y"
       titleElement={
         <TitleRow

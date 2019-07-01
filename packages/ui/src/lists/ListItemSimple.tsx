@@ -10,7 +10,6 @@ import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
 import { ListSeparator, ListSeparatorProps } from '../ListSeparator'
-import { useScale } from '../Scale'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
@@ -18,7 +17,7 @@ import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
 import { Col } from '../View/Col'
-import { getPadding } from '../View/pad'
+import { usePadding } from '../View/pad'
 import { Row } from '../View/Row'
 import { View } from '../View/View'
 
@@ -42,9 +41,6 @@ export type ListItemSpecificProps = ListItemHide & {
 
   /** Disable/enable selection */
   selectable?: boolean
-
-  /** Padding */
-  padding?: number | number[]
 
   /** Adds extra indentation for tree-style view */
   indent?: number
@@ -219,15 +215,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   }
 
   const iconElement = showIcon && getIcon(props)
-  const scale = useScale()
-  const listItemAdjustedPadding = getListItemPadding({
-    ...props,
-    // react-window had bug where odd heights caused everything to overlap
-    // so this was set to 13, but 12 is more natural
-    // eventually, we should get everything under the umbrella of padding="md" or similar
-    padding: selectDefined(padding, 12),
-  }).map(x => x * scale)
-  const spaceSize = listItemAdjustedPadding[1]
+  const listItemAdjustedPadding = usePadding(selectDefined(padding, 12))
+  const spaceSize = listItemAdjustedPadding.paddingTop
 
   const hasChildren = showChildren && !!children
   const childrenElement = hasChildren && (
@@ -281,8 +270,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         themeSelect="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
-        padding={listItemAdjustedPadding}
-        paddingLeft={indent ? indent * 22 : undefined}
+        {...listItemAdjustedPadding}
+        paddingLeft={(indent || 1) * listItemAdjustedPadding.paddingLeft}
         width="100%"
         before={
           <>
@@ -393,15 +382,6 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     </Theme>
   )
 })
-
-// we scale padX more than padY, depending on height of list item
-const getListItemPadding = (props: ListItemSimpleProps) => {
-  const padding = getPadding(props)
-  if (!padding) {
-    return []
-  }
-  return [padding.paddingTop, padding.paddingRight, padding.paddingBottom, padding.paddingLeft]
-}
 
 const ListItemTitleBar = gloss(Row, {
   width: '100%',

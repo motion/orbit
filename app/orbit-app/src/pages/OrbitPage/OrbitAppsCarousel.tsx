@@ -1,6 +1,6 @@
 import { AppDefinition, AppWithDefinition, createUsableStore, ensure, react, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useTheme, useWindowSize } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { interpolate, useSpring, useSprings } from 'react-spring'
 
@@ -61,14 +61,18 @@ class OrbitAppsCarouselStore {
 }
 
 // this is a global and needs to be fast so lets just do this
-let curPos = 0
+let curI = 0
 
-const getSpring = (paneIndex: number) => {
+const getSpring = (i: number) => {
+  const zoom = orbitAppsCarouselStore.zoomedOut ? 0.85 : 1
+  const importance = 1 - Math.abs(curI - i)
+  const scale = Math.max(0.75, importance * zoom)
+  const ry = (curI - i) * 10
   return {
     x: 0,
     y: 0,
-    scale: 1,
-    ry: (curPos - paneIndex) * 10,
+    scale,
+    ry,
   }
 }
 
@@ -81,9 +85,9 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   }, [apps])
 
   const paneStore = usePaneManagerStore()
-  const [sWidth, sHeight] = useWindowSize()
-  const [width, height] = [sWidth * 0.8, sHeight * 0.8]
-  const rowRef = useRef(null)
+  const frameRef = useRef<HTMLElement>(null)
+  const frameSize = useNodeSize({ ref: frameRef })
+  const rowRef = useRef<HTMLElement>(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
   // animation spring
   // fixing bug in react-spring
@@ -111,12 +115,12 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   }))
 
   const scrollToPaneIndex = (next: number) => {
-    if (curPos !== next) {
+    if (curI !== next) {
       const paneIndex = Math.round(next)
       if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
         orbitAppsCarouselStore.setFocusedAppIndex(paneIndex)
       }
-      curPos = next
+      curI = next
       set(getSpring)
     }
   }
@@ -152,36 +156,36 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   }, [curAppId, rowSize.width])
 
   return (
-    <Row
-      flex={1}
-      alignItems="center"
-      justifyContent="flex-start"
-      scrollable="x"
-      onWheel={() => {
-        scrollToPaneIndex(rowRef.current.scrollLeft / rowSize.width)
-      }}
-      scrollLeft={scrollSpring.x}
-      animated
-      space
-      padding
-      ref={rowRef}
-      perspective="600px"
-    >
-      {apps.map(({ app, definition }, index) => (
-        <OrbitAppCard
-          key={app.id}
-          index={index}
-          app={app}
-          definition={definition}
-          width={width}
-          height={height}
-          transform={interpolate(
-            Object.keys(springs[index]).map(k => springs[index][k]),
-            (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
-          )}
-        />
-      ))}
-    </Row>
+    <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
+      <Row
+        flex={1}
+        alignItems="center"
+        justifyContent="flex-start"
+        scrollable="x"
+        onWheel={() => {
+          scrollToPaneIndex(rowRef.current.scrollLeft / rowSize.width)
+        }}
+        scrollLeft={scrollSpring.x}
+        animated
+        ref={rowRef}
+        perspective="600px"
+      >
+        {apps.map(({ app, definition }, index) => (
+          <OrbitAppCard
+            key={app.id}
+            index={index}
+            app={app}
+            definition={definition}
+            width={frameSize.width}
+            height={frameSize.height}
+            transform={interpolate(
+              Object.keys(springs[index]).map(k => springs[index][k]),
+              (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
+            )}
+          />
+        ))}
+      </Row>
+    </View>
   )
 })
 

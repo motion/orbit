@@ -43,7 +43,7 @@ type CommonHTMLProps = Omit<
 
 // BUT WERE CHANGING IT TO ACCEPT ANIMATED VALUES FOR ANY CSS PROPERTY
 type CSSPropertyStrictWithAnimation = {
-  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] & SpringValue
+  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | SpringValue
 }
 
 export type ViewBaseProps = GlossProps<CommonHTMLProps & CSSPropertyStrictWithAnimation> &

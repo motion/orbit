@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppWithDefinition, createUsableStore, react, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useWindowSize } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useTheme, useWindowSize } from '@o/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { interpolate, useSprings } from 'react-spring'
 
@@ -52,6 +52,18 @@ class OrbitAppsCarouselStore {
   }
 }
 
+// this is a global and needs to be fast so lets just do this
+let curPos = 0
+
+const getSpring = (paneIndex: number) => {
+  return {
+    x: 0,
+    y: 0,
+    scale: 1,
+    ry: (curPos - paneIndex) * 10,
+  }
+}
+
 export const orbitAppsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 window['orbitAppsCarouselStore'] = orbitAppsCarouselStore
 
@@ -65,7 +77,6 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   const [width, height] = [sWidth * 0.8, sHeight * 0.8]
   const rowRef = useRef(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
-  const getRowSize = useGet(rowSize)
   // animation spring
   // fixing bug in react-spring
   const [mounted, setMounted] = useState(false)
@@ -77,36 +88,36 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   useReaction(
     () => orbitAppsCarouselStore.triggerScrollToFocused,
     () => {
-      const rowWidth = getRowSize().width
-      console.log('should scroll via keyboard', rowWidth, orbitAppsCarouselStore.focusedAppIndex)
-      rowRef.current.scrollLeft = rowWidth * orbitAppsCarouselStore.focusedAppIndex
+      rowRef.current.scrollLeft = rowSize.width * orbitAppsCarouselStore.focusedAppIndex
     },
     {
       lazy: true,
     },
+    [rowSize],
+  )
+
+  useReaction(
+    () => orbitAppsCarouselStore.zoomedOut,
+    zoomedOut => {
+      if (zoomedOut) {
+      }
+    },
   )
 
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
-    x: i * 30,
-    y: 0,
-    ry: -i * 50,
+    ...getSpring(i),
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
 
-  const scrollTo = (paneIndexPrecise: number) => {
-    const paneIndex = Math.round(paneIndexPrecise)
-    if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
-      orbitAppsCarouselStore.setFocusedAppIndex(paneIndex)
-    }
-
-    // @ts-ignore
-    set(i => {
-      return {
-        x: paneIndexPrecise * i * 20,
-        y: 0,
-        ry: paneIndexPrecise * i * 10,
+  const scrollTo = (next: number) => {
+    if (curPos !== next) {
+      const paneIndex = Math.round(next)
+      if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
+        orbitAppsCarouselStore.setFocusedAppIndex(paneIndex)
       }
-    })
+      curPos = next
+      set(getSpring)
+    }
   }
 
   const paneWidth = rowSize.width / apps.length
@@ -153,8 +164,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
           height={height}
           transform={interpolate(
             Object.keys(springs[index]).map(k => springs[index][k]),
-            (x, y, ry) =>
-              `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateY(${ry}deg)`,
+            (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
           )}
         />
       ))}
@@ -175,10 +185,10 @@ const OrbitAppCard = ({
   app: AppBit
   definition: AppDefinition
 }) => {
+  const theme = useTheme()
   const isFocused = useReaction(() => index === orbitAppsCarouselStore.focusedAppIndex, _ => _, [
     index,
   ])
-  console.log('index', index, isFocused)
   const cardRef = useRef(null)
   const [renderApp, setRenderApp] = useState(false)
   useIntersectionObserver({
@@ -193,12 +203,23 @@ const OrbitAppCard = ({
     <Card
       ref={cardRef}
       // alt="flat"
-      background={theme => theme.backgroundStronger}
+      background={theme.backgroundStronger}
       padding
       overflow="hidden"
       title={app.name}
       animated
-      borderColor={isFocused ? 'red' : undefined}
+      {...(isFocused
+        ? {
+            boxShadow: [
+              [0, 0, 0, 3, theme.alternates.selected.background],
+              [0, 0, 30, [0, 0, 0, 0.5]],
+            ],
+          }
+        : {
+            boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+          })}
+      transition="box-shadow 200ms ease"
+      zIndex={isFocused ? 2 : 1}
       {...cardProps}
     >
       <OrbitApp id={app.id} identifier={definition.id} appDef={definition} renderApp={renderApp} />

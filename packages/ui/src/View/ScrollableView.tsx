@@ -1,5 +1,5 @@
 import { isDefined } from '@o/utils'
-import { AnimatedInterpolation, withAnimated } from '@react-spring/animated'
+import { AnimatedInterpolation, AnimatedValue, withAnimated } from '@react-spring/animated'
 import { Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
@@ -58,11 +58,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
   if (hasPadding) {
-    content = (
-      <PaddedView {...!scrollable && viewPropsRaw} padding={padding}>
-        {content}
-      </PaddedView>
-    )
+    content = <PaddedView padding={padding}>{content}</PaddedView>
   }
 
   if (!scrollable) {
@@ -101,9 +97,10 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 export const getAnimatedStyleProp = props => {
   let style = props.style
   for (const key in props) {
-    if (props[key] instanceof AnimatedInterpolation) {
+    const val = props[key]
+    if (val instanceof AnimatedInterpolation || val instanceof AnimatedValue) {
       style = style || {}
-      style[key] = props[key]
+      style[key] = val
     }
   }
   return style

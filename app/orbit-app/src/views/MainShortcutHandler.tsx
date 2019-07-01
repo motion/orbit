@@ -62,7 +62,10 @@ export default memo(function MainShortcutHandler(props: {
         require('electron').remote.clipboard.writeText('http://example.com')
       },
       ESCAPE: () => {
-        console.log('ESCAPE')
+        if (orbitAppsCarouselStore.zoomedOut) {
+          orbitAppsCarouselStore.setZoomedOut(false)
+          return
+        }
         if (PopoverState.openPopovers.size > 0) {
           PopoverState.closeLast()
           return

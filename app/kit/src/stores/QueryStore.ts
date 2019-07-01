@@ -5,9 +5,17 @@ import { QueryFilterStore, SourceDesc } from './QueryFilterStore'
 
 export class QueryStore {
   queryInstant = ''
+  ignorePrefix = false
+
+  get queryParsed() {
+    if (this.ignorePrefix) {
+      return this.queryInstant.slice(this.queryInstant.indexOf(' ') + 1)
+    }
+    return this.queryInstant
+  }
 
   query = react(
-    () => this.queryInstant,
+    () => this.queryParsed,
     async (query, { sleep }) => {
       // update nlp
       this.nlpStore.setQuery(query)
@@ -26,6 +34,10 @@ export class QueryStore {
       defaultValue: '',
     },
   )
+
+  setIgnorePrefix(next: boolean = true) {
+    this.ignorePrefix = next
+  }
 
   nlpStore = new NLPStore()
 

@@ -18,13 +18,45 @@ class OrbitAppsCarouselStore {
   }
 
   scrollToSearchedApp = react(
-    () => queryStore.query,
-    query => {
+    () => queryStore.queryInstant,
+    async (query, { sleep }) => {
+      await sleep(40)
       ensure('has apps', !!this.apps.length)
-      const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-      const curId = searchedApp ? searchedApp.id : this.apps[0].app.id
-      const appIndex = this.apps.findIndex(x => x.app.id === curId)
-      this.setFocusedAppIndex(appIndex, true)
+      ensure('zoomed out', this.zoomedOut)
+      if (query.indexOf(' ') > -1) {
+        // searching within app
+        const [_, firstWord] = query.split(' ')
+        if (firstWord.trim().length) {
+          this.zoomedOut = false
+        }
+      } else {
+        // searching apps
+        const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
+        const curId = searchedApp ? searchedApp.id : this.apps[0].app.id
+        const appIndex = this.apps.findIndex(x => x.app.id === curId)
+        this.setFocusedAppIndex(appIndex, true)
+      }
+    },
+  )
+
+  filterQueryOnZoomOut = react(
+    () => this.zoomedOut,
+    zoomedOut => {
+      if (zoomedOut) {
+        // ignore until we next clear the querybar
+        queryStore.setIgnorePrefix()
+      }
+    },
+  )
+
+  stopIgnoringQueriesOnZoomIn = react(
+    () => queryStore.hasQuery,
+    hasQuery => {
+      if (!this.zoomedOut && !hasQuery) {
+        // if youre zoomed into an app and you clear the query bar,
+        // we should stop ignoring the prefix we used previosuly
+        queryStore.setIgnorePrefix(false)
+      }
     },
   )
 
@@ -32,14 +64,16 @@ class OrbitAppsCarouselStore {
 
   focusedAppIndex = 0
   setFocusedAppIndex(next: number, forceScroll = false) {
-    this.focusedAppIndex = next
-    if (forceScroll) {
-      this.triggerScrollToFocused = Date.now()
+    if (next !== this.focusedAppIndex) {
+      this.focusedAppIndex = next
+      if (forceScroll) {
+        this.triggerScrollToFocused = Date.now()
+      }
     }
   }
 
   zoomedOut = true
-  setZoomedOut(next: boolean) {
+  setZoomedOut(next: boolean = true) {
     this.zoomedOut = next
   }
 
@@ -101,18 +135,17 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     x: 0,
   }))
 
-  useReaction(
-    () => orbitAppsCarouselStore.zoomedOut,
-    zoomedOut => {
-      if (zoomedOut) {
-      }
-    },
-  )
-
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
     ...getSpring(i),
     config: { mass: 2, tension: 700, friction: 30 },
   }))
+
+  useReaction(
+    () => orbitAppsCarouselStore.zoomedOut,
+    () => {
+      set(getSpring)
+    },
+  )
 
   const scrollToPaneIndex = (next: number) => {
     if (curI !== next) {

@@ -23,7 +23,6 @@ export const Pane = memo((props: PaneProps) => {
       afterTitle,
       beforeTitle,
       children,
-      pad,
       padding,
       scrollable = 'y',
       space,
@@ -54,8 +53,7 @@ export const Pane = memo((props: PaneProps) => {
           spaceAround={spaceAround}
           flexDirection={flexDirection}
           scrollable={scrollable}
-          pad={toggle.isCollapsable && toggle.val ? 0 : pad}
-          padding={padding}
+          padding={toggle.isCollapsable && toggle.val ? 0 : padding}
           width="100%"
           flex={1}
           position="relative"

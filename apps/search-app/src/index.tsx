@@ -54,7 +54,7 @@ export function SearchApp(props: AppViewProps) {
           defaultWidth={width}
           defaultHeight={height}
           attach="bottom right"
-          edgePad={[20, 20]}
+          edgePadding={[20, 20]}
           elevation={6}
           visible
         >

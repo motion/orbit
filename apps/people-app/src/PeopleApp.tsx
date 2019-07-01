@@ -109,7 +109,7 @@ function PersonMedia({ id }: { id: number }) {
       scrollable="y"
       titleElement={
         <TitleRow
-          pad="xl"
+          padding="xl"
           before={<Avatar src={person.photo} />}
           title={person.title}
           subTitle={<Email href={`mailto:${person.email}`}>{person.email}</Email>}

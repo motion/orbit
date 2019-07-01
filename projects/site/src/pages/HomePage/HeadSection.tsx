@@ -221,7 +221,7 @@ export function HeadSection() {
           <Space size={40} />
           <Row
             space="xl"
-            pad={[0, 'xl']}
+            padding={[0, 'xl']}
             scrollable="x"
             maxWidth="100vw"
             justifyContent="space-between"

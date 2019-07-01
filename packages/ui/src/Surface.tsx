@@ -139,7 +139,7 @@ export type SurfaceSpecificProps = {
   themeSelect?: Gloss.ThemeSelect
 
   /** Amount to pad icon */
-  iconPad?: number
+  iconPadding?: number
 
   /** Force ignore grouping */
   ignoreSegment?: boolean
@@ -171,7 +171,7 @@ export const useSurfaceProps = SizedSurfacePropsContext.useProps
 type ThroughProps = Pick<
   SurfaceProps,
   | 'height'
-  | 'iconPad'
+  | 'iconPadding'
   | 'alignItems'
   | 'justifyContent'
   | 'sizeIcon'
@@ -220,7 +220,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     height,
     icon,
     iconAfter,
-    iconPad,
+    iconPadding,
     iconProps,
     justifyContent,
     noInnerElement,
@@ -230,7 +230,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     themeSelect,
     tooltip,
     tooltipProps,
-    pad,
     padding,
     badgeProps,
     badge,
@@ -252,7 +251,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : size * 8,
+    iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -475,7 +474,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ref: forwardRef,
     themeSelect,
     lineHeight,
-    pad,
     padding,
     borderWidth,
     borderPosition,

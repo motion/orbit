@@ -18,7 +18,7 @@ export type CardProps = SizedSurfaceSpecificProps &
     collapseOnClick?: boolean
     onClickTitle?: Function
     headerProps?: ListItemProps
-    titlePad?: Sizes
+    titlePadding?: Sizes
   }
 
 export const Card = forwardRef(function Card(props: CardProps, ref) {
@@ -38,7 +38,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
     titleFlex,
     onClickLocation,
     subTitle,
-    pad,
     date,
     hideSubtitle,
     space,
@@ -51,7 +50,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
     headerProps,
     alt,
     onClickTitle,
-    titlePad,
+    titlePadding,
     ...sizedSurfaceProps
   } = rest
   // end
@@ -59,10 +58,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const toggle = useCollapse(collapseProps)
-  const padProps = {
-    pad,
-    padding,
-  }
   const hasTitleClick = !!(collapseOnClick || onClickTitle || (headerProps && headerProps.onClick))
   const hasTitle = selectDefined(title, afterTitle, subTitle, icon, date, location)
   return (
@@ -119,7 +114,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             iconProps={iconProps}
             preview={preview}
             iconBefore={iconBefore}
-            pad={selectDefined(titlePad, 'sm')}
+            padding={selectDefined(titlePadding, 'sm')}
             {...headerProps}
           />
         )}
@@ -130,14 +125,12 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             scrollable={scrollable}
             flexDirection={flexDirection}
             space={!!space && getSpaceSizeNum(space) * getSize(size)}
-            pad={pad}
             padding={padding}
             flex={1}
             maxHeight={maxHeight}
             overflow="hidden"
             useCollapse={toggle}
             // {...resetColors}
-            {...padProps}
           >
             {showChildren && children}
           </Col>

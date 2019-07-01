@@ -78,8 +78,8 @@ export const DocsContents = memo(
             maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
-            pad={pad}
-            titlePad={pad}
+            padding={pad}
+            titlePadding={pad}
             titleBorder
             space
             title={

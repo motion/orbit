@@ -26,7 +26,7 @@ export function BlogFooter() {
       <Space size="xxl" />
       <Space size="xxl" />
 
-      <Col height={450} pad={[true, 0]}>
+      <Col height={450} padding={[true, 0]}>
         <AboveFooter />
       </Col>
 

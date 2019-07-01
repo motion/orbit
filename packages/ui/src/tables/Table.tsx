@@ -59,7 +59,7 @@ export const Table = (tableProps: TableProps) => {
     afterTitle,
     titleBorder,
     searchable,
-    titlePad = true,
+    titlePadding = true,
     titleElement,
     shareable,
     maxHeight,
@@ -110,7 +110,7 @@ export const Table = (tableProps: TableProps) => {
       subTitle={subTitle}
       bordered={bordered}
       titleBorder={titleBorder}
-      titlePad={titlePad}
+      titlePadding={titlePadding}
       titleElement={titleElement}
       icon={icon}
       beforeTitle={beforeTitle}

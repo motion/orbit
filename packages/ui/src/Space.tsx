@@ -49,7 +49,7 @@ export function getSpaceSize(space: Size, scale: number = 1): number | string {
   }
   if (typeof space === 'string') {
     if (spaceSizes[space]) {
-      return (spaceSizes[space] || 0) * scale
+      return spaceSizes[space] * scale
     }
     return space
   }

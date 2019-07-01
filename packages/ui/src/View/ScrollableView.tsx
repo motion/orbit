@@ -2,10 +2,11 @@ import { isDefined } from '@o/utils'
 import { AnimatedInterpolation, withAnimated } from '@react-spring/animated'
 import { Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
+import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
 import { Omit } from '../types'
-import { getPadding, PadProps } from './pad'
+import { getPadding } from './pad'
 import { View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
@@ -15,8 +16,8 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
   animated?: boolean
-  scrollX?: number
-  scrollY?: number
+  scrollX?: SpringValue<number> // TODO | number requires a custom hook
+  scrollY?: SpringValue<number>
 }
 
 const isOnlyChildrenDefined = props => {
@@ -36,7 +37,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   const {
     children,
-    pad,
     padding,
     scrollable,
     parentSpacing,
@@ -47,26 +47,19 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     ...viewPropsRaw
   } = props
   let content = children
-  const controlPad = typeof pad !== 'undefined'
+  const hasPadding = isDefined(padding)
 
   const viewProps = {
     ...viewPropsRaw,
     isWrapped: viewPropsRaw.flexWrap === 'wrap',
     parentSpacing,
-    ...(!controlPad && {
-      padding,
-    }),
   }
 
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
-  const innerPad = getPadding(props)
-  const hasInnerPad = !!innerPad
-
-  // we have to wrap in an a inner PaddedView because CSS will mess up scroll
-  if (hasInnerPad) {
+  if (hasPadding) {
     content = (
-      <PaddedView ref={ref} {...!scrollable && viewPropsRaw} {...innerPad}>
+      <PaddedView ref={ref} {...!scrollable && viewPropsRaw} padding={padding}>
         {content}
       </PaddedView>
     )
@@ -76,13 +69,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     const Component = animated ? ScrollableInnerAnimated : ScrollableInner
     const style = animated ? getAnimatedStyleProp(props) : props.style
     return (
-      <Component
-        ref={(!hasInnerPad && ref) || undefined}
-        {...viewProps}
-        {...props}
-        {...innerPad}
-        style={style}
-      >
+      <Component ref={(!hasPadding && ref) || undefined} {...viewProps} {...props} style={style}>
         {content}
       </Component>
     )
@@ -92,7 +79,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   const style = animated ? getAnimatedStyleProp(props) : props.style
   return (
     <Component
-      ref={(!hasInnerPad && ref) || undefined}
+      ref={(!hasPadding && ref) || undefined}
       scrollable={scrollable}
       // x and y is more consistent in our naming scheme, see scrollable="x"
       // but react-spring animation takes scrollTop and scrollLeft, converting
@@ -123,7 +110,7 @@ export const getAnimatedStyleProp = props => {
 }
 
 // plain padded view
-export const PaddedView = gloss<ViewProps & PadProps>(View, {
+export const PaddedView = gloss<ViewProps>(View, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
   // dont flex! this ruins the pad and width/height

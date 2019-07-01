@@ -19,7 +19,7 @@ export const SignupForm = memo((props: ViewProps) => {
       alignSelf="center"
       {...props}
     >
-      <View pad="lg">
+      <View padding="lg">
         <Join
           header={
             <>

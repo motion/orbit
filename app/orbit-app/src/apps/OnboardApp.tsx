@@ -96,7 +96,7 @@ export function OnboardApp() {
               buttonTitle="Done"
               validateFinished={onboardStore.finishOnboard}
             >
-              <Centered space="xl" pad="xxl" scrollable="y" flex={1}>
+              <Centered space="xl" padding="xxl" scrollable="y" flex={1}>
                 <Text size="xxl">All set</Text>
                 <IntroPara>To finish setup, click Finish to go to your app manager.</IntroPara>
               </Centered>
@@ -144,7 +144,7 @@ function OnboardStepProxy() {
   const status = setupContent[onboardStore.proxyStatus]
 
   return (
-    <Centered space="xl" pad="xxl" scrollable="y" flex={1}>
+    <Centered space="xl" padding="xxl" scrollable="y" flex={1}>
       <Text size="xxl">Welcome to Orbit</Text>
       <IntroPara alpha={0.5}>Orbit is a private app platform.</IntroPara>
       <IntroPara>

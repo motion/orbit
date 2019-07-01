@@ -113,7 +113,7 @@ export const List = memo((allProps: ListProps) => {
     editable,
     onEdit,
     onSelect: _ignoreOnSelect,
-    pad,
+    padding,
     ...restProps
   } = listProps
   const shareStore = useShareStore()
@@ -268,8 +268,8 @@ export const List = memo((allProps: ListProps) => {
       backgrounded={backgrounded}
       elevation={elevation}
       titleScale={titleScale}
-      titlePad
-      pad={pad}
+      titlePadding
+      padding={padding}
       {...collapseProps}
     >
       {children}

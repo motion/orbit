@@ -1,25 +1,5 @@
-import {
-  AppDefinition,
-  AppIcon,
-  getSearchAppDefinitions,
-  isDataDefinition,
-  useAppDefinition,
-  useAppDefinitionFromStore,
-  useAppStoreInstalledAppDefinition,
-} from '@o/kit'
-import {
-  BannerHandle,
-  Button,
-  ButtonProps,
-  Divider,
-  Loading,
-  Message,
-  Paragraph,
-  Row,
-  Section,
-  SubTitle,
-  useBanner,
-} from '@o/ui'
+import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
+import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { useInstallApp } from '../../helpers/installApp'
@@ -88,12 +68,12 @@ export function AppsMainAddAppContent({
 
   return (
     <Section
-      pad="lg"
+      padding="lg"
       space="xxl"
       icon={<AppIcon icon={def.icon} identifier={identifier} />}
       title={def.name}
       subTitle={`Add ${def.name} app.`}
-      titlePad
+      titlePadding
       titleBorder
       afterTitle={
         <>
@@ -125,7 +105,7 @@ export function AppsMainAddAppContent({
         title="Setup"
         titleSize="xs"
         subTitle="Customize and add app to workspace"
-        titlePad
+        titlePadding
         space
       >
         <AppsMainNew

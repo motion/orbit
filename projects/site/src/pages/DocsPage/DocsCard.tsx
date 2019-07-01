@@ -44,7 +44,7 @@ export let Floating = () => {
         width={300}
         height={200}
         attach="bottom right"
-        edgePad={[20, 20]}
+        edgepadding={[20, 20]}
         alt="warn"
         location="warn"
         elevation={4}

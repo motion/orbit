@@ -15,7 +15,7 @@ type RowProps = {
   label?: React.ReactNode
 }
 
-const FormItem = (props: ColProps) => <Col pad="xs" {...props} />
+const FormItem = (props: ColProps) => <Col padding="xs" {...props} />
 
 const FormRow = gloss(Row, {
   width: '100%',

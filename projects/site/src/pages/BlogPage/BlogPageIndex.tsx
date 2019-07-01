@@ -24,7 +24,7 @@ export function BlogPageIndex() {
       {all.map((post, index) => (
         <FadeChild key={post.date} delay={index * 150}>
           <Post
-            pad={useScreenVal('md', 'xl', 'xl')}
+            padding={useScreenVal('md', 'xl', 'xl')}
             {...linkProps(`/blog/${all[index].id}`)}
             hoverStyle={{
               background: '#f9f9f9',

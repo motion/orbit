@@ -7,7 +7,7 @@ import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as ReactDOM from 'react-dom'
-import { animated, useSprings } from 'react-spring'
+import { animated, useSpring, useSprings } from 'react-spring'
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
@@ -223,10 +223,6 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const rowRef = useRef(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
 
-  // current scroll
-  const curX = useRef(0)
-  const forceUpdate = useForceUpdate()
-
   // animation spring
 
   // fixing bug in react-spring
@@ -239,9 +235,9 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
     xyz: [i * 30, 0, -i * 50],
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
+  const [scrollX, setScrollX] = useSpring(() => ({ x: 0 }))
 
   const scrollTo = offset => {
-    curX.current = offset
     // @ts-ignore
     set(i => {
       return {
@@ -252,12 +248,13 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const paneWidth = rowSize.width / apps.length
   const getPaneWidth = useGet(paneWidth)
 
-  const scrollToPane = (paneIndex: number) => {
+  const scrollToPane = (appId: number) => {
     const pw = getPaneWidth()
-    console.log('scrollToPane', paneIndex, pw)
-    curX.current = pw * paneIndex
-    forceUpdate()
-    // scrollTo(set, paneWidth * paneIndex)
+    const paneIndex = apps.findIndex(x => x.app.id === appId)
+    const x = pw * paneIndex
+    console.log('paneIndex', paneIndex, pw, x)
+    setScrollX({ x })
+    scrollTo(x)
   }
 
   // listen for scroll
@@ -266,7 +263,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   }
 
   // listen for pane movement
-  useReaction(() => paneStore.paneIndex, scrollToPane)
+  useReaction(() => +paneStore.activePane.id, scrollToPane)
 
   return (
     <Row
@@ -275,10 +272,10 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       justifyContent="flex-start"
       scrollable="x"
       onWheel={handleMove}
-      scrollX={curX.current}
+      scrollX={scrollX.x}
       animated
       space
-      pad
+      padding="20%"
       ref={rowRef}
     >
       {apps.map(({ app, definition }, index) => (

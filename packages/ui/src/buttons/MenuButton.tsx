@@ -16,7 +16,7 @@ export const MenuButton = ({ items, scrollable, ...rest }) => {
           items={items}
           scrollable={scrollable}
           target={
-            <View position="relative" pad={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'xs']}>
+            <View position="relative" padding={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'xs']}>
               <BorderLeft />
               <Icon name="chevron-down" />
             </View>

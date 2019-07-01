@@ -271,7 +271,7 @@ export default function NeckSection() {
                     </CenterText>
                   </FadeChild>
                 </SubSection>
-                <SubSection flex={2} pad={[true, 'xxl']}>
+                <SubSection flex={2} padding={[true, 'xxl']}>
                   <FadeChild delay={500}>
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />

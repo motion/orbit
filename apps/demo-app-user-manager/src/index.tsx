@@ -34,7 +34,7 @@ export function DemoAppUserManager() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <Row space="sm" pad="sm">
+              <Row space="sm" padding="sm">
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
@@ -48,14 +48,14 @@ export function DemoAppUserManager() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane space pad scrollable="x" flexDirection="row">
+            <Pane space padding scrollable="x" flexDirection="row">
               {highlighted.map(row => (
                 <Card
                   key={row.id}
                   title={row.name}
                   subTitle={row.username}
                   elevation={2}
-                  pad
+                  padding
                   scrollable="y"
                 >
                   <DefinitionList row={row} />

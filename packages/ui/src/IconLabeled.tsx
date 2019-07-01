@@ -29,7 +29,7 @@ export const IconLabeled = memo(
     const sizeNum = getSize(size)
     return (
       <Scale size={size}>
-        <Col flex={1} pad space alignItems="center" justifyContent="center" {...restProps}>
+        <Col flex={1} padding space alignItems="center" justifyContent="center" {...restProps}>
           <Col marginTop="md" marginBottom="sm" alignItems="center" position="relative">
             {typeof icon === 'string' ? (
               <Icon name={icon} size={sizeNum * 48} {...iconProps} />

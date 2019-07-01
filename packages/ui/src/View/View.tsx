@@ -5,7 +5,7 @@ import { SpringValue } from 'react-spring'
 import { Sizes } from '../Space'
 import { Omit } from '../types'
 import { ElevatableProps, getElevation } from './elevate'
-import { getPadding, getSizableValue, PadProps, SizesObject } from './pad'
+import { getPadding, getSizableValue, PaddingProps, SizesObject } from './pad'
 
 // TODO further simplify and standardize props, instead of using HTML props
 // so we can unify eventually with native
@@ -54,12 +54,15 @@ export type ViewBaseProps = GlossProps<CommonHTMLProps> &
   AlphaColorProps &
   ElevatableProps &
   MarginProps &
-  PadProps & {
+  PaddingProps & {
     // could make this better done in terms of type flow, its for <Input labels...
     label?: React.ReactNode
   }
 
-export type ViewProps = ViewBaseProps & CSSPropertyStrictWithAnimation
+export type ViewProps = ViewBaseProps &
+  // be sure to omit margin/padding
+  Omit<CSSPropertyStrictWithAnimation, 'margin' | 'padding'>
+
 type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
@@ -71,7 +74,7 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 // margin
 
 export type MarginProps = {
-  margin?: Sizes | SizesObject
+  margin?: Sizes | SizesObject | GlossPropertySet['margin']
 }
 
 export function getMargin(props: MarginProps) {

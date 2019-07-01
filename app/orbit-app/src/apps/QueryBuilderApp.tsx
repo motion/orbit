@@ -132,7 +132,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   return (
     <Section
       pad
-      titlePad
+      titlePadding
       backgrounded
       title={props.title}
       subTitle="Select data app."
@@ -210,7 +210,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
   return (
     <Section
       flex={1}
-      titlePad
+      titlePadding
       backgrounded
       titleBorder
       title={props.title}

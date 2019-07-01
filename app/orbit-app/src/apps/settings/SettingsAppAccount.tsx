@@ -128,7 +128,7 @@ export default function SettingsAppAccount() {
   }, [user ? user.cloudId : null])
 
   return (
-    <Section pad="xl" margin="xl" bordered title="My Account" space>
+    <Section padding="xl" margin="xl" bordered title="My Account" space>
       {!!statusMessage && <Message>{statusMessage}</Message>}
 
       {user && user.email && user.cloudId && (

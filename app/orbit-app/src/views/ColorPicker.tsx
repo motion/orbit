@@ -62,7 +62,7 @@ export const ColorPicker = memo(
     })
 
     return (
-      <Row pad="sm" space scrollable="x" hideScrollbars flex={1}>
+      <Row padding="sm" space scrollable="x" hideScrollbars flex={1}>
         {combos.map((colors, i) => (
           <IconShape
             key={`${JSON.stringify(colors)}${i}`}

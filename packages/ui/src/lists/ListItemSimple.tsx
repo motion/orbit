@@ -222,7 +222,10 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const scale = useScale()
   const listItemAdjustedPadding = getListItemPadding({
     ...props,
-    pad: selectDefined(surfaceProps.pad, 13),
+    // react-window had bug where odd heights caused everything to overlap
+    // so this was set to 13, but 12 is more natural
+    // eventually, we should get everything under the umbrella of padding="md" or similar
+    padding: selectDefined(padding, 12),
   }).map(x => x * scale)
   const spaceSize = listItemAdjustedPadding[1]
 
@@ -350,15 +353,6 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
                   )}
                 </ListItemSubtitle>
               </>
-            )}
-            {!showSubtitle && !showTitle && (
-              <View
-                position="absolute"
-                right={Array.isArray(padding) ? padding[0] : padding}
-                top={Array.isArray(padding) ? padding[1] : padding}
-              >
-                {afterHeaderElement}
-              </View>
             )}
             {/* vertical space only if needed */}
             {showSubtitle && !!(children || showPreview) && (

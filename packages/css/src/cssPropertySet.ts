@@ -1,5 +1,6 @@
-import { ColorLike } from '@o/color';
-import { ThemeObject } from './ThemeObject';
+import { ColorLike } from '@o/color'
+
+import { ThemeObject } from './ThemeObject'
 
 /**
  * Copyright 2018-present Facebook.
@@ -1168,5 +1169,11 @@ export type CSSPropertySet = GlossPropertySetFunctional & {
 }
 
 export type CSSPropertySetResolved = GlossPropertySetFunctional & {
+  [key: string]: GlossPropertySet | any
+}
+
+export type CSSPropertySetLoose = {
+  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | any
+} & {
   [key: string]: GlossPropertySet | any
 }

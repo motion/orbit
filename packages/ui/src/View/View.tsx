@@ -1,3 +1,4 @@
+import { GlossPropertySet } from '@o/css'
 import { AlphaColorProps, Base, CSSPropertySetStrict, gloss, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import { SpringValue } from 'react-spring'
 
@@ -42,16 +43,15 @@ type CommonHTMLProps = Omit<
 >
 
 // BUT WERE CHANGING IT TO ACCEPT ANIMATED VALUES FOR ANY CSS PROPERTY
+// WE DONT PASS THIS TO THEMES
 type CSSPropertyStrictWithAnimation = {
   [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | SpringValue
 }
 
-export type ViewBaseProps = GlossProps<CommonHTMLProps & CSSPropertyStrictWithAnimation> &
+export type ViewBaseProps = GlossProps<CommonHTMLProps> &
   PseudoStyleProps &
   TextSizeProps &
-  AlphaColorProps
-
-export type ViewProps = ViewBaseProps &
+  AlphaColorProps &
   ElevatableProps &
   MarginProps &
   PadProps & {
@@ -59,7 +59,12 @@ export type ViewProps = ViewBaseProps &
     label?: React.ReactNode
   }
 
-export const View = gloss<ViewProps>(Base, {
+export type ViewProps = ViewBaseProps & CSSPropertyStrictWithAnimation
+type ViewThemeProps = ViewBaseProps & GlossPropertySet
+
+export type ViewCSSProps = GlossPropertySet
+
+export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',
 }).theme(getMargin, getPadding, getElevation)
 

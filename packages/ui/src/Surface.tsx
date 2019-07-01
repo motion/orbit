@@ -1,5 +1,5 @@
 import { ColorLike } from '@o/color'
-import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
+import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
 import { withAnimated } from '@react-spring/animated'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
@@ -152,6 +152,9 @@ export type SurfaceSpecificProps = {
 
   /** Style as part of a group */
   segment?: 'first' | 'last' | 'middle' | 'single'
+
+  /** Will allow for animation springs to be passed in */
+  animated?: boolean
 
   /** [Advanced] Add an extra theme to the inner element */
   elementTheme?: Gloss.ThemeFn
@@ -613,7 +616,7 @@ const perfectCenterStyle = props => {
 const applyElementTheme = (props, theme) =>
   props.elementTheme ? props.elementTheme(props, theme) : null
 
-const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean }>({
+const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',

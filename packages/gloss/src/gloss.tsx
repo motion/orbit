@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetResolved, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
+import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
 import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
 
 import { Config } from './config'
@@ -31,8 +31,8 @@ export type GlossProps<Props> = Props & {
 export type ThemeFn<Props = any> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
-  previous?: CSSPropertySetResolved | null,
-) => CSSPropertySetResolved | null | undefined
+  previous?: CSSPropertySetLoose | null,
+) => CSSPropertySetLoose | undefined | null
 
 export type GlossViewOptions<Props> = {
   displayName?: string
@@ -54,7 +54,12 @@ type GlossInternals<Props> = {
   getConfig: () => GlossInternalConfig
 }
 
-export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
+/**
+ * Note: ThemeProps is optional, for the user to define that they are
+ * filtering out props before they get to `theme`, which is helpful for keeping
+ * their types simple. It's still relatively low level. See our @o/ui/View.tsx
+ */
+export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<RawProps>> {
   // copied from FunctionComponent
   (props: Props, context?: any): React.ReactElement<any> | null
   propTypes?: React.ValidationMap<Props>
@@ -63,7 +68,7 @@ export interface GlossView<RawProps, Props = GlossProps<RawProps>> {
   displayName?: string
   // extra:
   ignoreAttrs?: { [key: string]: boolean }
-  theme: (...themeFns: ThemeFn<Props>[]) => GlossView<RawProps>
+  theme: (...themeFns: ThemeFn<ThemeProps>[]) => GlossView<RawProps>
   withConfig: (config: GlossViewOptions<Props>) => GlossView<RawProps>
   internal: GlossInternals<Props>
 }
@@ -78,10 +83,10 @@ const whiteSpaceRegex = /[\s]+/g
 let idCounter = 1
 const viewId = () => idCounter++ % Number.MAX_SAFE_INTEGER
 
-export function gloss<Props = any>(
-  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | string,
+export function gloss<Props = any, ThemeProps = Props>(
+  a?: CSSPropertySet | GlossView<Props, ThemeProps> | ((props: Props) => any) | string,
   b?: CSSPropertySet,
-): GlossView<GlossProps<Props>> {
+): GlossView<GlossProps<Props>, ThemeProps> {
   let target: any = a || 'div'
   let rawStyles = b
   let ignoreAttrs: Object
@@ -258,7 +263,8 @@ export function gloss<Props = any>(
     return ThemedView
   }
 
-  return ThemedView
+  // TODO this any type is a regression from adding ThemeProps
+  return ThemedView as any
 }
 
 function createGlossView<Props>(GlossView: any, config) {
@@ -531,7 +537,7 @@ function compileTheme(viewOG: GlossView<any>) {
   }
 
   return (props: Object, theme: ThemeObject) => {
-    let styles: CSSPropertySetResolved | null = null
+    let styles: CSSPropertySetLoose | null = null
     for (const themeFn of themes) {
       const next = themeFn(props, theme, styles)
       if (next) {

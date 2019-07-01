@@ -241,7 +241,6 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const scrollTo = offset => {
     // @ts-ignore
     set(i => {
-      console.log('settin it', offset)
       return {
         x: offset * i * 20,
         y: 0,

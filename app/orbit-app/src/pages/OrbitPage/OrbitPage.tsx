@@ -1,5 +1,5 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useReaction, useStore } from '@o/kit'
+import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { Card, ListPassProps, Loading, Row, useBanner, useGet, useOnMount, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
@@ -7,7 +7,7 @@ import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as ReactDOM from 'react-dom'
-import { animated, useSpring, useSprings } from 'react-spring'
+import { animated, interpolate, useSprings } from 'react-spring'
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
@@ -232,30 +232,25 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   })
 
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
-    xyz: [i * 30, 0, -i * 50],
+    x: i * 30,
+    y: 0,
+    z: -i * 50,
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
-  const [scrollX, setScrollX] = useSpring(() => ({ x: 0 }))
 
   const scrollTo = offset => {
     // @ts-ignore
     set(i => {
+      console.log('settin it', offset)
       return {
-        xyz: [offset * i * 20, 0, offset * i * 10],
+        x: offset * i * 20,
+        y: 0,
+        z: offset * i * 10,
       }
     })
   }
   const paneWidth = rowSize.width / apps.length
   const getPaneWidth = useGet(paneWidth)
-
-  const scrollToPane = (appId: number) => {
-    const pw = getPaneWidth()
-    const paneIndex = apps.findIndex(x => x.app.id === appId)
-    const x = pw * paneIndex
-    console.log('paneIndex', paneIndex, pw, x)
-    setScrollX({ x })
-    scrollTo(x)
-  }
 
   // listen for scroll
   const handleMove = () => {
@@ -263,7 +258,18 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   }
 
   // listen for pane movement
-  useReaction(() => +paneStore.activePane.id, scrollToPane)
+  useEffect(() => {
+    const scrollToPane = (appId: number) => {
+      const pw = getPaneWidth()
+      const paneIndex = apps.findIndex(x => x.app.id === appId)
+      if (paneIndex !== -1) {
+        const x = pw * paneIndex
+        console.log('paneIndex', paneIndex, pw, x, rowSize.width)
+        scrollTo(x === 0 ? 0 : x / rowSize.width)
+      }
+    }
+    scrollToPane(+paneStore.activePane.id)
+  }, [paneStore.activePane.id, rowSize.width])
 
   return (
     <Row
@@ -272,7 +278,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       justifyContent="flex-start"
       scrollable="x"
       onWheel={handleMove}
-      scrollX={scrollX.x}
+      scrollX={springs[0].x}
       animated
       space
       padding
@@ -289,7 +295,8 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
           overflow="hidden"
           title={app.name}
           animated
-          transform={springs[index].xyz.interpolate(
+          transform={interpolate(
+            [springs[index].x, springs[index].y, springs[index].z],
             (x, y, z) => `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateZ(${z}deg)`,
           )}
         >

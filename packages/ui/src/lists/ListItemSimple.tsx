@@ -215,7 +215,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   }
 
   const iconElement = showIcon && getIcon(props)
-  const listItemAdjustedPadding = usePadding(selectDefined(padding, 12))
+  const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
   const spaceSize = listItemAdjustedPadding.paddingTop
 
   const hasChildren = showChildren && !!children

@@ -73,7 +73,6 @@ function PersonMedia({ id }: { id: number }) {
   })
 
   if (!person || !topics || !recentBits) {
-    console.warn('no', person, topics, recentBits)
     return null
   }
 

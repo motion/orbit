@@ -33,7 +33,6 @@ export const usePadding = (
     : typeof padding === 'number'
     ? padding * scale
     : padding
-
   const paddingObj = {
     paddingTop: selectDefined(props.paddingTop, padding[0], padding),
     paddingRight: selectDefined(props.paddingRight, padding[1], padding),

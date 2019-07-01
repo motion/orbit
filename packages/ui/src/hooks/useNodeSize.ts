@@ -24,7 +24,6 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
   const updateFn = (val: SizeState) => {
     // avoid updates when not visible, it can return width: 0, height: 0
     if (!getVisible()) {
-      console.warn('invisible avoiding')
       return
     }
     const cb = props.onChange || setState

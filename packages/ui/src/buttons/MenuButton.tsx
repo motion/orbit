@@ -6,7 +6,10 @@ import { Menu, MenuProps } from '../Menu'
 import { View } from '../View/View'
 import { Button, ButtonProps } from './Button'
 
-export type MenuButtonProps = ButtonProps & Pick<MenuProps, 'items' | 'scrollable'>
+export type MenuButtonProps = ButtonProps & {
+  items?: MenuProps['items']
+  scrollable?: MenuProps['scrollable']
+}
 
 export const MenuButton = ({ items, scrollable, ...rest }) => {
   return (

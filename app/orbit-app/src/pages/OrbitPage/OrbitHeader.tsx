@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -165,7 +165,7 @@ export const OrbitHeader = memo(() => {
                 >
                   {orbitStore.activeActions}
                 </SurfacePassProps>
-                {!isEditing && !isTorn && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
+                {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
               </>
             )}
           </HeaderContain>

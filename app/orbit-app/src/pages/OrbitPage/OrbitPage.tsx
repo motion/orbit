@@ -1,8 +1,8 @@
 import { command, useModel } from '@o/bridge'
 import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
-import { AppStatusModel, CloseAppCommand } from '@o/models'
+import { AppBit, AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Card, ListPassProps, Loading, Row, useBanner, useGet, useOnMount, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
+import { Card, CardProps, ListPassProps, Loading, Row, useBanner, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -285,31 +285,61 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       perspective="600px"
     >
       {apps.map(({ app, definition }, index) => (
-        <Card
+        <OrbitAppCard
           key={app.id}
-          alt="flat"
-          background={theme => theme.backgroundStronger}
-          padding
+          app={app}
+          definition={definition}
           width={width}
           height={height}
-          overflow="hidden"
-          title={app.name}
-          animated
           transform={interpolate(
             Object.keys(springs[index]).map(k => springs[index][k]),
             (x, y, ry) =>
               `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateY(${ry}deg)`,
           )}
-        >
-          <OrbitApp id={app.id} identifier={definition.id} appDef={definition} />
-        </Card>
+        />
       ))}
     </Row>
   )
 })
 
+/**
+ * Handles visibility of the app as it moves in and out of viewport
+ */
+const OrbitAppCard = ({
+  app,
+  definition,
+  ...cardProps
+}: CardProps & { app: AppBit; definition: AppDefinition }) => {
+  const cardRef = useRef(null)
+  const [renderApp, setRenderApp] = useState(false)
+
+  useIntersectionObserver({
+    ref: cardRef,
+    onChange(x) {
+      if (x.length && x[0].isIntersecting && !renderApp) {
+        setRenderApp(true)
+      }
+    },
+  })
+
+  return (
+    <Card
+      ref={cardRef}
+      alt="flat"
+      background={theme => theme.backgroundStronger}
+      padding
+      overflow="hidden"
+      title={app.name}
+      animated
+      {...cardProps}
+    >
+      <OrbitApp id={app.id} identifier={definition.id} appDef={definition} renderApp={renderApp} />
+    </Card>
+  )
+}
+
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} hasShownOnce />
+  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} renderApp />
 }
 
 const OrbitContentArea = gloss(Box, {

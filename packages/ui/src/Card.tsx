@@ -63,7 +63,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
   return (
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <SizedSurface
-        ref={ref}
+        forwardRef={ref}
         className="ui-card-surface"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
@@ -78,7 +78,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
         activeStyle={null}
         {...sizedSurfaceProps}
       >
-        {/* Cards are ListItems scaled up 1.1 */}
         {hasTitle && (
           <ListItemSimple
             before={(toggle.isCollapsable && <CollapseArrow useCollapse={toggle} />) || undefined}

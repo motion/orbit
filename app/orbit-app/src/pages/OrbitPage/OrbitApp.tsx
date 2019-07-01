@@ -19,10 +19,10 @@ type OrbitAppProps = {
   id: number
   identifier: string
   appDef?: AppDefinition
-  hasShownOnce?: boolean
+  renderApp?: boolean
 }
 
-export const OrbitApp = memo(({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
+export const OrbitApp = memo(({ id, identifier, appDef, renderApp }: OrbitAppProps) => {
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
   const isActive = paneManagerStore.activePane.id === `${id}`
@@ -30,33 +30,12 @@ export const OrbitApp = memo(({ id, identifier, appDef, hasShownOnce }: OrbitApp
     id,
     identifier,
   })
-  // this is used for initial show/animation
-  const [shown, setShown] = useState(false)
-  // this is used to set display flex/none based on visibility to avoid too much on screen
-  const [appVisibility, setAppVisibility] = useState(isActive)
 
   useLayoutEffect(() => {
-    // set shown
-    if (isActive && !hasShownOnce) {
-      setShown(true)
-    }
     if (isActive) {
       orbitStore.setActiveAppStore(appStore)
     }
-
-    // set appVisibility
-    let tm
-    if (isActive) {
-      setAppVisibility(true)
-    } else {
-      tm = setTimeout(() => {
-        setAppVisibility(false)
-      }, 1000)
-    }
-    return () => {
-      clearTimeout(tm)
-    }
-  }, [orbitStore, appStore, isActive, hasShownOnce])
+  }, [orbitStore, appStore, isActive, renderApp])
 
   return (
     <Suspense
@@ -66,14 +45,14 @@ export const OrbitApp = memo(({ id, identifier, appDef, hasShownOnce }: OrbitApp
         </div>
       }
     >
-      <View className="orbit-app" flex={1} display={isActive || appVisibility ? 'flex' : 'none'}>
+      <View className="orbit-app" flex={1}>
         <ScopedState id={`or-${identifier}-${id}-`}>
           <ProvideStores stores={{ appStore }}>
             <ProvideVisibility visible={isActive}>
               <OrbitAppRender
                 id={id}
                 identifier={identifier}
-                hasShownOnce={hasShownOnce || shown}
+                renderApp={renderApp}
                 appDef={appDef}
               />
             </ProvideVisibility>
@@ -103,7 +82,7 @@ export const OrbitAppRenderOfDefinition = ({
   id,
   identifier,
   appDef,
-  hasShownOnce,
+  renderApp,
 }: AppRenderProps & {
   appDef: AppDefinition
 }) => {
@@ -152,7 +131,7 @@ export const OrbitAppRenderOfDefinition = ({
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`}>
             <Suspense fallback={<Loading />}>
-              {hasShownOnce && (
+              {renderApp && (
                 <FadeIn>
                   <FinalAppView
                     {...activeItem}

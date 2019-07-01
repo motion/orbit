@@ -275,7 +275,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       scrollX={scrollX.x}
       animated
       space
-      padding="20%"
+      padding
       ref={rowRef}
     >
       {apps.map(({ app, definition }, index) => (

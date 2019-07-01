@@ -3,6 +3,7 @@ import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { interpolate, useSpring, useSprings } from 'react-spring'
+import { useGesture } from 'react-use-gesture'
 
 import { queryStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
@@ -145,6 +146,25 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     config: { mass: 2, tension: 700, friction: 30 },
   }))
 
+  const bind = useGesture(
+    ({ down, delta: [xDelta], distance /* , direction: [xDir], cancel */ }) => {
+      // if (down && distance > window.innerWidth / 2)
+      //   cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pages.length - 1)))
+
+      if (down) {
+        const x = curI * rowSize.width + distance
+        setScroll({ x })
+      }
+
+      // set(i => {
+      //   if (i < index.current - 1 || i > index.current + 1) return { display: 'none' }
+      //   const x = (i - index.current) * window.innerWidth + (down ? xDelta : 0)
+      //   const sc = down ? 1 - distance / window.innerWidth / 2 : 1
+      //   return { x, sc, display: 'block' }
+      // })
+    },
+  )
+
   useReaction(
     () => orbitAppsCarouselStore.zoomedOut,
     () => {
@@ -207,6 +227,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         animated
         ref={rowRef}
         perspective="600px"
+        {...bind()}
       >
         {apps.map(({ app, definition }, index) => (
           <OrbitAppCard

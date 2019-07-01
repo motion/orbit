@@ -1,6 +1,10 @@
 import fuzzySort from 'fuzzysort'
 
-export const fuzzyFilter = <A extends Object[]>(query: string, results: A, extraOpts?): A => {
+export const fuzzyFilter = <A extends { [key: string]: any }[]>(
+  query: string,
+  results: A,
+  extraOpts?,
+): A => {
   if (!query) {
     return results
   }

@@ -1,7 +1,6 @@
-import { useSearchState } from '@o/kit'
+import { getRelativeDate, useSearchState } from '@o/kit'
 import { Button, SpaceGroup } from '@o/ui'
 import React from 'react'
-import { getDateAbbreviated } from './getDateAbbreviated'
 
 const filterAlt = {
   date: 'lightBlue',
@@ -13,7 +12,7 @@ const filterAlt = {
 
 export function SearchSuggestionBar() {
   const state = useSearchState()
-  const dateText = getDateAbbreviated(state.filters.dateState)
+  const dateText = getRelativeDate(state.filters.dateState, { short: true })
   const hasTextualDateFilter = !!state.activeDateFilters.length
   return (
     <SpaceGroup space="sm">

@@ -72,7 +72,6 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
         className="ui-card-surface"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
-        {...sizedSurfaceProps}
         flex={
           toggle.isCollapsable === true && toggle.val === true ? 'inherit' : sizedSurfaceProps.flex
         }
@@ -82,6 +81,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
         size={size}
         hoverStyle={null}
         activeStyle={null}
+        {...sizedSurfaceProps}
       >
         {/* Cards are ListItems scaled up 1.1 */}
         {hasTitle && (
@@ -136,7 +136,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             maxHeight={maxHeight}
             overflow="hidden"
             useCollapse={toggle}
-            {...resetColors}
+            // {...resetColors}
             {...padProps}
           >
             {showChildren && children}
@@ -152,7 +152,7 @@ Card.accepts = {
   surfaceProps: true,
 }
 
-const resetColors: any = {
-  background: theme => theme.background,
-  color: theme => theme.color,
-}
+// const resetColors: any = {
+//   background: theme => theme.background,
+//   color: theme => theme.color,
+// }

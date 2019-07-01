@@ -22,9 +22,6 @@ export type AppDefinition<AppData = any, SetupFields extends FormFieldsObj = any
   /** Set default colors for the icon */
   iconColors?: string[]
 
-  /** Description of app */
-  description?: string
-
   /** Automatic display item contents by ItemType */
   itemType?: ItemType
 

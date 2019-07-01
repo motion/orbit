@@ -16,7 +16,7 @@ import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 type OrbitAppProps = {
-  id: string
+  id: number
   identifier: string
   appDef?: AppDefinition
   hasShownOnce?: boolean
@@ -25,7 +25,7 @@ type OrbitAppProps = {
 export const OrbitApp = memo(({ id, identifier, appDef, hasShownOnce }: OrbitAppProps) => {
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
-  const isActive = paneManagerStore.activePane.id === id
+  const isActive = paneManagerStore.activePane.id === `${id}`
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,

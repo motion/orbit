@@ -16,7 +16,6 @@ export type ColProps = CollapsableProps &
   SpaceGroupProps &
   GroupProps & {
     suspense?: React.ReactNode | null
-    onSize?: (size: [number, number]) => any
   }
 
 export const Col = forwardRef((colProps: ColProps, ref) => {
@@ -34,7 +33,6 @@ export const Col = forwardRef((colProps: ColProps, ref) => {
       group,
       separator,
       suspense,
-      onSize,
       ...props
     },
   ] = splitCollapseProps(colProps)

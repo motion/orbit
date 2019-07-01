@@ -12,7 +12,7 @@ const filterAlt = {
 
 export function SearchSuggestionBar() {
   const state = useSearchState()
-  const dateText = getRelativeDate(state.filters.dateState, { short: true })
+  const dateText = getRelativeDate(state.filters.dateState.startDate, { short: true })
   const hasTextualDateFilter = !!state.activeDateFilters.length
   return (
     <SpaceGroup space="sm">

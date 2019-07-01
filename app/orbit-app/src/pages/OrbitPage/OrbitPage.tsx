@@ -1,12 +1,13 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
+import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useReaction, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
+import { Card, ListPassProps, Loading, Row, useBanner, useGet, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
+import { animated, useSprings } from 'react-spring'
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
@@ -186,37 +187,129 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 })
 
+// class OrbitHomeStore {
+//   props: {
+//     apps: AppBit[]
+//   }
+
+//   query = ''
+//   setQuery = x => (this.query = x)
+
+//   results = react(() => always(this.props.apps, this.query), this.getResults)
+
+//   getResults() {
+//     return fuzzyFilter(this.query, this.props.apps)
+//   }
+// }
+
 const OrbitWorkspaceApps = memo(() => {
-  const paneManagerStore = usePaneManagerStore()
-
-  // load all apps
-  const allApps = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    identifier: pane.type,
-  }))
-
+  const om = useOm()
+  const allApps = om.state.apps.activeApps
   const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
-
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
     .map(id => allApps.find(x => x.id === id))
     .filter(x => !!x && !!appDefsWithViews[x.identifier])
-    .map(x => ({
-      id: x.id,
-      definition: appDefsWithViews[x.identifier],
+    .map(app => ({
+      app: app,
+      definition: appDefsWithViews[app.identifier],
     }))
+  return <OrbitAppsCarousel apps={stableSortedApps} />
+})
+
+const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+  const paneStore = usePaneManagerStore()
+  const [sWidth, sHeight] = useWindowSize()
+  const [width, height] = [sWidth * 0.8, sHeight * 0.8]
+  const rowRef = useRef(null)
+  const rowSize = useParentNodeSize({ ref: rowRef })
+
+  // current scroll
+  const curX = useRef(0)
+  const forceUpdate = useForceUpdate()
+
+  // animation spring
+  console.log('apps.length', apps.length)
+  const [springs, set /* , _stop */] = useSprings(apps.length, i => ({
+    xyz: [i * 30, 0, -i * 50],
+    config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
+  }))
+
+  const scrollTo = offset => {
+    curX.current = offset
+    // @ts-ignore
+    set(i => {
+      console.log('got', i)
+      return {
+        xyz: [offset * i * 20, 0, offset * i * 10],
+      }
+    })
+  }
+  console.log('scrollTo', scrollTo)
+  const paneWidth = rowSize.width / apps.length
+  const getPaneWidth = useGet(paneWidth)
+
+  const scrollToPane = (paneIndex: number) => {
+    const pw = getPaneWidth()
+    console.log('scrollToPane', paneIndex, pw)
+    curX.current = pw * paneIndex
+    forceUpdate()
+    // scrollTo(set, paneWidth * paneIndex)
+  }
+
+  // listen for scroll
+  const handleMove = () => {
+    // stop()
+    // console.log('handleScroll', rowRef.current, rowRef.current.scrollLeft, rowSize.width)
+    scrollTo(rowRef.current.scrollLeft / rowSize.width)
+  }
+
+  // listen for pane movement
+  useReaction(() => paneStore.paneIndex, scrollToPane)
 
   return (
-    <>
-      {stableSortedApps.map(app => (
-        <OrbitApp key={app.id} id={app.id} identifier={app.definition.id} appDef={app.definition} />
+    <Row
+      flex={1}
+      alignItems="center"
+      justifyContent="flex-start"
+      scrollable="x"
+      onWheel={handleMove}
+      scrollX={curX.current}
+      animated
+      space
+      pad
+      ref={rowRef}
+    >
+      {apps.map(({ app, definition }, index) => (
+        <animated.div
+          key={app.id}
+          style={{
+            transform: springs[index].xyz.interpolate(
+              (x, y, z) =>
+                `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateZ(${z}deg)`,
+            ),
+            width,
+            height,
+          }}
+        >
+          <Card
+            alt="flat"
+            background={theme => theme.backgroundStronger}
+            pad
+            width={width}
+            height={height}
+            overflow="hidden"
+            title={app.name}
+          >
+            <OrbitApp id={app.id} identifier={definition.id} appDef={definition} />
+          </Card>
+        </animated.div>
       ))}
-    </>
+    </Row>
   )
 })
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  const appId = `${App.appConf.appId}`
-  return <OrbitApp appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
+  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} hasShownOnce />
 }
 
 const OrbitContentArea = gloss(Box, {

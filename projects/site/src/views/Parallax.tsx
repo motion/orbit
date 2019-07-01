@@ -1,11 +1,11 @@
-import { createAnimatedComponent as animated } from '@react-spring/animated'
+import { withAnimated } from '@react-spring/animated'
 import { config as configs, Controller, SpringConfig } from '@react-spring/core'
 import { useOnce } from '@react-spring/shared'
 import { defaultElement as View, requestAnimationFrame } from '@react-spring/shared/globals'
 import React, { CSSProperties, useContext, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 import { useMemoOne } from 'use-memo-one'
 
-const AnimatedView = animated(View)
+const AnimatedView = withAnimated(View)
 const ParentContext = React.createContext<any>(null)
 
 function getScrollType(horizontal: boolean) {

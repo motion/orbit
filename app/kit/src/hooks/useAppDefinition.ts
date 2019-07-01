@@ -71,7 +71,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): AppDefin
         id: searchedApp.identifier,
         icon: searchedApp.icon,
         name: searchedApp.name,
-        description: searchedApp.description,
+        // description: searchedApp.description,
         api: !!searchedApp.features.some(x => x === 'api') ? _ => _ : null,
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
         workers: !!searchedApp.features.some(x => x === 'workers') ? [] : undefined,

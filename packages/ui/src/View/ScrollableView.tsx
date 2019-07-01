@@ -1,12 +1,12 @@
 import { isDefined } from '@o/utils'
+import { AnimatedInterpolation, withAnimated } from '@react-spring/animated'
 import { Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 
 import { getSpaceSize, Size } from '../Space'
 import { Omit } from '../types'
-import { getPadding } from './pad'
-import { PaddedView } from './PaddedView'
-import { ViewProps } from './View'
+import { getPadding, PadProps } from './pad'
+import { View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
@@ -14,6 +14,9 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
+  animated?: boolean
+  scrollX?: number
+  scrollY?: number
 }
 
 const isOnlyChildrenDefined = props => {
@@ -38,6 +41,9 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     scrollable,
     parentSpacing,
     hideScrollbars,
+    animated,
+    scrollX,
+    scrollY,
     ...viewPropsRaw
   } = props
   let content = children
@@ -45,6 +51,10 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   const viewProps = {
     ...viewPropsRaw,
+    // x and y is more consistent in our naming scheme, see scrollable="x"
+    // but react-spring animation takes scrollTop and scrollLeft, converting
+    scrollTop: scrollY,
+    scrollLeft: scrollX,
     isWrapped: viewPropsRaw.flexWrap === 'wrap',
     parentSpacing,
     ...(!controlPad && {
@@ -57,50 +67,80 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   const innerPad = getPadding(props)
   const hasInnerPad = !!innerPad
 
-  if (!scrollable) {
-    return (
-      <ScrollableInner ref={ref} {...viewProps} {...props} {...innerPad}>
-        {content}
-      </ScrollableInner>
-    )
-  }
-
+  // we have to wrap in an a inner PaddedView because CSS will mess up scroll
   if (hasInnerPad) {
     content = (
-      <PaddedView ref={!scrollable ? ref : null} {...!scrollable && viewPropsRaw} {...innerPad}>
+      <PaddedView ref={ref} {...!scrollable && viewPropsRaw} {...innerPad}>
         {content}
       </PaddedView>
     )
   }
 
+  if (!scrollable) {
+    const Component = animated ? ScrollableInnerAnimated : ScrollableInner
+    const style = animated ? getAnimatedStyle(props) : props.style
+    return (
+      <Component
+        ref={(!hasInnerPad && ref) || undefined}
+        {...viewProps}
+        {...props}
+        {...innerPad}
+        style={style}
+      >
+        {content}
+      </Component>
+    )
+  }
+
+  const Component = animated ? ScrollableChromeAnimated : ScrollableChrome
+  const style = animated ? getAnimatedStyle(props) : props.style
   return (
-    <ScrollableChrome
-      ref={ref}
+    <Component
+      ref={(!hasInnerPad && ref) || undefined}
       scrollable={scrollable}
       {...viewProps}
       {...props}
       className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||
         ''}`}
       padding={0}
+      style={style}
     >
       {content}
-    </ScrollableChrome>
+    </Component>
   )
 })
 
-// for some reason this wouldn't apply through styles
-// const hideScrollbarsStyle = {
-//   '&::-webkit-scrollbar': {
-//     height: 0,
-//     width: 0,
-//     background: 'transparent',
-//   },
-// }
+// find react-spring animated props
+const getAnimatedStyle = props => {
+  let style = props.style
+  for (const key in props) {
+    if (props[key] instanceof AnimatedInterpolation) {
+      style = style || {}
+      style[key] = props[key]
+    }
+  }
+  console.log('animated props', style)
+  return style
+}
 
-const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }>(Col, {
+// plain padded view
+export const PaddedView = gloss<ViewProps & PadProps>(View, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
-}).theme(props => {
+  // dont flex! this ruins the pad and width/height
+  // use minHeight/minWidth instead
+  // flex: 1,
+  alignItems: 'inherit',
+  justifyContent: 'inherit',
+  overflow: 'inherit',
+  // otherwise it "shrinks to fit" vertically and overflow will cut off
+  minWidth: '100%',
+  minHeight: '100%',
+}).theme(getPadding)
+
+// TODO figure this out a bit better and cleanup this code
+// i have a feeling ScrollableInner and PaddedView and ScrollableChrome can be simplfiied/unified in some way
+const wrappingSpaceTheme = props => {
   if (props.isWrapped) {
     const space = getSpaceSize(props.parentSpacing)
     return {
@@ -110,7 +150,12 @@ const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }
       },
     }
   }
-})
+}
+
+const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }>(Col, {
+  flexDirection: 'inherit',
+  flexWrap: 'inherit',
+}).theme(wrappingSpaceTheme)
 
 export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   boxSizing: 'content-box',
@@ -124,3 +169,6 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   ...(scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
   ...(scrollable === true && { overflow: 'auto' }),
 }))
+
+const ScrollableInnerAnimated = withAnimated(ScrollableInner)
+const ScrollableChromeAnimated = withAnimated(ScrollableChrome)

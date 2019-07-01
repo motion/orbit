@@ -35,7 +35,6 @@
     "react-hot-loader": "^4.12.0",
     "react-media": "1.9.2",
     "react-navi": "0.12.4",
-    "react-spring": "9.0.0-beta.24",
     "react-svg-inline": "^2.1.0",
     "remark": "9.0.0",
     "requestidlecallback-polyfill": "1.0.2",
@@ -46,9 +45,10 @@
     "sticky-sidebar": "3.3.1",
     "zenscroll": "^4.0.2",
     "use-memo-one": "^1.1.0",
-    "@react-spring/core": "^9.0.0-beta.24",
-    "@react-spring/shared": "^9.0.0-beta.24",
-    "@react-spring/animated": "^9.0.0-beta.24"
+    "react-spring": "9.0.0-beta.27",
+    "@react-spring/core": "9.0.0-beta.27",
+    "@react-spring/shared": "9.0.0-beta.27",
+    "@react-spring/animated": "9.0.0-beta.27"
   },
   "devDependencies": {
     "react-docgen-typescript": "1.12.3",

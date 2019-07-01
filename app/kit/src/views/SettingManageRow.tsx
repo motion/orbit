@@ -14,7 +14,7 @@ export function SettingManageRow(props: { app: AppBit; whitelist: WhiteList }) {
   }
 
   return (
-    <Row pad alignItems="center">
+    <Row padding alignItems="center">
       {!!props.whitelist ? (
         <ManageSmartSync whitelist={props.whitelist} />
       ) : (

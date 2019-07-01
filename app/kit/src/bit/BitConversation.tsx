@@ -46,7 +46,7 @@ export function BitConversation(props: AppBitMainProps) {
 
   return (
     <>
-      <Section flex={1} pad scrollable="y" space>
+      <Section flex={1} padding scrollable="y" space>
         <ConvoGroup bits={prevConvos.reverse()} />
         {!!props.item && <ChatMessages messages={props.item.data.messages} />}
       </Section>

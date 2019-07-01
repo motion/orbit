@@ -256,7 +256,6 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       const paneIndex = apps.findIndex(x => x.app.id === appId)
       if (paneIndex !== -1) {
         const x = pw * paneIndex
-        console.log('paneIndex', paneIndex, pw, x, rowSize.width)
         scrollTo(x === 0 ? 0 : x / rowSize.width)
       }
     }

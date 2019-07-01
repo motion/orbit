@@ -75,7 +75,7 @@ export const Table = (tableProps: TableProps) => {
   const scale = useScale()
   const rowHeight = rowLineHeight * scale
   const sizer = useNodeSize({ throttle: 150, disable: !isVisible })
-  const height = maxHeight ? Math.min(maxHeight, sizer.height) : sizer.height
+  const height = typeof maxHeight === 'number' ? Math.min(maxHeight, sizer.height) : sizer.height
   const items = useMemo(() => (props.items ? props.items.map(normalizeRow) : null), [props.items])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, items && items[0]), defaultColumns),

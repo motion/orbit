@@ -222,7 +222,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
-      console.warn('may need to recalc height')
       // this.listRef.current.resetAfterIndex(0, true)
       this.setState({
         shouldRecalculateHeight: false,

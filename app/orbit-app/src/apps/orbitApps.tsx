@@ -19,7 +19,6 @@ let dynamicApps: AppDefinition[] = []
 
 async function updateDefinitions() {
   const rawApps = require('../../appDefinitions.js')
-  console.log('rawApps', rawApps)
   dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
   //
   // new idea:

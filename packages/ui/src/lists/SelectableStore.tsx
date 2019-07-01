@@ -94,7 +94,6 @@ export class SelectableStore {
   resetActiveOnRowsChange = react(
     () => always(this.rows),
     () => {
-      console.warn('resetActiveRowsOnChange')
       this.keyToIndex = {}
       this.setActive([])
     },

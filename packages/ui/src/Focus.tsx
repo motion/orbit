@@ -107,7 +107,9 @@ export class FocusManagerStore {
 
   // gets the order of things in the DOM
   getOrder() {
-    const items = Array.from(document.querySelectorAll(this.ids.map(id => `#${id}`).join(', ')))
+    const selectors = this.ids.map(id => `#${id}`).join(', ')
+    console.log('selectors', selectors)
+    const items = Array.from(document.querySelectorAll(selectors))
     return items.map((_, index) => {
       return this.ids[index]
     })

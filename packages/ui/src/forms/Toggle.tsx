@@ -20,9 +20,9 @@ export type ToggleProps = Partial<ReactSwitchProps> & {
   opacity?: number // todo make this whole switch native element
 }
 
-export function Toggle(props: ToggleProps) {
+export function Toggle({ defaultChecked, ...props }: ToggleProps) {
   const theme = useTheme()
-  const internal = useToggle(props.defaultChecked)
+  const internal = useToggle(defaultChecked)
   const checked = typeof props.checked !== 'undefined' ? props.checked : internal.val
   const colorProps = props.theme ? props.theme : toggleTheme(theme)
   const scale = useScale()

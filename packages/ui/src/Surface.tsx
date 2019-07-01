@@ -1,6 +1,7 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
+import { withAnimated } from '@react-spring/animated'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -21,6 +22,7 @@ import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
+import { getAnimatedStyleProp } from './View/ScrollableView'
 import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -237,6 +239,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     dangerouslySetInnerHTML,
     spaceSize,
     betweenIconElement,
+    animated,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -464,7 +467,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
-  const surfaceFrameProps = {
+  const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
     ref: forwardRef,
     themeSelect,
@@ -483,13 +486,18 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+    // animated styles
+    ...(animated && { style: getAnimatedStyleProp(props) }),
   }
+
+  // animated component
+  const SurfaceFrameComponent = animated ? AnimatedSurfaceFrame : SurfaceFrame
 
   return (
     <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
-          <SurfaceFrame {...surfaceFrameProps} />
+          <SurfaceFrameComponent {...surfaceFrameProps} />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
@@ -514,7 +522,8 @@ const defaultTextTheme = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
+type SurfaceFrameProps = ThroughProps & SurfaceProps
+const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
@@ -588,6 +597,8 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
 
   return res
 })
+
+const AnimatedSurfaceFrame = withAnimated(SurfaceFrame)
 
 const perfectCenterStyle = props => {
   if (props.height && props.height % 2 === 1) {

@@ -78,7 +78,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   if (!scrollable) {
     const Component = animated ? ScrollableInnerAnimated : ScrollableInner
-    const style = animated ? getAnimatedStyle(props) : props.style
+    const style = animated ? getAnimatedStyleProp(props) : props.style
     return (
       <Component
         ref={(!hasInnerPad && ref) || undefined}
@@ -93,7 +93,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   }
 
   const Component = animated ? ScrollableChromeAnimated : ScrollableChrome
-  const style = animated ? getAnimatedStyle(props) : props.style
+  const style = animated ? getAnimatedStyleProp(props) : props.style
   return (
     <Component
       ref={(!hasInnerPad && ref) || undefined}
@@ -111,7 +111,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 })
 
 // find react-spring animated props
-const getAnimatedStyle = props => {
+export const getAnimatedStyleProp = props => {
   let style = props.style
   for (const key in props) {
     if (props[key] instanceof AnimatedInterpolation) {
@@ -119,7 +119,6 @@ const getAnimatedStyle = props => {
       style[key] = props[key]
     }
   }
-  console.log('animated props', style)
   return style
 }
 

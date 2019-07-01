@@ -2,10 +2,10 @@ import { command, useModel } from '@o/bridge'
 import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useReaction, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Card, ListPassProps, Loading, Row, useBanner, useGet, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
+import { Card, ListPassProps, Loading, Row, useBanner, useGet, useOnMount, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as ReactDOM from 'react-dom'
 import { animated, useSprings } from 'react-spring'
 
@@ -228,8 +228,14 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const forceUpdate = useForceUpdate()
 
   // animation spring
-  console.log('apps.length', apps.length)
-  const [springs, set /* , _stop */] = useSprings(apps.length, i => ({
+
+  // fixing bug in react-spring
+  const [mounted, setMounted] = useState(false)
+  useOnMount(() => {
+    setMounted(true)
+  })
+
+  const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
     xyz: [i * 30, 0, -i * 50],
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
@@ -238,13 +244,11 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
     curX.current = offset
     // @ts-ignore
     set(i => {
-      console.log('got', i)
       return {
         xyz: [offset * i * 20, 0, offset * i * 10],
       }
     })
   }
-  console.log('scrollTo', scrollTo)
   const paneWidth = rowSize.width / apps.length
   const getPaneWidth = useGet(paneWidth)
 
@@ -258,8 +262,6 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
 
   // listen for scroll
   const handleMove = () => {
-    // stop()
-    // console.log('handleScroll', rowRef.current, rowRef.current.scrollLeft, rowSize.width)
     scrollTo(rowRef.current.scrollLeft / rowSize.width)
   }
 
@@ -280,29 +282,22 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
       ref={rowRef}
     >
       {apps.map(({ app, definition }, index) => (
-        <animated.div
+        <Card
           key={app.id}
-          style={{
-            transform: springs[index].xyz.interpolate(
-              (x, y, z) =>
-                `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateZ(${z}deg)`,
-            ),
-            width,
-            height,
-          }}
+          alt="flat"
+          background={theme => theme.backgroundStronger}
+          pad
+          width={width}
+          height={height}
+          overflow="hidden"
+          title={app.name}
+          animated
+          transform={springs[index].xyz.interpolate(
+            (x, y, z) => `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateZ(${z}deg)`,
+          )}
         >
-          <Card
-            alt="flat"
-            background={theme => theme.backgroundStronger}
-            pad
-            width={width}
-            height={height}
-            overflow="hidden"
-            title={app.name}
-          >
-            <OrbitApp id={app.id} identifier={definition.id} appDef={definition} />
-          </Card>
-        </animated.div>
+          <OrbitApp id={app.id} identifier={definition.id} appDef={definition} />
+        </Card>
       ))}
     </Row>
   )

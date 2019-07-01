@@ -1,6 +1,8 @@
 import { HighlightOptions } from '@o/utils'
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useMemo } from 'react'
+
 import { MergeContext } from '../helpers/MergeContext'
+import { useDebounceValue } from '../hooks/useDebounce'
 import { Text, TextProps } from '../text/Text'
 
 type Props = TextProps & {
@@ -20,19 +22,25 @@ export type MergeHighlightsContextProps = {
 }
 export const HighlightsContext = createContext(defaultValue)
 
-export const HighlightProvide = ({ value, children }: MergeHighlightsContextProps) => (
-  <MergeContext
-    Context={HighlightsContext}
-    value={{
+export const HighlightProvide = (props: MergeHighlightsContextProps) => {
+  // debounce this because its perf sensitive
+  const valueDebounced = useDebounceValue(props.value, 200)
+  const value = useMemo(
+    () => ({
       words: [],
       maxSurroundChars: Infinity,
       maxChars: Infinity,
       ...value,
-    }}
-  >
-    {children}
-  </MergeContext>
-)
+    }),
+    [valueDebounced],
+  )
+
+  return (
+    <MergeContext Context={HighlightsContext} value={value}>
+      {props.children}
+    </MergeContext>
+  )
+}
 
 export function HighlightText({ children, ...props }: Props) {
   const options = useContext(HighlightsContext)

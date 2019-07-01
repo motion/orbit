@@ -227,15 +227,17 @@ export const List = memo((allProps: ListProps) => {
   const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
   const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
+  const highlightValue = useMemo(
+    () => ({
+      words,
+      maxChars: 500,
+      maxSurroundChars: 80,
+    }),
+    [words],
+  )
 
   const children = (
-    <HighlightProvide
-      value={{
-        words,
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }}
-    >
+    <HighlightProvide value={highlightValue}>
       {hasResults && (
         <VirtualList
           items={filtered.results}

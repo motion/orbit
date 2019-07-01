@@ -65,7 +65,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-flip-toolkit": "6.6.4",
-    "react-hot-loader": "^4.11.0",
+    "react-hot-loader": "^4.12.0",
     "react-shadow": "16.3.2",
     "react-spring": "9.0.0-beta.24",
     "react-svg-inline": "2.1.1",
@@ -78,10 +78,11 @@
     "monaco-editor": "^0.17.0",
     "monaco-editor-webpack-plugin": "^1.7.0",
     "resize-observer-polyfill": "^1.5.1",
-    "raven": "^2.6.4"
+    "raven": "^2.6.4",
+    "react-use-gesture": "^5.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "*",
     "@babel/preset-env": "*",
     "@babel/preset-react": "*",
     "@o/babel-preset-motion": "^2.5.6",

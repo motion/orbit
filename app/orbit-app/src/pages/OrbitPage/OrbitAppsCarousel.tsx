@@ -258,6 +258,10 @@ const OrbitAppCard = ({
       overflow="hidden"
       title={app.name}
       animated
+      onDoubleClick={() => {
+        orbitAppsCarouselStore.setFocusedAppIndex(index, true)
+        orbitAppsCarouselStore.setZoomedOut(false)
+      }}
       {...(isFocused
         ? {
             boxShadow: [

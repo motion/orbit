@@ -12,12 +12,17 @@ class OrbitAppsCarouselStore {
   query = ''
   results = react(() => always(this.apps, this.query), this.getResults)
 
+  triggerScrollToFocused = 0
+
   focusedAppIndex = 0
-  setFocusedAppIndex(next: number) {
+  setFocusedAppIndex(next: number, forceScroll = false) {
     this.focusedAppIndex = next
+    if (forceScroll) {
+      this.triggerScrollToFocused = Date.now()
+    }
   }
 
-  zoomedOut = false
+  zoomedOut = true
   setZoomedOut(next: boolean) {
     this.zoomedOut = next
   }
@@ -33,16 +38,26 @@ class OrbitAppsCarouselStore {
   getResults() {
     return fuzzyFilter(this.query, this.apps)
   }
+
+  right() {
+    if (this.focusedAppIndex < this.apps.length - 1) {
+      this.setFocusedAppIndex(this.focusedAppIndex + 1, true)
+    }
+  }
+
+  left() {
+    if (this.focusedAppIndex > 0) {
+      this.setFocusedAppIndex(this.focusedAppIndex - 1, true)
+    }
+  }
 }
 
 export const orbitAppsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 window['orbitAppsCarouselStore'] = orbitAppsCarouselStore
 
 export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
-  const store = orbitAppsCarouselStore.useStore()
-
   useEffect(() => {
-    store.setApps(apps)
+    orbitAppsCarouselStore.setApps(apps)
   }, [apps])
 
   const paneStore = usePaneManagerStore()
@@ -50,6 +65,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   const [width, height] = [sWidth * 0.8, sHeight * 0.8]
   const rowRef = useRef(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
+  const getRowSize = useGet(rowSize)
   // animation spring
   // fixing bug in react-spring
   const [mounted, setMounted] = useState(false)
@@ -57,6 +73,18 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   useOnMount(() => {
     setMounted(true)
   })
+
+  useReaction(
+    () => orbitAppsCarouselStore.triggerScrollToFocused,
+    () => {
+      const rowWidth = getRowSize().width
+      console.log('should scroll via keyboard', rowWidth, orbitAppsCarouselStore.focusedAppIndex)
+      rowRef.current.scrollLeft = rowWidth * orbitAppsCarouselStore.focusedAppIndex
+    },
+    {
+      lazy: true,
+    },
+  )
 
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
     x: i * 30,
@@ -66,8 +94,6 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   }))
 
   const scrollTo = (paneIndexPrecise: number) => {
-    console.log('paneIndexPrecise', paneIndexPrecise)
-
     const paneIndex = Math.round(paneIndexPrecise)
     if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
       orbitAppsCarouselStore.setFocusedAppIndex(paneIndex)

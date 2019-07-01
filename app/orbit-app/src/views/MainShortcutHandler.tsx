@@ -92,14 +92,15 @@ export default memo(function MainShortcutHandler(props: {
       },
       LEFT: () => {
         if (orbitAppsCarouselStore.zoomedOut) {
-          // handle moving between input/carousel
+          orbitAppsCarouselStore.left()
           return
         }
         shortcutStore.emit(Direction.left)
       },
       RIGHT: () => {
+        console.log('right')
         if (orbitAppsCarouselStore.zoomedOut) {
-          // handle moving between input/carousel
+          orbitAppsCarouselStore.right()
           return
         }
         shortcutStore.emit(Direction.right)

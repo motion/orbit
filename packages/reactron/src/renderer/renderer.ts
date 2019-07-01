@@ -18,6 +18,10 @@ const HostConfig = {
   cancelDeferredCallback,
   now,
 
+  // TODO remove this on next scheduler upgrade
+  schedulePassiveEffects: scheduleDeferredCallback,
+  cancelPassiveEffects: cancelDeferredCallback,
+
   shouldDeprioritizeSubtree() {
     return false
   },

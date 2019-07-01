@@ -30,7 +30,7 @@ export const HighlightProvide = (props: MergeHighlightsContextProps) => {
       words: [],
       maxSurroundChars: Infinity,
       maxChars: Infinity,
-      ...value,
+      ...valueDebounced,
     }),
     [valueDebounced],
   )

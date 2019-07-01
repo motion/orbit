@@ -16,8 +16,8 @@ export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   scrollable?: boolean | 'x' | 'y'
   parentSpacing?: Size
   animated?: boolean
-  scrollX?: SpringValue<number> // TODO | number requires a custom hook
-  scrollY?: SpringValue<number>
+  scrollLeft?: SpringValue<number> // TODO | number requires a custom hook
+  scrollTop?: SpringValue<number>
 }
 
 const isOnlyChildrenDefined = props => {
@@ -42,8 +42,8 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     parentSpacing,
     hideScrollbars,
     animated,
-    scrollX,
-    scrollY,
+    scrollLeft,
+    scrollTop,
     ...viewPropsRaw
   } = props
   let content = children
@@ -77,10 +77,8 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     <Component
       ref={ref}
       scrollable={scrollable}
-      // x and y is more consistent in our naming scheme, see scrollable="x"
-      // but react-spring animation takes scrollTop and scrollLeft, converting
-      scrollTop={scrollY}
-      scrollLeft={scrollX}
+      scrollTop={scrollTop}
+      scrollLeft={scrollLeft}
       {...viewProps}
       {...props}
       className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||
@@ -97,6 +95,9 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 export const getAnimatedStyleProp = props => {
   let style = props.style
   for (const key in props) {
+    if (key === 'scrollLeft' || key === 'scrollTop') {
+      continue
+    }
     const val = props[key]
     if (val instanceof AnimatedInterpolation || val instanceof AnimatedValue) {
       style = style || {}

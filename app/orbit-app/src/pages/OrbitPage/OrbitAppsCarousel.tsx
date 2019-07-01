@@ -1,16 +1,32 @@
-import { always, AppDefinition, AppWithDefinition, createUsableStore, react, useReaction } from '@o/kit'
+import { AppDefinition, AppWithDefinition, createUsableStore, ensure, react, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useTheme, useWindowSize } from '@o/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { interpolate, useSprings } from 'react-spring'
+import { interpolate, useSpring, useSprings } from 'react-spring'
 
-import { usePaneManagerStore } from '../../om/stores'
+import { queryStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
 class OrbitAppsCarouselStore {
   apps: AppWithDefinition[] = []
-  query = ''
-  results = react(() => always(this.apps, this.query), this.getResults)
+
+  get searchableApps() {
+    return this.apps.map(x => ({
+      name: `${x.app.name} ${x.definition.id}`,
+      id: x.app.id,
+    }))
+  }
+
+  scrollToSearchedApp = react(
+    () => queryStore.query,
+    query => {
+      ensure('has apps', !!this.apps.length)
+      const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
+      const curId = searchedApp ? searchedApp.id : this.apps[0].app.id
+      const appIndex = this.apps.findIndex(x => x.app.id === curId)
+      this.setFocusedAppIndex(appIndex, true)
+    },
+  )
 
   triggerScrollToFocused = 0
 
@@ -29,14 +45,6 @@ class OrbitAppsCarouselStore {
 
   setApps(next: AppWithDefinition[]) {
     this.apps = next
-  }
-
-  setQuery(x: string) {
-    this.query = x
-  }
-
-  getResults() {
-    return fuzzyFilter(this.query, this.apps)
   }
 
   right() {
@@ -85,16 +93,9 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     setMounted(true)
   })
 
-  useReaction(
-    () => orbitAppsCarouselStore.triggerScrollToFocused,
-    () => {
-      rowRef.current.scrollLeft = rowSize.width * orbitAppsCarouselStore.focusedAppIndex
-    },
-    {
-      lazy: true,
-    },
-    [rowSize],
-  )
+  const [scrollSpring, setScroll] = useSpring(() => ({
+    x: 0,
+  }))
 
   useReaction(
     () => orbitAppsCarouselStore.zoomedOut,
@@ -109,7 +110,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
   }))
 
-  const scrollTo = (next: number) => {
+  const scrollToPaneIndex = (next: number) => {
     if (curPos !== next) {
       const paneIndex = Math.round(next)
       if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
@@ -120,6 +121,18 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     }
   }
 
+  useReaction(
+    () => orbitAppsCarouselStore.triggerScrollToFocused,
+    () => {
+      setScroll({ x: rowSize.width * orbitAppsCarouselStore.focusedAppIndex })
+      scrollToPaneIndex(orbitAppsCarouselStore.focusedAppIndex)
+    },
+    {
+      lazy: true,
+    },
+    [rowSize],
+  )
+
   const paneWidth = rowSize.width / apps.length
   const getPaneWidth = useGet(paneWidth)
 
@@ -127,15 +140,15 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
 
   // listen for pane movement
   useEffect(() => {
-    const scrollToPane = (appId: number) => {
+    const scrollToApp = (appId: number) => {
       const pw = getPaneWidth()
       const paneIndex = apps.findIndex(x => x.app.id === appId)
       if (paneIndex !== -1) {
         const x = pw * paneIndex
-        scrollTo(x === 0 ? 0 : x / rowSize.width)
+        scrollToPaneIndex(x === 0 ? 0 : x / rowSize.width)
       }
     }
-    scrollToPane(curAppId)
+    scrollToApp(curAppId)
   }, [curAppId, rowSize.width])
 
   return (
@@ -145,9 +158,9 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
       justifyContent="flex-start"
       scrollable="x"
       onWheel={() => {
-        scrollTo(rowRef.current.scrollLeft / rowSize.width)
+        scrollToPaneIndex(rowRef.current.scrollLeft / rowSize.width)
       }}
-      scrollX={springs[0].x}
+      scrollLeft={scrollSpring.x}
       animated
       space
       padding

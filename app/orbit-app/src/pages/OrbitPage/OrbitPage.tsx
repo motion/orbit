@@ -1,12 +1,11 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, AppWithDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
-import { AppBit, AppStatusModel, CloseAppCommand } from '@o/models'
+import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
+import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Card, CardProps, ListPassProps, Loading, Row, useBanner, useGet, useIntersectionObserver, useOnMount, useParentNodeSize, useWindowSize, View, ViewProps } from '@o/ui'
+import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
-import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { interpolate, useSprings } from 'react-spring'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
@@ -16,11 +15,12 @@ import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useOm } from '../../om/om'
-import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
+import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
+import { OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
@@ -180,21 +180,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 })
 
-// class OrbitHomeStore {
-//   props: {
-//     apps: AppBit[]
-//   }
-
-//   query = ''
-//   setQuery = x => (this.query = x)
-
-//   results = react(() => always(this.props.apps, this.query), this.getResults)
-
-//   getResults() {
-//     return fuzzyFilter(this.query, this.props.apps)
-//   }
-// }
-
 const OrbitWorkspaceApps = memo(() => {
   const om = useOm()
   const allApps = om.state.apps.activeApps.filter(x => x.tabDisplay !== 'hidden')
@@ -208,127 +193,6 @@ const OrbitWorkspaceApps = memo(() => {
     }))
   return <OrbitAppsCarousel apps={stableSortedApps} />
 })
-
-const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
-  const paneStore = usePaneManagerStore()
-  const [sWidth, sHeight] = useWindowSize()
-  const [width, height] = [sWidth * 0.8, sHeight * 0.8]
-  const rowRef = useRef(null)
-  const rowSize = useParentNodeSize({ ref: rowRef })
-
-  // animation spring
-
-  // fixing bug in react-spring
-  const [mounted, setMounted] = useState(false)
-  useOnMount(() => {
-    setMounted(true)
-  })
-
-  const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
-    x: i * 30,
-    y: 0,
-    ry: -i * 50,
-    config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
-  }))
-
-  const scrollTo = offset => {
-    // @ts-ignore
-    set(i => {
-      return {
-        x: offset * i * 20,
-        y: 0,
-        ry: offset * i * 10,
-      }
-    })
-  }
-  const paneWidth = rowSize.width / apps.length
-  const getPaneWidth = useGet(paneWidth)
-
-  // listen for scroll
-  const handleMove = () => {
-    scrollTo(rowRef.current.scrollLeft / rowSize.width)
-  }
-
-  // listen for pane movement
-  useEffect(() => {
-    const scrollToPane = (appId: number) => {
-      const pw = getPaneWidth()
-      const paneIndex = apps.findIndex(x => x.app.id === appId)
-      if (paneIndex !== -1) {
-        const x = pw * paneIndex
-        scrollTo(x === 0 ? 0 : x / rowSize.width)
-      }
-    }
-    scrollToPane(+paneStore.activePane.id)
-  }, [paneStore.activePane.id, rowSize.width])
-
-  return (
-    <Row
-      flex={1}
-      alignItems="center"
-      justifyContent="flex-start"
-      scrollable="x"
-      onWheel={handleMove}
-      scrollX={springs[0].x}
-      animated
-      space
-      padding
-      ref={rowRef}
-      perspective="600px"
-    >
-      {apps.map(({ app, definition }, index) => (
-        <OrbitAppCard
-          key={app.id}
-          app={app}
-          definition={definition}
-          width={width}
-          height={height}
-          transform={interpolate(
-            Object.keys(springs[index]).map(k => springs[index][k]),
-            (x, y, ry) =>
-              `translate3d(${x}px,${y}px,0) scale(${1 - index * 0.05}) rotateY(${ry}deg)`,
-          )}
-        />
-      ))}
-    </Row>
-  )
-})
-
-/**
- * Handles visibility of the app as it moves in and out of viewport
- */
-const OrbitAppCard = ({
-  app,
-  definition,
-  ...cardProps
-}: CardProps & { app: AppBit; definition: AppDefinition }) => {
-  const cardRef = useRef(null)
-  const [renderApp, setRenderApp] = useState(false)
-
-  useIntersectionObserver({
-    ref: cardRef,
-    onChange(x) {
-      if (x.length && x[0].isIntersecting && !renderApp) {
-        setRenderApp(true)
-      }
-    },
-  })
-
-  return (
-    <Card
-      ref={cardRef}
-      alt="flat"
-      background={theme => theme.backgroundStronger}
-      padding
-      overflow="hidden"
-      title={app.name}
-      animated
-      {...cardProps}
-    >
-      <OrbitApp id={app.id} identifier={definition.id} appDef={definition} renderApp={renderApp} />
-    </Card>
-  )
-}
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
   return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} renderApp />

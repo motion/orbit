@@ -6,6 +6,7 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
+import { orbitAppsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -16,14 +17,14 @@ const rootShortcuts = {
   SWITCH_SPACE: 'command+k',
   COPY_LINK: 'command+shift+c',
   ESCAPE: 'esc',
-  DOWN: 'down',
   UP: 'up',
+  DOWN: 'down',
+  LEFT: 'left',
+  RIGHT: 'right',
   BACK: 'command+[',
   FORWARD: 'command+[',
   LEFT_TAB: 'command+shift+[',
   RIGHT_TAB: 'command+shift+]',
-  LEFT: 'left',
-  RIGHT: 'right',
   COMMAND_1: 'command+1',
   COMMAND_2: 'command+2',
   COMMAND_3: 'command+3',
@@ -75,10 +76,34 @@ export default memo(function MainShortcutHandler(props: {
           command(ToggleOrbitMainCommand)
         }
       },
-      UP: () => shortcutStore.emit(Direction.up),
-      DOWN: () => shortcutStore.emit(Direction.down),
-      LEFT: () => shortcutStore.emit(Direction.left),
-      RIGHT: () => shortcutStore.emit(Direction.right),
+      UP: () => {
+        if (orbitAppsCarouselStore.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.up)
+      },
+      DOWN: () => {
+        if (orbitAppsCarouselStore.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.down)
+      },
+      LEFT: () => {
+        if (orbitAppsCarouselStore.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.left)
+      },
+      RIGHT: () => {
+        if (orbitAppsCarouselStore.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.right)
+      },
     }
 
     if (paneManagerStore) {

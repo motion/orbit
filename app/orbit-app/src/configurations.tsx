@@ -53,6 +53,7 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
 
   configureHotKeys({
     ignoreTags: [],
+    // logLevel: 'verbose',
   })
 }
 

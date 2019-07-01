@@ -1,7 +1,7 @@
 import { useActiveSpace } from '@o/kit'
 import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, useCallback } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 
 import { useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'

@@ -59,7 +59,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   // this is necessary so CSS scrollable has proper "end margin"
   if (hasPadding) {
     content = (
-      <PaddedView ref={ref} {...!scrollable && viewPropsRaw} padding={padding}>
+      <PaddedView {...!scrollable && viewPropsRaw} padding={padding}>
         {content}
       </PaddedView>
     )
@@ -69,7 +69,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     const Component = animated ? ScrollableInnerAnimated : ScrollableInner
     const style = animated ? getAnimatedStyleProp(props) : props.style
     return (
-      <Component ref={(!hasPadding && ref) || undefined} {...viewProps} {...props} style={style}>
+      <Component ref={ref} {...viewProps} {...props} style={style}>
         {content}
       </Component>
     )
@@ -79,7 +79,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   const style = animated ? getAnimatedStyleProp(props) : props.style
   return (
     <Component
-      ref={(!hasPadding && ref) || undefined}
+      ref={ref}
       scrollable={scrollable}
       // x and y is more consistent in our naming scheme, see scrollable="x"
       // but react-spring animation takes scrollTop and scrollLeft, converting

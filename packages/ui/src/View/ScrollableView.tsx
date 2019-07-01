@@ -51,10 +51,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   const viewProps = {
     ...viewPropsRaw,
-    // x and y is more consistent in our naming scheme, see scrollable="x"
-    // but react-spring animation takes scrollTop and scrollLeft, converting
-    scrollTop: scrollY,
-    scrollLeft: scrollX,
     isWrapped: viewPropsRaw.flexWrap === 'wrap',
     parentSpacing,
     ...(!controlPad && {
@@ -98,6 +94,10 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     <Component
       ref={(!hasInnerPad && ref) || undefined}
       scrollable={scrollable}
+      // x and y is more consistent in our naming scheme, see scrollable="x"
+      // but react-spring animation takes scrollTop and scrollLeft, converting
+      scrollTop={scrollY}
+      scrollLeft={scrollX}
       {...viewProps}
       {...props}
       className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||

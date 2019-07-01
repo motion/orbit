@@ -17,7 +17,7 @@ export let Basic = () => {
               onSelect={x => setRows(x)}
             />
           </Pane>
-          <Pane space pad scrollable="x" flexDirection="row">
+          <Pane space padding scrollable="x" flexDirection="row">
             {rows.map(row => (
               <Card key={row.id} title={row.name.first} subTitle={row.username} elevation={2} pad>
                 <DefinitionList row={row} />

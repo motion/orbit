@@ -74,7 +74,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
   }
 
   return (
-    <Section titleBorder margin pad title="General Settings">
+    <Section titleBorder margin padding title="General Settings">
       <ToggleField
         label="Start on Login"
         checked={settings.autoLaunch}
@@ -146,7 +146,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
       </FormField>
 
       <Space />
-      <Divider pad />
+      <Divider padding />
       <Space />
 
       <FormField label="Reset">

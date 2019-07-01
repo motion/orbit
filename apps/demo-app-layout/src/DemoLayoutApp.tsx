@@ -121,7 +121,7 @@ export function DemoLayoutApp() {
                 }}
               />
             </Pane>
-            <Pane title="Elements" flex={2} pad collapsable space>
+            <Pane title="Elements" flex={2} padding collapsable space>
               <SubTitle>Sub title</SubTitle>
               <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
             </Pane>

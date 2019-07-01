@@ -380,7 +380,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   return (
     <Layout type="row">
       <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
-        <Col pad space>
+        <Col padding space>
           <Row justifyContent="space-between">
             <Tag size={1.2} alt="lightGray">
               {method.name}
@@ -416,19 +416,19 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             }
           />
 
-          <Card pad elevation={3} height={24 * 3 + 16 * 2}>
+          <Card padding elevation={3} height={24 * 3 + 16 * 2}>
             <MonacoEditor noGutter readOnly value={queryBuilder.preview} />
           </Card>
 
           <Title size="xs">Output</Title>
           <Tabs defaultActive="0">
-            <Tab pad key="0" label="Inspect">
+            <Tab padding key="0" label="Inspect">
               <DataInspector data={{ data: queryBuilder.result }} />
             </Tab>
-            <Tab pad key="1" label="JSON">
+            <Tab padding key="1" label="JSON">
               <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
             </Tab>
-            <Tab pad key="2" label="Table">
+            <Tab padding key="2" label="Table">
               <Table items={[].concat(queryBuilder.result)} />
             </Tab>
           </Tabs>
@@ -440,7 +440,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             title="Placeholders"
             afterTitle={<PaneButton circular icon="plus" tooltip="Create new placeholder" />}
             scrollable="y"
-            pad
+            padding
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -451,7 +451,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" pad flex={2}>
+          <Pane title="Explore API" scrollable="y" padding flex={2}>
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (

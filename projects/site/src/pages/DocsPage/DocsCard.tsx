@@ -2,7 +2,7 @@ import { Button, Card, Col, FloatingCard, Row } from '@o/ui'
 import React, { useState } from 'react'
 
 const ExampleCard = ({ children = 'Hello world content', ...props }) => (
-  <Card title="Title" subTitle="SubTitle" pad width={180} icon="cog" iconBefore {...props}>
+  <Card title="Title" subTitle="SubTitle" padding width={180} icon="cog" iconBefore {...props}>
     {children}
   </Card>
 )
@@ -23,7 +23,7 @@ export let Basic = (
 )
 
 export let Collapsable = (
-  <Card title="Title" pad width={180} iconBefore collapsable>
+  <Card title="Title" padding width={180} iconBefore collapsable>
     Hello World
   </Card>
 )

@@ -1,39 +1,9 @@
-import {
-  AppIcon,
-  command,
-  createApp,
-  getAppDefinition,
-  useAppDefinition,
-  useLocationLink,
-} from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import {
-  Button,
-  Col,
-  Flow,
-  FlowProvide,
-  Form,
-  gloss,
-  IconLabeled,
-  List,
-  ListItemProps,
-  randomAdjective,
-  randomNoun,
-  Scale,
-  SectionPassProps,
-  SelectableGrid,
-  Text,
-  Theme,
-  Toolbar,
-  useBanner,
-  useCreateFlow,
-  useCreateForm,
-  useFlow,
-  View,
-} from '@o/ui'
+import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo, useEffect, useLayoutEffect } from 'react'
 
-import { createAppBitInActiveSpace, useInstallApp, useNewAppBit } from '../helpers/installApp'
+import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
@@ -317,7 +287,7 @@ const FlowStepSetup = memo(() => {
   }, [flow.data.selectedAppIdentifier])
 
   return (
-    <Col pad flex={1} scrollable="y">
+    <Col padding flex={1} scrollable="y">
       <Scale size={1.2}>
         <AppsMainNew key={identifier} customizeColor />
       </Scale>

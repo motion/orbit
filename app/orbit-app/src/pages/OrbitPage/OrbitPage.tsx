@@ -283,7 +283,7 @@ const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
           key={app.id}
           alt="flat"
           background={theme => theme.backgroundStronger}
-          pad
+          padding
           width={width}
           height={height}
           overflow="hidden"

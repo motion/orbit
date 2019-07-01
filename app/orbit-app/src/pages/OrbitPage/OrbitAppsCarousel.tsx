@@ -65,7 +65,7 @@ let curI = 0
 
 const getSpring = (i: number) => {
   const zoom = orbitAppsCarouselStore.zoomedOut ? 0.85 : 1
-  const importance = 1 - Math.abs(curI - i)
+  const importance = Math.max(0, 1 - Math.abs(curI - i))
   const scale = Math.max(0.75, importance * zoom)
   const ry = (curI - i) * 10
   return {
@@ -111,7 +111,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
 
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
     ...getSpring(i),
-    config: { mass: 1 + i * 2, tension: 700 - i * 100, friction: 30 + i * 20 },
+    config: { mass: 2, tension: 700, friction: 30 },
   }))
 
   const scrollToPaneIndex = (next: number) => {

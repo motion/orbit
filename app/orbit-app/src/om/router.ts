@@ -134,14 +134,16 @@ const ignoreNextPush: Action = om => {
 
 const back: Action = om => {
   if (om.state.router.historyIndex > 0) {
-    om.state.router.historyIndex--
+    // subtract two because back will add one!
+    om.state.router.historyIndex -= 2
     window.history.back()
   }
 }
 
 const forward: Action = om => {
   if (om.state.router.historyIndex < om.state.router.history.length - 1) {
-    om.state.router.historyIndex++
+    // subtract two because forward will add one!
+    om.state.router.historyIndex += 2
     window.history.forward()
   }
 }

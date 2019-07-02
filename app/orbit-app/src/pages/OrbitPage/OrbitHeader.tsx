@@ -381,7 +381,7 @@ const BackButton = memo(() => {
   return (
     <Button
       icon="chevron-left"
-      opacity={state.router.history.length ? 0.5 : 0.4}
+      disabled={state.router.historyIndex <= 0}
       iconSize={18}
       onClick={actions.router.back}
     />

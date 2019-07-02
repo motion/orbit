@@ -9,6 +9,7 @@ import { useGesture } from 'react-use-gesture'
 import { om } from '../../om/om'
 import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
+import { appsDrawerStore } from './OrbitAppsDrawer'
 
 const scaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (x: number) =>
   ((newMax - newMin) * (x - prevMin)) / (prevMax - prevMin) + newMin
@@ -89,6 +90,7 @@ class OrbitAppsCarouselStore {
     () => queryStore.queryInstant,
     async (query, { sleep }) => {
       await sleep(40)
+      ensure('not on drawer', !appsDrawerStore.isOpen)
       ensure('has apps', !!this.apps.length)
       ensure('zoomed out', this.state.zoomedOut)
       if (query.indexOf(' ') > -1) {

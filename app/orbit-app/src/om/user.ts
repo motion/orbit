@@ -13,10 +13,12 @@ export const state: UserState = {
 }
 
 const setUser: Action<User> = (om, user) => {
-  om.state.user.user = user
-  om.actions.spaces.setUser(user)
-  if (!isEqual(user.settings, App.state.userSettings)) {
-    App.setState({ userSettings: user.settings })
+  if (user !== om.state.user.user) {
+    om.state.user.user = user
+    om.actions.spaces.setUser(user)
+    if (!isEqual(user.settings, App.state.userSettings)) {
+      App.setState({ userSettings: user.settings })
+    }
   }
 }
 
@@ -24,7 +26,9 @@ const start: Action = async om => {
   const args = { args: {} }
   om.actions.user.setUser(await loadOne(UserModel, args))
   observeOne(UserModel, args).subscribe(user => {
-    om.actions.user.setUser(user)
+    if (user) {
+      om.actions.user.setUser(user)
+    }
   })
 }
 

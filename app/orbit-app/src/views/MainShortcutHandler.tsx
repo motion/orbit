@@ -116,16 +116,20 @@ export default memo(function MainShortcutHandler(props: {
         shortcutStore.emit(Direction.down)
       },
       LEFT: () => {
-        if (appsCarouselStore.state.zoomedOut) {
-          appsCarouselStore.left()
-          return
+        if (!appsDrawerStore.isOpen) {
+          if (appsCarouselStore.state.zoomedOut) {
+            appsCarouselStore.left()
+            return
+          }
         }
         shortcutStore.emit(Direction.left)
       },
       RIGHT: () => {
-        if (appsCarouselStore.state.zoomedOut) {
-          appsCarouselStore.right()
-          return
+        if (!appsDrawerStore.isOpen) {
+          if (appsCarouselStore.state.zoomedOut) {
+            appsCarouselStore.right()
+            return
+          }
         }
         shortcutStore.emit(Direction.right)
       },

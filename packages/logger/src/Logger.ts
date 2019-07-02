@@ -95,6 +95,20 @@ export class Logger {
   }
 
   /**
+   * Logs an error then exits.
+   */
+  panic(...messages: any[]) {
+    this.error(
+      ...messages,
+      `\n\n If this looks like an Orbit issue, open an issue on https://github.com/motion/orbit/issues`,
+    )
+    if (process.env.DEBUG) {
+      console.trace('Panic trace')
+    }
+    process.exit(1)
+  }
+
+  /**
    * Creates a timer that logs messages and tracks a period between
    * given label message and next timer call with the same label message.
    */

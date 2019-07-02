@@ -61,7 +61,7 @@ function ErrorMessage({ error, name, setError }) {
           scrollable="y"
           whiteSpace="pre-line"
           pointerEvents="auto"
-          pad
+          padding
         >
           <Button alt="confirm" onClick={() => setError({ error: null })}>
             Clear

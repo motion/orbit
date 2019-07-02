@@ -16,7 +16,17 @@ export type CardSimpleProps = SizedSurfaceSpecificProps &
 
 export const CardSimple = forwardRef(
   (
-    { title, titleProps, onClickTitle, children, space, group, pad, ...props }: CardSimpleProps,
+    {
+      title,
+      titleProps,
+      onClickTitle,
+      children,
+      space,
+      group,
+      padding,
+      scrollable,
+      ...props
+    }: CardSimpleProps,
     ref,
   ) => {
     const hasClick = !!props.onClick
@@ -25,7 +35,7 @@ export const CardSimple = forwardRef(
         ref={ref}
         className="ui-cardsimple-surface"
         borderWidth={0}
-        overflow={isDefined(props.scrollable, props.maxHeight) ? 'hidden' : 'hidden'}
+        overflow={isDefined(scrollable, props.maxHeight) ? 'hidden' : 'hidden'}
         hoverStyle={hasClick}
         activeStyle={hasClick}
         cursor={hasClick ? 'pointer' : 'inherit'}
@@ -33,7 +43,7 @@ export const CardSimple = forwardRef(
         {...props}
         noInnerElement
       >
-        <Col pad={pad} space={space} group={group}>
+        <Col padding={padding} space={space} group={group} scrollable={scrollable}>
           {!!title && (
             <Tag alt="lightGray" onClick={onClickTitle} {...titleProps}>
               {title}
@@ -50,6 +60,4 @@ export const CardSimple = forwardRef(
 
 CardSimple.defaultProps = {
   sizeRadius: true,
-  space: 'sm',
-  pad: 'sm',
 }

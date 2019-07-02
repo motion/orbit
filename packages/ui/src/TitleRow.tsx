@@ -55,9 +55,6 @@ export type TitleRowSpecificProps = ThemeableProps &
     /** Add a margine to title */
     margin?: number | number[]
 
-    /** Automatically set negative margin equivalent to Size */
-    unpad?: boolean
-
     /** Add an extra line of elements below the title */
     children?: React.ReactNode
 

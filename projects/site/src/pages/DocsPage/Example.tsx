@@ -93,7 +93,7 @@ export const Example = memo(
             <Card
               elevation={1}
               pad
-              titlePad="sm"
+              titlePadding="sm"
               background={theme => theme.backgroundStrong}
               title={name || capitalize(id)}
               afterTitle={

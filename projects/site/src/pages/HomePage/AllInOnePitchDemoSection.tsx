@@ -1,15 +1,4 @@
-import {
-  Button,
-  Col,
-  FullScreen,
-  gloss,
-  Image,
-  Row,
-  Space,
-  useGetFn,
-  useIntersectionObserver,
-  View,
-} from '@o/ui'
+import { Button, Col, FullScreen, gloss, Image, Row, Space, useGetFn, useIntersectionObserver, View } from '@o/ui'
 import { useForceUpdate } from '@o/use-store'
 import { Inline } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
@@ -19,14 +8,7 @@ import listScreen from '../../../public/images/screen-list.jpg'
 import tableScreen from '../../../public/images/screen-table.jpg'
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
-import {
-  FadeChild,
-  fadeLeftProps,
-  fadeRightProps,
-  fadeUpProps,
-  slowConfigLessBounce,
-  useFadePage,
-} from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps, fadeUpProps, slowConfigLessBounce, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -271,7 +253,7 @@ export default function NeckSection() {
                     </CenterText>
                   </FadeChild>
                 </SubSection>
-                <SubSection flex={2} pad={[true, 'xxl']}>
+                <SubSection flex={2} padding={[true, 'xxl']}>
                   <FadeChild delay={500}>
                     <PillButtonDark>Display</PillButtonDark>
                     <Space />
@@ -528,4 +510,4 @@ const Flex = gloss(View, {
   flex: 1,
 })
 
-const SubSection = gloss(props => <Flex minWidth={200} alignItems="center" pad {...props} />)
+const SubSection = gloss(props => <Flex minWidth={200} alignItems="center" padding {...props} />)

@@ -6,7 +6,6 @@ import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
-import * as ReactDOM from 'react-dom'
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
@@ -16,20 +15,15 @@ import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useOm } from '../../om/om'
-import { Stores, usePaneManagerStore, useThemeStore } from '../../om/stores'
+import { Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
+import { OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
-
-// temp: used by cli as we integrate it
-window['React'] = (window as any).React = React
-window['ReactDOM'] = (window as any).ReactDOM = ReactDOM
-window['OrbitKit'] = (window as any).OrbitUI = require('@o/kit')
-window['OrbitUI'] = (window as any).OrbitUI = require('@o/ui')
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
@@ -187,36 +181,21 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 const OrbitWorkspaceApps = memo(() => {
-  const paneManagerStore = usePaneManagerStore()
-
-  // load all apps
-  const allApps = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    identifier: pane.type,
-  }))
-
+  const om = useOm()
+  const allApps = om.state.apps.activeApps.filter(x => x.tabDisplay !== 'hidden')
   const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
-
   const stableSortedApps = useStableSort(allApps.map(x => x.id))
     .map(id => allApps.find(x => x.id === id))
     .filter(x => !!x && !!appDefsWithViews[x.identifier])
-    .map(x => ({
-      id: x.id,
-      definition: appDefsWithViews[x.identifier],
+    .map(app => ({
+      app: app,
+      definition: appDefsWithViews[app.identifier],
     }))
-
-  return (
-    <>
-      {stableSortedApps.map(app => (
-        <OrbitApp key={app.id} id={app.id} identifier={app.definition.id} appDef={app.definition} />
-      ))}
-    </>
-  )
+  return <OrbitAppsCarousel apps={stableSortedApps} />
 })
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  const appId = `${App.appConf.appId}`
-  return <OrbitApp appDef={appDef} id={appId} identifier={appDef.id} hasShownOnce />
+  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} renderApp />
 }
 
 const OrbitContentArea = gloss(Box, {

@@ -87,7 +87,7 @@ export function AppsPage() {
             <Space size="xxxl" />
 
             <Col
-              pad={useScreenVal(0, [50, '15%'], [100, '20%', 100])}
+              padding={useScreenVal(0, [50, '15%'], [100, '20%', 100])}
               space="xxl"
               spaceAround
               flex={1}

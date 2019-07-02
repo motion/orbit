@@ -1,4 +1,4 @@
-import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
+import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { BorderTop, ListPassProps, Sidebar } from '@o/ui'
 import { Col } from 'gloss'
 import React, { memo, useContext, useEffect } from 'react'
@@ -8,18 +8,6 @@ import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitSidebar = memo((props: AppMainViewProps) => {
-  const { id } = useContext(AppLoadContext)
-  if (!props.hasSidebar) {
-    return null
-  }
-  return (
-    <SubPane id={id} fullHeight>
-      <OrbitSidebarContent {...props} />
-    </SubPane>
-  )
-})
-
-const OrbitSidebarContent = (props: AppMainViewProps) => {
   const { id, identifier } = useContext(AppLoadContext)
   const { appStore } = useStores()
 
@@ -28,6 +16,10 @@ const OrbitSidebarContent = (props: AppMainViewProps) => {
       console.log('shouldnt unmount', id, identifier)
     }
   }, [])
+
+  if (!props.hasSidebar) {
+    return null
+  }
 
   return (
     <Sidebar
@@ -54,4 +46,4 @@ const OrbitSidebarContent = (props: AppMainViewProps) => {
       {props.hasStatusbar && statusbarPadElement}
     </Sidebar>
   )
-}
+})

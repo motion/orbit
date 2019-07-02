@@ -6,6 +6,7 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
+import { appsCarousel } from '../pages/OrbitPage/OrbitAppsCarousel'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -16,14 +17,15 @@ const rootShortcuts = {
   SWITCH_SPACE: 'command+k',
   COPY_LINK: 'command+shift+c',
   ESCAPE: 'esc',
-  DOWN: 'down',
+  ENTER: 'enter',
   UP: 'up',
+  DOWN: 'down',
+  LEFT: 'left',
+  RIGHT: 'right',
   BACK: 'command+[',
   FORWARD: 'command+[',
   LEFT_TAB: 'command+shift+[',
   RIGHT_TAB: 'command+shift+]',
-  LEFT: 'left',
-  RIGHT: 'right',
   COMMAND_1: 'command+1',
   COMMAND_2: 'command+2',
   COMMAND_3: 'command+3',
@@ -60,25 +62,63 @@ export default memo(function MainShortcutHandler(props: {
         console.log('COPY_LINK')
         require('electron').remote.clipboard.writeText('http://example.com')
       },
+      ENTER: () => {
+        console.log('why doesnt this run in input?')
+      },
       ESCAPE: () => {
-        console.log('ESCAPE')
+        // close any open popovers
         if (PopoverState.openPopovers.size > 0) {
           PopoverState.closeLast()
           return
         }
-        // then orbit query
+        // zoom out
+        if (appsCarousel.state.zoomedOut === false) {
+          appsCarousel.setZoomedOut()
+          return
+        }
+        // go to first app
+        if (appsCarousel.focusedAppIndex > 0) {
+          appsCarousel.setFocusedAppIndex(0, true)
+          return
+        }
+        // clear orbit query
         if (queryStore) {
           return queryStore.setQuery('')
         }
-        // then orbit itself
+        // close orbit itself
         if (Electron.state.showOrbitMain) {
           command(ToggleOrbitMainCommand)
         }
       },
-      UP: () => shortcutStore.emit(Direction.up),
-      DOWN: () => shortcutStore.emit(Direction.down),
-      LEFT: () => shortcutStore.emit(Direction.left),
-      RIGHT: () => shortcutStore.emit(Direction.right),
+      UP: () => {
+        if (appsCarousel.state.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.up)
+      },
+      DOWN: () => {
+        if (appsCarousel.state.zoomedOut) {
+          // handle moving between input/carousel
+          return
+        }
+        shortcutStore.emit(Direction.down)
+      },
+      LEFT: () => {
+        if (appsCarousel.state.zoomedOut) {
+          appsCarousel.left()
+          return
+        }
+        shortcutStore.emit(Direction.left)
+      },
+      RIGHT: () => {
+        console.log('right')
+        if (appsCarousel.state.zoomedOut) {
+          appsCarousel.right()
+          return
+        }
+        shortcutStore.emit(Direction.right)
+      },
     }
 
     if (paneManagerStore) {

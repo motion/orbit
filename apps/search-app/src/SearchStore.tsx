@@ -1,24 +1,5 @@
-import {
-  AppBit,
-  AppIcon,
-  ensure,
-  getAppDefinition,
-  getUser,
-  MarkType,
-  react,
-  saveUser,
-  searchBits,
-  SearchQuery,
-  SearchState,
-  SpaceIcon,
-  useActiveQuery,
-  useActiveSpace,
-  useAppBit,
-  useHooks,
-  useStoresSimple,
-  useActiveClientApps,
-} from '@o/kit'
-import { fuzzyFilter, ListItemProps, SimpleText } from '@o/ui'
+import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
 
@@ -89,33 +70,12 @@ export class SearchStore {
     }
   }
 
-  appToResult = (app: AppBit, index: number): ListItemProps => {
-    return {
-      key: `${app.id}`,
-      title: app.name,
-      icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
-      after: (
-        <SimpleText alpha={0.5} size={1.5}>
-          ⌘ + {index + 2}
-        </SimpleText>
-      ),
-      groupName: 'Apps',
-      extraData: {
-        id: `${app.id}`,
-        identifier: 'message',
-        icon: getAppDefinition(app.identifier) ? getAppDefinition(app.identifier).icon : '',
-        title: `Open ${app.name}`,
-        subTitle: 'Command: ⮐',
-      },
-    }
-  }
-
   get isHome() {
     return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
   }
 
   get allApps() {
-    return this.hooks.apps.filter(x => x.tabDisplay !== 'permanent').map(this.appToResult)
+    return this.hooks.apps.filter(x => x.tabDisplay !== 'permanent').map(appToListItem)
   }
 
   getApps(query: string, all = false): ListItemProps[] {

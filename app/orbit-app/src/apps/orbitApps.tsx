@@ -1,14 +1,8 @@
-import {
-  __SERIOUSLY_SECRET,
-  AppDefinition,
-  configureKit,
-  createApp,
-  useAppDefinitions,
-} from '@o/kit'
+import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { Loading } from '@o/ui'
 import { reaction } from 'mobx'
-import { createElement } from 'react'
+import React from 'react'
 
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
@@ -25,8 +19,11 @@ let dynamicApps: AppDefinition[] = []
 
 async function updateDefinitions() {
   const rawApps = require('../../appDefinitions.js')
-  console.log('rawApps', rawApps)
   dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
+  //
+  // new idea:
+  // just number the apps and hardcode them tosomething like `@o/app-1` `@o-app2`
+  //
   // this doesn't work because dynamic require doesn't use manifest
   // TODO we need to do something like this
   // const apps = await command(AppGetWorkspaceAppsCommand)
@@ -53,7 +50,10 @@ const LoadingApp = createApp({
   name: 'Loading...',
   icon: '',
   id: 'loading',
-  app: () => createElement(Loading),
+  app: () => {
+    console.log('LOADING')
+    return <Loading />
+  },
 })
 
 // apps we use internally in orbit

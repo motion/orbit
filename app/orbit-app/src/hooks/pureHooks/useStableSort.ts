@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { useRef } from 'react'
 
-export function useStableSort<A extends string>(ids: A[]): A[] {
+export function useStableSort<A extends string | number>(ids: A[]): A[] {
   const stableKeys = useRef<A[]>([])
   const sortedIds = [...ids].sort()
   if (!isEqual(stableKeys.current.sort(), sortedIds)) {

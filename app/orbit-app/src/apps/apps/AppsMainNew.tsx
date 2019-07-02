@@ -112,7 +112,7 @@ function IconPicker(props: IconPickerProps) {
   })
 
   return (
-    <Row space pad="sm" scrollable="x" hideScrollbars flex={1}>
+    <Row space padding="sm" scrollable="x" hideScrollbars flex={1}>
       {allIcons.slice(20, 100).map(icon => {
         console.log('icon, icon', icon)
         return (

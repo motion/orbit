@@ -1,9 +1,13 @@
 import { GlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import { app } from 'electron'
-import execa = require('execa')
+import execa from 'execa'
+import { last } from 'lodash'
 import * as Path from 'path'
 
 import { findContiguousPorts } from './helpers/findContiguousPorts'
+
+const log = new Logger('getInitialConfig')
 
 export async function getInitialConfig({
   appEntry,
@@ -13,13 +17,18 @@ export async function getInitialConfig({
   cli: string
 }): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
+  log.info(`Get config isProd ${isProd}`)
 
   // find a bunch of ports for us to use
-  const ports = await findContiguousPorts(20, isProd ? 3333 : 3001)
+  const ports = await findContiguousPorts(20, 3001)
+
+  if (ports === false) {
+    throw log.panic(`No ports found!`)
+  }
 
   // for electron we use ports dynamically - each new app window consumes a port from this pool
-  // todo: probably 14 is small number, we need to specify optimal number of ports we are going to use
-  const electronPorts = await findContiguousPorts(14, isProd ? 4444 : 4001)
+  // todo: could allocate more or just add more as we need
+  const electronPorts = await findContiguousPorts(20, last(ports))
   let config: GlobalConfig
 
   if (!ports || !electronPorts) {

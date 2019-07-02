@@ -31,7 +31,7 @@ export function PropsTable(props: { props: Object }) {
     <Col space>
       {propRows.map(row => (
         <Col space key={row.name}>
-          <TitleRow pad bordered borderSize={2}>
+          <TitleRow padding bordered borderSize={2}>
             <Row space alignItems="center">
               <Tag alt="lightBlue">{row.name}</Tag>
               <Tag alt="lightGreen" size={0.75}>

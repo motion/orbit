@@ -89,7 +89,7 @@ export function AboutPage() {
               <FadeChild delay={400} style={{ flex: 1 }}>
                 <Col
                   id="mission"
-                  pad={[0, useScreenVal('sm', 'xxl', 100)]}
+                  padding={[0, useScreenVal('sm', 'xxl', 100)]}
                   space="xxl"
                   spaceAround
                   flex={1}

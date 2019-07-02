@@ -1,3 +1,4 @@
+import { GlossPropertySet } from '@o/css'
 import { isDefined, selectDefined } from '@o/utils'
 
 import { useScale } from '../Scale'
@@ -13,13 +14,12 @@ export type SizesObject = {
 }
 
 // Padded
-export type PadProps = {
-  pad?: Sizes | SizesObject
+export type PaddingProps = {
+  padding?: Sizes | SizesObject | GlossPropertySet['padding']
 }
 
-export const getPadding = (
-  props: PadProps & {
-    padding?: any
+export const usePadding = (
+  props: PaddingProps & {
     paddingTop?: any
     paddingLeft?: any
     paddingRight?: any
@@ -27,41 +27,19 @@ export const getPadding = (
   },
 ) => {
   const scale = useScale()
-  if (typeof props.padding !== 'undefined') {
-    return {
-      paddingTop: selectDefined(props.paddingTop, props.padding[0], props.padding),
-      paddingRight: selectDefined(props.paddingRight, props.padding[1], props.padding),
-      paddingBottom: selectDefined(
-        props.paddingBottom,
-        props.padding[2],
-        props.padding[0],
-        props.padding,
-      ),
-      paddingLeft: selectDefined(
-        props.paddingLeft,
-        props.padding[3],
-        props.padding[1],
-        props.padding,
-      ),
-    }
+  let padding = getSizableValue(props.padding)
+  padding = Array.isArray(padding)
+    ? padding.map(x => (typeof x === 'number' ? x * scale : x))
+    : typeof padding === 'number'
+    ? padding * scale
+    : padding
+  const paddingObj = {
+    paddingTop: selectDefined(props.paddingTop, padding[0], padding),
+    paddingRight: selectDefined(props.paddingRight, padding[1], padding),
+    paddingBottom: selectDefined(props.paddingBottom, padding[2], padding[0], padding),
+    paddingLeft: selectDefined(props.paddingLeft, padding[3], padding[1], padding),
   }
-  if (props.pad) {
-    let padding = getSizableValue(props.pad)
-    padding = Array.isArray(padding)
-      ? padding.map(x => (typeof x === 'number' ? x * scale : x))
-      : typeof padding === 'number'
-      ? padding * scale
-      : padding
-
-    const paddingObj = {
-      paddingTop: selectDefined(props.paddingTop, padding[0], padding),
-      paddingRight: selectDefined(props.paddingRight, padding[1], padding),
-      paddingBottom: selectDefined(props.paddingBottom, padding[2], padding[0], padding),
-      paddingLeft: selectDefined(props.paddingLeft, padding[3], padding[1], padding),
-    }
-
-    return paddingObj
-  }
+  return paddingObj
 }
 
 export const getSizableValue = (

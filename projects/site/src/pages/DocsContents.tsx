@@ -59,7 +59,7 @@ export const DocsContents = memo(
       </>
     )
 
-    const pad = useScreenVal(
+    const padding = useScreenVal(
       ['xxl', 'md', true, 'md'],
       ['xxl', 'md', true, 'md'],
       ['xxxl', 'xl', true, 'xl'],
@@ -78,8 +78,8 @@ export const DocsContents = memo(
             maxWidth={760}
             width="100%"
             margin={[0, 'auto']}
-            pad={pad}
-            titlePad={pad}
+            padding={padding}
+            titlePadding={padding}
             titleBorder
             space
             title={

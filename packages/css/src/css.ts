@@ -5,9 +5,15 @@ import { processArray, processObject, px } from './helpers'
 
 // exports
 
+export { GlossPropertySet } from './cssPropertySet'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
-export { CSSPropertySet, CSSPropertySetResolved, CSSPropertySetStrict } from './cssPropertySet'
+export {
+  CSSPropertySet,
+  CSSPropertySetResolved,
+  CSSPropertySetStrict,
+  CSSPropertySetLoose,
+} from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
 export { ThemeObject, ThemeSet } from './ThemeObject'

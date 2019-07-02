@@ -105,7 +105,7 @@ export function DemoLayoutApp() {
         </Pane>
         <Pane title="Sidebar">
           <Layout type="column">
-            <Pane title="Elements" pad collapsable>
+            <Pane title="Elements" padding collapsable>
               <DataInspector
                 data={{
                   test: 'this',
@@ -121,7 +121,7 @@ export function DemoLayoutApp() {
                 }}
               />
             </Pane>
-            <Pane title="Elements" flex={2} pad collapsable space>
+            <Pane title="Elements" flex={2} padding collapsable space>
               <SubTitle>Sub title</SubTitle>
               <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
             </Pane>

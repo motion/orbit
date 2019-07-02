@@ -1,14 +1,4 @@
-import {
-  App,
-  AppFilterButton,
-  AppMainView,
-  AppViewProps,
-  createApp,
-  useSearchState,
-  useStore,
-  useStores,
-  useUserState,
-} from '@o/kit'
+import { App, AppFilterButton, AppMainView, AppViewProps, createApp, useSearchState, useStore, useStores, useUserState } from '@o/kit'
 import { Button, Calendar, FloatingCard, List, Popover, Row, Scale, View } from '@o/ui'
 import React, { useMemo } from 'react'
 
@@ -64,7 +54,7 @@ export function SearchApp(props: AppViewProps) {
           defaultWidth={width}
           defaultHeight={height}
           attach="bottom right"
-          edgePad={[20, 20]}
+          edgePadding={[20, 20]}
           elevation={6}
           visible
         >

@@ -1,5 +1,6 @@
-import { ColorLike } from '@o/color';
-import { ThemeObject } from './ThemeObject';
+import { ColorLike } from '@o/color'
+
+import { ThemeObject } from './ThemeObject'
 
 /**
  * Copyright 2018-present Facebook.
@@ -469,7 +470,7 @@ export type paddingTop = number | string
 export type pageBreakAfter = 'auto' | 'always' | 'avoid' | 'left' | 'right'
 export type pageBreakBefore = 'auto' | 'always' | 'avoid' | 'left' | 'right'
 export type pageBreakInside = 'auto' | 'avoid'
-export type perspective = 'none' | number
+export type perspective = 'none' | string | number
 export type perspectiveOrigin = string
 export type pointerEvents =
   | 'auto'
@@ -769,15 +770,15 @@ export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
 // allows functional or non-functional
-type CSSPropertyVal<IsFunctional, Val> = Val extends false
-  ? IsFunctional | 'inherit' | 'initial' | false
+type CSSPropertyVal<Val, IsFunctional> = IsFunctional extends false
+  ? Val | 'inherit' | 'initial' | false
   :
-      | IsFunctional
+      | Val
       | 'inherit'
       | 'initial'
-      | ((theme: ThemeObject) => IsFunctional)
-      | ((theme: ThemeObject, props: any) => IsFunctional)
       | false
+      | ((theme: ThemeObject) => Val)
+      | ((theme: ThemeObject, props: any) => Val)
 
 export type GenerateCSSPropertySet<A extends true | false> = {
   alignContent?: CSSPropertyVal<alignContent, A>
@@ -1168,5 +1169,11 @@ export type CSSPropertySet = GlossPropertySetFunctional & {
 }
 
 export type CSSPropertySetResolved = GlossPropertySetFunctional & {
+  [key: string]: GlossPropertySet | any
+}
+
+export type CSSPropertySetLoose = {
+  [P in keyof CSSPropertySetStrict]?: CSSPropertySetStrict[P] | any
+} & {
   [key: string]: GlossPropertySet | any
 }

@@ -3,15 +3,38 @@ import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback } from 'react'
 
-import { useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
+import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { appsCarousel } from './OrbitAppsCarousel'
 import { useHeaderStore } from './OrbitHeader'
+
+const Keys = {
+  up: 38,
+  down: 40,
+  enter: 13,
+}
 
 const handleKeyDown = e => {
   // up/down/enter
   const { keyCode } = e
-  if (keyCode === 38 || keyCode === 40 || keyCode === 13) {
+  if (keyCode === Keys.up || keyCode === Keys.down || keyCode === Keys.enter) {
     e.preventDefault()
+  }
+
+  if (keyCode === Keys.enter) {
+    if (appsCarousel.state.zoomedOut) {
+      e.stopPropagation()
+      appsCarousel.zoomIntoApp()
+      // if we had a query prefix active
+      if (queryStore.ignorePrefix) {
+        // remove the prefix we were using on enter
+        queryStore.setQuery(queryStore.queryParsed)
+      } else {
+        // otherwise clear the searched app query
+        queryStore.clearQuery()
+      }
+      return
+    }
   }
 }
 
@@ -22,7 +45,7 @@ function useActivePane() {
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   const search = useSearch()
-  const queryStore = useQueryStore()
+  const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()
   const { activeTheme } = React.useContext(ThemeContext)
@@ -36,7 +59,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
 
   const onChangeQuery = useCallback(e => {
     search.setQuery(e.target.value)
-    queryStore.onChangeQuery(e.target.value)
+    qs.onChangeQuery(e.target.value)
   }, [])
 
   return (
@@ -62,11 +85,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
         />
       </View>
       <After>
-        <ClearButton
-          margin={['auto', 5]}
-          visible={queryStore.hasQuery}
-          onClick={queryStore.clearQuery}
-        />
+        <ClearButton margin={['auto', 5]} visible={qs.hasQuery} onClick={qs.clearQuery} />
       </After>
     </FakeInput>
   )

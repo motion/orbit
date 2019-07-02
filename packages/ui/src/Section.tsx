@@ -16,7 +16,7 @@ import { Col, ColProps } from './View/Col'
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
 export type SectionSpecificProps = Partial<
-  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'unpad' | 'size' | 'selectable'>
+  Omit<TitleRowSpecificProps, 'after' | 'below' | 'margin' | 'size' | 'selectable'>
 > & {
   /** Add shadow to section */
   elevation?: SizedSurfaceProps['elevation']
@@ -25,7 +25,7 @@ export type SectionSpecificProps = Partial<
   titleScale?: number
 
   /** Allow padding just the title element */
-  titlePad?: Sizes
+  titlePadding?: Sizes
 
   /** Size the section: title, padding, border radius */
   size?: Size
@@ -55,7 +55,7 @@ export type SectionSpecificProps = Partial<
   maxInnerHeight?: number
 
   /** Set padding of inside of section independently */
-  padInner?: Sizes
+  paddingInner?: Sizes
 
   /** Prevent the title from scrolling when using scrollable property */
   fixedTitle?: boolean
@@ -73,7 +73,7 @@ export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
 // more padded above title
-const defaultTitlePadAmount = [1.5, 1, 0]
+const defaultTitlePaddingAmount = [1.5, 1, 0]
 
 export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const allProps = useProps(direct)
@@ -104,8 +104,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     flexDirection,
     space,
     spaceAround,
-    pad,
-    padInner,
+    paddingInner,
     size = true,
     titleSize = size,
     fixedTitle,
@@ -115,41 +114,42 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     titleScale,
     borderRadius,
     titleElement,
-    titlePad,
+    titlePadding,
+    padding,
     overflow,
     className,
     ...viewProps
   } = props
   const hasTitle = isDefined(title, afterTitle)
-  const padSized = pad === true ? size : pad
+  const padSized = padding === true ? size : padding
   const innerPad = selectDefined(
-    padInner,
+    paddingInner,
     !!(hasTitle || bordered || titleElement) ? padSized : undefined,
   )
   // this should always be a number were narrowing out array
   const titleSizePx = +getSpaceSize(
-    selectDefined(Array.isArray(titlePad) ? undefined : titlePad, titleSize),
+    selectDefined(Array.isArray(titlePadding) ? undefined : titlePadding, titleSize),
   )
   const spaceSize = selectDefined(space, size, 'sm')
   const spaceSizePx = getSpaceSizeNum(spaceSize)
-  const showTitleAbove = isDefined(fixedTitle, pad, scrollable, innerPad)
+  const showTitleAbove = isDefined(fixedTitle, padding, scrollable, innerPad)
   const collapse = useCollapse(collapseProps)
 
   let titleEl: React.ReactNode = titleElement || null
 
-  const defaultTitlePad = defaultTitlePadAmount.map(x => x * titleSizePx)
+  const defaultTitlePadding = defaultTitlePaddingAmount.map(x => x * titleSizePx)
 
   if (!titleElement && hasTitle) {
-    const adjustPadProps = !bordered && !titleBorder && !titlePad && { paddingBottom: 0 }
+    const adjustPadProps = !bordered && !titleBorder && !titlePadding && { paddingBottom: 0 }
 
-    const titlePadFinal = selectDefined(
+    const titlePaddingFinal = selectDefined(
       selectDefined(
-        titlePad === false || typeof titlePad === 'number' || Array.isArray(titlePad)
-          ? titlePad
+        titlePadding === false || typeof titlePadding === 'number' || Array.isArray(titlePadding)
+          ? titlePadding
           : undefined,
-        titlePad || pad ? defaultTitlePad : undefined,
-        bordered ? selectDefined(pad, true) : undefined,
-        titleBorder ? selectDefined(pad, defaultTitlePad) : undefined,
+        titlePadding || padding ? defaultTitlePadding : undefined,
+        bordered ? selectDefined(padding, true) : undefined,
+        titleBorder ? selectDefined(padding, defaultTitlePadding) : undefined,
       ),
     )
 
@@ -163,13 +163,13 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
             after={afterTitle}
             above={above}
             before={beforeTitle}
-            below={belowTitle || <Space size={defaultTitlePadAmount[2] || spaceSizePx} />}
+            below={belowTitle || <Space size={defaultTitlePaddingAmount[2] || spaceSizePx} />}
             icon={icon}
             userSelect="none"
             space={spaceSizePx / 2}
-            pad={titlePadFinal}
+            padding={titlePaddingFinal}
             // avoid double pad between content/title padding
-            paddingBottom={pad === true && titlePad === undefined ? 0 : undefined}
+            paddingBottom={padding === true && titlePadding === undefined ? 0 : undefined}
             size={selectDefined(titleSize, size)}
             titleProps={titleProps}
             useCollapse={collapse}
@@ -213,7 +213,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         overflow,
         isDefined(scrollable, maxHeight, bordered, borderRadius) ? 'hidden' : undefined,
       )}
-      pad={!showTitleAbove ? padSized : false}
+      padding={!showTitleAbove ? padSized : false}
       size={size}
       fontSize="inherit"
       lineHeight="inherit"
@@ -228,7 +228,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           spaceAround={spaceAround}
           flexDirection={flexDirection}
           scrollable={scrollable}
-          pad={innerPad}
+          padding={innerPad}
           beforeSpace={!showTitleAbove && titleEl}
           useCollapse={collapse}
           suspense={<Loading />}

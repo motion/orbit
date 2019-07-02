@@ -13,7 +13,7 @@ const examples = [
 const FeatureCard = (props: CardProps) => (
   <TiltCard
     size="xl"
-    titlePad="md"
+    titlePadding="md"
     cursor="pointer"
     tagName="a"
     textDecoration="none"

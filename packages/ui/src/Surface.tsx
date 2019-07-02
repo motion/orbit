@@ -1,6 +1,7 @@
 import { ColorLike } from '@o/color'
-import { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
+import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
+import { withAnimated } from '@react-spring/animated'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -21,6 +22,7 @@ import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { Omit } from './types'
 import { getElevation } from './View/elevate'
+import { getAnimatedStyleProp } from './View/ScrollableView'
 import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -137,7 +139,7 @@ export type SurfaceSpecificProps = {
   themeSelect?: Gloss.ThemeSelect
 
   /** Amount to pad icon */
-  iconPad?: number
+  iconPadding?: number
 
   /** Force ignore grouping */
   ignoreSegment?: boolean
@@ -150,6 +152,9 @@ export type SurfaceSpecificProps = {
 
   /** Style as part of a group */
   segment?: 'first' | 'last' | 'middle' | 'single'
+
+  /** Will allow for animation springs to be passed in */
+  animated?: boolean
 
   /** [Advanced] Add an extra theme to the inner element */
   elementTheme?: Gloss.ThemeFn
@@ -166,7 +171,7 @@ export const useSurfaceProps = SizedSurfacePropsContext.useProps
 type ThroughProps = Pick<
   SurfaceProps,
   | 'height'
-  | 'iconPad'
+  | 'iconPadding'
   | 'alignItems'
   | 'justifyContent'
   | 'sizeIcon'
@@ -215,7 +220,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     height,
     icon,
     iconAfter,
-    iconPad,
+    iconPadding,
     iconProps,
     justifyContent,
     noInnerElement,
@@ -225,7 +230,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     themeSelect,
     tooltip,
     tooltipProps,
-    pad,
     padding,
     badgeProps,
     badge,
@@ -237,6 +241,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     dangerouslySetInnerHTML,
     spaceSize,
     betweenIconElement,
+    animated,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -246,7 +251,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // goes to BOTH the outer element and inner element
   let throughProps: ThroughProps = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : size * 8,
+    iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -464,12 +469,11 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     }
   }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
-  const surfaceFrameProps = {
+  const surfaceFrameProps: SurfaceFrameProps = {
     className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
     ref: forwardRef,
     themeSelect,
     lineHeight,
-    pad,
     padding,
     borderWidth,
     borderPosition,
@@ -483,13 +487,18 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+    // animated styles
+    ...(animated && { style: getAnimatedStyleProp(props) }),
   }
+
+  // animated component
+  const SurfaceFrameComponent = animated ? AnimatedSurfaceFrame : SurfaceFrame
 
   return (
     <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
-          <SurfaceFrame {...surfaceFrameProps} />
+          <SurfaceFrameComponent {...surfaceFrameProps} />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
@@ -514,7 +523,8 @@ const defaultTextTheme = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
+type SurfaceFrameProps = ThroughProps & SurfaceProps
+const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   display: 'flex', // in case they change tagName
   fontFamily: 'inherit',
   position: 'relative',
@@ -589,6 +599,8 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(View, {
   return res
 })
 
+const AnimatedSurfaceFrame = withAnimated(SurfaceFrame)
+
 const perfectCenterStyle = props => {
   if (props.height && props.height % 2 === 1) {
     return {
@@ -602,7 +614,7 @@ const perfectCenterStyle = props => {
 const applyElementTheme = (props, theme) =>
   props.elementTheme ? props.elementTheme(props, theme) : null
 
-const Element = gloss<CSSPropertySetStrict & ThroughProps & { disabled?: boolean }>({
+const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   display: 'flex', // in case they change tagName
   flex: 1,
   overflow: 'hidden',

@@ -1,6 +1,6 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
@@ -165,7 +165,7 @@ export const OrbitHeader = memo(() => {
                 >
                   {orbitStore.activeActions}
                 </SurfacePassProps>
-                {!isEditing && !isTorn && <OpenButton>{width > 780 ? 'Open' : ''}</OpenButton>}
+                {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
               </>
             )}
           </HeaderContain>
@@ -355,16 +355,22 @@ const OpenButton = memo((props: ButtonProps) => {
   }
 
   return (
-    <Button
+    <MenuButton
       alt="action"
       size={1}
-      iconSize={18}
       sizeRadius={1.6}
-      borderWidth={0}
-      iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={effects.openCurrentApp}
-      icon="chevron-right"
+      items={[
+        {
+          title: 'Edit',
+          icon: 'edit',
+        },
+        {
+          title: 'Fork',
+          icon: 'fork',
+        },
+      ]}
       {...props}
     />
   )

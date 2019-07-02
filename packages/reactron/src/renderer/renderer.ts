@@ -1,10 +1,6 @@
 import Reconciler from 'react-reconciler'
-import {
-  unstable_cancelCallback as cancelDeferredCallback,
-  unstable_now as now,
-  unstable_scheduleCallback as scheduleDeferredCallback,
-  unstable_shouldYield as shouldYield,
-} from 'scheduler'
+import { unstable_cancelCallback as cancelDeferredCallback, unstable_now as now, unstable_scheduleCallback as scheduleDeferredCallback, unstable_shouldYield as shouldYield } from 'scheduler'
+
 import { createElement, getHostContextNode } from '../utils/createElement'
 
 const emptyObject = {}
@@ -17,12 +13,14 @@ const HostConfig = {
   // hooks stuff:
   noTimeout: -1,
   scheduleTimeout: setTimeout,
-  schedulePassiveEffects: scheduleDeferredCallback,
-  cancelPassiveEffects: cancelDeferredCallback,
   shouldYield,
   scheduleDeferredCallback,
   cancelDeferredCallback,
   now,
+
+  // TODO remove this on next scheduler upgrade
+  schedulePassiveEffects: scheduleDeferredCallback,
+  cancelPassiveEffects: cancelDeferredCallback,
 
   shouldDeprioritizeSubtree() {
     return false

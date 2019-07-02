@@ -38,8 +38,8 @@ export function ManageApps() {
   }
 
   return (
-    <Section title="Installed Apps" size="md" pad space="lg">
-      <SubSection pad={[true, 0]} title="View apps">
+    <Section title="Installed Apps" size="md" padding space="lg">
+      <SubSection padding={[true, 0]} title="View apps">
         {!viewApps.length && (
           <View height={200} position="relative">
             <Center>
@@ -74,7 +74,7 @@ export function ManageApps() {
         />
       </SubSection>
 
-      <SubSection pad={[true, 0]} title="Data apps">
+      <SubSection padding={[true, 0]} title="Data apps">
         {!dataApps.length && (
           <View height={200} position="relative">
             <Center>

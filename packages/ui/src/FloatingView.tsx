@@ -23,7 +23,7 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'he
   defaultWidth?: number
   defaultHeight?: number
   zIndex?: number
-  edgePad?: [number, number]
+  edgePadding?: [number, number]
   attach?: 'bottom right' | 'bottom left' | 'top left' | 'top right'
   usePosition?: (width: number, height: number) => [number, number]
 }
@@ -57,12 +57,12 @@ export function FloatingView(props: FloatingViewProps) {
     pointerEvents = 'auto',
     usePosition,
     attach,
-    edgePad = [0, 0],
+    edgePadding = [0, 0],
     ...restProps
   } = props
 
   if (attach) {
-    usePosition = useWindowAttachments[attach](...edgePad)
+    usePosition = useWindowAttachments[attach](...edgePadding)
   }
 
   const controlledSize = typeof props.height !== 'undefined'

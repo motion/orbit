@@ -252,7 +252,7 @@ export function useFilterable(props: FilterableProps): UseFilterable {
 
   useEffect(() => {
     if (!ref.current) {
-      console.warn('No input ref provided to useFilterable')
+      console.debug('No input ref provided to useFilterable, can be on purpose')
     }
     store.inputNode = ref.current
   }, [ref])

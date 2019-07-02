@@ -117,7 +117,7 @@ export class BridgeManager {
 
     this.port = getGlobalConfig().ports.bridge
 
-    log.info(`Starting store ${this.source} on port ${this.port}`)
+    log.verbose(`Starting store ${this.source} on port ${this.port}`)
 
     // ensure only start once
     if (this.started) {
@@ -152,7 +152,7 @@ export class BridgeManager {
       window.addEventListener('beforeunload', this.dispose)
     }
 
-    log.info(`Waiting for initial state`)
+    log.verbose(`Waiting for initial state`)
 
     // wait for initial state
     if (!this.options.master && !this.options.waitForInitialState) {

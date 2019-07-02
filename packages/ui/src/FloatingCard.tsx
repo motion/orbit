@@ -19,7 +19,7 @@ type FloatingCardProps = CardProps &
     | 'height'
     | 'usePosition'
     | 'attach'
-    | 'edgePad'
+    | 'edgePadding'
   > & {
     visible?: boolean
   }
@@ -39,7 +39,7 @@ export function FloatingCard({
   pointerEvents = 'auto',
   visible,
   attach,
-  edgePad,
+  edgePadding,
   elevation = 2,
   ...cardProps
 }: FloatingCardProps) {
@@ -70,7 +70,7 @@ export function FloatingCard({
       pointerEvents={visibilityProps.pointerEvents}
       usePosition={usePosition}
       attach={attach}
-      edgePad={edgePad}
+      edgePadding={edgePadding}
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}

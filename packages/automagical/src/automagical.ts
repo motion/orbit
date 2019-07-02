@@ -14,7 +14,15 @@ export { CurrentComponent, useCurrentComponent } from './useCurrentComponent'
 export { useReaction } from './useReaction'
 
 // this lets you "always" react to any values you give as arguments without bugs
-export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
+type AlwaysReactFn = (...args: any[]) => number
+
+export const always = (((obj: any) => {
+  if (Mobx.isObservableObject(obj)) {
+    // watch all values (shallowly) of an object
+    for (const k in obj) obj[k]
+  }
+  return Math.random()
+}) as unknown) as AlwaysReactFn
 export const IS_STORE = Symbol('IS_STORE')
 
 const IGNORE = {

@@ -15,7 +15,7 @@ export function ToggleField({
   }
   return (
     <SimpleFormField label={label} layout={layout}>
-      <Toggle id={name} name={name} {...props} />
+      <Toggle id={name} {...props} />
     </SimpleFormField>
   )
 }

@@ -7,7 +7,7 @@ import { findDOMNode } from 'react-dom'
 
 import { Button, ButtonProps } from '../buttons/Button'
 import { Icon } from '../Icon'
-import { PopoverMenu } from '../PopoverMenu'
+import { Menu } from '../Menu'
 import { TableFilter, TableFilterColumns } from './types'
 
 /**
@@ -100,7 +100,7 @@ export class FilterToken extends PureComponent {
       )
     }
     if (Electron.remote) {
-      // TODO make this automatic and move into <PopoverMenu />
+      // TODO make this automatic and move into <Menu />
       const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
       const { bottom, left } = this._ref
         ? this._ref.getBoundingClientRect()
@@ -187,7 +187,7 @@ export class FilterToken extends PureComponent {
 
     return (
       <Theme theme={filterTheme}>
-        <PopoverMenu
+        <Menu
           // only show popover for non-electron environment
           openOnClick={!Electron.remote}
           popoverTheme={this.context.activeTheme._originalTheme}

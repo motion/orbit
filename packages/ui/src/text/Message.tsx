@@ -40,7 +40,7 @@ MessageChrome.defaultProps = {
   hoverStyle: false,
   activeStyle: false,
   flexDirection: 'row',
-  pad: 'sm',
+  padding: 'sm',
   spaceSize: 'lg',
   sizeRadius: true,
   sizeIcon: 2,

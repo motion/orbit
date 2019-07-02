@@ -5,7 +5,7 @@ import { AppMenuItem } from '../views/App'
 
 export class AppStore {
   props: {
-    id: string
+    id: number
     identifier: string
   }
 

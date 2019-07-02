@@ -18,6 +18,10 @@ export const BorderTop = gloss(Border, {
   transform: {
     y: -0.5,
   },
+}).withConfig({
+  defaultProps: {
+    className: 'ui-border-top',
+  },
 })
 
 export const BorderBottom = gloss(Border, {
@@ -28,6 +32,10 @@ export const BorderBottom = gloss(Border, {
   right: 0,
   transform: {
     y: 0.5,
+  },
+}).withConfig({
+  defaultProps: {
+    className: 'ui-border-bottom',
   },
 })
 
@@ -40,6 +48,10 @@ export const BorderLeft = gloss(Border, {
   transform: {
     x: -0.5,
   },
+}).withConfig({
+  defaultProps: {
+    className: 'ui-border-left',
+  },
 })
 
 export const BorderRight = gloss(Border, {
@@ -50,5 +62,9 @@ export const BorderRight = gloss(Border, {
   right: 0,
   transform: {
     x: 0.5,
+  },
+}).withConfig({
+  defaultProps: {
+    className: 'ui-border-right',
   },
 })

@@ -14,7 +14,7 @@ import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useOm } from '../../om/om'
 import { useNewAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
-import { appsCarousel } from './OrbitAppsCarousel'
+import { appsCarouselStore } from './OrbitAppsCarousel'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -80,7 +80,7 @@ export const OrbitNav = memo(
               ]
             },
             onClick: () => {
-              appsCarousel.shouldZoomIn()
+              appsCarouselStore.shouldZoomIn()
               actions.router.showAppPage({ id: `${app.id}` })
             },
           }

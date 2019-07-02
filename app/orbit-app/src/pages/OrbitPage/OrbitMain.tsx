@@ -31,7 +31,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   }
 
   return (
-    <Col left={sidebarWidth} flex={1} zIndex={10}>
+    <Col className="orbit-main" position="absolute" left={sidebarWidth} flex={1} zIndex={10}>
       <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       </Suspense>

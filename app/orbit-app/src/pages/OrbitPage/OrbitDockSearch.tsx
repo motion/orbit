@@ -33,5 +33,5 @@ export function OrbitDockSearch() {
 
 const useAcceptsSearch = () => {
   const def = useActiveAppDefinition()
-  return !!(def.viewConfig && def.viewConfig.acceptsSearch)
+  return !!(def && def.viewConfig && def.viewConfig.acceptsSearch)
 }

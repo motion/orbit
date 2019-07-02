@@ -2,7 +2,7 @@ import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, e
 import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
 import { debounce } from 'lodash'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
@@ -34,6 +34,8 @@ class OrbitAppsCarouselStore {
   })
 
   zoomIntoNextApp = false
+  nextPane = -1
+  isScrolling = false
 
   get apps() {
     return this.props.apps
@@ -52,19 +54,32 @@ class OrbitAppsCarouselStore {
   )
 
   // listen for pane movement
+  // doing it with nextPane allows us to load in apps later
   scrollToPane = (id: number, shouldZoomIn?: boolean) => {
     if (shouldZoomIn) {
       this.zoomIntoNextApp = true
     }
-    const paneIndex = this.apps.findIndex(x => x.app.id === id)
-    if (paneIndex > -1) {
-      this.animateAndScrollTo(paneIndex)
-      // TODO make this a proper chain
-      if (this.zoomIntoNextApp) {
-        this.setZoomedOut(false)
-      }
-    }
+    this.nextPane = id
   }
+
+  updateScrollPane = react(
+    () => this.nextPane,
+    async (id, { when }) => {
+      ensure('valid id', id !== -1)
+      await when(() => !!this.apps.length)
+      const paneIndex = this.apps.findIndex(x => x.app.id === id)
+      if (paneIndex > -1) {
+        this.animateAndScrollTo(paneIndex)
+        if (this.zoomIntoNextApp) {
+          await when(() => !this.isScrolling)
+          this.setZoomedOut(false)
+        }
+      } else {
+        // clear
+        this.nextPane = -1
+      }
+    },
+  )
 
   shouldZoomIn() {
     this.zoomIntoNextApp = true
@@ -222,13 +237,22 @@ class OrbitAppsCarouselStore {
       this.animateAndScrollTo(paneIndex)
     }
   }
+
+  onFinishScroll = () => {
+    this.isScrolling = false
+  }
+
+  onStartScroll = () => {
+    this.isScrolling = true
+  }
 }
 
-export const appsCarousel = createUsableStore(OrbitAppsCarouselStore)
-export const useAppsCarousel = appsCarousel.useStore
-window['appsCarousel'] = appsCarousel
+export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
+export const useAppsCarousel = appsCarouselStore.useStore
+window['appsCarousel'] = appsCarouselStore
 
 export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+  const appsCarousel = useAppsCarousel()
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowRef = useRef<HTMLElement>(null)
@@ -243,25 +267,35 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
 
   const [scrollSpring, setScrollSpring] = useSpring(() => ({
     x: 0,
+    onRest: appsCarouselStore.onFinishScroll,
+    onStart: appsCarouselStore.onStartScroll,
   }))
 
   const [springs, setCarouselSprings] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
-    ...appsCarousel.getSpring(i),
+    ...appsCarouselStore.getSpring(i),
     config: { mass: 1, tension: 300, friction: 30 },
   }))
 
   useEffect(() => {
-    appsCarousel.setProps({
-      apps,
-      setCarouselSprings,
-      setScrollSpring,
-      rowWidth: rowSize.width,
-    })
+    if (rowSize.width) {
+      appsCarouselStore.setProps({
+        apps,
+        setCarouselSprings,
+        setScrollSpring,
+        rowWidth: rowSize.width,
+      })
+    }
   }, [apps, setScrollSpring, setCarouselSprings, rowSize])
 
   const bind = useGesture({
-    onDrag: appsCarousel.onDrag,
+    onDrag: appsCarouselStore.onDrag,
   })
+
+  const scrollable = appsCarousel.isScrolling || appsCarousel.state.zoomedOut ? 'x' : false
+
+  useLayoutEffect(() => {
+    rowRef.current.scrollLeft = scrollSpring.x.getValue()
+  }, [scrollable])
 
   return (
     <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
@@ -269,10 +303,11 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         flex={1}
         alignItems="center"
         justifyContent="flex-start"
-        scrollable="x"
+        scrollable={scrollable}
+        overflow={scrollable ? undefined : 'hidden'}
         onWheel={() => {
-          if (appsCarousel.state.zoomedOut) {
-            appsCarousel.animateTo(rowRef.current.scrollLeft / rowSize.width)
+          if (appsCarouselStore.state.zoomedOut) {
+            appsCarouselStore.animateTo(rowRef.current.scrollLeft / rowSize.width)
           }
         }}
         scrollLeft={scrollSpring.x}
@@ -314,9 +349,9 @@ const OrbitAppCard = ({
   definition: AppDefinition
 }) => {
   const theme = useTheme()
-  const isFocused = useReaction(() => index === appsCarousel.focusedAppIndex, [index])
+  const isFocused = useReaction(() => index === appsCarouselStore.focusedAppIndex, [index])
   const isFocusZoomed = useReaction(
-    () => index === appsCarousel.focusedAppIndex && !appsCarousel.state.zoomedOut,
+    () => index === appsCarouselStore.focusedAppIndex && !appsCarouselStore.state.zoomedOut,
     [index],
   )
   const cardRef = useRef(null)
@@ -340,16 +375,16 @@ const OrbitAppCard = ({
   return (
     <Card
       ref={cardRef}
-      alt="flat"
+      borderWidth={0}
       background={theme.backgroundStronger}
       overflow="hidden"
       borderRadius={isFocusZoomed ? 0 : 12}
       animated
       onClick={() => {
-        appsCarousel.setFocusedAppIndex(index)
+        appsCarouselStore.setFocusedAppIndex(index)
       }}
       onDoubleClick={() => {
-        appsCarousel.zoomIntoApp(index)
+        appsCarouselStore.zoomIntoApp(index)
       }}
       {...(isFocused
         ? {

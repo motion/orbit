@@ -217,7 +217,6 @@ export const effects = {
   },
 
   setPane(appId: string, avoidScroll?: boolean) {
-    console.log('set pane', appId, avoidScroll)
     paneManagerStore.setPane(appId)
     if (!avoidScroll) {
       appsCarouselStore.scrollToPane(+appId)

@@ -126,7 +126,7 @@ const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean }> = 
   }
   om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = next.id
-  om.effects.router.setPane(next.id)
+  om.effects.router.setPane(next.id, params.replace ? true : false)
 }
 
 const showSetupAppPage: Action = om => {
@@ -161,11 +161,17 @@ const forward: Action = om => {
   }
 }
 
+let ignoreNextRoute = false
+
 const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' }> = (
   om,
   { action, url },
 ) => {
   page(url, ({ params, querystring }) => {
+    if (ignoreNextRoute) {
+      ignoreNextRoute = false
+      return
+    }
     om.actions.router.ignoreNextPush()
     om.actions.router[action]({
       ...params,
@@ -201,16 +207,20 @@ export const effects = {
   },
 
   open(url: string) {
+    ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
+    ignoreNextRoute = true
     page.replace(url)
   },
 
-  setPane(appId: string) {
-    console.log('set pane', appId, appsCarouselStore.apps)
+  setPane(appId: string, avoidScroll?: boolean) {
+    console.log('set pane', appId, avoidScroll)
     paneManagerStore.setPane(appId)
-    appsCarouselStore.scrollToPane(+appId)
+    if (!avoidScroll) {
+      appsCarouselStore.scrollToPane(+appId)
+    }
   },
 }

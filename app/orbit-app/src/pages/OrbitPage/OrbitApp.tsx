@@ -222,7 +222,7 @@ export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppViewPro
   }
 }
 
-const onIdle = () => new Promise(res => window['requestIdleCallback'](res))
+export const whenIdle = () => new Promise(res => window['requestIdleCallback'](res))
 
 const FadeInDiv = gloss(Box, {
   position: 'absolute',
@@ -241,7 +241,7 @@ const FadeIn = (props: any) => {
 
   useEffect(() => {
     let off = false
-    Promise.race([sleep(100), onIdle()]).then(() => !off && setShown(true))
+    Promise.race([sleep(100), whenIdle()]).then(() => !off && setShown(true))
     return () => {
       off = true
     }

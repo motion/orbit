@@ -1,12 +1,12 @@
 import { AppDefinition, AppWithDefinition, createUsableStore, ensure, react, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, Row, useGet, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, Row, useDebounce, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { interpolate, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { queryStore, usePaneManagerStore } from '../../om/stores'
-import { OrbitApp } from './OrbitApp'
+import { OrbitApp, whenIdle } from './OrbitApp'
 
 class OrbitAppsCarouselStore {
   apps: AppWithDefinition[] = []
@@ -73,7 +73,7 @@ class OrbitAppsCarouselStore {
     }
   }
 
-  zoomIntoApp(index = Math.round(curI)) {
+  zoomIntoApp(index = Math.round(this.curI)) {
     this.setFocusedAppIndex(index, true)
     this.setZoomedOut(false)
   }
@@ -98,30 +98,30 @@ class OrbitAppsCarouselStore {
       this.setFocusedAppIndex(this.focusedAppIndex - 1, true)
     }
   }
-}
 
-// this is a global and needs to be fast so lets just do this
-let curI = 0
+  curI = 0
+  isDragging = false
 
-const getSpring = (i: number) => {
-  const zoom = orbitAppsCarouselStore.zoomedOut ? 0.85 : 1
-  const importance = Math.max(0, 1 - Math.abs(curI - i))
-  const scale = Math.max(0.75, importance * zoom)
-  const ry = (curI - i) * 10
-  return {
-    x: 0,
-    y: 0,
-    scale,
-    ry,
+  getSpring = (i: number) => {
+    const zoom = appsCarousel.zoomedOut ? 0.85 : 1
+    const importance = Math.max(0, 1 - Math.abs(this.curI - i))
+    const scale = Math.max(0.75, importance * zoom)
+    const ry = (this.curI - i) * 10
+    return {
+      x: 0,
+      y: 0,
+      scale: scale * (this.isDragging ? 0.93 : 1),
+      ry,
+    }
   }
 }
 
-export const orbitAppsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
-window['orbitAppsCarouselStore'] = orbitAppsCarouselStore
+export const appsCarousel = createUsableStore(OrbitAppsCarouselStore)
+window['appsCarousel'] = appsCarousel
 
 export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   useEffect(() => {
-    orbitAppsCarouselStore.setApps(apps)
+    appsCarousel.setApps(apps)
   }, [apps])
 
   const paneStore = usePaneManagerStore()
@@ -142,52 +142,64 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   }))
 
   const [springs, set] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
-    ...getSpring(i),
+    ...appsCarousel.getSpring(i),
     config: { mass: 2, tension: 700, friction: 30 },
   }))
 
-  const bind = useGesture(
-    ({ down, delta: [xDelta], distance /* , direction: [xDir], cancel */ }) => {
-      // if (down && distance > window.innerWidth / 2)
-      //   cancel((index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pages.length - 1)))
-
-      if (down) {
-        const x = curI * rowSize.width + distance
-        setScroll({ x })
-      }
-
-      // set(i => {
-      //   if (i < index.current - 1 || i > index.current + 1) return { display: 'none' }
-      //   const x = (i - index.current) * window.innerWidth + (down ? xDelta : 0)
-      //   const sc = down ? 1 - distance / window.innerWidth / 2 : 1
-      //   return { x, sc, display: 'block' }
-      // })
-    },
-  )
-
-  useReaction(
-    () => orbitAppsCarouselStore.zoomedOut,
-    () => {
-      set(getSpring)
-    },
-  )
-
-  const scrollToPaneIndex = (next: number) => {
-    if (curI !== next) {
+  const setCurIndexAndAnimate = (next: number) => {
+    if (appsCarousel.curI !== next) {
       const paneIndex = Math.round(next)
-      if (paneIndex !== orbitAppsCarouselStore.focusedAppIndex) {
-        orbitAppsCarouselStore.setFocusedAppIndex(paneIndex)
+      if (paneIndex !== appsCarousel.focusedAppIndex) {
+        appsCarousel.setFocusedAppIndex(paneIndex)
       }
-      curI = next
-      set(getSpring)
+      appsCarousel.curI = next
+      set(appsCarousel.getSpring)
     }
   }
 
+  const scrollToCurIndexAndAnimate = (index: number) => {
+    if (Math.round(index) !== appsCarousel.focusedAppIndex) {
+      appsCarousel.setFocusedAppIndex(index)
+    }
+    setScroll({ x: rowSize.width * index })
+    setCurIndexAndAnimate(index)
+  }
+
+  const bind = useGesture({
+    onDrag: next => {
+      if (!appsCarousel.zoomedOut) return
+
+      appsCarousel.isDragging = next.dragging
+      set(appsCarousel.getSpring)
+
+      const dx = -next.velocity * next.direction[0] * 15
+      // console.log('next', next)
+
+      // avoid easy presses
+      if (Math.abs(dx) < 0.5) return
+
+      if (appsCarousel.isDragging) {
+        const dI = dx / rowSize.width
+        const nextI = Math.min(Math.max(0, appsCarousel.curI + dI), apps.length - 1)
+        scrollToCurIndexAndAnimate(nextI)
+      } else {
+        const paneIndex = Math.round(appsCarousel.curI)
+        scrollToCurIndexAndAnimate(paneIndex)
+      }
+    },
+  })
+
   useReaction(
-    () => orbitAppsCarouselStore.triggerScrollToFocused,
+    () => appsCarousel.zoomedOut,
     () => {
-      setScroll({ x: rowSize.width * orbitAppsCarouselStore.focusedAppIndex })
-      scrollToPaneIndex(orbitAppsCarouselStore.focusedAppIndex)
+      set(appsCarousel.getSpring)
+    },
+  )
+
+  useReaction(
+    () => appsCarousel.triggerScrollToFocused,
+    () => {
+      scrollToCurIndexAndAnimate(appsCarousel.focusedAppIndex)
     },
     {
       lazy: true,
@@ -195,23 +207,19 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     [rowSize],
   )
 
-  const paneWidth = rowSize.width / apps.length
-  const getPaneWidth = useGet(paneWidth)
-
-  const curAppId = +paneStore.activePane.id
-
   // listen for pane movement
+  const curAppId = +paneStore.activePane.id
   useEffect(() => {
     const scrollToApp = (appId: number) => {
-      const pw = getPaneWidth()
       const paneIndex = apps.findIndex(x => x.app.id === appId)
-      if (paneIndex !== -1) {
-        const x = pw * paneIndex
-        scrollToPaneIndex(x === 0 ? 0 : x / rowSize.width)
-      }
+      scrollToCurIndexAndAnimate(paneIndex)
     }
     scrollToApp(curAppId)
   }, [curAppId, rowSize.width])
+
+  const finishScroll = useDebounce(() => {
+    appsCarousel.setFocusedAppIndex(Math.round(appsCarousel.curI))
+  }, 50)
 
   return (
     <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
@@ -221,7 +229,8 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         justifyContent="flex-start"
         scrollable="x"
         onWheel={() => {
-          scrollToPaneIndex(rowRef.current.scrollLeft / rowSize.width)
+          setCurIndexAndAnimate(rowRef.current.scrollLeft / rowSize.width)
+          finishScroll()
         }}
         scrollLeft={scrollSpring.x}
         animated
@@ -262,19 +271,25 @@ const OrbitAppCard = ({
   definition: AppDefinition
 }) => {
   const theme = useTheme()
-  const isFocused = useReaction(() => index === orbitAppsCarouselStore.focusedAppIndex, _ => _, [
-    index,
-  ])
+  const isFocused = useReaction(() => index === appsCarousel.focusedAppIndex, _ => _, [index])
   const cardRef = useRef(null)
   const [renderApp, setRenderApp] = useState(false)
+
+  // debounce + wait for idle to avoid frame loss
+  const setRenderTrue = useDebounce(async () => {
+    await whenIdle()
+    setRenderApp(true)
+  }, 200)
+
   useIntersectionObserver({
     ref: cardRef,
     onChange(x) {
       if (x.length && x[0].isIntersecting && !renderApp) {
-        setRenderApp(true)
+        setRenderTrue()
       }
     },
   })
+
   return (
     <Card
       ref={cardRef}
@@ -285,10 +300,10 @@ const OrbitAppCard = ({
       title={app.name}
       animated
       onClick={() => {
-        orbitAppsCarouselStore.setFocusedAppIndex(index)
+        appsCarousel.setFocusedAppIndex(index)
       }}
       onDoubleClick={() => {
-        orbitAppsCarouselStore.zoomIntoApp(index)
+        appsCarousel.zoomIntoApp(index)
       }}
       {...(isFocused
         ? {

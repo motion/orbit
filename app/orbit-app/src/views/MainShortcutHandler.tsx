@@ -6,7 +6,7 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
-import { orbitAppsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarousel } from '../pages/OrbitPage/OrbitAppsCarousel'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -63,54 +63,61 @@ export default memo(function MainShortcutHandler(props: {
         require('electron').remote.clipboard.writeText('http://example.com')
       },
       ENTER: () => {
-        if (orbitAppsCarouselStore.zoomedOut) {
-          orbitAppsCarouselStore.zoomIntoApp()
+        if (appsCarousel.zoomedOut) {
+          appsCarousel.zoomIntoApp()
           return
         }
       },
       ESCAPE: () => {
-        if (orbitAppsCarouselStore.zoomedOut === false) {
-          orbitAppsCarouselStore.setZoomedOut()
-          return
-        }
+        // close any open popovers
         if (PopoverState.openPopovers.size > 0) {
           PopoverState.closeLast()
           return
         }
-        // then orbit query
+        // zoom out
+        if (appsCarousel.zoomedOut === false) {
+          appsCarousel.setZoomedOut()
+          return
+        }
+        // go to first app
+        if (appsCarousel.focusedAppIndex > 0) {
+          appsCarousel.setFocusedAppIndex(0, true)
+          return
+        }
+        // clear orbit query
         if (queryStore) {
           return queryStore.setQuery('')
         }
-        // then orbit itself
+        // close orbit itself
         if (Electron.state.showOrbitMain) {
           command(ToggleOrbitMainCommand)
         }
       },
       UP: () => {
-        if (orbitAppsCarouselStore.zoomedOut) {
+        if (appsCarousel.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.up)
       },
       DOWN: () => {
-        if (orbitAppsCarouselStore.zoomedOut) {
+        if (appsCarousel.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.down)
       },
       LEFT: () => {
-        if (orbitAppsCarouselStore.zoomedOut) {
-          orbitAppsCarouselStore.left()
+        if (appsCarousel.zoomedOut) {
+          appsCarousel.left()
           return
         }
         shortcutStore.emit(Direction.left)
       },
       RIGHT: () => {
         console.log('right')
-        if (orbitAppsCarouselStore.zoomedOut) {
-          orbitAppsCarouselStore.right()
+        if (appsCarousel.zoomedOut) {
+          appsCarousel.right()
           return
         }
         shortcutStore.emit(Direction.right)

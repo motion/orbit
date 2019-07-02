@@ -5,7 +5,7 @@ import React, { memo, useCallback, useMemo } from 'react'
 
 import { useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
-import { orbitAppsCarouselStore } from './OrbitAppsCarousel'
+import { appsCarousel } from './OrbitAppsCarousel'
 import { useHeaderStore } from './OrbitHeader'
 
 const Keys = {
@@ -22,9 +22,9 @@ const handleKeyDown = e => {
   }
 
   if (keyCode === Keys.enter) {
-    if (orbitAppsCarouselStore.zoomedOut) {
+    if (appsCarousel.zoomedOut) {
       e.stopPropagation()
-      orbitAppsCarouselStore.zoomIntoApp()
+      appsCarousel.zoomIntoApp()
       return
     }
   }

@@ -22,7 +22,7 @@ export type RouterState = {
   appId: string
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
-  lastPage: Derive<RouterState, HistoryItem>
+  lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
@@ -72,6 +72,7 @@ const showPage: Operator<HistoryItem> = pipe(
     }
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
+    om.state.router.historyIndex++
   }),
   run((om, item) => {
     if (!om.state.router.ignoreNextPush) {
@@ -103,7 +104,6 @@ const isNumString = (x: number | string) => +x == x
 
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
   // find by identifier optionally
-  console.log('what', isNumString(params.id), params.id, om.state.apps.activeApps)
   const id = isNumString(params.id)
     ? params.id
     : `${om.state.apps.activeApps.find(x => x.identifier === params.id).id}`
@@ -133,7 +133,7 @@ const ignoreNextPush: Action = om => {
 }
 
 const back: Action = om => {
-  if (om.state.router.historyIndex > -1) {
+  if (om.state.router.historyIndex > 0) {
     om.state.router.historyIndex--
     window.history.back()
   }

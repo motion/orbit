@@ -7,6 +7,7 @@ import React, { memo, useMemo } from 'react'
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
 import { appsCarousel } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -69,6 +70,11 @@ export default memo(function MainShortcutHandler(props: {
         // close any open popovers
         if (PopoverState.openPopovers.size > 0) {
           PopoverState.closeLast()
+          return
+        }
+        // close app drawer if open
+        if (appsDrawerStore.isOpen) {
+          appsDrawerStore.closeDrawer()
           return
         }
         // zoom out

@@ -73,7 +73,11 @@ export function processArray(key: string, value: (number | string)[], level: num
   if (key === 'boxShadow') {
     return value
       .map(val =>
-        val && typeof val === 'object' ? processBoxShadow(val) : processArrayItem(key, val),
+        Array.isArray(val)
+          ? processArrayItem(key, val)
+          : typeof val === 'object'
+          ? processBoxShadow(val)
+          : val,
       )
       .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
   }

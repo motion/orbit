@@ -51,8 +51,6 @@ class AppsDrawerStore {
 export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
-const style: any = {}
-
 export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const paneManager = usePaneManagerStore()
   const appsDrawer = appsDrawerStore.useStore()
@@ -66,11 +64,13 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
     appsDrawerStore.setProps({ apps })
   }, [apps])
 
+  const boxShadowSize = 20
+
   const updateSpring = () => {
     if (appsDrawer.isOpen) {
       set({ y: yPad })
     } else {
-      set({ y: frameSize.height })
+      set({ y: frameSize.height + boxShadowSize })
     }
   }
 
@@ -83,7 +83,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
         background={theme => theme.backgroundStronger}
         boxShadow={[
           {
-            blur: 20,
+            blur: boxShadowSize,
             color: [0, 0, 0, 0.5],
           },
         ]}

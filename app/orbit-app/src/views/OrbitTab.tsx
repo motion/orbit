@@ -1,9 +1,9 @@
 import { invertLightness } from '@o/color'
 import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Button, ButtonProps, Icon, IconProps, memoIsEqualDeep, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
+import { Button, ButtonProps, Icon, IconProps, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
 import { gloss, useTheme } from 'gloss'
-import * as React from 'react'
+import React, { memo } from 'react'
 
 export const tabHeight = 36
 const inactiveOpacity = 0.45
@@ -29,7 +29,7 @@ export type TabProps = Omit<ViewProps, 'width'> & {
   location?: string
 }
 
-export const OrbitTab = memoIsEqualDeep(function OrbitTab({
+export const OrbitTab = memo(function OrbitTab({
   icon,
   iconSize: iconSizeProp,
   iconProps,

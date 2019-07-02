@@ -8,6 +8,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@o/models": "*"
+    "@o/models": "*",
+    "@o/fast-compare": "*"
   }
 }

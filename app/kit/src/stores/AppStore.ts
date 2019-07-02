@@ -9,7 +9,10 @@ export class AppStore {
     identifier: string
   }
 
-  hooks = useHooks({ stores: useStoresSimple })
+  hooks = useHooks({
+    stores: useStoresSimple,
+  })
+
   menuItems: AppMenuItem[] = []
 
   setMenuItems(items: AppMenuItem[]) {

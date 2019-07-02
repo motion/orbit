@@ -11,9 +11,14 @@ export const urls = {
 }
 
 type RouteName = keyof typeof urls
-type Params = { [key: string]: string }
+type Params = { [key: string]: string | number | boolean }
 
-type HistoryItem = { name: RouteName; path: string; params?: Params }
+type HistoryItem = {
+  name: RouteName
+  path: string
+  params?: Params
+  replace?: boolean
+}
 
 export type RouterState = {
   historyIndex: number
@@ -40,10 +45,11 @@ const getPath = (name: string, p?: Params) => {
         .slice(1)
 }
 
-const getItem = (name: RouteName, params?: Params): HistoryItem => ({
+const getItem = (name: RouteName, params?: Params, replace?: boolean): HistoryItem => ({
   name,
   path: getPath(name, params),
   params,
+  replace,
 })
 
 // init
@@ -76,7 +82,11 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
   run((om, item) => {
     if (!om.state.router.ignoreNextPush) {
-      om.effects.router.open(item.path)
+      if (item.replace) {
+        om.effects.router.replace(item.path)
+      } else {
+        om.effects.router.open(item.path)
+      }
     }
   }),
   mutate(om => {
@@ -102,7 +112,7 @@ const showHomePage: Action = om => {
 
 const isNumString = (x: number | string) => +x == x
 
-const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
+const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean }> = (om, params) => {
   // find by identifier optionally
   const id = isNumString(params.id)
     ? params.id
@@ -111,7 +121,7 @@ const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
     ...params,
     id,
   }
-  om.actions.router.showPage(getItem('app', next))
+  om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = next.id
   om.effects.router.setPane(next.id)
 }
@@ -189,6 +199,10 @@ export const effects = {
 
   open(url: string) {
     page.show(url)
+  },
+
+  replace(url: string) {
+    page.replace(url)
   },
 
   setPane(appId: string) {

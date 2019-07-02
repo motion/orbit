@@ -1,16 +1,20 @@
-import { useActiveApps, useLocationLink, useStore } from '@o/kit'
+import { useActiveApps, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { Button, ListItem, Menu } from '@o/ui'
-import React, { memo } from 'react'
+import React from 'react'
 
-import { useOm } from '../../om/om'
-import { usePaneManagerStore } from '../../om/stores'
+import { om, useOm } from '../../om/om'
+import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 
-export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
+const goToAppSettings = () => {
+  om.actions.router.showAppPage({
+    id: 'apps',
+    subId: paneManagerStore.activePane.id,
+  })
+}
+
+export const OrbitHeaderMenu = () => {
   const { effects, state } = useOm()
-  const paneManagerStore = usePaneManagerStore()
-  const { activePane } = paneManagerStore
-  const manageAppLink = useLocationLink(`/app/apps?itemId=${activePane.id}`)
 
   return (
     <Menu
@@ -25,10 +29,10 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
         onClick={effects.copyAppLink}
       />
       <OrbitEditAppItem />
-      <ListItem title="App Settings" icon="cog" onClick={manageAppLink} />
+      <ListItem title="App Settings" icon="cog" onClick={goToAppSettings} />
     </Menu>
   )
-})
+}
 
 function OrbitEditAppItem() {
   const { isEditing } = useStore(App)

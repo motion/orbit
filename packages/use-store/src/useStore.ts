@@ -63,7 +63,7 @@ export function createUsableStore<T, Props extends InferProps<T>>(
     return existing
   }
 
-  const Store = decorate(OGStore, initialProps as Object)
+  const Store = decorate(OGStore, (initialProps as any) || {})
   const store = (new Store() as any) as UsableStore<T, Props>
   store.useStore = options => useStore(store, undefined, options)
   StoreCache[hmrKey] = store

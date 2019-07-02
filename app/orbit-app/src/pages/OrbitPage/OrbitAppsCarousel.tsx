@@ -6,6 +6,7 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
+import { om } from '../../om/om'
 import { paneManagerStore, queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 
@@ -114,6 +115,14 @@ class OrbitAppsCarouselStore {
   setFocusedAppIndex(next: number, forceScroll = false) {
     if (next !== this.focusedAppIndex) {
       this.focusedAppIndex = next
+
+      // update url
+      const id = `${this.apps[next].app.id}`
+      om.actions.router.showAppPage({
+        id,
+        replace: true,
+      })
+
       if (forceScroll) {
         this.animateAndScrollTo(this.focusedAppIndex)
       }
@@ -213,6 +222,7 @@ class OrbitAppsCarouselStore {
 }
 
 export const appsCarousel = createUsableStore(OrbitAppsCarouselStore)
+export const useAppsCarousel = appsCarousel.useStore
 window['appsCarousel'] = appsCarousel
 
 export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {

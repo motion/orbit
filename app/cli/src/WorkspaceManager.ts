@@ -1,10 +1,4 @@
-import {
-  BuildServer,
-  getAppConfig,
-  makeWebpackConfig,
-  WebpackParams,
-  webpackPromise,
-} from '@o/build-server'
+import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
 import { AppMeta } from '@o/models'
 import { watch } from 'chokidar'
@@ -12,13 +6,13 @@ import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
+import { bundleApp, getBuildInfo } from './command-build'
+import { getAppEntry } from './command-dev'
 import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
-import { getAppEntry } from './command-dev'
-import { bundleApp, getBuildInfo } from './command-build'
 
 //
 // TODO we need to really improve this:
@@ -97,7 +91,7 @@ export class WorkspaceManager {
       return
     }
 
-    log.info(`workspace app config`, JSON.stringify(config, null, 2))
+    // log.verbose(`workspace app config`, JSON.stringify(config, null, 2))
 
     if (!isEqual(this.buildConfig, config)) {
       this.buildConfig = config

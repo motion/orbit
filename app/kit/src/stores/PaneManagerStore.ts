@@ -46,6 +46,11 @@ export class PaneManagerStore {
     defaultValue: this.activePaneFast,
   })
 
+  activePaneSlow = react(() => this.activePane, {
+    delay: 200,
+    defaultValue: this.activePaneFast,
+  })
+
   // set pane functions
   setPane = (id: string) => {
     this.paneId = id

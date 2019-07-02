@@ -47,13 +47,24 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
     { props: Mobx.observable.shallow },
     { name: Store.name },
   )
+  let initialProps
   const getProps = {
     configurable: true,
     get: () => storeProps.props,
-    set() {},
+    // allows for class { props = {} } for initial props
+    set(val: Object) {
+      if (!val) return
+      if (initialProps) {
+        throw new Error(`Don't use this.props = to set, use this.setProps()`)
+      }
+      initialProps = val
+    },
   }
   Object.defineProperty(Store.prototype, 'props', getProps)
   const instance = new Store()
+  if (initialProps) {
+    updateProps(instance, initialProps)
+  }
   Object.defineProperty(instance, 'props', getProps)
   return instance
 }

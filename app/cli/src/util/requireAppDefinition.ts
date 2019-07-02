@@ -1,8 +1,9 @@
+import { AppDefinition } from '@o/models'
+
 import { reporter } from '../reporter'
 import { findPackage } from './findPackage'
 import { setIdentifierToPackageId } from './getPackageId'
 import { loadAppEntry } from './loadAppEntry'
-import { AppDefinition } from '@o/models'
 
 export async function requireAppDefinition({
   directory,
@@ -29,7 +30,7 @@ export async function requireAppDefinition({
     }
   }
 
-  reporter.info(`Importing app definition at appRoot ${packageRoot}`)
+  reporter.verbose(`Importing app definition at appRoot ${packageRoot}`)
 
   // can specify preferred definition
   let definition: AppDefinition | null = null

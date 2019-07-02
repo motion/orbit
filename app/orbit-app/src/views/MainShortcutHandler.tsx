@@ -63,7 +63,7 @@ export default memo(function MainShortcutHandler(props: {
         require('electron').remote.clipboard.writeText('http://example.com')
       },
       ENTER: () => {
-        if (appsCarousel.zoomedOut) {
+        if (appsCarousel.state.zoomedOut) {
           appsCarousel.zoomIntoApp()
           // if we had a query prefix active
           if (queryStore.ignorePrefix) {
@@ -83,7 +83,7 @@ export default memo(function MainShortcutHandler(props: {
           return
         }
         // zoom out
-        if (appsCarousel.zoomedOut === false) {
+        if (appsCarousel.state.zoomedOut === false) {
           appsCarousel.setZoomedOut()
           return
         }
@@ -102,21 +102,21 @@ export default memo(function MainShortcutHandler(props: {
         }
       },
       UP: () => {
-        if (appsCarousel.zoomedOut) {
+        if (appsCarousel.state.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.up)
       },
       DOWN: () => {
-        if (appsCarousel.zoomedOut) {
+        if (appsCarousel.state.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.down)
       },
       LEFT: () => {
-        if (appsCarousel.zoomedOut) {
+        if (appsCarousel.state.zoomedOut) {
           appsCarousel.left()
           return
         }
@@ -124,7 +124,7 @@ export default memo(function MainShortcutHandler(props: {
       },
       RIGHT: () => {
         console.log('right')
-        if (appsCarousel.zoomedOut) {
+        if (appsCarousel.state.zoomedOut) {
           appsCarousel.right()
           return
         }

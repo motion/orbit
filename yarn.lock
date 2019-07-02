@@ -2315,10 +2315,10 @@
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
-"@o/react-window@1.9.0-alpha.2":
-  version "1.9.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.2.tgz#02979aa45b7b1e9efc1af72d55a92c04d79c1789"
-  integrity sha512-NwSvv8aL+eA1F9I5sQnrknPNHCNNjeA45Pe7bbq2u8MeI6BxMLXEYG7pIcRgwBpl5dqPFeFYqZPIcnRgRyoDxA==
+"@o/react-window@1.9.0-alpha.3":
+  version "1.9.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.3.tgz#42d0c254ad2302afdbc7ac536312df2e34f85197"
+  integrity sha512-/I2n4Fvebw1Y4U2xmLAf+xwWCLpCvh6W61yMU5uY2aWrviW86wGeoD9qsD32JHo+fTa7QZjLCeLy4tdQuLt//Q==
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
@@ -2540,7 +2540,7 @@
   dependencies:
     mkdirp "^0.5.1"
 
-"@react-spring/addons@9.0.0-beta.30", "@react-spring/addons@^9.0.0-beta.30":
+"@react-spring/addons@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/addons/-/addons-9.0.0-beta.30.tgz#109d941a713cb72aa5e9910babad5ce5c8dd1655"
   integrity sha512-9Pe/tpSzYtQZjT5Ko7Awyby6QNIJe62rumxEaJu25vQ50YB5tq76GsL+rIQGKxrzlj1LB9gNf2sg0WLXHMgD4Q==
@@ -2550,7 +2550,7 @@
     "@react-spring/core" "^9.0.0-beta.30"
     use-memo-one "^1.1.0"
 
-"@react-spring/animated@9.0.0-beta.30", "@react-spring/animated@^9.0.0-beta.30":
+"@react-spring/animated@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/animated/-/animated-9.0.0-beta.30.tgz#8952fc9f0777bf2b73158ae876cb4fb3ab72f757"
   integrity sha512-3cwZ8VX2/1mbYwgEyEUd7WU3xDJpRZ4ZiwerPcvytOLiwmUE4Onw5YTiJBJL7oZudfizIqBItJPf+Q+WcWvhNA==
@@ -2558,7 +2558,7 @@
     "@babel/runtime" "^7.3.1"
     "@react-spring/shared" "^9.0.0-beta.30"
 
-"@react-spring/core@9.0.0-beta.30", "@react-spring/core@^9.0.0-beta.30":
+"@react-spring/core@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/core/-/core-9.0.0-beta.30.tgz#ae6b54a2dda40a54ff864fc33a132b61f92d8f6e"
   integrity sha512-FL5lSj2f6/us6Dbq2ggHsgLULu/51okE6clZYmwCTsTJbuQ50HVfOEWS4hpTOTiXsnBEpBw+kvHvWMk88wH/JA==
@@ -2568,7 +2568,7 @@
     "@react-spring/shared" "^9.0.0-beta.30"
     use-memo-one "^1.1.0"
 
-"@react-spring/konva@9.0.0-beta.30", "@react-spring/konva@^9.0.0-beta.30":
+"@react-spring/konva@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/konva/-/konva-9.0.0-beta.30.tgz#68ed3cfea405b07e6300e243ac844f79af206758"
   integrity sha512-SLXWp+H2XTUVs69iy4Ob6BUkyQwFwoDbDZKGZ3S86orGTXs4nxjUqRbAD1BzaoUNWmx1pgvoJyGEv0xJDm/2Uw==
@@ -2578,7 +2578,7 @@
     "@react-spring/core" "^9.0.0-beta.30"
     "@react-spring/shared" "^9.0.0-beta.30"
 
-"@react-spring/native@9.0.0-beta.30", "@react-spring/native@^9.0.0-beta.30":
+"@react-spring/native@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/native/-/native-9.0.0-beta.30.tgz#a24647cf0ed271620e02631a8f17947e5ab2c07d"
   integrity sha512-NY2zkTB2LyA2MEMbm1VnQ/VJT5OPdjWj6PGjLOIuIXv4S4KxfQv0l35UHQnoAWmoGDaAMq7YhjML4vStP6mS+Q==
@@ -2596,7 +2596,7 @@
     "@babel/runtime" "^7.3.1"
     tiny-invariant "^1.0.4"
 
-"@react-spring/three@9.0.0-beta.30", "@react-spring/three@^9.0.0-beta.30":
+"@react-spring/three@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/three/-/three-9.0.0-beta.30.tgz#dfc6add4ba992ea3bb5955ee59156947a387378a"
   integrity sha512-7+/gfISjG6l05LEYhXTPxbVOc6HYlO7cM4KhO7hJwtTdWSPlPM1rOw10K8p65nXsG0oIas4qNYAaXgmBiZC5iw==
@@ -2606,7 +2606,7 @@
     "@react-spring/core" "^9.0.0-beta.30"
     "@react-spring/shared" "^9.0.0-beta.30"
 
-"@react-spring/web@9.0.0-beta.30", "@react-spring/web@^9.0.0-beta.30":
+"@react-spring/web@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/web/-/web-9.0.0-beta.30.tgz#a055c3b213990649c211d5e1868f5afb3bd3f1bb"
   integrity sha512-tmFIiEf49Z/6eks3GOguqyM003ceOCuttPlyFUqmfZk9TAulCU37USWbyOMPB3gbTbZJAW1pcPgaKCv/dB6U3Q==
@@ -2616,7 +2616,7 @@
     "@react-spring/core" "^9.0.0-beta.30"
     "@react-spring/shared" "^9.0.0-beta.30"
 
-"@react-spring/zdog@9.0.0-beta.30", "@react-spring/zdog@^9.0.0-beta.30":
+"@react-spring/zdog@^9.0.0-beta.30":
   version "9.0.0-beta.30"
   resolved "https://registry.yarnpkg.com/@react-spring/zdog/-/zdog-9.0.0-beta.30.tgz#375912a809b95e987fcf0ef2acca9ade9519b570"
   integrity sha512-TWPQKodCM2qbtCclXbQTza7eDpYuy1O+JhF5zKi0/o84IWThfeznLk1QQvs2okkV2Y+QlpGUXORl6ShgBdqtaA==
@@ -2979,10 +2979,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-window@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.7.0.tgz#8dd99822c54380c9c05df213b7b4400c24c9877e"
-  integrity sha512-HyxhB3TFL/2WKRi69paA1Ch7kowomhR2eSZe7sJz8OtKuNhzRrlYSteSID7GIUpV95k246iVOlxEXmG2bjZQFA==
+"@types/react-window@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.8.0.tgz#0649a855fd20e0541f5bc0079b14ae5e1ba60b93"
+  integrity sha512-+3pDwfns884TPYCCFFQObruGI1cOeVHAJ34KvyyhsFGTgCQtfR6Fhnh5TKdvATeHE2AslnU/dHx+tcfJgbhZ8Q==
   dependencies:
     "@types/react" "*"
 

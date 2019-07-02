@@ -25,12 +25,11 @@ import { OrbitHeader } from './OrbitHeader'
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
-
   return (
     <ProvideStores stores={Stores}>
       <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
         <OrbitPageInner />
-        {/* TODO: this wont load if no messages are in queue i think */}
+        {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
         <Suspense fallback={null}>
           <OrbitStatusMessages />
         </Suspense>

@@ -57,7 +57,8 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef, throttle: 300 })
   const [spring, set] = useSpring(() => ({
-    y: yPad,
+    // start offscreen
+    y: 10000,
   }))
 
   useEffect(() => {

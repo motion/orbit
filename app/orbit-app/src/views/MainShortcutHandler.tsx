@@ -63,19 +63,7 @@ export default memo(function MainShortcutHandler(props: {
         require('electron').remote.clipboard.writeText('http://example.com')
       },
       ENTER: () => {
-        console.log('appsCarousel.state.zoomedOut', appsCarousel.state.zoomedOut)
-        if (appsCarousel.state.zoomedOut) {
-          appsCarousel.zoomIntoApp()
-          // if we had a query prefix active
-          if (queryStore.ignorePrefix) {
-            // remove the prefix we were using on enter
-            queryStore.setQuery(queryStore.queryParsed)
-          } else {
-            // otherwise clear the searched app query
-            queryStore.clearQuery()
-          }
-          return
-        }
+        console.log('why doesnt this run in input?')
       },
       ESCAPE: () => {
         // close any open popovers

@@ -1,5 +1,5 @@
-import { react, useActiveSpace, useReaction, useStore } from '@o/kit'
-import { ClearButton, searchStore, sleep, ThemeContext, View } from '@o/ui'
+import { useActiveSpace, useReaction } from '@o/kit'
+import { ClearButton, sleep, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
 
@@ -38,25 +38,10 @@ function useActivePane() {
   return paneManagerStore.activePane
 }
 
-class OrbitInputStore {
-  // we only send the query without prefix to be used in lists, etc
-  // search store is used for highlighting/filtering so no prefix for that
-  updateSearch = react(
-    () => queryStore.queryWithoutPrefix,
-    async (val, { sleep }) => {
-      if (val !== searchStore.query) {
-        await sleep(100)
-        searchStore.setQuery(val)
-      }
-    },
-  )
-}
-
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
-  useStore(OrbitInputStore)
-
   // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
   const [inputVal, setInputVal] = useState('')
+  const search = useSearch()
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()
@@ -80,6 +65,19 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
    *     3. local state because it has concurrent properties, we can keep it fast
    *
    */
+  useReaction(
+    () => queryStore.queryWithoutPrefix,
+    async (val, { sleep }) => {
+      if (val !== search.query) {
+        await sleep(100)
+        search.setQuery(val)
+      }
+    },
+    {
+      name: 'Sync to search store',
+    },
+  )
+
   const updateQuery = (next: string) => {
     if (next === '/') {
       om.actions.router.showHomePage()

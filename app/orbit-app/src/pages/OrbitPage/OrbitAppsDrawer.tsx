@@ -75,12 +75,17 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
   useEffect(updateSpring, [frameSize, appsDrawer.isOpen])
 
   return (
-    <FullScreen className="orbit-apps-drawer" ref={frameRef} pointerEvents="none">
+    <FullScreen
+      transform="translate3d(0, 0, 0)"
+      className="orbit-apps-drawer"
+      ref={frameRef}
+      pointerEvents="none"
+    >
       <Card
-        alt="flat"
         background={theme => theme.backgroundStronger}
         elevation={8}
         sizeRadius={2}
+        borderWidth={0}
         width="100%"
         height="100%"
         animated
@@ -97,9 +102,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
               transform={{
                 y: frameSize.height,
               }}
-              display="none"
               {...isActive && {
-                display: 'flex',
                 opacity: 1,
                 transform: {
                   y: 0,

@@ -1,5 +1,9 @@
 import { createStoreContext, react } from '@o/use-store'
 
+/**
+ * TODO we should rename this to HighlightQueryStore likely and keep it specific
+ */
+
 class SearchStore {
   props: {
     query: string
@@ -19,7 +23,8 @@ class SearchStore {
   }
 }
 
-export const searchStore = createStoreContext(SearchStore)
+const searchStore = createStoreContext(SearchStore)
+
 export const useSearch = searchStore.useStore
 export const useCreateSearch = searchStore.useCreateStore
 export const ProvideSearch = searchStore.Provider

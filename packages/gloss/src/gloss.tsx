@@ -173,7 +173,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     // set up final props with filtering for various attributes
     let finalProps: any = {
-      className: props.className || '',
+      className: [...classNames].join(' '),
       'data-is': ThemedView.displayName,
     }
 
@@ -183,6 +183,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 
     if (isDOMElement) {
       for (const key in props) {
+        if (key === 'className') continue
         if (ignoreAttrs && ignoreAttrs[key]) {
           continue
         }
@@ -203,15 +204,12 @@ export function gloss<Props = any, ThemeProps = Props>(
       }
     } else {
       for (const key in props) {
+        if (key === 'className') continue
         if (conditionalStyles && conditionalStyles[key]) {
           continue
         }
         finalProps[key] = props[key]
       }
-    }
-
-    if (classNames) {
-      finalProps.className += ` ${[...classNames].join(' ')}`
     }
 
     return createElement(element, finalProps, props.children)

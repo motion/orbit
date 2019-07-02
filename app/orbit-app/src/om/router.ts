@@ -99,10 +99,21 @@ const showHomePage: Action = om => {
   }
 }
 
+const isNumString = (x: number | string) => +x == x
+
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
-  om.actions.router.showPage(getItem('app', params))
-  om.state.router.appId = params.id
-  om.effects.router.setPane(params.id)
+  // find by identifier optionally
+  console.log('what', isNumString(params.id), params.id, om.state.apps.activeApps)
+  const id = isNumString(params.id)
+    ? params.id
+    : `${om.state.apps.activeApps.find(x => x.identifier === params.id).id}`
+  const next = {
+    ...params,
+    id,
+  }
+  om.actions.router.showPage(getItem('app', next))
+  om.state.router.appId = next.id
+  om.effects.router.setPane(next.id)
 }
 
 const showSetupAppPage: Action = om => {

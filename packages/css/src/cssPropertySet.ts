@@ -109,7 +109,7 @@ export type boxShadowSyntax = {
   y?: number
   blur?: number
   spread?: number
-  color?: string
+  color?: ColorLike
   inset?: boolean
 }
 

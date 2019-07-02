@@ -112,13 +112,13 @@ export type boxShadowSyntax = {
   color?: string
   inset?: boolean
 }
-export type boxShadow =
-  | 'none'
-  | number
-  | string
-  | boxShadowSyntax[]
-  | (number | ColorLike)[][]
-  | (number | ColorLike | string)[][]
+
+export type boxShadowItem =
+  | boxShadowSyntax
+  | (number | ColorLike)[]
+  | (number | ColorLike | string)[]
+
+export type boxShadow = 'none' | number | string | boxShadowItem[]
 export type boxSizing = 'content-box' | 'border-box'
 export type boxSuppress = 'show' | 'discard' | 'hide'
 export type breakAfter =

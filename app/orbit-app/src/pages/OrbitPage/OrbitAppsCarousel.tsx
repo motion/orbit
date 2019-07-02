@@ -294,6 +294,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   })
 
   const scrollable = appsCarousel.isScrolling || appsCarousel.state.zoomedOut ? 'x' : false
+  const isDisabled = appsCarousel.state.zoomedOut === false
 
   useLayoutEffect(() => {
     rowRef.current.scrollLeft = scrollSpring.x.getValue()
@@ -324,6 +325,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
             index={index}
             app={app}
             definition={definition}
+            isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}
             transform={to(
@@ -344,8 +346,10 @@ const OrbitAppCard = ({
   app,
   definition,
   index,
+  isDisabled,
   ...cardProps
 }: CardProps & {
+  isDisabled: boolean
   index: number
   app: AppBit
   definition: AppDefinition
@@ -403,7 +407,13 @@ const OrbitAppCard = ({
       {...cardProps}
     >
       <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
-      <OrbitApp id={app.id} identifier={definition.id} appDef={definition} renderApp={renderApp} />
+      <OrbitApp
+        id={app.id}
+        isDisabled={isDisabled}
+        identifier={definition.id}
+        appDef={definition}
+        renderApp={renderApp}
+      />
     </Card>
   )
 }

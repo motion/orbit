@@ -10,7 +10,6 @@ import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo
 import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
 import { useOrbitStore, usePaneManagerStore } from '../../om/stores'
-import { useAppsCarousel } from './OrbitAppsCarousel'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -21,16 +20,15 @@ type OrbitAppProps = {
   identifier: string
   appDef?: AppDefinition
   renderApp?: boolean
+  isDisabled?: boolean
 }
 
-export const OrbitApp = memo(({ id, identifier, appDef, renderApp }: OrbitAppProps) => {
-  const appsCarousel = useAppsCarousel()
+export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }: OrbitAppProps) => {
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
 
   const isActive =
-    // not zoomed out
-    appsCarousel.state.zoomedOut === false &&
+    !isDisabled &&
     // on active pane
     paneManagerStore.activePane.id === `${id}`
 

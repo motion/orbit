@@ -80,7 +80,7 @@ export const OrbitNav = memo(
               ]
             },
             onClick: () => {
-              appsCarousel.zoomOutAfterMove = true
+              appsCarousel.shouldZoomIn()
               actions.router.showAppPage({ id: `${app.id}` })
             },
           }

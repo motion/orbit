@@ -7,7 +7,7 @@ import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { om } from '../../om/om'
-import { paneManagerStore, queryStore } from '../../om/stores'
+import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 
 const scaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (x: number) =>
@@ -33,6 +33,8 @@ class OrbitAppsCarouselStore {
     isDragging: false,
   })
 
+  zoomIntoNextApp = false
+
   get apps() {
     return this.props.apps
   }
@@ -50,21 +52,23 @@ class OrbitAppsCarouselStore {
   )
 
   // listen for pane movement
-  scrollToPane = react(
-    () => +paneManagerStore.activePane.id,
-    id => {
-      const paneIndex = this.apps.findIndex(x => x.app.id === id)
-      if (paneIndex > -1) {
-        this.animateAndScrollTo(paneIndex)
-        if (this.zoomOutAfterMove) {
-          this.setZoomedOut(false)
-        }
+  scrollToPane = (id: number, shouldZoomIn?: boolean) => {
+    if (shouldZoomIn) {
+      this.zoomIntoNextApp = true
+    }
+    const paneIndex = this.apps.findIndex(x => x.app.id === id)
+    if (paneIndex > -1) {
+      this.animateAndScrollTo(paneIndex)
+      // TODO make this a proper chain
+      if (this.zoomIntoNextApp) {
+        this.setZoomedOut(false)
       }
-    },
-    {
-      lazy: true,
-    },
-  )
+    }
+  }
+
+  shouldZoomIn() {
+    this.zoomIntoNextApp = true
+  }
 
   scrollToSearchedApp = react(
     () => queryStore.queryInstant,
@@ -134,10 +138,9 @@ class OrbitAppsCarouselStore {
     this.setZoomedOut(false)
   }
 
-  zoomOutAfterMove = false
   setZoomedOut(next: boolean = true) {
     this.state.zoomedOut = next
-    this.zoomOutAfterMove = false
+    this.zoomIntoNextApp = false
   }
 
   right() {

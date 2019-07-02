@@ -2,6 +2,7 @@ import { Action, catchError, Derive, mutate, Operator, pipe, run } from 'overmin
 import page from 'page'
 import queryString from 'query-string'
 
+import { appsCarousel } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -209,5 +210,9 @@ export const effects = {
 
   setPane(appId: string) {
     paneManagerStore.setPane(appId)
+    // scroll in carousel
+    if (appsCarousel.apps.some(app => app.app.id === +appId)) {
+      appsCarousel.scrollToPane(+appId)
+    }
   },
 }

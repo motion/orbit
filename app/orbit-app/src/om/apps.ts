@@ -4,6 +4,7 @@ import { Action, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
+import { queryStore } from './stores'
 
 export type AppsState = {
   allApps: AppBit[]
@@ -22,6 +23,7 @@ const setApps: Action<AppBit[]> = (om, apps) => {
   om.state.apps.allApps = apps
   om.effects.spaces.updatePaneSort(om.state.spaces.activeSpace, om.state.apps.activeApps)
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
+  om.effects.apps.updateQueryStoreSources(apps)
 }
 
 const setActiveSpace: Action<Space> = (om, space) => {
@@ -70,5 +72,13 @@ export const effects = {
         }
       })
     }
+  },
+
+  updateQueryStoreSources(apps: AppBit[]) {
+    const sources = apps.map(x => ({
+      name: x.name,
+      type: x.identifier,
+    }))
+    queryStore.setSources(sources)
   },
 }

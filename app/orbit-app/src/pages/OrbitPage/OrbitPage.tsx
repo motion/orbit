@@ -9,9 +9,6 @@ import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from '
 
 import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
-import { querySourcesEffect } from '../../effects/querySourcesEffect'
-import { useEnsureStaticAppBits } from '../../effects/useEnsureStaticAppBits'
-import { useUserEffects } from '../../effects/userEffects'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useOm } from '../../om/om'
@@ -33,8 +30,6 @@ export const OrbitPage = memo(() => {
     <ProvideStores stores={Stores}>
       <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
         <OrbitPageInner />
-        {/* Inside provide stores to capture all our relevant stores */}
-        <OrbitEffects />
         {/* TODO: this wont load if no messages are in queue i think */}
         <Suspense fallback={null}>
           <OrbitStatusMessages />
@@ -58,15 +53,6 @@ const OrbitStatusMessages = memo(() => {
     })
   }, [statusMessage])
 
-  return null
-})
-
-// TODO these effects are a bad pattern, was testing them
-// we should move them into another area, either in `om` or just directly onto their stores
-const OrbitEffects = memo(() => {
-  useEnsureStaticAppBits()
-  useUserEffects()
-  querySourcesEffect()
   return null
 })
 

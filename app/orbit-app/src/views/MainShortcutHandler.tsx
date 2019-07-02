@@ -118,7 +118,6 @@ export default memo(function MainShortcutHandler(props: {
         shortcutStore.emit(Direction.left)
       },
       RIGHT: () => {
-        console.log('right')
         if (appsCarousel.state.zoomedOut) {
           appsCarousel.right()
           return

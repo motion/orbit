@@ -37,7 +37,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
         width="100%"
         height="100%"
         animated
-        transform={spring.y.interpolate(y => `translate3d(0,${y}px,0)`)}
+        transform={spring.y.to(y => `translate3d(0,${y}px,0)`)}
         pointerEvents="auto"
       >
         {apps.map(({ app, definition }) => {

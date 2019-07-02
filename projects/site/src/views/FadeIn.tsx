@@ -1,11 +1,4 @@
-import {
-  Col,
-  createContextualProps,
-  useDebounce,
-  useDebounceValue,
-  useGet,
-  useIntersectionObserver,
-} from '@o/ui'
+import { Col, createContextualProps, useDebounce, useDebounceValue, useGet, useIntersectionObserver } from '@o/ui'
 import { selectDefined } from '@o/utils'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import { animated, useSpring, UseSpringProps } from 'react-spring'
@@ -152,7 +145,7 @@ export const useSimpleFade = ({
 }
 
 const transformYStyle = spring => ({
-  transform: spring.transformY ? spring.transformY.interpolate(y => `translateY(${y}px)`) : null,
+  transform: spring.transformY ? spring.transformY.to(y => `translateY(${y}px)`) : null,
 })
 
 export const fadeDownProps = {
@@ -189,7 +182,7 @@ export const fadeRightProps = {
     txys: [0, 0, 0, 1],
   },
   style: spring => ({
-    transform: spring.txys.interpolate(
+    transform: spring.txys.to(
       (t, x, y, s) =>
         `perspective(600px) translateX(${t}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
     ),
@@ -206,7 +199,7 @@ export const fadeLeftProps = {
     txys: [0, 0, 0, 1],
   },
   style: spring => ({
-    transform: spring.txys.interpolate(
+    transform: spring.txys.to(
       (t, x, y, s) =>
         `perspective(600px) translateX(${t}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`,
     ),

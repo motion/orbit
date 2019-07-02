@@ -65,6 +65,14 @@ export default memo(function MainShortcutHandler(props: {
       ENTER: () => {
         if (appsCarousel.zoomedOut) {
           appsCarousel.zoomIntoApp()
+          // if we had a query prefix active
+          if (queryStore.ignorePrefix) {
+            // remove the prefix we were using on enter
+            queryStore.setQuery(queryStore.queryParsed)
+          } else {
+            // otherwise clear the searched app query
+            queryStore.clearQuery()
+          }
           return
         }
       },

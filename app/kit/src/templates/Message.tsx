@@ -1,5 +1,5 @@
 import { AppViewProps } from '@o/models'
-import { Col, Icon, PassProps, SubTitle, Title } from '@o/ui'
+import { Col, ColProps, Icon, PassProps, SubTitle, Title } from '@o/ui'
 import React from 'react'
 
 export function Message({
@@ -8,9 +8,10 @@ export function Message({
   subTitle,
   subType,
   children,
-}: AppViewProps & { children?: React.ReactNode }) {
+  ...props
+}: ColProps & AppViewProps & { children?: React.ReactNode; icon?: React.ReactNode }) {
   return (
-    <Col flex={1} padding="lg" space="xl" alignItems="center" justifyContent="center">
+    <Col flex={1} padding="lg" space="xl" alignItems="center" justifyContent="center" {...props}>
       <Col space alignItems="center" justifyContent="center" textAlign="center">
         {!!title && <Title size={title.length > 40 ? 1 : 1.2}>{title}</Title>}
         {!!subTitle && <SubTitle>{subTitle}</SubTitle>}

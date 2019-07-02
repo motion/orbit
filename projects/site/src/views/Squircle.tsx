@@ -20,7 +20,7 @@ export const TiltSquircle = ({ style, ...rest }: ViewProps) => {
     <Squircle
       onMouseMove={({ clientX: x, clientY: y }) => set({ xys: calc(x, y) })}
       onMouseLeave={() => set({ xys: [0, 0, 1] })}
-      style={{ ...style, transform: props.xys.interpolate(trans as any) }}
+      style={{ ...style, transform: props.xys.to(trans as any) }}
       {...rest}
     />
   )

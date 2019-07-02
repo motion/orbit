@@ -97,7 +97,7 @@ export const ParallaxLayer = React.memo(
       }
     })
 
-    const translate3d = ctrl.animated.translate.interpolate(
+    const translate3d = ctrl.animated.translate.to(
       horizontal ? x => `translate3d(${x}px,0,0)` : y => `translate3d(0,${y}px,0)`,
     )
 

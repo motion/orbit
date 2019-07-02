@@ -3,7 +3,7 @@ import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
 import { debounce } from 'lodash'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { interpolate, useSpring, useSprings } from 'react-spring'
+import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { paneManagerStore, queryStore } from '../../om/stores'
@@ -274,7 +274,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
             definition={definition}
             width={frameSize.width}
             height={frameSize.height}
-            transform={interpolate(
+            transform={to(
               Object.keys(springs[index]).map(k => springs[index][k]),
               (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
             )}

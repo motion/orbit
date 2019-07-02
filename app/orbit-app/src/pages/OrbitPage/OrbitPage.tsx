@@ -21,6 +21,7 @@ import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
 import { OrbitAppsCarousel } from './OrbitAppsCarousel'
+import { OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
@@ -182,16 +183,30 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
 const OrbitWorkspaceApps = memo(() => {
   const om = useOm()
-  const allApps = om.state.apps.activeApps.filter(x => x.tabDisplay !== 'hidden')
+  const allApps = om.state.apps.activeApps
   const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
-  const stableSortedApps = useStableSort(allApps.map(x => x.id))
+  const sortedIds = useStableSort(allApps.map(x => x.id))
+  const appsWithDefinitions = sortedIds
     .map(id => allApps.find(x => x.id === id))
     .filter(x => !!x && !!appDefsWithViews[x.identifier])
     .map(app => ({
       app: app,
       definition: appDefsWithViews[app.identifier],
     }))
-  return <OrbitAppsCarousel apps={stableSortedApps} />
+
+  const [carouselApps, drawerApps] = useMemo(
+    () => [
+      appsWithDefinitions.filter(x => x.app.tabDisplay !== 'hidden'),
+      appsWithDefinitions.filter(x => x.app.tabDisplay === 'hidden'),
+    ],
+    [sortedIds],
+  )
+  return (
+    <>
+      <OrbitAppsCarousel apps={carouselApps} />
+      <OrbitAppsDrawer apps={drawerApps} />
+    </>
+  )
 })
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {

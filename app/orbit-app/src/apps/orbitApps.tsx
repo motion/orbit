@@ -51,7 +51,6 @@ const LoadingApp = createApp({
   icon: '',
   id: 'loading',
   app: () => {
-    console.log('LOADING')
     return <Loading />
   },
 })

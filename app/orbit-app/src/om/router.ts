@@ -22,7 +22,7 @@ export type RouterState = {
   appId: string
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
-  lastPage: Derive<RouterState, HistoryItem>
+  lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
@@ -72,6 +72,7 @@ const showPage: Operator<HistoryItem> = pipe(
     }
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
+    om.state.router.historyIndex++
   }),
   run((om, item) => {
     if (!om.state.router.ignoreNextPush) {
@@ -99,10 +100,20 @@ const showHomePage: Action = om => {
   }
 }
 
+const isNumString = (x: number | string) => +x == x
+
 const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
-  om.actions.router.showPage(getItem('app', params))
-  om.state.router.appId = params.id
-  om.effects.router.setPane(params.id)
+  // find by identifier optionally
+  const id = isNumString(params.id)
+    ? params.id
+    : `${om.state.apps.activeApps.find(x => x.identifier === params.id).id}`
+  const next = {
+    ...params,
+    id,
+  }
+  om.actions.router.showPage(getItem('app', next))
+  om.state.router.appId = next.id
+  om.effects.router.setPane(next.id)
 }
 
 const showSetupAppPage: Action = om => {
@@ -122,15 +133,17 @@ const ignoreNextPush: Action = om => {
 }
 
 const back: Action = om => {
-  if (om.state.router.historyIndex > -1) {
-    om.state.router.historyIndex--
+  if (om.state.router.historyIndex > 0) {
+    // subtract two because back will add one!
+    om.state.router.historyIndex -= 2
     window.history.back()
   }
 }
 
 const forward: Action = om => {
   if (om.state.router.historyIndex < om.state.router.history.length - 1) {
-    om.state.router.historyIndex++
+    // subtract two because forward will add one!
+    om.state.router.historyIndex += 2
     window.history.forward()
   }
 }

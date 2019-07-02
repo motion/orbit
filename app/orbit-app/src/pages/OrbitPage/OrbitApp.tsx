@@ -45,8 +45,8 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp }: OrbitAppPro
         </div>
       }
     >
-      <View className="orbit-app" flex={1}>
-        <ScopedState id={`or-${identifier}-${id}-`}>
+      <View className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`} flex={1}>
+        <ScopedState id={`or-${identifier}-${id}`}>
           <ProvideStores stores={{ appStore }}>
             <ProvideVisibility visible={isActive}>
               <OrbitAppRender
@@ -233,7 +233,6 @@ const FadeInDiv = gloss(Box, {
   transition: 'all ease 200ms',
   width: '100%',
   height: '100%',
-  pointerEvents: 'none',
 })
 
 const FadeIn = (props: any) => {

@@ -35,7 +35,7 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
         return !!(def && def.app)
       })
       .map(appToPane)
-    return [...defaultPanes, ...appPanes]
+    return appPanes
   }
 }
 
@@ -55,15 +55,6 @@ export const settingsPane = {
   type: 'settings',
   isHidden: true,
 }
-
-export const defaultPanes: PaneManagerPane[] = [
-  { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
-  settingsPane,
-  { id: 'apps', name: 'Apps', type: 'apps' },
-  { id: 'query-builder', name: 'Query Builder', type: 'query-builder' },
-  { id: 'setupApp', name: 'New app', type: 'setupApp' },
-  { id: 'onboard', name: 'Onboard', type: 'onboard' },
-]
 
 const tabDisplaySort = {
   permanent: 0,

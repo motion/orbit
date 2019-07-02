@@ -62,14 +62,14 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <FadeChild delay={100}>
                   <TitleText textAlign="center" size="xl">
-                    An ecosystem of apps & data
+                    Like IFFT for your apps.
                   </TitleText>
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
                     Every app exposes data - in GraphQL and TypeScript.
                     {screen !== 'small' && <br />}
-                    &nbsp;Plug in many more with the app store.
+                    &nbsp;Link them together with a line of code.
                   </FadeChild>
                 </TitleTextSub>
               </>

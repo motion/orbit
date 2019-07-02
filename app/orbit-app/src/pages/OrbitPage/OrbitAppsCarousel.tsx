@@ -124,7 +124,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     appsCarousel.setApps(apps)
   }, [apps])
 
-  const paneStore = usePaneManagerStore()
+  const paneManager = usePaneManagerStore()
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowRef = useRef<HTMLElement>(null)
@@ -208,13 +208,11 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   )
 
   // listen for pane movement
-  const curAppId = +paneStore.activePane.id
+  const curAppId = +paneManager.activePane.id
   useEffect(() => {
-    const scrollToApp = (appId: number) => {
-      const paneIndex = apps.findIndex(x => x.app.id === appId)
-      scrollToCurIndexAndAnimate(paneIndex)
-    }
-    scrollToApp(curAppId)
+    const paneIndex = apps.findIndex(x => x.app.id === curAppId)
+    scrollToCurIndexAndAnimate(paneIndex)
+    appsCarousel.setZoomedOut(false)
   }, [curAppId, rowSize.width])
 
   const finishScroll = useDebounce(() => {

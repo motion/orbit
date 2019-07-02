@@ -268,7 +268,9 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         justifyContent="flex-start"
         scrollable="x"
         onWheel={() => {
-          appsCarousel.animateTo(rowRef.current.scrollLeft / rowSize.width)
+          if (appsCarousel.state.zoomedOut) {
+            appsCarousel.animateTo(rowRef.current.scrollLeft / rowSize.width)
+          }
         }}
         scrollLeft={scrollSpring.x}
         animated

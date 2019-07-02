@@ -144,7 +144,6 @@ function use<ModelType, Args>(
               // i'm seeing this on useJobs() where none exist
               // so lets assume this means "emtpy" and return default value
               next = defaultValues[type]
-              console.log('setting default value', next)
             }
             if (!resolved) {
               valueRef.current = next

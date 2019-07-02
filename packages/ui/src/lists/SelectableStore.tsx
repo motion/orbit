@@ -169,7 +169,6 @@ export class SelectableStore {
       console.warn('no selecatble row!', this.rows)
       return
     }
-    console.log('selecting first valid', firstValidIndex)
     this.setActiveIndex(firstValidIndex)
   }
 

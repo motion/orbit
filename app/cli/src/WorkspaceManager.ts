@@ -136,7 +136,7 @@ export class WorkspaceManager {
    */
   private async addAppWatcher(app: AppMeta) {
     const entry = await getAppEntry(app.directory)
-    log.info(`Adding app watcher ${app.packageId} ${entry}`)
+    log.verbose(`Adding app watcher ${app.packageId} ${entry}`)
     // watch just the entry file to update buildInfo.json/appEntry.js
     let watcher = watch(entry, {
       persistent: true,

@@ -7,6 +7,14 @@ export class QueryStore {
   queryInstant = ''
   prefixFirstWord = false
 
+  setQuery = (value: string) => {
+    this.queryInstant = value
+  }
+
+  get queryFull() {
+    return this.queryInstant
+  }
+
   get queryWithoutPrefix() {
     if (this.prefixFirstWord) {
       const spaceIndex = this.queryInstant.indexOf(' ')
@@ -19,8 +27,8 @@ export class QueryStore {
   }
 
   query = react(
-    () => this.queryWithoutPrefix,
-    async (query, { sleep }) => {
+    () => [this.queryWithoutPrefix, this.queryInstant],
+    async ([query], { sleep }) => {
       // update nlp
       this.nlpStore.setQuery(query)
 
@@ -79,10 +87,6 @@ export class QueryStore {
       // otherwise clear the searched app query
       this.clearQuery()
     }
-  }
-
-  setQuery = (value: string) => {
-    this.queryInstant = value
   }
 
   toggleLocationFilter(location: string) {

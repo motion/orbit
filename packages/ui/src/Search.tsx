@@ -19,8 +19,7 @@ class SearchStore {
   }
 }
 
-const context = createStoreContext(SearchStore)
-
-export const useSearch = context.useStore
-export const useCreateSearch = context.useCreateStore
-export const ProvideSearch = context.Provider
+export const searchStore = createStoreContext(SearchStore)
+export const useSearch = searchStore.useStore
+export const useCreateSearch = searchStore.useCreateStore
+export const ProvideSearch = searchStore.Provider

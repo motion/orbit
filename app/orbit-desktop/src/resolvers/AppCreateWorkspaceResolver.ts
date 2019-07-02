@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import { AppCreateWorkspaceCommand, AppEntity, SpaceEntity } from '@o/models'
+import { AppCreateWorkspaceCommand, SpaceEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { getRepository } from 'typeorm'
 
@@ -38,17 +38,7 @@ export async function findOrCreateWorkspace(props) {
     ...props,
   })
 
-  // ensure default home app
-  await getRepository(AppEntity).save({
-    target: 'app',
-    identifier: 'home',
-    name: 'Home',
-    icon: '',
-    space,
-    colors: ['orange', 'red'],
-    tabDisplay: 'permanent',
-    editable: false,
-  })
+  // the default home app will be made on app startup, see om/apps.ts
 
   return space
 }

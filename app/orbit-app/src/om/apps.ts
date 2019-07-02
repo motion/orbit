@@ -1,7 +1,8 @@
-import { appSelectAllButDataAndTimestamps, loadMany, observeMany } from '@o/kit'
+import { appSelectAllButDataAndTimestamps, loadMany, loadOne, observeMany, save } from '@o/kit'
 import { AppBit, AppModel, Space } from '@o/models'
 import { Action, Derive } from 'overmind'
 
+import { orbitStaticApps } from '../apps/orbitApps'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
 
 export type AppsState = {
@@ -26,6 +27,7 @@ const setApps: Action<AppBit[]> = (om, apps) => {
 const setActiveSpace: Action<Space> = (om, space) => {
   om.state.apps.activeSpace = space
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
+  om.effects.apps.ensureStaticAppBits(space)
 }
 
 const start: Action = async om => {
@@ -49,4 +51,24 @@ const allAppsArgs = {
 
 export const effects = {
   updatePaneManagerPanes,
+
+  ensureStaticAppBits(activeSpace: Space) {
+    const appDefs = orbitStaticApps
+    for (const appDef of appDefs) {
+      loadOne(AppModel, { args: { where: { identifier: appDef.id } } }).then(app => {
+        if (!app) {
+          console.log('ensuring model for static app', appDef)
+          save(AppModel, {
+            name: appDef.name,
+            target: 'app',
+            identifier: appDef.id,
+            spaceId: activeSpace.id,
+            icon: appDef.icon,
+            colors: ['black', 'white'],
+            tabDisplay: 'hidden',
+          })
+        }
+      })
+    }
+  },
 }

@@ -72,6 +72,11 @@ export default memo(function MainShortcutHandler(props: {
           PopoverState.closeLast()
           return
         }
+        // clear input if written in
+        if (queryStore.hasQuery) {
+          queryStore.clearQuery()
+          return
+        }
         // close app drawer if open
         if (appsDrawerStore.isOpen) {
           appsDrawerStore.closeDrawer()

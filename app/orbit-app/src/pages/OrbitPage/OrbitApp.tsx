@@ -276,7 +276,3 @@ const OrbitActions = memo((props: { children?: any }) => {
   }, [isActive, props.children])
   return null
 })
-
-// if (module['hot']) {
-//   module['hot'].accept()
-// }

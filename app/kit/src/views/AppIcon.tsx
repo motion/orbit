@@ -27,7 +27,7 @@ export const AppIcon = memo(
     }
 
     if (!icon) {
-      console.warn('no icon for', props, icon)
+      console.debug('no icon for', props)
       icon = 'home'
     }
 

@@ -158,7 +158,7 @@ export class BridgeManager {
     if (!this.options.master && !this.options.waitForInitialState) {
       let failTm = setTimeout(() => {
         console.error('get initial state timeout!')
-      }, 2000)
+      }, 4000)
       await this.afterInitialState
       clearTimeout(failTm)
     }

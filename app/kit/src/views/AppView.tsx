@@ -41,8 +41,8 @@ export const AppView = memoIsEqualDeep(function AppView({ appProps, ...props }) 
     }
 
     if (!definition) {
-      console.warn('no definition found', props)
-      return null
+      console.debug('no definition found', props)
+      return <div>no definition found, see debug</div>
     }
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {

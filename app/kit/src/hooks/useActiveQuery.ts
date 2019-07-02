@@ -11,7 +11,6 @@ export function useActiveQuery(opts?: ReactionOptions): string {
     () => {
       ensure('visible', visibleStore.visible)
       ensure('queryStore', !!queryStore)
-      console.log('getting active query', queryStore.query)
       return queryStore.query
     },
     {

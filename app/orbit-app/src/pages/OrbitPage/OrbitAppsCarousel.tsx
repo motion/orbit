@@ -93,7 +93,7 @@ class OrbitAppsCarouselStore {
     zoomedOut => {
       if (zoomedOut) {
         // ignore until we next clear the querybar
-        queryStore.setIgnorePrefix()
+        queryStore.setPrefixFirstWord()
       }
     },
   )
@@ -104,7 +104,7 @@ class OrbitAppsCarouselStore {
       if (!this.state.zoomedOut && !hasQuery) {
         // if youre zoomed into an app and you clear the query bar,
         // we should stop ignoring the prefix we used previosuly
-        queryStore.setIgnorePrefix(false)
+        queryStore.setPrefixFirstWord(false)
       }
     },
   )

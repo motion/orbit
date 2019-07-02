@@ -78,7 +78,9 @@ const showPage: Operator<HistoryItem> = pipe(
     }
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
-    om.state.router.historyIndex++
+    if (!item.replace) {
+      om.state.router.historyIndex++
+    }
   }),
   run((om, item) => {
     if (!om.state.router.ignoreNextPush) {

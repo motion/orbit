@@ -1,7 +1,7 @@
-import { useActiveSpace } from '@o/kit'
-import { ClearButton, ThemeContext, useSearch, View } from '@o/ui'
+import { useActiveSpace, useReaction } from '@o/kit'
+import { ClearButton, sleep, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import React, { memo, useCallback } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 
 import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
@@ -14,7 +14,7 @@ const Keys = {
   enter: 13,
 }
 
-const handleKeyDown = e => {
+const handleKeyDown = async e => {
   // up/down/enter
   const { keyCode } = e
   if (keyCode === Keys.up || keyCode === Keys.down || keyCode === Keys.enter) {
@@ -25,14 +25,8 @@ const handleKeyDown = e => {
     if (appsCarousel.state.zoomedOut) {
       e.stopPropagation()
       appsCarousel.zoomIntoApp()
-      // if we had a query prefix active
-      if (queryStore.ignorePrefix) {
-        // remove the prefix we were using on enter
-        queryStore.setQuery(queryStore.queryParsed)
-      } else {
-        // otherwise clear the searched app query
-        queryStore.clearQuery()
-      }
+      await sleep(16)
+      queryStore.clearPrefix()
       return
     }
   }
@@ -44,6 +38,8 @@ function useActivePane() {
 }
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
+  // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
+  const [inputVal, setInputVal] = useState('')
   const search = useSearch()
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
@@ -58,9 +54,29 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
     ''
 
   const onChangeQuery = useCallback(e => {
-    search.setQuery(e.target.value)
-    qs.onChangeQuery(e.target.value)
+    setInputVal(e.target.value)
+    qs.setQuery(e.target.value)
   }, [])
+
+  // if we clear the queryStore, clear the input
+  useReaction(
+    () => queryStore.prefixFirstWord,
+    prefixFirstWord => {
+      if (!prefixFirstWord) {
+        setInputVal(queryStore.queryInstant)
+      }
+    },
+  )
+
+  // we only send the query without prefix to be used in lists, etc
+  useReaction(
+    () => queryStore.queryWithoutPrefix,
+    val => {
+      if (val !== search.query) {
+        search.setQuery(val)
+      }
+    },
+  )
 
   return (
     <FakeInput>
@@ -75,7 +91,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
           display="block"
           background="transparent"
           placeholder={placeholder}
-          value={search.query}
+          value={inputVal}
           highlight={headerStore.highlightWords}
           color={activeTheme.color}
           onChange={onChangeQuery}

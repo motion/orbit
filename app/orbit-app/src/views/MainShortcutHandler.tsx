@@ -63,6 +63,7 @@ export default memo(function MainShortcutHandler(props: {
         require('electron').remote.clipboard.writeText('http://example.com')
       },
       ENTER: () => {
+        console.log('appsCarousel.state.zoomedOut', appsCarousel.state.zoomedOut)
         if (appsCarousel.state.zoomedOut) {
           appsCarousel.zoomIntoApp()
           // if we had a query prefix active

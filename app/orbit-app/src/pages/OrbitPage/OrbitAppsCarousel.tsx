@@ -158,7 +158,6 @@ class OrbitAppsCarouselStore {
       this.setFocusedAppIndex(index)
     }
     const x = this.props.rowWidth * index
-    console.log('setting scroll spring', index, x)
     this.props.setScrollSpring({ x })
     this.animateCardsTo(index)
   }

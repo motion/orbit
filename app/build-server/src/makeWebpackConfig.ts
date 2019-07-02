@@ -213,7 +213,6 @@ export function makeWebpackConfig(
                 ],
               },
             },
-            target !== 'node' && 'react-hot-loader/webpack',
           ].filter(Boolean),
         },
         {

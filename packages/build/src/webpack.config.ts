@@ -275,7 +275,6 @@ async function makeConfig() {
               loader: 'babel-loader',
               options: babelrcOptions,
             },
-            !isProd && !flags.disableHMR && 'react-hot-loader/webpack',
           ].filter(Boolean),
         },
         {

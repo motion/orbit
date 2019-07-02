@@ -56,10 +56,17 @@ export class PaneManagerStore {
     this.paneId = id
   }
 
-  lastActivePaneId = react(() => this.activePane.id, _ => _, {
-    delayValue: true,
-    log: false,
-  })
+  lastActivePaneId = react(
+    () => this.activePane,
+    pane => {
+      ensure('pane', !!pane)
+      return pane.id
+    },
+    {
+      delayValue: true,
+      log: false,
+    },
+  )
 
   get paneIndex() {
     return this.panes.findIndex(x => x.id === this.paneId)

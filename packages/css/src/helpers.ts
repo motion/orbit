@@ -1,6 +1,7 @@
 import { Config } from './config'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+import { boxShadowSyntax } from './cssPropertySet'
 
 export const px = (x: number | string) =>
   typeof x === 'number' ? `${x}px` : `${+x}` === x ? `${x}px` : x
@@ -69,6 +70,13 @@ export function processArray(key: string, value: (number | string)[], level: num
       return Config.toColor(value)
     }
   }
+  if (key === 'boxShadow') {
+    return value
+      .map(val =>
+        val && typeof val === 'object' ? processBoxShadow(val) : processArrayItem(key, val),
+      )
+      .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+  }
   // solid default option for borders
   if (BORDER_KEY[key] && value.length === 2) {
     value.push('solid')
@@ -76,6 +84,13 @@ export function processArray(key: string, value: (number | string)[], level: num
   return value
     .map(val => processArrayItem(key, val))
     .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+}
+
+function processBoxShadow(val: boxShadowSyntax) {
+  return `${val.inset ? 'inset ' : ''}${val.x || 0}px ${val.y || 0}px ${val.blur ||
+    0}px ${val.spread || 0}px ${
+    Config.isColor(val.color) ? Config.toColor(val.color) : val.color || ''
+  }`
 }
 
 function objectValue(key: string, value: any) {

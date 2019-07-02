@@ -104,7 +104,7 @@ export type boxLines = 'single' | 'multiple'
 export type boxOrdinalGroup = number
 export type boxOrient = 'horizontal' | 'vertical' | 'inline-axis' | 'block-axis' | 'inherit'
 export type boxPack = 'start' | 'center' | 'end' | 'justify'
-type boxShadowSyntax = {
+export type boxShadowSyntax = {
   x?: number
   y?: number
   blur?: number
@@ -116,7 +116,7 @@ export type boxShadow =
   | 'none'
   | number
   | string
-  | boxShadowSyntax
+  | boxShadowSyntax[]
   | (number | ColorLike)[][]
   | (number | ColorLike | string)[][]
 export type boxSizing = 'content-box' | 'border-box'

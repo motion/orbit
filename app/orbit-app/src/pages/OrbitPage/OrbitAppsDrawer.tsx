@@ -51,6 +51,8 @@ class AppsDrawerStore {
 export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
+const style: any = {}
+
 export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) => {
   const paneManager = usePaneManagerStore()
   const appsDrawer = appsDrawerStore.useStore()
@@ -79,7 +81,12 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
       <Card
         ref={frameRef}
         background={theme => theme.backgroundStronger}
-        elevation={8}
+        boxShadow={[
+          {
+            blur: 20,
+            color: [0, 0, 0, 0.5],
+          },
+        ]}
         sizeRadius={2}
         borderWidth={0}
         width="100%"

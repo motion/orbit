@@ -1,4 +1,6 @@
 import { createApp } from '@o/kit'
+import SearchApp from '@o/search-app'
+import React from 'react'
 
 export default createApp({
   id: 'quickFind',
@@ -8,5 +10,6 @@ export default createApp({
 })
 
 function QuickFindApp() {
-  return <div>hi</div>
+  const View = SearchApp.app
+  return <View />
 }

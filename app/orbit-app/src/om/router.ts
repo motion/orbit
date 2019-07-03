@@ -105,15 +105,18 @@ const showPage: Operator<HistoryItem> = pipe(
 )
 
 const showHomePage: Action = om => {
-  om.actions.router.showPage(getItem('home'))
-  const foundApp = om.state.apps.activeApps.find(x => x.identifier === 'home')
-  if (foundApp) {
-    om.state.router.appId = `${foundApp.id}`
+  const firstApp = om.state.apps.activeApps.find(x => x.tabDisplay !== 'hidden')
+  if (firstApp) {
+    om.actions.router.showPage(getItem('app', { id: firstApp.identifier }))
+    om.state.router.appId = `${firstApp.id}`
     om.effects.router.setPane(om.state.router.appId)
+  } else {
+    console.log('no home app found')
   }
 }
 
 const showQuickFind: Action = om => {
+  console.log('show quick find')
   om.actions.router.showAppPage({ id: 'quickFind' })
 }
 

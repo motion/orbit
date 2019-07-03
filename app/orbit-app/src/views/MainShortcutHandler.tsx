@@ -77,8 +77,12 @@ export default memo(function MainShortcutHandler(props: {
           queryStore.clearQuery()
           return
         }
-        // toggle between app home app
-        if (appsCarouselStore.focusedAppIndex === 0 && !appsDrawerStore.isOpen) {
+        // toggle between app search app when on home zoomed out
+        if (
+          appsCarouselStore.state.zoomedOut === true &&
+          appsCarouselStore.focusedAppIndex === 0 &&
+          !appsDrawerStore.isOpen
+        ) {
           om.actions.router.showQuickFind()
           return
         }

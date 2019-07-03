@@ -36,11 +36,12 @@ export class PaneManagerStore {
     return (
       this.panes.find(x => x.id === this.paneId) ||
       this.panes.find(x => x.id === this.lastActivePaneId) ||
-      this.panes[0]
+      this.panes[0] ||
+      this.props.defaultPanes[0]
     )
   }
 
-  activePaneSlow = react(() => this.activePane, {
+  activePaneSlow = react(() => this.activePaneFast, _ => _, {
     delay: 16,
     defaultValue: this.activePaneFast,
   })

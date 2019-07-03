@@ -113,11 +113,23 @@ type ObjectFns = { [key: string]: Fn }
 
 type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
 
+/**
+ * TODO lets make this functional style:
+ *
+ * class Store {
+ *   hooks = useHooks(() => {
+ *     const myHook = useState()
+ *     return { myHook }
+ *   })
+ * }
+ *
+ */
 export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
   const getValues = () => {
     let res: any = {}
     for (const key in hooks) {
-      res[key] = hooks[key]()
+      const next = hooks[key]()
+      res[key] = next
     }
     return res
   }

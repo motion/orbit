@@ -1,5 +1,5 @@
 import { AppWithDefinition, createUsableStore, ensure, react } from '@o/kit'
-import { Card, FullScreen, isDefined, useNodeSize } from '@o/ui'
+import { Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
 
@@ -19,23 +19,20 @@ class AppsDrawerStore {
   lastAppId = react(
     () => [paneManagerStore.activePane.id, this.isOpen],
     ([activePaneId]) => {
-      if (this.isOpen && !isDefined(this.lastAppId)) {
-        // default case
-        return 'home'
-      }
       ensure('not open', !this.isOpen)
       return activePaneId
     },
   )
 
   closeDrawer = () => {
-    if (om.state.router.lastPage && om.state.router.lastPage.name === 'app') {
-      const id = om.state.router.lastPage.params.id
-      if (id && !this.isDrawerPage(id)) {
-        om.actions.router.back()
-        return
-      }
-    }
+    // if (om.state.router.lastPage && om.state.router.lastPage.name === 'app') {
+    //   const id = om.state.router.lastPage.params.id
+    //   if (id && !this.isDrawerPage(`${id}`)) {
+    //     om.actions.router.back()
+    //     return
+    //   }
+    // }
+    console.log('close drawer back to', this.lastAppId)
     om.actions.router.showAppPage({ id: this.lastAppId })
   }
 
@@ -68,6 +65,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
   const boxShadowSize = 20
 
   const updateSpring = () => {
+    console.log('set it to', appsDrawer.isOpen, yPad)
     if (appsDrawer.isOpen) {
       set({ y: yPad })
     } else {

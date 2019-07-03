@@ -7,8 +7,6 @@ import { om } from '../../om/om'
 import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
-const yPad = 20
-
 class AppsDrawerStore {
   props: {
     apps: AppWithDefinition[]
@@ -55,6 +53,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
     appsDrawerStore.setProps({ apps })
   }, [apps])
 
+  const yPad = 10
   const boxShadowSize = 20
 
   const updateSpring = () => {

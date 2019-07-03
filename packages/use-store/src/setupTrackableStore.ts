@@ -40,6 +40,7 @@ export function setupTrackableStore(
   const name = opts.component.renderName
   const storeName = store.constructor.name
   let paused = true
+  const trackedKeysWhilePaused = new Set<string>()
   let reactiveKeys = new Set<string>()
   let deepKeys: string[] = []
   const updateDeepKey = observable.box(0)
@@ -82,9 +83,13 @@ export function setupTrackableStore(
     observers.push(
       observe(store, change => {
         const key = change['name']
-        if (reactiveKeys.has(key)) {
-          if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
-          queueUpdate(update)
+        if (paused) {
+          trackedKeysWhilePaused.add(key)
+        } else {
+          if (reactiveKeys.has(key)) {
+            if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+            queueUpdate(update)
+          }
         }
       }),
     )
@@ -93,9 +98,13 @@ export function setupTrackableStore(
   for (const key in getters) {
     observers.push(
       observe(getters[key], () => {
-        if (reactiveKeys.has(key)) {
-          if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
-          queueUpdate(update)
+        if (paused) {
+          trackedKeysWhilePaused.add(key)
+        } else {
+          if (reactiveKeys.has(key)) {
+            if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
+            queueUpdate(update)
+          }
         }
       }),
     )
@@ -132,6 +141,15 @@ export function setupTrackableStore(
       paused = false
       reactiveKeys = done()
       const nextDeepKeys = [...reactiveKeys].filter(x => x.indexOf('.') > 0)
+      // check if anything changed during pause
+      if (trackedKeysWhilePaused.size) {
+        const shouldUpdate = [...trackedKeysWhilePaused].some(key => reactiveKeys.has(key))
+        if (shouldUpdate) {
+          queueUpdate(update)
+        }
+        trackedKeysWhilePaused.clear()
+      }
+      // re-run the reaction that watches keys
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
         if (debug()) console.log('schedule new reaction now...')

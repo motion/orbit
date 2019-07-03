@@ -1,7 +1,7 @@
-import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
-import { CheckProxyCommand, SetupProxyCommand, Space, UserModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
-import React from 'react'
+import { command, createApp, createStoreContext, save, useActiveSpace, useStoreDebug } from '@o/kit'
+import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
+import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import React, { useEffect } from 'react'
 
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
@@ -34,14 +34,19 @@ class OnboardStore {
   }
 
   finishOnboard = async () => {
-    const user = om.state.user.user
-    await save(UserModel, {
-      ...user,
-      settings: {
-        ...user.settings,
-        hasOnboarded: true,
-      },
+    const space = om.state.spaces.activeSpace
+    await save(SpaceModel, {
+      ...space,
+      onboarded: true,
     })
+    // const user = om.state.user.user
+    // await save(UserModel, {
+    //   ...user,
+    //   settings: {
+    //     ...user.settings,
+    //     hasOnboarded: true,
+    //   },
+    // })
     om.actions.router.showAppPage({ id: 'apps' })
   }
 }
@@ -52,12 +57,13 @@ export function OnboardApp() {
   const flow = useCreateFlow()
   const onboardStore = Onboard.useCreateStore()
 
-  useOnMount(async () => {
+  useEffect(() => {
     if (flow.index === 0) {
-      const valid = await onboardStore.checkProxy()
-      valid && flow.next()
+      onboardStore.checkProxy().then(valid => {
+        valid && flow.next()
+      })
     }
-  })
+  }, [flow.index])
 
   return (
     <Onboard.SimpleProvider value={onboardStore}>
@@ -96,6 +102,9 @@ export function OnboardApp() {
 function OnboardToolbar() {
   const flow = useFlow()
   const onboardStore = Onboard.useStore()
+  useStoreDebug()
+
+  console.log('flow', flow.index, flow.total, flow)
 
   const buttons = [<>ok</>]
 
@@ -148,7 +157,7 @@ function OnboardStepProxy() {
       <Card
         title={status.title}
         subTitle={status.subTitle}
-        pad
+        padding
         margin="auto"
         afterTitle={
           onboardStore.proxyStatus !== 'valid' && (

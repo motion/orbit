@@ -15,7 +15,6 @@ export function useActiveApps(where?: FindBitWhere): AppBit[] {
       ...where,
     },
   })
-  console.log('ok', apps, activeSpace.id)
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 

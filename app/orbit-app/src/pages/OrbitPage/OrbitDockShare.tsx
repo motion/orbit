@@ -1,15 +1,16 @@
+import { useReaction } from '@o/kit'
 import { DockButton, FloatingCard, List, Tabs, usePosition, useThrottledFn } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { memo, useRef, useState } from 'react'
 
 import { orbitStaticApps } from '../../apps/orbitApps'
 import { useOm } from '../../om/om'
+import { paneManagerStore } from '../../om/stores'
 
 export const isStaticApp = (id: string) => !!orbitStaticApps.find(x => x.id === id)
 
 export const useIsOnStaticApp = () => {
-  const om = useOm()
-  return isStaticApp(om.state.router.appId)
+  return useReaction(() => isStaticApp(paneManagerStore.activePane.type))
 }
 
 export const OrbitDockShare = memo(

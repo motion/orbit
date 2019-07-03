@@ -4,7 +4,7 @@ import { Button, ListItem, Menu } from '@o/ui'
 import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
-import { usePaneManagerStore } from '../../om/stores'
+import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 
 const goToAppSettings = () => {
   om.actions.router.showAppPage({
@@ -34,13 +34,12 @@ export const OrbitHeaderMenu = memo(() => {
   )
 })
 
-const OrbitEditAppItem = () => {
+const OrbitEditAppItem = memo(() => {
   const { isEditing } = useStore(App)
   const { effects } = useOm()
-  const paneManagerStore = usePaneManagerStore()
-  const activePaneId = paneManagerStore.activePane.id
+  const { activePane } = usePaneManagerStore()
   const activeApps = useActiveApps()
-  const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
+  const activeApp = activeApps.find(app => activePane.id === `${app.id}`)
   const show = activeApp && activeApp.identifier === 'custom' && !isEditing
 
   if (!show) {
@@ -56,4 +55,4 @@ const OrbitEditAppItem = () => {
       }}
     />
   )
-}
+})

@@ -93,6 +93,7 @@ export function useTopAppStoreApps(
 }
 
 export function AppsIndex() {
+  return null
   const allApps = useActiveAppsWithDefinition()
   const clientApps = allApps.filter(x => !!x.definition.app)
   const dataApps = useActiveDataAppsWithDefinition()

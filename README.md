@@ -12,55 +12,16 @@ First time:
 
 ```sh
 # bootstrap will ensure a couple deps from brew are installed, requires homebrew
-brew update
 bin/bootstrap
-# do once to get everything built out
+# build everything once
 build
 ```
 
 ## run
 
-```sh
-# once per shell (or use dotenv)
-source .env
+Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside the `app/example-workspace`.
 
-# run once to start watching / building everything in a persistent terminal
-build --watch
-
-# then, to run the apps you can either do:
-run orbit
-
-# or do any number of different ways. i often run webpack separate from the rest
-# this lets you see webpack errors more clearly
-
-# in one terminal:
-run orbit-app
-# in another terminal:
-run orbit --no-app
-```
-
-There are some run options:
-
-```
-run orbit \
-  --no-app \       # doesnt run webpack
-  --no-electron \  # run without electron, just desktop / syncers
-  --no-syncers \   # run without syncers process
-  --no-watch \     # dont restart electron on code changes
-  --no-logging \   # dont log out a lot (syncers log quite a bit)
-  --no-gpu         # dont render electron using gpu
-                   # (bcz occasionally you run into glitchy white bgs when debugging)
-```
-
-Some run options for orbit-app:
-
-```
-# To debug orbit in your web-browser instead of electron:
-run orbit-app --target web
-
-# To run orbit-app in prod mode:
-run orbit-app --prod
-```
+For devtools also run `yarn start:devtools`.
 
 ## Structure of this repo
 
@@ -124,8 +85,8 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 ### Other commands
 
-- `clean` remove all node_modules
-- `run` just does npm start in an app
+- `clean` removes built files, `clean -all` also removes node_modules
+- `run [appname]` just does npm start in an app
 
 ## Developing / REPL tools
 

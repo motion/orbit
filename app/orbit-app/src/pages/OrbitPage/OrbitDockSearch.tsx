@@ -14,7 +14,6 @@ export const OrbitDockSearch = memo(() => {
 
   return (
     <>
-      <DockButton id="search" visible={acceptsSearch} onClick={store.toggleOpen} icon="search" />
       <Modal
         width="50%"
         height="50%"
@@ -27,6 +26,7 @@ export const OrbitDockSearch = memo(() => {
           <AppMainView identifier="search" />
         </ProvideVisibility>
       </Modal>
+      <DockButton id="search" visible={acceptsSearch} onClick={store.toggleOpen} icon="search" />
     </>
   )
 })

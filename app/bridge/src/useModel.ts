@@ -152,7 +152,7 @@ function use<ModelType, Args>(
               cache.current = next
               setTimeout(() => {
                 delete PromiseCache[key]
-              }, 50)
+              }, 100)
               res()
             }
           }

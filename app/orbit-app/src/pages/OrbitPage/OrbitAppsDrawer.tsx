@@ -45,6 +45,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
   const appsDrawer = appsDrawerStore.useStore()
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef, throttle: 300 })
+  const height = frameSize.height
   const [spring, set] = useSpring(() => ({
     // start offscreen
     y: 10000,
@@ -57,15 +58,16 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
   const boxShadowSize = 20
 
   const updateSpring = () => {
-    console.log('set it to', appsDrawer.isOpen, yPad)
     if (appsDrawer.isOpen) {
       set({ y: yPad })
     } else {
-      set({ y: frameSize.height + boxShadowSize })
+      set({ y: height + boxShadowSize })
     }
   }
 
-  useEffect(updateSpring, [frameSize, appsDrawer.isOpen])
+  useEffect(updateSpring, [height, appsDrawer.isOpen])
+
+  const renderApp = useRef({})
 
   return (
     <FullScreen pointerEvents="none" className="orbit-apps-drawer">
@@ -88,6 +90,9 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
       >
         {apps.map(({ app, definition }) => {
           const isActive = `${app.id}` === paneManager.activePane.id
+          if (isActive) {
+            renderApp.current[app.id] = true
+          }
           return (
             <FullScreen
               key={app.id}
@@ -107,7 +112,12 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
                 },
               }}
             >
-              <OrbitApp id={app.id} identifier={definition.id} appDef={definition} renderApp />
+              <OrbitApp
+                id={app.id}
+                identifier={definition.id}
+                appDef={definition}
+                renderApp={renderApp.current[app.id]}
+              />
             </FullScreen>
           )
         })}

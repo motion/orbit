@@ -143,6 +143,10 @@ class OrbitAppsCarouselStore {
 
   focusedAppIndex = 0
   setFocusedAppIndex(next: number, forceScroll = false) {
+    if (!this.apps[next]) {
+      console.warn('no app at index', next)
+      return
+    }
     if (next !== this.focusedAppIndex) {
       this.focusedAppIndex = next
 
@@ -350,7 +354,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
             isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}
-            spring={springs[index]}
+            springs={springs}
           />
         ))}
       </Row>
@@ -364,19 +368,27 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
 
 type OrbitAppCardProps = CardProps & {
   isDisabled: boolean
-  spring: any
+  springs: any
   index: number
   app: AppBit
   definition: AppDefinition
 }
 
 const OrbitAppCard = memo(
-  ({ app, definition, index, isDisabled, spring, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, definition, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
+    const spring = springs[index]
     const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
-    const isFocused = useReaction(() => index === appsCarouselStore.focusedAppIndex, [index])
+    const isFocused = useReaction(
+      () => index === appsCarouselStore.focusedAppIndex,
+      { delay: 40 },
+      [index],
+    )
     const isFocusZoomed = useReaction(
       () => index === appsCarouselStore.focusedAppIndex && !appsCarouselStore.state.zoomedOut,
+      {
+        delay: 40,
+      },
       [index],
     )
     const cardRef = useRef(null)

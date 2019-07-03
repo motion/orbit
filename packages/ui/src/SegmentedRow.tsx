@@ -26,10 +26,17 @@ export function getSegmentedStyle(props: SurfaceProps, item: BreadcrumbInfo) {
   if (props.ignoreSegment) {
     return
   }
-  return {
+  const next = {
     ...getSegmentBorderRadius(props, item),
     ...getInnerBorderOffsetStyle(props, item),
   }
+  if (isDefined(props.borderLeftRadius)) {
+    next.borderLeftRadius = props.borderLeftRadius
+  }
+  if (isDefined(props.borderRightRadius)) {
+    next.borderRightRadius = props.borderRightRadius
+  }
+  return next
 }
 
 const getInnerBorderOffsetStyle = (_props: SurfaceProps, item: BreadcrumbInfo) => {

@@ -32,10 +32,9 @@ export const headerButtonProps: SizedSurfaceProps = {
   activeStyle: false,
 }
 
-const HeaderButtonPassProps = memo((props: any) => {
-  console.log('update')
+const HeaderButtonPassProps = (props: any) => {
   return <SurfacePassProps {...headerButtonProps} {...props} />
-})
+}
 
 const activeStyle = {
   opacity: 1,
@@ -112,13 +111,15 @@ export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
   const containerRef = useRef()
-  const om = useOm()
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
-  const { appRole } = useStore(App)
+  // const { appRole } = useStore(App)
+  const appRole = 'main'
   const queryBuilderLink = useLocationLink('/app/query-builder')
   const appsLink = useLocationLink('/app/apps')
+
+  console.warn('rendering header', appRole)
 
   const isEditing = appRole === 'editing'
   const isTorn = appRole === 'torn'
@@ -139,94 +140,99 @@ export const OrbitHeader = memo(() => {
   )
 
   return (
-    <>
-      <OrbitHeaderContainer
-        ref={containerRef}
-        isEditing={isEditing}
-        className="draggable"
-        onMouseUp={headerStore.handleMouseUp}
-      >
-        <OrbitHeaderEditingBg isActive={isEditing} />
+    <OrbitHeaderContainer
+      ref={containerRef}
+      isEditing={isEditing}
+      className="draggable"
+      onMouseUp={headerStore.handleMouseUp}
+    >
+      <OrbitHeaderEditingBg isActive={isEditing} />
 
-        <HeaderTop height={slim ? 46 : 56}>
-          <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround slim={slim}>
-              {!slim && <BackButton />}
-              <OrbitHeaderMenu />
-              {homeButtonElement}
-            </HeaderSide>
-          </HeaderButtonPassProps>
+      <HeaderTop height={slim ? 46 : 56}>
+        <HeaderButtonPassProps>
+          <HeaderSide space="sm" spaceAround slim={slim}>
+            {!slim && <BackButton />}
+            <OrbitHeaderMenu />
+            {homeButtonElement}
+          </HeaderSide>
+        </HeaderButtonPassProps>
 
-          <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
-            <OrbitHeaderInput fontSize={slim ? 16 : 18} />
+        <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
+          <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
-            {isOnTearablePane && (
+          {isOnTearablePane && (
+            <>
+              <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
+                {orbitStore.activeActions}
+              </SurfacePassProps>
+              {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
+            </>
+          )}
+        </HeaderContain>
+
+        <HeaderButtonPassProps>
+          <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
+            {isEditing && (
+              <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
+                <>
+                  <Button circular icon="edit" tooltip="Open in VSCode" />
+                  <Space size="sm" />
+                  <Button tooltip="Deploy to space">Publish</Button>
+                  <Space size="sm" />
+                </>
+              </SurfacePassProps>
+            )}
+
+            {!isEditing && !isTorn && (
               <>
-                <SurfacePassProps
-                  sizeRadius={1.5}
-                  sizeHeight={0.9}
-                  sizeIcon={1.1}
-                  sizePadding={1.2}
-                >
-                  {orbitStore.activeActions}
-                </SurfacePassProps>
-                {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
+                <OrbitButton
+                  appId="query-builder"
+                  activeStyle={activeStyle}
+                  onClick={queryBuilderLink}
+                  icon="layers"
+                  tooltip="Query Builder"
+                />
+                <OrbitButton
+                  appId="apps"
+                  activeStyle={activeStyle}
+                  onClick={appsLink}
+                  icon="layout-grid"
+                  tooltip="Manage apps"
+                />
+                <OrbitSpaceSwitch />
               </>
             )}
-          </HeaderContain>
 
-          <HeaderButtonPassProps>
-            <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
-              {isEditing && (
-                <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
-                  <>
-                    <Button circular icon="edit" tooltip="Open in VSCode" />
-                    <Space size="sm" />
-                    <Button tooltip="Deploy to space">Publish</Button>
-                    <Space size="sm" />
-                  </>
-                </SurfacePassProps>
-              )}
+            {(isEditing || isTorn) && (
+              <Button
+                icon="cog"
+                onClick={() => {
+                  console.log('got to app specific settings')
+                }}
+              />
+            )}
+          </HeaderSide>
+        </HeaderButtonPassProps>
+      </HeaderTop>
 
-              {!isEditing && !isTorn && (
-                <>
-                  <Button
-                    {...om.state.router.appId === 'query-builder' && activeStyle}
-                    onClick={queryBuilderLink}
-                    icon="layers"
-                    tooltip="Query Builder"
-                  />
-                  <Button
-                    {...om.state.router.appId === 'apps' && activeStyle}
-                    onClick={appsLink}
-                    icon="layout-grid"
-                    tooltip="Manage apps"
-                  />
-                  <OrbitSpaceSwitch />
-                </>
-              )}
-
-              {(isEditing || isTorn) && (
-                <Button
-                  icon="cog"
-                  onClick={() => {
-                    console.log('got to app specific settings')
-                  }}
-                />
-              )}
-            </HeaderSide>
-          </HeaderButtonPassProps>
-        </HeaderTop>
-
-        {/* this stays slightly below the active tab and looks nice */}
-        <BorderBottom
-          borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
-          zIndex={0}
-        />
-      </OrbitHeaderContainer>
-    </>
+      {/* this stays slightly below the active tab and looks nice */}
+      <BorderBottom
+        borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
+        zIndex={0}
+      />
+    </OrbitHeaderContainer>
   )
 })
+
+const OrbitButton = ({
+  appId,
+  activeStyle,
+  ...props
+}: ButtonProps & { appId?: string; activeStyle?: Partial<ButtonProps> }) => {
+  const om = useOm()
+  const isActive = appId ? om.state.router.appId === appId : false
+  return <Button {...props} {...isActive && activeStyle} />
+}
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()

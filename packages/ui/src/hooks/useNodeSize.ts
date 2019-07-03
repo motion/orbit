@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useGetVisibility } from '../Visibility'
 import { useResizeObserver } from './useResizeObserver'
@@ -71,8 +71,11 @@ export function useNodeSize(props: UseNodeSizeProps = {}, mountArgs: any[] = [])
     }
   }, [disable, ref, ...mountArgs])
 
-  return {
-    ...state,
-    ref,
-  }
+  return useMemo(
+    () => ({
+      ...state,
+      ref,
+    }),
+    [state.width, state.height, ref],
+  )
 }

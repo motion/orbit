@@ -104,11 +104,17 @@ export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
   'AppCreateWorkspaceCommand',
 )
 
+export type CommandWsOptions = {
+  workspaceRoot: string
+  mode: 'development' | 'production'
+  clean?: boolean
+  daemon?: boolean
+}
+
 export const AppOpenWorkspaceCommand = new Command<
   boolean,
-  {
+  CommandWsOptions & {
     // Path to the workspace project in dev
-    path: string
     packageIds?: string[]
   }
 >('AppOpenWorkspaceCommand')

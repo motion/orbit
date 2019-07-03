@@ -18,22 +18,22 @@ type WorkspaceInfo = {
 }
 
 export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
-  return resolveCommand(AppOpenWorkspaceCommand, async ({ path, packageIds }) => {
-    log.info(`Got command ${path} ${packageIds}`)
+  return resolveCommand(AppOpenWorkspaceCommand, async options => {
+    const { workspaceRoot } = options
+    log.info(`Got command ${workspaceRoot}`)
     Desktop.setState({
       workspaceState: {
-        path,
-        packageIds,
+        workspaceRoot,
       },
     })
 
-    const { identifier } = await loadWorkspace(path)
+    const { identifier } = await loadWorkspace(workspaceRoot)
     log.info('got', identifier)
 
     // ensure/find space
     const space = await findOrCreateWorkspace({
       identifier,
-      directory: path,
+      directory: workspaceRoot,
     })
     log.info('got space', space)
 
@@ -49,8 +49,9 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
     log.info(`starting cli workspace ${Config.paths.cli}`)
     const cli = require(Config.paths.cli)
 
+    // now re-run inside desktop, this time CLI in this process knowing we are the daemon
     const wsManager = await cli.commandWs({
-      workspaceRoot: path,
+      ...options,
       daemon: true,
     })
 

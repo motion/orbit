@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, ensure, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useOnMount, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
@@ -270,13 +270,6 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   const frameSize = useNodeSize({ ref: frameRef })
   const rowRef = useRef<HTMLElement>(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
-  // animation spring
-  // fixing bug in react-spring
-  const [mounted, setMounted] = useState(false)
-
-  useOnMount(() => {
-    setMounted(true)
-  })
 
   const [scrollSpring, setScrollSpring] = useSpring(() => ({
     x: 0,
@@ -284,7 +277,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     onStart: appsCarouselStore.onStartScroll,
   }))
 
-  const [springs, setCarouselSprings] = useSprings(mounted ? apps.length : apps.length + 1, i => ({
+  const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
     ...appsCarouselStore.getSpring(i),
     config: { mass: 1, tension: 300, friction: 30 },
     onRest: appsCarouselStore.onFinishZoom,

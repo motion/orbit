@@ -7,10 +7,10 @@ import React from 'react'
 import { StoreContext } from '../StoreContext'
 import AppsApp from './apps/AppsApp'
 import BitApp from './BitApp'
-import HomeApp from './HomeApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
+import QuickFindApp from './QuickFindApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
@@ -67,7 +67,7 @@ export const orbitStaticApps: AppDefinition[] = [
   SetupAppApp,
   MessageApp,
   LoadingApp,
-  HomeApp,
+  QuickFindApp,
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {

@@ -113,6 +113,10 @@ const showHomePage: Action = om => {
   }
 }
 
+const showQuickFind: Action = om => {
+  om.actions.router.showAppPage({ id: 'quickFind' })
+}
+
 const isNumString = (x: number | string) => +x == x
 
 const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean }> = (om, params) => {
@@ -197,6 +201,7 @@ export const actions = {
   ignoreNextPush,
   back,
   forward,
+  showQuickFind,
 }
 
 // effects

@@ -46,6 +46,8 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     scrollTop,
     ...viewPropsRaw
   } = props
+
+  // we may want to memo this, need to test if add/remove padding will cause remounts
   let content = children
   const hasPadding = isDefined(padding)
 
@@ -59,16 +61,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   // this is necessary so CSS scrollable has proper "end margin"
   if (hasPadding) {
     content = <PaddedView padding={padding}>{content}</PaddedView>
-  }
-
-  if (!scrollable) {
-    const Component = animated ? ScrollableInnerAnimated : ScrollableInner
-    const style = animated ? getAnimatedStyleProp(props) : props.style
-    return (
-      <Component ref={ref} {...viewProps} {...props} style={style}>
-        {content}
-      </Component>
-    )
   }
 
   const Component = animated ? ScrollableChromeAnimated : ScrollableChrome
@@ -107,6 +99,21 @@ export const getAnimatedStyleProp = props => {
   return style
 }
 
+/**
+ * This can only be used on the innermost element to space its children, css-specific
+ */
+const wrappingSpaceTheme = props => {
+  if (props.isWrapped) {
+    const space = getSpaceSize(props.parentSpacing)
+    return {
+      marginBottom: -space,
+      '& > *': {
+        marginBottom: `${space}px !important`,
+      },
+    }
+  }
+}
+
 // plain padded view
 export const PaddedView = gloss<ViewProps>(View, {
   flexDirection: 'inherit',
@@ -120,21 +127,7 @@ export const PaddedView = gloss<ViewProps>(View, {
   // otherwise it "shrinks to fit" vertically and overflow will cut off
   minWidth: '100%',
   minHeight: '100%',
-}).theme(usePadding)
-
-// TODO figure this out a bit better and cleanup this code
-// i have a feeling ScrollableInner and PaddedView and ScrollableChrome can be simplfiied/unified in some way
-const wrappingSpaceTheme = props => {
-  if (props.isWrapped) {
-    const space = getSpaceSize(props.parentSpacing)
-    return {
-      marginBottom: -space,
-      '& > *': {
-        marginBottom: `${space}px !important`,
-      },
-    }
-  }
-}
+}).theme(usePadding, wrappingSpaceTheme)
 
 const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }>(Col, {
   flexDirection: 'inherit',
@@ -147,12 +140,12 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
   flexWrap: 'inherit',
   // width: '100%',
   // height: '100%',
-}).theme(({ scrollable }) => ({
+}).theme(props => ({
   overflow: 'hidden',
-  ...(scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
-  ...(scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
-  ...(scrollable === true && { overflow: 'auto' }),
+  ...(props.scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
+  ...(props.scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
+  ...(props.scrollable === true && { overflow: 'auto' }),
+  ...(!props.scrollable && wrappingSpaceTheme(props)),
 }))
 
-const ScrollableInnerAnimated = withAnimated(ScrollableInner)
 const ScrollableChromeAnimated = withAnimated(ScrollableChrome)

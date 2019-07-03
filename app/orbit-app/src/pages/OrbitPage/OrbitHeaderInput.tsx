@@ -80,9 +80,8 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
 
   const updateQuery = (next: string) => {
     if (next === '/') {
-      om.actions.router.showHomePage()
+      om.actions.router.showQuickFind()
     }
-
     setInputVal(next)
     queryStore.setQuery(next)
   }

@@ -40,16 +40,14 @@ export class PaneManagerStore {
     )
   }
 
-  activePane = react(() => this.activePaneFast, {
+  activePaneSlow = react(() => this.activePane, {
     delay: 16,
-    log: false,
     defaultValue: this.activePaneFast,
   })
 
-  activePaneSlow = react(() => this.activePane, {
-    delay: 200,
-    defaultValue: this.activePaneFast,
-  })
+  get activePane() {
+    return this.activePaneSlow || this.activePaneFast
+  }
 
   // set pane functions
   setPane = (id: string) => {

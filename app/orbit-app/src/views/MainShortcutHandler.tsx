@@ -5,7 +5,7 @@ import { Direction, GlobalHotKeys, PopoverState, useShortcutStore } from '@o/ui'
 import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
-import { useOm } from '../om/om'
+import { om, useOm } from '../om/om'
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 
@@ -75,6 +75,11 @@ export default memo(function MainShortcutHandler(props: {
         // clear input if written in
         if (queryStore.hasQuery) {
           queryStore.clearQuery()
+          return
+        }
+        // toggle between app home app
+        if (appsCarouselStore.focusedAppIndex === 0 && !appsDrawerStore.isOpen) {
+          om.actions.router.showQuickFind()
           return
         }
         // close app drawer if open

@@ -1,6 +1,6 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, useNodeSize, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo } from 'react'
@@ -63,7 +63,7 @@ class HeaderStore {
     if (!this.inputRef.current) {
       return
     }
-    queryStore.onChangeQuery(this.inputRef.current.innerText)
+    queryStore.setQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
@@ -109,10 +109,6 @@ export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
   const containerRef = useRef()
-  const { width } = useNodeSize({
-    ref: containerRef,
-    throttle: 200,
-  })
   const om = useOm()
   const orbitStore = useOrbitStore()
   const theme = useTheme()

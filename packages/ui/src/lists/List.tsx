@@ -125,21 +125,22 @@ export const List = memo((allProps: ListProps) => {
   const filtered = useFilter(props as any)
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
+  const getShareable = useGet(shareable)
   const selection = useRef<[any[], number[]]>([[], []])
 
   const onSelectInner: SelectableProps['onSelect'] = useCallback(
     (selectedRows: any[], selectedIndices: number[]) => {
       selection.current = [selectedRows, selectedIndices]
 
-      if (shareable) {
-        shareStore.setSelected(shareable, selectedRows)
+      if (getShareable()) {
+        shareStore.setSelected(getShareable(), selectedRows)
       }
       const onSelect = getProps().onSelect
       if (onSelect) {
         onSelect(selectedRows, selectedIndices)
       }
     },
-    [shareable],
+    [],
   )
 
   // wrap select with extra functionality

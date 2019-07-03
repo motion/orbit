@@ -191,6 +191,7 @@ export default class DebugApps {
         result[index] = false
         continue
       }
+      console.log('compare', urls, session.debugUrl)
       if (urls.indexOf(session.debugUrl) > -1) {
         result[index] = false
       }

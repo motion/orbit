@@ -25,14 +25,6 @@ class AppsDrawerStore {
   )
 
   closeDrawer = () => {
-    // if (om.state.router.lastPage && om.state.router.lastPage.name === 'app') {
-    //   const id = om.state.router.lastPage.params.id
-    //   if (id && !this.isDrawerPage(`${id}`)) {
-    //     om.actions.router.back()
-    //     return
-    //   }
-    // }
-    console.log('close drawer back to', this.lastAppId)
     om.actions.router.showAppPage({ id: this.lastAppId })
   }
 

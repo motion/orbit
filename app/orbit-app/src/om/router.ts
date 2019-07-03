@@ -3,6 +3,7 @@ import page from 'page'
 import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -28,6 +29,7 @@ export type RouterState = {
   appId: string
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
+  isOnQuickFind: Derive<RouterState, boolean>
   lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
@@ -64,6 +66,7 @@ export const state: RouterState = {
   appId: 'search',
   ignoreNextPush: false,
   isOnSetupApp: state => state.pageName === 'app' && state.appId === 'setupApp',
+  isOnQuickFind: state => state.pageName === 'app' && state.appId === 'quickFind',
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
@@ -116,8 +119,19 @@ const showHomePage: Action = om => {
 }
 
 const showQuickFind: Action = om => {
-  console.log('show quick find')
   om.actions.router.showAppPage({ id: 'quickFind' })
+}
+
+const toggleQuickFind: Action = om => {
+  if (om.state.router.isOnQuickFind) {
+    om.actions.router.closeDrawer()
+  } else {
+    om.actions.router.showAppPage({ id: 'quickFind' })
+  }
+}
+
+const closeDrawer: Action = () => {
+  appsDrawerStore.closeDrawer()
 }
 
 const isNumString = (x: number | string) => +x == x
@@ -205,6 +219,8 @@ export const actions = {
   back,
   forward,
   showQuickFind,
+  toggleQuickFind,
+  closeDrawer,
 }
 
 // effects

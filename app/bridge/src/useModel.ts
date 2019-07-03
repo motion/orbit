@@ -93,6 +93,7 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
+      console.log('got an update', next)
       valueRef.current = next
       forceUpdate(Math.random())
     }
@@ -139,6 +140,7 @@ function use<ModelType, Args>(
           yallReadyKnow.current = true
 
           const finish = next => {
+            console.log('finish query', type, query, next)
             clearTimeout(tm)
             if (!isDefined(next)) {
               // i'm seeing this on useJobs() where none exist
@@ -176,6 +178,7 @@ function use<ModelType, Args>(
         if (cache.read) {
           throw cache.read
         } else {
+          // todo we may not need this since we timeout the original query
           throw new Promise((res, rej) => {
             orTimeout(cache.read, 2000)
               .then(res)

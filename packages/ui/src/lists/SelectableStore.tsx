@@ -228,7 +228,9 @@ export class SelectableStore {
   }
 
   setListRef(ref: DynamicListControlled) {
-    this.listRef = ref
+    if (this.listRef !== ref) {
+      this.listRef = ref
+    }
   }
 
   setActiveIndex = (index: number) => {

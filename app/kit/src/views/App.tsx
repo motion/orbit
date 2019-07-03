@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import React, { createContext, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { createContext, useContext, useEffect } from 'react'
 
 import { useStoresSimple } from '../hooks/useStores'
 

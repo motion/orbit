@@ -102,8 +102,10 @@ export class CosalManager {
       )
 
       // update scanned up to so it can resume if interrupted
+      const cosalIndexUpdatedTo = last(chunk).bitUpdatedAt
+      log.info(`Update cosal to ${cosalIndexUpdatedTo}`)
       await updateSetting({
-        cosalIndexUpdatedTo: last(chunk).bitUpdatedAt,
+        cosalIndexUpdatedTo,
       })
 
       // avoid burning too much cpu

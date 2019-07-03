@@ -1,5 +1,8 @@
+import { Logger } from '@o/logger'
 import { User, UserEntity } from '@o/models'
 import { getRepository } from 'typeorm'
+
+const log = new Logger('settingModelHelpers')
 
 export async function getUser() {
   return await getRepository(UserEntity).findOne({})
@@ -20,11 +23,15 @@ export async function getSettingValue<A extends keyof User['settings']>(key?: A)
 
 export async function updateSetting(next: Partial<User['settings']>) {
   const user = await getUser()
-  user.settings = {
+  const nextSettings = {
     ...user.settings,
     ...next,
   }
-  await getRepository(UserEntity).save(user)
+  if (JSON.stringify(user.settings) !== JSON.stringify(nextSettings)) {
+    log.info(`Updating user settings ${Object.keys(next)}`)
+    user.settings = nextSettings
+    await getRepository(UserEntity).save(user)
+  }
 }
 
 export async function ensureSetting<A extends keyof User['settings']>(

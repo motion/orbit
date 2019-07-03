@@ -35,6 +35,8 @@ export type SelectableProps = {
 }
 
 export const selectablePropKeys = [
+  'sortable',
+  'items',
   'onSelect',
   'alwaysSelected',
   'selectable',

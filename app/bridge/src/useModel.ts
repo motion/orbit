@@ -93,7 +93,9 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
-      console.log('got an update', next)
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`update`, model.name, next)
+      }
       valueRef.current = next
       forceUpdate(Math.random())
     }
@@ -140,7 +142,6 @@ function use<ModelType, Args>(
           yallReadyKnow.current = true
 
           const finish = next => {
-            console.log('finish query', type, query, next)
             clearTimeout(tm)
             if (!isDefined(next)) {
               // i'm seeing this on useJobs() where none exist
@@ -169,6 +170,9 @@ function use<ModelType, Args>(
           read: promise,
           resolve,
           current: undefined,
+        }
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`start query`, model.name, key)
         }
       }
 

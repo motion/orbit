@@ -49,7 +49,7 @@
     "string-natural-compare": "2.0.3",
     "react-flip-toolkit": "^6.6.4",
     "uncontrollable": "^6.1.0",
-    "react-use": "^9.1.2",
+    "react-use": "^9.8.1",
     "svg.js": "^2.7.1",
     "react-events": "^1.0.1"
   },

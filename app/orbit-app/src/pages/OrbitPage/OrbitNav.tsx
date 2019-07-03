@@ -48,7 +48,6 @@ export const OrbitNav = memo(
         activeAppsSorted
           .map(
             (app): TabProps => {
-              console.log('changing it up')
               const isActive = !isOnSetupApp && `${app.id}` === paneId
               // const next = activeAppsSorted[index + 1]
               // const isLast = index === activeAppsSorted.length

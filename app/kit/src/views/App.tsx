@@ -42,8 +42,6 @@ export type AppProps = {
 }
 
 export const App = (props: AppProps) => {
-  console.log('render app', props)
-
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)

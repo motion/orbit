@@ -1,9 +1,8 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
-import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
+import { CheckProxyCommand, SetupProxyCommand, Space, UserModel } from '@o/models'
 import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, useOnMount, View } from '@o/ui'
 import React from 'react'
 
-import { getActiveSpace } from '../helpers/installApp'
 import { om } from '../om/om'
 import BlurryGuys from '../pages/OrbitPage/BlurryGuys'
 import { SpaceEdit } from './SpacesApp'
@@ -35,13 +34,15 @@ class OnboardStore {
   }
 
   finishOnboard = async () => {
-    om.actions.router.showAppPage({ id: 'apps' })
-    const activeSpace = await getActiveSpace()
-    await save(SpaceModel, {
-      ...activeSpace,
-      ...this.space,
-      onboarded: true,
+    const user = om.state.user.user
+    await save(UserModel, {
+      ...user,
+      settings: {
+        ...user.settings,
+        hasOnboarded: true,
+      },
     })
+    om.actions.router.showAppPage({ id: 'apps' })
   }
 }
 

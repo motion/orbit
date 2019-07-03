@@ -43,7 +43,9 @@ export function makeWebpackConfig(
     externals,
     ignore = [],
     watch = false,
-    minify = mode === 'production',
+    // why minify? we arent optimizing for size much and it dramatically raises cost of build
+    // + way harder to debug in general, lets leave it off until someone yells about it
+    minify = false,
     dll,
     dllReference,
     devServer,
@@ -69,9 +71,13 @@ export function makeWebpackConfig(
   const optimization = {
     production: {
       minimize: minify,
+      namedModules: true,
       usedExports: true,
       providedExports: true,
-      sideEffects: true,
+      // YO turning this on messes up the dll/dllreference
+      // what we could do likely is turn this on just for the main bundle
+      // but also were an app platform, we dont care about file size so much for now
+      sideEffects: false,
       concatenateModules: true,
       // this helps runtime/loadtime
       splitChunks: {

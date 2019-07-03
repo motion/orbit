@@ -91,7 +91,7 @@ export class WorkspaceManager {
       return
     }
 
-    // log.verbose(`workspace app config`, JSON.stringify(config, null, 2))
+    log.info(`workspace app config`, JSON.stringify(config, null, 2))
 
     if (!isEqual(this.buildConfig, config)) {
       this.buildConfig = config

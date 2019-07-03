@@ -85,7 +85,6 @@ import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolv
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
-import { reaction } from 'mobx'
 import { getIdentifierToPackageId } from '@o/cli'
 
 const log = new Logger('desktop')

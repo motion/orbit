@@ -106,7 +106,7 @@ export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
 
 export type CommandWsOptions = {
   workspaceRoot: string
-  mode: 'development' | 'production'
+  mode?: 'development' | 'production'
   clean?: boolean
   daemon?: boolean
 }

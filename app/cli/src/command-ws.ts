@@ -22,7 +22,7 @@ import { WorkspaceManager } from './WorkspaceManager'
  *
  */
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info(`Running command ws, daemon? ${options.daemon}`)
+  reporter.info(`Running command ws, daemon? ${options.daemon} ${options.mode}`)
   if (options.daemon) {
     const wsManager = new WorkspaceManager()
     wsManager.setWorkspace(options)
@@ -56,7 +56,7 @@ export async function reloadAppDefinitions(directory: string) {
   let { mediator } = await getOrbitDesktop()
   const apps = await getWorkspaceApps(directory)
   await mediator.command(AppOpenWorkspaceCommand, {
-    path: directory,
+    workspaceRoot: directory,
     packageIds: apps.map(x => x.packageId),
   })
 }

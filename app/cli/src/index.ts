@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { CommandWsOptions } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 
@@ -8,7 +9,6 @@ import { CommandGenTypesOptions } from './command-gen-types'
 import { CommandInstallOptions, CommandInstallRes } from './command-install'
 import { CommandNewOptions } from './command-new'
 import { CommandPublishOptions } from './command-publish'
-import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 
 // programmatic API
@@ -235,9 +235,9 @@ function main() {
             type: 'boolean',
             default: false,
           })
-          .option('production', {
-            type: 'boolean',
-            default: false,
+          .option('mode', {
+            type: 'string',
+            default: 'development',
           }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)
@@ -246,7 +246,7 @@ function main() {
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          mode: argv.production ? 'production' : 'development',
+          mode: argv['mode'],
         })
       },
     )

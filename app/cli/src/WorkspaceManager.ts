@@ -1,6 +1,6 @@
 import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
-import { AppMeta } from '@o/models'
+import { AppMeta, CommandWsOptions } from '@o/models'
 import { watch } from 'chokidar'
 import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
@@ -8,7 +8,6 @@ import { join } from 'path'
 
 import { bundleApp, getBuildInfo } from './command-build'
 import { getAppEntry } from './command-dev'
-import { CommandWsOptions } from './command-ws'
 import { reporter } from './reporter'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
@@ -53,6 +52,7 @@ export class WorkspaceManager {
   setWorkspace(opts: CommandWsOptions) {
     this.directory = opts.workspaceRoot
     this.options = opts
+    log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
   }
 
   start() {
@@ -300,6 +300,7 @@ ${this.apps
     const wsConfig = await makeWebpackConfig(
       {
         name: 'main',
+        mode: this.options.mode,
         context: this.directory,
         entry: [entry],
         target: 'web',

@@ -159,7 +159,7 @@ function use<ModelType, Args>(
           let tm = setTimeout(() => {
             console.error(`Query timed out ${JSON.stringify(query)}`)
             finish(defaultValues[type])
-          }, 2000)
+          }, 4000)
 
           subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })

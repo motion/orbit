@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -32,7 +32,10 @@ export const headerButtonProps: SizedSurfaceProps = {
   activeStyle: false,
 }
 
-const HeaderButtonPassProps = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
+const HeaderButtonPassProps = memo((props: any) => {
+  console.log('update')
+  return <SurfacePassProps {...headerButtonProps} {...props} />
+})
 
 const activeStyle = {
   opacity: 1,
@@ -121,6 +124,20 @@ export const OrbitHeader = memo(() => {
   const isTorn = appRole === 'torn'
   const slim = isEditing || isTorn
 
+  const homeButtonElement = useMemo(
+    () =>
+      appRole === 'main' ? (
+        <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+          <OrbitNavPopover target={<HomeButton id="home-button" />}>
+            <OrbitNav />
+          </OrbitNavPopover>
+        </View>
+      ) : (
+        <HomeButton id="home-button" />
+      ),
+    [appRole],
+  )
+
   return (
     <>
       <OrbitHeaderContainer
@@ -136,15 +153,7 @@ export const OrbitHeader = memo(() => {
             <HeaderSide space="sm" spaceAround slim={slim}>
               {!slim && <BackButton />}
               <OrbitHeaderMenu />
-              {appRole === 'main' ? (
-                <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-                  <OrbitNavPopover target={<HomeButton id="home-button" />}>
-                    <OrbitNav />
-                  </OrbitNavPopover>
-                </View>
-              ) : (
-                <HomeButton id="home-button" />
-              )}
+              {homeButtonElement}
             </HeaderSide>
           </HeaderButtonPassProps>
 

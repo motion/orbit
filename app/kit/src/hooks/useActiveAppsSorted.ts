@@ -1,5 +1,6 @@
 import { AppBit } from '@o/models'
 import memoWeak from 'memoize-weak'
+import { useMemo } from 'react'
 
 import { useActiveApps } from './useActiveApps'
 import { useActivePaneSort } from './useActiveSpace'
@@ -11,5 +12,5 @@ export const sortApps: (apps: AppBit[], sort: number[]) => AppBit[] = memoWeak((
 export function useActiveAppsSorted() {
   const activeApps = useActiveApps()
   const paneSort = useActivePaneSort()
-  return sortApps(activeApps, paneSort)
+  return useMemo(() => sortApps(activeApps, paneSort), [paneSort, activeApps])
 }

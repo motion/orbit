@@ -130,8 +130,8 @@ debugUseStore(event => {
       if (!event.component) return
       if (window['enableLog'] > 1) {
         console.log(event.component.renderName, event)
+        addEvent(event.component, event)
       }
-      addEvent(event.component, event)
       return
   }
 })

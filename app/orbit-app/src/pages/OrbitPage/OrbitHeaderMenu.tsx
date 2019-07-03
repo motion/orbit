@@ -1,10 +1,10 @@
 import { useActiveApps, useStore } from '@o/kit'
 import { App } from '@o/stores'
 import { Button, ListItem, Menu } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 import { om, useOm } from '../../om/om'
-import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
+import { usePaneManagerStore } from '../../om/stores'
 
 const goToAppSettings = () => {
   om.actions.router.showAppPage({
@@ -13,7 +13,7 @@ const goToAppSettings = () => {
   })
 }
 
-export const OrbitHeaderMenu = () => {
+export const OrbitHeaderMenu = memo(() => {
   const { effects, state } = useOm()
 
   return (
@@ -32,9 +32,9 @@ export const OrbitHeaderMenu = () => {
       <ListItem title="App Settings" icon="cog" onClick={goToAppSettings} />
     </Menu>
   )
-}
+})
 
-function OrbitEditAppItem() {
+const OrbitEditAppItem = () => {
   const { isEditing } = useStore(App)
   const { effects } = useOm()
   const paneManagerStore = usePaneManagerStore()

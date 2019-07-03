@@ -6,7 +6,7 @@ import { App } from '@o/stores'
 import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
-import React, { forwardRef, memo } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -30,7 +30,10 @@ export const OrbitNav = memo(
     const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
     const allActiveApps = useActiveAppsSorted()
-    const activeAppsSorted = allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`))
+    const activeAppsSorted = useMemo(
+      () => allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`)),
+      [allActiveApps],
+    )
     const handleSortEnd = useAppSortHandler()
 
     if (isEditing) {
@@ -40,53 +43,58 @@ export const OrbitNav = memo(
     const tabWidth = 54
     const tabWidthPinned = 66
 
-    const items = activeAppsSorted
-      .map(
-        (app): TabProps => {
-          const isActive = !isOnSetupApp && `${app.id}` === paneId
-          // const next = activeAppsSorted[index + 1]
-          // const isLast = index === activeAppsSorted.length
-          // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
-          const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
-          return {
-            app,
-            width: isPinned ? tabWidthPinned : tabWidth,
-            tabDisplay: app.tabDisplay,
-            isActive,
-            icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
-            iconSize: tabHeight - 6,
-            getContext() {
-              return [
-                {
-                  label: 'Open...',
+    const items = useMemo(
+      () =>
+        activeAppsSorted
+          .map(
+            (app): TabProps => {
+              console.log('changing it up')
+              const isActive = !isOnSetupApp && `${app.id}` === paneId
+              // const next = activeAppsSorted[index + 1]
+              // const isLast = index === activeAppsSorted.length
+              // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
+              const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
+              return {
+                app,
+                width: isPinned ? tabWidthPinned : tabWidth,
+                tabDisplay: app.tabDisplay,
+                isActive,
+                icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
+                iconSize: tabHeight - 6,
+                getContext() {
+                  return [
+                    {
+                      label: 'Open...',
+                    },
+                    {
+                      label: 'App settings',
+                      checked: true,
+                    },
+                    {
+                      type: 'separator',
+                    },
+                    {
+                      label: isPinned ? 'Unpin' : 'Pin',
+                      click() {
+                        save(AppModel, {
+                          ...app,
+                          tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
+                        })
+                      },
+                    },
+                    ...getAppContextItems(app),
+                  ]
                 },
-                {
-                  label: 'App settings',
-                  checked: true,
+                onClick: () => {
+                  appsCarouselStore.shouldZoomIn()
+                  actions.router.showAppPage({ id: `${app.id}` })
                 },
-                {
-                  type: 'separator',
-                },
-                {
-                  label: isPinned ? 'Unpin' : 'Pin',
-                  click() {
-                    save(AppModel, {
-                      ...app,
-                      tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
-                    })
-                  },
-                },
-                ...getAppContextItems(app),
-              ]
+              }
             },
-            onClick: () => {
-              appsCarouselStore.shouldZoomIn()
-              actions.router.showAppPage({ id: `${app.id}` })
-            },
-          }
-        },
-      )
-      .filter(x => !!x)
+          )
+          .filter(x => !!x),
+      [activeAppsSorted, isOnSetupApp],
+    )
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
     const setupWidth = 120

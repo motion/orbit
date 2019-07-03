@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import React, { createContext, useContext, useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useRef } from 'react'
 
 import { useStoresSimple } from '../hooks/useStores'
 
@@ -80,6 +80,17 @@ export const App = (props: AppProps) => {
 }
 
 App.isApp = true
+
+// const useMemoElement = (el: React.ReactNode) => {
+//   const state = useRef({
+//     version: 0,
+//     last: null,
+//   })
+//   if (!isEqual(el, state.current.last)) {
+//     state.current.version++
+//   }
+//   return useMemo(() => el, [state.current.version])
+// }
 
 export const AppMenuItems: { [key: string]: AppMenuItem } = {
   ShowHints: {

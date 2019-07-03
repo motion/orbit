@@ -50,6 +50,24 @@ async function main() {
 
   console.timeEnd('splash')
 
+  if (process.env.NODE_ENV === 'development') {
+    const whyDidYouRender = require('@welldone-software/why-did-you-render').default
+    whyDidYouRender(React, {
+      // turn on to log ONLY when things rendered without needing to
+      // logOnDifferentValues: true,
+      include: [
+        // turn on to log just about everything
+        // /[A-Z][a-zA-Z]+/,
+        // turn on to log main orbit areas (higher level)
+        /App|Orbit.*/,
+      ],
+      // seems like classes dont work (transpiled probably similar to error: https://github.com/maicki/why-did-you-update/issues/47)
+      exclude: [
+        /ErrorBoundary|Sidebar|Interactive|Portal|Text|Popover|SuspenseWithBanner|ItemMeasurer|VirtualListItemInner|SortableGridItem|TimeAgo/,
+      ],
+    })
+  }
+
   // if you want to show a loading screen, do it above here
 
   await fetchInitialConfig()

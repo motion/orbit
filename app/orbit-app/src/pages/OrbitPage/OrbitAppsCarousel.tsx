@@ -58,6 +58,9 @@ class OrbitAppsCarouselStore {
   updateAnimation = react(
     () => always(this.state),
     () => this.props.setCarouselSprings(this.getSpring),
+    {
+      log: false,
+    },
   )
 
   // listen for pane movement
@@ -306,12 +309,12 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      await sleep()
+      await sleep(100)
       return next
     },
     {
       defaultValue: [false, true],
-      delay: 100,
+      delay: 50,
     },
   )
 

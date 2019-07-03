@@ -27,6 +27,8 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
 
+  console.log('id', id, identifier)
+
   const isActive =
     !isDisabled &&
     // on active pane
@@ -131,22 +133,26 @@ export const OrbitAppRenderOfDefinition = ({
     )
   }, [isAppWrapped, AppDefMain])
 
+  const appElement = useMemo(
+    () =>
+      renderApp && (
+        <FadeIn>
+          <FinalAppView
+            {...activeItem}
+            identifier={(activeItem && activeItem.identifier) || identifier}
+            id={(activeItem && activeItem.id) || id}
+          />
+        </FadeIn>
+      ),
+    [renderApp, activeItem, id, identifier],
+  )
+
   return (
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`}>
-            <Suspense fallback={<Loading />}>
-              {renderApp && (
-                <FadeIn>
-                  <FinalAppView
-                    {...activeItem}
-                    identifier={(activeItem && activeItem.identifier) || identifier}
-                    id={(activeItem && activeItem.id) || id}
-                  />
-                </FadeIn>
-              )}
-            </Suspense>
+            <Suspense fallback={<Loading />}>{appElement}</Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>

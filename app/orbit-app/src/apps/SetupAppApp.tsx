@@ -1,7 +1,7 @@
 import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
-import React, { memo, useEffect, useLayoutEffect } from 'react'
+import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
 import { newAppStore, useNewAppStore } from '../om/stores'
@@ -168,7 +168,6 @@ export function SetupAppHome(props: SetupAppHomeProps) {
     title: def.name,
     identifier: def.id,
     groupName: 'Installed apps',
-    subTitle: def.description || 'No description',
     icon: <AppIcon identifier={def.id} colors={def.iconColors} />,
   }))
   const [searchedApps, search] = useSearchAppStoreApps(results =>

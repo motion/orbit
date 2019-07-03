@@ -1,10 +1,10 @@
 import { AppViewProps } from '@o/models'
 import { CenteredText } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 import { AppView } from './AppView'
 
-export function AppMainView(props: AppViewProps) {
+export const AppMainView = memo((props: AppViewProps) => {
   if (!props.identifier) {
     return <CenteredText>No identifier passed to AppMainView</CenteredText>
   }
@@ -17,4 +17,4 @@ export function AppMainView(props: AppViewProps) {
       appProps={props}
     />
   )
-}
+})

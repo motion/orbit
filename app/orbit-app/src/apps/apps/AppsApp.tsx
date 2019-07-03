@@ -170,6 +170,7 @@ export function AppsIndex() {
 }
 
 export function AppsMain(props: AppViewProps) {
+  console.log('rendering appsmain')
   if (props.subType === 'explorer-graph') {
     return <GraphExplorer />
   }

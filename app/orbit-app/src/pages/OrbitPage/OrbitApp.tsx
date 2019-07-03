@@ -27,8 +27,6 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
 
-  console.log('id', id, identifier)
-
   const isActive =
     !isDisabled &&
     // on active pane

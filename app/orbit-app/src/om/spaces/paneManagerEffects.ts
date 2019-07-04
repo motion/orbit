@@ -60,6 +60,7 @@ const tabDisplaySort = {
   permanent: 0,
   pinned: 1,
   plain: 2,
+  permanentLast: 3,
 }
 
 export function sortPanes(space: Space, apps: AppBit[]) {

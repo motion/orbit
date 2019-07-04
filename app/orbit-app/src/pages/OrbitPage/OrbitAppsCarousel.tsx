@@ -32,8 +32,8 @@ class OrbitAppsCarouselStore {
   })
 
   zoomIntoNextApp = false
-  nextPane = -1
-
+  nextFocusedIndex = -1
+  focusedIndex = 0
   isScrolling = false
   isZooming = false
 
@@ -70,11 +70,11 @@ class OrbitAppsCarouselStore {
     if (shouldZoomIn) {
       this.zoomIntoNextApp = true
     }
-    this.nextPane = index
+    this.nextFocusedIndex = index
   }
 
   updateScrollPane = react(
-    () => [this.nextPane, this.zoomIntoNextApp],
+    () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when, sleep }) => {
       ensure('valid index', !!this.apps[index])
       await when(() => !!this.apps.length)
@@ -97,6 +97,7 @@ class OrbitAppsCarouselStore {
       ensure('not on drawer', !appsDrawerStore.isOpen)
       ensure('has apps', !!this.apps.length)
       ensure('zoomed out', this.state.zoomedOut)
+      ensure('not zooming into next app', !this.zoomIntoNextApp)
       if (query.indexOf(' ') > -1) {
         // searching within app
         const [_, firstWord] = query.split(' ')
@@ -113,16 +114,21 @@ class OrbitAppsCarouselStore {
     },
   )
 
-  triggerScrollToFocused = 0
+  forceScrollToPane = react(
+    () => this.focusedIndex,
+    async (_, { sleep }) => {
+      await sleep(1000)
+      this.animateAndScrollTo(Math.round(this.state.index))
+    },
+  )
 
-  focusedAppIndex = 0
   setFocusedAppIndex(next: number, forceScroll = false) {
     if (!this.apps[next]) {
       console.warn('no app at index', next)
       return
     }
-    if (next !== this.focusedAppIndex) {
-      this.focusedAppIndex = next
+    if (next !== this.focusedIndex) {
+      this.focusedIndex = next
 
       // update url
       const id = `${this.apps[next].app.id}`
@@ -132,7 +138,7 @@ class OrbitAppsCarouselStore {
       })
 
       if (forceScroll) {
-        this.animateAndScrollTo(this.focusedAppIndex)
+        this.animateAndScrollTo(this.focusedIndex)
       }
     }
   }
@@ -143,21 +149,21 @@ class OrbitAppsCarouselStore {
   }
 
   right() {
-    if (this.focusedAppIndex < this.apps.length - 1) {
-      this.setFocusedAppIndex(this.focusedAppIndex + 1, true)
+    if (this.focusedIndex < this.apps.length - 1) {
+      this.setFocusedAppIndex(this.focusedIndex + 1, true)
     }
   }
 
   left() {
-    if (this.focusedAppIndex > 0) {
-      this.setFocusedAppIndex(this.focusedAppIndex - 1, true)
+    if (this.focusedIndex > 0) {
+      this.setFocusedAppIndex(this.focusedIndex - 1, true)
     }
   }
 
   animateCardsTo = (index: number) => {
     if (this.state.index !== index) {
       const paneIndex = Math.round(index)
-      if (paneIndex !== this.focusedAppIndex) {
+      if (paneIndex !== this.focusedIndex) {
         this.setFocusedAppIndex(paneIndex)
       }
       this.state.index = index
@@ -165,7 +171,7 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = (index: number) => {
-    if (Math.round(index) !== this.focusedAppIndex) {
+    if (Math.round(index) !== this.focusedIndex) {
       this.setFocusedAppIndex(index)
     }
     const x = this.props.rowWidth * index
@@ -211,7 +217,7 @@ class OrbitAppsCarouselStore {
 
     this.state.isDragging = next.dragging
 
-    const dx = -next.velocity * next.direction[0] * 15
+    const dx = -next.velocity * next.direction[0] * 30
     // console.log('next', next)
 
     // avoid easy presses
@@ -354,13 +360,11 @@ const OrbitAppCard = memo(
     const spring = springs[index]
     const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
-    const isFocused = useReaction(
-      () => index === appsCarouselStore.focusedAppIndex,
-      { delay: 40 },
-      [index],
-    )
+    const isFocused = useReaction(() => index === appsCarouselStore.focusedIndex, { delay: 40 }, [
+      index,
+    ])
     const isFocusZoomed = useReaction(
-      () => index === appsCarouselStore.focusedAppIndex && !appsCarouselStore.state.zoomedOut,
+      () => index === appsCarouselStore.focusedIndex && !appsCarouselStore.state.zoomedOut,
       {
         delay: 40,
       },

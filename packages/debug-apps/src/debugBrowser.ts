@@ -185,18 +185,18 @@ export default class DebugApps {
 
   shouldUpdateTabs = async (sessions): Promise<boolean[]> => {
     const urls = (await this.getPages()).map(page => page.url())
-    const result = sessions.map(() => true)
+    const shouldUpdate = sessions.map(() => true)
     for (const [index, session] of sessions.entries()) {
       if (!session) {
-        result[index] = false
+        shouldUpdate[index] = false
         continue
       }
-      console.log('compare', urls, session.debugUrl)
-      if (urls.indexOf(session.debugUrl) > -1) {
-        result[index] = false
+      // console.log('compare', urls, session.debugUrl)
+      if (urls.some(x => session.debugUrl.replace('chrome-', '').indexOf(x) === 0)) {
+        shouldUpdate[index] = false
       }
     }
-    return result
+    return shouldUpdate
   }
 
   openUrlsInTabs = async (sessions, pages, updateTabs) => {

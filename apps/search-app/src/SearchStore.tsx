@@ -70,12 +70,8 @@ export class SearchStore {
     }
   }
 
-  get isHome() {
-    return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
-  }
-
   get allApps() {
-    return this.hooks.apps.filter(x => x.tabDisplay !== 'permanent').map(appToListItem)
+    return this.hooks.apps.map(appToListItem)
   }
 
   getApps(query: string, all = false): ListItemProps[] {
@@ -86,11 +82,6 @@ export class SearchStore {
   }
 
   getQuickResults(query: string, all = false) {
-    // non editable apps don't search apps, just the Home app
-    if (this.isHome === false) {
-      return []
-    }
-
     // TODO recent history
     return fuzzyFilter(query, [...this.getApps(query, all)])
   }

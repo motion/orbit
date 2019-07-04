@@ -66,7 +66,7 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="70%" height="80%" margin="auto">
+      <Col width="90%" height="90%" margin="auto">
         <Flow useFlow={flow}>
           <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
@@ -186,7 +186,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="70%" height="80%" margin="auto">
+        <Col width="90%" height="90%" margin="auto">
           <Flow
             useFlow={flow}
             afterTitle={
@@ -259,9 +259,6 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        <Button onClick={flow.next}>
-          Customize: <small>{definition.name}</small>
-        </Button>
         <Button
           alt="confirm"
           onClick={async () => {

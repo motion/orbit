@@ -67,7 +67,7 @@ export const effects = {
             spaceId: activeSpace.id,
             icon: appDef.icon,
             colors: ['black', 'white'],
-            tabDisplay: 'hidden',
+            tabDisplay: appDef.id === 'setupApp' ? 'permanentLast' : 'hidden',
           })
         }
       })

@@ -213,8 +213,9 @@ class OrbitAppsCarouselStore {
 
   getSpring = (i: number) => {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
-    const scaler = this.state.zoomedOut ? this.outScaler : this.inScaler
-    const scale = scaler(importance)
+    const scaler = this.zoomedIn ? this.inScaler : this.outScaler
+    // zoom all the way out of non-focused apps when zoomed in
+    const scale = this.zoomedIn && importance !== 1 ? 0 : scaler(importance)
     const ry = this.boundRotation((this.state.index - i) * 10)
     return {
       x: 0,
@@ -431,6 +432,7 @@ const OrbitAppCard = memo(
 
     return (
       <Card
+        data-is="OrbitAppCard"
         ref={cardRef}
         borderWidth={0}
         background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}

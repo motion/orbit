@@ -1,13 +1,13 @@
 import { isDefined } from '@o/utils'
 import { AnimatedInterpolation, AnimatedValue, withAnimated } from '@react-spring/animated'
-import { Col, gloss } from 'gloss'
+import { Base, Col, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
 import { Omit } from '../types'
 import { usePadding } from './pad'
-import { View, ViewProps } from './View'
+import { ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
@@ -51,16 +51,26 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
   let content = children
   const hasPadding = isDefined(padding)
 
+  const isWrapped = viewPropsRaw.flexWrap === 'wrap'
   const viewProps = {
     ...viewPropsRaw,
-    isWrapped: viewPropsRaw.flexWrap === 'wrap',
+    isWrapped,
     parentSpacing,
   }
 
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
   if (hasPadding) {
-    content = <PaddedView padding={padding}>{content}</PaddedView>
+    content = (
+      <PaddedView
+        scrollable={scrollable}
+        parentSpacing={parentSpacing}
+        isWrapped={isWrapped}
+        padding={padding}
+      >
+        {content}
+      </PaddedView>
+    )
   }
 
   const Component = animated ? ScrollableChromeAnimated : ScrollableChrome
@@ -114,8 +124,9 @@ const wrappingSpaceTheme = props => {
   }
 }
 
-// plain padded view
-export const PaddedView = gloss<ViewProps>(View, {
+export const PaddedView = gloss<
+  ViewProps & Pick<ScrollableViewProps, 'scrollable' | 'parentSpacing'> & { isWrapped?: boolean }
+>(Base, {
   flexDirection: 'inherit',
   flexWrap: 'inherit',
   // dont flex! this ruins the pad and width/height
@@ -127,14 +138,17 @@ export const PaddedView = gloss<ViewProps>(View, {
   // otherwise it "shrinks to fit" vertically and overflow will cut off
   minWidth: '100%',
   minHeight: '100%',
-}).theme(usePadding, wrappingSpaceTheme)
+}).theme(
+  props => ({
+    ...(!props.scrollable && { maxWidth: '100%' }),
+    ...(props.scrollable === 'x' && { maxHeight: '100%' }),
+    ...(props.scrollable === 'y' && { maxWidth: '100%' }),
+  }),
+  usePadding,
+  wrappingSpaceTheme,
+)
 
-const ScrollableInner = gloss<any & { parentSpacing: Size; isWrapped?: boolean }>(Col, {
-  flexDirection: 'inherit',
-  flexWrap: 'inherit',
-}).theme(wrappingSpaceTheme)
-
-export const ScrollableChrome = gloss<ScrollableViewProps>(ScrollableInner, {
+export const ScrollableChrome = gloss<ScrollableViewProps>(Col, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',

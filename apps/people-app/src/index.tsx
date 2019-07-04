@@ -100,6 +100,7 @@ function PersonMedia({ id }: { id: number }) {
       titleElement={
         <TitleRow
           padding="xl"
+          space="xl"
           before={<Avatar src={person.photo} />}
           title={person.title}
           subTitle={<Email href={`mailto:${person.email}`}>{person.email}</Email>}
@@ -124,9 +125,9 @@ function PersonMedia({ id }: { id: number }) {
       }
     >
       <StrongSubTitle>Topics</StrongSubTitle>
-      <Row flexDirection="row" flexWrap="wrap" padding={[5, 0, 0]}>
+      <Row flexDirection="row" flexWrap="wrap" space="sm">
         {topics.map((item, index) => (
-          <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
+          <RoundButton size={1.2} key={index}>
             {item}
           </RoundButton>
         ))}

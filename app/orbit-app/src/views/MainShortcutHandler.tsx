@@ -84,7 +84,7 @@ export default memo(function MainShortcutHandler(props: {
           return
         }
         // zoom out
-        if (appsCarouselStore.state.zoomedOut === false) {
+        if (appsCarouselStore.zoomedIn) {
           appsCarouselStore.setZoomedOut()
           return
         }

@@ -49,7 +49,7 @@
     "string-natural-compare": "2.0.3",
     "react-flip-toolkit": "^6.6.4",
     "uncontrollable": "^6.1.0",
-    "react-use": "^9.1.2",
+    "react-use": "^9.8.1",
     "svg.js": "^2.7.1",
     "react-events": "^1.0.1"
   },
@@ -57,7 +57,7 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "@types/react-select": "^2.0.19",
-    "@types/react-window": "1.7.0"
+    "@types/react-window": "1.8.0"
   },
   "resolutions": {
     "@types/react": "16.8.8",

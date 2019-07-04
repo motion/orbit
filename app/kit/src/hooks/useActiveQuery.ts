@@ -7,15 +7,16 @@ import { useStoresSimple } from './useStores'
 export function useActiveQuery(opts?: ReactionOptions): string {
   const { queryStore } = useStoresSimple()
   const visibleStore = useVisibilityStore()
-  return (
-    useReaction(() => {
+  return useReaction(
+    () => {
       ensure('visible', visibleStore.visible)
       ensure('queryStore', !!queryStore)
       return queryStore.query
-    }, opts || defaultOpts) || ''
+    },
+    {
+      name: 'useActiveQuery',
+      defaultValue: '',
+      ...opts,
+    },
   )
-}
-
-const defaultOpts = {
-  name: 'useActiveQuery',
 }

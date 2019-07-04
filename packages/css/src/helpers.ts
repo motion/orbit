@@ -1,6 +1,7 @@
 import { Config } from './config'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+import { boxShadowItem, boxShadowSyntax } from './cssPropertySet'
 
 export const px = (x: number | string) =>
   typeof x === 'number' ? `${x}px` : `${+x}` === x ? `${x}px` : x
@@ -37,13 +38,12 @@ export function expandCSSArray(given: number | (number | string)[]): (number | s
 }
 
 const objectToCSS = {
-  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${Config.toColor(color)}`,
-  boxShadow: v =>
-    v.inset || v.x || v.y || v.blur || v.spread || v.color
-      ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
-          v.spread,
-        )} ${Config.toColor(v.color)}`
-      : Config.toColor(v),
+  textShadow: ({ x, y, blur, color }) =>
+    `${px(x || 0)} ${px(y || 0)} ${px(blur || 0)} ${Config.toColor(color)}`,
+  boxShadow: (v: boxShadowSyntax) =>
+    `${v.inset ? 'inset ' : ''}${px(v.x || 0)} ${px(v.y || 0)} ${px(v.blur || 0)} ${px(
+      v.spread || 0,
+    )} ${Config.isColor(v.color) ? Config.toColor(v.color) : v.color || ''}`,
   background: v =>
     Config.isColor(v)
       ? Config.toColor(v)
@@ -63,7 +63,7 @@ function processArrayItem(key: string, val: any, level: number = 0) {
   return typeof val === 'number' ? `${val}px` : val
 }
 
-export function processArray(key: string, value: (number | string)[], level: number = 0): string {
+export function processArray(key: string, value: any[], level: number = 0): string {
   if (key === 'background') {
     if (Config.isColor(value)) {
       return Config.toColor(value)
@@ -73,9 +73,22 @@ export function processArray(key: string, value: (number | string)[], level: num
   if (BORDER_KEY[key] && value.length === 2) {
     value.push('solid')
   }
-  return value
-    .map(val => processArrayItem(key, val))
-    .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+  if (key === 'boxShadow') {
+    value = value.map(x => processBoxShadow(key, x))
+  } else {
+    value = value.map(val => processArrayItem(key, val))
+  }
+  return value.join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
+}
+
+function processBoxShadow(key: string, val: boxShadowItem) {
+  if (Array.isArray(val)) {
+    return val.map(x => processArrayItem(key, x)).join(' ')
+  }
+  if (val && typeof val === 'object') {
+    return objectToCSS.boxShadow(val)
+  }
+  return val
 }
 
 function objectValue(key: string, value: any) {

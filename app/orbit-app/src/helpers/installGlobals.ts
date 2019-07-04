@@ -7,6 +7,7 @@ import { Mediator } from '@o/bridge'
 import { toColor } from '@o/color'
 import { getGlobalConfig } from '@o/config'
 import { themes } from '@o/kit'
+import { isEqualDebug } from '@o/libs'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
@@ -70,14 +71,4 @@ global.Models = Models
 global.Themes = themes
 global.OrbitApps = OrbitApps
 global.GlossTheme = GlossTheme
-
-const { isEqual } = require('@o/fast-compare')
-global.isEqualDebug = (a, b) => {
-  for (const key in a) {
-    if (!isEqual(a[key], b[key])) {
-      console.log('falsy value', key)
-      return false
-    }
-  }
-  return true
-}
+global.isEqualDebug = isEqualDebug

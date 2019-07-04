@@ -93,6 +93,9 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`update`, model.name, next)
+      }
       valueRef.current = next
       forceUpdate(Math.random())
     }
@@ -150,7 +153,7 @@ function use<ModelType, Args>(
               cache.current = next
               setTimeout(() => {
                 delete PromiseCache[key]
-              }, 50)
+              }, 100)
               res()
             }
           }
@@ -159,7 +162,7 @@ function use<ModelType, Args>(
           let tm = setTimeout(() => {
             console.error(`Query timed out ${JSON.stringify(query)}`)
             finish(defaultValues[type])
-          }, 2000)
+          }, 4000)
 
           subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })
@@ -167,6 +170,9 @@ function use<ModelType, Args>(
           read: promise,
           resolve,
           current: undefined,
+        }
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`start query`, model.name, key)
         }
       }
 
@@ -176,6 +182,7 @@ function use<ModelType, Args>(
         if (cache.read) {
           throw cache.read
         } else {
+          // todo we may not need this since we timeout the original query
           throw new Promise((res, rej) => {
             orTimeout(cache.read, 2000)
               .then(res)

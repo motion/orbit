@@ -1,4 +1,4 @@
-import { AppOpenWorkspaceCommand } from '@o/models'
+import { AppOpenWorkspaceCommand, CommandWsOptions } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
 
@@ -6,13 +6,6 @@ import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
 import { WorkspaceManager } from './WorkspaceManager'
-
-export type CommandWsOptions = {
-  workspaceRoot: string
-  mode: 'development' | 'production'
-  clean?: boolean
-  daemon?: boolean
-}
 
 /**
  * This is run either from the daemon (Orbit app process) or from the
@@ -29,18 +22,18 @@ export type CommandWsOptions = {
  *
  */
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info(`Running command ws, daemon? ${options.daemon}`)
+  reporter.info(`Running command ws, daemon? ${options.daemon} ${options.mode}`)
   if (options.daemon) {
     const wsManager = new WorkspaceManager()
     wsManager.setWorkspace(options)
     await wsManager.start()
     return wsManager
   } else {
-    await sendOrbitDesktopOpenWorkspace(options.workspaceRoot)
+    await sendOrbitDesktopOpenWorkspace(options)
   }
 }
 
-async function sendOrbitDesktopOpenWorkspace(workspaceRoot: string) {
+async function sendOrbitDesktopOpenWorkspace(options: CommandWsOptions) {
   const { mediator } = await getOrbitDesktop()
   if (!mediator) {
     reporter.panic(`Could not open orbit desktop`)
@@ -49,9 +42,7 @@ async function sendOrbitDesktopOpenWorkspace(workspaceRoot: string) {
     reporter.info(`Sending open workspace command`)
     // this will tell orbit to look for this workspace and re-run the cli
     // we centralize all commands through orbit so we don't want to do it directly here
-    await mediator.command(AppOpenWorkspaceCommand, {
-      path: workspaceRoot,
-    })
+    await mediator.command(AppOpenWorkspaceCommand, options)
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
@@ -65,7 +56,7 @@ export async function reloadAppDefinitions(directory: string) {
   let { mediator } = await getOrbitDesktop()
   const apps = await getWorkspaceApps(directory)
   await mediator.command(AppOpenWorkspaceCommand, {
-    path: directory,
+    workspaceRoot: directory,
     packageIds: apps.map(x => x.packageId),
   })
 }

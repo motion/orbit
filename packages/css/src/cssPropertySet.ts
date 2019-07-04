@@ -104,21 +104,21 @@ export type boxLines = 'single' | 'multiple'
 export type boxOrdinalGroup = number
 export type boxOrient = 'horizontal' | 'vertical' | 'inline-axis' | 'block-axis' | 'inherit'
 export type boxPack = 'start' | 'center' | 'end' | 'justify'
-type boxShadowSyntax = {
+export type boxShadowSyntax = {
   x?: number
   y?: number
   blur?: number
   spread?: number
-  color?: string
+  color?: ColorLike
   inset?: boolean
 }
-export type boxShadow =
-  | 'none'
-  | number
-  | string
+
+export type boxShadowItem =
   | boxShadowSyntax
-  | (number | ColorLike)[][]
-  | (number | ColorLike | string)[][]
+  | (number | ColorLike)[]
+  | (number | ColorLike | string)[]
+
+export type boxShadow = 'none' | number | string | boxShadowItem[]
 export type boxSizing = 'content-box' | 'border-box'
 export type boxSuppress = 'show' | 'discard' | 'hide'
 export type breakAfter =

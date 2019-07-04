@@ -1,7 +1,7 @@
 import { AppLoadContext, AppMainViewProps, useReaction, useStore } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderLeft, BorderTop, Col, Loading, SuspenseWithBanner, useShareStore, View } from '@o/ui'
-import { Box, gloss } from 'gloss'
+import { BorderLeft, BorderTop, Loading, SuspenseWithBanner, useShareStore, View } from '@o/ui'
+import { Box, FullScreen, gloss } from 'gloss'
 import React, { memo, Suspense, useContext, useRef } from 'react'
 
 import { useStores } from '../../hooks/useStores'
@@ -31,7 +31,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   }
 
   return (
-    <Col left={sidebarWidth} flex={1} zIndex={10}>
+    <FullScreen className="orbit-main" position="absolute" left={sidebarWidth} zIndex={10}>
       <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       </Suspense>
@@ -48,7 +48,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         </View>
         <Suspense fallback={null}>{props.hasStatusbar && statusbarPadElement}</Suspense>
       </OrbitMainContainer>
-    </Col>
+    </FullScreen>
   )
 })
 

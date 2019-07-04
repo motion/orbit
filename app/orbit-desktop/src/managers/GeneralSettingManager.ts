@@ -28,7 +28,7 @@ export class GeneralSettingManager {
   }
 
   async start() {
-    let user = await getRepository(UserEntity).findOne({ name: 'general' })
+    let user = await getRepository(UserEntity).findOne()
     this.handleAutoLaunch(user)
   }
 

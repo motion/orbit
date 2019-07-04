@@ -63,7 +63,7 @@ export function createUsableStore<T, Props extends InferProps<T>>(
     return existing
   }
 
-  const Store = decorate(OGStore, initialProps as Object)
+  const Store = decorate(OGStore, (initialProps as any) || {})
   const store = (new Store() as any) as UsableStore<T, Props>
   store.useStore = options => useStore(store, undefined, options)
   StoreCache[hmrKey] = store
@@ -113,11 +113,23 @@ type ObjectFns = { [key: string]: Fn }
 
 type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
 
+/**
+ * TODO lets make this functional style:
+ *
+ * class Store {
+ *   hooks = useHooks(() => {
+ *     const myHook = useState()
+ *     return { myHook }
+ *   })
+ * }
+ *
+ */
 export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
   const getValues = () => {
     let res: any = {}
     for (const key in hooks) {
-      res[key] = hooks[key]()
+      const next = hooks[key]()
+      res[key] = next
     }
     return res
   }

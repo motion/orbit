@@ -1,10 +1,4 @@
-import {
-  getIdentifierFromPackageId,
-  getIdentifierToPackageId,
-  getWorkspaceApps,
-  requireWorkspaceDefinitions,
-  updateWorkspacePackageIds,
-} from '@o/cli'
+import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceApps, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -16,6 +10,9 @@ const log = new Logger('OrbitAppsManager')
 
 type PartialSpace = Pick<Space, 'id' | 'directory'>
 
+type AppMetaDict = { [identifier: string]: AppMeta }
+type AppMetaDictCb = (appMeta: AppMetaDict) => void
+
 @decorate
 export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
@@ -23,7 +20,7 @@ export class OrbitAppsManager {
 
   spaces: PartialSpace[] = []
   user: User | null = null
-  appMeta: { [identifier: string]: AppMeta } = {}
+  appMeta: AppMetaDict = {}
 
   private packageJsonUpdate = 0
   private updatePackagesVersion = 0
@@ -58,6 +55,11 @@ export class OrbitAppsManager {
     return this.spaces.find(x => x.id === user.activeSpace)
   }
 
+  onUpdatedCb = new Set<AppMetaDictCb>()
+  onUpdatedAppMeta = (cb: AppMetaDictCb) => {
+    this.onUpdatedCb.add(cb)
+  }
+
   updateAppDefinitionsReaction = react(
     () => [this.activeSpace, this.packageJsonUpdate],
     async ([space]) => {
@@ -88,13 +90,22 @@ export class OrbitAppsManager {
       if (!activeSpace) return
       const apps = await getWorkspaceApps(activeSpace.directory || '')
       ensure('apps', !!apps)
+
+      let updated = false
       for (const appInfo of apps) {
         const identifier = getIdentifierFromPackageId(appInfo.packageId)
         log.verbose('setting apps meta', appInfo.packageId, identifier)
         if (identifier !== null) {
           this.appMeta[identifier] = appInfo
+          updated = true
         } else {
           log.error(`no identifier found for ${appInfo.packageId}`)
+        }
+      }
+
+      if (updated) {
+        for (const cb of [...this.onUpdatedCb]) {
+          cb(this.appMeta)
         }
       }
     },

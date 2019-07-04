@@ -15,32 +15,36 @@ export const OrbitDock = memo(() => {
   })
 
   return (
-    <Dock
-      ref={dockRef}
-      onMouseEnter={() => {
-        setOpen(true)
-      }}
-      onMouseLeave={() => {
-        setOpen(false)
-      }}
-      transform={
-        open
-          ? {
-              x: 0,
-            }
-          : {
-              x: size.width - 20,
-            }
-      }
-      transition="all ease 300ms"
-      className="orbit-dock"
-    >
-      <DockButtonPassProps sizePadding={2.2}>
+    <DockButtonPassProps sizePadding={2.2}>
+      <Dock
+        ref={dockRef}
+        onMouseEnter={() => {
+          setOpen(true)
+        }}
+        onMouseLeave={() => {
+          setOpen(false)
+        }}
+        transform={
+          open
+            ? {
+                x: 30,
+              }
+            : {
+                x: size.width - 20,
+              }
+        }
+        transition="all ease 300ms"
+        className="orbit-dock"
+        group
+      >
+        {/* the part that floats out */}
+        <DockButton id="0" sizePadding={0} hover={false} borderLeftRadius={100} />
         {!isOnStaticApp && <OrbitDockMenu />}
         <OrbitDockShare />
         <OrbitDockSearch />
-      </DockButtonPassProps>
-    </Dock>
+        <DockButton id="1" sizePadding={0} hover={false} />
+      </Dock>
+    </DockButtonPassProps>
   )
 })
 

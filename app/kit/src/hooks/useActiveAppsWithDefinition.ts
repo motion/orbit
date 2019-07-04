@@ -2,7 +2,7 @@ import { AppBit, AppDefinition } from '@o/models'
 import { useMemo } from 'react'
 
 import { getAppDefinition } from '../helpers/getAppDefinition'
-import { useActiveApps, FindBitWhere } from './useActiveApps'
+import { FindBitWhere, useActiveApps } from './useActiveApps'
 
 export type AppWithDefinition = {
   definition: AppDefinition

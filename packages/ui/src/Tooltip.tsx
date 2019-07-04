@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { forwardRef } from 'react'
 
 import { Popover, PopoverProps } from './Popover'
 import { Scale, useScale } from './Scale'
@@ -15,7 +15,7 @@ const defaultOnClick = e => {
   console.log('no click on tooltip')
 }
 
-export const Tooltip = React.forwardRef<any, TooltipProps>(
+export const Tooltip = forwardRef<any, TooltipProps>(
   (
     {
       popoverTheme = 'tooltip',

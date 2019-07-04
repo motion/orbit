@@ -1,7 +1,10 @@
+import { getAppDefinition } from '@o/kit'
 import { Action, catchError, Derive, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -11,9 +14,14 @@ export const urls = {
 }
 
 type RouteName = keyof typeof urls
-type Params = { [key: string]: string }
+type Params = { [key: string]: string | number | boolean }
 
-type HistoryItem = { name: RouteName; path: string; params?: Params }
+type HistoryItem = {
+  name: RouteName
+  path: string
+  params?: Params
+  replace?: boolean
+}
 
 export type RouterState = {
   historyIndex: number
@@ -22,6 +30,7 @@ export type RouterState = {
   appId: string
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
+  isOnQuickFind: Derive<RouterState, boolean>
   lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
@@ -40,10 +49,11 @@ const getPath = (name: string, p?: Params) => {
         .slice(1)
 }
 
-const getItem = (name: RouteName, params?: Params): HistoryItem => ({
+const getItem = (name: RouteName, params?: Params, replace?: boolean): HistoryItem => ({
   name,
   path: getPath(name, params),
   params,
+  replace,
 })
 
 // init
@@ -57,6 +67,7 @@ export const state: RouterState = {
   appId: 'search',
   ignoreNextPush: false,
   isOnSetupApp: state => state.pageName === 'app' && state.appId === 'setupApp',
+  isOnQuickFind: state => state.pageName === 'app' && state.appId === 'quickFind',
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
@@ -72,11 +83,17 @@ const showPage: Operator<HistoryItem> = pipe(
     }
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
-    om.state.router.historyIndex++
+    if (!item.replace) {
+      om.state.router.historyIndex++
+    }
   }),
   run((om, item) => {
     if (!om.state.router.ignoreNextPush) {
-      om.effects.router.open(item.path)
+      if (item.replace) {
+        om.effects.router.replace(item.path)
+      } else {
+        om.effects.router.open(item.path)
+      }
     }
   }),
   mutate(om => {
@@ -92,17 +109,37 @@ const showPage: Operator<HistoryItem> = pipe(
 )
 
 const showHomePage: Action = om => {
-  om.actions.router.showPage(getItem('home'))
-  const foundApp = om.state.apps.activeApps.find(x => x.identifier === 'home')
-  if (foundApp) {
-    om.state.router.appId = `${foundApp.id}`
+  const firstApp = om.state.apps.activeApps.find(
+    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier).app,
+  )
+  if (firstApp) {
+    om.actions.router.showPage(getItem('app', { id: firstApp.identifier }))
+    om.state.router.appId = `${firstApp.id}`
     om.effects.router.setPane(om.state.router.appId)
+  } else {
+    console.log('no home app found')
   }
+}
+
+const showQuickFind: Action = om => {
+  om.actions.router.showAppPage({ id: 'quickFind' })
+}
+
+const toggleQuickFind: Action = om => {
+  if (om.state.router.isOnQuickFind) {
+    om.actions.router.closeDrawer()
+  } else {
+    om.actions.router.showAppPage({ id: 'quickFind' })
+  }
+}
+
+const closeDrawer: Action = () => {
+  appsDrawerStore.closeDrawer()
 }
 
 const isNumString = (x: number | string) => +x == x
 
-const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
+const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean }> = (om, params) => {
   // find by identifier optionally
   const id = isNumString(params.id)
     ? params.id
@@ -111,9 +148,9 @@ const showAppPage: Action<{ id?: string; subId?: string }> = (om, params) => {
     ...params,
     id,
   }
-  om.actions.router.showPage(getItem('app', next))
+  om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = next.id
-  om.effects.router.setPane(next.id)
+  om.effects.router.setPane(next.id, params.replace ? true : false)
 }
 
 const showSetupAppPage: Action = om => {
@@ -148,11 +185,17 @@ const forward: Action = om => {
   }
 }
 
+let ignoreNextRoute = false
+
 const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' }> = (
   om,
   { action, url },
 ) => {
   page(url, ({ params, querystring }) => {
+    if (ignoreNextRoute) {
+      ignoreNextRoute = false
+      return
+    }
     om.actions.router.ignoreNextPush()
     om.actions.router[action]({
       ...params,
@@ -178,6 +221,9 @@ export const actions = {
   ignoreNextPush,
   back,
   forward,
+  showQuickFind,
+  toggleQuickFind,
+  closeDrawer,
 }
 
 // effects
@@ -188,10 +234,19 @@ export const effects = {
   },
 
   open(url: string) {
+    ignoreNextRoute = true
     page.show(url)
   },
 
-  setPane(appId: string) {
+  replace(url: string) {
+    ignoreNextRoute = true
+    page.replace(url)
+  },
+
+  setPane(appId: string, avoidScroll?: boolean) {
     paneManagerStore.setPane(appId)
+    if (!avoidScroll) {
+      appsCarouselStore.scrollToPane(+appId)
+    }
   },
 }

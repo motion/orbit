@@ -6,7 +6,7 @@ import React, { memo, useMemo } from 'react'
 
 import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
-import { appsCarousel } from '../pages/OrbitPage/OrbitAppsCarousel'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 
 // TODO these would be easier to search if they all prefixed with something
@@ -72,19 +72,24 @@ export default memo(function MainShortcutHandler(props: {
           PopoverState.closeLast()
           return
         }
+        // clear input if written in
+        if (queryStore.hasQuery) {
+          queryStore.clearQuery()
+          return
+        }
         // close app drawer if open
         if (appsDrawerStore.isOpen) {
           appsDrawerStore.closeDrawer()
           return
         }
         // zoom out
-        if (appsCarousel.state.zoomedOut === false) {
-          appsCarousel.setZoomedOut()
+        if (appsCarouselStore.state.zoomedOut === false) {
+          appsCarouselStore.setZoomedOut()
           return
         }
         // go to first app
-        if (appsCarousel.focusedAppIndex > 0) {
-          appsCarousel.setFocusedAppIndex(0, true)
+        if (appsCarouselStore.focusedAppIndex > 0) {
+          appsCarouselStore.setFocusedAppIndex(0, true)
           return
         }
         // clear orbit query
@@ -97,30 +102,34 @@ export default memo(function MainShortcutHandler(props: {
         }
       },
       UP: () => {
-        if (appsCarousel.state.zoomedOut) {
+        if (!appsDrawerStore.isOpen && appsCarouselStore.state.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.up)
       },
       DOWN: () => {
-        if (appsCarousel.state.zoomedOut) {
+        if (!appsDrawerStore.isOpen && appsCarouselStore.state.zoomedOut) {
           // handle moving between input/carousel
           return
         }
         shortcutStore.emit(Direction.down)
       },
       LEFT: () => {
-        if (appsCarousel.state.zoomedOut) {
-          appsCarousel.left()
-          return
+        if (!appsDrawerStore.isOpen) {
+          if (appsCarouselStore.state.zoomedOut) {
+            appsCarouselStore.left()
+            return
+          }
         }
         shortcutStore.emit(Direction.left)
       },
       RIGHT: () => {
-        if (appsCarousel.state.zoomedOut) {
-          appsCarousel.right()
-          return
+        if (!appsDrawerStore.isOpen) {
+          if (appsCarouselStore.state.zoomedOut) {
+            appsCarouselStore.right()
+            return
+          }
         }
         shortcutStore.emit(Direction.right)
       },

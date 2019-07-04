@@ -1,24 +1,17 @@
-import {
-  BuildServer,
-  getAppConfig,
-  makeWebpackConfig,
-  WebpackParams,
-  webpackPromise,
-} from '@o/build-server'
+import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
-import { AppMeta } from '@o/models'
+import { AppMeta, CommandWsOptions } from '@o/models'
 import { watch } from 'chokidar'
 import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
-import { CommandWsOptions } from './command-ws'
+import { bundleApp, getBuildInfo } from './command-build'
+import { getAppEntry } from './command-dev'
 import { reporter } from './reporter'
 import { getIsInMonorepo } from './util/getIsInMonorepo'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
 import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
-import { getAppEntry } from './command-dev'
-import { bundleApp, getBuildInfo } from './command-build'
 
 //
 // TODO we need to really improve this:
@@ -59,6 +52,7 @@ export class WorkspaceManager {
   setWorkspace(opts: CommandWsOptions) {
     this.directory = opts.workspaceRoot
     this.options = opts
+    log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
   }
 
   start() {
@@ -142,7 +136,7 @@ export class WorkspaceManager {
    */
   private async addAppWatcher(app: AppMeta) {
     const entry = await getAppEntry(app.directory)
-    log.info(`Adding app watcher ${app.packageId} ${entry}`)
+    log.verbose(`Adding app watcher ${app.packageId} ${entry}`)
     // watch just the entry file to update buildInfo.json/appEntry.js
     let watcher = watch(entry, {
       persistent: true,
@@ -306,6 +300,7 @@ ${this.apps
     const wsConfig = await makeWebpackConfig(
       {
         name: 'main',
+        mode: this.options.mode,
         context: this.directory,
         entry: [entry],
         target: 'web',

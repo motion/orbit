@@ -27,7 +27,6 @@ export default {
               presets: ['@o/babel-preset-motion'],
             },
           },
-          'react-hot-loader/webpack',
         ],
       },
       {

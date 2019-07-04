@@ -1,4 +1,4 @@
-import { createStoreContext, ensure, react, useReaction } from '@o/use-store'
+import { createStoreContext, ensure, react } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { ObservableSet } from 'mobx'
 import React, { ReactNode, useLayoutEffect, useRef } from 'react'
@@ -94,13 +94,10 @@ export type BreadcrumbInfo = {
   selector: string
 }
 
-const opts = {
-  name: 'Breadcrumbs',
-}
-
 export function useBreadcrumb(): BreadcrumbInfo | null {
   const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
   const crumbStore = BContext.useStore()
+  const index = crumbStore ? crumbStore.orderedChildren.findIndex(x => x === selector) : -1
 
   useLayoutEffect(() => {
     if (!crumbStore) return
@@ -109,11 +106,6 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
       crumbStore.unmount(selector)
     }
   }, [])
-
-  const index = useReaction(() => {
-    ensure('crumbs', !!crumbStore)
-    return crumbStore.orderedChildren.findIndex(x => x === selector)
-  }, opts)
 
   if (!crumbStore) {
     return null

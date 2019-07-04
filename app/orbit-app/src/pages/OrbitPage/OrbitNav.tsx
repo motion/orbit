@@ -6,7 +6,7 @@ import { App } from '@o/stores'
 import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
 import { flow } from 'lodash'
-import React, { forwardRef, memo } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -14,7 +14,7 @@ import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useOm } from '../../om/om'
 import { useNewAppStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
-import { appsCarousel } from './OrbitAppsCarousel'
+import { appsCarouselStore } from './OrbitAppsCarousel'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -30,7 +30,10 @@ export const OrbitNav = memo(
     const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
     const allActiveApps = useActiveAppsSorted()
-    const activeAppsSorted = allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`))
+    const activeAppsSorted = useMemo(
+      () => allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`)),
+      [allActiveApps],
+    )
     const handleSortEnd = useAppSortHandler()
 
     if (isEditing) {
@@ -40,53 +43,57 @@ export const OrbitNav = memo(
     const tabWidth = 54
     const tabWidthPinned = 66
 
-    const items = activeAppsSorted
-      .map(
-        (app): TabProps => {
-          const isActive = !isOnSetupApp && `${app.id}` === paneId
-          // const next = activeAppsSorted[index + 1]
-          // const isLast = index === activeAppsSorted.length
-          // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
-          const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
-          return {
-            app,
-            width: isPinned ? tabWidthPinned : tabWidth,
-            tabDisplay: app.tabDisplay,
-            isActive,
-            icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
-            iconSize: tabHeight - 6,
-            getContext() {
-              return [
-                {
-                  label: 'Open...',
+    const items = useMemo(
+      () =>
+        activeAppsSorted
+          .map(
+            (app): TabProps => {
+              const isActive = !isOnSetupApp && `${app.id}` === paneId
+              // const next = activeAppsSorted[index + 1]
+              // const isLast = index === activeAppsSorted.length
+              // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
+              const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
+              return {
+                app,
+                width: isPinned ? tabWidthPinned : tabWidth,
+                tabDisplay: app.tabDisplay,
+                isActive,
+                icon: <AppIcon identifier={app.identifier} colors={app.colors} />,
+                iconSize: tabHeight - 6,
+                getContext() {
+                  return [
+                    {
+                      label: 'Open...',
+                    },
+                    {
+                      label: 'App settings',
+                      checked: true,
+                    },
+                    {
+                      type: 'separator',
+                    },
+                    {
+                      label: isPinned ? 'Unpin' : 'Pin',
+                      click() {
+                        save(AppModel, {
+                          ...app,
+                          tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
+                        })
+                      },
+                    },
+                    ...getAppContextItems(app),
+                  ]
                 },
-                {
-                  label: 'App settings',
-                  checked: true,
+                onClick: () => {
+                  appsCarouselStore.shouldZoomIn()
+                  actions.router.showAppPage({ id: `${app.id}` })
                 },
-                {
-                  type: 'separator',
-                },
-                {
-                  label: isPinned ? 'Unpin' : 'Pin',
-                  click() {
-                    save(AppModel, {
-                      ...app,
-                      tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
-                    })
-                  },
-                },
-                ...getAppContextItems(app),
-              ]
+              }
             },
-            onClick: () => {
-              appsCarousel.zoomOutAfterMove = true
-              actions.router.showAppPage({ id: `${app.id}` })
-            },
-          }
-        },
-      )
-      .filter(x => !!x)
+          )
+          .filter(x => !!x),
+      [activeAppsSorted, isOnSetupApp],
+    )
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
     const setupWidth = 120
@@ -100,63 +107,59 @@ export const OrbitNav = memo(
     const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
     const epad = 3
-    const sidePad = 26 // corresponds to OrbitNavClip side padding
-    const maxWidth = pinnedItemsWidth + extraButtonsWidth + sidePad
+    const maxWidth = pinnedItemsWidth + extraButtonsWidth
 
     return (
-      <OrbitNavClip ref={ref}>
-        <OrbitNavChrome>
-          <Row
-            transition="opacity ease 300ms"
-            height={tabHeight + 10}
-            padding={5}
-            margin={-5}
-            overflow="hidden"
-            flex={1}
-            opacity={onSettings ? 0.5 : 1}
-          >
-            {permanentItems.map(props => (
-              <OrbitTab key={props.app.id} {...props} />
-            ))}
-            {/* Pinned tabs */}
-            <SortableTabs
-              className="hide-scrollbars"
-              axis="x"
-              lockAxis="x"
-              distance={8}
-              items={pinnedItems}
-              shouldCancelStart={isRightClick}
-              onSortEnd={handleSortEnd}
-              height={tabHeight + 20}
-              overflowX="auto"
-              overflowY="hidden"
+      <OrbitNavChrome ref={ref}>
+        <Row
+          transition="opacity ease 300ms"
+          padding={5}
+          margin={-5}
+          overflow="hidden"
+          flex={1}
+          opacity={onSettings ? 0.5 : 1}
+        >
+          {permanentItems.map(props => (
+            <OrbitTab key={props.app.id} {...props} />
+          ))}
+          {/* Pinned tabs */}
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            items={pinnedItems}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            height={tabHeight}
+            overflowX="auto"
+            overflowY="hidden"
+          />
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            maxWidth={`calc(100% - ${maxWidth}px)`}
+            items={plainItems}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            height={tabHeight}
+            overflowX="auto"
+            overflowY="hidden"
+          />
+          <Space size={epad} />
+          {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
+          {!isOnSetupApp && (
+            <OrbitTab
+              tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
+              width={tabWidthPinned}
+              icon={isOnSetupApp ? 'remove' : 'add'}
+              onClick={actions.router.toggleSetupAppPage}
             />
-            <SortableTabs
-              className="hide-scrollbars"
-              axis="x"
-              lockAxis="x"
-              distance={8}
-              maxWidth={`calc(100% - ${maxWidth}px)`}
-              items={plainItems}
-              shouldCancelStart={isRightClick}
-              onSortEnd={handleSortEnd}
-              height={tabHeight + 20}
-              overflowX="auto"
-              overflowY="hidden"
-            />
-            <Space size={epad} />
-            {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
-            {!isOnSetupApp && (
-              <OrbitTab
-                tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
-                width={tabWidthPinned}
-                icon={isOnSetupApp ? 'remove' : 'add'}
-                onClick={actions.router.toggleSetupAppPage}
-              />
-            )}
-          </Row>
-        </OrbitNavChrome>
-      </OrbitNavClip>
+          )}
+        </Row>
+      </OrbitNavChrome>
     )
   }),
 )
@@ -185,20 +188,15 @@ const OrbitNewAppTab = props => {
   )
 }
 
-const OrbitNavClip = gloss(Box, {
-  padding: [20, 20],
-  margin: [-20, 0],
-})
-
 const OrbitNavChrome = gloss(Box, {
   maxWidth: '100%',
   pointerEvents: 'inherit',
-  height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
   justifyContent: 'space-between',
   margin: [0, 'auto'],
+  padding: [4, 20],
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

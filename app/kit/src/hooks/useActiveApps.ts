@@ -1,9 +1,9 @@
 import { useModels } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
 import { useMemo } from 'react'
+import { FindOptions } from 'typeorm'
 
 import { useActiveSpace } from './useActiveSpace'
-import { FindOptions } from 'typeorm'
 
 export type FindBitWhere = FindOptions<AppBit>['where']
 

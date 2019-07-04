@@ -2,6 +2,11 @@ import { AppViewProps } from '@o/models'
 import { Col, ColProps, Icon, PassProps, SubTitle, Title } from '@o/ui'
 import React from 'react'
 
+export type TemplateMessageProps = Omit<ColProps & AppViewProps, 'icon'> & {
+  children?: React.ReactNode
+  icon?: React.ReactNode
+}
+
 export function Message({
   title,
   icon,
@@ -9,7 +14,7 @@ export function Message({
   subType,
   children,
   ...props
-}: ColProps & AppViewProps & { children?: React.ReactNode; icon?: React.ReactNode }) {
+}: TemplateMessageProps) {
   return (
     <Col flex={1} padding="lg" space="xl" alignItems="center" justifyContent="center" {...props}>
       <Col space alignItems="center" justifyContent="center" textAlign="center">

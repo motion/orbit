@@ -20,12 +20,18 @@ type OrbitAppProps = {
   identifier: string
   appDef?: AppDefinition
   renderApp?: boolean
+  isDisabled?: boolean
 }
 
-export const OrbitApp = memo(({ id, identifier, appDef, renderApp }: OrbitAppProps) => {
+export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }: OrbitAppProps) => {
   const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
-  const isActive = paneManagerStore.activePane.id === `${id}`
+
+  const isActive =
+    !isDisabled &&
+    // on active pane
+    paneManagerStore.activePane.id === `${id}`
+
   const appStore = useStoreSimple(AppStore, {
     id,
     identifier,
@@ -125,22 +131,26 @@ export const OrbitAppRenderOfDefinition = ({
     )
   }, [isAppWrapped, AppDefMain])
 
+  const appElement = useMemo(
+    () =>
+      renderApp && (
+        <FadeIn>
+          <FinalAppView
+            {...activeItem}
+            identifier={(activeItem && activeItem.identifier) || identifier}
+            id={(activeItem && activeItem.id) || id}
+          />
+        </FadeIn>
+      ),
+    [renderApp, activeItem, id, identifier],
+  )
+
   return (
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`}>
-            <Suspense fallback={<Loading />}>
-              {renderApp && (
-                <FadeIn>
-                  <FinalAppView
-                    {...activeItem}
-                    identifier={(activeItem && activeItem.identifier) || identifier}
-                    id={(activeItem && activeItem.id) || id}
-                  />
-                </FadeIn>
-              )}
-            </Suspense>
+            <Suspense fallback={<Loading />}>{appElement}</Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>
@@ -270,7 +280,3 @@ const OrbitActions = memo((props: { children?: any }) => {
   }, [isActive, props.children])
   return null
 })
-
-// if (module['hot']) {
-//   module['hot'].accept()
-// }

@@ -20,16 +20,30 @@ const elevatedShadow = (x: number) => [
   [0, 0, 0, round(0.02 * smoother(x))],
 ]
 
-export function getElevation(props: ElevatableProps) {
-  if (!props.elevation) {
-    return {
-      boxShadow: props.boxShadow,
+export const getElevation = (props: ElevatableProps) => {
+  return cachedReturn(JSON.stringify([props.elevation, props.boxShadow]), () => {
+    if (!props.elevation) {
+      return {
+        boxShadow: props.boxShadow,
+      }
     }
+    return {
+      boxShadow: [
+        elevatedShadow(props.elevation),
+        ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
+      ],
+    }
+  })
+}
+
+// this may be a bit stupid (bad on memory surely)
+// im trying this because <Arrow /> via <Popover /> was showing huge render cost
+// and getElevation was causing new props to return every render
+const cache = {}
+const cachedReturn = (a: string, cb: Function) => {
+  if (cache[a]) {
+    return cache[a]
   }
-  return {
-    boxShadow: [
-      elevatedShadow(props.elevation),
-      ...(Array.isArray(props.boxShadow) ? props.boxShadow : []),
-    ],
-  }
+  cache[a] = cb()
+  return cache[a]
 }

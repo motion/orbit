@@ -1,4 +1,5 @@
 import { isDefined, selectDefined } from '@o/utils'
+import { pick } from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
@@ -20,7 +21,7 @@ import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
 import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
-import { Direction, SelectableProps, useSelectableStore } from './SelectableStore'
+import { Direction, selectablePropKeys, SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 // TODO round out, we can likely import models
@@ -124,26 +125,27 @@ export const List = memo((allProps: ListProps) => {
   const filtered = useFilter(props as any)
   const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
   const getItems = useGet(filtered.results)
+  const getShareable = useGet(shareable)
   const selection = useRef<[any[], number[]]>([[], []])
 
   const onSelectInner: SelectableProps['onSelect'] = useCallback(
     (selectedRows: any[], selectedIndices: number[]) => {
       selection.current = [selectedRows, selectedIndices]
 
-      if (shareable) {
-        shareStore.setSelected(shareable, selectedRows)
+      if (getShareable()) {
+        shareStore.setSelected(getShareable(), selectedRows)
       }
       const onSelect = getProps().onSelect
       if (onSelect) {
         onSelect(selectedRows, selectedIndices)
       }
     },
-    [shareable],
+    [],
   )
 
   // wrap select with extra functionality
   const selectableStore = useSelectableStore({
-    ...props,
+    ...pick(props, selectablePropKeys),
     onSelect: onSelectInner,
   })
 

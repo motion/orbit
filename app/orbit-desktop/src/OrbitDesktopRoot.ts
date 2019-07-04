@@ -85,6 +85,7 @@ import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolv
 import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
+import { getIdentifierToPackageId } from '@o/cli'
 
 const log = new Logger('desktop')
 
@@ -150,6 +151,19 @@ export class OrbitDesktopRoot {
       this.operatingSystemManager.start(),
       this.orbitAppsManager.start(),
     ])
+
+    // signals to frontend to update app definitions
+    this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
+      log.info('orbitAppsManager updating app meta', appMeta)
+      const identifiers = Object.keys(appMeta)
+      const packageIds = identifiers.map(getIdentifierToPackageId)
+      Desktop.setState({
+        workspaceState: {
+          packageIds,
+          identifiers,
+        },
+      })
+    })
 
     this.appMiddleware = new AppMiddleware()
 

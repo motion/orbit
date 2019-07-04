@@ -1,7 +1,7 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsync, useAsyncFn } from '@o/ui'
-import React from 'react'
+import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn } from '@o/ui'
+import React, { useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
 import { ManageApps } from '../../views/ManageApps'
@@ -15,11 +15,13 @@ export default createApp({
   id: 'apps',
   name: 'Apps',
   icon: '',
-  app: props => (
-    <App index={<AppsIndex />}>
-      <AppsMain {...props} />
-    </App>
-  ),
+  app: props => {
+    return (
+      <App index={<AppsIndex />}>
+        <AppsMain {...props} />
+      </App>
+    )
+  },
 })
 
 function getDescription(def: AppDefinition) {
@@ -81,9 +83,22 @@ export function useTopAppStoreApps(
     children: <SubTitle>Loading app store</SubTitle>,
   },
 ): ListItemProps[] {
-  const topApps = useAsync<ApiSearchItem[]>(() =>
-    fetch(`https://tryorbit.com/api/apps`).then(res => res.json()),
-  )
+  const [topApps, setTopApps] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(`https://tryorbit.com/api/apps`)
+      .then(res => res.json())
+      .then(res => {
+        if (!cancelled) {
+          setTopApps(res)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const filtered = filterFn(topApps.value || [])
   const withFallback = filtered.length ? filtered.map(appSearchToListItem) : [fallback]
   return withFallback.map(x => ({
@@ -170,6 +185,7 @@ export function AppsIndex() {
 }
 
 export function AppsMain(props: AppViewProps) {
+  console.log('rendering appsmain')
   if (props.subType === 'explorer-graph') {
     return <GraphExplorer />
   }

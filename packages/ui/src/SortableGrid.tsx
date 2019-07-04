@@ -23,14 +23,14 @@ type SortableGridItemProps = {
   realIndex: number
 }
 
-class GridItem extends React.PureComponent<SortableGridItemProps> {
+class SortableGridItem extends React.PureComponent<SortableGridItemProps> {
   render() {
     const { value, realIndex, getItem } = this.props
     return <View zIndex={100000}>{getItem(value, realIndex)}</View>
   }
 }
 
-const SortableItem = SortableElement(GridItem)
+const SortableItem = SortableElement(SortableGridItem)
 
 const SortableGridInner = SortableContainer(
   ({ items, getItem, getSortableItemProps, sortable, ...props }: any) => {

@@ -1,5 +1,7 @@
 next
 
+- "/" in search bar slides up AppsDrawer with Home/Search app for searching
+  - that makes it contextual which means we can potentially do drag/drop into lists!!!
 - opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit

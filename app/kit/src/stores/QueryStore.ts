@@ -5,18 +5,30 @@ import { QueryFilterStore, SourceDesc } from './QueryFilterStore'
 
 export class QueryStore {
   queryInstant = ''
-  ignorePrefix = false
+  prefixFirstWord = false
 
-  get queryParsed() {
-    if (this.ignorePrefix) {
-      return this.queryInstant.slice(this.queryInstant.indexOf(' ') + 1)
+  setQuery = (value: string) => {
+    this.queryInstant = value
+  }
+
+  get queryFull() {
+    return this.queryInstant
+  }
+
+  get queryWithoutPrefix() {
+    if (this.prefixFirstWord) {
+      const spaceIndex = this.queryInstant.indexOf(' ')
+      if (spaceIndex > -1) {
+        return this.queryInstant.slice(spaceIndex + 1)
+      }
+      return ''
     }
     return this.queryInstant
   }
 
   query = react(
-    () => this.queryParsed,
-    async (query, { sleep }) => {
+    () => [this.queryWithoutPrefix, this.queryInstant],
+    async ([query], { sleep }) => {
       // update nlp
       this.nlpStore.setQuery(query)
 
@@ -35,8 +47,8 @@ export class QueryStore {
     },
   )
 
-  setIgnorePrefix(next: boolean = true) {
-    this.ignorePrefix = next
+  setPrefixFirstWord(next: boolean = true) {
+    this.prefixFirstWord = next
   }
 
   nlpStore = new NLPStore()
@@ -50,7 +62,7 @@ export class QueryStore {
     this.queryFilters.setSources(sources)
   }
 
-  willUnmount() {
+  dispose() {
     // TODO decorators don't change the type of classes, need to fix compiler errors somehow
     // @ts-ignore
     this.nlpStore.dispose()
@@ -65,12 +77,16 @@ export class QueryStore {
     this.queryFilters.resetAllFilters()
   }
 
-  setQuery = value => {
-    this.queryInstant = value
-  }
-
-  onChangeQuery = (next: string) => {
-    this.queryInstant = next
+  clearPrefix() {
+    // if we had a query prefix active
+    if (this.prefixFirstWord) {
+      // remove the prefix we were using on enter
+      this.setQuery(this.queryWithoutPrefix)
+      this.prefixFirstWord = false
+    } else {
+      // otherwise clear the searched app query
+      this.clearQuery()
+    }
   }
 
   toggleLocationFilter(location: string) {

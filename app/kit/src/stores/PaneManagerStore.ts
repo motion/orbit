@@ -36,25 +36,36 @@ export class PaneManagerStore {
     return (
       this.panes.find(x => x.id === this.paneId) ||
       this.panes.find(x => x.id === this.lastActivePaneId) ||
-      this.panes[0]
+      this.panes[0] ||
+      this.props.defaultPanes[0]
     )
   }
 
-  activePane = react(() => this.activePaneFast, {
+  activePaneSlow = react(() => this.activePaneFast, _ => _, {
     delay: 16,
-    log: false,
     defaultValue: this.activePaneFast,
   })
+
+  get activePane() {
+    return this.activePaneSlow || this.activePaneFast
+  }
 
   // set pane functions
   setPane = (id: string) => {
     this.paneId = id
   }
 
-  lastActivePaneId = react(() => this.activePane.id, _ => _, {
-    delayValue: true,
-    log: false,
-  })
+  lastActivePaneId = react(
+    () => this.activePane,
+    pane => {
+      ensure('pane', !!pane)
+      return pane.id
+    },
+    {
+      delayValue: true,
+      log: false,
+    },
+  )
 
   get paneIndex() {
     return this.panes.findIndex(x => x.id === this.paneId)

@@ -14,10 +14,12 @@ export function createContextualProps<A extends any>(defaults?: A): ContextualPr
   const Context = createContext<Partial<A> | null>(null)
   const PassProps = ({ children, ...rest }: Partial<Omit<A, 'children'> & { children?: any }>) => {
     const parentProps = useContext(Context)
-    const memoVal = useMemo(() => {
-      return { ...defaults, ...parentProps, ...rest }
-    }, [parentProps, rest])
-    // @ts-ignore
+    const val = { ...defaults, ...parentProps, ...rest }
+    const memoVal = useMemo(
+      () => val,
+      // memo based on values
+      [...Object.keys(val).map(k => val[k])],
+    )
     return <Context.Provider value={memoVal}>{children}</Context.Provider>
   }
   return {

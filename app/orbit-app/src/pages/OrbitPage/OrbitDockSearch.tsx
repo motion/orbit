@@ -1,6 +1,6 @@
 import { AppMainView, useActiveAppDefinition, useStore } from '@o/kit'
 import { DockButton, Input, Modal, ProvideVisibility } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 class OrbitSearch {
   open = false
@@ -8,13 +8,12 @@ class OrbitSearch {
   toggleOpen = () => (this.open = !this.open)
 }
 
-export function OrbitDockSearch() {
+export const OrbitDockSearch = memo(() => {
   const store = useStore(OrbitSearch)
   const acceptsSearch = useAcceptsSearch()
 
   return (
     <>
-      <DockButton id="search" visible={acceptsSearch} onClick={store.toggleOpen} icon="search" />
       <Modal
         width="50%"
         height="50%"
@@ -27,11 +26,12 @@ export function OrbitDockSearch() {
           <AppMainView identifier="search" />
         </ProvideVisibility>
       </Modal>
+      <DockButton id="search" visible={acceptsSearch} onClick={store.toggleOpen} icon="search" />
     </>
   )
-}
+})
 
 const useAcceptsSearch = () => {
   const def = useActiveAppDefinition()
-  return !!(def.viewConfig && def.viewConfig.acceptsSearch)
+  return !!(def && def.viewConfig && def.viewConfig.acceptsSearch)
 }

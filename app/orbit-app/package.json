@@ -65,7 +65,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-flip-toolkit": "6.6.4",
-    "react-hot-loader": "^4.12.0",
+    "react-hot-loader": "^4.12.1",
     "react-shadow": "16.3.2",
     "react-spring": "9.0.0-beta.30",
     "react-svg-inline": "2.1.1",
@@ -80,7 +80,8 @@
     "resize-observer-polyfill": "^1.5.1",
     "raven": "^2.6.4",
     "react-use-gesture": "^5.1.2",
-    "react-events": "^1.0.1"
+    "react-events": "^1.0.1",
+    "@welldone-software/why-did-you-render": "3.2.1"
   },
   "devDependencies": {
     "@babel/core": "*",

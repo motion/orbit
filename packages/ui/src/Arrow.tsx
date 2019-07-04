@@ -1,5 +1,5 @@
 import { Contents, ContentsProps, gloss, ThemeContext } from 'gloss'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 
 import { View } from './View/View'
 
@@ -8,7 +8,14 @@ export type ArrowProps = ContentsProps & {
   towards?: 'top' | 'right' | 'bottom' | 'left'
 }
 
-export function Arrow({
+const transforms = {
+  right: { rotate: '90deg' },
+  bottom: { rotate: '0deg' },
+  left: { rotate: '-90deg' }, // x is -y here
+  top: { rotate: '0deg' },
+}
+
+export const Arrow = ({
   size = 16,
   towards = 'bottom',
   boxShadow,
@@ -16,16 +23,11 @@ export function Arrow({
   border,
   background,
   ...props
-}: ArrowProps) {
+}: ArrowProps) => {
   const theme = useContext(ThemeContext).activeTheme
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)
-  const transformOuter = {
-    right: { rotate: '90deg' },
-    bottom: { rotate: '0deg' },
-    left: { rotate: '-90deg' }, // x is -y here
-    top: { rotate: '0deg' },
-  }[towards]
+  const transformOuter = transforms[towards]
 
   let width = size
   let height = size
@@ -36,7 +38,20 @@ export function Arrow({
     width = size * 4
     transformOuter['x'] = -size * 1.5
   }
-  // TODO do for rest...
+
+  const bg = background || theme.background
+  const arrowInnerProps = useMemo(
+    () => ({
+      top: innerTop * 0.75,
+      width: size,
+      height: size,
+      boxShadow,
+      opacity,
+      border,
+      background: bg,
+    }),
+    [size, innerTop, bg, JSON.stringify({ boxShadow, opacity, border })],
+  )
 
   return (
     <Contents {...props}>
@@ -47,17 +62,7 @@ export function Arrow({
         height={height}
       >
         <ArrowMiddle width={size} height={size}>
-          <ArrowInner
-            {...{
-              top: innerTop * 0.75,
-              width: size,
-              height: size,
-              boxShadow,
-              opacity,
-              border,
-              background: background || theme.background,
-            }}
-          />
+          <ArrowInner {...arrowInnerProps} />
         </ArrowMiddle>
       </ArrowOuter>
     </Contents>

@@ -105,6 +105,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
                 y: frameSize.height,
                 z: 0,
               }}
+              // this fixes a really weird bug where they had wrong absolute position
               visibility="hidden"
               {...isActive && {
                 visibility: 'visible',
@@ -119,7 +120,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
                 id={app.id}
                 identifier={definition.id}
                 appDef={definition}
-                renderApp={renderApp.current[app.id]}
+                renderApp={isActive}
               />
             </FullScreen>
           )

@@ -4,7 +4,7 @@ import { createStoreContext, react } from '@o/use-store'
  * TODO we should rename this to HighlightQueryStore likely and keep it specific
  */
 
-class SearchStore {
+class UISearchStore {
   props: {
     query: string
   }
@@ -23,7 +23,7 @@ class SearchStore {
   }
 }
 
-const searchStore = createStoreContext(SearchStore)
+const searchStore = createStoreContext(UISearchStore)
 
 export const useSearch = searchStore.useStore
 export const useCreateSearch = searchStore.useCreateStore

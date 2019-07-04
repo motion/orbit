@@ -114,27 +114,6 @@ class OrbitAppsCarouselStore {
     },
   )
 
-  filterQueryOnZoomOut = react(
-    () => this.state.zoomedOut,
-    zoomedOut => {
-      if (zoomedOut) {
-        // ignore until we next clear the querybar
-        queryStore.setPrefixFirstWord()
-      }
-    },
-  )
-
-  stopIgnoringQueriesOnZoomIn = react(
-    () => queryStore.hasQuery,
-    hasQuery => {
-      if (!this.state.zoomedOut && !hasQuery) {
-        // if youre zoomed into an app and you clear the query bar,
-        // we should stop ignoring the prefix we used previosuly
-        queryStore.setPrefixFirstWord(false)
-      }
-    },
-  )
-
   triggerScrollToFocused = 0
 
   focusedAppIndex = 0

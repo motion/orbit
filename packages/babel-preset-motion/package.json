@@ -20,7 +20,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "gloss": "^2.5.6",
-    "react-hot-loader": "^4.12.1"
+    "react-hot-loader": "4.12.3"
   },
   "license": "MIT",
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"

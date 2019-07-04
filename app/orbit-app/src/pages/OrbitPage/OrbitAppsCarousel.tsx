@@ -65,6 +65,10 @@ class OrbitAppsCarouselStore {
     },
   )
 
+  zoomIntoCurrentApp() {
+    this.scrollToPane(Math.round(this.state.index), true)
+  }
+
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
   scrollToPane = (index: number, shouldZoomIn?: boolean) => {

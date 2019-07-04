@@ -12,7 +12,7 @@ import { StackNavigator, useStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'setupApp',
-  name: 'Setup App',
+  name: 'Add App',
   icon: 'plus',
   app: SetupAppMain,
 })

@@ -7,7 +7,7 @@ import { orbitStaticApps } from '../../apps/orbitApps'
 import { useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 
-export const isStaticApp = (id: string) => !!orbitStaticApps.find(x => x.id === id)
+export const isStaticApp = (identifier: string) => !!orbitStaticApps.find(x => x.id === identifier)
 
 export const useIsOnStaticApp = () => {
   return useReaction(() => isStaticApp(paneManagerStore.activePane.type))

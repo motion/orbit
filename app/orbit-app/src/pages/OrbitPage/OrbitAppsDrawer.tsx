@@ -1,11 +1,12 @@
 import { AppWithDefinition, createUsableStore, ensure, react } from '@o/kit'
-import { Card, FullScreen, useNodeSize } from '@o/ui'
+import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
 
 import { om } from '../../om/om'
 import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
+import { isStaticApp } from './OrbitDockShare'
 
 class AppsDrawerStore {
   props: {
@@ -18,6 +19,7 @@ class AppsDrawerStore {
     () => [paneManagerStore.activePane.id, this.isOpen],
     ([activePaneId]) => {
       ensure('not open', !this.isOpen)
+      ensure('not static app', !isStaticApp(paneManagerStore.activePane.type))
       return activePaneId
     },
   )
@@ -86,7 +88,9 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
         animated
         transform={spring.y.to(y => `translate3d(0,${y}px,0)`)}
         pointerEvents="auto"
+        position="relative"
       >
+        <DrawerCloseButton />
         {apps.map(({ app, definition }) => {
           const isActive = `${app.id}` === paneManager.activePane.id
           if (isActive) {
@@ -122,5 +126,21 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
         })}
       </Card>
     </FullScreen>
+  )
+})
+
+const DrawerCloseButton = memo(() => {
+  return (
+    <Button
+      zIndex={1000}
+      position="absolute"
+      onClick={appsDrawerStore.closeDrawer}
+      top={15}
+      right={15}
+      size={1.2}
+      alt="flat"
+      circular
+      icon="cross"
+    />
   )
 })

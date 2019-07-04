@@ -202,11 +202,13 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       noInnerElement
       flex={flex}
       background={background || 'transparent'}
-      height={height}
-      // todo type issue
-      width={width as any}
-      maxHeight={maxHeight}
-      maxWidth={maxWidth}
+      // in case they change fast
+      style={{
+        height,
+        width: width as any,
+        maxHeight,
+        maxWidth,
+      }}
       minHeight={minHeight}
       borderRadius={borderRadius}
       overflow={selectDefined(

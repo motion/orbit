@@ -80,6 +80,7 @@ class OrbitAppsCarouselStore {
   updateScrollPane = react(
     () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when, sleep }) => {
+      this.zoomIntoNextApp = false
       ensure('valid index', !!this.apps[index])
       await when(() => !!this.apps.length)
       this.animateAndScrollTo(index)
@@ -94,6 +95,13 @@ class OrbitAppsCarouselStore {
   shouldZoomIn() {
     this.zoomIntoNextApp = true
   }
+
+  undoShouldZoomOnZoomChange = react(
+    () => this.state.zoomedOut,
+    () => {
+      this.zoomIntoNextApp = false
+    },
+  )
 
   scrollToSearchedApp = react(
     () => queryStore.queryInstant,

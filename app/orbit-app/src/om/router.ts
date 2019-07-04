@@ -249,7 +249,7 @@ export const effects = {
     if (!avoidScroll) {
       const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)
       if (index >= 0) {
-        appsCarouselStore.scrollToPane(+appId)
+        appsCarouselStore.scrollToIndex(index, true)
       }
     }
   },

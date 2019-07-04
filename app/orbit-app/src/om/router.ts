@@ -77,6 +77,7 @@ class AlreadyOnPageError extends Error {}
 
 const showPage: Operator<HistoryItem> = pipe(
   mutate((om, item) => {
+    debugger
     const alreadyOnPage = JSON.stringify(item) === JSON.stringify(om.state.router.curPage)
     if (alreadyOnPage) {
       throw new AlreadyOnPageError()
@@ -245,8 +246,12 @@ export const effects = {
 
   setPane(appId: string, avoidScroll?: boolean) {
     paneManagerStore.setPane(appId)
+    // scroll to pane if its in carousel
     if (!avoidScroll) {
-      appsCarouselStore.scrollToPane(+appId)
+      const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)
+      if (index >= 0) {
+        appsCarouselStore.scrollToPane(+appId)
+      }
     }
   },
 }

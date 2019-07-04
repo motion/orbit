@@ -83,6 +83,7 @@ class OrbitAppsCarouselStore {
         await sleep(100)
         this.setZoomedOut(false)
       }
+      this.nextFocusedIndex = -1
     },
   )
 

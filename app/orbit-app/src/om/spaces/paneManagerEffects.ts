@@ -4,7 +4,6 @@ import { Space, SpaceModel } from '@o/models'
 import { App } from '@o/stores'
 import { keyBy, sortBy } from 'lodash'
 
-import { om } from '../om'
 import { paneManagerStore } from '../stores'
 
 export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
@@ -19,9 +18,7 @@ export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
 }
 
 export const updatePaneManagerPanes = (apps: AppBit[]) => {
-  const paneSort = sortPanes(om.state.spaces.activeSpace, apps)
-  const sortedPanes = paneSort.map(pane => apps.find(app => app.id === pane))
-  paneManagerStore.setPanes(getPanes(sortedPanes))
+  paneManagerStore.setPanes(getPanes(apps))
 }
 
 function getPanes(apps: AppBit[]): PaneManagerPane[] {

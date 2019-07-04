@@ -77,7 +77,6 @@ class AlreadyOnPageError extends Error {}
 
 const showPage: Operator<HistoryItem> = pipe(
   mutate((om, item) => {
-    debugger
     const alreadyOnPage = JSON.stringify(item) === JSON.stringify(om.state.router.curPage)
     if (alreadyOnPage) {
       throw new AlreadyOnPageError()

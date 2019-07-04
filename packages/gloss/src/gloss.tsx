@@ -578,8 +578,6 @@ function addRules(
       className,
     })
 
-    console.log('inserting', displayName, namespace, tagName, style)
-
     if (namespace[0] === '@') {
       sheet.insert(namespace, `${namespace} {\n${selector} {\n${style}\n}\n}`)
     } else {

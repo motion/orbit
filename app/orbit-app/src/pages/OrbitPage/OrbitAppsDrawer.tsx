@@ -1,4 +1,4 @@
-import { AppWithDefinition, createUsableStore, ensure, react, AppBit } from '@o/kit'
+import { AppBit, createUsableStore, ensure, getAppDefinition, react } from '@o/kit'
 import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
@@ -93,7 +93,7 @@ export const OrbitAppsDrawer = memo(() => {
         position="relative"
       >
         <DrawerCloseButton />
-        {apps.map(({ app, definition }) => {
+        {apps.map(app => {
           const isActive = `${app.id}` === paneManager.activePane.id
           if (isActive) {
             renderApp.current[app.id] = true
@@ -120,8 +120,8 @@ export const OrbitAppsDrawer = memo(() => {
             >
               <OrbitApp
                 id={app.id}
-                identifier={definition.id}
-                appDef={definition}
+                identifier={app.identifier}
+                appDef={getAppDefinition(app.identifier)}
                 renderApp={isActive}
               />
             </FullScreen>

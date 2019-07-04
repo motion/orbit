@@ -14,23 +14,31 @@ export type AppsState = {
   activeSettingsApps: Derive<AppsState, AppBit[]>
 }
 
+const isClientApp = (app: AppBit) => {
+  const def = getAppDefinition(app.identifier)
+  return def && !!def.app
+}
+
 export const state: AppsState = {
   allApps: [],
   activeSpace: null,
   activeApps: state => {
-    const all =
+    return (
       (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || []
-    return state.activeSpace ? sortApps(all, state.activeSpace.paneSort) : all
+    )
   },
   activeClientApps: state => {
-    return state.activeApps.filter(
-      app => !!getAppDefinition(app.identifier).app && app.tabDisplay !== 'hidden',
+    const clientApps = state.activeApps.filter(
+      app => isClientApp(app) && app.tabDisplay !== 'hidden',
     )
+    // only client apps are sorted
+    if (state.activeSpace) {
+      return sortApps(clientApps, state.activeSpace.paneSort)
+    }
+    return clientApps
   },
   activeSettingsApps: state => {
-    return state.activeApps.filter(
-      app => !!getAppDefinition(app.identifier).app && app.tabDisplay === 'hidden',
-    )
+    return state.activeApps.filter(app => isClientApp(app) && app.tabDisplay === 'hidden')
   },
 }
 

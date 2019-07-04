@@ -48,7 +48,7 @@ class OrbitAppsCarouselStore {
   get searchableApps() {
     return this.apps.map(x => ({
       name: `${x.name} ${x.identifier}`,
-      id: x.app.id,
+      id: x.id,
     }))
   }
 
@@ -108,7 +108,7 @@ class OrbitAppsCarouselStore {
         // searching apps
         const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
         const curId = searchedApp ? searchedApp.id : this.apps[0].id
-        const appIndex = this.apps.findIndex(x => x.app.id === curId)
+        const appIndex = this.apps.findIndex(x => x.id === curId)
         this.setFocusedAppIndex(appIndex, true)
       }
     },

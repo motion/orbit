@@ -124,6 +124,9 @@ export function gloss<Props = any, ThemeProps = Props>(
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
 
+  /**
+   * The main component for each gloss view.
+   */
   function GlossView(props: GlossProps<Props>, ref: any) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
@@ -264,8 +267,7 @@ export function gloss<Props = any, ThemeProps = Props>(
 }
 
 function createGlossView<Props>(GlossView: any, config) {
-  const forwarded = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView)
-  const res: GlossView<Props> = memo(forwarded) as any
+  const res: GlossView<Props> = forwardRef<HTMLDivElement, GlossProps<Props>>(GlossView) as any
   res.internal = config
   res[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   res.theme = (...themeFns) => {

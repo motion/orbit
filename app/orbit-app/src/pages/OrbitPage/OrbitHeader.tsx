@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -112,6 +112,7 @@ export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
   const containerRef = useRef()
+  const appCarousel = useAppsCarousel()
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
@@ -143,6 +144,7 @@ export const OrbitHeader = memo(() => {
       isEditing={isEditing}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
+      background={appCarousel.zoomedIn ? undefined : 'transparent'}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
 
@@ -308,9 +310,10 @@ const OrbitHeaderContainer = gloss<any>(View, {
   zIndex: 0,
 }).theme((props, theme) => ({
   background:
+    props.background ||
     (props.isEditing && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
-    theme.background.alpha(a => a * 0.65),
+    theme.background,
 }))
 
 const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {

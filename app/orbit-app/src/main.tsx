@@ -50,7 +50,7 @@ async function main() {
 
   console.timeEnd('splash')
 
-  if (process.env.NODE_ENV === 'development') {
+  if (window.location.search.indexOf('why-did-you-render') > -1) {
     const whyDidYouRender = require('@welldone-software/why-did-you-render').default
     whyDidYouRender(React, {
       // turn on to log ONLY when things rendered without needing to

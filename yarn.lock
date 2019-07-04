@@ -2315,10 +2315,10 @@
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
-"@o/react-window@1.9.0-alpha.3":
-  version "1.9.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.3.tgz#42d0c254ad2302afdbc7ac536312df2e34f85197"
-  integrity sha512-/I2n4Fvebw1Y4U2xmLAf+xwWCLpCvh6W61yMU5uY2aWrviW86wGeoD9qsD32JHo+fTa7QZjLCeLy4tdQuLt//Q==
+"@o/react-window@1.9.0-alpha.2":
+  version "1.9.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.2.tgz#02979aa45b7b1e9efc1af72d55a92c04d79c1789"
+  integrity sha512-NwSvv8aL+eA1F9I5sQnrknPNHCNNjeA45Pe7bbq2u8MeI6BxMLXEYG7pIcRgwBpl5dqPFeFYqZPIcnRgRyoDxA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"

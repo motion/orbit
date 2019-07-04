@@ -20,7 +20,7 @@ export const state: AppsState = {
   activeApps: state => {
     const all =
       (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || []
-    return sortApps(all, state.activeSpace.paneSort)
+    return state.activeSpace ? sortApps(all, state.activeSpace.paneSort) : all
   },
   activeClientApps: state => {
     return state.activeApps.filter(

@@ -1,4 +1,4 @@
-import { command, createApp, createStoreContext, save, useActiveSpace, useStoreDebug } from '@o/kit'
+import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
 import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
 import React, { useEffect } from 'react'
@@ -102,9 +102,6 @@ export function OnboardApp() {
 function OnboardToolbar() {
   const flow = useFlow()
   const onboardStore = Onboard.useStore()
-  useStoreDebug()
-
-  console.log('flow', flow.index, flow.total, flow)
 
   const buttons = [<>ok</>]
 

@@ -1,3 +1,4 @@
+import { getAppDefinition } from '@o/kit'
 import { Action, catchError, Derive, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
@@ -108,7 +109,9 @@ const showPage: Operator<HistoryItem> = pipe(
 )
 
 const showHomePage: Action = om => {
-  const firstApp = om.state.apps.activeApps.find(x => x.tabDisplay !== 'hidden')
+  const firstApp = om.state.apps.activeApps.find(
+    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier).app,
+  )
   if (firstApp) {
     om.actions.router.showPage(getItem('app', { id: firstApp.identifier }))
     om.state.router.appId = `${firstApp.id}`

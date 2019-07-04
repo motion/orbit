@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -114,12 +114,9 @@ export const OrbitHeader = memo(() => {
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
-  // const { appRole } = useStore(App)
-  const appRole = 'main'
+  const { appRole } = useStore(App)
   const queryBuilderLink = useLocationLink('/app/query-builder')
   const appsLink = useLocationLink('/app/apps')
-
-  console.warn('rendering header', appRole)
 
   const isEditing = appRole === 'editing'
   const isTorn = appRole === 'torn'
@@ -251,7 +248,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onChangeVisibility={actions.setNavVisible}
         open={state.navVisible}
         maxWidth="80vw"
-        padding={4}
+        padding={0}
         elevation={10}
         arrowSize={10}
         distance={8}

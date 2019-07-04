@@ -107,63 +107,59 @@ export const OrbitNav = memo(
     const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
     const epad = 3
-    const sidePad = 26 // corresponds to OrbitNavClip side padding
-    const maxWidth = pinnedItemsWidth + extraButtonsWidth + sidePad
+    const maxWidth = pinnedItemsWidth + extraButtonsWidth
 
     return (
-      <OrbitNavClip ref={ref}>
-        <OrbitNavChrome>
-          <Row
-            transition="opacity ease 300ms"
-            height={tabHeight + 10}
-            padding={5}
-            margin={-5}
-            overflow="hidden"
-            flex={1}
-            opacity={onSettings ? 0.5 : 1}
-          >
-            {permanentItems.map(props => (
-              <OrbitTab key={props.app.id} {...props} />
-            ))}
-            {/* Pinned tabs */}
-            <SortableTabs
-              className="hide-scrollbars"
-              axis="x"
-              lockAxis="x"
-              distance={8}
-              items={pinnedItems}
-              shouldCancelStart={isRightClick}
-              onSortEnd={handleSortEnd}
-              height={tabHeight + 20}
-              overflowX="auto"
-              overflowY="hidden"
+      <OrbitNavChrome ref={ref}>
+        <Row
+          transition="opacity ease 300ms"
+          padding={5}
+          margin={-5}
+          overflow="hidden"
+          flex={1}
+          opacity={onSettings ? 0.5 : 1}
+        >
+          {permanentItems.map(props => (
+            <OrbitTab key={props.app.id} {...props} />
+          ))}
+          {/* Pinned tabs */}
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            items={pinnedItems}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            height={tabHeight}
+            overflowX="auto"
+            overflowY="hidden"
+          />
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            maxWidth={`calc(100% - ${maxWidth}px)`}
+            items={plainItems}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            height={tabHeight}
+            overflowX="auto"
+            overflowY="hidden"
+          />
+          <Space size={epad} />
+          {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
+          {!isOnSetupApp && (
+            <OrbitTab
+              tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
+              width={tabWidthPinned}
+              icon={isOnSetupApp ? 'remove' : 'add'}
+              onClick={actions.router.toggleSetupAppPage}
             />
-            <SortableTabs
-              className="hide-scrollbars"
-              axis="x"
-              lockAxis="x"
-              distance={8}
-              maxWidth={`calc(100% - ${maxWidth}px)`}
-              items={plainItems}
-              shouldCancelStart={isRightClick}
-              onSortEnd={handleSortEnd}
-              height={tabHeight + 20}
-              overflowX="auto"
-              overflowY="hidden"
-            />
-            <Space size={epad} />
-            {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
-            {!isOnSetupApp && (
-              <OrbitTab
-                tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
-                width={tabWidthPinned}
-                icon={isOnSetupApp ? 'remove' : 'add'}
-                onClick={actions.router.toggleSetupAppPage}
-              />
-            )}
-          </Row>
-        </OrbitNavChrome>
-      </OrbitNavClip>
+          )}
+        </Row>
+      </OrbitNavChrome>
     )
   }),
 )
@@ -192,20 +188,15 @@ const OrbitNewAppTab = props => {
   )
 }
 
-const OrbitNavClip = gloss(Box, {
-  padding: [20, 20],
-  margin: [-20, 0],
-})
-
 const OrbitNavChrome = gloss(Box, {
   maxWidth: '100%',
   pointerEvents: 'inherit',
-  height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
   justifyContent: 'space-between',
   margin: [0, 'auto'],
+  padding: [4, 20],
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

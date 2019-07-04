@@ -1,20 +1,15 @@
 import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, ensure, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { numberBounder, numberScaler } from '@o/utils'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { config, to, useSpring, useSprings } from 'react-spring'
+import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { om } from '../../om/om'
 import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsDrawerStore } from './OrbitAppsDrawer'
-
-const scaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (x: number) =>
-  ((newMax - newMin) * (x - prevMin)) / (prevMax - prevMin) + newMin
-
-const bounded = (min: number, max: number) => (val: number) =>
-  val < min ? min : val > max ? max : val
 
 class OrbitAppsCarouselStore {
   props: {
@@ -194,9 +189,9 @@ class OrbitAppsCarouselStore {
     this.props.setScrollSpring({ x: index * this.props.rowWidth, config: { duration: 0 } })
   }
 
-  outScaler = scaler(0, 1, 0.8, 0.9)
-  inScaler = scaler(0, 1, 0.9, 1)
-  boundRotation = bounded(-10, 10)
+  outScaler = numberScaler(0, 1, 0.8, 0.9)
+  inScaler = numberScaler(0, 1, 0.9, 1)
+  boundRotation = numberBounder(-10, 10)
 
   getSpring = (i: number) => {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))

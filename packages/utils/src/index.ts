@@ -156,3 +156,16 @@ export function partition<T, U extends T>(
   }
   return [a, b]
 }
+
+/**
+ * Scale a number thats within prev range to new range
+ */
+export const numberScaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (
+  x: number,
+) => ((newMax - newMin) * (x - prevMin)) / (prevMax - prevMin) + newMin
+
+/**
+ * Bound a number between a min and max
+ */
+export const numberBounder = (min: number, max: number) => (val: number) =>
+  val < min ? min : val > max ? max : val

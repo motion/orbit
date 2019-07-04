@@ -31,10 +31,8 @@ export function useSearchState(cb?: (state: SearchState) => any) {
   const { queryStore } = useStoresSimple()
   const last = useRef(null)
   const visibilityStore = useVisibilityStore()
-
-  // TODO Michel mrwest debug this https://github.com/mobxjs/mobx/issues/1911
-  return (
-    useReaction(() => {
+  return useReaction(
+    () => {
       const next = getSearchState(queryStore)
       if (!last.current || (visibilityStore.visible && !isEqual(last.current, next))) {
         last.current = next
@@ -44,10 +42,9 @@ export function useSearchState(cb?: (state: SearchState) => any) {
           return next
         }
       }
-    }, opts) || getSearchState(queryStore)
+    },
+    {
+      name: 'useSearchState',
+    },
   )
-}
-
-const opts = {
-  name: 'useSearchState'
 }

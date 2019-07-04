@@ -1,4 +1,4 @@
-import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -12,7 +12,6 @@ type SearchResults = {
 export class SearchStore {
   hooks = useHooks({
     stores: useStoresSimple,
-    activeQuery: useActiveQuery,
     apps: useActiveClientApps,
     app: () => useAppBit()[0],
     space: () => useActiveSpace()[0],
@@ -29,7 +28,7 @@ export class SearchStore {
   }
 
   get searchedQuery() {
-    return this.searchState ? this.searchState.query : ''
+    return this.searchState ? this.searchState.query.replace('/', '') : ''
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
@@ -70,12 +69,8 @@ export class SearchStore {
     }
   }
 
-  get isHome() {
-    return this.hooks.app && this.hooks.app.tabDisplay === 'permanent'
-  }
-
   get allApps() {
-    return this.hooks.apps.filter(x => x.tabDisplay !== 'permanent').map(appToListItem)
+    return this.hooks.apps.map(appToListItem)
   }
 
   getApps(query: string, all = false): ListItemProps[] {
@@ -86,11 +81,6 @@ export class SearchStore {
   }
 
   getQuickResults(query: string, all = false) {
-    // non editable apps don't search apps, just the Home app
-    if (this.isHome === false) {
-      return []
-    }
-
     // TODO recent history
     return fuzzyFilter(query, [...this.getApps(query, all)])
   }
@@ -102,7 +92,7 @@ export class SearchStore {
   state = react(
     () => [
       this.hooks.space.id,
-      this.hooks.activeQuery,
+      this.searchedQuery,
       this.hooks.app,
       this.hooks.apps.map(x => x.id).join(' '),
     ],

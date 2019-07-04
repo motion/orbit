@@ -1,4 +1,4 @@
-import { AppIcon, command, createApp, getAppDefinition, useAppDefinition, useLocationLink } from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useLocationLink } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo, useLayoutEffect } from 'react'
@@ -12,7 +12,7 @@ import { StackNavigator, useStackNavigator } from './StackNavigator'
 
 export default createApp({
   id: 'setupApp',
-  name: 'Setup App',
+  name: 'Add App',
   icon: 'plus',
   app: SetupAppMain,
 })
@@ -66,7 +66,7 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="70%" height="80%" margin="auto">
+      <Col width="90%" height="90%" margin="auto">
         <Flow useFlow={flow}>
           <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
@@ -186,7 +186,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="70%" height="80%" margin="auto">
+        <Col width="90%" height="90%" margin="auto">
           <Flow
             useFlow={flow}
             afterTitle={
@@ -232,7 +232,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
   const flow = useFlow()
   const stackNav = useStackNavigator()
-  const definition = useAppDefinition(flow.data.selectedAppIdentifier)
+  // const definition = useAppDefinition(flow.data.selectedAppIdentifier)
   const installApp = useInstallApp()
   return (
     <Scale size="lg">
@@ -259,9 +259,6 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        <Button onClick={flow.next}>
-          Customize: <small>{definition.name}</small>
-        </Button>
         <Button
           alt="confirm"
           onClick={async () => {

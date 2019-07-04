@@ -1,22 +1,19 @@
-import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, ensure, react, shallow, Templates, useReaction } from '@o/kit'
+import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
-import { debounce } from 'lodash'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { numberBounder, numberScaler } from '@o/utils'
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
-import { om } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
-const scaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (x: number) =>
-  ((newMax - newMin) * (x - prevMin)) / (prevMax - prevMin) + newMin
-
 class OrbitAppsCarouselStore {
   props: {
-    apps: AppWithDefinition[]
+    apps: AppBit[]
     setCarouselSprings: Function
     setScrollSpring: Function
     rowWidth: number
@@ -34,9 +31,13 @@ class OrbitAppsCarouselStore {
     isDragging: false,
   })
 
-  zoomIntoNextApp = false
-  nextPane = -1
+  get zoomedIn() {
+    return !this.state.zoomedOut
+  }
 
+  zoomIntoNextApp = false
+  nextFocusedIndex = -1
+  focusedIndex = 0
   isScrolling = false
   isZooming = false
 
@@ -50,8 +51,8 @@ class OrbitAppsCarouselStore {
 
   get searchableApps() {
     return this.apps.map(x => ({
-      name: `${x.app.name} ${x.definition.id}`,
-      id: x.app.id,
+      name: `${x.name} ${x.identifier}`,
+      id: x.id,
     }))
   }
 
@@ -63,37 +64,44 @@ class OrbitAppsCarouselStore {
     },
   )
 
+  zoomIntoCurrentApp() {
+    this.scrollToIndex(Math.round(this.state.index), true)
+  }
+
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
-  scrollToPane = (id: number, shouldZoomIn?: boolean) => {
+  scrollToIndex = (index: number, shouldZoomIn?: boolean) => {
     if (shouldZoomIn) {
       this.zoomIntoNextApp = true
     }
-    this.nextPane = id
+    this.nextFocusedIndex = index
   }
 
   updateScrollPane = react(
-    () => this.nextPane,
-    async (id, { when }) => {
-      ensure('valid id', id !== -1)
+    () => [this.nextFocusedIndex, this.zoomIntoNextApp],
+    async ([index], { when, sleep }) => {
+      this.zoomIntoNextApp = false
+      ensure('valid index', !!this.apps[index])
       await when(() => !!this.apps.length)
-      const paneIndex = this.apps.findIndex(x => x.app.id === id)
-      if (paneIndex > -1) {
-        this.animateAndScrollTo(paneIndex)
-        if (this.zoomIntoNextApp) {
-          await when(() => !this.isScrolling)
-          this.setZoomedOut(false)
-        }
-      } else {
-        // clear
-        this.nextPane = -1
+      this.animateAndScrollTo(index)
+      if (this.zoomIntoNextApp) {
+        await sleep(100)
+        this.setZoomedOut(false)
       }
+      this.nextFocusedIndex = -1
     },
   )
 
   shouldZoomIn() {
     this.zoomIntoNextApp = true
   }
+
+  undoShouldZoomOnZoomChange = react(
+    () => this.state.zoomedOut,
+    () => {
+      this.zoomIntoNextApp = false
+    },
+  )
 
   scrollToSearchedApp = react(
     () => queryStore.queryInstant,
@@ -102,6 +110,7 @@ class OrbitAppsCarouselStore {
       ensure('not on drawer', !appsDrawerStore.isOpen)
       ensure('has apps', !!this.apps.length)
       ensure('zoomed out', this.state.zoomedOut)
+      ensure('not zooming into next app', !this.zoomIntoNextApp)
       if (query.indexOf(' ') > -1) {
         // searching within app
         const [_, firstWord] = query.split(' ')
@@ -111,61 +120,40 @@ class OrbitAppsCarouselStore {
       } else {
         // searching apps
         const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-        const curId = searchedApp ? searchedApp.id : this.apps[0].app.id
-        const appIndex = this.apps.findIndex(x => x.app.id === curId)
+        const curId = searchedApp ? searchedApp.id : this.apps[0].id
+        const appIndex = this.apps.findIndex(x => x.id === curId)
         this.setFocusedAppIndex(appIndex, true)
       }
     },
   )
 
-  filterQueryOnZoomOut = react(
-    () => this.state.zoomedOut,
-    zoomedOut => {
-      if (zoomedOut) {
-        // ignore until we next clear the querybar
-        queryStore.setPrefixFirstWord()
-      }
+  forceScrollToPane = react(
+    () => this.focusedIndex,
+    async (_, { sleep }) => {
+      await sleep(1000)
+      this.animateAndScrollTo(Math.round(this.state.index))
     },
   )
 
-  stopIgnoringQueriesOnZoomIn = react(
-    () => queryStore.hasQuery,
-    hasQuery => {
-      if (!this.state.zoomedOut && !hasQuery) {
-        // if youre zoomed into an app and you clear the query bar,
-        // we should stop ignoring the prefix we used previosuly
-        queryStore.setPrefixFirstWord(false)
-      }
-    },
-  )
-
-  triggerScrollToFocused = 0
-
-  focusedAppIndex = 0
   setFocusedAppIndex(next: number, forceScroll = false) {
     if (!this.apps[next]) {
       console.warn('no app at index', next)
       return
     }
-    if (next !== this.focusedAppIndex) {
-      this.focusedAppIndex = next
+    if (next !== this.focusedIndex) {
+      this.focusedIndex = next
 
       // update url
-      const id = `${this.apps[next].app.id}`
+      const id = `${this.apps[next].id}`
       om.actions.router.showAppPage({
         id,
         replace: true,
       })
 
       if (forceScroll) {
-        this.animateAndScrollTo(this.focusedAppIndex)
+        this.animateAndScrollTo(this.focusedIndex)
       }
     }
-  }
-
-  zoomIntoApp(index = Math.round(this.state.index)) {
-    this.setFocusedAppIndex(index, true)
-    this.setZoomedOut(false)
   }
 
   setZoomedOut(next: boolean = true) {
@@ -174,21 +162,21 @@ class OrbitAppsCarouselStore {
   }
 
   right() {
-    if (this.focusedAppIndex < this.apps.length - 1) {
-      this.setFocusedAppIndex(this.focusedAppIndex + 1, true)
+    if (this.focusedIndex < this.apps.length - 1) {
+      this.setFocusedAppIndex(this.focusedIndex + 1, true)
     }
   }
 
   left() {
-    if (this.focusedAppIndex > 0) {
-      this.setFocusedAppIndex(this.focusedAppIndex - 1, true)
+    if (this.focusedIndex > 0) {
+      this.setFocusedAppIndex(this.focusedIndex - 1, true)
     }
   }
 
   animateCardsTo = (index: number) => {
     if (this.state.index !== index) {
       const paneIndex = Math.round(index)
-      if (paneIndex !== this.focusedAppIndex) {
+      if (paneIndex !== this.focusedIndex) {
         this.setFocusedAppIndex(paneIndex)
       }
       this.state.index = index
@@ -196,7 +184,7 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = (index: number) => {
-    if (Math.round(index) !== this.focusedAppIndex) {
+    if (Math.round(index) !== this.focusedIndex) {
       this.setFocusedAppIndex(index)
     }
     const x = this.props.rowWidth * index
@@ -208,22 +196,27 @@ class OrbitAppsCarouselStore {
   animateTo = (index: number) => {
     this.isControlled = true
     this.animateCardsTo(index)
-    this.finishScroll()
   }
 
   // after scroll, select focused card
-  finishScroll = debounce(() => {
+  finishScroll = () => {
     this.setFocusedAppIndex(Math.round(this.state.index))
-  }, 100)
+    this.updateScrollPositionToIndex(this.state.index)
+  }
 
-  outScaler = scaler(0, 1, 0.75, 0.85)
-  inScaler = scaler(0, 1, 0.9, 1)
+  updateScrollPositionToIndex = (index: number) => {
+    this.props.setScrollSpring({ x: index * this.props.rowWidth, config: { duration: 0 } })
+  }
+
+  outScaler = numberScaler(0, 1, 0.8, 0.9)
+  inScaler = numberScaler(0, 1, 0.9, 1)
+  boundRotation = numberBounder(-10, 10)
 
   getSpring = (i: number) => {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
     const scaler = this.state.zoomedOut ? this.outScaler : this.inScaler
     const scale = scaler(importance)
-    const ry = (this.state.index - i) * 10
+    const ry = this.boundRotation((this.state.index - i) * 10)
     return {
       x: 0,
       y: 0,
@@ -237,7 +230,7 @@ class OrbitAppsCarouselStore {
 
     this.state.isDragging = next.dragging
 
-    const dx = -next.velocity * next.direction[0] * 15
+    const dx = -next.velocity * next.direction[0] * 30
     // console.log('next', next)
 
     // avoid easy presses
@@ -272,7 +265,9 @@ export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
 
-export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+export const OrbitAppsCarousel = memo(() => {
+  const { state } = useOm()
+  const apps = state.apps.activeClientApps
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowRef = useRef<HTMLElement>(null)
@@ -309,7 +304,7 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
   const [scrollable, isDisabled] = useReaction(
     () => [
       appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
-      appsCarouselStore.state.zoomedOut === false,
+      appsCarouselStore.state.zoomedOut === true,
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
@@ -334,23 +329,24 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         justifyContent="flex-start"
         scrollable={scrollable}
         overflow={scrollable ? undefined : 'hidden'}
-        onWheel={useCallback(() => {
+        onWheel={() => {
           if (appsCarouselStore.state.zoomedOut) {
             appsCarouselStore.animateTo(rowRef.current.scrollLeft / rowSize.width)
           }
-        }, [rowRef.current, rowSize])}
+          appsCarouselStore.finishScroll()
+        }}
         scrollLeft={scrollSpring.x}
         animated
         ref={rowRef}
         perspective="600px"
         {...bind()}
       >
-        {apps.map(({ app, definition }, index) => (
+        {apps.map((app, index) => (
           <OrbitAppCard
             key={app.id}
             index={index}
             app={app}
-            definition={definition}
+            definition={getAppDefinition(app.identifier)}
             isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}
@@ -379,13 +375,11 @@ const OrbitAppCard = memo(
     const spring = springs[index]
     const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
-    const isFocused = useReaction(
-      () => index === appsCarouselStore.focusedAppIndex,
-      { delay: 40 },
-      [index],
-    )
+    const isFocused = useReaction(() => index === appsCarouselStore.focusedIndex, { delay: 40 }, [
+      index,
+    ])
     const isFocusZoomed = useReaction(
-      () => index === appsCarouselStore.focusedAppIndex && !appsCarouselStore.state.zoomedOut,
+      () => index === appsCarouselStore.focusedIndex && !appsCarouselStore.state.zoomedOut,
       {
         delay: 40,
       },
@@ -393,11 +387,25 @@ const OrbitAppCard = memo(
     )
     const cardRef = useRef(null)
 
-    // debounce + wait for idle to avoid frame loss
-    const setRenderTrue = useDebounce(async () => {
-      await whenIdle()
-      setRenderApp(true)
-    }, 500)
+    /**
+     * These next hooks handle loading the app when not animating
+     */
+    const shouldRender = useRef(false)
+    const lastIntersection = useRef(null)
+
+    useReaction(
+      () => appsCarouselStore.isAnimating,
+      isAnimating => {
+        if (isAnimating) {
+          shouldRender.current = false
+        } else {
+          if (lastIntersection.current) {
+            console.warn('setting true')
+            setRenderApp(true)
+          }
+        }
+      },
+    )
 
     useIntersectionObserver({
       ref: cardRef,
@@ -405,8 +413,19 @@ const OrbitAppCard = memo(
         threshold: 1,
       },
       onChange(x) {
-        if (x.length && x[0].isIntersecting && !renderApp) {
-          setRenderTrue()
+        const isIntersecting = x.length && x[0].isIntersecting
+        lastIntersection.current = isIntersecting
+        if (isIntersecting && !renderApp) {
+          shouldRender.current = true
+          whenIdle().then(() => {
+            setTimeout(() => {
+              if (shouldRender.current) {
+                setRenderApp(true)
+              }
+            }, 50)
+          })
+        } else {
+          shouldRender.current = false
         }
       },
     })
@@ -423,7 +442,7 @@ const OrbitAppCard = memo(
           appsCarouselStore.setFocusedAppIndex(index)
         }}
         onDoubleClick={() => {
-          appsCarouselStore.zoomIntoApp(index)
+          appsCarouselStore.scrollToIndex(index, true)
         }}
         {...(isFocused
           ? {

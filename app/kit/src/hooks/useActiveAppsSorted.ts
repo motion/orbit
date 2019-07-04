@@ -5,9 +5,11 @@ import { useMemo } from 'react'
 import { useActiveApps } from './useActiveApps'
 import { useActivePaneSort } from './useActiveSpace'
 
-export const sortApps: (apps: AppBit[], sort: number[]) => AppBit[] = memoWeak((apps, sort) => {
-  return sort.map(id => apps.find(x => x.id === id)).filter(Boolean)
-})
+export const sortApps: (apps: AppBit[], paneSort: number[]) => AppBit[] = memoWeak(
+  (apps, paneSort) => {
+    return paneSort.map(id => apps.find(x => x.id === id)).filter(Boolean)
+  },
+)
 
 export function useActiveAppsSorted() {
   const activeApps = useActiveApps()

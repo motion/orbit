@@ -3,12 +3,13 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
+import { useAppsCarousel } from './OrbitAppsCarousel'
 import { useIsOnStaticApp } from './OrbitDockShare'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
@@ -386,12 +387,19 @@ const OpenButton = memo((props: ButtonProps) => {
 
 const BackButton = memo(() => {
   const { state, actions } = useOm()
+  const appsCarousel = useAppsCarousel()
   return (
     <Button
       icon="chevron-left"
-      disabled={state.router.historyIndex <= 0}
+      disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
-      onClick={actions.router.back}
+      onClick={() => {
+        if (appsCarousel.zoomedIn) {
+          appsCarousel.setZoomedOut()
+        } else {
+          actions.router.back()
+        }
+      }}
     />
   )
 })

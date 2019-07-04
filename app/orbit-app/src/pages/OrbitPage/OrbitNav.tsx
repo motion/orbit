@@ -92,7 +92,7 @@ export const OrbitNav = memo(
             },
           )
           .filter(x => !!x),
-      [activeAppsSorted, isOnSetupApp],
+      [activeAppsSorted, isOnSetupApp, paneId],
     )
 
     const onSettings = isOnSettings(paneManagerStore.activePane)

@@ -65,7 +65,7 @@ export function ManageApps() {
           distance={10}
           onSortEnd={handleSortEnd}
           getSortableItemProps={item => {
-            if (item.app.tabDisplay === 'permanent') {
+            if (item.app.tabDisplay === 'permanent' || item.app.tabDisplay === 'permanentLast') {
               return {
                 disabled: true,
               }

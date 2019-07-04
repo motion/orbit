@@ -25,7 +25,7 @@ const handleKeyDown = async e => {
   if (keyCode === Keys.enter) {
     if (appsCarouselStore.state.zoomedOut) {
       e.stopPropagation()
-      appsCarouselStore.zoomIntoApp()
+      appsCarouselStore.zoomIntoCurrentApp()
       await sleep(16)
       queryStore.clearPrefix()
       return

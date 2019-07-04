@@ -2,7 +2,7 @@ import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
-import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
+import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -43,6 +43,10 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
     }
   }, [orbitStore, appStore, isActive, renderApp])
 
+  if (isActive) {
+    console.log('active', identifier)
+  }
+
   return (
     <Suspense
       fallback={
@@ -51,14 +55,18 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
         </div>
       }
     >
-      <View className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`} flex={1}>
+      <View
+        className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
+        flex={1}
+        pointerEvents={isDisabled ? 'none' : 'inherit'}
+      >
         <ScopedState id={`or-${identifier}-${id}`}>
           <ProvideStores stores={{ appStore }}>
             <ProvideVisibility visible={isActive}>
               <OrbitAppRender
                 id={id}
                 identifier={identifier}
-                renderApp={renderApp}
+                renderApp={selectDefined(renderApp, true)}
                 appDef={appDef}
               />
             </ProvideVisibility>

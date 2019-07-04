@@ -1,4 +1,4 @@
-import { PaneManagerStore, QueryStore, SpaceStore, ThemeStore } from '@o/kit'
+import { PaneManagerStore, QueryStore, ThemeStore } from '@o/kit'
 import { createUsableStore } from '@o/use-store'
 
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
@@ -33,9 +33,6 @@ export const paneManagerStore = createUsableStore(PaneManagerStore, {
 })
 export const usePaneManagerStore = paneManagerStore.useStore
 
-export const spaceStore = createUsableStore(SpaceStore, { paneManagerStore })
-export const useSpaceStore = spaceStore.useStore
-
 export const Stores = {
   themeStore,
   orbitStore,
@@ -43,5 +40,4 @@ export const Stores = {
   orbitWindowStore,
   newAppStore,
   paneManagerStore,
-  spaceStore,
 }

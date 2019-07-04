@@ -1,16 +1,16 @@
-import { AppWithDefinition, createUsableStore, ensure, react } from '@o/kit'
+import { AppBit, createUsableStore, ensure, getAppDefinition, react } from '@o/kit'
 import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
 
-import { om } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 import { isStaticApp } from './OrbitDockShare'
 
 class AppsDrawerStore {
   props: {
-    apps: AppWithDefinition[]
+    apps: AppBit[]
   } = {
     apps: [],
   }
@@ -33,14 +33,16 @@ class AppsDrawerStore {
   }
 
   isDrawerPage = (appId: string) => {
-    return this.props.apps.some(x => `${x.app.id}` === appId)
+    return this.props.apps.some(x => `${x.id}` === appId)
   }
 }
 
 export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
-export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+export const OrbitAppsDrawer = memo(() => {
+  const { state } = useOm()
+  const apps = state.apps.activeSettingsApps
   const paneManager = usePaneManagerStore()
   const appsDrawer = appsDrawerStore.useStore()
   const frameRef = useRef<HTMLElement>(null)
@@ -91,7 +93,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
         position="relative"
       >
         <DrawerCloseButton />
-        {apps.map(({ app, definition }) => {
+        {apps.map(app => {
           const isActive = `${app.id}` === paneManager.activePane.id
           if (isActive) {
             renderApp.current[app.id] = true
@@ -105,6 +107,7 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
                 y: frameSize.height,
                 z: 0,
               }}
+              // this fixes a really weird bug where they had wrong absolute position
               visibility="hidden"
               {...isActive && {
                 visibility: 'visible',
@@ -117,9 +120,9 @@ export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) =>
             >
               <OrbitApp
                 id={app.id}
-                identifier={definition.id}
-                appDef={definition}
-                renderApp={renderApp.current[app.id]}
+                identifier={app.identifier}
+                appDef={getAppDefinition(app.identifier)}
+                renderApp={isActive}
               />
             </FullScreen>
           )

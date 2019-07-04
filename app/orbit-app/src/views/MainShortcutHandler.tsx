@@ -65,6 +65,7 @@ export default memo(function MainShortcutHandler(props: {
       },
       ENTER: () => {
         console.log('why doesnt this run in input?')
+        // see OrbitHeaderInput instead
       },
       ESCAPE: () => {
         // close any open popovers
@@ -88,7 +89,7 @@ export default memo(function MainShortcutHandler(props: {
           return
         }
         // go to first app
-        if (appsCarouselStore.focusedAppIndex > 0) {
+        if (appsCarouselStore.focusedIndex > 0) {
           appsCarouselStore.setFocusedAppIndex(0, true)
           return
         }

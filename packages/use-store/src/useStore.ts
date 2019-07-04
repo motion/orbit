@@ -49,6 +49,9 @@ export function createUsableStore<T, Props extends InferProps<T>>(
   OGStore: { new (...args: any[]): T },
   initialProps?: Props,
 ): UsableStore<T, Props> {
+  if (!OGStore) {
+    throw new Error(`Must pass store`)
+  }
   // HMR, dont reset store
   // assumes you only use one name per store, for now, we could make it fancy
   const hmrKey = OGStore.toString()

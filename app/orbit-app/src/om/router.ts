@@ -245,8 +245,12 @@ export const effects = {
 
   setPane(appId: string, avoidScroll?: boolean) {
     paneManagerStore.setPane(appId)
+    // scroll to pane if its in carousel
     if (!avoidScroll) {
-      appsCarouselStore.scrollToPane(+appId)
+      const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)
+      if (index >= 0) {
+        appsCarouselStore.scrollToIndex(index, true)
+      }
     }
   },
 }

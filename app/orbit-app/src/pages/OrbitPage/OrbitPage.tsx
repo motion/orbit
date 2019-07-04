@@ -1,27 +1,50 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, ProvideStores, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
+import { AppDefinition, createUsableStore, ProvideStores, react, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
-import { keyBy } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { getAllAppDefinitions } from '../../apps/orbitApps'
 import { APP_ID } from '../../constants'
 import { hmrSocket } from '../../helpers/hmrSocket'
-import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useOm } from '../../om/om'
-import { Stores, useThemeStore } from '../../om/stores'
+import { queryStore, Stores, useThemeStore } from '../../om/stores'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
-import { OrbitAppsCarousel } from './OrbitAppsCarousel'
-import { OrbitAppsDrawer } from './OrbitAppsDrawer'
+import { appsCarouselStore, OrbitAppsCarousel } from './OrbitAppsCarousel'
+import { appsDrawerStore, OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitHeader } from './OrbitHeader'
+
+// handle query prefixes
+export const queryPrefixStore = createUsableStore(
+  class QueryPrefixStore {
+    setQueryPrefix = react(
+      () => [appsCarouselStore.state.zoomedOut, queryStore.hasQuery, appsDrawerStore.isOpen],
+      ([zoomedOut, hasQuery, drawerOpen]) => {
+        if (drawerOpen) {
+          queryStore.setPrefixFirstWord(false)
+          return
+        }
+        if (!zoomedOut && !hasQuery) {
+          // if youre zoomed into an app and you clear the query bar,
+          // we should stop ignoring the prefix we used previosuly
+          queryStore.setPrefixFirstWord(false)
+          return
+        }
+        if (zoomedOut) {
+          // ignore until we next clear the querybar
+          queryStore.setPrefixFirstWord()
+          return
+        }
+      },
+    )
+  },
+)
 
 export const OrbitPage = memo(() => {
   const themeStore = useThemeStore()
@@ -140,7 +163,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       </Suspense>
     )
   } else {
-    contentArea = <OrbitWorkspaceApps />
+    contentArea = (
+      <>
+        <OrbitAppsCarousel />
+        <OrbitAppsDrawer />
+      </>
+    )
   }
 
   const onOpen = useCallback(rows => {
@@ -163,34 +191,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         </OrbitContentArea>
       </InnerChrome>
     </MainShortcutHandler>
-  )
-})
-
-const OrbitWorkspaceApps = memo(() => {
-  const om = useOm()
-  const allApps = om.state.apps.activeApps
-  const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
-  const sortedIds = useStableSort(allApps.map(x => x.id))
-  const appsWithDefinitions = sortedIds
-    .map(id => allApps.find(x => x.id === id))
-    .filter(x => !!x && !!appDefsWithViews[x.identifier])
-    .map(app => ({
-      app: app,
-      definition: appDefsWithViews[app.identifier],
-    }))
-
-  const [carouselApps, drawerApps] = useMemo(
-    () => [
-      appsWithDefinitions.filter(x => x.app.tabDisplay !== 'hidden'),
-      appsWithDefinitions.filter(x => x.app.tabDisplay === 'hidden'),
-    ],
-    [sortedIds],
-  )
-  return (
-    <>
-      <OrbitAppsCarousel apps={carouselApps} />
-      <OrbitAppsDrawer apps={drawerApps} />
-    </>
   )
 })
 

@@ -18,10 +18,10 @@ export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
 }
 
 export const updatePaneManagerPanes = (apps: AppBit[]) => {
-  paneManagerStore.setPanes(getAppsPanes(apps))
+  paneManagerStore.setPanes(getPanes(apps))
 }
 
-function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
+function getPanes(apps: AppBit[]): PaneManagerPane[] {
   if (App.isEditing) {
     let pane = {
       type: App.appConf.path,
@@ -34,18 +34,14 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
         const def = getAppDefinition(x.identifier)
         return !!(def && def.app)
       })
-      .map(appToPane)
+      .map((app: AppBit) => ({
+        type: app.identifier,
+        id: `${app.id}`,
+        keyable: app.tabDisplay !== 'hidden' ? true : false,
+        subType: 'app',
+        name: app.name,
+      }))
     return appPanes
-  }
-}
-
-function appToPane(app: AppBit): PaneManagerPane {
-  return {
-    type: app.identifier,
-    id: `${app.id}`,
-    keyable: app.tabDisplay !== 'hidden' ? true : false,
-    subType: 'app',
-    name: app.name,
   }
 }
 
@@ -60,6 +56,7 @@ const tabDisplaySort = {
   permanent: 0,
   pinned: 1,
   plain: 2,
+  permanentLast: 3,
 }
 
 export function sortPanes(space: Space, apps: AppBit[]) {

@@ -50,9 +50,10 @@ export class PaneManagerStore {
     return this.activePaneSlow || this.activePaneFast
   }
 
-  // set pane functions
   setPane = (id: string) => {
-    this.paneId = id
+    if (this.panes.some(pane => pane.id === id)) {
+      this.paneId = id
+    }
   }
 
   lastActivePaneId = react(

@@ -16,6 +16,7 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
     StoreContext,
     getLoadedApps: opts.getLoadedApps,
     handleLink: path => {
+      console.log('showing', path)
       page.show(path)
     },
   })

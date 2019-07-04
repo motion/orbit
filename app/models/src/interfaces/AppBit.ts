@@ -23,11 +23,12 @@ export interface AppBit<Data = any> {
 
   /**
    * permanent = fixed to the front of the pinned tabs
+   * permanentLast = fixed to the end of the pinned tabs
    * pinned = smaller, sorts to the front
    * plain = shows as normal tab
    * hidden = not used in main navigation, system/orbit-level tabs
    */
-  tabDisplay?: 'permanent' | 'pinned' | 'plain' | 'hidden'
+  tabDisplay?: 'permanent' | 'permanentLast' | 'pinned' | 'plain' | 'hidden'
 
   colors?: string[]
 

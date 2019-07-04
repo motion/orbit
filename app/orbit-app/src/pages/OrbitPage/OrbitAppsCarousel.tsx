@@ -1,19 +1,19 @@
-import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, ensure, react, shallow, Templates, useReaction } from '@o/kit'
+import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler } from '@o/utils'
-import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
-import { om } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class OrbitAppsCarouselStore {
   props: {
-    apps: AppWithDefinition[]
+    apps: AppBit[]
     setCarouselSprings: Function
     setScrollSpring: Function
     rowWidth: number
@@ -47,7 +47,7 @@ class OrbitAppsCarouselStore {
 
   get searchableApps() {
     return this.apps.map(x => ({
-      name: `${x.app.name} ${x.definition.id}`,
+      name: `${x.name} ${x.identifier}`,
       id: x.app.id,
     }))
   }
@@ -107,7 +107,7 @@ class OrbitAppsCarouselStore {
       } else {
         // searching apps
         const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-        const curId = searchedApp ? searchedApp.id : this.apps[0].app.id
+        const curId = searchedApp ? searchedApp.id : this.apps[0].id
         const appIndex = this.apps.findIndex(x => x.app.id === curId)
         this.setFocusedAppIndex(appIndex, true)
       }
@@ -131,7 +131,7 @@ class OrbitAppsCarouselStore {
       this.focusedIndex = next
 
       // update url
-      const id = `${this.apps[next].app.id}`
+      const id = `${this.apps[next].id}`
       om.actions.router.showAppPage({
         id,
         replace: true,
@@ -252,7 +252,9 @@ export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
 
-export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+export const OrbitAppsCarousel = memo(() => {
+  const { state } = useOm()
+  const apps = state.apps.activeClientApps
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowRef = useRef<HTMLElement>(null)
@@ -314,24 +316,24 @@ export const OrbitAppsCarousel = memo(({ apps }: { apps: AppWithDefinition[] }) 
         justifyContent="flex-start"
         scrollable={scrollable}
         overflow={scrollable ? undefined : 'hidden'}
-        onWheel={useCallback(() => {
+        onWheel={() => {
           if (appsCarouselStore.state.zoomedOut) {
             appsCarouselStore.animateTo(rowRef.current.scrollLeft / rowSize.width)
           }
           appsCarouselStore.finishScroll()
-        }, [rowRef.current, rowSize])}
+        }}
         scrollLeft={scrollSpring.x}
         animated
         ref={rowRef}
         perspective="600px"
         {...bind()}
       >
-        {apps.map(({ app, definition }, index) => (
+        {apps.map((app, index) => (
           <OrbitAppCard
             key={app.id}
             index={index}
             app={app}
-            definition={definition}
+            definition={getAppDefinition(app.identifier)}
             isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}

@@ -1,16 +1,16 @@
-import { AppWithDefinition, createUsableStore, ensure, react } from '@o/kit'
+import { AppWithDefinition, createUsableStore, ensure, react, AppBit } from '@o/kit'
 import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
 
-import { om } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 import { isStaticApp } from './OrbitDockShare'
 
 class AppsDrawerStore {
   props: {
-    apps: AppWithDefinition[]
+    apps: AppBit[]
   } = {
     apps: [],
   }
@@ -33,14 +33,16 @@ class AppsDrawerStore {
   }
 
   isDrawerPage = (appId: string) => {
-    return this.props.apps.some(x => `${x.app.id}` === appId)
+    return this.props.apps.some(x => `${x.id}` === appId)
   }
 }
 
 export const appsDrawerStore = createUsableStore(AppsDrawerStore)
 window['appsDrawerStore'] = appsDrawerStore
 
-export const OrbitAppsDrawer = memo(({ apps }: { apps: AppWithDefinition[] }) => {
+export const OrbitAppsDrawer = memo(() => {
+  const { state } = useOm()
+  const apps = state.apps.activeSettingsApps
   const paneManager = usePaneManagerStore()
   const appsDrawer = appsDrawerStore.useStore()
   const frameRef = useRef<HTMLElement>(null)

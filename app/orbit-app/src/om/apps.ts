@@ -1,6 +1,6 @@
-import { appSelectAllButDataAndTimestamps, loadMany, loadOne, observeMany, save } from '@o/kit'
+import { getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
 import { AppBit, AppModel, Space } from '@o/models'
-import { Action, Derive } from 'overmind'
+import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
@@ -10,13 +10,28 @@ export type AppsState = {
   allApps: AppBit[]
   activeSpace: Space
   activeApps: Derive<AppsState, AppBit[]>
+  activeClientApps: Derive<AppsState, AppBit[]>
+  activeSettingsApps: Derive<AppsState, AppBit[]>
 }
 
 export const state: AppsState = {
   allApps: [],
   activeSpace: null,
-  activeApps: state =>
-    (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || [],
+  activeApps: state => {
+    const all =
+      (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || []
+    return sortApps(all, state.activeSpace.paneSort)
+  },
+  activeClientApps: state => {
+    return state.activeApps.filter(
+      app => !!getAppDefinition(app.identifier).app && app.tabDisplay !== 'hidden',
+    )
+  },
+  activeSettingsApps: state => {
+    return state.activeApps.filter(
+      app => !!getAppDefinition(app.identifier).app && app.tabDisplay === 'hidden',
+    )
+  },
 }
 
 const setApps: Action<AppBit[]> = (om, apps) => {
@@ -32,9 +47,10 @@ const setActiveSpace: Action<Space> = (om, space) => {
   om.effects.apps.ensureStaticAppBits(space)
 }
 
-const start: Action = async om => {
-  om.actions.apps.setApps(await loadMany(AppModel, allAppsArgs))
-  observeMany(AppModel, allAppsArgs).subscribe(apps => {
+const start: AsyncAction = async om => {
+  const appsQuery = { args: { where: { spaceId: om.state.spaces.activeSpace.id } } }
+  om.actions.apps.setApps(await loadMany(AppModel, appsQuery))
+  observeMany(AppModel, appsQuery).subscribe(apps => {
     om.actions.apps.setApps(apps)
   })
 }
@@ -43,12 +59,6 @@ export const actions = {
   start,
   setApps,
   setActiveSpace,
-}
-
-const allAppsArgs = {
-  args: {
-    select: appSelectAllButDataAndTimestamps,
-  },
 }
 
 export const effects = {

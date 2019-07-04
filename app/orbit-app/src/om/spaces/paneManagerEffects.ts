@@ -4,6 +4,7 @@ import { Space, SpaceModel } from '@o/models'
 import { App } from '@o/stores'
 import { keyBy, sortBy } from 'lodash'
 
+import { om } from '../om'
 import { paneManagerStore } from '../stores'
 
 export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
@@ -18,10 +19,12 @@ export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
 }
 
 export const updatePaneManagerPanes = (apps: AppBit[]) => {
-  paneManagerStore.setPanes(getAppsPanes(apps))
+  const paneSort = sortPanes(om.state.spaces.activeSpace, apps)
+  const sortedPanes = paneSort.map(pane => apps.find(app => app.id === pane))
+  paneManagerStore.setPanes(getPanes(sortedPanes))
 }
 
-function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
+function getPanes(apps: AppBit[]): PaneManagerPane[] {
   if (App.isEditing) {
     let pane = {
       type: App.appConf.path,
@@ -34,18 +37,14 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
         const def = getAppDefinition(x.identifier)
         return !!(def && def.app)
       })
-      .map(appToPane)
+      .map((app: AppBit) => ({
+        type: app.identifier,
+        id: `${app.id}`,
+        keyable: app.tabDisplay !== 'hidden' ? true : false,
+        subType: 'app',
+        name: app.name,
+      }))
     return appPanes
-  }
-}
-
-function appToPane(app: AppBit): PaneManagerPane {
-  return {
-    type: app.identifier,
-    id: `${app.id}`,
-    keyable: app.tabDisplay !== 'hidden' ? true : false,
-    subType: 'app',
-    name: app.name,
   }
 }
 

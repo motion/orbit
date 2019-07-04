@@ -166,7 +166,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       </Suspense>
     )
   } else {
-    contentArea = <OrbitWorkspaceApps />
+    contentArea = (
+      <>
+        <OrbitAppsCarousel />
+        <OrbitAppsDrawer />
+      </>
+    )
   }
 
   const onOpen = useCallback(rows => {
@@ -189,34 +194,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         </OrbitContentArea>
       </InnerChrome>
     </MainShortcutHandler>
-  )
-})
-
-const OrbitWorkspaceApps = memo(() => {
-  const om = useOm()
-  const allApps = om.state.apps.activeApps
-  const appDefsWithViews = keyBy(getAllAppDefinitions().filter(x => !!x.app), 'id')
-  const sortedIds = useStableSort(allApps.map(x => x.id))
-  const appsWithDefinitions = sortedIds
-    .map(id => allApps.find(x => x.id === id))
-    .filter(x => !!x && !!appDefsWithViews[x.identifier])
-    .map(app => ({
-      app: app,
-      definition: appDefsWithViews[app.identifier],
-    }))
-
-  const [carouselApps, drawerApps] = useMemo(
-    () => [
-      appsWithDefinitions.filter(x => x.app.tabDisplay !== 'hidden'),
-      appsWithDefinitions.filter(x => x.app.tabDisplay === 'hidden'),
-    ],
-    [sortedIds],
-  )
-  return (
-    <>
-      <OrbitAppsCarousel apps={carouselApps} />
-      <OrbitAppsDrawer apps={drawerApps} />
-    </>
   )
 })
 

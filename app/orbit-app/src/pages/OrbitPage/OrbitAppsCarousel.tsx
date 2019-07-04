@@ -2,7 +2,7 @@ import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefini
 import { AppBit } from '@o/models'
 import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler } from '@o/utils'
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
@@ -41,6 +41,15 @@ class OrbitAppsCarouselStore {
   isScrolling = false
   isZooming = false
 
+  rowNode: HTMLElement = null
+  rowRef = createRef<HTMLElement>()
+
+  setRowNode = (next: HTMLElement) => {
+    this.rowNode = next
+    // @ts-ignore
+    this.rowRef.current = next
+  }
+
   get isAnimating() {
     return this.isScrolling || this.isZooming
   }
@@ -67,6 +76,31 @@ class OrbitAppsCarouselStore {
   zoomIntoCurrentApp() {
     this.scrollToIndex(Math.round(this.state.index), true)
   }
+
+  get currentNode(): HTMLElement | null {
+    if (this.rowNode && this.focusedIndex > -1) {
+      const elements = Array.from(this.rowNode.children) as HTMLElement[]
+      return elements[this.focusedIndex] || null
+    }
+    return null
+  }
+
+  ensureScrollLeftOnResize = react(
+    () => this.zoomedIn,
+    (zoomedIn, { useEffect }) => {
+      ensure('zoomedIn', zoomedIn)
+      useEffect(() => {
+        const onResize = () => {
+          const x = this.currentNode.offsetLeft
+          this.props.setScrollSpring({ x, config: { duration: 0 } })
+        }
+        window.addEventListener('resize', onResize, { passive: true })
+        return () => {
+          window.removeEventListener('resize', onResize)
+        }
+      })
+    },
+  )
 
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
@@ -267,10 +301,10 @@ window['appsCarousel'] = appsCarouselStore
 
 export const OrbitAppsCarousel = memo(() => {
   const { state } = useOm()
+  const rowRef = appsCarouselStore.rowRef
   const apps = state.apps.activeClientApps
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
-  const rowRef = useRef<HTMLElement>(null)
   const rowSize = useParentNodeSize({ ref: rowRef })
 
   const [scrollSpring, setScrollSpring] = useSpring(() => ({
@@ -337,7 +371,7 @@ export const OrbitAppsCarousel = memo(() => {
         }}
         scrollLeft={scrollSpring.x}
         animated
-        ref={rowRef}
+        ref={appsCarouselStore.setRowNode}
         perspective="600px"
         {...bind()}
       >
@@ -400,7 +434,6 @@ const OrbitAppCard = memo(
           shouldRender.current = false
         } else {
           if (lastIntersection.current) {
-            console.warn('setting true')
             setRenderApp(true)
           }
         }

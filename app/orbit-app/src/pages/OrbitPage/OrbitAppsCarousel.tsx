@@ -31,6 +31,10 @@ class OrbitAppsCarouselStore {
     isDragging: false,
   })
 
+  get zoomedIn() {
+    return !this.state.zoomedOut
+  }
+
   zoomIntoNextApp = false
   nextFocusedIndex = -1
   focusedIndex = 0

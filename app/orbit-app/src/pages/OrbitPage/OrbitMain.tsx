@@ -31,7 +31,12 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   }
 
   return (
-    <FullScreen className="orbit-main" position="absolute" left={sidebarWidth} zIndex={10}>
+    <FullScreen
+      className="orbit-main"
+      position="absolute"
+      zIndex={10}
+      style={{ left: sidebarWidth }}
+    >
       <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       </Suspense>

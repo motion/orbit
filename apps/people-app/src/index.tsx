@@ -1,5 +1,5 @@
 import { App, AppViewProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
-import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
+import { Avatar, Button, Center, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubSection, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export default createApp({
@@ -94,7 +94,7 @@ function PersonMedia({ id }: { id: number }) {
 
   return (
     <Section
-      space
+      space="xl"
       padding
       scrollable="y"
       titleElement={
@@ -124,18 +124,17 @@ function PersonMedia({ id }: { id: number }) {
         />
       }
     >
-      <StrongSubTitle>Topics</StrongSubTitle>
-      <Row flexDirection="row" flexWrap="wrap" space="sm">
-        {topics.map((item, index) => (
-          <RoundButton size={1.2} key={index}>
-            {item}
-          </RoundButton>
-        ))}
-      </Row>
+      <SubSection title="Topics">
+        <Row flexDirection="row" flexWrap="wrap" space="sm">
+          {topics.map((item, index) => (
+            <RoundButton size={1.2} key={index}>
+              {item}
+            </RoundButton>
+          ))}
+        </Row>
+      </SubSection>
 
-      <Col space>
-        <StrongSubTitle>Recently</StrongSubTitle>
-
+      <SubSection title="Recently">
         {recentBits.map(bit => {
           return (
             <ListItem
@@ -151,12 +150,10 @@ function PersonMedia({ id }: { id: number }) {
             />
           )
         })}
-      </Col>
+      </SubSection>
     </Section>
   )
 }
-
-const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
 
 const Email = gloss('a', {
   display: 'inline-block',

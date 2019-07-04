@@ -86,11 +86,11 @@ export const Layout = memo((props: any) => {
         className={`theme-${theme}`}
         minHeight="100vh"
         minWidth="100vw"
-        maxHeight={maxHeight}
         overflow={isDefined(maxHeight) ? 'hidden' : 'visible'}
         transition={transition}
-        transform={{
-          x: siteStore.showSidebar ? -sidebarWidth : 'none',
+        style={{
+          maxHeight,
+          transform: `translateX(${siteStore.showSidebar ? -sidebarWidth : 'none'})`,
         }}
       >
         <ErrorBoundary name="Site Error">
@@ -126,12 +126,12 @@ const LayoutSidebar = memo(() => {
           position="fixed"
           top={0}
           right={0}
-          width={sidebarWidth}
           height="100vh"
           transition={transition}
           background={bg}
-          transform={{
-            x: siteStore.showSidebar ? 0 : sidebarWidth,
+          style={{
+            width: sidebarWidth,
+            transform: `translateX(${siteStore.showSidebar ? 0 : sidebarWidth})`,
           }}
         >
           <Button

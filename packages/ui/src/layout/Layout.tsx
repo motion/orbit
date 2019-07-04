@@ -54,8 +54,10 @@ export const Layout = memo((props: LayoutProps) => {
       overflow="hidden"
       height="100%"
       width="100%"
-      maxHeight={height === 0 ? 'auto' : height}
-      maxWidth={width === 0 ? 'auto' : width}
+      style={{
+        maxHeight: height === 0 ? 'auto' : height,
+        maxWidth: width === 0 ? 'auto' : width,
+      }}
     >
       <LayoutContext.Provider value={memoValue}>
         <FlexLayout {...props} />

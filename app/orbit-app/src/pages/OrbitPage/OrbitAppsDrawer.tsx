@@ -133,14 +133,15 @@ export const OrbitAppsDrawer = memo(() => {
 })
 
 const DrawerCloseButton = memo(() => {
+  return null
   return (
     <Button
       zIndex={1000}
       position="absolute"
       onClick={appsDrawerStore.closeDrawer}
-      top={15}
-      right={15}
-      size={1.2}
+      top={5}
+      right={5}
+      size="sm"
       alt="flat"
       circular
       icon="cross"

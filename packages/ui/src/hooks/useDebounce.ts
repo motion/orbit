@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export function useDebounce(fn: Function, amount: number) {
+export function useDebounce(fn: Function, amount: number, mountArgs: any[] = []) {
   const tm = useRef(null)
 
   useEffect(() => {
     clearTimeout(tm.current)
     return () => clearTimeout(tm.current)
-  }, [fn, amount])
+  }, [...mountArgs, amount])
 
   return useCallback(
     (...args) => {
@@ -15,7 +15,7 @@ export function useDebounce(fn: Function, amount: number) {
         return fn(...args)
       }, amount)
     },
-    [fn, amount],
+    [...mountArgs, amount],
   )
 }
 

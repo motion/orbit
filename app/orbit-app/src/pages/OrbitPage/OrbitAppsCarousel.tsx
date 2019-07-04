@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppIcon, AppWithDefinition, createUsableStore, ensure, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useDebounce, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
@@ -13,6 +13,9 @@ import { appsDrawerStore } from './OrbitAppsDrawer'
 
 const scaler = (prevMin: number, prevMax: number, newMin: number, newMax: number) => (x: number) =>
   ((newMax - newMin) * (x - prevMin)) / (prevMax - prevMin) + newMin
+
+const bounded = (min: number, max: number) => (val: number) =>
+  val < min ? min : val > max ? max : val
 
 class OrbitAppsCarouselStore {
   props: {
@@ -216,14 +219,15 @@ class OrbitAppsCarouselStore {
     this.setFocusedAppIndex(Math.round(this.state.index))
   }, 100)
 
-  outScaler = scaler(0, 1, 0.75, 0.85)
+  outScaler = scaler(0, 1, 0.8, 0.9)
   inScaler = scaler(0, 1, 0.9, 1)
+  boundRotation = bounded(-10, 10)
 
   getSpring = (i: number) => {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
     const scaler = this.state.zoomedOut ? this.outScaler : this.inScaler
     const scale = scaler(importance)
-    const ry = (this.state.index - i) * 10
+    const ry = this.boundRotation((this.state.index - i) * 10)
     return {
       x: 0,
       y: 0,
@@ -392,12 +396,14 @@ const OrbitAppCard = memo(
       [index],
     )
     const cardRef = useRef(null)
+    const shouldRender = useRef(false)
 
-    // debounce + wait for idle to avoid frame loss
-    const setRenderTrue = useDebounce(async () => {
-      await whenIdle()
-      setRenderApp(true)
-    }, 500)
+    useReaction(
+      () => appsCarouselStore.isScrolling,
+      () => {
+        shouldRender.current = false
+      },
+    )
 
     useIntersectionObserver({
       ref: cardRef,
@@ -406,7 +412,16 @@ const OrbitAppCard = memo(
       },
       onChange(x) {
         if (x.length && x[0].isIntersecting && !renderApp) {
-          setRenderTrue()
+          shouldRender.current = true
+          whenIdle().then(() => {
+            setTimeout(() => {
+              if (shouldRender.current) {
+                setRenderApp(true)
+              }
+            }, 50)
+          })
+        } else {
+          shouldRender.current = false
         }
       },
     })

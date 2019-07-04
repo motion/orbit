@@ -51,7 +51,11 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
         </div>
       }
     >
-      <View className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`} flex={1}>
+      <View
+        className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
+        flex={1}
+        pointerEvents={isDisabled ? 'none' : 'inherit'}
+      >
         <ScopedState id={`or-${identifier}-${id}`}>
           <ProvideStores stores={{ appStore }}>
             <ProvideVisibility visible={isActive}>

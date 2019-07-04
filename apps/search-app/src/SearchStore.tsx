@@ -29,7 +29,7 @@ export class SearchStore {
   }
 
   get searchedQuery() {
-    return this.searchState ? this.searchState.query : ''
+    return this.searchState ? this.searchState.query.replace('/', '') : ''
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }

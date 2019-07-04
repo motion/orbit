@@ -204,10 +204,7 @@ const OrbitContentArea = gloss(Box, {
   transform: {
     z: 0,
   },
-}).theme((_, theme) => ({
-  // TODO test transparent
-  background: theme.sidebarBackgroundTransparent || theme.sidebarBackground,
-}))
+})
 
 const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,

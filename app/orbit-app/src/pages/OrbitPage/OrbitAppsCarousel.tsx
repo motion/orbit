@@ -433,7 +433,7 @@ const OrbitAppCard = memo(
       <Card
         ref={cardRef}
         borderWidth={0}
-        background={theme.backgroundStronger}
+        background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
         overflow="hidden"
         borderRadius={isFocusZoomed ? 0 : 12}
         animated
@@ -453,7 +453,7 @@ const OrbitAppCard = memo(
           : {
               boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
             })}
-        transition="box-shadow 200ms ease"
+        transition="box-shadow 200ms ease, background 300ms ease"
         zIndex={isFocused ? 2 : 1}
         transform={to(
           Object.keys(spring).map(k => spring[k]),

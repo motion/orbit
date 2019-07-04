@@ -1,4 +1,4 @@
-import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveQuery, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -12,7 +12,6 @@ type SearchResults = {
 export class SearchStore {
   hooks = useHooks({
     stores: useStoresSimple,
-    activeQuery: useActiveQuery,
     apps: useActiveClientApps,
     app: () => useAppBit()[0],
     space: () => useActiveSpace()[0],
@@ -93,7 +92,7 @@ export class SearchStore {
   state = react(
     () => [
       this.hooks.space.id,
-      this.hooks.activeQuery,
+      this.searchedQuery,
       this.hooks.app,
       this.hooks.apps.map(x => x.id).join(' '),
     ],

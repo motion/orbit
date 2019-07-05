@@ -1,7 +1,7 @@
+import { VariableSizeList, VariableSizeListProps } from '@o/react-window'
+import * as ReactWindow from '@o/react-window'
 import { gloss } from 'gloss'
 import React, { forwardRef, memo, RefObject } from 'react'
-import { VariableSizeList, VariableSizeListProps } from 'react-window'
-import * as ReactWindow from 'react-window'
 
 import { useNodeSize } from '../hooks/useNodeSize'
 import { Omit } from '../types'

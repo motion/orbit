@@ -1,19 +1,13 @@
-import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
-import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { always, createUsableStore, ensure, react, shallow, useReaction } from '@o/kit'
+import { Card, CardProps, idFn, Row, Title, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler } from '@o/utils'
-import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { createRef, memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
-import { om, useOm } from '../../om/om'
-import { queryStore } from '../../om/stores'
-import { OrbitApp, whenIdle } from './OrbitApp'
-import { appsDrawerStore } from './OrbitAppsDrawer'
-
 class OrbitAppsCarouselStore {
   props: {
-    apps: AppBit[]
+    apps: any[]
     setCarouselSprings: Function
     setScrollSpring: Function
     rowWidth: number
@@ -136,30 +130,6 @@ class OrbitAppsCarouselStore {
     },
   )
 
-  scrollToSearchedApp = react(
-    () => queryStore.queryInstant,
-    async (query, { sleep }) => {
-      await sleep(40)
-      ensure('not on drawer', !appsDrawerStore.isOpen)
-      ensure('has apps', !!this.apps.length)
-      ensure('zoomed out', this.state.zoomedOut)
-      ensure('not zooming into next app', !this.zoomIntoNextApp)
-      if (query.indexOf(' ') > -1) {
-        // searching within app
-        const [_, firstWord] = query.split(' ')
-        if (firstWord.trim().length) {
-          this.state.zoomedOut = false
-        }
-      } else {
-        // searching apps
-        const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-        const curId = searchedApp ? searchedApp.id : this.apps[0].id
-        const appIndex = this.apps.findIndex(x => x.id === curId)
-        this.setFocusedAppIndex(appIndex, true)
-      }
-    },
-  )
-
   forceScrollToPane = react(
     () => this.focusedIndex,
     async (_, { sleep }) => {
@@ -175,14 +145,6 @@ class OrbitAppsCarouselStore {
     }
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
-
-      // update url
-      const id = `${this.apps[next].id}`
-      om.actions.router.showAppPage({
-        id,
-        replace: true,
-      })
-
       if (forceScroll) {
         this.animateAndScrollTo(this.focusedIndex)
       }
@@ -299,10 +261,14 @@ export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
 
-export const OrbitAppsCarousel = memo(() => {
-  const { state } = useOm()
+export const TestCarousel = memo(() => {
   const rowRef = appsCarouselStore.rowRef
-  const apps = state.apps.activeClientApps
+  const apps = [
+    { id: 0, title: 'ok' },
+    { id: 1, title: 'ok2' },
+    { id: 2, title: 'ok3' },
+    { id: 3, title: 'o4' },
+  ]
   const frameRef = useRef<HTMLElement>(null)
   const frameSize = useNodeSize({ ref: frameRef })
   const rowSize = useParentNodeSize({ ref: rowRef })
@@ -380,7 +346,6 @@ export const OrbitAppsCarousel = memo(() => {
             key={app.id}
             index={index}
             app={app}
-            definition={getAppDefinition(app.identifier)}
             isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}
@@ -400,14 +365,12 @@ type OrbitAppCardProps = CardProps & {
   isDisabled: boolean
   springs: any
   index: number
-  app: AppBit
-  definition: AppDefinition
+  app: any
 }
 
 const OrbitAppCard = memo(
-  ({ app, definition, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
     const spring = springs[index]
-    const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
     const isFocused = useReaction(() => index === appsCarouselStore.focusedIndex, { delay: 40 }, [
       index,
@@ -421,56 +384,10 @@ const OrbitAppCard = memo(
     )
     const cardRef = useRef(null)
 
-    /**
-     * These next hooks handle loading the app when not animating
-     */
-    const shouldRender = useRef(false)
-    const lastIntersection = useRef(null)
-
-    useReaction(
-      () => appsCarouselStore.isAnimating,
-      isAnimating => {
-        if (isAnimating) {
-          shouldRender.current = false
-        } else {
-          if (lastIntersection.current) {
-            setRenderApp(true)
-          }
-        }
-      },
-    )
-
-    useIntersectionObserver({
-      ref: cardRef,
-      options: {
-        threshold: 1,
-      },
-      onChange(x) {
-        const isIntersecting = x.length && x[0].isIntersecting
-        lastIntersection.current = isIntersecting
-        if (isIntersecting && !renderApp) {
-          shouldRender.current = true
-          whenIdle().then(() => {
-            setTimeout(() => {
-              if (shouldRender.current) {
-                setRenderApp(true)
-              }
-            }, 50)
-          })
-        } else {
-          shouldRender.current = false
-        }
-      },
-    })
-
     return (
       <Card
-        data-is="OrbitAppCard"
         ref={cardRef}
-        borderWidth={0}
         background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
-        overflow="hidden"
-        borderRadius={isFocusZoomed ? 0 : 12}
         onClick={() => {
           appsCarouselStore.setFocusedAppIndex(index, true)
         }}
@@ -496,41 +413,8 @@ const OrbitAppCard = memo(
         )}
         {...cardProps}
       >
-        <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
-        <OrbitApp
-          id={app.id}
-          isDisabled={isDisabled}
-          identifier={definition.id}
-          appDef={definition}
-          renderApp={renderApp}
-        />
+        <Title>{app.title}</Title>
       </Card>
     )
   },
 )
-
-type AppLoadingScreenProps = {
-  visible: boolean
-  app: AppBit
-  definition: AppDefinition
-}
-
-const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
-  return (
-    <Templates.Message
-      title={props.app.name}
-      subTitle={props.definition.id}
-      icon={<AppIcon identifier={props.definition.id} colors={props.app.colors} />}
-      opacity={props.visible ? 1 : 0}
-      transform={{
-        y: props.visible ? 0 : 50,
-      }}
-      transition="all ease 200ms"
-      position="absolute"
-      top={0}
-      left={0}
-      right={0}
-      bottom={0}
-    />
-  )
-})

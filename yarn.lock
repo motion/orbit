@@ -2315,6 +2315,14 @@
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
+"@o/react-window@1.9.0-alpha.3":
+  version "1.9.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.3.tgz#42d0c254ad2302afdbc7ac536312df2e34f85197"
+  integrity sha512-/I2n4Fvebw1Y4U2xmLAf+xwWCLpCvh6W61yMU5uY2aWrviW86wGeoD9qsD32JHo+fTa7QZjLCeLy4tdQuLt//Q==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
+
 "@o/swagger-to-graphql@1.4.10":
   version "1.4.10"
   resolved "https://registry.yarnpkg.com/@o/swagger-to-graphql/-/swagger-to-graphql-1.4.10.tgz#2b58c1a7e759c57b508b0f208b30bf6b7842296f"
@@ -19325,7 +19333,7 @@ react-docgen-typescript@1.12.3:
   resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-1.12.3.tgz#fe62a5ce82e93573e316366e53adfe8273121c70"
   integrity sha512-s1XswWs4ykNdWKsPyfM4qptV5dT8nnjnVi2IcjoS/vGlRNYrc0TkW0scVOrinHZ+ndKhPqA4iVNrdwhxZBzJcg==
 
-react-dom@16.8.1, react-dom@16.8.6, react-dom@^16.8.6:
+react-dom@*, react-dom@16.8.1, react-dom@16.8.6, react-dom@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.6.tgz#71d6303f631e8b0097f56165ef608f051ff6e10f"
   integrity sha512-1nL7PIq9LTL3fthPqwkvr2zY7phIPjYrT0jp4HjyEQrEROnw4dG41VVwi/wfoCneoleqrNX7iAD+pXebJZwrwA==
@@ -19727,19 +19735,12 @@ react-wait@^0.3.0:
   resolved "https://registry.yarnpkg.com/react-wait/-/react-wait-0.3.0.tgz#0cdd4d919012451a5bc3ab0a16d00c6fd9a8c10b"
   integrity sha512-kB5x/kMKWcn0uVr9gBdNz21/oGbQwEQnF3P9p6E9yLfJ9DRcKS0fagbgYMFI0YFOoyKDj+2q6Rwax0kTYJF37g==
 
-react-window@bvaughn/react-window#13d48ad93ba1f65a51ef4a580f6ca8805c07719e:
-  version "1.9.0-alpha.1"
-  resolved "https://codeload.github.com/bvaughn/react-window/tar.gz/13d48ad93ba1f65a51ef4a580f6ca8805c07719e"
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    memoize-one ">=3.1.1 <6"
-
 react-with-gesture@4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-4.0.8.tgz#ce6db9e667ef13120797e641f1a00f934aed6c36"
   integrity sha512-VIJ1K2/UT67m+OnqYIgJUdYEqVmJDPfbZBoqUMYKts6WA0EbEC7YRMBEzxgy/jvVdafg9L2GSuFtUokpskKHag==
 
-react@16.5.0, react@16.8.1, react@16.8.6, react@^16.8.6:
+react@*, react@16.5.0, react@16.8.1, react@16.8.6, react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==

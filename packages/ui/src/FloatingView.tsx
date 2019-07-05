@@ -191,7 +191,7 @@ export function FloatingView(props: FloatingViewProps) {
             zIndex,
             width: spring.width,
             height: spring.height,
-            transform: spring.xy.to((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
+            transform: spring.xy['to']((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
             position: 'fixed',
           }}
         >

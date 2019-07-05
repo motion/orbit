@@ -1,5 +1,5 @@
-import { FixedSizeList, FixedSizeListProps, VariableSizeList, VariableSizeListProps } from '@o/react-window'
 import React, { forwardRef, useEffect, useRef } from 'react'
+import { FixedSizeList, FixedSizeListProps, VariableSizeList, VariableSizeListProps } from 'react-window'
 
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
 import { SelectableProps, useSelectableStore } from './SelectableStore'

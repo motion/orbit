@@ -1,5 +1,5 @@
 import { CSSPropertySet, CSSPropertySetLoose, cssString, styleToClassName, ThemeObject, validCSSAttr } from '@o/css'
-import { createElement, forwardRef, isValidElement, memo, useEffect, useRef } from 'react'
+import { createElement, forwardRef, isValidElement, useEffect, useRef } from 'react'
 
 import { Config } from './config'
 import { useTheme } from './helpers/useTheme'

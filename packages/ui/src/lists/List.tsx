@@ -9,7 +9,7 @@ import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
-import { Section, SectionSpecificProps } from '../Section'
+import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
 import { Sizes } from '../Space'
@@ -32,6 +32,7 @@ type BitLike = {
 }
 
 export type ListProps = SectionSpecificProps &
+  Pick<SectionProps, 'padding'> &
   /** Override the onOpen/onSelect */
   Omit<VirtualListProps<BitLike | ListItemProps>, 'onOpen' | 'onSelect'> &
   Omit<Partial<UseFilterProps<any>>, 'items'> & {

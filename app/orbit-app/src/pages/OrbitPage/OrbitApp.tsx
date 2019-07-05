@@ -188,6 +188,8 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
         } catch (err) {
           if (err.message.indexOf('Invalid hook call') > -1) {
             // ignore
+            /// what should we do by default here?
+            isAppWrapped = true
           } else {
             console.error(err)
           }

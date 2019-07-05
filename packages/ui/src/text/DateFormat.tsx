@@ -40,15 +40,12 @@ export function DateFormat({
     finalOptions.year = '2-digit'
     delete finalOptions.weekday
   } else if (differenceInCalendarDays(date, Date.now()) < 7) {
-    finalOptions = {
-      weekday: 'short',
-    }
+    finalOptions.weekday = 'short'
   }
   const formatted = date
     .toLocaleDateString(locale, finalOptions)
     .replace(/,.*,/, ',')
     .replace(/\//g, '·')
-
   // TODO wait for https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544 to fix type
   return formatted as any
 }

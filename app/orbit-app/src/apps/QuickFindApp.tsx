@@ -9,7 +9,7 @@ export default createApp({
   app: QuickFindApp,
 })
 
-function QuickFindApp() {
+function QuickFindApp(props) {
   const View = SearchApp.app
-  return <View />
+  return <View {...props} />
 }

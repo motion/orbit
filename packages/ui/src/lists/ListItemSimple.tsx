@@ -241,6 +241,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
+        alt="flat"
+        borderWidth={0}
         margin={[2, 0]}
         maxWidth={120}
         alpha={subTextOpacity}

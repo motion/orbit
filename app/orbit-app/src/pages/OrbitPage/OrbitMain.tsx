@@ -17,7 +17,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const suspenseBanner = useRef<SuspenseWithBanner>()
 
   useReaction(
-    () => shareStore.clipboards['main'],
+    () => shareStore.clipboards.main,
     () => {
       suspenseBanner.current.clearError()
     },

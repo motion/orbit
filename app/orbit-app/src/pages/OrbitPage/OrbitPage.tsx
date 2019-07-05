@@ -140,12 +140,18 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   let contentArea = null
 
+  /**
+   * Done by andreyy, work to get hmr working on one-off dev apps
+   */
   useEffect(() => {
     if (App.appConf.appId === 0) {
       return
     }
     hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
-      built: forceUpdate,
+      built: () => {
+        console.log('force updating after app server hmr')
+        forceUpdate()
+      },
     })
   }, [App.appConf.appId])
 

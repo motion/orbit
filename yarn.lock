@@ -2315,14 +2315,6 @@
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
-"@o/react-window@1.9.0-alpha.2":
-  version "1.9.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@o/react-window/-/react-window-1.9.0-alpha.2.tgz#02979aa45b7b1e9efc1af72d55a92c04d79c1789"
-  integrity sha512-NwSvv8aL+eA1F9I5sQnrknPNHCNNjeA45Pe7bbq2u8MeI6BxMLXEYG7pIcRgwBpl5dqPFeFYqZPIcnRgRyoDxA==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    memoize-one ">=3.1.1 <6"
-
 "@o/swagger-to-graphql@1.4.10":
   version "1.4.10"
   resolved "https://registry.yarnpkg.com/@o/swagger-to-graphql/-/swagger-to-graphql-1.4.10.tgz#2b58c1a7e759c57b508b0f208b30bf6b7842296f"
@@ -19734,6 +19726,13 @@ react-wait@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/react-wait/-/react-wait-0.3.0.tgz#0cdd4d919012451a5bc3ab0a16d00c6fd9a8c10b"
   integrity sha512-kB5x/kMKWcn0uVr9gBdNz21/oGbQwEQnF3P9p6E9yLfJ9DRcKS0fagbgYMFI0YFOoyKDj+2q6Rwax0kTYJF37g==
+
+react-window@bvaughn/react-window#13d48ad93ba1f65a51ef4a580f6ca8805c07719e:
+  version "1.9.0-alpha.1"
+  resolved "https://codeload.github.com/bvaughn/react-window/tar.gz/13d48ad93ba1f65a51ef4a580f6ca8805c07719e"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
 
 react-with-gesture@4.0.8:
   version "4.0.8"

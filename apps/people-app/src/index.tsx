@@ -101,7 +101,7 @@ function PersonMedia({ id }: { id: number }) {
         <TitleRow
           padding="xl"
           space="xl"
-          before={<Avatar src={person.photo} />}
+          before={!!person.photo && <Avatar src={person.photo} />}
           title={person.title}
           subTitle={<Email href={`mailto:${person.email}`}>{person.email}</Email>}
           below={

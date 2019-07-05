@@ -1,8 +1,8 @@
 import { useModel } from '@o/bridge'
 import { App, AppViewProps, createApp, ItemView } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
-import { Button, Col, ItemPropsProvider, normalizeItem, Space, SpaceGroup, View } from '@o/ui'
-import { gloss, Row } from 'gloss'
+import { Button, Col, ItemPropsProvider, normalizeItem, Row, View } from '@o/ui'
+import { gloss } from 'gloss'
 import * as React from 'react'
 
 import { om } from '../om/om'
@@ -38,7 +38,7 @@ export function BitAppMain(props: AppViewProps) {
   return (
     <ItemPropsProvider value={defaultItemProps}>
       <BitTitleBar bit={bit} />
-      <Col flex={1} scrollable>
+      <Col flex={1} scrollable="y" padding>
         <ItemView item={bit} />
       </Col>
     </ItemPropsProvider>
@@ -52,33 +52,33 @@ export class BitTitleBar extends React.Component<{
     const { bit } = this.props
     const normalizedItem = normalizeItem(bit)
     return (
-      <ToolbarChrome>
+      <ToolbarChrome space padding={['xs', true]}>
+        <Button
+          alt="flat"
+          circular
+          iconSize={16}
+          onClick={() => {
+            om.actions.openItem(normalizedItem.locationLink)
+          }}
+          icon={normalizedItem.icon}
+        >
+          {normalizedItem.location}
+        </Button>
+        <Button
+          alt="flat"
+          onClick={() => {
+            om.actions.openItem(normalizedItem.desktopLink || normalizedItem.webLink)
+          }}
+          icon="share"
+          tooltip="Open"
+          iconAfter
+        >
+          Open
+        </Button>
+
         <View flex={1} />
-        <Space />
-        <SpaceGroup space="sm">
-          <Button
-            alt="flat"
-            circular
-            iconSize={16}
-            onClick={() => {
-              om.actions.openItem(normalizedItem.locationLink)
-            }}
-            icon={normalizedItem.icon}
-          >
-            {normalizedItem.location}
-          </Button>
-          <Button
-            alt="flat"
-            onClick={() => {
-              om.actions.openItem(normalizedItem.desktopLink || normalizedItem.webLink)
-            }}
-            icon="share"
-            tooltip="Open"
-            iconAfter
-          >
-            Open
-          </Button>
-        </SpaceGroup>
+
+        <Button alt="flat" size={1.4} circular icon="hand" tooltip="Drag to use in app" />
       </ToolbarChrome>
     )
   }

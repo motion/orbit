@@ -43,10 +43,6 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
     }
   }, [orbitStore, appStore, isActive, renderApp])
 
-  if (isActive) {
-    console.log('active', identifier)
-  }
-
   return (
     <Suspense
       fallback={

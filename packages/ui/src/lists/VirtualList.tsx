@@ -12,7 +12,7 @@ import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { ListItemProps } from './ListItem'
 import { HandleSelection } from './ListItemSimple'
 import { SelectableDynamicList } from './SelectableList'
-import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
+import { SelectableProps, SelectableStore } from './SelectableStore'
 import { VirtualListItem } from './VirtualListItem'
 
 export type VirtualListProps<A = any> = SelectableProps &
@@ -138,9 +138,7 @@ const createItemData = memoize(
 // this memo seems to help most of the extraneous renders
 export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const props = useProps(virtualProps)
-  const { onSortStart, onSortEnd } = props
-  const selectableStore = useSelectableStore(props)
-
+  const { onSortStart, onSortEnd, selectableStore } = props
   return (
     <SortableList
       selectableStore={selectableStore}
@@ -152,14 +150,14 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       pressDelay={selectDefined(props.pressDelay, defaultSortPressDelay)}
       onSortStart={useCallback(
         (sort, event) => {
-          selectableStore.setSorting(true)
+          selectableStore && selectableStore.setSorting(true)
           onSortStart && onSortStart(sort, event)
         },
         [onSortStart],
       )}
       onSortEnd={useCallback(
         (sort, event) => {
-          selectableStore.setSorting(false)
+          selectableStore && selectableStore.setSorting(false)
           onSortEnd && onSortEnd(sort, event)
         },
         [onSortStart],

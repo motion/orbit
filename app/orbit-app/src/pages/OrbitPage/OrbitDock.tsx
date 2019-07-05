@@ -8,7 +8,7 @@ import { OrbitDockShare, useIsOnStaticApp } from './OrbitDockShare'
 export const OrbitDock = memo(() => {
   const isOnStaticApp = useIsOnStaticApp()
   const dockRef = useRef<HTMLElement>(null)
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const size = useNodeSize({
     ref: dockRef,
     throttle: 200,
@@ -30,7 +30,7 @@ export const OrbitDock = memo(() => {
                 x: 30,
               }
             : {
-                x: size.width - 20,
+                x: size.width - 10,
               }
         }
         transition="all ease 300ms"
@@ -38,11 +38,11 @@ export const OrbitDock = memo(() => {
         group
       >
         {/* the part that floats out */}
-        <DockButton id="0" sizePadding={0} hover={false} borderLeftRadius={100} />
+        <DockButton id="0" width={10} sizePadding={0} hover={false} borderLeftRadius={100} />
         {!isOnStaticApp && <OrbitDockMenu />}
         <OrbitDockShare />
         <OrbitDockSearch />
-        <DockButton id="1" sizePadding={0} hover={false} />
+        <DockButton id="1" width={10} sizePadding={0} hover={false} />
       </Dock>
     </DockButtonPassProps>
   )

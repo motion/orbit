@@ -155,7 +155,6 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(Col, {
   // width: '100%',
   // height: '100%',
 }).theme(props => ({
-  overflow: 'hidden',
   ...(props.scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
   ...(props.scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
   ...(props.scrollable === true && { overflow: 'auto' }),

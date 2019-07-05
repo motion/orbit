@@ -46,7 +46,7 @@ export type ListItemProps = ListItemSimpleProps &
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
   const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
-  const selectableStore = useSelectableStore(props)
+  const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
 

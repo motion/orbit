@@ -256,9 +256,10 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   )
 
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
+  const altTheme = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
 
   return (
-    <Theme alt={isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null}>
+    <Theme alt={altTheme}>
       {above}
       {/* unset the theme for the separator */}
       {!!separator && (
@@ -451,11 +452,9 @@ export function useIsSelected(props: Pick<ListItemSimpleProps, 'isSelected' | 'i
       }
       return !!props.isSelected
     },
-    opts,
+    {
+      name: 'useIsSelected',
+    },
     [props.isSelected],
   )
-}
-
-const opts = {
-  name: 'useIsSelected',
 }

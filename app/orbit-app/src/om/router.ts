@@ -5,6 +5,7 @@ import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
+import { headerStore } from '../pages/OrbitPage/OrbitHeader'
 import { paneManagerStore } from './stores'
 
 export const urls = {
@@ -252,5 +253,7 @@ export const effects = {
         appsCarouselStore.scrollToIndex(index, true)
       }
     }
+    // focus input after page navigate
+    headerStore.focus()
   },
 }

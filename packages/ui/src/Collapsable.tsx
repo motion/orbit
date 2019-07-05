@@ -24,7 +24,10 @@ export type CollapsableProps = {
 
 export const splitCollapseProps = <A extends CollapsableProps>(
   all: A,
-): [CollapsableProps, Omit<A, keyof CollapsableProps>] => {
+): [
+  CollapsableProps,
+  Omit<A, 'defaultCollapsed' | 'collapsable' | 'collapsed' | 'onCollapse' | 'useCollapse'>
+] => {
   return useMemo(() => {
     const {
       defaultCollapsed,

@@ -1,7 +1,7 @@
 import { useStore } from '@o/use-store'
 import React, { useCallback } from 'react'
 
-import { SelectableProps, SelectableStore, useSelectableStore } from './lists/SelectableStore'
+import { SelectableProps, SelectableStore, useCreateSelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
 
 type SelectableGridProps<A> = SortableGridProps<A> &
@@ -11,7 +11,7 @@ type SelectableGridProps<A> = SortableGridProps<A> &
   }
 
 export function SelectableGrid(props: SelectableGridProps<any>) {
-  const store = useSelectableStore(props)
+  const store = useCreateSelectableStore(props)
   const getItem = useCallback(
     (_, index) => {
       return (

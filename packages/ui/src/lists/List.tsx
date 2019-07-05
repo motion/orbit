@@ -21,7 +21,7 @@ import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
 import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
-import { Direction, selectablePropKeys, SelectableProps, useSelectableStore } from './SelectableStore'
+import { Direction, selectablePropKeys, SelectableProps, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 // TODO round out, we can likely import models
@@ -143,7 +143,7 @@ export const List = memo((allProps: ListProps) => {
   )
 
   // wrap select with extra functionality
-  const selectableStore = useSelectableStore({
+  const selectableStore = useCreateSelectableStore({
     ...pick(props, selectablePropKeys),
     items: filtered.results,
     onSelect: onSelectInner,
@@ -239,19 +239,21 @@ export const List = memo((allProps: ListProps) => {
   )
 
   const children = (
-    <HighlightProvide value={highlightValue}>
-      {hasResults && (
-        <VirtualList
-          items={filtered.results}
-          ItemView={ListItem}
-          {...restProps}
-          getItemProps={getItemPropsInner}
-          onOpen={onOpenInner}
-          selectableStore={selectableStore}
-        />
-      )}
-      {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
-    </HighlightProvide>
+    <SelectableStoreProvider value={selectableStore}>
+      <HighlightProvide value={highlightValue}>
+        {hasResults && (
+          <VirtualList
+            items={filtered.results}
+            ItemView={ListItem}
+            {...restProps}
+            getItemProps={getItemPropsInner}
+            onOpen={onOpenInner}
+            selectableStore={selectableStore}
+          />
+        )}
+        {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+      </HighlightProvide>
+    </SelectableStoreProvider>
   )
 
   if (!hasSectionProps) {

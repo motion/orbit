@@ -1,11 +1,9 @@
 import { useModel } from '@o/bridge'
-import { App, AppViewProps, createApp, ItemView } from '@o/kit'
+import { App, AppViewProps, createApp, ItemView, openItem } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
 import { Button, Col, ItemPropsProvider, normalizeItem, Row, View } from '@o/ui'
 import { gloss } from 'gloss'
 import * as React from 'react'
-
-import { om } from '../om/om'
 
 export default createApp({
   id: 'bit',
@@ -58,7 +56,7 @@ export class BitTitleBar extends React.Component<{
           circular
           iconSize={16}
           onClick={() => {
-            om.actions.openItem(normalizedItem.locationLink)
+            openItem(normalizedItem.locationLink)
           }}
           icon={normalizedItem.icon}
         >
@@ -67,7 +65,7 @@ export class BitTitleBar extends React.Component<{
         <Button
           alt="flat"
           onClick={() => {
-            om.actions.openItem(normalizedItem.desktopLink || normalizedItem.webLink)
+            openItem(normalizedItem.desktopLink || normalizedItem.webLink)
           }}
           icon="share"
           tooltip="Open"

@@ -1,4 +1,4 @@
-import { App, AppViewProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { App, AppViewProps, Bit, createApp, LocationLink, openItem, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
 import { Avatar, Button, Center, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubSection, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -144,8 +144,7 @@ function PersonMedia({ id }: { id: number }) {
               margin={0}
               padding={[15, 20]}
               onDoubleClick={() => {
-                console.warn('!TODO fix')
-                // AppActions.open(bit)
+                openItem(bit)
               }}
             />
           )

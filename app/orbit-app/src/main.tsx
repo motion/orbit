@@ -128,7 +128,7 @@ async function startApp(forceRefresh = false) {
 
   if (window.location.search.indexOf('react.concurrent') > 0) {
     ReactDOM.unstable_createRoot(RootNode).render(
-      <React.unstable_ConcurrentMode>{elements},</React.unstable_ConcurrentMode>,
+      <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
     )
   } else {
     ReactDOM.render(elements, RootNode)

@@ -99,7 +99,7 @@ export function useTopAppStoreApps(
     }
   }, [])
 
-  const filtered = filterFn(topApps.value || [])
+  const filtered = filterFn(topApps || [])
   const withFallback = filtered.length ? filtered.map(appSearchToListItem) : [fallback]
   return withFallback.map(x => ({
     ...x,
@@ -127,19 +127,16 @@ export function AppsIndex() {
 
   return (
     <List
-      className="hello-world"
-      title="Manage Apps"
       titleScale={0.75}
-      subTitle="Use search to find new apps."
       onQueryChange={search}
       itemProps={{
         iconBefore: true,
       }}
       items={[
         {
-          title: 'Organize',
+          title: 'Installed Apps',
           icon: 'apps',
-          subTitle: 'View and organize installed apps',
+          subTitle: 'View, organize installed apps',
           subType: 'manage-apps',
         },
         {

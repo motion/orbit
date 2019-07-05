@@ -17,7 +17,9 @@ import SpacesApp from './SpacesApp'
 
 let dynamicApps: AppDefinition[] = []
 
-async function updateDefinitions() {
+updateDefinitions()
+
+function updateDefinitions() {
   const rawApps = require('../../appDefinitions.js')
   dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
   //

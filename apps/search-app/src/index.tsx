@@ -19,8 +19,10 @@ export function SearchApp(props: AppViewProps) {
   const [showFloating, setShowFloating] = useUserState('show-floating', false)
   const searchStore = useStore(SearchStore)
 
-  useSearchState(state => {
-    searchStore.setSearchState(state)
+  useSearchState({
+    onChange: state => {
+      searchStore.setSearchState(state)
+    },
   })
 
   const listElement = (

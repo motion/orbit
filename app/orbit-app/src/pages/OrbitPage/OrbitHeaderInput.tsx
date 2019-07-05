@@ -29,6 +29,8 @@ const handleKeyDown = async e => {
       await sleep(16)
       queryStore.clearPrefix()
       return
+    } else {
+      queryStore.setLastCommand('enter')
     }
   }
 }

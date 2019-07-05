@@ -101,16 +101,6 @@ export class SearchStore {
 
       await sleep(120)
 
-      // quick goto
-      if (query[0] === '/') {
-        const newQuery = query.slice(1)
-        return {
-          query: newQuery,
-          results: this.getQuickResults(newQuery, true),
-          finished: true,
-        }
-      }
-
       // RESULTS
       let results: ListItemProps[] = []
 
@@ -128,13 +118,7 @@ export class SearchStore {
       const take = 18
 
       // query builder pieces
-      const {
-        exclusiveFilters,
-        activeFilters,
-        activeQuery,
-        dateState,
-        sortBy,
-      } = this.searchState.filters
+      const { exclusiveFilters, activeFilters, dateState, sortBy } = this.searchState.filters
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
@@ -156,7 +140,7 @@ export class SearchStore {
       const loadMore = async props => {
         const args: SearchQuery = {
           spaceId,
-          query: activeQuery,
+          query,
           sortBy,
           startDate,
           endDate,
@@ -185,18 +169,26 @@ export class SearchStore {
       }
 
       // app search
-      results = this.getQuickResults(activeQuery)
+      results = this.getQuickResults(query)
       setValue({ results, query, finished: false })
 
-      await loadMore({
-        take: 10,
-      })
-      await loadMore({
-        take: 10,
-      })
-      await loadMore({
-        take: 100,
-      })
+      // split into chunks to avoid heavy work
+      // react concurrent + react window lazy loading could do this work better
+      if (
+        await loadMore({
+          take: 12,
+        })
+      ) {
+        if (
+          await loadMore({
+            take: 10,
+          })
+        ) {
+          await loadMore({
+            take: 100,
+          })
+        }
+      }
 
       // finished
       return {

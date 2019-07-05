@@ -31,6 +31,7 @@ export function SearchApp(props: AppViewProps) {
       alwaysSelected
       shareable
       selectable
+      query={searchStore.searchedQuery}
       itemProps={useMemo(
         () => ({
           iconBefore: true,

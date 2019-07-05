@@ -23,6 +23,8 @@ export {
 export { Actions } from './Actions'
 export * from '@o/use-store'
 export * from '@o/utils'
+export { isEqual } from '@o/fast-compare'
+
 export * from './AppLoadContext'
 export * from './bit/Readability'
 export { configureKit } from './configureKit'

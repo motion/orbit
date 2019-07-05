@@ -473,7 +473,7 @@ const OrbitAppCard = memo(
         borderRadius={isFocusZoomed ? 0 : 12}
         animated
         onClick={() => {
-          appsCarouselStore.setFocusedAppIndex(index)
+          appsCarouselStore.setFocusedAppIndex(index, true)
         }}
         onDoubleClick={() => {
           appsCarouselStore.scrollToIndex(index, true)

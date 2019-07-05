@@ -1,4 +1,4 @@
-import { App, AppMainView, AppViewProps, getTargetValue, TreeList, useBitSearch, useTreeList } from '@o/kit'
+import { App, AppMainView, AppViewProps, getTargetValue, isEqual, TreeList, useBitSearch, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Button, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, TitleRow, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import pluralize from 'pluralize'
@@ -82,6 +82,7 @@ function ListsAppMainFolder(props: AppViewProps) {
   const treeList = useTreeList(id)
   const selectedItem = treeList.state.items[+props.subId]
   const [children, setChildren] = useState<ListItemProps[]>([])
+
   useEffect(() => {
     if (selectedItem && selectedItem.type === 'folder') {
       Promise.all(
@@ -91,10 +92,16 @@ function ListsAppMainFolder(props: AppViewProps) {
         }),
       ).then(items => {
         console.log('loaded items', selectedItem.children, items)
-        setChildren(items)
+        setChildren(cur => {
+          if (isEqual(cur, items)) {
+            return cur
+          }
+          return items
+        })
       })
     }
   }, [selectedItem && selectedItem.id])
+
   return <List title={props.title} items={children} />
 }
 

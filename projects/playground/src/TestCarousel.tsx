@@ -1,8 +1,8 @@
 import { always, createUsableStore, ensure, react, shallow, useReaction } from '@o/kit'
 import { Card, CardProps, idFn, Row, Title, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler } from '@o/utils'
-import React, { createRef, memo, useEffect, useLayoutEffect, useRef } from 'react'
-import { to, useSpring, useSprings } from 'react-spring'
+import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { to, animated } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 class OrbitAppsCarouselStore {
@@ -208,17 +208,7 @@ class OrbitAppsCarouselStore {
   boundRotation = numberBounder(-10, 10)
 
   getSpring = (i: number) => {
-    const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
-    const scaler = this.zoomedIn ? this.inScaler : this.outScaler
-    // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
-    const scale = this.zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
-    const ry = this.boundRotation((this.state.index - i) * 10)
-    return {
-      x: 0,
-      y: 0,
-      scale: scale * (this.state.isDragging ? 0.95 : 1),
-      ry,
-    }
+    
   }
 
   onDrag = next => {
@@ -273,53 +263,50 @@ export const TestCarousel = memo(() => {
   const frameSize = useNodeSize({ ref: frameRef })
   const rowSize = useParentNodeSize({ ref: rowRef })
 
-  const [scrollSpring, setScrollSpring] = useSpring(() => ({
-    x: 0,
-    onRest: appsCarouselStore.onFinishScroll,
-    onStart: appsCarouselStore.onStartScroll,
-  }))
+  const [scrollLeft, setScrollLeft] = useState(0)
 
-  const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
-    ...appsCarouselStore.getSpring(i),
-    config: { mass: 1, tension: 300, friction: 30 },
-    onRest: appsCarouselStore.onFinishZoom,
-    onStart: appsCarouselStore.onStartZoom,
-  }))
+  // const [scrollSpring, setScrollSpring] = useSpring(() => ({
+  //   x: 0,
+  //   onRest: appsCarouselStore.onFinishScroll,
+  //   onStart: appsCarouselStore.onStartScroll,
+  // }))
+
+  // const [springs, setCarouselSprings] = useSprings(apps.length, i => ({
+  //   ...appsCarouselStore.getSpring(i),
+  //   config: { mass: 1, tension: 300, friction: 30 },
+  //   onRest: appsCarouselStore.onFinishZoom,
+  //   onStart: appsCarouselStore.onStartZoom,
+  // }))
 
   useEffect(() => {
     if (rowSize.width) {
       appsCarouselStore.setProps({
         apps,
-        setCarouselSprings,
-        setScrollSpring,
+        setScrollLeft,
         rowWidth: rowSize.width,
       })
     }
-  }, [apps, setScrollSpring, setCarouselSprings, rowSize])
+  }, [apps, rowSize])
 
   const bind = useGesture({
     onDrag: appsCarouselStore.onDrag,
   })
 
-  const [scrollable, isDisabled] = useReaction(
-    () => [
-      appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
-      appsCarouselStore.state.zoomedOut === true,
-    ],
-    async (next, { when, sleep }) => {
-      await when(() => !appsCarouselStore.isAnimating)
-      await sleep(100)
-      return next
-    },
-    {
-      defaultValue: [false, true],
-      delay: 50,
-    },
-  )
-
-  useLayoutEffect(() => {
-    rowRef.current.scrollLeft = scrollSpring.x.getValue()
-  }, [scrollable])
+  // const [scrollable, isDisabled] = useReaction(
+  //   () => [
+  //     appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
+  //     appsCarouselStore.state.zoomedOut === true,
+  //   ],
+  //   async (next, { when, sleep }) => {
+  //     await when(() => !appsCarouselStore.isAnimating)
+  //     await sleep(100)
+  //     return next
+  //   },
+  //   {
+  //     defaultValue: [false, true],
+  //     delay: 50,
+  //   },
+  // )
 
   return (
     <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
@@ -327,18 +314,22 @@ export const TestCarousel = memo(() => {
         flex={1}
         alignItems="center"
         justifyContent="flex-start"
-        scrollable={scrollable}
-        overflow={scrollable ? undefined : 'hidden'}
+        scrollable
         onWheel={() => {
-          if (appsCarouselStore.state.zoomedOut) {
-            appsCarouselStore.animateTo(rowRef.current.scrollLeft / rowSize.width)
-          }
           appsCarouselStore.finishScroll()
         }}
-        scrollLeft={scrollSpring.x}
-        animated
+        // !!!!!!!!!!!!!!!!!!!!!!!! lets make perspective set automatically by default to this when animation set
+        // perspective="600px"
+        {...animated({
+          scrollLeft,
+          isZoomed: appsCarouselStore.isZooming
+        })}
+        // which just sets...
+        // scrollLeft={scrollLeft}
+        // animated={{
+        //   scrollLeft: true,
+        // }}
         ref={appsCarouselStore.setRowNode}
-        perspective="600px"
         {...bind()}
       >
         {apps.map((app, index) => (
@@ -346,10 +337,8 @@ export const TestCarousel = memo(() => {
             key={app.id}
             index={index}
             app={app}
-            isDisabled={isDisabled}
             width={frameSize.width}
             height={frameSize.height}
-            springs={springs}
           />
         ))}
       </Row>
@@ -357,20 +346,10 @@ export const TestCarousel = memo(() => {
   )
 })
 
-/**
- * Handles visibility of the app as it moves in and out of viewport
- */
-
-type OrbitAppCardProps = CardProps & {
-  isDisabled: boolean
-  springs: any
-  index: number
-  app: any
-}
+type OrbitAppCardProps = any
 
 const OrbitAppCard = memo(
   ({ app, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
-    const spring = springs[index]
     const theme = useTheme()
     const isFocused = useReaction(() => index === appsCarouselStore.focusedIndex, { delay: 40 }, [
       index,
@@ -406,11 +385,22 @@ const OrbitAppCard = memo(
             })}
         transition="box-shadow 200ms ease, background 300ms ease"
         zIndex={isFocused ? 2 : 1}
-        animated
-        transform={to(
-          Object.keys(spring).map(k => spring[k]),
-          (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
-        )}
+        {...animated(context => {
+          const importance = context.getStageIntersection()
+          return {
+            transform: {
+              rotateY: (index - importance) * 10,
+              scale: context.isZoomed ? 1 : importance
+            }
+          }
+        })}
+        // animated={{
+        //   transform: true,
+        // }}
+        // transform={to(
+        //   Object.keys(spring).map(k => spring[k]),
+        //   (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
+        // )}
         {...cardProps}
       >
         <Title>{app.title}</Title>
@@ -418,3 +408,15 @@ const OrbitAppCard = memo(
     )
   },
 )
+
+const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
+    const scaler = this.zoomedIn ? this.inScaler : this.outScaler
+    // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
+    const scale = this.zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
+    const ry = this.boundRotation((this.state.index - i) * 10)
+    return {
+      x: 0,
+      y: 0,
+      scale: scale * (this.state.isDragging ? 0.95 : 1),
+      ry,
+    }

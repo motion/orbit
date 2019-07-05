@@ -1,57 +1,54 @@
-import { Card, Row, Title, View } from '@o/ui'
-import React, { useState } from 'react'
-
-const useAnimation: any = () => {}
-const useParentAnimation = useAnimation
+import { Button, Card, Row, Title, View } from '@o/ui'
+import React from 'react'
 
 export const TestCarousel = () => {
   const apps = [{ title: 'ok' }, { title: 'ok2' }, { title: 'ok3' }, { title: 'o4' }]
-  const animation = useAnimation({
+  const carousel = animation(() => ({
     scrollLeft: 0,
     zoomed: false,
-  })
+  }))
+  /**
+   * animation() is a helper, but desugars into props somewhat like:
+   *    scrollLeft={spring(...)}
+   *    animated
+   * it lets us control it using .set without being fully controlled
+   */
   return (
     <View width="100%" height="100%">
-      <button onClick={() => animation.set(cur => ({ zoomed: !cur.zoomed }))}>zoom</button>
-      <button onClick={() => animation.set({ scrollLeft: 100 })}>scroll to offset 100</button>
-      <Row flex={1} scrollable {...animation}>
+      <Button onClick={() => carousel.set(cur => ({ zoomed: !cur.zoomed }))}>zoom</Button>
+      <Button onClick={() => carousel.set(cur => ({ scrollLeft: 100 + cur.scrollLeft }))}>
+        scroll 100px right
+      </Button>
+      <Row flex={1} scrollable {...carousel}>
         {apps.map((app, index) => (
-          <CarouselItem key={index} index={index} app={app} />
+          <Geometry key={index} leftIndex={index}>
+            {geometry => (
+              <Card
+                onClick={() => {
+                  carousel.set({
+                    scrollLeft: geometry.frame(),
+                  })
+                }}
+                onDoubleClick={() => {
+                  carousel.set(current => ({
+                    scrollLeft: geometry.frame(),
+                    zoomed: !current.zoomed,
+                  }))
+                }}
+                transform={{
+                  rotateY: () => (index - geometry.frame()) * 10,
+                  scale: () => (carousel.zoomed ? 1 : Math.abs(geometry.frame())),
+                }}
+              >
+                <Title>{app.title}</Title>
+              </Card>
+            )}
+          </Geometry>
         ))}
       </Row>
     </View>
   )
 }
 
-const CarouselItem = ({ app, index }: any) => {
-  const [width, setWidth] = useState(0)
-  const animation = useParentAnimation()
-  return (
-    <Card
-      onResize={({ width }) => setWidth(width)}
-      onClick={() => {
-        animation.set({
-          scrollLeft: index * width,
-        })
-      }}
-      onDoubleClick={() => {
-        animation.set(current => ({
-          scrollLeft: index * width,
-          zoomed: !current.zoomed,
-        }))
-      }}
-      {...animation.useAnimation(context => {
-        // not sure here best strategy
-        const intersection = context.getChildIntersection(index, width)
-        return {
-          transform: {
-            rotateY: (index - intersection) * 10,
-            scale: context.zoomed ? 1 : Math.abs(intersection),
-          },
-        }
-      })}
-    >
-      <Title>{app.title}</Title>
-    </Card>
-  )
-}
+const Geometry: any = null
+const animation: any = () => {}

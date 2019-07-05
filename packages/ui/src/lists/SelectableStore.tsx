@@ -53,6 +53,7 @@ type Modifiers = {
 // will grab the parent store if its provided, otherwise create its own
 export function useSelectableStore(props: SelectableProps, options = { react: false }) {
   const inactive = !!props.selectableStore || !props.selectable
+  console.log('using', props)
   const newStore = useStore(inactive ? false : SelectableStore, props, options)
   return props.selectableStore || newStore
 }

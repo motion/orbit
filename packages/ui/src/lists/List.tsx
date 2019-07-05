@@ -88,7 +88,9 @@ const nullFn = () => null
 export const List = memo((allProps: ListProps) => {
   const [collapseProps, allListProps] = splitCollapseProps(allProps)
   const props = useListProps(allListProps)
+  const getProps = useGet(props)
   const {
+    // split out props for section + other areas
     flex = 1,
     titleBorder = true,
     bordered,
@@ -100,10 +102,6 @@ export const List = memo((allProps: ListProps) => {
     backgrounded,
     elevation,
     titleScale = 0.9,
-    ...listProps
-  } = props
-  const getProps = useGet(props)
-  const {
     items,
     onOpen,
     placeholder,
@@ -117,7 +115,7 @@ export const List = memo((allProps: ListProps) => {
     onSelect: _ignoreOnSelect,
     padding,
     ...restProps
-  } = listProps
+  } = props
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -147,6 +145,7 @@ export const List = memo((allProps: ListProps) => {
   // wrap select with extra functionality
   const selectableStore = useSelectableStore({
     ...pick(props, selectablePropKeys),
+    items: filtered.results,
     onSelect: onSelectInner,
   })
 

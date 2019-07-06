@@ -4,13 +4,11 @@ import React, { memo, useRef } from 'react'
 
 import { om } from '../../om/om'
 import { useOrbitStore } from '../../om/stores'
-import { OrbitDockSearch } from './OrbitDockSearch'
-import { OrbitDockShare, useIsOnStaticApp } from './OrbitDockShare'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
 
 class OrbitDockStore {
-  state: DockOpenState = 'closed'
+  state: DockOpenState = 'pinned'
   nextState: { state: DockOpenState; delay: number } | null = null
 
   get isOpen() {
@@ -72,7 +70,6 @@ window['orbitDockStore'] = orbitDockStore
 
 export const OrbitDock = memo(() => {
   const store = orbitDockStore.useStore()
-  const isOnStaticApp = useIsOnStaticApp()
   const dockRef = useRef<HTMLElement>(null)
   const size = useNodeSize({
     ref: dockRef,
@@ -101,15 +98,15 @@ export const OrbitDock = memo(() => {
         bottom="auto"
         top={80}
       >
-        <OrbitDockShare />
-        <OrbitDockSearch />
+        {/* <OrbitDockShare />
+        <OrbitDockSearch /> */}
         <DockButton
           id="query-builder"
           onClick={() => {
             om.actions.router.showAppPage({ id: 'query-builder', toggle: 'docked' })
           }}
           icon="layers"
-          tooltip="Query Builder"
+          label="Query Builder"
         />
         <DockButton
           id="apps"
@@ -117,7 +114,7 @@ export const OrbitDock = memo(() => {
             om.actions.router.showAppPage({ id: 'apps', toggle: 'docked' })
           }}
           icon="layout-grid"
-          tooltip="Manage apps"
+          label="Manage apps"
         />
         <DockButton
           id="settings"
@@ -125,7 +122,7 @@ export const OrbitDock = memo(() => {
             om.actions.router.showAppPage({ id: 'settings', toggle: 'docked' })
           }}
           icon="cog"
-          tooltip="Settings"
+          label="Settings"
         />
       </Dock>
     </DockButtonPassProps>

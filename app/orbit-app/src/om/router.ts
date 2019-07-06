@@ -111,10 +111,10 @@ const showPage: Operator<HistoryItem> = pipe(
 
 const showHomePage: Action = om => {
   const firstApp = om.state.apps.activeApps.find(
-    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier).app,
+    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
   )
   if (firstApp) {
-    om.actions.router.showPage(getItem('app', { id: firstApp.identifier }))
+    om.actions.router.showPage(getItem('app', { id: firstApp.identifier! }))
     om.state.router.appId = `${firstApp.id}`
     om.effects.router.setPane(om.state.router.appId)
   } else {
@@ -140,18 +140,27 @@ const closeDrawer: Action = () => {
 
 const isNumString = (x: number | string) => +x == x
 
-const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean }> = (om, params) => {
+const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean; toggle?: boolean }> = (
+  om,
+  params,
+) => {
   // find by identifier optionally
-  const id = isNumString(params.id)
-    ? params.id
-    : `${om.state.apps.activeApps.find(x => x.identifier === params.id).id}`
+  const app = om.state.apps.activeApps.find(x => x.identifier! === params.id!)
+  const id = isNumString(params.id || '') ? params.id : app ? `${app.id}` : ''
+
+  // toggle back to last page
+  if (params.toggle && om.state.router.appId === id) {
+    om.actions.router.back()
+    return
+  }
+
   const next = {
     ...params,
     id,
   }
   om.actions.router.showPage(getItem('app', next, params.replace))
-  om.state.router.appId = next.id
-  om.effects.router.setPane(next.id, params.replace ? true : false)
+  om.state.router.appId = id
+  om.effects.router.setPane(id, params.replace ? true : false)
 }
 
 const showSetupAppPage: Action = om => {

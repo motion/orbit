@@ -220,6 +220,7 @@ class OrbitAppsCarouselStore {
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocusedAppIndex(index)
     }
+    this.state.isDragging = false
     const x = this.props.rowWidth * index
     this.props.setScrollSpring({ x })
     this.animateCardsTo(index)
@@ -261,14 +262,13 @@ class OrbitAppsCarouselStore {
 
   onDrag = next => {
     if (!this.state.zoomedOut) return
+    const dx = -next.velocity * next.direction[0] * 30
+    // avoid easy presses
+    if (Math.abs(dx) < 0.5) return
 
     this.state.isDragging = next.dragging
 
-    const dx = -next.velocity * next.direction[0] * 30
     // console.log('next', next)
-
-    // avoid easy presses
-    if (Math.abs(dx) < 0.5) return
 
     if (this.state.isDragging) {
       const dI = dx / this.props.rowWidth
@@ -463,6 +463,8 @@ const OrbitAppCard = memo(
       },
     })
 
+    const mouseDown = useRef(-1)
+
     return (
       <Card
         data-is="OrbitAppCard"
@@ -471,11 +473,15 @@ const OrbitAppCard = memo(
         background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
         overflow="hidden"
         borderRadius={isFocusZoomed ? 0 : 12}
-        onClick={() => {
-          appsCarouselStore.setFocusedAppIndex(index, true)
+        onMouseDown={() => {
+          mouseDown.current = appsCarouselStore.focusedIndex
         }}
-        onDoubleClick={() => {
-          appsCarouselStore.scrollToIndex(index, true)
+        onMouseUp={e => {
+          if (mouseDown.current === appsCarouselStore.focusedIndex) {
+            e.stopPropagation()
+            appsCarouselStore.scrollToIndex(index, true)
+          }
+          mouseDown.current = -1
         }}
         {...(isFocused
           ? {

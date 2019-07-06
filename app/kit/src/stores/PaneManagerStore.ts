@@ -19,7 +19,7 @@ export class PaneManagerStore {
   }
 
   paneId = this.props.defaultPaneId
-  panes = [...this.props.defaultPanes]
+  panes = [...(this.props.defaultPanes || [])]
 
   syncPaneIndexProp = react(
     () => this.props.defaultPaneId,
@@ -37,7 +37,7 @@ export class PaneManagerStore {
       this.panes.find(x => x.id === this.paneId) ||
       this.panes.find(x => x.id === this.lastActivePaneId) ||
       this.panes[0] ||
-      this.props.defaultPanes[0]
+      (this.props.defaultPanes || [])[0]
     )
   }
 

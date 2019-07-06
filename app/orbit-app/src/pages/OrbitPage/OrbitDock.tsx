@@ -37,12 +37,9 @@ export const OrbitDock = memo(() => {
         className="orbit-dock"
         group
       >
-        {/* the part that floats out */}
-        <DockButton id="0" width={10} sizePadding={0} hover={false} borderLeftRadius={100} />
         {!isOnStaticApp && <OrbitDockMenu />}
         <OrbitDockShare />
         <OrbitDockSearch />
-        <DockButton id="1" width={10} sizePadding={0} hover={false} />
       </Dock>
     </DockButtonPassProps>
   )

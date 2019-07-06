@@ -1,4 +1,4 @@
-import { AppBit, createUsableStore, ensure, getAppDefinition, react } from '@o/kit'
+import { AppBit, createUsableStore, getAppDefinition } from '@o/kit'
 import { Button, Card, FullScreen, useNodeSize } from '@o/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { useSpring } from 'react-spring'
@@ -6,7 +6,6 @@ import { useSpring } from 'react-spring'
 import { om, useOm } from '../../om/om'
 import { paneManagerStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
-import { isStaticApp } from './OrbitDockShare'
 
 class AppsDrawerStore {
   props: {
@@ -15,21 +14,17 @@ class AppsDrawerStore {
     apps: [],
   }
 
-  lastAppId = react(
-    () => [paneManagerStore.activePane.id, this.isOpen],
-    ([activePaneId]) => {
-      ensure('not open', !this.isOpen)
-      ensure('not static app', !isStaticApp(paneManagerStore.activePane.type))
-      return activePaneId
-    },
-  )
-
   closeDrawer = () => {
-    om.actions.router.showAppPage({ id: this.lastAppId })
+    if (om.state.apps.lastActiveApp) {
+      om.actions.router.showAppPage({ id: `${om.state.apps.lastActiveApp.id}` })
+    }
   }
 
   get isOpen() {
-    return this.isDrawerPage(paneManagerStore.activePane.id)
+    if (paneManagerStore.activePane) {
+      return this.isDrawerPage(paneManagerStore.activePane.id)
+    }
+    return false
   }
 
   isDrawerPage = (appId: string) => {

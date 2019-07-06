@@ -12,6 +12,7 @@ export type AppsState = {
   activeApps: Derive<AppsState, AppBit[]>
   activeClientApps: Derive<AppsState, AppBit[]>
   activeSettingsApps: Derive<AppsState, AppBit[]>
+  lastActiveApp: Derive<AppsState, AppBit | undefined>
 }
 
 const isClientApp = (app: AppBit) => {
@@ -39,6 +40,18 @@ export const state: AppsState = {
   },
   activeSettingsApps: state => {
     return state.activeApps.filter(app => isClientApp(app) && app.tabDisplay === 'hidden')
+  },
+  lastActiveApp: (state, { router }) => {
+    for (let i = router.history.length - 1; i > -1; i--) {
+      const item = router.history[i]
+      if (item.name !== 'app') continue
+      const app = state.activeClientApps.find(app => `${app.id}` === item.params.id)
+      if (app) {
+        return app
+      }
+    }
+    // none yet, lets just use the first client app
+    return state.activeClientApps[0]
   },
 }
 

@@ -20,17 +20,7 @@ export const useOrbitWindowStore = orbitWindowStore.useStore
 export const newAppStore = createUsableStore(NewAppStore)
 export const useNewAppStore = newAppStore.useStore
 
-export const paneManagerStore = createUsableStore(PaneManagerStore, {
-  defaultPaneId: 'home',
-  defaultPanes: [
-    {
-      id: 'home',
-      name: 'Home',
-      type: 'home',
-      isHidden: true,
-    },
-  ],
-})
+export const paneManagerStore = createUsableStore(PaneManagerStore)
 export const usePaneManagerStore = paneManagerStore.useStore
 
 export const Stores = {

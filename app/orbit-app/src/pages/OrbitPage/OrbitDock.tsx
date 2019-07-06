@@ -106,7 +106,7 @@ export const OrbitDock = memo(() => {
         <DockButton
           id="query-builder"
           onClick={() => {
-            om.actions.router.showAppPage({ id: 'query-builder', toggle: true })
+            om.actions.router.showAppPage({ id: 'query-builder', toggle: 'docked' })
           }}
           icon="layers"
           tooltip="Query Builder"
@@ -114,7 +114,7 @@ export const OrbitDock = memo(() => {
         <DockButton
           id="apps"
           onClick={() => {
-            om.actions.router.showAppPage({ id: 'apps', toggle: true })
+            om.actions.router.showAppPage({ id: 'apps', toggle: 'docked' })
           }}
           icon="layout-grid"
           tooltip="Manage apps"
@@ -122,7 +122,7 @@ export const OrbitDock = memo(() => {
         <DockButton
           id="settings"
           onClick={() => {
-            om.actions.router.showAppPage({ id: 'settings', toggle: true })
+            om.actions.router.showAppPage({ id: 'settings', toggle: 'docked' })
           }}
           icon="cog"
           tooltip="Settings"

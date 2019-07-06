@@ -13,7 +13,7 @@ export const OrbitDockSearch = memo(() => {
         id="search"
         visible={acceptsSearch}
         onClick={() => {
-          om.actions.router.showAppPage({ id: 'quickFind', toggle: true })
+          om.actions.router.showAppPage({ id: 'quickFind', toggle: 'docked' })
         }}
         icon="search"
       />

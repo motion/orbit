@@ -57,7 +57,7 @@ export const state: AppsState = {
     return state.activeClientApps[0]
   },
   activeDockApps: state => {
-    return state.activeApps.find(x => dockAppIdentifiers.some(id => id === x.identifier))
+    return state.activeApps.filter(x => dockAppIdentifiers.some(id => id === x.identifier))
   },
 }
 

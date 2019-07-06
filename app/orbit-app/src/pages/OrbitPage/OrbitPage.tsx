@@ -1,5 +1,13 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, createUsableStore, ProvideStores, react, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
+import {
+  AppDefinition,
+  createUsableStore,
+  ProvideStores,
+  react,
+  showConfirmDialog,
+  useForceUpdate,
+  useStore,
+} from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
@@ -138,7 +146,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
-  let contentArea = null
+  let contentArea: React.ReactNode = null
 
   /**
    * Done by andreyy, work to get hmr working on one-off dev apps

@@ -276,8 +276,6 @@ class OrbitAppsCarouselStore {
     this.lastDragAt = Date.now()
     this.state.isDragging = next.dragging
 
-    // console.log('next', next)
-
     if (this.state.isDragging) {
       const dI = dx / this.props.rowWidth
       const nextI = Math.min(Math.max(0, this.state.index + dI), this.apps.length - 1)

@@ -4,13 +4,17 @@ import * as UI from '@o/ui'
 import { Form, InputField, Message, Space as UISpace } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as React from 'react'
+import { fromStyles } from 'gloss-theme'
 
 type Props = {
   space?: Space
 }
 
 class SpaceEditViewStore {
-  props: Props
+  props: Props = {
+    space: null as any,
+  }
+
   values = {
     name: '',
     colors: ['red', 'yellow'],
@@ -21,7 +25,10 @@ class SpaceEditViewStore {
     async space => {
       // if space was sent via component props then use it
       if (space) {
-        this.values = { name: space.name, colors: space.colors }
+        this.values = {
+          name: `${space.name || ''}`,
+          colors: space.colors || ['#111', '#000'],
+        }
         return space
       }
 
@@ -79,10 +86,10 @@ export default function SpaceEditView(props: Props) {
           </Form>
           <UISpace />
           <UI.Theme
-            theme={{
+            theme={fromStyles({
               color: '#fff',
               background: '#4C36C4',
-            }}
+            })}
           >
             <UI.Button type="submit">Save</UI.Button>
           </UI.Theme>

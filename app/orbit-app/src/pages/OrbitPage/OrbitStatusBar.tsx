@@ -1,10 +1,8 @@
 import { AppLoadContext } from '@o/kit'
 import { BorderTop } from '@o/ui'
-import { useReaction } from '@o/use-store'
 import { gloss, Row, RowProps } from 'gloss'
 import React, { useContext } from 'react'
-
-import { useStoresSimple } from '../../hooks/useStores'
+import { usePaneManagerStore } from '../../om/stores'
 
 const statusBarHeight = 26
 
@@ -12,8 +10,8 @@ export const statusbarPadElement = <div style={{ height: statusBarHeight }} />
 
 export function OrbitStatusBar({ children }) {
   const { id } = useContext(AppLoadContext)
-  const { paneManagerStore } = useStoresSimple()
-  const isActive = useReaction(() => paneManagerStore.activePane.id === id)
+  const paneManagerStore = usePaneManagerStore()
+  const isActive = paneManagerStore.activePane.id === `${id}`
   return (
     <StatusBarChrome isActive={isActive}>
       {children}

@@ -91,7 +91,7 @@ export const OrbitAppsDrawer = memo(() => {
         {apps.map(app => {
           const isActive = `${app.id}` === paneManager.activePane.id
           if (isActive) {
-            renderApp.current[app.id] = true
+            renderApp.current[app.id!] = true
           }
           return (
             <FullScreen
@@ -114,9 +114,9 @@ export const OrbitAppsDrawer = memo(() => {
               }}
             >
               <OrbitApp
-                id={app.id}
-                identifier={app.identifier}
-                appDef={getAppDefinition(app.identifier)}
+                id={app.id!}
+                identifier={app.identifier!}
+                appDef={getAppDefinition(app.identifier!)}
                 renderApp={isActive}
               />
             </FullScreen>

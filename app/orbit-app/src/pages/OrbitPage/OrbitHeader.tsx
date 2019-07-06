@@ -1,6 +1,19 @@
 import { AppIcon, useLocationLink, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  MenuButton,
+  Popover,
+  PopoverProps,
+  Row,
+  RowProps,
+  SizedSurfaceProps,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
 import React, { forwardRef, memo, useMemo } from 'react'
@@ -49,14 +62,12 @@ const selectTextarea = el => {
 }
 
 class HeaderStore {
-  mouseUpAt = 0
   inputRef = createRef<HTMLDivElement>()
-  iconHovered = false
 
   get highlightWords() {
     const { activeMarks } = queryStore.queryFilters
     if (!activeMarks) {
-      return null
+      return
     }
     const markPositions = activeMarks.map(x => [x[0], x[1]])
     return () => markPositions

@@ -8,6 +8,8 @@ import { themeStore } from '../om/stores'
 export class OrbitWindowStore {
   props: {
     queryStore: QueryStore
+  } = {
+    queryStore: null as any,
   }
 
   syncBackgroundToVibrancy = react(

@@ -9,6 +9,13 @@ export function ensure(message: string, condition: boolean): condition is true {
   return true
 }
 
+export function ensureExists<T>(message: string, condition: T | null | undefined): condition is T {
+  if (condition === undefined || condition === null) {
+    throw new ReactionRejectionError(message)
+  }
+  return true
+}
+
 export function ensureBlock(cb: Function) {
   try {
     cb()

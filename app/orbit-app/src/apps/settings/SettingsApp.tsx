@@ -7,7 +7,7 @@ import { SettingsAppMain } from './SettingsAppMain'
 export default createApp({
   id: 'settings',
   name: 'Settings',
-  icon: '',
+  icon: 'cog',
   app: props => (
     <App index={<SettingsAppIndex />}>
       <SettingsAppMain {...props} />

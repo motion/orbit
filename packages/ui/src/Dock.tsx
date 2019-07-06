@@ -8,7 +8,6 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Tag, TagProps } from './Tag'
-import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
@@ -26,25 +25,15 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 // Dock
 
-export type DockProps = RowProps & {
-  direction?: 'row' | 'column'
-}
+export type DockProps = RowProps
 
 export const Dock = memo(
   forwardRef((props: DockProps, ref) => {
     const dockStore = useStore(DockStore)
-    const DockView = props.direction === 'row' ? Row : Col
     return (
       <DockStoreContext.SimpleProvider value={dockStore}>
         <Flipper flipKey={dockStore.key}>
-          <DockView
-            ref={ref}
-            position="absolute"
-            bottom={20}
-            right={20}
-            zIndex={100000000}
-            {...props}
-          />
+          <Row ref={ref} position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
         </Flipper>
       </DockStoreContext.SimpleProvider>
     )

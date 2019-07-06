@@ -57,7 +57,10 @@ export const state: AppsState = {
     return state.activeClientApps[0]
   },
   activeDockApps: state => {
-    return state.activeApps.filter(x => dockAppIdentifiers.some(id => id === x.identifier))
+    const all = state.activeApps.filter(x => dockAppIdentifiers.some(id => id === x.identifier))
+    // we only want one of each, for some reason we are getting multiple, for now just filter to be sure
+    const uids = [...new Set(all.map(x => x.identifier!))]
+    return uids.map(id => all.find(x => x.identifier === id)!)
   },
 }
 

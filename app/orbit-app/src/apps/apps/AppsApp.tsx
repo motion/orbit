@@ -14,7 +14,7 @@ import { getAppListItem } from './getAppListItem'
 export default createApp({
   id: 'apps',
   name: 'Apps',
-  icon: '',
+  icon: 'grid',
   app: props => {
     return (
       <App index={<AppsIndex />}>

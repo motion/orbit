@@ -10,8 +10,7 @@ import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import { om } from './om/om'
 import { useThemeStore } from './om/stores'
-import { OrbitDock } from './pages/OrbitPage/OrbitDock'
-import { OrbitHeader } from './pages/OrbitPage/OrbitHeader'
+import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 export const OrbitRoot = hot(() => {
   const themeStore = useThemeStore()
@@ -51,9 +50,7 @@ export const OrbitRoot = hot(() => {
         <ProvideUI themes={themes} activeTheme={themeStore.themeColor}>
           <ErrorBoundary name="Root">
             <React.Suspense fallback={<Loading />}>
-              <OrbitHeader />
-              <OrbitDock />
-              {/* <OrbitPage /> */}
+              <OrbitPage />
             </React.Suspense>
           </ErrorBoundary>
         </ProvideUI>

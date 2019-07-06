@@ -1,9 +1,10 @@
-import { createUsableStore, react } from '@o/kit'
-import { Badge, Dock, DockButton, DockButtonPassProps, DockButtonProps, Menu, useNodeSize } from '@o/ui'
+import { AppBit, createUsableStore, getAppDefinition, react } from '@o/kit'
+import { Badge, Dock, DockButton, DockButtonPassProps, FloatingCard, Menu, useNodeSize, usePosition, useThrottledFn } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 
-import { om } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { useOrbitStore } from '../../om/stores'
+import { OrbitApp } from './OrbitApp'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
 
@@ -69,6 +70,8 @@ export const orbitDockStore = createUsableStore(OrbitDockStore)
 window['orbitDockStore'] = orbitDockStore
 
 export const OrbitDock = memo(() => {
+  const { state } = useOm()
+  const activeDockApps = state.apps.activeDockApps
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
   const size = useNodeSize({
@@ -79,7 +82,7 @@ export const OrbitDock = memo(() => {
   return (
     <DockButtonPassProps>
       <Dock
-        direction="column"
+        flexDirection="column"
         ref={dockRef}
         onMouseEnter={store.hoverEnter}
         onMouseLeave={store.hoverLeave}
@@ -100,14 +103,10 @@ export const OrbitDock = memo(() => {
       >
         {/* <OrbitDockShare />
         <OrbitDockSearch /> */}
-        <OrbitDockButton
-          id="query-builder"
-          onClick={() => {
-            om.actions.router.showAppPage({ id: 'query-builder', toggle: 'docked' })
-          }}
-          icon="layers"
-          label="Query Builder"
-        />
+        {activeDockApps.map(app => (
+          <OrbitDockButton key={app.id} app={app} />
+        ))}
+        {/*
         <OrbitDockButton
           id="apps"
           onClick={() => {
@@ -123,32 +122,64 @@ export const OrbitDock = memo(() => {
           }}
           icon="cog"
           label="Settings"
-        />
+        /> */}
       </Dock>
     </DockButtonPassProps>
   )
 })
 
-const OrbitDockButton = (props: DockButtonProps) => {
-  const [inactive, setInactive] = useState(false)
+const OrbitDockButton = ({ app }: { app: AppBit }) => {
+  const definition = getAppDefinition(app.identifier!)
+  console.log('apo', app, definition)
+  const buttonRef = useRef(null)
+  const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
+  const [hovered, setHoveredRaw] = useState(false)
+  const setHovered = useThrottledFn(setHoveredRaw, { amount: 200 })
+  const [hoveredMenu, setHoveredMenu] = useState(false)
+  const showMenu = hovered || hoveredMenu
+
+  const width = 350
+  const height = 400
+
   return (
-    <DockButton
-      {...props}
-      labelProps={{
-        opacity: 1,
-        transform: {
-          y: 0,
-        },
-        transition: 'all ease 300ms',
-        ...(inactive && { opacity: 0, transform: { y: -10 } }),
-      }}
-      onMouseEnter={() => {
-        setInactive(true)
-      }}
-      onMouseLeave={() => {
-        setInactive(false)
-      }}
-    />
+    <>
+      <DockButton
+        id={`${app.id}`}
+        onClick={() => {
+          om.actions.router.showAppPage({ id: app.id, toggle: 'docked' })
+        }}
+        icon={definition.icon || 'layers'}
+        label={app.name}
+        forwardRef={buttonRef}
+        labelProps={{
+          transition: 'all ease 300ms',
+          ...(hovered && {
+            opacity: 1,
+            transform: {
+              y: 0,
+            },
+          }),
+          ...(!hovered && { opacity: 0, transform: { y: -10 } }),
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      />
+      {nodePosition && nodePosition.rect && (
+        <FloatingCard
+          defaultWidth={width}
+          defaultHeight={height}
+          defaultTop={nodePosition.rect.top - height + 20}
+          defaultLeft={nodePosition.rect.left - width + 20}
+          padding={0}
+          zIndex={10000000}
+          visible={showMenu}
+          onMouseEnter={() => setHoveredMenu(true)}
+          onMouseLeave={() => setHoveredMenu(false)}
+        >
+          <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
+        </FloatingCard>
+      )}
+    </>
   )
 }
 

@@ -12,7 +12,7 @@ import { OrbitSettingsToolbar } from './views/OrbitSettingsToolbar'
 export default createApp({
   id: 'spaces',
   name: 'Spaces',
-  icon: '',
+  icon: 'layer',
   app: props => (
     <App index={<SpacesAppIndex />} toolBar={<OrbitSettingsToolbar />}>
       <SpacesAppMain {...props} />

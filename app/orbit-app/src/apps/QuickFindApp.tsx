@@ -4,7 +4,7 @@ import React from 'react'
 
 export default createApp({
   id: 'quickFind',
-  icon: 'quickFind',
+  icon: 'search',
   name: 'Search',
   app: QuickFindApp,
 })

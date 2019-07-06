@@ -1,45 +1,132 @@
+import { createUsableStore, react } from '@o/kit'
 import { Badge, Dock, DockButton, DockButtonPassProps, Menu, useNodeSize } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useRef } from 'react'
 
+import { om } from '../../om/om'
 import { useOrbitStore } from '../../om/stores'
 import { OrbitDockSearch } from './OrbitDockSearch'
 import { OrbitDockShare, useIsOnStaticApp } from './OrbitDockShare'
 
+type DockOpenState = 'open' | 'closed' | 'pinned'
+
+class OrbitDockStore {
+  state: DockOpenState = 'closed'
+  nextState: { state: DockOpenState; delay: number } | null = null
+
+  get isOpen() {
+    return this.state !== 'closed'
+  }
+
+  setState(next: DockOpenState = 'open') {
+    this.state = next
+    this.nextState = null
+  }
+
+  deferUpdate = react(
+    () => this.nextState,
+    async (nextState, { sleep }) => {
+      if (nextState) {
+        await sleep(nextState.delay)
+        this.state = nextState.state
+        this.nextState = null
+      }
+    },
+  )
+
+  close = () => {
+    this.state = 'closed'
+  }
+
+  hoverLeave = () => {
+    if (this.state !== 'pinned') {
+      this.nextState = {
+        state: 'closed',
+        delay: 500,
+      }
+    }
+  }
+
+  hoverEnter = () => {
+    if (this.state !== 'pinned') {
+      this.setState('open')
+    }
+  }
+
+  togglePinned = () => {
+    switch (this.state) {
+      case 'pinned':
+        this.setState('closed')
+        return
+      case 'closed':
+        this.setState('pinned')
+        return
+      case 'open':
+        this.setState('pinned')
+        return
+    }
+  }
+}
+
+export const orbitDockStore = createUsableStore(OrbitDockStore)
+window['orbitDockStore'] = orbitDockStore
+
 export const OrbitDock = memo(() => {
+  const store = orbitDockStore.useStore()
   const isOnStaticApp = useIsOnStaticApp()
   const dockRef = useRef<HTMLElement>(null)
-  const [open, setOpen] = useState(true)
   const size = useNodeSize({
     ref: dockRef,
     throttle: 200,
   })
 
   return (
-    <DockButtonPassProps sizePadding={2.2}>
+    <DockButtonPassProps>
       <Dock
+        direction="column"
         ref={dockRef}
-        onMouseEnter={() => {
-          setOpen(true)
-        }}
-        onMouseLeave={() => {
-          setOpen(false)
-        }}
+        onMouseEnter={store.hoverEnter}
+        onMouseLeave={store.hoverLeave}
         transform={
-          open
+          store.isOpen
             ? {
-                x: 30,
+                x: 0,
               }
             : {
-                x: size.width - 10,
+                x: size.width + 40,
               }
         }
         transition="all ease 300ms"
         className="orbit-dock"
-        group
+        space="lg"
+        bottom="auto"
+        top={80}
       >
-        {!isOnStaticApp && <OrbitDockMenu />}
         <OrbitDockShare />
         <OrbitDockSearch />
+        <DockButton
+          id="query-builder"
+          onClick={() => {
+            om.actions.router.showAppPage({ id: 'query-builder' })
+          }}
+          icon="layers"
+          tooltip="Query Builder"
+        />
+        <DockButton
+          id="apps"
+          onClick={() => {
+            om.actions.router.showAppPage({ id: 'apps' })
+          }}
+          icon="layout-grid"
+          tooltip="Manage apps"
+        />
+        <DockButton
+          id="settings"
+          onClick={() => {
+            om.actions.router.showAppPage({ id: 'settings' })
+          }}
+          icon="cog"
+          tooltip="Settings"
+        />
       </Dock>
     </DockButtonPassProps>
   )

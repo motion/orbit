@@ -8,24 +8,27 @@ import { queryStore } from './stores'
 
 export type AppsState = {
   allApps: AppBit[]
-  activeSpace: Space
+  activeSpace: Space | null
   activeApps: Derive<AppsState, AppBit[]>
+  activeDockApps: Derive<AppsState, AppBit[]>
   activeClientApps: Derive<AppsState, AppBit[]>
   activeSettingsApps: Derive<AppsState, AppBit[]>
   lastActiveApp: Derive<AppsState, AppBit | undefined>
 }
 
 const isClientApp = (app: AppBit) => {
-  const def = getAppDefinition(app.identifier)
+  const def = getAppDefinition(app.identifier!)
   return def && !!def.app
 }
+
+const dockAppIdentifiers = ['quickFind', 'query-builder', 'apps', 'spaces', 'settings']
 
 export const state: AppsState = {
   allApps: [],
   activeSpace: null,
   activeApps: state => {
     return (
-      (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace.id)) || []
+      (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace!.id)) || []
     )
   },
   activeClientApps: state => {
@@ -34,7 +37,7 @@ export const state: AppsState = {
     )
     // only client apps are sorted
     if (state.activeSpace) {
-      return sortApps(clientApps, state.activeSpace.paneSort)
+      return sortApps(clientApps, state.activeSpace!.paneSort || [])
     }
     return clientApps
   },
@@ -44,7 +47,7 @@ export const state: AppsState = {
   lastActiveApp: (state, { router }) => {
     for (let i = router.history.length - 1; i > -1; i--) {
       const item = router.history[i]
-      if (item.name !== 'app') continue
+      if (item.name !== 'app' || !item.params) continue
       const app = state.activeClientApps.find(app => `${app.id}` === item.params.id)
       if (app) {
         return app
@@ -52,6 +55,9 @@ export const state: AppsState = {
     }
     // none yet, lets just use the first client app
     return state.activeClientApps[0]
+  },
+  activeDockApps: state => {
+    return state.activeApps.find(x => dockAppIdentifiers.some(id => id === x.identifier))
   },
 }
 

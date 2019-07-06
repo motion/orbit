@@ -1,18 +1,7 @@
 import { useModels } from '@o/bridge'
 import { App, AppViewProps, createApp, OrbitOrb, useActiveUser, useModel } from '@o/kit'
 import { Space, SpaceModel } from '@o/models'
-import {
-  Button,
-  CenteredText,
-  Col,
-  InputField,
-  List,
-  Paragraph,
-  Row,
-  Section,
-  SimpleFormField,
-  SubSection,
-} from '@o/ui'
+import { Button, CenteredText, Col, InputField, List, Paragraph, Row, Section, SimpleFormField, SubSection } from '@o/ui'
 import randomColor from 'randomcolor'
 import React from 'react'
 import { useState } from 'react'
@@ -35,7 +24,7 @@ function SpacesAppMain(props: AppViewProps) {
   if (props.subType === 'new-space') {
     return <SpacesAppNewSpace />
   }
-  return <SpacesAppEdit id={+props.id} />
+  return <SpacesAppEdit id={+(props.id || 0)} />
 }
 
 function SpacesAppNewSpace() {
@@ -44,7 +33,7 @@ function SpacesAppNewSpace() {
     colors: ['red', 'orange'],
   })
   return (
-    <Section title="Create new space" pad>
+    <Section title="Create new space" padding>
       <SpaceEdit space={newSpace} />
     </Section>
   )

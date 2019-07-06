@@ -5,6 +5,7 @@ import { Flipped, Flipper } from 'react-flip-toolkit'
 
 import { Button, ButtonProps } from './buttons/Button'
 import { createContextualProps } from './helpers/createContextualProps'
+import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 
 class DockStore {
@@ -21,16 +22,25 @@ export const DockStoreContext = createStoreContext(DockStore)
 
 // Dock
 
-export type DockProps = RowProps
+export type DockProps = RowProps & {
+  direction?: 'row' | 'column'
+}
 
 export const Dock = memo(
   forwardRef((props: DockProps, ref) => {
     const dockStore = useStore(DockStore)
-
+    const DockView = props.direction === 'row' ? Row : Col
     return (
       <DockStoreContext.SimpleProvider value={dockStore}>
         <Flipper flipKey={dockStore.key}>
-          <Row ref={ref} position="absolute" bottom={20} right={20} zIndex={100000000} {...props} />
+          <DockView
+            ref={ref}
+            position="absolute"
+            bottom={20}
+            right={20}
+            zIndex={100000000}
+            {...props}
+          />
         </Flipper>
       </DockStoreContext.SimpleProvider>
     )

@@ -1,7 +1,7 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { gloss, Theme, useTheme } from 'gloss'
-import React, { forwardRef, memo, useLayoutEffect } from 'react'
+import React, { forwardRef, memo, useLayoutEffect, useState } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
 import { Arrow } from './Arrow'
@@ -55,6 +55,7 @@ export const Dock = memo(
 
 export type DockButtonProps = ButtonProps & {
   label?: string
+  labelProps?: Partial<TagLabelProps>
   visible?: boolean
   id: string
 }
@@ -63,22 +64,25 @@ const DockButtonPropsContext = createContextualProps<DockButtonProps>()
 export const DockButtonPassProps = DockButtonPropsContext.PassProps
 
 export function DockButton(props: DockButtonProps) {
-  const { visible = true, id, ...buttonProps } = DockButtonPropsContext.useProps(props)
+  const { visible = true, id, label, labelProps, ...buttonProps } = DockButtonPropsContext.useProps(
+    props,
+  )
   const dockStore = DockStoreContext.useStore()
   const show = selectDefined(dockStore.items[id], visible)
+  const theme = useTheme()
 
   useLayoutEffect(() => {
     dockStore.next[id] = visible
     dockStore.rerender()
   }, [visible])
 
-  const theme = useTheme()
-
   return (
     <Flipped flipId={id}>
       <View flexDirection="row" position="relative" alignItems="center" justifyContent="flex-end">
         <Theme name={theme.background.isDark() ? 'light' : 'dark'}>
-          <TagLabel>{props.label}</TagLabel>
+          <TagLabel pointerEvents="none" {...labelProps}>
+            {props.label}
+          </TagLabel>
         </Theme>
         <Button
           size="xl"
@@ -116,10 +120,15 @@ const TagLabel = ({
   right,
   display,
   background,
+  opacity,
+  transform,
+  transition,
   ...props
 }: TagLabelProps) => {
   return (
-    <TagLabelChrome {...{ position, top, left, bottom, right, display }}>
+    <TagLabelChrome
+      {...{ position, top, left, bottom, right, display, opacity, transform, transition }}
+    >
       <Arrow
         position="absolute"
         top={`calc(50% - ${arrowSize / 2}px)`}

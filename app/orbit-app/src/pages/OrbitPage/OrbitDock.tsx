@@ -1,6 +1,6 @@
 import { createUsableStore, react } from '@o/kit'
-import { Badge, Dock, DockButton, DockButtonPassProps, Menu, useNodeSize } from '@o/ui'
-import React, { memo, useRef } from 'react'
+import { Badge, Dock, DockButton, DockButtonPassProps, DockButtonProps, Menu, useNodeSize } from '@o/ui'
+import React, { memo, useRef, useState } from 'react'
 
 import { om } from '../../om/om'
 import { useOrbitStore } from '../../om/stores'
@@ -100,7 +100,7 @@ export const OrbitDock = memo(() => {
       >
         {/* <OrbitDockShare />
         <OrbitDockSearch /> */}
-        <DockButton
+        <OrbitDockButton
           id="query-builder"
           onClick={() => {
             om.actions.router.showAppPage({ id: 'query-builder', toggle: 'docked' })
@@ -108,7 +108,7 @@ export const OrbitDock = memo(() => {
           icon="layers"
           label="Query Builder"
         />
-        <DockButton
+        <OrbitDockButton
           id="apps"
           onClick={() => {
             om.actions.router.showAppPage({ id: 'apps', toggle: 'docked' })
@@ -116,7 +116,7 @@ export const OrbitDock = memo(() => {
           icon="layout-grid"
           label="Manage apps"
         />
-        <DockButton
+        <OrbitDockButton
           id="settings"
           onClick={() => {
             om.actions.router.showAppPage({ id: 'settings', toggle: 'docked' })
@@ -128,6 +128,29 @@ export const OrbitDock = memo(() => {
     </DockButtonPassProps>
   )
 })
+
+const OrbitDockButton = (props: DockButtonProps) => {
+  const [inactive, setInactive] = useState(false)
+  return (
+    <DockButton
+      {...props}
+      labelProps={{
+        opacity: 1,
+        transform: {
+          y: 0,
+        },
+        transition: 'all ease 300ms',
+        ...(inactive && { opacity: 0, transform: { y: -10 } }),
+      }}
+      onMouseEnter={() => {
+        setInactive(true)
+      }}
+      onMouseLeave={() => {
+        setInactive(false)
+      }}
+    />
+  )
+}
 
 const useActiveAppMenuItems = () => {
   const orbitStore = useOrbitStore()

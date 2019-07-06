@@ -90,7 +90,7 @@ export default memo(function MainShortcutHandler(props: {
         }
         // go to first app
         if (appsCarouselStore.focusedIndex > 0) {
-          appsCarouselStore.setFocusedAppIndex(0, true)
+          appsCarouselStore.setFocused(0, true)
           return
         }
         // clear orbit query

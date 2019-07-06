@@ -129,6 +129,23 @@ class OrbitAppsCarouselStore {
     this.zoomIntoNextApp = true
   }
 
+  ensureScrollToPane = react(
+    () => this.isAnimating,
+    isScrolling => {
+      ensure('finished scrolling', !isScrolling)
+      ensure('zoomed out', !this.zoomedIn)
+      this.finishScroll()
+    },
+  )
+
+  // forceScrollToPane = react(
+  //   () => this.focusedIndex,
+  //   async (_, { sleep }) => {
+  //     await sleep(800)
+  //     this.animateAndScrollTo(Math.round(this.state.index))
+  //   },
+  // )
+
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
     () => {
@@ -155,37 +172,27 @@ class OrbitAppsCarouselStore {
         const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
         const curId = searchedApp ? searchedApp.id : this.apps[0].id
         const appIndex = this.apps.findIndex(x => x.id === curId)
-        this.setFocusedAppIndex(appIndex, true)
+        this.setFocused(appIndex, true)
       }
     },
   )
 
-  forceScrollToPane = react(
-    () => this.focusedIndex,
-    async (_, { sleep }) => {
-      await sleep(1000)
-      this.animateAndScrollTo(Math.round(this.state.index))
-    },
-  )
-
-  setFocusedAppIndex(next: number, forceScroll = false) {
+  setFocused(next: number, forceScroll = false) {
     if (!this.apps[next]) {
       console.warn('no app at index', next)
       return
     }
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
-
       // update url
       const id = `${this.apps[next].id}`
       om.actions.router.showAppPage({
         id,
         replace: true,
       })
-
-      if (forceScroll) {
-        this.animateAndScrollTo(this.focusedIndex)
-      }
+    }
+    if (forceScroll) {
+      this.animateAndScrollTo(this.focusedIndex)
     }
   }
 
@@ -196,13 +203,13 @@ class OrbitAppsCarouselStore {
 
   right() {
     if (this.focusedIndex < this.apps.length - 1) {
-      this.setFocusedAppIndex(this.focusedIndex + 1, true)
+      this.setFocused(this.focusedIndex + 1, true)
     }
   }
 
   left() {
     if (this.focusedIndex > 0) {
-      this.setFocusedAppIndex(this.focusedIndex - 1, true)
+      this.setFocused(this.focusedIndex - 1, true)
     }
   }
 
@@ -210,7 +217,7 @@ class OrbitAppsCarouselStore {
     if (this.state.index !== index) {
       const paneIndex = Math.round(index)
       if (paneIndex !== this.focusedIndex) {
-        this.setFocusedAppIndex(paneIndex)
+        this.setFocused(paneIndex)
       }
       this.state.index = index
     }
@@ -218,9 +225,8 @@ class OrbitAppsCarouselStore {
 
   animateAndScrollTo = (index: number) => {
     if (Math.round(index) !== this.focusedIndex) {
-      this.setFocusedAppIndex(index)
+      this.setFocused(index)
     }
-    this.state.isDragging = false
     const x = this.props.rowWidth * index
     this.props.setScrollSpring({ x })
     this.animateCardsTo(index)
@@ -234,8 +240,8 @@ class OrbitAppsCarouselStore {
 
   // after scroll, select focused card
   finishScroll = () => {
-    this.setFocusedAppIndex(Math.round(this.state.index))
-    this.updateScrollPositionToIndex(this.state.index)
+    const next = Math.round(this.state.index)
+    this.setFocused(next, true)
   }
 
   updateScrollPositionToIndex = (index: number) => {
@@ -260,12 +266,14 @@ class OrbitAppsCarouselStore {
     }
   }
 
+  lastDragAt = Date.now()
   onDrag = next => {
     if (!this.state.zoomedOut) return
     const dx = -next.velocity * next.direction[0] * 30
     // avoid easy presses
     if (Math.abs(dx) < 0.5) return
 
+    this.lastDragAt = Date.now()
     this.state.isDragging = next.dragging
 
     // console.log('next', next)
@@ -274,9 +282,6 @@ class OrbitAppsCarouselStore {
       const dI = dx / this.props.rowWidth
       const nextI = Math.min(Math.max(0, this.state.index + dI), this.apps.length - 1)
       this.animateAndScrollTo(nextI)
-    } else {
-      const paneIndex = Math.round(this.state.index)
-      this.animateAndScrollTo(paneIndex)
     }
   }
 
@@ -474,10 +479,10 @@ const OrbitAppCard = memo(
         overflow="hidden"
         borderRadius={isFocusZoomed ? 0 : 12}
         onMouseDown={() => {
-          mouseDown.current = appsCarouselStore.focusedIndex
+          mouseDown.current = Date.now()
         }}
         onMouseUp={e => {
-          if (mouseDown.current === appsCarouselStore.focusedIndex) {
+          if (mouseDown.current > appsCarouselStore.lastDragAt) {
             e.stopPropagation()
             appsCarouselStore.scrollToIndex(index, true)
           }

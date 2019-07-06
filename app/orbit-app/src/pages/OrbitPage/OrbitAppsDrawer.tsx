@@ -15,9 +15,7 @@ class AppsDrawerStore {
   }
 
   closeDrawer = () => {
-    if (om.state.apps.lastActiveApp) {
-      om.actions.router.showAppPage({ id: `${om.state.apps.lastActiveApp.id}` })
-    }
+    om.actions.router.closeDrawer()
   }
 
   get isOpen() {

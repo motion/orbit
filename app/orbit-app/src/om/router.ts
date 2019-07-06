@@ -4,7 +4,6 @@ import page from 'page'
 import queryString from 'query-string'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
-import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
 import { headerStore } from '../pages/OrbitPage/OrbitHeader'
 import { paneManagerStore } from './stores'
 
@@ -32,6 +31,7 @@ export type RouterState = {
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
   isOnQuickFind: Derive<RouterState, boolean>
+  isOnDockedApp: Derive<RouterState, boolean>
   lastPage: Derive<RouterState, HistoryItem | undefined>
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
@@ -69,6 +69,8 @@ export const state: RouterState = {
   ignoreNextPush: false,
   isOnSetupApp: state => state.pageName === 'app' && state.appId === 'setupApp',
   isOnQuickFind: state => state.pageName === 'app' && state.appId === 'quickFind',
+  isOnDockedApp: (state, globalState) =>
+    globalState.apps.activeDockApps.some(x => `${x.id}` === state.appId),
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
@@ -134,23 +136,25 @@ const toggleQuickFind: Action = om => {
   }
 }
 
-const closeDrawer: Action = () => {
-  appsDrawerStore.closeDrawer()
-}
-
 const isNumString = (x: number | string) => +x == x
 
-const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean; toggle?: boolean }> = (
-  om,
-  params,
-) => {
+const showAppPage: Action<{
+  id?: string
+  subId?: string
+  replace?: boolean
+  toggle?: boolean | 'docked'
+}> = (om, params) => {
   // find by identifier optionally
   const app = om.state.apps.activeApps.find(x => x.identifier! === params.id!)
-  const id = isNumString(params.id || '') ? params.id : app ? `${app.id}` : ''
+  const id = isNumString(params.id || '') ? params.id! : app ? `${app.id}` : ''
 
   // toggle back to last page
   if (params.toggle && om.state.router.appId === id) {
-    om.actions.router.back()
+    if (params.toggle === 'docked' && om.state.router.isOnDockedApp) {
+      om.actions.router.closeDrawer()
+    } else {
+      om.actions.router.back()
+    }
     return
   }
 
@@ -161,6 +165,12 @@ const showAppPage: Action<{ id?: string; subId?: string; replace?: boolean; togg
   om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = id
   om.effects.router.setPane(id, params.replace ? true : false)
+}
+
+const closeDrawer: Action = om => {
+  if (om.state.apps.lastActiveApp) {
+    om.actions.router.showAppPage({ id: `${om.state.apps.lastActiveApp.id}` })
+  }
 }
 
 const showSetupAppPage: Action = om => {

@@ -65,6 +65,8 @@ export function FloatingView(props: FloatingViewProps) {
     usePosition = useWindowAttachments[attach](...edgePadding)
   }
 
+  // todo dont let it go outside window!
+
   const controlledSize = typeof props.height !== 'undefined'
   const controlledPosition = typeof props.top !== 'undefined'
   const isVisible = useVisibility()

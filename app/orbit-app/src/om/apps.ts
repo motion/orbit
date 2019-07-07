@@ -48,7 +48,7 @@ export const state: AppsState = {
     for (let i = router.history.length - 1; i > -1; i--) {
       const item = router.history[i]
       if (item.name !== 'app' || !item.params) continue
-      const app = state.activeClientApps.find(app => `${app.id}` === item.params.id)
+      const app = state.activeClientApps.find(app => `${app.id}` === item.params!.id)
       if (app) {
         return app
       }
@@ -57,7 +57,11 @@ export const state: AppsState = {
     return state.activeClientApps[0]
   },
   activeDockApps: state => {
-    const all = state.activeApps.filter(x => dockAppIdentifiers.some(id => id === x.identifier))
+    const all = dockAppIdentifiers
+      .map(x => state.activeApps.find(app => app.identifier! === x))
+      // wtf typescript
+      .filter<AppBit>((x): x is AppBit => x !== undefined)
+
     // we only want one of each, for some reason we are getting multiple, for now just filter to be sure
     const uids = [...new Set(all.map(x => x.identifier!))]
     return uids.map(id => all.find(x => x.identifier === id)!)

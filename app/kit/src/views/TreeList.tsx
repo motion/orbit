@@ -6,7 +6,7 @@ import { pick } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
-import { useUserState, ScopedState } from '../hooks/useUserState'
+import { ScopedState, useUserState } from '../hooks/useUserState'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 

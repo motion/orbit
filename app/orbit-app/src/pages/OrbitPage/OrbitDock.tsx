@@ -1,9 +1,8 @@
 import { AppBit, createUsableStore, getAppDefinition, react } from '@o/kit'
-import { Badge, Dock, DockButton, DockButtonPassProps, FloatingCard, Menu, useNodeSize, usePosition, useThrottledFn } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import { Dock, DockButton, DockButtonPassProps, FloatingCard, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import React, { memo, useEffect, useRef, useState } from 'react'
 
 import { om, useOm } from '../../om/om'
-import { useOrbitStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
@@ -11,6 +10,11 @@ type DockOpenState = 'open' | 'closed' | 'pinned'
 class OrbitDockStore {
   state: DockOpenState = 'pinned'
   nextState: { state: DockOpenState; delay: number } | null = null
+  hoveredIndex = -1
+  nextHoveredIndex = {
+    index: 0,
+    at: Date.now(),
+  }
 
   get isOpen() {
     return this.state !== 'closed'
@@ -21,7 +25,7 @@ class OrbitDockStore {
     this.nextState = null
   }
 
-  deferUpdate = react(
+  deferUpdateState = react(
     () => this.nextState,
     async (nextState, { sleep }) => {
       if (nextState) {
@@ -50,6 +54,33 @@ class OrbitDockStore {
       this.setState('open')
     }
   }
+
+  hoverEnterButton = (index: number) => {
+    this.nextHoveredIndex = { index, at: Date.now() }
+  }
+
+  hoverLeaveButton = () => {
+    this.nextHoveredIndex = { index: -1, at: Date.now() }
+  }
+
+  deferUpdateHoveringButton = react(
+    () => this.nextHoveredIndex,
+    async (next, { sleep }) => {
+      if (this.hoveredIndex === -1 || next.index === -1) {
+        await sleep(next.index > -1 ? 200 : 500)
+      }
+      this.hoveredIndex = next.index
+      await sleep(100)
+      if (next) {
+        this.hoverEnter()
+      } else {
+        this.hoverLeave()
+      }
+    },
+    {
+      lazy: true,
+    },
+  )
 
   togglePinned = () => {
     switch (this.state) {
@@ -103,112 +134,103 @@ export const OrbitDock = memo(() => {
       >
         {/* <OrbitDockShare />
         <OrbitDockSearch /> */}
-        {activeDockApps.map(app => (
-          <OrbitDockButton key={app.id} app={app} />
+        {activeDockApps.map((app, index) => (
+          <OrbitDockButton key={app.id} app={app} index={index} />
         ))}
-        {/*
-        <OrbitDockButton
-          id="apps"
-          onClick={() => {
-            om.actions.router.showAppPage({ id: 'apps', toggle: 'docked' })
-          }}
-          icon="layout-grid"
-          label="Manage apps"
-        />
-        <OrbitDockButton
-          id="settings"
-          onClick={() => {
-            om.actions.router.showAppPage({ id: 'settings', toggle: 'docked' })
-          }}
-          icon="cog"
-          label="Settings"
-        /> */}
       </Dock>
     </DockButtonPassProps>
   )
 })
 
-const OrbitDockButton = ({ app }: { app: AppBit }) => {
+const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) => {
+  const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
-  console.log('apo', app, definition)
   const buttonRef = useRef(null)
   const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
-  const [hovered, setHoveredRaw] = useState(false)
-  const setHovered = useThrottledFn(setHoveredRaw, { amount: 200 })
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  const showMenu = hovered || hoveredMenu
-
-  const width = 350
-  const height = 400
+  const showMenu = dockStore.hoveredIndex === index || hoveredMenu
+  const showTooltip = dockStore.hoveredIndex === -1 && !showMenu
 
   return (
     <>
       <DockButton
         id={`${app.id}`}
         onClick={() => {
-          om.actions.router.showAppPage({ id: app.id, toggle: 'docked' })
+          om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
         }}
         icon={definition.icon || 'layers'}
         label={app.name}
         forwardRef={buttonRef}
         labelProps={{
           transition: 'all ease 300ms',
-          ...(hovered && {
+          ...(showTooltip && {
+            transition: 'all ease 300ms 300ms',
             opacity: 1,
             transform: {
               y: 0,
             },
           }),
-          ...(!hovered && { opacity: 0, transform: { y: -10 } }),
+          ...(!showTooltip && { opacity: 0, transform: { y: -10 } }),
         }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseMove={() => {
+          // wait for settle
+          if (dockStore.hoveredIndex === -1) {
+            dockStore.hoverEnterButton(index)
+          }
+        }}
+        onMouseEnter={() => {
+          dockStore.hoverEnterButton(index)
+        }}
+        onMouseLeave={() => {
+          dockStore.hoverLeaveButton()
+        }}
       />
       {nodePosition && nodePosition.rect && (
-        <FloatingCard
-          defaultWidth={width}
-          defaultHeight={height}
-          defaultTop={nodePosition.rect.top - height + 20}
-          defaultLeft={nodePosition.rect.left - width + 20}
-          padding={0}
-          zIndex={10000000}
-          visible={showMenu}
-          onMouseEnter={() => setHoveredMenu(true)}
-          onMouseLeave={() => setHoveredMenu(false)}
-        >
-          <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
-        </FloatingCard>
+        <FloatingAppWindow
+          setHoveredMenu={setHoveredMenu}
+          buttonRect={nodePosition.rect}
+          showMenu={showMenu}
+          definition={definition}
+          app={app}
+        />
       )}
     </>
   )
-}
-
-const useActiveAppMenuItems = () => {
-  const orbitStore = useOrbitStore()
-  if (!orbitStore.activeAppStore) {
-    return []
-  }
-  return orbitStore.activeAppStore.menuItems || []
-}
-
-const OrbitDockMenu = memo(() => {
-  const menuItems = useActiveAppMenuItems()
-  return (
-    <Menu
-      target={<DockButton id="app-menu" icon="menu" />}
-      items={[
-        {
-          title: 'Errors',
-          before: <Badge>2</Badge>,
-        },
-        ...menuItems.map(item => ({
-          title: item.title,
-          subTitle: item.subTitle,
-          icon: item.icon,
-        })),
-      ]}
-    />
-  )
 })
 
-// {/* <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} /> */}
+const FloatingAppWindow = ({ showMenu, buttonRect, setHoveredMenu, app, definition }) => {
+  const width = 300
+  const height = 380
+  const [, windowHeight] = useWindowSize({ throttle: 100 })
+  let top = buttonRect.top - 40
+  const left = buttonRect.left - width - 20
+
+  if (height + top > windowHeight) {
+    top -= height + top - windowHeight - 20
+  }
+
+  return (
+    <FloatingCard
+      defaultWidth={width}
+      defaultHeight={height}
+      defaultTop={top}
+      defaultLeft={left}
+      padding={0}
+      zIndex={10000000}
+      visible={showMenu}
+      onMouseEnter={() => setHoveredMenu(true)}
+      onMouseLeave={() => setHoveredMenu(false)}
+    >
+      <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
+    </FloatingCard>
+  )
+}
+
+// this could work to let apps ahve their own dock items...
+// const useActiveAppMenuItems = () => {
+//   const orbitStore = useOrbitStore()
+//   if (!orbitStore.activeAppStore) {
+//     return []
+//   }
+//   return orbitStore.activeAppStore.menuItems || []
+// }

@@ -98,6 +98,7 @@ export class SearchStore {
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
+      ensure('this.searchState', !!this.searchState)
 
       await sleep(120)
 

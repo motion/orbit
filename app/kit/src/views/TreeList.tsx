@@ -9,6 +9,8 @@ import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
+import { isEqual } from '@o/fast-compare';
+import { useDeepEqualState } from '../hooks/useDeepEqualState';
 
 type TreeItems = { [key: number]: TreeItem }
 
@@ -228,13 +230,15 @@ export function TreeList(props: TreeListProps) {
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal
   const { rootItemID, items } = useTree.state
-  const [loadedItems, setLoadedItems] = useState<ListItemProps[]>([])
+  const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
 
   useEffect(() => {
     let cancel = false
     Promise.all(items[rootItemID].children.map(id => loadTreeListItemProps(items[id]))).then(
-      res => {
-        !cancel && setLoadedItems(res)
+      next => {
+        if (!cancel) {
+          setLoadedItems(next)
+        }
       },
     )
     return () => {

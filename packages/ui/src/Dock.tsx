@@ -1,7 +1,7 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
 import { gloss, Theme, useTheme } from 'gloss'
-import React, { forwardRef, memo, useLayoutEffect, useState } from 'react'
+import React, { forwardRef, memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
 import { Arrow } from './Arrow'

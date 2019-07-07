@@ -1,6 +1,6 @@
 import { AppBit, createUsableStore, getAppDefinition, react } from '@o/kit'
 import { Dock, DockButton, DockButtonPassProps, FloatingCard, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { OrbitApp } from './OrbitApp'

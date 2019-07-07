@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -35,10 +35,6 @@ export const headerButtonProps: SizedSurfaceProps = {
 
 const HeaderButtonPassProps = (props: any) => {
   return <SurfacePassProps {...headerButtonProps} {...props} />
-}
-
-const activeStyle = {
-  opacity: 1,
 }
 
 const moveCursorToEndOfTextarea = el => {
@@ -129,8 +125,8 @@ export const OrbitHeader = memo(() => {
           </OrbitNavPopover>
         </View>
       ) : (
-        <HomeButton id="home-button" />
-      ),
+          <HomeButton id="home-button" />
+        ),
     [appRole],
   )
 
@@ -182,35 +178,6 @@ export const OrbitHeader = memo(() => {
           </HeaderButtonPassProps>
 
           <OrbitDockOpenButton />
-
-          {/* {!isEditing && !isTorn && (
-              <>
-                <OrbitButton
-                  appId="query-builder"
-                  activeStyle={activeStyle}
-                  onClick={queryBuilderLink}
-                  icon="layers"
-                  tooltip="Query Builder"
-                />
-                <OrbitButton
-                  appId="apps"
-                  activeStyle={activeStyle}
-                  onClick={appsLink}
-                  icon="layout-grid"
-                  tooltip="Manage apps"
-                />
-                <OrbitSpaceSwitch />
-              </>
-            )} */}
-
-          {/* {(isEditing || isTorn) && (
-              <Button
-                icon="cog"
-                onClick={() => {
-                  console.log('got to app specific settings')
-                }}
-              />
-            )} */}
         </HeaderSide>
       </HeaderTop>
 
@@ -218,6 +185,7 @@ export const OrbitHeader = memo(() => {
       <BorderBottom
         borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
+        opacity={0.5}
       />
     </OrbitHeaderContainer>
   )
@@ -353,8 +321,8 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
   background: isEditing
     ? theme.orbitInputBackgroundEditing
     : isActive
-    ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
-    : 'none',
+      ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
+      : 'none',
 }))
 
 const HeaderTop = gloss(View, {

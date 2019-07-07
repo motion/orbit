@@ -18,11 +18,11 @@ class OrbitAppsCarouselStore {
     setScrollSpring: Function
     rowWidth: number
   } = {
-    apps: [],
-    setCarouselSprings: idFn,
-    setScrollSpring: idFn,
-    rowWidth: 0,
-  }
+      apps: [],
+      setCarouselSprings: idFn,
+      setScrollSpring: idFn,
+      rowWidth: 0,
+    }
 
   // this is only the state that matters for animating
   state = shallow({
@@ -428,7 +428,7 @@ const OrbitAppCard = memo(
      * These next hooks handle loading the app when not animating
      */
     const shouldRender = useRef(false)
-    const lastIntersection = useRef(null)
+    const lastIntersection = useRef(false)
 
     useReaction(
       () => appsCarouselStore.isAnimating,
@@ -449,17 +449,17 @@ const OrbitAppCard = memo(
         threshold: 1,
       },
       onChange(x) {
-        const isIntersecting = x.length && x[0].isIntersecting
+        const isIntersecting = !!(x.length && x[0].isIntersecting)
         lastIntersection.current = isIntersecting
         if (isIntersecting && !renderApp) {
           shouldRender.current = true
-          whenIdle().then(() => {
-            setTimeout(() => {
+          setTimeout(() => {
+            whenIdle().then(() => {
               if (shouldRender.current) {
                 setRenderApp(true)
               }
-            }, 50)
-          })
+            })
+          }, 50)
         } else {
           shouldRender.current = false
         }
@@ -470,7 +470,7 @@ const OrbitAppCard = memo(
 
     return (
       <Card
-        data-is="OrbitAppCard"
+        data-is="OrbitAppCard2"
         ref={cardRef}
         borderWidth={0}
         background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
@@ -488,14 +488,14 @@ const OrbitAppCard = memo(
         }}
         {...(isFocused
           ? {
-              boxShadow: [
-                [0, 0, 0, 3, theme.alternates.selected['background']],
-                [0, 0, 30, [0, 0, 0, 0.5]],
-              ],
-            }
+            boxShadow: [
+              [0, 0, 0, 3, theme.alternates.selected['background']],
+              [0, 0, 30, [0, 0, 0, 0.5]],
+            ],
+          }
           : {
-              boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
-            })}
+            boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+          })}
         transition="box-shadow 200ms ease, background 300ms ease"
         zIndex={isFocused ? 2 : 1}
         animated

@@ -1,9 +1,9 @@
-import { Contents, ContentsProps, gloss, ThemeContext } from 'gloss'
+import { gloss, ThemeContext } from 'gloss'
 import React, { useContext, useMemo } from 'react'
 
-import { View } from './View/View'
+import { View, ViewProps } from './View/View'
 
-export type ArrowProps = ContentsProps & {
+export type ArrowProps = ViewProps & {
   size: number
   towards?: 'top' | 'right' | 'bottom' | 'left'
 }
@@ -54,7 +54,7 @@ export const Arrow = ({
   )
 
   return (
-    <Contents {...props}>
+    <View {...props}>
       <ArrowOuter
         transformOrigin="top left"
         transform={transformOuter}
@@ -65,7 +65,7 @@ export const Arrow = ({
           <ArrowInner {...arrowInnerProps} />
         </ArrowMiddle>
       </ArrowOuter>
-    </Contents>
+    </View>
   )
 }
 

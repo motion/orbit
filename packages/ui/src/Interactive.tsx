@@ -17,7 +17,6 @@ import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { InteractiveChrome } from './InteractiveChrome'
 import { ResizeObserverCallback } from './ResizeObserver'
-import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
 // TODO make prop
@@ -622,10 +621,12 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const cursor = this.state.cursor
     const nesting = this.context ? this.context.nesting || 0 : 0
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - nesting : props.zIndex
-    if (isNaN(zIndex)) {
-      debugger
+    const style: any = {
+      maxHeight,
+      maxWidth,
+      minWidth,
+      minHeight,
     }
-    const style: any = {}
     if (movable === true || top != null || left != null) {
       if (fill === true) {
         style.left = left || 0
@@ -657,21 +658,16 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     return (
       <InteractiveNesting.Provider value={nesting + 1}>
         <Col
-          {...{
-            className: this.props.className,
-            position,
-            cursor,
-            left,
-            top,
-            right,
-            minWidth,
-            maxHeight,
-            maxWidth,
-            minHeight,
-            zIndex,
-            pointerEvents,
-            ...style,
-          }}
+          data-is="Interactive"
+          className={this.props.className}
+          cursor={cursor}
+          left={left}
+          top={top}
+          right={right}
+          zIndex={zIndex}
+          position={position as any}
+          pointerEvents={pointerEvents as any}
+          style={style}
         >
           <InteractiveContainer
             hidden={this.props.hidden}

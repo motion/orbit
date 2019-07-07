@@ -7,9 +7,8 @@ import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
-import { useStoresSimple } from '../../hooks/useStores'
 import { useOm } from '../../om/om'
-import { useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { orbitStore, usePaneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -24,7 +23,6 @@ type OrbitAppProps = {
 }
 
 export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }: OrbitAppProps) => {
-  const orbitStore = useOrbitStore({ react: false })
   const paneManagerStore = usePaneManagerStore()
 
   const isActive =
@@ -42,10 +40,6 @@ export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }:
       orbitStore.setActiveAppStore(appStore)
     }
   }, [orbitStore, appStore, isActive, renderApp])
-
-  if (isActive) {
-    console.log('active', identifier)
-  }
 
   return (
     <Suspense
@@ -106,7 +100,7 @@ export const OrbitAppRenderOfDefinition = ({
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
-  const [activeItem, setActiveItem] = useState(null)
+  const [activeItem, setActiveItem] = useState<AppViewProps | null>(null)
   const getActiveItem = useGet(activeItem)
   const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
 
@@ -122,7 +116,7 @@ export const OrbitAppRenderOfDefinition = ({
     }
   }, [])
 
-  let AppDefMain = appDef.app
+  let AppDefMain = appDef.app!
 
   // test to see if they wrapped with <App>
   const isAppWrapped = useIsAppWrapped(appDef)
@@ -145,8 +139,8 @@ export const OrbitAppRenderOfDefinition = ({
         <FadeIn>
           <FinalAppView
             {...activeItem}
-            identifier={(activeItem && activeItem.identifier) || identifier}
-            id={(activeItem && activeItem.id) || id}
+            identifier={(activeItem && activeItem!.identifier) || identifier}
+            id={`${(activeItem && activeItem!.id) || id}`}
           />
         </FadeIn>
       ),
@@ -183,11 +177,13 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
       setTimeout(() => {
         let isAppWrapped = false
         try {
-          const appChildEl = appDef.app({})
+          const appChildEl = appDef && appDef.app && appDef.app({})
           isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
         } catch (err) {
           if (err.message.indexOf('Invalid hook call') > -1) {
             // ignore
+            /// what should we do by default here?
+            isAppWrapped = true
           } else {
             console.error(err)
           }
@@ -227,9 +223,9 @@ function getAppProps(props: ListItemProps): AppViewProps {
   }
 }
 
-export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppViewProps {
-  if (!appDef) {
-    throw new Error(`No source given: ${JSON.stringify(appDef)}`)
+export function getSourceAppProps(appDef?: AppDefinition, model?: Bit): AppViewProps {
+  if (!appDef || !model) {
+    throw new Error(`No app definition or model: ${JSON.stringify(appDef)}`)
   }
   return {
     id: `${model.id}`,
@@ -277,13 +273,12 @@ const FadeIn = (props: any) => {
 }
 
 const OrbitActions = memo((props: { children?: any }) => {
-  const stores = useStoresSimple()
   const isActive = useVisibility()
   useEffect(() => {
     if (isActive) {
-      stores.orbitStore.setActiveActions(props.children || null)
+      orbitStore.setActiveActions(props.children || null)
     } else {
-      stores.orbitStore.setActiveActions(null)
+      orbitStore.setActiveActions(null)
     }
   }, [isActive, props.children])
   return null

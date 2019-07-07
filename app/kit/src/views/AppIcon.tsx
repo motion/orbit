@@ -3,7 +3,6 @@ import { ThemeObject } from 'gloss'
 import React, { forwardRef, memo } from 'react'
 
 import { useAppDefinition } from '../hooks/useAppDefinition'
-import { Omit } from '../types'
 
 export type AppIconProps = Omit<IconShapeProps, 'color' | 'gradient'> & {
   identifier?: string

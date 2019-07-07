@@ -4,12 +4,12 @@ import React from 'react'
 
 export default createApp({
   id: 'quickFind',
-  icon: 'quickFind',
+  icon: 'search',
   name: 'Search',
   app: QuickFindApp,
 })
 
-function QuickFindApp() {
+function QuickFindApp(props) {
   const View = SearchApp.app
-  return <View />
+  return <View {...props} />
 }

@@ -7,7 +7,6 @@ import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Loading } from './progress/Loading'
 import { Tab, TabItem } from './Tab'
-import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
 import { View, ViewProps } from './View/View'
@@ -151,10 +150,10 @@ function TabsControlled({
           onClick={
             !isActive && onChange
               ? (event: MouseEvent) => {
-                  if (event.target !== closeButton) {
-                    onChange(id)
-                  }
+                if (event.target !== closeButton) {
+                  onChange(id)
                 }
+              }
               : undefined
           }
           icon={icon}

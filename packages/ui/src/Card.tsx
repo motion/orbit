@@ -8,7 +8,6 @@ import { ListItemSimple, ListItemSpecificProps, useIsSelected } from './lists/Li
 import { SizedSurface, SizedSurfaceSpecificProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { getSpaceSizeNum, Sizes } from './Space'
-import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
 export type CardProps = SizedSurfaceSpecificProps &
@@ -134,7 +133,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             // this fixed a super super chrome bug where doing any transform/animation
             // caused this inner node to not size as it should, this fixes it!
             transform="translate3d(0, 0, 0)"
-            // {...resetColors}
+          // {...resetColors}
           >
             {showChildren && children}
           </Col>

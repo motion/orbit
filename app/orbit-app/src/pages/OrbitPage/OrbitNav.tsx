@@ -17,7 +17,7 @@ import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/Orbit
 import { appsCarouselStore } from './OrbitAppsCarousel'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
-  (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
+  pane && (pane.type === 'sources' || pane.type === 'spaces' || pane.type === 'settings')
 
 const pinWidth = 52
 
@@ -120,7 +120,7 @@ export const OrbitNav = memo(
           opacity={onSettings ? 0.5 : 1}
         >
           {permanentItems.map(props => (
-            <OrbitTab key={props.app.id} {...props} />
+            <OrbitTab key={props.app!.id} {...props} />
           ))}
           {/* Pinned tabs */}
           <SortableTabs

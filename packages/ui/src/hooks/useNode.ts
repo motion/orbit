@@ -2,7 +2,7 @@ import { RefObject, useRef } from 'react'
 
 export type UseNodeProps<A> = {
   ref?: RefObject<A>
-  map: (node: A) => HTMLElement
+  map: (node: A) => HTMLElement | null
 }
 
 const idFn = _ => _

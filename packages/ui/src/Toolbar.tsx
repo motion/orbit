@@ -4,7 +4,6 @@ import React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Size } from './Space'
 import { SurfacePassProps } from './Surface'
-import { Omit } from './types'
 import { Row, RowProps } from './View/Row'
 
 export type ToolbarProps = Omit<RowProps, 'size'> & {

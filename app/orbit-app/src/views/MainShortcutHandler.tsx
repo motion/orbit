@@ -8,6 +8,7 @@ import { useStores } from '../hooks/useStores'
 import { useOm } from '../om/om'
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { appsDrawerStore } from '../pages/OrbitPage/OrbitAppsDrawer'
+import { orbitDockStore } from '../pages/OrbitPage/OrbitDock'
 
 // TODO these would be easier to search if they all prefixed with something
 
@@ -73,6 +74,11 @@ export default memo(function MainShortcutHandler(props: {
           PopoverState.closeLast()
           return
         }
+        // close dock if open
+        if (orbitDockStore.isOpen) {
+          orbitDockStore.close()
+          return
+        }
         // clear input if written in
         if (queryStore.hasQuery) {
           queryStore.clearQuery()
@@ -84,13 +90,13 @@ export default memo(function MainShortcutHandler(props: {
           return
         }
         // zoom out
-        if (appsCarouselStore.state.zoomedOut === false) {
+        if (appsCarouselStore.zoomedIn) {
           appsCarouselStore.setZoomedOut()
           return
         }
         // go to first app
         if (appsCarouselStore.focusedIndex > 0) {
-          appsCarouselStore.setFocusedAppIndex(0, true)
+          appsCarouselStore.setFocused(0, true)
           return
         }
         // clear orbit query

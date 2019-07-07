@@ -1,4 +1,4 @@
-import { GenericDataRow, Omit } from '../types'
+import { GenericDataRow } from '../types'
 
 /**
  * Copyright 2018-present Facebook.

@@ -22,7 +22,7 @@ export const TiltCard = ({ style, ...rest }: CardProps) => {
         width: rest.width,
         margin: rest.margin,
         ...style,
-        transform: props.xys.to(trans as any),
+        transform: props.xys['to'](trans as any),
       }}
     >
       <Card flex={1} {...rest} />

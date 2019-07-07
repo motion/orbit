@@ -16,7 +16,7 @@
     "noUnusedParameters": true,
     "noEmitOnError": false,
     "strictNullChecks": false,
-    "strictFunctionTypes": true,
+    "strictFunctionTypes": false,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

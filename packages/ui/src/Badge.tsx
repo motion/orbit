@@ -3,7 +3,6 @@ import React from 'react'
 import { Button, ButtonProps } from './buttons/Button'
 import { getSize } from './Sizes'
 import { Sizes } from './Space'
-import { Omit } from './types'
 
 export type BadgeProps = Omit<ButtonProps, 'children'> & {
   children: any

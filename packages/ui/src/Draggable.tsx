@@ -1,7 +1,6 @@
 import { FullScreen, FullScreenProps } from 'gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { useGet } from './hooks/useGet'
-import { Omit } from './types'
 
 export type DraggableProps = Omit<FullScreenProps, 'onChange'> & {
   disable?: boolean

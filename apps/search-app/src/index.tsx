@@ -19,18 +19,18 @@ export function SearchApp(props: AppViewProps) {
   const [showFloating, setShowFloating] = useUserState('show-floating', false)
   const searchStore = useStore(SearchStore)
 
-  useSearchState(state => {
-    searchStore.setSearchState(state)
+  useSearchState({
+    onChange: state => {
+      searchStore.setSearchState(state)
+    },
   })
-
-  const width = 500
-  const height = 350
 
   const listElement = (
     <List
       alwaysSelected
       shareable
       selectable
+      query={searchStore.searchedQuery}
       itemProps={useMemo(
         () => ({
           iconBefore: true,
@@ -51,8 +51,8 @@ export function SearchApp(props: AppViewProps) {
       <App actions={actionsElement}>
         <Scale size={1.1}>{listElement}</Scale>
         <FloatingCard
-          defaultWidth={width}
-          defaultHeight={height}
+          defaultWidth={500}
+          defaultHeight={350}
           attach="bottom right"
           edgePadding={[20, 20]}
           elevation={6}

@@ -10,7 +10,7 @@ import { useScale } from '../Scale'
 import { Section, SectionParentProps, SectionSpecificProps, useSectionProps } from '../Section'
 import { useShareStore } from '../Share'
 import { TitleRowSpecificProps } from '../TitleRow'
-import { DataColumnsShort, Omit } from '../types'
+import { DataColumnsShort } from '../types'
 import { useVisibility } from '../Visibility'
 import { FilterableProps, FilterableSearchInput, useFilterable } from './Filterable'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
@@ -46,7 +46,6 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 }
 
 export const Table = (tableProps: TableProps) => {
-  // const focusStore = useFocusStore()
   const shareStore = useShareStore()
   const sectionProps: SectionSpecificProps = useSectionProps(tableProps as any) // TODO fix
   const {

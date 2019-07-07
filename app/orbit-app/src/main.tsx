@@ -50,7 +50,7 @@ async function main() {
 
   console.timeEnd('splash')
 
-  if (window.location.search.indexOf('why-did-you-render') > -1) {
+  if (window.location.search.indexOf('why') > -1) {
     const whyDidYouRender = require('@welldone-software/why-did-you-render').default
     whyDidYouRender(React, {
       // turn on to log ONLY when things rendered without needing to
@@ -128,7 +128,7 @@ async function startApp(forceRefresh = false) {
 
   if (window.location.search.indexOf('react.concurrent') > 0) {
     ReactDOM.unstable_createRoot(RootNode).render(
-      <React.unstable_ConcurrentMode>{elements},</React.unstable_ConcurrentMode>,
+      <React.unstable_ConcurrentMode>{elements}</React.unstable_ConcurrentMode>,
     )
   } else {
     ReactDOM.render(elements, RootNode)

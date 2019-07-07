@@ -4,7 +4,7 @@ import GraphiQL from '@o/graphiql'
 import { getGlobalConfig, useActiveSpace } from '@o/kit'
 import { useNode } from '@o/ui'
 import GraphiQLExplorer from 'graphiql-explorer'
-import { buildClientSchema, getIntrospectionQuery } from 'graphql'
+import { buildClientSchema, getIntrospectionQuery, GraphQLSchema } from 'graphql'
 import React, { useEffect, useRef, useState } from 'react'
 import ShadowDOM from 'react-shadow'
 
@@ -13,18 +13,23 @@ import { useThemeStore } from '../om/stores'
 export function GraphExplorer() {
   const [space] = useActiveSpace()
   const { theme } = useThemeStore()
-  const graphiql = useRef(null)
-  const [state, setState] = useState({ schema: null, query: null })
+  const graphiql = useRef<any>(null)
+  const [state, setState] = useState<{
+    schema: GraphQLSchema | null
+    query: string
+  }>({
+    schema: null,
+    query: '',
+  })
   const { schema, query } = state
-  const shadowRoot = useRef(null)
+  const shadowRoot = useRef<HTMLDivElement>(null)
   const parentRoot = useNode({ map: x => x.parentElement })
-  const explorerLeft =
-    (shadowRoot.current && shadowRoot.current.querySelector('.graphiql-container').offsetLeft) || 0
-  const codeMirrorTop =
-    (shadowRoot.current && shadowRoot.current.querySelector('.query-editor').offsetTop) || 0
+  const node = shadowRoot.current
+  const explorerLeft = (node && node!.querySelector('.graphiql-container')!['offsetLeft']) || 0
+  const codeMirrorTop = (node && node!.querySelector('.query-editor')!['offsetTop']) || 0
   const explorerTop =
     codeMirrorTop + ((parentRoot.current && parentRoot.current.getBoundingClientRect().y) || 0)
-  const fetcher = spaceFetcher.bind(null, space.id)
+  const fetcher = spaceFetcher.bind(null, space.id || -1)
 
   useEffect(() => {
     fetcher({

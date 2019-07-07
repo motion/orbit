@@ -10,7 +10,6 @@ import { useScale } from './Scale'
 import { getSpaceSize, Size } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title, TitleProps } from './text/Title'
-import { Omit } from './types'
 import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 
@@ -97,10 +96,10 @@ export const TitleRow = themeable(
         (isValidElement(title) ? (
           title
         ) : (
-          <Title size={size} selectable={selectable} ellipse {...titleProps}>
-            {title}
-          </Title>
-        ))
+            <Title size={size} selectable={selectable} ellipse {...titleProps}>
+              {title}
+            </Title>
+          ))
 
       return (
         <TitleRowChrome
@@ -119,8 +118,8 @@ export const TitleRow = themeable(
             ) : React.isValidElement(icon) ? (
               React.cloneElement(icon as any, { size: iconSize })
             ) : (
-              icon || null
-            )}
+                  icon || null
+                )}
             <Col space={spaceSize} flex={1} alignItems="flex-start">
               {titleElement}
               {!!subTitle && (

@@ -1,15 +1,15 @@
-import { AppIcon, useLocationLink, useStore } from '@o/kit'
+import { AppIcon, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
-import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { useAppsCarousel } from './OrbitAppsCarousel'
+import { orbitDockStore } from './OrbitDock'
 import { useIsOnStaticApp } from './OrbitDockShare'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
@@ -37,10 +37,6 @@ const HeaderButtonPassProps = (props: any) => {
   return <SurfacePassProps {...headerButtonProps} {...props} />
 }
 
-const activeStyle = {
-  opacity: 1,
-}
-
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
 }
@@ -49,14 +45,12 @@ const selectTextarea = el => {
 }
 
 class HeaderStore {
-  mouseUpAt = 0
   inputRef = createRef<HTMLDivElement>()
-  iconHovered = false
 
   get highlightWords() {
     const { activeMarks } = queryStore.queryFilters
     if (!activeMarks) {
-      return null
+      return
     }
     const markPositions = activeMarks.map(x => [x[0], x[1]])
     return () => markPositions
@@ -112,12 +106,11 @@ export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
   const containerRef = useRef()
+  const appCarousel = useAppsCarousel()
   const orbitStore = useOrbitStore()
   const theme = useTheme()
   const isOnTearablePane = !useIsOnStaticApp()
   const { appRole } = useStore(App)
-  const queryBuilderLink = useLocationLink('/app/query-builder')
-  const appsLink = useLocationLink('/app/apps')
 
   const isEditing = appRole === 'editing'
   const isTorn = appRole === 'torn'
@@ -132,8 +125,8 @@ export const OrbitHeader = memo(() => {
           </OrbitNavPopover>
         </View>
       ) : (
-        <HomeButton id="home-button" />
-      ),
+          <HomeButton id="home-button" />
+        ),
     [appRole],
   )
 
@@ -143,6 +136,7 @@ export const OrbitHeader = memo(() => {
       isEditing={isEditing}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
+      background={appCarousel.zoomedIn ? undefined : 'transparent'}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
 
@@ -150,7 +144,6 @@ export const OrbitHeader = memo(() => {
         <HeaderButtonPassProps>
           <HeaderSide space="sm" spaceAround slim={slim}>
             {!slim && <BackButton />}
-            <OrbitHeaderMenu />
             {homeButtonElement}
           </HeaderSide>
         </HeaderButtonPassProps>
@@ -168,68 +161,49 @@ export const OrbitHeader = memo(() => {
           )}
         </HeaderContain>
 
-        <HeaderButtonPassProps>
-          <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
-            {isEditing && (
-              <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
-                <>
-                  <Button circular icon="edit" tooltip="Open in VSCode" />
-                  <Space size="sm" />
-                  <Button tooltip="Deploy to space">Publish</Button>
-                  <Space size="sm" />
-                </>
-              </SurfacePassProps>
-            )}
-
-            {!isEditing && !isTorn && (
+        <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
+          {isEditing && (
+            <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
               <>
-                <OrbitButton
-                  appId="query-builder"
-                  activeStyle={activeStyle}
-                  onClick={queryBuilderLink}
-                  icon="layers"
-                  tooltip="Query Builder"
-                />
-                <OrbitButton
-                  appId="apps"
-                  activeStyle={activeStyle}
-                  onClick={appsLink}
-                  icon="layout-grid"
-                  tooltip="Manage apps"
-                />
-                <OrbitSpaceSwitch />
+                <Button circular icon="edit" tooltip="Open in VSCode" />
+                <Space size="sm" />
+                <Button tooltip="Deploy to space">Publish</Button>
+                <Space size="sm" />
               </>
-            )}
+            </SurfacePassProps>
+          )}
 
-            {(isEditing || isTorn) && (
-              <Button
-                icon="cog"
-                onClick={() => {
-                  console.log('got to app specific settings')
-                }}
-              />
-            )}
-          </HeaderSide>
-        </HeaderButtonPassProps>
+          <HeaderButtonPassProps>
+            <OrbitHeaderMenu />
+          </HeaderButtonPassProps>
+
+          <OrbitDockOpenButton />
+        </HeaderSide>
       </HeaderTop>
 
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
         borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
+        opacity={0.5}
       />
     </OrbitHeaderContainer>
   )
 })
 
-const OrbitButton = ({
-  appId,
-  activeStyle,
-  ...props
-}: ButtonProps & { appId?: string; activeStyle?: Partial<ButtonProps> }) => {
-  const om = useOm()
-  const isActive = appId ? om.state.router.appId === appId : false
-  return <Button {...props} {...isActive && activeStyle} />
+const OrbitDockOpenButton = () => {
+  const orbitDock = orbitDockStore.useStore()
+  return (
+    <Button
+      width={20}
+      height={20}
+      circular
+      onMouseEnter={orbitDock.hoverEnter}
+      onMouseLeave={orbitDock.hoverLeave}
+      onClick={orbitDock.togglePinned}
+      active={orbitDock.state === 'pinned'}
+    />
+  )
 }
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
@@ -308,16 +282,17 @@ const OrbitHeaderContainer = gloss<any>(View, {
   zIndex: 0,
 }).theme((props, theme) => ({
   background:
+    props.background ||
     (props.isEditing && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
-    theme.background.alpha(a => a * 0.65),
+    theme.background,
 }))
 
 const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   flexFlow: 'row',
   flex: 1,
-  width: '18%',
-  minWidth: 150,
+  width: '10%',
+  minWidth: 110,
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -346,8 +321,8 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
   background: isEditing
     ? theme.orbitInputBackgroundEditing
     : isActive
-    ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
-    : 'none',
+      ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
+      : 'none',
 }))
 
 const HeaderTop = gloss(View, {

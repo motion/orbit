@@ -10,7 +10,6 @@ import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
 import { useWindowSize } from './hooks/useWindowSize'
 import { Interactive, InteractiveProps } from './Interactive'
-import { Omit } from './types'
 import { useVisibility } from './Visibility'
 
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
@@ -64,6 +63,8 @@ export function FloatingView(props: FloatingViewProps) {
   if (attach) {
     usePosition = useWindowAttachments[attach](...edgePadding)
   }
+
+  // todo dont let it go outside window!
 
   const controlledSize = typeof props.height !== 'undefined'
   const controlledPosition = typeof props.top !== 'undefined'
@@ -191,7 +192,7 @@ export function FloatingView(props: FloatingViewProps) {
             zIndex,
             width: spring.width,
             height: spring.height,
-            transform: spring.xy.to((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
+            transform: spring.xy['to']((x1, y1) => `translate3d(${x1}px,${y1}px,0)`),
             position: 'fixed',
           }}
         >

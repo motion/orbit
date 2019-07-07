@@ -53,6 +53,8 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
 
   configureHotKeys({
     ignoreTags: [],
+    ignoreRepeatedEventsWhenKeyHeldDown: false,
+    ignoreKeymapAndHandlerChangesByDefault: false,
     // logLevel: 'verbose',
   })
 }

@@ -31,14 +31,6 @@ export const BitStatusBar = ({ item }: AppBitMainProps) => {
       )}
       <View flex={1} />
       <StatusBarSection>
-        <StatusBarButton
-          onClick={() => {
-            // !TODO
-            // AppActions.copy(item)
-          }}
-        >
-          Copy Link <Cmd>⌘+C</Cmd>
-        </StatusBarButton>
         <View width={5} />
         <StatusBarButton
           onClick={() => {

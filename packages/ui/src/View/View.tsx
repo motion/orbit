@@ -3,7 +3,6 @@ import { AlphaColorProps, Base, CSSPropertySetStrict, gloss, GlossProps, PseudoS
 import { SpringValue } from 'react-spring'
 
 import { Sizes } from '../Space'
-import { Omit } from '../types'
 import { ElevatableProps, getElevation } from './elevate'
 import { getSizableValue, PaddingProps, SizesObject, usePadding } from './pad'
 

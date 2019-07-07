@@ -20,7 +20,6 @@ import { getSize } from './Sizes'
 import { Sizes, Space } from './Space'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
-import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { getAnimatedStyleProp } from './View/ScrollableView'
 import { getMargin, View, ViewProps } from './View/View'
@@ -406,17 +405,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {innerElements}
           </Box>
         ) : (
-          <>
-            {innerElements}
-            {!!betweenIconElement && (
-              <>
-                {spaceElement}
-                {betweenIconElement}
-              </>
-            )}
-            {showElement && icon && spaceElement}
-          </>
-        )}
+            <>
+              {innerElements}
+              {!!betweenIconElement && (
+                <>
+                  {spaceElement}
+                  {betweenIconElement}
+                </>
+              )}
+              {showElement && icon && spaceElement}
+            </>
+          )}
         {!!glow && !disabled && (
           <HoverGlow
             full
@@ -591,9 +590,9 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     '&:hover': props.active
       ? null
       : {
-          ...(!props.chromeless && themeStyle['&:hover']),
-          ...propStyles['&:hover'],
-        },
+        ...(!props.chromeless && themeStyle['&:hover']),
+        ...propStyles['&:hover'],
+      },
   }
 
   return res

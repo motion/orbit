@@ -1,6 +1,5 @@
-import { App, AppMainView, AppViewProps, getTargetValue, TreeList, useBitSearch, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, Button, List, ListItemProps, Pane, preventDefault, SearchableTopBar, StatusBarText, TitleRow, useToggle, View } from '@o/ui'
-import { flow } from 'lodash'
+import { App, AppMainView, AppViewProps, isEqual, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, List, ListItemProps, StatusBarText, TitleRow, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useEffect, useState } from 'react'
 
@@ -16,54 +15,15 @@ export function ListApp(props: AppViewProps) {
 
 export function ListsAppIndex() {
   const treeList = useTreeList(id)
-  const [addQuery, setAddQuery] = useState('')
-  const hideSearch = useToggle(true)
-  const results = useBitSearch({ query: addQuery, take: 20 }).map(item => ({
-    ...item,
-    after: <Button margin={['auto', 0, 'auto', 10]} icon="plus" />,
-  }))
-  return (
-    <>
-      <SearchableTopBar
-        value={addQuery}
-        onChange={flow(
-          preventDefault,
-          getTargetValue,
-          setAddQuery,
-        )}
-        onEnter={() => treeList.actions.addFolder(addQuery)}
-        placeholder="Add..."
-        buttons={
-          <>
-            <Button
-              active={hideSearch.val}
-              tooltip="Search to add"
-              icon="plus"
-              onClick={hideSearch.toggle}
-            />
-            <Button
-              tooltip="Create folder"
-              icon="folder-new"
-              onClick={() => treeList.actions.addFolder(addQuery)}
-            />
-          </>
-        }
-      />
-      <View flex={1}>
-        <TreeList use={treeList} sortable />
-      </View>
-      <Pane
-        elevation={1}
-        collapsable
-        collapsed={hideSearch.val}
-        onCollapse={hideSearch.toggle}
-        title={results ? `Search Results (${results.length})` : 'Search Results'}
-        maxHeight={600}
-      >
-        <List query={addQuery} items={results || []} />
-      </Pane>
-    </>
-  )
+
+  useSearchState({
+    onChange(search) {
+      treeList.actions.addFolder(search.query)
+    },
+    onEvent: 'enter',
+  })
+
+  return <TreeList use={treeList} sortable />
 }
 
 function ListsAppMain(props: AppViewProps) {
@@ -82,6 +42,7 @@ function ListsAppMainFolder(props: AppViewProps) {
   const treeList = useTreeList(id)
   const selectedItem = treeList.state.items[+props.subId]
   const [children, setChildren] = useState<ListItemProps[]>([])
+
   useEffect(() => {
     if (selectedItem && selectedItem.type === 'folder') {
       Promise.all(
@@ -91,10 +52,16 @@ function ListsAppMainFolder(props: AppViewProps) {
         }),
       ).then(items => {
         console.log('loaded items', selectedItem.children, items)
-        setChildren(items)
+        setChildren(cur => {
+          if (isEqual(cur, items)) {
+            return cur
+          }
+          return items
+        })
       })
     }
   }, [selectedItem && selectedItem.id])
+
   return <List title={props.title} items={children} />
 }
 

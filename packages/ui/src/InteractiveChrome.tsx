@@ -5,7 +5,6 @@ import { FloatingChrome } from './helpers/FloatingChrome'
 import { isRightClick } from './helpers/isRightClick'
 import { usePosition } from './hooks/usePosition'
 import { getResizeCursor, ResizableSides } from './Interactive'
-import { Omit } from './types'
 import { ViewProps } from './View/View'
 import { useVisibility } from './Visibility'
 

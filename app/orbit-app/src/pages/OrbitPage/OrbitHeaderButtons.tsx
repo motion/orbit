@@ -19,7 +19,7 @@ const Section = gloss('section', {
   },
 })
 
-const Interactive = gloss(Box, {
+const Interactive = gloss<{ enabled?: boolean }>(Box, {
   flexFlow: 'row',
   alignItems: 'center',
   opacity: 0,

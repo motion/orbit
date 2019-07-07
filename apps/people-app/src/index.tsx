@@ -1,5 +1,5 @@
-import { App, AppViewProps, Bit, createApp, LocationLink, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
-import { Avatar, Button, Center, Col, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubTitle, TitleRow } from '@o/ui'
+import { App, AppViewProps, Bit, createApp, LocationLink, openItem, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { Avatar, Button, Center, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubSection, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export default createApp({
@@ -94,13 +94,14 @@ function PersonMedia({ id }: { id: number }) {
 
   return (
     <Section
-      space
+      space="xl"
       padding
       scrollable="y"
       titleElement={
         <TitleRow
           padding="xl"
-          before={<Avatar src={person.photo} />}
+          space="xl"
+          before={!!person.photo && <Avatar src={person.photo} />}
           title={person.title}
           subTitle={<Email href={`mailto:${person.email}`}>{person.email}</Email>}
           below={
@@ -123,18 +124,17 @@ function PersonMedia({ id }: { id: number }) {
         />
       }
     >
-      <StrongSubTitle>Topics</StrongSubTitle>
-      <Row flexDirection="row" flexWrap="wrap" padding={[5, 0, 0]}>
-        {topics.map((item, index) => (
-          <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
-            {item}
-          </RoundButton>
-        ))}
-      </Row>
+      <SubSection title="Topics">
+        <Row flexDirection="row" flexWrap="wrap" space="sm">
+          {topics.map((item, index) => (
+            <RoundButton size={1.2} key={index}>
+              {item}
+            </RoundButton>
+          ))}
+        </Row>
+      </SubSection>
 
-      <Col space>
-        <StrongSubTitle>Recently</StrongSubTitle>
-
+      <SubSection title="Recently">
         {recentBits.map(bit => {
           return (
             <ListItem
@@ -144,18 +144,15 @@ function PersonMedia({ id }: { id: number }) {
               margin={0}
               padding={[15, 20]}
               onDoubleClick={() => {
-                console.warn('!TODO fix')
-                // AppActions.open(bit)
+                openItem(bit)
               }}
             />
           )
         })}
-      </Col>
+      </SubSection>
     </Section>
   )
 }
-
-const StrongSubTitle = props => <SubTitle fontWeight={200} fontSize={18} alpha={0.8} {...props} />
 
 const Email = gloss('a', {
   display: 'inline-block',

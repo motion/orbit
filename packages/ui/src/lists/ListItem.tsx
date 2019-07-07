@@ -7,7 +7,6 @@ import { Bit } from '../helpers/BitLike'
 import { Config, CustomItemView } from '../helpers/configureUI'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
-import { Omit } from '../types'
 import { useVisibilityStore } from '../Visibility'
 import { ListItemSimple, ListItemSimpleProps } from './ListItemSimple'
 import { ListItemViewProps } from './ListItemViewProps'
@@ -46,7 +45,7 @@ export type ListItemProps = ListItemSimpleProps &
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
   const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
-  const selectableStore = useSelectableStore(props)
+  const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
 

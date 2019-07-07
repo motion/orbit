@@ -14,12 +14,14 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const shareStore = useShareStore()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
   const { isEditing } = useStore(App)
-  const suspenseBanner = useRef<SuspenseWithBanner>()
+  const suspenseBanner = useRef<SuspenseWithBanner | null>(null)
 
   useReaction(
-    () => shareStore.clipboards['main'],
+    () => shareStore.clipboards.main,
     () => {
-      suspenseBanner.current.clearError()
+      if (suspenseBanner.current) {
+        suspenseBanner.current.clearError()
+      }
     },
     {
       lazy: true,
@@ -30,8 +32,17 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
     return null
   }
 
+  if (!appDef) {
+    return <div>No app def found</div>
+  }
+
   return (
-    <FullScreen className="orbit-main" position="absolute" left={sidebarWidth} zIndex={10}>
+    <FullScreen
+      className="orbit-main"
+      position="absolute"
+      zIndex={10}
+      style={{ left: sidebarWidth }}
+    >
       <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       </Suspense>

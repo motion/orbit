@@ -1,13 +1,12 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, TreeItem, useGet } from '@o/ui'
+import { Button, List, ListItemProps, ListProps, TreeItem, useGet, useDeepEqualState } from '@o/ui'
 import { pick } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
-import { useUserState, ScopedState } from '../hooks/useUserState'
-import { Omit } from '../types'
+import { ScopedState, useUserState } from '../hooks/useUserState'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 
 type TreeItems = { [key: number]: TreeItem }
@@ -228,13 +227,15 @@ export function TreeList(props: TreeListProps) {
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal
   const { rootItemID, items } = useTree.state
-  const [loadedItems, setLoadedItems] = useState<ListItemProps[]>([])
+  const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
 
   useEffect(() => {
     let cancel = false
     Promise.all(items[rootItemID].children.map(id => loadTreeListItemProps(items[id]))).then(
-      res => {
-        !cancel && setLoadedItems(res)
+      next => {
+        if (!cancel) {
+          setLoadedItems(next)
+        }
       },
     )
     return () => {

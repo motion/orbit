@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react'
 
 import { Button, ButtonProps } from './buttons/Button'
-import { Omit } from './types'
 import { ColProps } from './View/Col'
 
 export type TabProps = Omit<ColProps, 'children'> & {

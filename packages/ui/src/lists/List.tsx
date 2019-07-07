@@ -9,19 +9,18 @@ import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
-import { Section, SectionSpecificProps } from '../Section'
+import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
 import { Sizes } from '../Space'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
-import { Omit } from '../types'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
 import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
-import { Direction, selectablePropKeys, SelectableProps, useSelectableStore } from './SelectableStore'
+import { Direction, selectablePropKeys, SelectableProps, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 // TODO round out, we can likely import models
@@ -32,6 +31,7 @@ type BitLike = {
 }
 
 export type ListProps = SectionSpecificProps &
+  Pick<SectionProps, 'padding'> &
   /** Override the onOpen/onSelect */
   Omit<VirtualListProps<BitLike | ListItemProps>, 'onOpen' | 'onSelect'> &
   Omit<Partial<UseFilterProps<any>>, 'items'> & {
@@ -87,7 +87,9 @@ const nullFn = () => null
 export const List = memo((allProps: ListProps) => {
   const [collapseProps, allListProps] = splitCollapseProps(allProps)
   const props = useListProps(allListProps)
+  const getProps = useGet(props)
   const {
+    // split out props for section + other areas
     flex = 1,
     titleBorder = true,
     bordered,
@@ -99,10 +101,6 @@ export const List = memo((allProps: ListProps) => {
     backgrounded,
     elevation,
     titleScale = 0.9,
-    ...listProps
-  } = props
-  const getProps = useGet(props)
-  const {
     items,
     onOpen,
     placeholder,
@@ -116,7 +114,7 @@ export const List = memo((allProps: ListProps) => {
     onSelect: _ignoreOnSelect,
     padding,
     ...restProps
-  } = listProps
+  } = props
   const shareStore = useShareStore()
   const shortcutStore = useShortcutStore()
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -144,8 +142,9 @@ export const List = memo((allProps: ListProps) => {
   )
 
   // wrap select with extra functionality
-  const selectableStore = useSelectableStore({
+  const selectableStore = useCreateSelectableStore({
     ...pick(props, selectablePropKeys),
+    items: filtered.results,
     onSelect: onSelectInner,
   })
 
@@ -178,26 +177,26 @@ export const List = memo((allProps: ListProps) => {
     const filterExtraProps = filteredGetItemProps(a, b, c)
     const deleteProps: ListItemProps = deletable
       ? {
-          after: (
-            <>
-              {itemExtraProps && itemExtraProps.after}
-              <Button
-                chromeless
-                circular
-                icon="cross"
-                opacity={0.65}
-                onMouseDown={e => {
-                  e.stopPropagation()
-                }}
-                onClick={() => {
-                  if (window.confirm(`Are you sure you'd like to delete?`)) {
-                    onDelete(a, b)
-                  }
-                }}
-              />
-            </>
-          ),
-        }
+        after: (
+          <>
+            {itemExtraProps && itemExtraProps.after}
+            <Button
+              chromeless
+              circular
+              icon="cross"
+              opacity={0.65}
+              onMouseDown={e => {
+                e.stopPropagation()
+              }}
+              onClick={() => {
+                if (window.confirm(`Are you sure you'd like to delete?`)) {
+                  onDelete(a, b)
+                }
+              }}
+            />
+          </>
+        ),
+      }
       : null
 
     const onEditCb = useCallback(title => onEdit(a, title), [onEdit])
@@ -239,19 +238,21 @@ export const List = memo((allProps: ListProps) => {
   )
 
   const children = (
-    <HighlightProvide value={highlightValue}>
-      {hasResults && (
-        <VirtualList
-          items={filtered.results}
-          ItemView={ListItem}
-          {...restProps}
-          getItemProps={getItemPropsInner}
-          onOpen={onOpenInner}
-          selectableStore={selectableStore}
-        />
-      )}
-      {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
-    </HighlightProvide>
+    <SelectableStoreProvider value={selectableStore}>
+      <HighlightProvide value={highlightValue}>
+        {hasResults && (
+          <VirtualList
+            items={filtered.results}
+            ItemView={ListItem}
+            {...restProps}
+            getItemProps={getItemPropsInner}
+            onOpen={onOpenInner}
+            selectableStore={selectableStore}
+          />
+        )}
+        {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+      </HighlightProvide>
+    </SelectableStoreProvider>
   )
 
   if (!hasSectionProps) {

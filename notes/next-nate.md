@@ -1,7 +1,16 @@
 next
 
-- "/" in search bar slides up AppsDrawer with Home/Search app for searching
-  - that makes it contextual which means we can potentially do drag/drop into lists!!!
+important next:
+
+- getting the full edit flow working including publish/update etc
+
+umbrella type things:
+
+- get working animation primitives within views
+- get working drag and drop generally with easy drop targets
+
+those together are just nice, second one really helps with moving data between apps.
+
 - opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit
@@ -34,21 +43,12 @@ QueryBuilder:
 Visual Fixes:
 
 - Lists search+select seems to have regressed, could be new react-window
-- Fix GraphQL Explorer interface small glitches
-
-Install apps:
-
-- Test loading multiple different workspaces and apps
 
 Edit apps from interface:
 
 - Get editing apps working from UI
 - Test full edit => publish flow with build to production command
 - Needs some visual feedback with banners/messages
-
-Launch App into own window:
-
-- Get this working again, test it out with new code
 
 Workspaces:
 
@@ -59,11 +59,6 @@ App Settings:
 
 - Fix app settings various bugs that have come up
 - Make CRUD of settings work wel
-
-Demo apps:
-
-- Get demo apps imported into Example workspace
-- Iterate on a few of them together with real app data
 
 Dock:
 

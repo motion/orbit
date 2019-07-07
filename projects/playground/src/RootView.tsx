@@ -1,6 +1,7 @@
-import { IconShape } from '@o/ui'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+
+import { TestCarousel } from './TestCarousel'
 
 export default hot(function RootView() {
   return (
@@ -10,8 +11,8 @@ export default hot(function RootView() {
       {/* <TestStores /> */}
       {/* <TestMiniApps /> */}
       {/* <TestUIKitchenSink /> */}
-
-      <IconShape name="flow" />
+      {/* <IconShape name="flow" /> */}
+      <TestCarousel />
     </>
   )
 })

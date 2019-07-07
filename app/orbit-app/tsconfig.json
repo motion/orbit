@@ -7,6 +7,7 @@
     "typeRoots": ["./src/globalTypes.d.ts"],
     "types": ["jest"],
     "noEmit": true,
+    "strictNullChecks": true,
     "tsBuildInfoFile": "tsconfig.tsbuildinfo",
     "target": "es2018",
     "module": "esnext"
@@ -16,9 +17,11 @@
     { "path": "../bridge" },
     { "path": "../config" },
     { "path": "../libs" },
+    { "path": "../kit" },
     { "path": "../../apps/search-app" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/react-textfit" },
+    { "path": "../../packages/ui" },
     { "path": "../../packages/color" }
   ]
 }

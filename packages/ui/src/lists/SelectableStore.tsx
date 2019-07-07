@@ -1,4 +1,4 @@
-import { always, ensure, react, useStore } from '@o/use-store'
+import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
 
@@ -48,13 +48,6 @@ export const selectablePropKeys = [
 type Modifiers = {
   shift?: boolean
   option?: boolean
-}
-
-// will grab the parent store if its provided, otherwise create its own
-export function useSelectableStore(props: SelectableProps, options = { react: false }) {
-  const inactive = !!props.selectableStore || !props.selectable
-  const newStore = useStore(inactive ? false : SelectableStore, props, options)
-  return props.selectableStore || newStore
 }
 
 export class SelectableStore {
@@ -450,4 +443,19 @@ export class SelectableStore {
       shift: false,
     }
   }
+}
+
+const Context = createStoreContext(SelectableStore)
+
+export const SelectableStoreProvider = Context.SimpleProvider
+
+// will grab the parent store if its provided, otherwise create its own
+export function useCreateSelectableStore(props?: SelectableProps, options = { react: false }) {
+  const inactive = !!props.selectableStore || !props.selectable
+  const newStore = useStore(inactive ? false : SelectableStore, props, options)
+  return props.selectableStore || newStore
+}
+
+export function useSelectableStore() {
+  return Context.useStore()
 }

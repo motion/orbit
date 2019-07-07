@@ -5,7 +5,6 @@ import React, { forwardRef, memo, useLayoutEffect, useRef, useState } from 'reac
 import SVG from 'svg.js'
 
 import { findName, IconProps } from './Icon'
-import { Omit } from './types'
 import { View } from './View/View'
 
 export type IconShapeProps = Omit<IconProps, 'width' | 'height'> & {

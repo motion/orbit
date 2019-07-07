@@ -3,9 +3,20 @@ import { react } from '@o/use-store'
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryFilterStore, SourceDesc } from './QueryFilterStore'
 
+export type QueryCommand = 'enter'
+
 export class QueryStore {
   queryInstant = ''
   prefixFirstWord = false
+
+  lastCommand: { name: QueryCommand; at: number } = {
+    name: null,
+    at: Date.now(),
+  }
+
+  setLastCommand = (name: QueryCommand) => {
+    this.lastCommand = { name, at: Date.now() }
+  }
 
   setQuery = (value: string) => {
     this.queryInstant = value

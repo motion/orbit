@@ -57,7 +57,7 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
     }
   }, [query])
 
-  const search =
+  const searchQuery =
     props.searchable === false
       ? ''
       : props.removePrefix
@@ -75,32 +75,35 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
     sortByFn,
   ])
 
+  // TODO this could be a lot more flexible, also see nextapps.de search on github
   const searchIndex = useMemo(() => {
-    return items.map(item => item[filterKey])
-  }, [sortedItems])
+    if (props.searchable) {
+      return items.map(item => item[filterKey])
+    }
+    return []
+  }, [items, props.searchable])
 
   // THEN FILTER
 
   // memo per-query
   const filteredItems = useMemo(() => {
-    if (search) {
-      let next = []
-      // filter in a loop so we can do disableFilter checks
-      for (const [index, item] of sortedItems.entries()) {
-        if (item.disableFilter) {
-          next.push(item)
-          continue
-        }
-        const res = fuzzySort.single(search, searchIndex[index])
-        if (res && res.score > -50) {
-          next.push(item)
-        }
-      }
-      return next
-    } else {
+    if (!searchQuery) {
       return sortedItems
     }
-  }, [sortedItems, searchIndex, search])
+    let next = []
+    // filter in a loop so we can do disableFilter checks
+    for (const [index, item] of sortedItems.entries()) {
+      if (item.disableFilter) {
+        next.push(item)
+        continue
+      }
+      const res = fuzzySort.single(searchQuery, searchIndex[index])
+      if (res && res.score > -50) {
+        next.push(item)
+      }
+    }
+    return next
+  }, [sortedItems, searchIndex, searchQuery])
 
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 

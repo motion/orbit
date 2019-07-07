@@ -5,7 +5,6 @@ import { BorderTop } from './Border'
 import { CollapsableProps, CollapseArrow, splitCollapseProps, useCollapse } from './Collapsable'
 import { Scale, useScale } from './Scale'
 import { Text, TextProps } from './text/Text'
-import { Omit } from './types'
 import { View } from './View/View'
 import { Row } from './View/Row'
 

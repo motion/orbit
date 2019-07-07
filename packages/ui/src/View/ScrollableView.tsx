@@ -5,7 +5,6 @@ import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
-import { Omit } from '../types'
 import { usePadding } from './pad'
 import { ViewProps } from './View'
 

@@ -4,7 +4,6 @@ import { ObservableSet } from 'mobx'
 import React, { ReactNode, useLayoutEffect, useRef } from 'react'
 
 import { Text, TextProps } from './text/Text'
-import { Omit } from './types'
 
 export type BreadcrumbsProps = {
   separator?: ReactNode

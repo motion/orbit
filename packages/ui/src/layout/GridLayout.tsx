@@ -8,7 +8,6 @@ import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { SizedSurfaceProps } from '../SizedSurface'
-import { Omit } from '../types'
 import { Col, ColProps } from '../View/Col'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
@@ -349,10 +348,10 @@ function forwardSurfaceProps(children: any, props: SizedSurfaceProps) {
 // compacts horizontal + vertical
 // see https://github.com/STRML/react-grid-layout/issues/157
 function dualCompact(items: any[]) {
-  const max_x = items.reduce(function(max_x, item) {
+  const max_x = items.reduce(function (max_x, item) {
     return Math.max(max_x, item.x + item.w)
   }, 0)
-  const max_y = items.reduce(function(max_y, item) {
+  const max_y = items.reduce(function (max_y, item) {
     return Math.max(max_y, item.y + item.h)
   }, 0)
 
@@ -363,7 +362,7 @@ function dualCompact(items: any[]) {
   }
 
   //fill layout matrix
-  items.forEach(function(item) {
+  items.forEach(function (item) {
     for (let i_y = item.y, i_y_max = item.y + item.h; i_y < i_y_max; i_y++) {
       for (let i_x = item.x, i_x_max = item.x + item.w; i_x < i_x_max; i_x++) {
         matrix[i_y][i_x] = item.i
@@ -384,7 +383,7 @@ function dualCompact(items: any[]) {
 
     if (is_empty_row) {
       const compressed_y = y - compressed
-      items.forEach(function(item) {
+      items.forEach(function (item) {
         if (item.y > compressed_y) {
           item.y--
         }
@@ -406,7 +405,7 @@ function dualCompact(items: any[]) {
 
     if (is_empty_col) {
       const compressed_x = x - compressed
-      items.forEach(function(item) {
+      items.forEach(function (item) {
         if (item.x > compressed_x) {
           item.x--
         }

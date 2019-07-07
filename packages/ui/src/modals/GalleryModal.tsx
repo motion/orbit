@@ -1,5 +1,4 @@
 import React from 'react'
-import { Omit } from '../types'
 import { MediaModal } from './MediaModal'
 import { ModalProps } from './Modal'
 

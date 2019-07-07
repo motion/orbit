@@ -12,7 +12,6 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { SurfacePassPropsReset } from './Surface'
-import { Omit } from './types'
 import { getElevation } from './View/elevate'
 import { View } from './View/View'
 

@@ -17,7 +17,6 @@ import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { InteractiveChrome } from './InteractiveChrome'
 import { ResizeObserverCallback } from './ResizeObserver'
-import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
 // TODO make prop

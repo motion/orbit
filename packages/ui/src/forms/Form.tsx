@@ -7,7 +7,7 @@ import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
-import { DataType, Omit } from '../types'
+import { DataType } from '../types'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
@@ -37,27 +37,27 @@ export type FormErrors<A> = { [key in keyof A]: string } | string | null | true 
 
 type FormFieldType =
   | {
-      name: string
-      type?: InputType
-      value?: any
-      required?: boolean
-      validate?: (val: any) => string
-    }
+    name: string
+    type?: InputType
+    value?: any
+    required?: boolean
+    validate?: (val: any) => string
+  }
   | {
-      name: string
-      type: 'select'
-      value: { label: string; value: string }[]
-      required?: boolean
-      validate?: (val: any) => string
-    }
+    name: string
+    type: 'select'
+    value: { label: string; value: string }[]
+    required?: boolean
+    validate?: (val: any) => string
+  }
   | {
-      name: string
-      type: 'custom'
-      children: React.ReactNode
-      value?: any
-      required?: boolean
-      validate?: (val: any) => string
-    }
+    name: string
+    type: 'custom'
+    children: React.ReactNode
+    value?: any
+    required?: boolean
+    validate?: (val: any) => string
+  }
 
 export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
@@ -124,8 +124,8 @@ class FormStore {
           Array.isArray(x.value)
             ? x.value.map(y => createIncludeFilter(x.name, y.value))
             : x.value
-            ? createIncludeFilter(x.name, x.value.value)
-            : null,
+              ? createIncludeFilter(x.name, x.value.value)
+              : null,
         ),
     ).filter(Boolean)
     return selectFields

@@ -10,7 +10,6 @@ import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { getSpaceSize, getSpaceSizeNum, Size, Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
-import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
 // useful for making a higher order component that uses Section internally

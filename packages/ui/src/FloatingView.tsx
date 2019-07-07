@@ -10,7 +10,6 @@ import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
 import { useWindowSize } from './hooks/useWindowSize'
 import { Interactive, InteractiveProps } from './Interactive'
-import { Omit } from './types'
 import { useVisibility } from './Visibility'
 
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {

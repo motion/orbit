@@ -10,7 +10,6 @@ import * as React from 'react'
 
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
-import { Omit } from './types'
 
 export type SidebarProps = Omit<InteractiveProps, 'position'> & {
   /** Toggle sidebar visibility. */
@@ -95,16 +94,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       const resizable: { [key: string]: boolean } = {}
       if (position === 'left') {
         resizable.right = true
-        ;({ width, minWidth, maxWidth } = props)
+          ; ({ width, minWidth, maxWidth } = props)
       } else if (position === 'top') {
         resizable.bottom = true
-        ;({ height, minHeight, maxHeight } = props)
+          ; ({ height, minHeight, maxHeight } = props)
       } else if (position === 'right') {
         resizable.left = true
-        ;({ width, minWidth, maxWidth } = props)
+          ; ({ width, minWidth, maxWidth } = props)
       } else if (position === 'bottom') {
         resizable.top = true
-        ;({ height, minHeight, maxHeight } = props)
+          ; ({ height, minHeight, maxHeight } = props)
       }
 
       const horizontal = position === 'left' || position === 'right'

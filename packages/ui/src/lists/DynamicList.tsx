@@ -4,7 +4,6 @@ import { gloss } from 'gloss'
 import React, { forwardRef, memo, RefObject } from 'react'
 
 import { useNodeSize } from '../hooks/useNodeSize'
-import { Omit } from '../types'
 import { View } from '../View/View'
 
 // avoid type errors

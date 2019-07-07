@@ -16,7 +16,6 @@ import { Sizes } from '../Space'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
-import { Omit } from '../types'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
@@ -178,26 +177,26 @@ export const List = memo((allProps: ListProps) => {
     const filterExtraProps = filteredGetItemProps(a, b, c)
     const deleteProps: ListItemProps = deletable
       ? {
-          after: (
-            <>
-              {itemExtraProps && itemExtraProps.after}
-              <Button
-                chromeless
-                circular
-                icon="cross"
-                opacity={0.65}
-                onMouseDown={e => {
-                  e.stopPropagation()
-                }}
-                onClick={() => {
-                  if (window.confirm(`Are you sure you'd like to delete?`)) {
-                    onDelete(a, b)
-                  }
-                }}
-              />
-            </>
-          ),
-        }
+        after: (
+          <>
+            {itemExtraProps && itemExtraProps.after}
+            <Button
+              chromeless
+              circular
+              icon="cross"
+              opacity={0.65}
+              onMouseDown={e => {
+                e.stopPropagation()
+              }}
+              onClick={() => {
+                if (window.confirm(`Are you sure you'd like to delete?`)) {
+                  onDelete(a, b)
+                }
+              }}
+            />
+          </>
+        ),
+      }
       : null
 
     const onEditCb = useCallback(title => onEdit(a, title), [onEdit])

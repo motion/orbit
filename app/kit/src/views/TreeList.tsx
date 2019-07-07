@@ -1,16 +1,13 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, TreeItem, useGet } from '@o/ui'
+import { Button, List, ListItemProps, ListProps, TreeItem, useGet, useDeepEqualState } from '@o/ui'
 import { pick } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
-import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
-import { isEqual } from '@o/fast-compare';
-import { useDeepEqualState } from '../hooks/useDeepEqualState';
 
 type TreeItems = { [key: number]: TreeItem }
 

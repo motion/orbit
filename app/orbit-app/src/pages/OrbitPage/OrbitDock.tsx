@@ -186,15 +186,15 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
           transition: 'all ease 300ms',
         }}
         onMouseMove={() => {
+          if (appsDrawerStore.isOpen) return
           // wait for settle
           if (dockStore.hoveredIndex === -1) {
             dockStore.hoverEnterButton(index)
           }
         }}
         onMouseEnter={() => {
-          if (!appsDrawerStore.isOpen) {
-            dockStore.hoverEnterButton(index)
-          }
+          if (appsDrawerStore.isOpen) return
+          dockStore.hoverEnterButton(index)
         }}
         onMouseLeave={() => {
           dockStore.hoverLeaveButton()

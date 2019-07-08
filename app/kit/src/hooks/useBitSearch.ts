@@ -28,49 +28,51 @@ export function useBitSearch({
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
   const activeQuery = useActiveQuery({ delay })
   const query = searchable ? activeQuery : args.query
-
   const state = useSearchState()
-  const { appFilters } = state.filters
   let whereFinal = []
 
-  // add filters
-  // TODO exclusive/inclusive
-  if (appFilters && appFilters.length) {
-    for (const filter of appFilters) {
-      if (filter.active) {
-        whereFinal.push({
-          ...where,
-          type,
-          appIdentifier: filter.app,
-        })
+  if (state) {
+    const { appFilters } = state.filters
+
+    // add filters
+    // TODO exclusive/inclusive
+    if (appFilters && appFilters.length) {
+      for (const filter of appFilters) {
+        if (filter.active) {
+          whereFinal.push({
+            ...where,
+            type,
+            appIdentifier: filter.app,
+          })
+        }
       }
     }
-  }
 
-  // add search query
-  if (isDefined(query)) {
-    whereFinal = whereFinal.map(condition => {
-      return {
-        ...where,
-        ...condition,
-        type,
-        title: { $like: `%${query}%` },
-      }
-    })
-  }
-
-  // add where, account for type
-  if (isDefined(where)) {
-    if (Array.isArray(where)) {
-      whereFinal = [...whereFinal, where.map(x => ({ type, ...x }))]
-    } else {
-      whereFinal.push({
-        type,
-        ...where,
+    // add search query
+    if (isDefined(query)) {
+      whereFinal = whereFinal.map(condition => {
+        return {
+          ...where,
+          ...condition,
+          type,
+          title: { $like: `%${query}%` },
+        }
       })
     }
-  } else if (type) {
-    whereFinal.push({ type })
+
+    // add where, account for type
+    if (isDefined(where)) {
+      if (Array.isArray(where)) {
+        whereFinal = [...whereFinal, where.map(x => ({ type, ...x }))]
+      } else {
+        whereFinal.push({
+          type,
+          ...where,
+        })
+      }
+    } else if (type) {
+      whereFinal.push({ type })
+    }
   }
 
   if (excludeData) {

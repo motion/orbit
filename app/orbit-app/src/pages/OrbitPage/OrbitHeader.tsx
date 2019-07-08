@@ -2,9 +2,9 @@ import { AppIcon, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
-import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
+import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -194,17 +194,40 @@ export const OrbitHeader = memo(() => {
 const OrbitDockOpenButton = () => {
   const orbitDock = orbitDockStore.useStore()
   return (
-    <Button
-      width={20}
-      height={20}
-      circular
-      onMouseEnter={orbitDock.hoverEnter}
-      onMouseLeave={orbitDock.hoverLeave}
-      onClick={orbitDock.togglePinned}
-      active={orbitDock.state === 'pinned'}
-    />
+    <View position="relative">
+      <Button
+        width={20}
+        height={20}
+        circular
+        onMouseEnter={orbitDock.hoverEnter}
+        onMouseLeave={orbitDock.hoverLeave}
+        onClick={orbitDock.togglePinned}
+        active={orbitDock.state === 'pinned'}
+        zIndex={2}
+      />
+      <OpenButtonExtraArea
+        isOpen={orbitDock.isOpen}
+        onMouseEnter={orbitDock.hoverEnter}
+        onMouseLeave={orbitDock.hoverLeave}
+      />
+    </View>
   )
 }
+
+const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
+  position: 'absolute',
+  left: 0,
+  right: -100,
+  top: 0,
+  bottom: 0,
+  zIndex: 0,
+}).theme(({ isOpen }) => {
+  if (isOpen) {
+    return {
+      height: 200,
+    }
+  }
+})
 
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()

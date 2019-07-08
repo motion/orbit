@@ -78,8 +78,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
       scrollLeft={scrollLeft}
       {...viewProps}
       {...props}
-      className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||
-        ''}`}
+      className={`${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className || ''}`}
       padding={0}
     >
       {content}

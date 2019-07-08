@@ -53,7 +53,10 @@ class OrbitDockStore {
 
   hoverEnter = () => {
     if (this.state !== 'pinned') {
-      this.setState('open')
+      this.nextState = {
+        state: 'open',
+        delay: 0,
+      }
     }
   }
 
@@ -115,8 +118,6 @@ export const OrbitDock = memo(() => {
     throttle: 200,
   })
 
-  console.log('ok', store.isOpen, store.nextHovered, store.nextState)
-
   return (
     <DockButtonPassProps>
       <Dock
@@ -125,6 +126,9 @@ export const OrbitDock = memo(() => {
         pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
         onMouseEnter={store.hoverEnter}
         onMouseLeave={store.hoverLeave}
+        top={56}
+        right={0}
+        padding={20}
         transform={
           store.isOpen
             ? {
@@ -138,7 +142,6 @@ export const OrbitDock = memo(() => {
         className="orbit-dock"
         space={18}
         bottom="auto"
-        top={80}
       >
         {/* <OrbitDockShare />
         <OrbitDockSearch /> */}
@@ -163,7 +166,9 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = dockStore.hoveredIndex === index || hoveredMenu
   const showTooltip = dockStore.hoveredIndex === -1 && !showMenu
-  const isActive = useReaction(() => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`)
+  const isActive = useReaction(
+    () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
+  )
 
   console.log('nodePosition', nodePosition)
 

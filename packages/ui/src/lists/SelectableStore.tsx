@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
@@ -9,8 +10,6 @@ import { DynamicListControlled } from './DynamicList'
 if (isBrowser) {
   require('./SelectableStore.css')
 }
-
-const key = (item: any, index: number) => Config.getItemKey(item, index)
 
 export enum Direction {
   up = 'up',
@@ -59,10 +58,9 @@ export class SelectableStore {
   listRef: DynamicListControlled = null
   isSorting = false
   private keyToIndex = {}
+  rows = []
 
-  get rows() {
-    return this.props.items || []
-  }
+  key = (item: any, index: number) => Config.getItemKey(item, index)
 
   // async so we have time to render the active state first
   callbackOnSelect = react(
@@ -78,19 +76,20 @@ export class SelectableStore {
     },
   )
 
+  updateRows = react(
+    () => this.props.items,
+    items => {
+      this.rows = items
+      this.keyToIndex = {}
+      this.updateKeyToIndex()
+    },
+  )
+
   callbackRefProp = react(
     () => this.props.selectableStoreRef,
     ref => {
       ensure('onSelectableStore', !!ref)
       ref.current = this
-    },
-  )
-
-  resetActiveOnRowsChange = react(
-    () => always(this.rows),
-    () => {
-      this.keyToIndex = {}
-      this.setActive([])
     },
   )
 
@@ -105,8 +104,8 @@ export class SelectableStore {
   )
 
   defaultSelectedProp = react(
-    () => [this.props.defaultSelected, always(this.rows)],
-    async ([index], { when }) => {
+    () => this.props.defaultSelected,
+    async (index, { when }) => {
       ensure('defined', isDefined(index))
       await when(() => !!this.rows.length)
       this.setActiveIndex(index)
@@ -129,19 +128,6 @@ export class SelectableStore {
       return
     }
 
-    // update keyToIndex
-    for (const rowKey of next) {
-      if (!this.keyToIndex[rowKey]) {
-        const idx = this.rows.findIndex((r, i) => key(r, i) === rowKey)
-        if (idx >= 0) {
-          this.keyToIndex[rowKey] = idx
-        } else {
-          console.error(`no row found of key ${rowKey}`)
-          debugger
-        }
-      }
-    }
-
     // check for disabled rows
     const nextFiltered = this.removeUnselectable(next)
 
@@ -155,7 +141,28 @@ export class SelectableStore {
       return
     }
 
-    this.active = new Set(nextFiltered)
+    const nextActive = new Set(nextFiltered)
+
+    if (isEqual(this.active, nextActive)) return
+
+    this.active = nextActive
+    this.updateKeyToIndex(next)
+  }
+
+  updateKeyToIndex(next: string[] = [...this.active], ignoreMissing = false) {
+    for (const rowKey of next) {
+      if (!this.keyToIndex[rowKey]) {
+        const idx = this.rows.findIndex((r, i) => this.key(r, i) === rowKey)
+        if (idx >= 0) {
+          this.keyToIndex[rowKey] = idx
+        } else {
+          if (ignoreMissing === false) {
+            console.error(`no row found of key ${rowKey}`)
+            debugger
+          }
+        }
+      }
+    }
   }
 
   selectFirstValid() {
@@ -245,7 +252,7 @@ export class SelectableStore {
 
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = this.key(row, index)
     let next = []
     const { active } = this
     const modifiers = this.getModifiers(e)
@@ -344,7 +351,7 @@ export class SelectableStore {
     }
 
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = this.key(row, index)
     if (!this.props.selectable) {
       return false
     }
@@ -383,12 +390,12 @@ export class SelectableStore {
     this.setActive([])
   }
 
-  setSorting = (val: boolean) => {
+  setSorting = async (val: boolean) => {
     this.isSorting = val
   }
 
   private getIndexKey(index: number) {
-    return key(this.rows[index], index)
+    return this.key(this.rows[index], index)
   }
 
   private scrollToIndex(index: number) {

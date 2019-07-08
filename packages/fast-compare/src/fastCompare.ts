@@ -82,6 +82,17 @@ function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
     if (regexpA != regexpB) return false
     if (regexpA && regexpB) return a.toString() == b.toString()
 
+    let setA = a instanceof Set
+    let setB = b instanceof Set
+    if (setA != setB) return false
+    if (setA && setB) {
+      if (a.size !== b.size) return false
+      for (let item of a) {
+        if (!b.has(item)) return false
+      }
+      return true
+    }
+
     var keys = keyList(a)
     length = keys.length
 

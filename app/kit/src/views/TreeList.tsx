@@ -1,7 +1,7 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, TreeItem, useGet, useDeepEqualState } from '@o/ui'
+import { Button, List, ListItemProps, ListProps, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import { pick } from 'lodash'
 import React, { useCallback, useEffect, useMemo } from 'react'
 
@@ -198,6 +198,7 @@ async function loadTreeListItemProps(item: TreeItem): Promise<ListItemProps> {
   switch (item.type) {
     case 'folder':
       return {
+        id: `folder-${item.id}`,
         title: item.name,
         subTitle: `${item.children.length} items`,
         after: <Button circular chromeless iconSize={14} icon="chevron-right" />,

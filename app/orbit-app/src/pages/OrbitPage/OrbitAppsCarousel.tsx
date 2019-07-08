@@ -506,9 +506,15 @@ const OrbitAppCard = memo(
           overflow="hidden"
           borderRadius={isFocusZoomed ? 0 : 12}
           onMouseDown={() => {
+            if (appsCarouselStore.zoomedIn) {
+              return
+            }
             mouseDown.current = Date.now()
           }}
           onMouseUp={e => {
+            if (appsCarouselStore.zoomedIn) {
+              return
+            }
             if (mouseDown.current > appsCarouselStore.lastDragAt) {
               e.stopPropagation()
               appsCarouselStore.scrollToIndex(index, true)

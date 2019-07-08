@@ -157,7 +157,7 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       )}
       onSortEnd={useCallback(
         (sort, event) => {
-          selectableStore && selectableStore.setSorting(false)
+          // selectableStore && selectableStore.setSorting(false)
           onSortEnd && onSortEnd(sort, event)
         },
         [onSortStart],

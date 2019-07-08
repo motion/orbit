@@ -21,7 +21,14 @@ const isClientApp = (app: AppBit) => {
   return def && !!def.app
 }
 
-const dockAppIdentifiers = ['quickFind', 'query-builder', 'apps', 'spaces', 'settings']
+const dockAppIdentifiers = [
+  // pins certain apps into dock (hardcoded for now)
+  'quickFind',
+  'clipboard',
+  'query-builder',
+  'apps',
+  'settings',
+]
 
 export const state: AppsState = {
   allApps: [],

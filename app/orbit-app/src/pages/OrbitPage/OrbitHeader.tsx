@@ -6,11 +6,11 @@ import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
 import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
 
+import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
-import { useIsOnStaticApp } from './OrbitDockShare'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
@@ -198,6 +198,7 @@ const OrbitDockOpenButton = () => {
       <Button
         width={20}
         height={20}
+        icon="dot"
         circular
         onMouseEnter={orbitDock.hoverEnter}
         onMouseLeave={orbitDock.hoverLeave}

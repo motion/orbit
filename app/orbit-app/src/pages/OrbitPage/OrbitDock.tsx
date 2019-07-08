@@ -144,8 +144,6 @@ export const OrbitDock = memo(() => {
         space={18}
         bottom="auto"
       >
-        {/* <OrbitDockShare />
-        <OrbitDockSearch /> */}
         {activeDockApps.map((app, index) => (
           <OrbitDockButton key={app.id} app={app} index={index} />
         ))}

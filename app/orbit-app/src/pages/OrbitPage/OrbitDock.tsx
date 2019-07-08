@@ -129,7 +129,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[20, 20, 0, 0]}
+        padding={[20, 15, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -162,8 +162,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
     ref: buttonRef,
     debounce: 500,
   })
-  const [hoveredMenu, setHoveredMenu] = useState(false)
-  const showMenu = dockStore.hoveredIndex === index || hoveredMenu
+  const showMenu = dockStore.hoveredIndex === index
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
   )
@@ -200,18 +199,18 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
       />
       {nodePosition && nodePosition.rect && (
         <FloatingAppWindow
-          setHoveredMenu={setHoveredMenu}
           buttonRect={nodePosition.rect}
           showMenu={showMenu}
           definition={definition}
           app={app}
+          index={index}
         />
       )}
     </>
   )
 })
 
-const FloatingAppWindow = ({ showMenu, buttonRect, setHoveredMenu, app, definition }) => {
+const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => {
   const width = 300
   const height = 380
   const [, windowHeight] = useWindowSize({ throttle: 100 })
@@ -235,8 +234,12 @@ const FloatingAppWindow = ({ showMenu, buttonRect, setHoveredMenu, app, definiti
       padding={0}
       zIndex={10000000}
       visible={showMenu}
-      onMouseEnter={() => setHoveredMenu(true)}
-      onMouseLeave={() => setHoveredMenu(false)}
+      onMouseEnter={() => {
+        orbitDockStore.hoverEnterButton(index)
+      }}
+      onMouseLeave={() => {
+        orbitDockStore.hoverLeaveButton()
+      }}
     >
       <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
     </FloatingCard>

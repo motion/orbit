@@ -73,6 +73,9 @@ export type ViewCSSProps = GlossPropertySet
 export const View = forwardRef((props: ViewProps, ref) => {
   const Component = props.animated ? ViewBaseAnimated : ViewBase
   const style = props.animated ? getAnimatedStyleProp(props) : props.style
+  if (props.style && props.style.debug) {
+    debugger
+  }
   return (
     <Component
       ref={ref}

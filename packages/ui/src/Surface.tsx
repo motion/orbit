@@ -486,7 +486,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
-          <SurfaceFrame {...surfaceFrameProps} />
+          <SurfaceFrame debug {...surfaceFrameProps} />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>

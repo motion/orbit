@@ -439,8 +439,12 @@ function mergeStyles(
       // valid regular attr
       baseStyles[id][key] = nextStyles[key]
     } else if (isSubStyle(key)) {
-      // valid sub-attribute
-      baseStyles[key] = nextStyles[key]
+      for (const sKey in nextStyles[key]) {
+        if (overwrite === true || !baseStyles[key] || baseStyles[key][sKey] === undefined) {
+          baseStyles[key] = baseStyles[key] || {}
+          baseStyles[key][sKey] = nextStyles[key][sKey]
+        }
+      }
     } else {
       let subStyles = nextStyles[key]
       // catch invalid/falsy

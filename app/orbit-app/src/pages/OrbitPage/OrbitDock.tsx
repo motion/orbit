@@ -76,7 +76,7 @@ class OrbitDockStore {
     async (next, { sleep }) => {
       if (!next) return
       if (this.hoveredIndex === -1 || next.index === -1) {
-        await sleep(next.index > -1 ? 200 : 500)
+        await sleep(next.index > -1 ? 100 : 200)
       }
       this.hoveredIndex = next.index
       await sleep(100)
@@ -217,11 +217,15 @@ const FloatingAppWindow = ({ showMenu, buttonRect, setHoveredMenu, app, definiti
   const width = 300
   const height = 380
   const [, windowHeight] = useWindowSize({ throttle: 100 })
-  let top = buttonRect.top - 40
+
+  let top = buttonRect.top - 15
   const left = buttonRect.left - width - 20
 
-  if (height + top > windowHeight) {
-    top -= height + top - windowHeight - 20
+  // includes edge padding
+  const bottom = height + top + 40
+
+  if (bottom > windowHeight) {
+    top -= bottom - windowHeight
   }
 
   return (

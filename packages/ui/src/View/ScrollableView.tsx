@@ -1,12 +1,11 @@
 import { isDefined } from '@o/utils'
-import { AnimatedInterpolation, AnimatedValue, withAnimated } from '@react-spring/animated'
-import { Base, Col, gloss } from 'gloss'
+import { Base, gloss } from 'gloss'
 import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
 
 import { getSpaceSize, Size } from '../Space'
 import { usePadding } from './pad'
-import { ViewProps } from './View'
+import { View, ViewProps } from './View'
 
 // dont allow flexFlow so we force props down through flexDirection
 
@@ -40,7 +39,6 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     scrollable,
     parentSpacing,
     hideScrollbars,
-    animated,
     scrollLeft,
     scrollTop,
     ...viewPropsRaw
@@ -72,10 +70,8 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
     )
   }
 
-  const Component = animated ? ScrollableChromeAnimated : ScrollableChrome
-  const style = animated ? getAnimatedStyleProp(props) : props.style
   return (
-    <Component
+    <ScrollableChrome
       ref={ref}
       scrollable={scrollable}
       scrollTop={scrollTop}
@@ -85,28 +81,11 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
       className={`ui-scrollable ${hideScrollbars ? 'hide-scrollbars' : ''} ${props.className ||
         ''}`}
       padding={0}
-      style={style}
     >
       {content}
-    </Component>
+    </ScrollableChrome>
   )
 })
-
-// find react-spring animated props
-export const getAnimatedStyleProp = props => {
-  let style = props.style
-  for (const key in props) {
-    if (key === 'scrollLeft' || key === 'scrollTop') {
-      continue
-    }
-    const val = props[key]
-    if (val instanceof AnimatedInterpolation || val instanceof AnimatedValue) {
-      style = style || {}
-      style[key] = val
-    }
-  }
-  return style
-}
 
 /**
  * This can only be used on the innermost element to space its children, css-specific
@@ -147,7 +126,7 @@ export const PaddedView = gloss<
   wrappingSpaceTheme,
 )
 
-export const ScrollableChrome = gloss<ScrollableViewProps>(Col, {
+export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   boxSizing: 'content-box',
   flexDirection: 'inherit',
   flexWrap: 'inherit',
@@ -159,5 +138,3 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(Col, {
   ...(props.scrollable === true && { overflow: 'auto' }),
   ...(!props.scrollable && wrappingSpaceTheme(props)),
 }))
-
-const ScrollableChromeAnimated = withAnimated(ScrollableChrome)

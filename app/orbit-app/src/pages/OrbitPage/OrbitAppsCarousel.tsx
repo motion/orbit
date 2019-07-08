@@ -490,51 +490,53 @@ const OrbitAppCard = memo(
     const mouseDown = useRef(-1)
 
     return (
-      <Card
-        data-is="OrbitAppCard2"
-        ref={cardRef}
-        borderWidth={0}
-        background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
-        overflow="hidden"
-        borderRadius={isFocusZoomed ? 0 : 12}
-        onMouseDown={() => {
-          mouseDown.current = Date.now()
-        }}
-        onMouseUp={e => {
-          if (mouseDown.current > appsCarouselStore.lastDragAt) {
-            e.stopPropagation()
-            appsCarouselStore.scrollToIndex(index, true)
-          }
-          mouseDown.current = -1
-        }}
-        {...(isFocused
-          ? {
-              boxShadow: [
-                [0, 0, 0, 3, theme.alternates.selected['background']],
-                [0, 0, 30, [0, 0, 0, 0.5]],
-              ],
+      <View>
+        <Card
+          animated
+          transform={to(
+            Object.keys(spring).map(k => spring[k]),
+            (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
+          )}
+          data-is="OrbitAppCard2"
+          ref={cardRef}
+          borderWidth={0}
+          background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
+          overflow="hidden"
+          borderRadius={isFocusZoomed ? 0 : 12}
+          onMouseDown={() => {
+            mouseDown.current = Date.now()
+          }}
+          onMouseUp={e => {
+            if (mouseDown.current > appsCarouselStore.lastDragAt) {
+              e.stopPropagation()
+              appsCarouselStore.scrollToIndex(index, true)
             }
-          : {
-              boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
-            })}
-        transition="box-shadow 200ms ease, background 300ms ease"
-        zIndex={isFocused ? 2 : 1}
-        animated
-        transform={to(
-          Object.keys(spring).map(k => spring[k]),
-          (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
-        )}
-        {...cardProps}
-      >
-        <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
-        <OrbitApp
-          id={app.id}
-          isDisabled={isDisabled}
-          identifier={definition.id}
-          appDef={definition}
-          renderApp={renderApp}
-        />
-      </Card>
+            mouseDown.current = -1
+          }}
+          {...(isFocused
+            ? {
+                boxShadow: [
+                  [0, 0, 0, 3, theme.alternates!.selected['background']],
+                  [0, 0, 30, [0, 0, 0, 0.5]],
+                ],
+              }
+            : {
+                boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+              })}
+          transition="box-shadow 200ms ease, background 300ms ease"
+          zIndex={isFocused ? 2 : 1}
+          {...cardProps}
+        >
+          <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
+          <OrbitApp
+            id={app.id!}
+            isDisabled={isDisabled}
+            identifier={definition.id}
+            appDef={definition}
+            renderApp={renderApp}
+          />
+        </Card>
+      </View>
     )
   },
 )

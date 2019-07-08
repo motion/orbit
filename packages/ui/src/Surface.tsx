@@ -1,7 +1,6 @@
 import { ColorLike } from '@o/color'
 import { CSSPropertySet } from '@o/css'
 import { isDefined, selectDefined, selectObject } from '@o/utils'
-import { withAnimated } from '@react-spring/animated'
 import Gloss, { Base, Box, gloss, propsToStyles, psuedoStyleTheme, useTheme } from 'gloss'
 import React, { HTMLProps, useEffect, useMemo, useState } from 'react'
 
@@ -21,7 +20,6 @@ import { Sizes, Space } from './Space'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
-import { getAnimatedStyleProp } from './View/ScrollableView'
 import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -152,9 +150,6 @@ export type SurfaceSpecificProps = {
   /** Style as part of a group */
   segment?: 'first' | 'last' | 'middle' | 'single'
 
-  /** Will allow for animation springs to be passed in */
-  animated?: boolean
-
   /** [Advanced] Add an extra theme to the inner element */
   elementTheme?: Gloss.ThemeFn
 }
@@ -240,7 +235,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     dangerouslySetInnerHTML,
     spaceSize,
     betweenIconElement,
-    animated,
     ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -405,17 +399,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {innerElements}
           </Box>
         ) : (
-            <>
-              {innerElements}
-              {!!betweenIconElement && (
-                <>
-                  {spaceElement}
-                  {betweenIconElement}
-                </>
-              )}
-              {showElement && icon && spaceElement}
-            </>
-          )}
+          <>
+            {innerElements}
+            {!!betweenIconElement && (
+              <>
+                {spaceElement}
+                {betweenIconElement}
+              </>
+            )}
+            {showElement && icon && spaceElement}
+          </>
+        )}
         {!!glow && !disabled && (
           <HoverGlow
             full
@@ -486,18 +480,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     ...childrenProps,
     ...(!noInnerElement && { tagName }),
     opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
-    // animated styles
-    ...(animated && { style: getAnimatedStyleProp(props) }),
   }
-
-  // animated component
-  const SurfaceFrameComponent = animated ? AnimatedSurfaceFrame : SurfaceFrame
 
   return (
     <SizedSurfacePropsContext.Reset>
       <IconPropsContext.Provider value={iconContext}>
         <BreadcrumbReset>
-          <SurfaceFrameComponent {...surfaceFrameProps} />
+          <SurfaceFrame {...surfaceFrameProps} />
         </BreadcrumbReset>
       </IconPropsContext.Provider>
     </SizedSurfacePropsContext.Reset>
@@ -590,15 +579,13 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
     '&:hover': props.active
       ? null
       : {
-        ...(!props.chromeless && themeStyle['&:hover']),
-        ...propStyles['&:hover'],
-      },
+          ...(!props.chromeless && themeStyle['&:hover']),
+          ...propStyles['&:hover'],
+        },
   }
 
   return res
 })
-
-const AnimatedSurfaceFrame = withAnimated(SurfaceFrame)
 
 const perfectCenterStyle = props => {
   if (props.height && props.height % 2 === 1) {

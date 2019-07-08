@@ -5,6 +5,7 @@ import React, { memo, useRef, useState } from 'react'
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
+import { appsDrawerStore } from './OrbitAppsDrawer'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
 
@@ -191,7 +192,9 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
           }
         }}
         onMouseEnter={() => {
-          dockStore.hoverEnterButton(index)
+          if (!appsDrawerStore.isOpen) {
+            dockStore.hoverEnterButton(index)
+          }
         }}
         onMouseLeave={() => {
           dockStore.hoverLeaveButton()

@@ -15,7 +15,6 @@ const smoother = (base: number, amt = 1) =>
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
 const elevatedShadow = (x: number, theme: ThemeObject) => {
-  if (!theme.background.isDark) debugger
   const darkTheme = theme.background.isDark()
   return [
     // x

@@ -74,9 +74,9 @@ export interface GlossView<RawProps, ThemeProps = RawProps, Props = GlossProps<R
 }
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
-const tracker: StyleTracker = new Map()
+export const tracker: StyleTracker = new Map()
+export const sheet = new StyleSheet(true)
 const rulesToClass = new WeakMap()
-const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 const whiteSpaceRegex = /[\s]+/g
 
@@ -335,6 +335,8 @@ function deregisterClassName(name: string) {
   gc.deregisterClassUse(nonSpecificClassName)
 }
 
+const isNumericString = (x: string | number) => +x == x
+
 function addDynamicStyles(
   id: string,
   displayName: string = 'g',
@@ -365,8 +367,11 @@ function addDynamicStyles(
       const cn = className[0] === SPECIFIC_PREFIX ? className.slice(1) : className
       const info = tracker.get(cn)
       if (info) {
-        dynStyles[id] = dynStyles[id] || {}
-        mergeStyles(id, dynStyles, info.rules)
+        // curId is looking if info.namespace was &:hover (sub-select) or "123" (base) and then applying
+        // otherwise it would apply hover styles to the base styles here
+        const curId = isNumericString(info.namespace) ? id : info.namespace
+        dynStyles[curId] = dynStyles[curId] || {}
+        mergeStyles(curId, dynStyles, info.rules)
       } else {
         classNames.add(className)
       }
@@ -380,7 +385,8 @@ function addDynamicStyles(
   if (theme && themeFn) {
     const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
     dynStyles[id] = dynStyles[id] || {}
-    const themePropStyles = mergeStyles(id, dynStyles, themeFn(props, next), true)
+    const themeStyles = themeFn(props, next)
+    const themePropStyles = mergeStyles(id, dynStyles, themeStyles, true)
     if (themePropStyles) {
       mergePropStyles(id, dynStyles, themePropStyles, props)
     }

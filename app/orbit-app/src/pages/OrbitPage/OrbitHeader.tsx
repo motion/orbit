@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
@@ -120,13 +120,13 @@ export const OrbitHeader = memo(() => {
     () =>
       appRole === 'main' ? (
         <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
-          <OrbitNavPopover target={<HomeButton id="home-button" />}>
+          <OrbitNavPopover open target={<HomeButton id="home-button" />}>
             <OrbitNav />
           </OrbitNavPopover>
         </View>
       ) : (
-          <HomeButton id="home-button" />
-        ),
+        <HomeButton id="home-button" />
+      ),
     [appRole],
   )
 
@@ -321,8 +321,8 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
   background: isEditing
     ? theme.orbitInputBackgroundEditing
     : isActive
-      ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
-      : 'none',
+    ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]
+    : 'none',
 }))
 
 const HeaderTop = gloss(View, {

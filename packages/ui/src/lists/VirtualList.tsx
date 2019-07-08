@@ -139,6 +139,16 @@ const createItemData = memoize(
 export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const props = useProps(virtualProps)
   const { onSortStart, onSortEnd, selectableStore } = props
+
+  // key safety
+  if (process.env.NODE_ENV === 'development' && props.sortable) {
+    if (props.items.some((x, i) => Config.getItemKey(x, i) === i)) {
+      throw new Error(
+        `Must provide a key or id property to all items when you have a sortable list.`,
+      )
+    }
+  }
+
   return (
     <SortableList
       selectableStore={selectableStore}

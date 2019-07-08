@@ -1,6 +1,6 @@
-import { gloss } from 'gloss'
+import { Base, gloss } from 'gloss'
 
-export const Circle = gloss<{ size: number; background: any }>({
+export const Circle = gloss<{ size?: number; background?: any }>(Base, {
   position: 'relative',
   borderRadius: 1000,
   lineHeight: '1rem',
@@ -11,10 +11,12 @@ export const Circle = gloss<{ size: number; background: any }>({
   cursor: 'pointer',
   userSelect: 'none',
 }).theme(p => ({
-  circle: {
-    width: p.size,
-    height: p.size,
-    background: p.background,
-    borderRadius: p.size,
-  },
+  width: p.size,
+  height: p.size,
+  background: p.background,
+  borderRadius: p.size,
 }))
+
+Circle.defaultProps = {
+  size: 20,
+}

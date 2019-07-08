@@ -1,7 +1,7 @@
 import '../../apps/orbitApps'
 
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
@@ -94,6 +94,7 @@ export const OrbitAppRenderOfDefinition = ({
 }: AppRenderProps & {
   appDef: AppDefinition
 }) => {
+  const [app] = useAppBit(id)
   const om = useOm()
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
@@ -105,14 +106,22 @@ export const OrbitAppRenderOfDefinition = ({
   const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
 
   const onChangeShare = useCallback((location, items) => {
-    items = !items || Object.keys(items).length === 0 ? null : items
+    items = !items || Object.keys(items).length === 0 ? [] : items
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null
       if (isEqual(next, getActiveItem())) return
       setActiveItemThrottled(next)
     }
     if (location === 'main') {
-      om.actions.setShare({ key: `app-${id}`, value: items })
+      om.actions.setShare({
+        id: `app-${id}`,
+        value: {
+          id,
+          name: app.name!,
+          identifier,
+          items,
+        },
+      })
     }
   }, [])
 

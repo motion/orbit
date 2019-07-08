@@ -1,6 +1,6 @@
-import { App, createApp } from '@o/kit'
-import { List } from '@o/ui'
-import React from 'react'
+import { App, AppProps, createApp, getAppDefinition } from '@o/kit'
+import { Circle, List, ListItemProps, memoizeWeak } from '@o/ui'
+import React, { memo, useMemo } from 'react'
 
 import { useOm } from '../om/om'
 
@@ -9,28 +9,47 @@ export default createApp({
   name: 'Clipboard',
   icon: 'clipboard',
   app: props => (
-    <App index={<ShareAppIndex />}>
-      <div>no main</div>
+    <App index={<ClipboardAppIndex />}>
+      <ClipboardAppMain {...props} />
     </App>
   ),
 })
 
-const ShareAppIndex = () => {
+const ClipboardAppIndex = memo(() => {
   const om = useOm()
-  const items = Object.keys(om.state.share).flatMap(id => {
-    return om.state.share[id].map(i => ({
-      ...i,
-      groupName: id,
-    }))
-  })
+  const items: ListItemProps[] = Object.keys(om.state.share)
+    .map(key => {
+      if (!om.state.share[key]) {
+        return null
+      }
+      const { id, identifier, name, items } = om.state.share[key]
+      return {
+        title: name,
+        subTitle: `${(items || [])
+          .filter(x => !!x)
+          .map(i => i.title.slice(0, 20))
+          .slice(0, 2)
+          .join(', ')}${items.length > 2 ? '...' : ''}`,
+        icon: getAppDefinition(identifier).icon,
+        after: <Circle>{items.length}</Circle>,
+        extraData: {
+          subType: id,
+        },
+      }
+    })
+    .filter(Boolean)
   return (
     <List
-      selectable="multi"
+      selectable
       itemProps={{ small: true }}
       items={items ? listItemNiceNormalize(items) : null}
     />
   )
-}
+})
+
+const ClipboardAppMain = memo((props: AppProps) => {
+  return <div>{JSON.stringify(props)}</div>
+})
 
 const subTitleAttrs = ['subTitle', 'subtitle', 'email', 'address', 'phone', 'type', 'account']
 const titleAttrs = ['title', 'name', 'email', ...subTitleAttrs]
@@ -42,7 +61,7 @@ const findAttr = (attrs, row, avoid = '') => {
   }
 }
 
-function listItemNiceNormalize(rows: any[]) {
+const listItemNiceNormalize = memoizeWeak((rows: any[]) => {
   if (!rows.length) return rows
   if (!rows[0]) return []
   if (rows[0].title) return rows
@@ -57,4 +76,4 @@ function listItemNiceNormalize(rows: any[]) {
       subTitle: subTitle && id ? `${id} ${subTitle}` : subTitle,
     }
   })
-}
+})

@@ -1,7 +1,16 @@
+export type ShareItem = {
+  id: number
+  name: string
+  identifier: string
+  items: any[]
+}
+
 type State = {
   navVisible: boolean
   navHovered: boolean
-  share: { [key: string]: any }
+  share: {
+    [id: string]: ShareItem
+  }
 }
 
 export const state: State = {

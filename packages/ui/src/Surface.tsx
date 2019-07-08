@@ -556,7 +556,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), getElevation(props).boxShadow]
+    boxShadow = [...(boxShadow || []), getElevation(props, theme).boxShadow]
   }
 
   const res = {

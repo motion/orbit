@@ -1,5 +1,5 @@
 import { AppBit, createUsableStore, getAppDefinition, react } from '@o/kit'
-import { Dock, DockButton, DockButtonPassProps, FloatingCard, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -11,16 +11,14 @@ class OrbitDockStore {
   state: DockOpenState = 'pinned'
   nextState: { state: DockOpenState; delay: number } | null = null
   hoveredIndex = -1
-  nextHoveredIndex = {
-    index: 0,
-    at: Date.now(),
-  }
+  nextHovered: { index: number; at: number } | null = null
 
   get isOpen() {
     return this.state !== 'closed'
   }
 
   setState(next: DockOpenState = 'open') {
+    if (next === this.state) return
     this.state = next
     this.nextState = null
   }
@@ -37,7 +35,10 @@ class OrbitDockStore {
   )
 
   close = () => {
-    this.state = 'closed'
+    this.setState('closed')
+    this.nextHovered = null
+    // hide hover immediately on force close
+    this.hoveredIndex = -1
   }
 
   hoverLeave = () => {
@@ -56,22 +57,25 @@ class OrbitDockStore {
   }
 
   hoverEnterButton = (index: number) => {
-    this.nextHoveredIndex = { index, at: Date.now() }
+    if (this.nextHovered && this.nextHovered.index === index) return
+    this.nextHovered = { index, at: Date.now() }
   }
 
   hoverLeaveButton = () => {
-    this.nextHoveredIndex = { index: -1, at: Date.now() }
+    if (this.nextHovered && this.nextHovered.index === -1) return
+    this.nextHovered = { index: -1, at: Date.now() }
   }
 
   deferUpdateHoveringButton = react(
-    () => this.nextHoveredIndex,
+    () => this.nextHovered,
     async (next, { sleep }) => {
+      if (!next) return
       if (this.hoveredIndex === -1 || next.index === -1) {
         await sleep(next.index > -1 ? 200 : 500)
       }
       this.hoveredIndex = next.index
       await sleep(100)
-      if (next) {
+      if (next.index > -1) {
         this.hoverEnter()
       } else {
         this.hoverLeave()
@@ -110,11 +114,14 @@ export const OrbitDock = memo(() => {
     throttle: 200,
   })
 
+  console.log('ok', store.isOpen, store.nextHovered, store.nextState)
+
   return (
     <DockButtonPassProps>
       <Dock
         flexDirection="column"
         ref={dockRef}
+        pointerEvents={store.state === 'closed' ? 'none' : 'inherit'}
         onMouseEnter={store.hoverEnter}
         onMouseLeave={store.hoverLeave}
         transform={
@@ -128,7 +135,7 @@ export const OrbitDock = memo(() => {
         }
         transition="all ease 300ms"
         className="orbit-dock"
-        space="lg"
+        space={18}
         bottom="auto"
         top={80}
       >
@@ -146,10 +153,17 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)
-  const nodePosition = usePosition({ ref: buttonRef, debounce: 500 })
+  const fullyOpened = useDebounceValue(dockStore.isOpen, 300)
+  const nodePosition = usePosition({
+    measureKey: fullyOpened,
+    ref: buttonRef,
+    debounce: 500,
+  })
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = dockStore.hoveredIndex === index || hoveredMenu
   const showTooltip = dockStore.hoveredIndex === -1 && !showMenu
+
+  console.log('nodePosition', nodePosition)
 
   return (
     <>
@@ -157,6 +171,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
         id={`${app.id}`}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
+          dockStore.close()
         }}
         icon={definition.icon || 'layers'}
         label={app.name}

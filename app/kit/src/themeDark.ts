@@ -17,7 +17,7 @@ const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([77, 77, 77], [70, 70, 70])
 
 const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
-  // for dark theme, make "light" themes translucent
+  // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
       background: alternates[key].background.darken(0.25),
@@ -61,6 +61,10 @@ const darkAlternates: ThemeSet = {
   },
 }
 
+const round = (x: number) => Math.round(x * 30) / 30
+const smoother = (base: number, amt = 1) =>
+  round((Math.log(Math.max(1, base + 0.2)) + 0.75) * amt * 2)
+
 export const dark: ThemeObject = {
   alternates: darkAlternates,
   backgroundZebra: background.lighten(0.2).alpha(0.35),
@@ -68,6 +72,9 @@ export const dark: ThemeObject = {
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,
+  // elevatedShadowY: (elevation: number) => smoother(x, 1),
+  // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
+  // elevatedShadowColor: (elevation: number) => smoother(x, 1),
   separatorBackground: backgroundStrong,
   ...fromStyles({
     background,

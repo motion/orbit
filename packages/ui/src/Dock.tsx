@@ -1,6 +1,6 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
-import { gloss, Theme, useTheme } from 'gloss'
+import { gloss, Theme } from 'gloss'
 import React, { forwardRef, memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
@@ -58,7 +58,6 @@ export function DockButton(props: DockButtonProps) {
   )
   const dockStore = DockStoreContext.useStore()
   const show = selectDefined(dockStore.items[id], visible)
-  const theme = useTheme()
 
   useLayoutEffect(() => {
     dockStore.next[id] = visible
@@ -67,9 +66,15 @@ export function DockButton(props: DockButtonProps) {
 
   return (
     <Flipped flipId={id}>
-      <View flexDirection="row" position="relative" alignItems="center" justifyContent="flex-end">
-        <Theme name={theme.background.isDark() ? 'light' : 'dark'}>
-          <TagLabel pointerEvents="none" {...labelProps}>
+      <View
+        pointerEvents="none"
+        flexDirection="row"
+        position="relative"
+        alignItems="center"
+        justifyContent="flex-end"
+      >
+        <Theme name="tooltip">
+          <TagLabel size="xxs" {...labelProps}>
             {props.label}
           </TagLabel>
         </Theme>
@@ -86,6 +91,7 @@ export function DockButton(props: DockButtonProps) {
           }}
           zIndex={100000000}
           opacity={1}
+          pointerEvents="auto"
           {...!show && { marginRight: -(50 + 15), opacity: 0 }}
           {...buttonProps}
         />

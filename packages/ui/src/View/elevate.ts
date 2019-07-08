@@ -28,7 +28,7 @@ const elevatedShadow = (x: number, theme: ThemeObject) => {
     // color
     theme.elevatedShadowColor
       ? theme.elevatedShadowColor(x)
-      : [0, 0, 0, round(0.02 * smoother(x)) + (darkTheme ? 0.3 : 0)],
+      : [0, 0, 0, round(0.02 * smoother(x)) + (darkTheme ? 0.2 : 0)],
   ]
 }
 

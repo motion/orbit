@@ -1,8 +1,9 @@
-import { AppBit, createUsableStore, getAppDefinition, react } from '@o/kit'
+import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
 import { Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 
 import { om, useOm } from '../../om/om'
+import { paneManagerStore } from '../../om/stores'
 import { OrbitApp } from './OrbitApp'
 
 type DockOpenState = 'open' | 'closed' | 'pinned'
@@ -162,6 +163,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = dockStore.hoveredIndex === index || hoveredMenu
   const showTooltip = dockStore.hoveredIndex === -1 && !showMenu
+  const isActive = useReaction(() => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`)
 
   console.log('nodePosition', nodePosition)
 
@@ -169,6 +171,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
     <>
       <DockButton
         id={`${app.id}`}
+        active={isActive}
         onClick={() => {
           om.actions.router.showAppPage({ id: `${app.id!}`, toggle: 'docked' })
           dockStore.close()

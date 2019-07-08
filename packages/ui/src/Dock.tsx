@@ -8,6 +8,7 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Tag, TagProps } from './Tag'
+import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
@@ -66,23 +67,19 @@ export function DockButton(props: DockButtonProps) {
 
   return (
     <Flipped flipId={id}>
-      <View
+      <Col
         pointerEvents="none"
-        flexDirection="row"
+        // TODO do it based on attachment
+        flexDirection={'column'}
         position="relative"
         alignItems="center"
-        justifyContent="flex-end"
+        justifyContent="center"
+        space="sm"
       >
-        <Theme name="tooltip">
-          <TagLabel size="xxs" {...labelProps}>
-            {props.label}
-          </TagLabel>
-        </Theme>
         <Button
           size="xl"
           width={42}
           height={42}
-          marginLeft={15}
           circular
           iconSize={18}
           elevation={4}
@@ -95,7 +92,12 @@ export function DockButton(props: DockButtonProps) {
           {...!show && { marginRight: -(50 + 15), opacity: 0 }}
           {...buttonProps}
         />
-      </View>
+        <Theme name="tooltip">
+          <TagLabel towards="top" size="xxs" {...labelProps}>
+            {props.label}
+          </TagLabel>
+        </Theme>
+      </Col>
     </Flipped>
   )
 }
@@ -108,6 +110,7 @@ type TagLabelProps = TagProps & {
 const TagLabel = ({
   arrowSize = 12,
   towards = 'right',
+  maxWidth = 75,
   position,
   top,
   left,
@@ -124,15 +127,18 @@ const TagLabel = ({
     <TagLabelChrome
       {...{ position, top, left, bottom, right, display, opacity, transform, transition }}
     >
-      <Arrow
-        position="absolute"
-        top={`calc(50% - ${arrowSize / 2}px)`}
-        right={-arrowSize * 2}
-        size={arrowSize}
-        towards={towards}
-        background={background}
-      />
-      <Tag size="xs" background={background} {...props} />
+      {/* TODO do other directions */}
+      {towards === 'right' && (
+        <Arrow
+          position="absolute"
+          top={`calc(50% - ${arrowSize / 2}px)`}
+          right={-arrowSize * 2}
+          size={arrowSize}
+          towards={towards}
+          background={background}
+        />
+      )}
+      <Tag size="xs" maxWidth={maxWidth} background={background} {...props} />
     </TagLabelChrome>
   )
 }

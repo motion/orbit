@@ -128,7 +128,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={20}
+        padding={[20, 20, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -165,12 +165,9 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   })
   const [hoveredMenu, setHoveredMenu] = useState(false)
   const showMenu = dockStore.hoveredIndex === index || hoveredMenu
-  const showTooltip = dockStore.hoveredIndex === -1 && !showMenu
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
   )
-
-  console.log('nodePosition', nodePosition)
 
   return (
     <>
@@ -186,14 +183,6 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
         forwardRef={buttonRef}
         labelProps={{
           transition: 'all ease 300ms',
-          ...(showTooltip && {
-            transition: 'all ease 300ms 300ms',
-            opacity: 1,
-            transform: {
-              y: 0,
-            },
-          }),
-          ...(!showTooltip && { opacity: 0, transform: { y: -10 } }),
         }}
         onMouseMove={() => {
           // wait for settle

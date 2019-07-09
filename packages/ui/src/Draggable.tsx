@@ -1,15 +1,15 @@
 import { createStoreContext } from '@o/use-store'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 
 class DraggableStore {
   item = null
   position = [0, 0]
   private initialPosition = [0, 0]
 
-  setDragging = (item: any, e: MouseEvent<any>) => {
+  setDragging = (item: any, e: MouseEvent) => {
     this.item = item
-    this.initialPosition = e.clientX
-    this.position = e.clientY
+    this.initialPosition = [e.clientX, e.clientY]
+    this.position = [e.clientX, e.clientY]
     window.addEventListener('mousemove', this.handleDragMove)
     window.addEventListener('mouseup', this.handleDragEnd)
   }

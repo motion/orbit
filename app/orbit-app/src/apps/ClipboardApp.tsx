@@ -1,6 +1,6 @@
-import { App, AppProps, createApp, getAppDefinition } from '@o/kit'
-import { Circle, List, ListItemProps, memoizeWeak } from '@o/ui'
-import React, { memo, useMemo } from 'react'
+import { App, AppViewProps, createApp, getAppDefinition, useAppBit } from '@o/kit'
+import { CenteredText, Circle, List, ListItemProps, memoizeWeak, Section } from '@o/ui'
+import React, { memo } from 'react'
 
 import { useOm } from '../om/om'
 
@@ -18,26 +18,31 @@ export default createApp({
 const ClipboardAppIndex = memo(() => {
   const om = useOm()
   const items: ListItemProps[] = Object.keys(om.state.share)
+    // .map(x => om.state.share[x])
+    // dont show dock apps in clipboard
+    .filter(x => {
+      const shareItem = om.state.share[x]
+      return shareItem && om.state.apps.activeDockApps.some(app => shareItem.id === app.id) !== true
+    })
     .map(key => {
-      if (!om.state.share[key]) {
-        return null
-      }
-      const { id, identifier, name, items } = om.state.share[key]
+      const { id, identifier, name, items = [] } = om.state.share[key]
       return {
+        id: key,
         title: name,
-        subTitle: `${(items || [])
-          .filter(x => !!x)
-          .map(i => i.title.slice(0, 20))
-          .slice(0, 2)
-          .join(', ')}${items.length > 2 ? '...' : ''}`,
+        subTitle: items.length
+          ? `Selected: ${items
+              .filter(x => !!x)
+              .map(i => i.title.slice(0, 20))
+              .slice(0, 2)
+              .join(', ')}${items.length > 2 ? '...' : ''}`
+          : 'Nothing selected',
         icon: getAppDefinition(identifier).icon,
         after: <Circle>{items.length}</Circle>,
-        extraData: {
-          subType: id,
+        extraProps: {
+          subId: id,
         },
       }
     })
-    .filter(Boolean)
   return (
     <List
       selectable
@@ -47,8 +52,26 @@ const ClipboardAppIndex = memo(() => {
   )
 })
 
-const ClipboardAppMain = memo((props: AppProps) => {
-  return <div>{JSON.stringify(props)}</div>
+const ClipboardAppMain = memo((props: AppViewProps) => {
+  const om = useOm()
+  const shareItem = om.state.share[props.id!]
+  const [app] = useAppBit(shareItem && shareItem.id)
+
+  if (!shareItem || !app) {
+    return <CenteredText>No item found.</CenteredText>
+  }
+
+  const { items } = shareItem
+
+  return (
+    <Section title={app.name} titleBorder padding space>
+      <List
+        itemProps={{ iconBefore: true }}
+        selectable="multi"
+        items={items ? listItemNiceNormalize(items) : null}
+      />
+    </Section>
+  )
 })
 
 const subTitleAttrs = ['subTitle', 'subtitle', 'email', 'address', 'phone', 'type', 'account']

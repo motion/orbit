@@ -1,6 +1,6 @@
 import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
 import { Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'

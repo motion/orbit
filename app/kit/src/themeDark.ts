@@ -47,6 +47,9 @@ const darkAlternates: ThemeSet = {
     background: selectedColor,
     backgroundHover: selectedColor,
     backgroundFocus: selectedColor,
+    backgroundStrong: selectedColor.darken(0.1),
+    backgroundStronger: selectedColor.darken(0.2),
+    backgroundStrongest: selectedColor.darken(0.3),
   }),
   bordered: {
     ...alternates.bordered,
@@ -60,10 +63,6 @@ const darkAlternates: ThemeSet = {
     }),
   },
 }
-
-const round = (x: number) => Math.round(x * 30) / 30
-const smoother = (base: number, amt = 1) =>
-  round((Math.log(Math.max(1, base + 0.2)) + 0.75) * amt * 2)
 
 export const dark: ThemeObject = {
   alternates: darkAlternates,

@@ -1,22 +1,26 @@
-import { Base, gloss } from 'gloss'
+import { Base, gloss, propsToStyles } from 'gloss'
 
-export const Circle = gloss<{ size?: number; background?: any }>(Base, {
+import { getSize } from './Sizes'
+import { Size } from './Space'
+import { scaledTextSizeTheme } from './text/SimpleText'
+
+export const Circle = gloss<{ size?: Size; background?: any }>(Base, {
   position: 'relative',
-  borderRadius: 1000,
-  lineHeight: '1rem',
+  borderRadius: 100000,
   alignItems: 'center',
   justifyContent: 'center',
-  background: '#fff',
-  fontWeight: 400,
-  cursor: 'pointer',
   userSelect: 'none',
-}).theme(p => ({
-  width: p.size,
-  height: p.size,
-  background: p.background,
-  borderRadius: p.size,
-}))
+}).theme(
+  (p, theme) => ({
+    width: getSize(p.size) * 36,
+    height: getSize(p.size) * 36,
+    background: p.background || theme.backgroundStrong,
+    borderRadius: p.size,
+  }),
+  propsToStyles,
+  scaledTextSizeTheme,
+)
 
 Circle.defaultProps = {
-  size: 20,
+  size: 'md',
 }

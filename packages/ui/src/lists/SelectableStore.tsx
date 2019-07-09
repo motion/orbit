@@ -53,14 +53,16 @@ export class SelectableStore {
   props: SelectableProps
 
   dragStartIndex?: number = null
-  active = new Set<string>()
+  active = new Set<string | number>()
   lastEnter = -1
   listRef: DynamicListControlled = null
   isSorting = false
   private keyToIndex = {}
   rows = []
 
-  key = (item: any, index: number) => Config.getItemKey(item, index)
+  key = (item: any, index: number) => {
+    return Config.getItemKey(item, index)
+  }
 
   // async so we have time to render the active state first
   callbackOnSelect = react(
@@ -112,7 +114,7 @@ export class SelectableStore {
     },
   )
 
-  private removeUnselectable = (keys: string[]) => {
+  private removeUnselectable = (keys: (string | number)[]) => {
     return keys.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
       if (row && row.selectable === false) {
@@ -122,7 +124,7 @@ export class SelectableStore {
     })
   }
 
-  private setActive(next: string[]) {
+  private setActive(next: (string | number)[]) {
     // dont let it unselect
     if (this.props.alwaysSelected && next.length === 0) {
       return
@@ -149,7 +151,7 @@ export class SelectableStore {
     this.updateKeyToIndex(next)
   }
 
-  updateKeyToIndex(next: string[] = [...this.active], ignoreMissing = false) {
+  updateKeyToIndex(next: (string | number)[] = [...this.active], ignoreMissing = false) {
     for (const rowKey of next) {
       if (!this.keyToIndex[rowKey]) {
         const idx = this.rows.findIndex((r, i) => this.key(r, i) === rowKey)
@@ -411,7 +413,7 @@ export class SelectableStore {
     }
   }
 
-  private selectInRange = (fromKey: string, toKey: string): string[] => {
+  private selectInRange = (fromKey: string | number, toKey: string | number): string[] => {
     const { rows } = this
     const selected = []
     let startIndex = -1

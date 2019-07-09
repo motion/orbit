@@ -2,7 +2,8 @@ import { ImmutableUpdateFn, loadOne, save, useModel } from '@o/bridge'
 import { StateModel } from '@o/models'
 import { useScopedStateId } from '@o/ui'
 import { isDefined, OR_TIMED_OUT, orTimeout, selectDefined } from '@o/utils'
-import { useCallback } from 'react'
+import produce from 'immer'
+import { useCallback, useState } from 'react'
 
 // for storage of UI state that is per-user and not per-workspace
 // if you want to store data that is shared between everyone, use useScopedAppState
@@ -11,32 +12,47 @@ import { useCallback } from 'react'
 
 export type ScopedState<A> = [A, ImmutableUpdateFn<A>]
 
-export function useUserState<A>(id: string | false, defaultState: A): ScopedState<A> {
-  return usePersistedScopedState('user', id, defaultState)
+export function useUserState<A>(
+  id: string | false,
+  defaultState: A,
+  options?: PersistedStateOptions,
+): ScopedState<A> {
+  return usePersistedScopedState('user', id, defaultState, options)
+}
+
+export type PersistedStateOptions = {
+  persist?: 'off'
 }
 
 export function usePersistedScopedState<A>(
   type: string,
   id: string | false,
   defaultState?: A,
+  options?: PersistedStateOptions,
 ): ScopedState<A> {
-  // scope state id
-  const scopedId = useScopedStateId()
-  const identifier = `${scopedId}${id}`
+  // conditional here is "bad practice" for hooks, but its lots of overhead otherwise
+  // and people should never be turning on and off persist unless they are in development
+  if (options && options.persist === 'off') {
+    return useImmerState(defaultState)
+  } else {
+    // scope state id
+    const scopedId = useScopedStateId()
+    const identifier = `${scopedId}${id}`
 
-  // ensure default state
-  useEnsureDefaultState<A>(identifier, type, defaultState)
+    // ensure default state
+    useEnsureDefaultState<A>(identifier, type, defaultState)
 
-  // state
-  const [state, update] = useModel(StateModel, {
-    where: {
-      type,
-      identifier,
-    },
-  })
+    // state
+    const [state, update] = useModel(StateModel, {
+      where: {
+        type,
+        identifier,
+      },
+    })
 
-  // scope it to .data
-  return [selectDefined(state.data.dataValue, defaultState), useImmutableUpdateFn(update)]
+    // scope it to .data
+    return [selectDefined(state.data.dataValue, defaultState), useImmutableUpdateFn(update)]
+  }
 }
 
 const cache = {}
@@ -117,4 +133,18 @@ function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {
       }
     })
   }, [])
+}
+
+function useImmerState<A>(defaultState: A): ScopedState<A> {
+  const [val, updateValue] = useState(defaultState)
+  return [
+    val,
+    useCallback(updater => {
+      if (typeof updater === 'function') {
+        updateValue(produce(updater as any))
+      } else {
+        updateValue(updater)
+      }
+    }, []),
+  ]
 }

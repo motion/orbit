@@ -1,5 +1,5 @@
-import { App, AppMainView, AppViewProps, isEqual, TreeList, useSearchState, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, List, ListItemProps, StatusBarText, TitleRow, View } from '@o/ui'
+import { App, AppMainView, AppViewProps, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, StatusBarText, TitleRow, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useEffect, useState } from 'react'
 
@@ -39,37 +39,24 @@ function ListsAppMain(props: AppViewProps) {
 }
 
 function ListsAppMainFolder(props: AppViewProps) {
-  const treeList = useTreeList(id)
-  const selectedItem = treeList.state.items[+props.subId]
-  const [children, setChildren] = useState<ListItemProps[]>([])
+  console.log('props', props)
 
-  useEffect(() => {
-    if (selectedItem && selectedItem.type === 'folder') {
-      Promise.all(
-        selectedItem.children.map(id => {
-          return { id: `${id}` }
-          // return loadListItem(list.data.items[id])
-        }),
-      ).then(items => {
-        console.log('loaded items', selectedItem.children, items)
-        setChildren(cur => {
-          if (isEqual(cur, items)) {
-            return cur
-          }
-          return items
-        })
-      })
-    }
-  }, [selectedItem && selectedItem.id])
+  const currentTreeList = useTreeList(id)
 
   return (
-    <List
+    <TreeList
+      rootItemID={+props.subId}
+      title={props.title}
+      items={currentTreeList.state.items}
+      persist="off"
       droppable
+      sortable
       onDrop={item => {
         console.log('dropped an item', item)
       }}
-      title={props.title}
-      items={children}
+      onChange={items => {
+        console.log('got an update, persist back to main list', items)
+      }}
     />
   )
 }

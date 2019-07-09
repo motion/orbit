@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
 
+import { ActiveDraggables } from './Draggable'
 import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
 import { useWindowSize } from './hooks/useWindowSize'
@@ -169,9 +170,13 @@ export function FloatingView(props: FloatingViewProps) {
     update({ width, height, xy: [left, top], ...instantConf })
   }, [])
 
+  const dragCancel = useRef(null)
   const bindGesture = useGesture(next => {
-    const { down, delta } = next
+    const { down, delta, cancel } = next
+    dragCancel.current = cancel
+    ActiveDraggables.add(cancel)
     if (controlledPosition || disableDrag) {
+      ActiveDraggables.remove(dragCancel.current)
       return
     }
     const xy = lastDrop.current.xy
@@ -180,6 +185,7 @@ export function FloatingView(props: FloatingViewProps) {
       update({ xy: nextxy, ...instantConf }, true)
     } else {
       commit()
+      ActiveDraggables.remove(dragCancel.current)
     }
   })
 

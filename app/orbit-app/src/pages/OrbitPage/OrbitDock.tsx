@@ -1,5 +1,5 @@
 import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
-import { Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import React, { memo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -61,7 +61,7 @@ class OrbitDockStore {
     }
   }
 
-  hoverEnterButton = (index: number) => {
+  hoverEnterButton = (index: number = this.hoveredIndex) => {
     if (this.nextHovered && this.nextHovered.index === index) return
     this.nextHovered = { index, at: Date.now() }
   }
@@ -70,6 +70,17 @@ class OrbitDockStore {
     if (this.nextHovered && this.nextHovered.index === -1) return
     this.nextHovered = { index: -1, at: Date.now() }
   }
+
+  addCancelableDragOnMenuOpen = react(
+    () => this.hoveredIndex,
+    index => {
+      if (index > -1) {
+        ActiveDraggables.add(this.hoverEnterButton)
+      } else {
+        ActiveDraggables.remove(this.hoverEnterButton)
+      }
+    },
+  )
 
   deferUpdateHoveringButton = react(
     () => this.nextHovered,
@@ -231,6 +242,7 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
       defaultHeight={height}
       defaultTop={top}
       defaultLeft={left}
+      maxHeight={windowHeight - 80}
       padding={0}
       zIndex={10000000}
       visible={showMenu}

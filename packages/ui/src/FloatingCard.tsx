@@ -5,7 +5,7 @@ import { Card, CardProps } from './Card'
 import { FloatingView, FloatingViewProps } from './FloatingView'
 import { useVisibility } from './Visibility'
 
-type FloatingCardProps = CardProps &
+type FloatingCardProps = Omit<CardProps, 'maxHeight' | 'maxWidth'> &
   Pick<
     FloatingViewProps,
     | 'defaultTop'
@@ -20,6 +20,8 @@ type FloatingCardProps = CardProps &
     | 'usePosition'
     | 'attach'
     | 'edgePadding'
+    | 'maxHeight'
+    | 'maxWidth'
   > & {
     visible?: boolean
   }
@@ -41,6 +43,8 @@ export function FloatingCard({
   attach,
   edgePadding,
   elevation = 2,
+  maxHeight,
+  maxWidth,
   ...cardProps
 }: FloatingCardProps) {
   const isVisible = useVisibility()
@@ -71,6 +75,8 @@ export function FloatingCard({
       usePosition={usePosition}
       attach={attach}
       edgePadding={edgePadding}
+      maxHeight={maxHeight}
+      maxWidth={maxWidth}
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}

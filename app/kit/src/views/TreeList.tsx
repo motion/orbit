@@ -3,7 +3,7 @@ import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
 import { Button, List, ListItemProps, ListProps, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import { pick } from 'lodash'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
@@ -13,11 +13,20 @@ type TreeItems = { [key: number]: TreeItem }
 
 export type TreeListProps = Omit<ListProps, 'items'> & {
   // we should make this either require use or items
+  /** Pass in items to show in the tree */
   items?: TreeItems
+  /** Alternate to using items, pass in a treeState you've created from the useCreateTree hook */
   use?: TreeListStore
+  /** The root level item to show */
   rootItemID?: number
+  /** What to show when empty */
   placeholder?: React.ReactNode
+  /** Highlight a query in the tree */
   query?: string
+  /** Choose not to persist the treestate/userstate, if undefined will persist */
+  persist?: 'off'
+  /** Callback when any tree data changes */
+  onChange?: (items: TreeItems) => void
 }
 
 type TreeStateStatic = Pick<TreeListProps, 'items' | 'rootItemID'>
@@ -178,15 +187,29 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
 
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
+  const persistOptions = {
+    persist: props ? props.persist : undefined,
+  }
   // const stores = useStoresSimple()
-  const ts = useAppState<TreeStateStatic>(subSelect === false ? subSelect : `tlist-${subSelect}`, {
-    ...defaultState,
-    ...(props && pick(props, 'rootItemID', 'items')),
-  })
-  const us = useUserState(`tlist-${subSelect}`, defaultUserState)
+  const ts = useAppState<TreeStateStatic>(
+    subSelect === false ? subSelect : `tlist-${subSelect}`,
+    {
+      ...defaultState,
+      ...(props && pick(props, 'rootItemID', 'items')),
+    },
+    persistOptions,
+  )
+  const us = useUserState(`tlist-${subSelect}`, defaultUserState, persistOptions)
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
+
+  useEffect(() => {
+    if (props && props.rootItemID) {
+      actions.selectFolder(props.rootItemID)
+    }
+  }, [props && props.rootItemID])
+
   return {
     state: deriveState(ts[0], us[0]),
     userState: us[0],
@@ -224,7 +247,7 @@ const findAttribute = (item: TreeItem, key: string) =>
   (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
 export function TreeList(props: TreeListProps) {
-  const { use, query, ...rest } = props
+  const { use, query, onChange, ...rest } = props
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal
   const { rootItemID, items } = useTree.state
@@ -243,6 +266,18 @@ export function TreeList(props: TreeListProps) {
       cancel = true
     }
   }, [items, rootItemID])
+
+  // onChange callback
+  const ignoreInitial = useRef(true)
+  useEffect(() => {
+    if (onChange) {
+      if (ignoreInitial.current) {
+        ignoreInitial.current = false
+        return
+      }
+      onChange(items)
+    }
+  }, [items, onChange])
 
   const handleSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {
@@ -278,6 +313,20 @@ export function TreeList(props: TreeListProps) {
     [props.onSelect],
   )
 
+  const handleDrop = useCallback(
+    (item, position) => {
+      if (!props.droppable) return
+      console.log('dropping item onto list', item)
+      useTree.actions.addItem({
+        name: item.title || item.name,
+      })
+      if (props.onDrop) {
+        props.onDrop(item, position)
+      }
+    },
+    [props.onDrop, props.droppable],
+  )
+
   if (!items) {
     return null
   }
@@ -290,6 +339,7 @@ export function TreeList(props: TreeListProps) {
         {...rest}
         onSelect={handleSelect}
         onDelete={handleDelete}
+        onDrop={handleDrop}
         items={loadedItems}
       />
     </HighlightActiveQuery>

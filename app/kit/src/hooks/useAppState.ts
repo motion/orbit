@@ -1,5 +1,9 @@
-import { ScopedState, usePersistedScopedState } from './useUserState'
+import { PersistedStateOptions, ScopedState, usePersistedScopedState } from './useUserState'
 
-export function useAppState<A>(id: string | false, defaultState: A): ScopedState<A> {
-  return usePersistedScopedState('app', id, defaultState)
+export function useAppState<A>(
+  id: string | false,
+  defaultState: A,
+  options?: PersistedStateOptions,
+): ScopedState<A> {
+  return usePersistedScopedState('app', id, defaultState, options)
 }

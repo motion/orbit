@@ -62,7 +62,16 @@ function ListsAppMainFolder(props: AppViewProps) {
     }
   }, [selectedItem && selectedItem.id])
 
-  return <List title={props.title} items={children} />
+  return (
+    <List
+      droppable
+      onDrop={item => {
+        console.log('dropped an item', item)
+      }}
+      title={props.title}
+      items={children}
+    />
+  )
 }
 
 function ListAppStatusBar() {

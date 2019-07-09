@@ -51,7 +51,8 @@
     "uncontrollable": "^6.1.0",
     "react-use": "^9.8.1",
     "svg.js": "^2.7.1",
-    "react-events": "^1.0.1"
+    "react-events": "^1.0.1",
+    "@seznam/compose-react-refs": "^1.0.1"
   },
   "devDependencies": {
     "@types/react": "16.8.8",

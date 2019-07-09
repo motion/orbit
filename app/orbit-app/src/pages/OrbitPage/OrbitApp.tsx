@@ -109,8 +109,9 @@ export const OrbitAppRenderOfDefinition = ({
     items = !items || Object.keys(items).length === 0 ? [] : items
     if (location === 'main') {
       const next = items ? getAppProps(items[0]) : null
-      if (isEqual(next, getActiveItem())) return
-      setActiveItemThrottled(next)
+      if (!isEqual(next, getActiveItem())) {
+        setActiveItemThrottled(next)
+      }
     }
     if (location === 'main') {
       om.actions.setShare({

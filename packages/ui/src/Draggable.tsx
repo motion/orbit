@@ -1,4 +1,5 @@
 import { createStoreContext } from '@o/use-store'
+import { FullScreen, FullScreenProps, gloss } from 'gloss'
 import { RefObject, useEffect, useState } from 'react'
 
 class DraggableStore {
@@ -80,9 +81,10 @@ export function useDraggable({ item, ref, delay = 1000 }: UseDraggableProps) {
 type UseDroppableProps = {
   ref: RefObject<HTMLElement>
   acceptsItem?: (item: any) => boolean
+  onDrop?: (item: any) => void
 }
 
-const trueFn = _ => true
+export const trueFn = _ => true
 
 export function useDroppable(props: UseDroppableProps): boolean {
   const store = Context.useStore()
@@ -112,3 +114,10 @@ export function useDroppable(props: UseDroppableProps): boolean {
 
   return isDroppable
 }
+
+export const DropOverlay = gloss<FullScreenProps & { isDropping?: boolean }>(FullScreen, {
+  background: 'transparent',
+  isDropping: {
+    background: [255, 0, 0, 0.25],
+  },
+})

@@ -1,9 +1,11 @@
 import { isDefined } from '@o/utils'
 import { Box, gloss, Theme } from 'gloss'
-import React, { forwardRef, useCallback, useState } from 'react'
+import React, { forwardRef, useCallback, useRef, useState } from 'react'
 
+import { useDraggable } from '../Draggable'
 import { ProvideFocus } from '../Focus'
 import { Bit } from '../helpers/BitLike'
+import { composeRefs } from '../helpers/composeRefs'
 import { Config, CustomItemView } from '../helpers/configureUI'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
@@ -48,6 +50,13 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
+  const listItemRef = useRef<HTMLElement | null>(null)
+
+  useDraggable({
+    ref: listItemRef,
+    delay: 1000,
+    item: item || props,
+  })
 
   // this is the view from sources, each bit type can have its own display
   let ItemView: CustomItemView = null
@@ -131,7 +140,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     <ProvideFocus focused={isEditing === true ? false : undefined}>
       <Theme alt={alt}>
         <ListItemSimple
-          ref={ref}
+          ref={composeRefs(listItemRef, ref)}
           {...itemProps}
           {...rest}
           onStartEdit={onStartEditCb}

@@ -18,6 +18,7 @@ import { appsCarouselStore, OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore, OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
+import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
 
 // handle query prefixes
@@ -190,6 +191,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <MainShortcutHandler handlers={handlers}>
       <OrbitHeader />
       <OrbitDock />
+      <OrbitDraggableOverlay />
       <InnerChrome torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>

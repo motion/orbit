@@ -35,25 +35,30 @@ const Context = createStoreContext(DraggableStore)
 
 export const ProvideDraggable = Context.Provider
 
-export function useCurrentDraggingItem() {
-  return Context.useStore().item
+export function useCurrentDraggable() {
+  const store = Context.useStore()
+  return {
+    item: store.item,
+    position: store.position,
+  }
 }
 
 type UseDraggableProps = {
   item: any
   ref: RefObject<HTMLElement>
+  enabled: boolean
   delay?: number
   onDragStart?: () => any
   onDragEnd?: () => any
 }
 
-export function useDraggable({ item, ref, delay = 1000 }: UseDraggableProps) {
-  const node = ref.current
+export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggableProps) {
   const store = Context.useStore()
 
   // starts dragging if you hold for `delay` time and dont move mouse
   useEffect(() => {
-    if (!node) return
+    const node = ref.current
+    if (!node || !enabled) return
     let downTm = null
     const clearDrag = () => {
       clearTimeout(downTm)
@@ -63,6 +68,7 @@ export function useDraggable({ item, ref, delay = 1000 }: UseDraggableProps) {
       window.addEventListener('mouseup', clearDrag)
       const event = e.persist()
       downTm = setTimeout(() => {
+        console.log('got drag start, do it')
         window.removeEventListener('mousemove', clearDrag)
         window.removeEventListener('mouseup', clearDrag)
         store.setDragging(item, event)
@@ -75,7 +81,7 @@ export function useDraggable({ item, ref, delay = 1000 }: UseDraggableProps) {
       window.removeEventListener('mouseup', clearDrag)
       clearTimeout(downTm)
     }
-  }, [node, delay])
+  }, [enabled, ref, delay])
 }
 
 type UseDroppableProps = {
@@ -89,10 +95,11 @@ export const trueFn = _ => true
 export function useDroppable(props: UseDroppableProps): boolean {
   const store = Context.useStore()
   const { ref, acceptsItem = trueFn } = props
-  const node = ref.current
   const [isDroppable, setIsDroppable] = useState(false)
 
   useEffect(() => {
+    const node = ref.current
+    if (!node) return
     const isValid = () => {
       return !!store.item && acceptsItem(store.item) && store.position
     }
@@ -110,7 +117,7 @@ export function useDroppable(props: UseDroppableProps): boolean {
       node.removeEventListener('mouseenter', mouseEnter)
       node.removeEventListener('mouseleave', mouseLeave)
     }
-  }, [node])
+  }, [ref])
 
   return isDroppable
 }

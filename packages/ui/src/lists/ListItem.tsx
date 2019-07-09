@@ -43,10 +43,13 @@ export type ListItemProps = ListItemSimpleProps &
 
     /** Arbitrarily add extra data, makes search and doing things on onSelect callbacks easier */
     extraData?: any
+
+    /** Allow dragging to other targets */
+    draggable?: boolean
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
-  const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
+  const { item, itemViewProps, people, hidePeople, alt, draggable, ...rest } = props
   const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
@@ -56,6 +59,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     ref: listItemRef,
     delay: 1000,
     item: item || props,
+    enabled: draggable,
   })
 
   // this is the view from sources, each bit type can have its own display

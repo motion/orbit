@@ -1,5 +1,6 @@
 import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { FullScreen, useTheme } from 'gloss'
 import React, { memo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -122,6 +123,7 @@ window['orbitDockStore'] = orbitDockStore
 
 export const OrbitDock = memo(() => {
   const { state } = useOm()
+  const theme = useTheme()
   const activeDockApps = state.apps.activeDockApps
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
@@ -158,6 +160,22 @@ export const OrbitDock = memo(() => {
         {activeDockApps.map((app, index) => (
           <OrbitDockButton key={app.id} app={app} index={index} />
         ))}
+        <FullScreen
+          top={20}
+          bottom={20}
+          transform={{
+            x: '100%',
+          }}
+          borderRadius={100}
+          boxShadow={[
+            {
+              spread: 10,
+              blur: 180,
+              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.3],
+            },
+          ]}
+          zIndex={-1}
+        />
       </Dock>
     </DockButtonPassProps>
   )

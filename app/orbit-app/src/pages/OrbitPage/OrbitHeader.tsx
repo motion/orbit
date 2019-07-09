@@ -142,7 +142,7 @@ export const OrbitHeader = memo(() => {
 
       <HeaderTop height={slim ? 46 : 56}>
         <HeaderButtonPassProps>
-          <HeaderSide space="sm" spaceAround slim={slim}>
+          <HeaderSide space="sm" spaceAround="md" slim={slim}>
             {!slim && <BackButton />}
             {homeButtonElement}
           </HeaderSide>
@@ -161,7 +161,7 @@ export const OrbitHeader = memo(() => {
           )}
         </HeaderContain>
 
-        <HeaderSide space="sm" spaceAround justifyContent="flex-start" slim={slim}>
+        <HeaderSide space="sm" spaceAround="md" justifyContent="flex-start" slim={slim}>
           {isEditing && (
             <SurfacePassProps size={0.9} alt="flat" iconSize={14}>
               <>
@@ -177,6 +177,7 @@ export const OrbitHeader = memo(() => {
             <OrbitHeaderMenu />
           </HeaderButtonPassProps>
 
+          <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
       </HeaderTop>
@@ -320,7 +321,6 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
-
   slim: {
     flex: 'none',
     width: 'auto',

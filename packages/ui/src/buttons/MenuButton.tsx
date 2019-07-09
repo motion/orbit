@@ -11,7 +11,7 @@ export type MenuButtonProps = ButtonProps & {
   scrollable?: MenuProps['scrollable']
 }
 
-export const MenuButton = ({ items, scrollable, ...rest }) => {
+export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
   return (
     <Button
       after={

@@ -11,7 +11,7 @@ import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavi
 
 export default createApp({
   id: 'query-builder',
-  name: 'Query Builder',
+  name: 'Queries',
   icon: 'layers',
   app: QueryBuilder,
 })

@@ -6,7 +6,10 @@ import { isRightClick } from './helpers/isRightClick'
 import { View } from './View/View'
 
 export type GetGridItem<A> = (item: A, index: number) => any
-export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>
+export type GetSortableItem<A> = (
+  item: A,
+  index: number,
+) => Partial<SortableElementProps> | undefined | null
 
 export type SortableGridProps<A extends any> = SortableContainerProps &
   Omit<GridProps, 'onSelect'> & {
@@ -45,7 +48,7 @@ const SortableGridInner = SortableContainer(
             value={value}
             getItem={getItem}
             disabled={!sortable}
-            {...getSortableItemProps && getSortableItemProps(items[index], index)}
+            {...(getSortableItemProps && getSortableItemProps(items[index], index)) || null}
           />
         ))}
       </Grid>

@@ -192,13 +192,13 @@ export function AppsMain(props: AppViewProps) {
   }
 
   if (props.subType === 'add-app') {
-    return <AppsMainAddApp identifier={props.subId} />
+    return <AppsMainAddApp identifier={props.subId || ''} />
   }
 
   if (props.subType === 'settings') {
     return (
-      <CurrentAppBitContext.PassProps id={+props.subId}>
-        <AppSettings key={props.subId} appId={+props.subId} />
+      <CurrentAppBitContext.PassProps id={+props.subId!}>
+        <AppSettings key={props.subId} appId={+props.subId!} />
       </CurrentAppBitContext.PassProps>
     )
   }

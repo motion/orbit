@@ -36,7 +36,7 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
-    console.log('message', data)
+    console.log('MediatorServer.message', data)
     const onSuccess = result => {
       this.options.transport.send({
         id: data.id,

@@ -35,14 +35,16 @@ export class CosalManager {
     await ensureSetting('cosalIndexUpdatedTo', 0)
 
     // heavy startup
-    setTimeout(() => {
-      console.log('Starting cosal...')
-      this.cosal.start()
-      console.log('Finished starting cosal...')
-    }, 8000)
+    setTimeout(this.actuallyStart)
+  }
 
+  actuallyStart = async () => {
+    await sleep(8000)
+    log.info('Starting cosal...')
+    await this.cosal.start()
+    log.info('Finished starting cosal...')
+    await sleep(2000)
     // sleep a bit, this is a heavy-ish operation and we can do it after things startup
-    // TODO make this a bit better so its controlled above
     this.updateSearchIndexWithNewBits()
   }
 
@@ -71,9 +73,6 @@ export class CosalManager {
   }
 
   updateSearchIndexWithNewBits = async () => {
-    // heavy so wait a little
-    await sleep(10000)
-
     const lastScanAt = await this.getLastScan()
 
     const bitsSinceLastScan = await getRepository(BitEntity).find({

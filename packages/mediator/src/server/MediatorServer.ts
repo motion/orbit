@@ -36,7 +36,7 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
-    log.verbose('message', data)
+    console.log('message', data)
     const onSuccess = result => {
       this.options.transport.send({
         id: data.id,
@@ -212,7 +212,7 @@ export class MediatorServer {
         const name = 'model' in resolver ? resolver.model.name : resolver.command.name
         log.verbose(`Resolving ${resolver.type}: ${name}`)
         if (resolver.type === 'save') {
-          log.info(`Saving model ${name}`)
+          console.log(`Saving model ${name}`)
         }
         result = resolver.resolve(data.args)
       } catch (error) {

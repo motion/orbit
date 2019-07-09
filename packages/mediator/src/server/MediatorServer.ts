@@ -104,7 +104,7 @@ export class MediatorServer {
       // simply ignore if model was not found - maybe some other server has it defined
       if (!model && data.model) {
         if (this.options.fallbackClient) {
-          log.verbose(`model ${data.model} was not found, trying fallback clients`, data)
+          log.info(`model ${data.model} was not found, trying fallback clients`, data)
 
           if (data.type === 'save') {
             this.options.fallbackClient.save(data.model, data.value).then(onSuccess, onError)
@@ -209,11 +209,11 @@ export class MediatorServer {
       // resolve a value
       let result: any = null
       try {
-        log.verbose(
-          `Resolving ${resolver.type}: ${
-            'model' in resolver ? resolver.model.name : resolver.command.name
-          }`,
-        )
+        const name = 'model' in resolver ? resolver.model.name : resolver.command.name
+        log.verbose(`Resolving ${resolver.type}: ${name}`)
+        if (resolver.type === 'save') {
+          log.info(`Saving model ${name}`)
+        }
         result = resolver.resolve(data.args)
       } catch (error) {
         log.error('error executing resolver', error)

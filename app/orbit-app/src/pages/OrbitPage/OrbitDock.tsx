@@ -246,6 +246,7 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
       padding={0}
       zIndex={10000000}
       visible={showMenu}
+      pointerEvents={showMenu ? 'auto' : 'none'}
       onMouseEnter={() => {
         orbitDockStore.hoverEnterButton(index)
       }}

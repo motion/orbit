@@ -2,7 +2,6 @@ import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
 import { Button, List, ListItemProps, ListProps, TreeItem, useDeepEqualState, useGet } from '@o/ui'
-import { pick } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
@@ -23,13 +22,13 @@ export type TreeListProps = Omit<ListProps, 'items'> & {
   placeholder?: React.ReactNode
   /** Highlight a query in the tree */
   query?: string
-  /** Choose not to persist the treestate/userstate, if undefined will persist */
-  persist?: 'off'
+  /** Choose not to persist the treestate/userstate, 'all' is the default value if undefined */
+  persist?: 'all' | 'off' | 'tree' | 'user'
   /** Callback when any tree data changes */
   onChange?: (items: TreeItems) => void
 }
 
-type TreeStateStatic = Pick<TreeListProps, 'items' | 'rootItemID'>
+type TreeStateStatic = Pick<TreeListProps, 'items'>
 type TreeUserState = {
   depth?: {
     id: number
@@ -48,7 +47,6 @@ type TreeState = TreeStateStatic & {
 }
 
 const defaultState: TreeStateStatic = {
-  rootItemID: 0,
   items: {
     0: {
       id: 0,
@@ -65,16 +63,37 @@ const getActions = (
   // stores: KitStores,
 ) => {
   const Actions = {
-    addItem(item?: Partial<TreeItem>) {
+    addItem(item?: Partial<TreeItem>, parentId?: number) {
       const update = treeState()[1]
       update(next => {
         const id = item.id || Math.random()
-        next.items[Actions.curId()].children.push(id)
+        next.items[parentId || Actions.curId()].children.push(id)
         next.items[id] = { name: '', children: [], ...item, id }
       })
     },
-    addFolder(name?: string) {
-      Actions.addItem({ name, type: 'folder' })
+    addItemsFromDrop(items?: any, parentId?: number) {
+      if (Array.isArray(items)) {
+        for (const item of items) {
+          Actions.addItem(
+            {
+              name: item.title || item.name,
+              data: item,
+            },
+            parentId,
+          )
+        }
+      } else {
+        Actions.addItem(
+          {
+            name: items.title || items.name,
+            data: items,
+          },
+          parentId,
+        )
+      }
+    },
+    addFolder(name?: string, parentId?: number) {
+      Actions.addItem({ name, type: 'folder' }, parentId)
     },
     deleteItem(id: number) {
       const update = treeState()[1]
@@ -185,21 +204,27 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
   }
 }
 
+const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
+  if (!props || !props.persist || props.persist === stateType || props.persist === 'all') {
+    return undefined
+  }
+  return {
+    persist: 'off' as const,
+  }
+}
+
 // persists to app state
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
-  const persistOptions = {
-    persist: props ? props.persist : undefined,
-  }
   // const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
     subSelect === false ? subSelect : `tlist-${subSelect}`,
     {
       ...defaultState,
-      ...(props && pick(props, 'rootItemID', 'items')),
+      ...(props && { items: props.items }),
     },
-    persistOptions,
+    getStateOptions('tree', props),
   )
-  const us = useUserState(`tlist-${subSelect}`, defaultUserState, persistOptions)
+  const us = useUserState(`tlist-${subSelect}`, defaultUserState, getStateOptions('user', props))
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])
@@ -250,12 +275,12 @@ export function TreeList(props: TreeListProps) {
   const { use, query, onChange, ...rest } = props
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal
-  const { rootItemID, items } = useTree.state
+  const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
 
   useEffect(() => {
     let cancel = false
-    Promise.all(items[rootItemID].children.map(id => loadTreeListItemProps(items[id]))).then(
+    Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
         if (!cancel) {
           setLoadedItems(next)
@@ -265,7 +290,7 @@ export function TreeList(props: TreeListProps) {
     return () => {
       cancel = true
     }
-  }, [items, rootItemID])
+  }, [items, currentItem.id])
 
   // onChange callback
   const ignoreInitial = useRef(true)
@@ -314,14 +339,13 @@ export function TreeList(props: TreeListProps) {
   )
 
   const handleDrop = useCallback(
-    (item, position) => {
+    (items, position) => {
       if (!props.droppable) return
-      console.log('dropping item onto list', item)
-      useTree.actions.addItem({
-        name: item.title || item.name,
-      })
+      console.log('dropping item onto list', items)
       if (props.onDrop) {
-        props.onDrop(item, position)
+        props.onDrop(items, position)
+      } else {
+        useTree.actions.addItemsFromDrop(items)
       }
     },
     [props.onDrop, props.droppable],

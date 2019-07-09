@@ -4,6 +4,7 @@ import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { queueUpdate } from './batchUpdate'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './bridgeCommands'
 
 // enforce immutable style updates otherwise you hit insane cache issus
@@ -61,6 +62,13 @@ const hasQuery = (x: any) => {
   return x !== false && x !== null
 }
 
+const useForceUpdate = () => {
+  const forceUpdate = useState(0)[1]
+  return useCallback(() => {
+    forceUpdate(Math.random())
+  }, [])
+}
+
 function use<ModelType, Args>(
   type: 'one' | 'many' | 'count',
   model: Model<ModelType, Args, any>,
@@ -69,7 +77,7 @@ function use<ModelType, Args>(
 ): any {
   const queryKey = JSON.stringify(query)
   const observeEnabled = !options || (options.observe === undefined || options.observe === true)
-  const forceUpdate = useState(0)[1]
+  const forceUpdate = useForceUpdate()
   const valueRef = useRef(options ? options.defaultValue : undefined)
   const subscription = useRef<any>(null)
   const yallReadyKnow = useRef(false)
@@ -94,10 +102,10 @@ function use<ModelType, Args>(
       if (next === valueRef.current) return
       if (next === undefined) return
       if (process.env.NODE_ENV === 'development') {
-        console.debug(`update`, model.name, next)
+        console.debug(`update`, queryKey, observeEnabled, model.name, next)
       }
       valueRef.current = next
-      forceUpdate(Math.random())
+      queueUpdate(forceUpdate)
     }
 
     subscription.current = runUseQuery(model, type, query, observeEnabled, update)

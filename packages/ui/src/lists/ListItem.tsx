@@ -46,6 +46,9 @@ export type ListItemProps = ListItemSimpleProps &
 
     /** Allow dragging to other targets */
     draggable?: boolean
+
+    /** Specify the item you are dragging */
+    draggableItem?: any
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
@@ -58,7 +61,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   useDraggable({
     ref: listItemRef,
     delay: 1000,
-    item: item || props,
+    item: props.draggableItem || props.item || props.extraData || props,
     enabled: draggable,
   })
 

@@ -21,6 +21,7 @@ class DraggableStore {
 
   clearDragging = () => {
     this.item = null
+    this.activeDropCb = null
   }
 
   setActiveDrop = (cb: OnDropCb) => {
@@ -38,9 +39,8 @@ class DraggableStore {
     window.removeEventListener('mouseup', this.handleDragEnd)
     if (this.activeDropCb) {
       this.activeDropCb(this.item)
-      this.activeDropCb = null
-      this.item = null
     }
+    this.clearDragging()
   }
 }
 

@@ -28,7 +28,7 @@ export function ListsAppIndex() {
 
 function ListsAppMain(props: AppViewProps) {
   if (props.subType === 'folder') {
-    return <ListsAppMainFolder {...props} />
+    return <ListsAppMainFolder key={props.subId} {...props} />
   }
   return (
     <>
@@ -39,20 +39,26 @@ function ListsAppMain(props: AppViewProps) {
 }
 
 function ListsAppMainFolder(props: AppViewProps) {
-  console.log('props', props)
-
-  const currentTreeList = useTreeList(id)
-
+  const treeList = useTreeList(
+    id,
+    {
+      rootItemID: +props.subId,
+    },
+    {
+      persist: 'tree',
+    },
+  )
+  console.log('listid', props.subId, treeList)
   return (
     <TreeList
-      rootItemID={+props.subId}
+      use={treeList}
       title={props.title}
-      items={currentTreeList.state.items}
-      persist="off"
+      items={treeList.state.items}
       droppable
       sortable
-      onDrop={item => {
-        console.log('dropped an item', item)
+      onDrop={items => {
+        console.log('dropped an item', items)
+        treeList.actions.addItemsFromDrop(items)
       }}
       onChange={items => {
         console.log('got an update, persist back to main list', items)

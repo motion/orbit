@@ -64,8 +64,9 @@ const ClipboardAppMain = memo((props: AppViewProps) => {
   const { items } = shareItem
 
   return (
-    <Section title={app.name} titleBorder padding space>
+    <Section title={`Clipboard: ${app.name}`} titleBorder padding space flex={1}>
       <List
+        flex={1}
         itemProps={{ iconBefore: true }}
         selectable="multi"
         items={items ? listItemNiceNormalize(items) : null}

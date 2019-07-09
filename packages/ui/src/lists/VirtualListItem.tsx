@@ -27,6 +27,9 @@ export type VirtualListItemProps<Item> = {
 
   /** Index of the ListItem */
   index: number
+
+  /** forwardRef */
+  forwardRef?: any
 }
 
 export class VirtualListItemInner extends React.Component<VirtualListItemProps<any>> {
@@ -35,9 +38,9 @@ export class VirtualListItemInner extends React.Component<VirtualListItemProps<a
   }
 
   render() {
-    const { realIndex, ItemView, ...rest } = this.props
+    const { realIndex, ItemView, forwardRef, ...rest } = this.props
     const View = ItemView || ListItem
-    return <View index={realIndex} {...rest} />
+    return <View ref={forwardRef} index={realIndex} {...rest} />
   }
 }
 

@@ -209,7 +209,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   return (
     <SizedSurface
       className={`ui-section ${className}`}
-      forwardRef={ref}
+      ref={ref}
       hoverStyle={null}
       activeStyle={null}
       sizeRadius={bordered ? 1 : 0}

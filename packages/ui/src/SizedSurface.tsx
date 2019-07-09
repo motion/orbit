@@ -1,5 +1,5 @@
 import { mergeDefined } from '@o/utils'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 import { useScale } from './Scale'
 import { getSize } from './Sizes'
@@ -44,7 +44,7 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
   return height % 2 === 0 ? height : height + 1
 }
 
-export function SizedSurface(direct: SizedSurfaceProps) {
+export const SizedSurface = forwardRef((direct: SizedSurfaceProps, ref) => {
   const props = useSurfaceProps(direct)
   const scale = useScale()
   const {
@@ -100,5 +100,5 @@ export function SizedSurface(direct: SizedSurfaceProps) {
     pass.sizeIcon = num(sizeIcon)
   }
   const realProps = mergeDefined(pass, rest)
-  return <Surface iconPadding={iconPadding} {...realProps} size={size} />
-}
+  return <Surface ref={ref} iconPadding={iconPadding} {...realProps} size={size} />
+})

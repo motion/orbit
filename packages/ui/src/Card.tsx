@@ -62,7 +62,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
   return (
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <SizedSurface
-        forwardRef={ref}
+        ref={ref}
         className="ui-card-surface"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
@@ -133,7 +133,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             // this fixed a super super chrome bug where doing any transform/animation
             // caused this inner node to not size as it should, this fixes it!
             transform="translate3d(0, 0, 0)"
-          // {...resetColors}
+            // {...resetColors}
           >
             {showChildren && children}
           </Col>

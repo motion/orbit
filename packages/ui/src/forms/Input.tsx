@@ -56,7 +56,7 @@ export const Input = React.forwardRef(function Input(
 
   return (
     <SimpleInput
-      forwardRef={ref}
+      ref={ref}
       {...props}
       type={type}
       onKeyDown={useCallback(

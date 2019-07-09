@@ -63,14 +63,18 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
     const clearDrag = () => {
       clearTimeout(downTm)
     }
+    const mouseUp = () => {
+      clearDrag()
+      window.removeEventListener('mousemove', clearDrag)
+    }
     const onMouseDown = e => {
       window.addEventListener('mousemove', clearDrag)
-      window.addEventListener('mouseup', clearDrag)
+      window.addEventListener('mouseup', mouseUp)
       const event = e.persist()
       downTm = setTimeout(() => {
         console.log('got drag start, do it')
         window.removeEventListener('mousemove', clearDrag)
-        window.removeEventListener('mouseup', clearDrag)
+        window.removeEventListener('mouseup', mouseUp)
         store.setDragging(item, event)
       }, delay)
     }
@@ -78,7 +82,7 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
     return () => {
       node.removeEventListener('mousedown', onMouseDown)
       window.removeEventListener('mousemove', clearDrag)
-      window.removeEventListener('mouseup', clearDrag)
+      window.removeEventListener('mouseup', mouseUp)
       clearTimeout(downTm)
     }
   }, [enabled, ref, delay])

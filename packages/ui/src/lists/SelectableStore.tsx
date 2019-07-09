@@ -290,7 +290,8 @@ export class SelectableStore {
       return
     }
     if (e) {
-      e.stopPropagation()
+      // WARNING I just disabled this
+      // e.stopPropagation()
       if (e.shiftKey) {
         // prevent text selection
         e.preventDefault()

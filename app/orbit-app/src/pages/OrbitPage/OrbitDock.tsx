@@ -178,7 +178,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
         }}
         icon={definition.icon || 'layers'}
         label={app.name}
-        forwardRef={buttonRef}
+        ref={buttonRef}
         labelProps={{
           transition: 'all ease 300ms',
         }}

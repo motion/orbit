@@ -53,7 +53,7 @@ export type DockButtonProps = ButtonProps & {
 const DockButtonPropsContext = createContextualProps<DockButtonProps>()
 export const DockButtonPassProps = DockButtonPropsContext.PassProps
 
-export function DockButton(props: DockButtonProps) {
+export const DockButton = forwardRef((props: DockButtonProps, ref) => {
   const { visible = true, id, label, labelProps, ...buttonProps } = DockButtonPropsContext.useProps(
     props,
   )
@@ -77,6 +77,7 @@ export function DockButton(props: DockButtonProps) {
         space="sm"
       >
         <Button
+          ref={ref}
           size="xl"
           width={42}
           height={42}
@@ -100,7 +101,7 @@ export function DockButton(props: DockButtonProps) {
       </Col>
     </Flipped>
   )
-}
+})
 
 type TagLabelProps = TagProps & {
   arrowSize?: number

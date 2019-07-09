@@ -46,7 +46,10 @@ const ClipboardAppIndex = memo(() => {
   return (
     <List
       selectable
-      itemProps={{ small: true }}
+      itemProps={{
+        small: true,
+        draggable: true,
+      }}
       items={items ? listItemNiceNormalize(items) : null}
     />
   )
@@ -67,7 +70,10 @@ const ClipboardAppMain = memo((props: AppViewProps) => {
     <Section title={`Clipboard: ${app.name}`} titleBorder padding space flex={1}>
       <List
         flex={1}
-        itemProps={{ iconBefore: true }}
+        itemProps={{
+          iconBefore: true,
+          draggable: true,
+        }}
         selectable="multi"
         items={items ? listItemNiceNormalize(items) : null}
       />

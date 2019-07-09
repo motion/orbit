@@ -70,12 +70,11 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
     const onMouseDown = e => {
       window.addEventListener('mousemove', clearDrag)
       window.addEventListener('mouseup', mouseUp)
-      const event = e.persist()
       downTm = setTimeout(() => {
         console.log('got drag start, do it')
         window.removeEventListener('mousemove', clearDrag)
         window.removeEventListener('mouseup', mouseUp)
-        store.setDragging(item, event)
+        store.setDragging(item, e)
       }, delay)
     }
     node.addEventListener('mousedown', onMouseDown)

@@ -55,8 +55,6 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
   const [isEditing, setIsEditing] = useState(false)
   const listItemRef = useRef<HTMLElement | null>(null)
 
-  console.log('listItemRef', listItemRef)
-
   useDraggable({
     ref: listItemRef,
     delay: 1000,
@@ -146,7 +144,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     <ProvideFocus focused={isEditing === true ? false : undefined}>
       <Theme alt={alt}>
         <ListItemSimple
-          ref={listItemRef || composeRefs(listItemRef, ref)}
+          ref={composeRefs(listItemRef, ref)}
           {...itemProps}
           {...rest}
           onStartEdit={onStartEditCb}

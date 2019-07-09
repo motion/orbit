@@ -33,7 +33,11 @@ export class LinearGradient {
     return new LinearGradient(next)
   }
 
-  darken(amt) {
+  darken(amt: number) {
     return this.getColors()[1].darken(amt)
+  }
+
+  isDark() {
+    return this.getColors()[1].isDark()
   }
 }

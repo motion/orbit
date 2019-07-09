@@ -45,9 +45,9 @@ export const OrbitTab = memo(function OrbitTab({
   width,
   ...props
 }: TabProps) {
-  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : undefined })
   const iconSize = iconSizeProp || 16
-  const link = useLocationLink(location)
+  const link = useLocationLink(location || '')
 
   const button = (
     <NavButtonChrome
@@ -104,7 +104,7 @@ export const OrbitTab = memo(function OrbitTab({
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-function OrbitTabIcon(props: Omit<IconProps, 'label'> & TabProps) {
+function OrbitTabIcon(props: Omit<IconProps, 'label'> & Partial<TabProps>) {
   const theme = useTheme()
   let opacity = props.isActive ? 1 : 0.5
   opacity += props.iconAdjustOpacity || 0
@@ -150,12 +150,13 @@ const NavButtonChrome = gloss<TabProps>(View, {
   borderRadius: borderSize,
   height: tabHeight,
   marginRight: 2,
-}).theme(({ width, isActive, stretch }, theme) => {
+}).theme(({ isActive }, theme) => {
   const { tabBackgroundHover, tabBackgroundActive, tabBackgroundSelected } = theme
   const background = isActive ? tabBackgroundSelected : 'transparent'
   const backgroundHover = isActive ? tabBackgroundSelected : tabBackgroundHover
   const backgroundActive = isActive ? tabBackgroundSelected : tabBackgroundActive
   return {
+    debug: background === 'transparent',
     background,
     '&:hover': {
       background: backgroundHover,

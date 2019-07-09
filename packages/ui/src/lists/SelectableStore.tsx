@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
 import { MutableRefObject } from 'react'
@@ -9,8 +10,6 @@ import { DynamicListControlled } from './DynamicList'
 if (isBrowser) {
   require('./SelectableStore.css')
 }
-
-const key = (item: any, index: number) => Config.getItemKey(item, index)
 
 export enum Direction {
   up = 'up',
@@ -54,14 +53,15 @@ export class SelectableStore {
   props: SelectableProps
 
   dragStartIndex?: number = null
-  active = new Set<string>()
+  active = new Set<string | number>()
   lastEnter = -1
   listRef: DynamicListControlled = null
   isSorting = false
   private keyToIndex = {}
+  rows = []
 
-  get rows() {
-    return this.props.items || []
+  key = (item: any, index: number) => {
+    return Config.getItemKey(item, index)
   }
 
   // async so we have time to render the active state first
@@ -78,19 +78,20 @@ export class SelectableStore {
     },
   )
 
+  updateRows = react(
+    () => this.props.items,
+    items => {
+      this.rows = items
+      this.keyToIndex = {}
+      this.updateKeyToIndex()
+    },
+  )
+
   callbackRefProp = react(
     () => this.props.selectableStoreRef,
     ref => {
       ensure('onSelectableStore', !!ref)
       ref.current = this
-    },
-  )
-
-  resetActiveOnRowsChange = react(
-    () => always(this.rows),
-    () => {
-      this.keyToIndex = {}
-      this.setActive([])
     },
   )
 
@@ -105,15 +106,15 @@ export class SelectableStore {
   )
 
   defaultSelectedProp = react(
-    () => [this.props.defaultSelected, always(this.rows)],
-    async ([index], { when }) => {
+    () => this.props.defaultSelected,
+    async (index, { when }) => {
       ensure('defined', isDefined(index))
       await when(() => !!this.rows.length)
       this.setActiveIndex(index)
     },
   )
 
-  private removeUnselectable = (keys: string[]) => {
+  private removeUnselectable = (keys: (string | number)[]) => {
     return keys.filter(k => {
       const row = this.rows[this.keyToIndex[k]]
       if (row && row.selectable === false) {
@@ -123,23 +124,10 @@ export class SelectableStore {
     })
   }
 
-  private setActive(next: string[]) {
+  private setActive(next: (string | number)[]) {
     // dont let it unselect
     if (this.props.alwaysSelected && next.length === 0) {
       return
-    }
-
-    // update keyToIndex
-    for (const rowKey of next) {
-      if (!this.keyToIndex[rowKey]) {
-        const idx = this.rows.findIndex((r, i) => key(r, i) === rowKey)
-        if (idx >= 0) {
-          this.keyToIndex[rowKey] = idx
-        } else {
-          console.error(`no row found of key ${rowKey}`)
-          debugger
-        }
-      }
     }
 
     // check for disabled rows
@@ -155,7 +143,28 @@ export class SelectableStore {
       return
     }
 
-    this.active = new Set(nextFiltered)
+    const nextActive = new Set(nextFiltered)
+
+    if (isEqual(this.active, nextActive)) return
+
+    this.active = nextActive
+    this.updateKeyToIndex(next)
+  }
+
+  updateKeyToIndex(next: (string | number)[] = [...this.active], ignoreMissing = false) {
+    for (const rowKey of next) {
+      if (!this.keyToIndex[rowKey]) {
+        const idx = this.rows.findIndex((r, i) => this.key(r, i) === rowKey)
+        if (idx >= 0) {
+          this.keyToIndex[rowKey] = idx
+        } else {
+          if (ignoreMissing === false) {
+            console.error(`no row found of key ${rowKey}`)
+            debugger
+          }
+        }
+      }
+    }
   }
 
   selectFirstValid() {
@@ -245,7 +254,7 @@ export class SelectableStore {
 
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = this.key(row, index)
     let next = []
     const { active } = this
     const modifiers = this.getModifiers(e)
@@ -281,7 +290,8 @@ export class SelectableStore {
       return
     }
     if (e) {
-      e.stopPropagation()
+      // WARNING I just disabled this
+      // e.stopPropagation()
       if (e.shiftKey) {
         // prevent text selection
         e.preventDefault()
@@ -344,7 +354,7 @@ export class SelectableStore {
     }
 
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = this.key(row, index)
     if (!this.props.selectable) {
       return false
     }
@@ -383,12 +393,12 @@ export class SelectableStore {
     this.setActive([])
   }
 
-  setSorting = (val: boolean) => {
+  setSorting = async (val: boolean) => {
     this.isSorting = val
   }
 
   private getIndexKey(index: number) {
-    return key(this.rows[index], index)
+    return this.key(this.rows[index], index)
   }
 
   private scrollToIndex(index: number) {
@@ -404,7 +414,7 @@ export class SelectableStore {
     }
   }
 
-  private selectInRange = (fromKey: string, toKey: string): string[] => {
+  private selectInRange = (fromKey: string | number, toKey: string | number): string[] => {
     const { rows } = this
     const selected = []
     let startIndex = -1

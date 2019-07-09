@@ -154,9 +154,9 @@ export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop
 export const ListItemSimple = React.forwardRef(
-  ({ style, forwardRef, ...listProps }: ListItemSimpleProps, ref) => {
+  ({ style, ...listProps }: ListItemSimpleProps, ref) => {
     return (
-      <div style={style} ref={(forwardRef || ref) as any}>
+      <div style={style} ref={ref}>
         <ListItemInner {...listProps} />
       </div>
     )

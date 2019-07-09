@@ -1,7 +1,7 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { idFn, selectDefined } from '@o/utils'
 import memoize from 'memoize-one'
-import React, { forwardRef, memo, RefObject, useCallback } from 'react'
+import React, { forwardRef, memo, RefObject, useCallback, useRef } from 'react'
 
 import { defaultSortPressDelay } from '../constants'
 import { Config } from '../helpers/configureUI'
@@ -48,14 +48,11 @@ const ListRow = memo(
   forwardRef((props: any, ref) => {
     const { data, index, style } = props
     const { selectableStore, items, listProps } = data
-    const { getItemProps, ItemView, sortable, onSelect, onOpen, pressDelay, itemProps } = listProps
+    const { getItemProps, ItemView, sortable, onSelect, onOpen, itemProps } = listProps
     const item = items[index]
-    let mouseDownTm = null
-
     const dynamicProps = getItemProps && getItemProps(item, index, items)
-
-    let finishSelect = false
-
+    const mouseDownTm = useRef(null)
+    const finishSelect = useRef(false)
     const onMouseUp = selectDefined(
       dynamicProps ? dynamicProps.onMouseUp : undefined,
       itemProps ? itemProps.onMouseUp : undefined,
@@ -71,7 +68,6 @@ const ListRow = memo(
       itemProps ? itemProps.onMouseEnter : undefined,
       idFn,
     )
-
     return (
       <VirtualListItem
         forwardRef={ref}
@@ -87,29 +83,32 @@ const ListRow = memo(
         {...dynamicProps}
         // our overrides that fallback
         onMouseUp={useCallback(e => {
-          clearTimeout(mouseDownTm)
-          if (finishSelect) {
-            finishSelect = false
+          clearTimeout(mouseDownTm.current)
+          if (finishSelect.current) {
+            finishSelect.current = false
             selectableStore && selectableStore.setRowActive(index, e)
           }
           onMouseUp(e)
         }, [])}
-        onMouseDown={useCallback(e => {
-          e.persist()
-          clearTimeout(mouseDownTm)
-          // add delay when sortable
-          const setRowActive = () => {
-            selectableStore && selectableStore.setRowMouseDown(index, e)
-            finishSelect = false
-          }
-          if (sortable) {
-            finishSelect = true
-            mouseDownTm = setTimeout(setRowActive, pressDelay)
-          } else {
-            setRowActive()
-          }
-          onMouseDown(e)
-        }, [])}
+        onMouseDown={useCallback(
+          e => {
+            e.persist()
+            clearTimeout(mouseDownTm.current)
+            // add delay when sortable
+            const setRowActive = () => {
+              selectableStore && selectableStore.setRowMouseDown(index, e)
+              finishSelect.current = false
+            }
+            if (sortable) {
+              finishSelect.current = true
+              mouseDownTm.current = setTimeout(setRowActive, getPressDelay(listProps))
+            } else {
+              setRowActive()
+            }
+            onMouseDown(e)
+          },
+          [sortable, onMouseDown],
+        )}
         onMouseEnter={useCallback(e => {
           selectableStore && selectableStore.onHoverRow(index)
           onMouseEnter(e)
@@ -135,10 +134,23 @@ const createItemData = memoize(
   },
 )
 
+const getPressDelay = (props: VirtualListProps) =>
+  selectDefined(props.pressDelay, defaultSortPressDelay)
+
 // this memo seems to help most of the extraneous renders
 export const VirtualList = memo((virtualProps: VirtualListProps) => {
   const props = useProps(virtualProps)
   const { onSortStart, onSortEnd, selectableStore } = props
+
+  // key safety
+  if (process.env.NODE_ENV === 'development' && props.sortable) {
+    if (props.items.some((x, i) => Config.getItemKey(x, i) === i)) {
+      throw new Error(
+        `Must provide a key or id property to all items when you have a sortable list.`,
+      )
+    }
+  }
+
   return (
     <SortableList
       selectableStore={selectableStore}
@@ -147,7 +159,7 @@ export const VirtualList = memo((virtualProps: VirtualListProps) => {
       shouldCancelStart={isRightClick}
       lockAxis="y"
       {...props}
-      pressDelay={selectDefined(props.pressDelay, defaultSortPressDelay)}
+      pressDelay={getPressDelay(props)}
       onSortStart={useCallback(
         (sort, event) => {
           selectableStore && selectableStore.setSorting(true)

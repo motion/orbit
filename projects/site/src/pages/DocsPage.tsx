@@ -337,7 +337,7 @@ function DocsChromeSimple({ children }) {
   return (
     <>
       <Header slim noBorder />
-      <Row pad>
+      <Row padding>
         <Button
           {...linkProps(
             window.location.pathname

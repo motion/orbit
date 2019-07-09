@@ -4,6 +4,8 @@ import { filterCleanObject } from '@o/ui'
 import * as firebase from 'firebase/app'
 import { Action, AsyncAction } from 'overmind'
 
+import { ShareItem } from './state'
+
 export const setNavVisible: Action<boolean> = ({ state }, x) => {
   state.navVisible = x
 }
@@ -12,8 +14,8 @@ export const setNavHovered: Action<boolean> = ({ state }, x) => {
   state.navHovered = x
 }
 
-export const setShare: Action<{ key: string; value: any }> = ({ state }, { key, value }) => {
-  state.share[key] = filterCleanObject(value)
+export const setShare: Action<{ id: string; value: ShareItem }> = ({ state }, { id, value }) => {
+  state.share[id] = filterCleanObject(value)
 }
 
 export const finishAuthorization: AsyncAction<{ path: string }> = async (_, { path }) => {

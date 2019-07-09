@@ -26,10 +26,11 @@ const activeStyle = {
   opacity: 0.8,
 }
 
-function ButtonInner(props: ButtonProps) {
+const ButtonInner = forwardRef((props: ButtonProps, ref) => {
   const theme = useTheme()
   return (
     <SizedSurface
+      ref={ref}
       borderPosition="inside"
       userSelect="none"
       tagName="button"
@@ -59,7 +60,7 @@ function ButtonInner(props: ButtonProps) {
       {...props}
     />
   )
-}
+})
 
 export const Button = memo(
   forwardRef((buttonProps: ButtonProps, ref) => {
@@ -70,7 +71,7 @@ export const Button = memo(
     })
     return (
       <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
-        <ButtonInner forwardRef={ref} {...rest} {...controlledProps} />
+        <ButtonInner ref={ref} {...rest} {...controlledProps} />
       </Theme>
     )
   }),

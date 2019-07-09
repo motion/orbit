@@ -1,6 +1,8 @@
 import { Sizes } from './Space'
 
 const sizes = {
+  xxxs: 0.6,
+  xxs: 0.7,
   xs: 0.8,
   sm: 0.9,
   md: 1,

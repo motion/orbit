@@ -113,6 +113,8 @@ export const List = memo((allProps: ListProps) => {
     onEdit,
     onSelect: _ignoreOnSelect,
     padding,
+    droppable,
+    onDrop,
     ...restProps
   } = props
   const shareStore = useShareStore()
@@ -129,7 +131,6 @@ export const List = memo((allProps: ListProps) => {
   const onSelectInner: SelectableProps['onSelect'] = useCallback(
     (selectedRows: any[], selectedIndices: number[]) => {
       selection.current = [selectedRows, selectedIndices]
-
       if (getShareable()) {
         shareStore.setSelected(getShareable(), selectedRows)
       }
@@ -177,26 +178,26 @@ export const List = memo((allProps: ListProps) => {
     const filterExtraProps = filteredGetItemProps(a, b, c)
     const deleteProps: ListItemProps = deletable
       ? {
-        after: (
-          <>
-            {itemExtraProps && itemExtraProps.after}
-            <Button
-              chromeless
-              circular
-              icon="cross"
-              opacity={0.65}
-              onMouseDown={e => {
-                e.stopPropagation()
-              }}
-              onClick={() => {
-                if (window.confirm(`Are you sure you'd like to delete?`)) {
-                  onDelete(a, b)
-                }
-              }}
-            />
-          </>
-        ),
-      }
+          after: (
+            <>
+              {itemExtraProps && itemExtraProps.after}
+              <Button
+                chromeless
+                circular
+                icon="cross"
+                opacity={0.65}
+                onMouseDown={e => {
+                  e.stopPropagation()
+                }}
+                onClick={() => {
+                  if (window.confirm(`Are you sure you'd like to delete?`)) {
+                    onDelete(a, b)
+                  }
+                }}
+              />
+            </>
+          ),
+        }
       : null
 
     const onEditCb = useCallback(title => onEdit(a, title), [onEdit])
@@ -275,6 +276,8 @@ export const List = memo((allProps: ListProps) => {
       titleScale={titleScale}
       titlePadding
       padding={padding}
+      droppable={droppable}
+      onDrop={onDrop}
       {...collapseProps}
     >
       {children}

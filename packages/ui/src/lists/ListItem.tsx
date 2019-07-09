@@ -1,9 +1,11 @@
 import { isDefined } from '@o/utils'
 import { Box, gloss, Theme } from 'gloss'
-import React, { forwardRef, useCallback, useState } from 'react'
+import React, { forwardRef, useCallback, useRef, useState } from 'react'
 
+import { useDraggable } from '../Draggable'
 import { ProvideFocus } from '../Focus'
 import { Bit } from '../helpers/BitLike'
+import { composeRefs } from '../helpers/composeRefs'
 import { Config, CustomItemView } from '../helpers/configureUI'
 import { NormalItem, normalizeItem } from '../helpers/normalizeItem'
 import { PersonRow } from '../PersonRow'
@@ -41,13 +43,24 @@ export type ListItemProps = ListItemSimpleProps &
 
     /** Arbitrarily add extra data, makes search and doing things on onSelect callbacks easier */
     extraData?: any
+
+    /** Allow dragging to other targets */
+    draggable?: boolean
   }
 
 export const ListItem = forwardRef((props: ListItemProps, ref) => {
-  const { item, itemViewProps, people, hidePeople, alt, ...rest } = props
+  const { item, itemViewProps, people, hidePeople, alt, draggable, ...rest } = props
   const selectableStore = useSelectableStore()
   const visStore = useVisibilityStore()
   const [isEditing, setIsEditing] = useState(false)
+  const listItemRef = useRef<HTMLElement | null>(null)
+
+  useDraggable({
+    ref: listItemRef,
+    delay: 1000,
+    item: item || props,
+    enabled: draggable,
+  })
 
   // this is the view from sources, each bit type can have its own display
   let ItemView: CustomItemView = null
@@ -131,7 +144,7 @@ export const ListItem = forwardRef((props: ListItemProps, ref) => {
     <ProvideFocus focused={isEditing === true ? false : undefined}>
       <Theme alt={alt}>
         <ListItemSimple
-          ref={ref}
+          ref={composeRefs(listItemRef, ref)}
           {...itemProps}
           {...rest}
           onStartEdit={onStartEditCb}

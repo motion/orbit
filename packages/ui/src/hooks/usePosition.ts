@@ -20,6 +20,7 @@ export function getRect(o: any) {
 
 type UsePositionProps = {
   ref: RefObject<HTMLElement>
+  measureKey?: any
   onChange?: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
   preventMeasure?: boolean
   debounce?: number
@@ -27,7 +28,7 @@ type UsePositionProps = {
 
 export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
   const [pos, setPos] = useState(null)
-  const { ref, preventMeasure, debounce = 100 } = props
+  const { measureKey, ref, preventMeasure, debounce = 100 } = props
   const onChange = useGet(props.onChange || setPos)
   const disable = useVisibility() === false
   const intersected = useRef(false)
@@ -93,7 +94,7 @@ export function usePosition(props: UsePositionProps, mountArgs: any[] = []) {
     },
   })
 
-  useEffect(measure, [ref, ...mountArgs])
+  useEffect(measure, [ref, measureKey, ...mountArgs])
 
   useEffect(() => {
     if (disable) {

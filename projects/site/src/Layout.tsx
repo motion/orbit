@@ -90,7 +90,7 @@ export const Layout = memo((props: any) => {
         transition={transition}
         style={{
           maxHeight,
-          transform: `translateX(${siteStore.showSidebar ? -sidebarWidth : 'none'})`,
+          transform: `translateX(${siteStore.showSidebar ? -sidebarWidth : 0}px)`,
         }}
       >
         <ErrorBoundary name="Site Error">
@@ -131,7 +131,7 @@ const LayoutSidebar = memo(() => {
           background={bg}
           style={{
             width: sidebarWidth,
-            transform: `translateX(${siteStore.showSidebar ? 0 : sidebarWidth})`,
+            transform: `translateX(${siteStore.showSidebar ? 0 : sidebarWidth}px)`,
           }}
         >
           <Button

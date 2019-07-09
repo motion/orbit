@@ -18,7 +18,6 @@ export function Link({ children, fontSize, href, width, margin, ...props }: Link
         fontSize={fontSize || 'inherit'}
         alpha={isActive ? 1 : 0.6}
         hoverStyle={{ alpha: 1 }}
-        debug
         activeStyle={{ alpha: isActive ? 1 : 0.7 }}
         transition="all ease 300ms"
         {...fontProps.Nunito}

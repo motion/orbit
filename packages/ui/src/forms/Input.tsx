@@ -56,7 +56,7 @@ export const Input = React.forwardRef(function Input(
 
   return (
     <SimpleInput
-      forwardRef={ref}
+      ref={ref}
       {...props}
       type={type}
       onKeyDown={useCallback(
@@ -95,7 +95,7 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
     '&:focus-within': {
       boxShadow: [
         [0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.5)],
-        getElevation(props).boxShadow,
+        getElevation(props, theme).boxShadow,
       ],
     },
   }),

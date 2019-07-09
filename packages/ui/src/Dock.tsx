@@ -1,6 +1,6 @@
 import { createStoreContext, useStore } from '@o/use-store'
 import { selectDefined } from '@o/utils'
-import { gloss, Theme, useTheme } from 'gloss'
+import { gloss, Theme } from 'gloss'
 import React, { forwardRef, memo, useLayoutEffect } from 'react'
 import { Flipped, Flipper } from 'react-flip-toolkit'
 
@@ -8,6 +8,7 @@ import { Arrow } from './Arrow'
 import { Button, ButtonProps } from './buttons/Button'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Tag, TagProps } from './Tag'
+import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
@@ -52,13 +53,12 @@ export type DockButtonProps = ButtonProps & {
 const DockButtonPropsContext = createContextualProps<DockButtonProps>()
 export const DockButtonPassProps = DockButtonPropsContext.PassProps
 
-export function DockButton(props: DockButtonProps) {
+export const DockButton = forwardRef((props: DockButtonProps, ref) => {
   const { visible = true, id, label, labelProps, ...buttonProps } = DockButtonPropsContext.useProps(
     props,
   )
   const dockStore = DockStoreContext.useStore()
   const show = selectDefined(dockStore.items[id], visible)
-  const theme = useTheme()
 
   useLayoutEffect(() => {
     dockStore.next[id] = visible
@@ -67,17 +67,20 @@ export function DockButton(props: DockButtonProps) {
 
   return (
     <Flipped flipId={id}>
-      <View flexDirection="row" position="relative" alignItems="center" justifyContent="flex-end">
-        <Theme name={theme.background.isDark() ? 'light' : 'dark'}>
-          <TagLabel pointerEvents="none" {...labelProps}>
-            {props.label}
-          </TagLabel>
-        </Theme>
+      <Col
+        pointerEvents="none"
+        // TODO do it based on attachment
+        flexDirection={'column'}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        space="sm"
+      >
         <Button
+          ref={ref}
           size="xl"
           width={42}
           height={42}
-          marginLeft={15}
           circular
           iconSize={18}
           elevation={4}
@@ -86,13 +89,19 @@ export function DockButton(props: DockButtonProps) {
           }}
           zIndex={100000000}
           opacity={1}
+          pointerEvents="auto"
           {...!show && { marginRight: -(50 + 15), opacity: 0 }}
           {...buttonProps}
         />
-      </View>
+        <Theme name="tooltip">
+          <TagLabel towards="top" size="xxs" {...labelProps}>
+            {props.label}
+          </TagLabel>
+        </Theme>
+      </Col>
     </Flipped>
   )
-}
+})
 
 type TagLabelProps = TagProps & {
   arrowSize?: number
@@ -102,6 +111,7 @@ type TagLabelProps = TagProps & {
 const TagLabel = ({
   arrowSize = 12,
   towards = 'right',
+  maxWidth = 75,
   position,
   top,
   left,
@@ -118,15 +128,18 @@ const TagLabel = ({
     <TagLabelChrome
       {...{ position, top, left, bottom, right, display, opacity, transform, transition }}
     >
-      <Arrow
-        position="absolute"
-        top={`calc(50% - ${arrowSize / 2}px)`}
-        right={-arrowSize * 2}
-        size={arrowSize}
-        towards={towards}
-        background={background}
-      />
-      <Tag size="xs" background={background} {...props} />
+      {/* TODO do other directions */}
+      {towards === 'right' && (
+        <Arrow
+          position="absolute"
+          top={`calc(50% - ${arrowSize / 2}px)`}
+          right={-arrowSize * 2}
+          size={arrowSize}
+          towards={towards}
+          background={background}
+        />
+      )}
+      <Tag size="xs" maxWidth={maxWidth} background={background} {...props} />
     </TagLabelChrome>
   )
 }

@@ -14,7 +14,7 @@ import { getAppListItem } from './getAppListItem'
 export default createApp({
   id: 'apps',
   name: 'Apps',
-  icon: 'grid',
+  icon: 'layout-grid',
   app: props => {
     return (
       <App index={<AppsIndex />}>
@@ -215,7 +215,7 @@ function AppSettings(props: { appId: number }) {
       titleBorder
       icon={<AppIcon identifier={app.identifier} colors={app.colors} />}
       space
-      pad
+      padding
       title={app.name}
       subTitle={`${definition.name}`}
       afterTitle={

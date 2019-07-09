@@ -7,14 +7,13 @@ import React from 'react'
 import { useState } from 'react'
 
 import { ColorPicker } from '../views/ColorPicker'
-import { OrbitSettingsToolbar } from './views/OrbitSettingsToolbar'
 
 export default createApp({
   id: 'spaces',
   name: 'Spaces',
   icon: 'layer',
   app: props => (
-    <App index={<SpacesAppIndex />} toolBar={<OrbitSettingsToolbar />}>
+    <App index={<SpacesAppIndex />}>
       <SpacesAppMain {...props} />
     </App>
   ),

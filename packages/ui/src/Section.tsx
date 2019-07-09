@@ -1,9 +1,11 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { Base, Theme } from 'gloss'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useRef } from 'react'
 
 import { BorderBottom } from './Border'
 import { splitCollapseProps, useCollapse } from './Collapsable'
+import { DropOverlay, trueFn, useDroppable } from './Draggable'
+import { composeRefs } from './helpers/composeRefs'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Loading } from './progress/Loading'
 import { Scale } from './Scale'
@@ -61,6 +63,12 @@ export type SectionSpecificProps = Partial<
 
   /** Override the <TitleRow /> entirely */
   titleElement?: React.ReactNode
+
+  /** Allows dropping onto list */
+  droppable?: boolean | ((item?: any) => boolean)
+
+  /** Callback on dropped item */
+  onDrop?: (item?: any) => void
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
@@ -117,8 +125,18 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padding,
     overflow,
     className,
+    droppable,
+    onDrop,
     ...viewProps
   } = props
+  const sectionInnerRef = useRef<HTMLElement>(null)
+
+  const isDropping = useDroppable({
+    ref: sectionInnerRef,
+    acceptsItem: droppable === true ? trueFn : droppable || trueFn,
+    onDrop,
+  })
+
   const hasTitle = isDefined(title, afterTitle)
   const padSized = padding === true ? size : padding
   const innerPad = selectDefined(
@@ -191,7 +209,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   return (
     <SizedSurface
       className={`ui-section ${className}`}
-      forwardRef={ref}
+      ref={ref}
       hoverStyle={null}
       activeStyle={null}
       sizeRadius={bordered ? 1 : 0}
@@ -221,10 +239,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     >
       {showTitleAbove && titleEl}
       <Reset>
+        {!!droppable && <DropOverlay isDropping={isDropping} />}
         <Col
           maxHeight={maxInnerHeight}
           flex={1}
-          ref={innerRef}
+          ref={composeRefs(sectionInnerRef, innerRef)}
           space={spaceSize}
           spaceAround={spaceAround}
           flexDirection={flexDirection}

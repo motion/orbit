@@ -19,7 +19,7 @@ export type ConfigureUIProps = {
   getIconForBit: (bit: Bit) => React.ReactNode
 
   // set a custom item key getter for lists/tables
-  getItemKey: (item: any, index: number) => string
+  getItemKey: (item: any, index: number) => string | number
 
   // set a custom persistence function for appState
   useAppState: <A>(id: string, defaultState: A) => [A, ImmutableUpdateFn<A>]
@@ -84,7 +84,7 @@ export let Config: ConfigureUIProps = {
     if (typeof index === 'undefined') {
       return `${hash(x)}`
     }
-    return `${index}`
+    return index
   },
 }
 

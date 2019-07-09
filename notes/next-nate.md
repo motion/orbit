@@ -11,7 +11,6 @@ umbrella type things:
 
 those together are just nice, second one really helps with moving data between apps.
 
-- opening app windows into own space
 - edit apps from within orbit
 - publish apps from within orbit
 - create app from within orbit
@@ -40,20 +39,11 @@ QueryBuilder:
 - Fix topbar tabs
 - GraphQL editor
 
-Visual Fixes:
-
-- Lists search+select seems to have regressed, could be new react-window
-
 Edit apps from interface:
 
 - Get editing apps working from UI
 - Test full edit => publish flow with build to production command
 - Needs some visual feedback with banners/messages
-
-Workspaces:
-
-- Get second example workspace setup
-- Move between the two workspace in the interface
 
 App Settings:
 
@@ -62,7 +52,6 @@ App Settings:
 
 Dock:
 
-- Get the QueryBuilder into the dock
 - Get dragging from dock into apps (as part of demo apps as well)
 - Export options (to file/json/api)
 

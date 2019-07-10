@@ -43,7 +43,7 @@ function useActivePane() {
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {
   // separate value here, lets us interface with queryStore/search, + will be useful for concurrent
   const [inputVal, setInputVal] = useState('')
-  const search = useSearch()
+  const search = useSearch(undefined, { react: false })
   const qs = useQueryStore()
   const orbitWindowStore = useOrbitWindowStore()
   const headerStore = useHeaderStore()

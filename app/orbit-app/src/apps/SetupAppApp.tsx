@@ -1,4 +1,4 @@
-import { AppIcon, command, createApp, getAppDefinition, useLocationLink } from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo, useLayoutEffect } from 'react'
@@ -181,6 +181,15 @@ export function SetupAppHome(props: SetupAppHomeProps) {
     data: {
       selectedAppIdentifier: null,
     },
+  })
+
+  useSearchState({
+    onChange(state) {
+      if (!state.query) {
+        flow.next()
+      }
+    },
+    onEvent: 'enter',
   })
 
   return (

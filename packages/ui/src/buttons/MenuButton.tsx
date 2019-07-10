@@ -19,7 +19,12 @@ export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
           items={items}
           scrollable={scrollable}
           target={
-            <View position="relative" padding={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'xs']}>
+            <View
+              onClick={preventPropagation}
+              position="relative"
+              padding={[0, 0, 0, 'sm']}
+              margin={[0, 0, 0, 'xs']}
+            >
               <BorderLeft />
               <Icon size={12} name="caret-down" />
             </View>
@@ -29,4 +34,9 @@ export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
       {...rest}
     />
   )
+}
+
+const preventPropagation = (e: MouseEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
 }

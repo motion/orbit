@@ -537,7 +537,7 @@ const OrbitAppCard = memo(
             isDisabled={isDisabled}
             identifier={definition.id}
             appDef={definition}
-            renderApp={renderApp}
+            shouldRenderApp={renderApp}
           />
         </Card>
       </View>

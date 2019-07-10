@@ -128,24 +128,32 @@ function QueryBuilderMain({
 function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState<any[] | null>(null)
   return (
     <Section
-      pad
+      padding
       titlePadding
       backgrounded
-      title={props.title}
+      title={props.title || 'No title'}
       subTitle="Select data app."
       afterTitle={
         <>
           <Button
             onClick={() => {
-              if (!selected || !selected.length) {
+              if (!selected) {
                 window.alert('Please select an item first')
                 return
               }
               const item = selected[0]
-              const app = dataApps.find(x => x.id === item.id)
+              if (!item) {
+                window.alert(`No item selected`)
+                return
+              }
+              const app = dataApps.find(x => x.id === item.id!)
+              if (!app) {
+                window.alert(`No app!`)
+                return
+              }
               // navigate to app definition:
               props.navigation.navigate({
                 id: 'QueryEdit',

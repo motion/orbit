@@ -1,7 +1,7 @@
-import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
+import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { FullScreen, useTheme } from 'gloss'
-import React, { memo, useRef } from 'react'
+import React, { memo, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -13,7 +13,7 @@ type DockOpenState = 'open' | 'closed' | 'pinned'
 class OrbitDockStore {
   state: DockOpenState = 'pinned'
   nextState: { state: DockOpenState; delay: number } | null = null
-  hoveredIndex = -1
+  hoveredIndex = 1 //! -1
   nextHovered: { index: number; at: number } | null = null
 
   get isOpen() {
@@ -22,8 +22,8 @@ class OrbitDockStore {
 
   setState(next: DockOpenState = 'open') {
     if (next === this.state) return
-    this.state = next
-    this.nextState = null
+    //! this.state = next
+    //! this.nextState = null
   }
 
   deferUpdateState = react(
@@ -41,7 +41,7 @@ class OrbitDockStore {
     this.setState('closed')
     this.nextHovered = null
     // hide hover immediately on force close
-    this.hoveredIndex = -1
+    //! this.hoveredIndex = -1
   }
 
   hoverLeave = () => {
@@ -86,6 +86,7 @@ class OrbitDockStore {
   deferUpdateHoveringButton = react(
     () => this.nextHovered,
     async (next, { sleep }) => {
+      return // !
       if (!next) return
       if (this.hoveredIndex === -1 || next.index === -1) {
         await sleep(next.index > -1 ? 100 : 200)
@@ -254,6 +255,13 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
     top -= bottom - windowHeight
   }
 
+  const appViews = useMemo(
+    () => ({
+      Sidebar: DockSidebarView,
+    }),
+    [],
+  )
+
   return (
     <FloatingCard
       defaultWidth={width}
@@ -272,9 +280,25 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
         orbitDockStore.hoverLeaveButton()
       }}
     >
-      <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
+      <AppViewsContext.Provider value={appViews}>
+        <OrbitApp
+          id={app.id!}
+          identifier={app.identifier!}
+          appDef={definition}
+          shouldRenderApp
+          renderApp={DockAppRender}
+        />
+      </AppViewsContext.Provider>
     </FloatingCard>
   )
+}
+
+const DockAppRender = (props: RenderAppProps) => {
+  return <>{props.sidebar}</>
+}
+
+const DockSidebarView = (props: AppMainViewProps) => {
+  return props.children
 }
 
 // this could work to let apps ahve their own dock items...

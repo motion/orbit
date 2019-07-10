@@ -1,11 +1,9 @@
-import '../../apps/orbitApps'
-
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, sleep, useAppBit } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, sleep, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
-import React, { memo, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useOm } from '../../om/om'
 import { orbitStore, usePaneManagerStore } from '../../om/stores'
@@ -18,62 +16,64 @@ type OrbitAppProps = {
   id: number
   identifier: string
   appDef?: AppDefinition
-  renderApp?: boolean
+  shouldRenderApp?: boolean
   isDisabled?: boolean
+  renderApp?: RenderAppFn
 }
 
-export const OrbitApp = memo(({ id, identifier, appDef, renderApp, isDisabled }: OrbitAppProps) => {
-  const paneManagerStore = usePaneManagerStore()
+export const OrbitApp = memo(
+  ({ id, identifier, appDef, shouldRenderApp, isDisabled, renderApp }: OrbitAppProps) => {
+    const paneManagerStore = usePaneManagerStore()
 
-  const isActive =
-    !isDisabled &&
-    // on active pane
-    paneManagerStore.activePane.id === `${id}`
+    const isActive =
+      !isDisabled &&
+      // on active pane
+      paneManagerStore.activePane.id === `${id}`
 
-  const appStore = useStoreSimple(AppStore, {
-    id,
-    identifier,
-  })
+    const appStore = useStoreSimple(AppStore, {
+      id,
+      identifier,
+    })
 
-  useLayoutEffect(() => {
-    if (isActive) {
-      orbitStore.setActiveAppStore(appStore)
-    }
-  }, [orbitStore, appStore, isActive, renderApp])
-
-  return (
-    <Suspense
-      fallback={
-        <div>
-          error loading app {identifier} {id}
-        </div>
+    useLayoutEffect(() => {
+      if (isActive) {
+        orbitStore.setActiveAppStore(appStore)
       }
-    >
-      <View
-        className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
-        flex={1}
-        pointerEvents={isDisabled ? 'none' : 'inherit'}
+    }, [orbitStore, appStore, isActive, shouldRenderApp])
+
+    return (
+      <Suspense
+        fallback={
+          <div>
+            error loading app {identifier} {id}
+          </div>
+        }
       >
-        <ScopedState id={`or-${identifier}-${id}`}>
-          <ProvideStores stores={{ appStore }}>
-            <ProvideVisibility visible={isActive}>
-              <OrbitAppRender
-                id={id}
-                identifier={identifier}
-                renderApp={selectDefined(renderApp, true)}
-                appDef={appDef}
-              />
-            </ProvideVisibility>
-          </ProvideStores>
-        </ScopedState>
-      </View>
-    </Suspense>
-  )
-})
+        <View
+          className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
+          flex={1}
+          pointerEvents={isDisabled ? 'none' : 'inherit'}
+        >
+          <ScopedState id={`or-${identifier}-${id}`}>
+            <ProvideStores stores={{ appStore }}>
+              <ProvideVisibility visible={isActive}>
+                <OrbitAppRender
+                  id={id}
+                  identifier={identifier}
+                  shouldRenderApp={selectDefined(shouldRenderApp, true)}
+                  appDef={appDef}
+                  renderApp={renderApp}
+                />
+              </ProvideVisibility>
+            </ProvideStores>
+          </ScopedState>
+        </View>
+      </Suspense>
+    )
+  },
+)
 
-type AppRenderProps = OrbitAppProps
-
-const OrbitAppRender = memo((props: AppRenderProps) => {
+const OrbitAppRender = memo((props: OrbitAppProps) => {
   const appDef = props.appDef || getAppDefinition(props.identifier)
   if (appDef.app == null) {
     console.warn('no app', props)
@@ -90,20 +90,17 @@ export const OrbitAppRenderOfDefinition = ({
   id,
   identifier,
   appDef,
+  shouldRenderApp,
   renderApp,
-}: AppRenderProps & {
+}: OrbitAppProps & {
   appDef: AppDefinition
 }) => {
   const [app] = useAppBit(id)
   const om = useOm()
-  const Toolbar = OrbitToolBar
-  const Sidebar = OrbitSidebar
-  const Main = OrbitMain
-  const Statusbar = OrbitStatusBar
-  const Actions = OrbitActions
   const [activeItem, setActiveItem] = useState<AppViewProps | null>(null)
   const getActiveItem = useGet(activeItem)
   const setActiveItemThrottled = useThrottledFn(setActiveItem, { amount: 250 })
+  const appViewsContext = useContext(AppViewsContext)
 
   const onChangeShare = useCallback((location, items) => {
     items = !items || Object.keys(items).length === 0 ? [] : items
@@ -145,7 +142,7 @@ export const OrbitAppRenderOfDefinition = ({
 
   const appElement = useMemo(
     () =>
-      renderApp && (
+      shouldRenderApp && (
         <FadeIn>
           <FinalAppView
             {...activeItem}
@@ -154,13 +151,28 @@ export const OrbitAppRenderOfDefinition = ({
           />
         </FadeIn>
       ),
-    [renderApp, activeItem, id, identifier],
+    [shouldRenderApp, activeItem, id, identifier],
   )
+
+  const viewsContext = useMemo(
+    () => ({
+      Toolbar: OrbitToolBar,
+      Sidebar: OrbitSidebar,
+      Main: OrbitMain,
+      Statusbar: OrbitStatusBar,
+      Actions: OrbitActions,
+      ...appViewsContext,
+      renderApp,
+    }),
+    [renderApp, appViewsContext],
+  )
+
+  const appLoadContext = useMemo(() => ({ id, identifier, appDef }), [id, identifier, appDef])
 
   return (
     <ProvideShare onChange={onChangeShare}>
-      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
+      <AppLoadContext.Provider value={appLoadContext}>
+        <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`}>
             <Suspense fallback={<Loading />}>{appElement}</Suspense>
           </ErrorBoundary>

@@ -5,6 +5,28 @@ import { useStoresSimple } from '../hooks/useStores'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context', 'actions']
 
+export type RenderAppProps = {
+  statusbar: React.ReactElement | false
+  main: React.ReactElement | false
+  sidebar: React.ReactElement | false
+  toolbar: React.ReactElement | false
+  actions: React.ReactElement | false
+}
+
+export type RenderAppFn = (props: RenderAppProps) => React.ReactNode
+
+const defaultRenderApp: RenderAppFn = ({ statusbar, main, sidebar, toolbar, actions }) => {
+  return (
+    <>
+      {statusbar}
+      {main}
+      {sidebar}
+      {toolbar}
+      {actions}
+    </>
+  )
+}
+
 export type AppMainViewProps = {
   children: React.ReactNode
   hasSidebar: boolean
@@ -15,12 +37,17 @@ export type AppMainViewProps = {
 
 type AppMainView = React.FunctionComponent<AppMainViewProps>
 
-export const AppViewsContext = createContext({
-  Toolbar: null as AppMainView,
-  Statusbar: null as AppMainView,
-  Main: null as AppMainView,
-  Sidebar: null as AppMainView,
-  Actions: null as React.FunctionComponent,
+type IAppViewsContext = {
+  renderApp: RenderAppFn
+  Toolbar?: AppMainView | null
+  Statusbar?: AppMainView | null
+  Main?: AppMainView | null
+  Sidebar?: AppMainView | null
+  Actions?: React.FunctionComponent | null
+}
+
+export const AppViewsContext = createContext<IAppViewsContext>({
+  renderApp: defaultRenderApp,
 })
 
 export type AppMenuItem = {
@@ -49,7 +76,9 @@ export const App = (props: AppProps) => {
   }
 
   const { appStore } = useStoresSimple()
-  const { Statusbar, Main, Sidebar, Toolbar, Actions } = useContext(AppViewsContext)
+  const { renderApp = defaultRenderApp, Statusbar, Main, Sidebar, Toolbar, Actions } = useContext(
+    AppViewsContext,
+  )
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
   const hasSidebar = !!props.index && !!Sidebar
@@ -68,29 +97,16 @@ export const App = (props: AppProps) => {
     }
   }, [props.menuItems])
 
-  return (
-    <>
-      {hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>}
-      {hasMain && <Main {...hasProps}>{props.children}</Main>}
-      {hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>}
-      {hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>}
-      {hasActions && <Actions {...hasProps}>{props.actions}</Actions>}
-    </>
-  )
+  return renderApp({
+    statusbar: hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>,
+    main: hasMain && <Main {...hasProps}>{props.children}</Main>,
+    sidebar: hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>,
+    toolbar: hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>,
+    actions: hasActions && <Actions {...hasProps}>{props.actions}</Actions>,
+  })
 }
 
 App.isApp = true
-
-// const useMemoElement = (el: React.ReactNode) => {
-//   const state = useRef({
-//     version: 0,
-//     last: null,
-//   })
-//   if (!isEqual(el, state.current.last)) {
-//     state.current.version++
-//   }
-//   return useMemo(() => el, [state.current.version])
-// }
 
 export const AppMenuItems: { [key: string]: AppMenuItem } = {
   ShowHints: {

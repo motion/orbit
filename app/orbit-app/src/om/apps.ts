@@ -3,6 +3,7 @@ import { AppBit, AppModel, Space } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 import { updatePaneManagerPanes } from './spaces/paneManagerEffects'
 import { queryStore } from './stores'
 
@@ -80,6 +81,7 @@ const setApps: Action<AppBit[]> = (om, apps) => {
   om.effects.spaces.updatePaneSort(om.state.spaces.activeSpace, om.state.apps.activeApps)
   om.effects.apps.updatePaneManagerPanes(om.state.apps.activeApps)
   om.effects.apps.updateQueryStoreSources(apps)
+  om.effects.apps.updateCarouselApps(om.state.apps.activeClientApps)
 }
 
 const setActiveSpace: Action<Space> = (om, space) => {
@@ -91,6 +93,7 @@ const setActiveSpace: Action<Space> = (om, space) => {
 const start: AsyncAction = async om => {
   const appsQuery = { args: { where: { spaceId: om.state.spaces.activeSpace.id } } }
   om.actions.apps.setApps(await loadMany(AppModel, appsQuery))
+
   observeMany(AppModel, appsQuery).subscribe(apps => {
     om.actions.apps.setApps(apps)
   })
@@ -104,6 +107,13 @@ export const actions = {
 
 export const effects = {
   updatePaneManagerPanes,
+
+  updateCarouselApps(apps: AppBit[]) {
+    // load apps into carousel
+    appsCarouselStore.setProps({
+      apps,
+    })
+  },
 
   ensureStaticAppBits(activeSpace: Space) {
     const appDefs = orbitStaticApps
@@ -127,8 +137,8 @@ export const effects = {
 
   updateQueryStoreSources(apps: AppBit[]) {
     const sources = apps.map(x => ({
-      name: x.name,
-      type: x.identifier,
+      name: x.name || '',
+      type: x.identifier || '',
     }))
     queryStore.setSources(sources)
   },

@@ -68,7 +68,11 @@ class OrbitAppsCarouselStore {
 
   updateAnimation = react(
     () => always(this.state),
-    () => this.props.setCarouselSprings(this.getSpring),
+    () => {
+      if (this.props.setCarouselSprings) {
+        this.props.setCarouselSprings(this.getSpring)
+      }
+    },
     {
       log: false,
     },
@@ -138,14 +142,6 @@ class OrbitAppsCarouselStore {
       this.finishScroll()
     },
   )
-
-  // forceScrollToPane = react(
-  //   () => this.focusedIndex,
-  //   async (_, { sleep }) => {
-  //     await sleep(800)
-  //     this.animateAndScrollTo(Math.round(this.state.index))
-  //   },
-  // )
 
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
@@ -226,11 +222,14 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = async (index: number) => {
+    if (!this.rowNode) {
+      return
+    }
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }
     const x = this.props.rowWidth * index
-    if (this.rowNode!.scrollLeft !== this.state.index * this.props.rowWidth) {
+    if (this.rowNode.scrollLeft !== this.state.index * this.props.rowWidth) {
       this.updateScrollPositionToIndex()
       // TODO this sleep is necessary and a bug in react-spring
       await sleep(20)

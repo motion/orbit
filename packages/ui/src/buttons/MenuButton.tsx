@@ -3,6 +3,7 @@ import React from 'react'
 import { BorderLeft } from '../Border'
 import { Icon } from '../Icon'
 import { Menu, MenuProps } from '../Menu'
+import { useSurfaceHeight } from '../SizedSurface'
 import { View } from '../View/View'
 import { Button, ButtonProps } from './Button'
 
@@ -12,6 +13,7 @@ export type MenuButtonProps = ButtonProps & {
 }
 
 export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
+  const height = useSurfaceHeight(rest.size)
   return (
     <Button
       after={
@@ -20,8 +22,10 @@ export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
           scrollable={scrollable}
           target={
             <View
+              height={height}
               onClick={preventPropagation}
               position="relative"
+              justifyContent="center"
               padding={[0, 0, 0, 'sm']}
               margin={[0, 0, 0, 'xs']}
             >

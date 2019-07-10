@@ -102,7 +102,7 @@ export type SurfaceSpecificProps = {
   noInnerElement?: boolean
 
   /** Size of the surface */
-  size?: Sizes
+  size?: Size
 
   /** Size (relative) of the icon */
   sizeIcon?: number
@@ -115,6 +115,7 @@ export type SurfaceSpecificProps = {
   /** Extra props for the <Tooltip /> */
   tooltipProps?: PopoverProps
 
+  /** Control the width */
   width?: number | string
 
   /** Text alpha */

@@ -3,6 +3,7 @@ import React, { forwardRef } from 'react'
 
 import { useScale } from './Scale'
 import { getSize } from './Sizes'
+import { Size } from './Space'
 import { Surface, SurfaceProps, SurfaceSpecificProps, useSurfaceProps } from './Surface'
 
 export const LINE_HEIGHT = 30
@@ -36,6 +37,14 @@ const clampRound = (x: number) => Math.round(x * 100) / 100
 
 export const getSizedRadius = (size: number, sizeRadius: number | true) => {
   return clampRound(num(sizeRadius) * 6 * size)
+}
+
+export const useScaledSize = (size: Size) => {
+  return useScale() * getSize(size)
+}
+
+export const useSurfaceHeight = (size: Size) => {
+  return getHeight(useScaledSize(size), 1)
 }
 
 const getHeight = (size: number, sizeHeight: number | boolean) => {

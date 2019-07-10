@@ -219,8 +219,7 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
   const ts = useAppState<TreeStateStatic>(
     subSelect === false ? subSelect : `tlist-${subSelect}`,
     {
-      ...defaultState,
-      ...(props && { items: props.items }),
+      items: (props && props.items) || defaultState.items,
     },
     getStateOptions('tree', props),
   )

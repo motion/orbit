@@ -89,7 +89,7 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
             },
           },
         }),
-        1000,
+        400,
       )
 
       const create = () => {

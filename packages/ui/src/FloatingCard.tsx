@@ -24,6 +24,7 @@ type FloatingCardProps = Omit<CardProps, 'maxHeight' | 'maxWidth'> &
     | 'maxWidth'
   > & {
     visible?: boolean
+    outside?: React.ReactNode
   }
 
 export function FloatingCard({
@@ -45,6 +46,7 @@ export function FloatingCard({
   elevation = 2,
   maxHeight,
   maxWidth,
+  outside,
   ...cardProps
 }: FloatingCardProps) {
   const isVisible = useVisibility()
@@ -78,6 +80,7 @@ export function FloatingCard({
       maxHeight={maxHeight}
       maxWidth={maxWidth}
     >
+      {outside}
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}
         elevation={elevation}

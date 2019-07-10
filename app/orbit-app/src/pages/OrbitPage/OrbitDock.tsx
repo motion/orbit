@@ -1,6 +1,6 @@
 import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import { FullScreen, useTheme } from 'gloss'
+import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { memo, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
@@ -279,6 +279,7 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
       onMouseLeave={() => {
         orbitDockStore.hoverLeaveButton()
       }}
+      outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
     >
       <AppViewsContext.Provider value={appViews}>
         <OrbitApp
@@ -300,6 +301,36 @@ const DockAppRender = (props: RenderAppProps) => {
 const DockSidebarView = (props: AppMainViewProps) => {
   return props.children
 }
+
+const FloatingLabel = gloss<{ visible?: boolean }>(Box, {
+  pointerEvents: 'none',
+  position: 'absolute',
+  top: -40,
+  left: 0,
+  alignSelf: 'flex-start',
+  background: [0, 0, 0, 0.95],
+  padding: [4, 8],
+  borderRadius: 100,
+  fontSize: 14,
+  fontWeight: 600,
+  textShadow: {
+    x: 0,
+    y: 2,
+    blur: 4,
+    color: 'rgba(0,0,0,0.4)',
+  },
+  transition: 'all ease 300ms',
+  opacity: 0,
+  transform: {
+    y: -10,
+  },
+  visible: {
+    opacity: 1,
+    transform: {
+      y: 0,
+    },
+  },
+})
 
 // this could work to let apps ahve their own dock items...
 // const useActiveAppMenuItems = () => {

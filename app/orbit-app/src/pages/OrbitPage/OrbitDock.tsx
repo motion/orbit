@@ -13,7 +13,7 @@ type DockOpenState = 'open' | 'closed' | 'pinned'
 class OrbitDockStore {
   state: DockOpenState = 'pinned'
   nextState: { state: DockOpenState; delay: number } | null = null
-  hoveredIndex = 1 //! -1
+  hoveredIndex = -1
   nextHovered: { index: number; at: number } | null = null
 
   get isOpen() {
@@ -22,8 +22,8 @@ class OrbitDockStore {
 
   setState(next: DockOpenState = 'open') {
     if (next === this.state) return
-    //! this.state = next
-    //! this.nextState = null
+    this.state = next
+    this.nextState = null
   }
 
   deferUpdateState = react(
@@ -41,7 +41,7 @@ class OrbitDockStore {
     this.setState('closed')
     this.nextHovered = null
     // hide hover immediately on force close
-    //! this.hoveredIndex = -1
+    this.hoveredIndex = -1
   }
 
   hoverLeave = () => {
@@ -86,7 +86,6 @@ class OrbitDockStore {
   deferUpdateHoveringButton = react(
     () => this.nextHovered,
     async (next, { sleep }) => {
-      return // !
       if (!next) return
       if (this.hoveredIndex === -1 || next.index === -1) {
         await sleep(next.index > -1 ? 100 : 200)

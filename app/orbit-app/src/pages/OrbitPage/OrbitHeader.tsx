@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { om, useOm } from '../../om/om'
@@ -191,23 +191,25 @@ const OrbitDockOpenButton = memo(() => {
   const orbitDock = orbitDockStore.useStore()
   return (
     <View position="relative">
-      <Button
-        marginRight={20}
-        width={30}
-        height={30}
-        icon="more"
-        iconProps={{
-          transform: {
-            rotate: '90deg',
-          },
-        }}
-        circular
-        onMouseEnter={orbitDock.hoverEnter}
-        onMouseLeave={orbitDock.hoverLeave}
-        onClick={orbitDock.togglePinned}
-        active={orbitDock.state === 'pinned'}
-        zIndex={2}
-      />
+      <HeaderButtonPassProps>
+        <Button
+          margin={[0, 20, 0, 0]}
+          width={30}
+          height={30}
+          icon="more"
+          iconProps={{
+            transform: {
+              rotate: '90deg',
+            },
+          }}
+          circular
+          onMouseEnter={orbitDock.hoverEnter}
+          onMouseLeave={orbitDock.hoverLeave}
+          onClick={orbitDock.togglePinned}
+          active={orbitDock.state === 'pinned'}
+          zIndex={2}
+        />
+      </HeaderButtonPassProps>
       <OpenButtonExtraArea
         isOpen={orbitDock.isOpen}
         onMouseEnter={orbitDock.hoverEnter}

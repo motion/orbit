@@ -38,6 +38,7 @@ const ClipboardAppIndex = memo(() => {
           : 'Nothing selected',
         icon: getAppDefinition(identifier).icon,
         after: <Circle>{items.length}</Circle>,
+        draggableItem: items,
         extraProps: {
           subId: id,
         },

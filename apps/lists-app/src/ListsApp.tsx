@@ -1,7 +1,7 @@
-import { App, AppMainView, AppViewProps, isEqual, TreeList, useSearchState, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, List, ListItemProps, StatusBarText, TitleRow, View } from '@o/ui'
+import { App, AppMainView, AppViewProps, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, StatusBarText, TitleRow, View } from '@o/ui'
 import pluralize from 'pluralize'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 const id = 'my-tree-list'
 
@@ -28,7 +28,7 @@ export function ListsAppIndex() {
 
 function ListsAppMain(props: AppViewProps) {
   if (props.subType === 'folder') {
-    return <ListsAppMainFolder {...props} />
+    return <ListsAppMainFolder key={props.subId} {...props} />
   }
   return (
     <>
@@ -39,37 +39,24 @@ function ListsAppMain(props: AppViewProps) {
 }
 
 function ListsAppMainFolder(props: AppViewProps) {
-  const treeList = useTreeList(id)
-  const selectedItem = treeList.state.items[+props.subId]
-  const [children, setChildren] = useState<ListItemProps[]>([])
-
-  useEffect(() => {
-    if (selectedItem && selectedItem.type === 'folder') {
-      Promise.all(
-        selectedItem.children.map(id => {
-          return { id: `${id}` }
-          // return loadListItem(list.data.items[id])
-        }),
-      ).then(items => {
-        console.log('loaded items', selectedItem.children, items)
-        setChildren(cur => {
-          if (isEqual(cur, items)) {
-            return cur
-          }
-          return items
-        })
-      })
-    }
-  }, [selectedItem && selectedItem.id])
-
+  const treeList = useTreeList(id, {
+    rootItemID: +props.subId,
+    persist: 'tree',
+  })
   return (
-    <List
-      droppable
-      onDrop={item => {
-        console.log('dropped an item', item)
-      }}
+    <TreeList
+      use={treeList}
       title={props.title}
-      items={children}
+      items={treeList.state.items}
+      droppable
+      sortable
+      onDrop={items => {
+        console.log('dropped an item', items)
+        treeList.actions.addItemsFromDrop(items)
+      }}
+      onChange={items => {
+        console.log('got an update, persist back to main list', items)
+      }}
     />
   )
 }

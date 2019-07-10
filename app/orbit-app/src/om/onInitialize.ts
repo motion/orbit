@@ -29,7 +29,7 @@ export const onInitialize: OnInitialize = async om => {
   // load apps once before loading rest of app
   await actions.apps.start()
 
-  effects.router.start()
+  effects.router.watchPage()
 
   handleMediatorMessages()
 

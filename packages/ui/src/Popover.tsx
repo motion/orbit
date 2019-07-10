@@ -1,7 +1,7 @@
 import { ColorLike } from '@o/color'
 import { isEqual } from '@o/fast-compare'
 import { on } from '@o/utils'
-import { Contents, gloss, Theme, ThemeContext } from 'gloss'
+import { gloss, Theme, ThemeContext } from 'gloss'
 import { debounce, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { animated, AnimatedProps } from 'react-spring'
@@ -927,6 +927,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     const targetProps = {
       active: false,
       className: `${target.props['className'] || ''} popover-target`,
+      ref: this.targetRef,
     }
     if (this.props.passActive) {
       targetProps.active = this.showPopover
@@ -935,7 +936,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (acceptsHovered) {
       targetProps[acceptsHovered === true ? 'hover' : acceptsHovered] = this.showPopover
     }
-    return <Contents ref={this.targetRef}>{React.cloneElement(target, targetProps)}</Contents>
+    return React.cloneElement(target, targetProps)
   }
 
   closeOthersWithinGroup() {

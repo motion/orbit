@@ -3,6 +3,7 @@ import React from 'react'
 import { BorderLeft } from '../Border'
 import { Icon } from '../Icon'
 import { Menu, MenuProps } from '../Menu'
+import { useSurfaceHeight } from '../SizedSurface'
 import { View } from '../View/View'
 import { Button, ButtonProps } from './Button'
 
@@ -11,7 +12,8 @@ export type MenuButtonProps = ButtonProps & {
   scrollable?: MenuProps['scrollable']
 }
 
-export const MenuButton = ({ items, scrollable, ...rest }) => {
+export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
+  const height = useSurfaceHeight(rest.size)
   return (
     <Button
       after={
@@ -19,7 +21,14 @@ export const MenuButton = ({ items, scrollable, ...rest }) => {
           items={items}
           scrollable={scrollable}
           target={
-            <View position="relative" padding={[0, 0, 0, 'sm']} margin={[0, 0, 0, 'xs']}>
+            <View
+              height={height}
+              onClick={preventPropagation}
+              position="relative"
+              justifyContent="center"
+              padding={[0, 0, 0, 'sm']}
+              margin={[0, 0, 0, 'xs']}
+            >
               <BorderLeft />
               <Icon size={12} name="caret-down" />
             </View>
@@ -29,4 +38,9 @@ export const MenuButton = ({ items, scrollable, ...rest }) => {
       {...rest}
     />
   )
+}
+
+const preventPropagation = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  e.preventDefault()
+  e.stopPropagation()
 }

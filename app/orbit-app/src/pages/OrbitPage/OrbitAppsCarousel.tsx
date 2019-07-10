@@ -68,7 +68,11 @@ class OrbitAppsCarouselStore {
 
   updateAnimation = react(
     () => always(this.state),
-    () => this.props.setCarouselSprings(this.getSpring),
+    () => {
+      if (this.props.setCarouselSprings) {
+        this.props.setCarouselSprings(this.getSpring)
+      }
+    },
     {
       log: false,
     },
@@ -115,7 +119,7 @@ class OrbitAppsCarouselStore {
   updateScrollPane = react(
     () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when }) => {
-      await when(() => !!this.apps.length)
+      await when(() => !!this.apps.length && !!this.props.setCarouselSprings)
       ensure('valid index', !!this.apps[index])
       this.animateAndScrollTo(index)
       if (this.zoomIntoNextApp) {
@@ -138,14 +142,6 @@ class OrbitAppsCarouselStore {
       this.finishScroll()
     },
   )
-
-  // forceScrollToPane = react(
-  //   () => this.focusedIndex,
-  //   async (_, { sleep }) => {
-  //     await sleep(800)
-  //     this.animateAndScrollTo(Math.round(this.state.index))
-  //   },
-  // )
 
   undoShouldZoomOnZoomChange = react(
     () => this.state.zoomedOut,
@@ -230,7 +226,7 @@ class OrbitAppsCarouselStore {
       this.setFocused(index)
     }
     const x = this.props.rowWidth * index
-    if (this.rowNode!.scrollLeft !== this.state.index * this.props.rowWidth) {
+    if (this.rowNode.scrollLeft !== this.state.index * this.props.rowWidth) {
       this.updateScrollPositionToIndex()
       // TODO this sleep is necessary and a bug in react-spring
       await sleep(20)
@@ -541,7 +537,7 @@ const OrbitAppCard = memo(
             isDisabled={isDisabled}
             identifier={definition.id}
             appDef={definition}
-            renderApp={renderApp}
+            shouldRenderApp={renderApp}
           />
         </Card>
       </View>

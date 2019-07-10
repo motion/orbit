@@ -156,7 +156,7 @@ export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
 export const ListItemSimple = React.forwardRef(
   ({ style, ...listProps }: ListItemSimpleProps, ref) => {
     return (
-      <div style={style} ref={ref}>
+      <div style={style} ref={ref as any}>
         <ListItemInner {...listProps} />
       </div>
     )

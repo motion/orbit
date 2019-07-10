@@ -160,7 +160,8 @@ export function makeWebpackConfig(
           ? ['ts:main', 'module', 'browser', 'main']
           : ['ts:main', 'module', 'browser', 'main'],
       alias: {
-        'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+        // disable until fixed bug in rhl
+        // 'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
       },
       modules,
     },

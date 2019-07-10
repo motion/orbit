@@ -229,3 +229,20 @@ make gloss work with shadow-root; not too hard:
 ---
 
 make a big table of all the state/alternates for button/tag/etc
+
+---
+
+ideal levels of logging:
+
+0. just database mutations: save() actions
+1. + om actions
+2. + mobx actions
+3. + mobx reactions
+4. + useState and hook level update
+5. + why-did-you-update all render information
+
+you can layer them, or isolate any one
+
+debug() // all / toggle
+debug(0, 4) // through
+debug(4) // only

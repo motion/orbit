@@ -3,6 +3,7 @@ import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
+import { isEqual } from 'lodash'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
@@ -33,8 +34,12 @@ export class OrbitAppsManager {
       .observe({
         select: ['id', 'directory'],
       })
-      .subscribe(next => {
-        this.spaces = next as PartialSpace[]
+      .subscribe(_ => {
+        const spaces = _ as Space[]
+        const next = spaces.map(space => ({ id: space.id, directory: space.directory }))
+        if (!isEqual(next, this.spaces)) {
+          this.spaces = next
+        }
       })
 
     const userSubscription = getRepository(UserEntity)

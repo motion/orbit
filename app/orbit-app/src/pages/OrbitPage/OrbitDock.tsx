@@ -1,6 +1,7 @@
-import { AppBit, createUsableStore, getAppDefinition, react, useReaction } from '@o/kit'
-import { Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
-import React, { memo, useRef } from 'react'
+import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { Box, FullScreen, gloss, useTheme } from 'gloss'
+import React, { memo, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -61,7 +62,7 @@ class OrbitDockStore {
     }
   }
 
-  hoverEnterButton = (index: number) => {
+  hoverEnterButton = (index: number = this.hoveredIndex) => {
     if (this.nextHovered && this.nextHovered.index === index) return
     this.nextHovered = { index, at: Date.now() }
   }
@@ -70,6 +71,17 @@ class OrbitDockStore {
     if (this.nextHovered && this.nextHovered.index === -1) return
     this.nextHovered = { index: -1, at: Date.now() }
   }
+
+  addCancelableDragOnMenuOpen = react(
+    () => this.hoveredIndex,
+    index => {
+      if (index > -1) {
+        ActiveDraggables.add(this.hoverEnterButton)
+      } else {
+        ActiveDraggables.remove(this.hoverEnterButton)
+      }
+    },
+  )
 
   deferUpdateHoveringButton = react(
     () => this.nextHovered,
@@ -111,6 +123,7 @@ window['orbitDockStore'] = orbitDockStore
 
 export const OrbitDock = memo(() => {
   const { state } = useOm()
+  const theme = useTheme()
   const activeDockApps = state.apps.activeDockApps
   const store = orbitDockStore.useStore()
   const dockRef = useRef<HTMLElement>(null)
@@ -147,6 +160,22 @@ export const OrbitDock = memo(() => {
         {activeDockApps.map((app, index) => (
           <OrbitDockButton key={app.id} app={app} index={index} />
         ))}
+        <FullScreen
+          top={20}
+          bottom={20}
+          transform={{
+            x: '100%',
+          }}
+          borderRadius={100}
+          boxShadow={[
+            {
+              spread: 10,
+              blur: 180,
+              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.3],
+            },
+          ]}
+          zIndex={-1}
+        />
       </Dock>
     </DockButtonPassProps>
   )
@@ -225,26 +254,82 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
     top -= bottom - windowHeight
   }
 
+  const appViews = useMemo(
+    () => ({
+      Sidebar: DockSidebarView,
+    }),
+    [],
+  )
+
   return (
     <FloatingCard
       defaultWidth={width}
       defaultHeight={height}
       defaultTop={top}
       defaultLeft={left}
+      maxHeight={windowHeight - 80}
       padding={0}
       zIndex={10000000}
       visible={showMenu}
+      pointerEvents={showMenu ? 'auto' : 'none'}
       onMouseEnter={() => {
         orbitDockStore.hoverEnterButton(index)
       }}
       onMouseLeave={() => {
         orbitDockStore.hoverLeaveButton()
       }}
+      outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
     >
-      <OrbitApp id={app.id!} identifier={app.identifier!} appDef={definition} renderApp />
+      <AppViewsContext.Provider value={appViews}>
+        <OrbitApp
+          id={app.id!}
+          identifier={app.identifier!}
+          appDef={definition}
+          shouldRenderApp
+          renderApp={DockAppRender}
+        />
+      </AppViewsContext.Provider>
     </FloatingCard>
   )
 }
+
+const DockAppRender = (props: RenderAppProps) => {
+  return <>{props.sidebar}</>
+}
+
+const DockSidebarView = (props: AppMainViewProps) => {
+  return props.children
+}
+
+const FloatingLabel = gloss<{ visible?: boolean }>(Box, {
+  pointerEvents: 'none',
+  position: 'absolute',
+  top: -40,
+  left: 0,
+  alignSelf: 'flex-start',
+  background: [0, 0, 0, 0.95],
+  padding: [4, 8],
+  borderRadius: 100,
+  fontSize: 14,
+  fontWeight: 600,
+  textShadow: {
+    x: 0,
+    y: 2,
+    blur: 4,
+    color: 'rgba(0,0,0,0.4)',
+  },
+  transition: 'all ease 300ms',
+  opacity: 0,
+  transform: {
+    y: -10,
+  },
+  visible: {
+    opacity: 1,
+    transform: {
+      y: 0,
+    },
+  },
+})
 
 // this could work to let apps ahve their own dock items...
 // const useActiveAppMenuItems = () => {

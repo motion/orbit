@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, isValidElement } from 'react'
 
 import { ListItem, ListItemProps } from './lists/ListItem'
 import { Popover, PopoverProps } from './Popover'
@@ -6,7 +6,7 @@ import { Col, ColProps } from './View/Col'
 
 export type MenuProps = PopoverProps & {
   /** Pass in ListItemProps to determine the items in the popover. For full control you can use children instead */
-  items?: ListItemProps[]
+  items?: (ListItemProps | React.ReactNode)[]
   scrollable?: ColProps['scrollable']
 }
 
@@ -37,7 +37,10 @@ export const Menu = forwardRef(
         >
           {children ||
             items.map((item, index) => {
-              return <ListItem key={item.id || index} {...item} />
+              if (isValidElement(item)) {
+                return item
+              }
+              return <ListItem key={item['id'] || index} {...item} />
             })}
         </Col>
       </Popover>

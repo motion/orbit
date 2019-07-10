@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 import { ListItemSimpleProps } from '../lists/ListItemSimple'
-import { useSearch } from '../Search'
+import { useActiveSearchQuery } from '../Search'
 
 export type UseFilterProps<A> = {
   /** Toggle to enable/disable search filtering */
@@ -42,10 +42,9 @@ export type UseFilterProps<A> = {
 export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   const filterKey = props.filterKey || 'title'
   const items = props.items || []
-  const searchStore = useSearch()
   const initialQuery = useRef(true)
 
-  const query = selectDefined(props.query, searchStore.query)
+  const query = selectDefined(props.query, useActiveSearchQuery())
 
   useEffect(() => {
     if (initialQuery.current) {

@@ -115,7 +115,7 @@ export const OrbitAppsDrawer = memo(() => {
                 id={app.id!}
                 identifier={app.identifier!}
                 appDef={getAppDefinition(app.identifier!)}
-                renderApp={isActive}
+                shouldRenderApp={isActive}
               />
             </FullScreen>
           )

@@ -14,7 +14,9 @@ export const urls = {
 }
 
 type RouteName = keyof typeof urls
-type Params = { [key: string]: string | number | boolean }
+type Params = {
+  [key: string]: string | number | boolean | undefined
+}
 
 type HistoryItem = {
   name: RouteName
@@ -102,9 +104,9 @@ const showPage: Operator<HistoryItem> = pipe(
   mutate(om => {
     om.state.router.ignoreNextPush = false
   }),
-  catchError((_, error) => {
+  catchError<void>((_, error) => {
     if (error instanceof AlreadyOnPageError) {
-      return
+      // ok
     } else {
       console.error(error)
     }
@@ -249,7 +251,7 @@ export const actions = {
 // effects
 
 export const effects = {
-  start: () => {
+  watchPage() {
     page.start()
   },
 
@@ -264,6 +266,7 @@ export const effects = {
   },
 
   setPane(appId: string, avoidScroll?: boolean) {
+    console.warn('set pane', appId, avoidScroll)
     paneManagerStore.setPane(appId)
     // scroll to pane if its in carousel
     if (!avoidScroll) {

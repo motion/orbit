@@ -238,6 +238,10 @@ function main() {
           .option('mode', {
             type: 'string',
             default: 'development',
+          })
+          .option('verbose', {
+            type: 'boolean',
+            default: false,
           }),
       async argv => {
         reporter.setVerbose(!!argv.verbose)

@@ -10,6 +10,7 @@ export const updatePaneSort = async (space: Space, apps: AppBit[]) => {
   if (!space || !apps.length) return
   const paneSort = sortPanes(space, apps)
   if (!isEqual(paneSort, space.paneSort)) {
+    console.warn('redoing save order to account for permanent/pinned/hidden')
     await save(SpaceModel, {
       ...space,
       paneSort,
@@ -24,18 +25,18 @@ export const updatePaneManagerPanes = (apps: AppBit[]) => {
 function getPanes(apps: AppBit[]): PaneManagerPane[] {
   if (App.isEditing) {
     let pane = {
-      type: App.appConf.path,
+      type: App.appConf.path!,
       id: String(App.appConf.appId),
     }
     return [pane, settingsPane]
   } else {
     const appPanes = apps
       .filter(x => {
-        const def = getAppDefinition(x.identifier)
+        const def = getAppDefinition(x.identifier!)
         return !!(def && def.app)
       })
       .map((app: AppBit) => ({
-        type: app.identifier,
+        type: app.identifier!,
         id: `${app.id}`,
         keyable: app.tabDisplay !== 'hidden' ? true : false,
         subType: 'app',
@@ -65,7 +66,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   let next = [
     ...new Set([
       // keep current sort, remove deleted
-      ...space.paneSort.filter(id => appDict[id]),
+      ...space.paneSort!.filter(id => appDict[id]),
       // add new
       ...apps.filter(x => x.tabDisplay !== 'hidden').map(x => x.id),
     ]),
@@ -76,8 +77,10 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   //  2. pinned after that
   //  3. stable sort after that
   next = sortBy(next, id => {
-    const a = appDict[id]
-    return `${tabDisplaySort[a.tabDisplay]}${a.id}`
+    const a = appDict[id!]
+    const index = next.indexOf(id)
+    const sortKey = `${tabDisplaySort[a.tabDisplay!]}${index === -1 ? 999999 : index}${a.id}`
+    return sortKey
   })
 
   return next

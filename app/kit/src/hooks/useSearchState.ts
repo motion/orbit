@@ -1,5 +1,5 @@
 import { useVisibilityStore } from '@o/ui'
-import { cancel, useReaction } from '@o/use-store'
+import { ensure, useReaction } from '@o/use-store'
 
 import { QueryStore } from '../stores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
@@ -48,28 +48,20 @@ export function useSearchState({
   const visibilityStore = useVisibilityStore()
   return useReaction(
     () => {
-      if (!visibilityStore.visible) {
-        return false
-      }
       if (onEvent === 'enter') {
         return queryStore.lastCommand.at
       } else {
         return getSearchState(queryStore)
       }
     },
-    (status, { getValue }) => {
+    status => {
+      ensure('is visible', visibilityStore.visible)
       const update = (next: SearchState = getSearchState(queryStore)) => {
         if (onChange) {
           onChange(next)
         } else {
           return next
         }
-      }
-      if (status === false) {
-        if (!getValue() && !onChange) {
-          return update()
-        }
-        throw cancel
       }
       if (typeof status === 'number') {
         return update()

@@ -83,7 +83,7 @@ export class SelectableStore {
     items => {
       this.rows = items
       this.keyToIndex = {}
-      this.updateKeyToIndex()
+      this.updateActiveAndKeyToIndex()
     },
   )
 
@@ -145,25 +145,30 @@ export class SelectableStore {
 
     const nextActive = new Set(nextFiltered)
 
-    if (isEqual(this.active, nextActive)) return
+    if (isEqual(this.active, nextActive)) {
+      return
+    }
 
     this.active = nextActive
-    this.updateKeyToIndex(next)
+    this.updateActiveAndKeyToIndex(next)
   }
 
-  updateKeyToIndex(next: (string | number)[] = [...this.active], ignoreMissing = false) {
+  updateActiveAndKeyToIndex(
+    next: (string | number)[] = [...this.active],
+    opts = { updateActive: false },
+  ) {
+    const nextActive = []
     for (const rowKey of next) {
       if (!this.keyToIndex[rowKey]) {
         const idx = this.rows.findIndex((r, i) => this.key(r, i) === rowKey)
         if (idx >= 0) {
+          nextActive.push(rowKey)
           this.keyToIndex[rowKey] = idx
-        } else {
-          if (ignoreMissing === false) {
-            console.error(`no row found of key ${rowKey}`)
-            debugger
-          }
         }
       }
+    }
+    if (opts.updateActive) {
+      this.setActive(nextActive)
     }
   }
 
@@ -201,7 +206,6 @@ export class SelectableStore {
 
     const lastKey = [...active].pop()
     const lastIndex = this.keyToIndex[lastKey]
-
     const step = direction === Direction.up ? -1 : 1
     let nextIndex: number = lastIndex
     let found: number
@@ -212,18 +216,14 @@ export class SelectableStore {
       if (rows[nextIndex].selectable === false) continue
       found = nextIndex
     }
-
     if (modifiers.shift === false) {
       next = []
     }
-
     if (isDefined(found)) {
       next.push(this.getIndexKey(nextIndex))
     }
-
     this.setActive(next)
     this.scrollToIndex(nextIndex)
-
     return found
   }
 

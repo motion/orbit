@@ -13,7 +13,7 @@ export function ManageApps() {
   const om = useOm()
   const activeApps = useActiveAppsSorted().map(app => ({
     app,
-    definition: getAppDefinition(app.identifier),
+    definition: getAppDefinition(app.identifier!),
   }))
   const viewAppDefs = useUserVisualAppDefinitions()
   const handleSortEnd = useAppSortHandler()

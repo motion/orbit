@@ -2,12 +2,16 @@ import { createStoreContext } from '@o/use-store'
 import { FullScreen, FullScreenProps, gloss } from 'gloss'
 import { RefObject, useEffect, useState } from 'react'
 
+type OnDropCb = (item?: any, position?: [number, number]) => void
+
 class DraggableStore {
   item = null
   position = [0, 0]
+  activeDropCb: OnDropCb | null = null
   private initialPosition = [0, 0]
 
   setDragging = (item: any, e: MouseEvent) => {
+    ActiveDraggables.cancelAll()
     this.item = item
     this.initialPosition = [e.clientX, e.clientY]
     this.position = [e.clientX, e.clientY]
@@ -17,6 +21,11 @@ class DraggableStore {
 
   clearDragging = () => {
     this.item = null
+    this.activeDropCb = null
+  }
+
+  setActiveDrop = (cb: OnDropCb) => {
+    this.activeDropCb = cb
   }
 
   private handleDragMove = e => {
@@ -28,6 +37,10 @@ class DraggableStore {
   private handleDragEnd = () => {
     window.removeEventListener('mousemove', this.handleDragMove)
     window.removeEventListener('mouseup', this.handleDragEnd)
+    if (this.activeDropCb) {
+      this.activeDropCb(this.item)
+    }
+    this.clearDragging()
   }
 }
 
@@ -71,7 +84,6 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
       window.addEventListener('mousemove', clearDrag)
       window.addEventListener('mouseup', mouseUp)
       downTm = setTimeout(() => {
-        console.log('got drag start, do it')
         window.removeEventListener('mousemove', clearDrag)
         window.removeEventListener('mouseup', mouseUp)
         store.setDragging(item, e)
@@ -90,7 +102,7 @@ export function useDraggable({ enabled, item, ref, delay = 800 }: UseDraggablePr
 type UseDroppableProps = {
   ref: RefObject<HTMLElement>
   acceptsItem?: (item: any) => boolean
-  onDrop?: (item: any) => void
+  onDrop?: OnDropCb
 }
 
 export const trueFn = _ => true
@@ -109,10 +121,14 @@ export function useDroppable(props: UseDroppableProps): boolean {
     const mouseEnter = () => {
       if (isValid()) {
         setIsDroppable(true)
+        store.setActiveDrop(props.onDrop)
         node.addEventListener('mouseleave', mouseLeave)
       }
     }
     const mouseLeave = () => {
+      if (store.activeDropCb === props.onDrop) {
+        store.setActiveDrop(null)
+      }
       setIsDroppable(false)
     }
     node.addEventListener('mouseenter', mouseEnter)
@@ -131,3 +147,18 @@ export const DropOverlay = gloss<FullScreenProps & { isDropping?: boolean }>(Ful
     background: [255, 0, 0, 0.25],
   },
 })
+
+export const ActiveDraggables = {
+  items: new Set<Function>(),
+  add(item: Function) {
+    this.items.add(item)
+  },
+  remove(item: Function) {
+    this.items.delete(item)
+  },
+  cancelAll() {
+    for (const cancel of this.items) {
+      cancel()
+    }
+  },
+}

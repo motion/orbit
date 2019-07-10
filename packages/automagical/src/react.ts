@@ -62,28 +62,8 @@ export function setupReact(
   derive: Function | null,
   opts: ReactionOptions,
 ) {
-  const delayName =
-    opts && typeof opts.delay === 'number' && opts.delay >= 0 ? ` ..${opts.delay}ms ` : ''
-  const storeName = obj.constructor.name
   return createReaction(reaction, derive, opts, {
-    name: `${storeName}.${methodName}${delayName}`,
-    get nameFull() {
-      const props = obj.props
-      if (props) {
-        let res = ''
-        for (const prop of ['id', 'index', 'name', 'title']) {
-          const val = props[prop]
-          if (typeof val === 'string' || typeof val === 'number') {
-            res += `${prop}: ${val}`
-            break
-          }
-        }
-        if (res.length) {
-          return `${storeName}(${res}).${methodName}`
-        }
-      }
-      return `${storeName}.${methodName}`
-    },
+    ...getReactionNames(obj, methodName, opts),
     addSubscription(dispose) {
       obj.__automagic.subscriptions.add({ dispose })
     },
@@ -94,4 +74,65 @@ export function setupReact(
       return obj[methodName]
     },
   })
+}
+
+// TODO i want to make a helper so we can make any function a reaction easily
+// solves for a good pattern, started it here but problem is how do you pass in helpers?
+// both are weird:
+/**
+ * class X {
+ *   x = reactFn(helpers => (...args) => { })
+ *  }
+ *
+ *  or
+ *
+ *  class X {
+ *    x = reactFn(([...args], helpers) => { })
+ *  }
+ * }
+ */
+// export function reactFn<A extends ReactionFn<any, any>>(a: A): A {
+//   let lastCallProps = observable.box<any[]>([])
+
+//   return createReaction(reaction, derive, opts, {
+//     ...getReactionNames(obj, methodName, opts),
+//     addSubscription(dispose) {
+//       obj.__automagic.subscriptions.add({ dispose })
+//     },
+//     setValue(next) {
+//       obj[methodName] = next
+//     },
+//     getValue() {
+//       return obj[methodName]
+//     },
+//   })
+// }
+
+const getReactionNames = (obj: any, methodName: string, opts: ReactionOptions) => {
+  const delayName =
+    opts && typeof opts.delay === 'number' && opts.delay >= 0 ? ` ..${opts.delay}ms ` : ''
+  const storeName = obj.constructor.name
+  return {
+    name: `${storeName}.${methodName}${delayName}`,
+    nameFull: getDescriptiveMethodName(obj, methodName),
+  }
+}
+
+const getDescriptiveMethodName = (obj: any, methodName: string) => {
+  const storeName = obj.constructor.name
+  const props = obj.props
+  if (props) {
+    let res = ''
+    for (const prop of ['id', 'index', 'name', 'title']) {
+      const val = props[prop]
+      if (typeof val === 'string' || typeof val === 'number') {
+        res += `${prop}: ${val}`
+        break
+      }
+    }
+    if (res.length) {
+      return `${storeName}(${res}).${methodName}`
+    }
+  }
+  return `${storeName}.${methodName}`
 }

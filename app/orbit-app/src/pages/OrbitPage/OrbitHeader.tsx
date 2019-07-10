@@ -12,10 +12,9 @@ import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '
 import { useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { OrbitHeaderMenu } from './OrbitHeaderMenu'
+import { OrbitEditAppItem } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
-// import { clipboard } from 'electron'
 export const headerButtonProps: SizedSurfaceProps = {
   circular: true,
   background: 'transparent',
@@ -173,10 +172,6 @@ export const OrbitHeader = memo(() => {
             </SurfacePassProps>
           )}
 
-          <HeaderButtonPassProps>
-            <OrbitHeaderMenu />
-          </HeaderButtonPassProps>
-
           <View flex={1} />
           <OrbitDockOpenButton />
         </HeaderSide>
@@ -192,14 +187,20 @@ export const OrbitHeader = memo(() => {
   )
 })
 
-const OrbitDockOpenButton = () => {
+const OrbitDockOpenButton = memo(() => {
   const orbitDock = orbitDockStore.useStore()
   return (
     <View position="relative">
       <Button
-        width={20}
-        height={20}
-        icon="dot"
+        marginRight={20}
+        width={30}
+        height={30}
+        icon="more"
+        iconProps={{
+          transform: {
+            rotate: '90deg',
+          },
+        }}
         circular
         onMouseEnter={orbitDock.hoverEnter}
         onMouseLeave={orbitDock.hoverLeave}
@@ -214,7 +215,7 @@ const OrbitDockOpenButton = () => {
       />
     </View>
   )
-}
+})
 
 const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
   position: 'absolute',
@@ -355,7 +356,7 @@ const HeaderTop = gloss(View, {
 })
 
 const OpenButton = memo((props: ButtonProps) => {
-  const { effects } = useOm()
+  const { state, effects } = useOm()
   const { appRole } = useStore(App)
 
   if (appRole !== 'main') {
@@ -378,11 +379,30 @@ const OpenButton = memo((props: ButtonProps) => {
           title: 'Fork',
           icon: 'fork',
         },
+        {
+          title: 'Permalink',
+          subTitle: state.router.urlString,
+          icon: 'link',
+          onClick: effects.copyAppLink,
+        },
+        <OrbitEditAppItem key={100} />,
+        {
+          title: 'App Settings',
+          icon: 'cog',
+          onClick: goToAppSettings,
+        },
       ]}
       {...props}
     />
   )
 })
+
+const goToAppSettings = () => {
+  om.actions.router.showAppPage({
+    id: 'apps',
+    subId: paneManagerStore.activePane.id,
+  })
+}
 
 const BackButton = memo(() => {
   const { state, actions } = useOm()

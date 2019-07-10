@@ -113,7 +113,9 @@ class OrbitAppsCarouselStore {
     if (shouldZoomIn) {
       this.zoomIntoNextApp = true
     }
-    this.nextFocusedIndex = index
+    if (index !== this.nextFocusedIndex) {
+      this.nextFocusedIndex = index
+    }
   }
 
   updateScrollPane = react(

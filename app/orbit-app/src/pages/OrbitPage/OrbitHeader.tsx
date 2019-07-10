@@ -3,11 +3,11 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
-import { useOm } from '../../om/om'
+import { om, useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
@@ -270,7 +270,7 @@ const HomeButton = memo(
     const theme = useTheme()
     const newAppStore = useNewAppStore()
     const paneManagerStore = usePaneManagerStore()
-    const { activePane } = paneManagerStore
+    const activePane = paneManagerStore.activePane
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
     return (

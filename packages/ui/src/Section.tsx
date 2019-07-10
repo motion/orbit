@@ -68,7 +68,7 @@ export type SectionSpecificProps = Partial<
   droppable?: boolean | ((item?: any) => boolean)
 
   /** Callback on dropped item */
-  onDrop?: (item?: any) => void
+  onDrop?: (item: any, position: [number, number]) => void
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>

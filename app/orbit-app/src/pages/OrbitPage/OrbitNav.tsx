@@ -22,20 +22,20 @@ const isOnSettings = (pane?: PaneManagerPane) =>
 const pinWidth = 52
 
 export const OrbitNav = memo(
-  forwardRef((_: any, ref) => {
+  forwardRef(function OrbitNav(_: any, ref) {
+    const allActiveApps = useActiveAppsSorted()
+    console.log('render nav')
     const paneManagerStore = usePaneManagerStore()
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()
     const isOnSetupApp = state.router.isOnSetupApp
     const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
-    const allActiveApps = useActiveAppsSorted()
     const activeAppsSorted = useMemo(
       () => allActiveApps.filter(x => panes.some(pane => pane.id === `${x.id}`)),
       [allActiveApps],
     )
     const handleSortEnd = useAppSortHandler()
-
     if (isEditing) {
       return null
     }

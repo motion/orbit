@@ -238,7 +238,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
     if (!steps[flowStore.index]) {
       return (
         <Center>
-          No step at index: {flowStore.index}, steps: {steps.length}
+          No step at index: {flowStore.index}, steps: {JSON.stringify(steps)}
         </Center>
       )
     }

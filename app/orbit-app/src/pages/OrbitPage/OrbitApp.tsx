@@ -1,12 +1,12 @@
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, sleep, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
-import { useStoreSimple } from '@o/use-store'
+import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useOm } from '../../om/om'
-import { orbitStore, usePaneManagerStore } from '../../om/stores'
+import { orbitStore, paneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -23,12 +23,9 @@ type OrbitAppProps = {
 
 export const OrbitApp = memo(
   ({ id, identifier, appDef, shouldRenderApp, isDisabled, renderApp }: OrbitAppProps) => {
-    const paneManagerStore = usePaneManagerStore()
-
-    const isActive =
-      !isDisabled &&
-      // on active pane
-      paneManagerStore.activePane.id === `${id}`
+    const isActive = useReaction(() => {
+      return !isDisabled && paneManagerStore.activePane.id === `${id}`
+    }, [isDisabled])
 
     const appStore = useStoreSimple(AppStore, {
       id,

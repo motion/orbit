@@ -266,7 +266,6 @@ export const effects = {
   },
 
   setPane(appId: string, avoidScroll?: boolean) {
-    console.warn('set pane', appId, avoidScroll)
     paneManagerStore.setPane(appId)
     // scroll to pane if its in carousel
     if (!avoidScroll) {

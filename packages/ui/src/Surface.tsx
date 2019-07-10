@@ -16,7 +16,7 @@ import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
-import { Sizes, Space } from './Space'
+import { Size, Space } from './Space'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
@@ -140,7 +140,7 @@ export type SurfaceSpecificProps = {
   ignoreSegment?: boolean
 
   /** Override space between sizing between Icon/Element */
-  spaceSize?: Sizes
+  spaceSize?: Size
 
   /** Add an element between the icon and inner element */
   betweenIconElement?: React.ReactNode

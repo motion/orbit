@@ -119,7 +119,7 @@ class OrbitAppsCarouselStore {
   updateScrollPane = react(
     () => [this.nextFocusedIndex, this.zoomIntoNextApp],
     async ([index], { when }) => {
-      await when(() => !!this.apps.length)
+      await when(() => !!this.apps.length && !!this.props.setCarouselSprings)
       ensure('valid index', !!this.apps[index])
       this.animateAndScrollTo(index)
       if (this.zoomIntoNextApp) {
@@ -222,9 +222,6 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = async (index: number) => {
-    if (!this.rowNode) {
-      return
-    }
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }

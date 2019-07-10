@@ -9,7 +9,7 @@ import React, { forwardRef, memo, useMemo } from 'react'
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { om, useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
-import { useAppsCarousel } from './OrbitAppsCarousel'
+import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitEditAppItem } from './OrbitHeaderMenu'
@@ -286,10 +286,14 @@ const HomeButton = memo(
           hoverStyle={{
             opacity: 1,
           }}
-          identifier={state.navHovered ? 'home' : icon}
+          identifier={icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()
+            if (appsCarouselStore.zoomedIn) {
+              appsCarouselStore.setZoomedOut()
+              return
+            }
             actions.router.showHomePage()
           }}
         />

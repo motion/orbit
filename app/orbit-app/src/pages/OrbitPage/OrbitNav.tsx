@@ -28,7 +28,6 @@ export const OrbitNav = memo(
     const paneManagerStore = usePaneManagerStore()
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()
-    const isOnSetupApp = state.router.isOnSetupApp
     const { panes, paneId } = paneManagerStore
     // in case they get in a weird state, filter
     const activeAppsSorted = useMemo(
@@ -48,7 +47,7 @@ export const OrbitNav = memo(
         activeAppsSorted
           .map(
             (app): TabProps => {
-              const isActive = !isOnSetupApp && `${app.id}` === paneId
+              const isActive = `${app.id}` === paneId
               // const next = activeAppsSorted[index + 1]
               // const isLast = index === activeAppsSorted.length
               // const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
@@ -92,12 +91,12 @@ export const OrbitNav = memo(
             },
           )
           .filter(x => !!x),
-      [activeAppsSorted, isOnSetupApp, paneId],
+      [activeAppsSorted, paneId],
     )
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
     const setupWidth = 120
-    const isOnSetupAppWidth = isOnSetupApp ? setupWidth : tabWidthPinned
+    const isOnSetupAppWidth = tabWidthPinned
     const extraButtonsWidth = isOnSetupAppWidth
 
     const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
@@ -149,15 +148,13 @@ export const OrbitNav = memo(
             overflowY="hidden"
           />
           <Space size={epad} />
-          {isOnSetupApp && <OrbitNewAppTab width={setupWidth} />}
-          {!isOnSetupApp && (
-            <OrbitTab
-              tooltip={isOnSetupApp ? 'Cancel' : 'Add'}
-              width={tabWidthPinned}
-              icon={isOnSetupApp ? 'remove' : 'add'}
-              onClick={actions.router.toggleSetupAppPage}
-            />
-          )}
+          <OrbitTab
+            tooltip="Add add"
+            width={tabWidthPinned}
+            icon="Add"
+            onClick={actions.router.toggleSetupAppPage}
+            isActive={state.router.isOnSetupApp}
+          />
         </Row>
       </OrbitNavChrome>
     )

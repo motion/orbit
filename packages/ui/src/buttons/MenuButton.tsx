@@ -36,7 +36,7 @@ export const MenuButton = ({ items, scrollable, ...rest }: MenuButtonProps) => {
   )
 }
 
-const preventPropagation = (e: MouseEvent) => {
+const preventPropagation = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
   e.preventDefault()
   e.stopPropagation()
 }

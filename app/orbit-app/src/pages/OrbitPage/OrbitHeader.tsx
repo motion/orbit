@@ -241,7 +241,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onClick={() => actions.setNavVisible(!state.navVisible)}
       /> */}
       <Popover
-        openKey="orbit-nav"
+        group="orbit-nav"
         target={target}
         openOnClick
         openOnHover

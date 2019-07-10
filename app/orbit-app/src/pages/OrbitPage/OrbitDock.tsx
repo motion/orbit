@@ -239,20 +239,13 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   )
 })
 
-const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => {
-  const width = 300
-  const height = 380
+const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }: any) => {
   const [, windowHeight] = useWindowSize({ throttle: 100 })
 
-  let top = buttonRect.top - 15
+  const width = 300
+  const height = 380
+  const top = buttonRect.top - 15
   const left = buttonRect.left - width - 20
-
-  // includes edge padding
-  const bottom = height + top + 40
-
-  if (bottom > windowHeight) {
-    top -= bottom - windowHeight
-  }
 
   const appViews = useMemo(
     () => ({
@@ -267,6 +260,12 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
       defaultHeight={height}
       defaultTop={top}
       defaultLeft={left}
+      bounds={{
+        top: 70,
+        right: 60,
+        left: 20,
+        bottom: 20,
+      }}
       maxHeight={windowHeight - 80}
       padding={0}
       zIndex={10000000}
@@ -291,7 +290,7 @@ const FloatingAppWindow = ({ showMenu, buttonRect, app, definition, index }) => 
       </AppViewsContext.Provider>
     </FloatingCard>
   )
-}
+})
 
 const DockAppRender = (props: RenderAppProps) => {
   return <>{props.sidebar}</>

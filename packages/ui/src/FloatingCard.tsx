@@ -19,9 +19,9 @@ type FloatingCardProps = Omit<CardProps, 'maxHeight' | 'maxWidth'> &
     | 'height'
     | 'usePosition'
     | 'attach'
-    | 'edgePadding'
     | 'maxHeight'
     | 'maxWidth'
+    | 'bounds'
   > & {
     visible?: boolean
     outside?: React.ReactNode
@@ -42,11 +42,11 @@ export function FloatingCard({
   pointerEvents = 'auto',
   visible,
   attach,
-  edgePadding,
   elevation = 2,
   maxHeight,
   maxWidth,
   outside,
+  bounds,
   ...cardProps
 }: FloatingCardProps) {
   const isVisible = useVisibility()
@@ -76,9 +76,9 @@ export function FloatingCard({
       pointerEvents={visibilityProps.pointerEvents}
       usePosition={usePosition}
       attach={attach}
-      edgePadding={edgePadding}
       maxHeight={maxHeight}
       maxWidth={maxWidth}
+      bounds={bounds}
     >
       {outside}
       <Card

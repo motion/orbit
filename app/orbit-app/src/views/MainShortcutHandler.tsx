@@ -70,7 +70,7 @@ export default memo(function MainShortcutHandler(props: {
       },
       ESCAPE: () => {
         // close any open popovers
-        if (PopoverState.openPopovers.size > 0) {
+        if (PopoverState.state.size > 0) {
           PopoverState.closeLast()
           return
         }

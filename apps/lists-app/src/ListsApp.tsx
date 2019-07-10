@@ -1,7 +1,7 @@
 import { App, AppMainView, AppViewProps, TreeList, useSearchState, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, StatusBarText, TitleRow, View } from '@o/ui'
 import pluralize from 'pluralize'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 const id = 'my-tree-list'
 
@@ -43,7 +43,6 @@ function ListsAppMainFolder(props: AppViewProps) {
     rootItemID: +props.subId,
     persist: 'tree',
   })
-  console.log('listid', props.subId, treeList)
   return (
     <TreeList
       use={treeList}

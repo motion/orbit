@@ -8,7 +8,6 @@ import { ScopedState } from './helpers/ScopedState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
-import { SurfacePassProps } from './Surface'
 import { Row } from './View/Row'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
@@ -81,12 +80,16 @@ const tabButtonProps = {
   borderWidth: 0,
   glint: false,
   borderBottom: [3, 'transparent'],
-  color: (theme, props) => (props.active ? theme.color : theme.color.alpha(0.5)),
-  borderColor: (theme, props) => (props.active ? theme.borderColor : null),
-  opacity: (_, props) => (props.active ? 1 : 0.4),
+  opacity: 0.4,
   sizeRadius: 0,
   sizeHeight: 1.2,
   sizePadding: 1.5,
+}
+
+const tabButtonPropsActive = {
+  color: theme => theme.color,
+  borderColor: theme => theme.borderColor,
+  opacity: 1,
 }
 
 export const DefaultFlowLayout = (props: FlowLayoutProps) => {
@@ -96,25 +99,27 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
       bordered
       title={step.title}
       subTitle={step.subTitle}
-      minHeight={300}
+      minHeight={20}
       height={height}
       flex={1}
       titlePadding={['lg', true, false]}
       belowTitle={
-        <SurfacePassProps {...tabButtonProps}>
-          <Row>
-            {steps.map((stp, stepIndex) => (
+        <Row>
+          {steps.map((stp, stepIndex) => {
+            const isActive = steps[index].key === stp.key
+            return (
               <Button
                 key={stp.key}
-                alt={steps[index].key === stp.key ? 'selected' : null}
-                active={steps[index].key === stp.key}
+                alt={isActive ? 'selected' : null}
                 onClick={() => props.setStepIndex(stepIndex)}
+                {...tabButtonProps}
+                {...isActive && tabButtonPropsActive}
               >
                 {stp.buttonTitle || stp.title || 'No title'}
               </Button>
-            ))}
-          </Row>
-        </SurfacePassProps>
+            )
+          })}
+        </Row>
       }
       afterTitle={Toolbar && <Toolbar {...props} />}
     >

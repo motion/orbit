@@ -65,11 +65,15 @@ const getActions = (
   const Actions = {
     addItem(item?: Partial<TreeItem>, parentId?: number) {
       const update = treeState()[1]
-      update(next => {
-        const id = item.id || Math.random()
-        next.items[parentId || Actions.curId()].children.push(id)
-        next.items[id] = { name: '', children: [], ...item, id }
-      })
+      try {
+        update(next => {
+          const id = item.id || Math.random()
+          next.items[parentId || Actions.curId()].children.push(id)
+          next.items[id] = { name: '', children: [], ...item, id }
+        })
+      } catch(err) {
+        console.error('error adding', err)
+      }
     },
     addItemsFromDrop(items?: any, parentId?: number) {
       if (Array.isArray(items)) {

@@ -48,7 +48,6 @@ export const Slider = memo((props: SliderProps) => {
     ...rest
   } = props
   const frameRef = useRef(null)
-  const [size, setSize] = useState({ width: 0, height: 0 })
   const [heights, setHeights] = useState([])
   let currentHeight = 0
   const visible = useVisibility()
@@ -58,11 +57,10 @@ export const Slider = memo((props: SliderProps) => {
     setNumMounted(React.Children.count(getProps().children))
   }, [])
 
-  useParentNodeSize({
+  const size = useParentNodeSize({
     ref: frameRef,
     disable: !visible,
     throttle: 120,
-    onChange: setSize,
   })
 
   if (fixHeightToParent) {

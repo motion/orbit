@@ -195,7 +195,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" height="90%" margin="auto">
+        <Col width="90%" height="80%" margin="auto">
           <Flow
             useFlow={flow}
             afterTitle={

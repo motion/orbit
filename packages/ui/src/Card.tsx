@@ -133,6 +133,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
             // this fixed a super super chrome bug where doing any transform/animation
             // caused this inner node to not size as it should, this fixes it!
             transform="translate3d(0, 0, 0)"
+            suspense
             // {...resetColors}
           >
             {showChildren && children}

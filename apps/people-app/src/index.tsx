@@ -21,7 +21,7 @@ export function PeopleAppIndex(props: NavigatorProps) {
     <List
       shareable
       selectable="multi"
-      onSelect={items => props.navigateTo('detail', { items })}
+      onSelect={props.selectItems}
       items={people}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}
@@ -44,7 +44,7 @@ export function PeopleAppIndex(props: NavigatorProps) {
   )
 }
 
-export function PeopleAppMain(props: AppViewProps & { items: AppBit[] }) {
+export function PeopleAppMain(props: AppViewProps) {
   if (!props.id) {
     return (
       <Center>

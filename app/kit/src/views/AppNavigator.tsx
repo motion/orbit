@@ -1,6 +1,7 @@
 import { AppViewProps } from '@o/models'
+import { Card } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
-import React, { FunctionComponent, memo, useMemo, useState } from 'react'
+import React, { Children, FunctionComponent, memo, useMemo, useState } from 'react'
 
 import { App } from './App'
 
@@ -26,6 +27,7 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
         console.log('todo', name, props)
       },
       selectItems: next => {
+        console.log('selecting imtes', next)
         setItems(next)
       },
     }),
@@ -64,5 +66,41 @@ export const AppChildViews = createStoreContext(AppChildViewsStore)
 
 // TODO move into UI
 const CardStack = props => {
-  return props.children
+  const all = Children.toArray(props.children)
+  const [focused, setFocused] = useState(-1)
+
+  if (all.length <= 1) {
+    return all
+  }
+
+  return (
+    <>
+      {all.map((item, index) => (
+        <Card
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          elevation={4}
+          {...cardPositionalProps(index, all.length)}
+          key={item.id || index}
+        >
+          {item}
+        </Card>
+      ))}
+    </>
+  )
+}
+
+const cardPositionalProps = (index: number, total: number) => {
+  const mid = Math.round(total / 2)
+  const distanceFromMid = index - mid
+  return {
+    transform: {
+      scale: 0.8,
+      x: distanceFromMid * 10,
+      rotate: `${distanceFromMid * 2.5}deg`,
+    },
+  }
 }

@@ -17,7 +17,7 @@ export function AppsMainNew({
   customizeIcon?: boolean
 }) {
   const newAppStore = useNewAppStore()
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const [activeIcon, setActiveIcon] = useState('')
 
   // throttle callback to save
@@ -54,8 +54,8 @@ export function AppsMainNew({
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
+      inputRef.current!.focus()
+      inputRef.current!.select()
     }
   }, [inputRef.current])
 
@@ -89,7 +89,7 @@ export function AppsMainNew({
                       persist()
                     }
                   }}
-                  activeColor={newAppStore.app.colors[0]}
+                  activeColor={newAppStore.app!.colors![0]}
                 />
               )}
               {customizeIcon && <IconPicker active={activeIcon} onChange={setActiveIcon} />}

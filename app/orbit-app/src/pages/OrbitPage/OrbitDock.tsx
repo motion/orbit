@@ -286,6 +286,8 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
           appDef={definition}
           shouldRenderApp
           renderApp={DockAppRender}
+          // dont let them update on search changes, etc
+          isVisible={false}
         />
       </AppViewsContext.Provider>
     </FloatingCard>

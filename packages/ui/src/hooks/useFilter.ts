@@ -1,4 +1,4 @@
-import { selectDefined } from '@o/utils'
+import { isDefined, selectDefined } from '@o/utils'
 import fuzzySort from 'fuzzysort'
 import { sortBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -43,8 +43,10 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   const filterKey = props.filterKey || 'title'
   const items = props.items || []
   const initialQuery = useRef(true)
-
-  const query = selectDefined(props.query, useActiveSearchQuery())
+  const activeQuery = useActiveSearchQuery({
+    disabled: isDefined(props.query) || !props.searchable,
+  })
+  const query = selectDefined(props.query, activeQuery)
 
   useEffect(() => {
     if (initialQuery.current) {
@@ -98,11 +100,14 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
       }
       const res = fuzzySort.single(searchQuery, searchIndex[index])
       if (res && res.score > -50) {
+        console.log('fuzzy sort single', searchQuery, searchIndex[index], res, item)
         next.push(item)
       }
     }
     return next
   }, [sortedItems, searchIndex, searchQuery])
+
+  console.log('got', filteredItems)
 
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 

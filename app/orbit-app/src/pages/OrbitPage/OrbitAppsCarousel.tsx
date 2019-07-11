@@ -350,7 +350,7 @@ export const OrbitAppsCarousel = memo(() => {
     onDrag: appsCarouselStore.onDrag,
   })
 
-  const [scrollable, isDisabled] = useReaction(
+  const [scrollable, disableInteraction] = useReaction(
     () => [
       appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
       appsCarouselStore.state.zoomedOut === true,
@@ -397,7 +397,7 @@ export const OrbitAppsCarousel = memo(() => {
             index={index}
             app={app}
             definition={getAppDefinition(app.identifier!)}
-            isDisabled={isDisabled}
+            disableInteraction={disableInteraction}
             width={frameSize.width}
             height={frameSize.height}
             springs={springs}
@@ -413,7 +413,7 @@ export const OrbitAppsCarousel = memo(() => {
  */
 
 type OrbitAppCardProps = CardProps & {
-  isDisabled: boolean
+  disableInteraction: boolean
   springs: any
   index: number
   app: AppBit
@@ -421,7 +421,7 @@ type OrbitAppCardProps = CardProps & {
 }
 
 const OrbitAppCard = memo(
-  ({ app, definition, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, definition, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
     const spring = springs[index]
     const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
@@ -536,7 +536,7 @@ const OrbitAppCard = memo(
           <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
           <OrbitApp
             id={app.id!}
-            isDisabled={isDisabled}
+            disableInteraction={disableInteraction}
             identifier={definition.id}
             appDef={definition}
             shouldRenderApp={renderApp}

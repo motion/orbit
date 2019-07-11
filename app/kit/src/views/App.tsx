@@ -38,7 +38,7 @@ export type AppMainViewProps = {
 type AppMainView = React.FunctionComponent<AppMainViewProps>
 
 type IAppViewsContext = {
-  renderApp: RenderAppFn
+  renderApp?: RenderAppFn
   Toolbar?: AppMainView | null
   Statusbar?: AppMainView | null
   Main?: AppMainView | null

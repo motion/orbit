@@ -17,15 +17,27 @@ type OrbitAppProps = {
   identifier: string
   appDef?: AppDefinition
   shouldRenderApp?: boolean
-  isDisabled?: boolean
+  disableInteraction?: boolean
+  isVisible?: boolean
   renderApp?: RenderAppFn
 }
 
 export const OrbitApp = memo(
-  ({ id, identifier, appDef, shouldRenderApp, isDisabled, renderApp }: OrbitAppProps) => {
+  ({
+    id,
+    identifier,
+    appDef,
+    shouldRenderApp,
+    disableInteraction,
+    renderApp,
+    isVisible,
+  }: OrbitAppProps) => {
     const isActive = useReaction(() => {
-      return !isDisabled && paneManagerStore.activePane.id === `${id}`
-    }, [isDisabled])
+      return selectDefined(
+        isVisible,
+        !disableInteraction && paneManagerStore.activePane.id === `${id}`,
+      )
+    }, [disableInteraction])
 
     const appStore = useStoreSimple(AppStore, {
       id,
@@ -49,7 +61,7 @@ export const OrbitApp = memo(
         <View
           className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
           flex={1}
-          pointerEvents={isDisabled ? 'none' : 'inherit'}
+          pointerEvents={disableInteraction ? 'none' : 'inherit'}
         >
           <ScopedState id={`or-${identifier}-${id}`}>
             <ProvideStores stores={{ appStore }}>

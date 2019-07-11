@@ -22,7 +22,8 @@ if (process.env) {
 
 async function fetchInitialConfig() {
   // set config before app starts...
-  let config: GlobalConfig
+  let config: GlobalConfig | null = null
+
   while (!config) {
     try {
       config = await fetch('/config').then(res => res.json())
@@ -34,6 +35,7 @@ async function fetchInitialConfig() {
       await sleep(500)
     }
   }
+
   setGlobalConfig(config)
 
   // TODO im just doing this mid-big refactor until we fix it in @o/bridge

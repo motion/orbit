@@ -359,6 +359,8 @@ export function TreeList(props: TreeListProps) {
     return null
   }
 
+  console.log('ok', rest)
+
   return (
     <HighlightActiveQuery query={query}>
       <List

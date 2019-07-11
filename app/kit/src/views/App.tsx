@@ -16,7 +16,6 @@ export type RenderAppProps = {
 export type RenderAppFn = (props: RenderAppProps) => React.ReactNode
 
 const defaultRenderApp: RenderAppFn = ({ statusbar, main, sidebar, toolbar, actions }) => {
-  console.log('rendering', main)
   return (
     <>
       {statusbar}
@@ -86,7 +85,6 @@ export const App = (props: AppProps) => {
     Toolbar,
     Actions,
   } = appViewsContext
-  console.log('[renderApp', renderApp)
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
   const hasSidebar = !!props.index && !!Sidebar

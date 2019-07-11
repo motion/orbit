@@ -20,15 +20,12 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
   const DetailView = props.detail
   const [items, setItems] = useState([])
 
-  console.log('render appnavigatote')
-
   const navigatorProps = useMemo(
     () => ({
       navigateTo: (name, props) => {
         console.log('todo', name, props)
       },
       selectItems: next => {
-        console.log('setting active items', next)
         setItems(next)
       },
     }),

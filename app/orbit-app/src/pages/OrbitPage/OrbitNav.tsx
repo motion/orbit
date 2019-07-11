@@ -24,7 +24,6 @@ const pinWidth = 52
 export const OrbitNav = memo(
   forwardRef(function OrbitNav(_: any, ref) {
     const allActiveApps = useActiveAppsSorted()
-    console.log('render nav')
     const paneManagerStore = usePaneManagerStore()
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()

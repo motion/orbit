@@ -100,14 +100,11 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
       }
       const res = fuzzySort.single(searchQuery, searchIndex[index])
       if (res && res.score > -50) {
-        console.log('fuzzy sort single', searchQuery, searchIndex[index], res, item)
         next.push(item)
       }
     }
     return next
   }, [sortedItems, searchIndex, searchQuery])
-
-  console.log('got', filteredItems)
 
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 

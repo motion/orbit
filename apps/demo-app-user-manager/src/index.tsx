@@ -1,5 +1,5 @@
 import { createApp } from '@o/kit'
-import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, SearchInput, Section, Select, Tab, Table, Tabs, useCreateForm, useFetch } from '@o/ui'
+import { Card, DefinitionList, Fetch, Fieldsets, Form, Layout, Pane, Row, Section, Select, Tab, Table, Tabs, useActiveSearchQuery, useCreateForm, useFetch } from '@o/ui'
 import React, { useMemo, useState } from 'react'
 
 export default createApp({
@@ -35,16 +35,17 @@ export function DemoAppUserManager() {
           <Layout type="column">
             <Pane resizable>
               <Row space="sm" padding="sm">
-                <SearchInput name="search" />
+                {/* <SearchInput name="search" /> */}
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
               </Row>
               <Table
                 selectable="multi"
                 shareable
+                // query={form.getValue('search')}
+                query={useActiveSearchQuery()}
                 onSelect={items => setHighlighted(items)}
                 items={users}
-                searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
@@ -71,6 +72,7 @@ export function DemoAppUserManager() {
             padding={10}
             centered
             sizeRadius={2}
+            scrollable
           >
             {highlighted.map(row => (
               <Tab key={row.id} id={row.id} label={row.name}>
@@ -88,39 +90,23 @@ function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
   return (
     <Layout type="column">
-      <Pane>
-        <Section scrollable="y" titleBorder title={props.row.name}>
+      <Pane resizable>
+        <Section scrollable="y" titleBorder title={props.row.name} padding>
           <Fieldsets items={[props.row]} />
         </Section>
       </Pane>
-      <Pane resizable>
+      <Pane resizable title="Albums">
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-          {albums => (
-            <Table
-              selectable
-              titleBorder
-              title="Albums"
-              items={albums}
-              onSelect={items => setAlbum(items[0])}
-            />
-          )}
+          {albums => <Table selectable items={albums} onSelect={items => setAlbum(items[0])} />}
         </Fetch>
       </Pane>
-      <Pane resizable>
-        {!!album && (
+      {!!album && (
+        <Pane resizable title={album ? `${album.id} Album ${album.title} Pictures` : ''}>
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
-            {photos => (
-              <Table
-                titleBorder
-                selectable="multi"
-                searchable
-                title={`${album.id} Album ${album.title} Pictures`}
-                items={photos}
-              />
-            )}
+            {photos => <Table selectable="multi" searchable items={photos} />}
           </Fetch>
-        )}
-      </Pane>
+        </Pane>
+      )}
     </Layout>
   )
 }

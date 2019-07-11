@@ -643,6 +643,5 @@ const GlintContain = gloss(Base, {
 const roundHalf = (x: number) => {
   const oneDec = Math.round((x % 1) * 10) / 10
   const roundedToPointFive = oneDec > 6 ? 0.5 : 0
-  console.log('got', x, oneDec, roundedToPointFive)
   return Math.floor(x) + roundedToPointFive
 }

@@ -1,5 +1,6 @@
 import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, StatusBarText, TitleRow, View } from '@o/ui'
+import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
+import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React from 'react'
 
@@ -20,7 +21,9 @@ export function ListsAppIndex(props: NavigatorProps) {
   const treeList = useTreeList(id)
   useSearchState({
     onChange(search) {
-      treeList.actions.addFolder(search.query)
+      if (search.query.length) {
+        treeList.actions.addFolder(search.query)
+      }
     },
     onEvent: 'enter',
   })
@@ -28,6 +31,17 @@ export function ListsAppIndex(props: NavigatorProps) {
     <>
       <TreeList use={treeList} sortable onSelect={props.selectItems} />
       <ListAppStatusBar />
+      <Dock>
+        <DockButton
+          id="add"
+          icon="plus"
+          onClick={() => {
+            treeList.actions.addItem({
+              name: `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`,
+            })
+          }}
+        />
+      </Dock>
     </>
   )
 }

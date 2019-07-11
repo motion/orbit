@@ -148,8 +148,6 @@ app.post('/searchUpdate', async (req, res) => {
     return
   }
 
-  console.log('got', identifier, name, icon, setup)
-
   try {
     const registryInfo = await fetch(`https://registry.tryorbit.com/${packageId}`).then(x =>
       x.json(),

@@ -4,14 +4,14 @@ import React, { FunctionComponent, memo, useMemo, useState } from 'react'
 
 import { App } from './App'
 
-export type NavigatorProps = {
+export type NavigatorProps = AppViewProps & {
   selectItems: (items?: any[]) => void
   navigateTo: (name: string, props?: any) => void
 }
 
 export type AppNavigatorProps = {
   index: FunctionComponent<NavigatorProps>
-  detail: FunctionComponent<NavigatorProps & AppViewProps>
+  detail: FunctionComponent<NavigatorProps>
 }
 
 export const AppNavigator = memo((props: AppNavigatorProps) => {

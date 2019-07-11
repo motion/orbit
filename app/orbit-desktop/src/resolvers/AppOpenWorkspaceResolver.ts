@@ -28,7 +28,6 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
     })
 
     const { identifier } = await loadWorkspace(workspaceRoot)
-    log.info('got', identifier)
 
     // ensure/find space
     const space = await findOrCreateWorkspace({

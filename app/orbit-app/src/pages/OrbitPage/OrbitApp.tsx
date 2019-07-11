@@ -170,7 +170,7 @@ export const OrbitAppRenderOfDefinition = ({
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={appLoadContext}>
         <AppViewsContext.Provider value={viewsContext}>
-          <ErrorBoundary name={`OrbitApp: ${identifier}`}>
+          <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
             <Suspense fallback={<Loading />}>{appElement}</Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>

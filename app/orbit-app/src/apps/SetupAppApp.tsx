@@ -71,7 +71,7 @@ function SetupAppCustom() {
           <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
               return (
-                <Col pad>
+                <Col padding>
                   <SelectableGrid
                     alwaysSelected
                     defaultSelected={0}
@@ -101,7 +101,7 @@ function SetupAppCustom() {
           </Flow.Step>
 
           <Flow.Step title="Customize" subTitle="Your app settings.">
-            <Col pad>
+            <Col padding>
               <Form useForm={form} />
             </Col>
           </Flow.Step>

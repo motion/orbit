@@ -92,6 +92,7 @@ export const SizablePane = memo(
       const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
       element = (
         <Interactive
+          data-is="SizablePane"
           overflow="hidden"
           resizable={resizableProp}
           onResize={useCallback((w, h) => setSize(type === 'row' ? w : h), [type])}
@@ -106,6 +107,7 @@ export const SizablePane = memo(
       const isLast = props.index === total - 1
       element = (
         <PaneChrome
+          data-is="SizablePane"
           flex={typeof flex === 'undefined' && isLast ? 1 : flex}
           {...sizeProps}
           maxWidth="100%"

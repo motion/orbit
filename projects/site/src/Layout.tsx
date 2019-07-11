@@ -21,9 +21,10 @@ let updateLayout = null
 export const usePageTheme = () => {
   const forceUpdate = useForceUpdate()
   const route = useCurrentRoute()
-  const curView = route.views.find(x => x.type && x.type.theme)
+  const curView = route.views.find(x => x && x.type && x.type.theme)
   const key = `theme-${route.url.pathname.split('/')[1] || ''}`
-  const theme = localStorage.getItem(key) || (curView && curView.type.theme) || 'home'
+  const theme =
+    localStorage.getItem(key) || (curView && curView.type && curView.type.theme) || 'home'
   return [
     theme,
     useCallback(

@@ -45,7 +45,7 @@ export const useActiveSearchQuery = (props: { disabled?: boolean } = defaultProp
     next => {
       ensure('valid', next !== false)
       ensure('visible', getIsVisible())
-      return next
+      return next || ''
     },
     {
       defaultValue: store.query,

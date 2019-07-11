@@ -1,6 +1,6 @@
 import { produce } from '@o/kit'
 import { employees } from '@o/mock-data'
-import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, Scale, SubTitle, Table, Tree, useActiveSearchQuery } from '@o/ui'
 import React, { useState } from 'react'
 
 const treeData = {
@@ -101,7 +101,7 @@ export function DemoLayoutApp() {
           />
         </Pane>
         <Pane flex={3} collapsable title="Inspect" resizable>
-          <Table searchable selectable items={items} />
+          <Table searchable query={useActiveSearchQuery()} selectable items={items} />
         </Pane>
         <Pane title="Sidebar">
           <Layout type="column">

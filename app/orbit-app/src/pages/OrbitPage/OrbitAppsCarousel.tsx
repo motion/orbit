@@ -517,8 +517,8 @@ const OrbitAppCard = memo(
           position="relative"
         >
           {/* title of app card */}
-          <Row alignItems="center" space="sm" padding position="absolute" top={-60}>
-            <AppIcon size={24} opacity={1} identifier={definition.id} colors={app.colors} />
+          <Row alignItems="center" space="sm" padding position="absolute" top={-50}>
+            <AppIcon size={20} opacity={1} identifier={definition.id} colors={app.colors} />
             <SimpleText>{app.name}</SimpleText>
           </Row>
           <Card

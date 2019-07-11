@@ -17,6 +17,7 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
 import { Size, Space } from './Space'
+import { createSpacedChildren } from './SpaceGroup'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
@@ -140,7 +141,10 @@ export type SurfaceSpecificProps = {
   ignoreSegment?: boolean
 
   /** Override space between sizing between Icon/Element */
-  spaceSize?: Size
+  space?: Size
+
+  /** Override space between sizing between Icon/Element */
+  spaceAround?: Size
 
   /** Add an element between the icon and inner element */
   betweenIconElement?: React.ReactNode
@@ -184,7 +188,7 @@ const acceptsIcon = child =>
 
 export const Surface = memoIsEqualDeep(
   forwardRef(function Surface(direct: SurfaceProps, ref) {
-    const props = SizedSurfacePropsContext.useProps(direct)
+    const props = SizedSurfacePropsContext.useProps(direct) as SurfaceProps
     const crumb = useBreadcrumb()
     const [tooltipState, setTooltipState] = useState({ id: null, show: false })
     const theme = useTheme(props)
@@ -231,7 +235,8 @@ export const Surface = memoIsEqualDeep(
       alt,
       before,
       dangerouslySetInnerHTML,
-      spaceSize,
+      space,
+      spaceAround,
       betweenIconElement,
       ...viewProps
     } = props
@@ -303,7 +308,7 @@ export const Surface = memoIsEqualDeep(
       }
     } else {
       showElement = !!(hasChildren(children) || elementProps)
-      const spaceElement = <Space size={selectDefined(spaceSize, size * 6)} />
+      const spaceElement = <Space size={selectDefined(space, size * 6)} />
 
       const innerElements = (
         <PassProps
@@ -424,7 +429,7 @@ export const Surface = memoIsEqualDeep(
               disabled={disabled}
               elementTheme={elementTheme}
             >
-              {children}
+              {space ? createSpacedChildren({ children, space, spaceAround }) : children}
             </Element>
           )}
           {!!after && (

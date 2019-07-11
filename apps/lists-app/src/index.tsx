@@ -37,7 +37,6 @@ export function ListsAppIndex(props: NavigatorProps) {
         use={treeList}
         sortable
         onSelect={props.selectItems}
-        badValue
         itemProps={{
           editable: true,
           deletable: true,

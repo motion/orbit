@@ -248,11 +248,11 @@ export class GMailLoader {
   async loadMessages(threads: GMailThread[]): Promise<void> {
     await sleep(THROTTLING.messages)
 
-    this.log.verbose('loading thread messages', threads)
+    this.log.verbose('loading thread messages', threads.length)
     for (let thread of threads) {
       const result = await this.loader.load(GMailQueries.thread(thread.id))
       Object.assign(thread, result)
     }
-    this.log.verbose('thread messages are loaded', threads)
+    this.log.verbose('thread messages are loaded')
   }
 }

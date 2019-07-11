@@ -139,8 +139,6 @@ async function startApp(forceRefresh = false) {
 
 // hot reloading
 if (process.env.NODE_ENV === 'development') {
-  require('webpack-hot-middleware/client.js?name=apps&path=/__webpack_hmr_apps')
-
   if (typeof module['hot'] !== 'undefined') {
     module['hot'].accept(startApp)
   }

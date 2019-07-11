@@ -8,7 +8,7 @@ import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { om, useOm } from '../../om/om'
-import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { paneManagerStore, queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
@@ -268,11 +268,11 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 
 const HomeButton = memo(
   forwardRef((props: any, ref) => {
-    const { state, actions } = useOm()
+    const { actions } = useOm()
     const theme = useTheme()
     const newAppStore = useNewAppStore()
-    const paneManagerStore = usePaneManagerStore()
-    const activePane = paneManagerStore.activePane
+    const paneManager = usePaneManagerStore()
+    const activePane = paneManager.activePane
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
     return (

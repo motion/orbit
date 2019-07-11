@@ -273,7 +273,7 @@ class OrbitAppsCarouselStore {
     const ry = this.boundRotation((this.state.index - i) * 10)
     return {
       x: 0,
-      y: this.zoomedIn ? 0 : 20,
+      y: 0,
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
     }
@@ -517,8 +517,27 @@ const OrbitAppCard = memo(
           position="relative"
         >
           {/* title of app card */}
-          <Row alignItems="center" space="sm" padding position="absolute" top={-50}>
-            <AppIcon size={20} opacity={1} identifier={definition.id} colors={app.colors} />
+          <AppIcon
+            position="absolute"
+            top={-10}
+            left={-15}
+            size={32}
+            opacity={1}
+            identifier={definition.id}
+            colors={app.colors}
+            opacity={appsCarouselStore.zoomedIn ? 0 : 1}
+            pointerEvents="none"
+          />
+          <Row
+            alignItems="center"
+            justifyContent="center"
+            space="sm"
+            padding
+            position="absolute"
+            bottom={-40}
+            left={0}
+            right={0}
+          >
             <SimpleText>{app.name}</SimpleText>
           </Row>
           <Card

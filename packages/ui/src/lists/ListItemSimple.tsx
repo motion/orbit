@@ -225,7 +225,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
 
   const iconElement = showIcon && getIcon(props)
   const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
-  const spaceSize = listItemAdjustedPadding.paddingTop
+  const space = listItemAdjustedPadding.paddingTop
 
   const hasChildren = showChildren && !!children
   const childrenElement = hasChildren && (
@@ -260,7 +260,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       >
         {`${location}`}
       </RoundButtonSmall>
-      <Space size={spaceSize} />
+      <Space size={space} />
     </>
   )
 
@@ -290,11 +290,11 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         before={
           <>
             {before}
-            {!!before && <Space size={spaceSize} />}
+            {!!before && <Space size={space} />}
             {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
           </>
         }
-        spaceSize={spaceSize}
+        space={space}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
         {...disablePsuedoProps}
@@ -303,7 +303,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         <ListItemMainContent oneLine={oneLine}>
           <Col flex={1}>
             {showTitle && (
-              <ListItemTitleBar space={spaceSize} alignItems={alignItems}>
+              <ListItemTitleBar space={space} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
                 {isValidElement(title) ? (
                   title
@@ -326,7 +326,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
             )}
             {showSubtitle && (
               <>
-                <Space size={spaceSize / 2} />
+                <Space size={space / 2} />
                 <ListItemSubtitle>
                   {!!location && locationElement}
                   {!!subTitle &&
@@ -378,8 +378,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
           </Col>
           {hasAfterTitle && (
             <>
-              <Space size={spaceSize} />
-              <Col space={spaceSize}>
+              <Space size={space} />
+              <Col space={space}>
                 {props.afterTitle}
                 {afterHeaderElement}
               </Col>

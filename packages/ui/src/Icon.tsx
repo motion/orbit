@@ -42,7 +42,7 @@ export const Icon = memo(
     const extraProps = useContext(IconPropsContext)
     const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
     const ResolvedIcon = Config.useIcon || PlainIcon
-    return <ResolvedIcon ref={ref} themeSelect="icon" {...props} />
+    return <ResolvedIcon ref={ref} subTheme="icon" {...props} />
   }),
 )
 

@@ -131,7 +131,7 @@ export type SurfaceSpecificProps = {
   type?: string
 
   /** Select a subset theme easily */
-  themeSelect?: Gloss.ThemeSelect
+  subTheme?: Gloss.ThemeSelect
 
   /** Amount to pad icon */
   iconPadding?: number
@@ -219,7 +219,7 @@ export const Surface = memoIsEqualDeep(
       size: ogSize,
       sizeLineHeight,
       tagName,
-      themeSelect,
+      subTheme,
       tooltip,
       tooltipProps,
       padding,
@@ -353,7 +353,7 @@ export const Surface = memoIsEqualDeep(
               {...borderPosition === 'inside' && {
                 height: roundHalf(+height - size),
                 transform: {
-                  y: roundHalf(size),
+                  y: roundHalf(size) % 1,
                 },
               }}
             >
@@ -363,7 +363,7 @@ export const Surface = memoIsEqualDeep(
                   size={size}
                   borderLeftRadius={borderLeftRadius}
                   borderRightRadius={borderRightRadius}
-                  themeSelect={themeSelect}
+                  subTheme={subTheme}
                 />
               )}
               {glintBottom && !props.chromeless && (
@@ -373,7 +373,7 @@ export const Surface = memoIsEqualDeep(
                   bottom={0}
                   borderLeftRadius={borderLeftRadius}
                   borderRightRadius={borderRightRadius}
-                  themeSelect={themeSelect}
+                  subTheme={subTheme}
                 />
               )}
             </GlintContain>
@@ -463,7 +463,7 @@ export const Surface = memoIsEqualDeep(
     const surfaceFrameProps: SurfaceFrameProps = {
       className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
       ref,
-      themeSelect,
+      subTheme,
       lineHeight,
       padding,
       borderWidth,
@@ -642,6 +642,7 @@ const GlintContain = gloss(Base, {
 
 const roundHalf = (x: number) => {
   const oneDec = Math.round((x % 1) * 10) / 10
-  const roundedToPointFive = oneDec > 7 ? 1 : oneDec > 2 ? 0.5 : 0
+  const roundedToPointFive = oneDec > 6 ? 0.5 : 0
+  console.log('got', x, oneDec, roundedToPointFive)
   return Math.floor(x) + roundedToPointFive
 }

@@ -15,7 +15,7 @@ type Props = {
   bottom?: number
   y?: number
   opacity?: number
-  themeSelect?: ThemeSelect
+  subTheme?: ThemeSelect
 }
 
 export const Glint = gloss<Props>({

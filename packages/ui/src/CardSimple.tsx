@@ -38,7 +38,7 @@ export const CardSimple = forwardRef(
         hoverStyle={hasClick}
         activeStyle={hasClick}
         cursor={hasClick ? 'pointer' : 'inherit'}
-        themeSelect="cardSimple"
+        subTheme="cardSimple"
         {...props}
         noInnerElement
       >

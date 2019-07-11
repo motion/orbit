@@ -69,7 +69,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
         flex={
           toggle.isCollapsable === true && toggle.val === true ? 'inherit' : sizedSurfaceProps.flex
         }
-        themeSelect="card"
+        subTheme="card"
         sizeRadius={sizeRadius}
         noInnerElement
         size={size}

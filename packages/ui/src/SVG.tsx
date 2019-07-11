@@ -19,7 +19,7 @@ export const SVG = forwardRef<SVGElement, any>(function SVG(
       width={px(width)}
       height={px(height)}
       style={{ display: 'flex', width, height, ...styles, ...style }}
-      {...omit(rest, 'hoverStyle', 'themeSelect')}
+      {...omit(rest, 'hoverStyle', 'subTheme')}
     />
   )
 })

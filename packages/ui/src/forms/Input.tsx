@@ -161,7 +161,7 @@ const SimpleInput = gloss(
           maxWidth="100%"
           alignItems="center"
           flexDirection="row"
-          themeSelect="input"
+          subTheme="input"
           pointerEvents={visible ? 'inherit' : 'none'}
           sizeFont={0.9}
           sizePadding

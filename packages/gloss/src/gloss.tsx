@@ -6,6 +6,7 @@ import { useTheme } from './helpers/useTheme'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { StyleSheet } from './stylesheet/sheet'
+import { ThemeSelect } from './theme/Theme'
 
 export const baseIgnoreAttrs = {
   ...validCSSAttr,
@@ -26,6 +27,7 @@ export type GlossProps<Props> = Props & {
   ref?: any
   style?: any
   alt?: string
+  subTheme?: ThemeSelect
 }
 
 export type ThemeFn<Props = any> = (

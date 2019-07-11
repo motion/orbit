@@ -65,12 +65,12 @@ const ButtonInner = forwardRef((props: ButtonProps, ref) => {
 export const Button = memo(
   forwardRef((buttonProps: ButtonProps, ref) => {
     const props = useSurfaceProps(buttonProps)
-    const { alt, theme, themeSelect, ...rest } = props
+    const { alt, theme, subTheme, ...rest } = props
     const controlledProps = useUncontrolled(rest, {
       active: 'onChangeActive',
     })
     return (
-      <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
+      <Theme subTheme={subTheme} alt={alt} theme={theme}>
         <ButtonInner ref={ref} {...rest} {...controlledProps} />
       </Theme>
     )
@@ -78,7 +78,7 @@ export const Button = memo(
 )
 
 Button['defaultProps'] = {
-  themeSelect: 'button',
+  subTheme: 'button',
 }
 
 Button['acceptsProps'] = {

@@ -270,7 +270,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       <SizedSurface
         flexDirection="row"
         alignItems="center"
-        themeSelect="listItem"
+        subTheme="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         {...listItemAdjustedPadding}

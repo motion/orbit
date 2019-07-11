@@ -10,11 +10,7 @@ const altCache = new WeakMap<
   }
 >()
 
-export function getAlternateTheme(
-  name: string | undefined,
-  inTheme: ThemeObject,
-  shouldFallback?: boolean,
-): ThemeObject {
+export function getAlternateTheme(name: string | undefined, inTheme: ThemeObject): ThemeObject {
   if (!name || typeof name !== 'string') {
     return inTheme
   }
@@ -39,16 +35,12 @@ export function getAlternateTheme(
   if (cached) {
     return cached
   }
-  const next = createAlternateTheme(theme, name, shouldFallback)
+  const next = createAlternateTheme(theme, name)
   alts[name] = next
   return next
 }
 
-function createAlternateTheme(
-  theme: ThemeObject,
-  alt: string,
-  shouldFallback?: boolean,
-): ThemeObject {
+function createAlternateTheme(theme: ThemeObject, alt: string): ThemeObject {
   if (!theme.alternates) {
     throw new Error('No alternates in themes')
   }
@@ -59,12 +51,10 @@ function createAlternateTheme(
   // alternates can take parent theme as argument and return their theme:
   const next = theme.alternates[alt]
   const altTheme = typeof next === 'function' ? next(theme) : next
-  const parentTheme = shouldFallback ? theme : {}
 
   return {
-    ...parentTheme,
-    background: altTheme.background || parentTheme['background'] || toColor('#000'),
-    color: altTheme.color || parentTheme['color'] || toColor('#fff'),
+    background: altTheme.background || toColor('#000'),
+    color: altTheme.color || toColor('#fff'),
     ...altTheme,
     _alternateName: alt,
     _isAlternate: true,

@@ -1,4 +1,5 @@
 import { ThemeObject } from '@o/css'
+
 import { getAlternateTheme } from './getAlternateTheme'
 import { selectThemeSubset } from './selectThemeSubset'
 
@@ -9,5 +10,5 @@ import { selectThemeSubset } from './selectThemeSubset'
 // chaining syntax swould be nice here
 
 export const preProcessTheme = (props: any, theme: ThemeObject) => {
-  return selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme, true))
+  return selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme))
 }

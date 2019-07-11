@@ -201,6 +201,7 @@ export const alternates: ThemeSet = {
   flat: parent => {
     const background = invertLightness(parent.background, 0.05).alpha(0.35)
     return {
+      ...parent,
       color: parent.color,
       searchInputSizeRadius: 1,
       background,

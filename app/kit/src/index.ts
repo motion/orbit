@@ -99,6 +99,9 @@ export * from './hooks/useBits'
 export * from './hooks/useNLP'
 export * from './hooks/useAppDefinition'
 export * from './hooks/useIsActive'
+export * from './views/AppNavigator'
+export * from './views/AppStatusBar'
+export * from './views/AppToolBar'
 
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,

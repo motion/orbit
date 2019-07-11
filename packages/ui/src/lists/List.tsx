@@ -277,7 +277,7 @@ export const List = memo((allProps: ListProps) => {
       titlePadding
       padding={padding}
       droppable={droppable}
-      onDrop={onDrop}
+      onDrop={onDrop as any}
       {...collapseProps}
     >
       {children}

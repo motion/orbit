@@ -75,7 +75,7 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
   )
 }
 
-const tabButtonProps = {
+const tabButtonProps: any = {
   background: 'transparent',
   borderWidth: 0,
   glint: false,
@@ -86,7 +86,7 @@ const tabButtonProps = {
   sizePadding: 1.5,
 }
 
-const tabButtonPropsActive = {
+const tabButtonPropsActive: any = {
   color: theme => theme.color,
   borderColor: theme => theme.borderColor,
   opacity: 1,

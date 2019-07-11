@@ -71,7 +71,7 @@ const getActions = (
           next.items[parentId || Actions.curId()].children.push(id)
           next.items[id] = { name: '', children: [], ...item, id }
         })
-      } catch(err) {
+      } catch (err) {
         console.error('error adding', err)
       }
     },
@@ -366,7 +366,7 @@ export function TreeList(props: TreeListProps) {
         {...rest}
         onSelect={handleSelect}
         onDelete={handleDelete}
-        onDrop={handleDrop}
+        onDrop={handleDrop as any}
         items={loadedItems}
       />
     </HighlightActiveQuery>

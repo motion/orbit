@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -224,6 +224,7 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = async (index: number) => {
+    if (!this.rowNode) return
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }
@@ -272,7 +273,7 @@ class OrbitAppsCarouselStore {
     const ry = this.boundRotation((this.state.index - i) * 10)
     return {
       x: 0,
-      y: 0,
+      y: this.zoomedIn ? 0 : 20,
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
     }
@@ -490,19 +491,13 @@ const OrbitAppCard = memo(
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     return (
-      <View>
-        <Card
+      <View zIndex={isFocused ? 2 : 1}>
+        <View
           animated
           transform={to(
             Object.keys(spring).map(k => spring[k]),
             (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
           )}
-          data-is="OrbitAppCard2"
-          ref={cardRef}
-          borderWidth={0}
-          background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
-          overflow="hidden"
-          borderRadius={isFocusZoomed ? 0 : 12}
           onMouseDown={() => {
             if (appsCarouselStore.zoomedIn) {
               return
@@ -519,29 +514,44 @@ const OrbitAppCard = memo(
             }
             mouseDown.current = -1
           }}
-          {...(isFocused
-            ? {
-                boxShadow: [
-                  [0, 0, 0, 3, theme.alternates!.selected['background']],
-                  [0, 0, 30, [0, 0, 0, 0.5]],
-                ],
-              }
-            : {
-                boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
-              })}
-          transition="box-shadow 200ms ease, background 300ms ease"
-          zIndex={isFocused ? 2 : 1}
-          {...cardProps}
+          position="relative"
         >
-          <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
-          <OrbitApp
-            id={app.id!}
-            disableInteraction={disableInteraction}
-            identifier={definition.id}
-            appDef={definition}
-            shouldRenderApp={renderApp}
-          />
-        </Card>
+          {/* title of app card */}
+          <Row alignItems="center" space="sm" padding position="absolute" top={-60}>
+            <AppIcon size={24} opacity={1} identifier={definition.id} colors={app.colors} />
+            <SimpleText>{app.name}</SimpleText>
+          </Row>
+          <Card
+            data-is="OrbitAppCard"
+            ref={cardRef}
+            borderWidth={0}
+            background={
+              isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger
+            }
+            borderRadius={isFocusZoomed ? 0 : 12}
+            {...(isFocused
+              ? {
+                  boxShadow: [
+                    [0, 0, 0, 3, theme.alternates!.selected['background']],
+                    [0, 0, 30, [0, 0, 0, 0.5]],
+                  ],
+                }
+              : {
+                  boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+                })}
+            transition="box-shadow 200ms ease, background 300ms ease"
+            {...cardProps}
+          >
+            <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
+            <OrbitApp
+              id={app.id!}
+              disableInteraction={disableInteraction}
+              identifier={definition.id}
+              appDef={definition}
+              shouldRenderApp={renderApp}
+            />
+          </Card>
+        </View>
       </View>
     )
   },

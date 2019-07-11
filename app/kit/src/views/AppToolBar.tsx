@@ -9,7 +9,7 @@ export function AppToolBar(props: { children: React.ReactNode }) {
     appChildViews.setItems({
       toolBar: props.children,
     })
-  }, [props.children])
+  }, [])
 
   return null
 }

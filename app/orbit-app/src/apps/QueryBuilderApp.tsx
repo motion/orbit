@@ -72,9 +72,12 @@ export function QueryBuilderIndex({
           }
           return null
         }, [])}
+        itemProps={{
+          editable: true,
+          deletable: true,
+        }}
         title="Queries"
         sortable
-        editable
         deletable
       />
       <Dock>

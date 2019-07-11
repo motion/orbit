@@ -28,6 +28,8 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
     },
   )
 
+  console.log('transparent', props.children, appDef)
+
   if (!props.children) {
     return null
   }
@@ -35,6 +37,8 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   if (!appDef) {
     return <div>No app def found</div>
   }
+
+  const transparent = appDef.viewConfig && appDef.viewConfig.transparentBackground
 
   return (
     <FullScreen
@@ -46,10 +50,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
       <Suspense fallback={null}>
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       </Suspense>
-      <OrbitMainContainer
-        isEditing={isEditing}
-        transparent={appDef.viewConfig && appDef.viewConfig.transparentBackground}
-      >
+      <OrbitMainContainer isEditing={isEditing} transparent={transparent}>
         <View className="app-container" flex={1} position="relative" maxHeight="100%">
           {props.hasSidebar && <BorderLeft />}
           {props.hasToolbar && <BorderTop />}

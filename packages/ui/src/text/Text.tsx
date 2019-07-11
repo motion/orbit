@@ -174,6 +174,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   handleDoubleClick = event => {
+    console.log('double click', this.props.editable)
     if (this.props.editable && !this.state.isEditing) {
       event.stopPropagation()
       if (this.props.onStartEdit) {

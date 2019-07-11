@@ -280,6 +280,7 @@ export function TreeList(props: TreeListProps) {
   const useTree = use || internal
   const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
+  const getOnChange = useGet(onChange)
 
   useEffect(() => {
     let cancel = false
@@ -298,14 +299,14 @@ export function TreeList(props: TreeListProps) {
   // onChange callback
   const ignoreInitial = useRef(true)
   useEffect(() => {
-    if (onChange) {
+    if (getOnChange()) {
       if (ignoreInitial.current) {
         ignoreInitial.current = false
         return
       }
-      onChange(items)
+      getOnChange()(items)
     }
-  }, [items, onChange])
+  }, [items, getOnChange])
 
   const handleSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {

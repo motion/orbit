@@ -27,9 +27,18 @@ export function ListsAppIndex(props: NavigatorProps) {
     },
     onEvent: 'enter',
   })
+  console.log('whattt?????????')
   return (
     <>
-      <TreeList use={treeList} sortable onSelect={props.selectItems} />
+      <TreeList
+        use={treeList}
+        sortable
+        onSelect={props.selectItems}
+        itemsProps={{
+          editable: true,
+          deletable: true,
+        }}
+      />
       <ListAppStatusBar />
       <Dock>
         <DockButton

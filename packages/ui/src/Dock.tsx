@@ -93,11 +93,13 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
           {...!show && { marginRight: -(50 + 15), opacity: 0 }}
           {...buttonProps}
         />
-        <Theme name="tooltip">
-          <TagLabel towards="top" size="xxs" {...labelProps}>
-            {props.label}
-          </TagLabel>
-        </Theme>
+        {!!props.label && (
+          <Theme name="tooltip">
+            <TagLabel towards="top" size="xxs" {...labelProps}>
+              {props.label}
+            </TagLabel>
+          </Theme>
+        )}
       </Col>
     </Flipped>
   )

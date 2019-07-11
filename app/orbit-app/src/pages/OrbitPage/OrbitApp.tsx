@@ -171,7 +171,7 @@ export const OrbitAppRenderOfDefinition = ({
       Statusbar: OrbitStatusBar,
       Actions: OrbitActions,
       ...appViewsContext,
-      renderApp,
+      renderApp: renderApp!,
     }),
     [renderApp, appViewsContext],
   )

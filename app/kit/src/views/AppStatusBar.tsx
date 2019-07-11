@@ -9,7 +9,7 @@ export function AppStatusBar(props: { children: React.ReactNode }) {
     appChildViews.setItems({
       statusBar: props.children,
     })
-  }, [props.children])
+  }, [])
 
   return null
 }

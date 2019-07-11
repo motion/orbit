@@ -464,6 +464,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     // allow multiple ways to pass in targets
     if (typeof target === 'string') {
       // selector
+      // @ts-ignore
       this.targetRef['current'] = getTarget(target)
     } else {
       if (!this.target && !isManuallyPositioned) {

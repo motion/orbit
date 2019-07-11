@@ -60,22 +60,7 @@ function createAlternateTheme(
   const altTheme = typeof next === 'function' ? next(theme) : next
 
   return {
-    ...(shouldFallback
-      ? {
-          background: theme.background,
-          backgroundDisabled: theme.backgroundDisabled,
-          backgroundDisabledActive: theme.backgroundActive,
-          backgroundDisabledFocus: theme.backgroundFocus,
-          borderColor: theme.borderColor,
-          borderColorDisabled: theme.borderColorDisabled,
-          borderColorDisabledActive: theme.borderColorActive,
-          borderColorDisabledFocus: theme.borderColorFocus,
-          color: theme.color,
-          colorDisabled: theme.colorDisabled,
-          colorDisabledActive: theme.colorActive,
-          colorDisabledFocus: theme.colorFocus,
-        }
-      : null),
+    ...(shouldFallback ? theme : null),
     // todo why types mad
     background: altTheme.background as any,
     color: altTheme.color as any,

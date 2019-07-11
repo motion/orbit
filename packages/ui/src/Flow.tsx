@@ -82,13 +82,14 @@ const tabButtonProps: any = {
   borderBottom: [3, 'transparent'],
   opacity: 0.4,
   sizeRadius: 0,
-  sizeHeight: 1.2,
+  size: 1.1,
+  sizeHeight: 1.3,
   sizePadding: 1.5,
 }
 
 const tabButtonPropsActive: any = {
-  color: theme => theme.color,
-  borderColor: theme => theme.borderColor,
+  // color: theme => theme.color,
+  borderBottom: theme => [3, theme.backgroundHighlight],
   opacity: 1,
 }
 
@@ -110,7 +111,6 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
             return (
               <Button
                 key={stp.key}
-                alt={isActive ? 'selected' : null}
                 onClick={() => props.setStepIndex(stepIndex)}
                 {...tabButtonProps}
                 {...isActive && tabButtonPropsActive}

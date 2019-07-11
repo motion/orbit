@@ -1,3 +1,4 @@
+import { toColor } from '@o/color'
 import { ThemeObject } from '@o/css'
 
 // this lets you do simple subsets using syntax:
@@ -58,12 +59,12 @@ function createAlternateTheme(
   // alternates can take parent theme as argument and return their theme:
   const next = theme.alternates[alt]
   const altTheme = typeof next === 'function' ? next(theme) : next
+  const parentTheme = shouldFallback ? theme : {}
 
   return {
-    ...(shouldFallback ? theme : null),
-    // todo why types mad
-    background: altTheme.background as any,
-    color: altTheme.color as any,
+    ...parentTheme,
+    background: altTheme.background || parentTheme['background'] || toColor('#000'),
+    color: altTheme.color || parentTheme['color'] || toColor('#fff'),
     ...altTheme,
     _alternateName: alt,
     _isAlternate: true,

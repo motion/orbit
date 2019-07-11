@@ -90,6 +90,7 @@ const tabButtonProps: any = {
 const tabButtonPropsActive: any = {
   // color: theme => theme.color,
   borderBottom: theme => [3, theme.backgroundHighlight],
+  hoverStyle: false,
   opacity: 1,
 }
 

@@ -1,4 +1,4 @@
-import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, TreeListProps, useSearchState, useTreeList } from '@o/kit'
+import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
@@ -16,10 +16,6 @@ export default createApp({
 })
 
 const id = 'my-tree-list'
-
-type x = TreeListProps
-
-type y = x['anything']
 
 export function ListsAppIndex(props: NavigatorProps) {
   const treeList = useTreeList(id)

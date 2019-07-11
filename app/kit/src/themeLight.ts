@@ -1,9 +1,9 @@
 import { linearGradient, toColor } from '@o/color'
+import { ThemeObject } from 'gloss'
 import { fromStyles } from 'gloss-theme'
 
 import { alternates } from './themeAlternates'
 import { colors } from './themeColors'
-import { ThemeObject } from 'gloss'
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
@@ -27,6 +27,8 @@ export const light: ThemeObject = {
     backgroundZebra: '#f6f7f9aa',
     backgroundHighlightActive: colors.blue.lighten(0.1),
     backgroundHighlight: colors.blue,
+    boxShadowColor: [0, 0, 0],
+    boxShadowOpacity: 0.2,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',

@@ -12,7 +12,7 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { SurfacePassPropsReset } from './Surface'
-import { getElevation } from './View/elevate'
+import { getElevation } from './View/elevation'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]

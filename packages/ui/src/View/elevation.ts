@@ -15,20 +15,17 @@ const smoother = (base: number, amt = 1) =>
  * Accounts for darkness of background by default, but you can ovverride in Theme
  */
 const elevatedShadow = (x: number, theme: ThemeObject) => {
-  const darkTheme = theme.background.isDark()
   return [
     // x
     0,
     // y
-    theme.elevatedShadowY ? theme.elevatedShadowY(x) : smoother(x, 1) * (darkTheme ? 1.2 : 1),
+    theme.elevatedShadowY ? theme.elevatedShadowY(x) : smoother(x, 1),
     // spread
-    theme.elevatedShadowSpread
-      ? theme.elevatedShadowSpread(x)
-      : smoother(x, 2.5) * (darkTheme ? 1.2 : 1),
+    theme.elevatedShadowSpread ? theme.elevatedShadowSpread(x) : smoother(x, 2.5),
     // color
     theme.elevatedShadowColor
       ? theme.elevatedShadowColor(x)
-      : [0, 0, 0, round(0.02 * smoother(x)) + (darkTheme ? 0.2 : 0)],
+      : [0, 0, 0, round(0.015 * smoother(x)) + (theme.boxShadowOpacity || 0)],
   ]
 }
 

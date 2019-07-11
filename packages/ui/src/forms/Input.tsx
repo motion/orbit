@@ -5,7 +5,7 @@ import { isWebkit } from '../constants'
 import { useThrottledFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { DataType } from '../types'
-import { getElevation } from '../View/elevate'
+import { getElevation } from '../View/elevation'
 import { useVisibility } from '../Visibility'
 import { useParentForm } from './Form'
 

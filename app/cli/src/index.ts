@@ -42,6 +42,13 @@ let cwd = process.cwd()
 let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
+const setVerbose = (verbose?: boolean) => {
+  if (verbose) {
+    reporter.setVerbose(true)
+    process.env.LOG_LEVEL = 'verbose'
+  }
+}
+
 function main() {
   require('./processDispose')
 
@@ -69,7 +76,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandNew({
@@ -94,7 +101,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         let projectRoot = resolve(cwd, argv.app)
         await commandDev({ projectRoot })
       },
@@ -127,7 +134,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let directory = resolve(cwd, argv.ws)
         await commandInstall({
@@ -166,7 +173,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandBuild({
@@ -210,7 +217,7 @@ function main() {
             describe: 'One of: patch, minor, major',
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandPublish({
@@ -244,7 +251,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let workspaceRoot = resolve(cwd, argv.workspace)
         await commandWs({
@@ -259,7 +266,7 @@ function main() {
       'Generate a types.json for the public API (internal, useful for testing)',
       p => p.option('out', { alias: 'o' }),
       async argv => {
-        reporter.setVerbose(!!argv.verbose)
+        setVerbose(!!argv.verbose)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         const projectRoot = resolve(cwd)
         const projectEntry = join(

@@ -71,6 +71,8 @@ export const dark: ThemeObject = {
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,
+  boxShadowColor: [0, 0, 0],
+  boxShadowOpacity: 0.8,
   // elevatedShadowY: (elevation: number) => smoother(x, 1),
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),

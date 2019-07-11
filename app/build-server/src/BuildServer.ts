@@ -1,8 +1,11 @@
+import { Logger } from '@o/logger'
 import historyAPIFallback from 'connect-history-api-fallback'
 import express from 'express'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
+
+const log = new Logger('BuildServer')
 
 const existsInCache = (middleware, path) => {
   try {
@@ -47,6 +50,9 @@ export class BuildServer {
     // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
 
     // apps first only if they matching cached file
+    log.info('got config main', main)
+    log.info('got config apps', apps)
+
     for (const name in apps) {
       const config = apps[name]
       const hmrPath = `/__webpack_hmr_${name}`

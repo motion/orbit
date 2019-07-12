@@ -1,4 +1,18 @@
+
 ---
+
+-- High level
+
+First: working, non-buggy demos of everything. Visually impressive.
+
+Fix query builder postgres loop with drag/drop
+make a generic app for search + display data that you can drag a query into
+make user manager app use grid layout probably
+make slack app search something large and put it into layout demo app or similar
+
+---
+
+planning for workspaces:
 
 workspaces:
 
@@ -34,13 +48,6 @@ make them work better (easier to manage/work with):
 5. this similarly helps with forking
 
 ---
-
-
--- High level
-
-First: working, non-buggy demos of everything:
-
-~1.5 months
 
 # PART 1
 

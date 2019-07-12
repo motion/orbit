@@ -54,7 +54,7 @@ const blurShortcut = () => {
 
 export function SettingsAppGeneral(_props: AppViewProps) {
   const [user, updateUser] = useActiveUser()
-  const { settings } = user || { settings: {} }
+  const settings = user.settings || {}
 
   const handleClearAllData = async () => {
     if (
@@ -80,7 +80,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         checked={settings.autoLaunch}
         onChange={value => {
           updateUser(x => {
-            x.settings.autoLaunch = value
+            x.settings!.autoLaunch = value
           })
         }}
       />
@@ -89,7 +89,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         checked={settings.autoUpdate}
         onChange={autoUpdate => {
           updateUser(x => {
-            x.settings.autoUpdate = autoUpdate
+            x.settings!.autoUpdate = autoUpdate
           })
         }}
       />
@@ -99,7 +99,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
           value={settings.theme}
           onChange={e =>
             updateUser(x => {
-              x.settings.theme = e.target.value as any
+              x.settings!.theme = e.target.value as any
             })
           }
         >
@@ -116,7 +116,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
           value={settings.vibrancy}
           onChange={e =>
             updateUser(x => {
-              x.settings.vibrancy = e.target.value as any
+              x.settings!.vibrancy = e.target.value as any
             })
           }
         >
@@ -134,10 +134,10 @@ export function SettingsAppGeneral(_props: AppViewProps) {
 
       <FormField label="Open shortcut">
         <ShortcutCapture
-          defaultValue={electronToNiceChars(settings.openShortcut)}
+          defaultValue={electronToNiceChars(settings.openShortcut || '')}
           onUpdate={val => {
             updateUser(x => {
-              x.settings.openShortcut = niceCharsToElectronChars(val)
+              x.settings!.openShortcut = niceCharsToElectronChars(val)
             })
           }}
           modifierChars={eventCharsToNiceChars}

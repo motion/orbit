@@ -41,7 +41,11 @@ export function Toggle({ defaultChecked, size, ...props }: ToggleProps) {
     />
   )
   if (props.tooltip) {
-    element = <Tooltip label={props.tooltip}>{element}</Tooltip>
+    element = (
+      <Tooltip label={props.tooltip}>
+        <div>{element}</div>
+      </Tooltip>
+    )
   }
   return element
 }

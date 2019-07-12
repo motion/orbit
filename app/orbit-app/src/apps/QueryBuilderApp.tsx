@@ -120,7 +120,7 @@ function QueryBuilderMain({
         // const icon = getAppDefinition(item.id)
         treeList.actions.updateSelectedItem({
           data: {
-            identifier: item.props.subType,
+            identifier: item.props!.subType || '',
           },
         })
       }}
@@ -452,6 +452,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             afterTitle={<PaneButton circular icon="plus" tooltip="Create new placeholder" />}
             scrollable="y"
             padding
+            resizable
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -462,7 +463,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding flex={2}>
+          <Pane title="Explore API" scrollable="y" padding flex={2} space>
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (

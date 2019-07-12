@@ -28,8 +28,6 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
     },
   )
 
-  console.log('transparent', props.children, appDef)
-
   if (!props.children) {
     return null
   }

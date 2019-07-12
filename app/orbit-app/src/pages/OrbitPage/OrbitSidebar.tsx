@@ -37,7 +37,6 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
           shareable
           selectable
           searchable
-          alwaysSelected
           itemProps={{ iconBefore: true, iconSize: 26 }}
         >
           {props.children}

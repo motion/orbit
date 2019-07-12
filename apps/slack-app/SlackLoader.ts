@@ -76,9 +76,9 @@ export class SlackLoader {
       return response.members
     }
 
-    this.log.timer('load API users')
+    this.log.vtimer('load API users')
     const members = await loadRecursively()
-    this.log.timer('load API users', members)
+    this.log.vtimer('load API users', members)
 
     // filter out bots and strange users without emails
     const filteredMembers = members.filter(member => {

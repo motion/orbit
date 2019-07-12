@@ -68,6 +68,7 @@ export class SelectableStore {
   callbackOnSelect = react(
     () => always(this.active),
     async (_, { sleep }) => {
+      console.log('calling back onSelect', this.active, this.props.onSelect, this)
       ensure('this.props.onSelect', !!this.props.onSelect)
       await sleep(16)
       const { rows, indices } = this.getSelectedState()
@@ -96,9 +97,9 @@ export class SelectableStore {
   )
 
   ensureAlwaysSelected = react(
-    () => [this.props.alwaysSelected, always(this.rows), always(this.active)],
-    ([alwaysSelected]) => {
-      ensure('alwaysSelected', alwaysSelected)
+    () => this.props.alwaysSelected && always(this.rows, this.active),
+    () => {
+      ensure('alwaysSelected', this.props.alwaysSelected)
       ensure('rowsLen', this.rows.length > 0)
       ensure('activeLen', this.active.size < 1)
       this.selectFirstValid()
@@ -125,18 +126,8 @@ export class SelectableStore {
   }
 
   private setActive(next: (string | number)[]) {
-    // dont let it unselect
-    if (this.props.alwaysSelected && next.length === 0) {
-      return
-    }
-
     // check for disabled rows
     const nextFiltered = this.removeUnselectable(next)
-
-    // if we filtered out everything, avoid doing anything
-    if (next.length > 0 && nextFiltered.length === 0) {
-      return
-    }
 
     // dont update if not changed (simple empty check)
     if (this.active.size === 0 && nextFiltered.length === 0) {
@@ -150,13 +141,10 @@ export class SelectableStore {
     }
 
     this.active = nextActive
-    this.updateActiveAndKeyToIndex(next)
+    this.updateActiveAndKeyToIndex(next, false)
   }
 
-  updateActiveAndKeyToIndex(
-    next: (string | number)[] = [...this.active],
-    opts = { updateActive: false },
-  ) {
+  updateActiveAndKeyToIndex(next: (string | number)[] = [...this.active], updateActive = true) {
     const nextActive = []
     for (const rowKey of next) {
       if (!this.keyToIndex[rowKey]) {
@@ -167,7 +155,7 @@ export class SelectableStore {
         }
       }
     }
-    if (opts.updateActive) {
+    if (updateActive) {
       this.setActive(nextActive)
     }
   }

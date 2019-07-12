@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { AppViewProps, createStoreContext, ensure, useHooks, useReaction, useStore, useUserState } from '@o/kit'
+import { createStoreContext, react, useHooks, useReaction, useStore, useUserState } from '@o/kit'
 import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
@@ -11,11 +11,9 @@ export type NavigatorProps = {
   navigation: StackNavigatorStore
 }
 
-type StackItemProps = AppViewProps
-
 type StackItem = {
   id: string
-  props?: StackItemProps
+  props: { [key: string]: string | number | boolean | null | undefined }
 }
 
 type BaseProps = {
@@ -47,8 +45,6 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal
 
-  console.log('stackNav', props)
-
   if (!stackNav) {
     throw new Error('No stack navigator given, must provide one of useNavigator or stateId')
   }
@@ -59,17 +55,16 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   }, [stackNav, ref])
 
   useEffect(() => {
-    if (!stackNav) return
-    if (!stackNav.stack.length && props.defaultItem) {
-      stackNav.navigate(props.defaultItem)
-    }
+    if (!stackNav || !props.defaultItem) return
+    stackNav.updateDefaultItem(props.defaultItem)
   }, [stackNav, props.defaultItem])
 
   useReaction(
     () => stackNav && stackNav.currentItem,
     stackItem => {
-      ensure('props.onNavigate', !!props.onNavigate)
-      props.onNavigate(stackItem)
+      if (props.onNavigate) {
+        props.onNavigate(stackItem)
+      }
     },
     {
       lazy: true,
@@ -102,13 +97,8 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   )
 })
 
-type StackNavStateItem = {
-  id: string
-  props: { [key: string]: any }
-}
-
 type StackNavState = {
-  stack: StackNavStateItem[]
+  stack: StackItem[]
 }
 
 export class StackNavigatorStore {
@@ -119,30 +109,40 @@ export class StackNavigatorStore {
 
   next = null
 
-  private hooks = useHooks(() => ({
-    state: useUserState<StackNavState>(`sn-${this.props.id}`, {
+  private hooks = useHooks(() => {
+    const [state, setState] = useUserState<StackNavState>(`sn-${this.props.id}`, {
       stack: [],
-    }),
-  }))
-
-  private setState = this.hooks.state[1]
+    })
+    return {
+      state,
+      setState,
+    }
+  }, this)
 
   get items() {
     return this.props.items
   }
 
   get stack() {
-    return this.hooks.state[0].stack || []
+    return this.hooks.state.stack || []
   }
 
   get currentItem() {
     return this.stack[this.stack.length - 1]
   }
 
+  propUpdateDefaultItem = react(() => this.props.defaultItem, this.updateDefaultItem)
+
+  updateDefaultItem(defaultItem: StackItem) {
+    if (!this.stack.length && defaultItem) {
+      this.navigate(defaultItem)
+    }
+  }
+
   navigate(item: StackItem, forcePush = false) {
     const props = filterSimpleValues(item.props)
     // dont update stack if already on same item, unless explicitly asking
-    this.setState(next => {
+    this.hooks.setState(next => {
       if (!next || !next.stack) {
         return
       }
@@ -165,7 +165,7 @@ export class StackNavigatorStore {
   }
 
   back() {
-    this.setState(next => {
+    this.hooks.setState(next => {
       next.stack = removeLast(next.stack)
     })
   }

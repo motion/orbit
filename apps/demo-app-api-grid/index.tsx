@@ -34,7 +34,7 @@ export function DemoGridApp() {
         {({ api }) => (
           <Tabs scrollable defaultActive="0">
             {rooms.map((room, index) => (
-              <Tab key={room.id} id={`${index}`} label={room.name} padding scollable="y">
+              <Tab key={room.id} id={`${index}`} label={room.name} padding scrollable="y">
                 {() => {
                   const res = api.channelsHistory({ channel: room.id })
                   return <SlackConversation messages={res.messages || []} />

@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
 
@@ -18,14 +18,21 @@ export default createApp({
 
 const treeId = 'query-build'
 
-function QueryBuilder(props: AppViewProps) {
+function QueryBuilder() {
   const om = useOm()
   const dataApps = useActiveDataApps()
+  const [items, setItems] = useState<any[]>([])
+  const hasItems = !!items.length
+  const id = (items[0] && items[0].id) || -1
   const navigator = useCreateStackNavigator({
-    id: `query-builder-nav-${props.id}`,
+    id: `query-builder-nav-${id}`,
     items: {
       SelectApp: QueryBuilderSelectApp,
       QueryEdit: QueryBuilderQueryEdit,
+    },
+    defaultItem: {
+      id: 'SelectApp',
+      props: {},
     },
   })
   const treeList = useTreeList(treeId)
@@ -44,26 +51,43 @@ function QueryBuilder(props: AppViewProps) {
   }
 
   return (
-    <App index={<QueryBuilderIndex treeList={treeList} navigator={navigator} />}>
-      <QueryBuilderMain key={props.id} {...props} treeList={treeList} navigator={navigator} />
+    <App
+      index={<QueryBuilderIndex treeList={treeList} navigator={navigator} setItems={setItems} />}
+    >
+      {!hasItems && <CenteredText>Add a query</CenteredText>}
+      {hasItems && <QueryBuilderMain key={id} treeList={treeList} navigator={navigator} />}
     </App>
   )
 }
 
-export function QueryBuilderIndex({
+function QueryBuilderIndex({
   treeList,
+  setItems,
 }: {
   treeList: TreeListStore
   navigator: StackNavigatorStore
+  setItems: any
 }) {
   return (
     <>
       <TreeList
+        title="Queries"
+        alwaysSelected
         use={treeList}
+        onSelect={items => {
+          console.log('on select', items)
+          setItems(items)
+        }}
+        sortable
+        shareable={false}
+        itemProps={{
+          editable: true,
+          deletable: true,
+        }}
         getItemProps={useCallback(item => {
           const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
           if (treeItem) {
-            const definition = getAppDefinition(`${treeItem.data.identifier}`)
+            const definition = getAppDefinition(`${treeItem.data!.identifier}`)
             if (definition) {
               return {
                 icon: definition.icon,
@@ -72,13 +96,6 @@ export function QueryBuilderIndex({
           }
           return null
         }, [])}
-        itemProps={{
-          editable: true,
-          deletable: true,
-        }}
-        title="Queries"
-        sortable
-        deletable
       />
       <Dock>
         <DockButton
@@ -102,16 +119,10 @@ export function QueryBuilderIndex({
 function QueryBuilderMain({
   navigator,
   treeList,
-  ...props
 }: AppViewProps & { navigator: StackNavigatorStore; treeList: TreeListStore }) {
   return (
     <StackNavigator
-      key={props.id}
       useNavigator={navigator}
-      defaultItem={{
-        id: 'SelectApp',
-        props,
-      }}
       onNavigate={item => {
         console.log('navigating to', item, treeList)
         if (!item) {
@@ -370,8 +381,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const queryBuilder = useStore(QueryBuilderStore, {
     method: method ? method.name : '',
-    appId: app.id,
-    appIdentifier: def.id,
+    appId: app.id!,
+    appIdentifier: def.id!,
   })
   const hasApiInfo = !!meta && !!apiInfo
 

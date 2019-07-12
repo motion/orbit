@@ -65,7 +65,7 @@ class AppChildViewsStore {
 export const AppChildViews = createStoreContext(AppChildViewsStore)
 
 // TODO move into UI
-const CardStack = (props: { children: React.ReactNode }) => {
+const CardStack = (props: { children: any }) => {
   const all = Children.toArray(props.children)
   const [focused, setFocused] = useState(all.length - 1)
 

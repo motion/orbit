@@ -75,7 +75,8 @@ const CardStack = (props: { children: React.ReactNode }) => {
 
   return (
     <>
-      {all.map((item, index) => (
+      {/* show no more than ten at once */}
+      {all.slice(0, 10).map((item, index) => (
         <Card
           position="absolute"
           top={0}

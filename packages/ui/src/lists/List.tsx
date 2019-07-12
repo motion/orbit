@@ -11,7 +11,6 @@ import { useGet, useGetFn } from '../hooks/useGet'
 import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
-import { Sizes } from '../Space'
 import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
@@ -54,9 +53,6 @@ export type ListProps = SectionSpecificProps &
 
     /** Called on when `editable` and after editing a title */
     onEdit?: (item: any, nextTitle: string) => any
-
-    /** Adds padding */
-    pad?: Sizes
   }
 
 export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any } {

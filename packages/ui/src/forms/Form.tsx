@@ -37,27 +37,27 @@ export type FormErrors<A> = { [key in keyof A]: string } | string | null | true 
 
 type FormFieldType =
   | {
-    name: string
-    type?: InputType
-    value?: any
-    required?: boolean
-    validate?: (val: any) => string
-  }
+      name: string
+      type?: InputType
+      value?: any
+      required?: boolean
+      validate?: (val: any) => string
+    }
   | {
-    name: string
-    type: 'select'
-    value: { label: string; value: string }[]
-    required?: boolean
-    validate?: (val: any) => string
-  }
+      name: string
+      type: 'select'
+      value: { label: string; value: string }[]
+      required?: boolean
+      validate?: (val: any) => string
+    }
   | {
-    name: string
-    type: 'custom'
-    children: React.ReactNode
-    value?: any
-    required?: boolean
-    validate?: (val: any) => string
-  }
+      name: string
+      type: 'custom'
+      children: React.ReactNode
+      value?: any
+      required?: boolean
+      validate?: (val: any) => string
+    }
 
 export type FormStoreProps = Pick<FormProps<FormFieldsObj>, 'fields' | 'errors'>
 
@@ -124,8 +124,8 @@ class FormStore {
           Array.isArray(x.value)
             ? x.value.map(y => createIncludeFilter(x.name, y.value))
             : x.value
-              ? createIncludeFilter(x.name, x.value.value)
-              : null,
+            ? createIncludeFilter(x.name, x.value.value)
+            : null,
         ),
     ).filter(Boolean)
     return selectFields
@@ -225,18 +225,15 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
         <Section background="transparent" flex={1} {...sectionProps}>
           {formStore.globalError && (
             <>
-              <Message key={0} alt="error">
-                {formStore.globalError}
-              </Message>
-              <Space key={1} />
+              <Message alt="error">{formStore.globalError}</Message>
+              <Space />
             </>
           )}
-          {formStore.errors && (
+
+          {!!formStore.errors && (
             <>
-              <Message key={2} alt="warn">
-                Form has errors, please check.
-              </Message>
-              <Space key={3} />
+              <Message alt="warn">Form has errors, please check.</Message>
+              <Space />
             </>
           )}
 

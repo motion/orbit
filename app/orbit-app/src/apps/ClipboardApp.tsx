@@ -1,5 +1,5 @@
 import { App, AppViewProps, createApp, getAppDefinition, useAppBit } from '@o/kit'
-import { CenteredText, Circle, List, ListItemProps, memoizeWeak, Section } from '@o/ui'
+import { CenteredText, Circle, isDefined, List, ListItemProps, memoizeWeak, pluralize, Section } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useOm } from '../om/om'
@@ -15,6 +15,18 @@ export default createApp({
   ),
 })
 
+const summarize = (items: any[]) => {
+  const i0 = items[0]
+  if (isDefined(i0.title, i0.name)) {
+    return `${items
+      .filter(x => !!x)
+      .map(i => (i.title || i.name || '').slice(0, 20))
+      .slice(0, 2)
+      .join(', ')}${items.length > 2 ? '...' : ''}`
+  }
+  return `${items.length} ${pluralize(items.length, 'item')}`
+}
+
 const ClipboardAppIndex = memo(() => {
   const om = useOm()
   const items: ListItemProps[] = Object.keys(om.state.share)
@@ -26,16 +38,11 @@ const ClipboardAppIndex = memo(() => {
     })
     .map(key => {
       const { id, identifier, name, items = [] } = om.state.share[key]
+      const subTitle = items.length ? `Selected: ${summarize(items)}` : 'Nothing selected'
       return {
         id: key,
         title: name,
-        subTitle: items.length
-          ? `Selected: ${items
-              .filter(x => !!x)
-              .map(i => i.title.slice(0, 20))
-              .slice(0, 2)
-              .join(', ')}${items.length > 2 ? '...' : ''}`
-          : 'Nothing selected',
+        subTitle,
         icon: getAppDefinition(identifier).icon,
         after: <Circle>{items.length}</Circle>,
         draggableItem: items,

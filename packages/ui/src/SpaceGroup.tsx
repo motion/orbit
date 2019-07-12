@@ -24,6 +24,9 @@ function getChildrenForSpacing(childs: React.ReactNode) {
   // Allow nested unwraps, for example see <PassProps />
   for (const child of React.Children.toArray(childs)) {
     if (!isValidElement(child)) {
+      if (child === null || child === false || child === undefined || child === '') {
+        continue
+      }
       children.push(child)
       continue
     }

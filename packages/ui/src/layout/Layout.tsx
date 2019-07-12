@@ -49,7 +49,7 @@ export const Layout = memo((props: LayoutProps) => {
   return (
     <View
       ref={ref}
-      className="ui-layout"
+      data-is="Layout"
       flex={1}
       overflow="hidden"
       height="100%"

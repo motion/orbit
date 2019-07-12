@@ -31,7 +31,7 @@ const ButtonInner = forwardRef((props: ButtonProps, ref) => {
   return (
     <SizedSurface
       ref={ref}
-      borderPosition="inside2"
+      borderPosition="inside"
       userSelect="none"
       tagName="button"
       alignItems="center"

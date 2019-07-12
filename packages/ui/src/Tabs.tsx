@@ -230,7 +230,7 @@ function TabsControlled({
 
 const TabContainer = gloss(Box, {
   flex: 1,
-  minHeight: 'max-content',
+  // minHeight: 'max-content',
 })
 
 const getKey = comp => (comp ? comp.props.id || (comp.key && comp.key.replace('.$', '')) : null)

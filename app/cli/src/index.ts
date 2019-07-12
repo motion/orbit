@@ -2,6 +2,7 @@
 import { CommandWsOptions } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
+import Yargs from 'yargs'
 
 import { CommandBuildOptions } from './command-build'
 import { CommandDevOptions } from './command-dev'
@@ -42,56 +43,55 @@ let cwd = process.cwd()
 let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
-const setVerbose = (verbose?: boolean) => {
-  if (verbose) {
+const setVerbose = (logLevel?: number) => {
+  if (logLevel) {
     reporter.setVerbose(true)
-    process.env.LOG_LEVEL = 'verbose'
+    process.env.LOG_LEVEL = `${logLevel}`
   }
 }
 
 function main() {
   require('./processDispose')
 
-  const Yargs = require('yargs')
-
   Yargs.scriptName('orbit')
     .usage('$0 <cmd> [args]')
+    .option('logLevel', {
+      type: 'number',
+      default: 0,
+    })
     .command(
-      'new [app] [template]',
+      'new [appName] [template]',
       'Create a new orbit app',
       p =>
         p
-          .positional('app', {
+          .positional('appName', {
             type: 'string',
-            describe: 'The name of the folder to create for your new app.',
+            describe:
+              'The name of the folder to create for your new app, no spaces / special characters.',
           })
           .positional('template', {
             type: 'string',
             describe:
               'Choose from pre-defined starter app templates, or give an identifier of an existing orbit app, or a shorthand to a github repository.',
             default: 'blank',
-          })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
-        let projectRoot = resolve(cwd, argv.app)
+        let projectRoot = resolve(cwd, argv.appName)
         await commandNew({
           projectRoot,
-          name: argv.name,
+          name: argv.appName,
           template: argv.template,
         })
       },
     )
     .command(
-      'dev [app]',
+      'dev [appName]',
       'Run an Orbit app in development mode',
       p =>
         p
-          .positional('app', {
+          .positional('appName', {
             type: 'string',
             default: '.',
             describe: 'The application to run',
@@ -101,8 +101,8 @@ function main() {
             default: false,
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
-        let projectRoot = resolve(cwd, argv.app)
+        setVerbose(argv.logLevel)
+        let projectRoot = resolve(cwd, argv.appName)
         await commandDev({ projectRoot })
       },
     )
@@ -121,10 +121,6 @@ function main() {
             default: '.',
             describe: 'The workspace name to install to',
           })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
-          })
           .option('force-install', {
             type: 'boolean',
             default: false,
@@ -134,7 +130,7 @@ function main() {
             default: false,
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let directory = resolve(cwd, argv.ws)
         await commandInstall({
@@ -167,13 +163,9 @@ function main() {
           .option('debug-build', {
             type: 'boolean',
             default: false,
-          })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandBuild({
@@ -204,10 +196,6 @@ function main() {
           //   describe: `Publish to your own internal registry`,
           //   default: false,
           // })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
-          })
           .option('ignore-version', {
             type: 'boolean',
             default: false,
@@ -217,7 +205,7 @@ function main() {
             describe: 'One of: patch, minor, major',
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandPublish({
@@ -245,19 +233,15 @@ function main() {
           .option('mode', {
             type: 'string',
             default: 'development',
-          })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
           }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let workspaceRoot = resolve(cwd, argv.workspace)
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          mode: argv['mode'],
+          mode: argv.mode as any,
         })
       },
     )
@@ -266,7 +250,7 @@ function main() {
       'Generate a types.json for the public API (internal, useful for testing)',
       p => p.option('out', { alias: 'o' }),
       async argv => {
-        setVerbose(!!argv.verbose)
+        setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         const projectRoot = resolve(cwd)
         const projectEntry = join(
@@ -281,9 +265,6 @@ function main() {
         })
       },
     )
-    .option('verbose', {
-      alias: 'v',
-    })
     .version('version', 'Show version', description)
     .showHelpOnFail(true)
     .help().argv

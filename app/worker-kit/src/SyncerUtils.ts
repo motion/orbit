@@ -70,7 +70,7 @@ export class SyncerUtils {
     }
     this.log.vtimer('load bits from the database', options, findOptions)
     const bits = await this.manager.getRepository(BitEntity).find(findOptions)
-    this.log.vtimer('load bits from the database', bits)
+    this.log.vtimer('load bits from the database', bits.length)
     return bits
   }
 

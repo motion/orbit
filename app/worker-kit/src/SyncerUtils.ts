@@ -29,7 +29,7 @@ export class SyncerUtils {
     const apps = await this.manager.getRepository(AppEntity).find({
       identifier: options ? options.identifier : undefined,
     })
-    this.log.timer('load apps from the database', apps)
+    this.log.timer('load apps from the database', apps.map(x => x.id))
     return apps
   }
 

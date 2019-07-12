@@ -267,8 +267,6 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
   const hasAfterTitle = isDefined(props.afterTitle, afterHeaderElement)
   const altTheme = isSelected ? (isFocused ? 'selected' : 'selectedInactive') : null
 
-  if (deletable) console.warn(deletable)
-
   return (
     <Theme alt={altTheme}>
       {above}

@@ -67,7 +67,7 @@ export class GMailLoader {
     // load a history first
     this.log.verbose('loading history', { startHistoryId, pageToken })
     const result = await this.loader.load(GMailQueries.history(startHistoryId, pageToken))
-    this.log.verbose('history loaded', result)
+    this.log.verbose('history loaded')
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = []

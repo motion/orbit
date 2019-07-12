@@ -14,9 +14,6 @@
     { "path": "./app/orbit-dotapp" },
     { "path": "./app/cli" },
 
-    // apps
-    { "path": "./apps" },
-
     // dev time needs
     { "path": "./packages/build" },
     { "path": "./packages/plugin-transform-react-constant-elements" },

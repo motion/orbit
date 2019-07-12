@@ -311,10 +311,7 @@ export function makeWebpackConfig(
           context: '.',
         }),
 
-      hot &&
-        new webpack.HotModuleReplacementPlugin({
-          multiStep: true,
-        }),
+      hot && new webpack.HotModuleReplacementPlugin(),
 
       // new (require('bundle-analyzer-plugin').default)({
       //   analyzerMode: 'static',

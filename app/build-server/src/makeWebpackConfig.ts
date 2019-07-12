@@ -162,6 +162,7 @@ export function makeWebpackConfig(
       alias: {
         // disable until fixed bug in rhl
         'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
+        'react-native': 'react-native-web',
       },
       modules,
     },

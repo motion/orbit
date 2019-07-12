@@ -17,6 +17,9 @@ module.exports = function(_, givenOpts) {
   const config = {
     plugins: [
       isDev && plug('react-hot-loader/babel'),
+      plug('babel-plugin-react-native-web', {
+        commonjs: true,
+      }),
       plug('./babel-plugin-react-displayname.js'),
       plug('@babel/plugin-syntax-dynamic-import'),
       plug('@babel/plugin-transform-runtime', {

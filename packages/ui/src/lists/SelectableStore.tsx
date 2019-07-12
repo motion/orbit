@@ -68,7 +68,6 @@ export class SelectableStore {
   callbackOnSelect = react(
     () => always(this.active),
     async (_, { sleep }) => {
-      console.log('calling back onSelect', this.active, this.props.onSelect, this)
       ensure('this.props.onSelect', !!this.props.onSelect)
       await sleep(16)
       const { rows, indices } = this.getSelectedState()

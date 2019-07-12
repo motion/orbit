@@ -1,7 +1,7 @@
 {
   "name": "@o/demo-app-layout",
   "version": "2.5.6",
-  "main": "_/index.js",
+  "main": "index.tsx",
   "ts:main": "src/index.tsx",
   "config": {
     "orbitApp": true

@@ -1,8 +1,7 @@
 {
   "name": "@o/demo-app-user-manager",
   "version": "2.5.6",
-  "main": "_/index.js",
-  "ts:main": "src/index.tsx",
+  "main": "index.tsx",
   "config": {
     "orbitApp": true
   },

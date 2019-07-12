@@ -28,7 +28,8 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
       return { directory, packageId, isLocal: false }
     })
     const wsDirs = await getWorkspaceLocalPackageDirs(workspaceRoot)
-    const allDirs = [...packageDirs, ...wsDirs]
+    const allDirs = [...packageDirs, ...wsDirs].filter(Boolean)
+    console.log('allDirs', packageDirs, wsDirs)
     return (await Promise.all(
       allDirs.map(async ({ directory, packageId, isLocal }) => {
         const apiInfoPath = join(directory, 'dist', 'api.json')

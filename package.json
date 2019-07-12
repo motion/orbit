@@ -104,7 +104,7 @@
     "eslint-plugin-react-hooks": "1.6.0",
     "jest": "24.8.0",
     "json-diff": "0.5.4",
-    "lerna": "3.15.0",
+    "lerna": "^3.15.0",
     "mobx": "5.10.1",
     "overmind-devtools": "19.0.0",
     "patch-package": "6.1.2",

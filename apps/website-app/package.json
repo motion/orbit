@@ -2,8 +2,7 @@
   "name": "@o/website-app",
   "description": "Crawl a website given a URL.",
   "version": "2.5.8",
-  "main": "_/index.js",
-  "ts:main": "src/index.tsx",
+  "main": "index.tsx",
   "config": {
     "orbitApp": true
   },

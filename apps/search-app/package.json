@@ -2,8 +2,7 @@
   "name": "@o/search-app",
   "description": "Search across all synced data.",
   "version": "2.5.10",
-  "main": "_/index.js",
-  "ts:main": "src/index.tsx",
+  "main": "index.tsx",
   "scripts": {
     "start": "orbit dev",
     "build": "orbit build"

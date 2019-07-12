@@ -5,6 +5,7 @@ import { Box, gloss, Theme, ThemeContext, useTheme } from 'gloss'
 import React, { isValidElement } from 'react'
 
 import { BorderBottom } from '../Border'
+import { Button } from '../buttons/Button'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
@@ -136,6 +137,12 @@ export type ListItemSpecificProps = ListItemHide & {
   /** For use with automatic separator generation, when using `<List />` */
   groupName?: string
 
+  /** Will show a delete next to the item automatically and call onDelete */
+  deletable?: boolean
+
+  /** Called when deletable is set and user confirms the delete action */
+  onDelete?: (item: ListItemSimpleProps) => any
+
   /** Allows double click on title to edit, calls onEdit when user hits "enter" or clicks away */
   editable?: boolean
 
@@ -194,6 +201,8 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     onEdit,
     onStartEdit,
     onCancelEdit,
+    deletable,
+    onDelete,
     ...surfaceProps
   } = props
   const theme = useTheme()
@@ -216,7 +225,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
 
   const iconElement = showIcon && getIcon(props)
   const listItemAdjustedPadding = usePadding({ padding: selectDefined(padding, 12) })
-  const spaceSize = listItemAdjustedPadding.paddingTop
+  const space = listItemAdjustedPadding.paddingTop
 
   const hasChildren = showChildren && !!children
   const childrenElement = hasChildren && (
@@ -251,7 +260,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       >
         {`${location}`}
       </RoundButtonSmall>
-      <Space size={spaceSize} />
+      <Space size={space} />
     </>
   )
 
@@ -270,7 +279,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       <SizedSurface
         flexDirection="row"
         alignItems="center"
-        themeSelect="listItem"
+        subTheme="listItem"
         borderRadius={borderRadius}
         onClick={(!hasMouseDownEvent && onClick) || undefined}
         {...listItemAdjustedPadding}
@@ -279,11 +288,11 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         before={
           <>
             {before}
-            {!!before && <Space size={spaceSize} />}
+            {!!before && <Space size={space} />}
             {!hideBorder && <BorderBottom right={5} left={5} opacity={0.2} />}
           </>
         }
-        spaceSize={spaceSize}
+        space={space}
         icon={iconBefore && iconElement}
         noInnerElement={!iconElement}
         {...disablePsuedoProps}
@@ -292,7 +301,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
         <ListItemMainContent oneLine={oneLine}>
           <Col flex={1}>
             {showTitle && (
-              <ListItemTitleBar space={spaceSize} alignItems={alignItems}>
+              <ListItemTitleBar space={space} alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
                 {isValidElement(title) ? (
                   title
@@ -315,7 +324,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
             )}
             {showSubtitle && (
               <>
-                <Space size={spaceSize / 2} />
+                <Space size={space / 2} />
                 <ListItemSubtitle>
                   {!!location && locationElement}
                   {!!subTitle &&
@@ -367,14 +376,35 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
           </Col>
           {hasAfterTitle && (
             <>
-              <Space size={spaceSize} />
-              <Col space={spaceSize}>
+              <Space size={space} />
+              <Col space={space}>
                 {props.afterTitle}
                 {afterHeaderElement}
               </Col>
             </>
           )}
         </ListItemMainContent>
+        {/* TODO we should make this a right click option at least in electron */}
+        {!!deletable && (
+          <>
+            <Space />
+            <Button
+              className="ui-listitem-delete"
+              chromeless
+              circular
+              icon="cross"
+              opacity={0.65}
+              onMouseDown={e => {
+                e.stopPropagation()
+              }}
+              onClick={() => {
+                if (window.confirm(`Are you sure you'd like to delete?`)) {
+                  onDelete(props)
+                }
+              }}
+            />
+          </>
+        )}
         {!!after && (
           <>
             <Space />

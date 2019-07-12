@@ -3,7 +3,7 @@ import React from 'react'
 
 export let Basic = (
   <Popover
-    openKey="demo"
+    group="demo"
     openOnClick
     towards="bottom"
     elevation={8}
@@ -36,7 +36,7 @@ const baseChildren = (
 function BasicPopover({ children = baseChildren, ...props }) {
   return (
     <Popover
-      openKey="demo"
+      group="demo"
       openOnClick
       towards="bottom"
       elevation={8}

@@ -12,7 +12,7 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { SurfacePassPropsReset } from './Surface'
-import { getElevation } from './View/elevate'
+import { getElevation } from './View/elevation'
 import { View } from './View/View'
 
 const acceptsProps = (x, val) => x.type.acceptsProps && x.type.acceptsProps[val]
@@ -23,8 +23,8 @@ export type PopoverProps = Omit<SizedSurfaceProps, 'background' | 'style'> & {
   /** Custom theme for just the popover content */
   popoverTheme?: string
 
-  /** If you set a openKey, it acts as an ID that makes sure only one popover within that ID is ever open */
-  openKey?: string
+  /** If you set a group, it acts as an ID that makes sure only one popover within that ID is ever open */
+  group?: string
 
   /** Can pass function to get isOpen passed in */
   children?: React.ReactNode | PopoverChildrenFn
@@ -145,17 +145,25 @@ type PositionStateX = { arrowLeft: number; left: number }
 type PositionStateY = { arrowTop: number; top: number; maxHeight: number }
 type Bounds = { top: number; left: number; width: number; height: number }
 
-const OpenPopovers = new Set<any>()
-
-export const PopoverState = {
-  openPopovers: OpenPopovers,
-  closeLast: () => {
-    last([...OpenPopovers]).forceClose()
-  },
-  closeAll: () => {
-    ;[...OpenPopovers].map(x => x.forceClose())
-  },
+class PopoverManager {
+  state = new Set<Popover>()
+  closeGroup(group: string, ignore: any) {
+    for (const item of [...this.state]) {
+      if (item === ignore) continue
+      if (item.props.group === group) {
+        item.forceClose()
+      }
+    }
+  }
+  closeLast() {
+    last([...this.state]).forceClose()
+  }
+  closeAll() {
+    ;[...this.state].forEach(x => x.forceClose())
+  }
 }
+
+export const PopoverState = new PopoverManager()
 
 const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number }) => {
   return isNumber(top) && isNumber(left)
@@ -438,21 +446,11 @@ export class Popover extends React.Component<PopoverProps, State> {
       if (this.props.popoverRef) {
         this.props.popoverRef(ref)
       }
-      // const inner = ref.querySelector('.popover-inner-surface')
-      // on(
-      //   this,
-      //   setTimeout(() => {
-      //     this.resizeObserver.observe(inner)
-      //     this.mutationObserver.observe(ref, { attributes: true })
-      //   }, 300),
-      // )
     }
   }
 
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
-
-    // this.resizeObserver.observe(document.documentElement)
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
@@ -467,7 +465,7 @@ export class Popover extends React.Component<PopoverProps, State> {
     if (typeof target === 'string') {
       // selector
       // @ts-ignore
-      this.targetRef.current = getTarget(target)
+      this.targetRef['current'] = getTarget(target)
     } else {
       if (!this.target && !isManuallyPositioned) {
         // potentially we can just get it directly
@@ -504,7 +502,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   unmounted = false
 
   componentWillUnmount() {
-    PopoverState.openPopovers.delete(this)
+    PopoverState.state.delete(this)
     this.unmounted = true
   }
 
@@ -516,10 +514,10 @@ export class Popover extends React.Component<PopoverProps, State> {
       }
     }
     if (this.showPopover) {
-      PopoverState.openPopovers.add(this)
+      PopoverState.state.add(this)
       this.closeOthersWithinGroup()
     } else {
-      PopoverState.openPopovers.delete(this)
+      PopoverState.state.delete(this)
     }
     if (this.props.onDidOpen) {
       if (this.showPopover) {
@@ -940,16 +938,7 @@ export class Popover extends React.Component<PopoverProps, State> {
   }
 
   closeOthersWithinGroup() {
-    if (this.props.openKey) {
-      for (const popover of [...PopoverState.openPopovers]) {
-        if (popover === this) {
-          continue
-        }
-        if (popover.props.group === this.props.openKey) {
-          popover.forceClose()
-        }
-      }
-    }
+    PopoverState.closeGroup(this.props.group, this)
   }
 
   get isMeasuring() {
@@ -1083,7 +1072,7 @@ export class Popover extends React.Component<PopoverProps, State> {
               <SurfacePassPropsReset>
                 <SizedSurface
                   className="popover-inner-surface"
-                  themeSelect="popover"
+                  subTheme="popover"
                   sizeRadius
                   flex={1}
                   hoverStyle={null}

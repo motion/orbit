@@ -1,9 +1,3 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
 import { ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
 import { isDefined } from '@o/utils'
 import { capitalize } from 'lodash'
@@ -14,10 +8,16 @@ import { textContent } from '../helpers/textContent'
 import { GenericDataRow } from '../types'
 import { FilterIncludeExclude, TableFilter, TableFilterSimple, TableRows } from './types'
 
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
 export type FilterableProps = {
   addFilter?: (filter: TableFilter) => void
   searchable?: boolean
-  searchTerm?: string
+  query?: string
   filters?: TableFilterSimple[]
   defaultFilters?: TableFilterSimple[]
   onEnter?: (value: string) => any
@@ -72,9 +72,9 @@ class FilterableStore {
     normalize: normalizeFilters,
   })
 
-  searchTerm = syncFromProp(this.props, {
-    key: 'value',
-    defaultKey: 'defaultValue',
+  query = syncFromProp(this.props, {
+    key: 'query',
+    defaultKey: 'defaultQuery',
     defaultValue: [],
   })
 
@@ -85,9 +85,9 @@ class FilterableStore {
   onFilterChange = syncToProp(this, 'filters', 'onFilterChange')
 
   filter = react(
-    () => [this.filters, this.searchTerm],
-    ([filters, searchTerm]) => {
-      return filterRowsFactory(filters, searchTerm)
+    () => [this.filters, this.query],
+    ([filters, query]) => {
+      return filterRowsFactory(filters, query)
     },
   )
 
@@ -112,11 +112,11 @@ class FilterableStore {
       }
     } else if (e.key === 'Escape' && this.inputNode) {
       this.inputNode.blur()
-      this.searchTerm = ''
+      this.query = ''
     } else if (e.key === 'Backspace' && this.hasFocus) {
       if (
         this.focusedToken === -1 &&
-        this.searchTerm === '' &&
+        this.query === '' &&
         this.inputNode &&
         this.filters.length > 0 &&
         !this.filters[this.filters.length - 1].persistent
@@ -130,21 +130,21 @@ class FilterableStore {
       this.removeFilter(this.focusedToken)
     } else if (e.key === 'Enter' && this.hasFocus && this.inputNode) {
       if (this.props.onEnter) {
-        this.props.onEnter(this.searchTerm)
+        this.props.onEnter(this.query)
       }
       this.matchTags(this.inputNode.value, true)
     }
   }
 
-  onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
+  onChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.matchTags(e.target.value, false)
   }
 
-  matchTags = (searchTerm: string, matchEnd: boolean) => {
+  matchTags = (query: string, matchEnd: boolean) => {
     const filterPattern = matchEnd
       ? /([a-z][a-z0-9]*[!]?[:=][^\s]+)($|\s)/gi
       : /([a-z][a-z0-9]*[!]?[:=][^\s]+)\s/gi
-    const match = searchTerm.match(filterPattern)
+    const match = query.match(filterPattern)
     if (match && match.length > 0) {
       match.forEach((filter: string) => {
         const separator = filter.indexOf(':') > filter.indexOf('=') ? ':' : '='
@@ -169,9 +169,9 @@ class FilterableStore {
         })
       })
 
-      searchTerm = searchTerm.replace(filterPattern, '')
+      query = query.replace(filterPattern, '')
     }
-    this.searchTerm = searchTerm
+    this.query = query
   }
 
   addFilter = (filter: TableFilter) => {
@@ -233,7 +233,7 @@ class FilterableStore {
 
   clear = () => {
     this.filters = this.filters.filter(f => f.persistent != null && f.persistent === true)
-    this.searchTerm = ''
+    this.query = ''
   }
 
   inputProps = null
@@ -272,7 +272,7 @@ export const FilterableSearchInput = memo(
       <SearchInput
         placeholder="Search..."
         ref={useFilterable.ref}
-        clearable={!!store.searchTerm}
+        clearable={!!store.query}
         onClickClear={store.clear}
         focusedToken={store.focusedToken}
         filters={store.filters}
@@ -282,8 +282,8 @@ export const FilterableSearchInput = memo(
           onReplace: store.replaceFilter,
           onBlur: store.onTokenBlur,
         }}
-        onChange={store.onChangeSearchTerm}
-        value={store.searchTerm}
+        onChange={store.onChangeQuery}
+        value={store.query}
         onFocus={store.onInputFocus}
         onBlur={store.onInputBlur}
         {...rest}
@@ -293,16 +293,16 @@ export const FilterableSearchInput = memo(
 )
 
 const sep = '~~'
-export const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
+export const filterRowsFactory = (filters: TableFilter[], query: string) => (
   row: GenericDataRow,
 ): boolean => {
   const matchSearch =
-    !!searchTerm && searchTerm.length
+    !!query && query.length
       ? Object.keys(row.values)
           .map(key => textContent(row.values[key]))
           .join(sep) // prevent from matching text spanning multiple columns
           .toLowerCase()
-          .includes(searchTerm.toLowerCase())
+          .includes(query.toLowerCase())
       : true
 
   const matchFilter = filters

@@ -67,7 +67,7 @@ export class GMailLoader {
     // load a history first
     this.log.verbose('loading history', { startHistoryId, pageToken })
     const result = await this.loader.load(GMailQueries.history(startHistoryId, pageToken))
-    this.log.verbose('history loaded', result)
+    this.log.verbose('history loaded')
 
     // collect from history list of added/changed and removed thread ids
     let addedThreadIds: string[] = []
@@ -248,11 +248,11 @@ export class GMailLoader {
   async loadMessages(threads: GMailThread[]): Promise<void> {
     await sleep(THROTTLING.messages)
 
-    this.log.verbose('loading thread messages', threads)
+    this.log.verbose('loading thread messages', threads.length)
     for (let thread of threads) {
       const result = await this.loader.load(GMailQueries.thread(thread.id))
       Object.assign(thread, result)
     }
-    this.log.verbose('thread messages are loaded', threads)
+    this.log.verbose('thread messages are loaded')
   }
 }

@@ -1,7 +1,7 @@
+import { Logger } from '@o/logger'
 import { forkProcess } from '@o/orbit-fork-process'
 
 import { addAppProcess } from '../resolver/CloseAppResolver'
-import { Logger } from '@o/logger'
 
 const log = new Logger('forkAndStartOrbitApp')
 const lastUsedInspectPort = 9003
@@ -19,6 +19,12 @@ export function forkAndStartOrbitApp({ appId }: { appId: number }, environmentVa
   let proc = forkProcess({
     name: `orbit-app-${appId}`,
     env: {
+      ORBIT_CONFIG: process.env.ORBIT_CONFIG,
+      _: process.env._,
+      HOME: process.env.HOME,
+      LOG_LEVEL: process.env.LOG_LEVEL,
+      STACK_FILTER: process.env.STACK_FILTER,
+      NODE_ENV: process.env.NODE_ENV,
       ...environmentVariables,
       APP_ID: appId,
     },

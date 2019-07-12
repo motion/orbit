@@ -23,7 +23,7 @@ export const LayoutContext = createContext<{
 })
 
 export const acceptsProps = (child, key) =>
-  !!(child.type.acceptsProps && child.type.acceptsProps[key])
+  !!(child && child.type && child.type.acceptsProps && child.type.acceptsProps[key])
 
 export const Layout = memo((props: LayoutProps) => {
   const children: ReactElement[] = Children.map(props.children, child => {
@@ -72,10 +72,11 @@ const FlexLayout = memo(({ children, type, ...colProps }: LayoutProps) => {
     disable: !visibility,
     throttle: 200,
   })
-  const total = Children.count(children)
   const dimension = type === 'row' ? 'width' : 'height'
   const parentSize = size[dimension]
-  const childElements = Children.map(children, (child, index) => {
+  const validChildren = Children.toArray(children).filter(child => !!child)
+  const total = validChildren.length
+  const childElements = validChildren.map((child, index) => {
     return cloneElement(child as any, {
       index,
       total,

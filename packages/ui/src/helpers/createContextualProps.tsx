@@ -33,10 +33,13 @@ export function createContextualProps<A extends any>(defaults?: A): ContextualPr
         if (!extra) {
           return componentProps as any
         }
+        if (!componentProps) {
+          return extra
+        }
         // merge just undefined componentProps from extra
         const final: any = { ...componentProps }
         for (const key in extra) {
-          if (typeof final[key] === 'undefined') {
+          if (final[key] === undefined) {
             final[key] = extra[key]
           }
         }

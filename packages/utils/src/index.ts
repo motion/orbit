@@ -75,10 +75,16 @@ export function randomString(length: number) {
   return text
 }
 
+/**
+ * Simple opposite of Object.toEntries() can be removed once chrome has it
+ */
 export function fromEntries(iterable: any[]): { [key: string]: any } {
   return [...iterable].reduce((obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }), {})
 }
 
+/**
+ * Return the first arg that is not undefined
+ */
 export function selectDefined(...args: any[]) {
   for (const arg of args) {
     if (arg !== undefined) {
@@ -87,6 +93,10 @@ export function selectDefined(...args: any[]) {
   }
 }
 
+/**
+ * Return an object that consists of all defined properties
+ *   TODO make this use a weakmap likely
+ */
 export function mergeDefined<A extends Object>(...args: A[]): A {
   const res = {}
   const keysSets = args.map(a => Object.keys(a))
@@ -135,7 +145,6 @@ export function partitionObject<A extends Object>(
 /**
  * A typed partition function for lists
  */
-
 export function partition<T, U extends T>(
   list: T[],
   predicate: (v: T) => v is U,
@@ -169,3 +178,10 @@ export const numberScaler = (prevMin: number, prevMax: number, newMin: number, n
  */
 export const numberBounder = (min: number, max: number) => (val: number) =>
   val < min ? min : val > max ? max : val
+
+/**
+ * Integrate into orbits global debug logging
+ */
+export const shouldDebug = (level: number = 1) => {
+  return typeof window !== 'undefined' && window['enableLog'] >= level
+}

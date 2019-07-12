@@ -2,11 +2,10 @@
   "name": "@o/search-app",
   "description": "Search across all synced data.",
   "version": "2.5.10",
-  "main": "_/index.js",
-  "ts:main": "src/index.tsx",
+  "main": "index.tsx",
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "start": "orbit dev",
+    "build": "orbit build"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

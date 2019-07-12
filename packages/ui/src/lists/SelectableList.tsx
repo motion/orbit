@@ -1,23 +1,22 @@
 import { FixedSizeList, FixedSizeListProps, VariableSizeList, VariableSizeListProps } from '@o/react-window'
 import React, { forwardRef, useEffect, useRef } from 'react'
 
+import { composeRefs } from '../helpers/composeRefs'
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
-import { SelectableProps } from './SelectableStore'
+import { SelectableProps, useCreateSelectableStore } from './SelectableStore'
 
 type SelectableListProps = SelectableProps & { listRef?: any }
 
 export function useSelectableProps(props: SelectableListProps, extraRef: any) {
-  const selectableStore = props.selectableStore
+  const selectableStore = useCreateSelectableStore(props)
   const internalRef = useRef<DynamicListControlled>(null)
-  const listRef = props.listRef || internalRef
 
   useEffect(() => {
-    selectableStore && selectableStore.setListRef(listRef.current)
-    extraRef && extraRef(listRef.current)
-  }, [listRef, selectableStore])
+    selectableStore && selectableStore.setListRef(internalRef.current)
+  }, [internalRef, selectableStore])
 
   return {
-    ref: listRef,
+    ref: composeRefs(props.listRef, internalRef, extraRef),
   }
 }
 

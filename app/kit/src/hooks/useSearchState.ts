@@ -73,3 +73,7 @@ export function useSearchState({
     },
   )
 }
+
+export function useActiveSearch() {
+  return useSearchState().query
+}

@@ -6,7 +6,7 @@ import { useScale } from './Scale'
 import { scaledTextSizeTheme, SimpleText, SimpleTextProps } from './text/SimpleText'
 
 export type ListSeparatorProps = SimpleTextProps & {
-  themeSelect?: ThemeSelect
+  subTheme?: ThemeSelect
   hideBorderTop?: boolean
   hideBorderBottom?: boolean
 }
@@ -31,7 +31,7 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
 }).theme(
   (props, themeIn) => {
     const scale = useScale()
-    const theme = selectThemeSubset(props.themeSelect, themeIn)
+    const theme = selectThemeSubset(props.subTheme, themeIn)
     const themeStyle = psuedoStyleTheme(props, theme)
     return {
       padding: [scale * 5, scale * 8],
@@ -45,7 +45,7 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
 ListSeparator.defaultProps = {
   activeStyle: false,
   hoverStyle: false,
-  themeSelect: 'separator',
+  subTheme: 'separator',
   fontWeight: 400,
   size: 0.85,
   alpha: 0.6,

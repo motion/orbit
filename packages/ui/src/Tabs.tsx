@@ -9,7 +9,7 @@ import { Loading } from './progress/Loading'
 import { Tab, TabItem } from './Tab'
 import { Col } from './View/Col'
 import { Row } from './View/Row'
-import { View, ViewProps } from './View/View'
+import { ViewProps } from './View/View'
 
 /**
  * Copyright 2018-present Facebook.
@@ -150,10 +150,10 @@ function TabsControlled({
           onClick={
             !isActive && onChange
               ? (event: MouseEvent) => {
-                if (event.target !== closeButton) {
-                  onChange(id)
+                  if (event.target !== closeButton) {
+                    onChange(id)
+                  }
                 }
-              }
               : undefined
           }
           icon={icon}
@@ -210,7 +210,8 @@ function TabsControlled({
         {...rest}
       >
         {before}
-        <HideScrollbarRow
+        <Row
+          flex={1}
           className="hide-scrollbars"
           overflowX={scrollable ? 'auto' : undefined}
           height={height}
@@ -218,7 +219,7 @@ function TabsControlled({
           {Children.map(tabList, (child, key) =>
             cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
           )}
-        </HideScrollbarRow>
+        </Row>
         {after}
       </Row>
       {tabContents}
@@ -227,7 +228,7 @@ function TabsControlled({
   )
 }
 
-const TabContainer = gloss(View, {
+const TabContainer = gloss(Box, {
   flex: 1,
   minHeight: 'max-content',
 })
@@ -242,15 +243,6 @@ export function Tabs(props: TabsProps) {
   const cProps = useUncontrolled(props, controlledConfig)
   return <TabsControlled {...cProps} active={selectDefined(props.active, cProps.active)} />
 }
-
-const HideScrollbarRow = gloss(Box, {
-  flexFlow: 'row',
-  flex: 1,
-  // because we use box shadows for outlines
-  // margin: [0, 1],
-  height: '100%',
-  boxSizing: 'content-box',
-})
 
 const CloseButton = gloss(Box, {
   color: '#000',

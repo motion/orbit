@@ -1,4 +1,5 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
+
 import { useNodeSize, UseNodeSizeProps } from './useNodeSize'
 
 export function useParentNodeSize(props?: UseNodeSizeProps) {
@@ -12,10 +13,10 @@ export function useParentNodeSize(props?: UseNodeSizeProps) {
 
   useEffect(() => {
     if (!ref.current) return
-    let parent = ref.current.parentNode as HTMLElement
+    let parent = ref.current.parentElement
     // avoid display contents nodes
     while (getComputedStyle(parent, null).display === 'contents') {
-      parent = parent.parentNode as HTMLElement
+      parent = parent.parentElement
     }
     setParentNode({ current: parent })
   }, [ref])

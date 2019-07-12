@@ -63,6 +63,7 @@ export class PaneManagerStore {
       return pane.id
     },
     {
+      defaultValue: this.activePane ? this.activePane.id : undefined,
       delayValue: true,
       log: false,
     },

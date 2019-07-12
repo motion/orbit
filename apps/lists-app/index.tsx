@@ -1,29 +1,57 @@
-import { App, AppMainView, AppViewProps, TreeList, useSearchState, useTreeList } from '@o/kit'
-import { Breadcrumb, Breadcrumbs, StatusBarText, TitleRow, View } from '@o/ui'
+import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
+import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
 import React from 'react'
 
+import { API } from './api.node'
+
+export default createApp({
+  id: 'lists',
+  name: 'Lists',
+  icon: 'list',
+  iconColors: ['rgb(57, 204, 204)', 'rgb(61, 153, 112)'],
+  api: () => API,
+  app: () => <AppNavigator index={ListsAppIndex} detail={ListsAppMain} />,
+})
+
 const id = 'my-tree-list'
 
-export function ListApp(props: AppViewProps) {
-  return (
-    <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
-      <ListsAppMain {...props} />
-    </App>
-  )
-}
-
-export function ListsAppIndex() {
+export function ListsAppIndex(props: NavigatorProps) {
   const treeList = useTreeList(id)
-
   useSearchState({
     onChange(search) {
-      treeList.actions.addFolder(search.query)
+      if (search.query.length) {
+        treeList.actions.addFolder(search.query)
+      }
     },
     onEvent: 'enter',
   })
-
-  return <TreeList use={treeList} sortable />
+  return (
+    <>
+      <TreeList
+        use={treeList}
+        sortable
+        onSelect={props.selectItems}
+        itemProps={{
+          editable: true,
+          deletable: true,
+        }}
+      />
+      <ListAppStatusBar />
+      <Dock>
+        <DockButton
+          id="add"
+          icon="plus"
+          onClick={() => {
+            treeList.actions.addItem({
+              name: `${capitalize(randomAdjective())} ${capitalize(randomNoun())}`,
+            })
+          }}
+        />
+      </Dock>
+    </>
+  )
 }
 
 function ListsAppMain(props: AppViewProps) {
@@ -67,7 +95,8 @@ function ListAppStatusBar() {
     ? treeList.state.currentItem.children.length
     : 0
   return (
-    <>
+    <AppStatusBar>
+      123213
       <Breadcrumbs>
         {treeList.state.history.map(item => (
           <Breadcrumb size={0.9} alpha={0.68} fontWeight={500} key={item.id}>
@@ -79,6 +108,6 @@ function ListAppStatusBar() {
       <StatusBarText>
         {numItems} {pluralize('item', numItems)}
       </StatusBarText>
-    </>
+    </AppStatusBar>
   )
 }

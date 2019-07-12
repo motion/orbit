@@ -16,30 +16,30 @@ const mergeTheme = (parent, child) => ({
   ...child,
 })
 
-export function selectThemeSubset(themeSelect: ThemeSelect, theme: ThemeObject): ThemeObject {
-  if (!themeSelect) {
+export function selectThemeSubset(subTheme: ThemeSelect, theme: ThemeObject): ThemeObject {
+  if (!subTheme) {
     return theme
   }
 
-  if (typeof themeSelect === 'function') {
-    return mergeTheme(theme, themeSelect(theme))
+  if (typeof subTheme === 'function') {
+    return mergeTheme(theme, subTheme(theme))
   }
 
   // read from cache
   let key = cacheKey.get(theme)
   if (key) {
-    const isCached = key.has(themeSelect)
+    const isCached = key.has(subTheme)
     const cached = cacheVal.get(theme)
     if (isCached && cached) {
-      return cached[themeSelect]
+      return cached[subTheme]
     }
   }
 
   // generate new subset theme
-  const len = themeSelect.length
+  const len = subTheme.length
   const selectedTheme: PartialTheme = {}
   for (const subKey in theme) {
-    if (subKey.indexOf(themeSelect) === 0) {
+    if (subKey.indexOf(subTheme) === 0) {
       const newKey = subKey.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
       selectedTheme[newKeyCamelCase] = theme[subKey]
@@ -55,14 +55,14 @@ export function selectThemeSubset(themeSelect: ThemeSelect, theme: ThemeObject):
   }
 
   key = cacheKey.get(theme)
-  if (key) key.add(themeSelect)
+  if (key) key.add(subTheme)
 
   if (!cacheVal.get(theme)) {
     cacheVal.set(theme, {})
   }
 
   const val = cacheVal.get(theme)
-  if (val) val[themeSelect] = fullTheme
+  if (val) val[subTheme] = fullTheme
 
   return fullTheme
 }

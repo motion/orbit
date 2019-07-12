@@ -32,7 +32,7 @@ export let Floating = () => {
   const [show, setShow] = useState(false)
   return (
     <>
-      <Col pad>
+      <Col padding>
         <Button alt="action" size="lg" onClick={() => setShow(!show)}>
           Toggle Floating Card
         </Button>
@@ -44,7 +44,7 @@ export let Floating = () => {
         width={300}
         height={200}
         attach="bottom right"
-        edgepadding={[20, 20]}
+        bounds={{ top: 20, left: 20, right: 20, bottom: 20 }}
         alt="warn"
         location="warn"
         elevation={4}

@@ -30,6 +30,7 @@ export type RouterState = {
   history: HistoryItem[]
   pageName: string
   appId: string
+  appIdentifier: Derive<RouterState, string>
   urlString: Derive<RouterState, string>
   isOnSetupApp: Derive<RouterState, boolean>
   isOnQuickFind: Derive<RouterState, boolean>
@@ -69,12 +70,14 @@ export const state: RouterState = {
   pageName: 'home',
   appId: 'search',
   ignoreNextPush: false,
-  isOnSetupApp: state => state.pageName === 'app' && state.appId === 'setupApp',
-  isOnQuickFind: state => state.pageName === 'app' && state.appId === 'quickFind',
-  isOnDockedApp: (state, globalState) =>
-    globalState.apps.activeDockApps.some(x => `${x.id}` === state.appId),
   lastPage: state => state.history[state.history.length - 2],
   curPage: state => state.history[state.history.length - 1],
+  appIdentifier: state =>
+    (state.pageName === 'app' && `${state.curPage.params!.identifier!}`) || '',
+  isOnSetupApp: state => state.pageName === 'app' && state.appIdentifier === 'setupApp',
+  isOnQuickFind: state => state.pageName === 'app' && state.appIdentifier === 'quickFind',
+  isOnDockedApp: (state, globalState) =>
+    globalState.apps.activeDockApps.some(x => `${x.id}` === state.appId),
   urlString: state => (state.curPage ? `orbit:/${state.curPage.path}` : ''),
 }
 
@@ -146,9 +149,17 @@ const showAppPage: Action<{
   replace?: boolean
   toggle?: boolean | 'docked'
 }> = (om, params) => {
-  // find by identifier optionally
-  const app = om.state.apps.activeApps.find(x => x.identifier! === params.id!)
-  const id = isNumString(params.id || '') ? params.id! : app ? `${app.id}` : ''
+  const app = om.state.apps.activeApps.find(
+    x =>
+      // find by identifier optionally
+      x.identifier! === params.id! || x.id === +params.id!,
+  )
+
+  if (!app) {
+    throw new Error(`No app found ${params.id}`)
+  }
+
+  const id = isNumString(params.id || 'not') ? params.id! : app ? `${app.id}` : ''
 
   // toggle back to last page
   if (params.toggle && om.state.router.appId === id) {
@@ -162,6 +173,7 @@ const showAppPage: Action<{
 
   const next = {
     ...params,
+    identifier: app.identifier,
     id,
   }
   om.actions.router.showPage(getItem('app', next, params.replace))
@@ -266,7 +278,6 @@ export const effects = {
   },
 
   setPane(appId: string, avoidScroll?: boolean) {
-    console.warn('set pane', appId, avoidScroll)
     paneManagerStore.setPane(appId)
     // scroll to pane if its in carousel
     if (!avoidScroll) {

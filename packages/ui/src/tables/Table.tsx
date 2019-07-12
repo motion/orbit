@@ -63,6 +63,7 @@ export const Table = (tableProps: TableProps) => {
     shareable,
     maxHeight,
     maxWidth,
+    padding,
     children: _discardChildren,
     rowLineHeight = DEFAULT_ROW_HEIGHT,
     ...props
@@ -111,6 +112,7 @@ export const Table = (tableProps: TableProps) => {
       titleBorder={titleBorder}
       titlePadding={titlePadding}
       titleElement={titleElement}
+      padding={padding}
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}

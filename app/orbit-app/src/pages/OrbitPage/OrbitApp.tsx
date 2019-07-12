@@ -1,12 +1,12 @@
 import { isEqual } from '@o/fast-compare'
 import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, sleep, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
-import { useStoreSimple } from '@o/use-store'
+import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
 import React, { memo, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { useOm } from '../../om/om'
-import { orbitStore, usePaneManagerStore } from '../../om/stores'
+import { orbitStore, paneManagerStore } from '../../om/stores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
@@ -17,18 +17,27 @@ type OrbitAppProps = {
   identifier: string
   appDef?: AppDefinition
   shouldRenderApp?: boolean
-  isDisabled?: boolean
+  disableInteraction?: boolean
+  isVisible?: boolean
   renderApp?: RenderAppFn
 }
 
 export const OrbitApp = memo(
-  ({ id, identifier, appDef, shouldRenderApp, isDisabled, renderApp }: OrbitAppProps) => {
-    const paneManagerStore = usePaneManagerStore()
-
-    const isActive =
-      !isDisabled &&
-      // on active pane
-      paneManagerStore.activePane.id === `${id}`
+  ({
+    id,
+    identifier,
+    appDef,
+    shouldRenderApp,
+    disableInteraction,
+    renderApp,
+    isVisible,
+  }: OrbitAppProps) => {
+    const isActive = useReaction(() => {
+      return selectDefined(
+        isVisible,
+        !disableInteraction && paneManagerStore.activePane.id === `${id}`,
+      )
+    }, [disableInteraction])
 
     const appStore = useStoreSimple(AppStore, {
       id,
@@ -52,7 +61,7 @@ export const OrbitApp = memo(
         <View
           className={`orbit-app ${isActive ? 'is-active' : 'non-active'}`}
           flex={1}
-          pointerEvents={isDisabled ? 'none' : 'inherit'}
+          pointerEvents={disableInteraction ? 'none' : 'inherit'}
         >
           <ScopedState id={`or-${identifier}-${id}`}>
             <ProvideStores stores={{ appStore }}>
@@ -162,7 +171,7 @@ export const OrbitAppRenderOfDefinition = ({
       Statusbar: OrbitStatusBar,
       Actions: OrbitActions,
       ...appViewsContext,
-      renderApp,
+      renderApp: renderApp!,
     }),
     [renderApp, appViewsContext],
   )
@@ -173,7 +182,7 @@ export const OrbitAppRenderOfDefinition = ({
     <ProvideShare onChange={onChangeShare}>
       <AppLoadContext.Provider value={appLoadContext}>
         <AppViewsContext.Provider value={viewsContext}>
-          <ErrorBoundary name={`OrbitApp: ${identifier}`}>
+          <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
             <Suspense fallback={<Loading />}>{appElement}</Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>

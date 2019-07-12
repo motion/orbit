@@ -13,6 +13,13 @@ import { useWindowSize } from './hooks/useWindowSize'
 import { Interactive, InteractiveProps } from './Interactive'
 import { useVisibility } from './Visibility'
 
+type Bounds = {
+  top?: number
+  left?: number
+  right?: number
+  bottom?: number
+}
+
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
   width?: number
   height?: number
@@ -23,27 +30,81 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'he
   defaultWidth?: number
   defaultHeight?: number
   zIndex?: number
-  edgePadding?: [number, number]
   attach?: 'bottom right' | 'bottom left' | 'top left' | 'top right'
   usePosition?: (width: number, height: number) => [number, number]
+  bounds?: Bounds
 }
 
 const useWindowAttachments = {
-  'bottom right': memoize((px: number, py: number) => (width: number, height: number) =>
-    useWindowSize({ adjust: ([x, y]) => [x - width - px, y - height - py], throttle: 60 }),
+  'bottom right': memoize((bounds: Bounds) => (width: number, height: number) =>
+    useWindowSize({
+      adjust: ([x, y]) => [x - width - bounds.right, y - height - bounds.bottom],
+      throttle: 100,
+    }),
   ),
-  'bottom left': memoize((px: number, py: number) => (_, height: number) =>
-    useWindowSize({ adjust: ([x, y]) => [x + px, y - height - py], throttle: 60 }),
+  'bottom left': memoize((bounds: Bounds) => (_, height: number) =>
+    useWindowSize({
+      adjust: ([x, y]) => [x + bounds.left, y - height - bounds.bottom],
+      throttle: 100,
+    }),
   ),
-  'top left': memoize((px: number, py: number) => (_, _2) =>
-    useWindowSize({ adjust: ([x, y]) => [x + px, y + py], throttle: 60 }),
+  'top left': memoize((bounds: Bounds) => (_, _2) =>
+    useWindowSize({ adjust: ([x, y]) => [x + bounds.left, y + bounds.top], throttle: 100 }),
   ),
-  'top right': memoize((px: number, py: number) => (width: number, _) =>
-    useWindowSize({ adjust: ([x, y]) => [x - width - px, y + py], throttle: 60 }),
+  'top right': memoize((bounds: Bounds) => (width: number, _) =>
+    useWindowSize({
+      adjust: ([x, y]) => [x - width - bounds.right, y + bounds.top],
+      throttle: 100,
+    }),
   ),
 }
 
 const instantConf = { config: { duration: 0 } }
+
+const boundsContain = (
+  bounds: Bounds,
+  [windowWidth, windowHeight]: [number, number],
+  left: number,
+  top: number,
+  curWidth: number,
+  curHeight: number,
+) => {
+  const minX = bounds.left
+  const maxX = windowWidth - bounds.right
+  const minY = bounds.top
+  const maxY = windowHeight - bounds.bottom
+  const [x, xEnd] = fitBoundsDim(minX, maxX, left, left + curWidth)
+  const [y, yEnd] = fitBoundsDim(minY, maxY, top, top + curHeight)
+  return [x, y, xEnd - x, yEnd - y]
+}
+
+const fitBoundsDim = (low: number, high: number, curLow: number, curHigh: number) => {
+  const shorten = curHigh - curLow - (high - low)
+  if (shorten > 0) {
+    curLow -= shorten
+    curHigh -= shorten
+  }
+  if (curHigh > high) {
+    const amt = curHigh - high
+    curLow -= amt
+    curHigh -= amt
+  }
+  if (curLow < low) {
+    const amt = low - curLow
+    curLow += amt
+    if (shorten < 0) {
+      curHigh += amt
+    }
+  }
+  return [curLow, curHigh]
+}
+
+const defaultBounds = {
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+}
 
 export function FloatingView(props: FloatingViewProps) {
   let {
@@ -57,13 +118,15 @@ export function FloatingView(props: FloatingViewProps) {
     pointerEvents = 'auto',
     usePosition,
     attach,
-    edgePadding = [0, 0],
+    bounds = defaultBounds,
     ...restProps
   } = props
 
   if (attach) {
-    usePosition = useWindowAttachments[attach](...edgePadding)
+    usePosition = useWindowAttachments[attach](bounds)
   }
+
+  const windowSize = useWindowSize({ throttle: 100 })
 
   // todo dont let it go outside window!
 
@@ -74,15 +137,18 @@ export function FloatingView(props: FloatingViewProps) {
   const forceUpdate = useForceUpdate()
 
   // these go stale when uncontrolled, just used initially
-  const width = selectDefined(props.width, defaultWidth)
-  const height = selectDefined(props.height, defaultHeight)
+  let width = selectDefined(props.width, defaultWidth)
+  let height = selectDefined(props.height, defaultHeight)
+
   // this will be updated with internal dim
   const curDim = useRef({ width, height })
-
   const usePos = usePosition ? usePosition(curDim.current.width, curDim.current.height) : undefined
 
-  const x = selectDefined(props.left, usePos ? usePos[0] : defaultLeft)
-  const y = selectDefined(props.top, usePos ? usePos[1] : defaultTop)
+  let x = selectDefined(props.left, usePos ? usePos[0] : defaultLeft)
+  let y = selectDefined(props.top, usePos ? usePos[1] : defaultTop)
+
+    // bounds adjust
+  ;[x, y, width, height] = boundsContain(bounds, windowSize, x, y, width, height)
 
   const [spring, set] = useSpring(() => ({
     xy: [x, y],

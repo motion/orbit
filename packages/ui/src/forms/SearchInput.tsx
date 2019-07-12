@@ -89,6 +89,8 @@ ClearButton.defaultProps = {
   size: 0.65,
   sizeIcon: 1.2,
   alt: 'flat',
+  glint: false,
+  glintBottom: false,
 }
 
 const Actions = gloss(Row, {

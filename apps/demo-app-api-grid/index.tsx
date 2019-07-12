@@ -1,7 +1,15 @@
-import { AppCard } from '@o/kit'
+import { AppCard, createApp } from '@o/kit'
 import Slack, { SlackConversation } from '@o/slack-app'
 import { GridLayout, Tab, Table, Tabs } from '@o/ui'
 import React, { useState } from 'react'
+
+export default createApp({
+  id: 'demo-app-api-gri',
+  name: 'Demo App: API Grid',
+  icon: 'grid',
+  iconColors: ['rgb(46, 204, 64)', 'rgb(255, 65, 54)'],
+  app: DemoGridApp,
+})
 
 export function DemoGridApp() {
   const [app, setApp] = useState(null)

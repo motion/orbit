@@ -65,11 +65,15 @@ const getActions = (
   const Actions = {
     addItem(item?: Partial<TreeItem>, parentId?: number) {
       const update = treeState()[1]
-      update(next => {
-        const id = item.id || Math.random()
-        next.items[parentId || Actions.curId()].children.push(id)
-        next.items[id] = { name: '', children: [], ...item, id }
-      })
+      try {
+        update(next => {
+          const id = item.id || Math.random()
+          next.items[parentId || Actions.curId()].children.push(id)
+          next.items[id] = { name: '', children: [], ...item, id }
+        })
+      } catch (err) {
+        console.error('error adding', err)
+      }
     },
     addItemsFromDrop(items?: any, parentId?: number) {
       if (Array.isArray(items)) {
@@ -276,6 +280,7 @@ export function TreeList(props: TreeListProps) {
   const useTree = use || internal
   const { currentItem, items } = useTree.state
   const [loadedItems, setLoadedItems] = useDeepEqualState<ListItemProps[]>([])
+  const getOnChange = useGet(onChange)
 
   useEffect(() => {
     let cancel = false
@@ -294,14 +299,14 @@ export function TreeList(props: TreeListProps) {
   // onChange callback
   const ignoreInitial = useRef(true)
   useEffect(() => {
-    if (onChange) {
+    if (getOnChange()) {
       if (ignoreInitial.current) {
         ignoreInitial.current = false
         return
       }
-      onChange(items)
+      getOnChange()(items)
     }
-  }, [items, onChange])
+  }, [items, getOnChange])
 
   const handleSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {
@@ -354,6 +359,8 @@ export function TreeList(props: TreeListProps) {
     return null
   }
 
+  console.log('ok', rest)
+
   return (
     <HighlightActiveQuery query={query}>
       <List
@@ -362,7 +369,7 @@ export function TreeList(props: TreeListProps) {
         {...rest}
         onSelect={handleSelect}
         onDelete={handleDelete}
-        onDrop={handleDrop}
+        onDrop={handleDrop as any}
         items={loadedItems}
       />
     </HighlightActiveQuery>

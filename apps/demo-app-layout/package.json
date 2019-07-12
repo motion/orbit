@@ -1,15 +1,14 @@
 {
   "name": "@o/demo-app-layout",
   "version": "2.5.6",
-  "main": "_/index.js",
+  "main": "index.tsx",
   "ts:main": "src/index.tsx",
   "config": {
     "orbitApp": true
   },
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput",
-    "orbit:publish": "orbit publish"
+    "start": "orbit dev",
+    "build": "orbit build"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

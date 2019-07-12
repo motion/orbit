@@ -5,7 +5,7 @@ import React, { forwardRef } from 'react'
 import { SpringValue } from 'react-spring'
 
 import { Sizes } from '../Space'
-import { ElevatableProps, getElevation } from './elevate'
+import { ElevatableProps, getElevation } from './elevation'
 import { getSizableValue, PaddingProps, SizesObject, usePadding } from './pad'
 
 // TODO further simplify and standardize props, instead of using HTML props

@@ -1,4 +1,4 @@
-import { AppIcon, command, createApp, getAppDefinition, useLocationLink } from '@o/kit'
+import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
 import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo, useLayoutEffect } from 'react'
@@ -71,7 +71,7 @@ function SetupAppCustom() {
           <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
             {({ setData }) => {
               return (
-                <Col pad>
+                <Col padding>
                   <SelectableGrid
                     alwaysSelected
                     defaultSelected={0}
@@ -101,7 +101,7 @@ function SetupAppCustom() {
           </Flow.Step>
 
           <Flow.Step title="Customize" subTitle="Your app settings.">
-            <Col pad>
+            <Col padding>
               <Form useForm={form} />
             </Col>
           </Flow.Step>
@@ -183,10 +183,19 @@ export function SetupAppHome(props: SetupAppHomeProps) {
     },
   })
 
+  useSearchState({
+    onChange(state) {
+      if (!state.query) {
+        flow.next()
+      }
+    },
+    onEvent: 'enter',
+  })
+
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" height="90%" margin="auto">
+        <Col width="90%" height="80%" margin="auto">
           <Flow
             useFlow={flow}
             afterTitle={

@@ -16,7 +16,6 @@ import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
 import { appsCarouselStore, OrbitAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore, OrbitAppsDrawer } from './OrbitAppsDrawer'
-import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
@@ -47,7 +46,7 @@ export const queryPrefixStore = createUsableStore(
   },
 )
 
-export const OrbitPage = memo(() => {
+export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()
   return (
     <ProvideStores stores={Stores}>
@@ -171,10 +170,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     )
   } else {
     contentArea = (
-      <>
+      <Suspense fallback={null}>
         <OrbitAppsCarousel />
         <OrbitAppsDrawer />
-      </>
+      </Suspense>
     )
   }
 
@@ -195,7 +194,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       <InnerChrome torn={isEditing}>
         <OrbitContentArea>
           <ListPassProps onOpen={onOpen}>{contentArea}</ListPassProps>
-          <OrbitAppSettingsSidebar />
         </OrbitContentArea>
       </InnerChrome>
     </MainShortcutHandler>

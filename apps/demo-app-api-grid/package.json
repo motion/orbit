@@ -1,14 +1,13 @@
 {
   "name": "@o/demo-app-api-grid",
   "version": "2.5.6",
-  "main": "_/index.js",
-  "ts:main": "src/index.tsx",
+  "main": "index.tsx",
   "config": {
     "orbitApp": true
   },
   "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -b --watch --preserveWatchOutput"
+    "start": "orbit dev",
+    "build": "orbit build"
   },
   "dependencies": {
     "@o/gmail-app": "^2.5.6",

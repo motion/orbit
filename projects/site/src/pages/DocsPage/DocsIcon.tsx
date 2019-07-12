@@ -47,7 +47,7 @@ export let DocsIconSearch = () => {
     <>
       <SearchInput onChange={e => setSearch(e.target.value)} />
 
-      <Col pad>
+      <Col padding>
         <Grid height={630} scrollable="y" space="xl" itemMinWidth={dim}>
           {search ? results : allIconsList}
         </Grid>

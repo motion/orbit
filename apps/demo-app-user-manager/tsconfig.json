@@ -5,6 +5,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": ["**/*"],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "../../app/kit" }, { "path": "../../packages/ui" }]
 }

@@ -40,7 +40,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
             }
             openOnClick
             closeOnClickAway
-            openKey="filters"
+            group="filters"
             background
             borderRadius={10}
             elevation={1}

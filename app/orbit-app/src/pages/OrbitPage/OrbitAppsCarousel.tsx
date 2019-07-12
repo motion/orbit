@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, fuzzyFilter, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -113,7 +113,9 @@ class OrbitAppsCarouselStore {
     if (shouldZoomIn) {
       this.zoomIntoNextApp = true
     }
-    this.nextFocusedIndex = index
+    if (index !== this.nextFocusedIndex) {
+      this.nextFocusedIndex = index
+    }
   }
 
   updateScrollPane = react(
@@ -222,6 +224,7 @@ class OrbitAppsCarouselStore {
   }
 
   animateAndScrollTo = async (index: number) => {
+    if (!this.rowNode) return
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }
@@ -348,7 +351,7 @@ export const OrbitAppsCarousel = memo(() => {
     onDrag: appsCarouselStore.onDrag,
   })
 
-  const [scrollable, isDisabled] = useReaction(
+  const [scrollable, disableInteraction] = useReaction(
     () => [
       appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
       appsCarouselStore.state.zoomedOut === true,
@@ -395,7 +398,7 @@ export const OrbitAppsCarousel = memo(() => {
             index={index}
             app={app}
             definition={getAppDefinition(app.identifier!)}
-            isDisabled={isDisabled}
+            disableInteraction={disableInteraction}
             width={frameSize.width}
             height={frameSize.height}
             springs={springs}
@@ -411,7 +414,7 @@ export const OrbitAppsCarousel = memo(() => {
  */
 
 type OrbitAppCardProps = CardProps & {
-  isDisabled: boolean
+  disableInteraction: boolean
   springs: any
   index: number
   app: AppBit
@@ -419,7 +422,7 @@ type OrbitAppCardProps = CardProps & {
 }
 
 const OrbitAppCard = memo(
-  ({ app, definition, index, isDisabled, springs, ...cardProps }: OrbitAppCardProps) => {
+  ({ app, definition, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
     const spring = springs[index]
     const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
@@ -488,19 +491,13 @@ const OrbitAppCard = memo(
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     return (
-      <View>
-        <Card
+      <View zIndex={isFocused ? 2 : 1}>
+        <View
           animated
           transform={to(
             Object.keys(spring).map(k => spring[k]),
             (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
           )}
-          data-is="OrbitAppCard2"
-          ref={cardRef}
-          borderWidth={0}
-          background={isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger}
-          overflow="hidden"
-          borderRadius={isFocusZoomed ? 0 : 12}
           onMouseDown={() => {
             if (appsCarouselStore.zoomedIn) {
               return
@@ -517,29 +514,63 @@ const OrbitAppCard = memo(
             }
             mouseDown.current = -1
           }}
-          {...(isFocused
-            ? {
-                boxShadow: [
-                  [0, 0, 0, 3, theme.alternates!.selected['background']],
-                  [0, 0, 30, [0, 0, 0, 0.5]],
-                ],
-              }
-            : {
-                boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
-              })}
-          transition="box-shadow 200ms ease, background 300ms ease"
-          zIndex={isFocused ? 2 : 1}
-          {...cardProps}
+          position="relative"
         >
-          <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
-          <OrbitApp
-            id={app.id!}
-            isDisabled={isDisabled}
+          {/* title of app card */}
+          <AppIcon
+            position="absolute"
+            top={-10}
+            left={-15}
+            size={32}
+            opacity={1}
             identifier={definition.id}
-            appDef={definition}
-            shouldRenderApp={renderApp}
+            colors={app.colors}
+            opacity={appsCarouselStore.zoomedIn ? 0 : 1}
+            pointerEvents="none"
           />
-        </Card>
+          <Row
+            alignItems="center"
+            justifyContent="center"
+            space="sm"
+            padding
+            position="absolute"
+            bottom={-40}
+            left={0}
+            right={0}
+          >
+            <SimpleText>{app.name}</SimpleText>
+          </Row>
+          <Card
+            data-is="OrbitAppCard"
+            ref={cardRef}
+            borderWidth={0}
+            background={
+              isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger
+            }
+            borderRadius={isFocusZoomed ? 0 : 12}
+            {...(isFocused
+              ? {
+                  boxShadow: [
+                    [0, 0, 0, 3, theme.alternates!.selected['background']],
+                    [0, 0, 30, [0, 0, 0, 0.5]],
+                  ],
+                }
+              : {
+                  boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+                })}
+            transition="box-shadow 200ms ease, background 300ms ease"
+            {...cardProps}
+          >
+            <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
+            <OrbitApp
+              id={app.id!}
+              disableInteraction={disableInteraction}
+              identifier={definition.id}
+              appDef={definition}
+              shouldRenderApp={renderApp}
+            />
+          </Card>
+        </View>
       </View>
     )
   },

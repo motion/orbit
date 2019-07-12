@@ -7,9 +7,9 @@ import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
-import { useOm } from '../../om/om'
-import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
-import { useAppsCarousel } from './OrbitAppsCarousel'
+import { om, useOm } from '../../om/om'
+import { paneManagerStore, queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitEditAppItem } from './OrbitHeaderMenu'
@@ -191,23 +191,25 @@ const OrbitDockOpenButton = memo(() => {
   const orbitDock = orbitDockStore.useStore()
   return (
     <View position="relative">
-      <Button
-        marginRight={20}
-        width={30}
-        height={30}
-        icon="more"
-        iconProps={{
-          transform: {
-            rotate: '90deg',
-          },
-        }}
-        circular
-        onMouseEnter={orbitDock.hoverEnter}
-        onMouseLeave={orbitDock.hoverLeave}
-        onClick={orbitDock.togglePinned}
-        active={orbitDock.state === 'pinned'}
-        zIndex={2}
-      />
+      <HeaderButtonPassProps>
+        <Button
+          margin={[0, 20, 0, 0]}
+          width={30}
+          height={30}
+          icon="more"
+          iconProps={{
+            transform: {
+              rotate: '90deg',
+            },
+          }}
+          circular
+          onMouseEnter={orbitDock.hoverEnter}
+          onMouseLeave={orbitDock.hoverLeave}
+          onClick={orbitDock.togglePinned}
+          active={orbitDock.state === 'pinned'}
+          zIndex={2}
+        />
+      </HeaderButtonPassProps>
       <OpenButtonExtraArea
         isOpen={orbitDock.isOpen}
         onMouseEnter={orbitDock.hoverEnter}
@@ -241,7 +243,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
         onClick={() => actions.setNavVisible(!state.navVisible)}
       /> */}
       <Popover
-        openKey="orbit-nav"
+        group="orbit-nav"
         target={target}
         openOnClick
         openOnHover
@@ -266,11 +268,11 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 
 const HomeButton = memo(
   forwardRef((props: any, ref) => {
-    const { state, actions } = useOm()
+    const { actions } = useOm()
     const theme = useTheme()
     const newAppStore = useNewAppStore()
-    const paneManagerStore = usePaneManagerStore()
-    const { activePane } = paneManagerStore
+    const paneManager = usePaneManagerStore()
+    const activePane = paneManager.activePane
     const activePaneType = activePane.type
     const icon = activePaneType === 'setupApp' ? newAppStore.app.identifier : activePaneType
     return (
@@ -284,10 +286,14 @@ const HomeButton = memo(
           hoverStyle={{
             opacity: 1,
           }}
-          identifier={state.navHovered ? 'home' : icon}
+          identifier={icon}
           size={28}
           onMouseUp={e => {
             e.stopPropagation()
+            if (appsCarouselStore.zoomedIn) {
+              appsCarouselStore.setZoomedOut()
+              return
+            }
             actions.router.showHomePage()
           }}
         />

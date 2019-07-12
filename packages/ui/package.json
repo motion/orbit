@@ -36,10 +36,11 @@
     "react-date-range": "1.0.0-beta2",
     "react-debounce-render": "^5.0.0",
     "react-grid-layout": "0.16.6",
-    "react-hotkeys": "2.0.0-pre8",
+    "react-hotkeys": "2.0.0-pre9",
     "react-markdown": "4.0.6",
     "react-select": "^3.0.4",
-    "react-spring": "9.0.0-beta.30",
+    "react-spring": "9.0.0-beta.31",
+    "@react-spring/animated": "9.0.0-beta.31",
     "react-svg-inline": "^2.1.1",
     "react-switch": "^5.0.0",
     "@o/react-window": "1.9.0-alpha.3",
@@ -55,14 +56,14 @@
     "@seznam/compose-react-refs": "^1.0.1"
   },
   "devDependencies": {
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
-    "@types/react-select": "^2.0.19",
+    "@types/react": "16.8.23",
+    "@types/react-dom": "16.8.4",
+    "@types/react-select": "3.0.0",
     "@types/react-window": "1.8.0"
   },
   "resolutions": {
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2"
+    "@types/react": "16.8.23",
+    "@types/react-dom": "16.8.4"
   },
   "peerDependencies": {
     "electron": "*",

@@ -1,5 +1,6 @@
 import { useModel } from '@o/bridge'
 import { SpaceModel, UserModel } from '@o/models'
+import { useMemo } from 'react'
 
 export function useActiveSpace(query?) {
   const [user] = useModel(UserModel)
@@ -14,12 +15,6 @@ export function useActiveSpace(query?) {
 
 // if you want sorting too
 export function useActivePaneSort() {
-  const [user] = useModel(UserModel)
-  const [space] = useModel(
-    SpaceModel,
-    user && {
-      where: { id: user.activeSpace },
-    },
-  )
-  return space.paneSort
+  const [space] = useActiveSpace()
+  return useMemo(() => space.paneSort, space.paneSort)
 }

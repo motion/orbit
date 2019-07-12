@@ -45,6 +45,7 @@ export function startChildProcess({
       NODE_ENV: process.env.NODE_ENV,
       ORBIT_CONFIG: JSON.stringify(Config),
       PATH: process.env.PATH,
+      LOG_LEVEL: process.env.LOG_LEVEL,
       ...env,
     },
   })

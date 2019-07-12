@@ -170,7 +170,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
 
     // load threads for newly added / changed threads
     if (history.addedThreadIds.length) {
-      log.timer('found added/changed messages in history', history.addedThreadIds)
+      log.timer('found added/changed messages in history', history.addedThreadIds.length)
 
       // convert added thread ids into thread objects and load their messages
       const addedThreads = await Promise.all(
@@ -200,7 +200,7 @@ export const GMailSyncer: SyncerRunner = async ({ app, log, utils }) => {
 
     // load bits for removed threads and remove them
     if (history.removedThreadIds.length) {
-      log.info('found actions in history for thread removals', history.removedThreadIds)
+      log.info('found actions in history for thread removals', history.removedThreadIds.length)
       const removedBits = await utils.loadBits({
         ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId)),
       })

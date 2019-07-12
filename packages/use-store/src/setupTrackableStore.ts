@@ -31,7 +31,7 @@ export function setupTrackableStore(
     component: {},
   },
 ) {
-  const debug = (level: number = 1) => {
+  const shouldDebug = (level: number = 1) => {
     if (typeof window !== 'undefined' && window['enableLog'] > level) {
       return true
     }
@@ -87,7 +87,8 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+            if (shouldDebug())
+              console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
             queueUpdate(update)
           }
         }
@@ -102,7 +103,7 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
+            if (shouldDebug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
             queueUpdate(update)
           }
         }
@@ -134,7 +135,7 @@ export function setupTrackableStore(
     store: config.store,
     track() {
       paused = true
-      done = config.track(debug())
+      done = config.track(shouldDebug())
     },
     untrack() {
       if (disposed) return
@@ -152,15 +153,15 @@ export function setupTrackableStore(
       // re-run the reaction that watches keys
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
-        if (debug()) console.log('schedule new reaction now...')
+        if (shouldDebug()) console.log('schedule new reaction now...')
         updateDeepKey.set(Math.random())
       }
-      if (debug(2)) {
+      if (shouldDebug(4)) {
         console.log('untrack()', name, storeName, reactiveKeys)
       }
     },
     dispose() {
-      if (debug()) console.log('dispose reaction', name, storeName)
+      if (shouldDebug()) console.log('dispose reaction', name, storeName)
       disposed = true
       if (done) done()
       removeUpdate(update)

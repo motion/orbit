@@ -31,16 +31,25 @@ export const useSearch = searchStore.useStore
 export const useCreateSearch = searchStore.useCreateStore
 export const ProvideSearch = searchStore.Provider
 
-export const useActiveSearchQuery = () => {
+const defaultProps = {}
+
+export const useActiveSearchQuery = (props: { disabled?: boolean } = defaultProps) => {
   const store = searchStore.useStore(undefined, { react: false })
-  const getVisibility = useGetVisibility()
+  const getIsVisible = useGetVisibility()
+  const getCurrentQuery = () => {
+    const next = getIsVisible() && !props.disabled ? store.query : false
+    return next
+  }
   return useReaction(
-    () => {
-      ensure('visible', getVisibility())
-      return store.query
+    getCurrentQuery,
+    next => {
+      ensure('valid', next !== false)
+      ensure('visible', getIsVisible())
+      return next || ''
     },
     {
       defaultValue: store.query,
     },
+    [props.disabled],
   )
 }

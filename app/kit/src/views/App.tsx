@@ -38,7 +38,7 @@ export type AppMainViewProps = {
 type AppMainView = React.FunctionComponent<AppMainViewProps>
 
 type IAppViewsContext = {
-  renderApp: RenderAppFn
+  renderApp?: RenderAppFn
   Toolbar?: AppMainView | null
   Statusbar?: AppMainView | null
   Main?: AppMainView | null
@@ -59,12 +59,12 @@ export type AppMenuItem = {
 }
 
 export type AppProps = {
-  index?: React.ReactElement<any>
+  index?: React.ReactNode
   children?: React.ReactNode
-  statusBar?: React.ReactElement<any>
-  toolBar?: React.ReactElement<any>
+  statusBar?: React.ReactNode
+  toolBar?: React.ReactNode
   context?: any
-  actions?: React.ReactElement<any>
+  actions?: React.ReactNode
   menuItems?: AppMenuItem[]
 }
 
@@ -76,9 +76,15 @@ export const App = (props: AppProps) => {
   }
 
   const { appStore } = useStoresSimple()
-  const { renderApp = defaultRenderApp, Statusbar, Main, Sidebar, Toolbar, Actions } = useContext(
-    AppViewsContext,
-  )
+  const appViewsContext = useContext(AppViewsContext)
+  const {
+    renderApp = defaultRenderApp,
+    Statusbar,
+    Main,
+    Sidebar,
+    Toolbar,
+    Actions,
+  } = appViewsContext
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
   const hasSidebar = !!props.index && !!Sidebar
@@ -95,15 +101,22 @@ export const App = (props: AppProps) => {
     if (!isEqual(props.menuItems, appStore.menuItems)) {
       appStore.setMenuItems(props.menuItems)
     }
+    return () => {
+      appStore.setMenuItems([])
+    }
   }, [props.menuItems])
 
-  return renderApp({
-    statusbar: hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>,
-    main: hasMain && <Main {...hasProps}>{props.children}</Main>,
-    sidebar: hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>,
-    toolbar: hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>,
-    actions: hasActions && <Actions {...hasProps}>{props.actions}</Actions>,
-  })
+  return (
+    <>
+      {renderApp({
+        statusbar: hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>,
+        main: hasMain && <Main {...hasProps}>{props.children}</Main>,
+        sidebar: hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>,
+        toolbar: hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>,
+        actions: hasActions && <Actions {...hasProps}>{props.actions}</Actions>,
+      })}
+    </>
+  )
 }
 
 App.isApp = true

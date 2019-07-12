@@ -9,7 +9,7 @@ export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false
 
 type ThemeProps = {
   theme?: string | ThemeObject
-  themeSelect?: ThemeSelect
+  subTheme?: ThemeSelect
   alt?: string
   name?: string
   children: any
@@ -18,11 +18,11 @@ type ThemeProps = {
 export const cacheThemes = new WeakMap<any, ThemeContextType>()
 
 export const Theme = (props: ThemeProps) => {
-  const { theme, name, children, themeSelect, alt } = props
+  const { theme, name, children, subTheme, alt } = props
   const nextName = (typeof name === 'string' && name) || (typeof theme === 'string' && theme) || ''
   const prev = useContext(ThemeContext)
 
-  if (!theme && !name && !themeSelect && !alt) {
+  if (!theme && !name && !subTheme && !alt) {
     return children
   }
 
@@ -73,7 +73,7 @@ function createThemeFromObject(
   prev: ThemeContextType,
   next: ThemeObject,
 ): ThemeContextType {
-  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.themeSelect}.${uniqueId()}`
+  const activeThemeName = `${prev.activeThemeName}.${props.alt || props.subTheme}.${uniqueId()}`
   return {
     ...prev,
     activeThemeName,

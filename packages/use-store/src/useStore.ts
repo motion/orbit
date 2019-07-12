@@ -279,7 +279,9 @@ export function useStore<A extends ReactiveStore<any> | any>(
     }
     lastStore.current = Store
     store = Store
-    store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
+    if (shouldReactVal) {
+      store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
+    }
     if (!!store && props) {
       console.log('stores', store, props)
       updateProps(store, props as any)
@@ -287,7 +289,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
   } else {
     const res = useReactiveStore(Store as any, props)
     store = res && res.store
-    if (shouldReact) {
+    if (shouldReactVal) {
       store = useTrackableStore(store, rerender, {
         ...options,
         component,

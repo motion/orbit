@@ -1,3 +1,4 @@
+import { toColor } from '@o/color'
 import { ThemeObject } from '@o/css'
 
 // this lets you do simple subsets using syntax:
@@ -9,11 +10,7 @@ const altCache = new WeakMap<
   }
 >()
 
-export function getAlternateTheme(
-  name: string | undefined,
-  inTheme: ThemeObject,
-  shouldFallback?: boolean,
-): ThemeObject {
+export function getAlternateTheme(name: string | undefined, inTheme: ThemeObject): ThemeObject {
   if (!name || typeof name !== 'string') {
     return inTheme
   }
@@ -38,16 +35,12 @@ export function getAlternateTheme(
   if (cached) {
     return cached
   }
-  const next = createAlternateTheme(theme, name, shouldFallback)
+  const next = createAlternateTheme(theme, name)
   alts[name] = next
   return next
 }
 
-function createAlternateTheme(
-  theme: ThemeObject,
-  alt: string,
-  shouldFallback?: boolean,
-): ThemeObject {
+function createAlternateTheme(theme: ThemeObject, alt: string): ThemeObject {
   if (!theme.alternates) {
     throw new Error('No alternates in themes')
   }
@@ -60,25 +53,8 @@ function createAlternateTheme(
   const altTheme = typeof next === 'function' ? next(theme) : next
 
   return {
-    ...(shouldFallback
-      ? {
-          background: theme.background,
-          backgroundDisabled: theme.backgroundDisabled,
-          backgroundDisabledActive: theme.backgroundActive,
-          backgroundDisabledFocus: theme.backgroundFocus,
-          borderColor: theme.borderColor,
-          borderColorDisabled: theme.borderColorDisabled,
-          borderColorDisabledActive: theme.borderColorActive,
-          borderColorDisabledFocus: theme.borderColorFocus,
-          color: theme.color,
-          colorDisabled: theme.colorDisabled,
-          colorDisabledActive: theme.colorActive,
-          colorDisabledFocus: theme.colorFocus,
-        }
-      : null),
-    // todo why types mad
-    background: altTheme.background as any,
-    color: altTheme.color as any,
+    background: altTheme.background || toColor('#000'),
+    color: altTheme.color || toColor('#fff'),
     ...altTheme,
     _alternateName: alt,
     _isAlternate: true,

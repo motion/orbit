@@ -1,4 +1,4 @@
-import { App, AppViewProps, Bit, createApp, LocationLink, openItem, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
+import { AppNavigator, AppViewProps, Bit, createApp, LocationLink, NavigatorProps, openItem, useBit, useBits, useBitSearch, useLocationLink, useNLPTopics, useStores } from '@o/kit'
 import { Avatar, Button, Center, gloss, List, ListItem, Paragraph, RoundButton, Row, Section, Space, SubSection, SubTitle, TitleRow } from '@o/ui'
 import React, { useCallback } from 'react'
 
@@ -8,17 +8,10 @@ export default createApp({
   icon: 'person',
   iconColors: ['rgb(133, 20, 75)', 'rgb(123, 10, 65)'],
   itemType: 'person',
-  app: props => (
-    <App index={<PeopleAppIndex />}>
-      <PeopleAppMain {...props} />
-    </App>
-  ),
-  viewConfig: {
-    acceptsSearch: true,
-  },
+  app: () => <AppNavigator index={PeopleAppIndex} detail={PeopleAppMain} />,
 })
 
-export function PeopleAppIndex() {
+export function PeopleAppIndex(props: NavigatorProps) {
   const people = useBitSearch({
     type: 'person',
     excludeData: true,
@@ -28,6 +21,7 @@ export function PeopleAppIndex() {
     <List
       shareable
       selectable="multi"
+      onSelect={props.selectItems}
       items={people}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}

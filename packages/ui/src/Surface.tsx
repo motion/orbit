@@ -9,17 +9,17 @@ import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
-import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PassProps } from './PassProps'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { getSize } from './Sizes'
-import { Sizes, Space } from './Space'
+import { Size, Space } from './Space'
+import { createSpacedChildren } from './SpaceGroup'
 import { scaledTextSizeTheme } from './text/SimpleText'
 import { Tooltip } from './Tooltip'
-import { getElevation } from './View/elevate'
+import { getElevation } from './View/elevation'
 import { getMargin, View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -131,7 +131,7 @@ export type SurfaceSpecificProps = {
   type?: string
 
   /** Select a subset theme easily */
-  themeSelect?: Gloss.ThemeSelect
+  subTheme?: Gloss.ThemeSelect
 
   /** Amount to pad icon */
   iconPadding?: number
@@ -140,7 +140,10 @@ export type SurfaceSpecificProps = {
   ignoreSegment?: boolean
 
   /** Override space between sizing between Icon/Element */
-  spaceSize?: Sizes
+  space?: Size
+
+  /** Override space between sizing between Icon/Element */
+  spaceAround?: Size
 
   /** Add an element between the icon and inner element */
   betweenIconElement?: React.ReactNode
@@ -182,315 +185,314 @@ type ThroughProps = Pick<
 const acceptsIcon = child =>
   child && child.type.acceptsProps && child.type.acceptsProps.icon === true
 
-export const Surface = memoIsEqualDeep(
-  forwardRef(function Surface(direct: SurfaceProps, ref) {
-    const props = SizedSurfacePropsContext.useProps(direct)
-    const crumb = useBreadcrumb()
-    const [tooltipState, setTooltipState] = useState({ id: null, show: false })
-    const theme = useTheme(props)
+export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
+  const props = SizedSurfacePropsContext.useProps(direct) as SurfaceProps
+  const crumb = useBreadcrumb()
+  const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+  const theme = useTheme(props)
 
-    useEffect(() => {
-      const id = `Surface-${Math.round(Math.random() * 100000000)}`
-      setTooltipState({ id, show: false })
-      let tm = setTimeout(() => {
-        setTooltipState({ id, show: true })
-      })
-      return () => clearTimeout(tm)
-    }, [])
+  useEffect(() => {
+    const id = `Surface-${Math.round(Math.random() * 100000000)}`
+    setTooltipState({ id, show: false })
+    let tm = setTimeout(() => {
+      setTooltipState({ id, show: true })
+    })
+    return () => clearTimeout(tm)
+  }, [])
 
-    const {
-      alignItems,
-      children,
-      className,
-      disabled,
-      elementProps,
-      elementTheme,
-      glintBottom,
-      glint,
-      glow,
-      glowProps,
-      height,
-      icon,
-      iconAfter,
-      iconPadding,
-      iconProps,
-      justifyContent,
-      noInnerElement,
-      size: ogSize,
-      sizeLineHeight,
-      tagName,
-      themeSelect,
-      tooltip,
-      tooltipProps,
-      padding,
-      badgeProps,
-      badge,
-      after,
-      borderPosition = 'outside',
-      borderWidth,
-      alt,
-      before,
-      dangerouslySetInnerHTML,
-      spaceSize,
-      betweenIconElement,
-      ...viewProps
-    } = props
-    const size = getSize(selectDefined(ogSize, 1))
-    const segmentedStyle = getSegmentedStyle(props, crumb)
-    const stringIcon = typeof icon === 'string'
+  const {
+    alignItems,
+    children,
+    className,
+    disabled,
+    elementProps,
+    elementTheme,
+    glintBottom,
+    glint,
+    glow,
+    glowProps,
+    height,
+    icon,
+    iconAfter,
+    iconPadding,
+    iconProps,
+    justifyContent,
+    noInnerElement,
+    size: ogSize,
+    sizeLineHeight,
+    tagName,
+    subTheme,
+    tooltip,
+    tooltipProps,
+    padding,
+    badgeProps,
+    badge,
+    after,
+    borderPosition = 'outside',
+    borderWidth,
+    alt,
+    before,
+    dangerouslySetInnerHTML,
+    space,
+    spaceAround,
+    betweenIconElement,
+    ...viewProps
+  } = props
+  const size = getSize(selectDefined(ogSize, 1))
+  const segmentedStyle = getSegmentedStyle(props, crumb)
+  const stringIcon = typeof icon === 'string'
 
-    // goes to BOTH the outer element and inner element
-    let throughProps: ThroughProps = {
-      height,
-      iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
-      alignItems,
-      justifyContent,
-      sizeIcon: props.sizeIcon,
-      iconSize: props.iconSize,
-      iconAfter: props.iconAfter,
-      hasIcon: !!props.icon,
-      fontWeight: props.fontWeight,
-      ellipse: props.ellipse,
-      overflow: props.overflow,
-      textDecoration: props.textDecoration,
-    }
+  // goes to BOTH the outer element and inner element
+  let throughProps: ThroughProps = {
+    height,
+    iconPadding: typeof iconPadding === 'number' ? iconPadding : size * 8,
+    alignItems,
+    justifyContent,
+    sizeIcon: props.sizeIcon,
+    iconSize: props.iconSize,
+    iconAfter: props.iconAfter,
+    hasIcon: !!props.icon,
+    fontWeight: props.fontWeight,
+    ellipse: props.ellipse,
+    overflow: props.overflow,
+    textDecoration: props.textDecoration,
+  }
 
-    let lineHeight = props.lineHeight
-    if (sizeLineHeight) {
-      lineHeight = `${height}px`
-    }
+  let lineHeight = props.lineHeight
+  if (sizeLineHeight) {
+    lineHeight = `${height}px`
+  }
 
-    if (noInnerElement) {
-      throughProps.tagName = tagName
-      if (elementProps) {
-        throughProps = {
-          elementTheme,
-          ...throughProps,
-          ...elementProps,
-        }
+  if (noInnerElement) {
+    throughProps.tagName = tagName
+    if (elementProps) {
+      throughProps = {
+        elementTheme,
+        ...throughProps,
+        ...elementProps,
       }
     }
+  }
 
-    const childrenProps: HTMLProps<HTMLDivElement> = {}
+  const childrenProps: HTMLProps<HTMLDivElement> = {}
 
-    const borderLeftRadius = Math.min(
-      segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
-      +height / 2,
-    )
-    const borderRightRadius = Math.min(
-      segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
-      +height / 2,
-    )
+  const borderLeftRadius = Math.min(
+    segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius,
+    +height / 2,
+  )
+  const borderRightRadius = Math.min(
+    segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius,
+    +height / 2,
+  )
 
-    const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
-    let showElement = false
+  const hasAnyGlint = !props.chromeless && !!(glint || glintBottom)
+  let showElement = false
 
-    // because we can't define children at all on tags like input
-    // we conditionally set children here to avoid having children: undefined
-    if (dangerouslySetInnerHTML) {
-      childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
-    } else if (noInnerElement) {
-      if (isDefined(before, after)) {
-        childrenProps.children = (
-          <>
-            {before}
-            {children || null}
-            {after}
-          </>
-        )
-      } else {
-        childrenProps.children = children || null
-      }
-    } else {
-      showElement = !!(hasChildren(children) || elementProps)
-      const spaceElement = <Space size={selectDefined(spaceSize, size * 6)} />
-
-      const innerElements = (
-        <PassProps
-          passCondition={acceptsIcon}
-          alt={alt}
-          size={getIconSize(props)}
-          opacity={selectDefined(props.alpha, props.opacity)}
-          hoverStyle={props.hoverStyle}
-          activeStyle={props.activeStyle}
-          focusStyle={props.focusStyle}
-          disabledStyle={props.disabledStyle}
-          color="inherit"
-          {...perfectCenterStyle(throughProps)}
-          {...iconProps}
-        >
-          {icon && !stringIcon && icon}
-          {icon && stringIcon && <Icon name={`${icon}`} />}
-        </PassProps>
-      )
-
+  // because we can't define children at all on tags like input
+  // we conditionally set children here to avoid having children: undefined
+  if (dangerouslySetInnerHTML) {
+    childrenProps.dangerouslySetInnerHTML = dangerouslySetInnerHTML
+  } else if (noInnerElement) {
+    if (isDefined(before, after)) {
       childrenProps.children = (
         <>
           {before}
-          {!!badge && (
-            <Badge
-              alt={alt}
-              zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
-              position="absolute"
-              top="-18%"
-              left="-18%"
-              size={size}
-              {...badgeProps}
-            >
-              {badge}
-            </Badge>
-          )}
-          {!!tooltip && tooltipState.show && (
-            <Tooltip label={tooltip} {...tooltipProps}>
-              {`.${tooltipState.id}`}
-            </Tooltip>
-          )}
-          {hasAnyGlint && (
-            <GlintContain
-              className="ui-glint-contain"
-              borderLeftRadius={borderLeftRadius + 1}
-              borderRightRadius={borderRightRadius + 1}
-              {...borderPosition === 'inside' && {
-                height: roundHalf(+height - size),
-                transform: {
-                  y: roundHalf(size),
-                },
-              }}
-            >
-              {glint && !props.chromeless && (
-                <Glint
-                  alt={alt}
-                  size={size}
-                  borderLeftRadius={borderLeftRadius}
-                  borderRightRadius={borderRightRadius}
-                  themeSelect={themeSelect}
-                />
-              )}
-              {glintBottom && !props.chromeless && (
-                <Glint
-                  alt={alt}
-                  size={size}
-                  bottom={0}
-                  borderLeftRadius={borderLeftRadius}
-                  borderRightRadius={borderRightRadius}
-                  themeSelect={themeSelect}
-                />
-              )}
-            </GlintContain>
-          )}
-          {!!icon && iconAfter ? (
-            <Box
-              style={
-                {
-                  flexDirection: 'inherit',
-                  order: 3,
-                } as any
-              }
-            >
-              {showElement && spaceElement}
-              {!!betweenIconElement && (
-                <>
-                  {betweenIconElement}
-                  {spaceElement}
-                </>
-              )}
-              {innerElements}
-            </Box>
-          ) : (
-            <>
-              {innerElements}
-              {!!betweenIconElement && (
-                <>
-                  {spaceElement}
-                  {betweenIconElement}
-                </>
-              )}
-              {showElement && icon && spaceElement}
-            </>
-          )}
-          {!!glow && !disabled && (
-            <HoverGlow
-              full
-              scale={1.1}
-              opacity={0.35}
-              borderRadius={+props.borderRadius}
-              {...glowProps}
-            />
-          )}
-          {showElement && (
-            <Element
-              {...throughProps}
-              {...elementProps}
-              disabled={disabled}
-              elementTheme={elementTheme}
-            >
-              {children}
-            </Element>
-          )}
-          {!!after && (
-            <>
-              {spaceElement}
-              {after}
-            </>
-          )}
+          {children || null}
+          {after}
         </>
       )
+    } else {
+      childrenProps.children = children || null
     }
+  } else {
+    showElement = !!(hasChildren(children) || elementProps)
+    const spaceElement = <Space size={selectDefined(space, size * 6)} />
 
-    const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-    const iconColor = `${(props.iconProps && props.iconProps.color) ||
-      props.color ||
-      theme.color ||
-      ''}`
-    const iconColorHover =
-      (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
-      theme.colorHover ||
-      'inherit'
-
-    const iconContext = useMemo<Partial<IconProps>>(() => {
-      return {
-        alt,
-        opacity: iconOpacity,
-        color: iconColor,
-        justifyContent: 'center',
-        hoverStyle: {
-          ...selectObject(props.hoverStyle),
-          color: iconColorHover,
-        },
-      }
-    }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
-
-    const surfaceFrameProps: SurfaceFrameProps = {
-      className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
-      ref,
-      themeSelect,
-      lineHeight,
-      padding,
-      borderWidth,
-      borderPosition,
-      alt,
-      applyPsuedoColors: true,
-      disabled,
-      ...(!showElement && elementProps),
-      ...throughProps,
-      ...viewProps,
-      ...segmentedStyle,
-      ...childrenProps,
-      ...(!noInnerElement && { tagName }),
-      opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
-    }
-
-    return (
-      <SizedSurfacePropsContext.Reset>
-        <IconPropsContext.Provider value={iconContext}>
-          <BreadcrumbReset>
-            <SurfaceFrame {...surfaceFrameProps} />
-          </BreadcrumbReset>
-        </IconPropsContext.Provider>
-      </SizedSurfacePropsContext.Reset>
+    const innerElements = (
+      <PassProps
+        passCondition={acceptsIcon}
+        alt={alt}
+        size={getIconSize(props)}
+        opacity={selectDefined(props.alpha, props.opacity)}
+        hoverStyle={props.hoverStyle}
+        activeStyle={props.activeStyle}
+        focusStyle={props.focusStyle}
+        disabledStyle={props.disabledStyle}
+        color="inherit"
+        {...perfectCenterStyle(throughProps)}
+        {...iconProps}
+      >
+        {icon && !stringIcon && icon}
+        {icon && stringIcon && <Icon name={`${icon}`} />}
+      </PassProps>
     )
-  }),
-)
+
+    childrenProps.children = (
+      <>
+        {before}
+        {!!badge && (
+          <Badge
+            alt={alt}
+            zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
+            position="absolute"
+            top="-18%"
+            left="-18%"
+            size={size}
+            {...badgeProps}
+          >
+            {badge}
+          </Badge>
+        )}
+        {!!tooltip && tooltipState.show && (
+          <Tooltip label={tooltip} {...tooltipProps}>
+            {`.${tooltipState.id}`}
+          </Tooltip>
+        )}
+        {hasAnyGlint && (
+          <GlintContain
+            className="ui-glint-contain"
+            borderLeftRadius={borderLeftRadius + 1}
+            borderRightRadius={borderRightRadius + 1}
+            {...borderPosition === 'inside' && {
+              height: roundHalf(+height - size),
+              transform: {
+                y: roundHalf(size) % 1,
+              },
+            }}
+          >
+            {glint && !props.chromeless && (
+              <Glint
+                alt={alt}
+                size={size}
+                borderLeftRadius={borderLeftRadius}
+                borderRightRadius={borderRightRadius}
+                subTheme={subTheme}
+              />
+            )}
+            {glintBottom && !props.chromeless && (
+              <Glint
+                alt={alt}
+                size={size}
+                bottom={0}
+                borderLeftRadius={borderLeftRadius}
+                borderRightRadius={borderRightRadius}
+                subTheme={subTheme}
+              />
+            )}
+          </GlintContain>
+        )}
+        {!!icon && iconAfter ? (
+          <Box
+            style={
+              {
+                flexDirection: 'inherit',
+                order: 3,
+              } as any
+            }
+          >
+            {showElement && spaceElement}
+            {!!betweenIconElement && (
+              <>
+                {betweenIconElement}
+                {spaceElement}
+              </>
+            )}
+            {innerElements}
+          </Box>
+        ) : (
+          <>
+            {innerElements}
+            {!!betweenIconElement && (
+              <>
+                {spaceElement}
+                {betweenIconElement}
+              </>
+            )}
+            {showElement && icon && spaceElement}
+          </>
+        )}
+        {!!glow && !disabled && (
+          <HoverGlow
+            full
+            scale={1.1}
+            opacity={0.35}
+            borderRadius={+props.borderRadius}
+            {...glowProps}
+          />
+        )}
+        {showElement && (
+          <Element
+            {...throughProps}
+            {...elementProps}
+            disabled={disabled}
+            elementTheme={elementTheme}
+          >
+            {space ? createSpacedChildren({ children, space, spaceAround }) : children}
+          </Element>
+        )}
+        {!!after && (
+          <>
+            {spaceElement}
+            {after}
+          </>
+        )}
+      </>
+    )
+  }
+
+  const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
+  const iconColor = `${(props.iconProps && props.iconProps.color) ||
+    props.color ||
+    theme.color ||
+    ''}`
+  const iconColorHover =
+    (!!props.hoverStyle && typeof props.hoverStyle === 'object' && props.hoverStyle.color) ||
+    theme.colorHover ||
+    'inherit'
+
+  const iconContext = useMemo<Partial<IconProps>>(() => {
+    return {
+      alt,
+      opacity: iconOpacity,
+      color: iconColor,
+      justifyContent: 'center',
+      hoverStyle: {
+        ...selectObject(props.hoverStyle),
+        color: iconColorHover,
+      },
+    }
+  }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
+
+  const surfaceFrameProps: SurfaceFrameProps = {
+    className: `${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`,
+    ref,
+    subTheme,
+    lineHeight,
+    padding,
+    borderWidth,
+    borderPosition,
+    alt,
+    applyPsuedoColors: true,
+    disabled,
+    ...(!showElement && elementProps),
+    ...throughProps,
+    ...viewProps,
+    ...segmentedStyle,
+    ...childrenProps,
+    ...(!noInnerElement && { tagName }),
+    opacity: crumb && crumb.total === 0 ? 0 : props.opacity,
+  }
+
+  return (
+    <SizedSurfacePropsContext.Reset>
+      <IconPropsContext.Provider value={iconContext}>
+        <BreadcrumbReset>
+          <SurfaceFrame {...surfaceFrameProps} />
+        </BreadcrumbReset>
+      </IconPropsContext.Provider>
+    </SizedSurfacePropsContext.Reset>
+  )
+})
 
 const hasChildren = (children: React.ReactNode) => {
   if (Array.isArray(children)) {
@@ -605,15 +607,15 @@ const Element = gloss<SurfaceFrameProps & { disabled?: boolean }>({
   overflow: 'hidden',
   // needed to reset for <button /> at least
   fontSize: 'inherit',
-  padding: 0,
-  flexDirection: 'row',
-  fontFamily: 'inherit',
-  border: 'none',
-  background: 'transparent',
-  height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
   textAlign: 'inherit',
+  fontFamily: 'inherit',
+  padding: 0,
+  flexDirection: 'row',
+  border: 'none',
+  background: 'transparent',
+  height: '100%',
   ellipse: {
     display: 'block',
     overflow: 'hidden',
@@ -642,6 +644,6 @@ const GlintContain = gloss(Base, {
 
 const roundHalf = (x: number) => {
   const oneDec = Math.round((x % 1) * 10) / 10
-  const roundedToPointFive = oneDec > 7 ? 1 : oneDec > 2 ? 0.5 : 0
+  const roundedToPointFive = oneDec > 6 ? 0.5 : 0
   return Math.floor(x) + roundedToPointFive
 }

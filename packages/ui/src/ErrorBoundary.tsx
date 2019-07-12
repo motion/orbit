@@ -8,7 +8,7 @@ import { Section } from './Section'
 import { SubTitle } from './text/SubTitle'
 import { Col } from './View/Col'
 
-export class ErrorBoundary extends Component<{ name: string }> {
+export class ErrorBoundary extends Component<{ name: string; displayInline?: boolean }> {
   state = {
     error: null,
   }
@@ -28,7 +28,12 @@ export class ErrorBoundary extends Component<{ name: string }> {
     if (error) {
       if (process.env.NODE_ENV === 'development') {
         return (
-          <ErrorMessage setError={this.setState.bind(this)} error={error} name={this.props.name} />
+          <ErrorMessage
+            displayInline={this.props.displayInline}
+            setError={this.setState.bind(this)}
+            error={error}
+            name={this.props.name}
+          />
         )
       } else {
         // more subtle in prod
@@ -45,30 +50,30 @@ export class ErrorBoundary extends Component<{ name: string }> {
   }
 }
 
-function ErrorMessage({ error, name, setError }) {
+function ErrorMessage({ error, name, setError, displayInline }) {
   const { ref } = useNode({ map: x => x.parentElement })
-  return (
-    <>
-      <FloatingChrome target={ref}>
-        <Section
-          ref={ref}
-          background="darkorange"
-          color="white"
-          title={`${name}: ${error.message || 'Error'}`}
-          flex={1}
-          minWidth={200}
-          minHeight={200}
-          scrollable="y"
-          whiteSpace="pre-line"
-          pointerEvents="auto"
-          padding
-        >
-          <Button alt="confirm" onClick={() => setError({ error: null })}>
-            Clear
-          </Button>
-          <pre>{error.stack}</pre>
-        </Section>
-      </FloatingChrome>
-    </>
+  const content = (
+    <Section
+      ref={ref}
+      background="darkorange"
+      color="white"
+      title={`${name}: ${error.message || 'Error'}`}
+      flex={1}
+      minWidth={200}
+      minHeight={200}
+      scrollable="y"
+      whiteSpace="pre-line"
+      pointerEvents="auto"
+      padding
+    >
+      <Button alt="confirm" onClick={() => setError({ error: null })}>
+        Clear
+      </Button>
+      <pre>{error.stack}</pre>
+    </Section>
   )
+  if (displayInline) {
+    return content
+  }
+  return <FloatingChrome target={ref}>{content}</FloatingChrome>
 }

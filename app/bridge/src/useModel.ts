@@ -1,5 +1,5 @@
 import { Model } from '@o/mediator'
-import { isDefined, OR_TIMED_OUT, orTimeout } from '@o/utils'
+import { isDefined, OR_TIMED_OUT, orTimeout, shouldDebug } from '@o/utils'
 import produce from 'immer'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -62,6 +62,13 @@ const hasQuery = (x: any) => {
   return x !== false && x !== null
 }
 
+const currentComponent = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return require('react').__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner
+      .current
+  }
+}
+
 const useForceUpdate = () => {
   const forceUpdate = useState(0)[1]
   return useCallback(() => {
@@ -75,7 +82,7 @@ function use<ModelType, Args>(
   query?: Args | false,
   options?: UseModelOptions,
 ): any {
-  const queryKey = JSON.stringify(query)
+  const key = getKey(model.name, type, JSON.stringify(query))
   const observeEnabled = !options || (options.observe === undefined || options.observe === true)
   const forceUpdate = useForceUpdate()
   const valueRef = useRef(options ? options.defaultValue : undefined)
@@ -101,10 +108,11 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
-      if (process.env.NODE_ENV === 'development') {
-        console.debug(`update`, queryKey, observeEnabled, model.name, next)
-      }
       valueRef.current = next
+      if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+        console.log('useModel update', currentComponent(), key, next)
+      }
+      delete PromiseCache[key]
       queueUpdate(forceUpdate)
     }
 
@@ -113,15 +121,16 @@ function use<ModelType, Args>(
     return () => {
       cancelled = true
     }
-  }, [queryKey, observeEnabled])
+  }, [key, observeEnabled])
 
   const valueUpdater: ImmutableUpdateFn<any> = useCallback(
     updaterFn => {
       const finish = (val: any) => {
         const next = produce(val, updaterFn)
-        if (process.env.NODE_ENV === 'development') {
-          console.debug(`save model`, model.name, next)
+        if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+          console.debug(`useModel.save()`, model.name, next)
         }
+        delete PromiseCache[key]
         save(model, next as any)
       }
 
@@ -133,11 +142,10 @@ function use<ModelType, Args>(
         finish(valueRef.current)
       }
     },
-    [queryKey],
+    [key],
   )
 
   if (!isDefined(valueRef.current)) {
-    const key = getKey(model.name, type, queryKey)
     let cache = PromiseCache[key]
 
     if (!hasQuery(query)) {
@@ -159,9 +167,9 @@ function use<ModelType, Args>(
             if (!resolved) {
               valueRef.current = next
               cache.current = next
-              setTimeout(() => {
-                delete PromiseCache[key]
-              }, 100)
+              if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+                console.log('useModel.resolve', key, currentComponent(), next)
+              }
               res()
             }
           }

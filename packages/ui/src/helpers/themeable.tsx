@@ -3,14 +3,14 @@ import React from 'react'
 
 export type ThemeableProps = {
   theme?: string | ThemeObject
-  themeSelect?: ThemeSelect
+  subTheme?: ThemeSelect
   alt?: string
 }
 
 export function themeable<A extends any>(Component: A): A {
-  return function ThemeProp({ themeSelect, alt, theme, ...rest }: ThemeableProps) {
+  return function ThemeProp({ subTheme, alt, theme, ...rest }: ThemeableProps) {
     return (
-      <Theme themeSelect={themeSelect} alt={alt} theme={theme}>
+      <Theme subTheme={subTheme} alt={alt} theme={theme}>
         <Component {...rest} />
       </Theme>
     )

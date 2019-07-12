@@ -32,9 +32,9 @@ export function DemoGridApp() {
       </AppCard>
       <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
         {({ api }) => (
-          <Tabs>
-            {rooms.map(room => (
-              <Tab key={room.id} label={room.name} padding>
+          <Tabs defaultActive="0">
+            {rooms.map((room, index) => (
+              <Tab key={room.id} id={`${index}`} label={room.name} padding>
                 {() => {
                   const res = api.channelsHistory({ channel: room.id })
                   return <SlackConversation messages={res.messages || []} />

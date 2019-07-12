@@ -19,7 +19,7 @@
     "start:example-workspace": "(cd app/example-workspace && orbit ws --logLevel 1)",
     "build:app": "cd app/build-orbit && yarn run build-app",
     "build:app:resume": "cd app/build-orbit && yarn run build-app-resume",
-    "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --logLevel 2",
+    "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --logLevel 1",
     "deploy:site": "cd projects/site && yarn deploy",
     "publish:app": "cd app/build-orbit && yarn run publish",
     "publish:packages": "bin/publish",

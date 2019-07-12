@@ -517,7 +517,7 @@ const OrbitAppCard = memo(
           position="relative"
         >
           {/* title of app card */}
-          <AppIcon
+          {/* <AppIcon
             position="absolute"
             top={-10}
             left={-15}
@@ -527,7 +527,7 @@ const OrbitAppCard = memo(
             colors={app.colors}
             opacity={appsCarouselStore.zoomedIn ? 0 : 1}
             pointerEvents="none"
-          />
+          /> */}
           <Row
             alignItems="center"
             justifyContent="center"

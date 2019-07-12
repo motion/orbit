@@ -18,58 +18,64 @@ export type ColProps = CollapsableProps &
     suspense?: React.ReactNode | null
   }
 
-export const Col = forwardRef((colProps: ColProps, ref) => {
-  if (!colProps.children) {
-    return null
-  }
-  const [
-    collapseProps,
-    {
-      space = false,
-      spaceAround,
-      children,
-      beforeSpace,
-      afterSpace,
-      group,
-      separator,
-      suspense,
-      ...props
-    },
-  ] = splitCollapseProps(colProps)
-  let element = children
+export const Col = createBaseView({ flexDirection: 'column', 'data-is': 'Col' })
 
-  // spaceable
-  if (space || spaceAround || beforeSpace || afterSpace) {
-    element = createSpacedChildren({
-      space,
-      spaceAround,
-      beforeSpace,
-      afterSpace,
-      children,
-    })
-  }
+export function createBaseView(defaultProps: any) {
+  const View = forwardRef((colProps: ColProps, ref) => {
+    if (!colProps.children) {
+      return null
+    }
+    const [
+      collapseProps,
+      {
+        space = false,
+        spaceAround,
+        children,
+        beforeSpace,
+        afterSpace,
+        group,
+        separator,
+        suspense,
+        ...props
+      },
+    ] = splitCollapseProps(colProps)
+    let element = children
 
-  // collapsable
-  if (collapseProps) {
-    element = createCollapsableChildren({ ...collapseProps, children: element })
-  }
+    // spaceable
+    if (space || spaceAround || beforeSpace || afterSpace) {
+      element = createSpacedChildren({
+        space,
+        spaceAround,
+        beforeSpace,
+        afterSpace,
+        children,
+      })
+    }
 
-  // groupable
-  if (group) {
-    element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
-  }
+    // collapsable
+    if (collapseProps) {
+      element = createCollapsableChildren({ ...collapseProps, children: element })
+    }
 
-  // scrollable
-  return (
-    <ScrollableView data-is="Col" ref={ref} flexDirection="column" parentSpacing={space} {...props}>
-      {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
-    </ScrollableView>
-  )
-})
+    // groupable
+    if (group) {
+      element = <Breadcrumbs separator={separator}>{element}</Breadcrumbs>
+    }
 
-// for gloss parents
-// @ts-ignore
-Col.ignoreAttrs = Base.ignoreAttrs
+    // scrollable
+    return (
+      <ScrollableView ref={ref} {...defaultProps} parentSpacing={space} {...props}>
+        {suspense ? <Suspense fallback={suspense}>{element}</Suspense> : element}
+      </ScrollableView>
+    )
+  })
 
-// @ts-ignore
-Col.acceptsSpacing = true
+  // for gloss parents
+  // @ts-ignore
+  View.ignoreAttrs = Base.ignoreAttrs
+
+  // @ts-ignore
+  View.acceptsSpacing = true
+
+  return View
+}

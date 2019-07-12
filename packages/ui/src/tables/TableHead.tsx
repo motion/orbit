@@ -253,7 +253,7 @@ export class TableHead extends React.PureComponent<
       .reduce((acc, cv) => {
         acc.add(cv)
         return acc
-      }, new Set())
+      }, new Set<string>())
     return Object.keys(this.props.columns).map(key => {
       const visible = visibles.has(key)
       return {

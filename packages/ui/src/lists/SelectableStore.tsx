@@ -143,7 +143,7 @@ export class SelectableStore {
       return
     }
 
-    const nextActive = new Set(nextFiltered)
+    const nextActive = new Set<string | number>(nextFiltered)
 
     if (isEqual(this.active, nextActive)) {
       return

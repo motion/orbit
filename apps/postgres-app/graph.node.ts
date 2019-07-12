@@ -1,7 +1,8 @@
 import { AppBit } from '@o/kit'
 import { ApolloLink, Observable } from 'apollo-link'
 import * as graphileBuild from 'graphile-build'
-import { graphql, print } from 'graphql'
+import { ExecutionResult, graphql, print } from 'graphql'
+import { ExecutionResultDataDefault } from 'graphql/execution/execute'
 import { Pool } from 'pg'
 import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext } from 'postgraphile'
 
@@ -51,7 +52,7 @@ class PostGraphileLink extends ApolloLink {
     this.schema = schema
   }
   request(operation) {
-    return new Observable(observer => {
+    return new Observable<ExecutionResult<ExecutionResultDataDefault>>(observer => {
       performQuery(
         this.pool,
         this.schema,

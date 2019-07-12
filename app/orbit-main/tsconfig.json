@@ -11,9 +11,6 @@
     { "path": "../config" },
     { "path": "../../packages/orbit-fork-process" },
 
-    // apps
-    { "path": "../../apps" },
-
     // processes
     { "path": "../orbit-desktop" },
     { "path": "../orbit-syncers" },

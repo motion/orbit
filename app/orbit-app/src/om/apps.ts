@@ -71,7 +71,7 @@ export const state: AppsState = {
       .filter<AppBit>((x): x is AppBit => x !== undefined)
 
     // we only want one of each, for some reason we are getting multiple, for now just filter to be sure
-    const uids = [...new Set(all.map(x => x.identifier!))]
+    const uids = [...new Set<string>(all.map(x => x.identifier!))]
     return uids.map(id => all.find(x => x.identifier === id)!)
   },
 }

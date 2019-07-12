@@ -47,7 +47,7 @@ export const ObserverCache = {
       key,
       args,
       component: currentComponent(),
-      subscriptions: new Set(),
+      subscriptions: new Set<ZenObservable.SubscriptionObserver<any>>(),
       // store this so its quick to check for updates
       denormalizedValues: {},
       // store this so we keep the sort order

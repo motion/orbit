@@ -45,7 +45,7 @@ const COLOR_WHEEL = [
   '#870C25',
 ]
 
-let seenNames = new Set()
+let seenNames = new Set<string>()
 
 export const logGroup = ({ name = '', result, changed, timings = '', reactionArgs }) => {
   const hasChanges = !!changed

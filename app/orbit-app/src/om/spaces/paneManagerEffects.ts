@@ -64,11 +64,11 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   const appDict = keyBy(apps, 'id')
 
   let next = [
-    ...new Set([
+    ...new Set<number>([
       // keep current sort, remove deleted
       ...space.paneSort!.filter(id => appDict[id]),
       // add new
-      ...apps.filter(x => x.tabDisplay !== 'hidden').map(x => x.id),
+      ...apps.filter(x => x.tabDisplay !== 'hidden').map(x => x.id!),
     ]),
   ]
 

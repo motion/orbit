@@ -19,14 +19,12 @@ if (isBrowser) {
   require('./react-grid-layout-styles.css')
 }
 
-export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
-
 type GridItemDimensions = {
   w?: number | 'auto'
   h?: number | 'auto'
 }
 
-type Base = {
+type BaseGridLayoutProps = {
   cols?: {
     xxs?: number
     xs?: number
@@ -36,14 +34,16 @@ type Base = {
   }
 }
 
-type GridLayoutPropsObject = Base & {
+type GridLayoutPropsObject = BaseGridLayoutProps & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
 }
-type GridLayoutPropsControlled = Base & {
+type GridLayoutPropsControlled = BaseGridLayoutProps & {
   children?: React.ReactNode
   height?: number
 }
+
+export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
 
 const defaultProps: Partial<GridLayoutProps> = {
   cols: {
@@ -56,51 +56,6 @@ const defaultProps: Partial<GridLayoutProps> = {
 }
 
 type GridItems = { [key: string]: GridItemProps }
-
-const autoSize = (item: GridItemProps, cols: number, items: GridItems) => {
-  const total = Object.keys(items).length
-  let defaultSize = 1
-  if (total === 1) {
-    defaultSize = cols
-  } else if (total <= cols / 2) {
-    const n = cols / total
-    defaultSize = Math.floor(n % 1 === 0 ? n : n)
-  } else {
-    defaultSize = cols >= 4 ? 2 : 1
-  }
-  const w = item.w === 'auto' ? defaultSize : item.w
-  const h = item.h === 'auto' ? defaultSize : item.h
-  return { w, h }
-}
-
-// attempts to position things nicely
-function calculateLayout(items: GridItems, cols: number) {
-  const layout = []
-
-  let lastX = 0
-  let lastY = 0
-  for (const [idx, key] of Object.keys(items).entries()) {
-    const item = items[key]
-    const { w, h } = autoSize(item, cols, items)
-    let x = lastX + idx === 0 ? 0 : w + lastX
-    const shouldWrap = x + w > cols
-    if (shouldWrap) {
-      x = 0
-    }
-    const y = x + w > cols ? lastY + 1 : lastY
-    const next = {
-      x,
-      y,
-      w,
-      h,
-      i: key,
-    }
-    lastY = y
-    lastX = x
-    layout.push(next)
-  }
-  return layout
-}
 
 class GridStore {
   props: GridLayoutProps
@@ -348,10 +303,10 @@ function forwardSurfaceProps(children: any, props: SizedSurfaceProps) {
 // compacts horizontal + vertical
 // see https://github.com/STRML/react-grid-layout/issues/157
 function dualCompact(items: any[]) {
-  const max_x = items.reduce(function (max_x, item) {
+  const max_x = items.reduce(function(max_x, item) {
     return Math.max(max_x, item.x + item.w)
   }, 0)
-  const max_y = items.reduce(function (max_y, item) {
+  const max_y = items.reduce(function(max_y, item) {
     return Math.max(max_y, item.y + item.h)
   }, 0)
 
@@ -362,7 +317,7 @@ function dualCompact(items: any[]) {
   }
 
   //fill layout matrix
-  items.forEach(function (item) {
+  items.forEach(function(item) {
     for (let i_y = item.y, i_y_max = item.y + item.h; i_y < i_y_max; i_y++) {
       for (let i_x = item.x, i_x_max = item.x + item.w; i_x < i_x_max; i_x++) {
         matrix[i_y][i_x] = item.i
@@ -383,7 +338,7 @@ function dualCompact(items: any[]) {
 
     if (is_empty_row) {
       const compressed_y = y - compressed
-      items.forEach(function (item) {
+      items.forEach(function(item) {
         if (item.y > compressed_y) {
           item.y--
         }
@@ -405,7 +360,7 @@ function dualCompact(items: any[]) {
 
     if (is_empty_col) {
       const compressed_x = x - compressed
-      items.forEach(function (item) {
+      items.forEach(function(item) {
         if (item.x > compressed_x) {
           item.x--
         }
@@ -414,4 +369,49 @@ function dualCompact(items: any[]) {
       compressed++
     }
   }
+}
+
+const autoSize = (item: GridItemProps, cols: number, items: GridItems) => {
+  const total = Object.keys(items).length
+  let defaultSize = 1
+  if (total === 1) {
+    defaultSize = cols
+  } else if (total <= cols / 2) {
+    const n = cols / total
+    defaultSize = Math.floor(n % 1 === 0 ? n : n)
+  } else {
+    defaultSize = cols >= 4 ? 2 : 1
+  }
+  const w = item.w === 'auto' ? defaultSize : item.w
+  const h = item.h === 'auto' ? defaultSize : item.h
+  return { w, h }
+}
+
+// attempts to position things nicely
+function calculateLayout(items: GridItems, cols: number) {
+  const layout = []
+
+  let lastX = 0
+  let lastY = 0
+  for (const [idx, key] of Object.keys(items).entries()) {
+    const item = items[key]
+    const { w, h } = autoSize(item, cols, items)
+    let x = lastX + idx === 0 ? 0 : w + lastX
+    const shouldWrap = x + w > cols
+    if (shouldWrap) {
+      x = 0
+    }
+    const y = x + w > cols ? lastY + 1 : lastY
+    const next = {
+      x,
+      y,
+      w,
+      h,
+      i: key,
+    }
+    lastY = y
+    lastX = x
+    layout.push(next)
+  }
+  return layout
 }

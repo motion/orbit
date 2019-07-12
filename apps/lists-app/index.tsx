@@ -96,7 +96,6 @@ function ListAppStatusBar() {
     : 0
   return (
     <AppStatusBar>
-      123213
       <Breadcrumbs>
         {treeList.state.history.map(item => (
           <Breadcrumb size={0.9} alpha={0.68} fontWeight={500} key={item.id}>

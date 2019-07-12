@@ -3,13 +3,14 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
 import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
+import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
@@ -370,11 +371,15 @@ const BackButton = memo(() => {
       disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
       onClick={() => {
+        if (appsDrawerStore.isOpen) {
+          appsDrawerStore.closeDrawer()
+          return
+        }
         if (appsCarousel.zoomedIn) {
           appsCarousel.setZoomedOut()
-        } else {
-          actions.router.back()
+          return
         }
+        actions.router.back()
       }}
     />
   )

@@ -109,38 +109,20 @@ export function disposeStore(store: any, component?: CurrentComponent) {
   store.dispose()
 }
 
-let captureHooks: any = null
-
-type Fn = (...args: any[]) => any
-type ObjectFns = { [key: string]: Fn }
-
-type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
-
 /**
- * TODO lets make this functional style:
- *
- * class Store {
- *   hooks = useHooks(() => {
- *     const myHook = useState()
- *     return { myHook }
- *   })
- * }
- *
+ * Simple way to add hooks into a store
+ * Keeps types a lot simpler than using props
  */
-export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
-  const getValues = () => {
-    let res: any = {}
-    for (const key in hooks) {
-      const next = hooks[key]()
-      res[key] = next
-    }
-    return res
-  }
-  captureHooks = shallow({
-    ...getValues(),
-    __getHooksValues: getValues,
+type StringKeyObject = { [key: string]: any }
+type HooksObject<A extends StringKeyObject> = A & { __getHooksValues?: Function }
+
+let capturedHooks: HooksObject<any> | null = null
+export function useHooks<A extends () => StringKeyObject>(hooks: A): HooksObject<ReturnType<A>> {
+  capturedHooks = shallow({
+    ...hooks(),
+    __getHooksValues: hooks,
   })
-  return captureHooks
+  return capturedHooks
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: any) {
@@ -148,7 +130,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: any) {
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
-  captureHooks = null
+  capturedHooks = null
   const store = new AutomagicStore()
 
   if (config.onMount) {
@@ -165,7 +147,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: any) {
 
   return {
     store,
-    hooks: captureHooks,
+    hooks: capturedHooks,
     hasProps: !!props,
   }
 }
@@ -221,7 +203,7 @@ function useReactiveStore<A extends any>(
     const hooks = state.current.hooks
     if (hooks) {
       let next = hooks['__getHooksValues']()
-      for (const key in hooks) {
+      for (const key in next) {
         if (key === '__getHooksValues') continue
         if (next[key] !== hooks[key]) {
           hooks[key] = next[key]

@@ -10,12 +10,12 @@ type SearchResults = {
 }
 
 export class SearchStore {
-  hooks = useHooks({
-    stores: useStoresSimple,
-    apps: useActiveClientApps,
-    app: () => useAppBit()[0],
-    space: () => useActiveSpace()[0],
-  })
+  hooks = useHooks(() => ({
+    stores: useStoresSimple(),
+    apps: useActiveClientApps(),
+    app: useAppBit()[0],
+    space: useActiveSpace()[0],
+  }))
 
   searchState: SearchState | null = null
 

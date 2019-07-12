@@ -197,7 +197,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
           return (
             <OrbitAppIcon
-              app={getActiveApps().find(x => x.id === item.id)}
+              app={getActiveApps().find(x => x.id === item.id)!}
               isSelected={isSelected}
               onClick={select}
               onDoubleClick={onDoubleClick}
@@ -212,7 +212,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
 const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
-  const [app, def] = useAppWithDefinition(+props.id)
+  const [app, def] = useAppWithDefinition(+props.id!)
 
   if (!def) {
     return null
@@ -225,6 +225,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
       backgrounded
       titleBorder
       title={props.title}
+      beforeTitle={<Button chromeless icon="chevron-left" />}
       titleProps={{
         editable: true,
         autoselect: true,

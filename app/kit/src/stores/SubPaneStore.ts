@@ -22,7 +22,10 @@ const createResizObserver = (node, cb) => {
 export class SubPaneStore {
   props: Pick<SubPaneProps, 'id' | 'fullHeight' | 'onChangeHeight' | 'onScrollNearBottom'>
 
-  stores = useHooks({ stores: useStoresSimple }).stores
+  hooks = useHooks(() => ({ stores: useStoresSimple() }))
+  get stores() {
+    return this.hooks.stores
+  }
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
   aboveContentHeight = 0

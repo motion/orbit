@@ -137,9 +137,9 @@ async function startApp(forceRefresh = false) {
   }
 }
 
-window.testLoadAppsHmr = () => {
-  require('webpack-hot-middleware/client.js?name=apps&path=/__webpack_hmr_apps')
-}
+// window.testLoadAppsHmr = () => {
+//   require('webpack-hot-middleware/client.js?name=apps&path=/__webpack_hmr_apps')
+// }
 
 // hot reloading
 if (process.env.NODE_ENV === 'development') {

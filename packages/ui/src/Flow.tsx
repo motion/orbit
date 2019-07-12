@@ -137,10 +137,10 @@ export class FlowStore {
   props: FlowDataProps
   steps: FlowStepProps[] = []
 
-  private hooks = useHooks({
-    data: () => Config.useUserState('flowdata', (this.props && this.props.data) || null),
-    index: () => Config.useUserState('flowindex', 0),
-  })
+  private hooks = useHooks(() => ({
+    data: Config.useUserState('flowdata', (this.props && this.props.data) || null),
+    index: Config.useUserState('flowindex', 0),
+  }))
 
   get data() {
     return this.hooks.data[0]

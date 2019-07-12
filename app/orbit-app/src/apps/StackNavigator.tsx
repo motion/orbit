@@ -47,6 +47,8 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   // should never switch them out....
   const stackNav = stackNavParent || stackNavInternal
 
+  console.log('stackNav', props)
+
   if (!stackNav) {
     throw new Error('No stack navigator given, must provide one of useNavigator or stateId')
   }
@@ -110,14 +112,18 @@ type StackNavState = {
 }
 
 export class StackNavigatorStore {
-  props: StackNavProps
+  props: StackNavProps = {
+    id: '',
+    items: {},
+  }
+
   next = null
 
-  private hooks = useHooks({
-    state: () =>
-      useUserState<StackNavState>(`sn-${this.props.id}`, {
-        stack: [],
-      }),
+  private hooks = useHooks(() => {
+    const state = useUserState<StackNavState>(`sn-${this.props.id}`, {
+      stack: [],
+    })
+    return { state }
   })
 
   private setState = this.hooks.state[1]

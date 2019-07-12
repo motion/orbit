@@ -1,18 +1,18 @@
 import { AppIcon, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
-import { om, useOm } from '../../om/om'
-import { paneManagerStore, queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { useOm } from '../../om/om'
+import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { OrbitEditAppItem } from './OrbitHeaderMenu'
+import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
 import { OrbitNav } from './OrbitNav'
 
 export const headerButtonProps: SizedSurfaceProps = {
@@ -155,7 +155,7 @@ export const OrbitHeader = memo(() => {
               <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
                 {orbitStore.activeActions}
               </SurfacePassProps>
-              {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
+              <OrbitHeaderOpenAppMenu />
             </>
           )}
         </HeaderContain>
@@ -360,55 +360,6 @@ const HeaderTop = gloss(View, {
   flexFlow: 'row',
   position: 'relative',
 })
-
-const OpenButton = memo((props: ButtonProps) => {
-  const { state, effects } = useOm()
-  const { appRole } = useStore(App)
-
-  if (appRole !== 'main') {
-    return null
-  }
-
-  return (
-    <MenuButton
-      alt="action"
-      size={1}
-      sizeRadius={1.6}
-      tooltip="Open to desktop (⌘ + ⏎)"
-      onClick={effects.openCurrentApp}
-      items={[
-        {
-          title: 'Edit',
-          icon: 'edit',
-        },
-        {
-          title: 'Fork',
-          icon: 'fork',
-        },
-        {
-          title: 'Permalink',
-          subTitle: state.router.urlString,
-          icon: 'link',
-          onClick: effects.copyAppLink,
-        },
-        <OrbitEditAppItem key={100} />,
-        {
-          title: 'App Settings',
-          icon: 'cog',
-          onClick: goToAppSettings,
-        },
-      ]}
-      {...props}
-    />
-  )
-})
-
-const goToAppSettings = () => {
-  om.actions.router.showAppPage({
-    id: 'apps',
-    subId: paneManagerStore.activePane.id,
-  })
-}
 
 const BackButton = memo(() => {
   const { state, actions } = useOm()

@@ -32,7 +32,7 @@ export function DemoGridApp() {
       </AppCard>
       <AppCard key="slack2" title="Room Messages" appType={Slack} app={app}>
         {({ api }) => (
-          <Tabs defaultActive="0">
+          <Tabs scrollable defaultActive="0">
             {rooms.map((room, index) => (
               <Tab key={room.id} id={`${index}`} label={room.name} padding scollable="y">
                 {() => {

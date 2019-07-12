@@ -28,7 +28,7 @@ export const light: ThemeObject = {
     backgroundHighlightActive: colors.blue.lighten(0.1),
     backgroundHighlight: colors.blue,
     boxShadowColor: [0, 0, 0],
-    boxShadowOpacity: 0.2,
+    boxShadowOpacity: 0.1,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',

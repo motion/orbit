@@ -41,7 +41,7 @@ MessageChrome.defaultProps = {
   activeStyle: false,
   flexDirection: 'row',
   padding: 'sm',
-  spaceSize: 'lg',
+  space: 'lg',
   sizeRadius: true,
   sizeIcon: 2,
   elementProps: {

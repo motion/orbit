@@ -65,9 +65,9 @@ class AppChildViewsStore {
 export const AppChildViews = createStoreContext(AppChildViewsStore)
 
 // TODO move into UI
-const CardStack = props => {
+const CardStack = (props: { children: any }) => {
   const all = Children.toArray(props.children)
-  const [focused, setFocused] = useState(-1)
+  const [focused, setFocused] = useState(all.length - 1)
 
   if (all.length <= 1) {
     return all
@@ -75,7 +75,8 @@ const CardStack = props => {
 
   return (
     <>
-      {all.map((item, index) => (
+      {/* show no more than ten at once */}
+      {all.slice(0, 10).map((item, index) => (
         <Card
           position="absolute"
           top={0}
@@ -84,9 +85,9 @@ const CardStack = props => {
           bottom={0}
           elevation={4}
           {...cardPositionalProps(index, all.length)}
-          key={item.id || index}
+          key={item.props.id || index}
         >
-          {item}
+          {focused === index && item}
         </Card>
       ))}
     </>

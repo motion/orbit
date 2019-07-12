@@ -147,7 +147,6 @@ export class SlackLoader {
         oldest: oldestId,
         latest: latestMessageId,
       }
-      this.log.verbose('request to channels.history', options)
       const response = await channels.history(options)
       this.log.verbose('request to channels.history response', !!response)
 

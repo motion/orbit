@@ -31,14 +31,10 @@ class DesktopStore {
   hoverState: DesktopStore['state']['hoverState']
   appState: DesktopStore['state']['appState']
   ocrState: DesktopStore['state']['ocrState']
-  searchState: DesktopStore['state']['searchState']
   keyboardState: DesktopStore['state']['keyboardState']
   mouseState: DesktopStore['state']['mouseState']
   setKeyboardState: DesktopStore['setState']
   setOcrState: DesktopStore['setState']
-  setSearchState: DesktopStore['setState']
-  setMouseState: DesktopStore['setState']
-  setPaused: DesktopStore['setState']
   setLastScreenChange: DesktopStore['setState']
 
   bridge = Bridge
@@ -81,11 +77,6 @@ class DesktopStore {
       message: '',
       type: 'null' as 'warning' | 'error' | 'null',
     },
-    searchState: {
-      indexStatus: '',
-      searchResults: [],
-      pluginResults: [],
-    },
     keyboardState: {
       isHoldingOption: false,
       escapeDown: Date.now(),
@@ -107,7 +98,6 @@ class DesktopStore {
       supportsTransparency: false,
     },
     appFocusState: {} as AppFocusState,
-    focusedOnOrbit: false,
     lastScreenChange: Date.now(),
     lastAppChange: Date.now(),
     movedToNewSpace: 0,

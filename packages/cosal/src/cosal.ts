@@ -1,3 +1,4 @@
+import { Logger } from '@o/logger'
 import { pathExists, readJSON, remove, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
@@ -11,6 +12,8 @@ import { Pair, toCosal } from './toCosal'
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
 export { toCosal } from './toCosal'
+
+const log = new Logger('cosal')
 
 type Record = {
   id: number
@@ -116,7 +119,7 @@ export class Cosal {
       try {
         await this.readDatabase()
       } catch (err) {
-        console.log('Error reading database, removing and resetting...')
+        log.info('Error reading database, removing and resetting...')
         await remove(this.databasePath)
         await this.persist()
         console.error(err)
@@ -187,14 +190,14 @@ export class Cosal {
 
     for (const [index, record] of newRecords.entries()) {
       if (this.getVectorForId(db, record.id)) {
-        console.debug(`Already have a record id ${record.id}`)
+        log.verbose(`Already have a record id ${record.id}`)
         this.updateRecord(db, record.id, cosals[index].vector)
         continue
       }
       if (!cosals[index]) {
         const record = newRecords[index]
         const len = record.text.length
-        console.debug(
+        log.verbose(
           'no cosal found for id',
           record.id,
           `${record.text.slice(0, 40) + (len > 40 ? '...' : '')}`,
@@ -240,7 +243,7 @@ export class Cosal {
       this.fallbackVector,
     )
     if (!cosal) {
-      console.log('no vectors for query', query)
+      log.info('no vectors for query', query)
       return []
     }
     return await this.searchWithAnnoy(db, cosal.vector, { max })

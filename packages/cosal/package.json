@@ -5,6 +5,7 @@
   "sideEffects": false,
   "dependencies": {
     "@o/vectorious": "^2.5.2",
+    "@o/logger": "*",
     "compute-covariance": "^1.0.1",
     "electron-util": "0.9.0",
     "fs-extra": "7.0.0",

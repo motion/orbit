@@ -70,7 +70,7 @@ const CardStack = (props: { children: any }) => {
   const [focused, setFocused] = useState(all.length - 1)
 
   if (all.length <= 1) {
-    return all
+    return <>{all}</>
   }
 
   return (
@@ -86,6 +86,7 @@ const CardStack = (props: { children: any }) => {
           elevation={4}
           {...cardPositionalProps(index, all.length)}
           key={item.props.id || index}
+          onClick={() => setFocused(index)}
         >
           {focused === index && item}
         </Card>

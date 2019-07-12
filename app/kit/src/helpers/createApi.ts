@@ -14,7 +14,6 @@ export function createApi<T extends FunctionalAPI<any>>(
       {
         get(_target, method) {
           return (...args) => {
-            console.log('command', command, require('@o/bridge'))
             return command(CallAppBitApiMethodCommand, {
               appId: app.id,
               appIdentifier: app.identifier,

@@ -1,4 +1,4 @@
-import { createApi, createApp } from '@o/kit'
+import { createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import JiraApi from './api.node'
@@ -11,7 +11,7 @@ export default createApp<JiraAppData>({
   name: 'Jira',
   itemType: 'markdown',
   workers: [JiraSyncerWorker],
-  api: createApi(JiraApi),
+  api: JiraApi,
   graph,
   setupValidate: async app => {
     const loader = new JiraLoader(app)

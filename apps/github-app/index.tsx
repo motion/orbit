@@ -1,4 +1,4 @@
-import { createApi, createApp } from '@o/kit'
+import { createApp } from '@o/kit'
 
 import { GithubApi } from './api.node'
 import { GithubSettings } from './GithubSettings'
@@ -15,7 +15,7 @@ export default createApp({
     return app
   },
   settings: GithubSettings,
-  api: createApi(GithubApi),
+  api: GithubApi,
   workers: [GithubSyncerWorker],
   graph,
   icon: `

@@ -8,7 +8,7 @@ import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 
-type TreeItems = { [key: number]: TreeItem }
+type TreeItems = { [key in string | number]: TreeItem }
 
 export type TreeListProps = Omit<ListProps, 'items'> & {
   // we should make this either require use or items
@@ -99,7 +99,7 @@ const getActions = (
     addFolder(name?: string, parentId?: number) {
       Actions.addItem({ name, type: 'folder' }, parentId)
     },
-    deleteItem(id: number) {
+    deleteItem(id: number | string) {
       const update = treeState()[1]
       update(next => {
         // remove this item
@@ -107,7 +107,7 @@ const getActions = (
         // remove any references to this item in .children[]
         for (const key in next.items) {
           const item = next.items[key]
-          if (item.children && item.children.indexOf(id) > -1) {
+          if (item.children) {
             item.children = item.children.filter(x => x !== id)
           }
         }
@@ -245,11 +245,14 @@ export function useTreeList(subSelect: string | false, props?: TreeListProps): T
   }
 }
 
-async function loadTreeListItemProps(item: TreeItem): Promise<ListItemProps> {
+async function loadTreeListItemProps(item?: TreeItem): Promise<ListItemProps> {
+  if (!item) {
+    return null
+  }
   switch (item.type) {
     case 'folder':
       return {
-        id: `folder-${item.id}`,
+        id: `${item.id}`,
         title: item.name,
         subTitle: `${item.children.length} items`,
         after: <Button circular chromeless iconSize={14} icon="chevron-right" />,
@@ -287,7 +290,7 @@ export function TreeList(props: TreeListProps) {
     Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
         if (!cancel) {
-          setLoadedItems(next)
+          setLoadedItems(next.filter(Boolean))
         }
       },
     )
@@ -317,7 +320,7 @@ export function TreeList(props: TreeListProps) {
 
   const handleDelete = useCallback(
     (item: ListItemProps) => {
-      useTree.actions.deleteItem(+item.id)
+      useTree.actions.deleteItem(item.id)
     },
     [useTree],
   )

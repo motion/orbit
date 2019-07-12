@@ -15,7 +15,7 @@ export default createApp({
   app: () => <AppNavigator index={ListsAppIndex} detail={ListsAppMain} />,
 })
 
-const id = 'my-tree-list'
+const id = 'lists'
 
 export function ListsAppIndex(props: NavigatorProps) {
   const treeList = useTreeList(id)

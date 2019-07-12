@@ -1,5 +1,6 @@
 import { Avatar, ConfigureUIProps, Document, Markdown, Task, Thread } from '@o/ui'
 import React from 'react'
+
 import { BitConversation } from '../bit/BitConversation'
 import { ConversationItem } from '../bit/BitConversationItem'
 import { Readability } from '../bit/Readability'
@@ -28,8 +29,12 @@ export const customItems: ConfigureUIProps['customItems'] = {
     item: ({ item }) => <Task body={item.body} comments={item.data.comments} />,
   },
   thread: {
-    listItem: ({ item }) => <Thread body={item.body} messages={item.data.messages} />,
-    item: ({ item }) => <Thread body={item.body} messages={item.data.messages} />,
+    listItem: ({ item }) => (
+      <Thread body={item.body} messages={(item.data && item.data.messages) || []} />
+    ),
+    item: ({ item }) => (
+      <Thread body={item.body} messages={(item.data && item.data.messages) || []} />
+    ),
   },
   person: {
     item: ({ item }) => <AppMainView identifier="people" id={`${item.id}`} />,

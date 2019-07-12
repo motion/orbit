@@ -119,12 +119,11 @@ export class StackNavigatorStore {
 
   next = null
 
-  private hooks = useHooks(() => {
-    const state = useUserState<StackNavState>(`sn-${this.props.id}`, {
+  private hooks = useHooks(() => ({
+    state: useUserState<StackNavState>(`sn-${this.props.id}`, {
       stack: [],
-    })
-    return { state }
-  })
+    }),
+  }))
 
   private setState = this.hooks.state[1]
 

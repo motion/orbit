@@ -225,7 +225,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
       backgrounded
       titleBorder
       title={props.title}
-      beforeTitle={<Button chromeless icon="chevron-left" />}
+      beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
       titleProps={{
         editable: true,
         autoselect: true,

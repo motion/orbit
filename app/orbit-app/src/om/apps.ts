@@ -35,13 +35,14 @@ export const state: AppsState = {
   allApps: [],
   activeSpace: null,
   activeApps: state => {
-    return (
-      (state.activeSpace &&
-        state
-          .activeSpace!.paneSort!.map(appId => state.allApps.find(x => x.id === appId)!)
-          .filter(Boolean)) ||
-      []
-    )
+    if (!state.activeSpace) return []
+    // this only includes client apps
+    const paneSorted = state.activeSpace
+      .paneSort!.map(appId => state.allApps.find(x => x.id === appId)!)
+      .filter(Boolean)
+    // add the rest of them in
+    const allSortedIds = new Set([...paneSorted.map(x => x.id), ...state.allApps.map(x => x.id)])
+    return [...allSortedIds].map(id => state.allApps.find(x => x.id === id)!)
   },
   activeClientApps: state => {
     const clientApps = state.activeApps.filter(

@@ -357,6 +357,7 @@ export const OrbitAppsCarousel = memo(() => {
       appsCarouselStore.state.zoomedOut === true,
     ],
     async (next, { when, sleep }) => {
+      await sleep(100)
       await when(() => !appsCarouselStore.isAnimating)
       await sleep(100)
       return next

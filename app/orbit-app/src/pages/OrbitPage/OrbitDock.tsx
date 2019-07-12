@@ -11,7 +11,7 @@ import { appsDrawerStore } from './OrbitAppsDrawer'
 type DockOpenState = 'open' | 'closed' | 'pinned'
 
 class OrbitDockStore {
-  state: DockOpenState = 'pinned'
+  state: DockOpenState = 'closed'
   nextState: { state: DockOpenState; delay: number } | null = null
   hoveredIndex = -1
   nextHovered: { index: number; at: number } | null = null

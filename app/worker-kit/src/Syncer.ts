@@ -358,7 +358,7 @@ export class Syncer {
       } catch (error) {
         job.message = ''
       }
-      log.info('updating job', job)
+      log.verbose('updating job', job)
       await getRepository(JobEntity).save(job)
     }
   }

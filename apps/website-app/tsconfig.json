@@ -7,6 +7,9 @@
   },
   "include": ["**/*"],
   "exclude": ["node_modules", "dist"],
+  "typeAcquisition": {
+    "enable": true
+  },
   "references": [
     { "path": "../../app/kit" },
     { "path": "../../app/worker-kit" },

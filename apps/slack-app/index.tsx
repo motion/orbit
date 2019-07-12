@@ -6,6 +6,7 @@ import { SlackLoader } from './SlackLoader'
 import { SlackSettings } from './SlackSettings'
 import { SlackSyncerWorker } from './SlackSyncerWorker.node'
 
+export * from 'slack'
 export * from './SlackConversation'
 
 export default createApp({

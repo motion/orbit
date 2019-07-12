@@ -82,7 +82,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
           width={42}
           height={42}
           circular
-          iconSize={18}
+          iconSize={16}
           elevation={4}
           badgeProps={{
             background: '#333',

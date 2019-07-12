@@ -3,7 +3,6 @@ import { AppBit, CallAppBitApiMethodCommand } from '@o/models'
 
 export interface FunctionalAPI<X> {
   (appBit: AppBit): X
-  isClass?: undefined
 }
 
 export function createApi<T extends FunctionalAPI<any>>(
@@ -15,6 +14,7 @@ export function createApi<T extends FunctionalAPI<any>>(
       {
         get(_target, method) {
           return (...args) => {
+            console.log('command', command, require('@o/bridge'))
             return command(CallAppBitApiMethodCommand, {
               appId: app.id,
               appIdentifier: app.identifier,
@@ -25,6 +25,5 @@ export function createApi<T extends FunctionalAPI<any>>(
         },
       },
     )
-
   return fn as any
 }

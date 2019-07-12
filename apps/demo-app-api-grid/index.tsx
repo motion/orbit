@@ -4,7 +4,7 @@ import { GridLayout, Tab, Table, Tabs } from '@o/ui'
 import React, { useState } from 'react'
 
 export default createApp({
-  id: 'demo-app-api-gri',
+  id: 'demo-app-api-grid',
   name: 'Demo App: API Grid',
   icon: 'grid',
   iconColors: ['rgb(46, 204, 64)', 'rgb(255, 65, 54)'],

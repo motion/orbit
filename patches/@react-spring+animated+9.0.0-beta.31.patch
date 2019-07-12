@@ -1,0 +1,12 @@
+diff --git a/node_modules/@react-spring/animated/index.d.ts b/node_modules/@react-spring/animated/index.d.ts
+index be10210..a40384d 100644
+--- a/node_modules/@react-spring/animated/index.d.ts
++++ b/node_modules/@react-spring/animated/index.d.ts
+@@ -98,7 +98,6 @@ declare class AnimatedStyle extends AnimatedObject {
+ }
+ 
+ declare type AnimatableComponent = string | (Extract<ElementType, object> & {
+-    [cacheKey]?: any;
+ });
+ declare type WithAnimated = {
+     (Component: AnimatableComponent): any;

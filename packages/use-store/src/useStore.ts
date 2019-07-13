@@ -1,5 +1,6 @@
 import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
+import { debounce } from 'lodash'
 import { _interceptReads, observable, observe, transaction } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -119,7 +120,9 @@ type HooksObject = {
 
 export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType<A> & HooksObject {
   let updater: Function | null = null
-  const __setUpdater = cb => (updater = cb)
+  const __setUpdater = cb => {
+    updater = debounce(cb)
+  }
   let trackProps = new Set<string>()
   let disposeReads: any[] = []
   if (store) {
@@ -171,11 +174,14 @@ function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDe
     })
   }
 
+  const allHooks = Object.keys(store)
+    .map(key => store[key] && store[key].__rerunHooks && store[key])
+    .filter(Boolean)
+  const hooks = allHooks.length ? allHooks : null
+
   return {
     store,
-    hooks: Object.keys(store)
-      .map(key => store[key] && store[key].__rerunHooks && store[key])
-      .filter(Boolean),
+    hooks,
     hasProps: !!props,
   }
 }
@@ -225,7 +231,7 @@ function useReactiveStore<A extends any>(
     const next = setupReactiveStore(Store, props)
     if (next.hooks) {
       dispose = () => {
-        console.log('dispsing hoooks')
+        console.log('dispsing hoooks', next.hooks)
         next.hooks!.forEach(hook => hook.__dispose && hook.__dispose())
       }
       next.hooks.forEach(hook => {
@@ -315,7 +321,6 @@ export function useStore<A extends ReactiveStore<any> | any>(
       store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate }).store
     }
     if (!!store && props) {
-      console.log('stores', store, props)
       updateProps(store, props as any)
     }
   } else {
@@ -343,7 +348,7 @@ export function useStore<A extends ReactiveStore<any> | any>(
         store && disposeStore(store, component)
       }
     }
-  }, [store, state.current.isInstantiated])
+  }, [])
 
   return store
 }

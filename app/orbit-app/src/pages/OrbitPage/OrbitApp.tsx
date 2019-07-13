@@ -183,7 +183,9 @@ export const OrbitAppRenderOfDefinition = ({
       <AppLoadContext.Provider value={appLoadContext}>
         <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
-            <Suspense fallback={<Loading />}>{appElement}</Suspense>
+            <Suspense fallback={<Loading />} {...{ delayMs: 400 }}>
+              {appElement}
+            </Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>

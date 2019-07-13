@@ -49,6 +49,8 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
     throw new Error('No stack navigator given, must provide one of useNavigator or stateId')
   }
 
+  console.log('render me')
+
   useEffect(() => {
     if (!ref || typeof ref !== 'function') return
     ref(stackNav)

@@ -40,18 +40,24 @@ export type GlossViewOptions<Props> = {
   displayName?: string
   ignoreAttrs?: { [key: string]: boolean }
   defaultProps?: Partial<Props>
+  getExtraProps?: (props: Props) => any
+  getElement?: (props: Props) => any
 }
 
+type GlossGetExtraProps = (props: Object) => Object
+type GlossGetElement = (props: Object) => any
 type GlossInternalConfig = {
   id: string
   displayName: string
   targetElement: any
   styles: any
   conditionalStyles: Object
-  parent: any
+  getExtraProps: GlossGetExtraProps | null
+  getElement: GlossGetElement | null
 }
 
 type GlossInternals<Props> = {
+  parent: any
   themeFns: ThemeFn<Props>[] | null
   getConfig: () => GlossInternalConfig
 }
@@ -92,8 +98,10 @@ export function gloss<Props = any, ThemeProps = Props>(
   let target: any = a || 'div'
   let rawStyles = b
   let ignoreAttrs: Object
-  const hasGlossyChild = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  const targetConfig: GlossInternalConfig = hasGlossyChild ? target.internal.getConfig() : null
+  const hasGlossyChild = !!target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  const targetConfig: GlossInternalConfig | null = hasGlossyChild
+    ? target.internal.getConfig()
+    : null
 
   setTimeout(() => {
     if (!ignoreAttrs) {
@@ -117,25 +125,38 @@ export function gloss<Props = any, ThemeProps = Props>(
     rawStyles = a
   }
 
-  const targetElement = hasGlossyChild ? targetConfig.targetElement : target
+  const targetElement = !!targetConfig ? targetConfig.targetElement : target
   const targetElementName = typeof targetElement === 'string' ? targetElement : ''
   const id = `${viewId()}`
-  const Styles = getAllStyles(id, target, rawStyles || null)
+  const Styles = getAllStyles(id, targetConfig, rawStyles || null)
 
   const conditionalStyles = Styles.conditionalStyles
   let themeFn: ThemeFn | null = null
   let staticClasses: string[] | null = null
 
+  // this elements helpers
+  let getExtraProps: GlossGetExtraProps | null = null
+  let getElement: GlossGetElement | null = null
+  let parentGetExtraProps: GlossGetExtraProps | null = null
+  let parentGetElement: GlossGetElement | null = null
+
+  let hasCompiled = false
+
   /**
-   * The main component for each gloss view.
+   *
+   *
+   * 💅 The component for each gloss view.
+   *
+   *
    */
   function GlossView(props: GlossProps<Props>, ref: any) {
-    // compile theme on first run to avoid extra work
-    themeFn = themeFn || compileTheme(ThemedView)
-
-    // compile static styles once, on first run to avoid extra work
-    staticClasses =
-      staticClasses || addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+    // compile on first run to avoid extra work
+    if (!hasCompiled) {
+      hasCompiled = true
+      themeFn = compileTheme(ThemedView)
+      staticClasses = addStyles(Styles.styles, ThemedView.displayName, targetElementName)
+      ;[parentGetElement, parentGetExtraProps] = getParentConfig(ThemedView)
+    }
 
     const theme = useTheme()
     const dynClasses = useRef<Set<string> | null>(null)
@@ -144,7 +165,7 @@ export function gloss<Props = any, ThemeProps = Props>(
     useEffect(() => {
       return () => {
         const x = dynClasses.current
-        if (x) {
+        if (x && x.size > 0) {
           x.forEach(deregisterClassName)
         }
       }
@@ -172,8 +193,14 @@ export function gloss<Props = any, ThemeProps = Props>(
     dynClasses.current = dynClassNames
 
     // if this is a plain view we can use tagName, otherwise just pass it down
-    const element =
-      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+    let element = typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+
+    // helper for element
+    const getEl = getElement || parentGetElement
+    if (getEl) {
+      element = getEl(props)
+    }
+
     const isDOMElement = typeof element === 'string'
 
     // set up final props with filtering for various attributes
@@ -189,16 +216,10 @@ export function gloss<Props = any, ThemeProps = Props>(
     if (isDOMElement) {
       for (const key in props) {
         if (key === 'className') continue
-        if (ignoreAttrs && ignoreAttrs[key]) {
-          continue
-        }
-        if (conditionalStyles && conditionalStyles[key]) {
-          continue
-        }
+        if (ignoreAttrs && ignoreAttrs[key]) continue
+        if (conditionalStyles && conditionalStyles[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
-        if (key === 'size' && typeof props[key] !== 'string') {
-          continue
-        }
+        if (key === 'size' && typeof props[key] !== 'string') continue
         if (isDOMElement) {
           if (validProp(key)) {
             finalProps[key] = props[key]
@@ -210,10 +231,17 @@ export function gloss<Props = any, ThemeProps = Props>(
     } else {
       for (const key in props) {
         if (key === 'className') continue
-        if (conditionalStyles && conditionalStyles[key]) {
-          continue
-        }
+        if (conditionalStyles && conditionalStyles[key]) continue
         finalProps[key] = props[key]
+      }
+    }
+
+    // helper for props
+    const getP = getExtraProps || parentGetExtraProps
+    if (getP) {
+      const next = getP(props)
+      if (next) {
+        Object.assign(finalProps, next)
       }
     }
 
@@ -222,13 +250,15 @@ export function gloss<Props = any, ThemeProps = Props>(
 
   const internal: GlossInternals<Props> = {
     themeFns: null,
+    parent: hasGlossyChild ? target : null,
     getConfig: () => ({
+      getExtraProps,
+      getElement,
       id,
       displayName: ThemedView.displayName || '',
       targetElement,
       styles: { ...Styles.styles },
       conditionalStyles: { ...Styles.conditionalStyles },
-      parent: hasGlossyChild ? target : null,
     }),
   }
 
@@ -240,6 +270,13 @@ export function gloss<Props = any, ThemeProps = Props>(
   }
 
   ThemedView.withConfig = opts => {
+    if (opts.getElement) {
+      getElement = opts.getElement
+    }
+    if (opts.getExtraProps) {
+      getExtraProps = opts.getExtraProps
+    }
+
     // re-create it so it picks up displayName
     if (opts.displayName) {
       // this one is picked up by Profiling
@@ -374,7 +411,7 @@ function addDynamicStyles(
         const curId = isNumericString(info.namespace) ? id : info.namespace
         dynStyles[curId] = dynStyles[curId] || {}
         mergeStyles(curId, dynStyles, info.rules)
-      } else {
+      } else if (className) {
         classNames.add(className)
       }
     }
@@ -486,15 +523,18 @@ function mergeStyles(
 
 // happens once at initial gloss() call, so not as perf intense
 // get all parent styles and merge them into a big object
-function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | null) {
+function getAllStyles(
+  baseId: string,
+  config: GlossInternalConfig | null,
+  rawStyles: CSSPropertySet | null,
+) {
   const styles = {
     [baseId]: {},
   }
   let conditionalStyles = mergeStyles(baseId, styles, rawStyles)
   // merge parent styles
-  if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const parentConfig: GlossInternalConfig = target.internal.getConfig()
-    const parentPropStyles = parentConfig.conditionalStyles
+  if (config) {
+    const parentPropStyles = config.conditionalStyles
     if (parentPropStyles) {
       for (const key in parentPropStyles) {
         conditionalStyles = conditionalStyles || {}
@@ -505,8 +545,8 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
         }
       }
     }
-    const parentStyles = parentConfig.styles
-    const parentId = parentConfig.id
+    const parentStyles = config.styles
+    const parentId = config.id
     const moveToMyId = parentStyles[parentId]
     delete parentStyles[parentId]
     parentStyles[baseId] = moveToMyId
@@ -523,6 +563,21 @@ function getAllStyles(baseId: string, target: any, rawStyles: CSSPropertySet | n
   }
 }
 
+function getParentConfig(
+  viewOG: GlossView<any>,
+): [GlossGetElement | null, GlossGetExtraProps | null] {
+  let getElement: GlossGetElement | null = null
+  let getExtraProps: GlossGetExtraProps | null = null
+  let cur = viewOG
+  while (cur) {
+    const conf = cur.internal.getConfig()
+    getElement = getElement || conf.getElement
+    getExtraProps = getExtraProps || conf.getExtraProps
+    cur = cur.internal.parent
+  }
+  return [getElement, getExtraProps]
+}
+
 // compile theme from parents
 function compileTheme(viewOG: GlossView<any>) {
   let cur = viewOG
@@ -534,7 +589,7 @@ function compileTheme(viewOG: GlossView<any>) {
     if (conf.themeFns) {
       all.push(conf.themeFns)
     }
-    cur = conf.getConfig().parent
+    cur = conf.parent
   }
 
   // reverse, then flatten, so its a flat list of themes from least to most important

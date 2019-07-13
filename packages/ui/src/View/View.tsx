@@ -1,8 +1,8 @@
 import { GlossPropertySet } from '@o/css'
-import { AnimatedInterpolation, AnimatedValue, withAnimated } from '@react-spring/animated'
+import { AnimatedInterpolation, AnimatedValue } from '@react-spring/animated'
 import { AlphaColorProps, Base, CSSPropertySetStrict, gloss, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
 import React, { forwardRef } from 'react'
-import { SpringValue } from 'react-spring'
+import { animated, SpringValue } from 'react-spring'
 
 import { Sizes } from '../Space'
 import { ElevatableProps, getElevation } from './elevation'
@@ -70,29 +70,43 @@ type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
 
-export const View = forwardRef((props: ViewProps, ref) => {
-  const Component = props.animated ? ViewBaseAnimated : ViewBase
-  const style = props.animated ? getAnimatedStyleProp(props) : props.style
-  if (props.style && props.style.debug) {
-    debugger
-  }
-  return (
-    <Component
-      ref={ref}
-      {...props}
-      style={style}
-      data-is={props['data-is'] || (props.animated ? `ViewAnimated` : `View`)}
-    />
-  )
-})
+// export const View = ViewBase
+// export const View = forwardRef((props: ViewProps, ref) => {
+//   const Component = props.animated ? ViewBaseAnimated : ViewBase
+//   const style = props.animated ? getAnimatedStyleProp(props) : props.style
+//   if (props.style && props.style.debug) {
+//     debugger
+//   }
+//   return (
+//     <Component
+//       ref={ref}
+//       {...props}
+//       style={style}
+//       data-is={props['data-is'] || (props.animated ? `ViewAnimated` : `View`)}
+//     />
+//   )
+// })
 
 // regular view
-const ViewBase = gloss<ViewProps, ViewThemeProps>(Base, {
+export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',
-}).theme(getMargin, usePadding, getElevation)
-
-// animated view
-const ViewBaseAnimated = withAnimated(ViewBase)
+})
+  .theme(getMargin, usePadding, getElevation)
+  .withConfig({
+    getExtraProps(props) {
+      if (!props.animated) {
+        return null
+      }
+      const animatedStyles = getAnimatedStyleProp(props)
+      if (!props.style) {
+        return { style: animatedStyles }
+      }
+      return { style: { ...props.style, ...animatedStyles } }
+    },
+    getElement(props) {
+      return props.animated ? animated[props.tagName] || animated.div : props.tagName || 'div'
+    },
+  })
 
 export type MarginProps = {
   margin?: Sizes | SizesObject | GlossPropertySet['margin']

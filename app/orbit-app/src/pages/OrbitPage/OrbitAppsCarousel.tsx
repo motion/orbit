@@ -111,9 +111,7 @@ class OrbitAppsCarouselStore {
   // listen for pane movement
   // doing it with nextPane allows us to load in apps later
   scrollToIndex = (index: number, shouldZoomIn?: boolean) => {
-    if (shouldZoomIn) {
-      this.zoomIntoNextApp = true
-    }
+    this.zoomIntoNextApp = !!shouldZoomIn
     if (index !== this.nextFocusedIndex) {
       this.nextFocusedIndex = index
     }
@@ -262,27 +260,29 @@ class OrbitAppsCarouselStore {
     })
   }
 
-  outScaler = numberScaler(0, 1, 0.55, 0.7)
+  outScaler = numberScaler(0, 1, 0.5, 0.65)
   inScaler = numberScaler(0, 1, 0.9, 1)
   boundRotation = numberBounder(-10, 10)
   boundOpacity = numberBounder(0, 1)
 
   getSpring = (i: number) => {
+    const { zoomedIn } = this
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
-    const scaler = this.zoomedIn ? this.inScaler : this.outScaler
+    const scaler = zoomedIn ? this.inScaler : this.outScaler
     // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
-    const scale = this.zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
+    const scale = zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
     const offset = this.state.index - i
-    const rotation = (this.zoomedIn ? offset : offset - 0.5) * 10
+    const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
     const opacity = this.boundOpacity(1 - (this.state.index - i))
     const next = {
-      x: this.zoomedIn ? 0 : '13%',
+      x: zoomedIn ? 0 : 18,
       y: 0,
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
       opacity,
     }
+    console.log('ok', zoomedIn, next)
     return next
   }
 
@@ -397,7 +397,7 @@ export const OrbitAppsCarousel = memo(() => {
         scrollLeft={scrollSpring.x}
         animated
         ref={appsCarouselStore.setRowNode}
-        perspective="600px"
+        perspective="1000px"
         {...bind()}
       >
         {apps.map((app, index) => (
@@ -504,7 +504,7 @@ const OrbitAppCard = memo(
           animated
           transform={to(
             Object.keys(spring).map(k => spring[k]),
-            (x, y, scale, ry) => `translate3d(${x},${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
+            (x, y, scale, ry) => `translate3d(${x}%,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
           )}
           opacity={spring.opacity}
           onMouseDown={() => {

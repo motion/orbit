@@ -116,14 +116,23 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
 )
 
-const showHomePage: Action<{ avoidScroll?: boolean } | undefined> = (om, item) => {
+const showHomePage: Action<{ avoidScroll?: boolean; avoidZoom?: boolean } | undefined> = (
+  om,
+  item,
+) => {
   const firstApp = om.state.apps.activeApps.find(
     x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
   )
   if (firstApp) {
-    om.actions.router.showPage(getItem('app', { id: firstApp.identifier! }))
-    om.state.router.appId = `${firstApp.id}`
-    om.effects.router.setPane(om.state.router.appId, (item && item.avoidScroll) || false)
+    const id = `${firstApp.id}`
+    if (item && item.avoidZoom) {
+      om.actions.router.showPage(getItem('home'))
+      om.effects.router.setPane(id, item)
+    } else {
+      om.actions.router.showPage(getItem('app', { id: firstApp.identifier! }))
+      om.state.router.appId = id
+      om.effects.router.setPane(id, item)
+    }
   } else {
     console.log('no home app found')
   }
@@ -178,7 +187,7 @@ const showAppPage: Action<{
   }
   om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = id
-  om.effects.router.setPane(id, params.replace ? true : false)
+  om.effects.router.setPane(id, { avoidScroll: params.replace ? true : false })
 }
 
 const closeDrawer: Action = om => {
@@ -280,13 +289,14 @@ export const effects = {
     page.replace(url)
   },
 
-  setPane(appId: string, avoidScroll?: boolean) {
+  setPane(appId: string, opts: { avoidScroll?: boolean; avoidZoom?: boolean } = {}) {
     paneManagerStore.setPane(appId)
     // scroll to pane if its in carousel
-    if (!avoidScroll) {
+    if (!opts.avoidScroll) {
       const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)
       if (index >= 0) {
-        appsCarouselStore.scrollToIndex(index, true)
+        console.log('avoid zoom>', opts)
+        appsCarouselStore.scrollToIndex(index, !opts.avoidZoom)
       }
     }
     // focus input after page navigate

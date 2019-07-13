@@ -96,7 +96,7 @@ export default memo(function MainShortcutHandler(props: {
         }
         // go to first app
         if (appsCarouselStore.focusedIndex > 0) {
-          appsCarouselStore.setFocused(0, true)
+          actions.router.showHomePage({ avoidZoom: true })
           return
         }
         // clear orbit query

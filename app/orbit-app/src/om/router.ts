@@ -264,6 +264,9 @@ export const actions = {
 
 export const effects = {
   watchPage() {
+    if (window.location.pathname === '/') {
+      ignoreNextRoute = true
+    }
     page.start()
   },
 

@@ -273,7 +273,11 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       {/* unset the theme for the separator */}
       {!!separator && (
         <Theme name={activeThemeName}>
-          <ListSeparator {...separatorProps}>{separator}</ListSeparator>
+          {isValidElement(separator) ? (
+            separator
+          ) : (
+            <ListSeparator {...separatorProps}>{}</ListSeparator>
+          )}
         </Theme>
       )}
       <SizedSurface

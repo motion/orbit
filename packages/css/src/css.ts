@@ -17,16 +17,15 @@ export {
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
 export { ThemeObject, ThemeSet } from './ThemeObject'
-export { Transform } from './types'
 
-export type CSSOptions = {
+export type CSSConfig = {
   errorMessage?: string
   snakeCase?: boolean
 }
 
 const emptyObject = Object.freeze({})
 
-export function cssString(styles: Object, opts?: CSSOptions): string {
+export function cssString(styles: Object, opts?: CSSConfig): string {
   if (!styles) return ''
   const shouldSnake = !opts || opts.snakeCase !== false
   let toReturn = ''
@@ -50,7 +49,7 @@ export function cssString(styles: Object, opts?: CSSOptions): string {
   return toReturn
 }
 
-export function css(styles: Object, opts?: CSSOptions): Object {
+export function css(styles: Object, opts?: CSSConfig): Object {
   if (!styles) return emptyObject
   const shouldSnake = !opts || opts.snakeCase !== false
   const toReturn = {}
@@ -71,7 +70,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   return toReturn
 }
 
-function cssValue(key: string, value: any, options?: CSSOptions) {
+function cssValue(key: string, value: any, options?: CSSConfig) {
   let valueType = typeof value
   // get real values
   if (value === false) {

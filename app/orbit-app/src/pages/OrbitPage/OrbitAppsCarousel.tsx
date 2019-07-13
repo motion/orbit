@@ -11,6 +11,7 @@ import { om, useOm } from '../../om/om'
 import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
 import { appsDrawerStore } from './OrbitAppsDrawer'
+import { OrbitSearchResults } from './OrbitSearchResults'
 
 class OrbitAppsCarouselStore {
   props: {
@@ -261,22 +262,28 @@ class OrbitAppsCarouselStore {
     })
   }
 
-  outScaler = numberScaler(0, 1, 0.8, 0.9)
+  outScaler = numberScaler(0, 1, 0.55, 0.7)
   inScaler = numberScaler(0, 1, 0.9, 1)
   boundRotation = numberBounder(-10, 10)
+  boundOpacity = numberBounder(0, 1)
 
   getSpring = (i: number) => {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
     const scaler = this.zoomedIn ? this.inScaler : this.outScaler
     // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
     const scale = this.zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
-    const ry = this.boundRotation((this.state.index - i) * 10)
-    return {
-      x: 0,
+    const offset = this.state.index - i
+    const rotation = (this.zoomedIn ? offset : offset - 0.5) * 10
+    const ry = this.boundRotation(rotation)
+    const opacity = this.boundOpacity(1 - (this.state.index - i))
+    const next = {
+      x: this.zoomedIn ? 0 : '13%',
       y: 0,
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
+      opacity,
     }
+    return next
   }
 
   lastDragAt = Date.now()
@@ -373,6 +380,7 @@ export const OrbitAppsCarousel = memo(() => {
 
   return (
     <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
+      <OrbitSearchResults />
       <Row
         flex={1}
         alignItems="center"
@@ -496,8 +504,9 @@ const OrbitAppCard = memo(
           animated
           transform={to(
             Object.keys(spring).map(k => spring[k]),
-            (x, y, scale, ry) => `translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
+            (x, y, scale, ry) => `translate3d(${x},${y}px,0) scale(${scale}) rotateY(${ry}deg)`,
           )}
+          opacity={spring.opacity}
           onMouseDown={() => {
             if (appsCarouselStore.zoomedIn) {
               return

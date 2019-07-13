@@ -1,3 +1,9 @@
+small:
+
+- gloss could probably memo pretty well, should make adjustments using the benchmarks
+  - custom memo function:
+    - if children set, dont memo at all
+    - do a few smart props that we know are usually POJOs
 
 ---
 

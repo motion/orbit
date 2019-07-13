@@ -1,7 +1,82 @@
-import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
-import { fuzzyFilter, ListItemProps } from '@o/ui'
+import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useSearchState, useStore, useStoresSimple } from '@o/kit'
+import { FullScreen, FullScreenProps, fuzzyFilter, List, ListItemProps, SubTitle, View } from '@o/ui'
 import { uniq } from 'lodash'
-import React from 'react'
+import React, { memo, useMemo } from 'react'
+
+import { useAppsCarousel } from './OrbitAppsCarousel'
+
+export const OrbitSearchResults = memo(() => {
+  const carousel = useAppsCarousel()
+  const searchStore = useStore(SearchStore)
+  useSearchState({
+    onChange: state => {
+      console.log('got state', state)
+      searchStore.setSearchState(state)
+    },
+  })
+  const carouselProps: FullScreenProps = carousel.zoomedIn
+    ? {
+        transform: {
+          rotateY: '-10deg',
+          scale: 0.7,
+          x: -100,
+        },
+      }
+    : {
+        transform: {
+          rotateY: '7deg',
+          scale: 0.9,
+          x: 0,
+        },
+      }
+  return (
+    <View
+      perspective="1000px"
+      position="absolute"
+      top="-10%"
+      bottom="-10%"
+      left={0}
+      zIndex={1000}
+      width="44%"
+      transition="all ease 400ms"
+      background="linear-gradient(to right, #000 15%, transparent)"
+      opacity={carousel.zoomedIn ? 0 : 1}
+    >
+      <FullScreen
+        transition="all ease 400ms"
+        transformOrigin="left center"
+        paddingTop="5%"
+        paddingBottom="5%"
+        paddingRight="10%"
+        {...carouselProps}
+      >
+        <List
+          alwaysSelected
+          shareable
+          selectable
+          query={searchStore.searchedQuery}
+          itemProps={useMemo(
+            () => ({
+              iconBefore: true,
+              iconSize: 42,
+            }),
+            [],
+          )}
+          items={searchStore.results}
+          Separator={ListSeparatorLarge}
+        />
+      </FullScreen>
+    </View>
+  )
+})
+
+function ListSeparatorLarge(props: { children: string }) {
+  return (
+    <View padding={[38, 8, 16]}>
+      <SubTitle>{props.children}</SubTitle>
+    </View>
+  )
+}
 
 type SearchResults = {
   results: ListItemProps[]

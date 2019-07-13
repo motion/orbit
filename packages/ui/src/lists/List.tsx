@@ -102,6 +102,7 @@ export const List = memo((allProps: ListProps) => {
     droppable,
     onDrop,
     onDelete,
+    Separator,
     ...restProps
   } = props
   const shareStore = useShareStore()
@@ -208,6 +209,7 @@ export const List = memo((allProps: ListProps) => {
           <VirtualList
             items={filtered.results}
             ItemView={ListItem}
+            Separator={Separator}
             {...restProps}
             getItemProps={getItemPropsInner}
             onOpen={onOpenInner}

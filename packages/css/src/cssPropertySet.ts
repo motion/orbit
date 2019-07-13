@@ -535,10 +535,19 @@ type transformSyntax = {
   y?: number | string
   z?: number | string
   rotate?: string
+  rotateX?: string
+  rotateY?: string
+  rotateZ?: string
+  rotate3d?: string
   scale?: number | string
   scaleX?: number | string
   scaleY?: number | string
   scaleZ?: number | string
+  skew?: number | string
+  skewX?: number | string
+  skewY?: number | string
+  matrix?: string
+  matrix3d?: string
 }
 export type transform = 'none' | string | transformSyntax
 export type transformBox = 'border-box' | 'fill-box' | 'view-box'

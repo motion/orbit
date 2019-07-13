@@ -42,7 +42,7 @@ function goToInitialApp(om: IContext<Config>) {
     om.actions.router.showAppPage({ id: 'onboard' })
     return
   }
-  if (window.location.pathname === '/') {
-    om.actions.router.showHomePage({ avoidScroll: true })
-  }
+  // if (window.location.pathname === '/') {
+  //   om.actions.router.showHomePage({ avoidScroll: true })
+  // }
 }

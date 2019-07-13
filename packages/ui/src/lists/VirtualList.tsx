@@ -1,7 +1,7 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { idFn, selectDefined } from '@o/utils'
 import memoize from 'memoize-one'
-import React, { forwardRef, memo, RefObject, useCallback, useRef } from 'react'
+import React, { forwardRef, FunctionComponent, memo, RefObject, useCallback, useRef } from 'react'
 
 import { defaultSortPressDelay } from '../constants'
 import { Config } from '../helpers/configureUI'
@@ -38,6 +38,9 @@ export type VirtualListProps<A = any> = SelectableProps &
 
     /** Dynamically add extra props to each item */
     getItemProps?: (item: ListItemProps, index: number, items: A[]) => ListItemProps | null | false
+
+    /** Custom separator element */
+    Separator?: FunctionComponent<{ children: string }>
   }
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
@@ -76,7 +79,7 @@ const ListRow = memo(
         onClick={useCallback(e => onSelect(index, e), [])}
         onDoubleClick={useCallback(e => onOpen(index, e), [])}
         disabled={!sortable}
-        {...getSeparatorProps(items, item, index)}
+        {...getSeparatorProps(listProps.Separator, items, item, index)}
         // base props
         {...itemProps}
         {...item}
@@ -184,12 +187,18 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = (items: any[], item: any, index: number) => {
+const getSeparatorProps = (
+  SeparatorElement: VirtualListProps['SeparatorElement'],
+  items: any[],
+  item: any,
+  index: number,
+) => {
   if (!item || !item.groupName) {
     return null
   }
   if (index === 0 || item.groupName !== items[index - 1].groupName) {
-    return { separator: `${item.groupName}` }
+    const name = `${item.groupName}`
+    return { separator: SeparatorElement ? <SeparatorElement>{name}</SeparatorElement> : name }
   }
   return null
 }

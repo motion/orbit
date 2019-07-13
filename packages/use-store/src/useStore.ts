@@ -1,6 +1,6 @@
 import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
-import { _interceptReads, observable, observe } from 'mobx'
+import { _interceptReads, observable, observe, transaction } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { config } from './configure'
@@ -225,6 +225,7 @@ function useReactiveStore<A extends any>(
     const next = setupReactiveStore(Store, props)
     if (next.hooks) {
       dispose = () => {
+        console.log('dispsing hoooks')
         next.hooks!.forEach(hook => hook.__dispose && hook.__dispose())
       }
       next.hooks.forEach(hook => {
@@ -241,20 +242,20 @@ function useReactiveStore<A extends any>(
   } else {
     // re-run hooks
     const hooks = state.current.hooks
-    if (hooks) {
-      for (const hook of hooks) {
-        // update reactive hook by re-rendering when
-        // hook.__onReaction(forceUpdate)
-        let next = hook.__rerunHooks()
-        if (next) {
-          for (const key in next) {
-            if (key[0] === '_' && key[1] === '_') continue
-            if (next[key] !== hooks[key]) {
-              hooks[key] = next[key]
+    if (hooks && hooks.length) {
+      transaction(function updateHooks() {
+        for (const hook of hooks) {
+          let next = hook.__rerunHooks()
+          if (next) {
+            for (const key in next) {
+              if (key[0] === '_' && key[1] === '_') continue
+              if (next[key] !== hooks[key]) {
+                hook[key] = next[key]
+              }
             }
           }
         }
-      }
+      })
     }
   }
 

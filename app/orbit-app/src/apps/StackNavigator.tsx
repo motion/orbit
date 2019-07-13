@@ -62,6 +62,7 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   useReaction(
     () => stackNav && stackNav.currentItem,
     stackItem => {
+      console.log('calling onNavigate stackItem', stackItem)
       if (props.onNavigate) {
         props.onNavigate(stackItem)
       }
@@ -102,10 +103,8 @@ type StackNavState = {
 }
 
 export class StackNavigatorStore {
-  props: StackNavProps = {
-    id: '',
-    items: {},
-  }
+  // @ts-ignore
+  props: StackNavProps
 
   next = null
 
@@ -135,32 +134,37 @@ export class StackNavigatorStore {
 
   updateDefaultItem(defaultItem: StackItem) {
     if (!this.stack.length && defaultItem) {
-      this.navigate(defaultItem)
+      this.navigateTo(defaultItem)
     }
   }
 
-  navigate(item: StackItem, forcePush = false) {
-    const props = filterSimpleValues(item.props)
-    // dont update stack if already on same item, unless explicitly asking
-    this.hooks.setState(next => {
-      if (!next || !next.stack) {
-        return
-      }
-      if (next.stack.length) {
-        const prev = last(next.stack)
-        if (prev && item.id === prev.id && isEqual(props, prev.props)) {
-          if (forcePush === false) {
-            return
-          }
+  private filterItem<A extends StackItem>(item: A): A {
+    return {
+      ...item,
+      props: filterSimpleValues(item.props),
+    }
+  }
+
+  // push item on stack
+  // dont update if already on same item, unless forcePush
+  navigateTo(
+    item: StackItem,
+    { forcePush = false, replaceAll = false }: { forcePush?: boolean; replaceAll?: boolean } = {},
+  ) {
+    this.hooks.setState(current => {
+      if (!current || !current.stack) return
+      const next = this.filterItem(item)
+      if (!replaceAll && current.stack.length) {
+        const prev = last(current.stack)
+        if (prev && item.id === prev.id && isEqual(next.props, prev.props) && forcePush === false) {
+          return
         }
       }
-      next.stack = [
-        ...next.stack,
-        {
-          id: item.id,
-          props,
-        },
-      ]
+      if (replaceAll) {
+        current.stack = [item]
+      } else {
+        current.stack.push(next)
+      }
     })
   }
 

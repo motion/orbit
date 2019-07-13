@@ -393,7 +393,10 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               chromeless
               circular
               icon="cross"
-              opacity={0.65}
+              opacity={0.35}
+              hoverStyle={{
+                opacity: 1,
+              }}
               onMouseDown={e => {
                 e.stopPropagation()
               }}

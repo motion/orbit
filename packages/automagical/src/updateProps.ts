@@ -11,7 +11,7 @@ export function updateProps(store: any, nextProps: Object) {
   const curPropKeys = Object.keys(store.props)
 
   // changes
-  transaction(() => {
+  transaction(function updateProps() {
     for (const prop of nextPropsKeys) {
       const a = store.props[prop]
       const b = nextProps[prop]

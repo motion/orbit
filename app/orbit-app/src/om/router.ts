@@ -116,14 +116,14 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
 )
 
-const showHomePage: Action = om => {
+const showHomePage: Action<{ avoidScroll?: boolean } | undefined> = (om, item) => {
   const firstApp = om.state.apps.activeApps.find(
     x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
   )
   if (firstApp) {
     om.actions.router.showPage(getItem('app', { id: firstApp.identifier! }))
     om.state.router.appId = `${firstApp.id}`
-    om.effects.router.setPane(om.state.router.appId)
+    om.effects.router.setPane(om.state.router.appId, (item && item.avoidScroll) || false)
   } else {
     console.log('no home app found')
   }

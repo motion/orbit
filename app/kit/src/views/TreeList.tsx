@@ -1,8 +1,8 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, TreeItem, useDeepEqualState, useGet } from '@o/ui'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Button, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
+import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
@@ -278,6 +278,14 @@ const findAttribute = (item: TreeItem, key: string) =>
   (item.attributes && item.attributes.find(x => x.value === key).value) || ''
 
 export function TreeList(props: TreeListProps) {
+  return (
+    <Suspense fallback={<Loading />}>
+      <TreeListInner {...props} />
+    </Suspense>
+  )
+}
+
+function TreeListInner(props: TreeListProps) {
   const { use, query, onChange, ...rest } = props
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal

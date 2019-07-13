@@ -27,7 +27,6 @@ export const AppNavigator = memo((props: AppNavigatorProps) => {
         console.log('todo', name, props)
       },
       selectItems: next => {
-        console.log('selecting imtes', next)
         setItems(next)
       },
     }),

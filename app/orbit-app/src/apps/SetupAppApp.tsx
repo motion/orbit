@@ -250,7 +250,7 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
           <Button
             alt="action"
             onClick={() => {
-              stackNav.navigate({
+              stackNav.navigateTo({
                 id: 'SetupAppCustom',
               })
             }}

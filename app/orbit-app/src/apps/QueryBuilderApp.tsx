@@ -1,8 +1,8 @@
 import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
@@ -16,26 +16,43 @@ export default createApp({
   app: QueryBuilder,
 })
 
-const treeId = 'query-build'
+const treeId = 'query-builder3'
 
 function QueryBuilder() {
   const om = useOm()
   const dataApps = useActiveDataApps()
   const [items, setItems] = useState<any[]>([])
   const hasItems = !!items.length
-  const id = (items[0] && items[0].id) || -1
+  const curItem = items[0]
+  const id = (curItem && curItem.id) || -1
   const navigator = useCreateStackNavigator({
-    id: `query-builder-nav-${id}`,
+    id: `query-builder-nav-${id}-2`,
     items: {
+      Null: () => null,
       SelectApp: QueryBuilderSelectApp,
       QueryEdit: QueryBuilderQueryEdit,
     },
     defaultItem: {
-      id: 'SelectApp',
+      id: 'Null',
       props: {},
     },
   })
   const treeList = useTreeList(treeId)
+
+  useEffect(() => {
+    if (!navigator.currentItem) return
+    if (curItem && navigator.currentItem.id !== 'QueryEdit') {
+      navigator.navigateTo(
+        {
+          id: 'SelectApp',
+          props: curItem,
+        },
+        {
+          replaceAll: true,
+        },
+      )
+    }
+  }, [curItem, navigator.currentItem])
 
   if (!dataApps.length) {
     return (
@@ -55,7 +72,9 @@ function QueryBuilder() {
       index={<QueryBuilderIndex treeList={treeList} navigator={navigator} setItems={setItems} />}
     >
       {!hasItems && <CenteredText>Add a query</CenteredText>}
-      {hasItems && <QueryBuilderMain key={id} treeList={treeList} navigator={navigator} />}
+      <Suspense fallback={<Loading />}>
+        {hasItems && <QueryBuilderMain key={id} treeList={treeList} navigator={navigator} />}
+      </Suspense>
     </App>
   )
 }
@@ -83,6 +102,8 @@ function QueryBuilderIndex({
         itemProps={{
           editable: true,
           deletable: true,
+          iconBefore: true,
+          iconSize: 28,
         }}
         getItemProps={useCallback(item => {
           const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
@@ -143,6 +164,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState<any[] | null>(null)
+  console.log('props', props)
   return (
     <Section
       padding
@@ -169,7 +191,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
                 return
               }
               // navigate to app definition:
-              props.navigation.navigate({
+              props.navigation.navigateTo({
                 id: 'QueryEdit',
                 props: {
                   title: app.name,

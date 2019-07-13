@@ -43,6 +43,6 @@ function goToInitialApp(om: IContext<Config>) {
     return
   }
   if (window.location.pathname === '/') {
-    om.actions.router.showHomePage()
+    om.actions.router.showHomePage({ avoidScroll: true })
   }
 }

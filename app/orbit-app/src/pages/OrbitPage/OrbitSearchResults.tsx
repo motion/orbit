@@ -1,6 +1,6 @@
-import { AppBit, useSearchState } from '@o/kit'
-import { FullScreen, FullScreenProps, List, ProvideVisibility, SubTitle, Theme, useTheme, View } from '@o/ui'
-import React, { memo, useCallback, useMemo } from 'react'
+import { AppBit, ensure, useReaction, useSearchState } from '@o/kit'
+import { FullScreen, FullScreenProps, List, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import React, { memo, useCallback, useMemo, useRef } from 'react'
 
 import { SearchStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
@@ -11,12 +11,14 @@ export const OrbitSearchResults = memo(() => {
   const appsDrawer = appsDrawerStore.useStore()
   const carousel = useAppsCarousel()
   const searchStore = SearchStore.useStore()!
+  const listRef = useRef<SelectableStore>(null)
+
   useSearchState({
     onChange: state => {
-      console.log('got state', state)
       searchStore.setSearchState(state)
     },
   })
+
   const carouselProps: FullScreenProps = carousel.zoomedIn
     ? {
         transform: {
@@ -47,6 +49,11 @@ export const OrbitSearchResults = memo(() => {
     [theme],
   )
 
+  /**
+   * BEWARE! TWO WAY SYNC AHEAD
+   */
+
+  // sync to carousel from selection
   const handleSelect = useCallback(rows => {
     const item = rows[0]
     if (item && item.extraData && item.extraData.app) {
@@ -57,6 +64,22 @@ export const OrbitSearchResults = memo(() => {
       }
     }
   }, [])
+
+  // sync from carousel to list
+  useReaction(
+    () => appsCarouselStore.apps[appsCarouselStore.focusedIndex],
+    app => {
+      console.log('wut')
+      ensure('app', !!app)
+      const listIndex = searchStore.results.findIndex(
+        x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
+      )
+      console.log('go go', listIndex)
+      if (listRef.current && listIndex > -1) {
+        listRef.current.setActiveIndex(listIndex)
+      }
+    },
+  )
 
   return (
     <ProvideVisibility visible={!carousel.zoomedIn && !appsDrawer.isOpen}>
@@ -81,6 +104,7 @@ export const OrbitSearchResults = memo(() => {
         >
           <Theme theme={highlightTheme}>
             <List
+              ref={listRef}
               alwaysSelected
               shareable
               selectable

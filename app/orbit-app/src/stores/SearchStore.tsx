@@ -1,6 +1,8 @@
-import { appToListItem, createStoreContext, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, createStoreContext, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
+
+import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -11,7 +13,6 @@ type SearchResults = {
 class Search {
   hooks = useHooks(() => ({
     stores: useStoresSimple(),
-    apps: useActiveClientApps(),
     app: useAppBit()[0],
     space: useActiveSpace()[0],
   }))
@@ -20,6 +21,10 @@ class Search {
 
   get stores() {
     return this.hooks.stores
+  }
+
+  get apps() {
+    return appsCarouselStore.apps
   }
 
   setSearchState(next: SearchState) {
@@ -61,7 +66,7 @@ class Search {
   hasQueryVal = react(this.hasQuery, _ => _)
 
   get allApps() {
-    return this.hooks.apps.map(appToListItem)
+    return this.apps.map(appToListItem)
   }
 
   getApps(query: string, all = false): ListItemProps[] {
@@ -85,7 +90,7 @@ class Search {
       this.hooks.space.id,
       this.searchedQuery,
       this.hooks.app,
-      this.hooks.apps.map(x => x.id).join(' '),
+      this.apps.map(x => x.id).join(' '),
       !!this.searchState,
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {

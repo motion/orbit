@@ -109,17 +109,9 @@ export default memo(function MainShortcutHandler(props: {
         }
       },
       UP: () => {
-        if (!appsDrawerStore.isOpen && appsCarouselStore.state.zoomedOut) {
-          // handle moving between input/carousel
-          return
-        }
         shortcutStore.emit(Direction.up)
       },
       DOWN: () => {
-        if (!appsDrawerStore.isOpen && appsCarouselStore.state.zoomedOut) {
-          // handle moving between input/carousel
-          return
-        }
         shortcutStore.emit(Direction.down)
       },
       LEFT: () => {

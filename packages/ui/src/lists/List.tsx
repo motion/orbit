@@ -138,8 +138,10 @@ export const List = memo((allProps: ListProps) => {
   })
 
   useEffect(() => {
+    console.log('mount list', shortcutStore)
     if (!shortcutStore) return
     return shortcutStore.onShortcut(shortcut => {
+      console.log('got shortcut', shortcut, props, getVisibility())
       if (getVisibility() !== true) {
         return
       }

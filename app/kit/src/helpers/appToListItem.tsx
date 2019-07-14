@@ -22,6 +22,7 @@ export const appToListItem = (app: AppBit, index: number): ListItemProps => {
       icon: getAppDefinition(app.identifier) ? getAppDefinition(app.identifier).icon : '',
       title: `Open ${app.name}`,
       subTitle: 'Command: ⮐',
+      app,
     },
   }
 }

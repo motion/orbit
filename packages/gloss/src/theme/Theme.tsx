@@ -35,6 +35,10 @@ export const Theme = (props: ThemeProps) => {
 
   let next: any = null
 
+  // if (theme && theme['background'] === 'red') {
+  //   debugger
+  // }
+
   if (typeof theme === 'object' && cacheThemes.has(theme)) {
     next = cacheThemes.get(theme) as ThemeContextType
   } else {
@@ -46,16 +50,25 @@ export const Theme = (props: ThemeProps) => {
       previousOriginalTheme = prev.activeTheme._originalTheme || prev.activeTheme
     }
 
-    const nextTheme = Config.preProcessTheme
-      ? Config.preProcessTheme(props, previousOriginalTheme)
-      : prev.activeTheme
+    let nextTheme
 
-    next = cacheThemes.get(nextTheme)
+    if (props.alt || props.subTheme) {
+      nextTheme = Config.preProcessTheme
+        ? Config.preProcessTheme(props, previousOriginalTheme)
+        : prev.activeTheme
+      next = cacheThemes.get(nextTheme)
+    } else {
+      nextTheme = props.theme
+      if (!nextTheme) {
+        return children
+      }
+    }
 
     if (!next) {
       next = createThemeFromObject(props, prev, nextTheme)
       cacheThemes.set(nextTheme, next)
     }
+
     if (nextTheme === prev.activeTheme) {
       return children
     }

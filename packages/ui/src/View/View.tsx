@@ -70,23 +70,6 @@ type ViewThemeProps = ViewBaseProps & GlossPropertySet
 
 export type ViewCSSProps = GlossPropertySet
 
-// export const View = ViewBase
-// export const View = forwardRef((props: ViewProps, ref) => {
-//   const Component = props.animated ? ViewBaseAnimated : ViewBase
-//   const style = props.animated ? getAnimatedStyleProp(props) : props.style
-//   if (props.style && props.style.debug) {
-//     debugger
-//   }
-//   return (
-//     <Component
-//       ref={ref}
-//       {...props}
-//       style={style}
-//       data-is={props['data-is'] || (props.animated ? `ViewAnimated` : `View`)}
-//     />
-//   )
-// })
-
 // regular view
 export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   display: 'flex',

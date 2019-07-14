@@ -279,7 +279,7 @@ class OrbitAppsCarouselStore {
     if (zoomedIn) {
       //
     } else {
-      x = offset > 0 ? offset * 1 : 18
+      x = offset > 0 ? 0 : 18
     }
     const next = {
       x,

@@ -200,7 +200,6 @@ export function gloss<Props = any, ThemeProps = Props>(
     if (getEl) {
       element = getEl(props)
     }
-
     const isDOMElement = typeof element === 'string'
 
     // set up final props with filtering for various attributes

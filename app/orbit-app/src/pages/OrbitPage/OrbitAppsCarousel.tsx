@@ -260,29 +260,34 @@ class OrbitAppsCarouselStore {
     })
   }
 
-  outScaler = numberScaler(0, 1, 0.5, 0.65)
+  outScaler = numberScaler(0, 1, 0.6, 0.65)
   inScaler = numberScaler(0, 1, 0.9, 1)
   boundRotation = numberBounder(-10, 10)
   boundOpacity = numberBounder(0, 1)
 
   getSpring = (i: number) => {
     const { zoomedIn } = this
-    const importance = Math.min(1, Math.max(0, 1 - Math.abs(this.state.index - i)))
+    const offset = this.state.index - i
+    const importance = Math.min(1, Math.max(0, 1 - Math.abs(offset)))
     const scaler = zoomedIn ? this.inScaler : this.outScaler
     // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
-    const scale = zoomedIn && importance !== 1 ? 0.25 : scaler(importance)
-    const offset = this.state.index - i
+    const scale = zoomedIn && importance !== 1 ? 0.5 : scaler(importance)
     const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
-    const opacity = this.boundOpacity(1 - (this.state.index - i))
+    const opacity = this.boundOpacity(1 - offset)
+    let x = 0
+    if (zoomedIn) {
+      //
+    } else {
+      x = offset > 0 ? offset * 1 : 18
+    }
     const next = {
-      x: zoomedIn ? 0 : 18,
+      x,
       y: 0,
       scale: scale * (this.state.isDragging ? 0.95 : 1),
       ry,
       opacity,
     }
-    console.log('ok', zoomedIn, next)
     return next
   }
 
@@ -318,6 +323,8 @@ class OrbitAppsCarouselStore {
   }
 }
 
+const stackMarginLessPct = 0.25
+
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore
 window['appsCarousel'] = appsCarouselStore
@@ -343,16 +350,18 @@ export const OrbitAppsCarousel = memo(() => {
     onStart: appsCarouselStore.onStartZoom,
   }))
 
+  const rowWidth = rowSize.width ? rowSize.width * (1 - stackMarginLessPct) : 0
+
   useEffect(() => {
-    if (rowSize.width) {
+    if (rowWidth) {
       appsCarouselStore.setProps({
         apps,
         setCarouselSprings,
         setScrollSpring,
-        rowWidth: rowSize.width,
+        rowWidth,
       })
     }
-  }, [apps, setScrollSpring, setCarouselSprings, rowSize])
+  }, [apps, setScrollSpring, setCarouselSprings, rowWidth])
 
   const bind = useGesture({
     onDrag: appsCarouselStore.onDrag,
@@ -390,7 +399,7 @@ export const OrbitAppsCarousel = memo(() => {
         onWheel={() => {
           stopScrollSpring()
           if (appsCarouselStore.state.zoomedOut) {
-            appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowSize.width)
+            appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowWidth)
           }
           appsCarouselStore.finishWheel()
         }}
@@ -499,7 +508,7 @@ const OrbitAppCard = memo(
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     return (
-      <View zIndex={isFocused ? 2 : 1}>
+      <View zIndex={1000 - index} marginRight={`-${stackMarginLessPct * 100}%`}>
         <View
           animated
           transform={to(

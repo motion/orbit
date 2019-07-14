@@ -24,8 +24,8 @@ export const OrbitSearchResults = memo(() => {
       }
     : {
         transform: {
-          rotateY: '7deg',
-          scale: 0.9,
+          rotateY: '5deg',
+          scale: 1,
           x: 0,
         },
       }
@@ -45,8 +45,8 @@ export const OrbitSearchResults = memo(() => {
       <FullScreen
         transition="all ease 400ms"
         transformOrigin="left center"
-        paddingTop="5%"
-        paddingBottom="5%"
+        paddingTop="10%"
+        paddingBottom="10%"
         paddingRight="10%"
         {...carouselProps}
       >

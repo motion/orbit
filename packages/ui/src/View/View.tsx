@@ -1,7 +1,7 @@
 import { GlossPropertySet } from '@o/css'
 import { AnimatedInterpolation, AnimatedValue } from '@react-spring/animated'
 import { AlphaColorProps, Base, CSSPropertySetStrict, gloss, GlossProps, PseudoStyleProps, TextSizeProps } from 'gloss'
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { animated, SpringValue } from 'react-spring'
 
 import { Sizes } from '../Space'
@@ -76,16 +76,12 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
 })
   .theme(getMargin, usePadding, getElevation)
   .withConfig({
-    getExtraProps(props) {
-      if (!props.animated) {
-        return null
-      }
-      const animatedStyles = getAnimatedStyleProp(props)
-      if (!props.style) {
-        return { style: animatedStyles }
-      }
-      return { style: { ...props.style, ...animatedStyles } }
+    modifyProps(curProps, nextProps) {
+      if (!curProps.animated) return
+      const animatedStyles = getAnimatedStyleProp(curProps)
+      nextProps.style = { ...curProps.style, ...animatedStyles }
     },
+    isDOMElement: true,
     getElement(props) {
       return props.animated ? animated[props.tagName] || animated.div : props.tagName || 'div'
     },

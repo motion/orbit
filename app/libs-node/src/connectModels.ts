@@ -143,7 +143,7 @@ function buildOptions(props: ConnectModelsProps): ConnectionOptions {
     migrations: props.migrations || [],
     // location: 'default',
     entities: props.models,
-    logging: process.env.DEBUG ? true : ['error'],
+    logging: +process.env.LOG_LEVEL! > 1 ? true : ['error'],
     logger: 'simple-console',
     synchronize: true,
     migrationsRun: true,

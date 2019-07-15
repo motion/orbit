@@ -57,14 +57,20 @@ export const OrbitSearchResults = memo(() => {
   /**
    * BEWARE! TWO WAY SYNC AHEAD
    */
+  const ignoreNextSelect = useRef(false)
 
   // sync to carousel from selection
   const handleSelect = useCallback(rows => {
+    if (ignoreNextSelect.current) {
+      ignoreNextSelect.current = false
+      return
+    }
     const item = rows[0]
     if (item && item.extraData && item.extraData.app) {
       const app: AppBit = item.extraData.app
       const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
       if (carouselIndex !== -1) {
+        console.log('handle select go to', carouselIndex)
         appsCarouselStore.animateAndScrollTo(carouselIndex)
       }
     }
@@ -74,14 +80,16 @@ export const OrbitSearchResults = memo(() => {
   useReaction(
     () => appsCarouselStore.apps[appsCarouselStore.focusedIndex],
     app => {
-      console.log('wut')
       ensure('app', !!app)
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
       )
       console.log('go go', listIndex)
       if (listRef.current && listIndex > -1) {
-        listRef.current.setActiveIndex(listIndex)
+        if (listRef.current.activeIndex !== listIndex) {
+          ignoreNextSelect.current = true
+          listRef.current.setActiveIndex(listIndex)
+        }
       }
     },
   )

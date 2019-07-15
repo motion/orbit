@@ -68,19 +68,18 @@ export function sortPanes(space: Space, apps: AppBit[]) {
       // keep current sort, remove deleted
       ...space.paneSort!.filter(id => appDict[id]),
       // add new
-      ...apps.filter(x => x.tabDisplay !== 'hidden').map(x => x.id!),
+      ...sortBy(apps, x => `${x.id}`)
+        .filter(x => x.tabDisplay !== 'hidden')
+        .map(x => x.id!),
     ]),
   ]
 
-  // ensure:
-  //  1. editable at front
-  //  2. pinned after that
+  //  1. use tabdisplay to ensure they are in right order
   //  3. stable sort after that
   next = sortBy(next, id => {
     const a = appDict[id!]
-    const index = next.indexOf(id)
-    const sortKey = `${tabDisplaySort[a.tabDisplay!]}${index === -1 ? 999999 : index}${a.id}`
-    return sortKey
+    const index = `${next.indexOf(id)}`.padStart(20, '0')
+    return `${tabDisplaySort[a.tabDisplay!]}${index}${a.id}`
   })
 
   return next

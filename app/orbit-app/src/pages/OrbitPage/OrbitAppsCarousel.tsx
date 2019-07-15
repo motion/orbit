@@ -224,6 +224,7 @@ class OrbitAppsCarouselStore {
 
   animateAndScrollTo = async (index: number) => {
     if (!this.rowNode) return
+    if (this.state.index === index) return
     if (Math.round(index) !== this.focusedIndex) {
       this.setFocused(index)
     }

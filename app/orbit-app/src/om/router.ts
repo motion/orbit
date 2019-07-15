@@ -154,7 +154,8 @@ const showAppPage: Action<ShowAppPageProps> = (om, params) => {
   )
 
   if (!app) {
-    throw new Error(`No app found ${params.id}`)
+    console.error(`No app found ${params.id}`)
+    return
   }
 
   const id = isNumString(params.id || 'not') ? params.id! : app ? `${app.id}` : ''

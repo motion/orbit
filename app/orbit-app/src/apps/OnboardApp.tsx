@@ -1,6 +1,22 @@
 import { command, createApp, createStoreContext, save, useActiveSpace } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, Space, SpaceModel } from '@o/models'
-import { Button, Card, Col, Flow, FlowProvide, gloss, Icon, Paragraph, Scale, Text, Title, Toolbar, useCreateFlow, useFlow, View } from '@o/ui'
+import {
+  Button,
+  Card,
+  Col,
+  Flow,
+  FlowProvide,
+  gloss,
+  Icon,
+  Paragraph,
+  Scale,
+  Text,
+  Title,
+  Toolbar,
+  useCreateFlow,
+  useFlow,
+  View,
+} from '@o/ui'
 import React, { useEffect } from 'react'
 
 import { om } from '../om/om'
@@ -137,10 +153,7 @@ function OnboardStepProxy() {
     <Centered space="xl" padding="xxl" scrollable="y" flex={1}>
       <Text size="xxl">Welcome to Orbit</Text>
       <IntroPara alpha={0.5}>Orbit is a private app platform.</IntroPara>
-      <IntroPara>
-        Orbit lowers the bar to building apps in many ways. It makes it easy to build them, easy to
-        plug in data, and easy to then collaborate on them with your team.
-      </IntroPara>
+      <IntroPara>Make apps, manage your team information, all in one easy to use place.</IntroPara>
       <IntroPara>
         Importantly, Orbit is <b>fully open source and runs entirely privately on your desktop</b>,
         not in the cloud. To do this, it runs a private local server that acts as your own

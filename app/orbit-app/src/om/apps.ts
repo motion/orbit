@@ -127,26 +127,25 @@ export const effects = {
     })
   },
 
-  ensureStaticAppBits(activeSpace: Space) {
+  async ensureStaticAppBits(activeSpace: Space) {
     const appDefs = orbitStaticApps
     for (const appDef of appDefs) {
-      loadOne(AppModel, { args: { where: { identifier: appDef.id } } }).then(app => {
-        if (!app) {
-          const tabDisplay =
-            appDef.id === 'setupApp' || appDef.id === 'bit' ? 'permanentLast' : 'hidden'
-          const next: AppBit = {
-            name: appDef.name,
-            target: 'app',
-            identifier: appDef.id,
-            spaceId: activeSpace.id,
-            icon: appDef.icon,
-            colors: appDef.iconColors || ['#222', '#000'],
-            tabDisplay,
-          }
-          console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
-          save(AppModel, next)
+      const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
+      if (!app) {
+        const tabDisplay =
+          appDef.id === 'setupApp' || appDef.id === 'bit' ? 'permanentLast' : 'hidden'
+        const next: AppBit = {
+          name: appDef.name,
+          target: 'app',
+          identifier: appDef.id,
+          spaceId: activeSpace.id,
+          icon: appDef.icon,
+          colors: appDef.iconColors || ['#222', '#000'],
+          tabDisplay,
         }
-      })
+        console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
+        await save(AppModel, next)
+      }
     }
   },
 

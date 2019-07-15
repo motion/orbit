@@ -1,13 +1,13 @@
 import { isEqual, loadMany, observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
-import { Action, Derive } from 'overmind'
+import { Action, Derive, AsyncAction } from 'overmind'
 
 import { deepClone } from '../helpers'
 import { updatePaneSort } from './spaces/paneManagerEffects'
 
 export type SpacesState = {
   spaces: Space[]
-  activeUser: User
+  activeUser: User | null
   activeSpace: Derive<SpacesState, Space>
 }
 
@@ -16,7 +16,7 @@ const getActiveSpace = state =>
 
 export const state: SpacesState = {
   spaces: [],
-  activeUser: null as User,
+  activeUser: null,
   activeSpace: getActiveSpace,
 }
 
@@ -37,9 +37,10 @@ const setUser: Action<User> = (om, user) => {
   om.state.spaces.activeUser = user
 }
 
-const start: Action = async om => {
+const start: AsyncAction = async om => {
   const args = { args: {} }
   om.actions.spaces.setSpaces(await loadMany(SpaceModel, args))
+  await om.effects.apps.ensureStaticAppBits(om.state.spaces.activeSpace)
   observeMany(SpaceModel, args).subscribe(spaces => {
     om.actions.spaces.setSpaces(spaces)
   })

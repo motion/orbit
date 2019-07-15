@@ -78,7 +78,7 @@ export const OrbitSearchResults = memo(() => {
   // sync from carousel to list
   useReaction(
     () => appsCarouselStore.apps[appsCarouselStore.focusedIndex],
-    app => {
+    async (app, { sleep }) => {
       ensure('app', !!app)
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
@@ -86,6 +86,8 @@ export const OrbitSearchResults = memo(() => {
       if (listRef.current && listIndex > -1) {
         if (listRef.current.activeIndex !== listIndex) {
           ignoreNextSelect.current = true
+          console.log('set active index from reaction', listIndex)
+          await sleep(100)
           listRef.current.setActiveIndex(listIndex)
         }
       }

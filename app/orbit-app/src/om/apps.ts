@@ -1,5 +1,5 @@
 import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
-import { AppBit, AppModel, Space } from '@o/models'
+import { AppBit, AppModel, Space, RemoveAllAppDataCommand } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -96,7 +96,7 @@ const setActiveSpace: Action<Space> = (om, space) => {
 }
 
 const resetAllApps: AsyncAction = async om => {
-  await command(RemoveAllAppData)
+  await command(RemoveAllAppDataCommand)
   // ensure the defaults are there
   om.effects.apps.ensureStaticAppBits(om.state.spaces.activeSpace)
 }
@@ -140,7 +140,7 @@ export const effects = {
             identifier: appDef.id,
             spaceId: activeSpace.id,
             icon: appDef.icon,
-            colors: ['black', 'white'],
+            colors: appDef.iconColors || ['#222', '#000'],
             tabDisplay,
           }
           console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)

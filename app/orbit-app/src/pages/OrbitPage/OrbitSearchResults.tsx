@@ -93,6 +93,7 @@ export const OrbitSearchResults = memo(() => {
   )
 
   const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
+  console.log('orbitsearchresults', isActive, carousel.zoomedIn)
 
   return (
     <ProvideVisibility visible={isActive}>

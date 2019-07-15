@@ -398,9 +398,10 @@ export const OrbitAppsCarousel = memo(() => {
   }, [scrollable])
 
   return (
-    <View width="100%" height="100%" overflow="hidden" ref={frameRef}>
+    <View data-is="OrbitAppsCarousel" width="100%" height="100%" overflow="hidden" ref={frameRef}>
       <OrbitSearchResults />
       <Row
+        data-is="OrbitAppsCarousel-Row"
         flex={1}
         alignItems="center"
         justifyContent="flex-start"
@@ -518,7 +519,12 @@ const OrbitAppCard = memo(
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     return (
-      <View zIndex={1000 - index} marginRight={`-${stackMarginLessPct * 100}%`}>
+      <View
+        pointerEvents={isFocused ? 'auto' : 'none'}
+        data-is="OrbitAppCard-Container"
+        zIndex={1000 - index}
+        marginRight={`-${stackMarginLessPct * 100}%`}
+      >
         <View
           animated
           transform={to(

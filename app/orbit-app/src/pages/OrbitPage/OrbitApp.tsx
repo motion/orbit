@@ -39,8 +39,6 @@ export const OrbitApp = memo(
       )
     }, [disableInteraction])
 
-    console.log(identifier, isActive, disableInteraction)
-
     const appStore = useStoreSimple(AppStore, {
       id,
       identifier,

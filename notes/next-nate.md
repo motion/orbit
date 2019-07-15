@@ -1,15 +1,16 @@
-small:
-
-- gloss could probably memo pretty well, should make adjustments using the benchmarks
-  - custom memo function:
-    - if children set, dont memo at all
-    - do a few smart props that we know are usually POJOs
 
 ---
 
 -- High level
 
 First: working, non-buggy demos of everything. Visually impressive.
+
+- Move search out of drawer and make "/" just work on OrbitSearchResults
+- Add PermanentLast item AppShowBit in carousel (basically search app)
+- Drag/Drop with OrbitSearchResults
+- Get interaction with search + show AppShowBit proper
+- Fixing bugs with carousel/drawer/drop
+
 
 Fix query builder postgres loop with drag/drop
 make a generic app for search + display data that you can drag a query into
@@ -302,5 +303,13 @@ Goal #4: App building CLI
 Questions:
 
 -
+---
 
 - Apps + APIs and how "far" we should go: libaries / NLP is a good example case
+
+small:
+
+- gloss could probably memo pretty well, should make adjustments using the benchmarks
+  - custom memo function:
+    - if children set, dont memo at all
+    - do a few smart props that we know are usually POJOs

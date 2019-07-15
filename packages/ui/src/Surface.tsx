@@ -557,7 +557,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), getElevation(props, theme).boxShadow]
+    boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
   }
 
   const res = {
@@ -583,6 +583,10 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
           ...(!props.chromeless && themeStyle['&:hover']),
           ...propStyles['&:hover'],
         },
+  }
+
+  if (props['debug']) {
+    console.log('box shadow now', res)
   }
 
   return res

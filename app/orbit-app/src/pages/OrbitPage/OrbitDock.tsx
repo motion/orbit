@@ -1,4 +1,4 @@
-import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStoreDebug } from '@o/kit'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { memo, useMemo, useRef } from 'react'
@@ -161,6 +161,7 @@ export const OrbitDock = memo(() => {
           <OrbitDockButton key={app.id} app={app} index={index} />
         ))}
         <FullScreen
+          data-is="DockShadow"
           top={20}
           bottom={20}
           transform={{
@@ -170,8 +171,8 @@ export const OrbitDock = memo(() => {
           boxShadow={[
             {
               spread: 10,
-              blur: 180,
-              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.3],
+              blur: 160,
+              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.25],
             },
           ]}
           zIndex={-1}
@@ -195,7 +196,7 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
   )
-
+  useStoreDebug()
   return (
     <>
       <DockButton

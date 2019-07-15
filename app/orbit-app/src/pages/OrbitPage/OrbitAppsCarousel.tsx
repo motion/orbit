@@ -276,13 +276,16 @@ class OrbitAppsCarouselStore {
     const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
     const opacity = this.boundOpacity(1 - offset)
+    // x is by percent!
     let x = 0
     if (zoomedIn) {
-      //
+      // if zoomed in, move the side apps out of view (by 500px)
       if (offset !== 0) {
-        x = offset > 0 ? -500 : 500
+        x = offset > 0 ? -30 : 30
       }
     } else {
+      // zoomed out, move them a bit faster, shift them to the right side
+      // remember: this is in percent
       x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 17
     }
     const next = {

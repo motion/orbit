@@ -1,4 +1,4 @@
-import { AppBit, ensure, useReaction, useSearchState } from '@o/kit'
+import { AppBit, ensure, HighlightActiveQuery, useReaction, useSearchState } from '@o/kit'
 import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
@@ -14,10 +14,13 @@ export const OrbitSearchResults = memo(() => {
   const searchStore = SearchStore.useStore()!
   const listRef = useRef<SelectableStore>(null)
 
+  window['searchStore'] = searchStore
+
+  console.log('render OrbitSearchResults', searchStore.results)
+
   useSearchState({
     includePrefix: true,
     onChange: state => {
-      console.log('got state', state)
       searchStore.setSearchState(state)
     },
   })
@@ -121,23 +124,24 @@ export const OrbitSearchResults = memo(() => {
           {...carouselProps}
         >
           <Theme theme={highlightTheme}>
-            <List
-              ref={listRef}
-              alwaysSelected
-              shareable
-              selectable
-              query={searchStore.searchedQuery}
-              itemProps={useMemo(
-                () => ({
-                  iconBefore: true,
-                  iconSize: 42,
-                }),
-                [],
-              )}
-              onSelect={handleSelect}
-              items={searchStore.results}
-              Separator={ListSeparatorLarge}
-            />
+            <HighlightActiveQuery query={searchStore.searchedQuery}>
+              <List
+                ref={listRef}
+                alwaysSelected
+                shareable
+                selectable
+                itemProps={useMemo(
+                  () => ({
+                    iconBefore: true,
+                    iconSize: 42,
+                  }),
+                  [],
+                )}
+                onSelect={handleSelect}
+                items={searchStore.results}
+                Separator={ListSeparatorLarge}
+              />
+            </HighlightActiveQuery>
           </Theme>
         </FullScreen>
       </View>

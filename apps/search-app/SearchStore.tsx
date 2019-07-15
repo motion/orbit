@@ -1,6 +1,5 @@
-import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
-import { uniq } from 'lodash'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -29,23 +28,6 @@ export class SearchStore {
   get searchedQuery() {
     return this.searchState ? this.searchState.query.replace('/', '') : ''
   }
-
-  updateSearchHistoryOnSearch = react(
-    () => this.searchedQuery,
-    async (query, _) => {
-      ensure('has query', !!query)
-      await _.sleep(2000)
-      const user = await getUser()
-      saveUser({
-        settings: {
-          ...user.settings,
-          recentSearches: !user.settings.recentSearches
-            ? [query]
-            : uniq([...user.settings.recentSearches, query]).slice(0, 50),
-        },
-      })
-    },
-  )
 
   get isChanging() {
     return this.searchState && this.searchState.query !== this.searchedQuery

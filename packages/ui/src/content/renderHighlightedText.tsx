@@ -1,6 +1,7 @@
 import { gloss } from 'gloss'
 import React from 'react'
-import { HighlightText } from '../text/HighlightText'
+
+import { HighlightText } from '../Highlight'
 
 const HighlightTextFrame = gloss({
   flex: 1,

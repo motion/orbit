@@ -1,6 +1,5 @@
-import { appToListItem, createStoreContext, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, createStoreContext, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
-import { uniq } from 'lodash'
 
 import { appsCarouselStore } from '../pages/OrbitPage/OrbitAppsCarousel'
 
@@ -32,25 +31,26 @@ class Search {
   }
 
   get searchedQuery() {
-    return this.searchState ? this.searchState.query.replace('/', '') : ''
+    const query = (this.searchState && this.searchState.query) || ''
+    return query[0] === '/' ? query.slice(1) : query
   }
 
-  updateSearchHistoryOnSearch = react(
-    () => this.searchedQuery,
-    async (query, _) => {
-      ensure('has query', !!query)
-      await _.sleep(2000)
-      const user = await getUser()
-      saveUser({
-        settings: {
-          ...user.settings,
-          recentSearches: !user.settings!.recentSearches
-            ? [query]
-            : uniq([...user.settings!.recentSearches, query]).slice(0, 50),
-        },
-      })
-    },
-  )
+  // updateSearchHistoryOnSearch = react(
+  //   () => this.searchedQuery,
+  //   async (query, _) => {
+  //     ensure('has query', !!query)
+  //     await _.sleep(2000)
+  //     const user = await getUser()
+  //     saveUser({
+  //       settings: {
+  //         ...user.settings,
+  //         recentSearches: !user.settings!.recentSearches
+  //           ? [query]
+  //           : uniq([...user.settings!.recentSearches, query]).slice(0, 50),
+  //       },
+  //     })
+  //   },
+  // )
 
   get isChanging() {
     return this.searchState && this.searchState.query !== this.searchedQuery
@@ -74,7 +74,7 @@ class Search {
   }
 
   getQuickResults(query: string, all = false) {
-    // TODO recent history
+    if (query.length > 0) debugger
     return fuzzyFilter(query, [...this.getApps(query, all)])
   }
 
@@ -132,7 +132,8 @@ class Search {
       const { startDate, endDate } = dateState
       let total = 0
 
-      const loadMore = async props => {
+      /** We can load pages piece by piece with this */
+      async function loadMore(props: { take: number }) {
         const args: SearchQuery = {
           spaceId,
           query,
@@ -155,6 +156,7 @@ class Search {
           groupName: 'Search Results',
         }))
         results = [...results, ...next]
+        console.log('results', results)
         setValue({
           results,
           query,
@@ -165,6 +167,7 @@ class Search {
 
       // app search
       results = this.getQuickResults(query)
+      console.log('quickresults', results)
       setValue({ results, query, finished: false })
 
       // split into chunks to avoid heavy work

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { HighlightText } from '../text/HighlightText'
+import { HighlightText } from '../Highlight'
 import { Title } from '../text/Title'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 

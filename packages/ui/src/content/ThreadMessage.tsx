@@ -2,9 +2,9 @@ import { Box, gloss } from 'gloss'
 import * as React from 'react'
 
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
+import { HighlightText } from '../Highlight'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
-import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
 
 export type ThreadMessageLike = {

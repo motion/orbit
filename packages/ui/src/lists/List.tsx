@@ -6,12 +6,12 @@ import { HotKeys, HotKeysProps } from 'react-hotkeys'
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
+import { ProvideHighlight } from '../Highlight'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
 import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
-import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
@@ -207,7 +207,7 @@ export const List = memo(
 
     const children = (
       <SelectableStoreProvider value={selectableStore}>
-        <HighlightProvide value={highlightValue}>
+        <ProvideHighlight {...highlightValue}>
           {hasResults && (
             <VirtualList
               items={filtered.results}
@@ -220,7 +220,7 @@ export const List = memo(
             />
           )}
           {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
-        </HighlightProvide>
+        </ProvideHighlight>
       </SelectableStoreProvider>
     )
 

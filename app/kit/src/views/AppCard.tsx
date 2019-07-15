@@ -7,7 +7,9 @@ import { UnPromisifiedObject, useApp } from '../hooks/useApp'
 import { SelectApp } from './SelectApp'
 
 type AppCardProps<Def extends AppDefinition> = Omit<CardProps, 'children' | 'onChange'> & {
-  children: (props: { api: UnPromisifiedObject<ReturnType<Def['api']>> }) => React.ReactNode
+  children: (props: {
+    api: UnPromisifiedObject<Def['api'] extends Function ? ReturnType<Def['api']> : null>
+  }) => React.ReactNode
   app?: AppBit
   appType: Def
   onChange?: (app: AppBit) => any

@@ -8,6 +8,7 @@
     "outDir": "dist",
     "module": "CommonJS",
     "moduleResolution": "node",
+    "incremental": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2018",

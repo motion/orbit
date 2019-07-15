@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "rootDir": ".",
+    "incremental": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist",

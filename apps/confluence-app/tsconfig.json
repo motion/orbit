@@ -4,6 +4,7 @@
     "strict": true,
     "rootDir": ".",
     "declaration": true,
+    "incremental": true,
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "module": "CommonJS",

@@ -26,13 +26,17 @@ export function useApp(): AppBit
 export function useApp<A extends AppDefinition>(
   definition: A,
   app: AppBit,
-): UnPromisifiedObject<ReturnType<A['api']>>
+): UnPromisifiedObject<A['api'] extends Function ? ReturnType<A['api']> : undefined>
 export function useApp(definition?: AppDefinition, app?: AppBit) {
-  const shouldCheckUpdate = useRef(null)
+  const shouldCheckUpdate = useRef<any>(null)
   const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     if (!shouldCheckUpdate.current) return
+    if (!definition || !definition.api) {
+      console.warn('no def or api')
+      return
+    }
     let cancel = false
 
     const { key, app, method, args } = shouldCheckUpdate.current
@@ -57,7 +61,7 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
     }
   }, [shouldCheckUpdate])
 
-  if (!definition) {
+  if (!definition || !definition.api) {
     return useAppBit()[0]
   }
 
@@ -76,7 +80,7 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
           if (ApiCache[key]) {
             shouldCheckUpdate.current = { app, method, args, key }
           } else {
-            const rawRead = definition.api(app)[method](...args)
+            const rawRead = definition!.api!(app)[method](...args)
             const read = rawRead
               .then(val => {
                 ApiCache[key].response = val

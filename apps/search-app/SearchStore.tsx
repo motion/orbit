@@ -1,7 +1,6 @@
 import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
 import { uniq } from 'lodash'
-import React from 'react'
 
 type SearchResults = {
   results: ListItemProps[]

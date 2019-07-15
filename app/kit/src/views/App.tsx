@@ -39,11 +39,11 @@ type AppMainView = React.FunctionComponent<AppMainViewProps>
 
 type IAppViewsContext = {
   renderApp?: RenderAppFn
-  Toolbar?: AppMainView | null
-  Statusbar?: AppMainView | null
-  Main?: AppMainView | null
-  Sidebar?: AppMainView | null
-  Actions?: React.FunctionComponent | null
+  Toolbar?: AppMainView | undefined
+  Statusbar?: AppMainView | undefined
+  Main?: AppMainView | undefined
+  Sidebar?: AppMainView | undefined
+  Actions?: React.FunctionComponent | undefined
 }
 
 export const AppViewsContext = createContext<IAppViewsContext>({
@@ -68,6 +68,8 @@ export type AppProps = {
   menuItems?: AppMenuItem[]
 }
 
+const IDView = props => props.children
+
 export const App = (props: AppProps) => {
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
@@ -79,11 +81,11 @@ export const App = (props: AppProps) => {
   const appViewsContext = useContext(AppViewsContext)
   const {
     renderApp = defaultRenderApp,
-    Statusbar,
-    Main,
-    Sidebar,
-    Toolbar,
-    Actions,
+    Statusbar = IDView,
+    Main = IDView,
+    Sidebar = IDView,
+    Toolbar = IDView,
+    Actions = IDView,
   } = appViewsContext
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
@@ -98,11 +100,11 @@ export const App = (props: AppProps) => {
   }
 
   useEffect(() => {
-    if (!isEqual(props.menuItems, appStore.menuItems)) {
-      appStore.setMenuItems(props.menuItems)
+    if (!isEqual(props.menuItems, appStore!.menuItems)) {
+      appStore!.setMenuItems(props.menuItems!)
     }
     return () => {
-      appStore.setMenuItems([])
+      appStore!.setMenuItems([])
     }
   }, [props.menuItems])
 

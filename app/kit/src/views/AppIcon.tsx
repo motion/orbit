@@ -21,8 +21,8 @@ export const AppIcon = memo(
     const definition = useAppDefinition(identifier)
 
     if (identifier && definition) {
-      icon = definition.icon || props.identifier
-      iconLight = definition.iconLight
+      icon = definition.icon || props.identifier || ''
+      iconLight = definition.iconLight || ''
     }
 
     if (!icon) {

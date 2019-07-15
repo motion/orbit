@@ -9,13 +9,13 @@ import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext 
 import { PostgresAppData } from './PostgresModels'
 
 export async function graph(app: AppBit<PostgresAppData>) {
-  const c = app.data.setup
+  const c = app.data!.setup
   const pool = new Pool({
     user: c.username,
     host: c.hostname,
     database: c.database,
     password: c.password,
-    port: +c.port,
+    port: c.port ? +c.port : 1000,
   })
   const schema = await createSchema(pool, 'public', {})
   return {

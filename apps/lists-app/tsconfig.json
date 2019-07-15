@@ -16,7 +16,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmitOnError": false,
-    "strictNullChecks": false,
     "strictFunctionTypes": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,

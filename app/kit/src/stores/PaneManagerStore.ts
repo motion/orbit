@@ -12,6 +12,7 @@ export type PaneManagerPane = {
 }
 
 export class PaneManagerStore {
+  // @ts-ignore
   props: {
     defaultPanes: PaneManagerPane[]
     defaultPaneId: string

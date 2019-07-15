@@ -6,11 +6,12 @@ import { useAppBit } from './useAppBit'
 
 export function useAppWithDefinition(
   appId?: number | false,
-): [AppBit, AppDefinition, ImmutableUpdateFn<AppBit>] {
+): [AppBit, AppDefinition, ImmutableUpdateFn<AppBit>] | [null, null, null] {
   const [app, update] = useAppBit(appId)
-  if (!app) {
+  const definition = getAppDefinition((app && app.identifier) || '')
+  if (!app || !definition) {
+    console.warn('no app or definition', appId)
     return [null, null, null]
   }
-  const definition = getAppDefinition(app.identifier)
   return [app, definition, update]
 }

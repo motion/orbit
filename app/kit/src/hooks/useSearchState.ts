@@ -49,14 +49,14 @@ export function useSearchState({
   return useReaction(
     () => {
       if (onEvent === 'enter') {
-        return queryStore.lastCommand.at
+        return queryStore!.lastCommand.at
       } else {
-        return getSearchState(queryStore)
+        return getSearchState(queryStore!)
       }
     },
     status => {
       ensure('is visible', visibilityStore.visible)
-      const update = (next: SearchState = getSearchState(queryStore)) => {
+      const update = (next: SearchState = getSearchState(queryStore!)) => {
         if (onChange) {
           onChange(next)
         } else {
@@ -75,5 +75,6 @@ export function useSearchState({
 }
 
 export function useActiveSearch() {
-  return useSearchState().query
+  const state = useSearchState()
+  return state ? state.query : ''
 }

@@ -8,8 +8,8 @@ export type NLPResponse = {
   dates: string[]
   nouns: string[]
   date: DateRange
-  startDate: Date
-  endDate: Date
+  startDate: Date | null
+  endDate: Date | null
   people: string[]
   apps: string[]
 }

@@ -19,7 +19,7 @@ export const appToListItem = (app: AppBit, index: number): ListItemProps => {
     extraData: {
       id: `${app.id}`,
       identifier: 'message',
-      icon: getAppDefinition(app.identifier) ? getAppDefinition(app.identifier).icon : '',
+      icon: getAppDefinition(app.identifier) ? getAppDefinition(app.identifier)!.icon : '',
       title: `Open ${app.name}`,
       subTitle: 'Command: ⮐',
       app,

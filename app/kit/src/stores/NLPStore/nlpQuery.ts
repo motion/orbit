@@ -1,6 +1,7 @@
 import compromise from 'compromise'
 import { differenceInDays, getDaysInMonth, getYear, subDays } from 'date-fns'
 import Sherlockjs from 'sherlockjs'
+
 import { NLPResponse } from '../../types/NLPResponse'
 import { DateRange, Mark, MarkType, QueryFragment } from '../../types/NLPTypes'
 
@@ -115,7 +116,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     .map(word => word.normal)
   const nouns = filterNouns(nlp.nouns().out('frequency')).map(word => word.normal)
   const words = query.toLowerCase().split(' ')
-  const apps = []
+  const apps: string[] = []
 
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
@@ -128,7 +129,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     highlightIfClear(dateString, MarkType.Date)
   }
   if (state.namePattern) {
-    const nameMatches = query.match(state.namePattern)
+    const nameMatches = query.match(state.namePattern!)
     if (nameMatches && nameMatches.length) {
       for (const name of nameMatches) {
         highlightIfClear(name, MarkType.Person)

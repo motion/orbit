@@ -9,12 +9,17 @@ export type FindBitWhere = FindOptions<AppBit>['where']
 
 export function useActiveApps(where?: FindBitWhere): AppBit[] {
   const [activeSpace] = useActiveSpace()
-  const [apps] = useModels(AppModel, {
-    where: {
-      spaceId: activeSpace.id,
-      ...where,
-    },
-  })
+  const [apps] = useModels(
+    AppModel,
+    !activeSpace
+      ? false
+      : {
+          where: {
+            spaceId: activeSpace.id,
+            ...where,
+          },
+        },
+  )
   return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
 }
 

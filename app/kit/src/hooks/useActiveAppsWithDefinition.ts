@@ -15,7 +15,7 @@ export function useActiveAppsWithDefinition(where?: FindBitWhere): AppWithDefini
     return (
       activeApps
         .map(app => ({
-          definition: getAppDefinition(app.identifier),
+          definition: getAppDefinition(app.identifier)!,
           app,
         }))
         // we may not have loaded definition yet...

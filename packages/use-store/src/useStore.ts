@@ -25,7 +25,7 @@ export {
 } from '@o/automagical'
 export { configureUseStore } from './configure'
 export { createStoreContext } from './createStoreContext'
-export { createUseStores, UseStoresOptions } from './createUseStores'
+export { createUseStores, UseStoresOptions, UseStores } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'

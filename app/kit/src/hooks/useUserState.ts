@@ -16,7 +16,7 @@ export function useUserState<A>(
   id: string | false,
   defaultState: A,
   options?: PersistedStateOptions,
-): ScopedState<A> {
+): ScopedState<A> | null {
   return usePersistedScopedState('user', id, defaultState, options)
 }
 
@@ -27,9 +27,9 @@ export type PersistedStateOptions = {
 export function usePersistedScopedState<A>(
   type: string,
   id: string | false,
-  defaultState?: A,
+  defaultState: A,
   options?: PersistedStateOptions,
-): ScopedState<A> {
+): ScopedState<A> | null {
   // conditional here is "bad practice" for hooks, but its lots of overhead otherwise
   // and people should never be turning on and off persist unless they are in development
   if (options && options.persist === 'off') {
@@ -49,6 +49,10 @@ export function usePersistedScopedState<A>(
         identifier,
       },
     })
+
+    if (!state || !state.data) {
+      return null
+    }
 
     // scope it to .data
     return [selectDefined(state.data.dataValue, defaultState), useImmutableUpdateFn(update)]
@@ -101,6 +105,7 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
       }
 
       load
+        // @ts-ignore
         .then(row => {
           if (!row || !isDefined(row.data)) {
             return create()

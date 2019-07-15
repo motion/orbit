@@ -371,7 +371,7 @@ export class OrbitDesktopRoot {
           return appId
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
-          log.info('Remove all app data')
+          log.info('Remove all app data!')
           const connection = typeorm.getConnection()
           await Promise.all([
             connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`),

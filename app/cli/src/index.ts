@@ -90,16 +90,11 @@ function main() {
       'dev [appName]',
       'Run an Orbit app in development mode',
       p =>
-        p
-          .positional('appName', {
-            type: 'string',
-            default: '.',
-            describe: 'The application to run',
-          })
-          .option('verbose', {
-            type: 'boolean',
-            default: false,
-          }),
+        p.positional('appName', {
+          type: 'string',
+          default: '.',
+          describe: 'The application to run',
+        }),
       async argv => {
         setVerbose(argv.logLevel)
         let projectRoot = resolve(cwd, argv.appName)

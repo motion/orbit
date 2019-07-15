@@ -202,12 +202,6 @@ export function gloss<Props = any, ThemeProps = Props>(
     // set up final props with filtering for various attributes
     let finalProps: any = {}
 
-    // hook: setting your own props
-    const modifyProps = config && config.modifyProps
-    if (modifyProps) {
-      modifyProps(props, finalProps)
-    }
-
     if (ref) {
       finalProps.ref = ref
     }
@@ -218,9 +212,8 @@ export function gloss<Props = any, ThemeProps = Props>(
         if (conditionalStyles && conditionalStyles[key]) continue
         // TODO: need to figure out this use case: when a valid prop attr, but invalid val
         if (key === 'size' && typeof props[key] !== 'string') continue
-        if (validProp(key)) {
-          finalProps[key] = finalProps[key] || props[key]
-        }
+        if (!validProp(key)) continue
+        finalProps[key] = finalProps[key] || props[key]
       }
     } else {
       for (const key in props) {
@@ -230,8 +223,14 @@ export function gloss<Props = any, ThemeProps = Props>(
     }
 
     // we control these props
-    ;(finalProps.className = [...classNames].join(' ')),
-      (finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName)
+    finalProps.className = [...classNames].join(' ')
+    finalProps['data-is'] = finalProps['data-is'] || ThemedView.displayName
+
+    // hook: setting your own props
+    const modifyProps = config && config.modifyProps
+    if (modifyProps) {
+      modifyProps(props, finalProps)
+    }
 
     return createElement(element, finalProps, props.children)
   }

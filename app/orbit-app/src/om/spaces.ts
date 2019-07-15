@@ -1,4 +1,4 @@
-import { loadMany, observeMany } from '@o/kit'
+import { isEqual, loadMany, observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
 import { Action, Derive } from 'overmind'
 
@@ -16,12 +16,16 @@ const getActiveSpace = state =>
 
 export const state: SpacesState = {
   spaces: [],
-  activeUser: null,
+  activeUser: null as User,
   activeSpace: getActiveSpace,
 }
 
 const setSpaces: Action<Space[]> = (om, spaces) => {
   if (!spaces) return
+  if (isEqual(spaces, om.state.spaces.spaces)) {
+    console.log('is equal')
+    return
+  }
   om.state.spaces.spaces = spaces
   const activeSpace = deepClone(getActiveSpace({ spaces, activeUser: om.state.spaces.activeUser }))
   om.actions.apps.setActiveSpace(activeSpace)

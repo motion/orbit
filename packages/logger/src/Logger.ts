@@ -166,6 +166,8 @@ export class Logger {
     const logLevel = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 0
     const verboseLogging = (logLevel > 1 && level === 'verbose') || logLevel > 2
 
+    console.log('verboseLogging', process.env.LOG_LEVEL, level)
+
     // for syncer process with no-logging mode we do not log objects in messages
     if (verboseLogging) {
       messages = messages.filter(message => {

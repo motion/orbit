@@ -78,8 +78,10 @@ export const View = gloss<ViewProps, ViewThemeProps>(Base, {
   .withConfig({
     modifyProps(curProps, nextProps) {
       if (!curProps.animated) return
-      const animatedStyles = getAnimatedStyleProp(curProps)
-      nextProps.style = { ...curProps.style, ...animatedStyles }
+      const props = getAnimatedProps(curProps)
+      if (props) {
+        Object.assign(nextProps, props)
+      }
     },
     isDOMElement: true,
     getElement(props) {
@@ -98,17 +100,19 @@ export function getMargin(props: MarginProps) {
 }
 
 // find react-spring animated props
-export const getAnimatedStyleProp = props => {
-  let style = props.style
+const isAnimatedVal = x => x instanceof AnimatedInterpolation || x instanceof AnimatedValue
+export const getAnimatedProps = props => {
+  let next = null
   for (const key in props) {
-    if (key === 'scrollLeft' || key === 'scrollTop') {
-      continue
-    }
-    const val = props[key]
-    if (val instanceof AnimatedInterpolation || val instanceof AnimatedValue) {
-      style = style || {}
-      style[key] = val
+    if (props[key] && isAnimatedVal(props[key])) {
+      next = next || {}
+      if (key === 'scrollLeft' || key === 'scrollTop') {
+        next[key] = props[key]
+      } else {
+        next.style = next.style || props.style || {}
+        next.style[key] = props[key]
+      }
     }
   }
-  return style
+  return next
 }

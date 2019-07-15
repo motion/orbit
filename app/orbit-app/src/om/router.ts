@@ -116,13 +116,17 @@ const showPage: Operator<HistoryItem> = pipe(
   }),
 )
 
+const getFirstApp = om => {
+  return om.state.apps.activeApps.find(
+    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
+  )
+}
+
 const showHomePage: Action<{ avoidScroll?: boolean; avoidZoom?: boolean } | undefined> = (
   om,
   item,
 ) => {
-  const firstApp = om.state.apps.activeApps.find(
-    x => x.tabDisplay !== 'hidden' && !!getAppDefinition(x.identifier!).app,
-  )
+  const firstApp = getFirstApp(om)
   if (firstApp) {
     const id = `${firstApp.id}`
     if (item && item.avoidZoom) {
@@ -138,20 +142,6 @@ const showHomePage: Action<{ avoidScroll?: boolean; avoidZoom?: boolean } | unde
   }
 }
 
-const showQuickFind: Action = om => {
-  om.actions.router.showAppPage({ id: 'quickFind' })
-}
-
-const toggleQuickFind: Action = om => {
-  if (om.state.router.isOnQuickFind) {
-    om.actions.router.closeDrawer()
-  } else {
-    om.actions.router.showAppPage({ id: 'quickFind' })
-  }
-}
-
-const isNumString = (x: number | string) => +x == x
-
 const showAppPage: Action<{
   id?: string
   subId?: string
@@ -163,6 +153,10 @@ const showAppPage: Action<{
       // find by identifier optionally
       x.identifier! === params.id! || x.id === +params.id!,
   )
+
+  if (app === getFirstApp(om)) {
+    return om.actions.router.showHomePage({ avoidScroll: !!params.replace })
+  }
 
   if (!app) {
     throw new Error(`No app found ${params.id}`)
@@ -187,8 +181,22 @@ const showAppPage: Action<{
   }
   om.actions.router.showPage(getItem('app', next, params.replace))
   om.state.router.appId = id
-  om.effects.router.setPane(id, { avoidScroll: params.replace ? true : false })
+  om.effects.router.setPane(id, { avoidScroll: !!params.replace })
 }
+
+const showQuickFind: Action = om => {
+  om.actions.router.showAppPage({ id: 'quickFind' })
+}
+
+const toggleQuickFind: Action = om => {
+  if (om.state.router.isOnQuickFind) {
+    om.actions.router.closeDrawer()
+  } else {
+    om.actions.router.showAppPage({ id: 'quickFind' })
+  }
+}
+
+const isNumString = (x: number | string) => +x == x
 
 const closeDrawer: Action = om => {
   if (om.state.apps.lastActiveApp) {

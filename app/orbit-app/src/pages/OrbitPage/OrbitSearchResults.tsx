@@ -1,5 +1,6 @@
 import { AppBit, ensure, useReaction, useSearchState } from '@o/kit'
-import { FullScreen, FullScreenProps, List, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
 import { SearchStore } from '../../stores/SearchStore'
@@ -35,14 +36,18 @@ export const OrbitSearchResults = memo(() => {
         },
       }
 
-  const highlightTheme = useMemo(
+  const highlightTheme: ThemeObject = useMemo(
     () => ({
       ...theme,
       alternates: {
-        ...theme.alternates,
+        ...theme.alternates!,
         selected: {
           ...theme.alternates!.selected,
-          background: 'linear-gradient(to right, rgba(255,255,255,0.2), transparent)',
+          listItemBackground: linearGradient(
+            'to right',
+            theme.background.isDark() ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.05)',
+            'transparent',
+          ),
         },
       },
     }),

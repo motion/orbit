@@ -354,7 +354,7 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
             borderLeftRadius={borderLeftRadius + 1}
             borderRightRadius={borderRightRadius + 1}
             {...borderPosition === 'inside' && {
-              height: roundHalf(+height - size),
+              height: roundHalf(+height - size / 2),
               transform: {
                 y: roundHalf(size) % 1,
               },

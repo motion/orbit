@@ -279,7 +279,7 @@ class OrbitAppsCarouselStore {
     if (zoomedIn) {
       //
     } else {
-      x = offset > 0 ? 0 : 18
+      x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 17
     }
     const next = {
       x,
@@ -323,7 +323,7 @@ class OrbitAppsCarouselStore {
   }
 }
 
-const stackMarginLessPct = 0.25
+const stackMarginLessPct = 0.4
 
 export const appsCarouselStore = createUsableStore(OrbitAppsCarouselStore)
 export const useAppsCarousel = appsCarouselStore.useStore

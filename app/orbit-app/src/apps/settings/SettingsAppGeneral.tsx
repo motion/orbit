@@ -8,6 +8,7 @@ import * as React from 'react'
 
 import { sleep } from '../../helpers'
 import { showNotification } from '../../helpers/electron/showNotification'
+import { om } from '../../om/om'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 
 const eventCharsToNiceChars = {
@@ -52,26 +53,37 @@ const blurShortcut = () => {
   App.setState({ orbitState: { shortcutInputFocused: false } })
 }
 
+const handleClearAllData = async () => {
+  if (
+    showConfirmDialog({
+      title: 'Delete all Orbit local data?',
+      message: 'This will delete all Orbit data and restart Orbit.',
+    })
+  ) {
+    await command(ResetDataCommand)
+    showNotification({
+      title: 'Deleted successfully!',
+      message: 'Restarting...',
+    })
+    await sleep(2000)
+    await command(RestartAppCommand)
+  }
+}
+
+const handleClearAllApps = async () => {
+  if (
+    showConfirmDialog({
+      title: 'Delete all apps?',
+      message: 'This will delete every app from this workspace.',
+    })
+  ) {
+    om.actions.apps.resetAllApps()
+  }
+}
+
 export function SettingsAppGeneral(_props: AppViewProps) {
   const [user, updateUser] = useActiveUser()
   const settings = user.settings || {}
-
-  const handleClearAllData = async () => {
-    if (
-      showConfirmDialog({
-        title: 'Delete all Orbit local data?',
-        message: 'This will delete all Orbit data and restart Orbit.',
-      })
-    ) {
-      await command(ResetDataCommand)
-      showNotification({
-        title: 'Deleted successfully!',
-        message: 'Restarting...',
-      })
-      await sleep(2000)
-      await command(RestartAppCommand)
-    }
-  }
 
   return (
     <Section titleBorder margin padding title="General Settings">
@@ -150,7 +162,10 @@ export function SettingsAppGeneral(_props: AppViewProps) {
       <Space />
 
       <FormField label="Reset">
-        <Button alt="action" onClick={handleClearAllData}>
+        <Button alt="delete" onClick={handleClearAllApps}>
+          Remove all Apps
+        </Button>
+        <Button alt="delete" onClick={handleClearAllData}>
           Reset all Orbit data
         </Button>
       </FormField>

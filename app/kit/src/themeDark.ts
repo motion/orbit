@@ -33,6 +33,7 @@ const selectedColor = toColor('#363165')
 const darkAlternates: ThemeSet = {
   ...alternates,
   ...darkAltLight,
+  delete: darkAltLight.lightRed,
   error: darkAltLight.lightRed,
   warn: darkAltLight.lightYellow,
   approve: darkAltLight.lightGreen,

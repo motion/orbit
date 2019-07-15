@@ -16,5 +16,7 @@ export function useActiveSpace(query?) {
 // if you want sorting too
 export function useActivePaneSort() {
   const [space] = useActiveSpace()
-  return useMemo(() => (space && space.paneSort) || [], (space && space.paneSort) || [])
+  return useMemo(() => (space && space.paneSort) || [], [
+    JSON.stringify((space && space.paneSort) || []),
+  ])
 }

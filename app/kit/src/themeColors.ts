@@ -9,7 +9,7 @@ export const colors = colorize({
   blue: 'rgb(116, 162, 230)',
   darkBlue: '#0E3D7B',
   lightBlue: '#CBDFFA',
-  red: '#c80000',
+  red: '#AF2723',
   lightRed: '#FFB0B0',
   darkRed: '#A12727',
   green: '#37D55A',

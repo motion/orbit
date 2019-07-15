@@ -1,5 +1,5 @@
-import { getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
-import { AppBit, AppModel, Space } from '@o/models'
+import { getAppDefinition, loadMany, loadOne, observeMany, remove, save, sortApps } from '@o/kit'
+import { AppBit, AppModel, BitModel, Space } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -95,6 +95,24 @@ const setActiveSpace: Action<Space> = (om, space) => {
   om.effects.apps.ensureStaticAppBits(space)
 }
 
+const removeAll = async (model: any) => {
+  const all = await loadMany(model, { args: { select: ['id'] } })
+  if (all) {
+    await Promise.all(
+      all.map(async item => {
+        await remove(model, item)
+      }),
+    )
+  }
+}
+
+const resetAllApps: AsyncAction = async om => {
+  await removeAll(BitModel)
+  await removeAll(AppModel)
+  // ensure the defaults are there
+  om.effects.apps.ensureStaticAppBits(om.state.spaces.activeSpace)
+}
+
 const start: AsyncAction = async om => {
   const appsQuery = { args: { where: { spaceId: om.state.spaces.activeSpace.id } } }
   om.actions.apps.setApps(await loadMany(AppModel, appsQuery))
@@ -108,6 +126,7 @@ export const actions = {
   start,
   setApps,
   setActiveSpace,
+  resetAllApps,
 }
 
 export const effects = {
@@ -125,16 +144,19 @@ export const effects = {
     for (const appDef of appDefs) {
       loadOne(AppModel, { args: { where: { identifier: appDef.id } } }).then(app => {
         if (!app) {
-          console.log('ensuring model for static app', appDef)
-          save(AppModel, {
+          const tabDisplay =
+            appDef.id === 'setupApp' || appDef.id === 'bit' ? 'permanentLast' : 'hidden'
+          const next: AppBit = {
             name: appDef.name,
             target: 'app',
             identifier: appDef.id,
             spaceId: activeSpace.id,
             icon: appDef.icon,
             colors: ['black', 'white'],
-            tabDisplay: appDef.id === 'setupApp' ? 'permanentLast' : 'hidden',
-          })
+            tabDisplay,
+          }
+          console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
+          save(AppModel, next)
         }
       })
     }

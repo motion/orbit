@@ -313,6 +313,9 @@ const OrbitActions = memo((props: { children?: any }) => {
     } else {
       orbitStore.setActiveActions(null)
     }
+    return () => {
+      orbitStore.setActiveActions(null)
+    }
   }, [isActive, props.children])
   return null
 })

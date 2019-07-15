@@ -370,9 +370,11 @@ export class OrbitDesktopRoot {
           return appId
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
+          log.info('Remove all app data')
           await typeorm.getRepository(BitEntity).clear()
           await typeorm.getRepository(StateEntity).clear()
           await typeorm.getRepository(AppEntity).clear()
+          log.info('Remove all app data done')
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
           log.info('Removing build server', appId)

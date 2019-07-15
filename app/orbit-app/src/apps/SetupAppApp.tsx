@@ -130,6 +130,7 @@ function SetupAppCustom() {
                 template,
                 name,
                 identifier,
+                icon: 'blank',
               })
 
               if (res.type === 'error') {

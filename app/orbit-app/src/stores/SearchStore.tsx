@@ -23,7 +23,7 @@ class Search {
   }
 
   get apps() {
-    return appsCarouselStore.apps
+    return appsCarouselStore.apps.filter(x => x.identifier !== 'bit')
   }
 
   setSearchState(next: SearchState) {

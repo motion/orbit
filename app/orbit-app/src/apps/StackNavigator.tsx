@@ -13,7 +13,7 @@ export type NavigatorProps = {
 
 type StackItem = {
   id: string
-  props: { [key: string]: string | number | boolean | null | undefined }
+  props?: { [key: string]: string | number | boolean | null | undefined }
 }
 
 type BaseProps = {

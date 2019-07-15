@@ -62,6 +62,9 @@ export function useSearchState({
     },
     status => {
       ensure('is visible', getVis())
+      if (onEvent === 'enter') {
+        ensure('last command', queryStore!.lastCommand.name === 'enter')
+      }
       const update = (next: SearchState = getSearchState(queryStore!, includePrefix)) => {
         if (onChange) {
           onChange(next)

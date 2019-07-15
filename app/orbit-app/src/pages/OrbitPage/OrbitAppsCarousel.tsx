@@ -1,6 +1,6 @@
 import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
 import { AppBit } from '@o/models'
-import { Card, CardProps, fuzzyFilter, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
+import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
 import { debounce } from 'lodash'
 import React, { createRef, memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -8,9 +8,7 @@ import { to, useSpring, useSprings } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { om, useOm } from '../../om/om'
-import { queryStore } from '../../om/stores'
 import { OrbitApp, whenIdle } from './OrbitApp'
-import { appsDrawerStore } from './OrbitAppsDrawer'
 import { OrbitSearchResults } from './OrbitSearchResults'
 
 class OrbitAppsCarouselStore {
@@ -494,12 +492,12 @@ const OrbitAppCard = memo(
     useIntersectionObserver({
       ref: cardRef,
       options: {
-        threshold: 1,
+        threshold: 0.9,
       },
       onChange(x) {
         const isIntersecting = !!(x.length && x[0].isIntersecting)
         lastIntersection.current = isIntersecting
-        if (isIntersecting && !renderApp) {
+        if (isIntersecting) {
           shouldRender.current = true
           whenIdle().then(() => {
             setTimeout(() => {

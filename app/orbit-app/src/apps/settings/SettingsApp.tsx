@@ -1,8 +1,9 @@
-import { App, createApp } from '@o/kit'
+import { App, AppViewProps, createApp } from '@o/kit'
+import { List } from '@o/ui'
 import React from 'react'
 
-import { SettingsAppIndex } from './SettingsAppIndex'
-import { SettingsAppMain } from './SettingsAppMain'
+import SettingsAppAccount from './SettingsAppAccount'
+import { SettingsAppGeneral } from './SettingsAppGeneral'
 
 export default createApp({
   id: 'settings',
@@ -14,3 +15,38 @@ export default createApp({
     </App>
   ),
 })
+
+export function SettingsAppIndex() {
+  return (
+    <List
+      alwaysSelected
+      items={[
+        {
+          id: 'general',
+          title: 'General',
+          icon: 'cog',
+          iconBefore: true,
+          subTitle: 'Shortcuts, startup, theme',
+        },
+        {
+          id: 'account',
+          title: 'Account',
+          icon: 'user',
+          iconBefore: true,
+          subTitle: 'Manage your account',
+        },
+      ]}
+    />
+  )
+}
+
+export function SettingsAppMain(props: AppViewProps) {
+  switch (props.id) {
+    case 'general':
+      return <SettingsAppGeneral {...props} />
+    case 'account':
+      return <SettingsAppAccount />
+    default:
+      return <div>no found pane in settings {JSON.stringify(props)}</div>
+  }
+}

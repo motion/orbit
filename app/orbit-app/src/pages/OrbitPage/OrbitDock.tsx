@@ -142,7 +142,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[20, 15, 0, 0]}
+        padding={[25, 15, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -154,7 +154,7 @@ export const OrbitDock = memo(() => {
         }
         transition="all ease 300ms"
         className="orbit-dock"
-        space={18}
+        space={16}
         bottom="auto"
       >
         {activeDockApps.map((app, index) => (

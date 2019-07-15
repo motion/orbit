@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -56,14 +56,16 @@ function QueryBuilder() {
 
   if (!dataApps.length) {
     return (
-      <Templates.Message
-        title="No data apps"
-        subTitle="You haven't added any data apps to this workspace."
-      >
-        <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
-          Install apps
-        </Button>
-      </Templates.Message>
+      <Scale size={0.8}>
+        <Templates.Message
+          title="No data apps"
+          subTitle="You haven't added any data apps to this workspace."
+        >
+          <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
+            Install apps
+          </Button>
+        </Templates.Message>
+      </Scale>
     )
   }
 

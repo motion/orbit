@@ -41,6 +41,7 @@ import {
   StateEntity,
   RemoveAllAppDataCommand,
   AppStatusModel,
+  ResetDataCommand,
 } from '@o/models'
 import { OrbitAppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
@@ -71,7 +72,6 @@ import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMeth
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
-import { ResetDataResolver } from './resolvers/ResetDataResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
@@ -87,7 +87,6 @@ import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
 import { getIdentifierToPackageId } from '@o/cli'
-import { sleep } from '@o/ui'
 
 const log = new Logger('desktop')
 
@@ -401,7 +400,10 @@ export class OrbitDesktopRoot {
           return await new SearchResultResolver(props.cosal, args).resolve()
         }),
         getSalientWordsResolver(props.cosal),
-        ResetDataResolver,
+        resolveCommand(ResetDataCommand, async () => {
+          log.info(`resetting data...`)
+          await this.databaseManager.resetAllData()
+        }),
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),

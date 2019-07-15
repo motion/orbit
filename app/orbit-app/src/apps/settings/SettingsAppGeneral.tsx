@@ -65,7 +65,7 @@ const handleClearAllData = async () => {
       title: 'Deleted successfully!',
       message: 'Restarting...',
     })
-    await sleep(2000)
+    await sleep(1000)
     await command(RestartAppCommand)
   }
 }

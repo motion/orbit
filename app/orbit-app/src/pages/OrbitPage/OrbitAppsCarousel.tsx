@@ -272,13 +272,16 @@ class OrbitAppsCarouselStore {
     const importance = Math.min(1, Math.max(0, 1 - Math.abs(offset)))
     const scaler = zoomedIn ? this.inScaler : this.outScaler
     // zoom all further out of non-focused apps when zoomed in (so you cant see them behind transparent focused apps)
-    const scale = zoomedIn && importance !== 1 ? 0.5 : scaler(importance)
+    const scale = zoomedIn && importance !== 1 ? 0.65 : scaler(importance)
     const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
     const opacity = this.boundOpacity(1 - offset)
     let x = 0
     if (zoomedIn) {
       //
+      if (offset !== 0) {
+        x = offset > 0 ? -500 : 500
+      }
     } else {
       x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 17
     }

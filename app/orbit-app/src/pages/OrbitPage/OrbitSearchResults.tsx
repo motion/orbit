@@ -70,7 +70,6 @@ export const OrbitSearchResults = memo(() => {
       const app: AppBit = item.extraData.app
       const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
       if (carouselIndex !== -1) {
-        console.log('handle select go to', carouselIndex)
         appsCarouselStore.animateAndScrollTo(carouselIndex)
       }
     }
@@ -84,7 +83,6 @@ export const OrbitSearchResults = memo(() => {
       const listIndex = searchStore.results.findIndex(
         x => x.extraData && x.extraData.app && x.extraData.app.id === app.id,
       )
-      console.log('go go', listIndex)
       if (listRef.current && listIndex > -1) {
         if (listRef.current.activeIndex !== listIndex) {
           ignoreNextSelect.current = true

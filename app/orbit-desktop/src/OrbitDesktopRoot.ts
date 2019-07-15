@@ -372,9 +372,14 @@ export class OrbitDesktopRoot {
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
           log.info('Remove all app data')
-          await removeAll(BitEntity)
-          await removeAll(StateEntity)
-          await removeAll(AppEntity)
+          const connection = typeorm.getConnection()
+          await Promise.all([
+            connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'job_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'bit_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'app_entity_spaces_space_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'app_entity'`),
+          ])
           log.info('Remove all app data done')
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
@@ -456,16 +461,6 @@ export class OrbitDesktopRoot {
     log.info(`mediatorServer listening at ${mediatorServerPort}`)
 
     return mediatorServerPort
-  }
-}
-
-const removeAll = async (model: any) => {
-  const repo = typeorm.getRepository(model)
-  const all: any[] = await repo.find({ select: ['id'] })
-  console.log('all', all)
-  for (const { id } of all) {
-    await typeorm.getRepository(model).remove(id)
-    await sleep(1)
   }
 }
 

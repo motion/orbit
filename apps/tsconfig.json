@@ -1,0 +1,25 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "incremental": true
+  },
+  "references": [
+    // apps type defs only for use in monorepo
+    { "path": "./apps/confluence-app" },
+    { "path": "./apps/demo-app-api-grid" },
+    { "path": "./apps/demo-app-flow" },
+    { "path": "./apps/demo-app-layout" },
+    { "path": "./apps/demo-app-user-manager" },
+    { "path": "./apps/drive-app" },
+    { "path": "./apps/github-app" },
+    { "path": "./apps/graphql-source-app" },
+    { "path": "./apps/gmail-app" },
+    { "path": "./apps/jira-app" },
+    { "path": "./apps/lists-app" },
+    { "path": "./apps/people-app" },
+    { "path": "./apps/postgres-app" }
+    { "path": "./apps/search-app" },
+    { "path": "./apps/slack-app" },
+    { "path": "./apps/website-app" }
+  ]
+}

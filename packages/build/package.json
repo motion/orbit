@@ -5,8 +5,8 @@
 		"mcro-build": "./mcro-build"
 	},
 	"scripts": {
-		"build": "tsc || true",
-		"watch": "tsc --watch --preserveWatchOutput"
+		"build": "tsc -b || true",
+		"watch": "tsc -b --watch --preserveWatchOutput"
 	},
 	"resolutions": {
 		"duplicate-package-checker-webpack-plugin": "3.0.0",

@@ -6,8 +6,8 @@
   "ts:main": "src/index.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "disposable-event": "^1.0.3",

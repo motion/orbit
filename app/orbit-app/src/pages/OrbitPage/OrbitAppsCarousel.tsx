@@ -374,10 +374,13 @@ export const OrbitAppsCarousel = memo(() => {
     onDrag: appsCarouselStore.onDrag,
   })
 
+  /**
+   * Use this to update state after animations finish
+   */
   const [scrollable, disableInteraction] = useReaction(
     () => [
-      appsCarouselStore.isScrolling || appsCarouselStore.state.zoomedOut ? ('x' as const) : false,
-      appsCarouselStore.state.zoomedOut === true,
+      appsCarouselStore.isScrolling || appsCarouselStore.zoomedIn ? false : ('x' as const),
+      appsCarouselStore.zoomedIn === false,
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)

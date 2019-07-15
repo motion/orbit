@@ -11,6 +11,8 @@ export const AppForceCancelCommand = new Command<void, { appId: number }>('app-f
 
 export const UserOnboardFinishCommand = new Command<void, void>('UserOnboardFinishCommand')
 
+export const RemoveAllAppDataCommand = new Command<void, void>('RemoveAllAppDataCommand')
+
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
 

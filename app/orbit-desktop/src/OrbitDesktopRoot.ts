@@ -39,6 +39,7 @@ import {
   AppGetWorkspaceAppsCommand,
   StateModel,
   StateEntity,
+  RemoveAllAppDataCommand,
   AppStatusModel,
 } from '@o/models'
 import { OrbitAppsManager } from '@o/libs-node'
@@ -367,6 +368,11 @@ export class OrbitDesktopRoot {
           })
           props.appMiddleware.setApps(developingApps)
           return appId
+        }),
+        resolveCommand(RemoveAllAppDataCommand, async () => {
+          await typeorm.getRepository(BitEntity).clear()
+          await typeorm.getRepository(StateEntity).clear()
+          await typeorm.getRepository(AppEntity).clear()
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
           log.info('Removing build server', appId)

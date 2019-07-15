@@ -1,5 +1,5 @@
-import { getAppDefinition, loadMany, loadOne, observeMany, remove, save, sortApps } from '@o/kit'
-import { AppBit, AppModel, BitModel, Space } from '@o/models'
+import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
+import { AppBit, AppModel, Space } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -95,20 +95,8 @@ const setActiveSpace: Action<Space> = (om, space) => {
   om.effects.apps.ensureStaticAppBits(space)
 }
 
-const removeAll = async (model: any) => {
-  const all = await loadMany(model, { args: { select: ['id'] } })
-  if (all) {
-    await Promise.all(
-      all.map(async item => {
-        await remove(model, item)
-      }),
-    )
-  }
-}
-
 const resetAllApps: AsyncAction = async om => {
-  await removeAll(BitModel)
-  await removeAll(AppModel)
+  await command(RemoveAllAppData)
   // ensure the defaults are there
   om.effects.apps.ensureStaticAppBits(om.state.spaces.activeSpace)
 }

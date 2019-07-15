@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 
 import { useDebounceValue } from './hooks/useDebounce'
 import { Text, TextProps } from './text/Text'
+import { HighlightOptions } from '@o/utils'
 
 export type HighlightQueryProps = {
   words?: string[]
@@ -36,17 +37,32 @@ export const ProvideHighlight = ({ children, ...props }: ProvideHighlightProps) 
   )
 }
 
-export type HighlightTextProps = TextProps
+export type HighlightTextProps = TextProps & HighlightQueryProps
 
-export function HighlightText({ children, ...props }: HighlightTextProps) {
+export function HighlightText({
+  children,
+  words,
+  maxSurroundChars,
+  maxChars,
+  ...props
+}: HighlightTextProps) {
   const { state } = HighlightQueryStoreContext.useStore()
-  const highlight =
+  const text =
     state.words &&
     (state.words.length > 1 ||
       // avoid too short of words
       (state.words[0] && state.words[0].length > 1))
-      ? state
-      : null
+      ? state.words.join(' ')
+      : ''
+  const highlight: HighlightOptions = useMemo(
+    () => ({
+      maxSurroundChars: maxSurroundChars || state.maxSurroundChars,
+      maxChars: maxChars || state.maxChars,
+      words: words || state.words,
+      text,
+    }),
+    [state.maxSurroundChars, state.maxChars, text, words, maxSurroundChars, maxChars],
+  )
   return (
     <Text tagName="div" className="paragraph" display="block" highlight={highlight} {...props}>
       {children}

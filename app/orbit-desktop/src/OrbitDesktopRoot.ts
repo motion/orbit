@@ -87,6 +87,7 @@ import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
 import { getIdentifierToPackageId } from '@o/cli'
+import { sleep } from '@o/ui'
 
 const log = new Logger('desktop')
 
@@ -371,9 +372,9 @@ export class OrbitDesktopRoot {
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
           log.info('Remove all app data')
-          await typeorm.getRepository(BitEntity).clear()
-          await typeorm.getRepository(StateEntity).clear()
-          await typeorm.getRepository(AppEntity).clear()
+          await removeAll(BitEntity)
+          await removeAll(StateEntity)
+          await removeAll(AppEntity)
           log.info('Remove all app data done')
         }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
@@ -455,6 +456,16 @@ export class OrbitDesktopRoot {
     log.info(`mediatorServer listening at ${mediatorServerPort}`)
 
     return mediatorServerPort
+  }
+}
+
+const removeAll = async (model: any) => {
+  const repo = typeorm.getRepository(model)
+  const all: any[] = await repo.find({ select: ['id'] })
+  console.log('all', all)
+  for (const { id } of all) {
+    await typeorm.getRepository(model).remove(id)
+    await sleep(1)
   }
 }
 

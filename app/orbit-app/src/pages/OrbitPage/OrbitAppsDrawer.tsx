@@ -66,7 +66,7 @@ export const OrbitAppsDrawer = memo(() => {
   const renderApp = useRef({})
 
   return (
-    <FullScreen pointerEvents="none" className="orbit-apps-drawer">
+    <FullScreen pointerEvents="none" className="orbit-apps-drawer" zIndex={1000}>
       <Card
         ref={frameRef}
         background={theme => theme.backgroundStronger}

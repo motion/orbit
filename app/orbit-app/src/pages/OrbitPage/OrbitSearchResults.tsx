@@ -103,7 +103,7 @@ export const OrbitSearchResults = memo(() => {
         left={0}
         top={0}
         bottom={0}
-        zIndex={1000}
+        zIndex={200}
         width="40%"
         transition="all ease 300ms"
         background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"

@@ -151,29 +151,29 @@ class OrbitAppsCarouselStore {
     },
   )
 
-  scrollToSearchedApp = react(
-    () => queryStore.queryInstant,
-    async (query, { sleep }) => {
-      await sleep(40)
-      ensure('not on drawer', !appsDrawerStore.isOpen)
-      ensure('has apps', !!this.apps.length)
-      ensure('zoomed out', this.state.zoomedOut)
-      ensure('not zooming into next app', !this.zoomIntoNextApp)
-      if (query.indexOf(' ') > -1) {
-        // searching within app
-        const [_, firstWord] = query.split(' ')
-        if (firstWord.trim().length) {
-          this.state.zoomedOut = false
-        }
-      } else {
-        // searching apps
-        const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-        const curId = searchedApp ? searchedApp.id : this.apps[0].id
-        const appIndex = this.apps.findIndex(x => x.id === curId)
-        this.setFocused(appIndex, true)
-      }
-    },
-  )
+  // scrollToSearchedApp = react(
+  //   () => queryStore.queryInstant,
+  //   async (query, { sleep }) => {
+  //     await sleep(40)
+  //     ensure('not on drawer', !appsDrawerStore.isOpen)
+  //     ensure('has apps', !!this.apps.length)
+  //     ensure('zoomed out', this.state.zoomedOut)
+  //     ensure('not zooming into next app', !this.zoomIntoNextApp)
+  //     if (query.indexOf(' ') > -1) {
+  //       // searching within app
+  //       const [_, firstWord] = query.split(' ')
+  //       if (firstWord.trim().length) {
+  //         this.state.zoomedOut = false
+  //       }
+  //     } else {
+  //       // searching apps
+  //       const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
+  //       const curId = searchedApp ? searchedApp.id : this.apps[0].id
+  //       const appIndex = this.apps.findIndex(x => x.id === curId)
+  //       this.setFocused(appIndex, true)
+  //     }
+  //   },
+  // )
 
   setFocused(next: number, forceScroll = false) {
     if (!this.apps[next]) {

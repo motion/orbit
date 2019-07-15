@@ -30,9 +30,6 @@ export class SearchStore {
     return this.searchState ? this.searchState.query.replace('/', '') : ''
   }
 
-  nextRows = { startIndex: 0, endIndex: 0 }
-  curFindOptions = null
-
   updateSearchHistoryOnSearch = react(
     () => this.searchedQuery,
     async (query, _) => {

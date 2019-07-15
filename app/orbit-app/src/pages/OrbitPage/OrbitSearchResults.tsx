@@ -15,7 +15,9 @@ export const OrbitSearchResults = memo(() => {
   const listRef = useRef<SelectableStore>(null)
 
   useSearchState({
+    includePrefix: true,
     onChange: state => {
+      console.log('got state', state)
       searchStore.setSearchState(state)
     },
   })

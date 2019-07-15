@@ -5,6 +5,14 @@ import { QueryFilterStore, SourceDesc } from './QueryFilterStore'
 
 export type QueryCommand = 'enter'
 
+export const ignoreFirstWord = (q: string) => {
+  const spaceIndex = q.indexOf(' ')
+  if (spaceIndex > -1) {
+    return q.slice(spaceIndex + 1)
+  }
+  return ''
+}
+
 export class QueryStore {
   queryInstant = ''
   prefixFirstWord = false
@@ -22,39 +30,34 @@ export class QueryStore {
     this.queryInstant = value
   }
 
-  get queryFull() {
-    return this.queryInstant
-  }
-
   get queryWithoutPrefix() {
     if (this.prefixFirstWord) {
-      const spaceIndex = this.queryInstant.indexOf(' ')
-      if (spaceIndex > -1) {
-        return this.queryInstant.slice(spaceIndex + 1)
-      }
-      return ''
+      return ignoreFirstWord(this.queryInstant)
     }
     return this.queryInstant
   }
 
-  query = react(
-    () => [this.queryWithoutPrefix, this.queryInstant],
-    async ([query], { sleep }) => {
-      // update nlp
-      this.nlpStore.setQuery(query)
-
-      if (query === '') {
-        return query
-      }
-      await sleep(50)
+  queryFull = react(
+    () => this.queryInstant,
+    async (query, { sleep }) => {
+      if (query === '') return ''
       // debounce super short queries more because they are less often + in hot path
-      if (query.length <= 2) {
-        await sleep(50)
-      }
+      await sleep(query.length <= 2 ? 100 : 50)
       return query
     },
     {
       defaultValue: '',
+    },
+  )
+
+  query = react(() => this.queryFull, () => this.queryWithoutPrefix, {
+    defaultValue: '',
+  })
+
+  updateNLPOnQuery = react(
+    () => this.queryFull,
+    next => {
+      this.nlpStore.setQuery(next)
     },
   )
 

@@ -1,4 +1,4 @@
-import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction, useStoreDebug } from '@o/kit'
+import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
 import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
 import React, { memo, useMemo, useRef } from 'react'
@@ -196,7 +196,6 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
   )
-  useStoreDebug()
   return (
     <>
       <DockButton

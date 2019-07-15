@@ -68,7 +68,7 @@ function ListsAppMain(props: AppViewProps) {
 
 function ListsAppMainFolder(props: AppViewProps) {
   const treeList = useTreeList(id, {
-    rootItemID: +props.subId,
+    rootItemID: props.subId ? +props.subId : 0,
     persist: 'tree',
   })
   return (

@@ -231,7 +231,6 @@ function useReactiveStore<A extends any>(
     const next = setupReactiveStore(Store, props)
     if (next.hooks) {
       dispose = () => {
-        console.log('dispsing hoooks', next.hooks)
         next.hooks!.forEach(hook => hook.__dispose && hook.__dispose())
       }
       next.hooks.forEach(hook => {

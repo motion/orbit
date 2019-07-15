@@ -92,8 +92,10 @@ export const OrbitSearchResults = memo(() => {
     },
   )
 
+  const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
+
   return (
-    <ProvideVisibility visible={!carousel.zoomedIn && !appsDrawer.isOpen}>
+    <ProvideVisibility visible={isActive}>
       <View
         className="orbit-search-results"
         perspective="1000px"
@@ -106,6 +108,7 @@ export const OrbitSearchResults = memo(() => {
         transition="all ease 300ms"
         background="linear-gradient(to right, rgba(0,0,0,0.3) 15%, transparent 90%)"
         opacity={carousel.zoomedIn ? 0 : 1}
+        pointerEvents={isActive ? 'auto' : 'none'}
       >
         <FullScreen
           transition="all ease 300ms"

@@ -286,7 +286,7 @@ class OrbitAppsCarouselStore {
     } else {
       // zoomed out, move them a bit faster, shift them to the right side
       // remember: this is in percent
-      x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 17
+      x = (offset > -0.2 ? offset * 1 : offset * 0.25) + 19
     }
     const next = {
       x,

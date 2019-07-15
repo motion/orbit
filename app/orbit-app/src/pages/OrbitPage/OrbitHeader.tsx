@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -238,32 +238,27 @@ const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   return (
-    <>
-      {/* <OrbitNavHiddenBar
-        isVisible={state.navVisible}
-        onClick={() => actions.setNavVisible(!state.navVisible)}
-      /> */}
-      <Popover
-        group="orbit-nav"
-        target={target}
-        openOnClick
-        openOnHover
-        onHover={actions.setNavVisible}
-        onChangeVisibility={actions.setNavVisible}
-        open={state.navVisible}
-        maxWidth="80vw"
-        padding={0}
-        elevation={10}
-        arrowSize={10}
-        distance={8}
-        sizeRadius
-        background={(theme => theme.backgroundStrongest) as any}
-        adjust={[10, 0]}
-        {...rest}
-      >
-        {children}
-      </Popover>
-    </>
+    <Popover
+      group="orbit-nav"
+      target={target}
+      openOnClick
+      openOnHover
+      delay={500}
+      onHover={actions.setNavVisible}
+      onChangeVisibility={actions.setNavVisible}
+      open={state.navVisible}
+      maxWidth="80vw"
+      padding={0}
+      elevation={10}
+      arrowSize={10}
+      distance={8}
+      sizeRadius
+      background={(theme => theme.backgroundStrongest) as any}
+      adjust={[10, 0]}
+      {...rest}
+    >
+      {children}
+    </Popover>
   )
 }
 

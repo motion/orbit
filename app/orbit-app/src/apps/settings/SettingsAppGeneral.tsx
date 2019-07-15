@@ -162,9 +162,10 @@ export function SettingsAppGeneral(_props: AppViewProps) {
       <Space />
 
       <FormField label="Reset">
-        <Button alt="delete" onClick={handleClearAllApps}>
+        {/* unfortunately typeorm is giving immense amounts of issues just deleting data... */}
+        {/* <Button alt="delete" onClick={handleClearAllApps}>
           Remove all Apps
-        </Button>
+        </Button> */}
         <Button alt="delete" onClick={handleClearAllData}>
           Reset all Orbit data
         </Button>

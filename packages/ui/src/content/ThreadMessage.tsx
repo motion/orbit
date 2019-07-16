@@ -47,8 +47,9 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
 
 const Message = gloss(Box, {
   padding: 15,
-  borderBottom: [1, 'dotted', '#eee'],
-})
+}).theme(theme => ({
+  borderBottom: [1, theme.borderColor],
+}))
 
 const Paragraph = gloss(HighlightText, {
   marginBottom: '0.35rem',

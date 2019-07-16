@@ -66,6 +66,11 @@ export const OrbitSearchResults = memo(() => {
 
   // sync to carousel from selection
   const handleSelect = useCallback(rows => {
+    // avoid when zoomed in or in drawer
+    if (appsCarouselStore.zoomedIn || appsDrawerStore.isOpen) {
+      return
+    }
+
     const item = rows[0]
     // sync to searchStore so we can use in SearchResultsApp
     searchStore.setSelectedItem(item)

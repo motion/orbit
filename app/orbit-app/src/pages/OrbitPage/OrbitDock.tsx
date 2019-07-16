@@ -1,7 +1,7 @@
-import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
-import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
-import React, { memo, useMemo, useRef } from 'react'
+import React, { memo, useContext, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -247,15 +247,9 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
   const top = buttonRect.top - 15
   const left = buttonRect.left - width - 20
 
-  const appViews = useMemo(
-    () => ({
-      Sidebar: DockSidebarView,
-    }),
-    [],
-  )
-
   return (
     <FloatingCard
+      disableDrag
       defaultWidth={width}
       defaultHeight={height}
       defaultTop={top}
@@ -279,7 +273,14 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
       }}
       outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
     >
-      <AppViewsContext.Provider value={appViews}>
+      <AppViewsContext.Provider
+        value={useMemo(
+          () => ({
+            Sidebar: DockSidebarView,
+          }),
+          [],
+        )}
+      >
         <OrbitApp
           id={app.id!}
           identifier={app.identifier!}
@@ -299,7 +300,22 @@ const DockAppRender = (props: RenderAppProps) => {
 }
 
 const DockSidebarView = (props: AppMainViewProps) => {
-  return props.children
+  const { id } = useContext(AppLoadContext)
+  return (
+    <ListPassProps
+      onSelect={rows => {
+        console.log('on select', rows)
+        const item = rows[0]
+        if (!item) return
+        om.actions.router.showAppPage({
+          id: `${id}`,
+          subId: (item.extraProps && item.extraProps.subId) || -1,
+        })
+      }}
+    >
+      {props.children}
+    </ListPassProps>
+  )
 }
 
 const FloatingLabel = gloss<{ visible?: boolean }>(Box, {

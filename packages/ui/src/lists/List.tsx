@@ -1,6 +1,6 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { pick } from 'lodash'
-import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
@@ -65,9 +65,9 @@ export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any
   return props
 }
 
-const Context = createContextualProps<ListProps>()
-export const ListPassProps = Context.PassProps
-export const useListProps = Context.useProps
+const PropsContext = createContextualProps<ListProps>()
+export const ListPassProps = PropsContext.PassProps
+export const useListProps = PropsContext.useProps
 
 export type HandleOrbitSelect = (index: number, extraData: any) => any
 
@@ -76,6 +76,7 @@ const nullFn = () => null
 export const List = memo(
   forwardRef<SelectableStore, ListProps>((allProps, ref) => {
     const [collapseProps, allListProps] = splitCollapseProps(allProps)
+    const extraOnSelect = useContext(PropsContext.Context).onSelect
     const props = useListProps(allListProps)
     const getProps = useGet(props)
     const {
@@ -126,6 +127,10 @@ export const List = memo(
         const onSelect = getProps().onSelect
         if (onSelect) {
           onSelect(selectedRows, selectedIndices)
+        }
+        console.log('extraOnSelect', extraOnSelect)
+        if (extraOnSelect) {
+          extraOnSelect(selectedRows, selectedIndices)
         }
       },
       [],

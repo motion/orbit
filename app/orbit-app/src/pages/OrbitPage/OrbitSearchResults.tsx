@@ -71,12 +71,16 @@ export const OrbitSearchResults = memo(() => {
       return
     }
     const item = rows[0]
-    if (item && item.extraData && item.extraData.app) {
+    if (!item) return
+    if (item.extraData && item.extraData.app) {
       const app: AppBit = item.extraData.app
       const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
-      if (carouselIndex !== -1) {
-        appsCarouselStore.animateAndScrollTo(carouselIndex)
-      }
+      if (carouselIndex === -1) return
+      appsCarouselStore.animateAndScrollTo(carouselIndex)
+    } else {
+      const carouselIndex = appsCarouselStore.apps.findIndex(x => x.identifier === 'bit')
+      if (carouselIndex === -1) return
+      appsCarouselStore.animateAndScrollTo(carouselIndex)
     }
   }, [])
 

@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { App, AppViewProps, createApp, ItemView, openItem } from '@o/kit'
+import { AppViewProps, createApp, ItemView, openItem } from '@o/kit'
 import { Bit, BitModel } from '@o/models'
 import { Button, Col, ItemPropsProvider, normalizeItem, Row, View } from '@o/ui'
 import { gloss } from 'gloss'
@@ -9,11 +9,7 @@ export default createApp({
   id: 'bit',
   name: 'Bit',
   icon: '',
-  app: props => (
-    <App>
-      <BitAppMain {...props} />
-    </App>
-  ),
+  app: BitAppMain,
 })
 
 const defaultItemProps = {

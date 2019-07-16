@@ -138,7 +138,7 @@ type ShowAppPageProps = {
   toggle?: boolean | 'docked'
 }
 
-const showHomePage: Action<ShowAppPageProps | undefined> = (om, item) => {
+const showHomePage: Action<ShowAppPageProps | null> = (om, item) => {
   const firstApp = getFirstApp(om)
   if (firstApp) {
     const id = `${firstApp.id}`

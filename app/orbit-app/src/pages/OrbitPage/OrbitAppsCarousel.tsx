@@ -178,7 +178,6 @@ class OrbitAppsCarouselStore {
       console.warn('no app at index', next)
       return
     }
-    // debugger
     if (next !== this.focusedIndex) {
       this.focusedIndex = next
       // update url

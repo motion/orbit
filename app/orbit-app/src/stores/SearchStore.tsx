@@ -74,13 +74,23 @@ class Search {
   }
 
   getQuickResults(query: string, all = false) {
-    if (query.length > 0) debugger
     return fuzzyFilter(query, [...this.getApps(query, all)])
   }
 
   get results() {
     return this.state.results
   }
+
+  lastState = react(
+    () => this.state,
+    async (next, { sleep }) => {
+      await sleep(200)
+      return next
+    },
+    {
+      lazy: true,
+    },
+  )
 
   state = react(
     () => [
@@ -93,11 +103,12 @@ class Search {
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
       ensure('this.searchState', !!this.searchState)
+      const lastResults = this.lastState ? this.lastState.results : []
 
       await sleep(120)
 
       // RESULTS
-      let results: ListItemProps[] = []
+      let results: ListItemProps[] = fuzzyFilter(query, lastResults)
 
       // if typing, wait a bit
       const isChangingQuery = this.state.query !== query
@@ -167,25 +178,14 @@ class Search {
 
       // app search
       results = this.getQuickResults(query)
-      console.log('quickresults', results)
       setValue({ results, query, finished: false })
 
       // split into chunks to avoid heavy work
       // react concurrent + react window lazy loading could do this work better
-      if (
+      for (const take of [10, 10, 20, 20]) {
         await loadMore({
-          take: 12,
+          take,
         })
-      ) {
-        if (
-          await loadMore({
-            take: 10,
-          })
-        ) {
-          await loadMore({
-            take: 100,
-          })
-        }
       }
 
       // finished

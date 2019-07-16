@@ -35,10 +35,6 @@ export const Theme = (props: ThemeProps) => {
 
   let next: any = null
 
-  // if (theme && theme['background'] === 'red') {
-  //   debugger
-  // }
-
   if (typeof theme === 'object' && cacheThemes.has(theme)) {
     next = cacheThemes.get(theme) as ThemeContextType
   } else {

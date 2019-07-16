@@ -107,7 +107,7 @@ export class Color {
       this.color = zeroArray(color, color.length)
     }
 
-    if (this.color && this.color.some(x => isNaN(x))) {
+    if (process.env.NODE_ENV === 'development' && this.color && this.color.some(x => isNaN(x))) {
       debugger
     }
 

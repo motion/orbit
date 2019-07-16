@@ -1,5 +1,5 @@
 import { getAppDefinition } from '@o/kit'
-import { Action, catchError, Derive, mutate, Operator, pipe, run } from 'overmind'
+import { Action, AsyncAction, catchError, Derive, mutate, Operator, pipe, run } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
@@ -39,6 +39,9 @@ export type RouterState = {
   curPage: Derive<RouterState, HistoryItem>
   ignoreNextPush: boolean
 }
+
+let ignoreNextRoute = false
+let goingBack = false
 
 // helpers
 
@@ -198,7 +201,6 @@ const closeDrawer: Action = om => {
   const lastPage = om.state.router.lastPage
   if (om.state.apps.lastActiveApp) {
     const id = `${om.state.apps.lastActiveApp.id}`
-    debugger
     if (lastPage && lastPage.name === 'app' && lastPage.params!.id === id) {
       om.actions.router.back()
     } else {
@@ -225,6 +227,7 @@ const ignoreNextPush: Action = om => {
 
 const back: Action = om => {
   if (om.state.router.historyIndex > 0) {
+    goingBack = true
     // subtract two because back will add one!
     om.state.router.historyIndex -= 2
     window.history.back()
@@ -239,8 +242,6 @@ const forward: Action = om => {
   }
 }
 
-let ignoreNextRoute = false
-
 const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' }> = (
   om,
   { action, url },
@@ -250,8 +251,13 @@ const routeListen: Action<{ url: string; action: 'showHomePage' | 'showAppPage' 
       ignoreNextRoute = false
       return
     }
+    let avoidZoom = goingBack
+    if (goingBack) {
+      goingBack = false
+    }
     om.actions.router.ignoreNextPush()
     om.actions.router[action]({
+      avoidZoom,
       ...params,
       ...queryString.parse(querystring),
     })
@@ -264,7 +270,19 @@ const routeListenNotFound: Action = () => {
   })
 }
 
+const start: AsyncAction = async om => {
+  const startingOnHome = window.location.pathname === '/'
+  if (startingOnHome) {
+    ignoreNextRoute = true
+  }
+  om.effects.router.watchPage()
+  if (startingOnHome) {
+    om.actions.router.showHomePage({ avoidZoom: true })
+  }
+}
+
 export const actions = {
+  start,
   routeListenNotFound,
   routeListen,
   showPage,
@@ -284,9 +302,6 @@ export const actions = {
 
 export const effects = {
   watchPage() {
-    if (window.location.pathname === '/') {
-      ignoreNextRoute = true
-    }
     page.start()
   },
 
@@ -306,7 +321,6 @@ export const effects = {
     if (!opts.avoidScroll) {
       const index = appsCarouselStore.apps.findIndex(app => app.id === +appId)
       if (index >= 0) {
-        console.log('avoid zoom>', opts)
         appsCarouselStore.scrollToIndex(index, !opts.avoidZoom)
       }
     }

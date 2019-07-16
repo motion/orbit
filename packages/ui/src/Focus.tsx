@@ -29,22 +29,21 @@ class FocusStore {
   }
 }
 
-const Context = createStoreContext(FocusStore)
+const FocusContext = createStoreContext(FocusStore)
 
 // focus parents override children
 export const ProvideFocus = (props: FocusProps & { children: any }) => {
-  const parent = Context.useStore()
+  const parent = FocusContext.useStore()
   const focused =
     !parent || parent.focused === true
       ? selectDefined(props.focused, parent ? parent.focused : true)
       : false
-  console.log('focused', focused)
-  return <Context.Provider focused={focused}>{props.children}</Context.Provider>
+  return <FocusContext.Provider focused={focused}>{props.children}</FocusContext.Provider>
 }
 
 export function useFocus() {
   try {
-    const store = Context.useStore()
+    const store = FocusContext.useStore()
     return selectDefined(store.focused, true)
   } catch {
     // no focus store provided

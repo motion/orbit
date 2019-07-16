@@ -381,12 +381,13 @@ export const OrbitAppsCarousel = memo(() => {
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      await sleep(300)
+      console.log('wait for finish')
+      await sleep(100)
+      console.log('now')
       return next
     },
     {
       defaultValue: [false, true],
-      delay: 50,
     },
   )
 
@@ -453,7 +454,10 @@ const OrbitAppCard = memo(
     const theme = useTheme()
     const isFocused = useReaction(
       () => index === appsCarouselStore.focusedIndex,
-      { delay: 40, name: `AppCard${index}.isFocused` },
+      {
+        // delay: 40,
+        name: `AppCard${index}.isFocused`,
+      },
       [index],
     )
     const isFocusZoomed = useReaction(

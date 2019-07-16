@@ -108,7 +108,7 @@ export class CosalManager {
       })
 
       // avoid burning too much cpu
-      await sleep(250)
+      await sleep(1000)
     }
 
     log.info('Done scanning new bits')

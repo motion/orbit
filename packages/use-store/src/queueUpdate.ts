@@ -4,7 +4,7 @@ const Updates = new Set<Function>()
 
 let tm = setImmediate(() => {})
 
-const shouldDebug = () => {
+const shouldDebug = (level: number = 0) => {
   if (typeof window !== 'undefined' && window['enableLog'] > level) {
     return true
   }

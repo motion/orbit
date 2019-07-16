@@ -1,4 +1,4 @@
-import React, { createContext, memo, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 
 import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
 

@@ -1,4 +1,4 @@
-import { AppCard, createApp } from '@o/kit'
+import { AppCard, createApp, useUserState } from '@o/kit'
 import Slack, { SlackConversation } from '@o/slack-app'
 import { GridLayout, Tab, Table, Tabs } from '@o/ui'
 import React, { useState } from 'react'
@@ -14,12 +14,13 @@ export default createApp({
 export function DemoGridApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
+  const [layout, setLayout] = useUserState('grid-layout', null)
+  console.log('layout', layout)
   return (
-    <GridLayout>
+    <GridLayout layout={layout} onChangeLayout={setLayout}>
       <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>
         {({ api }) => {
           const res = api.channelsList()
-          console.log('re render table', res, api)
           return (
             <Table
               shareable

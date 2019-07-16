@@ -128,6 +128,7 @@ export function AppsIndex() {
   return (
     <List
       titleScale={0.75}
+      alwaysSelected
       onQueryChange={search}
       itemProps={{
         iconBefore: true,

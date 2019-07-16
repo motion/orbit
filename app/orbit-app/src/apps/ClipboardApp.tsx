@@ -53,6 +53,7 @@ const ClipboardAppIndex = memo(() => {
     })
   return (
     <List
+      alwaysSelected
       selectable
       itemProps={{
         small: true,

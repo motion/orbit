@@ -92,7 +92,6 @@ const showPage: Operator<HistoryItem> = pipe(
     if (alreadyOnPage) {
       throw new AlreadyOnPageError()
     }
-    console.log('show page', item)
     om.state.router.pageName = item.name
     om.state.router.history = [...om.state.router.history, item]
     if (!item.replace) {

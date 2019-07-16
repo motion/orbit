@@ -1,11 +1,12 @@
 import { observeMany } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
+
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
-// to run in web worker
 import initNlp from './nlpQuery.worker'
 
+// to run in web worker
 const { parseSearchQuery, setUserNames } = initNlp()
 
 // to run it on thread
@@ -13,14 +14,14 @@ const { parseSearchQuery, setUserNames } = initNlp()
 
 @decorate
 export class NLPStore {
-  queryStore: QueryStore
+  queryStore: QueryStore | null = null
   query = ''
 
   setQuery = (s: string) => {
     this.query = s
   }
 
-  peopleNames: string[] = null
+  peopleNames: string[] = []
   peopleNames$ = observeMany(BitModel, {
     args: {
       select: {
@@ -32,7 +33,7 @@ export class NLPStore {
       take: 100,
     },
   }).subscribe(bits => {
-    this.peopleNames = bits.map(bit => bit.title).filter(x => x.trim().length > 1)
+    this.peopleNames = bits.map(bit => bit.title || '').filter(x => x.trim().length > 1)
   })
 
   willUnmount() {

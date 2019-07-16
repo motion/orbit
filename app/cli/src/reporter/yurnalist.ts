@@ -1,8 +1,8 @@
 import convertHrtime from 'convert-hrtime'
 import { createReporter } from 'yurnalist'
 
-const VERBOSE = process.env.orbit_log_level === `verbose`
-const reporter = createReporter({ emoji: true, verbose: VERBOSE })
+// todo this isnt picking up verbose...
+let reporter = createReporter({ emoji: true, verbose: false })
 
 /**
  * Reporter module.

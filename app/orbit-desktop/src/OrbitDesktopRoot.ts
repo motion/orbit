@@ -39,7 +39,9 @@ import {
   AppGetWorkspaceAppsCommand,
   StateModel,
   StateEntity,
+  RemoveAllAppDataCommand,
   AppStatusModel,
+  ResetDataCommand,
 } from '@o/models'
 import { OrbitAppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
@@ -70,7 +72,6 @@ import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMeth
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
-import { ResetDataResolver } from './resolvers/ResetDataResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
@@ -368,6 +369,18 @@ export class OrbitDesktopRoot {
           props.appMiddleware.setApps(developingApps)
           return appId
         }),
+        resolveCommand(RemoveAllAppDataCommand, async () => {
+          log.info('Remove all app data!')
+          const connection = typeorm.getConnection()
+          await Promise.all([
+            connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'job_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'bit_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'app_entity_spaces_space_entity'`),
+            connection.query(`DROP TABLE IF EXISTS 'app_entity'`),
+          ])
+          log.info('Remove all app data done')
+        }),
         resolveCommand(AppDevCloseCommand, async ({ appId }) => {
           log.info('Removing build server', appId)
           developingApps = remove(developingApps, x => x.appId === appId)
@@ -387,7 +400,10 @@ export class OrbitDesktopRoot {
           return await new SearchResultResolver(props.cosal, args).resolve()
         }),
         getSalientWordsResolver(props.cosal),
-        ResetDataResolver,
+        resolveCommand(ResetDataCommand, async () => {
+          log.info(`resetting data...`)
+          await this.databaseManager.resetAllData()
+        }),
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),

@@ -1,23 +1,20 @@
 import { ImmutableUpdateFn, useModel } from '@o/bridge'
 import { AppBit, AppModel } from '@o/models'
-
-import { useStoresSimple } from './useStores'
-import { createContextualProps, ContextualProps } from '@o/ui'
+import { ContextualProps, createContextualProps } from '@o/ui'
 import { isDefined, selectDefined } from '@o/utils'
 import { merge } from 'lodash'
 
+import { useStoresSimple } from './useStores'
+
 export const CurrentAppBitContext: ContextualProps<{
-  id: number
-  identifier: string
-}> = createContextualProps({
-  id: undefined,
-  identifier: undefined,
-})
+  id?: number
+  identifier?: string
+}> = createContextualProps({})
 
 export function useAppBit(
   appId?: number | false,
   extraConditions?,
-): [AppBit, ImmutableUpdateFn<AppBit>] {
+): [AppBit | null, ImmutableUpdateFn<AppBit>] {
   // currently used by settings panes where appStore isn't loaded
   const curApp = CurrentAppBitContext.useProps()
   // TODO may want to just deprecate appStore in favor of above
@@ -26,7 +23,7 @@ export function useAppBit(
   const id = selectDefined(appId, curApp ? curApp.id : undefined, appStoreId)
 
   const currentAppIdentifier = useCurrentAppIdentifier()
-  let conditions = null
+  let conditions: any = null
 
   if (isDefined(id)) {
     // use id for non-static apps

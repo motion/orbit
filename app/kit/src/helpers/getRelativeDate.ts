@@ -12,7 +12,7 @@ const abbreviations = {
 }
 
 export const getRelativeDate = (date: Date, options?: RelativeDateOptions) => {
-  const len = options.short ? 'short' : 'long'
+  const len = options && options.short ? 'short' : 'long'
   if (!date) {
     return ''
   }

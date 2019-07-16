@@ -6,7 +6,7 @@ import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'
 
 export const onInitialize: OnInitialize = async om => {
-  const { actions, effects } = om
+  const { actions } = om
 
   // start watching for updated app ids
   await startAppLoadWatch()
@@ -29,7 +29,7 @@ export const onInitialize: OnInitialize = async om => {
   // load apps once before loading rest of app
   await actions.apps.start()
 
-  effects.router.watchPage()
+  await actions.router.start()
 
   handleMediatorMessages()
 
@@ -41,8 +41,5 @@ function goToInitialApp(om: IContext<Config>) {
     console.log(`hasn't onboarded, showing pane`)
     om.actions.router.showAppPage({ id: 'onboard' })
     return
-  }
-  if (window.location.pathname === '/') {
-    om.actions.router.showHomePage()
   }
 }

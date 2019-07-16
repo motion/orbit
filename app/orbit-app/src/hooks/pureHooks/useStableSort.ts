@@ -7,7 +7,7 @@ export function useStableSort<A extends string | number>(ids: A[]): A[] {
   if (!isEqual(stableKeys.current.sort(), sortedIds)) {
     // we are building this up over time, so once we see an id
     // we always show it in the same order in the DOM
-    const next = [...new Set([...stableKeys.current, ...sortedIds])]
+    const next = [...new Set<A>([...stableKeys.current, ...sortedIds])]
     stableKeys.current = next
   }
   return stableKeys.current

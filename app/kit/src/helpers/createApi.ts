@@ -3,7 +3,6 @@ import { AppBit, CallAppBitApiMethodCommand } from '@o/models'
 
 export interface FunctionalAPI<X> {
   (appBit: AppBit): X
-  isClass?: undefined
 }
 
 export function createApi<T extends FunctionalAPI<any>>(
@@ -15,9 +14,13 @@ export function createApi<T extends FunctionalAPI<any>>(
       {
         get(_target, method) {
           return (...args) => {
+            if (typeof method !== 'string') {
+              console.error('Not a string method')
+              return
+            }
             return command(CallAppBitApiMethodCommand, {
-              appId: app.id,
-              appIdentifier: app.identifier,
+              appId: app.id!,
+              appIdentifier: app.identifier!,
               method,
               args,
             })
@@ -25,6 +28,5 @@ export function createApi<T extends FunctionalAPI<any>>(
         },
       },
     )
-
   return fn as any
 }

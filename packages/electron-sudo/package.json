@@ -7,8 +7,8 @@
   "author": "Aleksandr Komlev",
   "license": "MIT",
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "lint": "node_modules/eslint/bin/eslint.js -c .eslintrc ./src",
     "test-win32": "npm run build-win32 && node node_modules\\mocha\\bin\\mocha --compilers js:babel-core/register tests",
     "test": "npm run build && node_modules/mocha/bin/mocha --compilers js:babel-core/register ./tests"

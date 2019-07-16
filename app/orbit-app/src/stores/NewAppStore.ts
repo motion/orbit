@@ -1,6 +1,6 @@
 import { AppBit } from '@o/models'
 
-import { getUserApps } from '../apps/orbitApps'
+import { getUserAppDefinitions } from '../apps/orbitApps'
 
 export class NewAppStore {
   app: AppBit = {
@@ -18,21 +18,16 @@ export class NewAppStore {
 
   setApp(identifier: string) {
     this.reset()
-    const userApps = getUserApps()
-    const nextApp = userApps.find(x => x.id === identifier)
-    if (!nextApp) {
-      console.warn('no app', nextApp)
+    const userDefs = getUserAppDefinitions()
+    const nextDef = userDefs.find(x => x.id === identifier)
+    if (!nextDef) {
+      console.warn('no app', nextDef)
       return
     }
 
-    // update name and colors if unedited
-    let name = this.app.name
-    let colors = this.app.colors
-    const app = userApps.find(x => x.id === this.app.identifier)
-    const neverChangedName = name === app ? app!.name : ''
-    if (neverChangedName) {
-      name = nextApp.name
-    }
+    // update name and colors
+    let name = nextDef.name || this.app.name
+    let colors = nextDef.iconColors || this.app.colors
 
     this.app = {
       ...this.app,
@@ -46,7 +41,7 @@ export class NewAppStore {
   }
 
   reset = () => {
-    const initialDef = getUserApps()[0]
+    const initialDef = getUserAppDefinitions()[0]
     this.app = {
       target: 'app',
       name: initialDef.name,

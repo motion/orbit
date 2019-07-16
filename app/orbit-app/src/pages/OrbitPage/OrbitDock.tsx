@@ -1,7 +1,7 @@
-import { AppBit, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
-import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
+import { AppBit, AppLoadContext, AppMainViewProps, AppViewsContext, createUsableStore, getAppDefinition, react, RenderAppProps, useReaction } from '@o/kit'
+import { ActiveDraggables, Dock, DockButton, DockButtonPassProps, FloatingCard, ListPassProps, useDebounceValue, useNodeSize, usePosition, useWindowSize } from '@o/ui'
 import { Box, FullScreen, gloss, useTheme } from 'gloss'
-import React, { memo, useMemo, useRef } from 'react'
+import React, { memo, useContext, useMemo, useRef } from 'react'
 
 import { om, useOm } from '../../om/om'
 import { paneManagerStore } from '../../om/stores'
@@ -11,7 +11,7 @@ import { appsDrawerStore } from './OrbitAppsDrawer'
 type DockOpenState = 'open' | 'closed' | 'pinned'
 
 class OrbitDockStore {
-  state: DockOpenState = 'pinned'
+  state: DockOpenState = 'closed'
   nextState: { state: DockOpenState; delay: number } | null = null
   hoveredIndex = -1
   nextHovered: { index: number; at: number } | null = null
@@ -142,7 +142,7 @@ export const OrbitDock = memo(() => {
         onMouseLeave={store.hoverLeave}
         top={56}
         right={0}
-        padding={[20, 15, 0, 0]}
+        padding={[25, 15, 0, 0]}
         transform={
           store.isOpen
             ? {
@@ -154,13 +154,14 @@ export const OrbitDock = memo(() => {
         }
         transition="all ease 300ms"
         className="orbit-dock"
-        space={18}
+        space={16}
         bottom="auto"
       >
         {activeDockApps.map((app, index) => (
           <OrbitDockButton key={app.id} app={app} index={index} />
         ))}
         <FullScreen
+          data-is="DockShadow"
           top={20}
           bottom={20}
           transform={{
@@ -170,8 +171,8 @@ export const OrbitDock = memo(() => {
           boxShadow={[
             {
               spread: 10,
-              blur: 180,
-              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.3],
+              blur: 160,
+              color: theme.background.isDark() ? [0, 0, 0] : [0, 0, 0, 0.25],
             },
           ]}
           zIndex={-1}
@@ -195,7 +196,6 @@ const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) =>
   const isActive = useReaction(
     () => paneManagerStore.activePane && paneManagerStore.activePane.id === `${app.id}`,
   )
-
   return (
     <>
       <DockButton
@@ -247,15 +247,9 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
   const top = buttonRect.top - 15
   const left = buttonRect.left - width - 20
 
-  const appViews = useMemo(
-    () => ({
-      Sidebar: DockSidebarView,
-    }),
-    [],
-  )
-
   return (
     <FloatingCard
+      disableDrag
       defaultWidth={width}
       defaultHeight={height}
       defaultTop={top}
@@ -279,7 +273,14 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
       }}
       outside={<FloatingLabel visible={showMenu}>{app.name}</FloatingLabel>}
     >
-      <AppViewsContext.Provider value={appViews}>
+      <AppViewsContext.Provider
+        value={useMemo(
+          () => ({
+            Sidebar: DockSidebarView,
+          }),
+          [],
+        )}
+      >
         <OrbitApp
           id={app.id!}
           identifier={app.identifier!}
@@ -299,7 +300,22 @@ const DockAppRender = (props: RenderAppProps) => {
 }
 
 const DockSidebarView = (props: AppMainViewProps) => {
-  return props.children
+  const { id } = useContext(AppLoadContext)
+  return (
+    <ListPassProps
+      onSelect={rows => {
+        console.log('on select', rows)
+        const item = rows[0]
+        if (!item) return
+        om.actions.router.showAppPage({
+          id: `${id}`,
+          subId: (item.extraProps && item.extraProps.subId) || -1,
+        })
+      }}
+    >
+      {props.children}
+    </ListPassProps>
+  )
 }
 
 const FloatingLabel = gloss<{ visible?: boolean }>(Box, {

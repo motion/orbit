@@ -9,7 +9,9 @@ import { useForceUpdate } from './useStore'
 
 export type UseStoresOptions<A> = { optional?: (keyof A)[]; debug?: boolean }
 
-export function createUseStores<A extends Object>(getStores: () => A) {
+export type UseStores<A> = (options?: UseStoresOptions<A>) => A
+
+export function createUseStores<A extends Object>(getStores: () => A): UseStores<A> {
   return function useStores(options?: UseStoresOptions<A>): A {
     const stores = getStores()
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())

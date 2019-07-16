@@ -1,7 +1,5 @@
-import { appToListItem, ensure, getUser, MarkType, react, saveUser, searchBits, SearchQuery, SearchState, SpaceIcon, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
+import { appToListItem, ensure, MarkType, react, searchBits, SearchQuery, SearchState, useActiveClientApps, useActiveSpace, useAppBit, useHooks, useStoresSimple } from '@o/kit'
 import { fuzzyFilter, ListItemProps } from '@o/ui'
-import { uniq } from 'lodash'
-import React from 'react'
 
 type SearchResults = {
   results: ListItemProps[]
@@ -10,12 +8,12 @@ type SearchResults = {
 }
 
 export class SearchStore {
-  hooks = useHooks({
-    stores: useStoresSimple,
-    apps: useActiveClientApps,
-    app: () => useAppBit()[0],
-    space: () => useActiveSpace()[0],
-  })
+  hooks = useHooks(() => ({
+    stores: useStoresSimple(),
+    apps: useActiveClientApps(),
+    app: useAppBit()[0],
+    space: useActiveSpace()[0],
+  }))
 
   searchState: SearchState | null = null
 
@@ -31,42 +29,12 @@ export class SearchStore {
     return this.searchState ? this.searchState.query.replace('/', '') : ''
   }
 
-  nextRows = { startIndex: 0, endIndex: 0 }
-  curFindOptions = null
-
-  updateSearchHistoryOnSearch = react(
-    () => this.searchedQuery,
-    async (query, _) => {
-      ensure('has query', !!query)
-      await _.sleep(2000)
-      const user = await getUser()
-      saveUser({
-        settings: {
-          ...user.settings,
-          recentSearches: !user.settings.recentSearches
-            ? [query]
-            : uniq([...user.settings.recentSearches, query]).slice(0, 50),
-        },
-      })
-    },
-  )
-
   get isChanging() {
     return this.searchState && this.searchState.query !== this.searchedQuery
   }
 
   hasQuery = () => {
     return !!this.searchedQuery
-  }
-
-  hasQueryVal = react(this.hasQuery, _ => _)
-
-  get homeItem() {
-    return {
-      title: this.hooks.space.name,
-      icon: <SpaceIcon space={this.hooks.space} />,
-      identifier: 'apps',
-    }
   }
 
   get allApps() {
@@ -95,6 +63,7 @@ export class SearchStore {
       this.searchedQuery,
       this.hooks.app,
       this.hooks.apps.map(x => x.id).join(' '),
+      !!this.searchState,
     ],
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)

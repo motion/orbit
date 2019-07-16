@@ -8,7 +8,7 @@ export function useAppSortHandler() {
     ({ oldIndex, newIndex }) => {
       let paneSort = arrayMove([...(space.paneSort || [])], oldIndex, newIndex)
       // bug fix we had multiple of the same, we need to figure out why this can happen though...
-      paneSort = [...new Set(paneSort)].filter(isDefined)
+      paneSort = [...new Set<number>(paneSort)].filter(isDefined)
       // update
       updateSpace(space => {
         space.paneSort = paneSort

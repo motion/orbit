@@ -1,8 +1,60 @@
+
+---
+
 -- High level
 
-First: working, non-buggy demos of everything:
+First: working, non-buggy demos of everything. Visually impressive.
 
-~1.5 months
+- Move search out of drawer and make "/" just work on OrbitSearchResults
+- Add PermanentLast item AppShowBit in carousel (basically search app)
+- Drag/Drop with OrbitSearchResults
+- Get interaction with search + show AppShowBit proper
+- Fixing bugs with carousel/drawer/drop
+
+
+Fix query builder postgres loop with drag/drop
+make a generic app for search + display data that you can drag a query into
+make user manager app use grid layout probably
+make slack app search something large and put it into layout demo app or similar
+
+---
+
+planning for workspaces:
+
+workspaces:
+
+refactor for actually working in prod:
+
+1. we should verify and ensure we run cli externally not in desktop
+2. we need to move things into a single unified build system:
+   1. right now we have webpack building
+   2. + we have nodeDefinitions loading into the backend
+   3. + we have appMeta loading into the backend
+   4. so we need to basically really look at the requirements above and redo it
+   5. ideally have something like:
+      1. webpack watches everything, builds everything
+      2. on webpack finish build: send UpdateAppInfo command to desktop
+      3. that command then should probably propogate to the client as well
+         1. Either send command like UpdateAppInfo to client, or Desktop.state.workspaceState
+3. we need to then build to prod and begin the process of making it all work legitimately, and covering all the use cases and bugs we missed
+
+small fixes:
+
+- dont run scripts on install (--ignore-scripts or similar for yarn)
+
+make them work better (easier to manage/work with):
+
+1. copy from node_modules into your workspace folder
+2. delete the original node_modules and symlink workspace back into node_modules
+  1. this lets users edit them as though they were their own
+  2. but they still all work naturally through node_modules
+3. automatically modify all package.jsons, adding every other workspace app as you install them
+  3. lets you not have to manually do a ton of linking
+4. similarly, we _could_ do the same for tsc + project references
+  4. (or we could just handle it all in orbit ws)
+5. this similarly helps with forking
+
+---
 
 # PART 1
 
@@ -251,5 +303,13 @@ Goal #4: App building CLI
 Questions:
 
 -
+---
 
 - Apps + APIs and how "far" we should go: libaries / NLP is a good example case
+
+small:
+
+- gloss could probably memo pretty well, should make adjustments using the benchmarks
+  - custom memo function:
+    - if children set, dont memo at all
+    - do a few smart props that we know are usually POJOs

@@ -32,7 +32,7 @@ export async function commandInstall(options: CommandInstallOptions): Promise<Co
   if (!packageId) {
     return {
       type: 'error' as const,
-      message: `No packageId found locally or in app store`,
+      message: `No packageId found locally or in app store for: ${options.identifier}`,
     }
   }
 

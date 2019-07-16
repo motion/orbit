@@ -2,9 +2,9 @@ import { Box, gloss } from 'gloss'
 import * as React from 'react'
 
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
+import { HighlightText } from '../Highlight'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
-import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
 
 export type ThreadMessageLike = {
@@ -47,8 +47,9 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
 
 const Message = gloss(Box, {
   padding: 15,
-  borderBottom: [1, 'dotted', '#eee'],
-})
+}).theme(theme => ({
+  borderBottom: [1, theme.borderColor],
+}))
 
 const Paragraph = gloss(HighlightText, {
   marginBottom: '0.35rem',

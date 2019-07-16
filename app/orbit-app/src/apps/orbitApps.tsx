@@ -11,7 +11,7 @@ import ClipboardApp from './ClipboardApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
-import QuickFindApp from './QuickFindApp'
+import SearchResultsApp from './SearchResultsApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
@@ -70,15 +70,15 @@ export const orbitStaticApps: AppDefinition[] = [
   SetupAppApp,
   MessageApp,
   LoadingApp,
-  QuickFindApp,
   ClipboardApp,
+  SearchResultsApp,
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {
   return [...orbitStaticApps, ...dynamicApps]
 }
 
-export function getUserApps(): AppDefinition[] {
+export function getUserAppDefinitions(): AppDefinition[] {
   return dynamicApps
 }
 
@@ -89,7 +89,7 @@ export function useStaticAppDefinitions() {
 // refreshes when they change
 export function useUserAppDefinitions() {
   useAppDefinitions() // this triggers update on app defs update
-  return getUserApps()
+  return getUserAppDefinitions()
 }
 
 export function useUserVisualAppDefinitions() {

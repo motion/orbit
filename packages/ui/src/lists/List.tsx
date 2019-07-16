@@ -1,24 +1,24 @@
 import { isDefined, selectDefined } from '@o/utils'
 import { pick } from 'lodash'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import { HotKeys, HotKeysProps } from 'react-hotkeys'
 
 import { Center } from '../Center'
 import { splitCollapseProps } from '../Collapsable'
 import { createContextualProps } from '../helpers/createContextualProps'
+import { ProvideHighlight } from '../Highlight'
 import { useFilter, UseFilterProps } from '../hooks/useFilter'
 import { useGet, useGetFn } from '../hooks/useGet'
 import { Section, SectionProps, SectionSpecificProps } from '../Section'
 import { useShareStore } from '../Share'
 import { useShortcutStore } from '../Shortcut'
-import { HighlightProvide } from '../text/HighlightText'
 import { SubTitle } from '../text/SubTitle'
 import { Text } from '../text/Text'
 import { View } from '../View/View'
 import { useVisibility } from '../Visibility'
 import { ListItem, ListItemProps } from './ListItem'
 import { HandleSelection, ListItemSimpleProps } from './ListItemSimple'
-import { Direction, selectablePropKeys, SelectableProps, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
+import { Direction, selectablePropKeys, SelectableProps, SelectableStore, SelectableStoreProvider, useCreateSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 // TODO round out, we can likely import models
@@ -65,188 +65,199 @@ export function toListItemProps(props?: any): ListItemSimpleProps & { item?: any
   return props
 }
 
-const Context = createContextualProps<ListProps>()
-export const ListPassProps = Context.PassProps
-export const useListProps = Context.useProps
+const PropsContext = createContextualProps<ListProps>()
+export const ListPassProps = PropsContext.PassProps
+export const useListProps = PropsContext.useProps
 
 export type HandleOrbitSelect = (index: number, extraData: any) => any
 
 const nullFn = () => null
 
-export const List = memo((allProps: ListProps) => {
-  const [collapseProps, allListProps] = splitCollapseProps(allProps)
-  const props = useListProps(allListProps)
-  const getProps = useGet(props)
-  const {
-    // split out props for section + other areas
-    flex = 1,
-    titleBorder = true,
-    bordered,
-    title,
-    subTitle,
-    icon,
-    beforeTitle,
-    afterTitle,
-    backgrounded,
-    elevation,
-    titleScale = 0.9,
-    items,
-    onOpen,
-    placeholder,
-    getItemProps,
-    query: search,
-    shareable,
-    onEdit,
-    onSelect: _ignoreOnSelect,
-    padding,
-    droppable,
-    onDrop,
-    onDelete,
-    ...restProps
-  } = props
-  const shareStore = useShareStore()
-  const shortcutStore = useShortcutStore()
-  const getItemPropsGet = useGet(getItemProps || nullFn)
-  const visibility = useVisibility()
-  const getVisibility = useGet(visibility)
-  const filtered = useFilter(props as any)
-  const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
-  const getItems = useGet(filtered.results)
-  const getShareable = useGet(shareable)
-  const selection = useRef<[any[], number[]]>([[], []])
+export const List = memo(
+  forwardRef<SelectableStore, ListProps>((allProps, ref) => {
+    const [collapseProps, allListProps] = splitCollapseProps(allProps)
+    const extraOnSelect = useContext(PropsContext.Context).onSelect
+    const props = useListProps(allListProps)
+    const getProps = useGet(props)
+    const {
+      // split out props for section + other areas
+      flex = 1,
+      titleBorder = true,
+      bordered,
+      title,
+      subTitle,
+      icon,
+      beforeTitle,
+      afterTitle,
+      backgrounded,
+      elevation,
+      titleScale = 0.9,
+      items,
+      onOpen,
+      placeholder,
+      getItemProps,
+      query: search,
+      shareable,
+      onEdit,
+      onSelect: _ignoreOnSelect,
+      padding,
+      droppable,
+      onDrop,
+      onDelete,
+      Separator,
+      ...restProps
+    } = props
+    const shareStore = useShareStore()
+    const shortcutStore = useShortcutStore()
+    const getItemPropsGet = useGet(getItemProps || nullFn)
+    const visibility = useVisibility()
+    const getVisibility = useGet(visibility)
+    const filtered = useFilter(props as any)
+    const filteredGetItemProps = useGetFn(filtered.getItemProps || nullFn)
+    const getItems = useGet(filtered.results)
+    const getShareable = useGet(shareable)
+    const selection = useRef<[any[], number[]]>([[], []])
 
-  const onSelectInner: SelectableProps['onSelect'] = useCallback(
-    (selectedRows: any[], selectedIndices: number[]) => {
-      selection.current = [selectedRows, selectedIndices]
-      if (getShareable()) {
-        shareStore.setSelected(getShareable(), selectedRows)
-      }
-      const onSelect = getProps().onSelect
-      if (onSelect) {
-        onSelect(selectedRows, selectedIndices)
-      }
-    },
-    [],
-  )
+    const onSelectInner: SelectableProps['onSelect'] = useCallback(
+      (selectedRows: any[], selectedIndices: number[]) => {
+        selection.current = [selectedRows, selectedIndices]
+        if (getShareable()) {
+          shareStore.setSelected(getShareable(), selectedRows)
+        }
+        const onSelect = getProps().onSelect
+        if (onSelect) {
+          onSelect(selectedRows, selectedIndices)
+        }
+        console.log('extraOnSelect', extraOnSelect)
+        if (extraOnSelect) {
+          extraOnSelect(selectedRows, selectedIndices)
+        }
+      },
+      [],
+    )
 
-  // wrap select with extra functionality
-  const selectableStore = useCreateSelectableStore({
-    ...pick(props, selectablePropKeys),
-    items: filtered.results,
-    onSelect: onSelectInner,
-  })
-
-  useEffect(() => {
-    if (!shortcutStore) return
-    return shortcutStore.onShortcut(shortcut => {
-      if (getVisibility() !== true) {
-        return
-      }
-      switch (shortcut) {
-        case 'open':
-          if (onOpen) {
-            onOpen(...selection.current)
-          }
-          break
-        case 'up':
-          selectableStore && selectableStore.move(Direction.up)
-          break
-        case 'down':
-          selectableStore && selectableStore.move(Direction.down)
-          break
-      }
+    // wrap select with extra functionality
+    const selectableStore = useCreateSelectableStore({
+      ...pick(props, selectablePropKeys),
+      items: filtered.results,
+      onSelect: onSelectInner,
     })
-  }, [onOpen, shortcutStore, shortcutStore, selectableStore])
 
-  /**
-   * We control some of the item props
-   */
-  const getItemPropsRaw: VirtualListProps['getItemProps'] = (item, index, c) => {
-    // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
-    const normalized = toListItemProps(item)
-    const itemExtraProps = getItemPropsGet()(normalized, index, c)
-    const filterExtraProps = filteredGetItemProps(item, index, c)
-    const itemProps = {
-      onDelete: onDelete ? () => onDelete(item, index) : undefined,
-      onEdit: onEdit ? title => onEdit(item, title) : undefined,
-      ...normalized,
-      ...itemExtraProps,
-      ...filterExtraProps,
-    }
-    return itemProps
-  }
-  const getItemPropsInner = useCallback(getItemPropsRaw, [onEdit, onDelete])
+    useImperativeHandle(ref, () => selectableStore, [])
 
-  const onOpenInner: HandleSelection = useCallback(
-    index => {
-      if (onOpen) {
-        onOpen([getItems()[index]], [index])
+    useEffect(() => {
+      if (!shortcutStore) return
+      return shortcutStore.onShortcut(shortcut => {
+        if (getVisibility() !== true) {
+          return
+        }
+        switch (shortcut) {
+          case 'open':
+            if (onOpen) {
+              onOpen(...selection.current)
+            }
+            break
+          case 'up':
+            selectableStore && selectableStore.move(Direction.up)
+            break
+          case 'down':
+            selectableStore && selectableStore.move(Direction.down)
+            break
+        }
+      })
+    }, [onOpen, shortcutStore, shortcutStore, selectableStore])
+
+    /**
+     * We control some of the item props
+     */
+    const getItemPropsRaw: VirtualListProps['getItemProps'] = (item, index, c) => {
+      // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
+      const normalized = toListItemProps(item)
+      const itemExtraProps = getItemPropsGet()(normalized, index, c)
+      const filterExtraProps = filteredGetItemProps(item, index, c)
+      const itemProps = {
+        onDelete: onDelete ? () => onDelete(item, index) : undefined,
+        onEdit: onEdit ? title => onEdit(item, title) : undefined,
+        ...normalized,
+        ...itemExtraProps,
+        ...filterExtraProps,
       }
-    },
-    [onOpen],
-  )
+      return itemProps
+    }
+    const getItemPropsInner = useCallback(getItemPropsRaw, [onEdit, onDelete])
 
-  const noQuery = typeof search === 'undefined' || search.length === 0
-  const hasResults = !!filtered.results.length
-  const showPlaceholder = noQuery && !hasResults
-  const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
+    const onOpenInner: HandleSelection = useCallback(
+      index => {
+        if (onOpen) {
+          onOpen([getItems()[index]], [index])
+        }
+      },
+      [onOpen],
+    )
 
-  const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
-  const highlightValue = useMemo(
-    () => ({
-      words,
-      maxChars: 500,
-      maxSurroundChars: 80,
-    }),
-    [words],
-  )
+    const noQuery = typeof search === 'undefined' || search.length === 0
+    const hasResults = !!filtered.results.length
+    const showPlaceholder = noQuery && !hasResults
+    const hasSectionProps = isDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
-  const children = (
-    <SelectableStoreProvider value={selectableStore}>
-      <HighlightProvide value={highlightValue}>
-        {hasResults && (
-          <VirtualList
-            items={filtered.results}
-            ItemView={ListItem}
-            {...restProps}
-            getItemProps={getItemPropsInner}
-            onOpen={onOpenInner}
-            selectableStore={selectableStore}
-          />
-        )}
-        {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
-      </HighlightProvide>
-    </SelectableStoreProvider>
-  )
+    const words = useMemo(() => (props.query ? props.query.split(' ') : []), [props.query])
+    const highlightValue = useMemo(
+      () => ({
+        words,
+        maxChars: 500,
+        maxSurroundChars: 80,
+      }),
+      [words],
+    )
 
-  if (!hasSectionProps) {
-    return children
-  }
+    const children = (
+      <SelectableStoreProvider value={selectableStore}>
+        <ProvideHighlight {...highlightValue}>
+          {hasResults && (
+            <VirtualList
+              items={filtered.results}
+              ItemView={ListItem}
+              Separator={Separator}
+              {...restProps}
+              getItemProps={getItemPropsInner}
+              onOpen={onOpenInner}
+              selectableStore={selectableStore}
+            />
+          )}
+          {showPlaceholder && (placeholder || <ListPlaceholder {...allProps} />)}
+        </ProvideHighlight>
+      </SelectableStoreProvider>
+    )
 
-  return (
-    <Section
-      background="transparent"
-      flex={selectDefined(flex, 1)}
-      title={title}
-      subTitle={subTitle}
-      bordered={bordered}
-      icon={icon}
-      beforeTitle={beforeTitle}
-      afterTitle={afterTitle}
-      titleBorder={titleBorder}
-      backgrounded={backgrounded}
-      elevation={elevation}
-      titleScale={titleScale}
-      titlePadding
-      padding={padding}
-      droppable={droppable}
-      onDrop={onDrop as any}
-      {...collapseProps}
-    >
-      {children}
-    </Section>
-  )
-})
+    if (!hasSectionProps) {
+      return children
+    }
+
+    return (
+      <Section
+        background="transparent"
+        flex={selectDefined(flex, 1)}
+        title={title}
+        subTitle={subTitle}
+        bordered={bordered}
+        icon={icon}
+        beforeTitle={beforeTitle}
+        afterTitle={afterTitle}
+        titleBorder={titleBorder}
+        backgrounded={backgrounded}
+        elevation={elevation}
+        titleScale={titleScale}
+        titlePadding
+        padding={padding}
+        droppable={droppable}
+        onDrop={onDrop as any}
+        {...collapseProps}
+      >
+        {children}
+      </Section>
+    )
+  }),
+)
 
 function ListPlaceholder(props: ListProps) {
   return (

@@ -10,7 +10,7 @@ export function useLocationLink(path: string | false) {
       }
       e.stopPropagation()
       e.preventDefault()
-      config.handleLink(path)
+      config.handleLink!(path)
     },
     [path],
   )

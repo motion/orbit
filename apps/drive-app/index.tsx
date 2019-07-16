@@ -1,4 +1,4 @@
-import { createApi, createApp } from '@o/kit'
+import { createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import DriveApi from './api.node'
@@ -21,7 +21,7 @@ export default createApp({
   itemType: 'task',
   settings: DriveSettings,
   workers: [DriverSyncerWorker],
-  api: createApi(DriveApi),
+  api: DriveApi,
   graph,
   icon: `
   <svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512">

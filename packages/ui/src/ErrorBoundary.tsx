@@ -63,7 +63,7 @@ function ErrorMessage({ error, name, setError, displayInline }) {
       minHeight={200}
       scrollable="y"
       whiteSpace="pre-line"
-      pointerEvents="auto"
+      pointerEvents="inherit"
       padding
     >
       <Button alt="confirm" onClick={() => setError({ error: null })}>

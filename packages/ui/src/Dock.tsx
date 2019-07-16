@@ -70,19 +70,19 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
       <Col
         pointerEvents="none"
         // TODO do it based on attachment
-        flexDirection={'column'}
+        flexDirection="column"
         position="relative"
         alignItems="center"
         justifyContent="center"
-        space="sm"
+        space="xs"
       >
         <Button
           ref={ref}
           size="xl"
-          width={42}
-          height={42}
+          width={40}
+          height={40}
           circular
-          iconSize={18}
+          iconSize={16}
           elevation={4}
           badgeProps={{
             background: '#333',

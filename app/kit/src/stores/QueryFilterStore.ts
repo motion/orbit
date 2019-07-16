@@ -1,5 +1,6 @@
 import { always, decorate, ensure, react } from '@o/use-store'
 import { memoize, uniqBy } from 'lodash'
+
 import { MarkType } from '../types/NLPTypes'
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryStore } from './QueryStore'
@@ -13,8 +14,8 @@ export type SearchFilter = {
 }
 
 type DateSelections = {
-  startDate: Date
-  endDate: Date
+  startDate: Date | null
+  endDate: Date | null
   key?: string
 }
 
@@ -119,7 +120,7 @@ export class QueryFilterStore {
     this.disabledFilters
     return this.parsedQuery.filter(this.isFilter).map(x => ({
       ...x,
-      type: x.type,
+      type: x.type!,
       active: this.isActive(x),
     }))
   }
@@ -157,9 +158,8 @@ export class QueryFilterStore {
     if (!this.parsedQuery) {
       return suggestedDates
     }
-    let suggestions = []
+    let suggestions: Filter[] = []
     // show location filters based on current search
-    suggestions = [...suggestions]
     const hasDates = this.parsedQuery.some(x => x.type === MarkType.Date)
     const numPeople = this.parsedQuery.filter(x => x.type === MarkType.Person).length
     if (!hasDates) {
@@ -182,7 +182,9 @@ export class QueryFilterStore {
         // set Relevant
         this.sortBy = this.sortOptions[0]
       } else {
-        this.dateState = this.nlpStore.nlp.date
+        if (this.nlpStore.nlp.date) {
+          this.dateState = this.nlpStore.nlp.date
+        }
         // set Recent
         this.sortBy = this.sortOptions[1]
       }
@@ -195,9 +197,9 @@ export class QueryFilterStore {
       const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)
       // reset source inactive filters
-      ensure('sources', nlp.apps && !!nlp.apps.length)
+      ensure('sources', !!(nlp.apps && nlp.apps.length))
       this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
-        acc[app.type] = nlp.apps.some(x => x === app.type)
+        acc[app.type] = nlp.apps!.some(x => x === app.type)
         return acc
       }, {})
     },

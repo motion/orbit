@@ -1,6 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { always, createStoreContext, ensure, react, useStore } from '@o/use-store'
 import { isDefined, selectDefined } from '@o/utils'
+import { isNumber } from 'lodash'
 import { MutableRefObject } from 'react'
 
 import { defaultSortPressDelay, isBrowser } from '../constants'
@@ -96,9 +97,9 @@ export class SelectableStore {
   )
 
   ensureAlwaysSelected = react(
-    () => [this.props.alwaysSelected, always(this.rows), always(this.active)],
-    ([alwaysSelected]) => {
-      ensure('alwaysSelected', alwaysSelected)
+    () => this.props.alwaysSelected && always(this.rows, this.active),
+    () => {
+      ensure('alwaysSelected', this.props.alwaysSelected)
       ensure('rowsLen', this.rows.length > 0)
       ensure('activeLen', this.active.size < 1)
       this.selectFirstValid()
@@ -125,38 +126,25 @@ export class SelectableStore {
   }
 
   private setActive(next: (string | number)[]) {
-    // dont let it unselect
-    if (this.props.alwaysSelected && next.length === 0) {
-      return
-    }
-
     // check for disabled rows
     const nextFiltered = this.removeUnselectable(next)
-
-    // if we filtered out everything, avoid doing anything
-    if (next.length > 0 && nextFiltered.length === 0) {
-      return
-    }
 
     // dont update if not changed (simple empty check)
     if (this.active.size === 0 && nextFiltered.length === 0) {
       return
     }
 
-    const nextActive = new Set(nextFiltered)
+    const nextActive = new Set<string | number>(nextFiltered)
 
     if (isEqual(this.active, nextActive)) {
       return
     }
 
     this.active = nextActive
-    this.updateActiveAndKeyToIndex(next)
+    this.updateActiveAndKeyToIndex(next, false)
   }
 
-  updateActiveAndKeyToIndex(
-    next: (string | number)[] = [...this.active],
-    opts = { updateActive: false },
-  ) {
+  updateActiveAndKeyToIndex(next: (string | number)[] = [...this.active], updateActive = true) {
     const nextActive = []
     for (const rowKey of next) {
       if (!this.keyToIndex[rowKey]) {
@@ -167,7 +155,7 @@ export class SelectableStore {
         }
       }
     }
-    if (opts.updateActive) {
+    if (updateActive) {
       this.setActive(nextActive)
     }
   }
@@ -235,6 +223,12 @@ export class SelectableStore {
     if (this.listRef !== ref) {
       this.listRef = ref
     }
+  }
+
+  // returns only the index of the first row!
+  get activeIndex(): number {
+    const maybeIndex = this.active.size && this.keyToIndex[[...this.active][0]]
+    return isNumber(maybeIndex) ? maybeIndex : -1
   }
 
   setActiveIndex = (index: number) => {

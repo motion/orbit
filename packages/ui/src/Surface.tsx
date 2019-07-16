@@ -354,7 +354,7 @@ export const Surface = forwardRef(function Surface(direct: SurfaceProps, ref) {
             borderLeftRadius={borderLeftRadius + 1}
             borderRightRadius={borderRightRadius + 1}
             {...borderPosition === 'inside' && {
-              height: roundHalf(+height - size),
+              height: roundHalf(+height - size / 2),
               transform: {
                 y: roundHalf(size) % 1,
               },
@@ -533,13 +533,6 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || null
 
-  // we should only ever get this in really weird error cases
-  // (i've seen in two odd cases, once in componentDidCatch)
-  if (!themeStyle) {
-    debugger
-    return null
-  }
-
   const borderColor = `${themeStyle.borderColor || ''}`
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
@@ -557,7 +550,7 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
   }
 
   if (props.elevation) {
-    boxShadow = [...(boxShadow || []), getElevation(props, theme).boxShadow]
+    boxShadow = [...(boxShadow || []), ...getElevation(props, theme).boxShadow]
   }
 
   const res = {
@@ -583,6 +576,10 @@ const SurfaceFrame = gloss<SurfaceFrameProps>(View, {
           ...(!props.chromeless && themeStyle['&:hover']),
           ...propStyles['&:hover'],
         },
+  }
+
+  if (props['debug']) {
+    console.log('box shadow now', res)
   }
 
   return res

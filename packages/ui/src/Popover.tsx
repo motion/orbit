@@ -923,7 +923,7 @@ export class Popover extends React.Component<PopoverProps, State> {
       return null
     }
     const targetProps = {
-      active: false,
+      active: undefined,
       className: `${target.props['className'] || ''} popover-target`,
       ref: this.targetRef,
     }

@@ -9,12 +9,12 @@ import { Button } from '../buttons/Button'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { useFocus } from '../Focus'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
+import { HighlightText } from '../Highlight'
 import { Icon, IconProps } from '../Icon'
 import { ListSeparator, ListSeparatorProps } from '../ListSeparator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
-import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text, TextProps } from '../text/Text'
 import { Col } from '../View/Col'
@@ -273,7 +273,11 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
       {/* unset the theme for the separator */}
       {!!separator && (
         <Theme name={activeThemeName}>
-          <ListSeparator {...separatorProps}>{separator}</ListSeparator>
+          {isValidElement(separator) ? (
+            separator
+          ) : (
+            <ListSeparator {...separatorProps}>{}</ListSeparator>
+          )}
         </Theme>
       )}
       <SizedSurface
@@ -393,7 +397,10 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
               chromeless
               circular
               icon="cross"
-              opacity={0.65}
+              opacity={0.35}
+              hoverStyle={{
+                opacity: 1,
+              }}
               onMouseDown={e => {
                 e.stopPropagation()
               }}

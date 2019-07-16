@@ -125,17 +125,18 @@ export function setupTrackableStore(
     return config
   }
 
-  const config = getOrCreateProxyWorm()
+  const proxyWorm = getOrCreateProxyWorm()
 
   // done gives us back the keys it tracked
-  let done: ReturnType<typeof config['track']>
+  let done: ReturnType<typeof proxyWorm['track']>
   let disposed = false
 
   return {
-    store: config.store,
+    proxyWorm,
+    store: proxyWorm.store,
     track() {
       paused = true
-      done = config.track(shouldDebug())
+      done = proxyWorm.track(shouldDebug())
     },
     untrack() {
       if (disposed) return
@@ -173,13 +174,15 @@ export function setupTrackableStore(
   }
 }
 
+export type TrackableStoreObject = ReturnType<typeof setupTrackableStore>
+
 export function useTrackableStore<A>(
   plainStore: A,
   rerenderCb: Function,
   opts?: TrackableStoreOptions,
-): A {
+): TrackableStoreObject {
   const component = useCurrentComponent()
-  const trackableStore = useRef<ReturnType<typeof setupTrackableStore>>({} as any)
+  const trackableStore = useRef<TrackableStoreObject>({} as any)
   let cur = trackableStore.current
 
   // [HMR] shouldUpdate replaces with new store
@@ -200,7 +203,7 @@ export function useTrackableStore<A>(
   cur.track && cur.track()
   useLayoutEffect(cur.untrack || idFn)
 
-  return cur.store as any
+  return cur
 }
 
 const idFn = _ => _

@@ -5,8 +5,8 @@
   "ts:main": "./src/index.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@o/config": "^2.5.2",

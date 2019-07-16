@@ -1,20 +1,21 @@
 import { AppBit } from '@o/kit'
 import { ApolloLink, Observable } from 'apollo-link'
 import * as graphileBuild from 'graphile-build'
-import { graphql, print } from 'graphql'
+import { ExecutionResult, graphql, print } from 'graphql'
+import { ExecutionResultDataDefault } from 'graphql/execution/execute'
 import { Pool } from 'pg'
 import { createPostGraphileSchema, PostGraphileOptions, withPostGraphileContext } from 'postgraphile'
 
 import { PostgresAppData } from './PostgresModels'
 
 export async function graph(app: AppBit<PostgresAppData>) {
-  const c = app.data.setup
+  const c = app.data!.setup
   const pool = new Pool({
     user: c.username,
     host: c.hostname,
     database: c.database,
     password: c.password,
-    port: +c.port,
+    port: c.port ? +c.port : 1000,
   })
   const schema = await createSchema(pool, 'public', {})
   return {
@@ -51,7 +52,7 @@ class PostGraphileLink extends ApolloLink {
     this.schema = schema
   }
   request(operation) {
-    return new Observable(observer => {
+    return new Observable<ExecutionResult<ExecutionResultDataDefault>>(observer => {
       performQuery(
         this.pool,
         this.schema,

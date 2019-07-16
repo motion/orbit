@@ -5,10 +5,10 @@ export function useAppSyncState(
   app: AppBit | false,
 ): {
   bitsCount: number
-  lastJob: Job
+  lastJob: Job | null
 } {
   const hasApp = app !== false
-  const appId = app && app.id
+  const appId = (app && app.id!) || -1
   const bitsCount = useModelCount(BitModel, hasApp && { where: { appId } })
   const [lastJob] = useModel(
     JobModel,

@@ -4,6 +4,9 @@ import { AppBit, AppRemoveCommand } from '@o/models'
 import { showConfirmDialog } from './showConfirmDialog'
 
 export const removeApp = async (app: AppBit) => {
+  if (!app.id) {
+    throw new Error(`No app id`)
+  }
   if (
     showConfirmDialog({
       title: 'Remove app?',

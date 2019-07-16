@@ -19,12 +19,13 @@ export type FlowPropsBase = FlowSectionProps & {
   height?: number
 }
 
-export type FlowDataProps = {
+export type FlowStoreProps = {
+  id?: string
   data?: any
 }
 
 export type FlowProps =
-  | FlowPropsBase & FlowDataProps
+  | FlowPropsBase & FlowStoreProps
   | FlowPropsBase & {
       useFlow: FlowStore
     }
@@ -89,7 +90,7 @@ const tabButtonProps: any = {
 
 const tabButtonPropsActive: any = {
   // color: theme => theme.color,
-  borderBottom: theme => [3, theme.backgroundHighlight],
+  borderBottom: theme => [3, theme.backgroundHighlight || theme.color],
   hoverStyle: false,
   opacity: 1,
 }
@@ -134,46 +135,55 @@ interface FlowComponent<Props> extends FunctionComponent<Props> {
 }
 
 export class FlowStore {
-  props: FlowDataProps
+  props: FlowStoreProps
   steps: FlowStepProps[] = []
 
-  private hooks = useHooks({
-    data: () => Config.useUserState('flowdata', (this.props && this.props.data) || null),
-    index: () => Config.useUserState('flowindex', 0),
+  private state = useHooks(() => {
+    const [data, setData] = Config.useUserState(
+      `flowdata-${this.props.id || ''}`,
+      this.props.data || null,
+    )
+    const [index, setIndex] = Config.useUserState(`flowindex-${this.props.id || ''}`, 0)
+    return {
+      data,
+      setData,
+      index,
+      setIndex,
+    }
   })
 
   get data() {
-    return this.hooks.data[0]
+    return this.state.data
   }
 
   get index() {
-    return this.hooks.index[0]
+    return this.state.index
   }
+
+  setData = this.state.setData
+  setIndex = this.state.setIndex
 
   get total() {
     return this.steps.length
   }
 
   get step() {
-    return this.steps[this.index]
+    return this.steps[this.state.index]
   }
 
-  setData = this.hooks.data[1]
-  setStepIndex = this.hooks.index[1]
-
   next = async () => {
-    const nextIndex = Math.min(this.total - 1, this.index + 1)
+    const nextIndex = Math.min(this.total - 1, this.state.index + 1)
     const { step } = this
     const nextStep = this.steps[nextIndex]
     if (!nextStep) return
-    const isValid = !step.validateFinished || (await step.validateFinished(this.data))
+    const isValid = !step.validateFinished || (await step.validateFinished(this.state.data))
     if (isValid) {
-      this.setStepIndex(nextIndex)
+      this.state.setIndex(nextIndex)
     }
   }
 
   prev = () => {
-    this.setStepIndex(Math.max(0, this.index - 1))
+    this.state.setIndex(Math.max(0, this.state.index - 1))
   }
 
   setStepsInternal(steps: FlowStepProps[]) {
@@ -221,7 +231,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
       setData: flowStore.setData,
       next: flowStore.next,
       prev: flowStore.prev,
-      setStepIndex: flowStore.setStepIndex,
+      setStepIndex: flowStore.setIndex,
     }
 
     const contents = (

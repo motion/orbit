@@ -20,8 +20,8 @@ const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
   // for dark theme, make "light" themes darker
   if (key.indexOf('light') === 0) {
     acc[key] = fromStyles({
-      background: alternates[key].background.darken(0.25),
-      borderColor: alternates[key].borderColor.darken(0.3),
+      background: alternates[key].background!.darken(0.25),
+      borderColor: alternates[key].borderColor!.darken(0.3),
       color: '#fff',
     })
   }
@@ -33,6 +33,7 @@ const selectedColor = toColor('#363165')
 const darkAlternates: ThemeSet = {
   ...alternates,
   ...darkAltLight,
+  delete: darkAltLight.lightRed,
   error: darkAltLight.lightRed,
   warn: darkAltLight.lightYellow,
   approve: darkAltLight.lightGreen,
@@ -72,7 +73,7 @@ export const dark: ThemeObject = {
   backgroundStronger,
   backgroundStrong,
   boxShadowColor: [0, 0, 0],
-  boxShadowOpacity: 0.5,
+  boxShadowOpacity: 0.35,
   // elevatedShadowY: (elevation: number) => smoother(x, 1),
   // elevatedShadowSpread: (elevation: number) => smoother(x, 1),
   // elevatedShadowColor: (elevation: number) => smoother(x, 1),
@@ -120,7 +121,7 @@ Object.assign(
     buttonGlintColorBottom: [0, 0, 0, 0.3],
     colorBlur: '#bbb',
     colorActive: '#fff',
-    tabColorActive: darkAlternates.selected.background.lighten(0.5),
+    tabColorActive: darkAlternates.selected.background!.lighten(0.5),
     tabBackgroundHover: [255, 255, 255, 0.1],
     tabBackgroundActive: [255, 255, 255, 0.125],
     tabBackgroundSelected: dark.backgroundStronger,

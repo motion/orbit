@@ -1,14 +1,14 @@
 import { ThemeSet } from '@o/css'
 import { ThemeProvide } from 'gloss'
-import React, { memo, useMemo } from 'react'
+import React from 'react'
 
 import { ProvideBanner } from './Banner'
 import { ProvideDraggable } from './Draggable'
 import { ProvideFocus, ProvideFocusManager } from './Focus'
+import { ProvideHighlight } from './Highlight'
 import { ProvideSearch } from './Search'
 import { ProvideShare } from './Share'
 import { ProvideShortcut } from './Shortcut'
-import { HighlightsContext } from './text/HighlightText'
 import { ProvideVisibility } from './Visibility'
 
 export type ProvideUIProps = {
@@ -17,17 +17,9 @@ export type ProvideUIProps = {
   children?: any
 }
 
-export const ProvideUI = memo((props: ProvideUIProps) => {
-  const defaultHighlight = useMemo(
-    () => ({
-      words: [],
-      maxSurroundChars: Infinity,
-      maxChars: Infinity,
-    }),
-    [],
-  )
+export const ProvideUI = (props: ProvideUIProps) => {
   return (
-    <HighlightsContext.Provider value={defaultHighlight}>
+    <ProvideHighlight>
       <ThemeProvide activeTheme={props.activeTheme} themes={props.themes}>
         <ProvideDraggable>
           <ProvideBanner>
@@ -45,6 +37,6 @@ export const ProvideUI = memo((props: ProvideUIProps) => {
           </ProvideBanner>
         </ProvideDraggable>
       </ThemeProvide>
-    </HighlightsContext.Provider>
+    </ProvideHighlight>
   )
-})
+}

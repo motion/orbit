@@ -25,8 +25,8 @@ export type SearchQuery = {
   query: string
   contentType?: BitContentType
   sortBy?: 'Recent' | 'Relevant'
-  startDate?: Date
-  endDate?: Date
+  startDate?: Date | null
+  endDate?: Date | null
   appFilters?: string[]
   peopleFilters?: string[]
   locationFilters?: string[]

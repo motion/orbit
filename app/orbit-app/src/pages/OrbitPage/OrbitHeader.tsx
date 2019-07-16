@@ -1,18 +1,19 @@
 import { AppIcon, useStore } from '@o/kit'
 import { App, Electron } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, MenuButton, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
+import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
-import { om, useOm } from '../../om/om'
-import { paneManagerStore, queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
+import { useOm } from '../../om/om'
+import { queryStore, useNewAppStore, useOrbitStore, usePaneManagerStore } from '../../om/stores'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
+import { appsDrawerStore } from './OrbitAppsDrawer'
 import { orbitDockStore } from './OrbitDock'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
-import { OrbitEditAppItem } from './OrbitHeaderMenu'
+import { OrbitHeaderOpenAppMenu } from './OrbitHeaderOpenAppMenu'
 import { OrbitNav } from './OrbitNav'
 
 export const headerButtonProps: SizedSurfaceProps = {
@@ -155,7 +156,7 @@ export const OrbitHeader = memo(() => {
               <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
                 {orbitStore.activeActions}
               </SurfacePassProps>
-              {!isEditing && !isTorn && <OpenButton>Open</OpenButton>}
+              <OrbitHeaderOpenAppMenu />
             </>
           )}
         </HeaderContain>
@@ -237,32 +238,27 @@ const OpenButtonExtraArea = gloss<BoxProps & { isOpen: boolean }>({
 const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
   const { state, actions } = useOm()
   return (
-    <>
-      {/* <OrbitNavHiddenBar
-        isVisible={state.navVisible}
-        onClick={() => actions.setNavVisible(!state.navVisible)}
-      /> */}
-      <Popover
-        group="orbit-nav"
-        target={target}
-        openOnClick
-        openOnHover
-        onHover={actions.setNavVisible}
-        onChangeVisibility={actions.setNavVisible}
-        open={state.navVisible}
-        maxWidth="80vw"
-        padding={0}
-        elevation={10}
-        arrowSize={10}
-        distance={8}
-        sizeRadius
-        background={(theme => theme.backgroundStrongest) as any}
-        adjust={[10, 0]}
-        {...rest}
-      >
-        {children}
-      </Popover>
-    </>
+    <Popover
+      group="orbit-nav"
+      target={target}
+      openOnClick
+      openOnHover
+      delay={500}
+      onHover={actions.setNavVisible}
+      onChangeVisibility={actions.setNavVisible}
+      open={state.navVisible}
+      maxWidth="80vw"
+      padding={0}
+      elevation={10}
+      arrowSize={10}
+      distance={8}
+      sizeRadius
+      background={(theme => theme.backgroundStrongest) as any}
+      adjust={[10, 0]}
+      {...rest}
+    >
+      {children}
+    </Popover>
   )
 }
 
@@ -294,7 +290,7 @@ const HomeButton = memo(
               appsCarouselStore.setZoomedOut()
               return
             }
-            actions.router.showHomePage()
+            actions.router.showHomePage(null)
           }}
         />
       </View>
@@ -328,11 +324,6 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  slim: {
-    flex: 'none',
-    width: 'auto',
-    minWidth: 'min-content',
-  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
@@ -346,7 +337,7 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
   margin: ['auto', 0],
   alignItems: 'center',
   flex: 20,
-  maxWidth: 980,
+  maxWidth: 900,
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing
@@ -361,55 +352,6 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const OpenButton = memo((props: ButtonProps) => {
-  const { state, effects } = useOm()
-  const { appRole } = useStore(App)
-
-  if (appRole !== 'main') {
-    return null
-  }
-
-  return (
-    <MenuButton
-      alt="action"
-      size={1}
-      sizeRadius={1.6}
-      tooltip="Open to desktop (⌘ + ⏎)"
-      onClick={effects.openCurrentApp}
-      items={[
-        {
-          title: 'Edit',
-          icon: 'edit',
-        },
-        {
-          title: 'Fork',
-          icon: 'fork',
-        },
-        {
-          title: 'Permalink',
-          subTitle: state.router.urlString,
-          icon: 'link',
-          onClick: effects.copyAppLink,
-        },
-        <OrbitEditAppItem key={100} />,
-        {
-          title: 'App Settings',
-          icon: 'cog',
-          onClick: goToAppSettings,
-        },
-      ]}
-      {...props}
-    />
-  )
-})
-
-const goToAppSettings = () => {
-  om.actions.router.showAppPage({
-    id: 'apps',
-    subId: paneManagerStore.activePane.id,
-  })
-}
-
 const BackButton = memo(() => {
   const { state, actions } = useOm()
   const appsCarousel = useAppsCarousel()
@@ -419,11 +361,15 @@ const BackButton = memo(() => {
       disabled={!appsCarousel.zoomedIn && state.router.historyIndex <= 0}
       iconSize={18}
       onClick={() => {
+        if (appsDrawerStore.isOpen) {
+          appsDrawerStore.closeDrawer()
+          return
+        }
         if (appsCarousel.zoomedIn) {
           appsCarousel.setZoomedOut()
-        } else {
-          actions.router.back()
+          return
         }
+        actions.router.back()
       }}
     />
   )

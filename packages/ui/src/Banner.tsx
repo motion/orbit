@@ -86,6 +86,8 @@ export const ProvideBanner = memo(
     const bannerStore = BannerManager.useCreateStore()
     const BannerView = template
 
+    console.log('rendeirng banner', bannerStore.banners)
+
     return (
       <BannerManager.SimpleProvider value={bannerStore}>
         {children}
@@ -177,17 +179,25 @@ export function useBanners() {
 
 export type BannerViewProps = MessageProps & BannerProps & { close: () => void }
 
-export const Banner = ({ type, title, message, close, timeout, ...rest }: BannerViewProps) => {
+export const Banner = (props: BannerViewProps) => {
+  const { type, title, message, close, timeout, ...rest } = props
   const [width, height] = useWindowSize({
     throttle: 50,
   })
+
+  if (timeout > 50) {
+    console.warn(
+      'Timeouts in Banners are in seconds, not milliseconds, you may have set this accidentally',
+      props,
+    )
+  }
 
   useEffect(() => {
     if (isDefined(timeout)) {
       let tm = setTimeout(close, timeout * 1000)
       return () => clearTimeout(tm)
     }
-  }, [timeout])
+  }, [type, title, message, timeout])
 
   return (
     <Message

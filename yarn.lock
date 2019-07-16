@@ -4675,6 +4675,11 @@ babel-plugin-react-native-web@0.11.4:
   resolved "https://registry.yarnpkg.com/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.4.tgz#55711c66a11292b93bc3c6ff7ece557ab0a90467"
   integrity sha512-xREobnt2fN0AsANhvm5Vh7JKRdYj9BlXvyoBWSTAT3+gmh1mtEgeRFj4CuhyiBcgKAfR8kj8v9BLj/LfOdenow==
 
+babel-plugin-react-native-web@^0.11.5:
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.5.tgz#df22a66991772fb3695279942528d3ae4dcba7af"
+  integrity sha512-elK9hL69DBxn5JUJT48QVoPEOrjb2AIkB18t476DYbmCZUFRuhGCbDxze0WXEI0NLhQDKrigJFgl6pVSHoCSmA==
+
 "babel-plugin-styled-components@>= 1":
   version "1.10.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.10.4.tgz#c9a01d7992e41dc45338792be5ce2cd805e4d868"
@@ -8399,6 +8404,13 @@ dns-txt@^2.0.2:
   dependencies:
     buffer-indexof "^1.0.0"
 
+doc-ready@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/doc-ready/-/doc-ready-1.0.4.tgz#37f5391969cff994303fdfef2e5d50357f8164d3"
+  integrity sha1-N/U5GWnP+ZQwP9/vLl1QNX+BZNM=
+  dependencies:
+    eventie "^1"
+
 doctrine@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-1.5.0.tgz#379dce730f6166f76cefa4e6707a159b02c5a6fa"
@@ -8817,6 +8829,13 @@ electron-osx-sign@0.4.11:
     isbinaryfile "^3.0.2"
     minimist "^1.2.0"
     plist "^3.0.1"
+
+electron-prompt@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/electron-prompt/-/electron-prompt-1.3.1.tgz#547dfa6daa68264249c689f0086fdfad6c9bf52b"
+  integrity sha512-bCbDb9c9knx23PG6MfzBdYuffDZlZQ9gZhjTuUVCAwdCZv9hj/7IEguvBrP4DVDTouv+pYQ0LqCh5VuwYDktpg==
+  dependencies:
+    doc-ready "^1.0.4"
 
 electron-publish@20.38.5:
   version "20.38.5"
@@ -9405,6 +9424,11 @@ eventemitter3@^3.0.0, eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
   integrity sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==
+
+eventie@^1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/eventie/-/eventie-1.0.6.tgz#d4ffc8b0c2b5e493c2aa1b22cbe918d3aee74437"
+  integrity sha1-1P/IsMK15JPCqhsiy+kY067nRDc=
 
 events@^3.0.0:
   version "3.0.0"
@@ -14553,7 +14577,7 @@ left-pad@^1.3.0:
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.3.0.tgz#5b8a3a7765dfe001261dde915589e782f8c94d1e"
   integrity sha512-XI5MPzVNApjAyhQzphX8BkmKsKUxD4LdyK24iZeQGinBN9yTQT3bFlCBy/aVx2HrNcqQGsdot8ghrjyrvMCoEA==
 
-lerna@3.15.0:
+lerna@^3.15.0:
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.15.0.tgz#b044dba8138d7a1a8dd48ac1d80e7541bdde0d1f"
   integrity sha512-kRIQ3bgzkmew5/WZQ0C9WjH0IUf3ZmTNnBwTHfXgLkVY7td0lbwMQFD7zehflUn0zG4ou54o/gn+IfjF0ti/5A==
@@ -17184,31 +17208,31 @@ output-file-sync@^2.0.0:
     is-plain-obj "^1.1.0"
     mkdirp "^0.5.1"
 
-overmind-devtools@19.0.0:
-  version "19.0.0"
-  resolved "https://registry.yarnpkg.com/overmind-devtools/-/overmind-devtools-19.0.0.tgz#2e8cb9a68c9009e5442d0f9a1604010ad2b81f12"
-  integrity sha512-8aOZ7F5BeLBdf9rzVSkq+nSHzH70aNoYJLRGbaLc1jAXpbwCnNXn5EOkBu+SFm1PR0l8zzspyxXaFOPxPZAHdw==
+overmind-devtools-client@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/overmind-devtools-client/-/overmind-devtools-client-2.0.1.tgz#e84f65c165fbc07bd9275af68e1dc23e21b1087f"
+  integrity sha512-btM/QvOatX2oQ0bM7UmSrUHucMbM3y9H7vsop75DgAVmiV57hlpijeX0PXD337gZagqu/cbZxr3vKEA9rfYn5Q==
   dependencies:
-    "@types/node" "^10.5.1"
+    emotion "^9.2.12"
+    lodash.throttle "^4.1.1"
+    overmind-react "20.0.1"
+    overmind-themes next
+    react "16.8.1"
+    react-dom "16.8.1"
+    ws "^7.0.0"
+
+overmind-devtools@20.0.1:
+  version "20.0.1"
+  resolved "https://registry.yarnpkg.com/overmind-devtools/-/overmind-devtools-20.0.1.tgz#471491f6f03d43f92b3c46e8f4a26f1a5d0a1457"
+  integrity sha512-r4KCb4TUotjgghBxIGGHU5Ewan//WZVUBDY+z3A7uLtVlMzj4wLg7sBlBHFQpaTp/3MDjCOtgCapJVIRFb69og==
+  dependencies:
     color "^3.0.0"
     color-hash "^1.0.3"
     electron "^2.0.8"
     electron-json-storage "^4.1.0"
-    emotion "^9.2.12"
-    overmind-react "19.0.0"
-    overmind-themes "1.0.2"
-    react "16.8.1"
-    react-dom "16.8.1"
-    ws "^5.2.1"
-
-overmind-react@19.0.0:
-  version "19.0.0"
-  resolved "https://registry.yarnpkg.com/overmind-react/-/overmind-react-19.0.0.tgz#9abe8703604c00208d227f3c1d560336e254388d"
-  integrity sha512-k1FOe5JEntU2pPYNkFZDLdBReEH2H7AHI3Vkj0wAX4ILOvDKM8abt2lztOIXOMMix+xUw+/27m8Of7jlhN2Sdg==
-  dependencies:
-    "@types/node" "^10.5.1"
-    overmind "18.0.0"
-    tslib "^1.9.3"
+    electron-prompt "^1.3.1"
+    overmind-devtools-client "2.0.1"
+    ws "^7.0.0"
 
 overmind-react@20.0.1:
   version "20.0.1"
@@ -17217,25 +17241,12 @@ overmind-react@20.0.1:
   dependencies:
     overmind "19.0.1"
 
-overmind-themes@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/overmind-themes/-/overmind-themes-1.0.2.tgz#80e46f0bb5e2ad34f18a087618195f9c84a5c111"
-  integrity sha512-dLcou3m7OURReZMbOgYhk3PQxrY605Sr8U2AFEer0ivh0itF/T6eNIZUQv7q8pJmN1XLiM9+YX08lFnhzqW0Mw==
+overmind-themes@next:
+  version "1.0.2-1562145138120"
+  resolved "https://registry.yarnpkg.com/overmind-themes/-/overmind-themes-1.0.2-1562145138120.tgz#0a34f46091d9bfb0a995220958fe54605c472c2b"
+  integrity sha512-sv3VHYAuSSJuxLkXXabwQ08R+FMf1pEf4z/a/DWASwwBTlv8/oxlfoZWDqrC3JjlSHuh6o8ggQH8JkhFjV3B7w==
   dependencies:
-    "@types/node" "^10.5.1"
     color "^3.0.0"
-    tslib "^1.9.3"
-
-overmind@18.0.0:
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/overmind/-/overmind-18.0.0.tgz#4d0de3c738c54a738c924ba463f7c5b5b8224960"
-  integrity sha512-3yLVJkyu+pq2vAxNGNRRv3DrDMUQaBYkaS/pq6sM55ndkBCrffM7o90lYuoEY9vh4w/1cvk0BhfOYc/P5O3zUg==
-  dependencies:
-    "@types/node" "^10.5.1"
-    betsy "1.0.2"
-    is-plain-obj "^1.1.0"
-    proxy-state-tree "4.4.0"
-    tslib "^1.9.3"
 
 overmind@19.0.1:
   version "19.0.1"
@@ -18866,13 +18877,6 @@ proxy-from-env@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.0.0.tgz#33c50398f70ea7eb96d21f7b817630a55791c7ee"
   integrity sha1-M8UDmPcOp+uW0h97gXYwpVeRx+4=
-
-proxy-state-tree@4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/proxy-state-tree/-/proxy-state-tree-4.4.0.tgz#c8642a3b4b2083fec0aa6e9565b70db7d1eaff98"
-  integrity sha512-/eiDWlILQBQJNKUBxeSo+DNn7C06K5JI7Z9lRjRVDA4V2hyhgYSiWFT/cFLtMVM/N6yOBRgBDrEKDEBNY/+pNA==
-  dependencies:
-    is-plain-obj "^1.1.0"
 
 proxy-state-tree@4.4.1:
   version "4.4.1"
@@ -24388,7 +24392,7 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@7.0.1, ws@^1.1.0, ws@^1.1.5, ws@^2.2.2, ws@^3.1.0, ws@^3.3.1, ws@^4.0.0, ws@^5.1.1, ws@^5.2.0, ws@^5.2.1, ws@^6.0.0, ws@^6.1.0, ws@^6.1.3, ws@^7.0.0, ws@~6.1.0:
+ws@7.0.1, ws@^1.1.0, ws@^1.1.5, ws@^2.2.2, ws@^3.1.0, ws@^3.3.1, ws@^4.0.0, ws@^5.1.1, ws@^5.2.0, ws@^6.0.0, ws@^6.1.0, ws@^6.1.3, ws@^7.0.0, ws@~6.1.0:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.0.1.tgz#1a04e86cc3a57c03783f4910fdb090cf31b8e165"
   integrity sha512-ILHfMbuqLJvnSgYXLgy4kMntroJpe8hT41dOVWM8bxRuw6TK4mgMp9VJUNsZTEc5Bh+Mbs0DJT4M0N+wBG9l9A==

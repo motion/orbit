@@ -6,7 +6,7 @@ import { EntityManager, getManager, getRepository } from 'typeorm'
 import { mediatorClient } from './mediatorClient'
 import { SyncerUtils } from './SyncerUtils'
 
-const cancelCommands = new Set()
+const cancelCommands = new Set<number>()
 
 export class AppCancelError extends Error {}
 
@@ -358,7 +358,7 @@ export class Syncer {
       } catch (error) {
         job.message = ''
       }
-      log.info('updating job', job)
+      log.verbose('updating job', job)
       await getRepository(JobEntity).save(job)
     }
   }

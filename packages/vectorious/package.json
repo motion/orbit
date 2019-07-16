@@ -4,10 +4,6 @@
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",
   "sideEffects": false,
-  "scripts": {
-    "build": "",
-    "watch": ""
-  },
   "license": "MIT",
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

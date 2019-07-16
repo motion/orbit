@@ -1,8 +1,9 @@
-import { useVisibilityStore } from '@o/ui'
+import { useGetVisibility } from '@o/ui'
 import { ensure, useReaction } from '@o/use-store'
 
 import { QueryStore } from '../stores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
+import { ignoreFirstWord } from '../stores/QueryStore'
 import { useStoresSimple } from './useStores'
 
 export type SearchState = {
@@ -16,12 +17,12 @@ export type SearchState = {
   clearQuery: QueryStore['clearQuery']
 }
 
-const getSearchState = (queryStore: QueryStore): SearchState => {
+const getSearchState = (queryStore: QueryStore, includePrefix?: boolean): SearchState => {
   const { queryFilters } = queryStore
   return {
     // state
     filters: queryFilters,
-    query: queryFilters.activeQuery,
+    query: includePrefix ? queryFilters.activeQuery : ignoreFirstWord(queryFilters.activeQuery),
     dateState: queryFilters.dateState,
     toggleFilterActive: queryFilters.toggleFilterActive,
     activeFilters: queryFilters.activeFilters,
@@ -40,40 +41,47 @@ const getSearchState = (queryStore: QueryStore): SearchState => {
 export function useSearchState({
   onChange,
   onEvent = 'keypress',
+  includePrefix = false,
 }: {
   onChange?: (state: SearchState) => any
   onEvent?: 'keypress' | 'enter'
+  includePrefix?: boolean
 } = {}) {
   const { queryStore } = useStoresSimple()
-  const visibilityStore = useVisibilityStore()
+  const getVis = useGetVisibility()
   return useReaction(
     () => {
+      if (getVis() === false) {
+        return
+      }
       if (onEvent === 'enter') {
-        return queryStore.lastCommand.at
+        return queryStore!.lastCommand.at
       } else {
-        return getSearchState(queryStore)
+        return getSearchState(queryStore!, includePrefix)
       }
     },
     status => {
-      ensure('is visible', visibilityStore.visible)
-      const update = (next: SearchState = getSearchState(queryStore)) => {
+      ensure('is visible', getVis())
+      if (onEvent === 'enter') {
+        ensure('last command', queryStore!.lastCommand.name === 'enter')
+      }
+      const update = (next: SearchState = getSearchState(queryStore!, includePrefix)) => {
         if (onChange) {
           onChange(next)
         } else {
           return next
         }
       }
-      if (typeof status === 'number') {
-        return update()
-      }
-      return update(status)
+      return typeof status === 'number' ? update() : update(status)
     },
     {
       name: 'useSearchState',
     },
+    [includePrefix, onChange, onEvent],
   )
 }
 
 export function useActiveSearch() {
-  return useSearchState().query
+  const state = useSearchState()
+  return state ? state.query : ''
 }

@@ -1,5 +1,5 @@
-import { getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
-import { AppBit, AppModel, Space } from '@o/models'
+import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
+import { AppBit, AppModel, RemoveAllAppDataCommand, Space } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -35,9 +35,14 @@ export const state: AppsState = {
   allApps: [],
   activeSpace: null,
   activeApps: state => {
-    return (
-      (state.activeSpace && state.allApps.filter(x => x.spaceId === state.activeSpace!.id)) || []
-    )
+    if (!state.activeSpace) return []
+    // this only includes client apps
+    const paneSorted = state.activeSpace
+      .paneSort!.map(appId => state.allApps.find(x => x.id === appId)!)
+      .filter(Boolean)
+    // add the rest of them in
+    const allSortedIds = new Set([...paneSorted.map(x => x.id), ...state.allApps.map(x => x.id)])
+    return [...allSortedIds].map(id => state.allApps.find(x => x.id === id)!)
   },
   activeClientApps: state => {
     const clientApps = state.activeApps.filter(
@@ -71,7 +76,7 @@ export const state: AppsState = {
       .filter<AppBit>((x): x is AppBit => x !== undefined)
 
     // we only want one of each, for some reason we are getting multiple, for now just filter to be sure
-    const uids = [...new Set(all.map(x => x.identifier!))]
+    const uids = [...new Set<string>(all.map(x => x.identifier!))]
     return uids.map(id => all.find(x => x.identifier === id)!)
   },
 }
@@ -90,6 +95,12 @@ const setActiveSpace: Action<Space> = (om, space) => {
   om.effects.apps.ensureStaticAppBits(space)
 }
 
+const resetAllApps: AsyncAction = async om => {
+  await command(RemoveAllAppDataCommand)
+  // ensure the defaults are there
+  om.effects.apps.ensureStaticAppBits(om.state.spaces.activeSpace)
+}
+
 const start: AsyncAction = async om => {
   const appsQuery = { args: { where: { spaceId: om.state.spaces.activeSpace.id } } }
   om.actions.apps.setApps(await loadMany(AppModel, appsQuery))
@@ -103,6 +114,7 @@ export const actions = {
   start,
   setApps,
   setActiveSpace,
+  resetAllApps,
 }
 
 export const effects = {
@@ -115,23 +127,25 @@ export const effects = {
     })
   },
 
-  ensureStaticAppBits(activeSpace: Space) {
+  async ensureStaticAppBits(activeSpace: Space) {
     const appDefs = orbitStaticApps
     for (const appDef of appDefs) {
-      loadOne(AppModel, { args: { where: { identifier: appDef.id } } }).then(app => {
-        if (!app) {
-          console.log('ensuring model for static app', appDef)
-          save(AppModel, {
-            name: appDef.name,
-            target: 'app',
-            identifier: appDef.id,
-            spaceId: activeSpace.id,
-            icon: appDef.icon,
-            colors: ['black', 'white'],
-            tabDisplay: appDef.id === 'setupApp' ? 'permanentLast' : 'hidden',
-          })
+      const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
+      if (!app) {
+        const tabDisplay =
+          appDef.id === 'setupApp' || appDef.id === 'searchResults' ? 'permanentLast' : 'hidden'
+        const next: AppBit = {
+          name: appDef.name,
+          target: 'app',
+          identifier: appDef.id,
+          spaceId: activeSpace.id,
+          icon: appDef.icon,
+          colors: appDef.iconColors || ['#222', '#000'],
+          tabDisplay,
         }
-      })
+        console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
+        await save(AppModel, next)
+      }
     }
   },
 

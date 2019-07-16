@@ -8,8 +8,8 @@
     "debug-apps": "./_/index.js"
   },
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "start": "node --max_old_space_size=4096 ./_/index"
   },
   "dependencies": {

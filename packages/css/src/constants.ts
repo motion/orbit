@@ -42,7 +42,7 @@ export const UNDEFINED = 'undefined'
 
 // TODO this could be dynamic
 // not the best tradeoff here for understanding where you can pass in colors
-export const COLOR_KEYS = new Set([
+export const COLOR_KEYS = new Set<string>([
   'color',
   'background-color',
   'border-color',
@@ -106,7 +106,7 @@ export const psuedoKeys = {
   '&:selection': true,
 }
 
-export const unitlessNumberProperties = new Set([
+export const unitlessNumberProperties = new Set<string>([
   'animationIterationCount',
   'borderImageOutset',
   'borderImageSlice',

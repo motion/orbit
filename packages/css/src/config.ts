@@ -1,4 +1,7 @@
-import { CSSOptions } from './types'
+export type CSSOptions = {
+  toColor: (a: any) => string
+  isColor: (a: any) => boolean
+}
 
 export let Config: CSSOptions = {
   isColor: _ => _ && !!_.toString,

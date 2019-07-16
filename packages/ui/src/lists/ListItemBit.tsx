@@ -1,6 +1,7 @@
 import React from 'react'
+
 import { ItemPropsContext } from '../content/ItemPropsContext'
-import { HighlightText } from '../text/HighlightText'
+import { HighlightText } from '../Highlight'
 
 // TODO type this...
 

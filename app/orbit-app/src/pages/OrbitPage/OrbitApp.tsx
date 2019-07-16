@@ -183,7 +183,9 @@ export const OrbitAppRenderOfDefinition = ({
       <AppLoadContext.Provider value={appLoadContext}>
         <AppViewsContext.Provider value={viewsContext}>
           <ErrorBoundary name={`OrbitApp: ${identifier}`} displayInline>
-            <Suspense fallback={<Loading />}>{appElement}</Suspense>
+            <Suspense fallback={<Loading />} {...{ delayMs: 400 }}>
+              {appElement}
+            </Suspense>
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>
@@ -309,6 +311,9 @@ const OrbitActions = memo((props: { children?: any }) => {
     if (isActive) {
       orbitStore.setActiveActions(props.children || null)
     } else {
+      orbitStore.setActiveActions(null)
+    }
+    return () => {
       orbitStore.setActiveActions(null)
     }
   }, [isActive, props.children])

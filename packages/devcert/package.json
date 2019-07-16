@@ -4,8 +4,8 @@
   "description": "Generate trusted local SSL/TLS certificates for local SSL development",
   "main": "_/index.js",
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
     "@types/configstore": "^2.1.1",

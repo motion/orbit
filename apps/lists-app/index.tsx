@@ -15,7 +15,7 @@ export default createApp({
   app: () => <AppNavigator index={ListsAppIndex} detail={ListsAppMain} />,
 })
 
-const id = 'my-tree-list'
+const id = 'lists'
 
 export function ListsAppIndex(props: NavigatorProps) {
   const treeList = useTreeList(id)
@@ -68,7 +68,7 @@ function ListsAppMain(props: AppViewProps) {
 
 function ListsAppMainFolder(props: AppViewProps) {
   const treeList = useTreeList(id, {
-    rootItemID: +props.subId,
+    rootItemID: props.subId ? +props.subId : 0,
     persist: 'tree',
   })
   return (
@@ -96,7 +96,6 @@ function ListAppStatusBar() {
     : 0
   return (
     <AppStatusBar>
-      123213
       <Breadcrumbs>
         {treeList.state.history.map(item => (
           <Breadcrumb size={0.9} alpha={0.68} fontWeight={500} key={item.id}>

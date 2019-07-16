@@ -1,6 +1,7 @@
 import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
-import { observable } from 'mobx'
+import { debounce } from 'lodash'
+import { _interceptReads, observable, observe, transaction } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { config } from './configure'
@@ -24,7 +25,7 @@ export {
 } from '@o/automagical'
 export { configureUseStore } from './configure'
 export { createStoreContext } from './createStoreContext'
-export { createUseStores, UseStoresOptions } from './createUseStores'
+export { createUseStores, UseStoresOptions, UseStores } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'
@@ -103,54 +104,64 @@ export function disposeStore(store: any, component?: CurrentComponent) {
       component,
     })
   }
-  if (!store.dispose) {
-    debugger
-  }
   store.dispose()
 }
 
-let captureHooks: any = null
-
-type Fn = (...args: any[]) => any
-type ObjectFns = { [key: string]: Fn }
-
-type ObjectReturnTypes<T extends ObjectFns> = { [P in keyof T]: ReturnType<T[P]> }
-
 /**
- * TODO lets make this functional style:
- *
- * class Store {
- *   hooks = useHooks(() => {
- *     const myHook = useState()
- *     return { myHook }
- *   })
- * }
- *
+ * Simple way to add hooks into a store
+ * Keeps types a lot simpler than using props
  */
-export function useHooks<A extends ObjectFns>(hooks: A): ObjectReturnTypes<A> {
-  const getValues = () => {
-    let res: any = {}
-    for (const key in hooks) {
-      const next = hooks[key]()
-      res[key] = next
-    }
-    return res
-  }
-  captureHooks = shallow({
-    ...getValues(),
-    __getHooksValues: getValues,
-  })
-  return captureHooks
+
+type HooksObject = {
+  __rerunHooks: () => any
+  __setUpdater: Function
+  __dispose?: Function
 }
 
-function setupReactiveStore<A>(Store: new () => A, props?: any) {
+export function useHooks<A extends () => any>(hooks: A, store?: any): ReturnType<A> & HooksObject {
+  let updater: Function | null = null
+  const __setUpdater = cb => {
+    updater = debounce(cb)
+  }
+  let trackProps = new Set<string>()
+  let disposeReads: any[] = []
+  if (store) {
+    for (const prop in store.props) {
+      disposeReads.push(
+        _interceptReads(store.props, prop, () => {
+          trackProps.add(prop)
+        }),
+      )
+    }
+  }
+  const res = hooks()
+  let __dispose
+  if (trackProps.size) {
+    __dispose = observe(store.props, change => {
+      if (updater && trackProps.has(change['name'])) {
+        updater()
+      }
+    })
+  }
+  for (const dispose of disposeReads) {
+    dispose()
+  }
+  return shallow({
+    ...res,
+    __rerunHooks: hooks,
+    __setUpdater,
+    __dispose,
+  })
+}
+
+// // this is reactive so we can capture this.props and other reactive state inside hooks call
+
+function setupReactiveStore<A>(Store: new () => A, props?: any): ReactiveStoreDesc {
   const component = useCurrentComponent()
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
-  captureHooks = null
   const store = new AutomagicStore()
-
   if (config.onMount) {
     config.onMount(store)
   }
@@ -163,18 +174,26 @@ function setupReactiveStore<A>(Store: new () => A, props?: any) {
     })
   }
 
+  const allHooks = Object.keys(store)
+    .map(key => store[key] && store[key].__rerunHooks && store[key])
+    .filter(Boolean)
+  const hooks = allHooks.length ? allHooks : null
+
   return {
     store,
-    hooks: captureHooks,
+    hooks,
     hasProps: !!props,
   }
 }
 
-type ReactiveStoreState = {
+type ReactiveStoreDesc = {
   store: any
-  initialState: HydrationState | null
-  hooks: any[] | null
+  hooks: HooksObject[] | null
   hasProps: boolean | null
+}
+
+type ReactiveStoreState = ReactiveStoreDesc & {
+  initialState: HydrationState | null
 }
 
 const initialStoreState = {
@@ -187,10 +206,11 @@ const initialStoreState = {
 function useReactiveStore<A extends any>(
   Store: new () => A | false,
   props?: any,
-): { store: A; hasChangedSource: boolean } | null {
+): { store: A; hasChangedSource: boolean; dispose: Function | null } | null {
   const forceUpdate = useForceUpdate()
   const state = useRef<ReactiveStoreState>(initialStoreState)
   let store = state.current.store
+  let dispose: Function | null = null
   const hasChangedSource = store && !isSourceEqual(store, Store)
 
   if (!Store) {
@@ -209,6 +229,14 @@ function useReactiveStore<A extends any>(
       disposeStore(state.current.store)
     }
     const next = setupReactiveStore(Store, props)
+    if (next.hooks) {
+      dispose = () => {
+        next.hooks!.forEach(hook => hook.__dispose && hook.__dispose())
+      }
+      next.hooks.forEach(hook => {
+        hook.__setUpdater(forceUpdate)
+      })
+    }
     state.current = {
       ...next,
       initialState: dehydrate(next.store),
@@ -219,14 +247,20 @@ function useReactiveStore<A extends any>(
   } else {
     // re-run hooks
     const hooks = state.current.hooks
-    if (hooks) {
-      let next = hooks['__getHooksValues']()
-      for (const key in hooks) {
-        if (key === '__getHooksValues') continue
-        if (next[key] !== hooks[key]) {
-          hooks[key] = next[key]
+    if (hooks && hooks.length) {
+      transaction(function updateHooks() {
+        for (const hook of hooks) {
+          let next = hook.__rerunHooks()
+          if (next) {
+            for (const key in next) {
+              if (key[0] === '_' && key[1] === '_') continue
+              if (next[key] !== hooks[key]) {
+                hook[key] = next[key]
+              }
+            }
+          }
         }
-      }
+      })
     }
   }
 
@@ -240,7 +274,7 @@ function useReactiveStore<A extends any>(
     forceUpdate()
   }
 
-  return { store: state.current.store, hasChangedSource }
+  return { store: state.current.store, hasChangedSource, dispose }
 }
 
 // allows us to use instantiated or non-instantiated stores
@@ -253,59 +287,67 @@ export function useStore<A extends ReactiveStore<any> | any>(
 ): A {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
-  const lastStore = useRef(Store)
-  const shouldReactVal = !options || options.react !== false
-  const shouldReact = useRef(shouldReactVal)
-  const isInstantiatedVal = Store && Store['constructor'].name !== 'Function'
-  const isInstantiated = useRef(isInstantiatedVal)
+  const shouldReact = !options || options.react !== false
+  const isInstantiated = Store && Store['constructor'].name !== 'Function'
+  const state = useRef({
+    lastStore: Store,
+    shouldReact,
+    isInstantiated,
+    dispose: null as any,
+  })
   let store: any = null
 
   if (process.env.NODE_ENV === 'development') {
-    if (shouldReact.current !== shouldReactVal) {
+    if (state.current.shouldReact !== shouldReact) {
       console.warn(`You're changing { react: true }, this is not allowed.`)
     }
-    if (isInstantiated.current !== isInstantiatedVal) {
+    if (state.current.isInstantiated !== isInstantiated) {
       console.warn(
         `You're changing the instantiation of a store passed to useStore, this is not allowed.`,
       )
     }
   }
 
-  if (isInstantiated.current) {
+  if (state.current.isInstantiated) {
     // [HMR] shouldUpdate handles if a new store comes down for the same hook, update it
-    const shouldUpdate = lastStore.current !== Store
-    if (shouldUpdate && lastStore.current) {
-      disposeStore(lastStore.current)
+    const shouldUpdate = state.current.lastStore !== Store
+    if (shouldUpdate && state.current.lastStore) {
+      disposeStore(state.current.lastStore)
     }
-    lastStore.current = Store
+    state.current.lastStore = Store
     store = Store
-    if (shouldReactVal) {
-      store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
+    if (shouldReact) {
+      store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate }).store
     }
     if (!!store && props) {
-      console.log('stores', store, props)
       updateProps(store, props as any)
     }
   } else {
     const res = useReactiveStore(Store as any, props)
-    store = res && res.store
-    if (shouldReactVal) {
+    if (res) {
+      state.current.dispose = res.dispose
+      store = res.store
+    }
+    if (shouldReact) {
       store = useTrackableStore(store, rerender, {
         ...options,
         component,
         shouldUpdate: res ? res.hasChangedSource : undefined,
-      })
+      }).store
     }
   }
 
   // dispose on unmount
   useEffect(() => {
-    if (!isInstantiated.current) {
-      return () => {
+    return () => {
+      if (state.current.dispose) {
+        state.current.dispose()
+      }
+      if (!state.current.isInstantiated) {
         store && disposeStore(store, component)
       }
     }
-  }, [store, isInstantiated.current])
+  }, [])
 
   return store
 }

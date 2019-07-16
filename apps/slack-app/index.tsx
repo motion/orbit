@@ -1,4 +1,4 @@
-import { createApi, createApp } from '@o/kit'
+import { createApp } from '@o/kit'
 
 import { graph } from './api.graph.node'
 import SlackApi from './api.node'
@@ -6,6 +6,7 @@ import { SlackLoader } from './SlackLoader'
 import { SlackSettings } from './SlackSettings'
 import { SlackSyncerWorker } from './SlackSyncerWorker.node'
 
+export * from 'slack'
 export * from './SlackConversation'
 
 export default createApp({
@@ -27,7 +28,7 @@ export default createApp({
     app.name = team.name
     return app
   },
-  api: createApi(SlackApi),
+  api: SlackApi,
   graph,
   iconColors: ['orange', 'yellow'],
   icon: `

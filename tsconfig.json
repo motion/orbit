@@ -14,6 +14,10 @@
     { "path": "./app/orbit-dotapp" },
     { "path": "./app/cli" },
 
+    // apps type defs only for use in monorepo
+    // warning this slowed things down
+    // { "path": "./apps" },
+
     // dev time needs
     { "path": "./packages/build" },
     { "path": "./packages/plugin-transform-react-constant-elements" },

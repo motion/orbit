@@ -1,7 +1,7 @@
+import { AppBit } from '@o/kit'
 import { Connection, createConnection } from 'typeorm'
 
 import { PostgresAppData } from './PostgresModels'
-import { AppBit } from '@o/kit'
 
 const connect = (appData: PostgresAppData) => {
   return createConnection({
@@ -18,8 +18,11 @@ const connect = (appData: PostgresAppData) => {
 
 export default (app: AppBit<PostgresAppData>) => {
   return {
-    async query(query: string, parameters: any[] = []): Promise<any[]> {
-      let connection: Connection
+    async query(query: string, parameters: any[] = []): Promise<any[] | undefined> {
+      let connection: Connection | null = null
+      if (!app.data) {
+        return
+      }
       try {
         const appData: PostgresAppData = app.data
         console.log('connecting...')

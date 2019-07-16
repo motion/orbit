@@ -7,8 +7,8 @@
   },
   "scripts": {
     "start": "node _/dev.js",
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput"
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
     "@o/debug-apps": "^2.5.2",

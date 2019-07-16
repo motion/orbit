@@ -1,8 +1,8 @@
 import { ThemeContext, ThemeObject, useTheme } from 'gloss'
 import React, { useCallback, useContext, useMemo } from 'react'
 import ReactSelect from 'react-select'
-import { Props } from 'react-select/lib/Select'
-import { ActionMeta } from 'react-select/lib/types'
+import { Props } from 'react-select/src/Select'
+import { ActionMeta } from 'react-select/src/types'
 
 import { ListItemSimple } from '../lists/ListItemSimple'
 import { SimpleText } from '../text/SimpleText'

@@ -8,6 +8,7 @@ import * as React from 'react'
 
 import { sleep } from '../../helpers'
 import { showNotification } from '../../helpers/electron/showNotification'
+import { om } from '../../om/om'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 
 const eventCharsToNiceChars = {
@@ -52,26 +53,37 @@ const blurShortcut = () => {
   App.setState({ orbitState: { shortcutInputFocused: false } })
 }
 
+const handleClearAllData = async () => {
+  if (
+    showConfirmDialog({
+      title: 'Delete all Orbit local data?',
+      message: 'This will delete all Orbit data and restart Orbit.',
+    })
+  ) {
+    await command(ResetDataCommand)
+    showNotification({
+      title: 'Deleted successfully!',
+      message: 'Restarting...',
+    })
+    await sleep(1000)
+    await command(RestartAppCommand)
+  }
+}
+
+const handleClearAllApps = async () => {
+  if (
+    showConfirmDialog({
+      title: 'Delete all apps?',
+      message: 'This will delete every app from this workspace.',
+    })
+  ) {
+    om.actions.apps.resetAllApps()
+  }
+}
+
 export function SettingsAppGeneral(_props: AppViewProps) {
   const [user, updateUser] = useActiveUser()
-  const { settings } = user || { settings: {} }
-
-  const handleClearAllData = async () => {
-    if (
-      showConfirmDialog({
-        title: 'Delete all Orbit local data?',
-        message: 'This will delete all Orbit data and restart Orbit.',
-      })
-    ) {
-      await command(ResetDataCommand)
-      showNotification({
-        title: 'Deleted successfully!',
-        message: 'Restarting...',
-      })
-      await sleep(2000)
-      await command(RestartAppCommand)
-    }
-  }
+  const settings = user.settings || {}
 
   return (
     <Section titleBorder margin padding title="General Settings">
@@ -80,7 +92,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         checked={settings.autoLaunch}
         onChange={value => {
           updateUser(x => {
-            x.settings.autoLaunch = value
+            x.settings!.autoLaunch = value
           })
         }}
       />
@@ -89,7 +101,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
         checked={settings.autoUpdate}
         onChange={autoUpdate => {
           updateUser(x => {
-            x.settings.autoUpdate = autoUpdate
+            x.settings!.autoUpdate = autoUpdate
           })
         }}
       />
@@ -99,7 +111,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
           value={settings.theme}
           onChange={e =>
             updateUser(x => {
-              x.settings.theme = e.target.value as any
+              x.settings!.theme = e.target.value as any
             })
           }
         >
@@ -116,7 +128,7 @@ export function SettingsAppGeneral(_props: AppViewProps) {
           value={settings.vibrancy}
           onChange={e =>
             updateUser(x => {
-              x.settings.vibrancy = e.target.value as any
+              x.settings!.vibrancy = e.target.value as any
             })
           }
         >
@@ -134,10 +146,10 @@ export function SettingsAppGeneral(_props: AppViewProps) {
 
       <FormField label="Open shortcut">
         <ShortcutCapture
-          defaultValue={electronToNiceChars(settings.openShortcut)}
+          defaultValue={electronToNiceChars(settings.openShortcut || '')}
           onUpdate={val => {
             updateUser(x => {
-              x.settings.openShortcut = niceCharsToElectronChars(val)
+              x.settings!.openShortcut = niceCharsToElectronChars(val)
             })
           }}
           modifierChars={eventCharsToNiceChars}
@@ -150,7 +162,11 @@ export function SettingsAppGeneral(_props: AppViewProps) {
       <Space />
 
       <FormField label="Reset">
-        <Button alt="action" onClick={handleClearAllData}>
+        {/* unfortunately typeorm is giving immense amounts of issues just deleting data... */}
+        {/* <Button alt="delete" onClick={handleClearAllApps}>
+          Remove all Apps
+        </Button> */}
+        <Button alt="delete" onClick={handleClearAllData}>
           Reset all Orbit data
         </Button>
       </FormField>

@@ -51,7 +51,7 @@ export default class DebugApps {
       this.browser = await puppeteer.launch({
         headless: false,
         args: [
-          `--window-size=${800},${680}`,
+          `--window-size=${800},${720}`,
           '--disable-infobars',
           // `--no-startup-window`,
           // `--enable-slim-navigation-manager`,

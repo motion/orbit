@@ -10,6 +10,7 @@ import { APP_ID } from '../../constants'
 import { hmrSocket } from '../../helpers/hmrSocket'
 import { useOm } from '../../om/om'
 import { queryStore, Stores, useThemeStore } from '../../om/stores'
+import { SearchStore } from '../../stores/SearchStore'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
@@ -50,13 +51,15 @@ export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()
   return (
     <ProvideStores stores={Stores}>
-      <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
-        <OrbitPageInner />
-        {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
-        <Suspense fallback={null}>
-          <OrbitStatusMessages />
-        </Suspense>
-      </AppWrapper>
+      <SearchStore.Provider>
+        <AppWrapper className={`theme-${themeStore.themeColor}`} color={themeStore.theme.color}>
+          <OrbitPageInner />
+          {/* TODO: this wont load or will hit suspense/fallback if no messages are in queue i think */}
+          <Suspense fallback={null}>
+            <OrbitStatusMessages />
+          </Suspense>
+        </AppWrapper>
+      </SearchStore.Provider>
     </ProvideStores>
   )
 })

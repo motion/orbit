@@ -13,10 +13,6 @@ debugUseStore(event => {
 
 export class ElectronDebugStore {
   error = null
-  stores = null
-  views = null
-  clear = Date.now()
-  apps = new Set()
 
   restart() {
     if (process.env.NODE_ENV === 'development') {

@@ -1,16 +1,16 @@
 import { AppDefinition } from '@o/models'
-import { Context, createContext } from 'react'
+import { Context } from 'react'
 
 import { KitStores } from './stores'
 
 type ConfigureOpts = {
-  StoreContext?: Context<KitStores>
+  StoreContext?: Context<KitStores> | null
   handleLink?: (url: string) => void
-  getLoadedApps: () => AppDefinition[]
+  getLoadedApps: (() => AppDefinition[]) | null
 }
 
 export let config: ConfigureOpts = {
-  StoreContext: createContext(null),
+  StoreContext: null,
   handleLink: path => window.history.pushState(null, '', path),
   getLoadedApps: null,
 }

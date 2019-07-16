@@ -20,9 +20,13 @@ const createResizObserver = (node, cb) => {
 }
 
 export class SubPaneStore {
+  // @ts-ignore
   props: Pick<SubPaneProps, 'id' | 'fullHeight' | 'onChangeHeight' | 'onScrollNearBottom'>
 
-  stores = useHooks({ stores: useStoresSimple }).stores
+  hooks = useHooks(() => ({ stores: useStoresSimple() }))
+  get stores() {
+    return this.hooks.stores
+  }
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
   aboveContentHeight = 0
@@ -40,13 +44,13 @@ export class SubPaneStore {
   }
 
   get isLeft() {
-    const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
-    return thisIndex === this.stores.paneManagerStore.paneIndex - 1
+    const thisIndex = this.stores.paneManagerStore!.indexOfPane(this.props.id)
+    return thisIndex === this.stores.paneManagerStore!.paneIndex - 1
   }
 
   get isActive() {
     const { paneManagerStore } = this.stores
-    return paneManagerStore.activePane && this.props.id === paneManagerStore.activePane.id
+    return paneManagerStore!.activePane && this.props.id === paneManagerStore!.activePane.id
   }
 
   triggerRewatch = 0
@@ -134,6 +138,9 @@ export class SubPaneStore {
       return
     }
     // get top from here because its not affected by scroll
+    if (!this.innerPaneRef.current) {
+      return
+    }
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {
       this.aboveContentHeight = Math.max(0, top)
@@ -148,7 +155,7 @@ export class SubPaneStore {
 
   onPaneNearEdges = () => {
     const pane = this.paneNode
-    if (!pane) {
+    if (!pane || !this.paneInnerNode) {
       return
     }
     const innerHeight = this.paneInnerNode.clientHeight

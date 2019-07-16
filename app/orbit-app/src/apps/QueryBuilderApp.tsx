@@ -1,8 +1,8 @@
 import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { memo, Suspense, useCallback, useMemo, useState } from 'react'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useOm } from '../om/om'
 import { MonacoEditor } from '../views/MonacoEditor'
@@ -16,54 +16,101 @@ export default createApp({
   app: QueryBuilder,
 })
 
-const treeId = 'query-build'
+const treeId = 'query-builder3'
 
-function QueryBuilder(props: AppViewProps) {
+function QueryBuilder() {
   const om = useOm()
   const dataApps = useActiveDataApps()
+  const [items, setItems] = useState<any[]>([])
+  const hasItems = !!items.length
+  const curItem = items[0]
+  const id = (curItem && curItem.id) || -1
   const navigator = useCreateStackNavigator({
-    id: `query-builder-nav-${props.id}`,
+    id: `query-builder-nav-${id}-2`,
     items: {
+      Null: () => null,
       SelectApp: QueryBuilderSelectApp,
       QueryEdit: QueryBuilderQueryEdit,
+    },
+    defaultItem: {
+      id: 'Null',
+      props: {},
     },
   })
   const treeList = useTreeList(treeId)
 
+  useEffect(() => {
+    if (!navigator.currentItem) return
+    if (curItem && navigator.currentItem.id !== 'QueryEdit') {
+      navigator.navigateTo(
+        {
+          id: 'SelectApp',
+          props: curItem,
+        },
+        {
+          replaceAll: true,
+        },
+      )
+    }
+  }, [curItem, navigator.currentItem])
+
   if (!dataApps.length) {
     return (
-      <Templates.Message
-        title="No data apps"
-        subTitle="You haven't added any data apps to this workspace."
-      >
-        <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
-          Install apps
-        </Button>
-      </Templates.Message>
+      <Scale size={0.8}>
+        <Templates.Message
+          title="No data apps"
+          subTitle="You haven't added any data apps to this workspace."
+        >
+          <Button alt="action" onClick={() => om.actions.router.showAppPage({ id: 'apps' })}>
+            Install apps
+          </Button>
+        </Templates.Message>
+      </Scale>
     )
   }
 
   return (
-    <App index={<QueryBuilderIndex treeList={treeList} navigator={navigator} />}>
-      <QueryBuilderMain key={props.id} {...props} treeList={treeList} navigator={navigator} />
+    <App
+      index={<QueryBuilderIndex treeList={treeList} navigator={navigator} setItems={setItems} />}
+    >
+      {!hasItems && <CenteredText>Add a query</CenteredText>}
+      <Suspense fallback={<Loading />}>
+        {hasItems && <QueryBuilderMain key={id} treeList={treeList} navigator={navigator} />}
+      </Suspense>
     </App>
   )
 }
 
-export function QueryBuilderIndex({
+function QueryBuilderIndex({
   treeList,
+  setItems,
 }: {
   treeList: TreeListStore
   navigator: StackNavigatorStore
+  setItems: any
 }) {
   return (
     <>
       <TreeList
+        title="Queries"
+        alwaysSelected
         use={treeList}
+        onSelect={items => {
+          console.log('on select', items)
+          setItems(items)
+        }}
+        sortable
+        shareable={false}
+        itemProps={{
+          editable: true,
+          deletable: true,
+          iconBefore: true,
+          iconSize: 28,
+        }}
         getItemProps={useCallback(item => {
           const treeItem = treeList.state.currentItemChildren.find(x => x.id === +item.id)
           if (treeItem) {
-            const definition = getAppDefinition(`${treeItem.data.identifier}`)
+            const definition = getAppDefinition(`${treeItem.data!.identifier}`)
             if (definition) {
               return {
                 icon: definition.icon,
@@ -72,13 +119,6 @@ export function QueryBuilderIndex({
           }
           return null
         }, [])}
-        itemProps={{
-          editable: true,
-          deletable: true,
-        }}
-        title="Queries"
-        sortable
-        deletable
       />
       <Dock>
         <DockButton
@@ -102,16 +142,10 @@ export function QueryBuilderIndex({
 function QueryBuilderMain({
   navigator,
   treeList,
-  ...props
 }: AppViewProps & { navigator: StackNavigatorStore; treeList: TreeListStore }) {
   return (
     <StackNavigator
-      key={props.id}
       useNavigator={navigator}
-      defaultItem={{
-        id: 'SelectApp',
-        props,
-      }}
       onNavigate={item => {
         console.log('navigating to', item, treeList)
         if (!item) {
@@ -120,7 +154,7 @@ function QueryBuilderMain({
         // const icon = getAppDefinition(item.id)
         treeList.actions.updateSelectedItem({
           data: {
-            identifier: item.props.subType,
+            identifier: item.props!.subType || '',
           },
         })
       }}
@@ -132,6 +166,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState<any[] | null>(null)
+  console.log('props', props)
   return (
     <Section
       padding
@@ -158,7 +193,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
                 return
               }
               // navigate to app definition:
-              props.navigation.navigate({
+              props.navigation.navigateTo({
                 id: 'QueryEdit',
                 props: {
                   title: app.name,
@@ -197,7 +232,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
         getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
           return (
             <OrbitAppIcon
-              app={getActiveApps().find(x => x.id === item.id)}
+              app={getActiveApps().find(x => x.id === item.id)!}
               isSelected={isSelected}
               onClick={select}
               onDoubleClick={onDoubleClick}
@@ -212,7 +247,7 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
 const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
   const [mode, setMode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
-  const [app, def] = useAppWithDefinition(+props.id)
+  const [app, def] = useAppWithDefinition(+props.id!)
 
   if (!def) {
     return null
@@ -225,6 +260,7 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
       backgrounded
       titleBorder
       title={props.title}
+      beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
       titleProps={{
         editable: true,
         autoselect: true,
@@ -369,8 +405,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const queryBuilder = useStore(QueryBuilderStore, {
     method: method ? method.name : '',
-    appId: app.id,
-    appIdentifier: def.id,
+    appId: app.id!,
+    appIdentifier: def.id!,
   })
   const hasApiInfo = !!meta && !!apiInfo
 
@@ -452,6 +488,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             afterTitle={<PaneButton circular icon="plus" tooltip="Create new placeholder" />}
             scrollable="y"
             padding
+            resizable
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -462,7 +499,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding flex={2}>
+          <Pane title="Explore API" scrollable="y" padding flex={2} space>
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (

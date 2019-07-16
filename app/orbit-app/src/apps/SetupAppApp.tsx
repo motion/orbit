@@ -130,6 +130,7 @@ function SetupAppCustom() {
                 template,
                 name,
                 identifier,
+                icon: 'blank',
               })
 
               if (res.type === 'error') {
@@ -169,6 +170,9 @@ export function SetupAppHome(props: SetupAppHomeProps) {
     identifier: def.id,
     groupName: 'Installed apps',
     icon: <AppIcon identifier={def.id} colors={def.iconColors} />,
+    extraData: {
+      definition: def,
+    },
   }))
   const [searchedApps, search] = useSearchAppStoreApps(results =>
     results.filter(res => res.features.some(x => x === 'app')),
@@ -211,6 +215,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
                 selectable
                 alwaysSelected
                 onSelect={rows => {
+                  console.log('selecting', rows)
                   const row = rows[0]
                   if (row) {
                     flow.setData({ selectedAppIdentifier: row.identifier })
@@ -240,7 +245,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
 
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
   const flow = useFlow()
-  const stackNav = useStackNavigator()
+  const stackNav = useStackNavigator()!
   // const definition = useAppDefinition(flow.data.selectedAppIdentifier)
   const installApp = useInstallApp()
   return (
@@ -250,7 +255,7 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
           <Button
             alt="action"
             onClick={() => {
-              stackNav.navigate({
+              stackNav.navigateTo({
                 id: 'SetupAppCustom',
               })
             }}

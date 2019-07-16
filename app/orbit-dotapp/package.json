@@ -4,8 +4,8 @@
   "main": "./_/main.js",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "build": "tsc -b || true",
+    "watch": "tsc -b --watch --preserveWatchOutput",
     "bundle": "mcro-build --build --prod --target node --entry ./src/main.ts",
     "dist": "pkg ./_/main.js --targets node10-macos-x64 -o ./dist/main"
   },

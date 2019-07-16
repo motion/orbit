@@ -18,7 +18,7 @@ export function MasterDetail({
   ...listProps
 }: MasterDetailProps) {
   const isSmall = useMedia({ maxWidth: 700 })
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState<any>(null)
 
   let contents: React.ReactNode = null
   if (typeof children === 'function') {

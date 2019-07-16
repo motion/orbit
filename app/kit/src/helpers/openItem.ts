@@ -6,9 +6,11 @@ export const openItem = (item: Bit | string) => {
   if (typeof item === 'string') {
     url = item
   } else if (item.target === 'bit') {
-    url = item.desktopLink || item.webLink
+    url = item.desktopLink || item.webLink || ''
   }
   if (url) {
     command(OpenCommand, { url })
+  } else {
+    console.warn('no url', item)
   }
 }

@@ -3,6 +3,7 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "src",
+    "incremental": true,
     "declaration": true,
     "declarationMap": true,
     "module": "CommonJS",

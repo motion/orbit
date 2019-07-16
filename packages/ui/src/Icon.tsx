@@ -76,10 +76,6 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
     }
   }
 
-  if (isNaN(size)) {
-    debugger
-  }
-
   if (typeof props.name === 'string') {
     const nameTrim = props.name.trim()
     if (nameTrim.indexOf('<svg') === 0) {

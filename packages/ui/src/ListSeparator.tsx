@@ -1,5 +1,5 @@
 import { alphaColorTheme, gloss, psuedoStyleTheme, selectThemeSubset, ThemeSelect } from 'gloss'
-import React from 'react'
+import React, { memo } from 'react'
 
 import { BorderBottom, BorderTop } from './Border'
 import { useScale } from './Scale'
@@ -11,7 +11,7 @@ export type ListSeparatorProps = SimpleTextProps & {
   hideBorderBottom?: boolean
 }
 
-export const ListSeparator = (props: ListSeparatorProps) => {
+export const ListSeparator = memo((props: ListSeparatorProps) => {
   return (
     <ListSeparatorChrome>
       {!props.hideBorderTop && <BorderTop />}
@@ -19,7 +19,7 @@ export const ListSeparator = (props: ListSeparatorProps) => {
       <ListSeparatorText {...props} />
     </ListSeparatorChrome>
   )
-}
+})
 
 const ListSeparatorChrome = gloss({
   position: 'relative',
@@ -42,7 +42,7 @@ const ListSeparatorText = gloss<ListSeparatorProps>(SimpleText, {
   alphaColorTheme,
 )
 
-ListSeparator.defaultProps = {
+ListSeparator['defaultProps'] = {
   activeStyle: false,
   hoverStyle: false,
   subTheme: 'separator',

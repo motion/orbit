@@ -1,6 +1,6 @@
 import { SendClientDataCommand } from '@o/models'
 import { Menu, MenuItem, MenuItemsExtra, SubMenu } from '@o/reactron'
-import { Desktop, Electron } from '@o/stores'
+import { Electron } from '@o/stores'
 import * as React from 'react'
 
 import { Mediator } from './mediator'
@@ -36,14 +36,6 @@ export class MenuItems extends React.Component<{ restart: Function }> {
     })
   }
 
-  handleMinimize = (_menuItem, _window, event) => {
-    if (typeof Desktop.state.appFocusState === 'number') {
-      console.log('avoid for app')
-      return
-    }
-    event.preventDefault()
-  }
-
   render() {
     return (
       <Menu>
@@ -70,7 +62,7 @@ export class MenuItems extends React.Component<{ restart: Function }> {
           <MenuItemsExtra.ResetZoom />
           <MenuItemsExtra.ZoomIn />
           <MenuItemsExtra.ZoomOut />
-          <MenuItemsExtra.Minimize onClick={this.handleMinimize} />
+          <MenuItemsExtra.Minimize />
           <MenuItemsExtra.Close accelerator="Command+w" onClick={this.handleClose} />
           <MenuItem label="Refresh" accelerator="Command+r" onClick={this.props.restart} />
           <MenuItem

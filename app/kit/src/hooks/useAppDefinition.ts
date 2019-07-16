@@ -54,17 +54,18 @@ export function getSearchAppDefinitions(query: string | false): ApiSearchItem | 
   return ApiDefSearch.read(query)
 }
 
-export function useAppDefinition(identifier?: string | false): AppDefinition {
+export function useAppDefinition(identifier?: string | false): AppDefinition | null {
   useReloadAppDefinitions()
   const { appStore } = useStores()
   if (identifier === false) {
     return null
   }
-  return getAppDefinition(identifier || appStore.identifier)
+  return getAppDefinition(identifier || appStore.identifier || '') || null
 }
 
-export function useAppDefinitionFromStore(identifier?: string | false): AppDefinition {
-  const searchedApp = getSearchAppDefinitions(identifier)
+// TODO type
+export function useAppDefinitionFromStore(identifier?: string | false): any | null {
+  const searchedApp = getSearchAppDefinitions(identifier || false)
   return !identifier || !searchedApp
     ? null
     : {
@@ -83,14 +84,14 @@ export function useAppStoreInstalledAppDefinition(
   identifier?: string | false,
   options?: { onStatus: (message: string | false) => any },
 ) {
-  const searchedApp = getSearchAppDefinitions(identifier)
+  const searchedApp = getSearchAppDefinitions(identifier || false)
   // start out with the searched app to load quickly
-  const [reply, setReply] = useState<AppDefinition | { error: string }>(null)
-  const tm = useRef(null)
+  const [reply, setReply] = useState<AppDefinition | { error: string } | null>(null)
+  const tm = useRef<any>(null)
 
   // then install the app definition and have it ready for use in setup validation
   useEffect(() => {
-    if (!identifier) return
+    if (!identifier || !searchedApp) return
     let cancel = false
 
     command(
@@ -99,7 +100,7 @@ export function useAppStoreInstalledAppDefinition(
       { timeout: 50000 },
     )
       .then(res => {
-        clearTimeout(tm.current)
+        clearTimeout(tm.current || 0)
         options && options.onStatus(false)
         if (!cancel) {
           console.log('success, import real app definition', res)
@@ -107,7 +108,7 @@ export function useAppStoreInstalledAppDefinition(
         }
       })
       .catch(error => {
-        clearTimeout(tm.current)
+        clearTimeout(tm.current || 0)
         options && options.onStatus(false)
         if (!cancel) {
           setReply({ error })

@@ -1,4 +1,4 @@
-import { gloss, Row } from 'gloss'
+import { Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
 import { getDataType } from '../helpers/getDataType'
@@ -6,37 +6,25 @@ import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
 import { Col, ColProps } from '../View/Col'
+import { useFormError } from './Form'
 import { InputField } from './InputField'
 import { Label } from './Label'
 import { ToggleField } from './ToggleField'
-import { useFormError } from './Form'
-
-type RowProps = {
-  label?: React.ReactNode
-}
-
-const FormItem = (props: ColProps) => <Col padding="xs" {...props} />
-
-const FormRow = gloss(Row, {
-  width: '100%',
-  alignItems: 'center',
-})
 
 const FormLabel = ({ children }) => (
-  <FormItem width="30%" maxWidth={120}>
+  <Col width="30%" maxWidth={120}>
     {children}
-  </FormItem>
+  </Col>
 )
 
-export const FormValue = ({ children }) => (
-  <FormItem minWidth="70%" flex={1}>
-    {children}
-  </FormItem>
+const FormValueCol = (props: ColProps) => (
+  <Col minWidth="70%" flex={1} padding="xs" space {...props} />
 )
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
-export type SimpleFormFieldProps = RowProps & {
+export type SimpleFormFieldProps = ColProps & {
+  label?: React.ReactNode
   layout?: FormFieldLayout
   children?: React.ReactNode
   name?: string
@@ -52,14 +40,14 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
   )
 
   const valueElement = (
-    <Col>
+    <>
       {children}
       {error && (
         <>
           <SimpleText alt="error">{error}</SimpleText>
         </>
       )}
-    </Col>
+    </>
   )
 
   if (layout === 'vertical') {
@@ -72,15 +60,15 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
   }
 
   return (
-    <FormRow>
+    <Row width="100%" alignItems="center">
       <FormLabel>
         <Row flex={1} alignItems="center">
           {labelElement}
           <Space />
         </Row>
       </FormLabel>
-      <FormValue>{valueElement}</FormValue>
-    </FormRow>
+      <FormValueCol>{valueElement}</FormValueCol>
+    </Row>
   )
 }
 

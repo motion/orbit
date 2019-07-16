@@ -15,7 +15,6 @@ export function DemoGridApp() {
   const [app, setApp] = useState(null)
   const [rooms, setRooms] = useState([])
   const [layout, setLayout] = useUserState('grid-layout', null)
-  console.log('layout', layout)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
       <AppCard key="slack" title="Slack Room" appType={Slack} onChange={setApp}>

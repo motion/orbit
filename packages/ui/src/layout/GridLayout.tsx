@@ -142,7 +142,6 @@ class GridStore {
         xs: calculateLayout(items, columns, this.layout, 'xs'),
         xxs: calculateLayout(items, columns, this.layout, 'xxs'),
       }
-      console.log('set layout', this.layout)
 
       // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933
       window.dispatchEvent(new Event('resize'))

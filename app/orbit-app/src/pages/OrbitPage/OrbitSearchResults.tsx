@@ -3,6 +3,7 @@ import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, S
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
+import { om } from '../../om/om'
 import { SearchStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
@@ -91,6 +92,16 @@ export const OrbitSearchResults = memo(() => {
       const carouselIndex = appsCarouselStore.apps.findIndex(x => x.identifier === 'searchResults')
       if (carouselIndex === -1) return
       appsCarouselStore.animateAndScrollTo(carouselIndex)
+
+      om.actions.setShare({
+        id: `app-search-results`,
+        value: {
+          id: item.id,
+          name: 'Search Results',
+          identifier: 'searchResults',
+          items: rows,
+        },
+      })
     }
   }, [])
 

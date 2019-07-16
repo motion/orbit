@@ -124,7 +124,7 @@ export const OrbitAppRenderOfDefinition = ({
         id: `app-${id}`,
         value: {
           id,
-          name: app.name!,
+          name: app!.name!,
           identifier,
           items,
         },

@@ -304,6 +304,7 @@ const DockSidebarView = (props: AppMainViewProps) => {
   return (
     <ListPassProps
       onSelect={rows => {
+        return // disable for demo
         console.log('on select', rows)
         const item = rows[0]
         if (!item) return

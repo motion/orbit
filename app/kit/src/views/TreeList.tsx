@@ -1,7 +1,7 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
+import { Button, filterCleanObject, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
@@ -69,7 +69,7 @@ const getActions = (
         update(next => {
           const id = item.id || Math.random()
           next.items[parentId || Actions.curId()].children.push(id)
-          next.items[id] = { name: '', children: [], ...item, id }
+          next.items[id] = filterCleanObject({ name: '', children: [], ...item, id })
         })
       } catch (err) {
         console.error('error adding', err)

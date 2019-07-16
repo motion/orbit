@@ -161,7 +161,6 @@ export function setupTrackableStore(
       if (trackedKeysWhilePaused.size) {
         const shouldUpdate = [...trackedKeysWhilePaused].some(key => reactiveKeys.has(key))
         if (shouldUpdate) {
-          console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
           if (process.env.NODE_ENV === 'development' && shouldDebug()) {
             console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
             update.__debug_update__.action = 'trackedKeysWhilePaused'

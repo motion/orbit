@@ -66,19 +66,24 @@ export const OrbitSearchResults = memo(() => {
 
   // sync to carousel from selection
   const handleSelect = useCallback(rows => {
+    const item = rows[0]
+    // sync to searchStore so we can use in SearchResultsApp
+    searchStore.setSelectedItem(item)
+    // ignore double
     if (ignoreNextSelect.current) {
       ignoreNextSelect.current = false
       return
     }
-    const item = rows[0]
     if (!item) return
     if (item.extraData && item.extraData.app) {
+      // onSelect App
       const app: AppBit = item.extraData.app
       const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
       if (carouselIndex === -1) return
       appsCarouselStore.animateAndScrollTo(carouselIndex)
     } else {
-      const carouselIndex = appsCarouselStore.apps.findIndex(x => x.identifier === 'bit')
+      // onSelect Bit
+      const carouselIndex = appsCarouselStore.apps.findIndex(x => x.identifier === 'searchResults')
       if (carouselIndex === -1) return
       appsCarouselStore.animateAndScrollTo(carouselIndex)
     }

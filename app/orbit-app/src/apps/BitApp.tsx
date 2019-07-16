@@ -23,7 +23,7 @@ const defaultItemProps = {
 
 export function BitAppMain(props: AppViewProps) {
   const [bit] = useModel(BitModel, {
-    where: { id: +props.id },
+    where: { id: +props.id! },
     relations: ['people'],
   })
   if (!bit) {

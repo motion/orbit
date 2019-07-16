@@ -18,6 +18,12 @@ class Search {
 
   searchState: SearchState | null = null
 
+  // we sync TO here not from here
+  selectedItem: ListItemProps | null = null
+  setSelectedItem(next: ListItemProps) {
+    this.selectedItem = next
+  }
+
   get stores() {
     return this.hooks.stores
   }
@@ -123,7 +129,7 @@ class Search {
         const lastResults = this.lastResults ? this.lastResults : []
         addResults(
           fuzzyFilter(query, lastResults, {
-            threshold: -200,
+            threshold: -300,
             keys: ['title', 'item.title'],
           }),
         )

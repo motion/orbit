@@ -1,5 +1,5 @@
 import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
-import { AppBit, AppModel, Space, RemoveAllAppDataCommand } from '@o/models'
+import { AppBit, AppModel, RemoveAllAppDataCommand, Space } from '@o/models'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -133,7 +133,7 @@ export const effects = {
       const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
       if (!app) {
         const tabDisplay =
-          appDef.id === 'setupApp' || appDef.id === 'bit' ? 'permanentLast' : 'hidden'
+          appDef.id === 'setupApp' || appDef.id === 'searchResults' ? 'permanentLast' : 'hidden'
         const next: AppBit = {
           name: appDef.name,
           target: 'app',

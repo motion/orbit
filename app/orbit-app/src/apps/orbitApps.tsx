@@ -11,6 +11,7 @@ import ClipboardApp from './ClipboardApp'
 import MessageApp from './MessageApp'
 import OnboardApp from './OnboardApp'
 import QueryBuilderApp from './QueryBuilderApp'
+import SearchResultsApp from './SearchResultsApp'
 import SettingsApp from './settings/SettingsApp'
 import SetupAppApp from './SetupAppApp'
 import SpacesApp from './SpacesApp'
@@ -70,6 +71,7 @@ export const orbitStaticApps: AppDefinition[] = [
   MessageApp,
   LoadingApp,
   ClipboardApp,
+  SearchResultsApp,
 ]
 
 export const getAllAppDefinitions = (): AppDefinition[] => {

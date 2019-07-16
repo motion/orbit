@@ -144,7 +144,7 @@ export class Text extends React.PureComponent<TextProps> {
     return (this.node && this.node.innerText) || ''
   }
 
-  finishEdit = (event, value: string) => {
+  finishEdit = (value: string, event: React.KeyboardEvent<any>) => {
     const { onFinishEdit } = this.props
     if (onFinishEdit) {
       onFinishEdit(value, event)
@@ -152,16 +152,18 @@ export class Text extends React.PureComponent<TextProps> {
     this.setState({ isEditing: false })
   }
 
-  handleKeydown = event => {
+  handleKeydown = (event: React.KeyboardEvent<HTMLParagraphElement>) => {
     const { onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
-      const code = keycode(event)
+      const code = keycode(event as any)
       if (code === 'enter') {
         event.preventDefault()
-        this.finishEdit(event, this.value)
+        event.stopPropagation()
+        this.finishEdit(this.value, event)
       }
       if (code === 'esc') {
         event.preventDefault()
+        event.stopPropagation()
         if (onCancelEdit) {
           onCancelEdit(this.value, event)
           this.setState({ isEditing: false })
@@ -174,7 +176,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   handleDoubleClick = event => {
-    console.log('double click', this.props.editable)
+    console.log('double click text', this.props.editable)
     if (this.props.editable && !this.state.isEditing) {
       event.stopPropagation()
       if (this.props.onStartEdit) {
@@ -186,7 +188,7 @@ export class Text extends React.PureComponent<TextProps> {
     }
   }
 
-  onBlur = event => {
+  onBlur = (event: FocusEvent) => {
     this.finishEdit(this.value, event)
   }
 

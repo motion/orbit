@@ -35,6 +35,7 @@ export function setupTrackableStore(
     if (typeof window !== 'undefined' && window['enableLog'] > level) {
       return true
     }
+    // allows per-component debugging using useStoreDebug()
     return opts.debug || (opts.component && opts.component.__debug)
   }
   const name = opts.component.renderName
@@ -75,8 +76,10 @@ export function setupTrackableStore(
     },
     () => {
       if (!deepKeys.length || paused) return
-      update.__debug_update__.action = 'deepKeysObserver'
-      update.__debug_update__.info = deepKeys
+      if (process.env.NODE_ENV === 'development') {
+        update.__debug_update__.action = 'deepKeysObserver'
+        update.__debug_update__.info = deepKeys
+      }
       queueUpdate(update)
     },
   )
@@ -91,10 +94,11 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (shouldDebug())
+            if (process.env.NODE_ENV === 'development' && shouldDebug()) {
               console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
-            update.__debug_update__.action = 'observers'
-            update.__debug_update__.info = key
+              update.__debug_update__.action = 'observers'
+              update.__debug_update__.info = key
+            }
             queueUpdate(update)
           }
         }
@@ -109,9 +113,11 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (shouldDebug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
-            update.__debug_update__.action = 'getters'
-            update.__debug_update__.info = key
+            if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+              console.log('update', name, `${storeName}.${key}`, '[getter]')
+              update.__debug_update__.action = 'getters'
+              update.__debug_update__.info = key
+            }
             queueUpdate(update)
           }
         }

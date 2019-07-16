@@ -94,7 +94,6 @@ export const OrbitNav = memo(
     )
 
     const onSettings = isOnSettings(paneManagerStore.activePane)
-    const setupWidth = 120
     const isOnSetupAppWidth = tabWidthPinned
     const extraButtonsWidth = isOnSetupAppWidth
 

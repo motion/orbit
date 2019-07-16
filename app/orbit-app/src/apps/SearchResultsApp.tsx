@@ -1,6 +1,6 @@
-import { createApp } from '@o/kit'
+import { createApp, useStoreDebug } from '@o/kit'
 import { CenteredText } from '@o/ui'
-import * as React from 'react'
+import React from 'react'
 
 import { SearchStore } from '../stores/SearchStore'
 import { BitAppMain } from './BitApp'
@@ -16,7 +16,7 @@ function SearchResultsApp() {
   const searchStore = SearchStore.useStore()!
   const item = searchStore.selectedItem
 
-  console.log('render search resulst app', item)
+  useStoreDebug()
 
   if (item && item.item) {
     return <BitAppMain id={`${item.item.id}`} />

@@ -560,7 +560,8 @@ export class Popover extends React.Component<PopoverProps, State> {
 
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
     const popoverBounds = this.popoverRef.firstElementChild.getBoundingClientRect()
-    const targetBounds = this.target.firstElementChild.getBoundingClientRect()
+    const targetNode = this.target.firstElementChild || this.target
+    const targetBounds = targetNode.getBoundingClientRect()
     const extraY = window.scrollY
     const nextState = {
       targetBounds: {

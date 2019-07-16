@@ -17,8 +17,6 @@ export const OrbitSearchResults = memo(() => {
 
   window['searchStore'] = searchStore
 
-  console.log('render OrbitSearchResults', searchStore.results)
-
   useSearchState({
     includePrefix: true,
     onChange: state => {
@@ -117,7 +115,7 @@ export const OrbitSearchResults = memo(() => {
         if (listRef.current.activeIndex !== listIndex) {
           ignoreNextSelect.current = true
           console.log('set active index from reaction', listIndex)
-          await sleep(100)
+          await sleep(70)
           listRef.current.setActiveIndex(listIndex)
         }
       }

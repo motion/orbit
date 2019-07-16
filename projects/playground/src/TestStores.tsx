@@ -1,4 +1,4 @@
-import { Button, SegmentedRow, usePosition } from '@o/ui'
+import { Button, Row, usePosition } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
@@ -51,18 +51,29 @@ export function TestStores() {
         gooo
       </Button>
 
+      <TestStoresCascading />
+
       <br />
 
       <Button onClick={() => store.y++}>ok</Button>
 
-      <SegmentedRow>
+      <Row group>
         <Button>hello</Button>
         {store.y % 2 === 0 ? <Button>hello2</Button> : null}
         <Button>hello3</Button>
         <Button>hello4</Button>
-      </SegmentedRow>
+      </Row>
     </div>
   )
+}
+
+class CascadeStore {
+  x = 0
+}
+
+function TestStoresCascading() {
+  const store = useStore(CascadeStore)
+  return <div>{store.x}</div>
 }
 
 window['TestStore'] = TestStore

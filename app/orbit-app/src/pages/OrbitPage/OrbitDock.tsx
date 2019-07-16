@@ -182,7 +182,13 @@ export const OrbitDock = memo(() => {
   )
 })
 
-const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) => {
+const OrbitDockButton = memo(function OrbitDockButton({
+  index,
+  app,
+}: {
+  app: AppBit
+  index: number
+}) {
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)

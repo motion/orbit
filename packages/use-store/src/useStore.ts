@@ -1,4 +1,4 @@
-import { AutomagicStore, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
+import { AutomagicStore, configureAutomagical, CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { debounce } from 'lodash'
 import { _interceptReads, observable, observe, transaction } from 'mobx'
@@ -8,13 +8,13 @@ import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
 import { GET_STORE } from './mobxProxyWorm'
+import { queueUpdate } from './queueUpdate'
 import { useTrackableStore } from './setupTrackableStore'
 import { ReactiveStore } from './Store'
 
 export {
   always,
   cancel,
-  configureAutomagical,
   decorate,
   ensure,
   IS_STORE,
@@ -30,6 +30,12 @@ export { debugUseStore } from './debugUseStore'
 export { resetTracking } from './mobxProxyWorm'
 export { Store } from './Store'
 export { syncFromProp, syncToProp } from './syncProps'
+
+// make automagical (useReaction, et all) use our queuedUpdate
+// TODO could possible move queueUpdate into automagical? it's lower level so makes sense
+configureAutomagical({
+  queueUpdate,
+})
 
 export interface UseStore<A extends ReactiveStore<any> | any> {
   (Store: { new (): A } | A | false, props?: InferProps<A>, options?: UseStoreOptions): A

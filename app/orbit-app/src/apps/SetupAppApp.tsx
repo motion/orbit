@@ -18,6 +18,7 @@ export default createApp({
 })
 
 function SetupAppMain() {
+  console.log('render SetupAppMain')
   return (
     <StackNavigator
       defaultItem={{
@@ -164,7 +165,8 @@ function SetupAppCustom() {
 
 type SetupAppHomeProps = { isEmbedded?: boolean }
 
-export function SetupAppHome(props: SetupAppHomeProps) {
+export const SetupAppHome = memo((props: SetupAppHomeProps) => {
+  console.log('render SetupAppHome')
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(def => ({
     title: def.name,
     identifier: def.id,
@@ -241,7 +243,7 @@ export function SetupAppHome(props: SetupAppHomeProps) {
       <SetupAppHomeToolbar {...props} />
     </FlowProvide>
   )
-}
+})
 
 const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
   const flow = useFlow()

@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
 
-import { TestCarousel } from './TestCarousel'
+import { TestStores } from './TestStores'
 
 export default hot(function RootView() {
   return (
     <>
       {/* <TestUI /> */}
       {/* <TestHMR /> */}
-      {/* <TestStores /> */}
+      <TestStores />
       {/* <TestMiniApps /> */}
       {/* <TestUIKitchenSink /> */}
       {/* <IconShape name="flow" /> */}
-      <TestCarousel />
+      {/* <TestCarousel /> */}
     </>
   )
 })

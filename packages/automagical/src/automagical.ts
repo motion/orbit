@@ -12,6 +12,7 @@ export * from './types'
 export { updateProps } from './updateProps'
 export { CurrentComponent, useCurrentComponent } from './useCurrentComponent'
 export { useReaction } from './useReaction'
+export { configureAutomagical, AutomagicalConfiguration } from './AutomagicalConfiguration'
 
 // this lets you "always" react to any values you give as arguments without bugs
 type AlwaysReactFn = (...args: any[]) => number
@@ -27,13 +28,6 @@ export const IS_STORE = Symbol('IS_STORE')
 
 const IGNORE = {
   props: true,
-}
-
-export let automagicConfig = {
-  isSubscribable: x => x && typeof x.subscribe === 'function',
-}
-export function configureAutomagical(opts: { isSubscribable?: (val: any) => boolean }) {
-  automagicConfig = Object.freeze(Object.assign(automagicConfig, opts))
 }
 
 const Getters = new WeakMap()

@@ -59,6 +59,8 @@ export function setupTrackableStore(
     }
     rerender()
   }
+  // see queueUpdate
+  update.__debug_update__ = { name, storeName, action: '', info: null as any }
 
   const { getters, decorations } = store.__automagic
   const observers: Lambda[] = []
@@ -73,6 +75,8 @@ export function setupTrackableStore(
     },
     () => {
       if (!deepKeys.length || paused) return
+      update.__debug_update__.action = 'deepKeysObserver'
+      update.__debug_update__.info = deepKeys
       queueUpdate(update)
     },
   )
@@ -89,6 +93,8 @@ export function setupTrackableStore(
           if (reactiveKeys.has(key)) {
             if (shouldDebug())
               console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+            update.__debug_update__.action = 'observers'
+            update.__debug_update__.info = key
             queueUpdate(update)
           }
         }
@@ -104,6 +110,8 @@ export function setupTrackableStore(
         } else {
           if (reactiveKeys.has(key)) {
             if (shouldDebug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
+            update.__debug_update__.action = 'getters'
+            update.__debug_update__.info = key
             queueUpdate(update)
           }
         }
@@ -147,7 +155,11 @@ export function setupTrackableStore(
       if (trackedKeysWhilePaused.size) {
         const shouldUpdate = [...trackedKeysWhilePaused].some(key => reactiveKeys.has(key))
         if (shouldUpdate) {
-          queueUpdate(update)
+          if (shouldDebug()) {
+            console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
+          }
+          // update.__debug_update__.action = 'trackedKeysWhilePaused'
+          // queueUpdate(update)
         }
         trackedKeysWhilePaused.clear()
       }

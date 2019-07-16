@@ -1,6 +1,7 @@
 import { CompositeDisposable } from 'event-kit'
-import { MutableRefObject, RefObject, useEffect, useRef, useState } from 'react'
+import { MutableRefObject, RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
+import { automagicConfig } from './AutomagicalConfiguration'
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'
@@ -114,11 +115,21 @@ const createComponentReaction = (
       }
       state.current = next
       if (!firstMount.current) {
-        forceUpdate(Math.random())
+        // use the configured queueUpdate if given
+        if (automagicConfig.queueUpdate) {
+          automagicConfig.queueUpdate(forceUpdate)
+        } else {
+          forceUpdate()
+        }
       }
     },
     getValue: () => state.current,
   })
+}
+
+const useForceUpdate = () => {
+  const setState = useState(0)[1]
+  return useCallback(() => setState(Math.random()), [])
 }
 
 // watches values in an autorun, and resolves their results
@@ -130,7 +141,7 @@ export function setupReact(
 ) {
   const component = useCurrentComponent()
   const state = useRef(opts ? opts.defaultValue : undefined)
-  const forceUpdate = useState(0)[1]
+  const forceUpdate = useForceUpdate()
   const subscriptions = useRef<CompositeDisposable | null>(null)
   const firstMount = useRef(true)
   const runReaction = () =>

@@ -19,10 +19,10 @@ export function useCurrentComponent(): CurrentComponent {
   return component
 }
 
-function getComponentName(c) {
+function getComponentName(c: any) {
   let name = c.displayName || (c.type && c.type.displayName) || (c.render && c.render.name)
   if (c.displayName === '_default') {
-    name = c.type && c.type.displayName
+    name = c.type && (c.type.displayName || c.type.name)
   }
   if (name === 'Component' || name === '_default' || !name) {
     if (c.type && c.type.__reactstandin__key) {

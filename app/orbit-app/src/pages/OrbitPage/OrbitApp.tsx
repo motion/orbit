@@ -206,23 +206,31 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
   cache = isWrappedCache[appDef.id] = {
     res: undefined,
     promise: new Promise(res => {
+      const finish = (val: boolean = false) => {
+        cache.res = val
+        res(val)
+      }
+
       // to avoid suspense running here from child view
       setTimeout(() => {
-        let isAppWrapped = false
         try {
-          const appChildEl = appDef && appDef.app && appDef.app({})
-          isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
+          const appView = appDef && appDef.app && appDef.app
+          if (!appView || typeof appView !== 'function') {
+            debugger
+            return finish(false)
+          }
+          const appChildEl = appView({})
+          return finish(!!(appChildEl && appChildEl.type['isApp']))
         } catch (err) {
           if (err.message.indexOf('Invalid hook call') > -1) {
             // ignore
             /// what should we do by default here?
-            isAppWrapped = true
+            return finish(true)
           } else {
             console.error(err)
           }
         }
-        cache.res = isAppWrapped
-        res(isAppWrapped)
+        return finish(false)
       })
     }),
   }

@@ -10,6 +10,7 @@ export function queueUpdate(fn: Function) {
   tm = setImmediate(() => {
     if (!Updates.size) return
     let next = [...Updates]
+    console.log('queueUpdate flush', next.map(x => x['__debug_update__']))
     Updates.clear()
     unstable_batchedUpdates(() => {
       next.forEach(cb => cb())

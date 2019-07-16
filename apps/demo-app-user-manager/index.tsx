@@ -100,13 +100,11 @@ function PersonInfo(props: { row: any }) {
           {albums => <Table selectable items={albums} onSelect={items => setAlbum(items[0])} />}
         </Fetch>
       </Pane>
-      {!!album && (
-        <Pane resizable title={album ? `${album.id} Album ${album.title} Pictures` : ''}>
-          <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
-            {photos => <Table selectable="multi" searchable items={photos} />}
-          </Fetch>
-        </Pane>
-      )}
+      <Pane resizable title={album ? `${album.id} Album ${album.title} Pictures` : ''}>
+        <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
+          {photos => <Table selectable="multi" searchable items={photos} />}
+        </Fetch>
+      </Pane>
     </Layout>
   )
 }

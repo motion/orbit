@@ -138,7 +138,7 @@ export class FlowStore {
   props: FlowStoreProps
   steps: FlowStepProps[] = []
 
-  state = useHooks(() => {
+  private state = useHooks(() => {
     const [data, setData] = Config.useUserState(
       `flowdata-${this.props.id || ''}`,
       this.props.data || null,
@@ -159,6 +159,9 @@ export class FlowStore {
   get index() {
     return this.state.index
   }
+
+  setData = this.state.setData
+  setIndex = this.state.setIndex
 
   get total() {
     return this.steps.length
@@ -224,15 +227,15 @@ export const Flow: FlowComponent<FlowProps> = memo(
     }, [flowStore, steps])
 
     const stepProps = {
-      data: flowStore.state.data,
-      setData: flowStore.state.setData,
+      data: flowStore.data,
+      setData: flowStore.setData,
       next: flowStore.next,
       prev: flowStore.prev,
-      setStepIndex: flowStore.state.setIndex,
+      setStepIndex: flowStore.setIndex,
     }
 
     const contents = (
-      <Slider fixHeightToParent curFrame={flowStore.state.index}>
+      <Slider fixHeightToParent curFrame={flowStore.index}>
         {stepChildren.map((child, idx) => {
           const ChildView = child.props.children
           return (
@@ -248,10 +251,10 @@ export const Flow: FlowComponent<FlowProps> = memo(
       </Slider>
     )
 
-    if (!steps[flowStore.state.index]) {
+    if (!steps[flowStore.index]) {
       return (
         <Center>
-          No step at index: {flowStore.state.index}, steps: {JSON.stringify(steps)}
+          No step at index: {flowStore.index}, steps: {JSON.stringify(steps)}
         </Center>
       )
     }
@@ -263,9 +266,9 @@ export const Flow: FlowComponent<FlowProps> = memo(
           total={total}
           height={height}
           afterTitle={afterTitle}
-          step={steps[flowStore.state.index]}
+          step={steps[flowStore.index]}
           steps={steps}
-          index={flowStore.state.index}
+          index={flowStore.index}
           {...stepProps}
         >
           <ScopedState id="flow">{contents}</ScopedState>

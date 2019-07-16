@@ -40,8 +40,8 @@ export function useInstallApp() {
 
 async function installApp(
   def: AppDefinition,
-  newAppBit?: Partial<AppBit> | true,
-  banner?: BannerHandle,
+  newAppBit: Partial<AppBit> | true,
+  banner: BannerHandle,
 ) {
   banner.set({
     message: `Installing app ${def.name}`,

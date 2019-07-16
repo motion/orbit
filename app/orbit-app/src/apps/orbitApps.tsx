@@ -78,7 +78,7 @@ export const getAllAppDefinitions = (): AppDefinition[] => {
   return [...orbitStaticApps, ...dynamicApps]
 }
 
-export function getUserApps(): AppDefinition[] {
+export function getUserAppDefinitions(): AppDefinition[] {
   return dynamicApps
 }
 
@@ -89,7 +89,7 @@ export function useStaticAppDefinitions() {
 // refreshes when they change
 export function useUserAppDefinitions() {
   useAppDefinitions() // this triggers update on app defs update
-  return getUserApps()
+  return getUserAppDefinitions()
 }
 
 export function useUserVisualAppDefinitions() {

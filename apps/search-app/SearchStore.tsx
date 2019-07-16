@@ -37,8 +37,6 @@ export class SearchStore {
     return !!this.searchedQuery
   }
 
-  hasQueryVal = react(this.hasQuery, _ => _)
-
   get allApps() {
     return this.hooks.apps.map(appToListItem)
   }

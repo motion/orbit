@@ -35,23 +35,6 @@ class Search {
     return query[0] === '/' ? query.slice(1) : query
   }
 
-  // updateSearchHistoryOnSearch = react(
-  //   () => this.searchedQuery,
-  //   async (query, _) => {
-  //     ensure('has query', !!query)
-  //     await _.sleep(2000)
-  //     const user = await getUser()
-  //     saveUser({
-  //       settings: {
-  //         ...user.settings,
-  //         recentSearches: !user.settings!.recentSearches
-  //           ? [query]
-  //           : uniq([...user.settings!.recentSearches, query]).slice(0, 50),
-  //       },
-  //     })
-  //   },
-  // )
-
   get isChanging() {
     return this.searchState && this.searchState.query !== this.searchedQuery
   }
@@ -59,8 +42,6 @@ class Search {
   hasQuery = () => {
     return !!this.searchedQuery
   }
-
-  hasQueryVal = react(this.hasQuery, _ => _)
 
   get allApps() {
     return this.apps.map(appToListItem)
@@ -81,16 +62,27 @@ class Search {
     return this.state.results
   }
 
-  lastState = react(
+  lastResults = react(
     () => this.state,
-    async (next, { sleep }) => {
+    async (state, { sleep }) => {
+      ensure('state', !!state)
       await sleep(200)
-      return next
+      return state.results
     },
     {
       lazy: true,
     },
   )
+
+  keyFor = (item: ListItemProps) => {
+    return (
+      item.key ||
+      (item.item && item.item.id) ||
+      (() => {
+        throw new Error(`No valid key`)
+      })()
+    )
+  }
 
   state = react(
     () => [
@@ -103,12 +95,41 @@ class Search {
     async ([spaceId, query, app], { sleep, when, setValue }): Promise<SearchResults> => {
       ensure('app', !!app)
       ensure('this.searchState', !!this.searchState)
-      const lastResults = this.lastState ? this.lastState.results : []
 
       await sleep(120)
 
       // RESULTS
-      let results: ListItemProps[] = fuzzyFilter(query, lastResults)
+      let results: ListItemProps[] = []
+      let resultsKeyMap: { [key: string]: boolean } = {}
+
+      // only use this to add to results, so we can de-dupe using resultsKeyMap
+      const addResults = (next: ListItemProps[]) => {
+        for (const item of next) {
+          const key = this.keyFor(item)
+          if (resultsKeyMap[key]) continue
+          resultsKeyMap[key] = true
+          results.push(item)
+        }
+        results = [...results]
+      }
+
+      addResults(this.getQuickResults(query))
+
+      // quick return from search
+      setValue({ results, query, finished: false })
+
+      // keep the previous results in memory and filter down fuzzy
+      if (query.length) {
+        const lastResults = this.lastResults ? this.lastResults : []
+        addResults(
+          fuzzyFilter(query, lastResults, {
+            threshold: -200,
+            keys: ['title', 'item.title'],
+          }),
+        )
+      }
+
+      await sleep(50)
 
       // if typing, wait a bit
       const isChangingQuery = this.state.query !== query
@@ -120,31 +141,24 @@ class Search {
         }
       }
 
-      // pagination
-      const take = 18
-
-      // query builder pieces
+      // query build
       const { exclusiveFilters, activeFilters, dateState, sortBy } = this.searchState!.filters
-
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
-
       const appFilters = [
         // these come from the text string
         ...activeFilters.filter(x => x.type === MarkType.App).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
       ]
-
       const locationFilters = activeFilters
         .filter(x => x.type === MarkType.Location)
         .map(x => x.text)
-
       const { startDate, endDate } = dateState
-      let total = 0
 
       /** We can load pages piece by piece with this */
-      async function loadMore(props: { take: number }) {
+      let total = 0
+      async function addSearchResults({ take }: { take: number }) {
         const args: SearchQuery = {
           spaceId,
           query,
@@ -154,20 +168,18 @@ class Search {
           appFilters,
           peopleFilters,
           locationFilters,
-          skip: total + props.take,
-          take: take,
+          skip: total + take,
+          take,
         }
         total += take
         const nextResults = await searchBits(args)
-        if (!nextResults.length) {
-          return false
-        }
+        await sleep(50)
+        if (!nextResults.length) return false
         const next: ListItemProps[] = nextResults.map(item => ({
           item,
           groupName: 'Search Results',
         }))
-        results = [...results, ...next]
-        console.log('results', results)
+        addResults(next)
         setValue({
           results,
           query,
@@ -176,16 +188,13 @@ class Search {
         return true
       }
 
-      // app search
-      results = this.getQuickResults(query)
-      setValue({ results, query, finished: false })
-
       // split into chunks to avoid heavy work
       // react concurrent + react window lazy loading could do this work better
       for (const take of [10, 10, 20, 20]) {
-        await loadMore({
+        const success = await addSearchResults({
           take,
         })
+        if (!success) break
       }
 
       // finished

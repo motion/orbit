@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -324,11 +324,6 @@ const HeaderSide = gloss<RowProps & { slim?: boolean }>(Row, {
   height: '100%',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  slim: {
-    flex: 'none',
-    width: 'auto',
-    minWidth: 'min-content',
-  },
 })
 
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {

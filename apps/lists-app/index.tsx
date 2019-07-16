@@ -32,6 +32,7 @@ export function ListsAppIndex(props: NavigatorProps) {
       <TreeList
         use={treeList}
         sortable
+        alwaysSelected
         onSelect={props.selectItems}
         itemProps={{
           editable: true,

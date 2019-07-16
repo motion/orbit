@@ -14,6 +14,7 @@
     "clean": "source .env && clean",
     "clean:packages": "source .env && clean --all",
     "start": "cd app/example-workspace && orbit ws --logLevel 1",
+    "start:prod": "cd app/example-workspace && orbit ws --logLevel 1 --mode production",
     "start:verbose": "cd app/example-workspace && orbit ws --logLevel 3",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",

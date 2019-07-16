@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import { createRef, useRef } from 'react'
 import React, { forwardRef, memo, useMemo } from 'react'
+import { createRef, useRef } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -342,7 +342,7 @@ const HeaderContain = gloss<RowProps & { isActive?: boolean; isEditing: boolean 
   margin: ['auto', 0],
   alignItems: 'center',
   flex: 20,
-  maxWidth: 980,
+  maxWidth: 900,
   borderRadius: 100,
 }).theme(({ isActive, isEditing }, theme) => ({
   background: isEditing

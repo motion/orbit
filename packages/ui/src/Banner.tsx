@@ -186,7 +186,10 @@ export const Banner = ({ type, title, message, close, timeout, ...rest }: Banner
 
   useEffect(() => {
     if (isDefined(timeout)) {
-      let tm = setTimeout(close, timeout * 1000)
+      let tm = setTimeout(() => {
+        console.log('closing banner')
+        close()
+      }, timeout * 1000)
       return () => clearTimeout(tm)
     }
   }, [timeout])

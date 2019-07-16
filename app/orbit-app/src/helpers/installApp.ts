@@ -81,12 +81,14 @@ async function installApp(
   if (newAppBit) {
     try {
       const activeSpace = await getActiveSpace()
+      const appBit =
+        newAppBit === true ? newEmptyAppBit(def) : { ...newEmptyAppBit(def), ...newAppBit }
       const bit = {
-        ...newEmptyAppBit(def),
+        ...appBit,
         spaceId: activeSpace.id,
         space: activeSpace,
-        name: newAppStore.app.name || def.name,
-        colors: newAppStore.app.colors,
+        name: appBit.name || newAppStore.app.name || def.name,
+        colors: appBit.colors || newAppStore.app.colors,
         icon: def.icon,
         ...((typeof newAppBit === 'object' && newAppBit) || null),
       }

@@ -10,6 +10,7 @@ First: working, non-buggy demos of everything. Visually impressive.
 - Drag/Drop with OrbitSearchResults
 - Get interaction with search + show AppShowBit proper
 - Fixing bugs with carousel/drawer/drop
+- Get search filtering the "last search results set" using fuzzyFilter to be more stable
 
 
 Fix query builder postgres loop with drag/drop

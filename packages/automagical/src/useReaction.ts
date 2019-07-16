@@ -142,6 +142,9 @@ export function setupReact(
   const component = useCurrentComponent()
   const state = useRef(opts ? opts.defaultValue : undefined)
   const forceUpdate = useForceUpdate()
+  if (!forceUpdate['__debug_update__']) {
+    forceUpdate['__debug_update__'] = { name: component.name, opts, state }
+  }
   const subscriptions = useRef<CompositeDisposable | null>(null)
   const firstMount = useRef(true)
   const runReaction = () =>

@@ -76,29 +76,29 @@ function resolveAppSetupVerify() {
     } catch (err) {
       console.log('error running validate', err)
       return {
-        type: 'error' as const,
+        type: 'error',
         errors: `${err}`,
-      }
+      } as const
     }
 
     if (typeof res === 'string') {
       return {
-        type: 'success' as const,
+        type: 'success',
         message: res,
-      }
+      } as const
     }
 
     if (res === undefined || res === true) {
       return {
-        type: 'success' as const,
+        type: 'success',
         message: 'Success',
-      }
+      } as const
     }
 
     return {
-      type: 'error' as const,
+      type: 'error',
       errors: res,
-    }
+    } as const
   })
 }
 

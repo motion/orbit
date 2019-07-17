@@ -10,7 +10,7 @@ export type StatusReply =
   | { type: 'progress'; message: string; percent?: number }
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
-export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
+export const AppRemoveCommand = new Command<StatusReply, { appId: number }>('app-remove')
 export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
 export const AppForceCancelCommand = new Command<void, { appId: number }>('app-force-cancel')
 

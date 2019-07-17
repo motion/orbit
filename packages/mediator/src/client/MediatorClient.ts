@@ -1,4 +1,4 @@
-import { orTimeout, isDefined } from '@o/utils'
+import { isDefined, orTimeout } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { Command, Model, TransportRequestType } from '../common'
@@ -32,6 +32,7 @@ function cachedObservable(
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
+              console.log('ok', response)
               if (!isDefined(response.result)) {
                 console.warn('undefined response result! Is this a weird bug?...')
               } else {

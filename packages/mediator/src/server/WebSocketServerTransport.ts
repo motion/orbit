@@ -72,7 +72,7 @@ export class WebSocketServerTransport implements ServerTransport {
       log.verbose(
         `send to "${clientId}"`,
         sendIdentifier,
-        process.env.DEBUG ? data : `DEBUG=true to debug`,
+        process.env.DEBUG_QUERIES ? data : `DEBUG_QUERIES=true to debug`,
       )
       client.client.send(JSON.stringify(data))
     }

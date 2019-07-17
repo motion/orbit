@@ -219,5 +219,5 @@ export * from './buttons/MenuButton'
 export * from './Draggable'
 export * from './helpers/composeRefs'
 
-// ok
-module['hot'].accept()
+// accept hmrs
+module['hot'] && module['hot'].accept()

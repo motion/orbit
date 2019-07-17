@@ -109,4 +109,5 @@ export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,
 }
 
-module['hot'].accept()
+// accept hmrs
+module['hot'] && module['hot'].accept()

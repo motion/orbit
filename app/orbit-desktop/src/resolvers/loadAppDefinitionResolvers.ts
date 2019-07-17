@@ -122,17 +122,17 @@ async function getAppDefinitionOrDownloadTemporary(identifier: string) {
 
   if (!packageId) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No package id found for identifier ${identifier}`,
-    }
+    } as const
   }
 
   const appPath = join(tempPackageDir, 'node_modules', ...packageId.split('/'))
   if (!(await pathExists(appPath))) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: 'No app definition downloaded',
-    }
+    } as const
   }
 
   // run definition

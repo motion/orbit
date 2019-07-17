@@ -170,6 +170,7 @@ function use<ModelType, Args>(
             if (!isDefined(next)) {
               // i'm seeing this on useJobs() where none exist
               // so lets assume this means "emtpy" and return default value
+              console.warn('we need to debug why this happens', query, key)
               debugger
               next = defaultValues[type]
             }

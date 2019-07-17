@@ -115,6 +115,7 @@ export class StackNavigatorStore {
     const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
+    console.log('got', id, state)
     return {
       state,
       setState,
@@ -180,6 +181,7 @@ export class StackNavigatorStore {
   back() {
     this.hooks.setState(next => {
       next.stack = removeLast(next.stack)
+      console.log('next stack', JSON.stringify(next.stack))
     })
   }
 }

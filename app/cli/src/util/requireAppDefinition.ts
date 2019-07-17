@@ -44,13 +44,13 @@ export async function requireAppDefinition({
     // update cache
     setIdentifierToPackageId(definition.id, packageId)
     return {
-      type: 'success' as const,
-      definition,
-    }
+      type: 'success',
+      value: definition,
+    } as const
   }
 
   return {
-    type: 'error' as const,
+    type: 'error',
     message: 'No definition found',
-  }
+  } as const
 }

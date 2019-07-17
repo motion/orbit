@@ -11,9 +11,9 @@ export async function downloadAppDefinition(options: { directory: string; packag
 
   if (!directory || !packageId) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No directory/packageId given`,
-    }
+    } as const
   }
 
   // if exists already just return it
@@ -23,9 +23,9 @@ export async function downloadAppDefinition(options: { directory: string; packag
   })
   if (existing.type === 'success') {
     return {
-      type: 'success' as const,
-      identifier: existing.definition.id,
-    }
+      type: 'success',
+      identifier: existing.value.id,
+    } as const
   }
 
   await ensureDir(directory)
@@ -70,14 +70,14 @@ export async function downloadAppDefinition(options: { directory: string; packag
     }
 
     return {
-      type: 'success' as const,
-      identifier: loadedDef.definition.id,
-    }
+      type: 'success',
+      identifier: loadedDef.value.id,
+    } as const
   } catch (err) {
     console.log('npm install error', err.message, err.stack)
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `${err.message}`,
-    }
+    } as const
   }
 }

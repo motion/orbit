@@ -103,7 +103,7 @@ function processMessage(obj) {
 /* global window __webpack_hash__ */
 
 if (!module.hot) {
-  throw new Error('[HMR] Hot Module Replacement is disabled.')
+  // throw new Error('[HMR] Hot Module Replacement is disabled.')
 }
 
 var hmrDocsUrl = 'https://webpack.js.org/concepts/hot-module-replacement/' // eslint-disable-line max-len

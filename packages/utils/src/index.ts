@@ -47,7 +47,7 @@ export async function orTimeout<T>(promise: Promise<T>, timeout: number): Promis
       reject(OR_TIMED_OUT)
     }, timeout)
   })
-  const res = Promise.race([promise, waitForTimeout])
+  const res = await Promise.race([promise, waitForTimeout])
   // prevent lots of unecessary pauses when using Pause on Exceptions
   if (!didReject) clearTimeout(tm)
   return await res

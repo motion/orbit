@@ -1,7 +1,7 @@
 import { AppViewProps } from '@o/models'
 import { Card } from '@o/ui'
 import { createStoreContext } from '@o/use-store'
-import React, { Children, FunctionComponent, memo, useMemo, useState } from 'react'
+import React, { Children, FunctionComponent, memo, useEffect, useMemo, useState } from 'react'
 
 import { App } from './App'
 
@@ -67,6 +67,10 @@ export const AppChildViews = createStoreContext(AppChildViewsStore)
 const CardStack = (props: { children: any }) => {
   const all = Children.toArray(props.children)
   const [focused, setFocused] = useState(all.length - 1)
+
+  useEffect(() => {
+    setFocused(all.length - 1)
+  }, [all.length])
 
   if (all.length <= 1) {
     return <>{all}</>

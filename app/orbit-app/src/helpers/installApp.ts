@@ -11,7 +11,7 @@ export function useNewAppBit(identifier: string) {
   const definition = useAppDefinition(identifier)
   const [activeSpace] = useActiveSpace()
   return {
-    ...newEmptyAppBit(definition),
+    ...newEmptyAppBit(definition!),
     spaceId: activeSpace.id,
   }
 }

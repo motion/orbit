@@ -10,9 +10,13 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
   const app = await getRepository(AppEntity).findOne({
     id: appId,
   })
+
   if (!app) {
     log.info('error - cannot find requested app', { appId })
-    return
+    return {
+      type: 'error',
+      message: `Can't find app ${appId}`,
+    } as const
   }
 
   // create a job about removing app
@@ -53,4 +57,9 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
       log.error('error during app removal', error)
       await getRepository(JobEntity).remove(job as JobEntity)
     })
+
+  return {
+    type: 'success',
+    message: `Removed app and all associated data`,
+  } as const
 })

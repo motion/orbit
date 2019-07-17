@@ -20,6 +20,7 @@ export function PeopleAppIndex(props: NavigatorProps) {
   return (
     <List
       shareable
+      alwaysSelected
       selectable="multi"
       onSelect={props.selectItems}
       items={people}

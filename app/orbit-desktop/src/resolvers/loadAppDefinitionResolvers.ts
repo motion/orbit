@@ -1,20 +1,8 @@
-import {
-  commandInstall,
-  getPackageId,
-  requireAppDefinition,
-  updateWorkspacePackageIds,
-} from '@o/cli'
+import { commandInstall, getPackageId, requireAppDefinition, updateWorkspacePackageIds } from '@o/cli'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
-import {
-  AppDefinitionSetupVerifyCommand,
-  AppInstallToWorkspaceCommand,
-  AppStatusId,
-  GetAppStoreAppDefinitionCommand,
-  SpaceEntity,
-  UserEntity,
-} from '@o/models'
+import { AppDefinitionSetupVerifyCommand, AppInstallToWorkspaceCommand, AppStatusId, GetAppStoreAppDefinitionCommand, SpaceEntity, UserEntity } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
@@ -56,9 +44,9 @@ function resolveInstallAppToWorkspace() {
     }
     await updateWorkspacePackageIds(directory)
     return {
-      type: 'success' as const,
+      type: 'success',
       message: `Installed ${identifier} successfully`,
-    }
+    } as const
   })
 }
 
@@ -157,7 +145,11 @@ async function getAppDefinitionOrDownloadTemporary(identifier: string) {
 
 function resolveGetAppStoreDefinition() {
   return resolveCommand(GetAppStoreAppDefinitionCommand, async ({ packageId }) => {
-    log.info(`Getting definition for packageId ${packageId}`)
+    log.info(`
+    ----TODO-----
+
+    Getting definition for packageId ${packageId}
+`)
     // TODO
     return null
   })

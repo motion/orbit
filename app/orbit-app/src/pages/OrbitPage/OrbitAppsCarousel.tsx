@@ -260,6 +260,7 @@ class OrbitAppsCarouselStore {
 
   outScaler = numberScaler(0, 1, 0.6, 0.65)
   inScaler = numberScaler(0, 1, 0.9, 1)
+  opacityScaler = numberScaler(1, 0, 1.2, 0)
   boundRotation = numberBounder(-10, 10)
   boundOpacity = numberBounder(0, 1)
 
@@ -272,7 +273,7 @@ class OrbitAppsCarouselStore {
     const scale = zoomedIn && importance !== 1 ? 0.65 : scaler(importance)
     const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
-    const opacity = this.boundOpacity(1 - offset)
+    const opacity = this.boundOpacity(this.opacityScaler(1 - offset))
     // x is by percent!
     let x = 0
     if (zoomedIn) {

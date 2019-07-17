@@ -16,7 +16,7 @@ export function useUserState<A>(
   id: string | false,
   defaultState: A,
   options?: PersistedStateOptions,
-): ScopedState<A> | null {
+): ScopedState<A> {
   return usePersistedScopedState('user', id, defaultState, options)
 }
 
@@ -29,7 +29,7 @@ export function usePersistedScopedState<A>(
   id: string | false,
   defaultState: A,
   options?: PersistedStateOptions,
-): ScopedState<A> | null {
+): ScopedState<A> {
   // conditional here is "bad practice" for hooks, but its lots of overhead otherwise
   // and people should never be turning on and off persist unless they are in development
   if (options && options.persist === 'off') {
@@ -51,7 +51,7 @@ export function usePersistedScopedState<A>(
     })
 
     if (!state || !state.data) {
-      return null
+      throw new Error(`Couldn't acquire state for ${type} ${id}`)
     }
 
     // scope it to .data

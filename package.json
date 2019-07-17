@@ -54,6 +54,7 @@
     "@types/fs-extra": "5.1.0",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.4",
+    "lodash": "4.17.11",
     "date-fns": "2.0.0-alpha.7",
     "graphql": "14.2.1",
     "typeorm": "0.3.0-alpha.23",

@@ -60,6 +60,11 @@ const tabDisplaySort = {
   permanentLast: 3,
 }
 
+const identifierSort = {
+  searchResults: 1,
+  setupApp: 2,
+}
+
 export function sortPanes(space: Space, apps: AppBit[]) {
   const appDict = keyBy(apps, 'id')
 
@@ -79,7 +84,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   next = sortBy(next, id => {
     const a = appDict[id!]
     const index = `${next.indexOf(id)}`.padStart(20, '0')
-    return `${tabDisplaySort[a.tabDisplay!]}${index}${a.id}`
+    return `${tabDisplaySort[a.tabDisplay!]}${identifierSort[a.identifier!] || 0}${index}${a.id}`
   })
 
   return next

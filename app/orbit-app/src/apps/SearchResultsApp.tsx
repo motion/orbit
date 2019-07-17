@@ -8,7 +8,7 @@ import { BitAppMain } from './BitApp'
 export default createApp({
   id: 'searchResults',
   name: 'Search Results',
-  icon: '',
+  icon: 'search',
   app: SearchResultsApp,
 })
 

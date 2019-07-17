@@ -256,6 +256,7 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
   return (
     <FloatingCard
       disableDrag
+      elevation={4}
       defaultWidth={width}
       defaultHeight={height}
       defaultTop={top}

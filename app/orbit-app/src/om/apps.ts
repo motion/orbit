@@ -1,5 +1,6 @@
 import { command, getAppDefinition, loadMany, loadOne, observeMany, save, sortApps } from '@o/kit'
 import { AppBit, AppModel, RemoveAllAppDataCommand, Space } from '@o/models'
+import { Lock } from '@o/utils'
 import { Action, AsyncAction, Derive } from 'overmind'
 
 import { orbitStaticApps } from '../apps/orbitApps'
@@ -117,6 +118,8 @@ export const actions = {
   resetAllApps,
 }
 
+const lock = new Lock()
+
 export const effects = {
   updatePaneManagerPanes,
 
@@ -127,25 +130,33 @@ export const effects = {
     })
   },
 
+  // lock prevents common bug this running multiple times times
   async ensureStaticAppBits(activeSpace: Space) {
+    await lock.acquireAsync()
     const appDefs = orbitStaticApps
-    for (const appDef of appDefs) {
-      const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
-      if (!app) {
-        const tabDisplay =
-          appDef.id === 'setupApp' || appDef.id === 'searchResults' ? 'permanentLast' : 'hidden'
-        const next: AppBit = {
-          name: appDef.name,
-          target: 'app',
-          identifier: appDef.id,
-          spaceId: activeSpace.id,
-          icon: appDef.icon,
-          colors: appDef.iconColors || ['#222', '#000'],
-          tabDisplay,
+    try {
+      for (const appDef of appDefs) {
+        const app = await loadOne(AppModel, { args: { where: { identifier: appDef.id } } })
+        if (!app) {
+          const tabDisplay =
+            appDef.id === 'setupApp' || appDef.id === 'searchResults' ? 'permanentLast' : 'hidden'
+          const next: AppBit = {
+            name: appDef.name,
+            target: 'app',
+            identifier: appDef.id,
+            spaceId: activeSpace.id,
+            icon: appDef.icon,
+            colors: appDef.iconColors || ['#222', '#000'],
+            tabDisplay,
+          }
+          console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
+          await save(AppModel, next)
         }
-        console.log('ensuring model for static app', appDef.id, app, tabDisplay, next)
-        await save(AppModel, next)
       }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      lock.release()
     }
   },
 

@@ -4,6 +4,11 @@ import { ApiInfo } from '../ApiInfo'
 import { AppBit } from './AppBit'
 import { Space } from './SpaceInterface'
 
+export type StatusReply =
+  | { type: 'error'; message: string; errors?: { message?: string; stack?: string }[] }
+  | { type: 'success'; message: string; value?: string }
+  | { type: 'progress'; message: string; percent?: number }
+
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
 export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
@@ -16,10 +21,9 @@ export const RemoveAllAppDataCommand = new Command<void, void>('RemoveAllAppData
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
 
-export const AuthAppCommand = new Command<
-  { type: 'error'; message: string } | { type: 'success' },
-  { authKey: string; identifier: string }
->('AuthAppCommand')
+export const AuthAppCommand = new Command<StatusReply, { authKey: string; identifier: string }>(
+  'AuthAppCommand',
+)
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
 
@@ -36,24 +40,22 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 )
 
 export const AppCreateNewCommand = new Command<
-  { type: 'error'; message: string } | { type: 'success'; message: string },
+  StatusReply,
   { template: string; name: string; icon: string; identifier: string }
 >('AppCreateNewCommand')
 
-export const AppInstallToWorkspaceCommand = new Command<
-  { type: 'error'; message: string } | { type: 'success'; message: string },
-  { identifier: string }
->('AppInstallToWorkspaceCommand')
+export const AppInstallToWorkspaceCommand = new Command<StatusReply, { identifier: string }>(
+  'AppInstallToWorkspaceCommand',
+)
 
 // download app definition from registry
-export const GetAppStoreAppDefinitionCommand = new Command<
-  { type: 'error'; message: string } | { type: 'success'; identifier: string },
-  { packageId: string }
->('GetAppStoreAppDefinition')
+export const GetAppStoreAppDefinitionCommand = new Command<StatusReply, { packageId: string }>(
+  'GetAppStoreAppDefinition',
+)
 
 // run verification on setup
 export const AppDefinitionSetupVerifyCommand = new Command<
-  { type: 'error'; message?: string; errors?: any } | { type: 'success'; message: string },
+  StatusReply,
   { identifier: string; app: AppBit }
 >('AppDefinitionSetupVerify')
 

@@ -53,6 +53,12 @@ const handleKeyDown = async e => {
   switch (keyCode) {
     case Keys.space:
       if (queryStore.prefixFirstWord) {
+        if (
+          !appsCarouselStore.focusedApp ||
+          appsCarouselStore.focusedApp.identifier === 'searchResults'
+        ) {
+          return
+        }
         appsCarouselStore.zoomIntoCurrentApp()
       }
       return

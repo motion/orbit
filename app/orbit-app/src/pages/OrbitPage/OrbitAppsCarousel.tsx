@@ -58,6 +58,10 @@ class OrbitAppsCarouselStore {
     return this.props.apps
   }
 
+  get focusedApp() {
+    return this.apps[this.focusedIndex]
+  }
+
   get searchableApps() {
     return this.apps.map(x => ({
       name: `${x.name} ${x.identifier}`,

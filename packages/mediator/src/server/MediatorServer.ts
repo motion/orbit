@@ -38,14 +38,14 @@ export class MediatorServer {
   private async handleMessage(data: TransportRequest) {
     log.verbose('MediatorServer.message', data)
     const onSuccess = result => {
+      log.verbose(`onSuccess`, data, result)
       this.options.transport.send({
         id: data.id,
         result,
       })
     }
     const onError = (error: any) => {
-      log.error(`error in mediator: `, error)
-
+      log.error(`error in mediator: `, data, error)
       this.options.transport.send({
         id: data.id,
         result: undefined,
@@ -210,8 +210,8 @@ export class MediatorServer {
       let result: any = null
       try {
         const name = 'model' in resolver ? resolver.model.name : resolver.command.name
-        log.info(`Resolving ${resolver.type}: ${name}`)
         result = resolver.resolve(data.args)
+        log.info(`Resolving ${resolver.type}: ${name}`)
       } catch (error) {
         log.error('error executing resolver', error)
         throw error

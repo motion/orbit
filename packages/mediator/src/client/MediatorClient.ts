@@ -24,7 +24,9 @@ function cachedObservable(
     cached.subscriptions.add(sub)
 
     if (cached.isActive) {
-      sub.next(cached.value)
+      if (cached.value !== undefined) {
+        sub.next(cached.value)
+      }
     } else {
       cached.isActive = true
 
@@ -32,7 +34,6 @@ function cachedObservable(
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
-              console.log('ok', response)
               if (!isDefined(response.result)) {
                 console.warn('undefined response result! Is this a weird bug?...')
               } else {

@@ -56,7 +56,7 @@ export const ObserverCache = {
       // we only update denormalized values
       update: value => {
         // weird perf opt but works for our cases....
-        if (value && typeof value === 'object' && Object.keys(value).length < 50) {
+        if (value && typeof value === 'object' && Object.keys(value).length < 20) {
           if (isEqual(value, entry.value)) return
         }
         entry.value = value

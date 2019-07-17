@@ -225,9 +225,24 @@ export class MediatorServer {
         data.type === 'observeManyAndCount' ||
         data.type === 'observeCount'
       ) {
+        const subscription = result.subscribe(next => {
+          if (next === undefined) {
+            console.log(
+              '---------------- GOT UNDEFIEND NEXT, WE NEED TO SEE TYPEORM WHY THIS HAPPENS ------',
+            )
+            // typeorm timing bug? going to retry...
+            subscription.unsubscribe()
+            this.subscriptions.push({
+              id: data.id,
+              subscription: result.subscribe(onSuccess),
+            })
+          } else {
+            onSuccess(next)
+          }
+        }, onError)
         this.subscriptions.push({
           id: data.id,
-          subscription: result.subscribe(onSuccess, onError),
+          subscription,
         })
       } else if (result instanceof Promise) {
         result.then(onSuccess, onError)

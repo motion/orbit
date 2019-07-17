@@ -1,5 +1,5 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, createUsableStore, hmrSocket, ProvideStores, react, showConfirmDialog, useStore } from '@o/kit'
+import { AppDefinition, hmrSocket, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
@@ -8,44 +8,17 @@ import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from '
 
 import { APP_ID } from '../../constants'
 import { useOm } from '../../om/om'
-import { queryStore, Stores, useThemeStore } from '../../om/stores'
+import { Stores, useThemeStore } from '../../om/stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
-import { appsCarouselStore, OrbitAppsCarousel } from './OrbitAppsCarousel'
-import { appsDrawerStore, OrbitAppsDrawer } from './OrbitAppsDrawer'
+import { OrbitAppsCarousel } from './OrbitAppsCarousel'
+import { OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
-
-// import { hmrSocket } from '../../helpers/hmrSocket'
-// handle query prefixes
-export const queryPrefixStore = createUsableStore(
-  class QueryPrefixStore {
-    setQueryPrefix = react(
-      () => [appsCarouselStore.state.zoomedOut, queryStore.hasQuery, appsDrawerStore.isOpen],
-      ([zoomedOut, hasQuery, drawerOpen]) => {
-        if (drawerOpen) {
-          queryStore.setPrefixFirstWord(false)
-          return
-        }
-        if (!zoomedOut && !hasQuery) {
-          // if youre zoomed into an app and you clear the query bar,
-          // we should stop ignoring the prefix we used previosuly
-          queryStore.setPrefixFirstWord(false)
-          return
-        }
-        if (zoomedOut) {
-          // ignore until we next clear the querybar
-          queryStore.setPrefixFirstWord()
-          return
-        }
-      },
-    )
-  },
-)
 
 export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()

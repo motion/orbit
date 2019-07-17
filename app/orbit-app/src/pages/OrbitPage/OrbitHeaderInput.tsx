@@ -1,4 +1,4 @@
-import { useActiveSpace, useReaction } from '@o/kit'
+import { createUsableStore, react, useActiveSpace, useReaction } from '@o/kit'
 import { ClearButton, sleep, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
@@ -7,13 +7,41 @@ import { om } from '../../om/om'
 import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarousel'
+import { appsDrawerStore } from './OrbitAppsDrawer'
 import { useHeaderStore } from './OrbitHeader'
 
 const Keys = {
   up: 38,
   down: 40,
   enter: 13,
+  space: 32,
 }
+
+// handle query prefixes
+createUsableStore(
+  class HeaderInputStore {
+    updateQueryPrefix = react(
+      () => [appsCarouselStore.state.zoomedOut, queryStore.hasQuery, appsDrawerStore.isOpen],
+      ([zoomedOut, hasQuery, drawerOpen]) => {
+        if (drawerOpen) {
+          queryStore.setPrefixFirstWord(false)
+          return
+        }
+        if (!zoomedOut && !hasQuery) {
+          // if youre zoomed into an app and you clear the query bar,
+          // we should stop ignoring the prefix we used previosuly
+          queryStore.setPrefixFirstWord(false)
+          return
+        }
+        if (zoomedOut) {
+          // ignore until we next clear the querybar
+          queryStore.setPrefixFirstWord()
+          return
+        }
+      },
+    )
+  },
+)
 
 const handleKeyDown = async e => {
   // up/down/enter
@@ -22,16 +50,21 @@ const handleKeyDown = async e => {
     e.preventDefault()
   }
 
-  if (keyCode === Keys.enter) {
-    if (appsCarouselStore.state.zoomedOut) {
-      e.stopPropagation()
-      appsCarouselStore.zoomIntoCurrentApp()
-      await sleep(16)
-      queryStore.clearPrefix()
+  switch (keyCode) {
+    case Keys.space:
+      if (queryStore.prefixFirstWord) {
+        appsCarouselStore.zoomIntoCurrentApp()
+      }
       return
-    } else {
-      queryStore.setLastCommand('enter')
-    }
+    case Keys.enter:
+      if (appsCarouselStore.state.zoomedOut) {
+        e.stopPropagation()
+        appsCarouselStore.zoomIntoCurrentApp()
+        return
+      } else {
+        queryStore.setLastCommand('enter')
+      }
+      return
   }
 }
 

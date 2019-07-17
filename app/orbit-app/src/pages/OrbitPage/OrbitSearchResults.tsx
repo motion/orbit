@@ -1,5 +1,5 @@
-import { AppBit, ensure, HighlightActiveQuery, useReaction, useSearchState } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { AppBit, ensure, HighlightActiveQuery, react, useReaction, useSearchState, useStore } from '@o/kit'
+import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
@@ -8,9 +8,55 @@ import { SearchStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
+class SearchResultsStore {
+  rows: ListItemProps[] = []
+
+  setRows(rows: ListItemProps[]) {
+    this.rows = rows
+  }
+
+  reactToItem = react(
+    () => this.rows,
+    async (rows, { sleep }) => {
+      const item = rows[0]
+      if (!item) return
+      // lets not be super greedy here
+      await sleep(100)
+      if (item.extraData && item.extraData.app) {
+        // onSelect App
+        const app: AppBit = item.extraData.app
+        const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
+        if (carouselIndex === -1) return
+        appsCarouselStore.animateAndScrollTo(carouselIndex)
+      } else {
+        // onSelect Bit
+        const carouselIndex = appsCarouselStore.apps.findIndex(
+          x => x.identifier === 'searchResults',
+        )
+        if (carouselIndex === -1) return
+        appsCarouselStore.animateAndScrollTo(carouselIndex)
+
+        om.actions.setShare({
+          id: `app-search-results`,
+          value: {
+            id: +`${item.id}`,
+            name: 'Search Results',
+            identifier: 'searchResults',
+            items: rows,
+          },
+        })
+      }
+    },
+    {
+      lazy: true,
+    },
+  )
+}
+
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
   const appsDrawer = appsDrawerStore.useStore()
+  const searchResultsStore = useStore(SearchResultsStore)
   const carousel = useAppsCarousel()
   const searchStore = SearchStore.useStore()!
   const listRef = useRef<SelectableStore>(null)
@@ -78,29 +124,7 @@ export const OrbitSearchResults = memo(() => {
       ignoreNextSelect.current = false
       return
     }
-    if (!item) return
-    if (item.extraData && item.extraData.app) {
-      // onSelect App
-      const app: AppBit = item.extraData.app
-      const carouselIndex = appsCarouselStore.apps.findIndex(x => x.id === app.id)
-      if (carouselIndex === -1) return
-      appsCarouselStore.animateAndScrollTo(carouselIndex)
-    } else {
-      // onSelect Bit
-      const carouselIndex = appsCarouselStore.apps.findIndex(x => x.identifier === 'searchResults')
-      if (carouselIndex === -1) return
-      appsCarouselStore.animateAndScrollTo(carouselIndex)
-
-      om.actions.setShare({
-        id: `app-search-results`,
-        value: {
-          id: item.id,
-          name: 'Search Results',
-          identifier: 'searchResults',
-          items: rows,
-        },
-      })
-    }
+    searchResultsStore.setRows(rows)
   }, [])
 
   // sync from carousel to list

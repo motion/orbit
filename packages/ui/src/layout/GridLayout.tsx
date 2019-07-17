@@ -108,7 +108,7 @@ class GridStore {
   layout = syncFromProp(this.props, {
     key: 'layout',
     defaultKey: 'defaultLayout',
-    defaultValue: null,
+    defaultValue: {},
   })
   onChangeLayoutCb = syncToProp(this, 'layout', 'onChangeLayout')
 

@@ -60,13 +60,13 @@ function resolveAppSetupVerify() {
       return loadDef
     }
 
-    const { definition } = loadDef
+    const definition = loadDef.value
 
     if (!definition.setupValidate) {
       return {
-        type: 'success' as const,
+        type: 'success',
         message: 'Success, no validation defined',
-      }
+      } as const
     }
 
     let res
@@ -77,7 +77,7 @@ function resolveAppSetupVerify() {
       console.log('error running validate', err)
       return {
         type: 'error',
-        errors: `${err}`,
+        message: `${err}`,
       } as const
     }
 
@@ -97,7 +97,7 @@ function resolveAppSetupVerify() {
 
     return {
       type: 'error',
-      errors: res,
+      message: res,
     } as const
   })
 }
@@ -122,17 +122,17 @@ async function getAppDefinitionOrDownloadTemporary(identifier: string) {
 
   if (!packageId) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No package id found for identifier ${identifier}`,
-    }
+    } as const
   }
 
   const appPath = join(tempPackageDir, 'node_modules', ...packageId.split('/'))
   if (!(await pathExists(appPath))) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: 'No app definition downloaded',
-    }
+    } as const
   }
 
   // run definition

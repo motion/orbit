@@ -16,7 +16,7 @@ export default createApp({
   app: QueryBuilder,
 })
 
-const treeId = 'query-builder3'
+const treeId = 'query-builder4'
 
 function QueryBuilder() {
   const om = useOm()
@@ -41,7 +41,7 @@ function QueryBuilder() {
 
   useEffect(() => {
     if (!navigator.currentItem) return
-    if (curItem && navigator.currentItem.id !== 'QueryEdit') {
+    if (curItem && navigator.currentItem.id === 'Null') {
       navigator.navigateTo(
         {
           id: 'SelectApp',
@@ -96,7 +96,6 @@ function QueryBuilderIndex({
         alwaysSelected
         use={treeList}
         onSelect={items => {
-          console.log('on select', items)
           setItems(items)
         }}
         sortable
@@ -148,9 +147,7 @@ function QueryBuilderMain({
       useNavigator={navigator}
       onNavigate={item => {
         console.log('navigating to', item, treeList)
-        if (!item) {
-          return
-        }
+        if (!item) return
         // const icon = getAppDefinition(item.id)
         treeList.actions.updateSelectedItem({
           data: {
@@ -166,7 +163,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState<any[] | null>(null)
-  console.log('props', props)
   return (
     <Section
       padding
@@ -245,9 +241,9 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
 }
 
 const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
-  const [mode, setMode] = useState<'api' | 'graph'>('api')
+  const [mode] = useState<'api' | 'graph'>('api')
   const [showSidebar, setShowSidebar] = useState(true)
-  const [app, def] = useAppWithDefinition(+props.id!)
+  const [, def] = useAppWithDefinition(+props.id!)
 
   if (!def) {
     return null
@@ -306,9 +302,9 @@ const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
     >
       <Suspense fallback={null}>
         {mode === 'api' ? (
-          <APIQueryBuild id={+props.id} showSidebar={showSidebar} />
+          <APIQueryBuild id={+props.id!} showSidebar={showSidebar} />
         ) : (
-          <GraphQueryBuild id={+props.id} />
+          <GraphQueryBuild id={+props.id!} />
         )}
       </Suspense>
     </Section>
@@ -339,6 +335,7 @@ type PlaceHolder = {
 }
 
 class QueryBuilderStore {
+  // @ts-ignore
   props: {
     appId: number
     appIdentifier: string
@@ -399,14 +396,14 @@ class QueryBuilderStore {
 
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const [app, def] = useAppWithDefinition(+props.id)
-  const meta = useAppMeta(def.id)
+  const meta = useAppMeta(def!.id)
   const apiInfo = meta.apiInfo || {}
   const allMethods = Object.keys(apiInfo)
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const queryBuilder = useStore(QueryBuilderStore, {
     method: method ? method.name : '',
-    appId: app.id!,
-    appIdentifier: def.id!,
+    appId: app!.id!,
+    appIdentifier: def!.id!,
   })
   const hasApiInfo = !!meta && !!apiInfo
 
@@ -476,7 +473,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
             </Tab>
             <Tab padding key="2" label="Table">
-              <Table items={[].concat(queryBuilder.result)} />
+              <Table items={[].concat(queryBuilder.result || [])} />
             </Tab>
           </Tabs>
         </Col>
@@ -566,7 +563,6 @@ const ArgumentField = memo(
               checked={isActive}
               tooltip="Toggle active"
               onChange={x => {
-                console.log('val', x)
                 setIsActive(x)
               }}
             />
@@ -575,7 +571,7 @@ const ArgumentField = memo(
         <Card
           transition="all ease 300ms"
           opacity={isActive ? 1 : 0.35}
-          pad
+          padding
           elevation={1}
           height={24 * numLines + /* padding */ 16 * 2}
         >
@@ -595,7 +591,7 @@ const ArgumentField = memo(
   },
 )
 
-const GraphQueryBuild = memo((props: { id: number }) => {
+const GraphQueryBuild = memo((_: { id: number }) => {
   return (
     <Layout type="row">
       <Pane flex={2} />

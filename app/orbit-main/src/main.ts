@@ -4,6 +4,7 @@ import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
 import root from 'global'
 import { join } from 'path'
 import WebSocket from 'ws'
+
 import { getInitialConfig } from './getInitialConfig'
 
 // sort order important
@@ -22,7 +23,19 @@ const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTR
 const log = new Logger('orbit-main')
 
 export async function main() {
-  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`)
+  log.info(
+    `starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${JSON.stringify(
+      {
+        SUB_PROCESS,
+        PROCESS_NAME,
+        ORBIT_CONFIG,
+        DISABLE_WORKERS,
+        DISABLE_ELECTRON,
+      },
+      null,
+      2,
+    )}`,
+  )
 
   // setup config
   if (SUB_PROCESS) {

@@ -58,6 +58,10 @@ class OrbitAppsCarouselStore {
     return this.props.apps
   }
 
+  get focusedApp() {
+    return this.apps[this.focusedIndex]
+  }
+
   get searchableApps() {
     return this.apps.map(x => ({
       name: `${x.name} ${x.identifier}`,
@@ -95,8 +99,10 @@ class OrbitAppsCarouselStore {
       ensure('zoomedIn', zoomedIn)
       useEffect(() => {
         const onResize = () => {
-          const x = this.currentNode!.offsetLeft
-          this.props.setScrollSpring({ x, config: { duration: 0 } })
+          if (this.currentNode) {
+            const x = this.currentNode.offsetLeft
+            this.props.setScrollSpring({ x, config: { duration: 0 } })
+          }
         }
         window.addEventListener('resize', onResize, { passive: true })
         return () => {

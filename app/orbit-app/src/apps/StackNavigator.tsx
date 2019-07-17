@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { createStoreContext, react, useHooks, useReaction, useStore, useUserState } from '@o/kit'
+import { createStoreContext, ensure, react, useHooks, useReaction, useStore, useUserState } from '@o/kit'
 import { Loading, Slider, SliderPane } from '@o/ui'
 import { removeLast } from '@o/utils'
 import { last, pickBy } from 'lodash'
@@ -62,6 +62,7 @@ export const StackNavigator = forwardRef<StackNavigatorStore, StackNavViewProps>
   useReaction(
     () => stackNav && stackNav.currentItem,
     stackItem => {
+      ensure('stackItem', !!stackItem)
       console.log('calling onNavigate stackItem', stackItem)
       if (props.onNavigate) {
         props.onNavigate(stackItem)
@@ -106,10 +107,12 @@ export class StackNavigatorStore {
   // @ts-ignore
   props: StackNavProps
 
-  next = null
+  // next stack item
+  nextItem = null
 
   private hooks = useHooks(() => {
-    const [state, setState] = useUserState<StackNavState>(`sn-${this.props.id}`, {
+    const id = this.props.id ? `sn-${this.props.id}` : false
+    const [state, setState] = useUserState<StackNavState>(id, {
       stack: [],
     })
     return {
@@ -130,7 +133,10 @@ export class StackNavigatorStore {
     return this.stack[this.stack.length - 1]
   }
 
-  propUpdateDefaultItem = react(() => this.props.defaultItem, this.updateDefaultItem)
+  propUpdateDefaultItem = react(
+    () => [this.props.defaultItem, this.props.id, this.hooks.state],
+    ([item]) => item && this.updateDefaultItem(item),
+  )
 
   updateDefaultItem(defaultItem: StackItem) {
     if (!this.stack.length && defaultItem) {
@@ -152,7 +158,10 @@ export class StackNavigatorStore {
     { forcePush = false, replaceAll = false }: { forcePush?: boolean; replaceAll?: boolean } = {},
   ) {
     this.hooks.setState(current => {
-      if (!current || !current.stack) return
+      if (!current) return
+      if (!current.stack) {
+        current.stack = []
+      }
       const next = this.filterItem(item)
       if (!replaceAll && current.stack.length) {
         const prev = last(current.stack)

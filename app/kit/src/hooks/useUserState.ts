@@ -51,7 +51,10 @@ export function usePersistedScopedState<A>(
     })
 
     if (!state || !state.data) {
-      throw new Error(`Couldn't acquire state for ${type} ${id}`)
+      if (id === false) {
+        return [null, null]
+      }
+      throw new Error(`Couldn't acquire state for ${type} ${id} ${identifier}`)
     }
 
     // scope it to .data
@@ -93,7 +96,7 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
             },
           },
         }),
-        400,
+        2500,
       )
 
       const create = () => {
@@ -105,16 +108,15 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
       }
 
       load
-        // @ts-ignore
-        .then(row => {
+        .then(async row => {
           if (!row || !isDefined(row.data)) {
-            return create()
+            return await create()
           }
         })
-        .catch(err => {
+        .catch(async err => {
           if (err === OR_TIMED_OUT) {
             console.error('timed out loading query', identifier, type, value)
-            return create()
+            return await create()
           } else {
             console.error(err)
           }
@@ -125,19 +127,22 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
 }
 
 function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {
-  return useCallback(val => {
-    update(draft => {
-      const innerState = draft.data.dataValue
-      if (typeof val === 'function') {
-        const next = val(innerState)
-        if (typeof next !== 'undefined') {
-          draft.data.dataValue = next
+  return useCallback(
+    val => {
+      update(draft => {
+        const innerState = draft.data.dataValue
+        if (typeof val === 'function') {
+          const next = val(innerState)
+          if (typeof next !== 'undefined') {
+            draft.data.dataValue = next
+          }
+        } else {
+          draft.data.dataValue = val
         }
-      } else {
-        draft.data.dataValue = val
-      }
-    })
-  }, [])
+      })
+    },
+    [update],
+  )
 }
 
 function useImmerState<A>(defaultState: A): ScopedState<A> {

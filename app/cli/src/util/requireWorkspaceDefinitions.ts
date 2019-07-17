@@ -16,14 +16,14 @@ export async function requireWorkspaceDefinitions(
         const message = `No node api, error: ${res.message}`
         reporter.error(message)
         return {
-          type: 'error' as const,
+          type: 'error',
           value: message,
-        }
+        } as const
       }
       return {
-        type: 'success' as const,
-        value: res.definition,
-      }
+        type: 'success',
+        value: res.value,
+      } as const
     }),
   )).filter(Boolean)
 }

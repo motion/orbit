@@ -63,7 +63,7 @@ export const OrbitApp = memo(
           flex={1}
           pointerEvents={disableInteraction ? 'none' : 'inherit'}
         >
-          <ScopedState id={`or-${identifier}-${id}`}>
+          <ScopedState id={`app-${identifier}-${id}`}>
             <ProvideStores stores={{ appStore }}>
               <ProvideVisibility visible={isActive}>
                 <OrbitAppRender

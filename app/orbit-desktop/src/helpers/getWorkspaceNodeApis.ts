@@ -13,7 +13,7 @@ export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinition[
         log.info(`No node api, error: ${res.message}`)
         return null
       }
-      return res.definition
+      return res.value
     }),
   )).filter(Boolean)
 }

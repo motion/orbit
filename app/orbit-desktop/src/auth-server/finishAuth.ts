@@ -77,7 +77,7 @@ export const finishAuth = async (type: string, values: OauthValues) => {
 
     const space = await getActiveSpace()
     let app: AppBit = {
-      ...newEmptyAppBit(required.definition),
+      ...newEmptyAppBit(required.value),
       spaces: [space],
       spaceId: space.id,
       token: values.token,
@@ -88,8 +88,8 @@ export const finishAuth = async (type: string, values: OauthValues) => {
       },
     }
 
-    if (required.definition.finishAuth) {
-      app = await required.definition.finishAuth(app, values, OAuthStrategies[type].config)
+    if (required.value.finishAuth) {
+      app = await required.value.finishAuth(app, values, OAuthStrategies[type].config)
       if (!app || typeof app !== 'object') {
         return {
           type: 'error' as const,

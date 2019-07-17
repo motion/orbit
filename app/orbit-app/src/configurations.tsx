@@ -25,6 +25,8 @@ export function runConfigurations(opts: { getLoadedApps: () => AppDefinition[] }
   window['hasConfigured'] = true
   if (hasConfigured) return
 
+  // after this stuff is just run once (no hmr effects)
+
   configureMobx({
     // for easier debugging mobx stack traces
     disableErrorBoundaries: false,

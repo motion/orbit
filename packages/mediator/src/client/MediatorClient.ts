@@ -1,4 +1,4 @@
-import { orTimeout } from '@o/utils'
+import { isDefined, orTimeout } from '@o/utils'
 import Observable from 'zen-observable'
 
 import { Command, Model, TransportRequestType } from '../common'
@@ -24,7 +24,9 @@ function cachedObservable(
     cached.subscriptions.add(sub)
 
     if (cached.isActive) {
-      sub.next(cached.value)
+      if (cached.value !== undefined) {
+        sub.next(cached.value)
+      }
     } else {
       cached.isActive = true
 
@@ -32,7 +34,11 @@ function cachedObservable(
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
-              cached.update(response.result)
+              if (!isDefined(response.result)) {
+                console.warn('undefined response result! Is this a weird bug?...')
+              } else {
+                cached.update(response.result)
+              }
             }
           },
           error => sub.error(error),
@@ -49,9 +55,11 @@ function cachedObservable(
       cached.subscriptions.delete(sub)
       if (cached.subscriptions.size === 0) {
         cached.removeTimeout = setTimeout(() => {
-          cached.isActive = false
-          cached.onDispose && cached.onDispose()
-          ObserverCache.delete(cached)
+          if (cached.subscriptions.size === 0) {
+            cached.isActive = false
+            cached.onDispose && cached.onDispose()
+            ObserverCache.delete(cached)
+          }
         }, 5000)
       }
     }
@@ -103,6 +111,7 @@ export class MediatorClient {
     values: SaveOptions<ModelType>,
   ): Promise<ModelType> {
     const modelName = typeof model === 'string' ? model : model.name
+
     ObserverCache.updateModels(modelName, Array.isArray(values) ? values : [values])
 
     for (let transport of this.options.transports) {

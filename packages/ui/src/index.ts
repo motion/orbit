@@ -218,3 +218,6 @@ export * from './text/CenteredText'
 export * from './buttons/MenuButton'
 export * from './Draggable'
 export * from './helpers/composeRefs'
+
+// accept hmrs
+module['hot'] && module['hot'].accept()

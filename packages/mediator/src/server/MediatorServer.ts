@@ -38,14 +38,14 @@ export class MediatorServer {
   private async handleMessage(data: TransportRequest) {
     log.verbose('MediatorServer.message', data)
     const onSuccess = result => {
+      log.verbose(`onSuccess`, data, result)
       this.options.transport.send({
         id: data.id,
         result,
       })
     }
     const onError = (error: any) => {
-      log.error(`error in mediator: `, error)
-
+      log.error(`error in mediator: `, data, error)
       this.options.transport.send({
         id: data.id,
         result: undefined,
@@ -208,14 +208,17 @@ export class MediatorServer {
     if (resolver) {
       // resolve a value
       let result: any = null
-      try {
-        const name = 'model' in resolver ? resolver.model.name : resolver.command.name
-        log.info(`Resolving ${resolver.type}: ${name}`)
-        result = resolver.resolve(data.args)
-      } catch (error) {
-        log.error('error executing resolver', error)
-        throw error
+      const resolveResult = () => {
+        try {
+          const name = 'model' in resolver ? resolver.model.name : resolver.command.name
+          result = resolver.resolve(data.args)
+          log.info(`Resolving ${resolver.type}: ${name}`)
+        } catch (error) {
+          log.error('error executing resolver', error)
+          throw error
+        }
       }
+      resolveResult()
 
       // additionally resolve properties
       // send result back over transport based on returned value
@@ -225,9 +228,27 @@ export class MediatorServer {
         data.type === 'observeManyAndCount' ||
         data.type === 'observeCount'
       ) {
+        const subscription = result.subscribe(next => {
+          if (next === undefined) {
+            resolveResult()
+            console.log(
+              '---------------- GOT UNDEFIEND NEXT, WE NEED TO SEE TYPEORM WHY THIS HAPPENS ------',
+            )
+            // typeorm timing bug? going to retry...
+            subscription.unsubscribe()
+            setTimeout(() => {
+              this.subscriptions.push({
+                id: data.id,
+                subscription: result.subscribe(onSuccess),
+              })
+            })
+          } else {
+            onSuccess(next)
+          }
+        }, onError)
         this.subscriptions.push({
           id: data.id,
-          subscription: result.subscribe(onSuccess, onError),
+          subscription,
         })
       } else if (result instanceof Promise) {
         result.then(onSuccess, onError)

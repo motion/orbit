@@ -25,6 +25,8 @@ export * from '@o/use-store'
 export * from '@o/utils'
 export { isEqual } from '@o/fast-compare'
 
+export * from './hmrSocket'
+
 export * from './AppLoadContext'
 export * from './bit/Readability'
 export { configureKit } from './configureKit'
@@ -106,3 +108,6 @@ export * from './views/AppToolBar'
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,
 }
+
+// accept hmrs
+module['hot'] && module['hot'].accept()

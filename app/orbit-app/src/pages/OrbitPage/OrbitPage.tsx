@@ -1,5 +1,5 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, createUsableStore, ProvideStores, react, showConfirmDialog, useForceUpdate, useStore } from '@o/kit'
+import { AppDefinition, hmrSocket, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
@@ -7,45 +7,18 @@ import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { APP_ID } from '../../constants'
-import { hmrSocket } from '../../helpers/hmrSocket'
 import { useOm } from '../../om/om'
-import { queryStore, Stores, useThemeStore } from '../../om/stores'
+import { Stores, useThemeStore } from '../../om/stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { AppWrapper } from '../../views'
 import MainShortcutHandler from '../../views/MainShortcutHandler'
 import { LoadApp } from './LoadApp'
 import { OrbitApp } from './OrbitApp'
-import { appsCarouselStore, OrbitAppsCarousel } from './OrbitAppsCarousel'
-import { appsDrawerStore, OrbitAppsDrawer } from './OrbitAppsDrawer'
+import { OrbitAppsCarousel } from './OrbitAppsCarousel'
+import { OrbitAppsDrawer } from './OrbitAppsDrawer'
 import { OrbitDock } from './OrbitDock'
 import { OrbitDraggableOverlay } from './OrbitDraggableOverlay'
 import { OrbitHeader } from './OrbitHeader'
-
-// handle query prefixes
-export const queryPrefixStore = createUsableStore(
-  class QueryPrefixStore {
-    setQueryPrefix = react(
-      () => [appsCarouselStore.state.zoomedOut, queryStore.hasQuery, appsDrawerStore.isOpen],
-      ([zoomedOut, hasQuery, drawerOpen]) => {
-        if (drawerOpen) {
-          queryStore.setPrefixFirstWord(false)
-          return
-        }
-        if (!zoomedOut && !hasQuery) {
-          // if youre zoomed into an app and you clear the query bar,
-          // we should stop ignoring the prefix we used previosuly
-          queryStore.setPrefixFirstWord(false)
-          return
-        }
-        if (zoomedOut) {
-          // ignore until we next clear the querybar
-          queryStore.setPrefixFirstWord()
-          return
-        }
-      },
-    )
-  },
-)
 
 export const OrbitPage = memo(function OrbitPage() {
   const themeStore = useThemeStore()
@@ -84,7 +57,6 @@ const OrbitStatusMessages = memo(() => {
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { isEditing } = useStore(App)
   const { actions } = useOm()
-  const forceUpdate = useForceUpdate()
 
   const shortcutState = useRef({
     closeTab: 0,
@@ -146,17 +118,29 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   /**
    * Done by andreyy, work to get hmr working on one-off dev apps
    */
+  // useEffect(() => {
+  //   if (App.appConf.appId === 0) {
+  //     return
+  //   }
+  //   hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
+  //     built: () => {
+  //       console.log('force updating after app server hmr')
+  //       forceUpdate()
+  //     },
+  //   })
+  // }, [App.appConf.appId])
+
   useEffect(() => {
-    if (App.appConf.appId === 0) {
-      return
-    }
-    hmrSocket(`/appServer/${App.appConf.appId}/__webpack_hmr`, {
+    hmrSocket(`/__webpack_hmr_apps`, {
+      // for some reason built is sent before 'sync', which applies update
+      // and i can't hook into sync, so just doing settimeout for now
       built: () => {
-        console.log('force updating after app server hmr')
-        forceUpdate()
+        setTimeout(() => {
+          window['rerender'](false)
+        }, 80)
       },
     })
-  }, [App.appConf.appId])
+  }, [])
 
   if (isEditing) {
     const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`
@@ -204,7 +188,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 let RenderDevApp = ({ appDef }: { appDef: AppDefinition }) => {
-  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} renderApp />
+  return <OrbitApp appDef={appDef} id={App.appConf.appId} identifier={appDef.id} shouldRenderApp />
 }
 
 const OrbitContentArea = gloss(Box, {

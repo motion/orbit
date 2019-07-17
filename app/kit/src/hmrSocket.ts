@@ -1,7 +1,5 @@
 /* global window __webpack_hash__ */
 
-const moduleHot = module['hot']
-
 function createEventSource(url: string) {
   var source
   var listeners: any[] = []
@@ -61,7 +59,7 @@ var subscribeAllHandler
 function processMessage(obj) {
   switch (obj.action) {
     case 'building':
-      console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
+      // console.log('[HMR] bundle ' + (obj.name ? "'" + obj.name + "' " : '') + 'rebuilding')
       break
     case 'built':
       console.log(
@@ -74,7 +72,7 @@ function processMessage(obj) {
         // if (reporter) reporter.problems('errors', obj)
         applyUpdate = false
       } else if (obj.warnings.length > 0) {
-        console.warn(obj.warnings)
+        // console.warn(obj.warnings)
       } else {
         // if (reporter) {
         //   reporter.cleanProblemsCache()
@@ -82,7 +80,7 @@ function processMessage(obj) {
         // }
       }
       if (applyUpdate) {
-        processUpdate(obj.hash, obj.modules, { reload: false })
+        processUpdate(obj.hash, obj.modules, { reload: true })
       }
       break
     default:
@@ -104,8 +102,8 @@ function processMessage(obj) {
 
 /* global window __webpack_hash__ */
 
-if (!moduleHot) {
-  throw new Error('[HMR] Hot Module Replacement is disabled.')
+if (!module.hot) {
+  // throw new Error('[HMR] Hot Module Replacement is disabled.')
 }
 
 var hmrDocsUrl = 'https://webpack.js.org/concepts/hot-module-replacement/' // eslint-disable-line max-len
@@ -117,10 +115,10 @@ var applyOptions = {
   ignoreDeclined: true,
   ignoreErrored: true,
   onUnaccepted: function(data) {
-    console.warn('Ignored an update to unaccepted module ' + data.chain.join(' -> '), data)
+    console.warn('Ignored an update to unaccepted module ' + data.chain.join(' -> '), data.chain)
   },
   onDeclined: function(data) {
-    console.warn('Ignored an update to declined module ' + data.chain.join(' -> '))
+    console.warn('Ignored an update to declined module ' + data.chain.join(' -> '), data.chain)
   },
   onErrored: function(data) {
     console.error(data.error)
@@ -130,15 +128,12 @@ var applyOptions = {
 
 function upToDate(hash?) {
   if (hash) lastHash = hash
-  // @ts-ignore
   return lastHash == __webpack_hash__
 }
 
 function processUpdate(hash, moduleMap, options) {
-  console.log('process update', hash, moduleMap)
-
   var reload = options.reload
-  if (!upToDate(hash) && moduleHot.status() == 'idle') {
+  if (!upToDate(hash) && module.hot.status() == 'idle') {
     if (options.log) console.log('[HMR] Checking for updates on the server...')
     check()
   }
@@ -164,7 +159,7 @@ function processUpdate(hash, moduleMap, options) {
         logUpdates(updatedModules, renewedModules)
       }
 
-      var applyResult = moduleHot.apply(applyOptions, applyCallback)
+      var applyResult = module.hot.apply(applyOptions, applyCallback) as any
       // webpack 2 promise
       if (applyResult && applyResult.then) {
         // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
@@ -175,7 +170,7 @@ function processUpdate(hash, moduleMap, options) {
       }
     }
 
-    var result = moduleHot.check(false, cb)
+    var result = module.hot.check(false, cb) as any
     // webpack 2 promise
     if (result && result.then) {
       result.then(function(updatedModules) {
@@ -226,7 +221,7 @@ function processUpdate(hash, moduleMap, options) {
   }
 
   function handleError(err) {
-    if (moduleHot.status() in failureStatuses) {
+    if (module.hot.status() in failureStatuses) {
       if (options.warn) {
         console.warn('[HMR] Cannot check for update (Full reload needed)')
         console.warn('[HMR] ' + (err.stack || err.message))

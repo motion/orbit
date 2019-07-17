@@ -18,6 +18,7 @@ export function DemoAppUserManager() {
   const [highlighted, setHighlighted] = useState([])
   const form = useCreateForm()
   const allUsers = useFetch(`${endpoint}/users`)
+  console.log('allUsers', allUsers)
   const users = useMemo(
     () =>
       allUsers.map((row, i) => ({

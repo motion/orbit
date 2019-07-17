@@ -88,6 +88,11 @@ export function DemoAppUserManager() {
 
 function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
+
+  if (!props.row) {
+    return null
+  }
+
   return (
     <Layout type="column">
       <Pane resizable>
@@ -101,9 +106,11 @@ function PersonInfo(props: { row: any }) {
         </Fetch>
       </Pane>
       <Pane resizable title={album ? `${album.id} Album ${album.title} Pictures` : ''}>
-        <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
-          {photos => <Table selectable="multi" searchable items={photos} />}
-        </Fetch>
+        {!!album && (
+          <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
+            {photos => <Table selectable="multi" searchable items={photos} />}
+          </Fetch>
+        )}
       </Pane>
     </Layout>
   )

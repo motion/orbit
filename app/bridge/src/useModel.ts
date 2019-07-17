@@ -88,7 +88,7 @@ function use<ModelType, Args>(
   const valueRef = useRef(options ? options.defaultValue : undefined)
   const forceUpdate = useForceUpdate()
   const subscription = useRef<any>(null)
-  const yallReadyKnow = useRef(false)
+  const waitForFirstResolve = useRef(false)
 
   // they changed the key! we should reset valueRef.current
   if (curKey.current !== key) {
@@ -97,15 +97,13 @@ function use<ModelType, Args>(
   }
 
   // unmount
-  useEffect(() => dispose(subscription), [key])
+  useEffect(() => dispose(subscription), [])
 
   // on new query: subscribe, update
   useEffect(() => {
     if (!hasQuery(query)) return
-    if (yallReadyKnow.current) {
-      yallReadyKnow.current = false
-      return
-    }
+    if (waitForFirstResolve.current) return
+    console.log('THIS SHOULD THEN RUN', key, waitForFirstResolve.current)
 
     // unsubscribe from previous subscription
     dispose(subscription)
@@ -115,13 +113,14 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
+      console.log('got update', next)
       valueRef.current = next
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.log('useModel update', currentComponent(), key, next)
       }
       setTimeout(() => {
         delete PromiseCache[curKey.current]
-      })
+      }, 200)
       queueUpdate(forceUpdate)
     }
 
@@ -130,7 +129,7 @@ function use<ModelType, Args>(
     return () => {
       cancelled = true
     }
-  }, [observeEnabled])
+  }, [waitForFirstResolve.current, key, observeEnabled])
 
   const valueUpdater: ImmutableUpdateFn<any> = useCallback(updaterFn => {
     const finish = (val: any) => {
@@ -141,6 +140,7 @@ function use<ModelType, Args>(
       setTimeout(() => {
         delete PromiseCache[curKey.current]
       })
+      console.log('calling save')
       save(model, next as any)
     }
 
@@ -160,11 +160,10 @@ function use<ModelType, Args>(
       valueRef.current = defaultValues[type]
     } else {
       if (!cache) {
+        waitForFirstResolve.current = true
         let resolve
         let resolved = false
         const promise = new Promise(res => {
-          yallReadyKnow.current = true
-
           const finish = next => {
             clearTimeout(tm)
             if (!isDefined(next)) {
@@ -181,6 +180,7 @@ function use<ModelType, Args>(
               if (process.env.NODE_ENV === 'development' && shouldDebug()) {
                 console.log('useModel.resolve', key, currentComponent(), next)
               }
+              waitForFirstResolve.current = false
               res()
             }
           }

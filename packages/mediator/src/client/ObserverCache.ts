@@ -92,16 +92,19 @@ export const ObserverCache = {
           if (!entry.value) continue // does this cause cache problems?
           if (entry.value.id === id) {
             const next = selectModel(entry, value)
-            if (!isEqual(entry.value, next)) {
-              toUpdate.add(entry)
-              entry.value = next
-            }
+            // if (!isEqual(entry.value, next)) {
+            toUpdate.add(entry)
+            entry.value = next
+            // }
           }
         }
       }
     }
 
     for (const entry of [...toUpdate]) {
+      if (!entry.subscriptions.size) {
+        console.warn('NO SUBSCRIPTIONS')
+      }
       for (const sub of [...entry.subscriptions]) {
         // re-calculate value now (doing this on save is better than on every render)
         if (entry.args.type === 'many') {

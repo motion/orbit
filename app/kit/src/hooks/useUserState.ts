@@ -127,19 +127,22 @@ function useEnsureDefaultState<A>(identifier: string, type: string, value: A) {
 }
 
 function useImmutableUpdateFn(update: ImmutableUpdateFn<any>) {
-  return useCallback(val => {
-    update(draft => {
-      const innerState = draft.data.dataValue
-      if (typeof val === 'function') {
-        const next = val(innerState)
-        if (typeof next !== 'undefined') {
-          draft.data.dataValue = next
+  return useCallback(
+    val => {
+      update(draft => {
+        const innerState = draft.data.dataValue
+        if (typeof val === 'function') {
+          const next = val(innerState)
+          if (typeof next !== 'undefined') {
+            draft.data.dataValue = next
+          }
+        } else {
+          draft.data.dataValue = val
         }
-      } else {
-        draft.data.dataValue = val
-      }
-    })
-  }, [])
+      })
+    },
+    [update],
+  )
 }
 
 function useImmerState<A>(defaultState: A): ScopedState<A> {

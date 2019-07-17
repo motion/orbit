@@ -128,7 +128,6 @@ export const List = memo(
         if (onSelect) {
           onSelect(selectedRows, selectedIndices)
         }
-        console.log('extraOnSelect', extraOnSelect)
         if (extraOnSelect) {
           extraOnSelect(selectedRows, selectedIndices)
         }

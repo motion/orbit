@@ -55,9 +55,11 @@ function cachedObservable(
       cached.subscriptions.delete(sub)
       if (cached.subscriptions.size === 0) {
         cached.removeTimeout = setTimeout(() => {
-          cached.isActive = false
-          cached.onDispose && cached.onDispose()
-          ObserverCache.delete(cached)
+          if (cached.subscriptions.size === 0) {
+            cached.isActive = false
+            cached.onDispose && cached.onDispose()
+            ObserverCache.delete(cached)
+          }
         }, 5000)
       }
     }
@@ -109,6 +111,7 @@ export class MediatorClient {
     values: SaveOptions<ModelType>,
   ): Promise<ModelType> {
     const modelName = typeof model === 'string' ? model : model.name
+
     ObserverCache.updateModels(modelName, Array.isArray(values) ? values : [values])
 
     for (let transport of this.options.transports) {

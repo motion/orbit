@@ -41,7 +41,7 @@ function QueryBuilder() {
 
   useEffect(() => {
     if (!navigator.currentItem) return
-    if (curItem && navigator.currentItem.id !== 'QueryEdit') {
+    if (curItem && navigator.currentItem.id === 'Null') {
       navigator.navigateTo(
         {
           id: 'SelectApp',
@@ -96,7 +96,6 @@ function QueryBuilderIndex({
         alwaysSelected
         use={treeList}
         onSelect={items => {
-          console.log('on select', items)
           setItems(items)
         }}
         sortable
@@ -164,7 +163,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   const dataApps = useActiveDataApps()
   const getActiveApps = useGet(dataApps)
   const [selected, setSelected] = useState<any[] | null>(null)
-  console.log('props', props)
   return (
     <Section
       padding
@@ -191,7 +189,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
                 return
               }
               // navigate to app definition:
-              console.log('navigate to next')
               props.navigation.navigateTo({
                 id: 'QueryEdit',
                 props: {
@@ -566,7 +563,6 @@ const ArgumentField = memo(
               checked={isActive}
               tooltip="Toggle active"
               onChange={x => {
-                console.log('val', x)
                 setIsActive(x)
               }}
             />

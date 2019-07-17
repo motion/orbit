@@ -208,14 +208,17 @@ export class MediatorServer {
     if (resolver) {
       // resolve a value
       let result: any = null
-      try {
-        const name = 'model' in resolver ? resolver.model.name : resolver.command.name
-        result = resolver.resolve(data.args)
-        log.info(`Resolving ${resolver.type}: ${name}`)
-      } catch (error) {
-        log.error('error executing resolver', error)
-        throw error
+      const resolveResult = () => {
+        try {
+          const name = 'model' in resolver ? resolver.model.name : resolver.command.name
+          result = resolver.resolve(data.args)
+          log.info(`Resolving ${resolver.type}: ${name}`)
+        } catch (error) {
+          log.error('error executing resolver', error)
+          throw error
+        }
       }
+      resolveResult()
 
       // additionally resolve properties
       // send result back over transport based on returned value
@@ -227,14 +230,17 @@ export class MediatorServer {
       ) {
         const subscription = result.subscribe(next => {
           if (next === undefined) {
+            resolveResult()
             console.log(
               '---------------- GOT UNDEFIEND NEXT, WE NEED TO SEE TYPEORM WHY THIS HAPPENS ------',
             )
             // typeorm timing bug? going to retry...
             subscription.unsubscribe()
-            this.subscriptions.push({
-              id: data.id,
-              subscription: result.subscribe(onSuccess),
+            setTimeout(() => {
+              this.subscriptions.push({
+                id: data.id,
+                subscription: result.subscribe(onSuccess),
+              })
             })
           } else {
             onSuccess(next)

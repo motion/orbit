@@ -388,9 +388,7 @@ export const OrbitAppsCarousel = memo(() => {
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      console.log('wait for finish')
       await sleep(100)
-      console.log('now')
       return next
     },
     {

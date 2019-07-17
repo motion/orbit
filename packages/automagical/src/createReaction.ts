@@ -137,8 +137,9 @@ export function createReaction(
           reject(SHARED_REJECTION_ERROR)
         }
       }
-      cancellation = effectFn(finish(true), finish(false))
-      rejections.push(finish(false))
+      const cancel = finish(false)
+      cancellation = effectFn(finish(true), cancel)
+      rejections.push(cancel)
     })
   }
 

@@ -35,7 +35,7 @@ function cachedObservable(
           response => {
             if (response.notFound !== true) {
               if (!isDefined(response.result)) {
-                console.warn('undefined response result! Is this a weird bug?...')
+                console.warn('undefined! weird... think its coming from Syncers mediator...')
               } else {
                 cached.update(response.result)
               }

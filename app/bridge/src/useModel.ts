@@ -103,7 +103,6 @@ function use<ModelType, Args>(
   useEffect(() => {
     if (!hasQuery(query)) return
     if (waitForFirstResolve.current) return
-    console.log('THIS SHOULD THEN RUN', key, waitForFirstResolve.current)
 
     // unsubscribe from previous subscription
     dispose(subscription)
@@ -113,7 +112,6 @@ function use<ModelType, Args>(
       if (cancelled) return
       if (next === valueRef.current) return
       if (next === undefined) return
-      console.log('got update', next)
       valueRef.current = next
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.log('useModel update', currentComponent(), key, next)

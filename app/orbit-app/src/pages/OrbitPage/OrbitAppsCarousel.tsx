@@ -99,8 +99,10 @@ class OrbitAppsCarouselStore {
       ensure('zoomedIn', zoomedIn)
       useEffect(() => {
         const onResize = () => {
-          const x = this.currentNode!.offsetLeft
-          this.props.setScrollSpring({ x, config: { duration: 0 } })
+          if (this.currentNode) {
+            const x = this.currentNode.offsetLeft
+            this.props.setScrollSpring({ x, config: { duration: 0 } })
+          }
         }
         window.addEventListener('resize', onResize, { passive: true })
         return () => {

@@ -16,7 +16,7 @@ export default createApp({
   app: QueryBuilder,
 })
 
-const treeId = 'query-builder3'
+const treeId = 'query-builder4'
 
 function QueryBuilder() {
   const om = useOm()
@@ -148,9 +148,7 @@ function QueryBuilderMain({
       useNavigator={navigator}
       onNavigate={item => {
         console.log('navigating to', item, treeList)
-        if (!item) {
-          return
-        }
+        if (!item) return
         // const icon = getAppDefinition(item.id)
         treeList.actions.updateSelectedItem({
           data: {

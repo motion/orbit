@@ -84,13 +84,20 @@ function use<ModelType, Args>(
 ): any {
   const key = getKey(model.name, type, JSON.stringify(query))
   const observeEnabled = !options || (options.observe === undefined || options.observe === true)
-  const forceUpdate = useForceUpdate()
+  const curKey = useRef(key)
   const valueRef = useRef(options ? options.defaultValue : undefined)
+  const forceUpdate = useForceUpdate()
   const subscription = useRef<any>(null)
   const yallReadyKnow = useRef(false)
 
+  // they changed the key! we should reset valueRef.current
+  if (curKey.current !== key) {
+    curKey.current = key
+    valueRef.current = options ? options.defaultValue : undefined
+  }
+
   // unmount
-  useEffect(() => dispose(subscription), [])
+  useEffect(() => dispose(subscription), [key])
 
   // on new query: subscribe, update
   useEffect(() => {
@@ -112,7 +119,9 @@ function use<ModelType, Args>(
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.log('useModel update', currentComponent(), key, next)
       }
-      delete PromiseCache[key]
+      setTimeout(() => {
+        delete PromiseCache[curKey.current]
+      })
       queueUpdate(forceUpdate)
     }
 
@@ -121,29 +130,28 @@ function use<ModelType, Args>(
     return () => {
       cancelled = true
     }
-  }, [key, observeEnabled])
+  }, [observeEnabled])
 
-  const valueUpdater: ImmutableUpdateFn<any> = useCallback(
-    updaterFn => {
-      const finish = (val: any) => {
-        const next = produce(val, updaterFn)
-        if (process.env.NODE_ENV === 'development' && shouldDebug()) {
-          console.debug(`useModel.save()`, model.name, next)
-        }
-        delete PromiseCache[key]
-        save(model, next as any)
+  const valueUpdater: ImmutableUpdateFn<any> = useCallback(updaterFn => {
+    const finish = (val: any) => {
+      const next = produce(val, updaterFn)
+      if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+        console.debug(`useModel.save()`, model.name, next)
       }
+      setTimeout(() => {
+        delete PromiseCache[curKey.current]
+      })
+      save(model, next as any)
+    }
 
-      // note, if we use a select this would fail because we wouldn't have all the values to save
-      // so if we have a select, we're going to fetch the full object first, then mutate, then save
-      if (query && query['select']) {
-        loadOne(model, { args: omit(query as any, 'select') }).then(finish)
-      } else {
-        finish(valueRef.current)
-      }
-    },
-    [key],
-  )
+    // note, if we use a select this would fail because we wouldn't have all the values to save
+    // so if we have a select, we're going to fetch the full object first, then mutate, then save
+    if (query && query['select']) {
+      loadOne(model, { args: omit(query as any, 'select') }).then(finish)
+    } else {
+      finish(valueRef.current)
+    }
+  }, [])
 
   if (!isDefined(valueRef.current)) {
     let cache = PromiseCache[key]
@@ -162,9 +170,11 @@ function use<ModelType, Args>(
             if (!isDefined(next)) {
               // i'm seeing this on useJobs() where none exist
               // so lets assume this means "emtpy" and return default value
+              debugger
               next = defaultValues[type]
             }
             if (!resolved) {
+              resolved = true
               valueRef.current = next
               cache.current = next
               if (process.env.NODE_ENV === 'development' && shouldDebug()) {
@@ -182,11 +192,12 @@ function use<ModelType, Args>(
 
           subscription.current = runUseQuery(model, type, query, observeEnabled, finish)
         })
-        cache = PromiseCache[key] = {
+        cache = {
           read: promise,
           resolve,
           current: undefined,
         }
+        PromiseCache[key] = cache
         if (process.env.NODE_ENV === 'development') {
           console.debug(`start query`, model.name, key)
         }

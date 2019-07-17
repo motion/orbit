@@ -202,7 +202,7 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
   return {
     ...state,
     currentItem,
-    currentItemChildren: currentItem.children.map(x => state.items[x]),
+    currentItemChildren: currentItem.children.map(x => state.items[x]).filter(Boolean),
     history: userState.depth.map(item => state.items[item.id]),
   }
 }

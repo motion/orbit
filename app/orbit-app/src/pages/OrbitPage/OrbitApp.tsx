@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, sleep, useAppBit } from '@o/kit'
+import { App, AppDefinition, AppLoadContext, AppStore, AppViewProps, AppViewsContext, Bit, getAppDefinition, getAppDefinitions, ProvideStores, RenderAppFn, useAppBit } from '@o/kit'
 import { ErrorBoundary, gloss, isDefined, ListItemProps, Loading, ProvideShare, ProvideVisibility, ScopedState, selectDefined, useGet, useThrottledFn, useVisibility, View } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import { Box } from 'gloss'
@@ -124,7 +124,7 @@ export const OrbitAppRenderOfDefinition = ({
         id: `app-${id}`,
         value: {
           id,
-          name: app.name!,
+          name: app!.name!,
           identifier,
           items,
         },
@@ -206,23 +206,31 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
   cache = isWrappedCache[appDef.id] = {
     res: undefined,
     promise: new Promise(res => {
+      const finish = (val: boolean = false) => {
+        cache.res = val
+        res(val)
+      }
+
       // to avoid suspense running here from child view
       setTimeout(() => {
-        let isAppWrapped = false
         try {
-          const appChildEl = appDef && appDef.app && appDef.app({})
-          isAppWrapped = !!(appChildEl && appChildEl.type['isApp'])
+          const appView = appDef && appDef.app && appDef.app
+          if (!appView || typeof appView !== 'function') {
+            debugger
+            return finish(false)
+          }
+          const appChildEl = appView({})
+          return finish(!!(appChildEl && appChildEl.type['isApp']))
         } catch (err) {
           if (err.message.indexOf('Invalid hook call') > -1) {
             // ignore
             /// what should we do by default here?
-            isAppWrapped = true
+            return finish(true)
           } else {
             console.error(err)
           }
         }
-        cache.res = isAppWrapped
-        res(isAppWrapped)
+        return finish(false)
       })
     }),
   }
@@ -269,7 +277,8 @@ export function getSourceAppProps(appDef?: AppDefinition, model?: Bit): AppViewP
   }
 }
 
-export const whenIdle = () => new Promise(res => window['requestIdleCallback'](res))
+export const whenIdle = ({ timeout = 600 }: { timeout?: number } = {}) =>
+  new Promise(res => window['requestIdleCallback'](res, { timeout }))
 
 const FadeInDiv = gloss(Box, {
   position: 'absolute',
@@ -287,7 +296,7 @@ const FadeIn = (props: any) => {
 
   useEffect(() => {
     let off = false
-    Promise.race([sleep(100), whenIdle()]).then(() => !off && setShown(true))
+    whenIdle({ timeout: 600 }).then(() => !off && setShown(true))
     return () => {
       off = true
     }

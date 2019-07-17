@@ -161,7 +161,7 @@ export type ListItemSimpleProps = SizedSurfaceProps & ListItemSpecificProps
 // this wrapper required for virtualization to measure/style */}
 // prevents hard re-renders on resize by taking out the style prop
 export const ListItemSimple = React.forwardRef(
-  ({ style, ...listProps }: ListItemSimpleProps, ref) => {
+  function ListItemSimple({ style, ...listProps }: ListItemSimpleProps, ref) {
     return (
       <div style={style} ref={ref as any}>
         <ListItemInner {...listProps} />
@@ -170,7 +170,8 @@ export const ListItemSimple = React.forwardRef(
   },
 )
 
-const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
+// TODO re-check if this memo is worth perf
+const ListItemInner = memoIsEqualDeep(function ListItemInner(props: ListItemSimpleProps) {
   const {
     date,
     location,
@@ -186,9 +187,9 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
     padding,
     onClickLocation,
     separator,
+    separatorProps,
     oneLine,
     before,
-    separatorProps,
     above,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.6,
@@ -276,7 +277,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemSimpleProps) => {
           {isValidElement(separator) ? (
             separator
           ) : (
-            <ListSeparator {...separatorProps}>{}</ListSeparator>
+            <ListSeparator {...separatorProps}>{separator}</ListSeparator>
           )}
         </Theme>
       )}

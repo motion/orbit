@@ -1,12 +1,11 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import { Button, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
+import { Button, filterCleanObject, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'
 import { ScopedState, useUserState } from '../hooks/useUserState'
-import { HighlightActiveQuery } from './HighlightActiveQuery'
 
 type TreeItems = { [key in string | number]: TreeItem }
 
@@ -69,7 +68,7 @@ const getActions = (
         update(next => {
           const id = item.id || Math.random()
           next.items[parentId || Actions.curId()].children.push(id)
-          next.items[id] = { name: '', children: [], ...item, id }
+          next.items[id] = filterCleanObject({ name: '', children: [], ...item, id })
         })
       } catch (err) {
         console.error('error adding', err)
@@ -286,7 +285,7 @@ export function TreeList(props: TreeListProps) {
 }
 
 function TreeListInner(props: TreeListProps) {
-  const { use, query, onChange, ...rest } = props
+  const { use, onChange, ...rest } = props
   const internal = useTreeList(use ? false : 'state', props)
   const useTree = use || internal
   const { currentItem, items } = useTree.state
@@ -371,16 +370,14 @@ function TreeListInner(props: TreeListProps) {
   }
 
   return (
-    <HighlightActiveQuery query={query}>
-      <List
-        onEdit={handleEditTitle}
-        onSortEnd={handleSortEnd}
-        {...rest}
-        onSelect={handleSelect}
-        onDelete={handleDelete}
-        onDrop={handleDrop as any}
-        items={loadedItems}
-      />
-    </HighlightActiveQuery>
+    <List
+      onEdit={handleEditTitle}
+      onSortEnd={handleSortEnd}
+      {...rest}
+      onSelect={handleSelect}
+      onDelete={handleDelete}
+      onDrop={handleDrop as any}
+      items={loadedItems}
+    />
   )
 }

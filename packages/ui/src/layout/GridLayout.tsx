@@ -1,4 +1,4 @@
-import { createStoreContext, ensure, react, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, syncFromProp, syncToProp, useStore } from '@o/use-store'
 import { Contents, gloss } from 'gloss'
 import React, { cloneElement, HTMLAttributes, isValidElement, memo, useCallback, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
@@ -24,29 +24,53 @@ type GridItemDimensions = {
   h?: number | 'auto'
 }
 
-type BaseGridLayoutProps = {
-  cols?: {
-    xxs?: number
-    xs?: number
-    sm?: number
-    md?: number
-    lg?: number
-  }
+type LayoutItem = {
+  x: number
+  y: number
+  w: number
+  h: number
+  i: string
 }
 
-type GridLayoutPropsObject = BaseGridLayoutProps & {
+type GridLayout = {
+  xxs?: LayoutItem[]
+  xs?: LayoutItem[]
+  sm?: LayoutItem[]
+  md?: LayoutItem[]
+  lg?: LayoutItem[]
+}
+
+type GridColumns = {
+  xxs?: number
+  xs?: number
+  sm?: number
+  md?: number
+  lg?: number
+}
+
+type BaseGridLayoutProps<A extends GridLayout = unknown> = {
+  /** Give an id to have the grid persist its state */
+  onChangeLayout?: (nextLayout: A) => any
+  /** Pass in a layout you want to  */
+  layout?: A
+  /** Configure how many columns show per width */
+  columns?: GridColumns
+}
+
+type GridLayoutPropsItems = BaseGridLayoutProps & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
 }
-type GridLayoutPropsControlled = BaseGridLayoutProps & {
+
+type GridLayoutPropsChildren = BaseGridLayoutProps & {
   children?: React.ReactNode
   height?: number
 }
 
-export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
+export type GridLayoutProps = GridLayoutPropsChildren | GridLayoutPropsItems
 
 const defaultProps: Partial<GridLayoutProps> = {
-  cols: {
+  columns: {
     xxs: 1,
     xs: 1,
     sm: 2,
@@ -61,7 +85,6 @@ class GridStore {
   props: GridLayoutProps
 
   items: GridItems = {}
-  layouts = null
   breakpoints = { lg: 1400, md: 1000, sm: 800, xs: 500, xxs: 0 }
   width = window.innerWidth
   enablePersist = false
@@ -82,12 +105,19 @@ class GridStore {
     }, 'xxs')
   }
 
+  layout = syncFromProp(this.props, {
+    key: 'layout',
+    defaultKey: 'defaultLayout',
+    defaultValue: null,
+  })
+  onChangeLayoutCb = syncToProp(this, 'layout', 'onChangeLayout')
+
   setLayout = (layout: any[], width?: number) => {
     if (!this.enablePersist) return
     const col = this.getCol(width)
     dualCompact(layout)
-    this.layouts = {
-      ...this.layouts,
+    this.layout = {
+      ...this.layout,
       [col]: layout,
     }
   }
@@ -95,8 +125,8 @@ class GridStore {
   mounted = false
 
   updateLayout = react(
-    () => [this.items, this.props.cols],
-    async ([items, cols], { sleep }) => {
+    () => [this.items, this.props.columns],
+    async ([items, columns], { sleep }) => {
       ensure('items', !!Object.keys(items).length)
 
       // react-grid had some bug if we listen to setLayout after sending
@@ -105,14 +135,12 @@ class GridStore {
 
       await sleep(50)
       // always re-calc from large and reset
-      this.layouts = {
-        lg: calculateLayout(items, cols['lg']),
-        // this would calc all layouts more nicely, but then when you change something it doesn't change all of them
-        // so we'd need to re-calc them all when you resize/change, if we wanted that, wed need a better calculateLayout
-        md: calculateLayout(items, cols['md']),
-        // sm: calculateLayout(items, cols['sm']),
-        // xs: calculateLayout(items, cols['xs']),
-        // xxs: calculateLayout(items, cols['xs']),
+      this.layout = {
+        lg: calculateLayout(items, columns, this.layout, 'lg'),
+        md: calculateLayout(items, columns, this.layout, 'md'),
+        sm: calculateLayout(items, columns, this.layout, 'sm'),
+        xs: calculateLayout(items, columns, this.layout, 'xs'),
+        xxs: calculateLayout(items, columns, this.layout, 'xxs'),
       }
 
       // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933
@@ -141,16 +169,14 @@ const { useStore: useGridStore, SimpleProvider } = createStoreContext(GridStore)
 
 export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
-
   // TODO not great pattern here... maybe remove first option
-
   if ('items' in props) {
     return <GridLayoutObject {...props} />
   }
   return <GridLayoutChildren {...props} />
 })
 
-export const GridLayoutChildren = memo((props: GridLayoutPropsControlled) => {
+export const GridLayoutChildren = memo((props: GridLayoutPropsChildren) => {
   const { width, ref } = useParentNodeSize()
   const gridStore = useStore(GridStore, props)
   const childArr = Array.isArray(props.children) ? props.children : [props.children]
@@ -181,21 +207,21 @@ export const GridLayoutChildren = memo((props: GridLayoutPropsControlled) => {
     .filter(Boolean)
 
   let children = null
-  if (!gridStore.layouts) {
+  if (!gridStore.layout) {
     children = <GridWrapper height={props.height}>{items}</GridWrapper>
   } else {
     children = (
       <GridWrapper mounted={gridStore.mounted}>
         <ResponsiveGridLayout
           onLayoutChange={next => gridStore.setLayout(next, width)}
-          layouts={gridStore.layouts}
+          layouts={gridStore.layout}
           breakpoints={gridStore.breakpoints}
           width={width}
           height={props.height}
           compactType="vertical"
           measureBeforeMount={false}
           draggableHandle=".grid-draggable"
-          cols={props.cols}
+          cols={props.columns}
         >
           {items}
         </ResponsiveGridLayout>
@@ -228,7 +254,7 @@ const getSizes = items => {
   return sizes
 }
 
-function GridLayoutObject(props: GridLayoutPropsObject) {
+function GridLayoutObject(props: GridLayoutPropsItems) {
   const gridStore = useStore(GridStore, props)
   const items = props.items.map((item, idx) => <div key={idx}>{props.renderItem(item, idx)}</div>)
   const sizes = getSizes(props.items)
@@ -238,7 +264,7 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
     gridStore.setItems(sizes)
   }, [JSON.stringify(sizes)])
 
-  if (!gridStore.layouts.lg) {
+  if (!gridStore.layout.lg) {
     return null
   }
 
@@ -246,9 +272,9 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
     <Responsive
       onLayoutChange={gridStore.setLayout}
       compactType="vertical"
-      layouts={gridStore.layouts}
+      layouts={gridStore.layout}
       measureBeforeMount={false}
-      cols={props.cols}
+      cols={props.columns}
     >
       {items}
     </Responsive>
@@ -388,8 +414,27 @@ const autoSize = (item: GridItemProps, cols: number, items: GridItems) => {
 }
 
 // attempts to position things nicely
-function calculateLayout(items: GridItems, cols: number) {
-  const layout = []
+function calculateLayout(
+  items: GridItems,
+  gridCols: GridColumns,
+  gridLayout: GridLayout,
+  size: keyof GridLayout,
+) {
+  const cols = gridCols[size]
+  const prevLayout = gridLayout[size]
+
+  const layoutNeedsUpdate = () => {
+    if (!prevLayout) return true
+    const layoutIds = prevLayout.map(x => x.i)
+    const itemIds = Object.keys(items)
+    return itemIds.some(id => !layoutIds.some(y => id === y))
+  }
+
+  if (layoutNeedsUpdate() === false) {
+    return prevLayout
+  }
+
+  const layout: LayoutItem[] = []
 
   let lastX = 0
   let lastY = 0

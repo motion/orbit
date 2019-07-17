@@ -182,7 +182,13 @@ export const OrbitDock = memo(() => {
   )
 })
 
-const OrbitDockButton = memo(({ index, app }: { app: AppBit; index: number }) => {
+const OrbitDockButton = memo(function OrbitDockButton({
+  index,
+  app,
+}: {
+  app: AppBit
+  index: number
+}) {
   const dockStore = orbitDockStore.useStore()
   const definition = getAppDefinition(app.identifier!)
   const buttonRef = useRef(null)
@@ -250,6 +256,7 @@ const FloatingAppWindow = memo(({ showMenu, buttonRect, app, definition, index }
   return (
     <FloatingCard
       disableDrag
+      elevation={4}
       defaultWidth={width}
       defaultHeight={height}
       defaultTop={top}
@@ -304,6 +311,7 @@ const DockSidebarView = (props: AppMainViewProps) => {
   return (
     <ListPassProps
       onSelect={rows => {
+        return // disable for demo
         console.log('on select', rows)
         const item = rows[0]
         if (!item) return

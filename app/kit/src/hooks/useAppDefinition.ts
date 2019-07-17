@@ -97,7 +97,7 @@ export function useAppStoreInstalledAppDefinition(
     command(
       GetAppStoreAppDefinitionCommand,
       { packageId: searchedApp.packageId },
-      { timeout: 50000 },
+      { timeout: 10000 },
     )
       .then(res => {
         clearTimeout(tm.current || 0)

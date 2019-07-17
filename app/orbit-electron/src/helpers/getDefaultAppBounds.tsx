@@ -5,8 +5,8 @@ export function getDefaultAppBounds(screenSize: number[]) {
   let h = screenSize[1] * scl
   // clamp width to not be too wide
   w = Math.min(h * 1.4, w)
-  const maxSize = [1440, 1024]
-  const minSize = [800, 700]
+  const maxSize = [1280, 900]
+  const minSize = [780, 640]
   const size = [w, h]
     .map(x => Math.round(x))
     .map((x, i) => Math.min(maxSize[i], x))

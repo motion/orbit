@@ -18,31 +18,32 @@ import { useVisibilityStore } from './Visibility'
 //
 
 type FocusProps = { focused: boolean }
+
 class FocusStore {
-  props: FocusProps
+  props: FocusProps = {
+    focused: false,
+  }
+
   get focused() {
     return this.props.focused
   }
 }
-const Context = createStoreContext(FocusStore)
+
+const FocusContext = createStoreContext(FocusStore)
+
 // focus parents override children
 export const ProvideFocus = (props: FocusProps & { children: any }) => {
-  const parent = Context.useStore()
-  return (
-    <Context.Provider
-      focused={
-        !parent || parent.focused === true
-          ? selectDefined(props.focused, parent ? parent.focused : true)
-          : false
-      }
-    >
-      {props.children}
-    </Context.Provider>
-  )
+  const parent = FocusContext.useStore()
+  const focused =
+    !parent || parent.focused === true
+      ? selectDefined(props.focused, parent ? parent.focused : true)
+      : false
+  return <FocusContext.Provider focused={focused}>{props.children}</FocusContext.Provider>
 }
+
 export function useFocus() {
   try {
-    const store = Context.useStore()
+    const store = FocusContext.useStore()
     return selectDefined(store.focused, true)
   } catch {
     // no focus store provided

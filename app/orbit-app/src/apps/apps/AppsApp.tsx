@@ -1,6 +1,6 @@
 import { App, AppDefinition, AppIcon, AppMainView, AppViewProps, createApp, CurrentAppBitContext, isDataDefinition, removeApp, useActiveAppsWithDefinition, useActiveDataAppsWithDefinition, useAppDefinitions, useAppWithDefinition } from '@o/kit'
 import { ApiSearchItem } from '@o/models'
-import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn } from '@o/ui'
+import { Button, Col, Icon, List, ListItemProps, Section, SubSection, SubTitle, useAsyncFn, useBanner } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 
 import { GraphExplorer } from '../../views/GraphExplorer'
@@ -128,6 +128,7 @@ export function AppsIndex() {
   return (
     <List
       titleScale={0.75}
+      alwaysSelected
       onQueryChange={search}
       itemProps={{
         iconBefore: true,
@@ -208,6 +209,9 @@ export function AppsMain(props: AppViewProps) {
 
 function AppSettings(props: { appId: number }) {
   const [app, definition] = useAppWithDefinition(props.appId)
+  const banner = useBanner()
+
+  if (!app || !definition) return null
 
   return (
     <Section
@@ -221,7 +225,11 @@ function AppSettings(props: { appId: number }) {
       afterTitle={
         app &&
         app.tabDisplay !== 'permanent' && (
-          <Button icon="cross" tooltip={`Remove ${app.name}`} onClick={() => removeApp(app)}>
+          <Button
+            icon="cross"
+            tooltip={`Remove ${app.name}`}
+            onClick={() => removeApp(app, banner)}
+          >
             Remove
           </Button>
         )

@@ -1,6 +1,6 @@
 import { command } from '@o/bridge'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
-import { Button, Space, SpaceGroup, Text, View } from '@o/ui'
+import { Button, Space, SpaceGroup, Text, useBanner, View } from '@o/ui'
 import * as React from 'react'
 
 import { removeApp } from '../helpers/removeApp'
@@ -17,6 +17,7 @@ export function ManageSyncStatus(props: { app: AppBit }) {
   const appId = props.app && props.app.id
   const { bitsCount } = useAppSyncState(props.app)
   const { activeJobs, removeJobs } = useJobs(appId)
+  const banner = useBanner()
 
   if (!appId) {
     return null
@@ -56,7 +57,7 @@ export function ManageSyncStatus(props: { app: AppBit }) {
         <Button
           icon="cross"
           tooltip={`Remove ${props.app.name}`}
-          onClick={() => removeApp(props.app)}
+          onClick={() => removeApp(props.app, banner)}
         />
       </SpaceGroup>
     </>

@@ -72,6 +72,8 @@ class FilterableStore {
     normalize: normalizeFilters,
   })
 
+  onFilterChange = syncToProp(this, 'filters', 'onFilterChange')
+
   query = syncFromProp(this.props, {
     key: 'query',
     defaultKey: 'defaultQuery',
@@ -81,8 +83,6 @@ class FilterableStore {
   focusedToken = -1
   inputFocused = false
   inputNode: HTMLInputElement = null
-
-  onFilterChange = syncToProp(this, 'filters', 'onFilterChange')
 
   filter = react(
     () => [this.filters, this.query],

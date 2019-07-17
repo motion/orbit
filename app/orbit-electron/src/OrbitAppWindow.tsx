@@ -3,12 +3,12 @@ import { Logger } from '@o/logger'
 import { Window } from '@o/reactron'
 import { App, Electron } from '@o/stores'
 import { react, useStore } from '@o/use-store'
+import { BrowserWindowConstructorOptions } from 'electron'
 import { join } from 'path'
 import * as React from 'react'
 
 import { ROOT } from './constants'
 import { getDefaultAppBounds } from './helpers/getDefaultAppBounds'
-import { BrowserWindowConstructorOptions } from 'electron'
 
 const log = new Logger('OrbitAppWindow')
 const Config = getGlobalConfig()
@@ -19,7 +19,11 @@ class OrbitAppWindowStore {
   }
 
   show = false
-  bounds = getDefaultAppBounds(Electron.state.screenSize)
+
+  get bounds() {
+    return getDefaultAppBounds(Electron.state.screenSize)
+  }
+
   size = this.bounds.size
   position = this.bounds.position
   vibrancy = 'light'

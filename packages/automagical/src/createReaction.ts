@@ -1,6 +1,6 @@
 import * as Mobx from 'mobx'
 
-import { automagicConfig } from './automagical'
+import { automagicConfig } from './AutomagicalConfiguration'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
 import { getReactionOptions, log, logGroup } from './helpers'
 import { SHARED_REJECTION_ERROR } from './react'
@@ -121,7 +121,7 @@ export function createReaction(
   let rejections: Function[] = []
 
   const reset = () => {
-    rejections.map(rej => rej())
+    rejections.forEach(rej => rej())
     rejections = []
     reactionID = null
   }

@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -263,7 +263,7 @@ const OrbitNavPopover = ({ children, target, ...rest }: PopoverProps) => {
 }
 
 const HomeButton = memo(
-  forwardRef((props: any, ref) => {
+  forwardRef(function HomeButton(props: any, ref) {
     const { actions } = useOm()
     const theme = useTheme()
     const newAppStore = useNewAppStore()
@@ -286,11 +286,15 @@ const HomeButton = memo(
           size={28}
           onMouseUp={e => {
             e.stopPropagation()
+            if (appsDrawerStore.isOpen) {
+              appsDrawerStore.closeDrawer()
+              return
+            }
             if (appsCarouselStore.zoomedIn) {
               appsCarouselStore.setZoomedOut()
               return
             }
-            actions.router.showHomePage(null)
+            actions.router.showHomePage({ avoidZoom: true })
           }}
         />
       </View>

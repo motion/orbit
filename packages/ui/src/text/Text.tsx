@@ -189,7 +189,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   onBlur = (event: FocusEvent) => {
-    this.finishEdit(this.value, event)
+    this.finishEdit(this.value, event as any)
   }
 
   render() {

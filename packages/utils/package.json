@@ -12,7 +12,8 @@
   "dependencies": {
     "disposable-event": "^1.0.3",
     "event-kit": "^2.5.0",
-    "lodash": "4.17.11"
+    "lodash": "4.17.11",
+    "await-lock": "^1.1.3"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

@@ -12,7 +12,7 @@ import { om } from './om/om'
 import { useThemeStore } from './om/stores'
 import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
-export const OrbitRoot = hot(() => {
+export const OrbitRoot = hot(function OrbitRoot() {
   const themeStore = useThemeStore()
 
   useLayoutEffect(() => {

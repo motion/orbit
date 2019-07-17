@@ -1,4 +1,4 @@
-import React, { createContext, memo, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 
 import { unwrapProxy, useStore, UseStoreOptions } from './useStore'
 
@@ -11,13 +11,13 @@ export function createStoreContext<Instance>(constructor: { new (): Instance }) 
   const Context = createContext<Instance | null>(null)
   return {
     Context,
-    SimpleProvider: memo(({ value, children }: { value: Instance; children: any }) => {
+    SimpleProvider: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={unwrapProxy(value)}>{children}</Context.Provider>
-    }),
-    Provider: memo(({ children, ...props }: InferProps<Instance> & { children: any }) => {
+    },
+    Provider: ({ children, ...props }: InferProps<Instance> & { children: any }) => {
       const store = useStore(constructor, props as any, { react: false })
       return <Context.Provider value={unwrapProxy(store)}>{children}</Context.Provider>
-    }),
+    },
     // false allows for conditional creation
     useCreateStore(props?: InferProps<Instance> | false, opts?: UseStoreOptions) {
       return useStore(props === false ? false : constructor, props as any, opts)

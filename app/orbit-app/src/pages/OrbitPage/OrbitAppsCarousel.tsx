@@ -1,4 +1,4 @@
-import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction } from '@o/kit'
+import { always, AppDefinition, AppIcon, createUsableStore, ensure, getAppDefinition, react, shallow, Templates, useReaction, useStore } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Card, CardProps, idFn, Row, SimpleText, useIntersectionObserver, useNodeSize, useParentNodeSize, useTheme, View } from '@o/ui'
 import { numberBounder, numberScaler, sleep } from '@o/utils'
@@ -260,6 +260,7 @@ class OrbitAppsCarouselStore {
 
   outScaler = numberScaler(0, 1, 0.6, 0.65)
   inScaler = numberScaler(0, 1, 0.9, 1)
+  opacityScaler = numberScaler(1, 0, 1.2, 0)
   boundRotation = numberBounder(-10, 10)
   boundOpacity = numberBounder(0, 1)
 
@@ -272,7 +273,7 @@ class OrbitAppsCarouselStore {
     const scale = zoomedIn && importance !== 1 ? 0.65 : scaler(importance)
     const rotation = (zoomedIn ? offset : offset - 0.5) * 10
     const ry = this.boundRotation(rotation)
-    const opacity = this.boundOpacity(1 - offset)
+    const opacity = this.boundOpacity(this.opacityScaler(1 - offset))
     // x is by percent!
     let x = 0
     if (zoomedIn) {
@@ -381,12 +382,13 @@ export const OrbitAppsCarousel = memo(() => {
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      await sleep(300)
+      console.log('wait for finish')
+      await sleep(100)
+      console.log('now')
       return next
     },
     {
       defaultValue: [false, true],
-      delay: 50,
     },
   )
 
@@ -405,6 +407,7 @@ export const OrbitAppsCarousel = memo(() => {
         scrollable={scrollable}
         overflow={scrollable ? undefined : 'hidden'}
         onWheel={() => {
+          appsCarouselStore.onFinishScroll()
           stopScrollSpring()
           if (appsCarouselStore.state.zoomedOut) {
             appsCarouselStore.animateTo(rowRef.current!.scrollLeft / rowWidth)
@@ -446,14 +449,38 @@ type OrbitAppCardProps = CardProps & {
   definition: AppDefinition
 }
 
+class AppCardStore {
+  isIntersected = false
+  shouldRender = false
+
+  renderApp = react(
+    () => [this.isIntersected, appsCarouselStore.isAnimating],
+    async ([isIntersected, isAnimating], { sleep }) => {
+      ensure('not animating', !isAnimating)
+      ensure('is intersected', isIntersected)
+      await whenIdle()
+      await sleep(50)
+      await whenIdle()
+      this.shouldRender = true
+    },
+  )
+
+  setIsIntersected(val: boolean) {
+    this.isIntersected = val
+  }
+}
+
 const OrbitAppCard = memo(
   ({ app, definition, index, disableInteraction, springs, ...cardProps }: OrbitAppCardProps) => {
+    const store = useStore(AppCardStore)
     const spring = springs[index]
-    const [renderApp, setRenderApp] = useState(false)
     const theme = useTheme()
     const isFocused = useReaction(
       () => index === appsCarouselStore.focusedIndex,
-      { delay: 40, name: `AppCard${index}.isFocused` },
+      {
+        // delay: 40,
+        name: `AppCard${index}.isFocused`,
+      },
       [index],
     )
     const isFocusZoomed = useReaction(
@@ -466,28 +493,6 @@ const OrbitAppCard = memo(
     )
     const cardRef = useRef(null)
 
-    /**
-     * These next hooks handle loading the app when not animating
-     */
-    const shouldRender = useRef(false)
-    const lastIntersection = useRef(false)
-
-    useReaction(
-      () => appsCarouselStore.isAnimating,
-      isAnimating => {
-        if (isAnimating) {
-          shouldRender.current = false
-        } else {
-          if (lastIntersection.current) {
-            setRenderApp(true)
-          }
-        }
-      },
-      {
-        name: `AppCard${index}.setRender`,
-      },
-    )
-
     useIntersectionObserver({
       ref: cardRef,
       options: {
@@ -495,19 +500,7 @@ const OrbitAppCard = memo(
       },
       onChange(x) {
         const isIntersecting = !!(x.length && x[0].isIntersecting)
-        lastIntersection.current = isIntersecting
-        if (isIntersecting) {
-          shouldRender.current = true
-          whenIdle().then(() => {
-            setTimeout(() => {
-              if (shouldRender.current) {
-                setRenderApp(true)
-              }
-            }, 50)
-          })
-        } else {
-          shouldRender.current = false
-        }
+        store.setIsIntersected(isIntersecting)
       },
     })
 
@@ -592,13 +585,13 @@ const OrbitAppCard = memo(
             transition="box-shadow 200ms ease, background 300ms ease"
             {...cardProps}
           >
-            <AppLoadingScreen definition={definition} app={app} visible={!renderApp} />
+            <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />
             <OrbitApp
               id={app.id!}
               disableInteraction={disableInteraction}
               identifier={definition.id}
               appDef={definition}
-              shouldRenderApp={renderApp}
+              shouldRenderApp={store.shouldRender}
             />
           </Card>
         </View>

@@ -3,6 +3,8 @@ import { createNavigator, SceneView, StackRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 
+import { TestUIPopovers } from './TestUI/TestUIPopovers'
+
 const Orbit = ({ descriptors, navigation }) => {
   const activeKey = navigation.state.routes[navigation.state.index].key
   const descriptor = descriptors[activeKey]
@@ -45,8 +47,7 @@ const OrbitBrowser = createBrowserApp(navigator)
 export function TestUI() {
   return (
     <Row flex={1} overflow="hidden" height="100%">
-      {/* <TestUIPopovers /> */}
-
+      <TestUIPopovers />
       <OrbitBrowser />
     </Row>
   )

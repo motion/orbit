@@ -45,7 +45,9 @@ const normalizers = {
       people: bit.people,
       location: bit.location ? bit.location.name : '',
       locationLink:
-        bit.desktopLink || bit.webLink || bit.location.desktopLink || bit.location.webLink,
+        bit.desktopLink ||
+        bit.webLink ||
+        (bit.location ? bit.location.desktopLink || bit.location.webLink : ''),
       desktopLink: bit.desktopLink,
       subType: bit.type,
       createdAt: new Date(bit.bitCreatedAt || bit.createdAt || 0),

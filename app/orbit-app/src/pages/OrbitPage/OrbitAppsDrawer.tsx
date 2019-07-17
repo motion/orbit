@@ -43,19 +43,18 @@ export const OrbitAppsDrawer = memo(() => {
   const height = frameSize.height
   const [spring, set] = useSpring(() => ({
     // start offscreen
-    y: 10000,
+    y: window.innerHeight * 1.5,
   }))
 
   useEffect(() => {
     appsDrawerStore.setProps({ apps })
   }, [apps])
 
-  const yPad = 10
   const boxShadowSize = 20
 
   const updateSpring = () => {
     if (appsDrawer.isOpen) {
-      set({ y: yPad })
+      set({ y: boxShadowSize })
     } else {
       set({ y: height + boxShadowSize })
     }
@@ -94,7 +93,7 @@ export const OrbitAppsDrawer = memo(() => {
           return (
             <FullScreen
               key={app.id}
-              bottom={yPad}
+              bottom={boxShadowSize}
               opacity={0}
               transform={{
                 y: frameSize.height,

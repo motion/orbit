@@ -37,7 +37,8 @@ const handleKeyDown = async e => {
 
 function useActivePane() {
   const paneManagerStore = usePaneManagerStore()
-  return paneManagerStore.activePane
+  // we can be a little slower
+  return paneManagerStore.activePaneSlow
 }
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { fontSize: number }) {

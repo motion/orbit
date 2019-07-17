@@ -35,6 +35,7 @@ export function setupTrackableStore(
     if (typeof window !== 'undefined' && window['enableLog'] > level) {
       return true
     }
+    // allows per-component debugging using useStoreDebug()
     return opts.debug || (opts.component && opts.component.__debug)
   }
   const name = opts.component.renderName
@@ -59,6 +60,8 @@ export function setupTrackableStore(
     }
     rerender()
   }
+  // see queueUpdate
+  update.__debug_update__ = { name, storeName, action: '', info: null as any }
 
   const { getters, decorations } = store.__automagic
   const observers: Lambda[] = []
@@ -73,6 +76,10 @@ export function setupTrackableStore(
     },
     () => {
       if (!deepKeys.length || paused) return
+      if (process.env.NODE_ENV === 'development') {
+        update.__debug_update__.action = 'deepKeysObserver'
+        update.__debug_update__.info = deepKeys
+      }
       queueUpdate(update)
     },
   )
@@ -87,8 +94,11 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (shouldDebug())
+            if (process.env.NODE_ENV === 'development' && shouldDebug()) {
               console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+              update.__debug_update__.action = 'observers'
+              update.__debug_update__.info = key
+            }
             queueUpdate(update)
           }
         }
@@ -103,7 +113,11 @@ export function setupTrackableStore(
           trackedKeysWhilePaused.add(key)
         } else {
           if (reactiveKeys.has(key)) {
-            if (shouldDebug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
+            if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+              console.log('update', name, `${storeName}.${key}`, '[getter]')
+              update.__debug_update__.action = 'getters'
+              update.__debug_update__.info = key
+            }
             queueUpdate(update)
           }
         }
@@ -147,6 +161,10 @@ export function setupTrackableStore(
       if (trackedKeysWhilePaused.size) {
         const shouldUpdate = [...trackedKeysWhilePaused].some(key => reactiveKeys.has(key))
         if (shouldUpdate) {
+          if (process.env.NODE_ENV === 'development' && shouldDebug()) {
+            console.log('got update while paused', name, storeName, trackedKeysWhilePaused)
+            update.__debug_update__.action = 'trackedKeysWhilePaused'
+          }
           queueUpdate(update)
         }
         trackedKeysWhilePaused.clear()

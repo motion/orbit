@@ -1,6 +1,10 @@
+import AwaitLock from 'await-lock'
+
 export * from './highlightText'
 export * from './on'
 export * from './randomWords'
+
+export const Lock = AwaitLock
 
 /**
  * Remove last X items from array (without mutating).

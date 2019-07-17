@@ -25,6 +25,8 @@ export const OrbitNav = memo(
   forwardRef(function OrbitNav(_: any, ref) {
     const allActiveApps = useActiveAppsSorted()
     const paneManagerStore = usePaneManagerStore()
+    // use Slow this view doesnt need update quickly
+    const activePane = paneManagerStore.activePaneSlow
     const { isEditing } = useStore(App)
     const { state, actions } = useOm()
     const { panes, paneId } = paneManagerStore
@@ -93,8 +95,7 @@ export const OrbitNav = memo(
       [activeAppsSorted, paneId],
     )
 
-    const onSettings = isOnSettings(paneManagerStore.activePane)
-    const setupWidth = 120
+    const onSettings = isOnSettings(activePane)
     const isOnSetupAppWidth = tabWidthPinned
     const extraButtonsWidth = isOnSetupAppWidth
 

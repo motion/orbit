@@ -21,8 +21,3 @@
   - shows the database in a virtual table
   - lets you write sql queries in the topbar
   - lets you insert common sql queries in sidebar
-
-# App API
-
-import { Button } from 'orbit/ui'
-import { Language } from 'orbit/engines'

@@ -100,9 +100,7 @@ async function main() {
 }
 
 // helper for force-rerender
-window['rerender'] = () => {
-  startApp(true)
-}
+window['rerender'] = (force = true) => startApp(force)
 
 const React = require('react')
 const ReactDOM = require('react-dom')

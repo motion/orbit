@@ -476,7 +476,7 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
               <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
             </Tab>
             <Tab padding key="2" label="Table">
-              <Table items={[].concat(queryBuilder.result)} />
+              <Table items={[].concat(queryBuilder.result || [])} />
             </Tab>
           </Tabs>
         </Col>

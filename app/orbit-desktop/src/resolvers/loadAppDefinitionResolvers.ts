@@ -60,13 +60,13 @@ function resolveAppSetupVerify() {
       return loadDef
     }
 
-    const { definition } = loadDef
+    const definition = loadDef.value
 
     if (!definition.setupValidate) {
       return {
-        type: 'success' as const,
+        type: 'success',
         message: 'Success, no validation defined',
-      }
+      } as const
     }
 
     let res
@@ -77,7 +77,7 @@ function resolveAppSetupVerify() {
       console.log('error running validate', err)
       return {
         type: 'error',
-        errors: `${err}`,
+        message: `${err}`,
       } as const
     }
 
@@ -97,7 +97,7 @@ function resolveAppSetupVerify() {
 
     return {
       type: 'error',
-      errors: res,
+      message: res,
     } as const
   })
 }

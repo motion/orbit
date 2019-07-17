@@ -24,13 +24,17 @@ const log = new Logger('orbit-main')
 
 export async function main() {
   log.info(
-    `starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${JSON.stringify({
-      SUB_PROCESS,
-      PROCESS_NAME,
-      ORBIT_CONFIG,
-      DISABLE_WORKERS,
-      DISABLE_ELECTRON,
-    })}`,
+    `starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${JSON.stringify(
+      {
+        SUB_PROCESS,
+        PROCESS_NAME,
+        ORBIT_CONFIG,
+        DISABLE_WORKERS,
+        DISABLE_ELECTRON,
+      },
+      null,
+      2,
+    )}`,
   )
 
   // setup config

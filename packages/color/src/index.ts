@@ -2,7 +2,6 @@ import { Color, ColorInput } from './color'
 import { ColorLike } from './types'
 
 export { Color } from './color'
-export * from './invertLightness'
 export { isColorLike, toColorString } from './isColor'
 export * from './linearGradient'
 export { ColorArray, ColorLike } from './types'

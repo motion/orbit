@@ -18,7 +18,6 @@ export default createApp({
 })
 
 function SetupAppMain() {
-  console.log('render SetupAppMain')
   return (
     <StackNavigator
       defaultItem={{

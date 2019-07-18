@@ -1,4 +1,3 @@
-import { invertLightness } from '@o/color'
 import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Button, ButtonProps, Icon, IconProps, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'
@@ -110,7 +109,7 @@ function OrbitTabIcon(props: Omit<IconProps, 'label'> & Partial<TabProps>) {
   opacity += props.iconAdjustOpacity || 0
   return (
     <Icon
-      color={invertLightness(theme.color, 0.8)}
+      color={theme.color.inverseLighten(0.8)}
       opacity={opacity}
       className={`tab-icon-${props.isActive ? 'active' : 'inactive'}`}
       {...props}

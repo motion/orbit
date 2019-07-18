@@ -113,15 +113,13 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
 
   const baseColor = toColor(base.color)
 
+  const backgroundHover = base.background.lighten(base.background.isLight() ? 0.1 : 0.15)
+
   const res: ThemeObject = {
     ...colorize({
       // for buttons/surfaces, we generate a nice set of themes
       colorHover: s.colorHover || baseColor.lighten(0.1),
-      backgroundHover:
-        s.backgroundHover ||
-        // for some reason this isnt immutable
-        // try removing toColor() and running base.background = toColor('#363165').lighten(0.2)
-        toColor(base.background).lighten(base.background.isLight() ? 0.1 : 0.15),
+      backgroundHover: s.backgroundHover || backgroundHover,
       borderColorHover: s.borderColorHover || increaseContrast(base.borderColor, smallAmount),
       backgroundActiveHover:
         s.backgroundActiveHover || increaseContrast(base.background, largeAmount),

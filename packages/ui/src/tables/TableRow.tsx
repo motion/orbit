@@ -174,7 +174,6 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   userSelect: 'none',
 }).theme((props, theme) => {
   const background = backgroundColor(props, theme)
-  console.log('background', background.toString())
   return {
     background,
     boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.setAlpha(0.35)}`,
@@ -189,19 +188,10 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
     lineHeight: `${String(props.rowLineHeight)}px`,
     flexShrink: 0,
     '&:hover': {
-      background: typeof background === 'string' ? background : lightenRelative(background, 0.1),
+      background: typeof background === 'string' ? background : background.lighten(0.075, true),
     },
   }
 })
-
-const lightenRelative = (color: Color, pct: number) => {
-  console.log(color.toString(), color.lightness(), color.getAlpha())
-  return color
-    .lighten(pct)
-    .saturate(pct)
-    .setAlpha(1)
-  return color
-}
 
 const TableBodyColumnContainer = gloss<any>(Box, {
   overflow: 'hidden',

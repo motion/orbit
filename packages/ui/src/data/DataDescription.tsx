@@ -398,7 +398,7 @@ class DataDescriptionContainer extends Component<{
         return <NumberValue>{Number(val)}</NumberValue>
 
       case 'color': {
-        const colorInfo = toColor(val).rgbaObject()
+        const colorInfo = toColor(val).toRgb()
         if (colorInfo) {
           const { a, b, g, r } = colorInfo
           return [

@@ -151,7 +151,7 @@ const transformYStyle = spring => ({
 export const fadeDownProps = {
   from: {
     opacity: 0,
-    transformY: -15,
+    transformY: -20,
   },
   to: {
     opacity: 1,
@@ -163,7 +163,7 @@ export const fadeDownProps = {
 export const fadeUpProps = {
   from: {
     opacity: 0,
-    transformY: 15,
+    transformY: 20,
   },
   to: {
     opacity: 1,

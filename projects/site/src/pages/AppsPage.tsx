@@ -179,7 +179,7 @@ const AppDescription = () => {
         <SizedSurface
           margin={[-75, 'auto']}
           height={155}
-          pad
+          padding
           size={2}
           sizeRadius={2}
           elevation={100}
@@ -268,14 +268,13 @@ const AppSearch = memo(() => {
         <Space size="xxxl" />
       </View>
 
-      <Col padding>
+      <Col padding alignItems="center">
         <Grid
           alignItems="flex-start"
           height={dim * 2 + 60}
           space="xl"
           itemMinWidth={dim}
           overflow="hidden"
-          padding={10}
         >
           {store.results}
         </Grid>

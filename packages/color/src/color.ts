@@ -51,14 +51,12 @@ export class Color {
   roundA!: number
 
   constructor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
-    // If input is already a tinycolor, use it for originalInput
     if (color instanceof Color) {
       return color
     }
 
     this.originalInput = color
     const rgb = inputToRGB(color)
-    this.originalInput = color
     this.r = rgb.r
     this.g = rgb.g
     this.b = rgb.b
@@ -371,14 +369,14 @@ export class Color {
 
   /**
    * Set the absolute lightness.
-   * @param x - valid between 1-100
+   * @param x - valid between 0.1-1
    */
   lightness(): number
   lightness<A extends number>(x?: A): A extends number ? Color : number {
     if (typeof x === 'number') {
       const hsl = this.toHsl()
       // NOTE: not +=
-      hsl.l = x / 100
+      hsl.l = x
       hsl.l = clamp01(hsl.l)
       return new Color(hsl) as any
     } else {
@@ -388,35 +386,35 @@ export class Color {
 
   /**
    * Lighten the color a given amount. Providing 100 will always return white.
-   * @param amount - valid between 1-100
+   * @param amount - valid between 0.1-1
    */
-  lighten(amount = 10) {
+  lighten(amount = 0.1) {
     const hsl = this.toHsl()
-    hsl.l += amount / 100
+    hsl.l += amount
     hsl.l = clamp01(hsl.l)
     return new Color(hsl)
   }
 
   /**
    * Brighten the color a given amount, from 0 to 100.
-   * @param amount - valid between 1-100
+   * @param amount - valid between 0.1-1
    */
-  brighten(amount = 10) {
+  brighten(amount = 0.1) {
     const rgb = this.toRgb()
-    rgb.r = Math.max(0, Math.min(255, rgb.r - Math.round(255 * -(amount / 100))))
-    rgb.g = Math.max(0, Math.min(255, rgb.g - Math.round(255 * -(amount / 100))))
-    rgb.b = Math.max(0, Math.min(255, rgb.b - Math.round(255 * -(amount / 100))))
+    rgb.r = Math.max(0, Math.min(255, rgb.r - Math.round(255 * -amount)))
+    rgb.g = Math.max(0, Math.min(255, rgb.g - Math.round(255 * -amount)))
+    rgb.b = Math.max(0, Math.min(255, rgb.b - Math.round(255 * -amount)))
     return new Color(rgb)
   }
 
   /**
    * Darken the color a given amount, from 0 to 100.
    * Providing 100 will always return black.
-   * @param amount - valid between 1-100
+   * @param amount - valid between 0.1-1
    */
-  darken(amount = 10) {
+  darken(amount = 0.1) {
     const hsl = this.toHsl()
-    hsl.l -= amount / 100
+    hsl.l -= amount
     hsl.l = clamp01(hsl.l)
     return new Color(hsl)
   }
@@ -426,7 +424,7 @@ export class Color {
    * Providing 0 will do nothing, providing 100 will always return white.
    * @param amount - valid between 1-100
    */
-  tint(amount = 10) {
+  tint(amount = 0.1) {
     return this.mix('white', amount)
   }
 
@@ -435,7 +433,7 @@ export class Color {
    * Providing 0 will do nothing, providing 100 will always return black.
    * @param amount - valid between 1-100
    */
-  shade(amount = 10) {
+  shade(amount = 0.1) {
     return this.mix('black', amount)
   }
 
@@ -444,9 +442,9 @@ export class Color {
    * Providing 100 will is the same as calling greyscale
    * @param amount - valid between 1-100
    */
-  desaturate(amount = 10) {
+  desaturate(amount = 0.1) {
     const hsl = this.toHsl()
-    hsl.s -= amount / 100
+    hsl.s -= amount
     hsl.s = clamp01(hsl.s)
     return new Color(hsl)
   }
@@ -455,9 +453,9 @@ export class Color {
    * Saturate the color a given amount, from 0 to 100.
    * @param amount - valid between 1-100
    */
-  saturate(amount = 10) {
+  saturate(amount = 0.1) {
     const hsl = this.toHsl()
-    hsl.s += amount / 100
+    hsl.s += amount
     hsl.s = clamp01(hsl.s)
     return new Color(hsl)
   }
@@ -467,7 +465,7 @@ export class Color {
    * Same as calling `desaturate(100)`
    */
   greyscale() {
-    return this.desaturate(100)
+    return this.desaturate(1)
   }
 
   /**
@@ -485,11 +483,11 @@ export class Color {
    * Mix the current color a given amount with another color, from 0 to 100.
    * 0 means no mixing (return current color).
    */
-  mix(color: ColorInput, amount = 50) {
+  mix(color: ColorInput, amount = 0.5) {
     const rgb1 = this.toRgb()
     const rgb2 = new Color(color).toRgb()
 
-    const p = amount / 100
+    const p = amount
     const rgba = {
       r: (rgb2.r - rgb1.r) * p + rgb1.r,
       g: (rgb2.g - rgb1.g) * p + rgb1.g,
@@ -500,84 +498,28 @@ export class Color {
     return new Color(rgba)
   }
 
-  analogous(results = 6, slices = 30) {
-    const hsl = this.toHsl()
-    const part = 360 / slices
-    const ret: Color[] = [this]
-
-    for (hsl.h = (hsl.h - ((part * results) >> 1) + 720) % 360; --results; ) {
-      hsl.h = (hsl.h + part) % 360
-      ret.push(new Color(hsl))
-    }
-
-    return ret
-  }
-
-  /**
-   * taken from https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js
-   */
-  complement() {
-    const hsl = this.toHsl()
-    hsl.h = (hsl.h + 180) % 360
-    return new Color(hsl)
-  }
-
-  monochromatic(results = 6) {
-    const hsv = this.toHsv()
-    const { h } = hsv
-    const { s } = hsv
-    let { v } = hsv
-    const res: Color[] = []
-    const modification = 1 / results
-
-    while (results--) {
-      res.push(new Color({ h, s, v }))
-      v = (v + modification) % 1
-    }
-
-    return res
-  }
-
-  splitcomplement() {
-    const hsl = this.toHsl()
-    const { h } = hsl
-    return [
-      this,
-      new Color({ h: (h + 72) % 360, s: hsl.s, l: hsl.l }),
-      new Color({ h: (h + 216) % 360, s: hsl.s, l: hsl.l }),
-    ]
-  }
-
-  triad() {
-    return this.polyad(3)
-  }
-
-  tetrad() {
-    return this.polyad(4)
-  }
-
-  /**
-   * Get polyad colors, like (for 1, 2, 3, 4, 5, 6, 7, 8, etc...)
-   * monad, dyad, triad, tetrad, pentad, hexad, heptad, octad, etc...
-   */
-  polyad(n: number) {
-    const hsl = this.toHsl()
-    const { h } = hsl
-
-    const result: Color[] = [this]
-    const increment = 360 / n
-    for (let i = 1; i < n; i++) {
-      result.push(new Color({ h: (h + i * increment) % 360, s: hsl.s, l: hsl.l }))
-    }
-
-    return result
-  }
-
   /**
    * compare color vs current color
    */
   equals(color?: ColorInput): boolean {
     return this.toRgbString() === new Color(color).toRgbString()
+  }
+
+  /**
+   * If light, darken, if dark, lighten, percent is 0-1
+   */
+  inverseLightness(percent: number) {
+    const lightness = this.getLuminance()
+    if (lightness === 50) {
+      return this
+    }
+    if (percent < 0) {
+      throw new Error('Percent should be a positive value')
+    }
+    const isLight = lightness > 50
+    const direction = isLight ? -1 : 1
+    const diff = Math.abs(lightness - 50) * percent
+    return this.lighten(lightness + direction * diff)
   }
 }
 

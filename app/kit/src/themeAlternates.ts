@@ -1,4 +1,3 @@
-import { invertLightness } from '@o/color'
 import { ThemeSet } from '@o/css'
 import { colorize, fromStyles } from 'gloss-theme'
 
@@ -200,7 +199,7 @@ export const alternates: ThemeSet = {
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = invertLightness(parent.background, 0.05).setAlpha(0.35)
+    const background = parent.background.inverseLightness(0.05).setAlpha(0.35)
     return {
       ...parent,
       color: parent.color,
@@ -208,7 +207,7 @@ export const alternates: ThemeSet = {
       background,
       backgroundHover: background,
       buttonBackground: background,
-      buttonBackgroundHover: invertLightness(background, 0.05),
+      buttonBackgroundHover: background.inverseLightness(0.05),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
       colorDisabled: parent.color.setAlpha(0.15),

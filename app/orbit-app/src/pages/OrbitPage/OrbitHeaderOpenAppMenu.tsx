@@ -44,8 +44,6 @@ export const OrbitHeaderOpenAppMenu = memo(() => {
     return <MenuButton size={1} sizeRadius={1.6} items={constantMenuItems} />
   }
 
-  console.log('ok')
-
   return (
     <MenuButton
       alt="action"

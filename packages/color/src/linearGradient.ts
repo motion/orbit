@@ -24,10 +24,6 @@ export class LinearGradient {
     return `linear-gradient(${args})`
   }
 
-  toCSS() {
-    return this.toString()
-  }
-
   adjust(cb: (items: ColorLike) => ColorLike) {
     const next = this.items.map(cb)
     return new LinearGradient(next)

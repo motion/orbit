@@ -17,7 +17,7 @@ export const OrbitRoot = hot(function OrbitRoot() {
 
   useLayoutEffect(() => {
     if (!IS_ELECTRON) {
-      document.body.style.background = themes[themeStore.themeColor].background.toCSS()
+      document.body.style.background = themes[themeStore.themeColor].background.toString()
     }
   }, [themeStore.themeColor])
 

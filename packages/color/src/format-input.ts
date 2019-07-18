@@ -1,6 +1,6 @@
 import { convertHexToDecimal, hslToRgb, hsvToRgb, parseIntFromHex, rgbToRgb } from './conversion'
 import { names } from './css-color-names'
-import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA, RGBArray } from './interfaces'
 import { boundAlpha, convertToPercentage } from './util'
 
 /**
@@ -21,7 +21,7 @@ import { boundAlpha, convertToPercentage } from './util'
  * "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
  * ```
  */
-export function inputToRGB(color: string | RGB | RGBA | HSL | HSLA | HSV | HSVA | any) {
+export function inputToRGB(color: string | RGB | RGBA | HSL | HSLA | HSV | HSVA | RGBArray | any) {
   let rgb = { r: 0, g: 0, b: 0 }
   let a = 1
   let s: string | number | null = null
@@ -35,22 +35,31 @@ export function inputToRGB(color: string | RGB | RGBA | HSL | HSLA | HSV | HSVA 
   }
 
   if (typeof color === 'object') {
-    if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
-      rgb = rgbToRgb(color.r, color.g, color.b)
+    if (Array.isArray(color)) {
+      rgb.r = color[0]
+      rgb.g = color[1]
+      rgb.b = color[2]
+      a = typeof color[3] === 'number' ? color[3] : 1
+      format = 'rgb'
       ok = true
-      format = String(color.r).substr(-1) === '%' ? 'prgb' : 'rgb'
-    } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
-      s = convertToPercentage(color.s)
-      v = convertToPercentage(color.v)
-      rgb = hsvToRgb(color.h, s as number, v as number)
-      ok = true
-      format = 'hsv'
-    } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
-      s = convertToPercentage(color.s)
-      l = convertToPercentage(color.l)
-      rgb = hslToRgb(color.h, s as number, l as number)
-      ok = true
-      format = 'hsl'
+    } else {
+      if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
+        rgb = rgbToRgb(color.r, color.g, color.b)
+        ok = true
+        format = String(color.r).substr(-1) === '%' ? 'prgb' : 'rgb'
+      } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+        s = convertToPercentage(color.s)
+        v = convertToPercentage(color.v)
+        rgb = hsvToRgb(color.h, s as number, v as number)
+        ok = true
+        format = 'hsv'
+      } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+        s = convertToPercentage(color.s)
+        l = convertToPercentage(color.l)
+        rgb = hslToRgb(color.h, s as number, l as number)
+        ok = true
+        format = 'hsl'
+      }
     }
 
     if (Object.prototype.hasOwnProperty.call(color, 'a')) {

@@ -53,7 +53,7 @@ export class Color {
   constructor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
     // If input is already a tinycolor, use it for originalInput
     if (color instanceof Color) {
-      color = color.originalInput
+      return color
     }
 
     this.originalInput = color

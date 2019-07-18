@@ -115,10 +115,6 @@ function getColorLikeLibraryValue(val: any) {
     res = val.css()
   } else if (typeof val.toCSS === 'function') {
     res = val.toCSS()
-  } else if (typeof val.rgba === 'function') {
-    res = val.rgba()
-  } else if (typeof val.rgb === 'function') {
-    res = val.rgb()
   }
-  return res
+  return res.toString ? res.toString() : res
 }

@@ -5,13 +5,15 @@
  * and blue in equal intensities makes white.
  */
 export interface RGB {
-  r: number | string;
-  g: number | string;
-  b: number | string;
+  r: number | string
+  g: number | string
+  b: number | string
 }
 
+export type RGBArray = [number, number, number] | [number, number, number, number]
+
 export interface RGBA extends RGB {
-  a: number;
+  a: number
 }
 
 /**
@@ -20,13 +22,13 @@ export interface RGBA extends RGB {
  * @link https://en.wikibooks.org/wiki/Color_Models:_RGB,_HSV,_HSL#HSL
  */
 export interface HSL {
-  h: number | string;
-  s: number | string;
-  l: number | string;
+  h: number | string
+  s: number | string
+  l: number | string
 }
 
 export interface HSLA extends HSL {
-  a: number;
+  a: number
 }
 
 /**
@@ -35,11 +37,11 @@ export interface HSLA extends HSL {
  * @link https://en.wikibooks.org/wiki/Color_Models:_RGB,_HSV,_HSL#HSV
  */
 export interface HSV {
-  h: number | string;
-  s: number | string;
-  v: number | string;
+  h: number | string
+  s: number | string
+  v: number | string
 }
 
 export interface HSVA extends HSV {
-  a: number;
+  a: number
 }

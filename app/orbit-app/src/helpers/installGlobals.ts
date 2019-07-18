@@ -4,7 +4,7 @@
 // ⚠️ ️
 // ⚠️ ️
 import { Mediator } from '@o/bridge'
-import { toColor } from '../../../packages/color/_'
+import { toColor } from '@o/color'
 import { getGlobalConfig } from '@o/config'
 import { themes } from '@o/kit'
 import { isEqualDebug } from '@o/libs'

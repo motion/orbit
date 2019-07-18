@@ -1,6 +1,6 @@
 import { isEqual, loadMany, observeMany } from '@o/kit'
 import { Space, SpaceModel, User } from '@o/models'
-import { Action, Derive, AsyncAction } from 'overmind'
+import { Action, AsyncAction, Derive } from 'overmind'
 
 import { deepClone } from '../helpers'
 import { updatePaneSort } from './spaces/paneManagerEffects'
@@ -23,7 +23,6 @@ export const state: SpacesState = {
 const setSpaces: Action<Space[]> = (om, spaces) => {
   if (!spaces) return
   if (isEqual(spaces, om.state.spaces.spaces)) {
-    console.log('is equal')
     return
   }
   om.state.spaces.spaces = spaces

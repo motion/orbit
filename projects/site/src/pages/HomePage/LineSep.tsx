@@ -13,7 +13,10 @@ export function LineSep({
 }) {
   const theme = useTheme()
   let svg = fill
-    ? sepFilled.replace('fill="#000000"', `fill="${fill === true ? theme.background.hex() : fill}"`)
+    ? sepFilled.replace(
+        'fill="#000000"',
+        `fill="${fill === true ? theme.background.toHexString() : fill}"`,
+      )
     : sep
   if (noOverlay) {
     svg = svg.replace(`fill="url(#linearGradient-1)"`, '')

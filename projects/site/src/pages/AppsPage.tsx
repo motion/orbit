@@ -268,7 +268,7 @@ const AppSearch = memo(() => {
         <Space size="xxxl" />
       </View>
 
-      <Col padding alignItems="center">
+      <Col padding>
         <Grid
           alignItems="flex-start"
           height={dim * 2 + 60}

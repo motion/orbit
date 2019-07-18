@@ -1,7 +1,7 @@
 {
   "name": "@o/color",
   "version": "2.5.2",
-  "main": "_/color.js",
+  "main": "_/index.js",
   "sideEffects": false,
   "author": "Motion",
   "license": "MIT",

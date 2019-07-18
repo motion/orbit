@@ -135,23 +135,23 @@ export const TableRow = memo(function TableRow({
 })
 
 const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
+  if (props.background) {
+    return props.background
+  }
+  const isZebra = props.even && props.zebra
   if (props.highlighted) {
-    const bg = theme.backgroundHighlight || theme.backgroundActive
-    return props.even && props.zebra ? bg.lighten(0.025) : bg
-
     if (!props.background && props.row) {
       const cat = props.row.category
       if (cat && guesses[cat]) {
         return guessTheme(cat, theme).background || 'transparent'
       }
     }
-    if (props.background) {
-      return props.background
-    } else if (props.even && props.zebra) {
-      return theme.backgroundZebra || theme.backgroundZebra
-    } else {
-      return theme.background
-    }
+    return theme.backgroundHighlight
+  }
+  if (isZebra) {
+    return theme.backgroundZebra
+  } else {
+    return theme.background.setAlpha(0.35)
   }
 }
 
@@ -173,11 +173,11 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
   width: '100%',
   userSelect: 'none',
 }).theme((props, theme) => {
-  const isZebra = props.even && props.zebra
   const background = backgroundColor(props, theme)
+  console.log('background', background.toString())
   return {
     background,
-    boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.alpha(0.35)}`,
+    boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.setAlpha(0.35)}`,
     color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
     '& *': {
       color: props.highlighted ? `${theme.colorHighlight} !important` : null,
@@ -188,15 +188,20 @@ const TableBodyRowContainer = gloss<TableRowProps>(Box, {
     height: props.multiline ? 'auto' : props.rowLineHeight,
     lineHeight: `${String(props.rowLineHeight)}px`,
     flexShrink: 0,
-    '&:hover': props.selectable && {
-      background: props.highlighted
-        ? background
-        : isZebra
-        ? theme.backgroundZebraHover || theme.backgroundStronger
-        : theme.backgroundStrong,
+    '&:hover': {
+      background: typeof background === 'string' ? background : lightenRelative(background, 0.1),
     },
   }
 })
+
+const lightenRelative = (color: Color, pct: number) => {
+  console.log(color.toString(), color.lightness(), color.getAlpha())
+  return color
+    .lighten(pct)
+    .saturate(pct)
+    .setAlpha(1)
+  return color
+}
 
 const TableBodyColumnContainer = gloss<any>(Box, {
   overflow: 'hidden',

@@ -1,499 +1,583 @@
-import { colorConvert } from './colorConvert'
-import { colorString, toHex, toRgbPercent } from './colorString'
+import { rgbaToHex, rgbToHex, rgbToHsl, rgbToHsv } from './conversion'
+import { names } from './css-color-names'
+import { inputToRGB } from './format-input'
+import { HSL, HSLA, HSV, HSVA, RGB, RGBA } from './interfaces'
+import { bound01, boundAlpha, clamp01 } from './util'
 
-// exports
-
-export { colorNames } from './colorNames'
-export * from './invertLightness'
-export { isColorLike, toColorString } from './isColor'
-export * from './linearGradient'
-export { ColorArray, ColorLike } from './types'
-
-export function toColor(obj) {
-  return new Color(obj)
+export interface ColorOptions {
+  format: string
+  gradientType: string
 }
 
-const slice = [].slice
-const skippedModels = [
-  // to be honest, I don't really feel like keyword belongs in color convert, but eh.
-  'keyword',
-  // gray conflicts with some method names, and has its own method defined.
-  'gray',
-  // shouldn't really be in color-convert either...
-  'hex',
-]
+export type ColorInput = string | RGB | RGBA | HSL | HSLA | HSV | HSVA | Color
 
-var hashedModelKeys = {}
-Object.keys(colorConvert).forEach(function(model) {
-  hashedModelKeys[
-    slice
-      .call(colorConvert[model].labels)
-      .sort()
-      .join('')
-  ] = model
-})
-
-const StringCache = new WeakMap()
-
-const cached = new WeakMap()
-
-var limiters = {}
+export type ColorFormats =
+  | 'rgb'
+  | 'prgb'
+  | 'hex'
+  | 'hex3'
+  | 'hex4'
+  | 'hex6'
+  | 'hex8'
+  | 'name'
+  | 'hsl'
+  | 'hsv'
 
 export class Color {
-  static rgb: Function
+  /** red */
+  r!: number
 
-  model = 'rgb'
-  color = [0, 0, 0]
-  valpha = 1
+  /** green */
+  g!: number
 
-  rgb: Function
-  hsl: Function
-  hwb: Function
+  /** blue */
+  b!: number
 
-  constructor(obj, model?) {
-    if (model && model in skippedModels) {
-      model = null
-    }
-    if (model && !(model in colorConvert)) {
-      throw new Error('Unknown model: ' + model)
-    }
-    var i
-    var channels
-    if (!obj) {
-      throw new Error('Error, empty value for color')
-    }
-    if (obj instanceof Color) {
-      this.model = obj.model
-      this.color = obj.color.slice()
-      this.valpha = obj.valpha
-    } else if (typeof obj === 'string') {
-      var result = colorString.get(obj)
-      if (result === null) {
-        throw new Error('Unable to parse color from string: ' + obj)
-      }
-      this.model = result.model
-      channels = colorConvert[this.model].channels
-      this.color = result.value.slice(0, channels)
-      this.valpha = typeof result.value[channels] === 'number' ? result.value[channels] : 1
-    } else if (obj.length) {
-      this.model = model || 'rgb'
-      channels = colorConvert[this.model].channels
-      var newArr = slice.call(obj, 0, channels)
-      this.color = zeroArray(newArr, channels)
-      this.valpha = typeof obj[channels] === 'number' ? obj[channels] : 1
-    } else if (typeof obj === 'number') {
-      // this is always RGB - can be converted later on.
-      obj &= 0xffffff
-      this.model = 'rgb'
-      this.color = [(obj >> 16) & 0xff, (obj >> 8) & 0xff, obj & 0xff]
-      this.valpha = 1
-    } else {
-      this.valpha = 1
-      var keys = Object.keys(obj)
-      if ('alpha' in obj) {
-        keys.splice(keys.indexOf('alpha'), 1)
-        this.valpha = typeof obj.alpha === 'number' ? obj.alpha : 0
-      }
-      var hashedKeys = keys.sort().join('')
-      if (!(hashedKeys in hashedModelKeys)) {
-        throw new Error('Unable to parse color from object: ' + JSON.stringify(obj))
-      }
-      this.model = hashedModelKeys[hashedKeys]
-      var labels = colorConvert[this.model].labels
-      var color = []
-      for (i = 0; i < labels.length; i++) {
-        color.push(obj[labels[i]])
-      }
-      this.color = zeroArray(color, color.length)
+  /** alpha */
+  a!: number
+
+  /** the format used to create the tinycolor instance */
+  format!: ColorFormats
+
+  /** input passed into the constructer used to create the tinycolor instance */
+  originalInput!: ColorInput
+
+  /** the color was successfully parsed */
+  isValid!: boolean
+
+  gradientType?: string
+
+  /** rounded alpha */
+  roundA!: number
+
+  constructor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
+    // If input is already a tinycolor, use it for originalInput
+    if (color instanceof Color) {
+      color = color.originalInput
     }
 
-    if (process.env.NODE_ENV === 'development' && this.color && this.color.some(x => isNaN(x))) {
-      debugger
+    this.originalInput = color
+    const rgb = inputToRGB(color)
+    this.originalInput = color
+    this.r = rgb.r
+    this.g = rgb.g
+    this.b = rgb.b
+    this.a = rgb.a
+    this.roundA = Math.round(100 * this.a) / 100
+    this.format = opts.format || rgb.format
+    this.gradientType = opts.gradientType
+
+    // Don't let the range of [0,255] come back in [0,1].
+    // Potentially lose a little bit of precision here, but will fix issues where
+    // .5 gets interpreted as half of the total, instead of half of 1
+    // If it was supposed to be 128, this was already taken care of by `inputToRgb`
+    if (this.r < 1) {
+      this.r = Math.round(this.r)
     }
 
-    // perform limitations (clamping, etc.)
-    if (limiters[this.model]) {
-      channels = colorConvert[this.model].channels
-      for (i = 0; i < channels; i++) {
-        var limit = limiters[this.model][i]
-        if (limit) {
-          this.color[i] = limit(this.color[i])
-        }
-      }
+    if (this.g < 1) {
+      this.g = Math.round(this.g)
     }
 
-    this.valpha = Math.max(0, Math.min(1, this.valpha))
-
-    if (Object.freeze) {
-      Object.freeze(this)
+    if (this.b < 1) {
+      this.b = Math.round(this.b)
     }
-  }
 
-  toCSS = () => {
-    if (cached.has(this)) {
-      return cached.get(this)
-    }
-    const { color, valpha } = this.rgb()
-    const [r, g, b] = color
-    const next =
-      typeof this.valpha === 'number' && valpha !== 1
-        ? `rgba(${r}, ${g}, ${b}, ${valpha})`
-        : `rgb(${r}, ${g}, ${b})`
-    cached.set(this, next)
-    return next
-  }
-
-  get _equalityKey() {
-    return this.toString()
-  }
-
-  rgbaObject() {
-    return {
-      ...this.unitObject(),
-      a: this.valpha,
-    }
-  }
-
-  toString() {
-    return this.toCSS()
-  }
-
-  string(places?) {
-    if (StringCache.get(this)) {
-      return StringCache.get(this)
-    }
-    var self = this.model in colorString.to ? this : this.rgb()
-    self = self.round(typeof places === 'number' ? places : 1)
-    var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha)
-    const val = colorString.to[self.model](args)
-    StringCache.set(this, val)
-    return val
-  }
-
-  percentString(places) {
-    var self = this.rgb().round(typeof places === 'number' ? places : 1)
-    var args = self.valpha === 1 ? self.color : self.color.concat(this.valpha)
-    return toRgbPercent(args)
-  }
-
-  array() {
-    return this.valpha === 1 ? this.color.slice() : this.color.concat(this.valpha)
-  }
-
-  object() {
-    var result = {}
-    var channels = colorConvert[this.model].channels
-    var labels = colorConvert[this.model].labels
-    for (var i = 0; i < channels; i++) {
-      result[labels[i]] = this.color[i]
-    }
-    if (this.valpha !== 1) {
-      // @ts-ignore
-      result.alpha = this.valpha
-    }
-    return result
-  }
-
-  unitArray() {
-    var rgb = this.rgb().color
-    rgb[0] /= 255
-    rgb[1] /= 255
-    rgb[2] /= 255
-    if (this.valpha !== 1) {
-      rgb.push(this.valpha)
-    }
-    return rgb
-  }
-
-  unitObject() {
-    const { color, valpha } = this.rgb()
-    return {
-      r: color[0] / 255,
-      g: color[1] / 255,
-      b: color[2] / 255,
-      alpha: valpha,
-    }
-  }
-
-  round(places) {
-    places = Math.max(places || 0, 0)
-    return new Color(this.color.map(roundToPlace(places)).concat(this.valpha), this.model)
-  }
-
-  alpha(rawVal?) {
-    const val = typeof rawVal === 'function' ? rawVal(this.valpha) : rawVal
-    if (arguments.length) {
-      return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model)
-    }
-    return this
-  }
-
-  keyword(val?) {
-    if (arguments.length) {
-      return new Color(val)
-    }
-    return colorConvert[this.model].keyword(this.color)
-  }
-
-  hex(val?) {
-    if (arguments.length) {
-      return new Color(val)
-    }
-    return toHex(this.rgb().round().color)
-  }
-
-  rgbNumber() {
-    var rgb = this.rgb().color
-    return ((rgb[0] & 0xff) << 16) | ((rgb[1] & 0xff) << 8) | (rgb[2] & 0xff)
-  }
-
-  luminosity() {
-    // http://www.w3.org/TR/WCAG20/#relativeluminancedef
-    var rgb = this.rgb().color
-    var lum = []
-    for (var i = 0; i < rgb.length; i++) {
-      var chan = rgb[i] / 255
-      lum[i] = chan <= 0.03928 ? chan / 12.92 : Math.pow((chan + 0.055) / 1.055, 2.4)
-    }
-    return 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2]
-  }
-
-  contrast(color2) {
-    // http://www.w3.org/TR/WCAG20/#contrast-ratiodef
-    var lum1 = this.luminosity()
-    var lum2 = color2.luminosity()
-    if (lum1 > lum2) {
-      return (lum1 + 0.05) / (lum2 + 0.05)
-    }
-    return (lum2 + 0.05) / (lum1 + 0.05)
-  }
-
-  level(color2) {
-    var contrastRatio = this.contrast(color2)
-    if (contrastRatio >= 7.1) {
-      return 'AAA'
-    }
-    return contrastRatio >= 4.5 ? 'AA' : ''
+    this.isValid = rgb.ok
   }
 
   isDark() {
-    // YIQ equation from http://24ways.org/2010/calculating-color-contrast
-    var rgb = this.rgb().color
-    var yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
-    return yiq < 128
+    return this.getBrightness() < 128
   }
 
   isLight() {
     return !this.isDark()
   }
 
-  negate() {
-    var rgb = this.rgb()
-    for (var i = 0; i < 3; i++) {
-      rgb.color[i] = 255 - rgb.color[i]
+  /**
+   * Returns the perceived brightness of the color, from 0-255.
+   */
+  getBrightness(): number {
+    // http://www.w3.org/TR/AERT#color-contrast
+    const rgb = this.toRgb()
+    return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
+  }
+
+  /**
+   * Returns the perceived luminance of a color, from 0-1.
+   */
+  getLuminance(): number {
+    // http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+    const rgb = this.toRgb()
+    let R
+    let G
+    let B
+    const RsRGB = rgb.r / 255
+    const GsRGB = rgb.g / 255
+    const BsRGB = rgb.b / 255
+
+    if (RsRGB <= 0.03928) {
+      R = RsRGB / 12.92
+    } else {
+      R = Math.pow((RsRGB + 0.055) / 1.055, 2.4)
     }
-    return rgb
+
+    if (GsRGB <= 0.03928) {
+      G = GsRGB / 12.92
+    } else {
+      G = Math.pow((GsRGB + 0.055) / 1.055, 2.4)
+    }
+
+    if (BsRGB <= 0.03928) {
+      B = BsRGB / 12.92
+    } else {
+      B = Math.pow((BsRGB + 0.055) / 1.055, 2.4)
+    }
+
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B
   }
 
-  lighten(ratio: number) {
-    var hsl = this.hsl()
-    hsl.color[2] += hsl.color[2] * ratio
-    return hsl
+  /**
+   * Returns the alpha value of a color, from 0-1.
+   */
+  getAlpha(): number {
+    return this.a
   }
 
-  darken(ratio) {
-    var hsl = this.hsl()
-    hsl.color[2] -= hsl.color[2] * ratio
-    return hsl
+  /**
+   * Clones a new instance of this class
+   */
+  clone(modifyCb?: (next: Color) => void) {
+    const next = new Color(this.toString() as string)
+    modifyCb && modifyCb(next)
+    return next
   }
 
-  saturate(ratio) {
-    var hsl = this.hsl()
-    hsl.color[1] += hsl.color[1] * ratio
-    return hsl
-  }
-
-  desaturate(ratio) {
-    var hsl = this.hsl()
-    hsl.color[1] -= hsl.color[1] * ratio
-    return hsl
-  }
-
-  whiten(ratio) {
-    var hwb = this.hwb()
-    hwb.color[1] += hwb.color[1] * ratio
-    return hwb
-  }
-
-  blacken(ratio) {
-    var hwb = this.hwb()
-    hwb.color[2] += hwb.color[2] * ratio
-    return hwb
-  }
-
-  grayscale() {
-    // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
-    var rgb = this.rgb().color
-    var val = rgb[0] * 0.3 + rgb[1] * 0.59 + rgb[2] * 0.11
-    return Color.rgb(val, val, val)
-  }
-
-  fade(ratio) {
-    return this.alpha(this.valpha - this.valpha * ratio)
-  }
-
-  opaquer(ratio) {
-    return this.alpha(this.valpha + this.valpha * ratio)
-  }
-
-  rotate(degrees) {
-    var hsl = this.hsl()
-    var hue = hsl.color[0]
-    hue = (hue + degrees) % 360
-    hue = hue < 0 ? 360 + hue : hue
-    hsl.color[0] = hue
-    return hsl
-  }
-
-  mix(mixinColor, weight = 0.5) {
-    // ported from sass implementation in C
-    // https://github.com/sass/libsass/blob/0e6b4a2850092356aa3ece07c6b249f0221caced/functions.cpp#L209
-    var color1 = mixinColor.rgb()
-    var color2 = this.rgb()
-    var p = weight
-    var w = 2 * p - 1
-    var a = color1.valpha - color2.valpha
-    var w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0
-    var w2 = 1 - w1
-    return Color.rgb(
-      w1 * color1.red() + w2 * color2.red(),
-      w1 * color1.green() + w2 * color2.green(),
-      w1 * color1.blue() + w2 * color2.blue(),
-      color1.valpha * p + color2.valpha * (1 - p),
-    )
-  }
-
-  get red() {
-    return getset(this, 'rgb', 0, maxfn(255))
-  }
-
-  get green() {
-    return getset(this, 'rgb', 1, maxfn(255))
-  }
-
-  get blue() {
-    return getset(this, 'rgb', 2, maxfn(255))
-  }
-
-  get hue() {
-    return getset(this, ['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
-      return ((val % 360) + 360) % 360
+  /**
+   * Sets the alpha value on the current color.
+   *
+   * @param alpha - The new alpha value. The accepted range is 0-1.
+   */
+  setAlpha(alpha?: string | number | ((current: number) => number)): Color {
+    return this.clone(next => {
+      next.a = boundAlpha(typeof alpha === 'function' ? alpha(next.a) : alpha)
+      next.roundA = Math.round(100 * this.a) / 100
     })
   }
 
-  get saturationl() {
-    return getset(this, 'hsl', 1, maxfn(100))
+  /**
+   * Returns the object as a HSVA object.
+   */
+  toHsv() {
+    const hsv = rgbToHsv(this.r, this.g, this.b)
+    return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this.a }
   }
 
-  get lightness() {
-    return getset(this, 'hsl', 2, maxfn(100))
+  /**
+   * Returns the hsva values interpolated into a string with the following format:
+   * "hsva(xxx, xxx, xxx, xx)".
+   */
+  toHsvString(): string {
+    const hsv = rgbToHsv(this.r, this.g, this.b)
+    const h = Math.round(hsv.h * 360)
+    const s = Math.round(hsv.s * 100)
+    const v = Math.round(hsv.v * 100)
+    return this.a === 1 ? `hsv(${h}, ${s}%, ${v}%)` : `hsva(${h}, ${s}%, ${v}%, ${this.roundA})`
   }
 
-  get saturationv() {
-    return getset(this, 'hsv', 1, maxfn(100))
+  /**
+   * Returns the object as a HSLA object.
+   */
+  toHsl() {
+    const hsl = rgbToHsl(this.r, this.g, this.b)
+    return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this.a }
   }
 
-  get value() {
-    return getset(this, 'hsv', 2, maxfn(100))
+  /**
+   * Returns the hsla values interpolated into a string with the following format:
+   * "hsla(xxx, xxx, xxx, xx)".
+   */
+  toHslString(): string {
+    const hsl = rgbToHsl(this.r, this.g, this.b)
+    const h = Math.round(hsl.h * 360)
+    const s = Math.round(hsl.s * 100)
+    const l = Math.round(hsl.l * 100)
+    return this.a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsla(${h}, ${s}%, ${l}%, ${this.roundA})`
   }
 
-  get white() {
-    return getset(this, 'hwb', 1, maxfn(100))
+  /**
+   * Returns the hex value of the color.
+   * @param allow3Char will shorten hex value to 3 char if possible
+   */
+  toHex(allow3Char = false): string {
+    return rgbToHex(this.r, this.g, this.b, allow3Char)
   }
 
-  get wblack() {
-    return getset(this, 'hwb', 2, maxfn(100))
+  /**
+   * Returns the hex value of the color -with a # appened.
+   * @param allow3Char will shorten hex value to 3 char if possible
+   */
+  toHexString(allow3Char = false): string {
+    return '#' + this.toHex(allow3Char)
   }
-}
 
-// model conversion methods and static constructors
-Object.keys(colorConvert).forEach(function(model) {
-  if (skippedModels.indexOf(model) !== -1) {
-    return
+  /**
+   * Returns the hex 8 value of the color.
+   * @param allow4Char will shorten hex value to 4 char if possible
+   */
+  toHex8(allow4Char = false): string {
+    return rgbaToHex(this.r, this.g, this.b, this.a, allow4Char)
   }
-  var channels = colorConvert[model].channels
-  // conversion methods
-  Color.prototype[model] = function() {
-    if (this.model === model) {
-      return this
+
+  /**
+   * Returns the hex 8 value of the color -with a # appened.
+   * @param allow4Char will shorten hex value to 4 char if possible
+   */
+  toHex8String(allow4Char = false): string {
+    return '#' + this.toHex8(allow4Char)
+  }
+
+  /**
+   * Returns the object as a RGBA object.
+   */
+  toRgb() {
+    return {
+      r: Math.round(this.r),
+      g: Math.round(this.g),
+      b: Math.round(this.b),
+      a: this.a,
     }
-    if (arguments.length) {
-      return new Color(arguments, model)
+  }
+
+  /**
+   * Returns the RGBA values interpolated into a string with the following format:
+   * "RGBA(xxx, xxx, xxx, xx)".
+   */
+  toRgbString() {
+    const r = Math.round(this.r)
+    const g = Math.round(this.g)
+    const b = Math.round(this.b)
+    return this.a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${this.roundA})`
+  }
+
+  /**
+   * Returns the object as a RGBA object.
+   */
+  toPercentageRgb() {
+    const fmt = (x: number) => `${Math.round(bound01(x, 255) * 100)}%`
+    return {
+      r: fmt(this.r),
+      g: fmt(this.g),
+      b: fmt(this.b),
+      a: this.a,
     }
-    var newAlpha = typeof arguments[channels] === 'number' ? channels : this.valpha
-    return new Color(
-      assertArray(colorConvert[this.model][model].raw(this.color)).concat(newAlpha),
-      model,
-    )
   }
-  // 'static' construction methods
-  Color[model] = function(color) {
-    if (typeof color === 'number') {
-      color = zeroArray(slice.call(arguments), channels)
+
+  /**
+   * Returns the RGBA relative values interpolated into a string
+   */
+  toPercentageRgbString() {
+    const rnd = (x: number) => Math.round(bound01(x, 255) * 100)
+    return this.a === 1
+      ? `rgb(${rnd(this.r)}%, ${rnd(this.g)}%, ${rnd(this.b)}%)`
+      : `rgba(${rnd(this.r)}%, ${rnd(this.g)}%, ${rnd(this.b)}%, ${this.roundA})`
+  }
+
+  /**
+   * The 'real' name of the color -if there is one.
+   */
+  toName(): string | false {
+    if (this.a === 0) {
+      return 'transparent'
     }
-    return new Color(color, model)
-  }
-})
-
-function roundTo(num, places) {
-  return Number(num.toFixed(places))
-}
-
-function roundToPlace(places) {
-  return function(num) {
-    return roundTo(num, places)
-  }
-}
-
-function getset(color: Color, model, channel, modifier?) {
-  model = Array.isArray(model) ? model : [model]
-  model.forEach(function(m) {
-    ;(limiters[m] || (limiters[m] = []))[channel] = modifier
-  })
-  model = model[0]
-  return function(val?) {
-    var result
-    if (arguments.length) {
-      if (modifier) {
-        val = modifier(val)
+    if (this.a < 1) {
+      return false
+    }
+    const hex = '#' + rgbToHex(this.r, this.g, this.b, false)
+    for (const key of Object.keys(names)) {
+      if (names[key] === hex) {
+        return key
       }
-      result = color[model]()
-      result.color[channel] = val
-      return result
     }
-    result = color[model]().color[channel]
-    if (modifier) {
-      result = modifier(result)
+    return false
+  }
+
+  /**
+   * String representation of the color.
+   *
+   * @param format - The format to be used when displaying the string representation.
+   */
+  toString(format?: ColorFormats) {
+    const formatSet = Boolean(format)
+    format = format || this.format
+
+    let formattedString: string | false = false
+    const hasAlpha = this.a < 1 && this.a >= 0
+    const needsAlphaFormat =
+      !formatSet && hasAlpha && (format.startsWith('hex') || format === 'name')
+
+    if (needsAlphaFormat) {
+      // Special case for "transparent", all other non-alpha formats
+      // will return rgba when there is transparency.
+      if (format === 'name' && this.a === 0) {
+        return this.toName()
+      }
+
+      return this.toRgbString()
     }
+
+    if (format === 'rgb') {
+      formattedString = this.toRgbString()
+    }
+
+    if (format === 'prgb') {
+      formattedString = this.toPercentageRgbString()
+    }
+
+    if (format === 'hex' || format === 'hex6') {
+      formattedString = this.toHexString()
+    }
+
+    if (format === 'hex3') {
+      formattedString = this.toHexString(true)
+    }
+
+    if (format === 'hex4') {
+      formattedString = this.toHex8String(true)
+    }
+
+    if (format === 'hex8') {
+      formattedString = this.toHex8String()
+    }
+
+    if (format === 'name') {
+      formattedString = this.toName()
+    }
+
+    if (format === 'hsl') {
+      formattedString = this.toHslString()
+    }
+
+    if (format === 'hsv') {
+      formattedString = this.toHsvString()
+    }
+
+    return formattedString || this.toHexString()
+  }
+
+  /**
+   * Set the absolute lightness.
+   * @param x - valid between 1-100
+   */
+  lightness(): number
+  lightness<A extends number>(x?: A): A extends number ? Color : number {
+    if (typeof x === 'number') {
+      const hsl = this.toHsl()
+      // NOTE: not +=
+      hsl.l = x / 100
+      hsl.l = clamp01(hsl.l)
+      return new Color(hsl) as any
+    } else {
+      return this.toHsl().l as any
+    }
+  }
+
+  /**
+   * Lighten the color a given amount. Providing 100 will always return white.
+   * @param amount - valid between 1-100
+   */
+  lighten(amount = 10) {
+    const hsl = this.toHsl()
+    hsl.l += amount / 100
+    hsl.l = clamp01(hsl.l)
+    return new Color(hsl)
+  }
+
+  /**
+   * Brighten the color a given amount, from 0 to 100.
+   * @param amount - valid between 1-100
+   */
+  brighten(amount = 10) {
+    const rgb = this.toRgb()
+    rgb.r = Math.max(0, Math.min(255, rgb.r - Math.round(255 * -(amount / 100))))
+    rgb.g = Math.max(0, Math.min(255, rgb.g - Math.round(255 * -(amount / 100))))
+    rgb.b = Math.max(0, Math.min(255, rgb.b - Math.round(255 * -(amount / 100))))
+    return new Color(rgb)
+  }
+
+  /**
+   * Darken the color a given amount, from 0 to 100.
+   * Providing 100 will always return black.
+   * @param amount - valid between 1-100
+   */
+  darken(amount = 10) {
+    const hsl = this.toHsl()
+    hsl.l -= amount / 100
+    hsl.l = clamp01(hsl.l)
+    return new Color(hsl)
+  }
+
+  /**
+   * Mix the color with pure white, from 0 to 100.
+   * Providing 0 will do nothing, providing 100 will always return white.
+   * @param amount - valid between 1-100
+   */
+  tint(amount = 10) {
+    return this.mix('white', amount)
+  }
+
+  /**
+   * Mix the color with pure black, from 0 to 100.
+   * Providing 0 will do nothing, providing 100 will always return black.
+   * @param amount - valid between 1-100
+   */
+  shade(amount = 10) {
+    return this.mix('black', amount)
+  }
+
+  /**
+   * Desaturate the color a given amount, from 0 to 100.
+   * Providing 100 will is the same as calling greyscale
+   * @param amount - valid between 1-100
+   */
+  desaturate(amount = 10) {
+    const hsl = this.toHsl()
+    hsl.s -= amount / 100
+    hsl.s = clamp01(hsl.s)
+    return new Color(hsl)
+  }
+
+  /**
+   * Saturate the color a given amount, from 0 to 100.
+   * @param amount - valid between 1-100
+   */
+  saturate(amount = 10) {
+    const hsl = this.toHsl()
+    hsl.s += amount / 100
+    hsl.s = clamp01(hsl.s)
+    return new Color(hsl)
+  }
+
+  /**
+   * Completely desaturates a color into greyscale.
+   * Same as calling `desaturate(100)`
+   */
+  greyscale() {
+    return this.desaturate(100)
+  }
+
+  /**
+   * Spin takes a positive or negative amount within [-360, 360] indicating the change of hue.
+   * Values outside of this range will be wrapped into this range.
+   */
+  spin(amount: number) {
+    const hsl = this.toHsl()
+    const hue = (hsl.h + amount) % 360
+    hsl.h = hue < 0 ? 360 + hue : hue
+    return new Color(hsl)
+  }
+
+  /**
+   * Mix the current color a given amount with another color, from 0 to 100.
+   * 0 means no mixing (return current color).
+   */
+  mix(color: ColorInput, amount = 50) {
+    const rgb1 = this.toRgb()
+    const rgb2 = new Color(color).toRgb()
+
+    const p = amount / 100
+    const rgba = {
+      r: (rgb2.r - rgb1.r) * p + rgb1.r,
+      g: (rgb2.g - rgb1.g) * p + rgb1.g,
+      b: (rgb2.b - rgb1.b) * p + rgb1.b,
+      a: (rgb2.a - rgb1.a) * p + rgb1.a,
+    }
+
+    return new Color(rgba)
+  }
+
+  analogous(results = 6, slices = 30) {
+    const hsl = this.toHsl()
+    const part = 360 / slices
+    const ret: Color[] = [this]
+
+    for (hsl.h = (hsl.h - ((part * results) >> 1) + 720) % 360; --results; ) {
+      hsl.h = (hsl.h + part) % 360
+      ret.push(new Color(hsl))
+    }
+
+    return ret
+  }
+
+  /**
+   * taken from https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js
+   */
+  complement() {
+    const hsl = this.toHsl()
+    hsl.h = (hsl.h + 180) % 360
+    return new Color(hsl)
+  }
+
+  monochromatic(results = 6) {
+    const hsv = this.toHsv()
+    const { h } = hsv
+    const { s } = hsv
+    let { v } = hsv
+    const res: Color[] = []
+    const modification = 1 / results
+
+    while (results--) {
+      res.push(new Color({ h, s, v }))
+      v = (v + modification) % 1
+    }
+
+    return res
+  }
+
+  splitcomplement() {
+    const hsl = this.toHsl()
+    const { h } = hsl
+    return [
+      this,
+      new Color({ h: (h + 72) % 360, s: hsl.s, l: hsl.l }),
+      new Color({ h: (h + 216) % 360, s: hsl.s, l: hsl.l }),
+    ]
+  }
+
+  triad() {
+    return this.polyad(3)
+  }
+
+  tetrad() {
+    return this.polyad(4)
+  }
+
+  /**
+   * Get polyad colors, like (for 1, 2, 3, 4, 5, 6, 7, 8, etc...)
+   * monad, dyad, triad, tetrad, pentad, hexad, heptad, octad, etc...
+   */
+  polyad(n: number) {
+    const hsl = this.toHsl()
+    const { h } = hsl
+
+    const result: Color[] = [this]
+    const increment = 360 / n
+    for (let i = 1; i < n; i++) {
+      result.push(new Color({ h: (h + i * increment) % 360, s: hsl.s, l: hsl.l }))
+    }
+
     return result
   }
-}
 
-function maxfn(max) {
-  return function(v) {
-    return Math.max(0, Math.min(max, v))
+  /**
+   * compare color vs current color
+   */
+  equals(color?: ColorInput): boolean {
+    return this.toRgbString() === new Color(color).toRgbString()
   }
 }
 
-function assertArray(val) {
-  return Array.isArray(val) ? val : [val]
-}
-
-function zeroArray(arr, length) {
-  for (var i = 0; i < length; i++) {
-    if (typeof arr[i] !== 'number') {
-      arr[i] = 0
-    }
-  }
-  return arr
+// kept for backwards compatability with v1
+export function tinycolor(color: ColorInput = '', opts: Partial<ColorOptions> = {}) {
+  return new Color(color, opts)
 }

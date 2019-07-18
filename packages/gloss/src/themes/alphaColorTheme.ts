@@ -34,7 +34,7 @@ export const alphaColorTheme: ThemeFn = (props, theme, previous) => {
   const next: CSSPropertySet | null = {}
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
-      next.color = Config.toColor(color).alpha(alpha)
+      next.color = Config.toColor(color).setAlpha(alpha)
     } else {
       next.color = color
     }
@@ -68,7 +68,7 @@ function merge(
   if (color) {
     if (color !== 'inherit' && typeof alpha === 'number') {
       next[key] = {
-        color: `${Config.toColor(color).alpha(alpha)}`,
+        color: `${Config.toColor(color).setAlpha(alpha)}`,
       }
     } else if (parentColor !== color) {
       next[key] = {

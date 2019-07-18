@@ -194,13 +194,13 @@ export const alternates: ThemeSet = {
       glintColor: transparent,
       color: parent.color,
       background: parent.background.isDark()
-        ? parent.background.lighten(0.1).alpha(0.15)
-        : parent.background.darken(0.1).alpha(0.15),
+        ? parent.background.lighten(0.1).setAlpha(0.15)
+        : parent.background.darken(0.1).setAlpha(0.15),
       borderColor: transparent,
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = invertLightness(parent.background, 0.05).alpha(0.35)
+    const background = invertLightness(parent.background, 0.05).setAlpha(0.35)
     return {
       ...parent,
       color: parent.color,
@@ -211,7 +211,7 @@ export const alternates: ThemeSet = {
       buttonBackgroundHover: invertLightness(background, 0.05),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
-      colorDisabled: parent.color.alpha(0.15),
+      colorDisabled: parent.color.setAlpha(0.15),
       backgroundStrong: parent.backgroundStrong,
       backgroundStronger: parent.backgroundStronger,
       backgroundStrongest: parent.backgroundStrongest,

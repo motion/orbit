@@ -24,7 +24,7 @@ export const decreaseContrast = (color: Color, amt: Adjuster) => {
 }
 
 const roundToExtreme = (color: Color, pct = 20) => {
-  const lightness = color.lightness()
+  const lightness = color.getLuminance()
   if (lightness <= pct) {
     return '#000'
   }
@@ -48,8 +48,8 @@ export const xSmallAmount = color => smallAmount(color) * 0.75
 
 const opposite = color => {
   return color.isDark()
-    ? color.mix(color.lightness(0.1)).lightness(75)
-    : color.mix(color.lightness(0.9)).lightness(25)
+    ? color.mix(color.lightness(10)).lightness(75)
+    : color.mix(color.lightness(90)).lightness(25)
 }
 
 const isPlainObj = o => typeof o == 'object' && o.constructor == Object
@@ -98,7 +98,7 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
   if (!s.background && !s.color) {
     throw new Error('Themes require at least background or color')
   }
-  const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color))
+  const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color!))
 
   // some handy basic styles
   const base = colorize({
@@ -135,8 +135,8 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
       // borderColorFocus: s.borderColorFocus || decreaseContrast(base.borderColor, largeAmount),
       // ensure rest is last so they can override anything
 
-      backgroundDisabled: backgroundColored.desaturate(0.85).alpha(0.2),
-      colorDisabled: baseColor.alpha(baseColor.valpha * 0.25),
+      backgroundDisabled: backgroundColored.desaturate(0.85).setAlpha(0.2),
+      colorDisabled: baseColor.setAlpha(baseColor.getAlpha() * 0.25),
 
       ...s,
       // except for base which is already using the right order

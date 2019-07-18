@@ -65,6 +65,6 @@ export const light: ThemeObject = {
     cardBorderColor: [0, 0, 0, 0.1],
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     orbitInputBackgroundEditing: [0, 0, 0, 0.2],
-    separatorBackground: backgroundStrong.alpha(0.5),
+    separatorBackground: backgroundStrong.setAlpha(0.5),
   }),
 }

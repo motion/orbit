@@ -1,4 +1,4 @@
-import { invertLightness } from '@o/color'
+import { invertLightness } from '../../../packages/color/_'
 import { useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import { Button, ButtonProps, Icon, IconProps, MenuTemplate, Row, SimpleText, Tooltip, useContextMenu, View, ViewProps } from '@o/ui'

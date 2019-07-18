@@ -58,7 +58,7 @@ const SIZE_LARGE = 20
 export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: IconProps, ref) => {
   const theme = useTheme(props)
   const size = snapToSizes(props.size) * useScale()
-  let color = props.color || (theme.color ? theme.color.toCSS() : '#fff')
+  let color = props.color || (theme.color ? theme.color.toString() : '#fff')
   let opacity
 
   if (isDefined(props.opacity)) {
@@ -66,9 +66,9 @@ export const PlainIcon = forwardRef(({ style, ignoreColor, svg, ...props }: Icon
       opacity = props.opacity
     } else {
       try {
-        color = toColor(color)
-          .alpha(props.opacity)
-          .toCSS()
+        color = toColor(color as any)
+          .setAlpha(typeof props.opacity === 'number' ? props.opacity : 1)
+          .toString()
       } catch {
         console.debug('couldnt interpret color', color)
         opacity = props.opacity

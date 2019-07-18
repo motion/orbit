@@ -1,3 +1,5 @@
+- SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
+
 ---
 
 -- High level

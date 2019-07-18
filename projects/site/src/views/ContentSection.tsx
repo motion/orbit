@@ -12,7 +12,7 @@ export const ContentSection = (props: ColProps) => {
       margin="auto"
       fontSize={16}
       lineHeight={28}
-      color={theme.color.alpha(0.85)}
+      color={theme.color.setAlpha(0.85)}
       {...props}
     />
   )

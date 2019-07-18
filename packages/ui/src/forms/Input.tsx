@@ -94,7 +94,7 @@ const inputSurfaceTheme: ThemeFn = (props, theme) => ({
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
       boxShadow: [
-        [0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.5)],
+        [0, 0, 0, 3, theme.borderColor.setAlpha(a => a * 0.5)],
         getElevation(props, theme).boxShadow,
       ],
     },

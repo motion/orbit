@@ -277,7 +277,7 @@ class ColorEditor extends Component<{
   render() {
     let colorInfo
     try {
-      colorInfo = toColor(this.props.value).rgbaObject()
+      colorInfo = toColor(this.props.value).toRgb()
     } catch (err) {
       console.warn('cant parse color', this.props.value, err)
       return <Fragment />

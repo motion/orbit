@@ -1,8 +1,8 @@
-import { toColor } from './color'
+import { Color } from './color'
 import { isColorLike } from './isColor'
 import { ColorLike } from './types'
 
-const convertToColor = item => (isColorLike(item) ? toColor(item) : item)
+const convertToColor = item => (isColorLike(item) ? new Color(item) : item)
 
 export function linearGradient(...args: ColorLike[]) {
   return new LinearGradient(args)

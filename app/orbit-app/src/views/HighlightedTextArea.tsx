@@ -1,5 +1,5 @@
-import { CSSPropertySet, gloss } from 'gloss'
 import * as UI from '@o/ui'
+import { CSSPropertySet, gloss } from 'gloss'
 import * as React from 'react'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
@@ -29,7 +29,7 @@ const SelectableBlock = gloss<UI.BlockProps & Pick<TextArea, 'value' | 'rows'>>(
       background: theme.background.darken(0.1),
     },
     '&::placeholder': {
-      color: theme.color.alpha(0.6),
+      color: theme.color.setAlpha(0.6),
     },
   }),
 )

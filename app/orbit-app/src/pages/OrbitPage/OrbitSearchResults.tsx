@@ -86,8 +86,8 @@ export const OrbitSearchResults = memo(() => {
         },
       }
 
-  const highlightTheme: ThemeObject = useMemo(
-    () => ({
+  const highlightTheme: ThemeObject = useMemo(() => {
+    return {
       ...theme,
       alternates: {
         ...theme.alternates!,
@@ -100,9 +100,8 @@ export const OrbitSearchResults = memo(() => {
           ),
         },
       },
-    }),
-    [theme],
-  )
+    }
+  }, [theme])
 
   /**
    * BEWARE! TWO WAY SYNC AHEAD

@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/color'
 import { isDefined } from '@o/utils'
-import { gloss, ThemeSelect } from 'gloss'
+import { Box, gloss, ThemeSelect } from 'gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -18,7 +18,7 @@ type Props = {
   subTheme?: ThemeSelect
 }
 
-export const Glint = gloss<Props>({
+export const Glint = gloss<Props>(Box, {
   pointerEvents: 'none',
   position: 'absolute',
   left: 0,

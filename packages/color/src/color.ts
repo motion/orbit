@@ -165,7 +165,7 @@ export class Color {
   setAlpha(alpha?: string | number | ((current: number) => number)): Color {
     return this.clone(next => {
       next.a = boundAlpha(typeof alpha === 'function' ? alpha(next.a) : alpha)
-      next.roundA = Math.round(100 * this.a) / 100
+      next.roundA = Math.round(100 * next.a) / 100
     })
   }
 

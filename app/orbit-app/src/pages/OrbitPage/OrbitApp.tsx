@@ -216,7 +216,6 @@ const useIsAppWrapped = (appDef: AppDefinition) => {
         try {
           const appView = appDef && appDef.app && appDef.app
           if (!appView || typeof appView !== 'function') {
-            debugger
             return finish(false)
           }
           const appChildEl = appView({})

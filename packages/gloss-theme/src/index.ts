@@ -114,10 +114,6 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
   const baseColor = toColor(base.color)
 
   const backgroundHover = base.background.lighten(base.background.isLight() ? 0.1 : 0.15)
-  console.log('backgroundColored', backgroundColored)
-  // if (Math.round(backgroundColored.r) === 54) {
-  //   debugger
-  // }
 
   const res: ThemeObject = {
     ...colorize({

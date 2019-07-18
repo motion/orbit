@@ -30,8 +30,6 @@ const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
 
 const selectedColor = toColor('#363165')
 
-console.log('123', selectedColor.lighten(0.2))
-
 const darkAlternates: ThemeSet = {
   ...alternates,
   ...darkAltLight,

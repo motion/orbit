@@ -104,8 +104,8 @@ function cssValue(key: string, value: any, options?: CSSConfig) {
   ) {
     return css(value, options)
   } else if (valueType === 'object') {
-    if (value.toString) {
-      return value.toString()
+    if (value.toCSS) {
+      return value.toCSS()
     }
     // not react element
     if (process.env.NODE_ENV === 'development') {

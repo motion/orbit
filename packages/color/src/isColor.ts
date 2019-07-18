@@ -1,5 +1,4 @@
-import { names } from '@ctrl/tinycolor'
-
+import { names } from './css-color-names'
 import { ColorLike, ColorObject } from './types'
 
 export const toColorString = memoizeOne<string>(
@@ -69,7 +68,7 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
 }
 
 function isColorLikeString(str: string) {
-  if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
+  if (str[0] === '#') {
     return true
   }
   if (str.indexOf('rgb(') === 0 || str.indexOf('rgba(') === 0) {

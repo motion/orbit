@@ -86,6 +86,10 @@ export class Color {
     this.isValid = rgb.ok
   }
 
+  toCSS() {
+    return this.toString()
+  }
+
   isDark() {
     return this.getBrightness() < 128
   }

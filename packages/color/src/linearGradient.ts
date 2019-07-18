@@ -19,8 +19,13 @@ export class LinearGradient {
     return this.items.filter(isColorLike).map(convertToColor)
   }
 
+  toCSS() {
+    return this.toString()
+  }
+
   toString() {
     const args = this.items.map(convertToColor).join(', ')
+    console.log('returning', `linear-gradient(${args})`, this.items, this.items[0], isColorLike)
     return `linear-gradient(${args})`
   }
 

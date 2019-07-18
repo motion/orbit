@@ -1,7 +1,4 @@
 // https://github.com/bahamas10/css-color-names/blob/master/css-color-names.json
-/**
- * @hidden
- */
 export const names: { [key: string]: string } = {
   aliceblue: '#f0f8ff',
   antiquewhite: '#faebd7',

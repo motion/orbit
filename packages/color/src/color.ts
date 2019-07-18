@@ -387,12 +387,30 @@ export class Color {
   /**
    * Lighten the color a given amount. Providing 100 will always return white.
    * @param amount - valid between 0.1-1
+   * @param relative - whether to do it based on the current * amount, or just hardcode amt
    */
-  lighten(amount = 0.1) {
+  lighten(amount = 0.1, absolute?: boolean) {
     const hsl = this.toHsl()
-    hsl.l += amount
+    hsl.l += absolute ? amount : hsl.l * amount
     hsl.l = clamp01(hsl.l)
     return new Color(hsl)
+  }
+
+  /**
+   * If light, darken, if dark, lighten, percent is 0-1
+   */
+  inverseLighten(percent: number) {
+    const lightness = this.getLuminance()
+    if (lightness === 50) {
+      return this
+    }
+    if (percent < 0) {
+      throw new Error('Percent should be a positive value')
+    }
+    const isLight = lightness > 50
+    const direction = isLight ? -1 : 1
+    const diff = Math.abs(lightness - 50) * percent
+    return this.lighten(lightness + direction * diff)
   }
 
   /**
@@ -411,10 +429,11 @@ export class Color {
    * Darken the color a given amount, from 0 to 100.
    * Providing 100 will always return black.
    * @param amount - valid between 0.1-1
+   * @param relative - whether to do it based on the current * amount, or just hardcode amt
    */
-  darken(amount = 0.1) {
+  darken(amount = 0.1, absolute?: boolean) {
     const hsl = this.toHsl()
-    hsl.l -= amount
+    hsl.l -= absolute ? amount : hsl.l * amount
     hsl.l = clamp01(hsl.l)
     return new Color(hsl)
   }
@@ -503,23 +522,6 @@ export class Color {
    */
   equals(color?: ColorInput): boolean {
     return this.toRgbString() === new Color(color).toRgbString()
-  }
-
-  /**
-   * If light, darken, if dark, lighten, percent is 0-1
-   */
-  inverseLightness(percent: number) {
-    const lightness = this.getLuminance()
-    if (lightness === 50) {
-      return this
-    }
-    if (percent < 0) {
-      throw new Error('Percent should be a positive value')
-    }
-    const isLight = lightness > 50
-    const direction = isLight ? -1 : 1
-    const diff = Math.abs(lightness - 50) * percent
-    return this.lighten(lightness + direction * diff)
   }
 }
 

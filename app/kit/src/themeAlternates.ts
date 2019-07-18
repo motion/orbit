@@ -199,7 +199,7 @@ export const alternates: ThemeSet = {
       borderWidth: 0,
     }),
   flat: parent => {
-    const background = parent.background.inverseLightness(0.05).setAlpha(0.35)
+    const background = parent.background.inverseLighten(0.05).setAlpha(0.35)
     return {
       ...parent,
       color: parent.color,
@@ -207,7 +207,7 @@ export const alternates: ThemeSet = {
       background,
       backgroundHover: background,
       buttonBackground: background,
-      buttonBackgroundHover: background.inverseLightness(0.05),
+      buttonBackgroundHover: background.inverseLighten(0.05),
       backgroundFocus: background.darken(0.05),
       backgroundActive: background.darken(0.05),
       colorDisabled: parent.color.setAlpha(0.15),

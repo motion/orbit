@@ -186,14 +186,6 @@ const showQuickFind: Action = om => {
   om.actions.router.showAppPage({ id: 'quickFind' })
 }
 
-const toggleQuickFind: Action = om => {
-  if (om.state.router.isOnQuickFind) {
-    om.actions.router.closeDrawer()
-  } else {
-    om.actions.router.showAppPage({ id: 'quickFind' })
-  }
-}
-
 const isNumString = (x: number | string) => +x == x
 
 const closeDrawer: Action = om => {
@@ -293,7 +285,6 @@ export const actions = {
   back,
   forward,
   showQuickFind,
-  toggleQuickFind,
   closeDrawer,
 }
 

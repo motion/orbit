@@ -135,12 +135,13 @@ class GridStore {
 
       await sleep(50)
       // always re-calc from large and reset
+      const layout = this.layout || {}
       this.layout = {
-        lg: calculateLayout(items, columns, this.layout, 'lg'),
-        md: calculateLayout(items, columns, this.layout, 'md'),
-        sm: calculateLayout(items, columns, this.layout, 'sm'),
-        xs: calculateLayout(items, columns, this.layout, 'xs'),
-        xxs: calculateLayout(items, columns, this.layout, 'xxs'),
+        lg: calculateLayout(items, columns, layout, 'lg'),
+        md: calculateLayout(items, columns, layout, 'md'),
+        sm: calculateLayout(items, columns, layout, 'sm'),
+        xs: calculateLayout(items, columns, layout, 'xs'),
+        xxs: calculateLayout(items, columns, layout, 'xxs'),
       }
 
       // bugfix react-grid-layout see https://github.com/STRML/react-grid-layout/issues/933

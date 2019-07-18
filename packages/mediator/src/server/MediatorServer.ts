@@ -230,18 +230,9 @@ export class MediatorServer {
       ) {
         const subscription = result.subscribe(next => {
           if (next === undefined) {
-            resolveResult()
             console.log(
-              '---------------- GOT UNDEFIEND NEXT, WE NEED TO SEE TYPEORM WHY THIS HAPPENS ------',
+              '----- GOT UNDEFIEND NEXT, either typeorm or syncers fallback responding with no resolver? ------',
             )
-            // typeorm timing bug? going to retry...
-            subscription.unsubscribe()
-            setTimeout(() => {
-              this.subscriptions.push({
-                id: data.id,
-                subscription: result.subscribe(onSuccess),
-              })
-            })
           } else {
             onSuccess(next)
           }

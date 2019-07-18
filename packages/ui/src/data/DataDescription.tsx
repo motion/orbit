@@ -277,7 +277,7 @@ class ColorEditor extends Component<{
   render() {
     let colorInfo
     try {
-      colorInfo = toColor(this.props.value).rgbaObject()
+      colorInfo = toColor(this.props.value).toRgb()
     } catch (err) {
       console.warn('cant parse color', this.props.value, err)
       return <Fragment />
@@ -398,7 +398,7 @@ class DataDescriptionContainer extends Component<{
         return <NumberValue>{Number(val)}</NumberValue>
 
       case 'color': {
-        const colorInfo = toColor(val).rgbaObject()
+        const colorInfo = toColor(val).toRgb()
         if (colorInfo) {
           const { a, b, g, r } = colorInfo
           return [

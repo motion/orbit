@@ -18,8 +18,12 @@ export const MenuButton = ({ items, scrollable, children, ...rest }: MenuButtonP
   const height = useSurfaceHeight(rest.size)
   return (
     <Button sizePadding={0} space="sm" {...rest}>
-      <Space size="sm" />
-      <SimpleText>{children}</SimpleText>
+      {!!children && (
+        <>
+          <Space size="sm" />
+          <SimpleText>{children}</SimpleText>
+        </>
+      )}
       <Menu
         items={items}
         scrollable={scrollable}
@@ -31,7 +35,7 @@ export const MenuButton = ({ items, scrollable, children, ...rest }: MenuButtonP
             justifyContent="center"
             padding={[0, 'sm']}
           >
-            <BorderLeft top={4} bottom={4} />
+            {!!children && <BorderLeft top={4} bottom={4} />}
             <Icon size={12} name="caret-down" />
           </View>
         }

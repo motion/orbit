@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/color'
 import { isDefined } from '@o/utils'
-import { gloss, ThemeSelect } from 'gloss'
+import { Box, gloss, ThemeSelect } from 'gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -18,7 +18,7 @@ type Props = {
   subTheme?: ThemeSelect
 }
 
-export const Glint = gloss<Props>({
+export const Glint = gloss<Props>(Box, {
   pointerEvents: 'none',
   position: 'absolute',
   left: 0,
@@ -40,7 +40,7 @@ export const Glint = gloss<Props>({
   let glintColor = props.color || theme[themeProp]
   if (!isDefined(glintColor)) {
     if (isTop) {
-      glintColor = theme.glintColor || theme.color.alpha(0.25)
+      glintColor = theme.glintColor || theme.color.setAlpha(0.25)
     } else {
       glintColor = theme.backgroundStrong || theme.background.darken(0.1)
     }

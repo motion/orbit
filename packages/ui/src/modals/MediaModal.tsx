@@ -13,7 +13,7 @@ import { Modal, ModalProps } from './Modal'
 export const MediaModal = memo(
   ({ title, subTitle, onChangeOpen, closable, afterTitle, open, size, ...props }: ModalProps) => {
     const theme = useTheme()
-    const modalBackground = theme.overlayBackground || theme.background.darken(0.1).alpha(0.8)
+    const modalBackground = theme.overlayBackground || theme.background.darken(0.1).setAlpha(0.8)
     return (
       <Scale size={getSize(size)}>
         <Theme name="dark">

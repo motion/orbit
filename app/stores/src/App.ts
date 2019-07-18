@@ -8,6 +8,9 @@ import { getAppId } from './getAppId'
 
 export let App = null as AppStore
 
+// run before window changes
+const appId = getAppId()
+
 export type AppState = {
   id: number
   appProps: any // TODO
@@ -76,7 +79,7 @@ class AppStore {
   })
 
   get appId() {
-    return getAppId()
+    return appId
   }
 
   get appConf(): AppWindow {

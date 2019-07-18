@@ -3,7 +3,6 @@ import { ClearButton, sleep, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
 
-import { om } from '../../om/om'
 import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarousel'
@@ -123,9 +122,8 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
   const updateQuery = (next: string) => {
     const prev = queryStore.query
     if (!prev && next === '/') {
-      om.actions.router.toggleQuickFind()
+      console.warn('should move into search results mode')
     }
-    console.log('set query', next)
     setInputVal(next)
     queryStore.setQuery(next)
   }

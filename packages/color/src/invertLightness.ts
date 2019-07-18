@@ -1,7 +1,7 @@
 import { Color } from './color'
 
 export const invertLightness = (color: Color, percent: number) => {
-  const lightness = color.lightness()
+  const lightness = color.getLuminance()
   if (lightness === 50) {
     return color
   }
@@ -11,5 +11,5 @@ export const invertLightness = (color: Color, percent: number) => {
   const isLight = lightness > 50
   const direction = isLight ? -1 : 1
   const diff = Math.abs(lightness - 50) * percent
-  return color.lightness(lightness + direction * diff)
+  return color.lighten(lightness + direction * diff)
 }

@@ -388,9 +388,7 @@ export const OrbitAppsCarousel = memo(() => {
     ],
     async (next, { when, sleep }) => {
       await when(() => !appsCarouselStore.isAnimating)
-      console.log('wait for finish')
       await sleep(100)
-      console.log('now')
       return next
     },
     {
@@ -575,7 +573,11 @@ const OrbitAppCard = memo(
             ref={cardRef}
             borderWidth={0}
             background={
-              isFocusZoomed ? theme.sidebarBackgroundTransparent : theme.backgroundStronger
+              isFocusZoomed
+                ? definition.viewConfig && definition.viewConfig.transparentBackground
+                  ? theme.sidebarBackgroundTransparent
+                  : theme.backgroundStronger
+                : theme.backgroundStronger
             }
             borderRadius={isFocusZoomed ? 0 : 20}
             {...(isFocused

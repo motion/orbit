@@ -1,4 +1,4 @@
-import { colorNames } from './colorNames'
+import { names } from './css-color-names'
 import { ColorLike, ColorObject } from './types'
 
 export const toColorString = memoizeOne<string>(
@@ -68,13 +68,13 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
 }
 
 function isColorLikeString(str: string) {
-  if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
+  if (str[0] === '#') {
     return true
   }
   if (str.indexOf('rgb(') === 0 || str.indexOf('rgba(') === 0) {
     return true
   }
-  if (colorNames[str]) {
+  if (names[str]) {
     return true
   }
   return false
@@ -114,10 +114,6 @@ function getColorLikeLibraryValue(val: any) {
     res = val.css()
   } else if (typeof val.toCSS === 'function') {
     res = val.toCSS()
-  } else if (typeof val.rgba === 'function') {
-    res = val.rgba()
-  } else if (typeof val.rgb === 'function') {
-    res = val.rgb()
   }
-  return res
+  return res.toString ? res.toString() : res
 }

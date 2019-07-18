@@ -67,8 +67,7 @@ const darkAlternates: ThemeSet = {
 
 export const dark: ThemeObject = {
   alternates: darkAlternates,
-  backgroundZebra: background.lighten(0.2).alpha(0.35),
-  backgroundZebraHover: background.lighten(0.4).alpha(0.35),
+  backgroundZebra: background.lighten(0.2).setAlpha(0.35),
   backgroundStrongest,
   backgroundStronger,
   backgroundStrong,

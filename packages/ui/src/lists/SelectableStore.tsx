@@ -399,7 +399,6 @@ export class SelectableStore {
     if (!this.listRef) return
     if (index < 0) return
     if (!isDefined(index)) return
-    console.log('scroll to', index, this.listRef)
     if (index === 0) {
       // bugfix: alwaysselected would call scroll super early and react-window has a bug
       // where it would scroll down below 0px. perhaps due to not being measured yet right?

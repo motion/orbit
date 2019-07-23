@@ -73,7 +73,7 @@ function BitTitleBar({ bit }: { bit: Bit }) {
 
       <View flex={1} />
 
-      <Button alt="flat" size={1.4} circular icon="hand" tooltip="Drag to use in app" />
+      <Button alt="flat" size={1.2} circular icon="hand" tooltip="Drag to use in app" />
     </ToolbarChrome>
   )
 }

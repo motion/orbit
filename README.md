@@ -52,19 +52,38 @@ What we may want to do is split these a bit further:
 
 ```sh
 /app
-  /orbit               # empty for now, will eventually be our CLI
-  /orbit-cli           # CLI, because we may want `orbit` to be CLI + APIs
-  /orbit-app           # web app (webpack, electron loads it)
-  /orbit-desktop       # node process (runs server for oauth, runs a variety of backend services)
-  /orbit-electron      # electron process (one-per-window, controls electron windows and other state)
-  /orbit-syncers       # workers process, runs the apps node-processes
+  # for running the main app
+
+  /cli              # CLI, because we may want `orbit` to be CLI + APIs
+  /orbit            # empty for now, will eventually be our CLI
+  /orbit-app        # web app (webpack, electron loads it)
+  /orbit-desktop    # node process (runs server for oauth, runs a variety of backend services)
+  /build-server     # used by orbit-desktop to run webpack for apps
+  /orbit-electron   # electron process (one-per-window, controls electron windows and other state)
+  /orbit-syncers    # workers process, runs the apps node-processes
+  /config           # set on startup, config shared by all processes
   /kit              # The public facing APIs for building apps: higher level hooks, views and components that work together
+  /kit-internal     # "Private" kit for our internal use
   /models           # TypeORM models, shared by all apps ^^
   /services         # Oauth integration helpers (Github.getRepos, Drive.getFiles...)
   /stores           # Singleton *across all processess*, syncs deep reactive .state
   /orbit-repl       # Runs Puppeteer and hooks into all processes for debugging
   /oracle           # (inactive) OCR for reading screen, light OS level controller
   /model-bridge     # Lets us do observeOne/loadOne/commands/etc between processes
+  /libs-node        # Libraries shared by all node processes
+  /libs             # Libraries shared by all web processes
+
+  # mobile
+  /mobile           # as of now just experiment to get our UI kit running in react-native, on hold until react native better supports things, we should move off haul and onto their own packager once monorepo support.
+
+  # cloud
+  /api              # search / registry updating endpoints for publishing apps
+  /registry         # verdaccio registry (basically our own npm registry) so we have an index of all orbit apps published
+
+  # some things in ./app are from older attempts, not currently used:
+  /oracle           # realtime OCR system for mac desktop
+  /screen           # watches your screen for events and runs OCR
+  /orbit-dotapp     # experiment on making custom .app icons for each app
 
 /packages           # all packages we maintain
   # note: only documenting interesting packages, the rest extermely minor

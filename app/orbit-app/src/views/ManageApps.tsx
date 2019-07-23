@@ -38,7 +38,7 @@ export function ManageApps() {
   }
 
   return (
-    <Section title="Installed Apps" size="md" padding space="lg">
+    <Section title="Installed Apps" size="md" padding space="lg" scrollable="y">
       <SubSection padding={[true, 0]} title="View apps">
         {!viewApps.length && (
           <View height={200} position="relative">

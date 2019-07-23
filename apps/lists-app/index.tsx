@@ -22,6 +22,7 @@ export function ListsAppIndex(props: NavigatorProps) {
   useSearchState({
     onChange(search) {
       if (search.query.length) {
+        debugger
         treeList.actions.addFolder(search.query)
       }
     },
@@ -33,6 +34,7 @@ export function ListsAppIndex(props: NavigatorProps) {
         use={treeList}
         sortable
         alwaysSelected
+        selectable="multi"
         onSelect={props.selectItems}
         itemProps={{
           editable: true,

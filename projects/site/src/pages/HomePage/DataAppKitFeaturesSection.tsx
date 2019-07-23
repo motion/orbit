@@ -5,7 +5,7 @@ import orbits from '../../../public/images/orbits.svg'
 import { useIsTiny, useScreenHeight, useScreenSize } from '../../hooks/useScreenSize'
 import { linkProps } from '../../LinkState'
 import { useSiteStore } from '../../SiteStore'
-import { FadeChild, fadeLeftProps, useFadePage } from '../../views/FadeIn'
+import { FadeChild, fadeLeftProps, fadeRightProps, useFadePage } from '../../views/FadeIn'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
 import { PillButton } from '../../views/PillButton'
@@ -67,7 +67,8 @@ export default memo(function DataAppKitFeaturesSection() {
                 </FadeChild>
                 <TitleTextSub>
                   <FadeChild delay={200}>
-                    Every app exposes data - in GraphQL and TypeScript.
+                    Every app exposes data - in GraphQL and TypeScript. Every view shows data
+                    naturally. Plug in data sources, move data between apps with a click.
                     {screen !== 'small' && <br />}
                     &nbsp;Link them together with a line of code.
                   </FadeChild>
@@ -251,7 +252,7 @@ export default memo(function DataAppKitFeaturesSection() {
 })
 
 const Integration = memoIsEqualDeep(({ icon, title, index, ...props }: any) => (
-  <FadeChild {...fadeLeftProps} delay={index * 50 + 100}>
+  <FadeChild {...(index % 1 == 0 ? fadeLeftProps : fadeRightProps)} delay={index * 50 + 100}>
     <View
       userSelect="none"
       height={150}

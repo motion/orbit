@@ -8,4 +8,4 @@ export const isBrowser = !isNode && !isNative
 export const isWebkit =
   typeof document !== 'undefined' && 'webkitLineBreak' in document.documentElement.style
 
-export const defaultSortPressDelay = 200
+export const defaultSortPressDelay = 350

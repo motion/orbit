@@ -76,7 +76,8 @@ const nullFn = () => null
 export const List = memo(
   forwardRef<SelectableStore, ListProps>((allProps, ref) => {
     const [collapseProps, allListProps] = splitCollapseProps(allProps)
-    const extraOnSelect = useContext(PropsContext.Context).onSelect
+    const extraPropsContext = useContext(PropsContext.Context)
+    const extraOnSelect = extraPropsContext && extraPropsContext.onSelect
     const props = useListProps(allListProps)
     const getProps = useGet(props)
     const {

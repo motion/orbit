@@ -943,11 +943,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@ctrl/tinycolor@2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-2.5.3.tgz#65dbb773f3a7e9a37b88ea0a5b68a392f8a447b0"
-  integrity sha512-tu0Xqhz0AI5LoU2yyz4asVAev4hzWt30dutbY6Nu7pKvLX0JP5p6NJ5uomwC/blhLMk88hVgXRODFlTB+c03Nw==
-
 "@emotion/babel-utils@^0.6.4":
   version "0.6.10"
   resolved "https://registry.yarnpkg.com/@emotion/babel-utils/-/babel-utils-0.6.10.tgz#83dbf3dfa933fae9fc566e54fbb45f14674c6ccc"

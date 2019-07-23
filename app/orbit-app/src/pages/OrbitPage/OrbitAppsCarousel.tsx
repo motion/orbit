@@ -510,6 +510,8 @@ const OrbitAppCard = memo(
 
     const mouseDown = useRef(-1)
 
+    const cardBoxShadow = [15, 30, 120, [0, 0, 0, theme.background.isDark() ? 0.5 : 0.25]]
+
     // wrapping with view lets the scale transform not affect the scroll, for some reason this was happening
     // i thought scale transform doesnt affect layout?
     return (
@@ -584,13 +586,13 @@ const OrbitAppCard = memo(
               ? {
                   boxShadow: [
                     [0, 0, 0, 3, theme.alternates!.selected['background']],
-                    [0, 0, 30, [0, 0, 0, 0.5]],
+                    cardBoxShadow,
                   ],
                 }
               : {
-                  boxShadow: [[0, 0, 10, [0, 0, 0, 0.5]]],
+                  boxShadow: [cardBoxShadow],
                 })}
-            transition="box-shadow 200ms ease, background 300ms ease"
+            transition="background 300ms ease"
             {...cardProps}
           >
             <AppLoadingScreen definition={definition} app={app} visible={!store.shouldRender} />

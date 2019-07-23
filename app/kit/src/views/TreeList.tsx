@@ -202,7 +202,9 @@ const deriveState = (state: TreeStateStatic, userState: TreeUserState): TreeStat
   return {
     ...state,
     currentItem,
-    currentItemChildren: currentItem.children.map(x => state.items[x]).filter(Boolean),
+    currentItemChildren: ((currentItem && currentItem.children) || [])
+      .map(x => state.items[x])
+      .filter(Boolean),
     history: userState.depth.map(item => state.items[item.id]),
   }
 }
@@ -293,6 +295,8 @@ function TreeListInner(props: TreeListProps) {
   const getOnChange = useGet(onChange)
 
   useEffect(() => {
+    if (!currentItem) return
+
     let cancel = false
     Promise.all(items[currentItem.id].children.map(id => loadTreeListItemProps(items[id]))).then(
       next => {
@@ -304,7 +308,7 @@ function TreeListInner(props: TreeListProps) {
     return () => {
       cancel = true
     }
-  }, [items, currentItem.id])
+  }, [items, currentItem && currentItem.id])
 
   // onChange callback
   const ignoreInitial = useRef(true)

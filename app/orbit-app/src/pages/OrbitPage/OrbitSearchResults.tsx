@@ -9,6 +9,29 @@ import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class SearchResultsStore {
+  props: {
+    searchStore: SearchStore
+  }
+
+  searchState = null
+
+  setSearchState = next => {
+    this.searchState = next
+  }
+
+  updateSearchResultsStore = react(
+    () => this.searchState,
+    async (next, { when }) => {
+      await when(() => this.isActive)
+      await when(() => !appsCarouselStore.isAnimating)
+      this.props.searchStore.setSearchState(next)
+    },
+  )
+
+  get isActive() {
+    return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
+  }
+
   rows: ListItemProps[] = []
 
   setRows(rows: ListItemProps[]) {
@@ -56,18 +79,17 @@ class SearchResultsStore {
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
   const appsDrawer = appsDrawerStore.useStore()
-  const searchResultsStore = useStore(SearchResultsStore)
-  const carousel = useAppsCarousel()
   const searchStore = SearchStore.useStore()!
+  const searchResultsStore = useStore(SearchResultsStore, { searchStore })
+  const isActive = searchResultsStore.isActive
+  const carousel = useAppsCarousel()
   const listRef = useRef<SelectableStore>(null)
 
   window['searchStore'] = searchStore
 
   useSearchState({
     includePrefix: true,
-    onChange: state => {
-      searchStore.setSearchState(state)
-    },
+    onChange: searchResultsStore.setSearchState,
   })
 
   const carouselProps: FullScreenProps = carousel.zoomedIn
@@ -144,8 +166,6 @@ export const OrbitSearchResults = memo(() => {
       }
     },
   )
-
-  const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
 
   return (
     <ProvideVisibility visible={isActive}>

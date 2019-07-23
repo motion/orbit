@@ -98,8 +98,9 @@ export const fromStyles = <A extends Partial<SimpleStyleObject>>(s: A): ThemeObj
   if (!s.background && !s.color) {
     throw new Error('Themes require at least background or color')
   }
-  const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color!))
-
+  const backgroundColored = s.background
+    ? toColor((s as any).background)
+    : opposite(toColor((s as any).color!))
   // some handy basic styles
   const base = colorize({
     background: backgroundColored,

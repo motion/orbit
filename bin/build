@@ -2,10 +2,9 @@
 
 . $(dirname $0)/__/common
 
-echo "you may want to just run this with vscode directly (cmd+ctrl+b > tsc: watch)"
-
 if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
+  echo "... you can run this with vscode directly (cmd+ctrl+b > tsc: watch) to avoid multiple build processess"
   if [ "$1" = "--watch" ]; then
     ./node_modules/.bin/tsc -b -w --preserveWatchOutput ${@:2}
     echo "RAN WATCH"

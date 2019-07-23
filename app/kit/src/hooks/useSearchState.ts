@@ -3,7 +3,6 @@ import { ensure, useReaction } from '@o/use-store'
 
 import { QueryStore } from '../stores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
-import { ignoreFirstWord } from '../stores/QueryStore'
 import { useStoresSimple } from './useStores'
 
 export type SearchState = {
@@ -17,12 +16,12 @@ export type SearchState = {
   clearQuery: QueryStore['clearQuery']
 }
 
-const getSearchState = (queryStore: QueryStore, includePrefix?: boolean): SearchState => {
+const getSearchState = (queryStore: QueryStore, includePrefix: boolean = false): SearchState => {
   const { queryFilters } = queryStore
   return {
     // state
     filters: queryFilters,
-    query: includePrefix ? queryFilters.activeQuery : ignoreFirstWord(queryFilters.activeQuery),
+    query: includePrefix ? queryFilters.activeQuery : queryStore.queryWithoutPrefix,
     dateState: queryFilters.dateState,
     toggleFilterActive: queryFilters.toggleFilterActive,
     activeFilters: queryFilters.activeFilters,
@@ -41,7 +40,7 @@ const getSearchState = (queryStore: QueryStore, includePrefix?: boolean): Search
 export function useSearchState({
   onChange,
   onEvent = 'keypress',
-  includePrefix = false,
+  includePrefix,
 }: {
   onChange?: (state: SearchState) => any
   onEvent?: 'keypress' | 'enter'
@@ -49,6 +48,7 @@ export function useSearchState({
 } = {}) {
   const { queryStore } = useStoresSimple()
   const getVis = useGetVisibility()
+
   return useReaction(
     () => {
       if (getVis() === false) {
@@ -77,7 +77,7 @@ export function useSearchState({
     {
       name: 'useSearchState',
     },
-    [includePrefix, onChange, onEvent],
+    [includePrefix, onEvent],
   )
 }
 

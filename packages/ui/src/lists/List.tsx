@@ -210,6 +210,8 @@ export const List = memo(
       [words],
     )
 
+    console.log('items are', filtered.results)
+
     const children = (
       <SelectableStoreProvider value={selectableStore}>
         <ProvideHighlight {...highlightValue}>

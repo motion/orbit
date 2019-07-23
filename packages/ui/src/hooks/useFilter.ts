@@ -23,8 +23,8 @@ export type UseFilterProps<A> = {
   /** Function to determine sort order of items, should return a string determining sort order */
   sortBy?: (item: A) => string
 
-  /** The property on item to use for search filtering */
-  filterKey?: string
+  /** The properties on item to use for search filtering */
+  filterKeys?: string[]
 
   /** Will remove the string from the front of your search, optionally, on filter */
   removePrefix?: string
@@ -40,8 +40,8 @@ export type UseFilterProps<A> = {
 }
 
 export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
-  const filterKey = props.filterKey || 'title'
   const items = props.items || []
+  const filterKeys = props.filterKeys || ['title']
   const initialQuery = useRef(true)
   const activeQuery = useActiveSearchQuery({
     disabled: isDefined(props.query) || !props.searchable,
@@ -79,10 +79,10 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   // TODO this could be a lot more flexible, also see nextapps.de search on github
   const searchIndex = useMemo(() => {
     if (props.searchable) {
-      return items.map(item => item[filterKey])
+      return sortedItems.map(item => filterKeys.map(key => (item.item || item)[key]).join(' '))
     }
     return []
-  }, [items, props.searchable])
+  }, [sortedItems, props.searchable, ...filterKeys])
 
   // THEN FILTER
 
@@ -109,7 +109,7 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   const shouldGroup = filteredItems.length > (props.groupMinimum || 0)
 
   // handle groupByLetter boolean
-  let getGroupProps = shouldGroup && props.groupByLetter && groupByFirstLetter(filterKey)
+  let getGroupProps = shouldGroup && props.groupByLetter && groupByFirstLetter(filterKeys[0])
 
   // handle groupBy function
   if (shouldGroup && props.groupBy) {

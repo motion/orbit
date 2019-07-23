@@ -1,5 +1,5 @@
 import { AppBit, ensure, HighlightActiveQuery, react, useReaction, useSearchState, useStore } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
+import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useGet, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
@@ -61,12 +61,17 @@ export const OrbitSearchResults = memo(() => {
   const searchStore = SearchStore.useStore()!
   const listRef = useRef<SelectableStore>(null)
 
+  const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
+  const getIsActive = useGet(isActive)
+
   window['searchStore'] = searchStore
 
   useSearchState({
     includePrefix: true,
     onChange: state => {
-      searchStore.setSearchState(state)
+      if (getIsActive()) {
+        searchStore.setSearchState(state)
+      }
     },
   })
 
@@ -144,8 +149,6 @@ export const OrbitSearchResults = memo(() => {
       }
     },
   )
-
-  const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
 
   return (
     <ProvideVisibility visible={isActive}>

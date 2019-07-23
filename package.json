@@ -10,6 +10,7 @@
     ]
   },
   "scripts": {
+    "bootstrap": "./bin/bootstrap",
     "watch": "source .env && build --watch",
     "clean": "source .env && clean",
     "clean:packages": "source .env && clean --all",

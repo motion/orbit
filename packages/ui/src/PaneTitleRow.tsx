@@ -25,7 +25,12 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
   const toggle = useCollapse(collapseProps)
   return (
     <Scale size={0.85}>
-      <PanelHeader padding="sm" subTheme="panelHeader" space="xs" onDoubleClick={toggle.toggle}>
+      <PanelHeader
+        padding="sm"
+        subTheme="panelHeader"
+        space="xs"
+        onDoubleClick={toggle.isCollapsable && toggle.toggle}
+      >
         <BorderTop opacity={0.5} />
         {before}
         {collapseProps.collapsable && <CollapseArrow {...collapseProps} />}

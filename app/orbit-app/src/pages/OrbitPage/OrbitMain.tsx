@@ -64,7 +64,6 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
 
 const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>(Box, {
   flex: 1,
-  overflowY: 'auto',
 }).theme((props, theme) => ({
   background: props.transparent
     ? 'transparent'

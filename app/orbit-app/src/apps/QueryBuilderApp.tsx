@@ -460,8 +460,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             }
           />
 
-          <Card padding elevation={3} height={24 * 3 + 16 * 2}>
-            <MonacoEditor noGutter readOnly value={queryBuilder.preview} />
+          <Card elevation={3} height={24 * 3 + 16 * 2}>
+            <MonacoEditor padding noGutter readOnly value={queryBuilder.preview} />
           </Card>
 
           <Title size="xs">Output</Title>
@@ -486,6 +486,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             scrollable="y"
             padding
             resizable
+            collapsable
+            debug
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -496,11 +498,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding flex={2} space>
+          <Pane title="Explore API" scrollable="y" padding flex={2} space collapsable>
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
                 <CardSimple
+                  space
                   key={key}
                   title={info.name}
                   onClick={() => {
@@ -571,11 +574,11 @@ const ArgumentField = memo(
         <Card
           transition="all ease 300ms"
           opacity={isActive ? 1 : 0.35}
-          padding
           elevation={1}
           height={24 * numLines + /* padding */ 16 * 2}
         >
           <MonacoEditor
+            padding
             // not controlled
             noGutter
             value={queryBuilder.arguments[index]}

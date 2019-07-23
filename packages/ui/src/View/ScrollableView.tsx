@@ -46,7 +46,7 @@ export const ScrollableView = forwardRef(function ScrollableView(props: Scrollab
 
   // we may want to memo this, need to test if add/remove padding will cause remounts
   let content = children
-  const hasPadding = isDefined(padding)
+  const hasPadding = Array.isArray(padding) ? padding.some(Boolean) : !!padding
 
   const isWrapped = viewPropsRaw.flexWrap === 'wrap'
   const viewProps = {

@@ -44,6 +44,7 @@ export const SizablePane = memo(
     let element = null
     let sizeProps: any = {
       [type === 'row' ? 'width' : 'height']: 'auto',
+      flex,
     }
     let borderElement = null
 
@@ -53,14 +54,16 @@ export const SizablePane = memo(
       }
       if (size !== -1) {
         sizeProps = {
+          ...sizeProps,
           width: size,
           minWidth: flexSize * 0.5,
-          maxWidth: flexSize * 1.5,
+          maxWidth: props.parentSize,
         }
       }
       if (collapsed) {
         sizeProps = {
           ...sizeProps,
+          flex: 'none',
           // "rows" collapsing would be odd
           // minWidth: 'auto',
           // width: 'auto',
@@ -72,9 +75,10 @@ export const SizablePane = memo(
       }
       if (size !== -1) {
         sizeProps = {
+          ...sizeProps,
           minHeight: flexSize * 0.5,
           height: size,
-          maxHeight: flexSize * 1.5,
+          maxHeight: props.parentSize,
         }
       }
       if (collapsed) {
@@ -82,6 +86,7 @@ export const SizablePane = memo(
           ...sizeProps,
           minHeight: 'auto',
           height: 'auto',
+          flex: 'none',
         }
       }
     }
@@ -92,27 +97,26 @@ export const SizablePane = memo(
       const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
       element = (
         <Interactive
-          data-is="SizablePane"
+          data-is="SizablePane-Interactive"
           overflow="hidden"
           resizable={resizableProp}
           onResize={useCallback((w, h) => setSize(type === 'row' ? w : h), [type])}
-          {...sizeProps}
           {...props}
+          {...sizeProps}
         >
           {borderElement}
           {childElement}
         </Interactive>
       )
     } else {
-      const isLast = props.index === total - 1
+      // const isLast = props.index === total - 1
       element = (
         <PaneChrome
-          data-is="SizablePane"
-          flex={typeof flex === 'undefined' && isLast ? 1 : flex}
+          data-is="SizablePane-PaneChrome"
+          {...props}
           {...sizeProps}
           maxWidth="100%"
           maxHeight="100%"
-          {...props}
         >
           {borderElement}
           {childElement}

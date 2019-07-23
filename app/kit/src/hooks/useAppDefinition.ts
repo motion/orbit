@@ -43,7 +43,6 @@ function createResource(fetch: any) {
 }
 
 const ApiDefSearch = createResource((identifier: string) => {
-  console.log('identifier', identifier)
   return fetch(`https://tryorbit.com/api/apps/${identifier}`).then(res => res.json())
 })
 
@@ -77,6 +76,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): any | nu
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
         workers: !!searchedApp.features.some(x => x === 'workers') ? [] : undefined,
         setup: searchedApp.setup,
+        auth: searchedApp.features.some(x => x === 'auth') ? 'auth' : undefined,
       }
 }
 

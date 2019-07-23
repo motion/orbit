@@ -47,7 +47,7 @@ export function AppsMainAddAppContent({
   )
 
   let error = ''
-  let def: AppDefinition = localDef
+  let def: AppDefinition | null = localDef
 
   if (fullSetupDef && 'error' in fullSetupDef) {
     error = fullSetupDef.error

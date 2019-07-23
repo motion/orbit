@@ -282,7 +282,7 @@ class QueryBuilderStore {
   syncQueryState = react(() => this.hooks.query, this.setQuery)
 
   saveQuery = () => {
-    this.hooks.setQuery(this.query)
+    this.hooks.setQuery(() => this.query)
   }
 
   setMethod(next: string) {
@@ -436,7 +436,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const hasApiInfo = !!meta && !!apiInfo
 
   useEffect(() => {
-    queryBuilder.setMethod(method)
+    console.log('setting method', method)
+    queryBuilder.setMethod(`${method}`)
   }, [method])
 
   if (!hasApiInfo) {

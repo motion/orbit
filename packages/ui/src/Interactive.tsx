@@ -51,7 +51,7 @@ const ALL_RESIZABLE: ResizableSides = {
 
 export type InteractiveProps = Omit<
   ViewProps,
-  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left'
+  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left' | 'flex'
 > & {
   position?: string
   disabled?: boolean
@@ -94,6 +94,7 @@ export type InteractiveProps = Omit<
   style?: Record<string, any>
   className?: string
   children?: any
+  flex?: number | string
 }
 
 type InteractiveState = {
@@ -615,6 +616,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       position,
       right,
       pointerEvents,
+      flex,
       ...props
     } = this.props
     const { resizingSides } = this.state
@@ -668,6 +670,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
           position={position as any}
           pointerEvents={pointerEvents as any}
           style={style}
+          flex={flex}
         >
           <InteractiveContainer
             hidden={this.props.hidden}

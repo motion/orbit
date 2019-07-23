@@ -54,9 +54,9 @@ const ClipboardAppIndex = memo(() => {
   return (
     <List
       alwaysSelected
+      title="Clipboard"
       selectable
       itemProps={{
-        small: true,
         draggable: true,
       }}
       items={items ? listItemNiceNormalize(items) : null}

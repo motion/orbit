@@ -217,7 +217,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       borderWidth={bordered ? 1 : 0}
       margin={margin}
       noInnerElement
-      flex={flex}
+      // scrollable section wont scroll if no flex, see ManageApps
+      flex={selectDefined(flex, !!scrollable ? 1 : undefined)}
       background={background || 'transparent'}
       // in case they change fast
       style={{

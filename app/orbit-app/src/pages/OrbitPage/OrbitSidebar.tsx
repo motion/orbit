@@ -38,6 +38,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
           selectable
           searchable
           itemProps={{ iconBefore: true, iconSize: 26 }}
+          titleScale={0.75}
         >
           {props.children}
         </ListPassProps>

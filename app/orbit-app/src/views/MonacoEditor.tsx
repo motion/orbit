@@ -3,7 +3,7 @@ import * as monaco from 'monaco-editor'
 import React, { useEffect, useRef } from 'react'
 
 export type MonacoEditorProps = monaco.editor.IEditorConstructionOptions &
-  Pick<ViewProps, 'width' | 'height'> & {
+  Pick<ViewProps, 'width' | 'height' | 'padding'> & {
     onChange?: (value: string, event: monaco.editor.IModelContentChangedEvent) => void
     noGutter?: boolean
   }
@@ -17,34 +17,38 @@ const noGutterProps: any = {
   lineNumbersMinChars: 0,
 }
 
-export function MonacoEditor({ width, height, noGutter, ...props }: MonacoEditorProps) {
+export function MonacoEditor({ width, height, noGutter, padding, ...props }: MonacoEditorProps) {
   const node = useRef(null)
   const ed = useRef<monaco.editor.IStandaloneCodeEditor>(null)
   const theme = useTheme()
   const monacoTheme = props.theme || (theme.background.isDark() ? 'vs-dark' : 'vs-light')
+  const background = monacoTheme === 'vs-dark' ? '#1e1e1e' : '#fff'
   const preventUpdate = useRef(false)
 
   useOnMount(() => {
-    const editor = monaco.editor.create(node.current, {
+    const editor = monaco.editor.create(node.current!, {
       ...props,
       theme: monacoTheme,
       ...(noGutter && noGutterProps),
     })
 
+    // @ts-ignore
     ed.current = editor
   })
 
   useEffect(() => {
     preventUpdate.current = true
-    ed.current.setValue(props.value)
+    ed.current!.setValue(props.value!)
     preventUpdate.current = false
   }, [props.value])
 
   useEffect(() => {
-    const disposer = ed.current.onDidChangeModelContent(event => {
-      const value = ed.current.getValue()
+    const disposer = ed.current!.onDidChangeModelContent(event => {
+      const value = ed.current!.getValue()
       if (!preventUpdate.current) {
-        props.onChange(value, event)
+        if (props.onChange) {
+          props.onChange(value, event)
+        }
       }
     })
     return () => {
@@ -57,10 +61,20 @@ export function MonacoEditor({ width, height, noGutter, ...props }: MonacoEditor
   }, [monacoTheme])
 
   useEffect(() => {
-    ed.current.layout()
+    ed.current!.layout()
   }, [width, height])
 
-  return <View ref={node} position="relative" overflow="hidden" width={width} height={height} />
+  return (
+    <View
+      background={background}
+      ref={node}
+      position="relative"
+      overflow="hidden"
+      width={width}
+      height={height}
+      padding={padding}
+    />
+  )
 }
 
 const defaults: MonacoEditorProps = {

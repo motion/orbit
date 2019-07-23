@@ -63,7 +63,7 @@ export const Card = forwardRef(function Card(props: CardProps, ref) {
     <Theme alt={isSelected ? 'selected' : alt || null}>
       <SizedSurface
         ref={ref}
-        className="ui-card-surface"
+        data-is="Card"
         borderWidth={1}
         overflow={isDefined(scrollable, maxHeight) ? 'hidden' : 'hidden'}
         flex={

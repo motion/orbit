@@ -21,7 +21,7 @@ export function Document(rawProps: DocumentProps) {
   return (
     <>
       <Title>{title}</Title>
-      <HighlightText>{body}</HighlightText>
+      <HighlightText whiteSpace="pre-line">{body}</HighlightText>
     </>
   )
 }

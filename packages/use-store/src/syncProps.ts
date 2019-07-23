@@ -5,13 +5,14 @@ export const syncFromProp = (
   props: any,
   options: {
     key: string
-    defaultKey: string
     defaultValue: any
+    defaultKey?: string
     normalize?: (a: any) => any
   },
 ) => {
   const normalize = options.normalize || idFn
-  const getValue = () => selectDefined(props[options.key], props[options.defaultKey])
+  const getValue = () =>
+    selectDefined(props[options.key], options.defaultKey ? props[options.defaultKey] : undefined)
   return react(() => getValue(), normalize, {
     defaultValue: normalize(selectDefined(getValue(), options.defaultValue)),
   })

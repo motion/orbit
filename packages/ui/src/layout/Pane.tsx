@@ -29,6 +29,7 @@ export const Pane = memo((props: PaneProps) => {
       spaceAround,
       flexDirection,
       above,
+      flex = 1,
       below,
       ...sizablePaneProps
     },
@@ -36,7 +37,7 @@ export const Pane = memo((props: PaneProps) => {
   const toggle = useCollapse(collapseProps)
   const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
-    <SizablePane {...sizablePaneProps} collapsed={toggle.val}>
+    <SizablePane {...sizablePaneProps} collapsed={toggle.val} flex={flex}>
       {hasTitle && (
         <PaneTitleRow
           title={title}

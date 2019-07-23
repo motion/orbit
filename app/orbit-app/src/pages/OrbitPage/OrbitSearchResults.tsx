@@ -159,7 +159,6 @@ export const OrbitSearchResults = memo(() => {
       if (listRef.current && listIndex > -1) {
         if (listRef.current.activeIndex !== listIndex) {
           ignoreNextSelect.current = true
-          console.log('set active index from reaction', listIndex)
           await sleep(70)
           listRef.current.setActiveIndex(listIndex)
         }

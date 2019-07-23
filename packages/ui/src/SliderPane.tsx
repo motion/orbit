@@ -65,6 +65,7 @@ export const SliderPane = memo(
           padding={[verticalPad, framePad, verticalPad]}
           isActive={isActive}
           display={display}
+          debug
           {...props}
         >
           {children}

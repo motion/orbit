@@ -1,4 +1,4 @@
-import { App, AppViewProps, command, createApp, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useStore, useTreeList } from '@o/kit'
+import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useHooks, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
 import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
@@ -11,14 +11,14 @@ import { NavigatorProps, StackNavigator, StackNavigatorStore, useCreateStackNavi
 
 export default createApp({
   id: 'query-builder',
-  name: 'Queries',
+  name: 'Query Builder',
   icon: 'layers',
-  app: QueryBuilder,
+  app: QueryBuilderApp,
 })
 
 const treeId = 'query-builder4'
 
-function QueryBuilder() {
+function QueryBuilderApp() {
   const om = useOm()
   const dataApps = useActiveDataApps()
   const [items, setItems] = useState<any[]>([])
@@ -240,88 +240,6 @@ function QueryBuilderSelectApp(props: AppViewProps & NavigatorProps) {
   )
 }
 
-const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
-  const [mode] = useState<'api' | 'graph'>('api')
-  const [showSidebar, setShowSidebar] = useState(true)
-  const [, def] = useAppWithDefinition(+props.id!)
-
-  if (!def) {
-    return null
-  }
-
-  return (
-    <Section
-      flex={1}
-      titlePadding
-      backgrounded
-      titleBorder
-      title={props.title}
-      beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
-      titleProps={{
-        editable: true,
-        autoselect: true,
-        onFinishEdit: (val: string) => {
-          console.log('should persist new title', val)
-        },
-      }}
-      subTitle={props.subTitle}
-      icon={def.icon}
-      afterTitle={
-        <>
-          <Labeled>
-            <Labeled.Item>
-              <Button
-                defaultActive
-                onChangeActive={setShowSidebar}
-                tooltip="Toggle Explore API sidebar"
-                icon="panel-stats"
-              />
-            </Labeled.Item>
-            <Labeled.Text>Sidebar</Labeled.Text>
-          </Labeled>
-
-          <SeparatorVertical height={40} />
-
-          <Labeled>
-            <Labeled.Item group>
-              <Tabs TabComponent={Button} defaultActive="0">
-                <Tab key="0" icon="code" />
-                <Tab key="1" icon="layout" />
-              </Tabs>
-              {/* <Button tooltip="API" icon="code" />
-              <Button tooltip="Graph" icon="layout" /> */}
-            </Labeled.Item>
-            <Labeled.Text>Query</Labeled.Text>
-          </Labeled>
-
-          <SeparatorVertical height={40} />
-
-          <Button alt="action">Save</Button>
-        </>
-      }
-    >
-      <Suspense fallback={null}>
-        {mode === 'api' ? (
-          <APIQueryBuild id={+props.id!} showSidebar={showSidebar} />
-        ) : (
-          <GraphQueryBuild id={+props.id!} />
-        )}
-      </Suspense>
-    </Section>
-  )
-})
-
-function useAppMeta(identifier: string) {
-  return (
-    useCommand(AppMetaCommand, { identifier }) || {
-      packageId: '',
-      directory: '',
-      packageJson: {},
-      apiInfo: {},
-    }
-  )
-}
-
 const defaultValues = {
   string: '',
   number: '0',
@@ -337,33 +255,53 @@ type PlaceHolder = {
 class QueryBuilderStore {
   // @ts-ignore
   props: {
+    id: number
     appId: number
     appIdentifier: string
-    method: string
   }
 
+  private hooks = useHooks(() => {
+    const [query, setQuery] = useAppState(`query-${this.props.id}`, '')
+    return {
+      query,
+      setQuery,
+    }
+  }, this)
+
+  method = ''
   placeholders: PlaceHolder[] = []
   arguments: any[] = []
   result = null
-  preview = ''
   argumentsVersion = 0
+  query = ''
 
-  updateMethod = react(
-    () => this.props.method,
-    () => {
-      this.arguments = []
-      this.argumentsVersion++
-      this.placeholders = []
-    },
-  )
+  setQuery = (next: string) => {
+    this.query = next
+  }
 
-  updatePreview = react(
+  syncQueryState = react(() => this.hooks.query, this.setQuery)
+
+  saveQuery = () => {
+    this.hooks.setQuery(() => this.query)
+  }
+
+  setMethod(next: string) {
+    this.method = next
+    this.arguments = []
+    this.argumentsVersion++
+    this.placeholders = []
+  }
+
+  updateQuery = react(
     () => this.argumentsVersion,
     async (_, { sleep }) => {
       await sleep(500)
-      this.preview = `${this.props.method}(${this.resolvedArguments()
-        .map(argToVal)
-        .join(', ')})`
+      console.log('set query', this.resolvedArguments())
+      // this.setQuery(
+      //   `${this.props.method}(${this.resolvedArguments()
+      //     .map(argToVal)
+      //     .join(', ')})`,
+      // )
     },
   )
 
@@ -388,24 +326,119 @@ class QueryBuilderStore {
     this.result = await command(CallAppBitApiMethodCommand, {
       appId: this.props.appId,
       appIdentifier: this.props.appIdentifier,
-      method: this.props.method,
+      method: this.method,
       args: this.resolvedArguments(),
     })
   }
 }
 
+const QueryBuilder = createStoreContext(QueryBuilderStore)
+
+const QueryBuilderQueryEdit = memo((props: AppViewProps & NavigatorProps) => {
+  const id = +props.id! || -1
+  const [app, def] = useAppWithDefinition(id)
+  const [mode] = useState<'api' | 'graph'>('api')
+  const [showSidebar, setShowSidebar] = useState(true)
+  const queryBuilder = QueryBuilder.useCreateStore({
+    id,
+    appId: app!.id!,
+    appIdentifier: def!.id!,
+  })
+
+  if (!def) {
+    return null
+  }
+
+  return (
+    <QueryBuilder.SimpleProvider value={queryBuilder}>
+      <Section
+        flex={1}
+        titlePadding
+        backgrounded
+        titleBorder
+        title={props.title}
+        beforeTitle={<Button chromeless icon="chevron-left" onClick={props.navigation.back} />}
+        titleProps={{
+          editable: true,
+          autoselect: true,
+          onFinishEdit: (val: string) => {
+            console.log('should persist new title', val)
+          },
+        }}
+        subTitle={props.subTitle}
+        icon={def.icon}
+        afterTitle={
+          <>
+            <Labeled>
+              <Labeled.Item>
+                <Button
+                  defaultActive
+                  onChangeActive={setShowSidebar}
+                  tooltip="Toggle Explore API sidebar"
+                  icon="panel-stats"
+                />
+              </Labeled.Item>
+              <Labeled.Text>Sidebar</Labeled.Text>
+            </Labeled>
+
+            <SeparatorVertical height={40} />
+
+            <Labeled>
+              <Labeled.Item group>
+                <Tabs TabComponent={Button} defaultActive="0">
+                  <Tab key="0" icon="code" />
+                  <Tab key="1" icon="layout" />
+                </Tabs>
+                {/* <Button tooltip="API" icon="code" />
+                <Button tooltip="Graph" icon="layout" /> */}
+              </Labeled.Item>
+              <Labeled.Text>Query</Labeled.Text>
+            </Labeled>
+
+            <SeparatorVertical height={40} />
+
+            <Button alt="action" onClick={queryBuilder.saveQuery}>
+              Save
+            </Button>
+          </>
+        }
+      >
+        <Suspense fallback={null}>
+          {mode === 'api' ? (
+            <APIQueryBuild id={+props.id!} showSidebar={showSidebar} />
+          ) : (
+            <GraphQueryBuild id={+props.id!} />
+          )}
+        </Suspense>
+      </Section>
+    </QueryBuilder.SimpleProvider>
+  )
+})
+
+function useAppMeta(identifier: string) {
+  return (
+    useCommand(AppMetaCommand, { identifier }) || {
+      packageId: '',
+      directory: '',
+      packageJson: {},
+      apiInfo: {},
+    }
+  )
+}
+
 const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
-  const [app, def] = useAppWithDefinition(+props.id)
+  const queryBuilder = QueryBuilder.useStore()!
+  const [, def] = useAppWithDefinition(+props.id)
   const meta = useAppMeta(def!.id)
   const apiInfo = meta.apiInfo || {}
   const allMethods = Object.keys(apiInfo)
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
-  const queryBuilder = useStore(QueryBuilderStore, {
-    method: method ? method.name : '',
-    appId: app!.id!,
-    appIdentifier: def!.id!,
-  })
   const hasApiInfo = !!meta && !!apiInfo
+
+  useEffect(() => {
+    console.log('setting method', method)
+    queryBuilder.setMethod(`${method}`)
+  }, [method])
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
@@ -460,8 +493,14 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             }
           />
 
-          <Card padding elevation={3} height={24 * 3 + 16 * 2}>
-            <MonacoEditor noGutter readOnly value={queryBuilder.preview} />
+          <Card elevation={3} height={24 * 3 + 16 * 2}>
+            <MonacoEditor
+              onChange={queryBuilder.setQuery}
+              padding
+              noGutter
+              readOnly
+              value={queryBuilder.query}
+            />
           </Card>
 
           <Title size="xs">Output</Title>
@@ -486,6 +525,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             scrollable="y"
             padding
             resizable
+            collapsable
+            debug
           >
             <SimpleFormField label="Name">
               <Tag alt="lightBlue">$0</Tag>
@@ -496,11 +537,12 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
             <FormField label="Value" name="pname" defaultValue="" />
           </Pane>
 
-          <Pane title="Explore API" scrollable="y" padding flex={2} space>
+          <Pane title="Explore API" scrollable="y" padding flex={2} space collapsable>
             {allMethods.map(key => {
               const info = meta.apiInfo[key]
               return (
                 <CardSimple
+                  space
                   key={key}
                   title={info.name}
                   onClick={() => {
@@ -571,11 +613,11 @@ const ArgumentField = memo(
         <Card
           transition="all ease 300ms"
           opacity={isActive ? 1 : 0.35}
-          padding
           elevation={1}
           height={24 * numLines + /* padding */ 16 * 2}
         >
           <MonacoEditor
+            padding
             // not controlled
             noGutter
             value={queryBuilder.arguments[index]}

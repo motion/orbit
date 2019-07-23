@@ -1,3 +1,14 @@
+
+Lists:
+
+- Content type chooser:
+  - In lists when you create new item you can choose the content type:
+    - We can also allow folders, but content type chooser is a grid
+    - In the grid we show all content types Orbit understands and render them
+  - Then, we can have a WYSIWIG content type provided by an editor App.
+  - Or we can have a Code content type provided by a code app.
+
+
 - SelectableStore should export themselves into a global, based on if they are visibile, and then esc can clear selection before doing anything else
 
 ---

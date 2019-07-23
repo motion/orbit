@@ -273,16 +273,16 @@ class QueryBuilderStore {
   arguments: any[] = []
   result = null
   argumentsVersion = 0
+  query = ''
 
-  get query() {
-    return this.hooks.query
+  setQuery = (next: string) => {
+    this.query = next
   }
 
-  nextQuery = ''
+  syncQueryState = react(() => this.hooks.query, this.setQuery)
 
-  setQuery(next: string) {
-    console.log('next', next)
-    this.nextQuery = next
+  saveQuery = () => {
+    this.hooks.setQuery(this.query)
   }
 
   setMethod(next: string) {
@@ -326,7 +326,7 @@ class QueryBuilderStore {
     this.result = await command(CallAppBitApiMethodCommand, {
       appId: this.props.appId,
       appIdentifier: this.props.appIdentifier,
-      method: this.props.method,
+      method: this.method,
       args: this.resolvedArguments(),
     })
   }
@@ -434,6 +434,10 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
   const allMethods = Object.keys(apiInfo)
   const [method, setMethod] = useState(apiInfo[allMethods[0]])
   const hasApiInfo = !!meta && !!apiInfo
+
+  useEffect(() => {
+    queryBuilder.setMethod(method)
+  }, [method])
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />

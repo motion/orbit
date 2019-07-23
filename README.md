@@ -6,33 +6,59 @@
 
 ## install
 
-Currenly using Node 9.11.1.
-
-First time:
+Currenly using Node 9.11.1. Run this command:
 
 ```sh
-# bootstrap will ensure a couple deps from brew are installed, requires homebrew
-bin/bootstrap
-# build everything once
-build
+yarn bootstrap
 ```
+
+Bootstrap make sure everything is installed and built. I find the easiest way to add new npm packages to any app/package is to just edit the package.json directly (VSCode will suggest the latest version for you), and then re-run bootstrap.
+
+If you just want to re-build everyhting, try `yarn build`.
 
 ## run
 
 Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside the `app/example-workspace`.
 
-For devtools also run `yarn start:devtools`.
+To run the development tools, run `yarn start:devtools`. This will run two things:
 
-## Structure of this repo
+- A [Puppeteer](https://github.com/GoogleChrome/puppeteer) instance that automatically hooks into the REPL for all processes (node, electron and client).
+- The [Overmind](https://overmindjs.org/) devtools which let you see the state inside Overmind which we use for mostly global state.
+
+## how this repo is structured
+
+A the high level:
+
+- Code (these folders are all managed by [Lerna](https://github.com/lerna/lerna)):
+  - `app` contains Orbit itself, including things that build/debug it.
+  - `apps` are individual orbit apps we've built.
+  - `packages` contains anything that could run across any app, and are independent of orbit generally.
+  - `projects` contains sub-projects like our website and a playground to do light debugging on things.
+- Development:
+  - `bin` lets you create scripts for the repo that you can run when you `source .env` directly from CLI. useful for more complex monorepo scripting.
+  - `scripts` has one-off scripts that you may need for specific actions (like downloading datasets for fixtures).
+  - `patches` is for [patch-package](https://github.com/ds300/patch-package), helpful for working around broken node modules
+- Others:
+  - `assets` has media/images
+  - `data` is a temp folder created to store data needed for fixtures
+  - `notes` is just markdown files with some notes
+
+What we may want to do is split these a bit further:
+
+1. Make `app` into `orbit-desktop` and move out:
+   1. All the cloud APIs into `cloud-api` or similar (registry, api).
+   2. All the middleware type things into their own thing (above packages, below orbit-desktop), so we could use them all in mobile apps.
+   3. The `mobile` app into it's own top level thing.
 
 ```sh
-/apps
-  /orbit            # entry, forks the orbit-* processes, then require('orbit-electron')
+/app
+  /orbit               # empty for now, will eventually be our CLI
+  /orbit-cli           # CLI, because we may want `orbit` to be CLI + APIs
   /orbit-app           # web app (webpack, electron loads it)
-  /orbit-desktop       # node app (runs server for oauth, runs a variety of backend services)
-  /orbit-electron      # electron app (one-per-window, controls electron windows and other state)
-  /orbit-syncers       # syncers app (syncs data from github, slack, etc into the app)
-  /kit              # Kit for building apps: higher level hooks, views and components that work together
+  /orbit-desktop       # node process (runs server for oauth, runs a variety of backend services)
+  /orbit-electron      # electron process (one-per-window, controls electron windows and other state)
+  /orbit-syncers       # workers process, runs the apps node-processes
+  /kit              # The public facing APIs for building apps: higher level hooks, views and components that work together
   /models           # TypeORM models, shared by all apps ^^
   /services         # Oauth integration helpers (Github.getRepos, Drive.getFiles...)
   /stores           # Singleton *across all processess*, syncs deep reactive .state
@@ -40,8 +66,6 @@ For devtools also run `yarn start:devtools`.
   /oracle           # (inactive) OCR for reading screen, light OS level controller
   /model-bridge     # Lets us do observeOne/loadOne/commands/etc between processes
 
-/bin                # monorepo scripts (bootstrap, build, run, deploy, etc)
-/notes              # ongoing notes related to project
 /packages           # all packages we maintain
   # note: only documenting interesting packages, the rest extermely minor
   /automagical        # powers react()
@@ -61,7 +85,7 @@ cd apps/desktop
 install randomcolor
 ```
 
-2.  Using the `in` command
+2. `in`
 
 The `in` command finds the sub-package or app and just cd's into it before doing something. So you can do something like:
 
@@ -72,25 +96,49 @@ in desktop install randomcolor
 likewise you can do other things:
 
 ```
-in models npm start
+in models yarn start
 ```
 
-3.  modify the package.json directly, and then:
-
-```
-bootstrap
-```
+3.  modify the package.json directly, and then `bootstrap`:
 
 Bootstrap sort of checks a lot of stuff, but its really fast, so you can generally just modify a lot of package.json's and then run `bootstrap` after.
 
-### Other commands
+- `clean` removes built files, `clean --all` also removes node_modules
 
-- `clean` removes built files, `clean -all` also removes node_modules
-- `run [appname]` just does npm start in an app
+## Developing Orbit
 
-## Developing / REPL tools
+Once you run orbit with `yarn start` you should be able to develop Orbit either in the Electron app or in Chrome.
 
-When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
+To see the app itself in Electron, you hit **"Option+Space"**. That's the default command to open Orbit.
+
+Developing in Chrome is a bit easier, it refreshes more easily and if things freeze you don't have to kill everything. To do so just open [https://localhost:3001](https://localhost:3001).
+
+### The main areas of the app
+
+To understand the client side app you'll want to know the following:
+
+#### How it starts / keeps global state
+
+- `main.tsx > configurations.tsx` - Sets up global variables and other debugging tools in development, configures various packages like the UI kit.
+- `main.tsx > om/om.ts` - We use Overmind, abbreviated to om, for our global state. It gives us a really nice state contained that is granular, works with hooks, and lets us derive state and react to state easily. See the `om/onInitiialize`, this will really give you a good overview to see the high level state.
+- `main.tsx > OrbitRoot.tsx` - The React entry point
+  - `pages/OrbitPage.tsx` - Generally everything goes through here, we used to have a few different apps (HighlightsPage/CosalPage and others), but we don't use them now other than for debugging, and potentially down the road.
+
+We also have some configuration which is shared by *every* process and every client app. It stores things like which ports we are using, common and important paths, and so on. That gets set up by `orbit-main/src/getInitialConfig.ts`.
+
+So how does data stored / loaded from the abckend?
+
+#### How data is stored/synced from the backend
+
+We have a unique and powerful system for managing our data. The important things to know are:
+
+1. We store it in SQLite.
+2. That's typically managed by [TypeORM](https://typeorm.io/)
+3. The `@o/bridge` package then handles the bridge between the backend and frontend:
+   1. The `MediatorServer` and `MediatorClient` classes are a websocket bridge for handling the main communication.
+      1. See `save()` and `load/loadOne()` used in places around the stack.
+      2. You can also `observe/observeOne()` that returns an Observable stream of any updates.
+   2. We then have a Suspense style wrapper around that that makes it easy to query using hooks: `@o/bridge/src/useModel.ts`. This also dedupes the queries and caches values, including optimistic updating.
 
 ### `Logger` from @o/logger
 

@@ -127,7 +127,7 @@ export function AppsIndex() {
 
   return (
     <List
-      titleScale={0.75}
+      title="Apps"
       alwaysSelected
       onQueryChange={search}
       itemProps={{

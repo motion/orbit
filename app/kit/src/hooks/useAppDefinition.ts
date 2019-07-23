@@ -76,7 +76,7 @@ export function useAppDefinitionFromStore(identifier?: string | false): any | nu
         graph: !!searchedApp.features.some(x => x === 'graph') ? _ => _ : null,
         workers: !!searchedApp.features.some(x => x === 'workers') ? [] : undefined,
         setup: searchedApp.setup,
-        auth: searchedApp.features.some(x => x === 'auth') ? 'auth' : undefined,
+        auth: searchedApp.features.some(x => x === 'auth') ? identifier : undefined,
       }
 }
 

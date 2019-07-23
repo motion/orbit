@@ -22,6 +22,7 @@ export const SizablePane = memo(
     const { total, type, flexes } = useContext(LayoutContext)
     const [size, setSize] = useState(-1)
     const [flexSize, setFlexSize] = useState(-1)
+    const isLast = props.index === total - 1
 
     useEffect(() => {
       if (!props.parentSize || typeof props.index === 'undefined' || flexes.length === 0) {
@@ -42,10 +43,12 @@ export const SizablePane = memo(
     ])
 
     let element = null
-    let sizeProps: any = {
+
+    let style: any = {
       [type === 'row' ? 'width' : 'height']: 'auto',
       flex,
     }
+
     let borderElement = null
 
     if (type === 'row') {
@@ -53,16 +56,16 @@ export const SizablePane = memo(
         borderElement = <BorderLeft />
       }
       if (size !== -1) {
-        sizeProps = {
-          ...sizeProps,
-          width: size,
-          minWidth: flexSize * 0.5,
-          maxWidth: props.parentSize,
+        style = {
+          ...style,
+          maxWidth: isLast ? 'auto' : size,
+          minWidth: size,
+          // minWidth: flexSize * 0.5,
         }
       }
       if (collapsed) {
-        sizeProps = {
-          ...sizeProps,
+        style = {
+          ...style,
           flex: 'none',
           // "rows" collapsing would be odd
           // minWidth: 'auto',
@@ -74,16 +77,15 @@ export const SizablePane = memo(
         borderElement = <BorderTop />
       }
       if (size !== -1) {
-        sizeProps = {
-          ...sizeProps,
-          minHeight: flexSize * 0.5,
-          height: size,
-          maxHeight: props.parentSize,
+        style = {
+          ...style,
+          minHeight: size,
+          maxHeight: isLast ? 'auto' : flexSize * 10,
         }
       }
       if (collapsed) {
-        sizeProps = {
-          ...sizeProps,
+        style = {
+          ...style,
           minHeight: 'auto',
           height: 'auto',
           flex: 'none',
@@ -102,22 +104,16 @@ export const SizablePane = memo(
           resizable={resizableProp}
           onResize={useCallback((w, h) => setSize(type === 'row' ? w : h), [type])}
           {...props}
-          {...sizeProps}
+          style={style}
         >
           {borderElement}
           {childElement}
         </Interactive>
       )
     } else {
-      // const isLast = props.index === total - 1
       element = (
-        <PaneChrome
-          data-is="SizablePane-PaneChrome"
-          {...props}
-          {...sizeProps}
-          maxWidth="100%"
-          maxHeight="100%"
-        >
+        // @ts-ignore
+        <PaneChrome data-is="SizablePane-PaneChrome" {...props} style={style}>
           {borderElement}
           {childElement}
         </PaneChrome>

@@ -129,7 +129,6 @@ const ListRow = memo(
 
 const createItemData = memoize(
   (items: any[], selectableStore: SelectableStore, listProps: VirtualListProps) => {
-    console.log('return new items', items)
     return {
       items,
       listProps,

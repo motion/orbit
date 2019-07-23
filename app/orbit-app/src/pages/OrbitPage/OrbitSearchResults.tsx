@@ -1,5 +1,5 @@
 import { AppBit, ensure, HighlightActiveQuery, react, useReaction, useSearchState, useStore } from '@o/kit'
-import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useGet, useTheme, View } from '@o/ui'
+import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
@@ -9,6 +9,29 @@ import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class SearchResultsStore {
+  props: {
+    searchStore: SearchStore
+  }
+
+  searchState = null
+
+  setSearchState = next => {
+    this.searchState = next
+  }
+
+  updateSearchResultsStore = react(
+    () => this.searchState,
+    async (next, { when }) => {
+      await when(() => this.isActive)
+      await when(() => !appsCarouselStore.isAnimating)
+      this.props.searchStore.setSearchState(next)
+    },
+  )
+
+  get isActive() {
+    return !appsCarouselStore.zoomedIn && !appsDrawerStore.isOpen
+  }
+
   rows: ListItemProps[] = []
 
   setRows(rows: ListItemProps[]) {
@@ -56,23 +79,17 @@ class SearchResultsStore {
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
   const appsDrawer = appsDrawerStore.useStore()
-  const searchResultsStore = useStore(SearchResultsStore)
-  const carousel = useAppsCarousel()
   const searchStore = SearchStore.useStore()!
+  const searchResultsStore = useStore(SearchResultsStore, { searchStore })
+  const isActive = searchResultsStore.isActive
+  const carousel = useAppsCarousel()
   const listRef = useRef<SelectableStore>(null)
-
-  const isActive = !carousel.zoomedIn && !appsDrawer.isOpen
-  const getIsActive = useGet(isActive)
 
   window['searchStore'] = searchStore
 
   useSearchState({
     includePrefix: true,
-    onChange: state => {
-      if (getIsActive()) {
-        searchStore.setSearchState(state)
-      }
-    },
+    onChange: searchResultsStore.setSearchState,
   })
 
   const carouselProps: FullScreenProps = carousel.zoomedIn

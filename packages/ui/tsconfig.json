@@ -9,6 +9,7 @@
   "references": [
     { "path": "../color" },
     { "path": "../gloss" },
+    { "path": "../gloss-theme" },
     { "path": "../fast-compare" },
     { "path": "../utils" },
     { "path": "../use-store" }

@@ -79,7 +79,7 @@ export function useFilter(props: UseFilterProps<ListItemSimpleProps>) {
   // TODO this could be a lot more flexible, also see nextapps.de search on github
   const searchIndex = useMemo(() => {
     if (props.searchable) {
-      return sortedItems.map(item => filterKeys.map(key => (item.item || item)[key]).join(' '))
+      return sortedItems.map(item => filterKeys.map(key => item[key]).join(' '))
     }
     return []
   }, [sortedItems, props.searchable, ...filterKeys])

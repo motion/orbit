@@ -97,13 +97,7 @@ const defaults: MonacoEditorProps = {
     horizontalSliderSize: 0,
     useShadows: false,
   },
-  value: `export class Something {
-  x = 0
-
-  run() {
-    console.log('hello world')
-  }
-}`,
+  value: ``,
   language: 'typescript',
 }
 

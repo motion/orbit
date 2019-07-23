@@ -1,12 +1,12 @@
-import { ProvideHighlight, ProvideHighlightProps, selectDefined } from '@o/ui'
+import { isDefined, ProvideHighlight, ProvideHighlightProps } from '@o/ui'
 import React, { memo } from 'react'
 
 import { useActiveQuery } from '../hooks/useActiveQuery'
 
-export const HighlightActiveQuery = memo(({ words, children, ...rest }: ProvideHighlightProps) => {
+export const HighlightActiveQuery = memo(({ query, children, ...rest }: ProvideHighlightProps) => {
   return (
     <ProvideHighlight
-      words={selectDefined(words, useActiveQuery().split(' '))}
+      query={isDefined(query) ? query : useActiveQuery()}
       maxChars={500}
       maxSurroundChars={80}
       {...rest}

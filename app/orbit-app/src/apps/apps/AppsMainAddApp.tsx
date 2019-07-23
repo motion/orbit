@@ -1,5 +1,5 @@
 import { AppDefinition, AppIcon, getSearchAppDefinitions, isDataDefinition, useAppDefinition, useAppDefinitionFromStore, useAppStoreInstalledAppDefinition } from '@o/kit'
-import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubTitle, useBanner } from '@o/ui'
+import { BannerHandle, Button, ButtonProps, Divider, Loading, Message, Paragraph, Row, Section, SubSection, SubTitle, useBanner } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
 import { useInstallApp } from '../../helpers/installApp'
@@ -83,7 +83,7 @@ export function AppsMainAddAppContent({
             </Button>
           )}
           {!def.auth && !def.setup && (
-            <Button alt="confirm" icon="plus" iconAfter onClick={() => installApp(def, true)}>
+            <Button alt="confirm" icon="plus" onClick={() => installApp(def, true)}>
               Add
             </Button>
           )}
@@ -91,7 +91,7 @@ export function AppsMainAddAppContent({
       }
       belowTitle={
         !!searchApp && (
-          <Row space>
+          <Row space padding={[0, 'md', 'md']}>
             <SubItem>{searchApp.author || 'anonymous'}</SubItem>
             <SubItem icon="download">{searchApp.installs || '11,129'}</SubItem>
           </Row>
@@ -100,14 +100,7 @@ export function AppsMainAddAppContent({
     >
       {!!error && <Message alt="error">{error}</Message>}
 
-      <Section
-        pad
-        title="Setup"
-        titleSize="xs"
-        subTitle="Customize and add app to workspace"
-        titlePadding
-        space
-      >
+      <SubSection title="Setup" titleSize="xs" subTitle="Customize and add app to workspace" space>
         <AppsMainNew
           customizeColor={!isDataDefinition(def)}
           app={{ target: 'app', name: def.name, identifier: def.id }}
@@ -124,7 +117,7 @@ export function AppsMainAddAppContent({
             />
           </>
         )}
-      </Section>
+      </SubSection>
 
       {hasSetup && (
         <Message alt="lightGray" icon="warn">

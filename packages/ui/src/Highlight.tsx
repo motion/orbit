@@ -1,18 +1,18 @@
 import { createStoreContext } from '@o/use-store'
+import { HighlightOptions, selectDefined } from '@o/utils'
 import React, { useMemo } from 'react'
 
 import { useDebounceValue } from './hooks/useDebounce'
 import { Text, TextProps } from './text/Text'
-import { HighlightOptions } from '@o/utils'
 
 export type HighlightQueryProps = {
-  words?: string[]
+  query?: string
   maxSurroundChars?: number
   maxChars?: number
 }
 
 const defaultState: HighlightQueryProps = {
-  words: [] as string[],
+  query: '',
   maxSurroundChars: Infinity,
   maxChars: Infinity,
 }
@@ -41,24 +41,25 @@ export type HighlightTextProps = TextProps & HighlightQueryProps
 
 export function HighlightText({
   children,
-  words,
   maxSurroundChars,
   maxChars,
   ...props
 }: HighlightTextProps) {
   const { state } = HighlightQueryStoreContext.useStore()
+  const query = selectDefined(props.query, state.query)
+  const words = useMemo(() => state.query.split(' '), [query])
   const text =
-    state.words &&
-    (state.words.length > 1 ||
+    words &&
+    (words.length > 1 ||
       // avoid too short of words
-      (state.words[0] && state.words[0].length > 1))
-      ? state.words.join(' ')
+      (words[0] && words[0].length > 1))
+      ? words.join(' ')
       : ''
   const highlight: HighlightOptions = useMemo(
     () => ({
       maxSurroundChars: maxSurroundChars || state.maxSurroundChars,
       maxChars: maxChars || state.maxChars,
-      words: words || state.words,
+      words,
       text,
     }),
     [state.maxSurroundChars, state.maxChars, text, words, maxSurroundChars, maxChars],

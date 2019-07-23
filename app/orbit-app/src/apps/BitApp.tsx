@@ -39,29 +39,29 @@ export function BitAppMain(props: AppViewProps) {
   )
 }
 
-export class BitTitleBar extends React.Component<{
-  bit: Bit
-}> {
-  render() {
-    const { bit } = this.props
-    const normalizedItem = normalizeItem(bit)
-    return (
-      <ToolbarChrome space padding={['xs', true]}>
+function BitTitleBar({ bit }: { bit: Bit }) {
+  const normalizedItem = normalizeItem(bit)
+  const link = normalizedItem.desktopLink || normalizedItem.webLink
+  return (
+    <ToolbarChrome space padding={['xs', true]}>
+      {!!normalizedItem.locationLink && (
         <Button
           alt="flat"
           circular
           iconSize={16}
           onClick={() => {
-            openItem(normalizedItem.locationLink)
+            openItem(normalizedItem.locationLink!)
           }}
           icon={normalizedItem.icon}
         >
           {normalizedItem.location}
         </Button>
+      )}
+      {!!link && (
         <Button
           alt="flat"
           onClick={() => {
-            openItem(normalizedItem.desktopLink || normalizedItem.webLink)
+            openItem(link)
           }}
           icon="share"
           tooltip="Open"
@@ -69,13 +69,13 @@ export class BitTitleBar extends React.Component<{
         >
           Open
         </Button>
+      )}
 
-        <View flex={1} />
+      <View flex={1} />
 
-        <Button alt="flat" size={1.4} circular icon="hand" tooltip="Drag to use in app" />
-      </ToolbarChrome>
-    )
-  }
+      <Button alt="flat" size={1.4} circular icon="hand" tooltip="Drag to use in app" />
+    </ToolbarChrome>
+  )
 }
 
 const ToolbarChrome = gloss(Row, {

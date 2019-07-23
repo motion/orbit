@@ -1,14 +1,15 @@
 {
   "name": "@o/github-app",
   "description": "Query, explore and sync the full Github API",
-  "version": "2.5.8",
+  "version": "2.5.9",
   "main": "index.tsx",
   "config": {
     "orbitApp": true
   },
   "scripts": {
     "start": "orbit dev",
-    "build": "orbit build"
+    "build": "orbit build",
+    "deploy": "orbit publish"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

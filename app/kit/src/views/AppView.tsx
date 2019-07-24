@@ -1,6 +1,6 @@
 import { isEqual } from '@o/fast-compare'
 import { AppViewProps } from '@o/models'
-import { ErrorBoundary, ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
+import { ErrorBoundary, ErrorMessage, ItemPropsProviderSmall, Loading, memoIsEqualDeep } from '@o/ui'
 import { Contents } from 'gloss'
 import { capitalize } from 'lodash'
 import React, { createContext, Suspense, useContext, useMemo, useRef } from 'react'
@@ -42,7 +42,9 @@ export const AppView = memoIsEqualDeep(function AppView({ appProps, ...props }) 
 
     if (!definition) {
       console.debug('no definition found', props)
-      return () => <div>no definition found, see debug</div>
+      return () => (
+        <ErrorMessage message={`no definition found, see console.debug for more information.`} />
+      )
     }
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {

@@ -1,4 +1,5 @@
-import { SelectableGrid, SelectableSurface } from '@o/ui'
+import { AppViewProps } from '@o/models'
+import { SelectableGrid, SelectableSurface, SubSection } from '@o/ui'
 import { uniqBy } from 'lodash'
 import React, { useCallback, useMemo } from 'react'
 
@@ -7,51 +8,61 @@ import { useAppState } from '../hooks/useAppState'
 import { AppIcon } from './AppIcon'
 import { AppMainView } from './AppMainView'
 
-export type AppContentViewProps = {
+export type AppContentViewProps = AppViewProps & {
   /** Unique identifier if you display more than one in an app */
   id?: string
 }
 
 export function AppContentView(props: AppContentViewProps) {
-  const [identifier, setIdentifier] = useAppState(`AppContentView-${props.id}`, null)
-  const all = uniqBy(useActiveAppsWithDefinition(), x => x.definition.id)
+  const [identifier, setIdentifier] = useAppState(`AppContentV-${props.id}`, null)
+  const all = uniqBy(useActiveAppsWithDefinition(), x => x.definition.id).filter(
+    x => !!x.definition.itemType,
+  )
 
   if (identifier) {
     return <AppMainView identifier={identifier} />
   }
 
   return (
-    <SelectableGrid
-      gridGap={20}
-      itemMinWidth={180}
-      itemMaxWidth={220}
-      items={useMemo(
-        () => [
-          ...all.map(({ definition }) => ({
-            id: definition.id,
-            title: definition.name,
-            type: 'installed',
-            groupName: 'Installed Apps',
-            onDoubleClick: () => {
-              console.log('Stack navigate!')
-            },
-          })),
-        ],
-        [all],
-      )}
-      onSelect={useCallback(i => setIdentifier(i), [])}
-      getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
-        return (
-          <SelectableSurface selected={isSelected} sizeRadius flex={1}>
-            <AppIcon
-              identifier={item.id}
-              colors={all.find(x => x.definition.id === item.id)!.app.colors}
-              onClick={select}
-              onDoubleClick={onDoubleClick}
-            />
-          </SelectableSurface>
-        )
-      }, [])}
-    />
+    <SubSection title="Select Content Type" flex={1} scrollable="y">
+      <SelectableGrid
+        padding={20}
+        gridGap={20}
+        itemMinWidth={180}
+        itemMaxWidth={220}
+        items={useMemo(
+          () => [
+            ...all.map(({ definition }) => ({
+              id: definition.id,
+              title: definition.name,
+              type: 'installed',
+              groupName: 'Installed Apps',
+            })),
+          ],
+          [all],
+        )}
+        getItem={useCallback((item, { isSelected, select }) => {
+          const { definition, app } = all.find(x => x.definition.id === item.id)!
+          return (
+            <SelectableSurface
+              selected={isSelected}
+              sizeRadius
+              flex={1}
+              alignItems="center"
+              justifyContent="center"
+              minHeight={180}
+            >
+              <AppIcon
+                identifier={item.id}
+                colors={app.colors}
+                onClick={select}
+                onDoubleClick={() => setIdentifier(definition.id)}
+                size={80}
+              />
+            </SelectableSurface>
+          )
+        }, [])}
+      />
+    </SubSection>
   )
 }

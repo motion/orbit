@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Section } from './Section'
-import { CenteredText } from './text/CenteredText'
+import { SubTitle } from './text/SubTitle'
 
 export type ErrorMessageProps = {
   message: string
@@ -20,7 +20,7 @@ export function ErrorMessage({ message }: ErrorMessageProps) {
           pointerEvents="inherit"
           padding
         >
-          <CenteredText>{message}</CenteredText>
+          <SubTitle>{message}</SubTitle>
           {!!stack && <pre>{stack}</pre>}
         </Section>
       )}
@@ -29,21 +29,21 @@ export function ErrorMessage({ message }: ErrorMessageProps) {
 }
 
 type ComponentStackProps = {
-  children?: (props: { error: string }) => React.ReactNode
+  children?: (stack: string) => React.ReactNode
 }
 
 class ComponentStack extends React.Component<ComponentStackProps> {
   state = {
-    error: null,
+    info: '',
   }
-  componentDidCatch(error) {
-    this.setState({ error })
+  componentDidCatch(_, info) {
+    this.setState({ info: `${info.componentStack}` })
   }
-  componentDidMount() {
-    if (!this.state.error) {
+  render() {
+    if (!this.state.info) {
       return <ThrowComponent />
     }
-    return this.props.children(this.state)
+    return this.props.children(this.state.info)
   }
 }
 

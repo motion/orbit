@@ -1,4 +1,4 @@
-import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { AppContentView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
@@ -64,7 +64,7 @@ function ListsAppMain(props: AppViewProps) {
   return (
     <>
       <TitleRow padding bordered margin={0} title={props.title} />
-      <AppMainView {...props} />
+      <AppContentView {...props} />
     </>
   )
 }

@@ -9,7 +9,7 @@ import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, sa
 
 // enforce immutable style updates otherwise you hit insane cache issus
 type UpdateFn<A> = (draft: A) => A | void
-export type ImmutableUpdateFn<A> = (cb: UpdateFn<A>) => any
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | string | number | boolean | Object) => any
 
 export type UseModelOptions = {
   defaultValue?: any

@@ -83,7 +83,7 @@ import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolve
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
-import { AppCreateNewResolver } from './resolvers/AppCreateNewResolver'
+import { AppCreateNewResolver, createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
 import { getIdentifierToPackageId } from '@o/cli'
@@ -390,7 +390,7 @@ export class OrbitDesktopRoot {
           log.info('Closed app', appId)
         }),
         createAppOpenWorkspaceResolver(this),
-        AppCreateNewResolver,
+        createAppCreateNewResolver(this),
         AppCreateWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,

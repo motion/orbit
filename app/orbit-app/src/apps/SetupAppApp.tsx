@@ -138,7 +138,7 @@ function SetupAppCustom() {
 
               // go to app
               console.warn('should go to app')
-              createAppBitInActiveSpace({
+              await createAppBitInActiveSpace({
                 identifier,
               })
 

@@ -6,33 +6,38 @@ import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
+import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 import { getCurrentWorkspace } from './AppOpenWorkspaceResolver'
 
 const log = new Logger('AppCreateNewCommand')
 
-export const AppCreateNewResolver = resolveCommand(
-  AppCreateNewCommand,
-  async ({ name, template, icon, identifier }) => {
+export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
+  return resolveCommand(AppCreateNewCommand, async ({ name, template, icon, identifier }) => {
     log.info(`Creating new app ${name} ${template}`)
     const ws = await getCurrentWorkspace()
     return await createNewWorkspaceApp(ws, { name, template, icon, identifier })
-  },
-)
+  })
 
-async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
-  // TODO icon
-  try {
-    const name = await findValidDirectoryName(space.directory, opts.identifier)
-    return await commandNew({
-      projectRoot: space.directory,
-      name,
-      template: opts.template,
-    })
-  } catch (err) {
-    return {
-      type: 'error',
-      message: `${err.message}`,
-    } as const
+  async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
+    // TODO icon
+    try {
+      const name = await findValidDirectoryName(space.directory, opts.identifier)
+      let res = await commandNew({
+        projectRoot: space.directory,
+        name,
+        template: opts.template,
+      })
+      if (res.type === 'error') {
+        return res
+      }
+      // ensure we update the workspace with new package id
+      return await orbitDesktop.workspaceManager.updateWorkspace()
+    } catch (err) {
+      return {
+        type: 'error',
+        message: `${err.message}`,
+      } as const
+    }
   }
 }
 

@@ -620,7 +620,6 @@ const AppLoadingScreen = memo((props: AppLoadingScreenProps) => {
   return (
     <Templates.Message
       title={props.app.name}
-      subTitle={props.definition.id}
       icon={<AppIcon identifier={props.definition.id} colors={props.app.colors} />}
       opacity={props.visible ? 1 : 0}
       transform={{

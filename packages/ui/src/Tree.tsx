@@ -26,6 +26,7 @@ export type TreeProps = {
 
 export type TreeItemID = number
 
+// TODO make this closer to ListItemProps, or change attributes into that
 export type TreeItem = {
   id: TreeItemID
   name: string

@@ -1,3 +1,6 @@
+// accept hmrs
+module['hot'] && module['hot'].accept()
+
 // until next hotkeys patches types
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
@@ -196,6 +199,7 @@ export * from './View/Row'
 export { View, ViewProps } from './View/View'
 export * from './Visibility'
 export * from './ErrorBoundary'
+export * from './ErrorMessage'
 export * from './hooks/useBoundedNumberState'
 export * from './hooks/useWindowSize'
 export * from './hooks/useNode'
@@ -218,6 +222,4 @@ export * from './text/CenteredText'
 export * from './buttons/MenuButton'
 export * from './Draggable'
 export * from './helpers/composeRefs'
-
-// accept hmrs
-module['hot'] && module['hot'].accept()
+export * from './SelectableSurface'

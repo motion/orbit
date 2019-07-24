@@ -9,7 +9,7 @@ import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, sa
 
 // enforce immutable style updates otherwise you hit insane cache issus
 type UpdateFn<A> = (draft: A) => A | void
-export type ImmutableUpdateFn<A> = (cb: UpdateFn<A>) => any
+export type ImmutableUpdateFn<A> = (cb: UpdateFn<A> | string | number | boolean | Object) => any
 
 export type UseModelOptions = {
   defaultValue?: any
@@ -135,10 +135,7 @@ function use<ModelType, Args>(
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.debug(`useModel.save()`, model.name, next)
       }
-      setTimeout(() => {
-        delete PromiseCache[curKey.current]
-      })
-      console.log('calling save')
+      delete PromiseCache[curKey.current]
       save(model, next as any)
     }
 

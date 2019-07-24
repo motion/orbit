@@ -1,5 +1,8 @@
 import { reloadAppDefinitions } from './hooks/useReloadAppDefinitions'
 
+// accept hmrs
+module['hot'] && module['hot'].accept()
+
 export { Templates } from './templates/all'
 export { produce } from './helpers/produce'
 export * from '@o/bridge'
@@ -104,10 +107,8 @@ export * from './hooks/useIsActive'
 export * from './views/AppNavigator'
 export * from './views/AppStatusBar'
 export * from './views/AppToolBar'
+export * from './views/AppContentView'
 
 export const __SERIOUSLY_SECRET = {
   reloadAppDefinitions,
 }
-
-// accept hmrs
-module['hot'] && module['hot'].accept()

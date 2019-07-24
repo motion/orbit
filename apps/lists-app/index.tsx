@@ -1,4 +1,4 @@
-import { AppMainView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
+import { AppContentView, AppNavigator, AppStatusBar, AppViewProps, createApp, NavigatorProps, TreeList, useSearchState, useTreeList } from '@o/kit'
 import { Breadcrumb, Breadcrumbs, Dock, DockButton, randomAdjective, randomNoun, StatusBarText, TitleRow, View } from '@o/ui'
 import { capitalize } from 'lodash'
 import pluralize from 'pluralize'
@@ -22,7 +22,6 @@ export function ListsAppIndex(props: NavigatorProps) {
   useSearchState({
     onChange(search) {
       if (search.query.length) {
-        debugger
         treeList.actions.addFolder(search.query)
       }
     },
@@ -63,8 +62,8 @@ function ListsAppMain(props: AppViewProps) {
   }
   return (
     <>
-      <TitleRow bordered margin={0} title={props.title} />
-      <AppMainView {...props} />
+      <TitleRow padding bordered margin={0} title={props.title} />
+      <AppContentView {...props} />
     </>
   )
 }

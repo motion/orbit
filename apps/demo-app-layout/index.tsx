@@ -109,9 +109,16 @@ function DemoLayoutApp() {
           />
         </Pane>
         <Pane flex={3} collapsable title="Inspect" resizable>
-          <Table searchable query={useActiveSearchQuery()} selectable items={items} />
+          <Table
+            columnSizes={{ username: 120 }}
+            searchable
+            query={useActiveSearchQuery()}
+            selectable="multi"
+            shareable
+            items={items}
+          />
         </Pane>
-        <Pane title="Sidebar">
+        <Pane>
           <Layout type="column">
             <Pane title="Elements" resizable padding collapsable>
               <DataInspector

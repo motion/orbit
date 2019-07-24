@@ -3,6 +3,7 @@ import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
 import { Button } from '../buttons/Button'
+import { ErrorMessage } from '../ErrorMessage'
 import { Section, SectionProps } from '../Section'
 import { Space } from '../Space'
 import { TableFilterIncludeExclude } from '../tables/types'
@@ -156,8 +157,10 @@ export const Form = forwardRef<HTMLFormElement, FormProps<FormFieldsObj>>(functi
   const finalFields = formStore.props ? formStore.props.fields : undefined
 
   if (finalFields && children) {
-    throw new Error(
-      `Can't pass both fields and children, Form accepts one or the other. See docs: `,
+    return (
+      <ErrorMessage
+        message={`Can't pass both fields and children, Form accepts one or the other.`}
+      />
     )
   }
 

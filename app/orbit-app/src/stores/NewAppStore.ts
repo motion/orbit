@@ -21,7 +21,6 @@ export class NewAppStore {
     const userDefs = getUserAppDefinitions()
     const nextDef = userDefs.find(x => x.id === identifier)
     if (!nextDef) {
-      console.warn('no app', nextDef)
       return
     }
 

@@ -75,24 +75,36 @@ const getActions = (
       }
     },
     addItemsFromDrop(items?: any, parentId?: number) {
-      if (Array.isArray(items)) {
-        for (const item of items) {
-          Actions.addItem(
-            {
-              name: item.title || item.name,
-              data: item,
-            },
-            parentId,
-          )
+      const addItem = x => {
+        // should normalize fancier
+        const item = x.type === 'row' ? x.values : x.item || x
+        let name = item.title || item.name
+
+        if (typeof name !== 'string') {
+          if (name) {
+            name = Object.keys(name)
+              .map(k => name[k])
+              .join(', ')
+          } else {
+            name = Object.keys(x)
+              .slice(0, 3)
+              .map(k => x[k])
+              .join(', ')
+          }
         }
-      } else {
+
         Actions.addItem(
           {
-            name: items.title || items.name,
-            data: items,
+            name,
+            data: item,
           },
           parentId,
         )
+      }
+      if (Array.isArray(items)) {
+        items.forEach(addItem)
+      } else {
+        addItem(items)
       }
     },
     addFolder(name?: string, parentId?: number) {
@@ -222,13 +234,13 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
-    subSelect === false ? subSelect : `tlist-${subSelect}`,
+    subSelect === false ? subSelect : `tl-${subSelect}`,
     {
       items: (props && props.items) || defaultState.items,
     },
     getStateOptions('tree', props),
   )
-  const us = useUserState(`tlist-${subSelect}`, defaultUserState, getStateOptions('user', props))
+  const us = useUserState(`tl-${subSelect}`, defaultUserState, getStateOptions('user', props))
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])

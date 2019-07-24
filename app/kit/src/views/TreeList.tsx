@@ -80,7 +80,7 @@ const getActions = (
         const item = x.type === 'row' ? x.values : x.item || x
         Actions.addItem(
           {
-            name: item.title || item.name,
+            name: `${item.title || item.name}`,
             data: item,
           },
           parentId,
@@ -219,13 +219,13 @@ const getStateOptions = (stateType: 'tree' | 'user', props?: TreeListProps) => {
 export function useTreeList(subSelect: string | false, props?: TreeListProps): TreeListStore {
   // const stores = useStoresSimple()
   const ts = useAppState<TreeStateStatic>(
-    subSelect === false ? subSelect : `tlist-${subSelect}`,
+    subSelect === false ? subSelect : `tl-${subSelect}`,
     {
       items: (props && props.items) || defaultState.items,
     },
     getStateOptions('tree', props),
   )
-  const us = useUserState(`tlist-${subSelect}`, defaultUserState, getStateOptions('user', props))
+  const us = useUserState(`tl-${subSelect}`, defaultUserState, getStateOptions('user', props))
   const getTs = useGet(ts)
   const getUs = useGet(us)
   const actions = useMemo(() => getActions(getTs, getUs /* , stores */), [])

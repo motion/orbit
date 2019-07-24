@@ -135,10 +135,7 @@ function use<ModelType, Args>(
       if (process.env.NODE_ENV === 'development' && shouldDebug()) {
         console.debug(`useModel.save()`, model.name, next)
       }
-      setTimeout(() => {
-        delete PromiseCache[curKey.current]
-      })
-      console.log('calling save')
+      delete PromiseCache[curKey.current]
       save(model, next as any)
     }
 

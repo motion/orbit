@@ -1,6 +1,6 @@
 import { AppIcon, command, createApp, getAppDefinition, useLocationLink, useSearchState } from '@o/kit'
 import { AppCreateNewCommand } from '@o/models'
-import { Button, Col, Flow, FlowProvide, Form, gloss, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, Text, Theme, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
+import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, List, ListItemProps, randomAdjective, randomNoun, Scale, SectionPassProps, SelectableGrid, SelectableSurface, Text, Toolbar, useBanner, useCreateFlow, useCreateForm, useFlow, View } from '@o/ui'
 import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
@@ -32,13 +32,6 @@ function SetupAppMain() {
   )
 }
 
-export const SelectableView = gloss<any>(View).theme(({ isSelected }, theme) => ({
-  background: isSelected ? theme.background : 'transparent',
-  '&:hover': {
-    background: isSelected ? theme.background : 'transparent',
-  },
-}))
-
 function SetupAppCustom() {
   const banner = useBanner()
   const newAppStore = useNewAppStore()
@@ -54,21 +47,26 @@ function SetupAppCustom() {
     fields: {
       name: {
         name: 'Name',
-        type: 'text' as const,
+        type: 'text',
       },
       packageId: {
         name: 'Package ID',
-        type: 'text' as const,
+        type: 'text',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
-    },
+    } as const,
   })
 
   return (
     <>
       <Col width="90%" height="90%" margin="auto">
-        <Flow useFlow={flow}>
-          <Flow.Step buttonTitle="Template" title="Choose Template" subTitle="Choose template">
+        <Flow useFlow={flow} Layout={FlowLayoutInline}>
+          <Flow.Step title="Customize" subTitle="Your app settings.">
+            <Col padding>
+              <Form useForm={form} />
+            </Col>
+          </Flow.Step>
+          <Flow.Step buttonTitle="Template" title="Custom App" subTitle="Choose template">
             {({ setData }) => {
               return (
                 <Col padding>
@@ -83,11 +81,9 @@ function SetupAppCustom() {
                       },
                     ]}
                     getItem={(props, { isSelected, select }) => (
-                      <Theme alt={isSelected ? 'selected' : undefined}>
-                        <SelectableView isSelected={isSelected} onClick={select} borderRadius={10}>
-                          <IconLabeled {...props} />
-                        </SelectableView>
-                      </Theme>
+                      <SelectableSurface selected={isSelected} onClick={select} borderRadius={10}>
+                        <IconLabeled {...props} />
+                      </SelectableSurface>
                     )}
                     onSelect={item => {
                       console.log('set item', item)
@@ -98,12 +94,6 @@ function SetupAppCustom() {
                 </Col>
               )
             }}
-          </Flow.Step>
-
-          <Flow.Step title="Customize" subTitle="Your app settings.">
-            <Col padding>
-              <Form useForm={form} />
-            </Col>
           </Flow.Step>
         </Flow>
       </Col>
@@ -165,7 +155,6 @@ function SetupAppCustom() {
 type SetupAppHomeProps = { isEmbedded?: boolean }
 
 export const SetupAppHome = memo((props: SetupAppHomeProps) => {
-  console.log('render SetupAppHome')
   const installedApps: ListItemProps[] = useUserVisualAppDefinitions().map(def => ({
     title: def.name,
     identifier: def.id,

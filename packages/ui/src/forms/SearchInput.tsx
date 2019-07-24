@@ -74,7 +74,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   )
 })
 
-export const ClearButton = gloss<ButtonProps & { visible?: boolean }>(Button, {
+export const ClearButton = gloss<ButtonProps & { invisible?: boolean }>(Button, {
   opacity: 1,
   pointerEvents: 'none',
   invisible: {

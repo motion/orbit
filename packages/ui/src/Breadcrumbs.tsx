@@ -51,7 +51,7 @@ class BreadcrumbStore {
 const BContext = createStoreContext(BreadcrumbStore)
 
 export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
-  const store = BContext.useCreateStore({ separator }, { react: false })
+  const store = BContext.useCreateStore({ separator })
   return <BContext.SimpleProvider value={store}>{children}</BContext.SimpleProvider>
 }
 

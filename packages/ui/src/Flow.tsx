@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Center } from './Center'
@@ -38,28 +38,30 @@ type StepProps = {
   setStepIndex: (index: number) => void
 }
 
-export type FlowStepProps = FlowSectionProps & {
-  title?: string
-  buttonTitle?: string
-  subTitle?: string
-  children?: React.ReactNode | ((props: StepProps) => any)
-  validateFinished?: (a: any) => true | any
-}
+export type FlowStepProps = StepProps &
+  FlowSectionProps & {
+    title?: string
+    buttonTitle?: string
+    subTitle?: string
+    children?: React.ReactNode | ((props: StepProps) => any)
+    validateFinished?: (a: any) => true | any
+  }
 
 type FlowStep = FlowStepProps & {
   key: string
 }
 
-export type FlowLayoutProps = FlowSectionProps &
-  StepProps & {
-    Toolbar: FlowProps['Toolbar']
-    children: React.ReactChild
-    index: number
-    total: number
-    step: FlowStep
-    steps: FlowStep[]
-    height?: number
-  }
+export type FlowLayoutProps = Omit<FlowSectionProps, 'children'> & {
+  stepProps: StepProps
+  flowStore: FlowStore
+  Toolbar: FlowProps['Toolbar']
+  children: React.ReactChild
+  index: number
+  total: number
+  step: FlowStep
+  steps: FlowStep[]
+  height?: number
+}
 
 const DefaultFlowToolbar = (props: FlowLayoutProps) => {
   const isOnFirstStep = props.index === 0
@@ -95,8 +97,8 @@ const tabButtonPropsActive: any = {
   opacity: 1,
 }
 
-export const DefaultFlowLayout = (props: FlowLayoutProps) => {
-  const { Toolbar, children, index, step, steps, height } = props
+export const FlowLayoutSlider = (props: FlowLayoutProps) => {
+  const { Toolbar, index, step, steps, height, flowStore, stepProps } = props
   return (
     <Section
       bordered
@@ -113,7 +115,7 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
             return (
               <Button
                 key={stp.key}
-                onClick={() => props.setStepIndex(stepIndex)}
+                onClick={() => stepProps.setStepIndex(stepIndex)}
                 {...tabButtonProps}
                 {...isActive && tabButtonPropsActive}
               >
@@ -125,8 +127,37 @@ export const DefaultFlowLayout = (props: FlowLayoutProps) => {
       }
       afterTitle={Toolbar && <Toolbar {...props} />}
     >
-      {children}
+      <Slider fixHeightToParent curFrame={flowStore.index}>
+        {steps.map((child, idx) => {
+          const ChildView = child.children as any
+          return (
+            <SliderPane key={idx}>
+              {typeof ChildView === 'string' || isValidElement(ChildView) ? (
+                ChildView
+              ) : (
+                <ChildView {...stepProps} />
+              )}
+            </SliderPane>
+          )
+        })}
+      </Slider>
     </Section>
+  )
+}
+
+export const FlowLayoutInline = (props: FlowLayoutProps) => {
+  const { steps, stepProps } = props
+  return (
+    <>
+      {steps.map((child, idx) => {
+        const ChildView = child.children as any
+        return typeof ChildView === 'string' || isValidElement(ChildView) ? (
+          ChildView
+        ) : (
+          <ChildView key={idx} {...stepProps} />
+        )
+      })}
+    </>
   )
 }
 
@@ -201,7 +232,7 @@ export const Flow: FlowComponent<FlowProps> = memo(
   ({
     height,
     Toolbar = DefaultFlowToolbar,
-    Layout = DefaultFlowLayout,
+    Layout = FlowLayoutSlider,
     afterTitle,
     ...props
   }: FlowProps) => {
@@ -211,20 +242,29 @@ export const Flow: FlowComponent<FlowProps> = memo(
       x => x && x.type && x.type === FlowStep,
     )
 
-    const steps: FlowStep[] = useMemo(
-      () =>
-        stepChildren.map((child, idx) => ({
-          key: `${idx}`,
-          ...child.props,
-        })),
-      [props.children],
-    )
+    // Why no memo? Because we conditionally want to update based on if they are a function (always)
+    // or an element (never). if we don't, you run into infinite loops as you are updating every
+    // render for functional children
+    const stepsRef = useRef<FlowStep[]>([])
+    const stepsId = useRef(0)
+    for (const [index, stepChild] of stepChildren.entries()) {
+      const nextStep = {
+        key: `${index}`,
+        ...stepChild.props,
+      }
+      // memoize functions to prevent infinite renders
+      const isFunctionChild = typeof stepChild.props.children === 'function'
+      if ((isFunctionChild && !stepsRef.current[index]) || !isFunctionChild) {
+        stepsRef.current[index] = nextStep
+        stepsId.current += 1
+      }
+    }
 
     const total = stepChildren.length
 
     useLayoutEffect(() => {
-      flowStore.setStepsInternal(steps)
-    }, [flowStore, steps])
+      flowStore.setStepsInternal(stepsRef.current)
+    }, [flowStore, stepsId.current])
 
     const stepProps = {
       data: flowStore.data,
@@ -234,27 +274,10 @@ export const Flow: FlowComponent<FlowProps> = memo(
       setStepIndex: flowStore.setIndex,
     }
 
-    const contents = (
-      <Slider fixHeightToParent curFrame={flowStore.index}>
-        {stepChildren.map((child, idx) => {
-          const ChildView = child.props.children
-          return (
-            <SliderPane key={idx}>
-              {typeof ChildView === 'string' || isValidElement(ChildView) ? (
-                ChildView
-              ) : (
-                <ChildView {...stepProps} />
-              )}
-            </SliderPane>
-          )
-        })}
-      </Slider>
-    )
-
-    if (!steps[flowStore.index]) {
+    if (!stepsRef.current[flowStore.index]) {
       return (
         <Center>
-          No step at index: {flowStore.index}, steps: {JSON.stringify(steps)}
+          No step at index: {flowStore.index}, steps: {JSON.stringify(stepsRef.current)}
         </Center>
       )
     }
@@ -266,12 +289,13 @@ export const Flow: FlowComponent<FlowProps> = memo(
           total={total}
           height={height}
           afterTitle={afterTitle}
-          step={steps[flowStore.index]}
-          steps={steps}
+          step={stepsRef.current[flowStore.index]}
+          steps={stepsRef.current}
           index={flowStore.index}
-          {...stepProps}
+          flowStore={flowStore}
+          stepProps={stepProps}
         >
-          <ScopedState id="flow">{contents}</ScopedState>
+          <ScopedState id="flow">{stepsRef.current}</ScopedState>
         </Layout>
       </FlowStoreContext.SimpleProvider>
     )

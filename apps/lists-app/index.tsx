@@ -63,7 +63,7 @@ function ListsAppMain(props: AppViewProps) {
   }
   return (
     <>
-      <TitleRow bordered margin={0} title={props.title} />
+      <TitleRow padding bordered margin={0} title={props.title} />
       <AppMainView {...props} />
     </>
   )

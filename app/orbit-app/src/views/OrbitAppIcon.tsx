@@ -1,6 +1,6 @@
 import { AppBit, AppIcon, removeApp, useAppDefinition } from '@o/kit'
 import { getAppContextItems } from '@o/kit-internal'
-import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useContextMenu } from '@o/ui'
+import { Button, IconLabeled, IconLabeledProps, SurfacePassProps, useContextMenu, useBanner } from '@o/ui'
 import { Box, gloss, Row, Theme } from 'gloss'
 import React, { memo } from 'react'
 
@@ -14,6 +14,7 @@ export const OrbitAppIcon = memo(
   ({ app, isSelected, size = 58, removable, ...props }: OrbitAppIconProps) => {
     const definition = useAppDefinition(app.identifier)
     const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
+    const banner = useBanner()
     const isPermanent = app.tabDisplay === 'permanent' || app.tabDisplay === 'permanentLast'
     return (
       <Theme alt={isSelected ? 'selected' : undefined}>
@@ -29,7 +30,7 @@ export const OrbitAppIcon = memo(
                   hoverStyle={{ opacity: 1 }}
                   tooltip="Remove"
                   icon="cross"
-                  onClick={() => removeApp(app)}
+                  onClick={() => removeApp(app, banner)}
                 />
               )}
             </Row>

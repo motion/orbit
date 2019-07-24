@@ -1,3 +1,6 @@
+// accept hmrs
+module['hot'] && module['hot'].accept()
+
 // until next hotkeys patches types
 export * from './helpers/configureHotKeys'
 export { default as allIcons } from './icons'
@@ -218,6 +221,4 @@ export * from './text/CenteredText'
 export * from './buttons/MenuButton'
 export * from './Draggable'
 export * from './helpers/composeRefs'
-
-// accept hmrs
-module['hot'] && module['hot'].accept()
+export * from './SelectableSurface'

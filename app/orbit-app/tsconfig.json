@@ -18,6 +18,7 @@
     { "path": "../config" },
     { "path": "../libs" },
     { "path": "../kit" },
+    { "path": "../kit-internal" },
     { "path": "../../apps/search-app" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/react-textfit" },

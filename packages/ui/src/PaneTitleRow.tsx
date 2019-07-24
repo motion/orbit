@@ -29,7 +29,7 @@ export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProp
         padding="sm"
         subTheme="panelHeader"
         space="xs"
-        onDoubleClick={toggle.isCollapsable && toggle.toggle}
+        onDoubleClick={toggle.isCollapsable ? toggle.toggle : undefined}
       >
         <BorderTop opacity={0.5} />
         {before}

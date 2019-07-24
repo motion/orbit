@@ -75,24 +75,21 @@ const getActions = (
       }
     },
     addItemsFromDrop(items?: any, parentId?: number) {
-      if (Array.isArray(items)) {
-        for (const item of items) {
-          Actions.addItem(
-            {
-              name: item.title || item.name,
-              data: item,
-            },
-            parentId,
-          )
-        }
-      } else {
+      const addItem = x => {
+        // should normalize fancier
+        const item = x.type === 'row' ? x.values : x.item || x
         Actions.addItem(
           {
-            name: items.title || items.name,
-            data: items,
+            name: item.title || item.name,
+            data: item,
           },
           parentId,
         )
+      }
+      if (Array.isArray(items)) {
+        items.forEach(addItem)
+      } else {
+        addItem(items)
       }
     },
     addFolder(name?: string, parentId?: number) {

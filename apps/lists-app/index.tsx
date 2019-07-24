@@ -22,7 +22,6 @@ export function ListsAppIndex(props: NavigatorProps) {
   useSearchState({
     onChange(search) {
       if (search.query.length) {
-        debugger
         treeList.actions.addFolder(search.query)
       }
     },

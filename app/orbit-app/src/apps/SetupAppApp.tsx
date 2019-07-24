@@ -48,6 +48,7 @@ function SetupAppCustom() {
       name: {
         name: 'Name',
         type: 'text',
+        value: '',
       },
       packageId: {
         name: 'Package ID',
@@ -280,6 +281,12 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
 
 const FlowStepSetup = memo(() => {
   const flow = useFlow()
+
+  if (!flow.data) {
+    debugger
+    throw new Error('No Data?')
+  }
+
   const identifier = flow.data.selectedAppIdentifier
 
   useLayoutEffect(() => {

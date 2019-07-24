@@ -8,6 +8,8 @@ import { ScopedState } from './helpers/ScopedState'
 import { Section, SectionProps } from './Section'
 import { Slider } from './Slider'
 import { SliderPane } from './SliderPane'
+import { SubSection } from './SubSection'
+import { Col } from './View/Col'
 import { Row } from './View/Row'
 
 type FlowSectionProps = Pick<SectionProps, 'afterTitle'>
@@ -148,16 +150,22 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
 export const FlowLayoutInline = (props: FlowLayoutProps) => {
   const { steps, stepProps } = props
   return (
-    <>
+    <Col flex={1} scrollable="y">
       {steps.map((child, idx) => {
         const ChildView = child.children as any
-        return typeof ChildView === 'string' || isValidElement(ChildView) ? (
-          ChildView
-        ) : (
-          <ChildView key={idx} {...stepProps} />
+        const contents =
+          typeof ChildView === 'string' || isValidElement(ChildView) ? (
+            ChildView
+          ) : (
+            <ChildView {...stepProps} />
+          )
+        return (
+          <SubSection key={idx} title={child.title} subTitle={child.subTitle}>
+            {contents}
+          </SubSection>
         )
       })}
-    </>
+    </Col>
   )
 }
 

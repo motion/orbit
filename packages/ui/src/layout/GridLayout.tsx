@@ -241,6 +241,7 @@ const GridWrapper = gloss<ColProps & { mounted?: boolean }>(Col, {
   flex: 1,
   opacity: 0,
   transition: 'all ease 300ms',
+  overflow: 'auto',
   mounted: {
     opacity: 1,
     background: 'transparent',

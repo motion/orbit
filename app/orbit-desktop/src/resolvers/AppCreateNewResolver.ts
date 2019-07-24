@@ -1,6 +1,10 @@
+import { commandNew } from '@o/cli'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppCreateNewCommand, AppCreateNewOptions, SpaceEntity } from '@o/models'
+import { pathExists } from 'fs-extra'
+import { join } from 'path'
+import sanitize from 'sanitize-filename'
 
 import { getCurrentWorkspace } from './AppOpenWorkspaceResolver'
 
@@ -17,18 +21,15 @@ export const AppCreateNewResolver = resolveCommand(
 )
 
 async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
+  // TODO icon
+
   try {
-    const path = await findValidDirectory(space.directory, opts.identifier)
-
-    await createNewAppFromTemplate({
-      ...opts,
-      path,
+    const name = await findValidDirectoryName(space.directory, opts.identifier)
+    return await await commandNew({
+      projectRoot: space.directory,
+      name,
+      template: opts.template,
     })
-
-    return {
-      type: 'success',
-      message: `Created new app`,
-    } as const
   } catch (err) {
     return {
       type: 'error',
@@ -37,15 +38,20 @@ async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptio
   }
 }
 
-async function findValidDirectory(rootDir: string, preferredName: string) {
+async function findValidDirectoryName(rootDir: string, preferredName: string) {
   let i = 0
+  let base = `${sanitize(preferredName)}`
+  if (base.length === 0) {
+    base = `myapp`
+  }
   while (i < 10) {
     i++
-    // TODO
+    const name = i === 1 ? base : `${base}-${i}`
+    const path = join(rootDir, name)
+    if (await pathExists(path)) {
+      continue
+    }
+    return name
   }
   throw new Error(`Couldn't find a valid directory ${preferredName}`)
-}
-
-async function createNewAppFromTemplate(opts: AppCreateNewOptions & { path: string }) {
-  // TODO
 }

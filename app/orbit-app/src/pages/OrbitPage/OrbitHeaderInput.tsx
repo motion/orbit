@@ -163,7 +163,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput({ fontSize }: { f
         />
       </View>
       <After>
-        <ClearButton margin={['auto', 5]} visible={qs.hasQuery} onClick={qs.clearQuery} />
+        <ClearButton margin={['auto', 5]} invisible={!qs.hasQuery} onClick={qs.clearQuery} />
       </After>
     </FakeInput>
   )

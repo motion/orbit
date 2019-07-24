@@ -5,15 +5,13 @@ import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { App } from '@o/stores'
 import { isRightClick, Space } from '@o/ui'
 import { Box, gloss, Row, RowProps } from 'gloss'
-import { flow } from 'lodash'
 import React, { forwardRef, memo, useMemo } from 'react'
 
 import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { preventDefault } from '../../helpers/preventDefault'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useOm } from '../../om/om'
-import { useNewAppStore, usePaneManagerStore } from '../../om/stores'
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../views/OrbitTab'
+import { usePaneManagerStore } from '../../om/stores'
+import { OrbitTab, tabHeight, TabProps } from '../../views/OrbitTab'
 import { appsCarouselStore } from './OrbitAppsCarousel'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
@@ -149,7 +147,7 @@ export const OrbitNav = memo(
           />
           <Space size={epad} />
           <OrbitTab
-            tooltip="Add add"
+            tooltip="Add app"
             width={tabWidthPinned}
             icon="Add"
             onClick={actions.router.toggleSetupAppPage}
@@ -160,30 +158,6 @@ export const OrbitNav = memo(
     )
   }),
 )
-
-const OrbitNewAppTab = props => {
-  const newAppStore = useNewAppStore()
-  const { actions } = useOm()
-  return (
-    <OrbitTab
-      stretch
-      iconSize={18}
-      icon={<AppIcon identifier={newAppStore.app.identifier} colors={newAppStore.app.colors} />}
-      isActive
-      label={'New app'}
-      after={
-        <OrbitTabButton
-          icon="cross"
-          onClick={flow(
-            preventDefault,
-            actions.router.back,
-          )}
-        />
-      }
-      {...props}
-    />
-  )
-}
 
 const OrbitNavChrome = gloss(Box, {
   maxWidth: '100%',

@@ -3,8 +3,8 @@ import { App, Electron } from '@o/stores'
 import { BorderBottom, Button, Popover, PopoverProps, Row, RowProps, SizedSurfaceProps, Space, SurfacePassProps, View } from '@o/ui'
 import { createUsableStore, ensure, react } from '@o/use-store'
 import { BoxProps, FullScreen, gloss, useTheme } from 'gloss'
-import React, { forwardRef, memo, useMemo } from 'react'
 import { createRef, useRef } from 'react'
+import React, { forwardRef, memo, useMemo } from 'react'
 
 import { useIsOnStaticApp } from '../../hooks/seIsOnStaticApp'
 import { useOm } from '../../om/om'
@@ -105,6 +105,7 @@ export const headerStore = createUsableStore(HeaderStore)
 export const useHeaderStore = headerStore.useStore
 
 export const OrbitHeader = memo(() => {
+  const om = useOm()
   const containerRef = useRef()
   const appCarousel = useAppsCarousel()
   const orbitStore = useOrbitStore()
@@ -156,6 +157,20 @@ export const OrbitHeader = memo(() => {
               <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
                 {orbitStore.activeActions}
               </SurfacePassProps>
+              <Button
+                circular
+                alt="flat"
+                icon="plus"
+                size="sm"
+                sizeIcon={1.6}
+                glint={false}
+                glintBottom={false}
+                opacity={0.5}
+                hoverStyle={{
+                  opacity: 0.75,
+                }}
+                onClick={om.actions.router.toggleSetupAppPage}
+              />
               <OrbitHeaderOpenAppMenu />
             </>
           )}

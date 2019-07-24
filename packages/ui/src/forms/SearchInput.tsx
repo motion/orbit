@@ -61,7 +61,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
       }
       after={
         <>
-          <ClearButton onClick={onClickClear} visible={clearVisible} />
+          <ClearButton onClick={onClickClear} invisible={!clearVisible} />
           {after}
           {!!actions && <Actions space="xs">{actions}</Actions>}
         </>
@@ -75,10 +75,10 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
 })
 
 export const ClearButton = gloss<ButtonProps & { visible?: boolean }>(Button, {
-  opacity: 0,
+  opacity: 1,
   pointerEvents: 'none',
-  visible: {
-    opacity: 1,
+  invisible: {
+    opacity: 0,
     pointerEvents: 'auto',
   },
 })

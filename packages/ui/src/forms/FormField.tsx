@@ -24,14 +24,23 @@ const FormValueCol = (props: ColProps) => (
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
 export type SimpleFormFieldProps = ColProps & {
+  description?: string
   label?: React.ReactNode
   layout?: FormFieldLayout
   children?: React.ReactNode
   name?: string
 }
 
-export function SimpleFormField({ name, label, children, layout }: SimpleFormFieldProps) {
+export function SimpleFormField({
+  name,
+  label,
+  children,
+  layout,
+  description,
+}: SimpleFormFieldProps) {
   const error = useFormError(`${label}`)
+
+  const descriptionElement = <SimpleText>{description}</SimpleText>
 
   const labelElement = (
     <Label width="100%" htmlFor={name}>
@@ -52,10 +61,11 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
 
   if (layout === 'vertical') {
     return (
-      <>
+      <Col space="sm">
         {labelElement}
         {valueElement}
-      </>
+        {descriptionElement}
+      </Col>
     )
   }
 
@@ -67,7 +77,10 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
           <Space />
         </Row>
       </FormLabel>
-      <FormValueCol>{valueElement}</FormValueCol>
+      <FormValueCol space="sm">
+        {valueElement}
+        {descriptionElement}
+      </FormValueCol>
     </Row>
   )
 }
@@ -78,6 +91,7 @@ type FormFieldProps =
       label: React.ReactNode
       value: any
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
   | {
@@ -85,6 +99,7 @@ type FormFieldProps =
       label: React.ReactNode
       defaultValue: any
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
   | {
@@ -92,6 +107,7 @@ type FormFieldProps =
       children: React.ReactNode
       type?: undefined
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
 

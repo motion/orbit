@@ -51,7 +51,9 @@ function SetupAppCustom() {
         value: '',
       },
       packageId: {
-        name: 'Package ID',
+        name: 'Unique ID',
+        description:
+          'You can change this later, used for publishing and installing from app store.',
         type: 'text',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
@@ -64,7 +66,9 @@ function SetupAppCustom() {
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
           <Flow.Step title="Customize" subTitle="Your app settings.">
             <Col padding>
-              <Form useForm={form} />
+              <Scale size={1.2}>
+                <Form useForm={form} />
+              </Scale>
             </Col>
           </Flow.Step>
           <Flow.Step buttonTitle="Template" title="Custom App" subTitle="Choose template">

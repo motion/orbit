@@ -121,7 +121,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
                 {...tabButtonProps}
                 {...isActive && tabButtonPropsActive}
               >
-                {stp.buttonTitle || stp.title || 'No title'}
+                {stepIndex + 1}. {stp.buttonTitle || stp.title || 'No title'}
               </Button>
             )
           })}

@@ -39,10 +39,15 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
-export const AppCreateNewCommand = new Command<
-  StatusReply,
-  { template: string; name: string; icon: string; identifier: string }
->('AppCreateNewCommand')
+export type AppCreateNewOptions = {
+  template: string
+  name: string
+  icon: string
+  identifier: string
+}
+export const AppCreateNewCommand = new Command<StatusReply, AppCreateNewOptions>(
+  'AppCreateNewCommand',
+)
 
 export const AppInstallToWorkspaceCommand = new Command<StatusReply, { identifier: string }>(
   'AppInstallToWorkspaceCommand',

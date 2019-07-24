@@ -42,6 +42,7 @@ type FormFieldType =
       type?: InputType
       value?: any
       required?: boolean
+      description?: string
       validate?: (val: any) => string
     }
   | {
@@ -49,6 +50,7 @@ type FormFieldType =
       type: 'select'
       value: { label: string; value: string }[]
       required?: boolean
+      description?: string
       validate?: (val: any) => string
     }
   | {
@@ -268,6 +270,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
         name={key}
         type={DataType[field.type]}
         defaultValue={field.value}
+        description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />
     )

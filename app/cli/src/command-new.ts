@@ -25,7 +25,7 @@ export type CommandNewOptions = {
  * Main function that clones or copies the template.
  */
 export async function commandNew(options: CommandNewOptions) {
-  const projectRoot = options.projectRoot || process.cwd()
+  const projectRoot = join(options.projectRoot || process.cwd(), options.name)
 
   const urlObject = url.parse(projectRoot)
   if (urlObject.protocol && urlObject.host) {

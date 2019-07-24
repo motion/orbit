@@ -14,7 +14,6 @@ export const AppCreateNewResolver = resolveCommand(
   AppCreateNewCommand,
   async ({ name, template, icon, identifier }) => {
     log.info(`Creating new app ${name} ${template}`)
-
     const ws = await getCurrentWorkspace()
     return await createNewWorkspaceApp(ws, { name, template, icon, identifier })
   },
@@ -22,10 +21,9 @@ export const AppCreateNewResolver = resolveCommand(
 
 async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
   // TODO icon
-
   try {
     const name = await findValidDirectoryName(space.directory, opts.identifier)
-    return await await commandNew({
+    return await commandNew({
       projectRoot: space.directory,
       name,
       template: opts.template,

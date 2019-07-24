@@ -8,6 +8,6 @@ export const Label = gloss<SimpleTextProps & HTMLProps<HTMLLabelElement>>(Simple
 Label.defaultProps = {
   tagName: 'label',
   alpha: 0.65,
-  size: 0.85,
   ellipse: true,
+  height: 'max-content',
 }

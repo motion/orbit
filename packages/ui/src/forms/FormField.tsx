@@ -2,6 +2,7 @@ import { Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
 import { getDataType } from '../helpers/getDataType'
+import { useSurfaceHeight } from '../SizedSurface'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
@@ -11,15 +12,13 @@ import { InputField } from './InputField'
 import { Label } from './Label'
 import { ToggleField } from './ToggleField'
 
-const FormLabel = ({ children }) => (
-  <Col width="30%" maxWidth={120}>
+const FormLabel = ({ children, height }) => (
+  <Col data-is="FormLabel" width="30%" maxWidth={120} height={height}>
     {children}
   </Col>
 )
 
-const FormValueCol = (props: ColProps) => (
-  <Col minWidth="70%" flex={1} padding="xs" space {...props} />
-)
+const FormValueCol = (props: ColProps) => <Col minWidth="70%" flex={1} space {...props} />
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
@@ -39,8 +38,13 @@ export function SimpleFormField({
   description,
 }: SimpleFormFieldProps) {
   const error = useFormError(`${label}`)
+  const height = useSurfaceHeight(1)
 
-  const descriptionElement = <SimpleText>{description}</SimpleText>
+  const descriptionElement = (
+    <SimpleText size="sm" alpha={0.8}>
+      {description}
+    </SimpleText>
+  )
 
   const labelElement = (
     <Label width="100%" htmlFor={name}>
@@ -70,8 +74,8 @@ export function SimpleFormField({
   }
 
   return (
-    <Row width="100%" alignItems="center">
-      <FormLabel>
+    <Row width="100%" alignItems="flex-start" padding="xs">
+      <FormLabel height={height}>
         <Row flex={1} alignItems="center">
           {labelElement}
           <Space />

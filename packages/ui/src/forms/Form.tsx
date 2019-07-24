@@ -1,4 +1,4 @@
-import { createStoreContext, shallow, useStore } from '@o/use-store'
+import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -87,6 +87,21 @@ class FormStore {
       this.errors = null
     }
   }
+
+  updateValuesFromProps = react(
+    () => this.props.fields,
+    fields => {
+      for (const key in fields) {
+        const field = fields[key]
+        this.changeField({
+          ...field,
+          // this is really weird, and we need to fix something here
+          // because the key on the fields object is the real "name" here.
+          name: key,
+        })
+      }
+    },
+  )
 
   setFields(value: FormFieldsObj) {
     this.values = value

@@ -74,7 +74,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
         position="relative"
         alignItems="center"
         justifyContent="center"
-        space="xs"
+        space={12}
       >
         <Button
           ref={ref}
@@ -84,6 +84,7 @@ export const DockButton = forwardRef((props: DockButtonProps, ref) => {
           circular
           iconSize={16}
           elevation={4}
+          borderWidth={0}
           badgeProps={{
             background: '#333',
           }}

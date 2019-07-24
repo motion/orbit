@@ -9,7 +9,7 @@ type SearchResults = {
   query: string
 }
 
-class Search {
+export class SearchStoreStore {
   hooks = useHooks(() => ({
     stores: useStoresSimple(),
     app: useAppBit()[0],
@@ -29,7 +29,9 @@ class Search {
   }
 
   get apps() {
-    return appsCarouselStore.apps.filter(x => x.identifier !== 'searchResults' && x.identifier !== 'bit')
+    return appsCarouselStore.apps.filter(
+      x => x.identifier !== 'searchResults' && x.identifier !== 'bit',
+    )
   }
 
   setSearchState(next: SearchState) {
@@ -217,4 +219,4 @@ class Search {
   )
 }
 
-export const SearchStore = createStoreContext(Search)
+export const SearchStore = createStoreContext(SearchStoreStore)

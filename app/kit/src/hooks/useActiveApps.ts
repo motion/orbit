@@ -20,7 +20,10 @@ export function useActiveApps(where?: FindBitWhere): AppBit[] {
           },
         },
   )
-  return useMemo(() => apps.filter(x => x.tabDisplay !== 'hidden'), [apps])
+  return useMemo(
+    () => apps.filter(x => x.tabDisplay !== 'hidden' && x.tabDisplay !== 'permanentLast'),
+    [apps],
+  )
 }
 
 export const appSelectAllButData: (keyof AppBit)[] = [

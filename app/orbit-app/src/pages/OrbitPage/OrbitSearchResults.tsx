@@ -1,19 +1,20 @@
-import { AppBit, ensure, HighlightActiveQuery, react, useReaction, useSearchState, useStore } from '@o/kit'
+import { AppBit, ensure, HighlightActiveQuery, react, SearchState, useReaction, useSearchState, useStore } from '@o/kit'
 import { FullScreen, FullScreenProps, linearGradient, List, ListItemProps, ProvideVisibility, SelectableStore, SubTitle, Theme, useTheme, View } from '@o/ui'
 import { ThemeObject } from 'gloss'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 
 import { om } from '../../om/om'
-import { SearchStore } from '../../stores/SearchStore'
+import { SearchStore, SearchStoreStore } from '../../stores/SearchStore'
 import { appsCarouselStore, useAppsCarousel } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'
 
 class SearchResultsStore {
+  // @ts-ignore
   props: {
-    searchStore: SearchStore
+    searchStore: SearchStoreStore
   }
 
-  searchState = null
+  searchState: SearchState | null = null
 
   setSearchState = next => {
     this.searchState = next
@@ -22,9 +23,11 @@ class SearchResultsStore {
   updateSearchResultsStore = react(
     () => this.searchState,
     async (next, { when }) => {
-      await when(() => this.isActive)
-      await when(() => !appsCarouselStore.isAnimating)
-      this.props.searchStore.setSearchState(next)
+      if (next) {
+        await when(() => this.isActive)
+        // await when(() => !appsCarouselStore.isAnimating)
+        this.props.searchStore.setSearchState(next)
+      }
     },
   )
 
@@ -78,7 +81,6 @@ class SearchResultsStore {
 
 export const OrbitSearchResults = memo(() => {
   const theme = useTheme()
-  const appsDrawer = appsDrawerStore.useStore()
   const searchStore = SearchStore.useStore()!
   const searchResultsStore = useStore(SearchResultsStore, { searchStore })
   const isActive = searchResultsStore.isActive

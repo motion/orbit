@@ -1,6 +1,6 @@
 import { App, AppViewProps, command, createApp, createStoreContext, getAppDefinition, react, Templates, TreeList, TreeListStore, useActiveDataApps, useAppState, useAppWithDefinition, useCommand, useHooks, useTreeList } from '@o/kit'
 import { ApiArgType, AppMetaCommand, CallAppBitApiMethodCommand } from '@o/models'
-import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, Title, TitleRow, Toggle, useGet } from '@o/ui'
+import { Button, Card, CardSimple, Center, CenteredText, Code, Col, DataInspector, Dock, DockButton, FormField, Labeled, Layout, Loading, MonoSpaceText, Pane, PaneButton, randomAdjective, randomNoun, Row, Scale, Section, Select, SelectableGrid, SeparatorHorizontal, SeparatorVertical, SimpleFormField, Space, SubTitle, Tab, Table, Tabs, Tag, TitleRow, Toggle, useGet } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -437,8 +437,8 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
   useEffect(() => {
     console.log('setting method', method)
-    queryBuilder.setMethod(`${method}`)
-  }, [method])
+    queryBuilder.setMethod(method.name)
+  }, [method.name])
 
   if (!hasApiInfo) {
     return <Templates.Message title="This app doesn't have an API" />
@@ -456,66 +456,72 @@ const APIQueryBuild = memo((props: { id: number; showSidebar?: boolean }) => {
 
   return (
     <Layout type="row">
-      <Pane flex={2} resizable background={theme => theme.backgroundStrong}>
-        <Col padding space>
-          <Row justifyContent="space-between">
-            <Tag size={1.2} alt="lightGray">
-              {method.name}
-            </Tag>
-            <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
-          </Row>
+      <Pane flex={2} resizable>
+        <Layout type="col">
+          <Pane flex={2} resizable>
+            <Col padding space>
+              <Row justifyContent="space-between">
+                <Tag size={1.2} alt="lightGray">
+                  {method.name}
+                </Tag>
+                <Button alt="flat" sizeIcon={1.4} tooltip="Show help" icon="help" />
+              </Row>
 
-          {(method.args || []).map((arg, index) => {
-            if (typeof queryBuilder.arguments[index] === 'undefined') {
-              queryBuilder.arguments[index] = defaultValues[arg.type] || ''
-            }
-            return <ArgumentField key={index} arg={arg} queryBuilder={queryBuilder} index={index} />
-          })}
+              {(method.args || []).map((arg, index) => {
+                if (typeof queryBuilder.arguments[index] === 'undefined') {
+                  queryBuilder.arguments[index] = defaultValues[arg.type] || ''
+                }
+                return (
+                  <ArgumentField key={index} arg={arg} queryBuilder={queryBuilder} index={index} />
+                )
+              })}
 
-          <Space size="xl" />
-          <SeparatorHorizontal />
-          <Space size="xl" />
+              <Space size="xl" />
+              <SeparatorHorizontal />
+              <Space size="xl" />
 
-          <TitleRow
-            title="Preview"
-            size="xs"
-            after={
-              <Button
-                alt="approve"
-                margin={[0, 'auto']}
-                size="lg"
-                iconAfter
-                icon="play"
-                onClick={queryBuilder.run}
-              >
-                Run
-              </Button>
-            }
-          />
+              <TitleRow
+                title="Preview"
+                size="xs"
+                after={
+                  <Button
+                    alt="approve"
+                    margin={[0, 'auto']}
+                    size="lg"
+                    iconAfter
+                    icon="play"
+                    onClick={queryBuilder.run}
+                  >
+                    Run
+                  </Button>
+                }
+              />
 
-          <Card elevation={3} height={24 * 3 + 16 * 2}>
-            <MonacoEditor
-              onChange={queryBuilder.setQuery}
-              padding
-              noGutter
-              readOnly
-              value={queryBuilder.query}
-            />
-          </Card>
-
-          <Title size="xs">Output</Title>
-          <Tabs defaultActive="0">
-            <Tab padding key="0" label="Inspect">
-              <DataInspector data={{ data: queryBuilder.result }} />
-            </Tab>
-            <Tab padding key="1" label="JSON">
-              <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
-            </Tab>
-            <Tab padding key="2" label="Table">
-              <Table items={[].concat(queryBuilder.result || [])} />
-            </Tab>
-          </Tabs>
-        </Col>
+              <Card elevation={3} height={24 * 3 + 16 * 2}>
+                <MonacoEditor
+                  onChange={queryBuilder.setQuery}
+                  padding
+                  noGutter
+                  readOnly
+                  value={queryBuilder.query}
+                />
+              </Card>
+            </Col>
+          </Pane>
+          <Pane resizable title="Output" collapsable padding>
+            <Tabs defaultActive="0">
+              <Tab padding key="0" label="Inspect">
+                <DataInspector data={{ data: queryBuilder.result }} />
+              </Tab>
+              <Tab padding key="1" label="JSON">
+                <Code minHeight={200}>{JSON.stringify(queryBuilder.result)}</Code>
+              </Tab>
+              <Tab padding key="2" label="Table">
+                <Table items={[].concat(queryBuilder.result || [])} />
+              </Tab>
+            </Tabs>
+          </Pane>
+        </Layout>
       </Pane>
       <Pane display={props.showSidebar ? undefined : 'none'}>
         <Layout type="column">

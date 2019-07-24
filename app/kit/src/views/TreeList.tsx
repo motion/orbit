@@ -78,9 +78,24 @@ const getActions = (
       const addItem = x => {
         // should normalize fancier
         const item = x.type === 'row' ? x.values : x.item || x
+        let name = item.title || item.name
+
+        if (typeof name !== 'string') {
+          if (name) {
+            name = Object.keys(name)
+              .map(k => name[k])
+              .join(', ')
+          } else {
+            name = Object.keys(x)
+              .slice(0, 3)
+              .map(k => x[k])
+              .join(', ')
+          }
+        }
+
         Actions.addItem(
           {
-            name: `${item.title || item.name}`,
+            name,
             data: item,
           },
           parentId,

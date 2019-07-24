@@ -111,7 +111,7 @@ function DemoLayoutApp() {
         <Pane flex={3} collapsable title="Inspect" resizable>
           <Table searchable query={useActiveSearchQuery()} selectable items={items} />
         </Pane>
-        <Pane title="Sidebar">
+        <Pane>
           <Layout type="column">
             <Pane title="Elements" resizable padding collapsable>
               <DataInspector

@@ -81,18 +81,18 @@ export class WorkspaceManager {
     })
   }
 
-  private onWorkspaceChange = debounce(async () => {
+  updateWorkspace = async () => {
     log.info(`See workspace change`)
     await this.updateApps()
     const config = await this.getAppsConfig()
-
     if (!config) {
       reporter.error('No apps found')
-      return
+      return {
+        type: 'error',
+        message: `No apps found`,
+      } as const
     }
-
     log.info(`workspace app config`, JSON.stringify(config, null, 2))
-
     if (!isEqual(this.buildConfig, config)) {
       this.buildConfig = config
       if (this.buildServer) {
@@ -102,7 +102,13 @@ export class WorkspaceManager {
       await this.buildServer.start()
       await updateWorkspacePackageIds(this.directory)
     }
-  }, 50)
+    return {
+      type: 'success',
+      message: `Updated app ids`,
+    } as const
+  }
+
+  private onWorkspaceChange = debounce(this.updateWorkspace, 50)
 
   async updateApps() {
     const next = await getWorkspaceApps(this.directory)

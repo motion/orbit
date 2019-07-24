@@ -1,4 +1,4 @@
-import { createStoreContext, shallow, useStore } from '@o/use-store'
+import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -42,6 +42,7 @@ type FormFieldType =
       type?: InputType
       value?: any
       required?: boolean
+      description?: string
       validate?: (val: any) => string
     }
   | {
@@ -49,6 +50,7 @@ type FormFieldType =
       type: 'select'
       value: { label: string; value: string }[]
       required?: boolean
+      description?: string
       validate?: (val: any) => string
     }
   | {
@@ -85,6 +87,21 @@ class FormStore {
       this.errors = null
     }
   }
+
+  updateValuesFromProps = react(
+    () => this.props.fields,
+    fields => {
+      for (const key in fields) {
+        const field = fields[key]
+        this.changeField({
+          ...field,
+          // this is really weird, and we need to fix something here
+          // because the key on the fields object is the real "name" here.
+          name: key,
+        })
+      }
+    },
+  )
 
   setFields(value: FormFieldsObj) {
     this.values = value
@@ -268,6 +285,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
         name={key}
         type={DataType[field.type]}
         defaultValue={field.value}
+        description={'description' in field ? field.description : undefined}
         {...field.type === 'custom' && { children: field.children }}
       />
     )

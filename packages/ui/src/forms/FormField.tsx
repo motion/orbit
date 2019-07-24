@@ -2,6 +2,7 @@ import { Row } from 'gloss'
 import React, { useEffect, useState } from 'react'
 
 import { getDataType } from '../helpers/getDataType'
+import { useSurfaceHeight } from '../SizedSurface'
 import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
@@ -11,27 +12,39 @@ import { InputField } from './InputField'
 import { Label } from './Label'
 import { ToggleField } from './ToggleField'
 
-const FormLabel = ({ children }) => (
-  <Col width="30%" maxWidth={120}>
+const FormLabel = ({ children, height }) => (
+  <Col data-is="FormLabel" width="30%" maxWidth={120} height={height}>
     {children}
   </Col>
 )
 
-const FormValueCol = (props: ColProps) => (
-  <Col minWidth="70%" flex={1} padding="xs" space {...props} />
-)
+const FormValueCol = (props: ColProps) => <Col minWidth="70%" flex={1} space {...props} />
 
 export type FormFieldLayout = 'horizontal' | 'vertical'
 
 export type SimpleFormFieldProps = ColProps & {
+  description?: string
   label?: React.ReactNode
   layout?: FormFieldLayout
   children?: React.ReactNode
   name?: string
 }
 
-export function SimpleFormField({ name, label, children, layout }: SimpleFormFieldProps) {
+export function SimpleFormField({
+  name,
+  label,
+  children,
+  layout,
+  description,
+}: SimpleFormFieldProps) {
   const error = useFormError(`${label}`)
+  const height = useSurfaceHeight(1)
+
+  const descriptionElement = (
+    <SimpleText size="sm" alpha={0.8}>
+      {description}
+    </SimpleText>
+  )
 
   const labelElement = (
     <Label width="100%" htmlFor={name}>
@@ -52,22 +65,26 @@ export function SimpleFormField({ name, label, children, layout }: SimpleFormFie
 
   if (layout === 'vertical') {
     return (
-      <>
+      <Col space="sm">
         {labelElement}
         {valueElement}
-      </>
+        {descriptionElement}
+      </Col>
     )
   }
 
   return (
-    <Row width="100%" alignItems="center">
-      <FormLabel>
+    <Row width="100%" alignItems="flex-start" padding="xs">
+      <FormLabel height={height}>
         <Row flex={1} alignItems="center">
           {labelElement}
           <Space />
         </Row>
       </FormLabel>
-      <FormValueCol>{valueElement}</FormValueCol>
+      <FormValueCol space="sm">
+        {valueElement}
+        {descriptionElement}
+      </FormValueCol>
     </Row>
   )
 }
@@ -78,6 +95,7 @@ type FormFieldProps =
       label: React.ReactNode
       value: any
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
   | {
@@ -85,6 +103,7 @@ type FormFieldProps =
       label: React.ReactNode
       defaultValue: any
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
   | {
@@ -92,6 +111,7 @@ type FormFieldProps =
       children: React.ReactNode
       type?: undefined
       name?: string
+      description?: string
       layout?: FormFieldLayout
     }
 

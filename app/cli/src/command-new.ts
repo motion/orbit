@@ -4,12 +4,16 @@ import execa from 'execa'
 import fs, { pathExistsSync, remove } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
-import sysPath, { join } from 'path'
+import { basename, join, resolve } from 'path'
 import url from 'url'
 
 import { reporter } from './reporter'
 import { configStore, promptPackageManager } from './util/configStore'
 import { isTty } from './util/isTty'
+
+// adapted from gatsby
+// The MIT License (MIT)
+// Copyright (c) 2015 Gatsbyjs
 
 export type CommandNewOptions = {
   projectRoot: string
@@ -21,56 +25,64 @@ export type CommandNewOptions = {
  * Main function that clones or copies the template.
  */
 export async function commandNew(options: CommandNewOptions) {
-  const projectRoot = options.projectRoot || process.cwd()
+  const projectRoot = join(options.projectRoot || process.cwd(), options.name)
 
   const urlObject = url.parse(projectRoot)
   if (urlObject.protocol && urlObject.host) {
     trackError(`NEW_PROJECT_NAME_MISSING`)
-    reporter.panic(
-      `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${projectRoot}"`,
-    )
-    return
+    return {
+      type: 'error',
+      message: `It looks like you forgot to add a name for your new project. Try running instead "orbit new new-orbit-project ${projectRoot}"`,
+    } as const
   }
 
   if (!isValid(projectRoot)) {
-    reporter.panic(
-      `Could not create a project in "${sysPath.resolve(
+    return {
+      type: 'error',
+      message: `Could not create a project in "${resolve(
         projectRoot,
       )}" because it's not a valid path`,
-    )
-    return
+    } as const
   }
 
-  if (pathExistsSync(sysPath.join(projectRoot, `package.json`))) {
+  if (pathExistsSync(join(projectRoot, `package.json`))) {
     trackError(`NEW_PROJECT_IS_NPM_PROJECT`)
-    reporter.panic(`Directory ${projectRoot} is already an npm project`)
-    return
+    return {
+      type: 'error',
+      message: `Directory ${projectRoot} is already an npm project`,
+    } as const
   }
 
   const hostedInfo = hostedGitInfo.fromUrl(options.template)
 
   trackCli(`NEW_PROJECT`, { templateName: options.template })
 
-  if (hostedInfo) {
-    reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
-    await clone(hostedInfo, projectRoot)
-    return
-  }
-
-  const templatePath = join(__dirname, '..', 'templates', options.template)
-
-  if (!pathExistsSync(templatePath)) {
-    reporter.panic(`Couldn't find local template with name ${options.template} at ${templatePath}`)
-    return
-  }
-
   try {
-    await copy(templatePath, projectRoot)
+    if (hostedInfo) {
+      reporter.info(`Cloning from git ${JSON.stringify(hostedInfo)}`)
+      await clone(hostedInfo, projectRoot)
+    } else {
+      const templatePath = join(__dirname, '..', 'templates', options.template)
+      if (!pathExistsSync(templatePath)) {
+        return {
+          type: 'error',
+          message: `Couldn't find local template with name ${options.template} at ${templatePath}`,
+        } as const
+      }
+      await copy(templatePath, projectRoot)
+    }
+    return {
+      type: 'success',
+      message: `Created app at ${projectRoot}`,
+    } as const
   } catch (err) {
     try {
       await remove(projectRoot)
     } catch {}
-    reporter.panic(`Error copying template ${err.message}`)
+    return {
+      type: 'error',
+      message: `Error copying template ${err.message}`,
+    } as const
   }
 }
 
@@ -113,12 +125,12 @@ const gitInit = async projectRoot => {
 
 // Create a .gitignore file if it is missing in the new directory
 const maybeCreateGitIgnore = async projectRoot => {
-  if (pathExistsSync(sysPath.join(projectRoot, `.gitignore`))) {
+  if (pathExistsSync(join(projectRoot, `.gitignore`))) {
     return
   }
 
   reporter.info(`Creating minimal .gitignore in ${projectRoot}`)
-  await fs.writeFile(sysPath.join(projectRoot, `.gitignore`), `.cache\nnode_modules\npublic\n`)
+  await fs.writeFile(join(projectRoot, `.gitignore`), `.cache\nnode_modules\npublic\n`)
 }
 
 // Create an initial git commit in the new directory
@@ -153,7 +165,7 @@ const install = async projectRoot => {
   }
 }
 
-const ignored = path => !/^\.(git|hg)$/.test(sysPath.basename(path))
+const ignored = path => !/^\.(git|hg)$/.test(basename(path))
 
 // Copy template from file system.
 const copy = async (templatePath: string, projectRoot: string) => {
@@ -207,7 +219,7 @@ const clone = async (hostInfo: any, projectRoot: string) => {
 
   reporter.success(`Created template directory layout`)
 
-  await fs.remove(sysPath.join(projectRoot, `.git`))
+  await fs.remove(join(projectRoot, `.git`))
 
   await install(projectRoot)
   await gitInit(projectRoot)

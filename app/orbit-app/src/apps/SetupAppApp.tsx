@@ -4,7 +4,7 @@ import { Button, Col, Flow, FlowLayoutInline, FlowProvide, Form, IconLabeled, Li
 import React, { memo, useLayoutEffect } from 'react'
 
 import { createAppBitInActiveSpace, useInstallApp } from '../helpers/installApp'
-import { newAppStore, useNewAppStore } from '../om/stores'
+import { newAppStore } from '../om/stores'
 import { useSearchAppStoreApps, useTopAppStoreApps } from './apps/AppsApp'
 import { AppsMainNew } from './apps/AppsMainNew'
 import { useUserVisualAppDefinitions } from './orbitApps'
@@ -34,8 +34,7 @@ function SetupAppMain() {
 
 function SetupAppCustom() {
   const banner = useBanner()
-  const newAppStore = useNewAppStore()
-  const stackNav = useStackNavigator()
+  const stackNav = useStackNavigator()!
 
   const flow = useCreateFlow({
     data: {
@@ -50,8 +49,10 @@ function SetupAppCustom() {
         type: 'text',
         value: '',
       },
-      packageId: {
-        name: 'Package ID',
+      identifier: {
+        name: 'Unique ID',
+        description:
+          'You can change this later, used for publishing and installing from app store.',
         type: 'text',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
@@ -60,14 +61,16 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="90%" height="90%" margin="auto">
+      <Col width="90%" height="90%" margin="auto" flex={1}>
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
           <Flow.Step title="Customize" subTitle="Your app settings.">
             <Col padding>
-              <Form useForm={form} />
+              <Scale size={1.2}>
+                <Form useForm={form} />
+              </Scale>
             </Col>
           </Flow.Step>
-          <Flow.Step buttonTitle="Template" title="Custom App" subTitle="Choose template">
+          <Flow.Step buttonTitle="Template" title="Template" subTitle="Choose starting template.">
             {({ setData }) => {
               return (
                 <Col padding>
@@ -77,6 +80,7 @@ function SetupAppCustom() {
                     items={[
                       {
                         label: 'Blank',
+                        template: 'blank',
                         icon: 'template',
                         subTitle: 'Empty app template',
                       },
@@ -86,10 +90,10 @@ function SetupAppCustom() {
                         <IconLabeled {...props} />
                       </SelectableSurface>
                     )}
-                    onSelect={item => {
+                    onSelect={items => {
+                      const item = items[0]
                       console.log('set item', item)
-                      newAppStore.setApp(flow.data.identifier)
-                      setData(item)
+                      setData({ selectedTemplate: item.template })
                     }}
                   />
                 </Col>
@@ -113,9 +117,20 @@ function SetupAppCustom() {
               const name = form.getValue('name')
               const identifier = form.getValue('identifier')
 
+              if (!identifier || !name || !template) {
+                console.log(identifier, name, template)
+                banner.set({
+                  message: `Error, must have identifier, name, and template selected`,
+                  timeout: 2,
+                })
+                return
+              }
+
               banner.set({
                 message: `Creating app "${name}" with template "${template}".`,
               })
+
+              debugger
 
               const res = await command(AppCreateNewCommand, {
                 template,
@@ -134,7 +149,7 @@ function SetupAppCustom() {
 
               // go to app
               console.warn('should go to app')
-              createAppBitInActiveSpace({
+              await createAppBitInActiveSpace({
                 identifier,
               })
 
@@ -190,7 +205,7 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" height="80%" margin="auto">
+        <Col width="90%" height="80%" margin="auto" flex={1}>
           <Flow
             useFlow={flow}
             afterTitle={

@@ -79,11 +79,14 @@ function main() {
         setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.appName)
-        await commandNew({
+        const res = await commandNew({
           projectRoot,
           name: argv.appName,
           template: argv.template,
         })
+        if (res.type === 'error') {
+          reporter.panic(res.message)
+        }
       },
     )
     .command(

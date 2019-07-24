@@ -40,14 +40,13 @@ type StepProps = {
   setStepIndex: (index: number) => void
 }
 
-export type FlowStepProps = StepProps &
-  FlowSectionProps & {
-    title?: string
-    buttonTitle?: string
-    subTitle?: string
-    children?: React.ReactNode | ((props: StepProps) => any)
-    validateFinished?: (a: any) => true | any
-  }
+export type FlowStepProps = FlowSectionProps & {
+  title?: string
+  buttonTitle?: string
+  subTitle?: string
+  children?: React.ReactNode | ((props: StepProps) => any)
+  validateFinished?: (a: any) => true | any
+}
 
 type FlowStep = FlowStepProps & {
   key: string
@@ -121,7 +120,7 @@ export const FlowLayoutSlider = (props: FlowLayoutProps) => {
                 {...tabButtonProps}
                 {...isActive && tabButtonPropsActive}
               >
-                {stp.buttonTitle || stp.title || 'No title'}
+                {stepIndex + 1}. {stp.buttonTitle || stp.title || 'No title'}
               </Button>
             )
           })}

@@ -6,7 +6,7 @@ import { useScale } from '../Scale'
 import { getTextSize } from '../Sizes'
 import { Size } from '../Space'
 
-export type SimpleTextProps = BaseProps & {
+export type SimpleTextProps = Omit<BaseProps, 'size'> & {
   size?: Size
   ellipse?: boolean
   selectable?: boolean

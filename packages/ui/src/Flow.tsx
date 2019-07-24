@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useRef } from 'react'
 
 import { Button } from './buttons/Button'
 import { Center } from './Center'
@@ -71,8 +71,8 @@ const DefaultFlowToolbar = (props: FlowLayoutProps) => {
 
   return (
     <Row space="sm">
-      <Button disabled={isOnFirstStep} icon="chevron-left" onClick={props.prev} />
-      <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.next}>
+      <Button disabled={isOnFirstStep} icon="chevron-left" onClick={props.stepProps.prev} />
+      <Button disabled={isOnLastStep} iconAfter icon="chevron-right" onClick={props.stepProps.next}>
         Next
       </Button>
       {props.afterTitle}

@@ -153,7 +153,7 @@ function useImmerState<A>(defaultState: A): ScopedState<A> {
       if (typeof updater === 'function') {
         updateValue(produce(updater as any))
       } else {
-        updateValue(updater)
+        updateValue(updater as A)
       }
     }, []),
   ]

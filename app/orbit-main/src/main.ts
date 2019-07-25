@@ -142,7 +142,7 @@ export async function main() {
     //  4. if syncers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
     //
     //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
-    await new Promise(res => setTimeout(res, 4000))
+    await new Promise(res => setTimeout(res, 8000))
     setupProcess({
       name: 'syncers',
       inspectPort: 9003,

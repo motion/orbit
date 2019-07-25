@@ -31,7 +31,7 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
     const { identifier } = await loadWorkspace(workspaceRoot)
 
     // ensure/find space
-    const space = await findOrCreateWorkspace({
+    let space = await findOrCreateWorkspace({
       identifier,
       directory: workspaceRoot,
     })
@@ -50,6 +50,7 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
         ...space,
         directory: workspaceRoot,
       })
+      space = await getRepository(SpaceEntity).findOne({ identifier })
     }
 
     log.info('got space', space)

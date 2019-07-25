@@ -1,10 +1,4 @@
-import {
-  getIdentifierFromPackageId,
-  getIdentifierToPackageId,
-  getWorkspaceApps,
-  requireWorkspaceDefinitions,
-  updateWorkspacePackageIds,
-} from '@o/cli'
+import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceApps, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'

@@ -1,17 +1,7 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { arrayMove } from '@o/react-sortable-hoc'
-import {
-  Button,
-  filterCleanObject,
-  List,
-  ListItemProps,
-  ListProps,
-  Loading,
-  TreeItem,
-  useDeepEqualState,
-  useGet,
-} from '@o/ui'
+import { Button, filterCleanObject, List, ListItemProps, ListProps, Loading, TreeItem, useDeepEqualState, useGet } from '@o/ui'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useAppState } from '../hooks/useAppState'

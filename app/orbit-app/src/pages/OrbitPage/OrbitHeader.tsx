@@ -152,28 +152,32 @@ export const OrbitHeader = memo(() => {
         <HeaderContain space spaceAround isActive={false} isEditing={isEditing}>
           <OrbitHeaderInput fontSize={slim ? 16 : 18} />
 
-          {isOnTearablePane && (
-            <>
-              <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
-                {orbitStore.activeActions}
-              </SurfacePassProps>
-              <Button
-                circular
-                alt="flat"
-                icon="plus"
-                size="sm"
-                sizeIcon={1.6}
-                glint={false}
-                glintBottom={false}
-                opacity={0.5}
-                hoverStyle={{
-                  opacity: 0.75,
-                }}
-                onClick={om.actions.router.toggleSetupAppPage}
-              />
-              <OrbitHeaderOpenAppMenu />
-            </>
-          )}
+          <Row
+            space
+            transition="all ease 300ms"
+            {...!isOnTearablePane &&
+              appCarousel.zoomedIn && { pointerEvents: 'none', opacity: 0.3 }}
+          >
+            <SurfacePassProps sizeRadius={1.5} sizeHeight={0.9} sizeIcon={1.1} sizePadding={1.2}>
+              {orbitStore.activeActions}
+            </SurfacePassProps>
+            <Button
+              circular
+              tooltip="Add app to workspace"
+              alt="flat"
+              icon="plus"
+              size="sm"
+              sizeIcon={1.6}
+              glint={false}
+              glintBottom={false}
+              opacity={0.5}
+              hoverStyle={{
+                opacity: 0.75,
+              }}
+              onClick={om.actions.router.toggleSetupAppPage}
+            />
+            <OrbitHeaderOpenAppMenu />
+          </Row>
         </HeaderContain>
 
         <HeaderSide space="sm" spaceAround="md" justifyContent="flex-start" slim={slim}>

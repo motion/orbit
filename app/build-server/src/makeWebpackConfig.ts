@@ -183,13 +183,19 @@ export function makeWebpackConfig(
           test: /\.node.[jt]sx?/,
           use: 'ignore-loader',
         },
-        // ignore non-.node.js modules in node mode
-        target === 'node' && {
+        !!ignore.length && {
+          use: 'ignore-loader',
           test: x => {
             // explicit ignores from options
             if (ignore.find(z => z.indexOf(x) > -1)) {
               return true
             }
+            return false
+          },
+        },
+        // ignore non-.node.js modules in node mode
+        target === 'node' && {
+          test: x => {
             // dont ignore if outside of this app source
             if (x.indexOf(entryDir) !== 0) {
               return false

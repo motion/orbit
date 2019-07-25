@@ -1,5 +1,5 @@
 import { createStoreContext, useHooks, useStore } from '@o/use-store'
-import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useRef } from 'react'
+import React, { Children, FunctionComponent, isValidElement, memo, useLayoutEffect, useRef, useState } from 'react'
 
 import { Button } from './buttons/Button'
 import { Center } from './Center'
@@ -181,7 +181,7 @@ export class FlowStore {
       `flowdata-${this.props.id || ''}`,
       this.props.data || null,
     )
-    const [index, setIndex] = Config.useUserState(`flowindex-${this.props.id || ''}`, 0)
+    const [index, setIndex] = useState(0)
     return {
       data,
       setData,

@@ -51,8 +51,7 @@ function SetupAppCustom() {
       },
       identifier: {
         name: 'Unique ID',
-        description:
-          'You can change this later, used for publishing and installing from app store.',
+        description: 'You can change this later.',
         type: 'text',
         value: `${randomAdjective()}${randomNoun()}${Math.round(Math.random() * 10)}`,
       },
@@ -61,9 +60,9 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="90%" height="90%" margin="auto" flex={1}>
+      <Col margin="auto" width="90%" flex={1} padding scrollable="y">
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
-          <Flow.Step title="Customize" subTitle="Your app settings.">
+          <Flow.Step title="Customize" subTitle="Pick a name and ID 123 ok.">
             <Col padding>
               <Scale size={1.2}>
                 <Form useForm={form} />
@@ -205,7 +204,7 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" height="80%" margin="auto" flex={1}>
+        <Col width="90%" maxHeight="80%" margin="auto" flex={1}>
           <Flow
             useFlow={flow}
             afterTitle={

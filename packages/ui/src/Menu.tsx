@@ -34,6 +34,7 @@ export const Menu = forwardRef(
           borderRadius={borderRadius}
           flex={1}
           maxHeight={maxHeight}
+          elevation={3}
         >
           {children ||
             items.map((item, index) => {

@@ -155,30 +155,6 @@ class OrbitAppsCarouselStore {
     },
   )
 
-  // scrollToSearchedApp = react(
-  //   () => queryStore.queryInstant,
-  //   async (query, { sleep }) => {
-  //     await sleep(40)
-  //     ensure('not on drawer', !appsDrawerStore.isOpen)
-  //     ensure('has apps', !!this.apps.length)
-  //     ensure('zoomed out', this.state.zoomedOut)
-  //     ensure('not zooming into next app', !this.zoomIntoNextApp)
-  //     if (query.indexOf(' ') > -1) {
-  //       // searching within app
-  //       const [_, firstWord] = query.split(' ')
-  //       if (firstWord.trim().length) {
-  //         this.state.zoomedOut = false
-  //       }
-  //     } else {
-  //       // searching apps
-  //       const searchedApp = fuzzyFilter(query, this.searchableApps)[0]
-  //       const curId = searchedApp ? searchedApp.id : this.apps[0].id
-  //       const appIndex = this.apps.findIndex(x => x.id === curId)
-  //       this.setFocused(appIndex, true)
-  //     }
-  //   },
-  // )
-
   setFocused(next: number, forceScroll = false) {
     if (!this.apps[next]) {
       console.warn('no app at index', next)
@@ -399,6 +375,24 @@ export const OrbitAppsCarousel = memo(() => {
   useLayoutEffect(() => {
     rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   }, [scrollable])
+
+  // this is literally just to fix a stupid hmr bug where when on setupApp
+  // you'd find it scrolled weirdly, i tried mutationObserver/addEventListener('scroll'),
+  // neither pick it up because the event is removed
+  useEffect(() => {
+    if (rowRef.current) {
+      const curLeft = rowRef.current.scrollLeft
+      const index = appsCarouselStore.focusedIndex
+      const expectedLeft = index * rowWidth
+      if (curLeft !== expectedLeft) {
+        appsCarouselStore.animateAndScrollTo(0)
+        sleep(100).then(() => {
+          appsCarouselStore.animateAndScrollTo(index)
+        })
+        console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
+      }
+    }
+  })
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%" overflow="hidden" ref={frameRef}>

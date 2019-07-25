@@ -7,7 +7,7 @@
   "scripts": {
     "start": "orbit dev",
     "build": "orbit build",
-    "publish": "orbit publish"
+    "publish-app": "orbit publish"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

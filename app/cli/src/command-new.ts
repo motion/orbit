@@ -1,7 +1,7 @@
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
 import execa from 'execa'
-import fs, { pathExistsSync, remove } from 'fs-extra'
+import fs, { pathExistsSync, readJSON, remove, writeJSON } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
 import { basename, join, resolve } from 'path'
@@ -71,6 +71,15 @@ export async function commandNew(options: CommandNewOptions) {
       }
       await copy(templatePath, projectRoot)
     }
+
+    // replace name into package.json
+    const pkgJsonPath = join(projectRoot, 'package.json')
+    const pkgInfo = await readJSON(pkgJsonPath)
+    pkgInfo.name = options.name || 'no-name'
+    await writeJSON(pkgJsonPath, pkgInfo, {
+      spaces: 2,
+    })
+
     return {
       type: 'success',
       message: `Created app at ${projectRoot}`,

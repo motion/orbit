@@ -6,12 +6,12 @@ import { getRepository } from 'typeorm'
 
 const log = new Logger('createWorkspace')
 
-export const AppCreateWorkspaceResolver = resolveCommand(
-  AppCreateWorkspaceCommand,
-  findOrCreateWorkspace,
-)
+export const AppCreateWorkspaceResolver = resolveCommand(AppCreateWorkspaceCommand, async props => {
+  await findOrCreateWorkspace(props)
+  return true
+})
 
-export async function findOrCreateWorkspace(props) {
+export async function findOrCreateWorkspace(props: { identifier?: string; directory?: string }) {
   log.info(`looking for space`, props)
 
   const ws = await getRepository(SpaceEntity).findOne({
@@ -23,10 +23,6 @@ export async function findOrCreateWorkspace(props) {
   log.info('Find or create space', props, 'found?', !!ws)
 
   if (ws) {
-    // moved!
-    if (ws.directory !== props.directory) {
-      console.log('directory seems to have moved, we should prompt and allow choice')
-    }
     return ws
   }
 

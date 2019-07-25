@@ -22,6 +22,7 @@ export * from './util/findPackage'
 export * from './util/getWorkspaceApps'
 export * from './util/updateWorkspacePackageIds'
 export * from './util/getIsInMonorepo'
+export * from './WorkspaceManager'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 

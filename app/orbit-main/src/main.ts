@@ -135,7 +135,14 @@ export async function main() {
 
   // syncers
   if (!DISABLE_WORKERS) {
-    await new Promise(res => setTimeout(res, 1000))
+    // i bumped up the wait time here because when you run `orbit ws` the CLI:
+    //  1. starts orbit-desktop
+    //  2. sends OpenWorkspaceCommand to the resolver
+    //  3. that then needs to validate/update the space.directory if it moved
+    //  4. if syncers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
+    //
+    //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
+    await new Promise(res => setTimeout(res, 4000))
     setupProcess({
       name: 'syncers',
       inspectPort: 9003,

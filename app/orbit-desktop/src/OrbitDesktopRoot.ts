@@ -85,8 +85,7 @@ import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceReso
 import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
-import { WorkspaceManager } from '@o/cli/_/WorkspaceManager'
-import { getIdentifierToPackageId } from '@o/cli'
+import { getIdentifierToPackageId, WorkspaceManager } from '@o/cli'
 
 const log = new Logger('desktop')
 
@@ -147,11 +146,7 @@ export class OrbitDesktopRoot {
     // manage apps/apis
     this.orbitAppsManager = new OrbitAppsManager()
 
-    await Promise.all([
-      this.generalSettingManager.start(),
-      this.operatingSystemManager.start(),
-      this.orbitAppsManager.start(),
-    ])
+    await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
     // signals to frontend to update app definitions
     this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
@@ -198,7 +193,7 @@ export class OrbitDesktopRoot {
     this.authServer = new AuthServer()
     this.graphServer = new GraphServer()
 
-    await Promise.all([this.authServer.start(), this.graphServer.start()])
+    await Promise.all([this.authServer.start()])
 
     // depends on cosal
     this.topicsManager = new TopicsManager({ cosal })
@@ -206,30 +201,6 @@ export class OrbitDesktopRoot {
 
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
-
-    // DISABLED: OCR/screen stuff
-
-    // setup screen before we pass into managers...
-    // this.screen = new Screen({
-    //   ...screenOptions,
-    //   showTray: true,
-    // })
-
-    // this.screen.onError(err => {
-    //   if (err.indexOf('Could not watch application') >= 0) {
-    //     return
-    //   }
-    //   console.log('Screen error', err)
-    // })
-
-    // start managers...
-
-    // if (!process.env.DISABLE_MENU) {
-    //   this.oracleManager = new OracleManager()
-    //   await this.oracleManager.start()
-    // }
-
-    // new ContextManager({ screen: this.screen })
 
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
@@ -283,7 +254,15 @@ export class OrbitDesktopRoot {
   }
 
   setWorkspaceManager(wsManager: WorkspaceManager) {
+    log.info(`setWorkspaceManager`)
     this.workspaceManager = wsManager
+    // start orbit apps manager workspace manager is started
+    // this is some sloppy code, needs refactoring.
+    // we start it after because workspace manager validated/updated a few things in SpaceEntity
+    // like being sure directory is matching
+    this.orbitAppsManager.start()
+    // same goes for graphManager
+    this.graphServer.start()
   }
 
   /**

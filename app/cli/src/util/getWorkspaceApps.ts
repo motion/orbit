@@ -18,7 +18,7 @@ type OrbitAppDirDesc = {
 export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
   try {
     reporter.info(`getWorkspaceApps ${workspaceRoot}`)
-    console.trace('getting workspace apps')
+    console.trace('ok')
     const packageJson: PackageJson = await readJSON(join(workspaceRoot, 'package.json'))
     const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
       const directory = findPackage({ directory: workspaceRoot, packageId })
@@ -52,7 +52,8 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
 }
 
 async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<OrbitAppDirDesc[]> {
-  const directories = (await readdir(workspaceRoot)).map(x => join(workspaceRoot, x))
+  const appsDir = join(workspaceRoot, 'apps')
+  const directories = (await readdir(appsDir)).map(x => join(appsDir, x))
   let res: OrbitAppDirDesc[] = []
   for (const directory of directories) {
     if (await isOrbitApp(directory)) {

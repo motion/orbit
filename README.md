@@ -18,7 +18,7 @@ If you just want to re-build everyhting, try `yarn build`.
 
 ## run
 
-Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside the `app/example-workspace`.
+Orbit now "self-builds" so you can just run with `yarn start` which runs `orbit ws` inside `example-workspace`.
 
 To run the development tools, run `yarn start:devtools`. This will run two things:
 

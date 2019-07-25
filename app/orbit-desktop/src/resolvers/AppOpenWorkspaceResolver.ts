@@ -7,8 +7,8 @@ import { readJSON } from 'fs-extra'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 
-import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
+import { findOrCreateWorkspace } from './AppCreateWorkspaceResolver'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 const Config = getGlobalConfig()
@@ -21,6 +21,7 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
   return resolveCommand(AppOpenWorkspaceCommand, async options => {
     const { workspaceRoot } = options
     log.info(`Got command ${workspaceRoot}`)
+
     Desktop.setState({
       workspaceState: {
         workspaceRoot,
@@ -34,9 +35,26 @@ export function createAppOpenWorkspaceResolver(desktop: OrbitDesktopRoot) {
       identifier,
       directory: workspaceRoot,
     })
+
+    // verify matching identifier
+    if (space.identifier !== identifier) {
+      // we should prompt to make sure they either are in wrong directory / or to change it
+      console.error(`Wrong space, not matching this identifier`)
+      process.exit(1)
+    }
+
+    // validate/update directory
+    if (workspaceRoot !== space.directory) {
+      console.log('You moved this space, updating to new directory', workspaceRoot)
+      await getRepository(SpaceEntity).save({
+        ...space,
+        directory: workspaceRoot,
+      })
+    }
+
     log.info('got space', space)
 
-    // set active space
+    // set user active space
     const user = await getRepository(UserEntity).findOne({})
     user.activeSpace = space.id
     await getRepository(UserEntity).save(user)

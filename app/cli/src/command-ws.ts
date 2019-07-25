@@ -22,7 +22,7 @@ import { WorkspaceManager } from './WorkspaceManager'
  *
  */
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info(`Running command ws, daemon? ${options.daemon} ${options.mode}`)
+  reporter.info(`Running command ws, daemon? ${!!options.daemon}, mode ${options.mode}`)
   if (options.daemon) {
     const wsManager = new WorkspaceManager()
     wsManager.setWorkspace(options)

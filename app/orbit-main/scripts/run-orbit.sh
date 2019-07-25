@@ -2,7 +2,7 @@
 
 cd $(dirname $0)/..
 
-npx kill-port 3031 & # overmind-dev
+# kill old instances
 npx kill-port 9001 &
 npx kill-port 9002 &
 npx kill-port 9003 &

@@ -5,6 +5,9 @@
   "config": {
     "orbitWorkspace": true
   },
+  "workspaces": [
+    "apps"
+  ],
   "dependencies": {
     "@o/demo-app-api-grid": "^2.5.6",
     "@o/demo-app-flow": "^2.5.6",

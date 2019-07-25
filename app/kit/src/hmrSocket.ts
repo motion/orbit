@@ -237,7 +237,7 @@ function processUpdate(hash, moduleMap, options) {
   function performReload() {
     if (reload) {
       if (options.warn) console.warn('[HMR] Reloading page')
-      window.location.reload()
+      // window.location.reload()
     }
   }
 }

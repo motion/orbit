@@ -1,23 +1,21 @@
 {
   "name": "orbit-monorepo",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "app/*",
-      "packages/*",
-      "apps/*",
-      "projects/*"
-    ]
-  },
+  "workspaces": [
+    "app/*",
+    "packages/*",
+    "apps/*",
+    "projects/*"
+  ],
   "scripts": {
     "bootstrap": "./bin/bootstrap",
     "watch": "source .env && build --watch",
     "clean": "source .env && clean",
     "clean:packages": "source .env && clean --all",
-    "start": "chmod ug+x app/cli/_/index.js && cd app/example-workspace && orbit ws --logLevel 1",
-    "start:prod": "cd app/example-workspace && orbit ws --logLevel 1 --mode production",
-    "start:verbose": "cd app/example-workspace && orbit ws --logLevel 3",
-    "start:noworkers": "(cd app/example-workspace && DISABLE_WORKERS=true orbit ws --logLevel 3)",
+    "start": "chmod ug+x app/cli/_/index.js && cd example-workspace && orbit ws --logLevel 1",
+    "start:prod": "cd example-workspace && orbit ws --logLevel 1 --mode production",
+    "start:verbose": "cd example-workspace && orbit ws --logLevel 3",
+    "start:noworkers": "(cd example-workspace && DISABLE_WORKERS=true orbit ws --logLevel 3)",
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
     "build": "./bin/build",

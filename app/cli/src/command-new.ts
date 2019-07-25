@@ -164,7 +164,7 @@ const install = async projectRoot => {
   try {
     if (await shouldUseYarn()) {
       await fs.remove(`package-lock.json`)
-      await spawn(`yarnpkg`)
+      await spawn(`yarn install`)
     } else {
       await fs.remove(`yarn.lock`)
       await spawn(`npm install`)

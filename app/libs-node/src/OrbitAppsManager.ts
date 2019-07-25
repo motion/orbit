@@ -1,4 +1,10 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceApps, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
+import {
+  getIdentifierFromPackageId,
+  getIdentifierToPackageId,
+  getWorkspaceApps,
+  requireWorkspaceDefinitions,
+  updateWorkspacePackageIds,
+} from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -19,6 +25,7 @@ export class OrbitAppsManager {
   subscriptions = new Set<ZenObservable.Subscription>()
   nodeAppDefinitions: AppDefinition[] = []
 
+  started = false
   spaces: PartialSpace[] = []
   user: User | null = null
   appMeta: AppMetaDict = {}
@@ -30,6 +37,7 @@ export class OrbitAppsManager {
   getIdentifierToPackageId = getIdentifierToPackageId
 
   async start() {
+    log.info('Starting...')
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({
         select: ['id', 'directory'],
@@ -50,6 +58,7 @@ export class OrbitAppsManager {
 
     this.subscriptions.add(userSubscription)
     this.subscriptions.add(spacesSubscription)
+    this.started = true
   }
 
   get activeSpace() {
@@ -67,7 +76,8 @@ export class OrbitAppsManager {
 
   updateAppDefinitionsReaction = react(
     () => [this.activeSpace, this.packageJsonUpdate],
-    async ([space]) => {
+    async ([space], { when }) => {
+      await when(() => this.started)
       ensure('space', !!space)
       if (space) {
         this.updateAppDefinitions(space)

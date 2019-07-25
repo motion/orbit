@@ -55,7 +55,7 @@ export class WorkspaceManager {
     log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
   }
 
-  start() {
+  async start() {
     this.watchWorkspace()
     this.onWorkspaceChange()
   }

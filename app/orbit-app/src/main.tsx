@@ -47,6 +47,9 @@ async function main() {
   // we've already started, ignore
   if (getGlobalConfig()) return
 
+  // if you want to show a loading screen, do it above here
+  await fetchInitialConfig()
+
   // until resolved: https://github.com/webpack-contrib/webpack-hot-middleware/pull/362
   console.group = console.groupCollapsed
 
@@ -69,10 +72,6 @@ async function main() {
       ],
     })
   }
-
-  // if you want to show a loading screen, do it above here
-
-  await fetchInitialConfig()
 
   // start cross-process stores
   console.time('loadStores')

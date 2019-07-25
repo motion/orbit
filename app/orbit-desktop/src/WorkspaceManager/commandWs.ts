@@ -66,7 +66,7 @@ export function createCommandWs(orbitAppsManager: OrbitAppsManager) {
     wsManager.setWorkspace(options)
     await wsManager.start()
 
-    desktop.setWorkspaceManager(wsManager)
+    // desktop.setWorkspaceManager(wsManager)
 
     return true
   })

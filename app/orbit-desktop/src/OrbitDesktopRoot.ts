@@ -31,9 +31,6 @@ import {
   SpaceModel,
   UserEntity,
   UserModel,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  CloseAppCommand,
   AppMetaCommand,
   AuthAppCommand,
   AppGetWorkspaceAppsCommand,
@@ -77,16 +74,11 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { GraphServer } from './GraphServer'
-import { AppMiddleware, AppDesc } from '@o/build-server'
-import { remove } from 'lodash'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 import { FinishAuthQueue } from './auth-server/finishAuth'
-import { createAppOpenWorkspaceResolver } from './resolvers/AppOpenWorkspaceResolver'
-import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolver'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
-import { getIdentifierToPackageId, WorkspaceManager } from '@o/cli'
-import { CLI } from './cli'
+import { WorkspaceManager } from './workspaceManager'
 
 const log = new Logger('desktop')
 
@@ -104,17 +96,15 @@ export class OrbitDesktopRoot {
   webServer: WebServer
   bonjour: bonjour.Bonjour
   bonjourService: bonjour.Service
-  appMiddleware: AppMiddleware
-  cli: CLI
 
   // managers
+  workspaceManager: WorkspaceManager
   orbitDataManager: OrbitDataManager
   cosalManager: CosalManager
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
   orbitAppsManager: OrbitAppsManager
-  workspaceManager: WorkspaceManager | null = null
 
   start = async () => {
     await Desktop.start({
@@ -147,18 +137,7 @@ export class OrbitDesktopRoot {
 
     await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
-    // signals to frontend to update app definitions
-    this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
-      log.info('orbitAppsManager updating app meta', appMeta)
-      const identifiers = Object.keys(appMeta)
-      const packageIds = identifiers.map(getIdentifierToPackageId)
-      Desktop.setState({
-        workspaceState: {
-          packageIds,
-          identifiers,
-        },
-      })
-    })
+    this.workspaceManager = new WorkspaceManager(this.mediatorServer, this.orbitAppsManager)
 
     this.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)

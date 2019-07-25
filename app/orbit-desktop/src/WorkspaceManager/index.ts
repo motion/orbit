@@ -1,9 +1,8 @@
-import { AppDesc, AppMiddleware } from '@o/build-server'
 import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
 import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand } from '@o/models'
-import { Electron } from '@o/stores'
+import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
 
 import { GraphServer } from '../GraphServer'
@@ -11,18 +10,31 @@ import { commandBuild } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { createCommandWs } from './commandWs'
 
-const log = new Logger('CLI')
+const log = new Logger('WorkspaceManager')
 
 export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
-export class Apps {
+export class WorkspaceManager {
   developingApps: AppDesc[] = []
   statusListeners = new Set<AppBuildStatusListener>()
 
   graphServer = new GraphServer()
   appMiddleware = new AppMiddleware()
 
-  constructor(private mediatorServer: MediatorServer, private orbitAppsManager: OrbitAppsManager) {}
+  constructor(private mediatorServer: MediatorServer, private orbitAppsManager: OrbitAppsManager) {
+    // signals to frontend to update app definitions
+    this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
+      log.info('orbitAppsManager updating app meta', appMeta)
+      const identifiers = Object.keys(appMeta)
+      const packageIds = identifiers.map(getIdentifierToPackageId)
+      Desktop.setState({
+        workspaceState: {
+          packageIds,
+          identifiers,
+        },
+      })
+    })
+  }
 
   async start() {
     await this.orbitAppsManager.start()

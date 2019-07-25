@@ -1,10 +1,9 @@
+import { Logger } from '@o/logger'
 import { AppMeta, PackageJson } from '@o/models'
 import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { isOrbitApp } from '../command-build'
-import { reporter } from '../reporter'
-import { findPackage } from './findPackage'
+const log = new Logger('getWorkspaceApps')
 
 type OrbitAppDirDesc = {
   packageId: string
@@ -17,13 +16,13 @@ type OrbitAppDirDesc = {
  */
 export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
   try {
-    reporter.info(`getWorkspaceApps ${workspaceRoot}`)
+    log.info(`getWorkspaceApps ${workspaceRoot}`)
     console.trace('ok')
     const packageJson: PackageJson = await readJSON(join(workspaceRoot, 'package.json'))
     const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
       const directory = findPackage({ directory: workspaceRoot, packageId })
       if (!directory) {
-        reporter.error(`No directory found for package ${workspaceRoot} ${packageId}`)
+        log.error(`No directory found for package ${workspaceRoot} ${packageId}`)
         return null
       }
       return { directory, packageId, isLocal: false }
@@ -47,7 +46,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
       }),
     )).filter(Boolean)
   } catch (err) {
-    reporter.panic(`Error finding app paths`, err)
+    log.error(`Error finding app paths`, err)
   }
 }
 
@@ -65,6 +64,6 @@ async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<Orbi
       })
     }
   }
-  reporter.info(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
+  log.info(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
   return res
 }

@@ -1,14 +1,15 @@
-import { reporter } from '../reporter'
+import { Logger } from '@o/logger'
+
 import { getWorkspaceApps } from './getWorkspaceApps'
+
+const log = new Logger('isInstalled')
 
 /**
  * Optionally pass a version to validate the version is installed
  */
 export async function isInstalled(packageId: string, directory: string, version?: string) {
   try {
-    reporter.info(
-      `isInstalled -- checking ${packageId} in ${directory} at version ${version || 'any'}`,
-    )
+    log.info(`isInstalled -- checking ${packageId} in ${directory} at version ${version || 'any'}`)
 
     const apps = await getWorkspaceApps(directory)
     const foundApp = apps.find(x => x.packageId === packageId)
@@ -28,7 +29,7 @@ export async function isInstalled(packageId: string, directory: string, version?
       return true
     }
   } catch (err) {
-    reporter.error(err.message, err)
+    log.error(err.message, err)
     return false
   }
 }

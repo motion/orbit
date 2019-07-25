@@ -100,6 +100,17 @@ export const AppOpenWindowCommand = new Command<
 
 // CLI Options
 
+export type CommandInstallOptions = {
+  directory: string
+  identifier: string
+  verbose?: boolean
+  forceInstall?: boolean
+  upgrade?: boolean
+}
+export const AppInstallCommand = new Command<StatusReply, CommandInstallOptions>(
+  'AppInstallCommand',
+)
+
 export type CommandBuildOptions = {
   projectRoot: string
   watch?: boolean

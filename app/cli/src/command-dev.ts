@@ -1,14 +1,12 @@
-import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand } from '@o/models'
-import { copy, pathExists, readJSON } from 'fs-extra'
+import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
+import { copy, pathExists } from 'fs-extra'
 import { join } from 'path'
 
-import { isInWorkspace, commandWs } from './command-ws'
+import { commandWs, isInWorkspace } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 import { baseWorkspaceDir, configStore } from './util/configStore'
-
-export type CommandDevOptions = { projectRoot: string }
 
 export async function commandDev(options: CommandDevOptions) {
   const { mediator, didStartOrbit } = await getOrbitDesktop()
@@ -33,13 +31,8 @@ export async function commandDev(options: CommandDevOptions) {
     })
   }
 
-  const entry = await getAppEntry(options.projectRoot)
-
   try {
-    const appId = await mediator.command(AppDevOpenCommand, {
-      path: options.projectRoot,
-      entry,
-    })
+    const appId = await mediator.command(AppDevOpenCommand, options)
     await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
@@ -53,11 +46,6 @@ export async function commandDev(options: CommandDevOptions) {
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)
   }
-}
-
-export async function getAppEntry(appRoot: string) {
-  const pkg = await readJSON(join(appRoot, 'package.json'))
-  return join(appRoot, `${pkg['ts:main'] || pkg.main}`)
 }
 
 /**

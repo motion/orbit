@@ -86,6 +86,7 @@ import { AppCreateWorkspaceResolver } from './resolvers/AppCreateWorkspaceResolv
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { getIdentifierToPackageId, WorkspaceManager } from '@o/cli'
+import { CLI } from './cli'
 
 const log = new Logger('desktop')
 
@@ -104,6 +105,7 @@ export class OrbitDesktopRoot {
   bonjour: bonjour.Bonjour
   bonjourService: bonjour.Service
   appMiddleware: AppMiddleware
+  cli: CLI
 
   // managers
   orbitDataManager: OrbitDataManager
@@ -175,6 +177,9 @@ export class OrbitDesktopRoot {
       cosal,
       orbitAppsManager: this.orbitAppsManager,
     })
+
+    // depends on middleware + mediatorServer
+    this.cli = new CLI(this.appMiddleware, this.mediatorServer, this.orbitAppsManager)
 
     // start announcing on bonjour
     this.bonjour = bonjour()
@@ -285,7 +290,6 @@ export class OrbitDesktopRoot {
     const client = new MediatorClient({ transports: [syncersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
-    let developingApps: AppDesc[] = []
 
     this.mediatorServer = new MediatorServer({
       models: [
@@ -319,34 +323,12 @@ export class OrbitDesktopRoot {
           return appStatusManager.observe(args.appId)
         }),
         ...loadAppDefinitionResolvers(),
+        ...this.cli.getResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
           return this.orbitAppsManager.appMeta[identifier] || null
         }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
-        }),
-        resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
-          const appId = Object.keys(Electron.state.appWindows).length
-
-          // launch new app
-          Electron.setState({
-            appWindows: {
-              ...Electron.state.appWindows,
-              [appId]: {
-                appId,
-                appRole: 'editing',
-              },
-            },
-          })
-
-          developingApps.push({
-            entry,
-            appId,
-            path,
-            publicPath: `/appServer/${appId}`,
-          })
-          props.appMiddleware.setApps(developingApps)
-          return appId
         }),
         resolveCommand(RemoveAllAppDataCommand, async () => {
           log.info('Remove all app data!')
@@ -359,14 +341,6 @@ export class OrbitDesktopRoot {
             connection.query(`DROP TABLE IF EXISTS 'app_entity'`),
           ])
           log.info('Remove all app data done')
-        }),
-        resolveCommand(AppDevCloseCommand, async ({ appId }) => {
-          log.info('Removing build server', appId)
-          developingApps = remove(developingApps, x => x.appId === appId)
-          props.appMiddleware.setApps(developingApps)
-          log.info('Removing process', appId)
-          await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
-          log.info('Closed app', appId)
         }),
         createAppOpenWorkspaceResolver(this),
         createAppCreateNewResolver(this),

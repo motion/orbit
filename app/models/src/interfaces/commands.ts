@@ -98,12 +98,34 @@ export const AppOpenWindowCommand = new Command<
   }
 >('AppOpenWindowCommand')
 
+// CLI Options
+
+export type CommandBuildOptions = {
+  projectRoot: string
+  watch?: boolean
+  force?: boolean
+  verbose?: boolean
+  // we can do more careful building for better errors
+  debugBuild?: boolean
+  // if you dont want to build the whole thing in dev mode
+  onlyInfo?: boolean
+}
+export const AppBuildCommand = new Command<StatusReply, CommandBuildOptions>('AppBuildCommand')
+
+export type CommandGenTypesOptions = {
+  projectRoot: string
+  projectEntry: string
+  out?: string
+}
+export const AppGenTypesCommand = new Command<StatusReply, CommandGenTypesOptions>(
+  'AppGenTypesCommand',
+)
+
+export type CommandDevOptions = { projectRoot: string }
 export const AppDevOpenCommand = new Command<
-  number,
+  StatusReply,
   {
-    // Path to the app project in dev
-    path: string
-    entry: string
+    projectRoot: string
   }
 >('AppDevOpenCommand')
 
@@ -117,7 +139,6 @@ export type CommandWsOptions = {
   workspaceRoot: string
   mode?: 'development' | 'production'
   clean?: boolean
-  daemon?: boolean
 }
 
 export const AppOpenWorkspaceCommand = new Command<

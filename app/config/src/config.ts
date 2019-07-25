@@ -51,3 +51,6 @@ export function setGlobalConfig(nextConfig: GlobalConfig) {
   }
   config = Object.freeze(nextConfig)
 }
+
+// persisted config
+export * from './configStore'

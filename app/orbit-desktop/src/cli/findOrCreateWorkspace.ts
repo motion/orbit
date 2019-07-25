@@ -1,15 +1,9 @@
 import { Logger } from '@o/logger'
-import { resolveCommand } from '@o/mediator'
-import { AppCreateWorkspaceCommand, SpaceEntity } from '@o/models'
+import { SpaceEntity } from '@o/models'
 import { randomAdjective, randomNoun } from '@o/ui'
 import { getRepository } from 'typeorm'
 
-const log = new Logger('createWorkspace')
-
-export const AppCreateWorkspaceResolver = resolveCommand(AppCreateWorkspaceCommand, async props => {
-  await findOrCreateWorkspace(props)
-  return true
-})
+const log = new Logger('findOrCreateWorkspace')
 
 export async function findOrCreateWorkspace(props: { identifier?: string; directory?: string }) {
   log.info(`looking for space`, props)

@@ -5,10 +5,11 @@ import fs, { pathExistsSync, readJSON, remove, writeJSON } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
 import { basename, join, resolve } from 'path'
+import prompts from 'prompts'
 import url from 'url'
 
 import { reporter } from './reporter'
-import { configStore, promptPackageManager } from './util/configStore'
+import { configStore } from './util/configStore'
 import { isTty } from './util/isTty'
 
 // adapted from gatsby
@@ -123,6 +124,23 @@ const shouldUseYarn = async () => {
   } catch (e) {
     return false
   }
+}
+
+export const promptPackageManager = async () => {
+  const promptsAnswer = await prompts([
+    {
+      type: `select`,
+      name: `packageManager`,
+      message: `Which package manager would you like to use ?`,
+      choices: [{ title: `yarn`, value: `yarn` }, { title: `npm`, value: `npm` }],
+      initial: 0,
+    },
+  ])
+  const response = promptsAnswer.packageManager
+  if (response) {
+    configStore.packageManager.set(response)
+  }
+  return response
 }
 
 // Initialize newly cloned directory as a git repo

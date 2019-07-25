@@ -5,7 +5,6 @@ import { join } from 'path'
 import { getOrbitDesktop } from './getDesktop'
 import { reporter } from './reporter'
 import { getWorkspaceApps } from './util/getWorkspaceApps'
-import { WorkspaceManager } from './WorkspaceManager'
 
 /**
  * This is run either from the daemon (Orbit app process) or from the
@@ -22,15 +21,8 @@ import { WorkspaceManager } from './WorkspaceManager'
  *
  */
 export async function commandWs(options: CommandWsOptions) {
-  reporter.info(`Running command ws, daemon? ${!!options.daemon}, mode ${options.mode}`)
-  if (options.daemon) {
-    const wsManager = new WorkspaceManager()
-    wsManager.setWorkspace(options)
-    await wsManager.start()
-    return wsManager
-  } else {
-    await sendOrbitDesktopOpenWorkspace(options)
-  }
+  reporter.info(`Running command ws mode ${options.mode}`)
+  await sendOrbitDesktopOpenWorkspace(options)
 }
 
 async function sendOrbitDesktopOpenWorkspace(options: CommandWsOptions) {

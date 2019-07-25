@@ -376,31 +376,23 @@ export const OrbitAppsCarousel = memo(() => {
     rowRef.current!.scrollLeft = scrollSpring.x.getValue()
   }, [scrollable])
 
-  useLayoutEffect(() => {
-    const onScroll = () => {
-      console.log('did scroll ok')
+  // this is literally just to fix a stupid hmr bug where when on setupApp
+  // you'd find it scrolled weirdly, i tried mutationObserver/addEventListener('scroll'),
+  // neither pick it up because the event is removed
+  useEffect(() => {
+    if (rowRef.current) {
+      const curLeft = rowRef.current.scrollLeft
+      const index = appsCarouselStore.focusedIndex
+      const expectedLeft = index * rowWidth
+      if (curLeft !== expectedLeft) {
+        appsCarouselStore.animateAndScrollTo(0)
+        sleep(100).then(() => {
+          appsCarouselStore.animateAndScrollTo(index)
+        })
+        console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
+      }
     }
-    console.log('add listener')
-    rowRef.current!.addEventListener('scroll', onScroll)
-    return () => {
-      console.log('remove listener')
-      rowRef.current!.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-
-  console.log(
-    'rendering apps carousel',
-    scrollSpring.x.getValue(),
-    rowRef.current && rowRef.current!.scrollLeft,
-  )
-  if (rowRef.current) {
-    const curLeft = rowRef.current.scrollLeft
-    const expectedLeft = appsCarouselStore.focusedIndex * rowWidth
-    if (curLeft !== expectedLeft) {
-      appsCarouselStore.scrollToIndex(appsCarouselStore.focusedIndex)
-      console.warn('mismatched scroll spring / scrollLeft', curLeft, expectedLeft)
-    }
-  }
+  })
 
   return (
     <View data-is="OrbitAppsCarousel" width="100%" height="100%" overflow="hidden" ref={frameRef}>

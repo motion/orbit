@@ -1,4 +1,3 @@
-import { getAppConfig, makeWebpackConfig, webpackPromise } from '@o/build-server'
 import { configStore } from '@o/config'
 import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions } from '@o/models'
@@ -6,6 +5,9 @@ import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
 import { commandGenTypes } from './commandGenTypes'
+import { getAppConfig } from './getAppConfig'
+import { makeWebpackConfig } from './makeWebpackConfig'
+import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('AppCreateNewCommand')
 

@@ -15,7 +15,6 @@
     "@o/telemetry": "^2.5.2",
     "@o/utils": "*",
     "@o/mediator": "*",
-    "@o/build-server": "*",
     "@o/models": "*",
     "@babel/code-frame": "^7.0.0",
     "configstore": "4.0.0",

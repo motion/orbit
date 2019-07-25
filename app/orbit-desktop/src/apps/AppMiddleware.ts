@@ -19,7 +19,6 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
 export class AppMiddleware {
   middlewares = []
-  statusListeners = new Set<AppBuildStatusListener>()
 
   getMiddleware() {
     return (req, res, next) => {
@@ -37,26 +36,10 @@ export class AppMiddleware {
     }
   }
 
-  onStatus(callback: AppBuildStatusListener) {
-    this.statusListeners.add(callback)
-    return () => {
-      this.statusListeners.delete(callback)
-    }
-  }
-
-  private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
-    ;[...this.statusListeners].forEach(listener => {
-      listener({
-        id: `${message.appId}-build-status`,
-        ...message,
-      })
-    })
-  }
-
   // use this to report errors back to app
-  // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
   createReporterForApp = (appId: number) => (middlewareOptions, options) => {
     // run the usual webpack reporter
+    // https://github.com/webpack/webpack-dev-middleware/blob/master/lib/reporter.js
     webpackDevReporter(middlewareOptions, options)
 
     // report our own errors

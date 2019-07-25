@@ -145,9 +145,6 @@ export class OrbitDesktopRoot {
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
     await this.cosalManager.start()
 
-    // manage apps/apis
-    this.orbitAppsManager = new OrbitAppsManager()
-
     await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
     // signals to frontend to update app definitions
@@ -162,8 +159,6 @@ export class OrbitDesktopRoot {
         },
       })
     })
-
-    this.appMiddleware = new AppMiddleware()
 
     this.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)
@@ -196,7 +191,6 @@ export class OrbitDesktopRoot {
     await this.webServer.start()
 
     this.authServer = new AuthServer()
-    this.graphServer = new GraphServer()
 
     await Promise.all([this.authServer.start()])
 
@@ -265,9 +259,6 @@ export class OrbitDesktopRoot {
     // this is some sloppy code, needs refactoring.
     // we start it after because workspace manager validated/updated a few things in SpaceEntity
     // like being sure directory is matching
-    this.orbitAppsManager.start()
-    // same goes for graphManager
-    this.graphServer.start()
   }
 
   /**

@@ -1,3 +1,4 @@
+import { baseWorkspaceDir, configStore } from '@o/config'
 import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
 import { copy, pathExists } from 'fs-extra'
 import { join } from 'path'
@@ -6,13 +7,12 @@ import { commandWs, isInWorkspace } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
-import { baseWorkspaceDir, configStore } from './util/configStore'
 
 export async function commandDev(options: CommandDevOptions) {
   const { mediator, didStartOrbit } = await getOrbitDesktop()
 
   if (!mediator) {
-    process.exit(0)
+    reporter.panic('No mediator found')
   }
 
   if (didStartOrbit) {

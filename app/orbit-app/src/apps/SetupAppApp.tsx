@@ -61,9 +61,9 @@ function SetupAppCustom() {
 
   return (
     <>
-      <Col width="90%" height="90%" margin="auto" flex={1}>
+      <Col margin="auto" flex={1} padding scrollable="y">
         <Flow useFlow={flow} Layout={FlowLayoutInline}>
-          <Flow.Step title="Customize" subTitle="Your app settings.">
+          <Flow.Step title="Customize" subTitle="Pick a name and ID.">
             <Col padding>
               <Scale size={1.2}>
                 <Form useForm={form} />
@@ -205,7 +205,7 @@ export const SetupAppHome = memo((props: SetupAppHomeProps) => {
   return (
     <FlowProvide value={flow}>
       <SectionPassProps elevation={10}>
-        <Col width="90%" height="80%" margin="auto" flex={1}>
+        <Col width="90%" maxHeight="80%" margin="auto" flex={1}>
           <Flow
             useFlow={flow}
             afterTitle={

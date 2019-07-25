@@ -315,7 +315,7 @@ export function makeWebpackConfig(
       !!dllReference &&
         new webpack.DllReferencePlugin({
           manifest: dllReference,
-          context: '..',
+          context: '.',
         }),
 
       hot && new webpack.HotModuleReplacementPlugin(),

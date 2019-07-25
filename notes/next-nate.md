@@ -1,3 +1,19 @@
+useState hooks:
+
+instead of useUserState / useAppState:
+
+```
+useAppState('id', defaultValue, {
+  persist: 'user' | 'app' | 'memory',
+})
+```
+
+this lets it be configurable easily, see <Flow />.
+
+<Flow persistStep="user" persistData="app" />
+
+---
+
 
 Lists:
 

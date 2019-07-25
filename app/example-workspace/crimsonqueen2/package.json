@@ -1,5 +1,5 @@
 {
-  "name": "my-orbit-app",
+  "name": "crimsonqueen2",
   "description": "",
   "version": "0.1.0",
   "main": "dist/index.js",
@@ -7,7 +7,7 @@
   "scripts": {
     "start": "orbit dev",
     "build": "orbit build",
-    "publish-app": "orbit publish"
+    "publish": "orbit publish"
   },
   "dependencies": {
     "@o/kit": "^2.5.6",

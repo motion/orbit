@@ -77,7 +77,7 @@ export class AppsManager {
   }
 
   onUpdatedCb = new Set<AppMetaDictCb>()
-  onUpdatedAppMeta = (cb: AppMetaDictCb) => {
+  onUpdatedApps = (cb: AppMetaDictCb) => {
     this.onUpdatedCb.add(cb)
   }
 

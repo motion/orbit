@@ -1,31 +1,7 @@
-import {
-  AppsManager,
-  getBuildInfo,
-  getWorkspaceApps,
-  updateWorkspacePackageIds,
-} from '@o/apps-manager'
+import { AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import {
-  AppBuildCommand,
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppEntity,
-  AppGenTypesCommand,
-  AppGetWorkspaceAppsCommand,
-  AppMeta,
-  AppMetaCommand,
-  AppOpenWorkspaceCommand,
-  AppStatusMessage,
-  AppStatusModel,
-  CallAppBitApiMethodCommand,
-  CloseAppCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  WorkspaceInfoModel,
-  AppInstallCommand,
-} from '@o/models'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -34,15 +10,16 @@ import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
 import { GraphServer } from '../GraphServer'
+import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
+import { commandInstall } from './commandInstall'
 import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { getAppsConfig } from './getAppsConfig'
 import { useWebpackMiddleware } from './useWebpackMiddleware'
-import { commandInstall } from './commandInstall'
 
 const log = new Logger('WorkspaceManager')
 
@@ -65,10 +42,14 @@ export class WorkspaceManager {
   appMiddleware = new AppMiddleware()
 
   constructor(private mediatorServer: MediatorServer) {
-    // signals to frontend to update app definitions
-    this.appsManager.onUpdatedAppMeta(appMeta => {
-      log.info('appsManager updating app meta', appMeta)
+    this.appsManager.onUpdatedApps(async appMeta => {
+      log.verbose('appsManager updating app meta', appMeta)
       const identifiers = Object.keys(appMeta)
+
+      const space = await getActiveSpace()
+      const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
+      this.graphServer.setupGraph(apps)
+
       const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
       Desktop.setState({
         workspaceState: {
@@ -125,17 +106,22 @@ export class WorkspaceManager {
       log.info(`updateWorkspace ${directory}`)
       ensure('directory', !!directory)
 
+      console.log(1)
       await this.updateApps()
+      console.log(2)
 
       const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
 
+      console.log(3)
       if (!config) {
         log.error('No apps found')
         return
       }
+      console.log(4)
 
       await sleep()
-      log.info(`workspace app config`, JSON.stringify(config, null, 2))
+      console.log('WUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
+      console.log(`workspace app config`, config)
 
       if (!isEqual(this.buildConfig, config)) {
         this.buildConfig = config

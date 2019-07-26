@@ -69,8 +69,32 @@ import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolve
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
+import { orTimeout, OR_TIMED_OUT } from '@o/ui'
 
 const log = new Logger('OrbitDesktopRoot')
+
+async function startSeries(
+  fns: (() => Promise<void>)[],
+  options: {
+    timeout?: number
+  } = {},
+) {
+  for (const fn of fns) {
+    log.verbose('startSeries, start function', fn, options.timeout)
+    if (options.timeout) {
+      try {
+        await orTimeout(fn(), options.timeout)
+      } catch (err) {
+        if (err === OR_TIMED_OUT) {
+          console.log('Timed out starting', fn)
+        }
+        throw err
+      }
+    } else {
+      await fn()
+    }
+  }
+}
 
 export class OrbitDesktopRoot {
   // public
@@ -96,63 +120,107 @@ export class OrbitDesktopRoot {
   operatingSystemManager: OperatingSystemManager
 
   start = async () => {
-    await Desktop.start({
-      ignoreSelf: true,
-      master: true,
-      stores: {
-        App,
-        Electron,
-        Desktop,
-      },
-    })
-
     // this is if we are running a CLI command that exits on finish
     const singleUseMode = !!process.env.SINGLE_USE_MODE
+    log.verbose(`start(), singleUseMode ${singleUseMode}`)
 
-    // TODO: this abritrary ordering here is really a dependency graph, should be setup in that way
-
-    // databaserunner runs your migrations which everything can be impacted by...
-    // leave it as high up here as possible
-    this.databaseManager = new DatabaseManager()
-    await this.databaseManager.start()
-
-    this.workspaceManager = new WorkspaceManager(this.mediatorServer)
-    await this.workspaceManager.start({
-      singleUseMode,
-    })
-
-    if (!singleUseMode) {
-      // run this early, it sets up the general setting if needed
-      this.generalSettingManager = new GeneralSettingManager()
-
-      // manages operating system state
-      this.operatingSystemManager = new OperatingSystemManager()
-
-      // search index
-      this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-      await this.cosalManager.start()
-
-      await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
-
-      // the electron app wont start until this runs
-      // start server a bit early so it lets them start
-      this.webServer = new WebServer(this.workspaceManager.appMiddleware)
-      await this.webServer.start()
-
-      this.authServer = new AuthServer()
-
-      await Promise.all([this.authServer.start()])
-
-      // depends on cosal
-      this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
-      await this.topicsManager.start()
-
-      this.onboardManager = new OnboardManager()
-      await this.onboardManager.start()
-
-      this.orbitDataManager = new OrbitDataManager()
-      await this.orbitDataManager.start()
-    }
+    await startSeries(
+      [
+        async () => {
+          if (!singleUseMode) {
+            await Desktop.start({
+              ignoreSelf: true,
+              master: true,
+              stores: {
+                App,
+                Electron,
+                Desktop,
+              },
+            })
+          }
+        },
+        async () => {
+          // databaserunner runs your migrations which everything can be impacted by...
+          // leave it as high up here as possible
+          this.databaseManager = new DatabaseManager()
+          await this.databaseManager.start()
+        },
+        async () => {
+          this.workspaceManager = new WorkspaceManager(this.mediatorServer)
+          try {
+            await this.workspaceManager.start({
+              singleUseMode,
+            })
+          } catch (err) {
+            console.error('error starting', err)
+            throw err
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // run this early, it sets up the general setting if needed
+            this.generalSettingManager = new GeneralSettingManager()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // manages operating system state
+            this.operatingSystemManager = new OperatingSystemManager()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // search index
+            this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+            await this.cosalManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            await Promise.all([
+              this.generalSettingManager.start(),
+              this.operatingSystemManager.start(),
+            ])
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // the electron app wont start until this runs
+            // start server a bit early so it lets them start
+            this.webServer = new WebServer(this.workspaceManager.appMiddleware)
+            await this.webServer.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.authServer = new AuthServer()
+            await this.authServer.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            // depends on cosal
+            this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
+            await this.topicsManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.onboardManager = new OnboardManager()
+            await this.onboardManager.start()
+          }
+        },
+        async () => {
+          if (!singleUseMode) {
+            this.orbitDataManager = new OrbitDataManager()
+            await this.orbitDataManager.start()
+          }
+        },
+      ],
+      {
+        timeout: 3000,
+      },
+    )
 
     this.registerREPLGlobals()
 
@@ -160,6 +228,7 @@ export class OrbitDesktopRoot {
     const mediatorPort = this.registerMediatorServer()
 
     // start announcing on bonjour
+    log.verbose(`Starting Bonjour service on ${mediatorPort}`)
     this.bonjour = bonjour()
     this.bonjourService = this.bonjour.publish({
       name: 'orbitDesktop',

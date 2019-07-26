@@ -25,6 +25,8 @@ let log = {
 //   }
 // }
 
+type LogType = 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer'
+
 // for now just log because its not being output anywhere
 const debug = (...args) => {
   if (typeof window !== 'undefined') {
@@ -140,13 +142,24 @@ export class Logger {
     return new Logger(this.namespace, { trace: true })
   }
 
+  private shouldLogAll(type: LogType) {
+    const level = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 2
+    if (type === 'error') {
+      return true
+    }
+    if (type === 'info') {
+      return level > 3
+    }
+    if (type === 'verbose') {
+      return level > 4
+    }
+    return level > 5
+  }
+
   /**
    * Executes logging.
    */
-  private log(
-    level: 'verbose' | 'info' | 'warning' | 'error' | 'timer' | 'vtimer',
-    messages: any[],
-  ) {
+  private log(level: LogType, messages: any[]) {
     // don't log if we have logging disabled
     const index = LoggerSettings.disables.indexOf(this.namespace)
     if (level !== 'error' && index !== -1) return
@@ -163,11 +176,11 @@ export class Logger {
 
     const isDevelopment = process.env.NODE_ENV === 'development'
     const isTrace = this.opts.trace && isDevelopment
-    const logLevel = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 2
-    const verboseLogging = level === 'verbose' ? logLevel > 2 : logLevel > 1
+    const shouldLogAll = this.shouldLogAll(level)
+    const logLevel = process.env.LOG_LEVEL ? +process.env.LOG_LEVEL : 0
 
     // for syncer process with no-logging mode we do not log objects in messages
-    if (!verboseLogging) {
+    if (!shouldLogAll) {
       messages = [messages[0]]
     }
 
@@ -227,30 +240,34 @@ export class Logger {
       )
       log.error(this.namespace, ...messages)
     } else if (level === 'warning') {
-      console.warn(
-        ...colored(
-          this.namespace,
-          'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
-        ),
-        ...messages,
-      )
+      if (logLevel > 1) {
+        console.warn(
+          ...colored(
+            this.namespace,
+            'color: #666; background-color: yellow; padding: 0 2px; margin: 0 2px',
+          ),
+          ...messages,
+        )
+      }
       log.warn(this.namespace, ...messages)
     } else if (level === 'verbose') {
-      if (verboseLogging) {
+      if (logLevel > 2) {
         debug(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
         log.debug(this.namespace, ...messages)
       }
     } else if (level === 'info') {
-      console.log(
-        ...colored(
-          this.namespace,
-          `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
-        ),
-        ...messages,
-      )
+      if (logLevel > 0) {
+        console.log(
+          ...colored(
+            this.namespace,
+            `color: ${color}; font-weight: bold; padding: 0 2px; margin: 0 2px`,
+          ),
+          ...messages,
+        )
+      }
       log.info(this.namespace, ...messages)
     } else if (level === 'timer' || level === 'vtimer') {
-      if (verboseLogging || level === 'timer') {
+      if (logLevel > 2 || (level === 'timer' && logLevel > 0)) {
         const consoleLog =
           level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
         const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
@@ -270,10 +287,8 @@ export class Logger {
         }
       }
     } else {
-      if (verboseLogging) {
-        console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
-        log.info(this.namespace, ...messages)
-      }
+      console.log(...colored(this.namespace, `color: ${color}; font-weight: bold`), ...messages)
+      log.info(this.namespace, ...messages)
     }
 
     if (isTrace) {

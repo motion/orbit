@@ -34,7 +34,9 @@ export async function getOrbitDesktop(
     const isInMonoRepo = await getIsInMonorepo()
     orbitProcess = runOrbitDesktop(props, isInMonoRepo)
     if (orbitProcess) {
+      reporter.verbose(`Started orbit process, waiting for bonjour`)
       port = await findBonjourService('orbitDesktop', 15000)
+      reporter.verbose(`Started orbit on port ${port}`)
       didStartOrbit = true
     }
   }
@@ -79,7 +81,7 @@ async function findBonjourService(type: string, timeout: number): Promise<number
     service = await orTimeout(waitForService, timeout)
   } catch (e) {
     if (e !== OR_TIMED_OUT) {
-      console.log(`Error finding port ${e.message}`)
+      reporter.panic(`Error finding port ${e.message}`)
       return false
     }
     reporter.verbose('Timed out finding bonjour')
@@ -116,7 +118,9 @@ export function runOrbitDesktop(
   if (cmd) {
     try {
       // detached should keep it running as a daemon basically, which we want in production mode
-      const detached = !isInMonoRepo
+      // TODO could make singleUseMode actually start it properly, but that would be tricky because we'd
+      // want to avoid doing extra work initially, and then later "start" the rest of orbit (non singleUseMode stufg)
+      const detached = !isInMonoRepo && !singleUseMode
       reporter.verbose(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
       const child: ChildProcess = execa.command(cmd, {
         detached,

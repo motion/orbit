@@ -28,6 +28,7 @@ export class DatabaseManager {
     })
 
     // setup default data
+    log.verbose('Ensure default user...')
     await this.ensureDefaultUser()
 
     await sleep(100)

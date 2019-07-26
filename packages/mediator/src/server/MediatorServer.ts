@@ -21,6 +21,7 @@ export class MediatorServer {
   commands: Command<any, any>[] = []
 
   constructor(public options: MediatorServerOptions) {
+    log.verbose('Starting MediatorServer', options)
     this.commands = this.options.resolvers.flatMap(x => (x.type === 'command' ? [x.command] : []))
   }
 
@@ -36,7 +37,7 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
-    log.verbose('MediatorServer.message', data)
+    console.log('MediatorServer.message', data)
     const onSuccess = result => {
       log.verbose(`onSuccess`, data, result)
       this.options.transport.send({

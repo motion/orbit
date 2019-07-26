@@ -99,13 +99,15 @@ async function findBonjourService(type: string, timeout: number): Promise<number
   return service
 }
 
-export async function getIsInMonorepo() {
-  const monorepoPkg = join(__dirname, '..', '..', '..', '..', 'package.json')
+async function getIsInMonorepo() {
+  const monorepoPkg = join(__dirname, '..', '..', '..', 'package.json')
   return (await pathExists(monorepoPkg)) && (await readJSON(monorepoPkg)).name === 'orbit-monorepo'
 }
 
 export async function runOrbitDesktop(): Promise<boolean> {
+  reporter.info('runOrbitDesktop')
   const isInMonoRepo = await getIsInMonorepo()
+  reporter.info(`isInMonoRepo ${isInMonoRepo}`)
   let cmd = configStore.orbitMainPath.get()
   let cwd = process.cwd()
 

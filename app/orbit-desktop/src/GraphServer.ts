@@ -9,12 +9,7 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { GraphQLSchema } from 'graphql'
 import { graphqlExpress } from 'graphql-server-express'
-import {
-  introspectSchema,
-  makeExecutableSchema,
-  makeRemoteExecutableSchema,
-  mergeSchemas,
-} from 'graphql-tools'
+import { introspectSchema, makeExecutableSchema, makeRemoteExecutableSchema, mergeSchemas } from 'graphql-tools'
 import killPort from 'kill-port'
 import { getRepository } from 'typeorm'
 
@@ -66,16 +61,13 @@ export class GraphServer {
 
   private watchWorkspacesForGraphs() {
     let subs: ZenObservable.Subscription[] = []
-
     getRepository(SpaceEntity)
       .observe()
       .subscribe(async _ => {
         for (const sub of subs) {
           sub.unsubscribe()
         }
-
         let spaces: Space[] = _ as any
-
         for (const space of spaces) {
           subs.push(this.watchAppsForSchemaSetup(space))
         }

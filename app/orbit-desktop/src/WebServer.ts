@@ -8,7 +8,7 @@ import * as Path from 'path'
 
 import { AppMiddleware } from './workspaceManager/AppMiddleware'
 
-const log = new Logger('desktop')
+const log = new Logger('WebServer')
 const Config = getGlobalConfig()
 
 export function cors() {

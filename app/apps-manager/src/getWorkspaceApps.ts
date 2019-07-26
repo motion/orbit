@@ -1,8 +1,8 @@
+import { isOrbitApp } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { AppMeta, PackageJson } from '@o/models'
 import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
-import { isOrbitApp } from '@o/libs-node'
 
 import { findPackage } from './findPackage'
 
@@ -18,9 +18,11 @@ type OrbitAppDirDesc = {
  * Finds all valid orbit app package directories in a given workspace
  */
 export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
+  log.info(`workspaceRoot ${workspaceRoot}`)
+  if (!workspaceRoot.trim()) {
+    throw new Error(`No workspaceRoot given!`)
+  }
   try {
-    log.info(`getWorkspaceApps ${workspaceRoot}`)
-    console.trace('ok')
     const packageJson: PackageJson = await readJSON(join(workspaceRoot, 'package.json'))
     const packageDirs: OrbitAppDirDesc[] = Object.keys(packageJson.dependencies).map(packageId => {
       const directory = findPackage({ directory: workspaceRoot, packageId })
@@ -32,6 +34,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
     })
     const wsDirs = await getWorkspaceLocalPackageDirs(workspaceRoot)
     const allDirs = [...packageDirs, ...wsDirs].filter(Boolean)
+    log.info(`allDirs ${JSON.stringify(allDirs)}`)
     return (await Promise.all(
       allDirs.map(async ({ directory, packageId, isLocal }) => {
         const apiInfoPath = join(directory, 'dist', 'api.json')

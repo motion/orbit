@@ -21,17 +21,4 @@ export function startDevelopment(appRoot: OrbitWorkersRoot) {
   }
 
   process.on('exit', exitHandler)
-  process.on('uncaughtException', err => {
-    console.warn('uncaughtException!!!!!!!')
-    console.log(err)
-  })
-  process.on('unhandledRejection', function(reason: any, promise) {
-    if (reason) {
-      if (reason.code === 'SQLITE_BUSY') {
-        console.log('sqlite busy!')
-      }
-    }
-    console.warn('Workers: Possibly Unhandled Rejection!!!!!!!!', promise, reason)
-    console.log(reason.stack)
-  })
 }

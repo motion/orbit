@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
-import { AppsManager } from '@o/apps-manager'
 import {
   MediatorClient,
   MediatorServer,
@@ -10,7 +9,6 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
-  resolveObserveOne,
 } from '@o/mediator'
 import {
   AppEntity,
@@ -37,7 +35,6 @@ import {
   StateEntity,
   RemoveAllAppDataCommand,
   AppStatusModel,
-  WorkspaceInfoModel,
   ResetDataCommand,
 } from '@o/models'
 import { App, Desktop, Electron } from '@o/stores'
@@ -56,9 +53,6 @@ import { COSAL_DB } from './constants'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-// import { Screen } from '@o/screen'
-// import { OCRManager } from './managers/OCRManager'
-// import { ScreenManager } from './managers/ScreenManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
@@ -75,11 +69,9 @@ import { GraphServer } from './GraphServer'
 import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolvers'
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
-import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
-import { AppMiddleware } from './WorkspaceManager/AppMiddleware'
 
-const log = new Logger('desktop')
+const log = new Logger('OrbitDesktopRoot')
 
 export class OrbitDesktopRoot {
   // public
@@ -136,18 +128,13 @@ export class OrbitDesktopRoot {
     await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
     this.workspaceManager = new WorkspaceManager(this.mediatorServer)
-
-    this.workspaceManager.appMiddleware.onStatus(status => {
-      appStatusManager.sendMessage(status)
-    })
+    await this.workspaceManager.start()
 
     const cosal = this.cosalManager.cosal
 
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer({
-      appMiddleware: this.workspaceManager.appMiddleware,
       cosal,
-      appsManager: this.workspaceManager.appsManager,
     })
 
     // start announcing on bonjour
@@ -226,24 +213,11 @@ export class OrbitDesktopRoot {
     root.mediatorServer = this.mediatorServer
   }
 
-  setWorkspaceManager(wsManager: WorkspaceManager) {
-    log.info(`setWorkspaceManager`)
-    this.workspaceManager = wsManager
-    // start orbit apps manager workspace manager is started
-    // this is some sloppy code, needs refactoring.
-    // we start it after because workspace manager validated/updated a few things in SpaceEntity
-    // like being sure directory is matching
-  }
-
   /**
    * Registers a mediator server which is responsible
    * for communication between processes.
    */
-  private registerMediatorServer(props: {
-    cosal: Cosal
-    appsManager: AppsManager
-    appMiddleware: AppMiddleware
-  }) {
+  private registerMediatorServer(props: { cosal: Cosal }) {
     const workersTransport = new WebSocketClientTransport(
       'workers',
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.workersMediator}`, [], {
@@ -284,12 +258,6 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
           { entity: StateEntity, models: [StateModel] },
         ]),
-        resolveObserveOne(AppStatusModel, args => {
-          return appStatusManager.observe(args.appId)
-        }),
-        resolveObserveOne(WorkspaceInfoModel, () => {
-          return this.workspaceManager.observe()
-        }),
         ...loadAppDefinitionResolvers(),
         ...this.workspaceManager.getResolvers(),
         resolveCommand(GetPIDCommand, async () => {
@@ -321,35 +289,31 @@ export class OrbitDesktopRoot {
         }),
         SendClientDataResolver,
         ChangeDesktopThemeResolver,
+
         resolveCommand(CheckProxyCommand, checkAuthProxy),
+
         resolveCommand(AuthAppCommand, async ({ authKey, identifier }) => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())
-
           if (!success) {
             return {
               type: 'error' as const,
               message: `Error setting up local authentication proxy.`,
             }
           }
-
           const url = `${getGlobalConfig().urls.auth}/auth/${authKey}`
           const didOpenAuthUrl = await openUrl({ url })
-
           if (!didOpenAuthUrl) {
             return {
               type: 'error' as const,
               message: `Couldn't open the authentication url: ${url}`,
             }
           }
-
           // wait for finish from finishAuth()
           let finish
           const promise = new Promise(res => {
             finish = res
           })
-
           FinishAuthQueue.set(authKey, { identifier, finish })
-
           return await promise
         }),
 

@@ -1,19 +1,21 @@
 import { AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { MediatorServer, resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppMeta, AppMetaCommand, AppStatusMessage, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo } from '@o/models'
+import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
+import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { debounce, isEqual, remove } from 'lodash'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
 import { GraphServer } from '../GraphServer'
+import { appStatusManager } from '../managers/AppStatusManager'
 import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { BuildServer } from './BuildServer'
 import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
-import { createCommandWs } from './commandWs'
+import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { getAppsConfig } from './getAppsConfig'
 
@@ -21,9 +23,9 @@ const log = new Logger('WorkspaceManager')
 
 export type AppBuildStatusListener = (status: AppStatusMessage) => any
 type Disposable = Set<{ id: string; dispose: Function }>
-const disposeAll = (x: Disposable) => x.forEach(x => x.dispose())
 const dispose = (x: Disposable, id: string) => x.forEach(x => x.id === id && x.dispose())
 
+@decorate
 export class WorkspaceManager {
   developingApps: AppDesc[] = []
   appsMeta: AppMeta[] = []
@@ -31,7 +33,6 @@ export class WorkspaceManager {
   options: CommandWsOptions
   buildConfig = null
   buildServer: BuildServer | null = null
-  wsWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
 
   appsManager = new AppsManager()
@@ -56,9 +57,29 @@ export class WorkspaceManager {
   async start() {
     await this.appsManager.start()
     await this.graphServer.start()
-    this.watchWorkspace()
     this.onWorkspaceChange()
+    this.appMiddleware.onStatus(status => {
+      appStatusManager.sendMessage(status)
+    })
   }
+
+  watchWorkspace = react(
+    () => this.directory,
+    (directory, { useEffect }) => {
+      ensure('directory', !!directory)
+      useEffect(() => {
+        let watcher = watch(this.directory, {
+          persistent: true,
+          // only watch top level
+          depth: 0,
+        })
+        watcher.on('change', this.onWorkspaceChange)
+        return () => {
+          watcher.close()
+        }
+      })
+    },
+  )
 
   setWorkspace(opts: CommandWsOptions) {
     this.directory = opts.workspaceRoot
@@ -66,28 +87,10 @@ export class WorkspaceManager {
     log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
   }
 
-  stop() {
-    disposeAll(this.wsWatchers)
-    disposeAll(this.appWatchers)
-  }
-
-  private watchWorkspace() {
-    dispose(this.wsWatchers, 'watcher')
-    let watcher = watch(this.directory, {
-      persistent: true,
-      // only watch top level
-      depth: 0,
-    })
-    watcher.on('change', this.onWorkspaceChange)
-    this.wsWatchers.add({
-      id: 'watcher',
-      dispose: () => {
-        watcher.close()
-      },
-    })
-  }
-
   updateWorkspace = async () => {
+    if (!this.directory) {
+      return
+    }
     log.info(`See workspace change`)
     await this.updateApps()
     const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
@@ -198,11 +201,19 @@ export class WorkspaceManager {
    */
   getResolvers() {
     return [
+      resolveObserveOne(WorkspaceInfoModel, () => {
+        return this.observe()
+      }),
+      resolveObserveOne(AppStatusModel, args => {
+        return appStatusManager.observe(args.appId)
+      }),
       resolveCommand(AppCreateWorkspaceCommand, async props => {
         await findOrCreateWorkspace(props)
         return true
       }),
-      createCommandWs(this.appsManager),
+      resolveCommand(AppOpenWorkspaceCommand, async options => {
+        return await commandWs(options, this.appsManager)
+      }),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
       resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {

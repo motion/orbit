@@ -7,7 +7,12 @@ const { workersRoot } = require('./OrbitWorkersRoot')
 
 process.on('unhandledRejection', (error: any) => {
   console.log('unhandledRejection', error.stack)
-  throw error
+  process.exit(1)
+})
+
+process.on('uncaughtException', err => {
+  console.error('uncaughtException', err)
+  process.exit(1)
 })
 
 export async function main() {

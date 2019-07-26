@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import ReconnectingWebSocket from 'reconnectingwebsocket'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export const mediatorClient = new MediatorClient({
   transports: [

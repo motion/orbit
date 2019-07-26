@@ -1,7 +1,6 @@
 import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { resolveCommand } from '@o/mediator'
-import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
+import { CommandWsOptions, SpaceEntity, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -15,63 +14,55 @@ type WorkspaceInfo = {
   identifier: string
 }
 
-export function createCommandWs(AppsManager: AppsManager) {
-  return resolveCommand(AppOpenWorkspaceCommand, async options => {
-    const { workspaceRoot } = options
-    log.info(`Got command ${workspaceRoot}`)
+/**
+ * This sets the current active workspace.
+ */
+export async function commandWs(options: CommandWsOptions, appsManager: AppsManager) {
+  const { workspaceRoot } = options
+  log.info(`Got command ${workspaceRoot}`)
 
-    Desktop.setState({
-      workspaceState: {
-        workspaceRoot,
-      },
-    })
+  Desktop.setState({
+    workspaceState: {
+      workspaceRoot,
+    },
+  })
 
-    const { identifier } = await loadWorkspace(workspaceRoot)
+  const { identifier } = await loadWorkspace(workspaceRoot)
 
-    // ensure/find space
-    let space = await findOrCreateWorkspace({
-      identifier,
+  // ensure/find space
+  let space = await findOrCreateWorkspace({
+    identifier,
+    directory: workspaceRoot,
+  })
+
+  // verify matching identifier
+  if (space.identifier !== identifier) {
+    // we should prompt to make sure they either are in wrong directory / or to change it
+    console.error(`Wrong space, not matching this identifier`)
+    process.exit(1)
+  }
+
+  // validate/update directory
+  if (workspaceRoot !== space.directory) {
+    console.log('You moved this space, updating to new directory', workspaceRoot)
+    await getRepository(SpaceEntity).save({
+      ...space,
       directory: workspaceRoot,
     })
+    space = await getRepository(SpaceEntity).findOne({ identifier })
+  }
 
-    // verify matching identifier
-    if (space.identifier !== identifier) {
-      // we should prompt to make sure they either are in wrong directory / or to change it
-      console.error(`Wrong space, not matching this identifier`)
-      process.exit(1)
-    }
+  log.info('got space', space)
 
-    // validate/update directory
-    if (workspaceRoot !== space.directory) {
-      console.log('You moved this space, updating to new directory', workspaceRoot)
-      await getRepository(SpaceEntity).save({
-        ...space,
-        directory: workspaceRoot,
-      })
-      space = await getRepository(SpaceEntity).findOne({ identifier })
-    }
+  // set user active space
+  const user = await getRepository(UserEntity).findOne({})
+  user.activeSpace = space.id
+  await getRepository(UserEntity).save(user)
 
-    log.info('got space', space)
+  // make sure we've finished updating new app info before running
+  await appsManager.updateAppDefinitions(space)
 
-    // set user active space
-    const user = await getRepository(UserEntity).findOne({})
-    user.activeSpace = space.id
-    await getRepository(UserEntity).save(user)
-
-    // ensure app bits
-    await AppsManager.updateAppDefinitions(space)
-
-    // ⚠️ TODO finish refactor here:
-
-    // now re-run inside desktop, this time CLI in this process knowing we are the daemon
-    // const wsManager = new WorkspaceManager()
-    // wsManager.setWorkspace(options)
-    // await wsManager.start()
-
-    // desktop.setWorkspaceManager(wsManager)
-
-    return true
-  })
+  return true
 }
 
 async function loadWorkspace(path: string): Promise<WorkspaceInfo> {

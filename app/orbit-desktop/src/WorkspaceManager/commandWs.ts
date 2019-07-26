@@ -8,7 +8,6 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
-import { WorkspaceManager } from './WorkspaceManager'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 
@@ -62,10 +61,12 @@ export function createCommandWs(AppsManager: AppsManager) {
     // ensure app bits
     await AppsManager.updateAppDefinitions(space)
 
+    // ⚠️ TODO finish refactor here:
+
     // now re-run inside desktop, this time CLI in this process knowing we are the daemon
-    const wsManager = new WorkspaceManager()
-    wsManager.setWorkspace(options)
-    await wsManager.start()
+    // const wsManager = new WorkspaceManager()
+    // wsManager.setWorkspace(options)
+    // await wsManager.start()
 
     // desktop.setWorkspaceManager(wsManager)
 

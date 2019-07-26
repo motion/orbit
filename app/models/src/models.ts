@@ -1,6 +1,7 @@
 import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 
+import { AppDefinition } from './AppDefinition'
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
@@ -8,7 +9,6 @@ import { Job } from './interfaces/Job'
 import { Space } from './interfaces/SpaceInterface'
 import { State } from './interfaces/State'
 import { User } from './interfaces/User'
-import { AppDefinition } from './AppDefinition'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -62,7 +62,7 @@ export const AppStatusId = {
  * For communicating the status of the current workspace, for reloading app definitions
  * across processes (see orbit-workers using this).
  */
-type WorkspaceInfo = {
+export type WorkspaceInfo = {
   identifier: string
   definitions: AppDefinition & { version?: number }
 }

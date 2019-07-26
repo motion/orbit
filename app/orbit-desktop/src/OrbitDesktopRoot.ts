@@ -1,6 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
+import { AppsManager } from '@o/apps-manager'
 import {
   MediatorClient,
   MediatorServer,
@@ -31,9 +32,7 @@ import {
   SpaceModel,
   UserEntity,
   UserModel,
-  AppMetaCommand,
   AuthAppCommand,
-  AppGetWorkspaceAppsCommand,
   StateModel,
   StateEntity,
   RemoveAllAppDataCommand,
@@ -41,7 +40,6 @@ import {
   WorkspaceInfoModel,
   ResetDataCommand,
 } from '@o/models'
-import { AppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSONSync } from 'fs-extra'
@@ -79,7 +77,7 @@ import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolve
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
-import { WorkspaceManager } from './workspaceManager'
+import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
 import { AppMiddleware } from './WorkspaceManager/AppMiddleware'
 
 const log = new Logger('desktop')
@@ -106,7 +104,6 @@ export class OrbitDesktopRoot {
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
-  appsManager: AppsManager
 
   start = async () => {
     await Desktop.start({
@@ -139,7 +136,7 @@ export class OrbitDesktopRoot {
 
     await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
-    this.workspaceManager = new WorkspaceManager(this.mediatorServer, this.appsManager)
+    this.workspaceManager = new WorkspaceManager(this.mediatorServer)
 
     this.workspaceManager.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)
@@ -151,7 +148,7 @@ export class OrbitDesktopRoot {
     const mediatorPort = this.registerMediatorServer({
       appMiddleware: this.workspaceManager.appMiddleware,
       cosal,
-      appsManager: this.appsManager,
+      appsManager: this.workspaceManager.appsManager,
     })
 
     // start announcing on bonjour
@@ -295,10 +292,7 @@ export class OrbitDesktopRoot {
           return this.workspaceManager.observe()
         }),
         ...loadAppDefinitionResolvers(),
-        ...this.cli.getResolvers(),
-        resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          return this.appsManager.appMeta[identifier] || null
-        }),
+        ...this.workspaceManager.getResolvers(),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
         }),
@@ -359,13 +353,6 @@ export class OrbitDesktopRoot {
           FinishAuthQueue.set(authKey, { identifier, finish })
 
           return await promise
-        }),
-
-        resolveCommand(AppGetWorkspaceAppsCommand, async () => {
-          if (this.workspaceManager) {
-            return this.workspaceManager.apps
-          }
-          return []
         }),
 
         resolveCommand(SetupProxyCommand, async () => {

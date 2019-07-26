@@ -1,8 +1,9 @@
+import { updateBuildInfo } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
-import { updateBuildInfo } from '@o/apps-manager'
 import { join } from 'path'
+import { isOrbitApp, readPackageJson } from '@o/libs-node'
 
 import { commandGenTypes } from './commandGenTypes'
 import { getAppConfig } from './getAppConfig'
@@ -61,36 +62,6 @@ export async function commandBuild(options: CommandBuildOptions) {
       error,
     } as const
   }
-}
-
-type BuildInfo = {
-  appVersion: string
-  orbitVersion: string
-  buildId: number
-  identifier: string
-  name: string
-  api: boolean
-  app: boolean
-  graph: boolean
-  workers: boolean
-}
-
-export const isOrbitApp = async (rootDir: string) => {
-  const pkg = await readPackageJson(rootDir)
-  return pkg && pkg.config && pkg.config.orbitApp === true
-}
-
-async function readPackageJson(appRoot: string) {
-  const packagePath = join(appRoot, 'package.json')
-  log.verbose(`isOrbitApp ${packagePath}`)
-  if (!(await pathExists(packagePath))) {
-    return null
-  }
-  return await readJSON(packagePath)
-}
-
-function getOrbitVersion() {
-  return require('../package.json').version
 }
 
 export async function bundleApp(entry: string, options: CommandBuildOptions) {

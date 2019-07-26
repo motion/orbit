@@ -1,47 +1,49 @@
+import {
+  AppsManager,
+  getBuildInfo,
+  getWorkspaceApps,
+  updateWorkspacePackageIds,
+} from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { AppMeta, CommandWsOptions } from '@o/models'
+import { MediatorServer, resolveCommand } from '@o/mediator'
+import {
+  AppBuildCommand,
+  AppCreateWorkspaceCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppGenTypesCommand,
+  AppMeta,
+  AppStatusMessage,
+  CloseAppCommand,
+  CommandWsOptions,
+  WorkspaceInfo,
+  AppGetWorkspaceAppsCommand,
+  AppMetaCommand,
+} from '@o/models'
+import { Desktop, Electron } from '@o/stores'
 import { watch } from 'chokidar'
-import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
-import { debounce, isEqual } from 'lodash'
-import { join } from 'path'
-import { getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
+import { debounce, isEqual, remove } from 'lodash'
+import Observable from 'zen-observable'
 
+import { GraphServer } from '../GraphServer'
+import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { BuildServer } from './BuildServer'
-import { bundleApp, getAppEntry } from './commandBuild'
-import { getAppConfig } from './getAppConfig'
-import { getIsInMonorepo } from './getIsInMonorepo'
-import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
-import { webpackPromise } from './webpackPromise'
-
-//
-// TODO we need to really improve this:
-//   1. we need a way to just load in apps that you are developing
-//   2. need to remove getWorkspacePackagesInfo in favor of getWorkspaceApps
-//   3. need to build local apps and installed apps separately (solve #1 by just only ever loading app server for local apps)
-//   4. that opens up forking apps
-//
-
-/**
- * PLAN:
- *
- *   - orbit-desktop need to run everything so we can bonjour to it to run and have it act as a daemon
- *   - but we want to be able to update the build/cli stuff more often than the app bundle itself
- *   - SO:
- *     1. keep everything in the cli
- *     2. have orbit-desktop run the cli by requiring it
- *     3. have cli make a call to desktop to run everything so it goes through single place
- *     4. then desktop goes back to cli to actually run the WorkspaceManager, this lets us update cli independently
- */
+import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
+import { commandGenTypes } from './commandGenTypes'
+import { createCommandWs } from './commandWs'
+import { findOrCreateWorkspace } from './findOrCreateWorkspace'
+import { getAppsConfig } from './getAppsConfig'
 
 const log = new Logger('WorkspaceManager')
 
+export type AppBuildStatusListener = (status: AppStatusMessage) => any
 type Disposable = Set<{ id: string; dispose: Function }>
-
 const disposeAll = (x: Disposable) => x.forEach(x => x.dispose())
 const dispose = (x: Disposable, id: string) => x.forEach(x => x.id === id && x.dispose())
 
 export class WorkspaceManager {
-  apps: AppMeta[] = []
+  developingApps: AppDesc[] = []
+  appsMeta: AppMeta[] = []
   directory = ''
   options: CommandWsOptions
   buildConfig = null
@@ -49,15 +51,36 @@ export class WorkspaceManager {
   wsWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
 
+  appsManager = new AppsManager()
+  graphServer = new GraphServer()
+  appMiddleware = new AppMiddleware()
+
+  constructor(private mediatorServer: MediatorServer) {
+    // signals to frontend to update app definitions
+    this.appsManager.onUpdatedAppMeta(appMeta => {
+      log.info('appsManager updating app meta', appMeta)
+      const identifiers = Object.keys(appMeta)
+      const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
+      Desktop.setState({
+        workspaceState: {
+          packageIds,
+          identifiers,
+        },
+      })
+    })
+  }
+
+  async start() {
+    await this.appsManager.start()
+    await this.graphServer.start()
+    this.watchWorkspace()
+    this.onWorkspaceChange()
+  }
+
   setWorkspace(opts: CommandWsOptions) {
     this.directory = opts.workspaceRoot
     this.options = opts
     log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
-  }
-
-  async start() {
-    this.watchWorkspace()
-    this.onWorkspaceChange()
   }
 
   stop() {
@@ -84,7 +107,7 @@ export class WorkspaceManager {
   updateWorkspace = async () => {
     log.info(`See workspace change`)
     await this.updateApps()
-    const config = await this.getAppsConfig()
+    const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
     if (!config) {
       log.error('No apps found')
       return {
@@ -112,24 +135,21 @@ export class WorkspaceManager {
 
   async updateApps() {
     const next = await getWorkspaceApps(this.directory)
-
-    if (!isEqual(next, this.apps)) {
+    if (!isEqual(next, this.appsMeta)) {
       // remove old
-      for (const app of this.apps) {
+      for (const app of this.appsMeta) {
         if (next.some(x => x.packageId === app.packageId) === false) {
           dispose(this.appWatchers, app.packageId)
         }
       }
-
       // add new
       for (const app of next) {
-        if (this.apps.some(x => x.packageId === app.packageId) === false) {
+        if (this.appsMeta.some(x => x.packageId === app.packageId) === false) {
           // watch app for changes to build buildInfo
           this.addAppWatcher(app)
         }
       }
-
-      this.apps = next
+      this.appsMeta = next
     }
   }
 
@@ -171,156 +191,77 @@ export class WorkspaceManager {
     })
   }
 
-  private async getAppsConfig() {
-    if (!this.apps.length) {
-      return null
-    }
-
-    const dllFile = join(this.directory, 'dist', 'manifest.json')
-    log.info(`dllFile ${dllFile}`)
-
-    const isInMonoRepo = await getIsInMonorepo(process.cwd())
-
-    // link local apps into local node_modules
-    await ensureDir(join(this.directory, 'node_modules'))
-    await Promise.all(
-      this.apps
-        .filter(x => x.isLocal)
-        .map(async app => {
-          const where = join(
-            this.directory,
-            // FOR NOW lets link into monorepo root if need be
-            // need to figure out how to control dlls a bit better
-            ...(isInMonoRepo ? ['..', '..'] : []),
-            'node_modules',
-            ...app.packageId.split('/'),
-          )
-          log.info(`Ensuring symlink from ${app.directory} to ${where}`)
-          await ensureSymlink(app.directory, where)
-        }),
-    )
-
-    const appsConfBase: WebpackParams = {
-      name: 'apps',
-      entry: this.apps.map(x => x.packageId),
-      context: this.directory,
-      watch: false,
-      mode: this.options.mode,
-      target: 'web',
-      publicPath: '/',
-      outputFile: '[name].apps.js',
-      output: {
-        library: 'apps',
-      },
-      dll: dllFile,
-    }
-
-    // we have to build apps once
-    if (this.options.clean || !(await pathExists(dllFile))) {
-      log.info('building all apps once...')
-      await webpackPromise([getAppConfig(appsConfBase)])
-    }
-
-    // create app config now with `hot`
-    const appsConfig = getAppConfig({
-      ...appsConfBase,
-      watch: true,
-      hot: true,
+  /**
+   * Returns Observable for the current workspace information
+   */
+  observables = new Set<{ update: (next: any) => void; observable: Observable<WorkspaceInfo> }>()
+  observe() {
+    const observable = new Observable<WorkspaceInfo>(observer => {
+      this.observables.add({
+        update: (status: WorkspaceInfo) => {
+          observer.next(status)
+        },
+        observable,
+      })
+      // start with empty
+      observer.next(null)
     })
+    return observable
+  }
 
-    /**
-     * Get the monorepo in development mode and build orbit
-     */
-    let entry = ''
-    let extraConfig
-    if (isInMonoRepo) {
-      // main entry for orbit-app
-      const monoRoot = join(__dirname, '..', '..', '..')
-      const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
-      entry = appEntry
-      const extraConfFile = join(appEntry, '..', '..', 'webpack.config.js')
-      if (await pathExists(extraConfFile)) {
-        extraConfig = require(extraConfFile)
-      }
-    }
-
-    /**
-     * Writes out a file webpack will understand and import properly
-     *
-     * Notes:
-     *
-     *  It seems that webpack doesn't like dynamic imports when dealing with DLLs.
-     *  So for now we do this. In production we'd need something different. My ideas
-     *  for running in prod:
-     *
-     *   1. We build orbit itself as a static dll, but without the apps part
-     *   2. We have it look for a global variable that has the apps
-     *   3. The apps are a DLL as they are now
-     *   4. Right now we build all of orbit (see isInMonoRepo above) in development mode,
-     *      this lets us develop all of orbit at once nicely in dev. But we'd instead
-     *      have the orbit DLL in production, and instead of importing orbit we'd have some
-     *      smaller webpack config just for improting the apps, and injecting them into orbit
-     *      via the global variable or similar.
-     *
-     */
-    const appDefinitionsSrc = `
-// all apps
-${this.apps
-  .map((app, index) => {
-    return `export const app_${index} = require('${app.packageId}')`
-  })
-  .join('\n')}`
-    const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-    log.info(`appDefsFile ${appDefsFile}`)
-    await writeFile(appDefsFile, appDefinitionsSrc)
-
-    /**
-     * Allows for our orbit app to define some extra configuration
-     * Could be used similarly in the future, if wanted, for apps too.
-     */
-    let extraEntries = {}
-    let extraMainConfig = null
-
-    if (extraConfig) {
-      const { main, ...others } = extraConfig
-      extraMainConfig = main
-      for (const name in others) {
-        extraEntries[name] = await makeWebpackConfig(
-          {
-            mode: this.options.mode,
-            name,
-            outputFile: `${name}.js`,
-            context: this.directory,
-            target: 'web',
-            hot: true,
+  /**
+   * For external commands, this lets the CLI call various commands in here,
+   * as well as the client apps if need be.
+   */
+  getResolvers() {
+    return [
+      resolveCommand(AppCreateWorkspaceCommand, async props => {
+        await findOrCreateWorkspace(props)
+        return true
+      }),
+      createCommandWs(this.appsManager),
+      resolveCommand(AppBuildCommand, commandBuild),
+      resolveCommand(AppGenTypesCommand, commandGenTypes),
+      resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
+        const entry = await getAppEntry(projectRoot)
+        const appId = Object.keys(Electron.state.appWindows).length
+        // launch new app
+        Electron.setState({
+          appWindows: {
+            ...Electron.state.appWindows,
+            [appId]: {
+              appId,
+              appRole: 'editing',
+            },
           },
-          extraConfig[name],
-        )
-        log.info(`extra entry: ${name}`)
-      }
-    }
-
-    /**
-     * The orbit main app config
-     */
-    const wsConfig = await makeWebpackConfig(
-      {
-        name: 'main',
-        mode: this.options.mode,
-        context: this.directory,
-        entry: [entry],
-        target: 'web',
-        watch: true,
-        hot: true,
-        dllReference: dllFile,
-      },
-      extraMainConfig,
-    )
-
-    return {
-      main: wsConfig,
-      apps: appsConfig,
-      ...extraEntries,
-    }
+        })
+        this.developingApps.push({
+          entry,
+          appId,
+          path: projectRoot,
+          publicPath: `/appServer/${appId}`,
+        })
+        this.appMiddleware.setApps(this.developingApps)
+        return {
+          type: 'success',
+          message: 'Got app id',
+          value: `${appId}`,
+        } as const
+      }),
+      resolveCommand(AppDevCloseCommand, async ({ appId }) => {
+        log.info('Removing build server', appId)
+        this.developingApps = remove(this.developingApps, x => x.appId === appId)
+        this.appMiddleware.setApps(this.developingApps)
+        log.info('Removing process', appId)
+        await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
+        log.info('Closed app', appId)
+      }),
+      resolveCommand(AppMetaCommand, async ({ identifier }) => {
+        return this.appsManager.appMeta[identifier] || null
+      }),
+      resolveCommand(AppGetWorkspaceAppsCommand, async () => {
+        return this.appsManager.appsMeta
+      }),
+    ]
   }
 }

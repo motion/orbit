@@ -1,7 +1,20 @@
 import { configStore } from '@o/config'
+import { readPackageJson } from '@o/libs-node'
 import { AppDefinition } from '@o/models'
 import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
 import { join } from 'path'
+
+type BuildInfo = {
+  appVersion: string
+  orbitVersion: string
+  buildId: number
+  identifier: string
+  name: string
+  api: boolean
+  app: boolean
+  graph: boolean
+  workers: boolean
+}
 
 const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
   Object.keys(appInfo).some(x => keys.some(key => x === key))
@@ -32,6 +45,11 @@ export async function updateBuildInfo(appRoot: string) {
       buildId,
     },
   })
+}
+
+// TODO make it read real version in production/dev
+function getOrbitVersion() {
+  return require('../package.json').version
 }
 
 const buildInfoDir = x => join(x, 'dist', 'buildInfo.json')

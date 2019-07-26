@@ -2,6 +2,7 @@ import { Logger } from '@o/logger'
 import { AppMeta, PackageJson } from '@o/models'
 import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
+import { isOrbitApp } from '@o/libs-node'
 
 import { findPackage } from './findPackage'
 

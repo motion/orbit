@@ -64,7 +64,6 @@ import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
-import { createCallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
@@ -311,7 +310,6 @@ export class OrbitDesktopRoot {
         createAppCreateNewResolver(this),
         AppRemoveResolver,
         NewFallbackServerPortResolver,
-        createCallAppBitApiMethodResolver(props.appsManager),
         ...getCosalResolvers(props.cosal),
         resolveMany(SearchResultModel, async args => {
           return await new SearchResultResolver(props.cosal, args).resolve()

@@ -2,7 +2,7 @@ import { join } from 'path'
 
 import { pathExistsSync, readFileSync } from 'fs-extra'
 import { Logger } from '@o/logger'
-import { isOrbitApp } from './commandBuild'
+import { isOrbitApp } from '@o/libs-node'
 
 const log = new Logger('findPackage')
 

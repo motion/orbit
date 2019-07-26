@@ -59,7 +59,7 @@ async function setBuildInfo(projectRoot: string, next: BuildInfo) {
   await writeJSON(buildInfoDir(projectRoot), next)
 }
 
-export async function getBuildInfo(projectRoot: string): BuildInfo | null {
+export async function getBuildInfo(projectRoot: string): Promise<BuildInfo | null> {
   const dir = buildInfoDir(projectRoot)
   if (await pathExists(dir)) {
     return await readJSON(dir)

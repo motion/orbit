@@ -6,8 +6,8 @@ import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import sanitize from 'sanitize-filename'
 
+import { getCurrentWorkspace } from '../helpers/getCurrentWorkspace'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
-import { getCurrentWorkspace } from './AppOpenWorkspaceResolver'
 
 const log = new Logger('AppCreateNewCommand')
 

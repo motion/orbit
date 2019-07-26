@@ -1,28 +1,11 @@
-import {
-  AppsManager,
-  getBuildInfo,
-  getWorkspaceApps,
-  updateWorkspacePackageIds,
-} from '@o/apps-manager'
+import { AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
-import {
-  AppBuildCommand,
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppGenTypesCommand,
-  AppMeta,
-  AppStatusMessage,
-  CloseAppCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  AppGetWorkspaceAppsCommand,
-  AppMetaCommand,
-} from '@o/models'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppMeta, AppMetaCommand, AppStatusMessage, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { watch } from 'chokidar'
 import { debounce, isEqual, remove } from 'lodash'
+import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
 import { GraphServer } from '../GraphServer'
@@ -256,11 +239,25 @@ export class WorkspaceManager {
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
         log.info('Closed app', appId)
       }),
+      // TODO these two commands (AppMetaCommand, AppGetWorkspaceAppsCommand)
+      // are both doing similar things but in different ways
       resolveCommand(AppMetaCommand, async ({ identifier }) => {
         return this.appsManager.appMeta[identifier] || null
       }),
       resolveCommand(AppGetWorkspaceAppsCommand, async () => {
-        return this.appsManager.appsMeta
+        return this.appsMeta
+      }),
+      resolveCommand(CallAppBitApiMethodCommand, async ({ appId, appIdentifier, method, args }) => {
+        const app = await getRepository(AppEntity).findOneOrFail(appId)
+        const api = this.appsManager.nodeAppDefinitions.find(x => x.id === appIdentifier).api(app)
+        if (!api) throw new Error(`API for app "${appId}" is invalid`)
+        if (!api[method]) throw new Error(`No method "${method}" was found in the ${appId}" app`)
+        log.info(
+          `Calling api for app ${appIdentifier} id ${appId} method ${method} args ${JSON.stringify(
+            args,
+          )}`,
+        )
+        return await Promise.resolve(api[method](...args))
       }),
     ]
   }

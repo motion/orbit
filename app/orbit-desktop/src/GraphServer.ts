@@ -1,4 +1,4 @@
-import { requireWorkspaceDefinitions } from '@o/cli'
+import { requireWorkspaceDefinitions } from '@o/apps-manager'
 import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { Logger } from '@o/logger'

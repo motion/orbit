@@ -17,11 +17,15 @@ type PartialSpace = Pick<Space, 'id' | 'directory'>
 type AppMetaDict = { [identifier: string]: AppMeta }
 type AppMetaDictCb = (appMeta: AppMetaDict) => void
 
-export { getPackageId } from './getPackageId'
-export { getRegistryLatestVersion } from './getRegistryLatestVersion'
-export { isInstalled } from './isInstalled'
-export { downloadAppDefinition } from './downloadAppDefinition'
+export * from './getPackageId'
+export * from './getRegistryLatestVersion'
+export * from './isInstalled'
+export * from './downloadAppDefinition'
+export * from './requireWorkspaceDefinitions'
+export * from './requireAppDefinition'
 export * from './buildInfo'
+export * from './updateWorkspacePackageIds'
+export * from './getWorkspaceApps'
 
 @decorate
 export class AppsManager {

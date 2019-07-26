@@ -1,4 +1,4 @@
-import { OrbitAppsManager } from '@o/libs-node'
+import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppOpenWorkspaceCommand, SpaceEntity, UserEntity } from '@o/models'
@@ -16,7 +16,7 @@ type WorkspaceInfo = {
   identifier: string
 }
 
-export function createCommandWs(orbitAppsManager: OrbitAppsManager) {
+export function createCommandWs(AppsManager: AppsManager) {
   return resolveCommand(AppOpenWorkspaceCommand, async options => {
     const { workspaceRoot } = options
     log.info(`Got command ${workspaceRoot}`)
@@ -60,7 +60,7 @@ export function createCommandWs(orbitAppsManager: OrbitAppsManager) {
     await getRepository(UserEntity).save(user)
 
     // ensure app bits
-    await orbitAppsManager.updateAppDefinitions(space)
+    await AppsManager.updateAppDefinitions(space)
 
     // now re-run inside desktop, this time CLI in this process knowing we are the daemon
     const wsManager = new WorkspaceManager()

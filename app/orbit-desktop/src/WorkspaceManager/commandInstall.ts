@@ -1,11 +1,9 @@
+import { getPackageId, getRegistryLatestVersion, isInstalled } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { CommandInstallOptions } from '@o/models'
 import execa from 'execa'
 
 import { yarnOrNpm } from './commandHelpers'
-import { getPackageId } from './getPackageId'
-import { getRegistryLatestVersion } from './getRegistryLatestVersion'
-import { isInstalled } from './isInstalled'
 
 const log = new Logger('commandInstall')
 
@@ -82,11 +80,12 @@ export async function runCommand(command: string, args: string, env?: Object) {
  * Sends command to open workspace with latest packageIds
  * Gets packageIds by reading current workspace directory
  */
-export async function reloadAppDefinitions(directory: string) {
-  let { mediator } = await getOrbitDesktop()
-  const apps = await getWorkspaceApps(directory)
-  await mediator.command(AppOpenWorkspaceCommand, {
-    workspaceRoot: directory,
-    packageIds: apps.map(x => x.packageId),
-  })
+async function reloadAppDefinitions(_directory: string) {
+  console.log('TODO')
+  // let { mediator } = await getOrbitDesktop()
+  // const apps = await getWorkspaceApps(directory)
+  // await mediator.command(AppOpenWorkspaceCommand, {
+  //   workspaceRoot: directory,
+  //   packageIds: apps.map(x => x.packageId),
+  // })
 }

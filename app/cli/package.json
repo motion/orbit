@@ -17,7 +17,6 @@
     "@o/mediator": "*",
     "@o/models": "*",
     "@babel/code-frame": "^7.0.0",
-    "configstore": "4.0.0",
     "ci-info": "^2.0.0",
     "reconnecting-websocket": "4.1.10",
     "ws": "^7.0.0",
@@ -30,8 +29,6 @@
     "hosted-git-info": "2.7.1",
     "is-valid-path": "0.1.1",
     "lodash": "4.17.11",
-    "minimist": "1.2.0",
-    "null-loader": "*",
     "opentracing": "0.14.3",
     "execa": "^1.0.0",
     "pretty-error": "^2.1.1",
@@ -41,14 +38,10 @@
     "yargs": "^13.2.2",
     "yurnalist": "^1.0.5",
     "wait-on": "3.3.0-beta.0",
-    "typescript": "3.5.3",
     "kill-port": "^1.5.0",
     "command-exists": "^1.2.8",
     "isomorphic-fetch": "^2.2.1",
-    "prompts": "^2.1.0",
-    "webpack-node-externals": "^1.7.2",
-    "react-hot-loader": "4.12.9",
-    "chokidar": "^3.0.1"
+    "prompts": "^2.1.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"

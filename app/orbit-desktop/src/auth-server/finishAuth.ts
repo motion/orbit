@@ -1,4 +1,4 @@
-import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/cli'
+import { downloadAppDefinition, getPackageId, requireAppDefinition } from '@o/apps-manager'
 import { newEmptyAppBit } from '@o/libs'
 import { Logger } from '@o/logger'
 import { AppBit, AppEntity } from '@o/models'

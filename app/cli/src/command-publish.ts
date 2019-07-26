@@ -1,5 +1,6 @@
 import 'isomorphic-fetch'
 
+import { npmCommand, yarnOrNpm } from '@o/libs-node'
 import { AppDefinition } from '@o/models'
 import { pathExists, readFile, readJSON } from 'fs-extra'
 import { join } from 'path'
@@ -7,7 +8,6 @@ import prompts from 'prompts'
 
 import { commandBuild } from './command-build'
 import { reporter } from './reporter'
-import { npmCommand, yarnOrNpm } from './yarnOrNpm'
 
 export type CommandPublishOptions = {
   projectRoot: string

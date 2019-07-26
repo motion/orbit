@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@o/utils": "*",
-    "@o/logger": "*"
+    "@o/logger": "*",
+    "configstore": "4.0.0"
   }
 }

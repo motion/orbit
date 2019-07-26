@@ -1,7 +1,7 @@
 {
   "name": "@o/orbit-workers",
   "version": "2.5.6",
-  "main": "./_/main.js",
+  "main": "_/main.js",
   "private": true,
   "scripts": {
     "build": "tsc -b",

@@ -1,9 +1,5 @@
-import { baseWorkspaceDir, configStore } from '@o/config'
 import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
-import { copy, pathExists } from 'fs-extra'
-import { join } from 'path'
 
-import { commandWs, isInWorkspace } from './command-ws'
 import { getOrbitDesktop } from './getDesktop'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
@@ -17,22 +13,26 @@ export async function commandDev(options: CommandDevOptions) {
 
   if (didStartOrbit) {
     reporter.info(`Starting workspace from command: dev`)
-    const baseWorkspace = await ensureBaseWorkspace()
-    const lastWorkspace = configStore.lastActiveWorkspace.get()
-    const workspaceRoot = (await isInWorkspace(options.projectRoot, lastWorkspace))
-      ? lastWorkspace
-      : baseWorkspace
-    reporter.info(`Using workspace: ${workspaceRoot}`)
-
-    await commandWs({
-      workspaceRoot,
-      // TODO
-      mode: 'development',
-    })
+    console.log('TODO re-enable this')
+    // const baseWorkspace = await ensureBaseWorkspace()
+    // const lastWorkspace = configStore.lastActiveWorkspace.get()
+    // const workspaceRoot = (await isInWorkspace(options.projectRoot, lastWorkspace))
+    //   ? lastWorkspace
+    //   : baseWorkspace
+    // reporter.info(`Using workspace: ${workspaceRoot}`)
+    // await commandWs({
+    //   workspaceRoot,
+    //   mode: 'development',
+    // })
   }
 
   try {
-    const appId = await mediator.command(AppDevOpenCommand, options)
+    const reply = await mediator.command(AppDevOpenCommand, options)
+    if (reply.type !== 'success') {
+      reporter.panic(reply.message)
+      return
+    }
+    const appId = +reply.value
     await mediator.command(AppOpenWindowCommand, {
       appId,
       isEditing: true,
@@ -48,13 +48,26 @@ export async function commandDev(options: CommandDevOptions) {
   }
 }
 
-/**
- * Copy an empty workspace somewhere so we can use it for developing apps outside a workspace
- */
-async function ensureBaseWorkspace() {
-  if (await pathExists(baseWorkspaceDir)) {
-    return baseWorkspaceDir
-  }
-  await copy(join(__dirname, '..', 'base-workspace'), baseWorkspaceDir)
-  return baseWorkspaceDir
-}
+// async function isInWorkspace(packagePath: string, workspacePath: string): Promise<boolean> {
+//   try {
+//     const packageInfo = await readJSON(join(packagePath, 'package.json'))
+//     const workspaceInfo = await getWorkspaceApps(workspacePath)
+//     if (packageInfo && workspaceInfo) {
+//       return workspaceInfo.some(x => x.packageId === packageInfo.name)
+//     }
+//   } catch (err) {
+//     reporter.verbose(`Potential err ${err.message}`)
+//   }
+//   return false
+// }
+
+// /**
+//  * Copy an empty workspace somewhere so we can use it for developing apps outside a workspace
+//  */
+// async function ensureBaseWorkspace() {
+//   if (await pathExists(baseWorkspaceDir)) {
+//     return baseWorkspaceDir
+//   }
+//   await copy(join(__dirname, '..', 'base-workspace'), baseWorkspaceDir)
+//   return baseWorkspaceDir
+// }

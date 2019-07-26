@@ -1,8 +1,10 @@
 import { join } from 'path'
 
-import { reporter } from '../reporter'
 import { pathExistsSync, readFileSync } from 'fs-extra'
-import { isOrbitApp } from '../command-build'
+import { Logger } from '@o/logger'
+import { isOrbitApp } from './commandBuild'
+
+const log = new Logger('findPackage')
 
 /**
  * Finds a package root directory (where package.json is) given id and current directory
@@ -30,7 +32,7 @@ export function findPackage({ packageId, directory }: { packageId: string; direc
     iter++
     try {
       const nextPath = join(cur, 'node_modules', packageId)
-      reporter.verbose(`checking path ${nextPath}`)
+      log.verbose(`checking path ${nextPath}`)
       path = require.resolve(nextPath)
       // found "compiled out" path so lets make sure we go up to name
       const baseName = packageId.replace(/@[a-zA-Z0-9_\-\.]+\//, '') // remove any namespace

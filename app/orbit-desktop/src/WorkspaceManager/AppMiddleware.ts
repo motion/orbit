@@ -19,6 +19,23 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
 export class AppMiddleware {
   middlewares = []
+  statusListeners = new Set<AppBuildStatusListener>()
+
+  onStatus(callback: AppBuildStatusListener) {
+    this.statusListeners.add(callback)
+    return () => {
+      this.statusListeners.delete(callback)
+    }
+  }
+
+  private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
+    ;[...this.statusListeners].forEach(listener => {
+      listener({
+        id: `${message.appId}-build-status`,
+        ...message,
+      })
+    })
+  }
 
   getMiddleware() {
     return (req, res, next) => {

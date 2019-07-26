@@ -1,7 +1,14 @@
 import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand } from '@o/models'
+import {
+  AppBuildCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppGenTypesCommand,
+  AppStatusMessage,
+  CloseAppCommand,
+} from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
 
@@ -49,7 +56,6 @@ export class WorkspaceManager {
       resolveCommand(AppGenTypesCommand, commandGenTypes),
       resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
         const appId = Object.keys(Electron.state.appWindows).length
-
         // launch new app
         Electron.setState({
           appWindows: {
@@ -60,7 +66,6 @@ export class WorkspaceManager {
             },
           },
         })
-
         this.developingApps.push({
           entry,
           appId,
@@ -68,7 +73,10 @@ export class WorkspaceManager {
           publicPath: `/appServer/${appId}`,
         })
         this.appMiddleware.setApps(this.developingApps)
-        return appId
+        return {
+          type: 'success',
+          value: `${appId}`,
+        } as const
       }),
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
         log.info('Removing build server', appId)

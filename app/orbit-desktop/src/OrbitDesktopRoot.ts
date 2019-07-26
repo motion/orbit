@@ -79,6 +79,7 @@ import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { appStatusManager } from './managers/AppStatusManager'
 import { WorkspaceManager } from './workspaceManager'
+import { AppMiddleware } from './WorkspaceManager/AppMiddleware'
 
 const log = new Logger('desktop')
 
@@ -147,13 +148,10 @@ export class OrbitDesktopRoot {
 
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer({
-      appMiddleware: this.appMiddleware,
+      appMiddleware: this.workspaceManager.appMiddleware,
       cosal,
       orbitAppsManager: this.orbitAppsManager,
     })
-
-    // depends on middleware + mediatorServer
-    this.cli = new CLI(this.appMiddleware, this.mediatorServer, this.orbitAppsManager)
 
     // start announcing on bonjour
     this.bonjour = bonjour()
@@ -166,7 +164,7 @@ export class OrbitDesktopRoot {
 
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
-    this.webServer = new WebServer(this.appMiddleware)
+    this.webServer = new WebServer(this.workspaceManager.appMiddleware)
     await this.webServer.start()
 
     this.authServer = new AuthServer()

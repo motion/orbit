@@ -16,7 +16,6 @@
     { "path": "../libs" },
     { "path": "../libs-node" },
     { "path": "../cli" },
-    { "path": "../build-server" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },
     { "path": "../../packages/mediator" },

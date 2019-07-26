@@ -23,15 +23,16 @@ export class GraphServer {
 
   constructor() {
     this.server = express()
+  }
+
+  start() {
     this.server.set('port', port)
     this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))
     this.server.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.server.get('/hello', (_, res) => res.send('hello world'))
-  }
 
-  start() {
     this.watchWorkspacesForGraphs()
 
     // graphql

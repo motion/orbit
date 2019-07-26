@@ -21,7 +21,7 @@ export const reporter: Reporter = {
    */
   stripIndent,
   format: chalk,
-  isVerbose: true,
+  isVerbose: false,
 
   /**
    * Toggle verbosity.

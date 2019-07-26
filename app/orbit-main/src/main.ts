@@ -22,19 +22,15 @@ const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTR
 
 const log = new Logger('orbit-main')
 
-const envInfo = JSON.stringify(
-  {
-    SUB_PROCESS,
-    PROCESS_NAME,
-    DISABLE_WORKERS,
-    DISABLE_ELECTRON,
-  },
-  null,
-  2,
-)
+const envInfo = {
+  SUB_PROCESS,
+  PROCESS_NAME,
+  DISABLE_WORKERS,
+  DISABLE_ELECTRON,
+}
 
 export async function main() {
-  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${envInfo}`, ORBIT_CONFIG)
+  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS}`, envInfo, ORBIT_CONFIG)
 
   // setup config
   if (SUB_PROCESS) {
@@ -57,7 +53,7 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (!SUB_PROCESS) {
+  if (!SUB_PROCESS && !process.env.SINGLE_USE_MODE) {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     const ports = Object.values(config.ports)
@@ -124,6 +120,11 @@ export async function main() {
     inspectPort: 9000,
     isNode: true,
   })
+
+  if (process.env.SINGLE_USE_MODE) {
+    log.verbose(`Single use mode!, not running other processes`)
+    return
+  }
 
   if (DISABLE_ELECTRON !== 'true') {
     log.info('Starting electron...')

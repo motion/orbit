@@ -22,7 +22,6 @@ async function findBonjourService(type: string, timeout: number) {
 
 async function getOrbitDesktop() {
   let port = await findBonjourService('orbitDesktop', 5000)
-
   if (port == null) {
     // TODO(andreypopp): start orbit instead
     throw new Error('orbit-desktop is not running')

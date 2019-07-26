@@ -31,7 +31,7 @@ const finishLaunchingElectron = async ({ mainProcess }) => {
   ElectronApp.main()
 
   // PRODUCTION
-  if (mainProcess && Config.isProd) {
+  if (mainProcess && Config.isProd && !process.env.SINGLE_USE_MODE) {
     // move to app folder
     if (!app.isInApplicationsFolder()) {
       app.dock.bounce('informational')

@@ -81,7 +81,7 @@ export async function runCommand(command: string, args: string, env?: Object) {
  * Gets packageIds by reading current workspace directory
  */
 async function reloadAppDefinitions(_directory: string) {
-  console.log('TODO')
+  console.log('\n\n\n\nTODO\n\n\n\n\n')
   // let { mediator } = await getOrbitDesktop()
   // const apps = await getWorkspaceApps(directory)
   // await mediator.command(AppOpenWorkspaceCommand, {

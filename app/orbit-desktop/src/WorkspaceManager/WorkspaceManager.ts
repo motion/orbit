@@ -12,12 +12,12 @@ import Observable from 'zen-observable'
 import { GraphServer } from '../GraphServer'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppDesc, AppMiddleware } from './AppMiddleware'
-import { BuildServer } from './BuildServer'
 import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { getAppsConfig } from './getAppsConfig'
+import { useWebpackMiddleware } from './useWebpackMiddleware'
 
 const log = new Logger('WorkspaceManager')
 
@@ -29,10 +29,10 @@ const dispose = (x: Disposable, id: string) => x.forEach(x => x.id === id && x.d
 export class WorkspaceManager {
   developingApps: AppDesc[] = []
   appsMeta: AppMeta[] = []
+  workspaceVersion = 0
   directory = ''
   options: CommandWsOptions
   buildConfig = null
-  buildServer: BuildServer | null = null
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
 
   appsManager = new AppsManager()
@@ -54,13 +54,15 @@ export class WorkspaceManager {
     })
   }
 
-  async start() {
-    await this.appsManager.start()
-    await this.graphServer.start()
-    this.onWorkspaceChange()
-    this.appMiddleware.onStatus(status => {
-      appStatusManager.sendMessage(status)
-    })
+  async start(opts: { singleUseMode: boolean }) {
+    if (!opts.singleUseMode) {
+      await this.appsManager.start()
+      await this.graphServer.start()
+      this.onWorkspaceChange()
+      this.appMiddleware.onStatus(status => {
+        appStatusManager.sendMessage(status)
+      })
+    }
   }
 
   watchWorkspace = react(
@@ -89,34 +91,36 @@ export class WorkspaceManager {
   }
 
   updateWorkspace = async () => {
-    log.info(`updateWorkspace ${this.directory}`)
-    if (!this.directory) {
-      return
-    }
-    await this.updateApps()
-    const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
-    if (!config) {
-      log.error('No apps found')
-      return {
-        type: 'error',
-        message: `No apps found`,
-      } as const
-    }
-    log.info(`workspace app config`, JSON.stringify(config, null, 2))
-    if (!isEqual(this.buildConfig, config)) {
-      this.buildConfig = config
-      if (this.buildServer) {
-        this.buildServer.stop()
-      }
-      this.buildServer = new BuildServer(config)
-      await this.buildServer.start()
-      await updateWorkspacePackageIds(this.directory)
-    }
-    return {
-      type: 'success',
-      message: `Updated app ids`,
-    } as const
+    this.workspaceVersion = (this.workspaceVersion + 1) % Number.MAX_SAFE_INTEGER
   }
+
+  onNewWorkspaceVersion = react(
+    () => [this.directory, this.workspaceVersion],
+    async ([directory], { sleep, useEffect }) => {
+      log.info(`updateWorkspace ${directory}`)
+      ensure('directory', !!directory)
+
+      await this.updateApps()
+
+      const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
+
+      if (!config) {
+        log.error('No apps found')
+        return
+      }
+
+      await sleep()
+      log.info(`workspace app config`, JSON.stringify(config, null, 2))
+
+      if (!isEqual(this.buildConfig, config)) {
+        this.buildConfig = config
+        useEffect(() => {
+          return useWebpackMiddleware(config)
+        })
+        await updateWorkspacePackageIds(this.directory)
+      }
+    },
+  )
 
   private onWorkspaceChange = debounce(this.updateWorkspace, 50)
 

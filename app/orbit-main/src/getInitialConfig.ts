@@ -17,7 +17,7 @@ export async function getInitialConfig({
   cli: string
 }): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
-  log.info(`Get config isProd ${isProd}`)
+  log.verbose(`Get config isProd ${isProd}`)
 
   // find a bunch of ports for us to use
   const ports = await findContiguousPorts(20, 3001)

@@ -1,78 +1,68 @@
-import { configStore } from '@o/config'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
-import { OR_TIMED_OUT, orTimeout, randomString, sleep } from '@o/utils'
+import { OR_TIMED_OUT, orTimeout, randomString } from '@o/utils'
 import bonjour from 'bonjour'
+import { ChildProcess } from 'child_process'
 import execa from 'execa'
 import { pathExists, readJSON } from 'fs-extra'
-import killPort from 'kill-port'
-import { join, relative } from 'path'
+import { join } from 'path'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import WebSocket from 'ws'
 
 import { cliPath } from './constants'
 import { reporter } from './reporter'
 
-let tries = 0
+export type GetOrbitDesktopProps = {
+  singleUseMode?: boolean
+}
 
-export async function getOrbitDesktop(): Promise<{
+export async function getOrbitDesktop(
+  props: GetOrbitDesktopProps = {},
+): Promise<{
   mediator: MediatorClient
   didStartOrbit: boolean
+  orbitProcess: ChildProcess | null
 }> {
   let port = await findBonjourService('orbitDesktop', 120)
   let didStartOrbit = false
+  let orbitProcess: ChildProcess | null = null
 
-  if (!port) {
+  if (port) {
+    reporter.info(`Found existing orbit process`)
+  } else {
     reporter.info('Starting orbit desktop process')
     // run desktop and try again
-    if (await runOrbitDesktop()) {
-      port = await findBonjourService('orbitDesktop', 25000)
+    const isInMonoRepo = await getIsInMonorepo()
+    orbitProcess = runOrbitDesktop(props, isInMonoRepo)
+    if (orbitProcess) {
+      port = await findBonjourService('orbitDesktop', 15000)
       didStartOrbit = true
-      // adding some sleep so it connects
-      await sleep(1000)
     }
   }
+
   if (!port) {
     reporter.panic(`Couldn't get Orbit to run`)
   }
+
+  reporter.verbose(`Connecting to orbit desktop on port ${port}`)
+
   const socket = new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
     WebSocket,
     minReconnectionDelay: 1,
   })
-  // we want to be sure it opens before we send messages
-  try {
-    reporter.info('Waiting for socket connection')
-    await orTimeout(
-      new Promise(res => {
-        if (socket.readyState === 1) res()
-        else {
-          socket.onopen = res
-        }
-      }),
-      1000,
-    )
-  } catch (err) {
-    if (err === OR_TIMED_OUT) {
-      if (tries >= 1) {
-        reporter.panic(`Couldn't connect to Orbit`)
-      }
-      reporter.info(
-        'Timed out waiting for socket to open, potentially stuck Orbit process, attempting restart.',
-      )
-      await killPort(port)
-      tries++
-      return await getOrbitDesktop()
-    } else {
-      reporter.error(err.message, err)
-    }
-  }
-
+  const transport = new WebSocketClientTransport('cli-client-' + randomString(5), socket)
   const mediator = new MediatorClient({
-    transports: [new WebSocketClientTransport('cli-client-' + randomString(5), socket)],
+    transports: [transport],
   })
+  await transport.onOpen()
+
+  if (!mediator) {
+    reporter.panic('No mediator found')
+  }
 
   return {
     mediator,
     didStartOrbit,
+    orbitProcess,
   }
 }
 
@@ -104,31 +94,39 @@ async function getIsInMonorepo() {
   return (await pathExists(monorepoPkg)) && (await readJSON(monorepoPkg)).name === 'orbit-monorepo'
 }
 
-export async function runOrbitDesktop(): Promise<boolean> {
-  reporter.info('runOrbitDesktop')
-  const isInMonoRepo = await getIsInMonorepo()
-  reporter.info(`isInMonoRepo ${isInMonoRepo}`)
-  let cmd = configStore.orbitMainPath.get()
+// weirdly, if i made this async, it never returned (when isInMonoRepo)
+// ..oh i know why.... because execa returns a weird promise, so it awaits the promise :(
+export function runOrbitDesktop(
+  { singleUseMode }: GetOrbitDesktopProps,
+  isInMonoRepo,
+): ChildProcess | null {
+  reporter.info(`runOrbitDesktop, isInMonoRepo ${isInMonoRepo}`)
+  let cmd = ''
   let cwd = process.cwd()
 
   if (isInMonoRepo) {
     const monoRoot = join(__dirname, '..', '..', '..')
-    const script = join(monoRoot, 'app', 'orbit-main', 'scripts', 'run-orbit.sh')
-    cwd = join(script, '..', '..')
-    cmd = `./${relative(cwd, script)}`
-    configStore.orbitMainPath.set(cmd)
-  } else if (!cmd) {
+    cwd = join(monoRoot, 'app', 'orbit-main')
+    cmd = `npx electron --async-stack-traces --inspect=9001 --remote-debugging-port=9002 ./_/main.js`
+  }
+  if (!cmd) {
     reporter.info('No orbit path found, searching...')
   }
 
   if (cmd) {
     try {
-      reporter.info('Running Orbit', cmd, cwd)
-      const child = execa(cmd, [], {
-        detached: !isInMonoRepo,
+      const detached = !isInMonoRepo && !singleUseMode
+      reporter.info(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
+      const child: ChildProcess = execa.command(cmd, {
+        detached,
         cwd,
         env: {
           ...process.env,
+          ...(singleUseMode && { SINGLE_USE_MODE: 'true' }),
+          ...(isInMonoRepo && {
+            FIRST_RUN: 'true', // runs it when in monorepo mode
+            NODE_ENV: 'development',
+          }),
           HIDE_ON_START: 'true',
           SINGLE_APP_MODE: 'true',
           CLI_PATH: cliPath,
@@ -136,15 +134,16 @@ export async function runOrbitDesktop(): Promise<boolean> {
       })
 
       if (reporter.isVerbose) {
+        reporter.info(`\n\n Logging orbit proces in verbose mode\n\n`)
         child.stdout.pipe(process.stdout)
         child.stderr.pipe(process.stderr)
       }
 
-      return true
+      return child
     } catch (e) {
       console.log('Error running', e)
     }
   }
 
-  return false
+  return null
 }

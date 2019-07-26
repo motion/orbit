@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import { ApiInfo } from '@o/models'
-import { pathExists, readJSON, writeJSON } from 'fs-extra'
-import path, { join } from 'path'
+import { pathExists, writeJSON } from 'fs-extra'
+import { join } from 'path'
 import ts from 'typescript'
 
 let checker: ts.TypeChecker
@@ -14,9 +14,41 @@ export type CommandGenTypesOptions = {
   out?: string
 }
 
+const compilerOptions = JSON.parse(`{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "incremental": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "CommonJS",
+    "removeComments": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2018",
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmitOnError": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "allowJs": false,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "lib": ["es2017", "es2018", "dom", "esnext.array"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
+}`)
+
 export async function commandGenTypes(options: CommandGenTypesOptions) {
   log.info('Running orbit gen-types')
-  const compilerOptions = await readJSON(path.join(__dirname, '..', 'project-tsconfig.json'))
   const apiEntry = join(options.projectEntry, '..', 'api.node.ts')
 
   if (!(await pathExists(apiEntry))) {

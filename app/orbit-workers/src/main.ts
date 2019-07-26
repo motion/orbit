@@ -9,7 +9,7 @@ const { workersRoot } = require('./OrbitWorkersRoot')
 const log = new Logger('orbit-workers')
 
 process.on('unhandledRejection', (error: any) => {
-  log.info('unhandledRejection', error.stack)
+  console.error('unhandledRejection', error.stack)
   // process.exit(1)
 })
 

@@ -20,7 +20,6 @@ export const baseWorkspaceDir = join(conf.path, '..', 'base-orbit-workspace')
  */
 export const configStore = {
   packageManager: createConfig<string>('packageManager'),
-  orbitMainPath: createConfig<string>('orbitMainPath'),
   appBuildInfo: createConfig<AppBuildInfo>('appBuildInfo'),
   lastActiveWorkspace: createConfig<string>('lastActiveWorkspace2', baseWorkspaceDir),
 }
@@ -33,7 +32,7 @@ function createConfig<A extends any>(key: string, defaultValue?: A) {
     get: (): A => conf.get(key),
     set: (val: A) => {
       conf.set(key, val)
-      log.info(`configStore.set ${key} ${JSON.stringify(val)}`)
+      log.info(`.set ${key} ${JSON.stringify(val)}`)
     },
   }
 }

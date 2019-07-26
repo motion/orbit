@@ -18,7 +18,7 @@ type OrbitAppDirDesc = {
  * Finds all valid orbit app package directories in a given workspace
  */
 export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]> {
-  log.info(`workspaceRoot ${workspaceRoot}`)
+  log.verbose(`workspaceRoot ${workspaceRoot}`)
   if (!workspaceRoot.trim()) {
     throw new Error(`No workspaceRoot given!`)
   }
@@ -34,7 +34,7 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
     })
     const wsDirs = await getWorkspaceLocalPackageDirs(workspaceRoot)
     const allDirs = [...packageDirs, ...wsDirs].filter(Boolean)
-    log.info(`allDirs ${allDirs.length}`, allDirs)
+    log.verbose(`allDirs ${allDirs.length}`, allDirs)
     return (await Promise.all(
       allDirs.map(async ({ directory, packageId, isLocal }) => {
         const apiInfoPath = join(directory, 'dist', 'api.json')
@@ -70,6 +70,6 @@ async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<Orbi
       })
     }
   }
-  log.info(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
+  log.verbose(`getWorkspaceLocalPackageDirs ${JSON.stringify(res)}`)
   return res
 }

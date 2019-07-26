@@ -24,9 +24,6 @@ export async function commandWs(options: CommandWsOptions) {
 
 async function sendOrbitDesktopOpenWorkspace(options: CommandWsOptions) {
   const { mediator } = await getOrbitDesktop()
-  if (!mediator) {
-    reporter.panic(`Could not open orbit desktop`)
-  }
   try {
     reporter.info(`Sending open workspace command`)
     // this will tell orbit to look for this workspace and re-run the cli

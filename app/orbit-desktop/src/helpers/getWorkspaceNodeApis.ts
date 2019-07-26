@@ -10,7 +10,7 @@ export async function getWorkspaceNodeApis(space: Space): Promise<AppDefinition[
     appsMeta.map(async ({ packageId, directory }) => {
       const res = await requireAppDefinition({ packageId, directory, types: ['node'] })
       if (res.type === 'error') {
-        log.info(`No node api, error: ${res.message}`)
+        log.verbose(`No node api, error: ${res.message}`)
         return null
       }
       return res.value

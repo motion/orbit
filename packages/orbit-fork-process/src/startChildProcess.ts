@@ -9,6 +9,10 @@ export type ChildProcessProps = {
   inspectPortRemote?: number
 }
 
+/**
+ * TODO theres some duplication here with forkAndStartOrbitApp
+ */
+
 export function startChildProcess({
   name = '',
   isNode = false,
@@ -17,8 +21,6 @@ export function startChildProcess({
   env = {},
 }: ChildProcessProps): ChildProcess {
   const Config = getGlobalConfig()
-  console.error('starting process, entry:', Config.paths.appEntry)
-
   let args = [Config.paths.appEntry]
 
   if (!Config.isProd) {
@@ -45,6 +47,7 @@ export function startChildProcess({
       NODE_ENV: process.env.NODE_ENV,
       PATH: process.env.PATH,
       LOG_LEVEL: process.env.LOG_LEVEL,
+      SINGLE_USE_MODE: process.env.SINGLE_USE_MODE,
       ...env,
       ORBIT_CONFIG: JSON.stringify(Config),
     },

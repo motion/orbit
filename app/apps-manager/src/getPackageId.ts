@@ -5,11 +5,12 @@ import { apiUrl } from './getRegistryLatestVersion'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
 const identifierToPackageId: { [key: string]: string } = {}
-const log = new Logger('getPackageid')
+
+const log = new Logger('getPackageId')
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
   if (identifierToPackageId[identifier] !== packageId) {
-    log.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
+    log.verbose(`setIdentifierToPackageId ${identifier} ${packageId}`)
     identifierToPackageId[identifier] = packageId
   }
 }
@@ -27,14 +28,14 @@ export async function getPackageId(
   }
 
   const info = JSON.stringify(identifierToPackageId, null, 2)
-  log.info(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
+  log.verbose(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
 
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]
   }
 
   if (options.search) {
-    log.info(`Fetching package info from registry ${identifier}`)
+    log.verbose(`Fetching package info from registry ${identifier}`)
     const searchApp: ApiSearchItem = await fetch(`${apiUrl}/apps/${identifier}`).then(x => x.json())
     return searchApp.packageId || null
   }
@@ -47,7 +48,7 @@ export function getIdentifierFromPackageId(packageId: string) {
   if (found) {
     return found
   }
-  log.info(
+  log.verbose(
     `getIdentifierFromPackageId failed to find ${packageId} ${JSON.stringify(
       identifierToPackageId,
     )}`,

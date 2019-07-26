@@ -1,5 +1,4 @@
 import { getGlobalConfig } from '@o/config'
-import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
 import {
   MediatorClient,
@@ -107,35 +106,58 @@ export class OrbitDesktopRoot {
       },
     })
 
+    // this is if we are running a CLI command that exits on finish
+    const singleUseMode = !!process.env.SINGLE_USE_MODE
+
     // TODO: this abritrary ordering here is really a dependency graph, should be setup in that way
 
-    // FIRST THING
     // databaserunner runs your migrations which everything can be impacted by...
     // leave it as high up here as possible
     this.databaseManager = new DatabaseManager()
     await this.databaseManager.start()
 
-    // run this early, it sets up the general setting if needed
-    this.generalSettingManager = new GeneralSettingManager()
-
-    // manages operating system state
-    this.operatingSystemManager = new OperatingSystemManager()
-
-    // search index
-    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
-
-    await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
-
     this.workspaceManager = new WorkspaceManager(this.mediatorServer)
-    await this.workspaceManager.start()
+    await this.workspaceManager.start({
+      singleUseMode,
+    })
 
-    const cosal = this.cosalManager.cosal
+    if (!singleUseMode) {
+      // run this early, it sets up the general setting if needed
+      this.generalSettingManager = new GeneralSettingManager()
+
+      // manages operating system state
+      this.operatingSystemManager = new OperatingSystemManager()
+
+      // search index
+      this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+      await this.cosalManager.start()
+
+      await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
+
+      // the electron app wont start until this runs
+      // start server a bit early so it lets them start
+      this.webServer = new WebServer(this.workspaceManager.appMiddleware)
+      await this.webServer.start()
+
+      this.authServer = new AuthServer()
+
+      await Promise.all([this.authServer.start()])
+
+      // depends on cosal
+      this.topicsManager = new TopicsManager({ cosal: this.cosalManager.cosal })
+      await this.topicsManager.start()
+
+      this.onboardManager = new OnboardManager()
+      await this.onboardManager.start()
+
+      this.orbitDataManager = new OrbitDataManager()
+      await this.orbitDataManager.start()
+    }
+
+    this.registerREPLGlobals()
 
     // pass dependencies into here as arguments to be clear
-    const mediatorPort = this.registerMediatorServer({
-      cosal,
-    })
+    const mediatorPort = this.registerMediatorServer()
 
     // start announcing on bonjour
     this.bonjour = bonjour()
@@ -145,27 +167,6 @@ export class OrbitDesktopRoot {
       port: mediatorPort,
     })
     this.bonjourService.start()
-
-    // the electron app wont start until this runs
-    // start server a bit early so it lets them start
-    this.webServer = new WebServer(this.workspaceManager.appMiddleware)
-    await this.webServer.start()
-
-    this.authServer = new AuthServer()
-
-    await Promise.all([this.authServer.start()])
-
-    // depends on cosal
-    this.topicsManager = new TopicsManager({ cosal })
-    await this.topicsManager.start()
-
-    this.onboardManager = new OnboardManager()
-    await this.onboardManager.start()
-
-    this.orbitDataManager = new OrbitDataManager()
-    await this.orbitDataManager.start()
-
-    this.registerREPLGlobals()
 
     console.log('DESKTOP FINISHED START()')
   }
@@ -217,7 +218,9 @@ export class OrbitDesktopRoot {
    * Registers a mediator server which is responsible
    * for communication between processes.
    */
-  private registerMediatorServer(props: { cosal: Cosal }) {
+  private registerMediatorServer() {
+    const cosal = this.cosalManager && this.cosalManager.cosal
+
     const workersTransport = new WebSocketClientTransport(
       'workers',
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.workersMediator}`, [], {
@@ -278,11 +281,11 @@ export class OrbitDesktopRoot {
         createAppCreateNewResolver(this),
         AppRemoveResolver,
         NewFallbackServerPortResolver,
-        ...getCosalResolvers(props.cosal),
+        ...getCosalResolvers(cosal),
         resolveMany(SearchResultModel, async args => {
-          return await new SearchResultResolver(props.cosal, args).resolve()
+          return await new SearchResultResolver(cosal, args).resolve()
         }),
-        getSalientWordsResolver(props.cosal),
+        getSalientWordsResolver(cosal),
         resolveCommand(ResetDataCommand, async () => {
           log.info(`resetting data...`)
           await this.databaseManager.resetAllData()

@@ -1,15 +1,12 @@
 import { AppDevCloseCommand, AppDevOpenCommand, AppOpenWindowCommand, CommandDevOptions } from '@o/models'
 
 import { getOrbitDesktop } from './getDesktop'
+import { logStatusReply } from './logStatusReply'
 import { addProcessDispose } from './processDispose'
 import { reporter } from './reporter'
 
 export async function commandDev(options: CommandDevOptions) {
   const { mediator, didStartOrbit } = await getOrbitDesktop()
-
-  if (!mediator) {
-    reporter.panic('No mediator found')
-  }
 
   if (didStartOrbit) {
     reporter.info(`Starting workspace from command: dev`)
@@ -39,9 +36,11 @@ export async function commandDev(options: CommandDevOptions) {
     })
     addProcessDispose(async () => {
       reporter.info('Disposing orbit dev process...')
-      await mediator.command(AppDevCloseCommand, {
-        appId,
-      })
+      logStatusReply(
+        await mediator.command(AppDevCloseCommand, {
+          appId,
+        }),
+      )
     })
   } catch (err) {
     reporter.panic(`Error opening app for dev ${err.message}\n${err.stack}`)

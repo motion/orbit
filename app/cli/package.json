@@ -31,7 +31,7 @@
     "is-valid-path": "0.1.1",
     "lodash": "4.17.11",
     "opentracing": "0.14.3",
-    "execa": "^1.0.0",
+    "execa": "^2.0.3",
     "pretty-error": "^2.1.1",
     "source-map": "*",
     "stack-trace": "^0.0.10",

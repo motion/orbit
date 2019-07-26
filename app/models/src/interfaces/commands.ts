@@ -5,7 +5,11 @@ import { AppBit } from './AppBit'
 import { Space } from './SpaceInterface'
 
 export type StatusReply =
-  | { type: 'error'; message: string; errors?: { message?: string; stack?: string }[] }
+  | {
+      type: 'error'
+      message: string
+      errors?: Object[]
+    }
   | { type: 'success'; message: string; value?: string }
   | { type: 'progress'; message: string; percent?: number }
 
@@ -103,7 +107,6 @@ export const AppOpenWindowCommand = new Command<
 export type CommandInstallOptions = {
   directory: string
   identifier: string
-  verbose?: boolean
   forceInstall?: boolean
   upgrade?: boolean
 }
@@ -115,7 +118,6 @@ export type CommandBuildOptions = {
   projectRoot: string
   watch?: boolean
   force?: boolean
-  verbose?: boolean
   // we can do more careful building for better errors
   debugBuild?: boolean
   // if you dont want to build the whole thing in dev mode

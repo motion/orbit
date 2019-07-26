@@ -19,7 +19,7 @@ export class DatabaseManager {
 
   async start() {
     // connect models next
-    log.info('Connecting models...')
+    log.verbose('Connecting models...')
     await connectModels({
       name: 'default',
       models: Entities,
@@ -32,7 +32,7 @@ export class DatabaseManager {
 
     await sleep(100)
 
-    log.info('Connected models...')
+    log.verbose('Connected models...')
 
     // TODO typeorm needs a patch
     // sql errors happened here if i didnt wait... @nate
@@ -53,7 +53,7 @@ export class DatabaseManager {
       }
     }
 
-    log.info('Ensure indices...')
+    log.verbose('Ensure indices...')
     await Promise.all([this.createSearchIndices(), this.createIndices()])
   }
 

@@ -1,5 +1,12 @@
 #!/usr/bin/env node
-import { CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
+import {
+  CommandBuildOptions,
+  CommandDevOptions,
+  CommandGenTypesOptions,
+  CommandInstallOptions,
+  CommandWsOptions,
+  StatusReply,
+} from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
@@ -29,9 +36,9 @@ let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
 const setVerbose = (logLevel?: number) => {
-  if (logLevel) {
+  process.env.LOG_LEVEL = `${logLevel || 0}`
+  if (logLevel > 0) {
     reporter.setVerbose(true)
-    process.env.LOG_LEVEL = `${logLevel}`
   }
 }
 
@@ -119,7 +126,6 @@ function main() {
         await commandInstall({
           identifier: argv.id,
           directory,
-          verbose: !!argv.verbose,
           forceInstall: !!argv['force-install'],
           upgrade: !!argv.upgrade,
         })
@@ -155,7 +161,6 @@ function main() {
           projectRoot,
           watch: !!argv.watch,
           force: !!argv.force,
-          verbose: !!argv.verbose,
           debugBuild: !!argv['debug-build'],
         })
       },

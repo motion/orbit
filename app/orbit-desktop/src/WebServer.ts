@@ -1,4 +1,3 @@
-import { AppMiddleware } from '@o/build-server'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
@@ -6,6 +5,8 @@ import express from 'express'
 import httpProxyMiddleware from 'http-proxy-middleware'
 import killPort from 'kill-port'
 import * as Path from 'path'
+
+import { AppMiddleware } from './workspaceManager/AppMiddleware'
 
 const log = new Logger('desktop')
 const Config = getGlobalConfig()

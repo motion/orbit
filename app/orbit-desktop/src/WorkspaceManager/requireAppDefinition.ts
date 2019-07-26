@@ -1,9 +1,11 @@
+import { Logger } from '@o/logger'
 import { AppDefinition } from '@o/models'
 
-import { reporter } from '../reporter'
 import { findPackage } from './findPackage'
 import { setIdentifierToPackageId } from './getPackageId'
 import { loadAppEntry } from './loadAppEntry'
+
+const log = new Logger('requireAppDefinition')
 
 export async function requireAppDefinition({
   directory,
@@ -30,7 +32,7 @@ export async function requireAppDefinition({
     }
   }
 
-  reporter.verbose(`Importing app definition at appRoot ${packageRoot}`)
+  log.verbose(`Importing app definition at appRoot ${packageRoot}`)
 
   // can specify preferred definition
   let definition: AppDefinition | null = null
@@ -40,7 +42,7 @@ export async function requireAppDefinition({
   }
 
   if (definition) {
-    reporter.info(`got def ${definition.name}`)
+    log.info(`got def ${definition.name}`)
     // update cache
     setIdentifierToPackageId(definition.id, packageId)
     return {

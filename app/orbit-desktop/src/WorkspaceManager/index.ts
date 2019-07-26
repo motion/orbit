@@ -1,20 +1,13 @@
 import { OrbitAppsManager } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
-import {
-  AppBuildCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppGenTypesCommand,
-  AppStatusMessage,
-  CloseAppCommand,
-} from '@o/models'
+import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
 
 import { GraphServer } from '../GraphServer'
 import { AppDesc, AppMiddleware } from './AppMiddleware'
-import { commandBuild } from './commandBuild'
+import { commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { createCommandWs } from './commandWs'
 import { getIdentifierToPackageId } from './getPackageId'
@@ -54,7 +47,8 @@ export class WorkspaceManager {
       createCommandWs(this.orbitAppsManager),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
-      resolveCommand(AppDevOpenCommand, async ({ path, entry }) => {
+      resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {
+        const entry = await getAppEntry(projectRoot)
         const appId = Object.keys(Electron.state.appWindows).length
         // launch new app
         Electron.setState({
@@ -69,12 +63,13 @@ export class WorkspaceManager {
         this.developingApps.push({
           entry,
           appId,
-          path,
+          path: projectRoot,
           publicPath: `/appServer/${appId}`,
         })
         this.appMiddleware.setApps(this.developingApps)
         return {
           type: 'success',
+          message: 'Got app id',
           value: `${appId}`,
         } as const
       }),

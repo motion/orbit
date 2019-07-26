@@ -1,14 +1,17 @@
-import { reporter } from '../reporter'
+import { Logger } from '@o/logger'
+
+import { getBuildInfo } from './commandBuild'
 import { setIdentifierToPackageId } from './getPackageId'
 import { getWorkspaceApps } from './getWorkspaceApps'
-import { getBuildInfo } from '../command-build'
+
+const log = new Logger('updateWorkspacePackageIds')
 
 /**
  * Given a workspace, finds all packages, then updates our local cache of identifier => packageId
  */
 export async function updateWorkspacePackageIds(workspaceRoot: string) {
   const paths = await getWorkspaceApps(workspaceRoot)
-  reporter.info(
+  log.info(
     `Updating workspace package ids: ${workspaceRoot}, got ${paths
       .map(x => x.packageId)
       .join(', ')}`,
@@ -19,10 +22,10 @@ export async function updateWorkspacePackageIds(workspaceRoot: string) {
       if (buildInfo.identifier) {
         setIdentifierToPackageId(buildInfo.identifier, packageId)
       } else {
-        reporter.info(`No identifier in buildInfo.json ${JSON.stringify(buildInfo)}`)
+        log.info(`No identifier in buildInfo.json ${JSON.stringify(buildInfo)}`)
       }
     } else {
-      reporter.info(`No buildInfo.json found: ${directory}`)
+      log.info(`No buildInfo.json found: ${directory}`)
     }
   }
 }

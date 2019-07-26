@@ -1,14 +1,15 @@
+import { Logger } from '@o/logger'
 import { ApiSearchItem } from '@o/models'
 
-import { apiUrl } from '../command-publish'
-import { reporter } from '../reporter'
+import { apiUrl } from './getRegistryLatestVersion'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
 const identifierToPackageId: { [key: string]: string } = {}
+const log = new Logger('getPackageid')
 
 export function setIdentifierToPackageId(identifier: string, packageId: string) {
   if (identifierToPackageId[identifier] !== packageId) {
-    reporter.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
+    log.info(`setIdentifierToPackageId ${identifier} ${packageId}`)
     identifierToPackageId[identifier] = packageId
   }
 }
@@ -26,14 +27,14 @@ export async function getPackageId(
   }
 
   const info = JSON.stringify(identifierToPackageId, null, 2)
-  reporter.info(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
+  log.info(`getPackageId ${identifier}, checking loaded app identifiers: ${info}`)
 
   if (identifierToPackageId[identifier]) {
     return identifierToPackageId[identifier]
   }
 
   if (options.search) {
-    reporter.info(`Fetching package info from registry ${identifier}`)
+    log.info(`Fetching package info from registry ${identifier}`)
     const searchApp: ApiSearchItem = await fetch(`${apiUrl}/apps/${identifier}`).then(x => x.json())
     return searchApp.packageId || null
   }
@@ -46,7 +47,7 @@ export function getIdentifierFromPackageId(packageId: string) {
   if (found) {
     return found
   }
-  reporter.info(
+  log.info(
     `getIdentifierFromPackageId failed to find ${packageId} ${JSON.stringify(
       identifierToPackageId,
     )}`,

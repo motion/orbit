@@ -1,3 +1,4 @@
+import { configStore } from '@o/config'
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
 import execa from 'execa'
@@ -8,9 +9,8 @@ import { basename, join, resolve } from 'path'
 import prompts from 'prompts'
 import url from 'url'
 
+import { isTty } from './isTty'
 import { reporter } from './reporter'
-import { configStore } from './util/configStore'
-import { isTty } from './util/isTty'
 
 // adapted from gatsby
 // The MIT License (MIT)

@@ -1,8 +1,9 @@
+import { Logger } from '@o/logger'
 import { AppDefinition } from '@o/models'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 
-import { reporter } from '../reporter'
+const log = new Logger('loadAppEntry')
 
 const entryFileNames = {
   node: 'index.node.js',
@@ -16,12 +17,12 @@ export async function loadAppEntry(
 ): Promise<AppDefinition | null> {
   try {
     const path = join(directory, 'dist', entryFileNames[entryType])
-    reporter.info(`loadAppEntry type ${entryType} path ${path}`)
+    log.info(`loadAppEntry type ${entryType} path ${path}`)
     if (await pathExists(path)) {
       return require(path).default
     }
   } catch (err) {
-    reporter.error(`Error loading entry`, err)
+    log.error(`Error loading entry`, err)
     return null
   }
 }

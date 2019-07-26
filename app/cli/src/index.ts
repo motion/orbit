@@ -1,28 +1,12 @@
 #!/usr/bin/env node
-import { CommandWsOptions } from '@o/models'
+import { CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
 
-import { CommandBuildOptions } from './command-build'
-import { CommandDevOptions } from './command-dev'
-import { CommandGenTypesOptions } from './command-gen-types'
-import { CommandInstallOptions, CommandInstallRes } from './command-install'
 import { CommandNewOptions } from './command-new'
 import { CommandPublishOptions } from './command-publish'
 import { reporter } from './reporter'
-
-// programmatic API
-
-export * from './util/downloadAppDefinition'
-export * from './util/requireAppDefinition'
-export * from './util/requireWorkspaceDefinitions'
-export * from './util/getPackageId'
-export * from './util/findPackage'
-export * from './util/getWorkspaceApps'
-export * from './util/updateWorkspacePackageIds'
-export * from './util/getIsInMonorepo'
-export * from './WorkspaceManager'
 
 // these require inside fn because we want to avoid long startup time requiring everything
 
@@ -34,7 +18,7 @@ export const commandPublish = (x: CommandPublishOptions) =>
 export const commandNew = (x: CommandNewOptions) => require('./command-new').commandNew(x)
 export const commandGenTypes = (x: CommandGenTypesOptions) =>
   require('./command-gen-types').commandGenTypes(x)
-export const commandInstall = (x: CommandInstallOptions): CommandInstallRes =>
+export const commandInstall = (x: CommandInstallOptions): StatusReply =>
   require('./command-install').commandInstall(x)
 
 // using require here because it's outside of ts's rootDir and ts complains otherwise

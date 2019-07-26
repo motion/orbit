@@ -1,4 +1,3 @@
-import { BuildServer, getAppConfig, makeWebpackConfig, WebpackParams, webpackPromise } from '@o/build-server'
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { watch } from 'chokidar'
@@ -6,12 +5,14 @@ import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
 
-import { bundleApp, getBuildInfo } from './command-build'
-import { getAppEntry } from './command-dev'
-import { reporter } from './reporter'
-import { getIsInMonorepo } from './util/getIsInMonorepo'
-import { getWorkspaceApps } from './util/getWorkspaceApps'
-import { updateWorkspacePackageIds } from './util/updateWorkspacePackageIds'
+import { BuildServer } from './BuildServer'
+import { bundleApp, getAppEntry, getBuildInfo } from './commandBuild'
+import { getAppConfig } from './getAppConfig'
+import { getIsInMonorepo } from './getIsInMonorepo'
+import { getWorkspaceApps } from './getWorkspaceApps'
+import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
+import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
+import { webpackPromise } from './webpackPromise'
 
 //
 // TODO we need to really improve this:
@@ -86,7 +87,7 @@ export class WorkspaceManager {
     await this.updateApps()
     const config = await this.getAppsConfig()
     if (!config) {
-      reporter.error('No apps found')
+      log.error('No apps found')
       return {
         type: 'error',
         message: `No apps found`,
@@ -179,7 +180,7 @@ export class WorkspaceManager {
     const dllFile = join(this.directory, 'dist', 'manifest.json')
     log.info(`dllFile ${dllFile}`)
 
-    const isInMonoRepo = await getIsInMonorepo()
+    const isInMonoRepo = await getIsInMonorepo(process.cwd())
 
     // link local apps into local node_modules
     await ensureDir(join(this.directory, 'node_modules'))
@@ -217,7 +218,7 @@ export class WorkspaceManager {
 
     // we have to build apps once
     if (this.options.clean || !(await pathExists(dllFile))) {
-      reporter.info('building all apps once...')
+      log.info('building all apps once...')
       await webpackPromise([getAppConfig(appsConfBase)])
     }
 
@@ -271,7 +272,7 @@ ${this.apps
   })
   .join('\n')}`
     const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
-    reporter.info(`appDefsFile ${appDefsFile}`)
+    log.info(`appDefsFile ${appDefsFile}`)
     await writeFile(appDefsFile, appDefinitionsSrc)
 
     /**
@@ -296,7 +297,7 @@ ${this.apps
           },
           extraConfig[name],
         )
-        reporter.info(`extra entry: ${name}`)
+        log.info(`extra entry: ${name}`)
       }
     }
 

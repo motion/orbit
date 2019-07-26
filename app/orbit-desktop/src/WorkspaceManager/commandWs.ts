@@ -8,6 +8,7 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
+import { WorkspaceManager } from './WorkspaceManager'
 
 const log = new Logger('AppOpenWorkspaceResolver')
 

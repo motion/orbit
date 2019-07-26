@@ -1,10 +1,12 @@
+import { Logger } from '@o/logger'
 import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { yarnOrNpm } from '../command-publish'
-import { reporter } from '../reporter'
+import { yarnOrNpm } from './commandHelpers'
 import { requireAppDefinition } from './requireAppDefinition'
+
+const log = new Logger('downloadAppDefinition')
 
 export async function downloadAppDefinition(options: { directory: string; packageId: string }) {
   const { directory, packageId } = options
@@ -46,7 +48,7 @@ export async function downloadAppDefinition(options: { directory: string; packag
       ' ',
     )
 
-    reporter.info(`executing ${command} ${args.join(' ')} in ${directory}`)
+    log.info(`executing ${command} ${args.join(' ')} in ${directory}`)
 
     const proc = execa(command, args, {
       cwd: directory,

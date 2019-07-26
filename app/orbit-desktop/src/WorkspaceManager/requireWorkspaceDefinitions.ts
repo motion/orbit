@@ -1,8 +1,10 @@
+import { Logger } from '@o/logger'
 import { AppDefinition } from '@o/models'
 
-import { reporter } from '../reporter'
 import { getWorkspaceApps } from './getWorkspaceApps'
 import { requireAppDefinition } from './requireAppDefinition'
+
+const log = new Logger('requireWorkspaceDefinitions')
 
 export async function requireWorkspaceDefinitions(
   directory: string,
@@ -14,7 +16,7 @@ export async function requireWorkspaceDefinitions(
       const res = await requireAppDefinition({ packageId, directory, types: [entry] })
       if (res.type === 'error') {
         const message = `No node api, error: ${res.message}`
-        reporter.error(message)
+        log.error(message)
         return {
           type: 'error',
           value: message,

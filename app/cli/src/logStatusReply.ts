@@ -3,7 +3,7 @@ import { StatusReply } from '@o/models'
 
 export function logStatusReply(reply?: StatusReply) {
   if (!reply) {
-    reporter.info('no reply')
+    reporter.verbose('no reply')
     return
   }
   if (reply.type === 'success') {

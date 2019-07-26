@@ -69,7 +69,7 @@ export async function commandGenTypes(options: CommandGenTypesOptions) {
 
   if (!defaultExportSymbol) {
     return {
-      type: 'error',
+      type: 'success',
       message: 'gen-types no default export symbol found, not exporting node api types.',
     } as const
   }

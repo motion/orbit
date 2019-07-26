@@ -236,15 +236,21 @@ function main() {
     .command(
       'gen-types [app]',
       'Generate a types.json for the public API (internal, useful for testing)',
-      p => p.option('out', { alias: 'o' }),
+      p =>
+        p
+          .positional('app', {
+            type: 'string',
+            default: '.',
+            describe: 'The application to run',
+          })
+          .option('out', { alias: 'o' }),
       async argv => {
         setVerbose(argv.logLevel)
         reporter.info(`argv ${JSON.stringify(argv)}`)
         const projectRoot = resolve(cwd)
         const projectEntry = join(
           projectRoot,
-          // ts:main?
-          (await readJSON(join(projectRoot, 'package.json')))['ts:main'],
+          (await readJSON(join(projectRoot, 'package.json')))['main'],
         )
         await commandGenTypes({
           projectRoot,

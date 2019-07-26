@@ -9,6 +9,7 @@ import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 import { getAppConfig } from './getAppConfig'
 import { updateBuildInfo } from '@o/apps-manager'
+import webpack = require('webpack')
 
 const log = new Logger('commandBuild')
 
@@ -79,21 +80,22 @@ export async function bundleApp(entry: string, options: CommandBuildOptions) {
     throw new Error(`No appInfo export default found`)
   }
 
+  let webConf: webpack.Configuration | null = null
+  let nodeConf: webpack.Configuration | null = null
+
   if (hasKey(appInfo, 'app')) {
     log.info(`Found web app, building`)
-    const webConf = getWebAppConfig(entry, pkg.name, options)
-    await webpackPromise([webConf], {
-      loud: verbose,
-    })
+    webConf = getWebAppConfig(entry, pkg.name, options)
   }
 
   if (hasKey(appInfo, 'graph', 'workers', 'api')) {
     log.info(`Found node app, building`)
-    const nodeConf = await getNodeAppConfig(entry, pkg.name, options)
-    await webpackPromise([nodeConf], {
-      loud: verbose,
-    })
+    nodeConf = await getNodeAppConfig(entry, pkg.name, options)
   }
+
+  await webpackPromise([webConf, nodeConf].filter(Boolean), {
+    loud: verbose,
+  })
 
   log.info(`Writing out app build information`)
 

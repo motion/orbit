@@ -13,8 +13,12 @@ export async function commandGenTypes(options: CommandGenTypesOptions) {
     reporter.log(`No api entry found ${apiEntry}`)
     return
   }
-  const { mediator } = await getOrbitDesktop({
+  const { mediator, orbitProcess } = await getOrbitDesktop({
     singleUseMode: true,
   })
   logStatusReply(await mediator.command(AppGenTypesCommand, options))
+  if (orbitProcess) {
+    orbitProcess.kill()
+    process.exit(0)
+  }
 }

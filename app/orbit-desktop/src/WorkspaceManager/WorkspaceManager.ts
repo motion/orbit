@@ -1,7 +1,31 @@
-import { AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
+import {
+  AppsManager,
+  getBuildInfo,
+  getWorkspaceApps,
+  updateWorkspacePackageIds,
+} from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import {
+  AppBuildCommand,
+  AppCreateWorkspaceCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppEntity,
+  AppGenTypesCommand,
+  AppGetWorkspaceAppsCommand,
+  AppMeta,
+  AppMetaCommand,
+  AppOpenWorkspaceCommand,
+  AppStatusMessage,
+  AppStatusModel,
+  CallAppBitApiMethodCommand,
+  CloseAppCommand,
+  CommandWsOptions,
+  WorkspaceInfo,
+  WorkspaceInfoModel,
+  AppInstallCommand,
+} from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -18,6 +42,7 @@ import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { getAppsConfig } from './getAppsConfig'
 import { useWebpackMiddleware } from './useWebpackMiddleware'
+import { commandInstall } from './commandInstall'
 
 const log = new Logger('WorkspaceManager')
 
@@ -219,6 +244,7 @@ export class WorkspaceManager {
       resolveCommand(AppOpenWorkspaceCommand, async options => {
         return await commandWs(options, this)
       }),
+      resolveCommand(AppInstallCommand, commandInstall),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
       resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {

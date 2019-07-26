@@ -69,7 +69,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.appName)
         const res = await commandNew({
           projectRoot,
@@ -121,7 +121,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let directory = resolve(cwd, argv.ws)
         await commandInstall({
           identifier: argv.id,
@@ -155,7 +155,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandBuild({
           projectRoot,
@@ -194,7 +194,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let projectRoot = resolve(cwd, argv.app)
         await commandPublish({
           projectRoot,
@@ -224,7 +224,7 @@ function main() {
           }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         let workspaceRoot = resolve(cwd, argv.workspace)
         await commandWs({
           workspaceRoot,
@@ -246,7 +246,7 @@ function main() {
           .option('out', { alias: 'o' }),
       async argv => {
         setVerbose(argv.logLevel)
-        reporter.info(`argv ${JSON.stringify(argv)}`)
+        reporter.verbose(`argv ${JSON.stringify(argv)}`)
         const projectRoot = resolve(cwd)
         const projectEntry = join(
           projectRoot,

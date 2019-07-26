@@ -1,13 +1,15 @@
 import { getPackageId, getRegistryLatestVersion, isInstalled } from '@o/apps-manager'
 import { Logger } from '@o/logger'
-import { CommandInstallOptions } from '@o/models'
+import { CommandInstallOptions, StatusReply } from '@o/models'
 import execa from 'execa'
 
 import { yarnOrNpm } from './commandHelpers'
 
 const log = new Logger('commandInstall')
 
-export async function commandInstall(options: CommandInstallOptions) {
+export async function commandInstall(options: CommandInstallOptions): Promise<StatusReply> {
+  log.info(`commandInstall ${options.directory} ${options.identifier}`)
+
   const command = await yarnOrNpm()
   const packageId = await getPackageId(options.identifier, {
     search: true,
@@ -16,7 +18,7 @@ export async function commandInstall(options: CommandInstallOptions) {
 
   if (!packageId) {
     return {
-      type: 'error' as const,
+      type: 'error',
       message: `No packageId found locally or in app store for: ${options.identifier}`,
     }
   }
@@ -28,7 +30,7 @@ export async function commandInstall(options: CommandInstallOptions) {
     log.info(`Definition is already installed ${packageId}`)
     if (!options.forceInstall) {
       return {
-        type: 'success' as const,
+        type: 'success',
         message: `Already installed this version, use --force-install or options.forceInstall to force update`,
       }
     }
@@ -39,18 +41,18 @@ export async function commandInstall(options: CommandInstallOptions) {
 
   try {
     if (command === 'yarn') {
-      await runCommand(command, `add ${packageInstallKey}`, {
+      await runCommand(`yarn add ${packageInstallKey}`, {
         cwd: options.directory,
       })
     } else {
-      await runCommand(command, `install --save ${packageInstallKey}`, {
+      await runCommand(`npm install --save ${packageInstallKey}`, {
         cwd: options.directory,
       })
     }
   } catch (err) {
     return {
-      type: 'error' as const,
-      message: `${err.message}`,
+      type: 'error',
+      message: `${err.message} ${err.stack}`,
     }
   }
 
@@ -61,14 +63,14 @@ export async function commandInstall(options: CommandInstallOptions) {
   await reloadAppDefinitions(options.directory)
 
   return {
-    type: 'success' as const,
+    type: 'success',
     message: 'Installed',
   }
 }
 
-export async function runCommand(command: string, args: string, env?: Object) {
-  log.info(`${command} ${args}`)
-  const proc = execa(command, args.split(' '), env)
+async function runCommand(command: string, opts?: Object) {
+  log.info(`runCommand ${command} ${process.env.NODE_ENV}`)
+  const proc = execa.command(command, opts)
   if (process.env.NODE_ENV !== 'production') {
     proc.stdout.pipe(process.stdout)
     proc.stderr.pipe(process.stderr)

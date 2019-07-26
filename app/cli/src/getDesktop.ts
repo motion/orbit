@@ -29,7 +29,7 @@ export async function getOrbitDesktop(
   if (port) {
     reporter.info(`Found existing orbit process`)
   } else {
-    reporter.info('Starting orbit desktop process')
+    reporter.info('Orbit not running, starting Orbit.app')
     // run desktop and try again
     const isInMonoRepo = await getIsInMonorepo()
     orbitProcess = runOrbitDesktop(props, isInMonoRepo)
@@ -69,7 +69,7 @@ export async function getOrbitDesktop(
 async function findBonjourService(type: string, timeout: number): Promise<number | false> {
   let bonjourInstance = bonjour()
   let waitForService = new Promise(resolve => {
-    reporter.info('Finding bounjour service', type)
+    reporter.verbose('Finding bounjour service', type)
     bonjourInstance.findOne({ type }, service => {
       resolve(service.port)
     })
@@ -82,7 +82,7 @@ async function findBonjourService(type: string, timeout: number): Promise<number
       console.log(`Error finding port ${e.message}`)
       return false
     }
-    reporter.info('Timed out finding bonjour')
+    reporter.verbose('Timed out finding bonjour')
   } finally {
     bonjourInstance.destroy()
   }
@@ -100,7 +100,7 @@ export function runOrbitDesktop(
   { singleUseMode }: GetOrbitDesktopProps,
   isInMonoRepo,
 ): ChildProcess | null {
-  reporter.info(`runOrbitDesktop, isInMonoRepo ${isInMonoRepo}`)
+  reporter.verbose(`runOrbitDesktop, isInMonoRepo ${isInMonoRepo}`)
   let cmd = ''
   let cwd = process.cwd()
 
@@ -115,8 +115,9 @@ export function runOrbitDesktop(
 
   if (cmd) {
     try {
-      const detached = !isInMonoRepo && !singleUseMode
-      reporter.info(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
+      // detached should keep it running as a daemon basically, which we want in production mode
+      const detached = !isInMonoRepo
+      reporter.verbose(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
       const child: ChildProcess = execa.command(cmd, {
         detached,
         cwd,
@@ -134,7 +135,6 @@ export function runOrbitDesktop(
       })
 
       if (reporter.isVerbose) {
-        reporter.info(`\n\n Logging orbit proces in verbose mode\n\n`)
         child.stdout.pipe(process.stdout)
         child.stderr.pipe(process.stderr)
       }

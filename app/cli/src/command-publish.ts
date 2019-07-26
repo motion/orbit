@@ -49,10 +49,13 @@ export async function commandPublish(options: CommandPublishOptions) {
   try {
     // wont build it already built
     if (!options.ignoreBuild) {
-      await commandBuild({
-        projectRoot: options.projectRoot,
-        force: true,
-      })
+      await commandBuild(
+        {
+          projectRoot: options.projectRoot,
+          force: true,
+        },
+        false,
+      )
     }
 
     // publish to registry
@@ -130,13 +133,13 @@ export async function commandPublish(options: CommandPublishOptions) {
 
     if (shouldPublish) {
       // npm first so if it fails we dont udpate search
-      reporter.info(`Publishing app to npm registry`)
+      reporter.info(`Publishing to npm registry`)
       let err = await publishApp(`https://registry.npmjs.org`)
       if (err) {
         reporter.error(err.message, err.error)
         return err
       }
-      reporter.info(`Publishing app to our registry for search update`)
+      reporter.info(`Publishing to Orbit registry`)
       err = await publishApp()
       if (err) {
         reporter.error(err.message, err.error)
@@ -145,7 +148,7 @@ export async function commandPublish(options: CommandPublishOptions) {
     }
 
     // trigger search api index update
-    reporter.info(`Indexing new app information for search`)
+    reporter.info(`Pushing to Orbit app store`)
 
     // get README.md description
     let fullDescription = pkg.description
@@ -184,6 +187,8 @@ export async function commandPublish(options: CommandPublishOptions) {
   } catch (err) {
     reporter.error(err.message, err)
   }
+
+  process.exit(0)
 }
 
 async function publishApp(registry?: string) {

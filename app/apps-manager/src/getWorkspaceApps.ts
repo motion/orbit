@@ -58,6 +58,9 @@ export async function getWorkspaceApps(workspaceRoot: string): Promise<AppMeta[]
 
 async function getWorkspaceLocalPackageDirs(workspaceRoot: string): Promise<OrbitAppDirDesc[]> {
   const appsDir = join(workspaceRoot, 'apps')
+  if (!(await pathExists(appsDir))) {
+    return []
+  }
   const directories = (await readdir(appsDir)).map(x => join(appsDir, x))
   let res: OrbitAppDirDesc[] = []
   for (const directory of directories) {

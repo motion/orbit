@@ -82,16 +82,17 @@ export class WorkspaceManager {
   )
 
   setWorkspace(opts: CommandWsOptions) {
+    log.info(`setWorkspace ${JSON.stringify(opts)}`)
     this.directory = opts.workspaceRoot
     this.options = opts
-    log.info(`WorkspaceManager options ${JSON.stringify(opts)}`)
+    this.updateWorkspace()
   }
 
   updateWorkspace = async () => {
+    log.info(`updateWorkspace ${this.directory}`)
     if (!this.directory) {
       return
     }
-    log.info(`See workspace change`)
     await this.updateApps()
     const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
     if (!config) {
@@ -212,7 +213,7 @@ export class WorkspaceManager {
         return true
       }),
       resolveCommand(AppOpenWorkspaceCommand, async options => {
-        return await commandWs(options, this.appsManager)
+        return await commandWs(options, this)
       }),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),

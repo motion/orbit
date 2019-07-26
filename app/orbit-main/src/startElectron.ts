@@ -1,12 +1,18 @@
 import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import { app, dialog } from 'electron'
 
 import { handleExit } from './helpers/handleExit'
 
+const log = new Logger('startElectron')
+
 export function startElectron({ mainProcess }) {
   if (mainProcess) {
     // this works in prod
-    app.on('before-quit', handleExit)
+    app.on('before-quit', () => {
+      log.info('before-quit')
+      handleExit()
+    })
 
     if (app.isReady) {
       finishLaunchingElectron({ mainProcess })

@@ -1,4 +1,3 @@
-import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { CommandWsOptions, SpaceEntity, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
@@ -7,8 +6,9 @@ import { join } from 'path'
 import { getRepository } from 'typeorm'
 
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
+import { WorkspaceManager } from './WorkspaceManager'
 
-const log = new Logger('AppOpenWorkspaceResolver')
+const log = new Logger('commandWs')
 
 type WorkspaceInfo = {
   identifier: string
@@ -17,9 +17,9 @@ type WorkspaceInfo = {
 /**
  * This sets the current active workspace.
  */
-export async function commandWs(options: CommandWsOptions, appsManager: AppsManager) {
+export async function commandWs(options: CommandWsOptions, workspaceManager: WorkspaceManager) {
   const { workspaceRoot } = options
-  log.info(`Got command ${workspaceRoot}`)
+  log.info(`${workspaceRoot}`)
 
   Desktop.setState({
     workspaceState: {
@@ -52,15 +52,18 @@ export async function commandWs(options: CommandWsOptions, appsManager: AppsMana
     space = await getRepository(SpaceEntity).findOne({ identifier })
   }
 
-  log.info('got space', space)
+  log.info(`got space ${space.directory}`)
 
   // set user active space
   const user = await getRepository(UserEntity).findOne({})
   user.activeSpace = space.id
   await getRepository(UserEntity).save(user)
 
+  // update workspace
+  await workspaceManager.setWorkspace(options)
+
   // make sure we've finished updating new app info before running
-  await appsManager.updateAppDefinitions(space)
+  await workspaceManager.appsManager.updateAppDefinitions(space)
 
   return true
 }

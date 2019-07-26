@@ -22,20 +22,19 @@ const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTR
 
 const log = new Logger('orbit-main')
 
+const envInfo = JSON.stringify(
+  {
+    SUB_PROCESS,
+    PROCESS_NAME,
+    DISABLE_WORKERS,
+    DISABLE_ELECTRON,
+  },
+  null,
+  2,
+)
+
 export async function main() {
-  log.info(
-    `starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${JSON.stringify(
-      {
-        SUB_PROCESS,
-        PROCESS_NAME,
-        ORBIT_CONFIG,
-        DISABLE_WORKERS,
-        DISABLE_ELECTRON,
-      },
-      null,
-      2,
-    )}`,
-  )
+  log.info(`starting ${PROCESS_NAME || 'orbit-main'} ${SUB_PROCESS} ${envInfo}`, ORBIT_CONFIG)
 
   // setup config
   if (SUB_PROCESS) {
@@ -116,7 +115,7 @@ export async function main() {
   // each call pushes the process into the array and then gives them all over to setupHandleExit
   const setupProcess = (opts: ChildProcessProps) => {
     const p = startChildProcess(opts)
-    setupHandleExit(p)
+    setupHandleExit(opts.name, p)
   }
 
   // start desktop before starting other processes (it runs the server)...

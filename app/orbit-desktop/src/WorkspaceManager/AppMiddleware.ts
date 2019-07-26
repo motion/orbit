@@ -8,6 +8,10 @@ import { makeWebpackConfig } from './makeWebpackConfig'
 
 const log = new Logger('AppMiddleware')
 
+/**
+ * I think this needs to merge with BuildServer
+ */
+
 export type AppDesc = {
   appId: number
   entry: string

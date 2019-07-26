@@ -195,7 +195,7 @@ export class BridgeManager {
   setupClientSocket = () => {
     this.socket.onmessage = async ({ data }) => {
       if (!data) {
-        console.log('No data received over socket')
+        log.info('No data received over socket')
         return
       }
       try {
@@ -289,13 +289,13 @@ export class BridgeManager {
         err.stopPropagation()
       }
       if (err.code === 'ETIMEDOUT') {
-        console.log('socket timeout')
+        log.info('socket timeout')
         return
       }
       if (this.socket.readyState == 1) {
-        console.log('swift ws error', err)
+        log.info('swift ws error', err)
       } else {
-        console.log('socket err', err.message, err.stack)
+        log.info('socket err', this.source, err.message, err.stack)
       }
     }
   }
@@ -371,8 +371,8 @@ export class BridgeManager {
     try {
       this.socket.send(JSON.stringify(message))
     } catch (err) {
-      console.log('error sending!', err.message)
-      console.log('message is', message)
+      log.info('error sending!', err.message)
+      log.info('message is', message)
     }
   }
 

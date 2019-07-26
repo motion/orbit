@@ -74,7 +74,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   let extraConfig
   if (isInMonoRepo) {
     // main entry for orbit-app
-    const monoRoot = join(__dirname, '..', '..', '..')
+    const monoRoot = join(__dirname, '..', '..', '..', '..')
     const appEntry = join(monoRoot, 'app', 'orbit-app', 'src', 'main')
     entry = appEntry
     const extraConfFile = join(appEntry, '..', '..', 'webpack.config.js')

@@ -42,7 +42,7 @@ export async function requireAppDefinition({
   }
 
   if (definition) {
-    log.info(`got def ${definition.name}`)
+    log.verbose(`got def ${definition.name}`)
     // update cache
     setIdentifierToPackageId(definition.id, packageId)
     return {

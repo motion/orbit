@@ -17,7 +17,7 @@ export async function loadAppEntry(
 ): Promise<AppDefinition | null> {
   try {
     const path = join(directory, 'dist', entryFileNames[entryType])
-    log.info(`loadAppEntry type ${entryType} path ${path}`)
+    log.verbose(`loadAppEntry type ${entryType}`, path)
     if (await pathExists(path)) {
       return require(path).default
     }

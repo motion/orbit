@@ -4,15 +4,16 @@ import { ChildProcess } from 'child_process'
 import root from 'global'
 import { once } from 'lodash'
 
-let processes: ChildProcess[] = []
+let processes: { name: string; proc: ChildProcess }[] = []
 
 const log = new Logger('handleExit')
 
 export const handleExit = once(async () => {
   try {
-    log.info('Electron handle exit...', processes.length)
-    for (const proc of processes) {
+    log.info(`Electron handle exit... stopping ${processes.length} processes`)
+    for (const { name, proc } of processes) {
       try {
+        log.info(`Killing ${name}`)
         process.kill(proc.pid)
       } catch (err) {
         try {
@@ -31,10 +32,16 @@ export const handleExit = once(async () => {
 
 root.handleExit = handleExit
 
-export const setupHandleExit = (x: ChildProcess) => {
+export const setupHandleExit = (name: string, proc: ChildProcess) => {
   // exit main process if a child process exits unexpectedly
-  x.on('close', handleExit)
-  x.on('exit', handleExit)
+  proc.on('close', () => {
+    log.info(`Process closed ${name}`)
+    handleExit()
+  })
+  proc.on('exit', () => {
+    log.info(`Process exited ${name}`)
+    handleExit()
+  })
   // clean it up later when this process exits
-  processes.push(x)
+  processes.push({ proc, name })
 }

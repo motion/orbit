@@ -87,13 +87,12 @@ export class WorkspaceManager {
   async start(opts: { singleUseMode: boolean }) {
     if (!opts.singleUseMode) {
       // await this.appsManager.start()
-      await this.graphServer.start()
+      // await this.graphServer.start()
       this.onWorkspaceChange()
       this.appMiddleware.onStatus(status => {
         appStatusManager.sendMessage(status)
       })
     }
-    console.log('DONE')
   }
 
   watchWorkspace = react(
@@ -131,22 +130,16 @@ export class WorkspaceManager {
       log.info(`updateWorkspace ${directory}`)
       ensure('directory', !!directory)
 
-      console.log(1)
       await this.updateApps()
-      console.log(2)
 
       const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
 
-      console.log(3)
       if (!config) {
         log.error('No apps found')
         return
       }
-      console.log(4)
 
       await sleep()
-      console.log('WUTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
-      console.log(`workspace app config`, config)
 
       if (!isEqual(this.buildConfig, config)) {
         this.buildConfig = config

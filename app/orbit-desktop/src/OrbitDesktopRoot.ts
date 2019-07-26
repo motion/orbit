@@ -69,7 +69,7 @@ import { loadAppDefinitionResolvers } from './resolvers/loadAppDefinitionResolve
 import { FinishAuthQueue } from './auth-server/finishAuth'
 import { createAppCreateNewResolver } from './resolvers/AppCreateNewResolver'
 import { WorkspaceManager } from './WorkspaceManager/WorkspaceManager'
-import { orTimeout, OR_TIMED_OUT } from '@o/ui'
+import { orTimeout, OR_TIMED_OUT } from '@o/utils'
 
 const log = new Logger('OrbitDesktopRoot')
 
@@ -79,20 +79,21 @@ async function startSeries(
     timeout?: number
   } = {},
 ) {
-  for (const fn of fns) {
-    log.verbose('startSeries, start function', fn, options.timeout)
-    if (options.timeout) {
-      try {
+  log.verbose(`startSeries ${fns.length}`)
+  for (const [index, fn] of fns.entries()) {
+    log.verbose(`startSeries, start function ${index}`, fn, options.timeout)
+    try {
+      if (options.timeout) {
         await orTimeout(fn(), options.timeout)
-      } catch (err) {
-        if (err === OR_TIMED_OUT) {
-          log.error('Timed out starting', fn)
-        }
-        log.error('got real err', err)
-        throw err
+      } else {
+        await fn()
       }
-    } else {
-      await fn()
+    } catch (err) {
+      if (err === OR_TIMED_OUT) {
+        log.error('Timed out starting', fn)
+      }
+      log.error('got real err', err)
+      throw err
     }
   }
 }
@@ -124,6 +125,8 @@ export class OrbitDesktopRoot {
     // this is if we are running a CLI command that exits on finish
     const singleUseMode = !!process.env.SINGLE_USE_MODE
     log.verbose(`start(), singleUseMode ${singleUseMode}`)
+
+    this.registerREPLGlobals()
 
     await startSeries(
       [
@@ -212,12 +215,9 @@ export class OrbitDesktopRoot {
       },
     )
 
-    this.registerREPLGlobals()
-
     // pass dependencies into here as arguments to be clear
     const mediatorPort = this.registerMediatorServer()
 
-    // start announcing on bonjour
     log.verbose(`Starting Bonjour service on ${mediatorPort}`)
     this.bonjour = bonjour()
     this.bonjourService = this.bonjour.publish({

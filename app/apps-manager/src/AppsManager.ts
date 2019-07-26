@@ -107,7 +107,8 @@ export class AppsManager {
 
   updateAppMeta = react(
     () => [this.nodeAppDefinitions, this.updatePackagesVersion],
-    async ([appDefs]) => {
+    async ([appDefs], { when }) => {
+      await when(() => this.started)
       ensure('appDefs', !!appDefs)
       const activeSpace = this.activeSpace
       if (!activeSpace) return
@@ -136,7 +137,8 @@ export class AppsManager {
 
   syncFromActiveSpacePackageJSON = react(
     () => this.activeSpace,
-    (space, { useEffect }) => {
+    async (space, { useEffect, when }) => {
+      await when(() => this.started)
       ensure('space', !!space)
       if (space) {
         const pkg = join(space.directory || '', 'package.json')

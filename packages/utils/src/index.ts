@@ -40,19 +40,15 @@ export function isDefined(...args: any) {
 export const OR_TIMED_OUT = Symbol('OR_TIMED_OUT')
 export async function orTimeout<T>(promise: Promise<T>, timeout: number): Promise<T> {
   let tm: any
-  let didReject = false
   let waitForTimeout = new Promise<any>((_, reject) => {
     tm = setTimeout(() => {
-      didReject = true
       reject(OR_TIMED_OUT)
     }, timeout)
   })
   const res = await Promise.race([promise, waitForTimeout])
-  // prevent lots of unecessary pauses when using Pause on Exceptions
-  if (!didReject) {
-    clearTimeout(tm)
-  }
-  return await res
+  clearTimeout(tm)
+  const response = await res
+  return response
 }
 
 /**

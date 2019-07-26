@@ -139,7 +139,7 @@ export class OrbitDesktopRoot {
 
     this.workspaceManager = new WorkspaceManager(this.mediatorServer, this.orbitAppsManager)
 
-    this.appMiddleware.onStatus(status => {
+    this.workspaceManager.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)
     })
 

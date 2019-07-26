@@ -6,5 +6,5 @@ import { reporter } from './reporter'
 export async function commandInstall(options: CommandInstallOptions): Promise<StatusReply> {
   reporter.info(`Checking for installation ${options.identifier} into ${options.directory}`)
   const { mediator } = await getOrbitDesktop()
-  await mediator.command(AppInstallCommand, options)
+  return await mediator.command(AppInstallCommand, options)
 }

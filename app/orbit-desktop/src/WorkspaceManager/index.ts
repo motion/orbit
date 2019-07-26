@@ -6,9 +6,11 @@ import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
 
 import { GraphServer } from '../GraphServer'
+import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { commandBuild } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { createCommandWs } from './commandWs'
+import { getIdentifierToPackageId } from './getPackageId'
 
 const log = new Logger('WorkspaceManager')
 
@@ -16,7 +18,6 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 
 export class WorkspaceManager {
   developingApps: AppDesc[] = []
-  statusListeners = new Set<AppBuildStatusListener>()
 
   graphServer = new GraphServer()
   appMiddleware = new AppMiddleware()
@@ -39,13 +40,6 @@ export class WorkspaceManager {
   async start() {
     await this.orbitAppsManager.start()
     await this.graphServer.start()
-  }
-
-  onStatus(callback: AppBuildStatusListener) {
-    this.statusListeners.add(callback)
-    return () => {
-      this.statusListeners.delete(callback)
-    }
   }
 
   getResolvers() {
@@ -85,14 +79,5 @@ export class WorkspaceManager {
         log.info('Closed app', appId)
       }),
     ]
-  }
-
-  private sendStatus(message: Pick<AppStatusMessage, 'type' | 'message' | 'appId'>) {
-    ;[...this.statusListeners].forEach(listener => {
-      listener({
-        id: `${message.appId}-build-status`,
-        ...message,
-      })
-    })
   }
 }

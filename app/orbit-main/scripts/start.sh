@@ -28,8 +28,8 @@ if [[ "$FLAGS" =~ "--no-gpu" ]]; then
   export DISABLE_GPU="true"
 fi
 
-if [[ "$FLAGS" =~ "--no-syncers" ]]; then
-  echo "DISABLE SYNCERS"
+if [[ "$FLAGS" =~ "--no-workers" ]]; then
+  echo "DISABLE WORKERS"
   export DISABLE_WORKERS="true"
 fi
 

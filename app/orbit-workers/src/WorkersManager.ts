@@ -1,4 +1,4 @@
-import { OrbitAppsManager } from '@o/libs-node'
+import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { decorate, react } from '@o/use-store'
 
@@ -14,10 +14,10 @@ type WorkerInfo = {
 @decorate
 export class WorkersManager {
   workers = new Map<string, WorkerInfo>()
-  orbitAppsManager = new OrbitAppsManager()
+  appsManager = new AppsManager()
 
   async start() {
-    await this.orbitAppsManager.start()
+    await this.appsManager.start()
   }
 
   async stop() {
@@ -25,7 +25,7 @@ export class WorkersManager {
   }
 
   updateAppDefinitions = react(
-    () => this.orbitAppsManager.nodeAppDefinitions,
+    () => this.appsManager.nodeAppDefinitions,
     async nodeDefinitions => {
       log.info('i see nodeDefinitions, update workers', Object.keys(nodeDefinitions))
 

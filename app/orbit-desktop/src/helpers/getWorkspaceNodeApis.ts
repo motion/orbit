@@ -1,4 +1,4 @@
-import { getWorkspaceApps, requireAppDefinition } from '@o/cli'
+import { getWorkspaceApps, requireAppDefinition } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { AppDefinition, Space } from '@o/models'
 

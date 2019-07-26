@@ -78,7 +78,7 @@ export async function main() {
       case 'desktop':
         require('@o/orbit-desktop').main()
         return
-      case 'syncers':
+      case 'workers':
         require('@o/orbit-workers').main()
         return
       case 'electron-menus':
@@ -133,18 +133,18 @@ export async function main() {
     require('./startElectron').startElectron({ mainProcess: true })
   }
 
-  // syncers
+  // workers
   if (!DISABLE_WORKERS) {
     // i bumped up the wait time here because when you run `orbit ws` the CLI:
     //  1. starts orbit-desktop
     //  2. sends OpenWorkspaceCommand to the resolver
     //  3. that then needs to validate/update the space.directory if it moved
-    //  4. if syncers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
+    //  4. if workers runs too quickly it will run its OrbitAppsManager with the wrong space.directory
     //
     //  the ideal fix would be a big refactor of this whole area taking into account many moving pieces
     await new Promise(res => setTimeout(res, 8000))
     setupProcess({
-      name: 'syncers',
+      name: 'workers',
       inspectPort: 9003,
       isNode: true,
       env: {

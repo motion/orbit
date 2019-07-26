@@ -47,7 +47,7 @@ export async function getInitialConfig({
     swift,
     mediator,
     desktopMediator,
-    syncersMediator,
+    workersMediator,
     screenBridge,
     ocrBridge,
     auth,
@@ -89,7 +89,7 @@ export async function getInitialConfig({
       auth,
       authProxy,
       apps,
-      syncersMediator,
+      workersMediator,
       electronMediators: electronPorts,
     },
   }

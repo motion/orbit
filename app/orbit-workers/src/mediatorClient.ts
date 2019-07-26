@@ -5,8 +5,9 @@ import ReconnectingWebSocket from 'reconnectingwebsocket'
 export const mediatorClient = new MediatorClient({
   transports: [
     new WebSocketClientTransport(
-      'syncers', // randomString(5)
+      'workers', // randomString(5)
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
+        // @ts-ignore
         WebSocket,
         minReconnectionDelay: 1,
       }),

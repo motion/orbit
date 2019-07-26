@@ -10,7 +10,6 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
-    { "path": "../cli" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/use-store" }
   ]

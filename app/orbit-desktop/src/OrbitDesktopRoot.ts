@@ -41,7 +41,7 @@ import {
   WorkspaceInfoModel,
   ResetDataCommand,
 } from '@o/models'
-import { OrbitAppsManager } from '@o/libs-node'
+import { AppsManager } from '@o/libs-node'
 import { App, Desktop, Electron } from '@o/stores'
 import bonjour from 'bonjour'
 import { writeJSONSync } from 'fs-extra'
@@ -106,7 +106,7 @@ export class OrbitDesktopRoot {
   generalSettingManager: GeneralSettingManager
   topicsManager: TopicsManager
   operatingSystemManager: OperatingSystemManager
-  orbitAppsManager: OrbitAppsManager
+  appsManager: AppsManager
 
   start = async () => {
     await Desktop.start({
@@ -139,7 +139,7 @@ export class OrbitDesktopRoot {
 
     await Promise.all([this.generalSettingManager.start(), this.operatingSystemManager.start()])
 
-    this.workspaceManager = new WorkspaceManager(this.mediatorServer, this.orbitAppsManager)
+    this.workspaceManager = new WorkspaceManager(this.mediatorServer, this.appsManager)
 
     this.workspaceManager.appMiddleware.onStatus(status => {
       appStatusManager.sendMessage(status)
@@ -151,7 +151,7 @@ export class OrbitDesktopRoot {
     const mediatorPort = this.registerMediatorServer({
       appMiddleware: this.workspaceManager.appMiddleware,
       cosal,
-      orbitAppsManager: this.orbitAppsManager,
+      appsManager: this.appsManager,
     })
 
     // start announcing on bonjour
@@ -245,18 +245,18 @@ export class OrbitDesktopRoot {
    */
   private registerMediatorServer(props: {
     cosal: Cosal
-    orbitAppsManager: OrbitAppsManager
+    appsManager: AppsManager
     appMiddleware: AppMiddleware
   }) {
-    const syncersTransport = new WebSocketClientTransport(
-      'syncers',
-      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
+    const workersTransport = new WebSocketClientTransport(
+      'workers',
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.workersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
       }),
     )
 
-    const client = new MediatorClient({ transports: [syncersTransport] })
+    const client = new MediatorClient({ transports: [workersTransport] })
 
     const mediatorServerPort = this.config.ports.desktopMediator
 
@@ -297,7 +297,7 @@ export class OrbitDesktopRoot {
         ...loadAppDefinitionResolvers(),
         ...this.cli.getResolvers(),
         resolveCommand(AppMetaCommand, async ({ identifier }) => {
-          return this.orbitAppsManager.appMeta[identifier] || null
+          return this.appsManager.appMeta[identifier] || null
         }),
         resolveCommand(GetPIDCommand, async () => {
           return process.pid
@@ -314,12 +314,10 @@ export class OrbitDesktopRoot {
           ])
           log.info('Remove all app data done')
         }),
-        createAppOpenWorkspaceResolver(this),
         createAppCreateNewResolver(this),
-        AppCreateWorkspaceResolver,
         AppRemoveResolver,
         NewFallbackServerPortResolver,
-        createCallAppBitApiMethodResolver(props.orbitAppsManager),
+        createCallAppBitApiMethodResolver(props.appsManager),
         ...getCosalResolvers(props.cosal),
         resolveMany(SearchResultModel, async args => {
           return await new SearchResultResolver(props.cosal, args).resolve()

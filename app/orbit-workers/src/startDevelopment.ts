@@ -1,9 +1,9 @@
-import { OrbitSyncersRoot } from './OrbitSyncersRoot'
+import { OrbitWorkersRoot } from './OrbitWorkersRoot'
 
-export function startDevelopment(appRoot: OrbitSyncersRoot) {
+export function startDevelopment(appRoot: OrbitWorkersRoot) {
   Error.stackTraceLimit = Infinity
 
-  console.log(`$ NODE_ENV=${process.env.NODE_ENV} run syncers`)
+  console.log(`$ NODE_ENV=${process.env.NODE_ENV} run workers`)
 
   require('source-map-support/register')
   require('./installGlobals').installGlobals(appRoot)
@@ -31,7 +31,7 @@ export function startDevelopment(appRoot: OrbitSyncersRoot) {
         console.log('sqlite busy!')
       }
     }
-    console.warn('Syncers: Possibly Unhandled Rejection!!!!!!!!', promise, reason)
+    console.warn('Workers: Possibly Unhandled Rejection!!!!!!!!', promise, reason)
     console.log(reason.stack)
   })
 }

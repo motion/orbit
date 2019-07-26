@@ -3,7 +3,7 @@ import { once } from 'lodash'
 const root = global as any
 root.window = global
 
-const { syncersRoot } = require('./OrbitSyncersRoot')
+const { workersRoot } = require('./OrbitWorkersRoot')
 
 process.on('unhandledRejection', (error: any) => {
   console.log('unhandledRejection', error.stack)
@@ -11,18 +11,18 @@ process.on('unhandledRejection', (error: any) => {
 })
 
 export async function main() {
-  console.log('start syncers')
+  console.log('start workers')
 
   if (process.env.NODE_ENV === 'development') {
-    require('./startDevelopment').startDevelopment(syncersRoot)
+    require('./startDevelopment').startDevelopment(workersRoot)
   }
 
   const dispose = once(() => {
-    console.log('Syncers exiting...')
-    syncersRoot.dispose()
+    console.log('Workers exiting...')
+    workersRoot.dispose()
   })
   process.on('exit', dispose)
 
-  await syncersRoot.start()
+  await workersRoot.start()
   return dispose
 }

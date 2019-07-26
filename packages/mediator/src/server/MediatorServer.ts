@@ -231,7 +231,7 @@ export class MediatorServer {
         const subscription = result.subscribe(next => {
           if (next === undefined) {
             console.log(
-              '----- GOT UNDEFIEND NEXT, either typeorm or syncers fallback responding with no resolver? ------',
+              '----- GOT UNDEFIEND NEXT, either typeorm or workers fallback responding with no resolver? ------',
             )
           } else {
             onSuccess(next)

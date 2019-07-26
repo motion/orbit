@@ -4,14 +4,13 @@ import { watch } from 'chokidar'
 import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { debounce, isEqual } from 'lodash'
 import { join } from 'path'
+import { getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 
 import { BuildServer } from './BuildServer'
-import { bundleApp, getAppEntry, getBuildInfo } from './commandBuild'
+import { bundleApp, getAppEntry } from './commandBuild'
 import { getAppConfig } from './getAppConfig'
 import { getIsInMonorepo } from './getIsInMonorepo'
-import { getWorkspaceApps } from './getWorkspaceApps'
 import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
-import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 import { webpackPromise } from './webpackPromise'
 
 //

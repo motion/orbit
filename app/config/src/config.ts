@@ -30,7 +30,7 @@ export type GlobalConfig = {
     ocrBridge: number
     mediator: number
     desktopMediator: number
-    syncersMediator: number
+    workersMediator: number
     electronMediators: number[]
     auth: number
     authProxy: number

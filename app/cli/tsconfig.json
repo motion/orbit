@@ -9,6 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../../packages/build" },
+    { "path": "../libs-node" },
     { "path": "../telemetry" },
     { "path": "../models" }
   ]

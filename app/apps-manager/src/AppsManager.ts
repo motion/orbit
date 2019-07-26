@@ -21,6 +21,7 @@ export { getPackageId } from './getPackageId'
 export { getRegistryLatestVersion } from './getRegistryLatestVersion'
 export { isInstalled } from './isInstalled'
 export { downloadAppDefinition } from './downloadAppDefinition'
+export * from './buildInfo'
 
 @decorate
 export class AppsManager {

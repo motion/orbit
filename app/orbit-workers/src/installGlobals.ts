@@ -2,10 +2,10 @@ import { getGlobalConfig } from '@o/config'
 import * as Models from '@o/models'
 import root from 'global'
 import * as Mobx from 'mobx'
-import { OrbitSyncersRoot } from './OrbitSyncersRoot'
+import { OrbitWorkersRoot } from './OrbitWorkersRoot'
 
-export function installGlobals(syncersRoot: OrbitSyncersRoot) {
-  root['Root'] = syncersRoot
+export function installGlobals(workersRoot: OrbitWorkersRoot) {
+  root['Root'] = workersRoot
   root['require'] = require
   root['Path'] = require('path')
   root['_'] = require('lodash')

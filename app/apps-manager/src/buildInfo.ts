@@ -10,7 +10,7 @@ function getAppInfo(appRoot: string): AppDefinition {
   return require(join(appRoot, 'dist', 'appInfo.js')).default
 }
 
-async function updateBuildInfo(appRoot: string) {
+export async function updateBuildInfo(appRoot: string) {
   const appInfo = getAppInfo(appRoot)
   const pkg = await readPackageJson(appRoot)
   const buildId = Date.now()
@@ -41,7 +41,7 @@ async function setBuildInfo(projectRoot: string, next: BuildInfo) {
   await writeJSON(buildInfoDir(projectRoot), next)
 }
 
-export async function getBuildInfo(projectRoot: string) {
+export async function getBuildInfo(projectRoot: string): BuildInfo | null {
   const dir = buildInfoDir(projectRoot)
   if (await pathExists(dir)) {
     return await readJSON(dir)

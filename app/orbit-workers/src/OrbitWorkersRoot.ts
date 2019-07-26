@@ -14,7 +14,7 @@ import { mediatorClient } from './mediatorClient'
 
 const log = new Logger('WorkersRoot')
 
-export class OrbitSyncersRoot {
+export class OrbitWorkersRoot {
   config = getGlobalConfig()
   connection: Connection
   mediatorServer: MediatorServer
@@ -83,7 +83,7 @@ export class OrbitSyncersRoot {
     this.mediatorServer = new MediatorServer({
       models: [AppModel, JobModel],
       transport: new WebSocketServerTransport({
-        port: getGlobalConfig().ports.syncersMediator,
+        port: getGlobalConfig().ports.workersMediator,
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
@@ -98,4 +98,4 @@ export class OrbitSyncersRoot {
   }
 }
 
-export const syncersRoot = new OrbitSyncersRoot()
+export const workersRoot = new OrbitWorkersRoot()

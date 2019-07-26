@@ -1,7 +1,7 @@
 import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand, WorkspaceInfo } from '@o/models'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand, WorkspaceInfo } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
 import Observable from 'zen-observable'
@@ -11,6 +11,7 @@ import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { createCommandWs } from './commandWs'
+import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 
 const log = new Logger('WorkspaceManager')
 
@@ -25,10 +26,10 @@ export class WorkspaceManager {
 
   constructor(private mediatorServer: MediatorServer) {
     // signals to frontend to update app definitions
-    this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
-      log.info('orbitAppsManager updating app meta', appMeta)
+    this.appsManager.onUpdatedAppMeta(appMeta => {
+      log.info('appsManager updating app meta', appMeta)
       const identifiers = Object.keys(appMeta)
-      const packageIds = identifiers.map(getIdentifierToPackageId)
+      const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
       Desktop.setState({
         workspaceState: {
           packageIds,
@@ -39,7 +40,7 @@ export class WorkspaceManager {
   }
 
   async start() {
-    await this.orbitAppsManager.start()
+    await this.appsManager.start()
     await this.graphServer.start()
   }
 
@@ -63,7 +64,11 @@ export class WorkspaceManager {
 
   getResolvers() {
     return [
-      createCommandWs(this.orbitAppsManager),
+      resolveCommand(AppCreateWorkspaceCommand, async props => {
+        await findOrCreateWorkspace(props)
+        return true
+      }),
+      createCommandWs(this.appsManager),
       resolveCommand(AppBuildCommand, commandBuild),
       resolveCommand(AppGenTypesCommand, commandGenTypes),
       resolveCommand(AppDevOpenCommand, async ({ projectRoot }) => {

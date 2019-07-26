@@ -1,7 +1,7 @@
-import { configStore } from '@o/config'
 import { Logger } from '@o/logger'
 import { AppDefinition, CommandBuildOptions } from '@o/models'
-import { ensureDir, pathExists, readJSON, writeJSON } from 'fs-extra'
+import { pathExists, readJSON } from 'fs-extra'
+import { updateBuildInfo } from '@o/apps-manager'
 import { join } from 'path'
 
 import { commandGenTypes } from './commandGenTypes'
@@ -134,45 +134,6 @@ const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
 
 function getAppInfo(appRoot: string): AppDefinition {
   return require(join(appRoot, 'dist', 'appInfo.js')).default
-}
-
-async function updateBuildInfo(appRoot: string) {
-  const appInfo = getAppInfo(appRoot)
-  const pkg = await readPackageJson(appRoot)
-  const buildId = Date.now()
-  await setBuildInfo(appRoot, {
-    identifier: appInfo.id,
-    name: appInfo.name,
-    buildId,
-    appVersion: pkg ? pkg.version : '0.0.0',
-    orbitVersion: getOrbitVersion(),
-    api: hasKey(appInfo, 'api'),
-    app: hasKey(appInfo, 'app'),
-    graph: hasKey(appInfo, 'graph'),
-    workers: hasKey(appInfo, 'workers'),
-  })
-  const appBuildInfo = configStore.appBuildInfo.get() || {}
-  configStore.appBuildInfo.set({
-    ...appBuildInfo,
-    [appRoot]: {
-      buildId,
-    },
-  })
-}
-
-const buildInfoDir = x => join(x, 'dist', 'buildInfo.json')
-
-async function setBuildInfo(projectRoot: string, next: BuildInfo) {
-  await ensureDir(join(projectRoot, 'dist'))
-  await writeJSON(buildInfoDir(projectRoot), next)
-}
-
-export async function getBuildInfo(projectRoot: string) {
-  const dir = buildInfoDir(projectRoot)
-  if (await pathExists(dir)) {
-    return await readJSON(dir)
-  }
-  return null
 }
 
 function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {

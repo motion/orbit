@@ -1,9 +1,9 @@
+import { yarnOrNpm } from '@o/libs-node'
 import { Logger } from '@o/logger'
 import execa from 'execa'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { join } from 'path'
 
-import { yarnOrNpm } from './commandHelpers'
 import { requireAppDefinition } from './requireAppDefinition'
 
 const log = new Logger('downloadAppDefinition')

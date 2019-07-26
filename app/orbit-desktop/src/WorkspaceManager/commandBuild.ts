@@ -120,6 +120,7 @@ function getWebAppConfig(entry: string, name: string, options: CommandBuildOptio
     context: options.projectRoot,
     entry: [entry],
     target: 'web', // TODO electron-renderer
+    ignore: ['electron-log'],
     outputFile: 'index.js',
     watch: options.watch,
     mode: 'production',

@@ -54,13 +54,17 @@ export function makeWebpackConfig(
     noChunking,
   } = params
 
-  const entryDir = __dirname
+  // entry dir is the path above the entry file, this could be better...
+  const entryDir = Path.join(params.entry[0], '..')
   const target = params.target || 'electron-renderer'
 
   // TODO isnt set for production
+  const repoEntry = require.resolve('@o/orbit-desktop')
+  const repoRoot = Path.join(repoEntry, '..', '..')
   const buildNodeModules = [
-    Path.join(__dirname, '..', 'node_modules'),
-    Path.join(__dirname, '..', '..', '..', 'node_modules'),
+    Path.join(repoRoot, 'node_modules'),
+    // TODO we can pass in process.env.IS_IN_MONO_REPO
+    Path.join(repoRoot, '..', '..', 'node_modules'),
   ]
 
   const defines = {
@@ -196,6 +200,10 @@ export function makeWebpackConfig(
         // ignore non-.node.js modules in node mode
         target === 'node' && {
           test: x => {
+            // dont ignore if is entry file
+            if (x === entry[0]) {
+              return false
+            }
             // dont ignore if outside of this app source
             if (x.indexOf(entryDir) !== 0) {
               return false

@@ -62,7 +62,7 @@ export async function commandBuild(options: CommandBuildOptions): Promise<Status
 export async function bundleApp(entry: string, options: CommandBuildOptions) {
   const verbose = true
 
-  log.info(`Running orbit build, verbose ${verbose}`)
+  log.info(`Running orbit build: ${verbose} ${options.projectRoot}`)
   const pkg = await readPackageJson(options.projectRoot)
 
   // build appInfo first, we can then use it to determine if we need to build web/node
@@ -72,10 +72,12 @@ export async function bundleApp(entry: string, options: CommandBuildOptions) {
     loud: verbose,
   })
 
-  log.info(`Reading appInfo`)
   const appInfo = await getAppInfo(options.projectRoot)
+  log.info(`appInfo`, appInfo)
 
-  log.info(`apiInfo: ${Object.keys(appInfo).join(',')}`)
+  if (!appInfo) {
+    throw new Error(`No appInfo export default found`)
+  }
 
   if (hasKey(appInfo, 'app')) {
     log.info(`Found web app, building`)
@@ -103,8 +105,11 @@ const hasKey = (appInfo: AppDefinition, ...keys: string[]) =>
 
 function getAppInfo(appRoot: string): AppDefinition | null {
   try {
-    return require(join(appRoot, 'dist', 'appInfo.js')).default
+    const path = join(appRoot, 'dist', 'appInfo.js')
+    log.info(`getAppInfo ${path}`)
+    return require(path).default
   } catch (err) {
+    log.error(err.message, err)
     return null
   }
 }
@@ -176,6 +181,7 @@ async function getAppInfoConfig(entry: string, name: string, options: CommandBui
         '@o/kit': '@o/kit/export-app',
       },
       module: {
+        // ignore *everything* outside entry
         rules: [
           {
             test: x => x !== entry,

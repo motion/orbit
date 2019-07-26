@@ -6,16 +6,12 @@ export async function main() {
    *  Setup app after config
    */
   const { OrbitDesktopRoot } = require('./OrbitDesktopRoot')
-  const appRoot = new OrbitDesktopRoot()
-
-  if (process.env.NODE_ENV === 'development') {
-    require('./helpers/startDevelopment').startDevelopment(appRoot)
-  }
+  const desktopRoot = new OrbitDesktopRoot()
 
   // handle exits gracefully
   const dispose = once(async () => {
     console.log('Desktop exiting...')
-    await appRoot.dispose()
+    await desktopRoot.dispose()
     console.log('Dispose children...')
     try {
       cleanupChildren()
@@ -31,7 +27,16 @@ export async function main() {
   process.on('SIGTERM', dispose)
   process.on('SIGQUIT', dispose)
 
-  await appRoot.start()
+  if (process.env.NODE_ENV === 'development') {
+    require('./helpers/startDevelopment').startDevelopment(desktopRoot)
+  }
+
+  try {
+    await desktopRoot.start()
+  } catch (err) {
+    console.error('error starting desktopRoot', err)
+    process.exit(1)
+  }
 
   return dispose
 }

@@ -14,7 +14,7 @@ export const findContiguousPorts = async (total = 3, start = 3000): Promise<numb
     const foundPorts = await Promise.all(next.map(port => getPort({ port })))
     // found in a row
     if (foundPorts.every(Boolean)) {
-      log.verbose(`Found ports: ${next}`)
+      log.verbose(`Found ports ${next.length}`, next)
       found = next
     } else {
       current += 10

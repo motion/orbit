@@ -3,7 +3,7 @@ import { getGlobalConfig } from '@o/config'
 import { nestSchema } from '@o/graphql-nest-schema'
 import { Logger } from '@o/logger'
 import { AppBit } from '@o/models'
-import { orTimeout, partition } from '@o/utils'
+import { partition } from '@o/utils'
 import { createHttpLink } from 'apollo-link-http'
 import bodyParser from 'body-parser'
 import express from 'express'
@@ -15,7 +15,6 @@ import {
   makeRemoteExecutableSchema,
   mergeSchemas,
 } from 'graphql-tools'
-import killPort from 'kill-port'
 
 import { getActiveSpace } from './helpers/getActiveSpace'
 
@@ -32,7 +31,6 @@ export class GraphServer {
   }
 
   start() {
-    this.server.set('port', port)
     this.server.use(require('cors')())
     this.server.disable('etag')
     this.server.use(bodyParser.json({ limit: '2048mb' }))
@@ -54,15 +52,10 @@ export class GraphServer {
     })
 
     return new Promise(async res => {
-      log.verbose(`Killing old server on ${port}...`)
-      try {
-        await orTimeout(killPort(port), 500)
-      } catch {
-        // timed out
-      }
+      log.info(`Starting on ${port}`)
       this.server.listen(port, () => {
-        res()
         log.info('Server listening', port)
+        res()
       })
     })
   }

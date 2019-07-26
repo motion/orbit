@@ -11,7 +11,7 @@ import { getWorkspaceApps } from './getWorkspaceApps'
 import { requireWorkspaceDefinitions } from './requireWorkspaceDefinitions'
 import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 
-const log = new Logger('OrbitAppsManager')
+const log = new Logger('AppsManager')
 
 type PartialSpace = Pick<Space, 'id' | 'directory'>
 type AppMetaDict = { [identifier: string]: AppMeta }
@@ -44,6 +44,10 @@ export class AppsManager {
   getIdentifierToPackageId = getIdentifierToPackageId
 
   async start() {
+    if (this.started) {
+      return
+    }
+
     log.info('Starting...')
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({
@@ -118,7 +122,7 @@ export class AppsManager {
           this.appMeta[identifier] = appInfo
           updated = true
         } else {
-          log.error(`no identifier found for ${appInfo.packageId}`)
+          log.warning(`no identifier found for ${appInfo.packageId}`)
         }
       }
 

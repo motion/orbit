@@ -24,7 +24,7 @@ export function startDevelopment(appRoot: OrbitDesktopRoot) {
   })
 
   process.on('unhandledRejection', function(reason: any) {
-    log.info(`Desktop: Possibly Unhandled Rejection: ${reason.message}\n${reason.stack}`)
+    console.log(`Desktop: Possibly Unhandled Rejection: ${reason.message}\n${reason.stack}`)
     // process.exit(1)
   })
 }

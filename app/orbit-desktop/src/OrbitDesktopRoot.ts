@@ -86,8 +86,9 @@ async function startSeries(
         await orTimeout(fn(), options.timeout)
       } catch (err) {
         if (err === OR_TIMED_OUT) {
-          console.log('Timed out starting', fn)
+          log.error('Timed out starting', fn)
         }
+        log.error('got real err', err)
         throw err
       }
     } else {
@@ -147,25 +148,22 @@ export class OrbitDesktopRoot {
         },
         async () => {
           this.workspaceManager = new WorkspaceManager(this.mediatorServer)
-          try {
-            await this.workspaceManager.start({
-              singleUseMode,
-            })
-          } catch (err) {
-            console.error('error starting', err)
-            throw err
-          }
+          await this.workspaceManager.start({
+            singleUseMode,
+          })
         },
         async () => {
           if (!singleUseMode) {
             // run this early, it sets up the general setting if needed
             this.generalSettingManager = new GeneralSettingManager()
+            await this.generalSettingManager.start()
           }
         },
         async () => {
           if (!singleUseMode) {
             // manages operating system state
             this.operatingSystemManager = new OperatingSystemManager()
+            await this.operatingSystemManager.start()
           }
         },
         async () => {
@@ -173,14 +171,6 @@ export class OrbitDesktopRoot {
             // search index
             this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
             await this.cosalManager.start()
-          }
-        },
-        async () => {
-          if (!singleUseMode) {
-            await Promise.all([
-              this.generalSettingManager.start(),
-              this.operatingSystemManager.start(),
-            ])
           }
         },
         async () => {
@@ -237,7 +227,7 @@ export class OrbitDesktopRoot {
     })
     this.bonjourService.start()
 
-    console.log('DESKTOP FINISHED START()')
+    log.info('DESKTOP FINISHED START()')
   }
 
   restart = () => {

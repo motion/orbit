@@ -59,17 +59,8 @@ export function startChildProcess({
 
   child.stderr.on('data', b => {
     const out = b.toString()
-    // ignore errors
-    if (
-      out.indexOf('Debugger listening on') >= 0 ||
-      out.indexOf('Debugger attached.') >= 0 ||
-      out.indexOf('DeprecationWarning:') >= 0
-    ) {
-      return
-    }
     if (/error/i.test(out) === false) {
-      console.error('\nGot an error that may not be worth reporting:')
-      console.error(`${name} error:`, out, '\n\n\n')
+      console.error('\nGot an error that may not be worth reporting:', name, out, '\n')
       return
     }
     console.error(`${name} error:`, out)

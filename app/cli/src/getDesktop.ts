@@ -73,6 +73,7 @@ async function findBonjourService(type: string, timeout: number): Promise<number
   let waitForService = new Promise(resolve => {
     reporter.verbose('Finding bounjour service', type)
     bonjourInstance.findOne({ type }, service => {
+      reporter.verbose(`bonjour got ${service.type} ${service.port}`)
       resolve(service.port)
     })
   })
@@ -80,11 +81,12 @@ async function findBonjourService(type: string, timeout: number): Promise<number
   try {
     service = await orTimeout(waitForService, timeout)
   } catch (e) {
-    if (e !== OR_TIMED_OUT) {
-      reporter.panic(`Error finding port ${e.message}`)
-      return false
+    if (e === OR_TIMED_OUT) {
+      reporter.verbose(`Timed out ${type} ${timeout}`)
+      return null
+    } else {
+      reporter.panic(`Error finding bonjour ${e.message}`)
     }
-    reporter.verbose('Timed out finding bonjour')
   } finally {
     bonjourInstance.destroy()
   }

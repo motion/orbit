@@ -1,7 +1,31 @@
-import { AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
+import {
+  AppsManager,
+  getBuildInfo,
+  getWorkspaceApps,
+  updateWorkspacePackageIds,
+} from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
+import {
+  AppBuildCommand,
+  AppCreateWorkspaceCommand,
+  AppDevCloseCommand,
+  AppDevOpenCommand,
+  AppEntity,
+  AppGenTypesCommand,
+  AppGetWorkspaceAppsCommand,
+  AppInstallCommand,
+  AppMeta,
+  AppMetaCommand,
+  AppOpenWorkspaceCommand,
+  AppStatusMessage,
+  AppStatusModel,
+  CallAppBitApiMethodCommand,
+  CloseAppCommand,
+  CommandWsOptions,
+  WorkspaceInfo,
+  WorkspaceInfoModel,
+} from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -62,13 +86,14 @@ export class WorkspaceManager {
 
   async start(opts: { singleUseMode: boolean }) {
     if (!opts.singleUseMode) {
-      await this.appsManager.start()
+      // await this.appsManager.start()
       await this.graphServer.start()
       this.onWorkspaceChange()
       this.appMiddleware.onStatus(status => {
         appStatusManager.sendMessage(status)
       })
     }
+    console.log('DONE')
   }
 
   watchWorkspace = react(

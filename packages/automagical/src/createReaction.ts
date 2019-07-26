@@ -260,6 +260,10 @@ export function createReaction(
       let curID = reactionID
       let result: any
 
+      if (process.env.LOG_LEVEL && +process.env.LOG_LEVEL > 5) {
+        log.verbose(`Running reaction ${config.nameFull}`)
+      }
+
       // async update helpers
       const updateAsync = val => updateAsyncValue(start, reactValArg, curID === reactionID, val)
       reactionHelpers.setValue = updateAsync

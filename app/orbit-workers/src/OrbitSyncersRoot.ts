@@ -1,12 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import {
-  MediatorClient,
-  MediatorServer,
-  typeormResolvers,
-  WebSocketClientTransport,
-  WebSocketServerTransport,
-} from '@o/mediator'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@o/mediator'
 import { Entities, JobEntity, JobModel, AppModel, AppEntity } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
@@ -14,9 +8,9 @@ import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import { __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS } from '@o/worker-kit'
 import { WorkersManager } from './WorkersManager'
+import { mediatorClient } from './mediatorClient'
 
 const log = new Logger('WorkersRoot')
 
@@ -24,36 +18,17 @@ export class OrbitSyncersRoot {
   config = getGlobalConfig()
   connection: Connection
   mediatorServer: MediatorServer
-  mediatorClient: MediatorClient
+  mediatorClient = mediatorClient
 
   // managers
   workersManager = new WorkersManager()
 
   async start() {
     log.info(`Starting Orbit Workers`)
-
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
-
-    this.mediatorClient = new MediatorClient({
-      transports: [
-        new WebSocketClientTransport(
-          'syncers', // randomString(5)
-          new ReconnectingWebSocket(
-            `ws://localhost:${getGlobalConfig().ports.desktopMediator}`,
-            [],
-            {
-              WebSocket,
-              minReconnectionDelay: 1,
-            },
-          ),
-        ),
-      ],
-    })
-
     __YOURE_FIRED_IF_YOU_EVEN_REPL_PEEK_AT_THIS.setMediatorClient(this.mediatorClient)
-
     await this.workersManager.start()
   }
 

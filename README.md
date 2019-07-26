@@ -60,7 +60,7 @@ What we may want to do is split these a bit further:
   /orbit-desktop    # node process (runs server for oauth, runs a variety of backend services)
   /build-server     # used by orbit-desktop to run webpack for apps
   /orbit-electron   # electron process (one-per-window, controls electron windows and other state)
-  /orbit-syncers    # workers process, runs the apps node-processes
+  /orbit-workers    # workers process, runs the apps node-processes
   /config           # set on startup, config shared by all processes
   /kit              # The public facing APIs for building apps: higher level hooks, views and components that work together
   /kit-internal     # "Private" kit for our internal use

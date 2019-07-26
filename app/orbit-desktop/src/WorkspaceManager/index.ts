@@ -1,16 +1,16 @@
-import { OrbitAppsManager } from '@o/libs-node'
+import { AppsManager } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand } from '@o/mediator'
-import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand } from '@o/models'
+import { AppBuildCommand, AppDevCloseCommand, AppDevOpenCommand, AppGenTypesCommand, AppStatusMessage, CloseAppCommand, WorkspaceInfo } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { remove } from 'lodash'
+import Observable from 'zen-observable'
 
 import { GraphServer } from '../GraphServer'
 import { AppDesc, AppMiddleware } from './AppMiddleware'
 import { commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { createCommandWs } from './commandWs'
-import { getIdentifierToPackageId } from './getPackageId'
 
 const log = new Logger('WorkspaceManager')
 
@@ -19,10 +19,11 @@ export type AppBuildStatusListener = (status: AppStatusMessage) => any
 export class WorkspaceManager {
   developingApps: AppDesc[] = []
 
+  appsManager = new AppsManager()
   graphServer = new GraphServer()
   appMiddleware = new AppMiddleware()
 
-  constructor(private mediatorServer: MediatorServer, private orbitAppsManager: OrbitAppsManager) {
+  constructor(private mediatorServer: MediatorServer) {
     // signals to frontend to update app definitions
     this.orbitAppsManager.onUpdatedAppMeta(appMeta => {
       log.info('orbitAppsManager updating app meta', appMeta)
@@ -40,6 +41,24 @@ export class WorkspaceManager {
   async start() {
     await this.orbitAppsManager.start()
     await this.graphServer.start()
+  }
+
+  /**
+   * Returns Observable for the current workspace information
+   */
+  observables = new Set<{ update: (next: any) => void; observable: Observable<WorkspaceInfo> }>()
+  observe() {
+    const observable = new Observable<WorkspaceInfo>(observer => {
+      this.observables.add({
+        update: (status: WorkspaceInfo) => {
+          observer.next(status)
+        },
+        observable,
+      })
+      // start with empty
+      observer.next(null)
+    })
+    return observable
   }
 
   getResolvers() {

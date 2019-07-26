@@ -2,8 +2,8 @@ import { Logger } from '@o/logger'
 import { AppMeta, PackageJson } from '@o/models'
 import { pathExists, readdir, readJSON } from 'fs-extra'
 import { join } from 'path'
+
 import { findPackage } from './findPackage'
-import { isOrbitApp } from './commandBuild'
 
 const log = new Logger('getWorkspaceApps')
 

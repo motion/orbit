@@ -79,7 +79,7 @@ export async function main() {
         require('@o/orbit-desktop').main()
         return
       case 'syncers':
-        require('@o/orbit-syncers').main()
+        require('@o/orbit-workers').main()
         return
       case 'electron-menus':
       case 'electron-apps':

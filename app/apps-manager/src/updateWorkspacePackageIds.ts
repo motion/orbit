@@ -1,9 +1,5 @@
 import { Logger } from '@o/logger'
 
-import { getBuildInfo } from './commandBuild'
-import { setIdentifierToPackageId } from './getPackageId'
-import { getWorkspaceApps } from './getWorkspaceApps'
-
 const log = new Logger('updateWorkspacePackageIds')
 
 /**

@@ -1,4 +1,3 @@
-import { getIdentifierFromPackageId, getIdentifierToPackageId, getWorkspaceApps, requireWorkspaceDefinitions, updateWorkspacePackageIds } from '@o/cli'
 import { Logger } from '@o/logger'
 import { AppDefinition, AppMeta, Space, SpaceEntity, User, UserEntity } from '@o/models'
 import { decorate, ensure, react } from '@o/use-store'
@@ -10,7 +9,6 @@ import { getRepository } from 'typeorm'
 const log = new Logger('OrbitAppsManager')
 
 type PartialSpace = Pick<Space, 'id' | 'directory'>
-
 type AppMetaDict = { [identifier: string]: AppMeta }
 type AppMetaDictCb = (appMeta: AppMetaDict) => void
 

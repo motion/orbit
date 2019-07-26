@@ -8,6 +8,7 @@ import { Job } from './interfaces/Job'
 import { Space } from './interfaces/SpaceInterface'
 import { State } from './interfaces/State'
 import { User } from './interfaces/User'
+import { AppDefinition } from './AppDefinition'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -56,6 +57,16 @@ export const AppStatusModel = new Model<AppStatusMessage, { appId: number }>('Ap
 export const AppStatusId = {
   install: (identifier: string) => `install-${identifier}`,
 }
+
+/**
+ * For communicating the status of the current workspace, for reloading app definitions
+ * across processes (see orbit-workers using this).
+ */
+type WorkspaceInfo = {
+  identifier: string
+  definitions: AppDefinition & { version?: number }
+}
+export const WorkspaceInfoModel = new Model<WorkspaceInfo, undefined>('WorkspaceInfoModel')
 
 export type GroupResult = {
   title: string

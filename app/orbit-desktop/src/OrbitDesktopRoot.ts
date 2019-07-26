@@ -38,6 +38,7 @@ import {
   StateEntity,
   RemoveAllAppDataCommand,
   AppStatusModel,
+  WorkspaceInfoModel,
   ResetDataCommand,
 } from '@o/models'
 import { OrbitAppsManager } from '@o/libs-node'
@@ -289,6 +290,9 @@ export class OrbitDesktopRoot {
         ]),
         resolveObserveOne(AppStatusModel, args => {
           return appStatusManager.observe(args.appId)
+        }),
+        resolveObserveOne(WorkspaceInfoModel, () => {
+          return this.workspaceManager.observe()
         }),
         ...loadAppDefinitionResolvers(),
         ...this.cli.getResolvers(),

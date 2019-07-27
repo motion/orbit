@@ -53,4 +53,4 @@ export function setGlobalConfig(nextConfig: GlobalConfig) {
 }
 
 // persisted config
-export * from './configStore'
+export * from './configStore.node'

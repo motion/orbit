@@ -127,25 +127,28 @@ export class WorkspaceManager {
   onNewWorkspaceVersion = react(
     () => [this.directory, this.workspaceVersion],
     async ([directory], { sleep, useEffect }) => {
-      log.info(`updateWorkspace ${directory}`)
       ensure('directory', !!directory)
+      log.info(`updateWorkspace ${directory}`)
 
       await this.updateApps()
 
       const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
 
-      if (!config) {
-        log.error('No apps found')
-        return
-      }
+      ensure('config', !!config)
+
+      console.log('123')
 
       await sleep()
 
       if (!isEqual(this.buildConfig, config)) {
         this.buildConfig = config
+
+        console.log('345')
         useEffect(() => {
+          console.log('567')
           return useWebpackMiddleware(config)
         })
+
         await updateWorkspacePackageIds(this.directory)
       }
     },

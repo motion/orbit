@@ -18,7 +18,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const dllFile = join(directory, 'dist', 'manifest.json')
   log.info(`dllFile ${dllFile}`)
 
-  const isInMonoRepo = await getIsInMonorepo(process.cwd())
+  const isInMonoRepo = await getIsInMonorepo()
 
   // link local apps into local node_modules
   await ensureDir(join(directory, 'node_modules'))

@@ -212,7 +212,7 @@ export class MediatorServer {
         try {
           const name = 'model' in resolver ? resolver.model.name : resolver.command.name
           result = resolver.resolve(data.args)
-          log.info(`Resolving ${resolver.type}: ${name}`)
+          log.verbose(`Resolving ${resolver.type}: ${name}`, data.args)
         } catch (error) {
           log.error('error executing resolver', error)
           throw error

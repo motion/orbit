@@ -64,7 +64,6 @@ const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths
 ) => {
   const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
   const path = config.output.path + req.url
-  console.log('ok', resolvePaths, req.url, path)
   if (isInResolvePaths || existsInCache(middleware, path)) {
     middleware(req, res, next)
   } else {

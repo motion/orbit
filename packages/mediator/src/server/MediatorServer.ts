@@ -37,7 +37,6 @@ export class MediatorServer {
   }
 
   private async handleMessage(data: TransportRequest) {
-    console.log('MediatorServer.message', data)
     const onSuccess = result => {
       log.verbose(`onSuccess`, data, result)
       this.options.transport.send({

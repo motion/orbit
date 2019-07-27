@@ -1,5 +1,5 @@
 import nateImg from '../../../public/images/nate.jpg'
-import { PostEntry } from './PostEntry'
+import { PostEntry } from '../BlogPage/PostEntry'
 
 export type PostDirectory = {
   [key: string]: PostEntry

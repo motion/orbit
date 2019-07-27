@@ -13,7 +13,6 @@ export function BlogLayout({ children, ...props }: ColProps) {
       <SectionContent minHeight={500}>
         <Col {...props}>{children}</Col>
       </SectionContent>
-
       <BlogFooter />
     </>
   )
@@ -25,13 +24,10 @@ export function BlogFooter() {
       <Space size="xxl" />
       <Space size="xxl" />
       <Space size="xxl" />
-
       <Col height={450} padding={[true, 0]}>
         <AboveFooter />
       </Col>
-
       <Space size="xxl" />
-
       <SectionContent padding={[50, 0]}>
         <Footer />
       </SectionContent>

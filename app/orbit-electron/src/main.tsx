@@ -11,7 +11,6 @@ import {
 } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
-import { sleep } from '@o/utils'
 import electronDebug from 'electron-debug'
 import * as React from 'react'
 import waitOn from 'wait-on'
@@ -121,11 +120,6 @@ export async function main() {
   //
   // START THE PROCESSES
   //
-
-  if (process.env.SINGLE_APP_MODE && process.env.WAIT_FOR_ORBIT !== 'false') {
-    console.log('Running from cli, wait to start up the main process for a bit for speed')
-    await sleep(3000)
-  }
 
   switch (process.env.SUB_PROCESS) {
     case 'electron-menus':

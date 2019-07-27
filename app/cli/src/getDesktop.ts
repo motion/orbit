@@ -124,7 +124,7 @@ export function runOrbitDesktop(
       // want to avoid doing extra work initially, and then later "start" the rest of orbit (non singleUseMode stufg)
       const detached = !isInMonoRepo && !singleUseMode
       reporter.verbose(`Running Orbit ${cmd} in ${cwd}, detached? ${detached}`)
-      const child: ChildProcess = execa.command(cmd, {
+      const child = execa.command(cmd, {
         detached,
         cwd,
         env: {
@@ -141,8 +141,8 @@ export function runOrbitDesktop(
       })
 
       if (reporter.isVerbose) {
-        child.stdout.pipe(process.stdout)
-        // child.stderr.pipe(process.stderr)
+        // all fixed a bug where it would stop piping from stdio/stderr
+        child.all.pipe(process.stdout)
       }
 
       return child

@@ -27,7 +27,7 @@ const linkDelay = 80
 export const LinksLeft = props => {
   return (
     <>
-      <HeaderLink delay={linkDelay * 1} {...props} href="/docs">
+      <HeaderLink delay={linkDelay * 1} {...props} href="/guides">
         Guides
       </HeaderLink>
       <HeaderLink delay={linkDelay * 2} {...props} href="/docs">

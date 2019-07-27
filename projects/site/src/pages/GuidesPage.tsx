@@ -1,4 +1,4 @@
-import { Space, gloss, ColProps, Col } from '@o/ui'
+import { Space, gloss, ColProps, Col, Grid } from '@o/ui'
 import { compose, mount, route, withView } from 'navi'
 import React from 'react'
 import { View } from 'react-navi'
@@ -9,13 +9,12 @@ import { FadeParent, FadeChild } from '../views/FadeIn'
 import { MDX } from '../views/MDX'
 import { SectionContent } from '../views/SectionContent'
 import { TitleText } from '../views/TitleText'
-import { posts } from './GuidesPage/guides'
+import { guides, GuideEntry } from './GuidesPage/guides'
 import { AboveFooter } from './HomePage/AboveFooter'
 import { Footer } from './HomePage/Footer'
 import { linkProps } from '../LinkState'
 import { useScreenVal } from './HomePage/SpacedPageContent'
 import { colors } from '../constants'
-import { PostEntry } from './BlogPage/PostEntry'
 
 export default compose(
   withView(() => {
@@ -33,16 +32,15 @@ export default compose(
     }),
     '/:id': route(async req => {
       let id = req.params.id
-      if (!posts[id]) {
+      if (!guides[id]) {
         return {
-          // todo
           view: () => <div>not found</div>,
         }
       }
-      let ChildView = (await posts[id].view()).default
+      let ChildView = (await guides[id].view()).default
       return {
         view: (
-          <PostPage post={posts[id]}>
+          <PostPage post={guides[id]}>
             <ChildView />
           </PostPage>
         ),
@@ -64,7 +62,7 @@ export function GuidesPage(props: { title?: string; children?: any }) {
 
 GuidesPage.theme = 'light'
 
-function PostPage(props: { post: PostEntry; children?: any }) {
+function PostPage(props: { post: GuideEntry; children?: any }) {
   return (
     <>
       <SectionContent>
@@ -80,20 +78,18 @@ function PostPage(props: { post: PostEntry; children?: any }) {
 }
 
 export function GuidesPageIndex() {
-  const all = Object.keys(posts)
-    .slice(0, 10)
+  const all = Object.keys(guides)
     .map(id => ({
-      ...posts[id],
+      ...guides[id],
       id,
     }))
     .filter(x => !x.private)
     .sort((a, b) => (new Date(a.date).getTime() > new Date(b.date).getTime() ? -1 : 1))
-
   return (
     <GuidesLayout space>
       {all.map((post, index) => (
         <FadeChild key={post.date} delay={index * 150}>
-          <Post
+          <Col
             padding={useScreenVal('md', 'xl', 'xl')}
             {...linkProps(`/guides/${all[index].id}`)}
             hoverStyle={{
@@ -110,21 +106,20 @@ export function GuidesPageIndex() {
               {post.title}
             </TitleText>
             <Space size="sm" />
-          </Post>
+          </Col>
         </FadeChild>
       ))}
     </GuidesLayout>
   )
 }
 
-const Post = gloss(View, {})
-
 export function GuidesLayout({ children, ...props }: ColProps) {
   return (
     <>
-      <GuidesTitle />
-      <SectionContent minHeight={500}>
-        <Col {...props}>{children}</Col>
+      <SectionContent minHeight={500} padding="xxl">
+        <Grid itemMaxWidth={200} itemMinWidth={150} {...props}>
+          {children}
+        </Grid>
       </SectionContent>
       <GuidesFooter />
     </>

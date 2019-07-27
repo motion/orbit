@@ -21,7 +21,7 @@ export const widths = {
   tiny: 420,
   small: 700,
   medium: 860,
-  large: 1180,
+  large: 1100,
 }
 
 export const sectionMaxHeight = 1250

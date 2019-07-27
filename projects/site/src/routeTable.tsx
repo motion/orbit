@@ -1,6 +1,7 @@
 // for easy pre-loading
 export const routeTable = {
   '/docs': () => import('./pages/DocsPage'),
+  '/guides': () => import('./pages/GuidesPage'),
   '/blog': () => import('./pages/BlogPage'),
   '/about': () => import('./pages/AboutPage'),
   '/beta': () => import('./pages/BetaPage'),

@@ -67,7 +67,7 @@ export class WebServer {
 
       this.server.listen(Config.ports.server, () => {
         res()
-        log.info('Server listening', Config.ports.server)
+        log.info(`Server listening ${Config.ports.server}`)
       })
     })
   }

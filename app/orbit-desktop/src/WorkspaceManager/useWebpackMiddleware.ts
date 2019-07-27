@@ -9,15 +9,11 @@ const log = new Logger('useWebpackMiddleware')
 
 export function useWebpackMiddleware(configs: { main: any; [key: string]: any }) {
   const { main, ...apps } = configs
+  log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
   const server = express()
 
   // you have to do it this janky ass way because webpack just isnt really great at
   // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
-
-  // apps first only if they matching cached file
-  log.info('got config main', main)
-  log.info('got config apps', apps)
-
   for (const name in apps) {
     const config = apps[name]
     const hmrPath = `/__webpack_hmr_${name}`
@@ -67,7 +63,9 @@ const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths
   next,
 ) => {
   const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
-  if (isInResolvePaths || existsInCache(middleware, config.output.path + req.url)) {
+  const path = config.output.path + req.url
+  console.log('ok', resolvePaths, req.url, path)
+  if (isInResolvePaths || existsInCache(middleware, path)) {
     middleware(req, res, next)
   } else {
     next()

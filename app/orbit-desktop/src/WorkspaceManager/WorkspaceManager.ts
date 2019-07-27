@@ -86,8 +86,8 @@ export class WorkspaceManager {
 
   async start(opts: { singleUseMode: boolean }) {
     if (!opts.singleUseMode) {
-      // await this.appsManager.start()
-      // await this.graphServer.start()
+      await this.appsManager.start()
+      await this.graphServer.start()
       this.onWorkspaceChange()
       this.appMiddleware.onStatus(status => {
         appStatusManager.sendMessage(status)
@@ -136,16 +136,12 @@ export class WorkspaceManager {
 
       ensure('config', !!config)
 
-      console.log('123')
-
       await sleep()
 
       if (!isEqual(this.buildConfig, config)) {
         this.buildConfig = config
 
-        console.log('345')
         useEffect(() => {
-          console.log('567')
           return useWebpackMiddleware(config)
         })
 

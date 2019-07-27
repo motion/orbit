@@ -3,7 +3,12 @@ import { ClearButton, sleep, ThemeContext, useSearch, View } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, useCallback, useState } from 'react'
 
-import { queryStore, useOrbitWindowStore, usePaneManagerStore, useQueryStore } from '../../om/stores'
+import {
+  queryStore,
+  useOrbitWindowStore,
+  usePaneManagerStore,
+  useQueryStore,
+} from '../../om/stores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { appsCarouselStore } from './OrbitAppsCarousel'
 import { appsDrawerStore } from './OrbitAppsDrawer'

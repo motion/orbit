@@ -278,9 +278,9 @@ export function makeWebpackConfig(
       !dll &&
         target !== 'node' &&
         new HtmlWebpackPlugin({
-          template: Path.join(__dirname, '..', 'index.html'),
+          template: Path.join(__dirname, '..', '..', 'index.html'),
           chunksSortMode: 'none',
-          inject: false,
+          inject: true,
           externals: ['apps.js'],
         }),
 

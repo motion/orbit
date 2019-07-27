@@ -11,6 +11,7 @@
     { "path": "../models" },
     { "path": "../stores" },
     { "path": "../config" },
+    { "path": "../cli" },
     { "path": "../libs" },
     { "path": "../libs-node" },
     { "path": "../apps-manager" },

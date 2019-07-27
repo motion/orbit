@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
+    "@o/cli": "^2.5.2",
     "@o/config": "^2.5.2",
     "@o/apps-manager": "^2.5.2",
     "@o/constants": "^2.5.2",

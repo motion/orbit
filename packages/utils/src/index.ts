@@ -47,8 +47,7 @@ export async function orTimeout<T>(promise: Promise<T>, timeout: number): Promis
   })
   const res = await Promise.race([promise, waitForTimeout])
   clearTimeout(tm)
-  const response = await res
-  return response
+  return res
 }
 
 /**

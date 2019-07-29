@@ -35,6 +35,8 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
   await getRepository(JobEntity).save(job)
   log.info('created a new job', job)
 
+  let error = ''
+
   // remove app and all its related data
   log.info('removing app', app)
   await getManager()
@@ -45,14 +47,16 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
 
       if (bitRemoveFailures.has(appId)) {
         const connection = getConnection()
-        await connection.query(`DELETE FROM bit_entity WHERE app_id = $1;`, [appId])
+        await connection.query(`DELETE FROM bit_entity WHERE appId = $1;`, [appId])
         // TODO
         // await connection.query(`DELETE FROM bit_entity_people_bit_entity WHERE bitEntityId_1 = $1;`, [appId])
       } else {
         // TODO I saw this failing easily with just a few slack messages synced in, so added this alternate delete method
         // but its not ideal
         try {
-          await orTimeout(manager.remove(bits, { chunk: 100 }), 10 * 1000)
+          const numBits = bits.length
+          const chunk = numBits / 10 // lets delete small amount at a time to be conservative it seems to slow down over time
+          await orTimeout(manager.remove(bits, { chunk }), 10 * 1000)
         } catch (err) {
           if (err === OR_TIMED_OUT) {
             bitRemoveFailures.add(appId)
@@ -79,8 +83,16 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
     })
     .catch(async error => {
       log.error('error during app removal', error)
+      error = error.message
       await getRepository(JobEntity).remove(job as JobEntity)
     })
+
+  if (error) {
+    return {
+      type: 'error',
+      message: error,
+    }
+  }
 
   return {
     type: 'success',

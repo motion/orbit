@@ -278,16 +278,22 @@ const SetupAppHomeToolbar = memo((props: SetupAppHomeProps) => {
             </Text>
           </View>
         )}
-        <Button
-          alt="confirm"
-          onClick={async () => {
-            const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
-            installApp(definition, newAppStore.app)
-          }}
-          icon="chevron-right"
-        >
-          Add
-        </Button>
+        {flow.index === 0 ? (
+          <Button onClick={flow.next} icon="chevron-right">
+            Customize
+          </Button>
+        ) : (
+          <Button
+            alt="confirm"
+            onClick={async () => {
+              const definition = await getAppDefinition(flow.data.selectedAppIdentifier)
+              installApp(definition, newAppStore.app)
+            }}
+            icon="chevron-right"
+          >
+            Add
+          </Button>
+        )}
       </Toolbar>
     </Scale>
   )

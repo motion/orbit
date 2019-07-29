@@ -91,7 +91,7 @@
     "ignore-loader": "^0.1.2",
     "image-webpack-loader": "^4.6.0",
     "raw-loader": "^2.0.0",
-    "react-hot-loader": "4.12.9",
+    "react-hot-loader": "4.12.10",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.0",
     "thread-loader": "^2.1.2",

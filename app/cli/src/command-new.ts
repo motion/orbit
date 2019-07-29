@@ -2,11 +2,12 @@ import { configStore } from '@o/config'
 import { trackCli, trackError } from '@o/telemetry'
 import { execSync } from 'child_process'
 import execa from 'execa'
-import fs, { pathExistsSync, readJSON, remove, writeJSON } from 'fs-extra'
+import fs, { pathExistsSync, remove } from 'fs-extra'
 import hostedGitInfo from 'hosted-git-info'
 import isValid from 'is-valid-path'
 import { basename, join, resolve } from 'path'
 import prompts from 'prompts'
+import replaceInFile from 'replace-in-file'
 import url from 'url'
 
 import { isTty } from './isTty'
@@ -20,6 +21,8 @@ export type CommandNewOptions = {
   projectRoot: string
   name: string
   template: string
+  identifier: string
+  icon: string
 }
 
 /**
@@ -73,12 +76,10 @@ export async function commandNew(options: CommandNewOptions) {
       await copy(templatePath, projectRoot)
     }
 
-    // replace name into package.json
-    const pkgJsonPath = join(projectRoot, 'package.json')
-    const pkgInfo = await readJSON(pkgJsonPath)
-    pkgInfo.name = options.name || 'no-name'
-    await writeJSON(pkgJsonPath, pkgInfo, {
-      spaces: 2,
+    await replaceInFile({
+      files: join(projectRoot, '**'),
+      from: ['$ID', '$NAME', '$ICON'],
+      to: [options.identifier, options.name, options.icon],
     })
 
     return {

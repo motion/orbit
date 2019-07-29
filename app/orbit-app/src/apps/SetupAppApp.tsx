@@ -80,8 +80,20 @@ function SetupAppCustom() {
                       {
                         label: 'Blank',
                         template: 'blank',
-                        icon: 'template',
-                        subTitle: 'Empty app template',
+                        icon: 'square',
+                        subTitle: 'Empty app template.',
+                      },
+                      {
+                        label: 'Index/Detail',
+                        template: 'index-detail',
+                        icon: 'panel-stats',
+                        subTitle: 'Sidebar with list controlling main view.',
+                      },
+                      {
+                        label: 'Grid',
+                        template: 'grid',
+                        icon: 'grid-view',
+                        subTitle: 'Grid view, orderable and resizable.',
                       },
                     ]}
                     getItem={(props, { isSelected, select }) => (

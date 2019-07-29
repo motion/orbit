@@ -19,13 +19,15 @@ export function createAppCreateNewResolver(orbitDesktop: OrbitDesktopRoot) {
   })
 
   async function createNewWorkspaceApp(space: SpaceEntity, opts: AppCreateNewOptions) {
-    // TODO icon
     try {
-      const name = await findValidDirectoryName(space.directory, opts.identifier)
+      const appsDir = join(space.directory, 'apps')
+      const name = await findValidDirectoryName(appsDir, opts.identifier)
       let res = await commandNew({
-        projectRoot: space.directory,
+        projectRoot: appsDir,
         name,
         template: opts.template,
+        icon: opts.icon,
+        identifier: opts.identifier,
       })
       if (res.type === 'error') {
         return res

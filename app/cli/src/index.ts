@@ -1,12 +1,5 @@
 #!/usr/bin/env node
-import {
-  CommandBuildOptions,
-  CommandDevOptions,
-  CommandGenTypesOptions,
-  CommandInstallOptions,
-  CommandWsOptions,
-  StatusReply,
-} from '@o/models'
+import { CommandBuildOptions, CommandDevOptions, CommandGenTypesOptions, CommandInstallOptions, CommandWsOptions, StatusReply } from '@o/models'
 import { readJSON } from 'fs-extra'
 import { join, resolve } from 'path'
 import Yargs from 'yargs'
@@ -66,6 +59,11 @@ function main() {
             describe:
               'Choose from pre-defined starter app templates, or give an identifier of an existing orbit app, or a shorthand to a github repository.',
             default: 'blank',
+          })
+          .option('icon', {
+            type: 'string',
+            describe: 'Give it an icon.',
+            default: 'square',
           }),
       async argv => {
         setVerbose(argv.logLevel)
@@ -75,6 +73,8 @@ function main() {
           projectRoot,
           name: argv.appName,
           template: argv.template,
+          identifier: argv.appName,
+          icon: argv.icon,
         })
         if (res.type === 'error') {
           reporter.panic(res.message)

@@ -41,7 +41,8 @@
     "wait-on": "3.3.0-beta.0",
     "kill-port": "^1.5.0",
     "isomorphic-fetch": "^2.2.1",
-    "prompts": "^2.1.0"
+    "prompts": "^2.1.0",
+    "replace-in-file": "^4.1.1"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.10"

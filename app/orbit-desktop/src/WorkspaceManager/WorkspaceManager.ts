@@ -1,31 +1,7 @@
-import {
-  AppsManager,
-  getBuildInfo,
-  getWorkspaceApps,
-  updateWorkspacePackageIds,
-} from '@o/apps-manager'
+import { AppMetaDict, AppsManager, getBuildInfo, getWorkspaceApps, updateWorkspacePackageIds } from '@o/apps-manager'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, resolveObserveOne } from '@o/mediator'
-import {
-  AppBuildCommand,
-  AppCreateWorkspaceCommand,
-  AppDevCloseCommand,
-  AppDevOpenCommand,
-  AppEntity,
-  AppGenTypesCommand,
-  AppGetWorkspaceAppsCommand,
-  AppInstallCommand,
-  AppMeta,
-  AppMetaCommand,
-  AppOpenWorkspaceCommand,
-  AppStatusMessage,
-  AppStatusModel,
-  CallAppBitApiMethodCommand,
-  CloseAppCommand,
-  CommandWsOptions,
-  WorkspaceInfo,
-  WorkspaceInfoModel,
-} from '@o/models'
+import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevOpenCommand, AppEntity, AppGenTypesCommand, AppGetWorkspaceAppsCommand, AppInstallCommand, AppMeta, AppMetaCommand, AppOpenWorkspaceCommand, AppStatusMessage, AppStatusModel, CallAppBitApiMethodCommand, CloseAppCommand, CommandWsOptions, WorkspaceInfo, WorkspaceInfoModel } from '@o/models'
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
@@ -66,22 +42,7 @@ export class WorkspaceManager {
   appMiddleware = new AppMiddleware()
 
   constructor(private mediatorServer: MediatorServer) {
-    this.appsManager.onUpdatedApps(async appMeta => {
-      log.verbose('appsManager updating app meta', appMeta)
-      const identifiers = Object.keys(appMeta)
-
-      const space = await getActiveSpace()
-      const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
-      this.graphServer.setupGraph(apps)
-
-      const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
-      Desktop.setState({
-        workspaceState: {
-          packageIds,
-          identifiers,
-        },
-      })
-    })
+    this.appsManager.onUpdatedApps(this.handleUpdatedApps)
   }
 
   async start(opts: { singleUseMode: boolean }) {
@@ -93,6 +54,23 @@ export class WorkspaceManager {
         appStatusManager.sendMessage(status)
       })
     }
+  }
+
+  handleUpdatedApps = async (appMeta: AppMetaDict) => {
+    log.verbose('appsManager updating app meta', appMeta)
+    const identifiers = Object.keys(appMeta)
+
+    const space = await getActiveSpace()
+    const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
+    this.graphServer.setupGraph(apps)
+
+    const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
+    Desktop.setState({
+      workspaceState: {
+        packageIds,
+        identifiers,
+      },
+    })
   }
 
   watchWorkspace = react(
@@ -129,22 +107,15 @@ export class WorkspaceManager {
     async ([directory], { sleep, useEffect }) => {
       ensure('directory', !!directory)
       log.info(`updateWorkspace ${directory}`)
-
       await this.updateApps()
-
       const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
-
       ensure('config', !!config)
-
       await sleep()
-
       if (!isEqual(this.buildConfig, config)) {
         this.buildConfig = config
-
         useEffect(() => {
           return useWebpackMiddleware(config)
         })
-
         await updateWorkspacePackageIds(this.directory)
       }
     },

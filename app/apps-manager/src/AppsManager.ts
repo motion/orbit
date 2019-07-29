@@ -14,8 +14,8 @@ import { updateWorkspacePackageIds } from './updateWorkspacePackageIds'
 const log = new Logger('AppsManager')
 
 type PartialSpace = Pick<Space, 'id' | 'directory'>
-type AppMetaDict = { [identifier: string]: AppMeta }
-type AppMetaDictCb = (appMeta: AppMetaDict) => void
+export type AppMetaDict = { [identifier: string]: AppMeta }
+export type AppMetaDictCb = (appMeta: AppMetaDict) => void
 
 export * from './getPackageId'
 export * from './getRegistryLatestVersion'
@@ -26,6 +26,11 @@ export * from './requireAppDefinition'
 export * from './buildInfo'
 export * from './updateWorkspacePackageIds'
 export * from './getWorkspaceApps'
+
+/**
+ * The AppsManager is shared between backend processes. Because we have a Workers process,
+ * both it and the main Desktop process use this to observe and load the latest app definitions.
+ */
 
 @decorate
 export class AppsManager {
@@ -47,7 +52,6 @@ export class AppsManager {
     if (this.started) {
       return
     }
-
     log.info('Starting...')
     const spacesSubscription = getRepository(SpaceEntity)
       .observe({
@@ -140,22 +144,20 @@ export class AppsManager {
     async (space, { useEffect, when }) => {
       await when(() => this.started)
       ensure('space', !!space)
-      if (space) {
-        const pkg = join(space.directory || '', 'package.json')
-        log.info('watching package.json for changes', pkg)
-        useEffect(() => {
-          let watcher = watch(pkg, {
-            persistent: true,
-          })
-          watcher.on('change', () => {
-            log.info('got package.json change')
-            this.packageJsonUpdate = Math.random()
-          })
-          return () => {
-            watcher.close()
-          }
+      const pkg = join(space.directory || '', 'package.json')
+      log.info('watching package.json for changes', pkg)
+      useEffect(() => {
+        let watcher = watch(pkg, {
+          persistent: true,
         })
-      }
+        watcher.on('change', () => {
+          log.info('got package.json change')
+          this.packageJsonUpdate = Math.random()
+        })
+        return () => {
+          watcher.close()
+        }
+      })
     },
   )
 

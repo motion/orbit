@@ -13,8 +13,8 @@ const log = new Logger('getAppsConfig')
 
 const cleanString = (x: string) =>
   x
-    .replace(/[^a-z0-9_]/gi, '-')
-    .replace(/-{2,}/g, '-')
+    .replace(/[^a-z0-9_]/gi, '_')
+    .replace(/-{2,}/g, '_')
     .replace(/^[^a-z]/i, '')
     .replace(/[^a-z]$/i, '')
 
@@ -188,6 +188,7 @@ ${apps
   /**
    * The orbit main app config
    */
+  dllReferences.reverse()
   const mainConfig = await makeWebpackConfig(
     {
       name: 'main',

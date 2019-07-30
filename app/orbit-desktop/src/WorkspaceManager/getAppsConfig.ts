@@ -89,7 +89,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   await addDLL(baseWebpackParams, baseConfig)
 
   // apps dlls with just each apps code
-  const appParams: WebpackParams[] = apps.map(app => {
+  const appParams: WebpackParams[] = apps.map((app, index) => {
     const cleanName = cleanString(app.packageId)
     const dllFile = join(outputDir, `manifest-${cleanName}.json`)
     return {
@@ -104,7 +104,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       outputFile: `${cleanName}.dll.js`,
       outputDir,
       output: {
-        library: cleanName,
+        library: `@o/app_${index}`,
       },
       // output: {
       //   // TODO(andreypopp): sort this out, we need some custom symbol here which

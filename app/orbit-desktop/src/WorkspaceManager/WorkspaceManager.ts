@@ -104,9 +104,10 @@ export class WorkspaceManager {
 
   onNewWorkspaceVersion = react(
     () => [this.directory, this.workspaceVersion],
-    async ([directory], { sleep, useEffect }) => {
+    async ([directory], { sleep, useEffect, when }) => {
+      await when(() => !!this.options)
       ensure('directory', !!directory)
-      log.info(`updateWorkspace ${directory}`)
+      log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
       await this.updateApps()
       try {
         const config = await getAppsConfig(this.directory, this.appsMeta, this.options)

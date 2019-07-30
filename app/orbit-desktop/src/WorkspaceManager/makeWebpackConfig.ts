@@ -1,5 +1,6 @@
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
 import TerserPlugin from 'terser-webpack-plugin'
@@ -274,6 +275,12 @@ export function makeWebpackConfig(
       ].filter(Boolean),
     },
     plugins: [
+      new HardSourceWebpackPlugin({
+        environmentHash: {
+          root: process.cwd()
+        }
+      }),
+
       new TimeFixPlugin(),
 
       new webpack.DefinePlugin(defines),

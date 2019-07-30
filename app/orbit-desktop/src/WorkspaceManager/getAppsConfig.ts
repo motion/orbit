@@ -114,7 +114,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       outputFile: `${cleanName}.dll.js`,
       outputDir,
       output: {
-        library: cleanName,
+        library: cleanName || `app_${index}`,
         // libraryTarget: 'commonjs2',
       },
       // output: {

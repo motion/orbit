@@ -80,16 +80,16 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       target: 'web',
       publicPath: '/',
       outputFile: `[name].${cleanName}.js`,
-      // output: {
-      //   library: 'apps',
-      // },
       output: {
-        // TODO(andreypopp): sort this out, we need some custom symbol here which
-        // we will communicate to Orbit
-        library: 'window.OrbitAppToRun',
-        libraryTarget: 'assign',
-        libraryExport: 'default',
+        library: cleanName,
       },
+      // output: {
+      //   // TODO(andreypopp): sort this out, we need some custom symbol here which
+      //   // we will communicate to Orbit
+      //   library: 'window.OrbitAppToRun',
+      //   libraryTarget: 'assign',
+      //   libraryExport: 'default',
+      // },
       dll: dllFile,
       // apps use the base dll
       dllReferences: [baseDllFile],

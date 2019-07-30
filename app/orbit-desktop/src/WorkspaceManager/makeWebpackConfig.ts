@@ -6,6 +6,7 @@ import merge from 'webpack-merge'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const TimeFixPlugin = require('time-fix-plugin')
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 
 export type WebpackParams = {
   name?: string
@@ -329,6 +330,15 @@ export function makeWebpackConfig(
             }),
         )) ||
         []),
+
+      // inject dll references into index.html
+      ...(!!(dllReferences && dllReferences.length) &&
+        dllReferences.map(
+          filepath =>
+            new AddAssetHtmlPlugin({
+              filepath,
+            }),
+        )),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 

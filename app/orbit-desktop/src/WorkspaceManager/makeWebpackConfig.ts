@@ -21,7 +21,7 @@ export type WebpackParams = {
   ignore?: string[]
   watch?: boolean
   dll?: string
-  dllReference?: string
+  dllReferences?: string[]
   devServer?: boolean
   hot?: boolean
   minify?: boolean
@@ -47,7 +47,7 @@ export function makeWebpackConfig(
     // + way harder to debug in general, lets leave it off until someone yells about it
     minify = false,
     dll,
-    dllReference,
+    dllReferences,
     devServer,
     hot,
     name,
@@ -320,11 +320,15 @@ export function makeWebpackConfig(
           path: dll,
         }),
 
-      !!dllReference &&
-        new webpack.DllReferencePlugin({
-          manifest: dllReference,
-          context: '.',
-        }),
+      ...((!!(dllReferences && dllReferences.length) &&
+        dllReferences.map(
+          manifest =>
+            new webpack.DllReferencePlugin({
+              manifest,
+              context: '.',
+            }),
+        )) ||
+        []),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 

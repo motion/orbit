@@ -2,6 +2,7 @@ import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
 import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { join } from 'path'
+import webpack from 'webpack'
 
 import { getAppConfig } from './getAppConfig'
 import { getIsInMonorepo } from './getIsInMonorepo'
@@ -10,13 +11,12 @@ import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('getAppsConfig')
 
+const cleanString = (x: string) => x.replace(/[^a-z0-9_]/gi, '-').replace(/-{2,}/g, '-')
+
 export async function getAppsConfig(directory: string, apps: AppMeta[], options: CommandWsOptions) {
   if (!apps.length) {
     return null
   }
-
-  const dllFile = join(directory, 'dist', 'manifest.json')
-  log.info(`dllFile ${dllFile}`)
 
   const isInMonoRepo = await getIsInMonorepo()
 
@@ -39,32 +39,78 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       }),
   )
 
-  const appsConfBase: WebpackParams = {
-    name: 'apps',
-    entry: apps.map(x => x.packageId),
+  const dllsDir = join(directory, 'dist')
+  let dllReferences = []
+
+  // base dll with shared libraries
+  const baseDllFile = join(dllsDir, 'manifest-base.json')
+  dllReferences.push(baseDllFile)
+  const baseWebpackParams: WebpackParams = {
+    name: `base`,
+    entry: ['@o/kit', '@o/ui', '@o/utils'],
+    ignore: ['electron-log', 'configstore'],
     context: directory,
     watch: false,
     mode: options.mode,
     target: 'web',
     publicPath: '/',
-    outputFile: '[name].apps.js',
+    outputFile: '[name].base.js',
     output: {
-      library: 'apps',
+      library: 'base',
     },
-    dll: dllFile,
+    dll: baseDllFile,
+  }
+  const baseConfig = await makeWebpackConfig(baseWebpackParams)
+  if (options.clean || !(await pathExists(baseWebpackParams.dll))) {
+    log.info(`Ensuring base config built once...`)
+    await webpackPromise([baseConfig], { loud: true })
   }
 
-  // we have to build apps once
-  if (options.clean || !(await pathExists(dllFile))) {
-    log.info('building all apps once...')
-    await webpackPromise([getAppConfig(appsConfBase)])
+  // apps dlls with just each apps code
+  const appsBaseConfigs: WebpackParams[] = apps.map(app => {
+    const cleanName = cleanString(app.packageId)
+    const dllFile = join(dllsDir, `manifest-${cleanName}.json`)
+    dllReferences.push(dllFile)
+    return {
+      name: `app-${cleanName}`,
+      entry: [app.directory],
+      context: directory,
+      watch: false,
+      mode: options.mode,
+      target: 'web',
+      publicPath: '/',
+      outputFile: `[name].${cleanName}.js`,
+      // output: {
+      //   library: 'apps',
+      // },
+      output: {
+        // TODO(andreypopp): sort this out, we need some custom symbol here which
+        // we will communicate to Orbit
+        library: 'window.OrbitAppToRun',
+        libraryTarget: 'assign',
+        libraryExport: 'default',
+      },
+      dll: dllFile,
+      // apps use the base dll
+      dllReferences: [baseDllFile],
+    }
+  })
+
+  // ensure we've built all apps once at least
+  for (const appConf of appsBaseConfigs) {
+    if (options.clean || !(await pathExists(appConf.dll))) {
+      log.info(`Building DLL first time ${appConf.dll}...`)
+      await webpackPromise([getAppConfig(appConf)], { loud: true })
+    }
   }
 
   // create app config now with `hot`
-  const appsConfig = getAppConfig({
-    ...appsConfBase,
-    watch: true,
-    hot: true,
+  const appsConfigs: webpack.Configuration[] = appsBaseConfigs.map(conf => {
+    return getAppConfig({
+      ...conf,
+      watch: true,
+      hot: true,
+    })
   })
 
   /**
@@ -83,25 +129,6 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     }
   }
 
-  /**
-   * Writes out a file webpack will understand and import properly
-   *
-   * Notes:
-   *
-   *  It seems that webpack doesn't like dynamic imports when dealing with DLLs.
-   *  So for now we do this. In production we'd need something different. My ideas
-   *  for running in prod:
-   *
-   *   1. We build orbit itself as a static dll, but without the apps part
-   *   2. We have it look for a global variable that has the apps
-   *   3. The apps are a DLL as they are now
-   *   4. Right now we build all of orbit (see isInMonoRepo above) in development mode,
-   *      this lets us develop all of orbit at once nicely in dev. But we'd instead
-   *      have the orbit DLL in production, and instead of importing orbit we'd have some
-   *      smaller webpack config just for improting the apps, and injecting them into orbit
-   *      via the global variable or similar.
-   *
-   */
   const appDefinitionsSrc = `
 // all apps
 ${apps
@@ -143,7 +170,7 @@ ${apps
   /**
    * The orbit main app config
    */
-  const wsConfig = await makeWebpackConfig(
+  const mainConfig = await makeWebpackConfig(
     {
       name: 'main',
       mode: options.mode,
@@ -153,14 +180,15 @@ ${apps
       target: 'web',
       watch: true,
       hot: true,
-      dllReference: dllFile,
+      dllReferences,
     },
     extraMainConfig,
   )
 
   return {
-    main: wsConfig,
-    apps: appsConfig,
+    base: baseConfig,
+    main: mainConfig,
+    ...appsConfigs,
     ...extraEntries,
   }
 }

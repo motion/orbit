@@ -57,6 +57,7 @@ export function makeWebpackConfig(
   // entry dir is the path above the entry file, this could be better...
   const entryDir = Path.join(params.entry[0], '..')
   const target = params.target || 'electron-renderer'
+  const hasDLLReferences = !!(dllReferences && dllReferences.length)
 
   // TODO isnt set for production
   const repoEntry = require.resolve('@o/orbit-desktop')
@@ -319,7 +320,7 @@ export function makeWebpackConfig(
           path: dll,
         }),
 
-      ...((!!(dllReferences && dllReferences.length) &&
+      ...((hasDLLReferences &&
         dllReferences.map(
           manifest =>
             new webpack.DllReferencePlugin({
@@ -330,10 +331,14 @@ export function makeWebpackConfig(
         []),
 
       // inject dll references into index.html
-      !!(dllReferences && dllReferences.length) &&
-        new AddAssetHtmlPlugin({
-          filepath: Path.resolve(context, 'dist', '*.dll.js'),
-        }),
+      ...((hasDLLReferences &&
+        dllReferences.map(
+          filepath =>
+            new AddAssetHtmlPlugin({
+              filepath,
+            }),
+        )) ||
+        []),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 

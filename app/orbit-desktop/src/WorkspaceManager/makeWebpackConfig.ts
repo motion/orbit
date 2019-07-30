@@ -7,6 +7,8 @@ import TimeFixPlugin from 'time-fix-plugin'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
 
+export type DLLReferenceDesc = { manifest: string; filepath: string }
+
 export type WebpackParams = {
   name?: string
   entry?: string[]
@@ -21,7 +23,7 @@ export type WebpackParams = {
   ignore?: string[]
   watch?: boolean
   dll?: string
-  dllReferences?: string[]
+  dllReferences?: DLLReferenceDesc[]
   devServer?: boolean
   hot?: boolean
   minify?: boolean
@@ -322,7 +324,7 @@ export function makeWebpackConfig(
 
       ...((hasDLLReferences &&
         dllReferences.map(
-          manifest =>
+          ({ manifest }) =>
             new webpack.DllReferencePlugin({
               manifest,
               context: '.',
@@ -333,7 +335,7 @@ export function makeWebpackConfig(
       // inject dll references into index.html
       ...((hasDLLReferences &&
         dllReferences.map(
-          filepath =>
+          ({ filepath }) =>
             new AddAssetHtmlPlugin({
               filepath,
             }),

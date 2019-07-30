@@ -108,15 +108,20 @@ export class WorkspaceManager {
       ensure('directory', !!directory)
       log.info(`updateWorkspace ${directory}`)
       await this.updateApps()
-      const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
-      ensure('config', !!config)
-      await sleep()
-      if (!isEqual(this.buildConfig, config)) {
-        this.buildConfig = config
-        useEffect(() => {
-          return useWebpackMiddleware(config)
-        })
-        await updateWorkspacePackageIds(this.directory)
+      try {
+        const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
+        ensure('config', !!config)
+        await sleep()
+        if (!isEqual(this.buildConfig, config)) {
+          this.buildConfig = config
+          useEffect(() => {
+            return useWebpackMiddleware(config)
+          })
+          await updateWorkspacePackageIds(this.directory)
+        }
+      } catch (err) {
+        console.error('Error running workspace', err.message, err.stack)
+        // ErrorReporter.push('')
       }
     },
   )

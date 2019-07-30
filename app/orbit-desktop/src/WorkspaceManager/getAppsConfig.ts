@@ -6,7 +6,7 @@ import webpack from 'webpack'
 
 import { getAppConfig } from './getAppConfig'
 import { getIsInMonorepo } from './getIsInMonorepo'
-import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
+import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('getAppsConfig')
@@ -45,7 +45,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   )
 
   const outputDir = join(directory, 'dist')
-  let dllReferences = []
+  let dllReferences: DLLReferenceDesc[] = []
 
   /**
    * Webpack fails to handle DLLs properly on first build, you can't put them all into
@@ -54,7 +54,10 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
    */
   async function addDLL(params: WebpackParams, config: webpack.Configuration) {
     // add to dlls
-    dllReferences.push(params.dll)
+    dllReferences.push({
+      manifest: params.dll,
+      filepath: join(params.outputDir || outputDir, params.outputFile),
+    })
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
       log.info(`Ensuring config built once: ${params.name}...`)
@@ -64,7 +67,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   }
 
   // base dll with shared libraries
-  const baseDllFile = join(outputDir, 'manifest-base.json')
+  const baseDllManifest = join(outputDir, 'manifest-base.json')
+  const baseDllOutputFileName = 'base.dll.js'
   const baseWebpackParams: WebpackParams = {
     name: `base`,
     entry: ['@o/kit', '@o/ui', '@o/utils'],
@@ -74,12 +78,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     mode: options.mode,
     target: 'web',
     publicPath: '/',
-    outputFile: 'base.dll.js',
+    outputFile: baseDllOutputFileName,
     outputDir,
     output: {
       library: 'base',
     },
-    dll: baseDllFile,
+    dll: baseDllManifest,
   }
   const baseConfig = await makeWebpackConfig(baseWebpackParams)
   await addDLL(baseWebpackParams, baseConfig)
@@ -88,7 +92,6 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const appParams: WebpackParams[] = apps.map(app => {
     const cleanName = cleanString(app.packageId)
     const dllFile = join(outputDir, `manifest-${cleanName}.json`)
-    dllReferences.push(dllFile)
     return {
       name: `app-${cleanName}`,
       entry: [app.directory],
@@ -112,7 +115,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       // },
       dll: dllFile,
       // apps use the base dll
-      dllReferences: [baseDllFile],
+      dllReferences: [
+        {
+          manifest: baseDllManifest,
+          filepath: join(outputDir, baseDllOutputFileName),
+        },
+      ],
     }
   })
   // create app config now with `hot`

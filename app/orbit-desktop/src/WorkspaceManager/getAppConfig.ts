@@ -1,30 +1,26 @@
 import { Logger } from '@o/logger'
-import webpack from 'webpack'
 
-import { makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
+import { WebpackParams } from './makeWebpackConfig'
 
 const log = new Logger('BuildServer.getAppConfig')
 
-export function getAppConfig(props: WebpackParams, extraConfig?: Partial<webpack.Configuration>) {
+export function getAppConfig(props: WebpackParams): WebpackParams {
   if (!props.entry.length) {
     log.info(`No entries for ${props.name}`)
     return null
   }
-  return makeWebpackConfig(
-    {
-      mode: 'development',
-      publicPath: '/',
-      externals: {
-        typeorm: 'typeorm',
-      },
-      ignore: ['electron-log', '@o/worker-kit'],
-      ...props,
-      output: {
-        library: '[name]',
-        libraryTarget: 'umd',
-        ...props.output,
-      },
+  return {
+    mode: 'development',
+    publicPath: '/',
+    externals: {
+      typeorm: 'typeorm',
     },
-    extraConfig,
-  )
+    ignore: ['electron-log', '@o/worker-kit'],
+    ...props,
+    output: {
+      library: '[name]',
+      libraryTarget: 'umd',
+      ...props.output,
+    },
+  }
 }

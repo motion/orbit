@@ -1,15 +1,15 @@
+import { updateBuildInfo } from '@o/apps-manager'
 import { isOrbitApp, readPackageJson } from '@o/libs-node'
 import { Logger } from '@o/logger'
-import { CommandBuildOptions, StatusReply, AppDefinition } from '@o/models'
+import { AppDefinition, CommandBuildOptions, StatusReply } from '@o/models'
 import { pathExists, readJSON } from 'fs-extra'
 import { join } from 'path'
+import webpack = require('webpack')
 
 import { commandGenTypes } from './commandGenTypes'
+import { getAppConfig } from './getAppConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
-import { getAppConfig } from './getAppConfig'
-import { updateBuildInfo } from '@o/apps-manager'
-import webpack = require('webpack')
 
 const log = new Logger('commandBuild')
 
@@ -131,8 +131,8 @@ function getWebAppConfig(entry: string, name: string, options: CommandBuildOptio
 }
 
 async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
-  return getAppConfig(
-    {
+  return await makeWebpackConfig(
+    getAppConfig({
       name,
       context: options.projectRoot,
       entry: [entry],
@@ -140,7 +140,7 @@ async function getNodeAppConfig(entry: string, name: any, options: CommandBuildO
       outputFile: 'index.node.js',
       watch: options.watch,
       mode: 'development',
-    },
+    }),
     {
       node: {
         __dirname: false,

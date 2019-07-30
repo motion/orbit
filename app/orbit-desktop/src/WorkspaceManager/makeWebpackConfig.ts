@@ -1,12 +1,11 @@
+import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin'
 import { pathExistsSync, readJSONSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Path from 'path'
+import TerserPlugin from 'terser-webpack-plugin'
+import TimeFixPlugin from 'time-fix-plugin'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
-
-const TerserPlugin = require('terser-webpack-plugin')
-const TimeFixPlugin = require('time-fix-plugin')
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 
 export type WebpackParams = {
   name?: string
@@ -280,7 +279,6 @@ export function makeWebpackConfig(
         target !== 'node' &&
         new HtmlWebpackPlugin({
           template: Path.join(__dirname, '..', '..', 'index.html'),
-          chunksSortMode: 'none',
           inject: true,
           externals: ['apps.js'],
         }),
@@ -332,14 +330,10 @@ export function makeWebpackConfig(
         []),
 
       // inject dll references into index.html
-      ...((!!(dllReferences && dllReferences.length) &&
-        dllReferences.map(
-          filepath =>
-            new AddAssetHtmlPlugin({
-              filepath,
-            }),
-        )) ||
-        []),
+      !!(dllReferences && dllReferences.length) &&
+        new AddAssetHtmlPlugin({
+          filepath: Path.resolve(context, 'dist', '*.dll.js'),
+        }),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 

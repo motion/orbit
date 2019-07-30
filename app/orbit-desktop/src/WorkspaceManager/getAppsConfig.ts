@@ -39,12 +39,27 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       }),
   )
 
-  const dllsDir = join(directory, 'dist')
+  const outputDir = join(directory, 'dist')
   let dllReferences = []
 
+  /**
+   * Webpack fails to handle DLLs properly on first build, you can't put them all into
+   * one config. You need to build them once before running the dllReference (main) app.
+   * This inline function just ensures we build + reference them.
+   */
+  async function addDLL(params: WebpackParams, config: webpack.Configuration) {
+    // add to dlls
+    dllReferences.push(params.dll)
+    // ensure built
+    if (options.clean || !(await pathExists(params.dll))) {
+      log.info(`Ensuring base config built once...`)
+      await webpackPromise([{ ...config, watch: false }], { loud: true })
+    }
+    return config
+  }
+
   // base dll with shared libraries
-  const baseDllFile = join(dllsDir, 'manifest-base.json')
-  dllReferences.push(baseDllFile)
+  const baseDllFile = join(outputDir, 'manifest-base.json')
   const baseWebpackParams: WebpackParams = {
     name: `base`,
     entry: ['@o/kit', '@o/ui', '@o/utils'],
@@ -54,32 +69,32 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     mode: options.mode,
     target: 'web',
     publicPath: '/',
-    outputFile: '[name].base.js',
+    outputFile: 'base.dll.js',
+    outputDir,
     output: {
       library: 'base',
     },
     dll: baseDllFile,
   }
   const baseConfig = await makeWebpackConfig(baseWebpackParams)
-  if (options.clean || !(await pathExists(baseWebpackParams.dll))) {
-    log.info(`Ensuring base config built once...`)
-    await webpackPromise([baseConfig], { loud: true })
-  }
+  await addDLL(baseWebpackParams, baseConfig)
 
   // apps dlls with just each apps code
-  const appsBaseConfigs: WebpackParams[] = apps.map(app => {
+  const appParams: WebpackParams[] = apps.map(app => {
     const cleanName = cleanString(app.packageId)
-    const dllFile = join(dllsDir, `manifest-${cleanName}.json`)
+    const dllFile = join(outputDir, `manifest-${cleanName}.json`)
     dllReferences.push(dllFile)
     return {
       name: `app-${cleanName}`,
       entry: [app.directory],
       context: directory,
-      watch: false,
+      watch: true,
+      hot: true,
       mode: options.mode,
       target: 'web',
       publicPath: '/',
-      outputFile: `[name].${cleanName}.js`,
+      outputFile: `${cleanName}.dll.js`,
+      outputDir,
       output: {
         library: cleanName,
       },
@@ -95,23 +110,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       dllReferences: [baseDllFile],
     }
   })
-
-  // ensure we've built all apps once at least
-  for (const appConf of appsBaseConfigs) {
-    if (options.clean || !(await pathExists(appConf.dll))) {
-      log.info(`Building DLL first time ${appConf.dll}...`)
-      await webpackPromise([getAppConfig(appConf)], { loud: true })
-    }
-  }
-
   // create app config now with `hot`
-  const appsConfigs: webpack.Configuration[] = appsBaseConfigs.map(conf => {
-    return getAppConfig({
-      ...conf,
-      watch: true,
-      hot: true,
-    })
-  })
+  const appsConfigs: webpack.Configuration[] = appParams.map(getAppConfig)
+  // ensure we've built all apps once at least
+  for (const [index, appConf] of appParams.entries()) {
+    await addDLL(appParams[index], appConf)
+  }
 
   /**
    * Get the monorepo in development mode and build orbit
@@ -156,6 +160,7 @@ ${apps
           mode: options.mode,
           name,
           outputFile: `${name}.js`,
+          outputDir,
           context: directory,
           ignore: ['electron-log', 'configstore'],
           target: 'web',
@@ -173,6 +178,8 @@ ${apps
   const mainConfig = await makeWebpackConfig(
     {
       name: 'main',
+      outputFile: 'main.js',
+      outputDir,
       mode: options.mode,
       context: directory,
       entry: [entry],

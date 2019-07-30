@@ -363,5 +363,7 @@ export function makeWebpackConfig(
     config = merge.smart([config, ...extraConfigs])
   }
 
+  console.log('config', config)
+
   return config
 }

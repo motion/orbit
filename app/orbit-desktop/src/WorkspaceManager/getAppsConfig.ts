@@ -11,7 +11,12 @@ import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('getAppsConfig')
 
-const cleanString = (x: string) => x.replace(/[^a-z0-9_]/gi, '-').replace(/-{2,}/g, '-')
+const cleanString = (x: string) =>
+  x
+    .replace(/[^a-z0-9_]/gi, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^[^a-z]/i, '')
+    .replace(/[^a-z]$/i, '')
 
 export async function getAppsConfig(directory: string, apps: AppMeta[], options: CommandWsOptions) {
   if (!apps.length) {
@@ -52,7 +57,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     dllReferences.push(params.dll)
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
-      log.info(`Ensuring base config built once...`)
+      log.info(`Ensuring config built once: ${params.name}...`)
       await webpackPromise([{ ...config, watch: false }], { loud: true })
     }
     return config
@@ -111,9 +116,9 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     }
   })
   // create app config now with `hot`
-  const appsConfigs: webpack.Configuration[] = appParams.map(getAppConfig)
+  const appsConfigs = await Promise.all(appParams.map(getAppConfig).map(x => makeWebpackConfig(x)))
   // ensure we've built all apps once at least
-  for (const [index, appConf] of appParams.entries()) {
+  for (const [index, appConf] of appsConfigs.entries()) {
     await addDLL(appParams[index], appConf)
   }
 

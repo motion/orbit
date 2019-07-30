@@ -59,11 +59,9 @@ export class WorkspaceManager {
   handleUpdatedApps = async (appMeta: AppMetaDict) => {
     log.verbose('appsManager updating app meta', appMeta)
     const identifiers = Object.keys(appMeta)
-
     const space = await getActiveSpace()
     const apps = await getRepository(AppEntity).find({ where: { spaceId: space.id } })
     this.graphServer.setupGraph(apps)
-
     const packageIds = identifiers.map(this.appsManager.getIdentifierToPackageId)
     Desktop.setState({
       workspaceState: {
@@ -116,6 +114,12 @@ export class WorkspaceManager {
         if (!isEqual(this.buildConfig, config)) {
           this.buildConfig = config
           useEffect(() => {
+            Desktop.setState({
+              workspaceState: {
+                hmrBundleNames: Object.keys(config),
+              },
+            })
+
             return useWebpackMiddleware(config)
           })
           await updateWorkspacePackageIds(this.directory)

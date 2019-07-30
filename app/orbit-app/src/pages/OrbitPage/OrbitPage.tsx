@@ -1,5 +1,5 @@
 import { command, useModel } from '@o/bridge'
-import { AppDefinition, hmrSocket, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
+import { AppDefinition, ProvideStores, showConfirmDialog, useStore } from '@o/kit'
 import { AppStatusModel, CloseAppCommand } from '@o/models'
 import { App } from '@o/stores'
 import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
@@ -129,18 +129,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   //     },
   //   })
   // }, [App.appConf.appId])
-
-  useEffect(() => {
-    hmrSocket(`/__webpack_hmr_apps`, {
-      // for some reason built is sent before 'sync', which applies update
-      // and i can't hook into sync, so just doing settimeout for now
-      built: () => {
-        setTimeout(() => {
-          window['rerender'](false)
-        }, 80)
-      },
-    })
-  }, [])
 
   if (isEditing) {
     const bundleUrl = `${App.bundleUrl}?cacheKey=${Math.random()}`

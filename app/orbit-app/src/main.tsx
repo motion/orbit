@@ -2,6 +2,8 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import { Desktop } from '@o/stores'
+import { reaction } from 'mobx'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
@@ -41,6 +43,9 @@ async function fetchInitialConfig() {
   // TODO im just doing this mid-big refactor until we fix it in @o/bridge
   window['GlobalConfig'] = config
 }
+
+// helper for force-rerender
+const rerender = (window['rerender'] = (force = true) => startApp(force))
 
 // setup for app
 async function main() {
@@ -96,10 +101,24 @@ async function main() {
   console.time('startApp')
   startApp()
   console.timeEnd('startApp')
-}
 
-// helper for force-rerender
-window['rerender'] = (force = true) => startApp(force)
+  // listen for HMR
+  reaction(
+    () => Desktop.state.workspaceState.hmrBundleNames,
+    names => {
+      console.log('should set up hmr socket', names)
+      // hmrSocket(`/__webpack_hmr_apps`, {
+      //   // for some reason built is sent before 'sync', which applies update
+      //   // and i can't hook into sync, so just doing settimeout for now
+      //   built: () => {
+      //     setTimeout(() => {
+      //       window['rerender'](false)
+      //     }, 80)
+      //   },
+      // })
+    },
+  )
+}
 
 const React = require('react')
 const ReactDOM = require('react-dom')

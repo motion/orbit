@@ -15,7 +15,10 @@ export function setIdentifierToPackageId(identifier: string, packageId: string) 
   }
 }
 
-export function getIdentifierToPackageId() {
+export function getIdentifierToPackageId(identifier?: string) {
+  if (identifier) {
+    return identifierToPackageId[identifier]
+  }
   return { ...identifierToPackageId }
 }
 

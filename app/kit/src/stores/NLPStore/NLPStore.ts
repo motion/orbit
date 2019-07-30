@@ -8,6 +8,7 @@ import initNlp from './nlpQuery.worker'
 
 // to run in web worker
 const { parseSearchQuery, setUserNames } = initNlp()
+console.log('initNlp', initNlp, initNlp())
 
 // to run it on thread
 // import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'

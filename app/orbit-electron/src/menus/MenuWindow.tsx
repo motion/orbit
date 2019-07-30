@@ -1,7 +1,8 @@
 import { getGlobalConfig } from '@o/config'
 import { Window } from '@o/reactron'
-import { Desktop, Electron } from '@o/stores'
+import { Electron } from '@o/stores'
 import * as React from 'react'
+
 import { WEB_PREFERENCES } from '../constants'
 
 const Config = getGlobalConfig()
@@ -16,7 +17,7 @@ export default function MenuWindow() {
       // TODO useScreenSize()
       size={Electron.state.screenSize.slice()}
       focus={false}
-      ignoreMouseEvents={!Desktop.hoverState.menuHovered}
+      // ignoreMouseEvents={!Desktop.hoverState.menuHovered}
       focusable
       file={`${Config.urls.server}/chrome`}
       frame={false}

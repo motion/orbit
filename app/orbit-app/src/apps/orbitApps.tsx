@@ -21,15 +21,8 @@ let dynamicApps: AppDefinition[] = []
 updateDefinitions()
 
 function updateDefinitions() {
-  dynamicApps = []
-  for (let i = 0; i < 1000; i++) {
-    const app = window[`LoadOrbitApp_${i}`]
-    if (app) {
-      console.log('got app', app)
-    } else {
-      break
-    }
-  }
+  const rawApps = require('../../appDefinitions.js')
+  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
 }
 
 export async function startAppLoadWatch() {

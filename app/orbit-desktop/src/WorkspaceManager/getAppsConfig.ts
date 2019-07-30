@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
-import { ensureDir, ensureSymlink, pathExists } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -71,7 +71,17 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const baseDllOutputFileName = 'base.dll.js'
   const baseWebpackParams: WebpackParams = {
     name: `base`,
-    entry: ['@o/kit', '@o/ui', '@o/utils'],
+    entry: [
+      '@o/kit',
+      '@o/ui',
+      '@o/utils',
+      '@o/bridge',
+      '@o/logger',
+      '@o/config',
+      '@o/models',
+      '@o/stores',
+      '@o/libs',
+    ],
     ignore: ['electron-log', 'configstore'],
     context: directory,
     watch: false,
@@ -103,16 +113,17 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       publicPath: '/',
       outputFile: `${cleanName}.dll.js`,
       outputDir,
-      // output: {
-      //   library: `@o/app_${index}`,
-      // },
       output: {
-        // TODO(andreypopp): sort this out, we need some custom symbol here which
-        // we will communicate to Orbit
-        library: `window['LoadOrbitApp_${index}']`,
-        libraryTarget: 'assign',
-        libraryExport: 'default',
+        library: `app_${index}`,
+        // libraryTarget: 'commonjs2',
       },
+      // output: {
+      //   // TODO(andreypopp): sort this out, we need some custom symbol here which
+      //   // we will communicate to Orbit
+      //   library: `window['LoadOrbitApp_${index}']`,
+      //   libraryTarget: 'assign',
+      //   libraryExport: 'default',
+      // },
       dll: dllFile,
       // apps use the base dll
       dllReferences: [
@@ -145,6 +156,20 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       extraConfig = require(extraConfFile)
     }
   }
+
+  /**
+   * Build appDefinitions.js which the main app uses to dynamically load apps
+   */
+  const appDefinitionsSrc = `
+// all apps
+${apps
+  .map((app, index) => {
+    return `export const app_${index} = require('${app.packageId}')`
+  })
+  .join('\n')}`
+  const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
+  log.info(`appDefsFile ${appDefsFile}`)
+  await writeFile(appDefsFile, appDefinitionsSrc)
 
   /**
    * Allows for our orbit app to define some extra configuration

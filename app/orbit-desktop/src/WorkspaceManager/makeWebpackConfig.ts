@@ -332,13 +332,14 @@ export function makeWebpackConfig(
         []),
 
       // inject dll references into index.html
-      ...(!!(dllReferences && dllReferences.length) &&
+      ...((!!(dllReferences && dllReferences.length) &&
         dllReferences.map(
           filepath =>
             new AddAssetHtmlPlugin({
               filepath,
             }),
-        )),
+        )) ||
+        []),
 
       hot && new webpack.HotModuleReplacementPlugin(),
 

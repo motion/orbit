@@ -21,19 +21,15 @@ let dynamicApps: AppDefinition[] = []
 updateDefinitions()
 
 function updateDefinitions() {
-  const rawApps = require('../../appDefinitions.js')
-  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
-  //
-  // new idea:
-  // just number the apps and hardcode them tosomething like `@o/app-1` `@o-app2`
-  //
-  // this doesn't work because dynamic require doesn't use manifest
-  // TODO we need to do something like this
-  // const apps = await command(AppGetWorkspaceAppsCommand)
-  // const allApps = apps.map(app => {
-  //   return require(app.packageId).default
-  // })
-  // dynamicApps = allApps
+  dynamicApps = []
+  for (let i = 0; i < 1000; i++) {
+    const app = window[`LoadOrbitApp_${i}`]
+    if (app) {
+      console.log('got app', app)
+    } else {
+      break
+    }
+  }
 }
 
 export async function startAppLoadWatch() {

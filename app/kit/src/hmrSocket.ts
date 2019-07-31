@@ -17,7 +17,6 @@ export function createHotHandler({
   })
 
   function handleMessage(event) {
-    console.log('handle message', event)
     if (event.data == '\uD83D\uDC93') {
       return
     }

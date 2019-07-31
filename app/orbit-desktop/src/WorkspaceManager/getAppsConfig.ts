@@ -126,6 +126,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const baseDllOutputFileName = 'base.dll.js'
   const baseConfig = await addDLL({
     name: `base`,
+    injectHot: true,
     entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,
@@ -161,8 +162,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         injectHot:
           app.packageId === '@o/demo-app-api-grid' ||
           app.packageId === '@o/lists-app' ||
-          app.packageId === '@o/people-app' ||
-          app.packageId === '@o/demo-app-layout' ||
+          // app.packageId === '@o/people-app' ||
+          // app.packageId === '@o/demo-app-layout' ||
           app.packageId === '@o/demo-app-flow',
         output: {
           library: cleanName,

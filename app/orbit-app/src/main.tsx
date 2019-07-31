@@ -117,6 +117,9 @@ async function main() {
       //   },
       // })
     },
+    {
+      fireImmediately: true,
+    },
   )
 }
 

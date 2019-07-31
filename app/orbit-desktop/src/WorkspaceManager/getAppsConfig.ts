@@ -4,7 +4,6 @@ import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
-import { getAppConfig } from './getAppConfig'
 import { getIsInMonorepo } from './getIsInMonorepo'
 import { DLLReferenceDesc, makeWebpackConfig, WebpackParams } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
@@ -99,11 +98,11 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   await addDLL(baseWebpackParams, baseConfig)
 
   // apps dlls with just each apps code
-  const appParams: WebpackParams[] = apps.map((app, index) => {
+  const appParams: WebpackParams[] = apps.map(app => {
     const cleanName = cleanString(app.packageId)
     const dllFile = join(outputDir, `manifest-${cleanName}.json`)
     return {
-      name: `app-${cleanName}`,
+      name: `app_${cleanName}`,
       entry: [app.directory],
       context: directory,
       watch: true,
@@ -114,8 +113,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       outputFile: `${cleanName}.dll.js`,
       outputDir,
       output: {
-        library: cleanName || `app_${index}`,
-        // libraryTarget: 'commonjs2',
+        library: cleanName,
       },
       // output: {
       //   // TODO(andreypopp): sort this out, we need some custom symbol here which
@@ -135,10 +133,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     }
   })
   // create app config now with `hot`
-  const appsConfigs = await Promise.all(appParams.map(getAppConfig).map(x => makeWebpackConfig(x)))
-  // ensure we've built all apps once at least
-  for (const [index, appConf] of appsConfigs.entries()) {
-    await addDLL(appParams[index], appConf)
+  const appsConfigs = {}
+  for (const params of appParams) {
+    const appConfig = getAppParams(params)
+    const config = await makeWebpackConfig(appConfig)
+    appsConfigs[params.name] = config
+    await addDLL(params, config)
   }
 
   /**
@@ -225,5 +225,26 @@ ${apps
     main: mainConfig,
     ...appsConfigs,
     ...extraEntries,
+  }
+}
+
+export function getAppParams(props: WebpackParams): WebpackParams {
+  if (!props.entry.length) {
+    log.info(`No entries for ${props.name}`)
+    return null
+  }
+  return {
+    mode: 'development',
+    publicPath: '/',
+    externals: {
+      typeorm: 'typeorm',
+    },
+    ignore: ['electron-log', '@o/worker-kit'],
+    ...props,
+    output: {
+      library: '[name]',
+      libraryTarget: 'umd',
+      ...props.output,
+    },
   }
 }

@@ -7,7 +7,7 @@ import { join } from 'path'
 import webpack = require('webpack')
 
 import { commandGenTypes } from './commandGenTypes'
-import { getAppConfig } from './getAppConfig'
+import { getAppParams } from './getAppsConfig'
 import { makeWebpackConfig } from './makeWebpackConfig'
 import { webpackPromise } from './webpackPromise'
 
@@ -117,7 +117,7 @@ function getAppInfo(appRoot: string): AppDefinition | null {
 }
 
 function getWebAppConfig(entry: string, name: string, options: CommandBuildOptions) {
-  return getAppConfig({
+  return getAppParams({
     name,
     context: options.projectRoot,
     entry: [entry],
@@ -132,7 +132,7 @@ function getWebAppConfig(entry: string, name: string, options: CommandBuildOptio
 
 async function getNodeAppConfig(entry: string, name: any, options: CommandBuildOptions) {
   return await makeWebpackConfig(
-    getAppConfig({
+    getAppParams({
       name,
       context: options.projectRoot,
       entry: [entry],

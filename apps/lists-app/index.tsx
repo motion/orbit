@@ -6,8 +6,8 @@ import React from 'react'
 
 import { API } from './api.node'
 
-module['hot'] && module['hot'].accept()
-require('webpack-hot-middleware/client.js?name=app_o_lists_app&path=/__webpack_hmr_app_o_lists_app')
+// module['hot'] && module['hot'].accept()
+// require('webpack-hot-middleware/client.js?name=app_o_lists_app&path=/__webpack_hmr_app_o_lists_app')
 
 export default createApp({
   id: 'lists',
@@ -33,7 +33,7 @@ export function ListsAppIndex(props: NavigatorProps) {
   return (
     <>
       <TreeList
-        title="no"
+        title="no123"
         use={treeList}
         sortable
         alwaysSelected

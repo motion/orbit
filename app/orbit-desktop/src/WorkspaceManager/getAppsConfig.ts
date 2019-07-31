@@ -97,6 +97,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     '@o/color',
     '@o/automagical',
     '@o/use-store',
+    'webpack-hot-middleware',
   ]
   let allPackages = [...basePackages]
 
@@ -157,6 +158,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
         outputDir,
+        injectHot: app.packageId === '@o/demo-app-api-grid',
         output: {
           library: cleanName,
         },

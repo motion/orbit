@@ -24,6 +24,7 @@ export type WebpackParams = {
   watch?: boolean
   dll?: string
   dllReferences?: DLLReferenceDesc[]
+  injectHot?: boolean
   hot?: boolean
   minify?: boolean
   noChunking?: boolean
@@ -52,6 +53,7 @@ export function makeWebpackConfig(
     hot,
     name,
     noChunking,
+    injectHot,
   } = params
 
   // entry dir is the path above the entry file, this could be better...
@@ -131,7 +133,7 @@ export function makeWebpackConfig(
   }
 
   const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
-  const main = hot ? [hotEntry, ...entry] : entry
+  const main = hot && !injectHot ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
     watch,
@@ -223,18 +225,35 @@ export function makeWebpackConfig(
           test: /\.electron.[jt]sx?/,
           use: 'ignore-loader',
         },
-        // {
-        //   test: x => {
-        //     if (x === entry[0]) return true
-        //     return false
-        //   },
-        //   use: {
-        //     loader: `add-source-loader`,
-        //     options: {
-        //       imports: [hotEntry],
-        //     },
-        //   },
-        // },
+
+        injectHot && {
+          test: x => {
+            if (x === entry[0]) return true
+            return false
+          },
+          use: {
+            loader: `add-source-loader`,
+            options: {
+              postfix: `
+require('@o/kit').createHotHandler({
+  url: '/__webpack_hmr_${name}',
+  getHash: __webpack_require__.h,
+  module,
+  actions: {
+    // for some reason built is sent before 'sync', which applies update
+    // and i can't hook into sync, so just doing settimeout for now
+    built: () => {
+      console.warn('done')
+      setTimeout(() => {
+        window['rerender']()
+      }, 40)
+    },
+  },
+})
+`,
+            },
+          },
+        },
         {
           test: /\.tsx?$/,
           use: [

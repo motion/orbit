@@ -113,13 +113,12 @@ export class WorkspaceManager {
         await sleep()
         if (!isEqual(this.buildConfig, config)) {
           this.buildConfig = config
+          Desktop.setState({
+            workspaceState: {
+              hmrBundleNames: Object.keys(config),
+            },
+          })
           useEffect(() => {
-            Desktop.setState({
-              workspaceState: {
-                hmrBundleNames: Object.keys(config),
-              },
-            })
-
             return useWebpackMiddleware(config)
           })
           await updateWorkspacePackageIds(this.directory)

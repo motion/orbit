@@ -120,8 +120,6 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       x !== 'typeorm',
   )
 
-  console.log('allPackages', allPackages)
-
   // base dll with shared libraries
   const baseDllManifest = join(outputDir, 'manifest-base.json')
   const baseDllOutputFileName = 'base.dll.js'

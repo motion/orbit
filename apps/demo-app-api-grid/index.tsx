@@ -17,7 +17,7 @@ export function DemoGridApp() {
   const [layout, setLayout] = useUserState('grid-layout', null)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
-      <AppCard key="slack" title="Slack 1231233 123 123" appType={Slack} onChange={setApp}>
+      <AppCard key="slack" title="Slack 123 ok ok" appType={Slack} onChange={setApp}>
         {({ api }) => {
           const res = api.channelsList()
           return (
@@ -48,6 +48,5 @@ export function DemoGridApp() {
   )
 }
 
-// module['hot'] && module['hot'].accept()
-
-// require('webpack-hot-middleware/client.js?name=app_o_demo_app_api_grid&path=/__webpack_hmr_app_o_demo_app_api_grid')
+module['hot'] && module['hot'].accept()
+require('webpack-hot-middleware/client.js?name=app_o_demo_app_api_grid&path=/__webpack_hmr_app_o_demo_app_api_grid')

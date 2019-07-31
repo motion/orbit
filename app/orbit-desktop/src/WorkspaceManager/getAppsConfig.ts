@@ -22,6 +22,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     return null
   }
 
+  log.info(`mode ${options.mode} ${directory}, apps ${apps.length}`, options)
+
   const isInMonoRepo = await getIsInMonorepo()
 
   // link local apps into local node_modules

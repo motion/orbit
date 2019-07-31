@@ -17,6 +17,13 @@ const cleanString = (x: string) =>
     .replace(/^[^a-z]/i, '')
     .replace(/[^a-z]$/i, '')
 
+/**
+ * This returns the configuration object for everything:
+ *   1. a base.dll.js that includes the big shared libraries
+ *   2. each app as it's own dll
+ *   3. the "main" entry point with orbit-app
+ */
+
 export async function getAppsConfig(directory: string, apps: AppMeta[], options: CommandWsOptions) {
   if (!apps.length) {
     return null

@@ -60,7 +60,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
    * one config. You need to build them once before running the dllReference (main) app.
    * This inline function just ensures we build + reference them.
    */
-  async function addDLL(params: WebpackParams, config: webpack.Configuration) {
+  async function addDLL(params: WebpackParams): Promise<webpack.Configuration> {
     // add to dlls
     dllReferences.push({
       manifest: params.dll,
@@ -69,26 +69,27 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
       log.info(`Ensuring config built once: ${params.name}...`)
-      await webpackPromise([{ ...config, watch: false }], { loud: true })
+      const buildOnceConfig = await makeWebpackConfig({ ...params, hot: false, watch: false })
+      await webpackPromise([buildOnceConfig], { loud: true })
     }
-    return config
+    return await makeWebpackConfig(params)
   }
 
   // base dll with shared libraries
   const baseDllManifest = join(outputDir, 'manifest-base.json')
   const baseDllOutputFileName = 'base.dll.js'
-  const baseWebpackParams: WebpackParams = {
+  const baseConfig = await addDLL({
     name: `base`,
     entry: [
       '@o/kit',
       '@o/ui',
-      // '@o/utils',
-      // '@o/bridge',
-      // '@o/logger',
-      // '@o/config',
-      // '@o/models',
-      // '@o/stores',
-      // '@o/libs',
+      '@o/utils',
+      '@o/bridge',
+      '@o/logger',
+      '@o/config',
+      '@o/models',
+      '@o/stores',
+      '@o/libs',
     ],
     ignore: ['electron-log', 'configstore'],
     context: directory,
@@ -102,9 +103,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       library: 'base',
     },
     dll: baseDllManifest,
-  }
-  const baseConfig = await makeWebpackConfig(baseWebpackParams)
-  await addDLL(baseWebpackParams, baseConfig)
+  })
 
   // apps dlls with just each apps code
   const appParams: WebpackParams[] = apps.map(app => {
@@ -141,14 +140,13 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       ],
     }
   })
-  // create app config now with `hot`
   const appsConfigs = {}
-  for (const params of appParams) {
-    const appConfig = getAppParams(params)
-    const config = await makeWebpackConfig(appConfig)
-    appsConfigs[params.name] = config
-    await addDLL(params, config)
-  }
+  await Promise.all([
+    appParams.map(async params => {
+      const config = await addDLL(getAppParams(params))
+      appsConfigs[params.name] = config
+    }),
+  ])
 
   /**
    * Get the monorepo in development mode and build orbit

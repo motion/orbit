@@ -8,14 +8,14 @@ import WebpackHotMiddleware from 'webpack-hot-middleware'
 const log = new Logger('useWebpackMiddleware')
 
 export function useWebpackMiddleware(configs: { main: any; [key: string]: any }) {
-  const { main, ...apps } = configs
+  const { main, ...rest } = configs
   log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
   const server = express()
 
   // you have to do it this janky ass way because webpack just isnt really great at
   // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
-  for (const name in apps) {
-    const config = apps[name]
+  for (const name in rest) {
+    const config = rest[name]
     const hmrPath = `/__webpack_hmr_${name}`
     const resolvePaths = [hmrPath]
     const { devMiddleware, hotMiddleware } = getMiddleware(hmrPath, config)

@@ -103,13 +103,21 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   for (const pkg of basePackages) {
     const path = require.resolve(`${pkg}/package.json`)
     const pkgJson = await readJSON(path)
-    const deps = Object.keys(pkgJson.dependencies || {})
+    const deps = [
+      ...Object.keys(pkgJson.dependencies || {}),
+      ...Object.keys(pkgJson.peerDependencies || {}),
+    ]
     allPackages = [...allPackages, ...deps]
   }
 
   // ignore electron things
   allPackages = allPackages.filter(
-    x => x !== 'electron-log' && x !== 'configstore' && x !== 'react-use',
+    x =>
+      x !== 'electron-log' &&
+      x !== 'configstore' &&
+      x !== 'react-use' &&
+      x !== '@babel/runtime' &&
+      x !== 'typeorm',
   )
 
   console.log('allPackages', allPackages)
@@ -120,7 +128,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   const baseConfig = await addDLL({
     name: `base`,
     entry: [...new Set(allPackages)],
-    ignore: ['electron-log', 'configstore'],
+    ignore: ['electron-log', 'configstore', 'typeorm'],
     context: directory,
     mode: options.mode,
     target: 'web',

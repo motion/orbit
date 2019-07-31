@@ -243,10 +243,9 @@ require('@o/kit').createHotHandler({
     // for some reason built is sent before 'sync', which applies update
     // and i can't hook into sync, so just doing settimeout for now
     built: () => {
-      console.warn('done')
       setTimeout(() => {
-        window['rerender']()
-      }, 40)
+        window['rerender'](false)
+      }, 10)
     },
   },
 })

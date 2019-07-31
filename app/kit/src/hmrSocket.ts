@@ -9,10 +9,15 @@ export function createHotHandler({
   module: any
   actions: any
 }) {
-  console.log('creating hot handler.........', url, getHash())
-  createEventSource(url).addMessageListener(handleMessage)
+  const source = createEventSource(url)
+  source.addMessageListener(handleMessage)
+
+  module.hot.dispose(() => {
+    source.close()
+  })
 
   function handleMessage(event) {
+    console.log('handle message', event)
     if (event.data == '\uD83D\uDC93') {
       return
     }
@@ -59,6 +64,7 @@ export function createHotHandler({
       addMessageListener: function(fn) {
         listeners.push(fn)
       },
+      close: () => source.close(),
     }
   }
 

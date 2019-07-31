@@ -6,8 +6,6 @@ import { Action, AsyncAction } from 'overmind'
 
 import { ShareItem } from './state'
 
-export * from './listenForHmrUpdate'
-
 export const setNavVisible: Action<boolean> = ({ state }, x) => {
   state.navVisible = x
 }
@@ -25,13 +23,17 @@ export const rerenderApp: Action = () => {
 }
 
 export const finishAuthorization: AsyncAction<{ path: string }> = async (_, { path }) => {
-  console.log('finishAuthorization path', path)
   if (firebase.auth().isSignInWithEmailLink(path)) {
     try {
       const user = await loadOne(UserModel, { args: {} })
       if (!user.email) throw new Error(`There is no email in user, something went wrong...`)
 
       const result = await firebase.auth().signInWithEmailLink(user.email, path)
+
+      if (!result.user) {
+        console.warn('no user')
+        return
+      }
 
       await save(UserModel, { ...user, cloudId: result.user.uid })
 

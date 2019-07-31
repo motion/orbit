@@ -158,7 +158,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
         outputDir,
-        injectHot: app.packageId === '@o/demo-app-api-grid',
+        injectHot: app.packageId === '@o/demo-app-api-grid' || app.packageId === '@o/lists-app',
         output: {
           library: cleanName,
         },

@@ -71,7 +71,7 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       log.info(`Ensuring config built once: ${params.name}...`)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
-        hot: false,
+        hot: true,
         watch: false,
       })
       await webpackPromise([buildOnceConfig], { loud: true })
@@ -140,38 +140,45 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   })
 
   // apps dlls with just each apps code
-  const appParams: WebpackParams[] = apps.map(app => {
-    const cleanName = cleanString(app.packageId)
-    const dllFile = join(outputDir, `manifest-${cleanName}.json`)
-    return {
-      name: `app_${cleanName}`,
-      entry: [app.directory],
-      context: directory,
-      mode: options.mode,
-      target: 'web',
-      publicPath: '/',
-      outputFile: `${cleanName}.dll.js`,
-      outputDir,
-      output: {
-        library: cleanName,
-      },
-      // output: {
-      //   // TODO(andreypopp): sort this out, we need some custom symbol here which
-      //   // we will communicate to Orbit
-      //   library: `window['LoadOrbitApp_${index}']`,
-      //   libraryTarget: 'assign',
-      //   libraryExport: 'default',
-      // },
-      dll: dllFile,
-      // apps use the base dll
-      dllReferences: [
-        {
-          manifest: baseDllManifest,
-          filepath: join(outputDir, baseDllOutputFileName),
+  const appParams: WebpackParams[] = await Promise.all(
+    apps.map(async app => {
+      const cleanName = cleanString(app.packageId)
+      const dllFile = join(outputDir, `manifest-${cleanName}.json`)
+      const appEntry = join(
+        app.directory,
+        (await readJSON(join(app.directory, 'package.json'))).main,
+      )
+      const params: WebpackParams = {
+        name: `app_${cleanName}`,
+        entry: [appEntry],
+        context: directory,
+        mode: options.mode,
+        target: 'web',
+        publicPath: '/',
+        outputFile: `${cleanName}.dll.js`,
+        outputDir,
+        output: {
+          library: cleanName,
         },
-      ],
-    }
-  })
+        // output: {
+        //   // TODO(andreypopp): sort this out, we need some custom symbol here which
+        //   // we will communicate to Orbit
+        //   library: `window['LoadOrbitApp_${index}']`,
+        //   libraryTarget: 'assign',
+        //   libraryExport: 'default',
+        // },
+        dll: dllFile,
+        // apps use the base dll
+        dllReferences: [
+          {
+            manifest: baseDllManifest,
+            filepath: join(outputDir, baseDllOutputFileName),
+          },
+        ],
+      }
+      return params
+    }),
+  )
   const appsConfigs = {}
   await Promise.all([
     appParams.map(async params => {

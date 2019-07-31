@@ -381,9 +381,9 @@ export const OrbitAppsCarousel = memo(() => {
   // neither pick it up because the event is removed
   useEffect(() => {
     if (rowRef.current) {
-      const curLeft = rowRef.current.scrollLeft
+      const curLeft = Math.round(rowRef.current.scrollLeft)
       const index = appsCarouselStore.focusedIndex
-      const expectedLeft = index * rowWidth
+      const expectedLeft = Math.round(index * rowWidth)
       if (curLeft !== expectedLeft) {
         appsCarouselStore.animateAndScrollTo(0)
         sleep(100).then(() => {

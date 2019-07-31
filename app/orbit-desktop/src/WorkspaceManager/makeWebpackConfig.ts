@@ -130,9 +130,8 @@ export function makeWebpackConfig(
     console.log('err testing monorepo', err)
   }
 
-  const main = hot
-    ? [`webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`, ...entry]
-    : entry
+  const hotEntry = `webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`
+  const main = hot ? [hotEntry, ...entry] : entry
 
   let config: webpack.Configuration = {
     watch,
@@ -224,6 +223,18 @@ export function makeWebpackConfig(
           test: /\.electron.[jt]sx?/,
           use: 'ignore-loader',
         },
+        // {
+        //   test: x => {
+        //     if (x === entry[0]) return true
+        //     return false
+        //   },
+        //   use: {
+        //     loader: `add-source-loader`,
+        //     options: {
+        //       imports: [hotEntry],
+        //     },
+        //   },
+        // },
         {
           test: /\.tsx?$/,
           use: [

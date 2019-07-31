@@ -245,7 +245,7 @@ require('@o/kit').createHotHandler({
     built: () => {
       setTimeout(() => {
         window['rerender'](false)
-      }, 10)
+      }, 40)
     },
   },
 })

@@ -17,7 +17,7 @@ export function DemoGridApp() {
   const [layout, setLayout] = useUserState('grid-layout', null)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
-      <AppCard key="slack" title="Slack Rooms 123" appType={Slack} onChange={setApp}>
+      <AppCard key="slack" title="Slack Roomsss" appType={Slack} onChange={setApp}>
         {({ api }) => {
           const res = api.channelsList()
           return (
@@ -47,22 +47,3 @@ export function DemoGridApp() {
     </GridLayout>
   )
 }
-
-// createHotHandler({
-//   url: `/__webpack_hmr_app_o_demo_app_api_grid`,
-//   getHash: __webpack_require__.h,
-//   module,
-//   actions: {
-//     // for some reason built is sent before 'sync', which applies update
-//     // and i can't hook into sync, so just doing settimeout for now
-//     built: () => {
-//       console.warn('done')
-//       setTimeout(() => {
-//         window['rerender']()
-//       }, 50)
-//     },
-//   },
-// })
-
-// module['hot'] && module['hot'].accept()
-// require('webpack-hot-middleware/client.js?name=app_o_demo_app_api_grid&path=/__webpack_hmr_app_o_demo_app_api_grid')

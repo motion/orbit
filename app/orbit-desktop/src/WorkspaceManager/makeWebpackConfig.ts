@@ -276,9 +276,15 @@ export function makeWebpackConfig(
     },
     plugins: [
       new HardSourceWebpackPlugin({
+        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+        configHash: config => require('hash-sum')(config),
         environmentHash: {
-          root: process.cwd()
-        }
+          root: process.cwd(),
+        },
+        info: {
+          mode: 'none',
+          level: 'error', // warn to debug if its slow
+        },
       }),
 
       new TimeFixPlugin(),

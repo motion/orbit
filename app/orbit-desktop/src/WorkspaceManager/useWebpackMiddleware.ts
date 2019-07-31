@@ -1,6 +1,5 @@
 import { Logger } from '@o/logger'
 import historyAPIFallback from 'connect-history-api-fallback'
-import express from 'express'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
@@ -10,7 +9,7 @@ const log = new Logger('useWebpackMiddleware')
 export function useWebpackMiddleware(configs: { main: any; [key: string]: any }) {
   const { main, ...rest } = configs
   log.verbose(`configs ${Object.keys(configs).join(', ')}`, configs)
-  const server = express()
+  const middlewares = []
 
   // you have to do it this janky ass way because webpack just isnt really great at
   // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
@@ -20,27 +19,21 @@ export function useWebpackMiddleware(configs: { main: any; [key: string]: any })
     const resolvePaths = [hmrPath]
     const { devMiddleware, hotMiddleware } = getMiddleware(hmrPath, config)
     global.webpackMiddlewares[name] = { devMiddleware, hotMiddleware }
-    server.use(resolveIfExists(devMiddleware, config, resolvePaths))
-    server.use(resolveIfExists(hotMiddleware, config, resolvePaths))
+    middlewares.push(resolveIfExists(devMiddleware, config, resolvePaths))
+    middlewares.push(resolveIfExists(hotMiddleware, config, resolvePaths))
   }
 
   // falls back to the main entry middleware
   const { devMiddleware, hotMiddleware } = getMiddleware('/__webpack_hmr_main', main)
-  server.use(devMiddleware)
-  server.use(hotMiddleware)
+  middlewares.push(devMiddleware)
+  middlewares.push(hotMiddleware)
   global.webpackMiddlewares.main = { devMiddleware, hotMiddleware }
-  server.use(historyAPIFallback())
+  middlewares.push(historyAPIFallback())
   // need to have this one after, see:
   // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
-  server.use(devMiddleware)
+  middlewares.push(devMiddleware)
 
-  server.listen(3999, 'localhost', () => {
-    log.info('listening on 3999')
-  })
-
-  return () => {
-    server.removeAllListeners()
-  }
+  return middlewares
 }
 
 const global = require('global')
@@ -51,7 +44,7 @@ const existsInCache = (middleware, path: string) => {
     if (middleware.fileSystem && middleware.fileSystem.readFileSync(path)) {
       return true
     }
-  } catch {
+  } catch (err) {
     // not found in this middleware
   }
   return false

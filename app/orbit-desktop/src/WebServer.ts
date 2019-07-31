@@ -1,12 +1,9 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
-import express from 'express'
-import httpProxyMiddleware from 'http-proxy-middleware'
+import express, { Handler } from 'express'
 import killPort from 'kill-port'
 import * as Path from 'path'
-
-import { AppMiddleware } from './workspaceManager/AppMiddleware'
 
 const log = new Logger('WebServer')
 const Config = getGlobalConfig()
@@ -28,12 +25,14 @@ export class WebServer {
   login = null
   server: express.Application
 
-  constructor(private appMiddleware: AppMiddleware) {
+  constructor(config: { middlewares: Handler[] }) {
     this.server = express()
     this.server.set('port', Config.ports.server)
 
-    // use build server, must be before cors
-    this.server.use(this.appMiddleware.getMiddleware())
+    // this needs be in front of cors for the app middlewares!
+    for (const middleware of config.middlewares) {
+      this.server.use(middleware)
+    }
 
     this.server.use(cors())
     // fixes bug with 304 errors sometimes
@@ -73,24 +72,6 @@ export class WebServer {
   }
 
   private setupOrbitApp() {
-    // proxy to webpack-dev-server in development
-    if (process.env.NODE_ENV === 'development') {
-      const webpackUrl = 'http://localhost:3999'
-      const router = {
-        [`http://localhost:${Config.ports.server}`]: webpackUrl,
-      }
-      this.server.use(
-        '/',
-        httpProxyMiddleware({
-          target: webpackUrl,
-          changeOrigin: true,
-          secure: false,
-          ws: true,
-          logLevel: 'warn',
-          router,
-        }),
-      )
-    }
     // serve static in production
     if (process.env.NODE_ENV !== 'development') {
       log.info(`Serving orbit static app in ${Config.paths.appStatic}...`)

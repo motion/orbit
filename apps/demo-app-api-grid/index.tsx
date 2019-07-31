@@ -17,7 +17,12 @@ export function DemoGridApp() {
   const [layout, setLayout] = useUserState('grid-layout', null)
   return (
     <GridLayout layout={layout} onChangeLayout={setLayout}>
-      <AppCard key="slack" title="Slack Rooms" appType={Slack} onChange={setApp}>
+      <AppCard
+        key="slack"
+        title="Slack Rooms 123 123 123 123 123123123"
+        appType={Slack}
+        onChange={setApp}
+      >
         {({ api }) => {
           const res = api.channelsList()
           return (

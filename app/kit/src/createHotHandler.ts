@@ -152,6 +152,7 @@ export function createHotHandler({
   }
 
   function processUpdate(hash, moduleMap, options) {
+    console.log('got update', hash, moduleMap)
     var reload = options.reload
     if (!upToDate(hash) && module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')

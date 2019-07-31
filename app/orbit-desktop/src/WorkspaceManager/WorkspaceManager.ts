@@ -5,6 +5,7 @@ import { AppBuildCommand, AppCreateWorkspaceCommand, AppDevCloseCommand, AppDevO
 import { Desktop, Electron } from '@o/stores'
 import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
+import { Handler } from 'express'
 import { debounce, isEqual, remove } from 'lodash'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
@@ -12,7 +13,7 @@ import Observable from 'zen-observable'
 import { GraphServer } from '../GraphServer'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
-import { AppDesc, AppMiddleware } from './AppMiddleware'
+import { AppDesc } from './AppMiddleware'
 import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { commandInstall } from './commandInstall'
@@ -36,13 +37,27 @@ export class WorkspaceManager {
   options: CommandWsOptions
   buildConfig = null
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
+  middlewares = []
 
   appsManager = new AppsManager()
   graphServer = new GraphServer()
-  appMiddleware = new AppMiddleware()
 
   constructor(private mediatorServer: MediatorServer) {
     this.appsManager.onUpdatedApps(this.handleUpdatedApps)
+  }
+
+  middleware: Handler = (req, res, next) => {
+    let fin = false
+    const done = val => {
+      fin = val
+    }
+    for (const middleware of this.middlewares) {
+      middleware(req, res, done)
+      if (fin) {
+        next(fin)
+        break
+      }
+    }
   }
 
   async start(opts: { singleUseMode: boolean }) {
@@ -50,9 +65,9 @@ export class WorkspaceManager {
       await this.appsManager.start()
       await this.graphServer.start()
       this.onWorkspaceChange()
-      this.appMiddleware.onStatus(status => {
-        appStatusManager.sendMessage(status)
-      })
+      // this.appMiddleware.onStatus(status => {
+      //   appStatusManager.sendMessage(status)
+      // })
     }
   }
 
@@ -102,7 +117,7 @@ export class WorkspaceManager {
 
   onNewWorkspaceVersion = react(
     () => [this.directory, this.workspaceVersion],
-    async ([directory], { sleep, useEffect, when }) => {
+    async ([directory], { sleep, when }) => {
       await when(() => !!this.options)
       ensure('directory', !!directory)
       log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
@@ -113,19 +128,11 @@ export class WorkspaceManager {
         await sleep()
         if (!isEqual(this.buildConfig, config)) {
           this.buildConfig = config
-          Desktop.setState({
-            workspaceState: {
-              hmrBundleNames: Object.keys(config),
-            },
-          })
-          useEffect(() => {
-            return useWebpackMiddleware(config)
-          })
+          this.middlewares = useWebpackMiddleware(config)
           await updateWorkspacePackageIds(this.directory)
         }
       } catch (err) {
         console.error('Error running workspace', err.message, err.stack)
-        // ErrorReporter.push('')
       }
     },
   )
@@ -249,7 +256,7 @@ export class WorkspaceManager {
           path: projectRoot,
           publicPath: `/appServer/${appId}`,
         })
-        this.appMiddleware.setApps(this.developingApps)
+        // this.appMiddleware.setApps(this.developingApps)
         return {
           type: 'success',
           message: 'Got app id',
@@ -259,7 +266,7 @@ export class WorkspaceManager {
       resolveCommand(AppDevCloseCommand, async ({ appId }) => {
         log.info('Removing build server', appId)
         this.developingApps = remove(this.developingApps, x => x.appId === appId)
-        this.appMiddleware.setApps(this.developingApps)
+        // this.appMiddleware.setApps(this.developingApps)
         log.info('Removing process', appId)
         await this.mediatorServer.sendRemoteCommand(CloseAppCommand, { appId })
         log.info('Closed app', appId)

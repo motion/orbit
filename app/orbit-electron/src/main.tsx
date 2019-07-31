@@ -3,18 +3,12 @@ import 'raf/polyfill'
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
-import {
-  AppOpenWindowCommand,
-  NewFallbackServerPortCommand,
-  SendClientDataCommand,
-  ToggleOrbitMainCommand,
-} from '@o/models'
+import { AppOpenWindowCommand, NewFallbackServerPortCommand, SendClientDataCommand, ToggleOrbitMainCommand } from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
 import * as React from 'react'
 import waitOn from 'wait-on'
-import waitPort from 'wait-port'
 
 import { IS_MAIN_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
@@ -111,7 +105,6 @@ export async function main() {
     require('source-map-support/register')
     require('./helpers/installGlobals')
     require('./helpers/monitorResourceUsage')
-    await waitPort({ port: 3999 })
   }
 
   // why not make it a bit easier in prod mode too

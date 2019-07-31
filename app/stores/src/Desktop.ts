@@ -20,7 +20,6 @@ class DesktopStore {
     workspaceState: {
       path: '',
       packageIds: [] as string[],
-      hmrBundleNames: [] as string[],
     },
     appState: {
       id: '',

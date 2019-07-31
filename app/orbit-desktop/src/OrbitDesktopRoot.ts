@@ -180,7 +180,9 @@ export class OrbitDesktopRoot {
           if (!singleUseMode) {
             // the electron app wont start until this runs
             // start server a bit early so it lets them start
-            this.webServer = new WebServer(this.workspaceManager.appMiddleware)
+            this.webServer = new WebServer({
+              middlewares: [this.workspaceManager.middleware],
+            })
             await this.webServer.start()
           }
         },

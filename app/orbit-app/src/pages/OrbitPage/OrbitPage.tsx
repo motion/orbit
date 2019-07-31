@@ -6,7 +6,7 @@ import { ListPassProps, Loading, useBanner, View, ViewProps } from '@o/ui'
 import { Box, gloss } from 'gloss'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { APP_ID } from '../../constants'
+import { APP_ID, IS_ELECTRON } from '../../constants'
 import { useOm } from '../../om/om'
 import { Stores, useThemeStore } from '../../om/stores'
 import { SearchStore } from '../../stores/SearchStore'
@@ -69,33 +69,33 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       const { closeTab, closeApp } = shortcutState.current
       const shouldCloseTab = Date.now() - closeTab < 60
       const shouldCloseApp = Date.now() - closeApp < 60
-
       console.log('unloading!', shouldCloseApp, shouldCloseTab)
-
-      if (App.isMainApp === false) {
-        if (shouldCloseApp || shouldCloseTab) {
-          e.returnValue = false
-          command(CloseAppCommand, { appId: App.appConf.appId })
-          return
-        }
-      } else {
-        // MAIN APP
-        // prevent on command+w
-        if (shouldCloseTab) {
-          e.returnValue = false
-          actions.router.back()
-          return
-        }
-        if (shouldCloseApp) {
-          if (
-            showConfirmDialog({
-              title: 'Close Orbit?',
-              message: 'This will close all sub-windows as well.',
-            })
-          ) {
-            console.log('Bye all of orbit...')
-          } else {
+      if (IS_ELECTRON) {
+        if (App.isMainApp === false) {
+          if (shouldCloseApp || shouldCloseTab) {
             e.returnValue = false
+            command(CloseAppCommand, { appId: App.appConf.appId })
+            return
+          }
+        } else {
+          // MAIN APP
+          // prevent on command+w
+          if (shouldCloseTab) {
+            e.returnValue = false
+            actions.router.back()
+            return
+          }
+          if (shouldCloseApp) {
+            if (
+              showConfirmDialog({
+                title: 'Close Orbit?',
+                message: 'This will close all sub-windows as well.',
+              })
+            ) {
+              console.log('Bye all of orbit...')
+            } else {
+              e.returnValue = false
+            }
           }
         }
       }

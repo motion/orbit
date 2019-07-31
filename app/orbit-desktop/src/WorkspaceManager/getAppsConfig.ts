@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { AppMeta, CommandWsOptions } from '@o/models'
-import { ensureDir, ensureSymlink, pathExists, writeFile } from 'fs-extra'
+import { ensureDir, ensureSymlink, pathExists, readJSON, writeFile } from 'fs-extra'
 import { join } from 'path'
 import webpack from 'webpack'
 
@@ -69,31 +69,59 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     // ensure built
     if (options.clean || !(await pathExists(params.dll))) {
       log.info(`Ensuring config built once: ${params.name}...`)
-      const buildOnceConfig = await makeWebpackConfig({ ...params, hot: false, watch: false })
+      const buildOnceConfig = await makeWebpackConfig({
+        ...params,
+        hot: false,
+        watch: false,
+      })
       await webpackPromise([buildOnceConfig], { loud: true })
     }
-    return await makeWebpackConfig(params)
+    return await makeWebpackConfig({
+      ...params,
+      hot: true,
+      watch: true,
+    })
   }
+
+  const basePackages = [
+    '@o/kit',
+    '@o/ui',
+    '@o/utils',
+    '@o/bridge',
+    '@o/logger',
+    '@o/config',
+    '@o/models',
+    '@o/stores',
+    '@o/libs',
+    '@o/css',
+    '@o/color',
+    '@o/automagical',
+    '@o/use-store',
+  ]
+  let allPackages = [...basePackages]
+
+  for (const pkg of basePackages) {
+    const path = require.resolve(`${pkg}/package.json`)
+    const pkgJson = await readJSON(path)
+    const deps = Object.keys(pkgJson.dependencies || {})
+    allPackages = [...allPackages, ...deps]
+  }
+
+  // ignore electron things
+  allPackages = allPackages.filter(
+    x => x !== 'electron-log' && x !== 'configstore' && x !== 'react-use',
+  )
+
+  console.log('allPackages', allPackages)
 
   // base dll with shared libraries
   const baseDllManifest = join(outputDir, 'manifest-base.json')
   const baseDllOutputFileName = 'base.dll.js'
   const baseConfig = await addDLL({
     name: `base`,
-    entry: [
-      '@o/kit',
-      '@o/ui',
-      '@o/utils',
-      '@o/bridge',
-      '@o/logger',
-      '@o/config',
-      '@o/models',
-      '@o/stores',
-      '@o/libs',
-    ],
+    entry: [...new Set(allPackages)],
     ignore: ['electron-log', 'configstore'],
     context: directory,
-    watch: false,
     mode: options.mode,
     target: 'web',
     publicPath: '/',
@@ -113,8 +141,6 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       name: `app_${cleanName}`,
       entry: [app.directory],
       context: directory,
-      watch: true,
-      hot: true,
       mode: options.mode,
       target: 'web',
       publicPath: '/',
@@ -171,7 +197,13 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
 // all apps
 ${apps
   .map((app, index) => {
-    return `export const app_${index} = require('${app.packageId}')`
+    // const params = appParams[index]
+    // const name = params.name
+    return `
+export const app_${index} = require('${app.packageId}')
+`
+    // didnt work, calls it but doesnt hmr the code
+    // require('webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}')
   })
   .join('\n')}`
   const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
@@ -199,6 +231,7 @@ ${apps
           ignore: ['electron-log', 'configstore'],
           target: 'web',
           hot: true,
+          watch: true,
         },
         extraConfig[name],
       )

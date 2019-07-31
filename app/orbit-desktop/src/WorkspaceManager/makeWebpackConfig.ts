@@ -24,7 +24,6 @@ export type WebpackParams = {
   watch?: boolean
   dll?: string
   dllReferences?: DLLReferenceDesc[]
-  devServer?: boolean
   hot?: boolean
   minify?: boolean
   noChunking?: boolean
@@ -50,7 +49,6 @@ export function makeWebpackConfig(
     minify = false,
     dll,
     dllReferences,
-    devServer,
     hot,
     name,
     noChunking,
@@ -132,16 +130,20 @@ export function makeWebpackConfig(
     console.log('err testing monorepo', err)
   }
 
+  const main = hot
+    ? [`webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`, ...entry]
+    : entry
+
   let config: webpack.Configuration = {
     watch,
     context,
     target,
     mode,
-    entry: {
-      main: hot
-        ? [`webpack-hot-middleware/client?name=${name}&path=/__webpack_hmr_${name}`, ...entry]
-        : entry,
-    },
+    entry: dll
+      ? main
+      : {
+          main,
+        },
     optimization: optimization[mode],
     output: {
       path: outputDir,
@@ -153,7 +155,7 @@ export function makeWebpackConfig(
       // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    devtool: mode === 'production' || target === 'node' ? 'source-map' : undefined,
+    devtool: mode === 'production' || target === 'node' ? 'source-map' : 'source-map',
     externals: [
       {
         electron: '{}',
@@ -332,6 +334,8 @@ export function makeWebpackConfig(
               throw new Error(`need output.library`)
             })(),
           path: dll,
+          // @ts-ignore
+          entryOnly: true,
         }),
 
       ...((hasDLLReferences &&
@@ -362,20 +366,6 @@ export function makeWebpackConfig(
 
       // mode === 'development' && new webpack.NamedModulesPlugin(),
     ].filter(Boolean) as webpack.Plugin[],
-  }
-
-  if (devServer) {
-    // @ts-ignore
-    config.devServer = {
-      stats: {
-        warnings: false,
-      },
-      historyApiFallback: true,
-      hot,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    }
   }
 
   if (extraConfigs.some(Boolean)) {

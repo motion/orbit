@@ -34,6 +34,10 @@ export const onInitialize: OnInitialize = async om => {
   handleMediatorMessages()
 
   goToInitialApp(om)
+
+  if (process.env.NODE_ENV === 'development') {
+    actions.listenForHmrUpdate()
+  }
 }
 
 function goToInitialApp(om: IContext<Config>) {

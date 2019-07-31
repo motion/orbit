@@ -159,7 +159,12 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
         publicPath: '/',
         outputFile: `${cleanName}.dll.js`,
         outputDir,
-        injectHot: true,
+        injectHot:
+          app.packageId === '@o/demo-app-api-grid' ||
+          app.packageId === '@o/lists-app' ||
+          app.packageId === '@o/people-app' ||
+          app.packageId === '@o/demo-app-layout' ||
+          app.packageId === '@o/demo-app-flow',
         output: {
           library: cleanName,
         },

@@ -2,12 +2,14 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
-import { hmrSocket } from '@o/kit'
-import { Desktop } from '@o/stores'
-import { reaction } from 'mobx'
 
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
+
+/**
+ * Warning: I ran into a bug importing @/kit or @/ui here (or anything from the base DLL)
+ * It causes many imports that shouldn't be undefined to be undefined.
+ */
 
 // Be careful not to import anything that depends on getGlobalConfig() here
 // we set it up once with setGlobalConfig() and then import the rest of the app
@@ -46,7 +48,7 @@ async function fetchInitialConfig() {
 }
 
 // helper for force-rerender
-const rerender = (window['rerender'] = (force = true) => startApp(force))
+window['rerender'] = (force = true) => startApp(force)
 
 // setup for app
 async function main() {
@@ -102,29 +104,6 @@ async function main() {
   console.time('startApp')
   startApp()
   console.timeEnd('startApp')
-
-  // listen for HMR
-  reaction(
-    () => Desktop.state.workspaceState.hmrBundleNames,
-    names => {
-      console.log('should set up hmr socket', names)
-      for (const name of names) {
-        if (name === 'main') continue
-        hmrSocket(`/__webpack_hmr_${name}`, {
-          // for some reason built is sent before 'sync', which applies update
-          // and i can't hook into sync, so just doing settimeout for now
-          built: () => {
-            setTimeout(() => {
-              window['rerender'](false)
-            }, 80)
-          },
-        })
-      }
-    },
-    {
-      fireImmediately: true,
-    },
-  )
 }
 
 const React = require('react')

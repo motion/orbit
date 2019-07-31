@@ -1,4 +1,4 @@
-import { createStoreContext, react, shallow, useStore } from '@o/use-store'
+import { createStoreContext, ensure, react, shallow, useStore } from '@o/use-store'
 import { flatten } from 'lodash'
 import React, { forwardRef, HTMLProps, useCallback } from 'react'
 
@@ -91,6 +91,7 @@ class FormStore {
   updateValuesFromProps = react(
     () => this.props.fields,
     fields => {
+      ensure('fields', !!fields)
       for (const key in fields) {
         const field = fields[key]
         this.changeField({

@@ -2,6 +2,7 @@ import '../public/styles/base.css'
 import 'react-hot-loader'
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import { hmrSocket } from '@o/kit'
 import { Desktop } from '@o/stores'
 import { reaction } from 'mobx'
 
@@ -107,15 +108,18 @@ async function main() {
     () => Desktop.state.workspaceState.hmrBundleNames,
     names => {
       console.log('should set up hmr socket', names)
-      // hmrSocket(`/__webpack_hmr_apps`, {
-      //   // for some reason built is sent before 'sync', which applies update
-      //   // and i can't hook into sync, so just doing settimeout for now
-      //   built: () => {
-      //     setTimeout(() => {
-      //       window['rerender'](false)
-      //     }, 80)
-      //   },
-      // })
+      for (const name of names) {
+        if (name === 'main') continue
+        hmrSocket(`/__webpack_hmr_${name}`, {
+          // for some reason built is sent before 'sync', which applies update
+          // and i can't hook into sync, so just doing settimeout for now
+          built: () => {
+            setTimeout(() => {
+              window['rerender'](false)
+            }, 80)
+          },
+        })
+      }
     },
     {
       fireImmediately: true,

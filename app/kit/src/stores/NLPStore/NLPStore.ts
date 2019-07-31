@@ -4,15 +4,14 @@ import { decorate, ensure, react } from '@o/use-store'
 
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
-import initNlp from './nlpQuery.worker'
+import { parseSearchQuery, setUserNames } from './nlpQuery'
 
 // to run in web worker
-const { parseSearchQuery, setUserNames } = initNlp()
-console.log('initNlp', initNlp, initNlp())
+// import initNlp from './nlpQuery.worker'
+// const { parseSearchQuery, setUserNames } = initNlp()
+// console.log('initNlp', initNlp, initNlp())
 
 // to run it on thread
-// import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'
-
 @decorate
 export class NLPStore {
   queryStore: QueryStore | null = null

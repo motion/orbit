@@ -47,17 +47,18 @@ export class WorkspaceManager {
   }
 
   middleware: Handler = (req, res, next) => {
-    let fin = false
-    const done = val => {
-      fin = val
+    let calledNext = false
+    const doNext = (val = true) => {
+      calledNext = val
     }
     for (const middleware of this.middlewares) {
-      middleware(req, res, done)
-      if (fin) {
-        next(fin)
-        break
+      calledNext = false
+      middleware(req, res, doNext)
+      if (calledNext === false) {
+        return
       }
     }
+    next(calledNext)
   }
 
   async start(opts: { singleUseMode: boolean }) {

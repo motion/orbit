@@ -22,6 +22,7 @@ class DesktopStore {
       path: '',
       packageIds: [] as string[],
       appsMeta: [] as AppMeta[],
+      appImportNames: [] as string[],
     },
     appState: {
       id: '',

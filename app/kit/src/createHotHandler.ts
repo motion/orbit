@@ -4,14 +4,14 @@ async function stopSockets() {
   for (const { source } of activeHandlers) {
     source.close()
   }
-  await new Promise(res => setTimeout(res, 100))
+  await new Promise(res => setTimeout(res, 20))
 }
 
 async function restartSockets() {
   activeHandlers = []
-  for (const props of activeHandlers) {
-    createHotHandler(props)
-  }
+  Object.keys(window['__hmr_handlers']).forEach(key => {
+    window['__hmr_handlers'][key]()
+  })
 }
 
 export function createHotHandler(props: {
@@ -70,6 +70,7 @@ export function createHotHandler(props: {
     }
 
     function handleDisconnect() {
+      console.log('[HMR] disconnected')
       source.close()
       setTimeout(init, 1000)
     }

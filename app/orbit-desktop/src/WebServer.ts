@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
-import connectTimeout from 'connect-timeout'
 import express, { Handler } from 'express'
 import killPort from 'kill-port'
 import * as Path from 'path'
@@ -31,12 +30,7 @@ export class WebServer {
     this.server.set('port', Config.ports.server)
 
     // ensure nothing hangs, useful for debugging if you mess up a middleware
-    this.server.use(connectTimeout('5s'))
-
-    this.server.use((req, _res, next) => {
-      console.log('url', req.url)
-      next()
-    })
+    // this.server.use(connectTimeout('5s'))
 
     // this.server.use(cors())
 

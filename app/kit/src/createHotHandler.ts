@@ -1,7 +1,6 @@
 let activeHandlers = []
 
 async function stopSockets() {
-  return
   for (const { source } of activeHandlers) {
     source.close()
   }
@@ -18,20 +17,16 @@ async function restartSockets() {
 
 let source
 
-export function createHotHandler(props: {
-  url: string
-  getHash: Function
-  module: any
-  actions?: any
-}) {
-  const { url, getHash, module, actions = {} } = props
+export function createHotHandler(props: { getHash: Function; module: any; actions?: any }) {
+  const url = '/__webpack_hmr'
+  const { getHash, module, actions = {} } = props
 
   source = source || createEventSource(url)
   source.addMessageListener(handleMessage)
   activeHandlers.push({ ...props, source })
 
   window.addEventListener('beforeunload', source.close)
-  // module.hot.dispose(source.close)
+  module.hot.dispose(source.close)
 
   function handleMessage(event) {
     if (event.data == '\uD83D\uDC93') return
@@ -240,7 +235,6 @@ function createEventSource(url: string) {
   }
 
   function handleMessage(event) {
-    console.log('event', event)
     for (var i = 0; i < listeners.length; i++) {
       listeners[i](event)
     }

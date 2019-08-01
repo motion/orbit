@@ -1,9 +1,10 @@
 import { Logger } from '@o/logger'
 import historyAPIFallback from 'connect-history-api-fallback'
 import { Handler } from 'express'
+import { parse } from 'url'
 import Webpack from 'webpack'
+import webpack = require('webpack')
 import WebpackDevMiddleware from 'webpack-dev-middleware'
-import WebpackHotMiddleware from 'webpack-hot-middleware'
 
 const log = new Logger('useWebpackMiddleware')
 
@@ -11,24 +12,34 @@ export function useWebpackMiddleware(configs: { main: any; [key: string]: any })
   const { main, ...rest } = configs
   log.info(`configs ${Object.keys(configs).join(', ')}`, configs)
   const middlewares = []
+  const tasks: { compiler: webpack.Compiler; config: webpack.Configuration }[] = []
 
   // you have to do it this janky ass way because webpack just isnt really great at
   // doing multi-config hmr, and this makes sure the 404 hot-update bug if fixed (google)
   for (const name in rest) {
     const config = rest[name]
-    const hmrPath = `/__webpack_hmr_${name}`
-    const resolvePaths = [hmrPath]
-    const { devMiddleware, hotMiddleware } = getMiddleware(hmrPath, config)
-    global.webpackMiddlewares[name] = { devMiddleware, hotMiddleware }
-    middlewares.push(resolveIfExists(devMiddleware, config, resolvePaths))
-    middlewares.push(resolveIfExists(hotMiddleware, config, resolvePaths))
+    const { devMiddleware, compiler } = getMiddleware(config)
+    tasks.push({ compiler, config })
+    global.webpackMiddlewares[name] = { devMiddleware }
+    middlewares.push(resolveIfExists(devMiddleware, [config.output.path]))
   }
 
   // falls back to the main entry middleware
-  const { devMiddleware, hotMiddleware } = getMiddleware('/__webpack_hmr_main', main)
+  const { devMiddleware, compiler } = getMiddleware(main)
+  tasks.push({ compiler, config: main })
+
+  /**
+   * One HMR server for everything because EventStream's don't support >5 in Chrome
+   */
+  const hotMiddleware = WebpackHotMiddleware(tasks.map(x => x.compiler), {
+    path: '/__webpack_hmr',
+    log: console.log,
+    heartBeat: 10 * 1000,
+  })
+  middlewares.push(resolveIfExists(hotMiddleware, tasks.map(x => x.config.output.path)))
+
   middlewares.push(devMiddleware)
-  middlewares.push(hotMiddleware)
-  global.webpackMiddlewares.main = { devMiddleware, hotMiddleware }
+  global.webpackMiddlewares.main = { devMiddleware }
   middlewares.push(historyAPIFallback())
   // need to have this one after, see:
   // https://github.com/webpack/webpack-dev-middleware/issues/88#issuecomment-252048006
@@ -51,11 +62,13 @@ const existsInCache = (middleware, path: string) => {
   return false
 }
 
-const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths: string[]) => {
+const resolveIfExists = (middleware, basePaths: string[], exactPaths: string[] = []) => {
   const handler: Handler = (req, res, next) => {
-    const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
-    const path = config.output.path + req.url
-    if (isInResolvePaths || existsInCache(middleware, path)) {
+    const exists = basePaths.some(
+      path =>
+        existsInCache(middleware, path + req.url) || exactPaths.some(x => x.indexOf(req.url) === 0),
+    )
+    if (exists) {
       middleware(req, res, next)
     } else {
       next()
@@ -64,16 +77,185 @@ const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths
   return handler
 }
 
-const getMiddleware = (hmrPath: string, config: any) => {
+const getMiddleware = (config: any) => {
   const compiler = Webpack(config)
   const publicPath = config.output.publicPath
   const devMiddleware = WebpackDevMiddleware(compiler, {
     publicPath,
   })
-  const hotMiddleware = WebpackHotMiddleware(compiler, {
-    path: hmrPath,
-    log: console.log,
-    heartBeat: 10 * 1000,
+  return { devMiddleware, compiler }
+}
+const pathMatch = function(url, path) {
+  try {
+    return parse(url).pathname === path
+  } catch (e) {
+    return false
+  }
+}
+
+function WebpackHotMiddleware(compiler, opts) {
+  opts = opts || {}
+  opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
+  opts.path = opts.path || '/__webpack_hmr'
+  opts.heartbeat = opts.heartbeat || 10 * 1000
+
+  var eventStream = createEventStream(opts.heartbeat)
+  var latestStats = null
+  var closed = false
+
+  if (compiler.hooks) {
+    compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
+    compiler.hooks.done.tap('webpack-hot-middleware', onDone)
+  } else {
+    compiler.plugin('invalid', onInvalid)
+    compiler.plugin('done', onDone)
+  }
+
+  function onInvalid() {
+    if (closed) return
+    latestStats = null
+    if (opts.log) opts.log('webpack building...')
+    eventStream.publish({ action: 'building' })
+  }
+
+  function onDone(statsResult) {
+    if (closed) return
+    // Keep hold of latest stats so they can be propagated to new clients
+    latestStats = statsResult
+    publishStats('built', latestStats, eventStream, opts.log)
+  }
+
+  function middleware(req, res, next) {
+    if (closed) return next()
+    if (!pathMatch(req.url, opts.path)) return next()
+    eventStream.handler(req, res)
+    if (latestStats) {
+      // Explicitly not passing in `log` fn as we don't want to log again on
+      // the server
+      publishStats('sync', latestStats, eventStream, opts.log)
+    }
+  }
+
+  middleware.publish = function(payload) {
+    if (closed) return
+    eventStream.publish(payload)
+  }
+
+  middleware.close = function() {
+    if (closed) return
+    // Can't remove compiler plugins, so we just set a flag and noop if closed
+    // https://github.com/webpack/tapable/issues/32#issuecomment-350644466
+    closed = true
+    eventStream.close()
+    eventStream = null
+  }
+
+  return middleware
+}
+
+function createEventStream(heartbeat: number) {
+  var clientId = 0
+  var clients = {}
+  function everyClient(fn) {
+    Object.keys(clients).forEach(function(id) {
+      fn(clients[id])
+    })
+  }
+  let interval = setInterval(function heartbeatTick() {
+    everyClient(function(client) {
+      client.write('data: \uD83D\uDC93\n\n')
+    })
+  }, heartbeat)
+  interval.unref()
+  return {
+    close: function() {
+      clearInterval(interval)
+      everyClient(function(client) {
+        if (!client.finished) client.end()
+      })
+      clients = {}
+    },
+    handler: function(req, res) {
+      var headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'text/event-stream;charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        'X-Accel-Buffering': 'no',
+      }
+      var isHttp1 = !(parseInt(req.httpVersion) >= 2)
+      if (isHttp1) {
+        req.socket.setKeepAlive(true)
+        Object.assign(headers, {
+          Connection: 'keep-alive',
+        })
+      }
+
+      res.writeHead(200, headers)
+      res.write('\n')
+      var id = clientId++
+      clients[id] = res
+      req.on('close', function() {
+        if (!res.finished) res.end()
+        delete clients[id]
+      })
+    },
+    publish: function(payload) {
+      everyClient(function(client) {
+        client.write('data: ' + JSON.stringify(payload) + '\n\n')
+      })
+    },
+  }
+}
+
+function publishStats(action, statsResult, eventStream, log) {
+  var stats = statsResult.toJson({
+    all: false,
+    cached: true,
+    children: true,
+    modules: true,
+    timings: true,
+    hash: true,
   })
-  return { devMiddleware, hotMiddleware }
+  // For multi-compiler, stats will be an object with a 'children' array of stats
+  var bundles = extractBundles(stats)
+  bundles.forEach(function(stats) {
+    var name = stats.name || ''
+
+    // Fallback to compilation name in case of 1 bundle (if it exists)
+    if (bundles.length === 1 && !name && statsResult.compilation) {
+      name = statsResult.compilation.name || ''
+    }
+
+    if (log) {
+      log('webpack built ' + (name ? name + ' ' : '') + stats.hash + ' in ' + stats.time + 'ms')
+    }
+    eventStream.publish({
+      name: name,
+      action: action,
+      time: stats.time,
+      hash: stats.hash,
+      warnings: stats.warnings || [],
+      errors: stats.errors || [],
+      modules: buildModuleMap(stats.modules),
+    })
+  })
+}
+
+function extractBundles(stats) {
+  // Stats has modules, single bundle
+  if (stats.modules) return [stats]
+
+  // Stats has children, multiple bundles
+  if (stats.children && stats.children.length) return stats.children
+
+  // Not sure, assume single
+  return [stats]
+}
+
+function buildModuleMap(modules) {
+  var map = {}
+  modules.forEach(function(module) {
+    map[module.id] = module.name
+  })
+  return map
 }

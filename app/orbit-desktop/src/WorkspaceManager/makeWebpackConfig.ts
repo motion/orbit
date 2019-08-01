@@ -238,7 +238,6 @@ export function makeWebpackConfig(
               postfix: `
 function __hmrHandler() {
   require('@o/kit').createHotHandler({
-    url: '/__webpack_hmr_${name}',
     getHash: __webpack_require__.h,
     module,
   })

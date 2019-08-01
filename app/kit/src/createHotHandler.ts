@@ -206,9 +206,8 @@ export function createHotHandler(props: {
           // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
           applyResult.then(function(outdatedModules) {
             applyCallback(null, outdatedModules)
-
-            console.log('render after hmr')
-            window['rerender']()
+            // render after hmr
+            window['rerender'](false)
 
           })
           applyResult.catch(applyCallback)

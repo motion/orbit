@@ -1,6 +1,7 @@
 import { Config, IContext, OnInitialize } from 'overmind'
 
-import { getAllAppDefinitions, startAppLoadWatch } from '../apps/orbitApps'
+import { getAllAppDefinitions } from '../apps/orbitApps'
+import { startAppLoadWatch } from '../apps/startAppLoadWatch'
 import { runConfigurations } from '../configurations'
 import { handleMediatorMessages } from './initialize/handleMediatorMessages'
 import { urls } from './router'

@@ -1,7 +1,5 @@
-import { __SERIOUSLY_SECRET, AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
-import { Desktop } from '@o/stores'
+import { AppDefinition, configureKit, createApp, useAppDefinitions } from '@o/kit'
 import { Loading } from '@o/ui'
-import { reaction } from 'mobx'
 import React from 'react'
 
 import { StoreContext } from '../StoreContext'
@@ -20,21 +18,10 @@ let dynamicApps: AppDefinition[] = []
 
 updateDefinitions()
 
-function updateDefinitions() {
-  dynamicApps = Desktop.state.workspaceState.appImportNames.map(name => window[name])
-}
-
-export async function startAppLoadWatch() {
-  await updateDefinitions()
-
-  // watch for updates
-  reaction(
-    () => Desktop.state.workspaceState.packageIds,
-    async () => {
-      await updateDefinitions()
-      __SERIOUSLY_SECRET.reloadAppDefinitions()
-    },
-  )
+export function updateDefinitions() {
+  const apps = window['__orbit_workspace']
+  console.log('dynamicApps', dynamicApps, apps)
+  dynamicApps = Object.keys(apps).map(key => apps[key]())
 }
 
 const LoadingApp = createApp({

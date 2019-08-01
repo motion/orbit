@@ -310,11 +310,7 @@ export default {
       }
     </script>
     <script src="/base.dll.js"></script>
-    ${apps
-      .map(app => {
-        return `    <script src="/${cleanString(app.packageId)}.dll.js"></script>`
-      })
-      .join('\n')}
+${apps.map(app => `    <script src="/${cleanString(app.packageId)}.dll.js"></script>`).join('\n')}
     <script src="/workspaceEntry.js"></script>
     <script src="/main.js"></script>
   </body>

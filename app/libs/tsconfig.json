@@ -11,6 +11,6 @@
   "references": [
     { "path": "../models" },
     { "path": "../config" },
-    { "path": "../../packages/fast-config" }
+    { "path": "../../packages/fast-compare" }
   ]
 }

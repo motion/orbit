@@ -702,6 +702,65 @@ function start(es, url, options) {
   onTimeout()
 }
 
+function EventTarget(this: any) {
+  this._listeners = Object.create(null)
+}
+EventTarget.prototype.dispatchEvent = function(event) {
+  event.target = this
+  var typeListeners = this._listeners[event.type]
+  if (typeListeners != undefined) {
+    var length = typeListeners.length
+    for (var i = 0; i < length; i += 1) {
+      var listener = typeListeners[i]
+      try {
+        if (typeof listener.handleEvent === 'function') {
+          listener.handleEvent(event)
+        } else {
+          listener.call(this, event)
+        }
+      } catch (e) {
+        throwError(e)
+      }
+    }
+  }
+}
+EventTarget.prototype.addEventListener = function(type, listener) {
+  type = String(type)
+  var listeners = this._listeners
+  var typeListeners = listeners[type]
+  if (typeListeners == undefined) {
+    typeListeners = []
+    listeners[type] = typeListeners
+  }
+  var found = false
+  for (var i = 0; i < typeListeners.length; i += 1) {
+    if (typeListeners[i] === listener) {
+      found = true
+    }
+  }
+  if (!found) {
+    typeListeners.push(listener)
+  }
+}
+EventTarget.prototype.removeEventListener = function(type, listener) {
+  type = String(type)
+  var listeners = this._listeners
+  var typeListeners = listeners[type]
+  if (typeListeners != undefined) {
+    var filtered = []
+    for (var i = 0; i < typeListeners.length; i += 1) {
+      if (typeListeners[i] !== listener) {
+        filtered.push(typeListeners[i])
+      }
+    }
+    if (filtered.length === 0) {
+      delete listeners[type]
+    } else {
+      listeners[type] = filtered
+    }
+  }
+}
+
 EventSourcePolyfill.prototype = Object.create(EventTarget.prototype)
 EventSourcePolyfill.prototype.CONNECTING = CONNECTING
 EventSourcePolyfill.prototype.OPEN = OPEN

@@ -243,10 +243,10 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
   /**
    * Create the apps import
    */
-  const appImports = apps
-    .map((app, index) => `export const app_${index} = require('${app.packageId}');`)
-    .join('\n')
-  const appDefinitionsSrc = `// all apps\n${appImports}`
+  const appDefinitionsSrc = `// all apps
+export default {
+  ${apps.map(app => `${cleanString(app.packageId)}: require('${app.packageId}')`).join(',\n')}
+}`
   // const appDefsFile = join(entry, '..', '..', 'appDefinitions.js')
   const workspaceEntry = join(directory, 'dist', 'workspace-entry.js')
   log.info(`workspaceEntry ${workspaceEntry}`)
@@ -266,11 +266,11 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     watch,
     hot: watch,
     dllReferences,
-    // output: {
-    //   library: `window['LoadOrbitApp_${cleanName}']`,
-    //   libraryTarget: 'assign',
-    //   libraryExport: 'default',
-    // },
+    output: {
+      library: `window['__orbit_workspace']`,
+      libraryTarget: 'assign',
+      libraryExport: 'default',
+    },
   })
 
   /**

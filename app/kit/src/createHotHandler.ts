@@ -21,6 +21,12 @@ export function createHotHandler(props: {
   actions?: any
 }) {
   const { url, getHash, module, actions = {} } = props
+
+  if (!module.hot) {
+    console.warn('hot not active')
+    return
+  }
+
   const source = createEventSource(url)
   source.addMessageListener(handleMessage)
 

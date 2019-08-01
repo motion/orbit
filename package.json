@@ -20,6 +20,7 @@
     "start:devtools": "overmind-devtools & (cd app/orbit-repl && yarn start)",
     "start:site": "cd projects/site && yarn start",
     "build": "./bin/build",
+    "build:example-workspace": "(cd app/example-workspace && orbit ws --build --logLevel 1)",
     "build:app": "cd app/build-orbit && yarn run build-app",
     "build:app:resume": "cd app/build-orbit && yarn run build-app-resume",
     "build:apps": "lerna exec --concurrency 1 --scope '@o/*-app' --no-bail -- orbit build --debug-build --logLevel 1",

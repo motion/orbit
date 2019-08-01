@@ -135,7 +135,6 @@ export function runOrbitDesktop(
             NODE_ENV: 'development',
           }),
           HIDE_ON_START: 'true',
-          SINGLE_APP_MODE: 'true',
           CLI_PATH: cliPath,
         },
       })

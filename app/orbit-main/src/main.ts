@@ -18,7 +18,14 @@ require('array.prototype.flatmap').shim()
 
 Error.stackTraceLimit = Infinity
 
-const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_WORKERS, DISABLE_ELECTRON } = process.env
+const {
+  SUB_PROCESS,
+  PROCESS_NAME,
+  ORBIT_CONFIG,
+  DISABLE_WORKERS,
+  DISABLE_ELECTRON,
+  SINGLE_USE_MODE,
+} = process.env
 
 const log = new Logger('orbit-main')
 
@@ -53,7 +60,7 @@ export async function main() {
 
   const config = getGlobalConfig()
 
-  if (!SUB_PROCESS && !process.env.SINGLE_USE_MODE) {
+  if (!SUB_PROCESS && !SINGLE_USE_MODE) {
     // 🐛 for some reason you'll get "directv-tick" consistently on a port
     // EVEN IF port was found to be empty.... killing again helps
     const ports = Object.values(config.ports)

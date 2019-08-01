@@ -150,8 +150,12 @@ export const AppCreateWorkspaceCommand = new Command<boolean, Partial<Space>>(
 
 export type CommandWsOptions = {
   workspaceRoot: string
+  // default mode to run in
   mode?: 'development' | 'production'
+  // reset and rebuild before running
   clean?: boolean
+  // develop on orbit itself
+  dev?: boolean
 }
 
 export const AppOpenWorkspaceCommand = new Command<

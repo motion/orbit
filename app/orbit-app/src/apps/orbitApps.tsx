@@ -21,8 +21,7 @@ let dynamicApps: AppDefinition[] = []
 updateDefinitions()
 
 function updateDefinitions() {
-  const rawApps = require('../../appDefinitions.js')
-  dynamicApps = Object.keys(rawApps).map(simpleKey => rawApps[simpleKey].default)
+  dynamicApps = Desktop.state.workspaceState.appImportNames.map(name => window[name])
 }
 
 export async function startAppLoadWatch() {

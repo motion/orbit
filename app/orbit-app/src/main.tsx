@@ -87,6 +87,9 @@ async function main() {
   await App.start()
   console.timeEnd('loadStores')
 
+  // install dev tools
+  require('./helpers/installDevelopmentHelpers')
+
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
@@ -96,9 +99,6 @@ async function main() {
   const { om } = require('./om/om')
   await om.initialized
   console.timeEnd('loadOm')
-
-  // install dev tools
-  require('./helpers/installDevelopmentHelpers')
 
   // now run app..
   console.time('startApp')

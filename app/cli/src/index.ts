@@ -207,8 +207,8 @@ function main() {
     .command(
       'ws [workspace]',
       'Run an Orbit workspace',
-      p =>
-        p
+      p => {
+        let options = p
           .positional('workspace', {
             type: 'string',
             default: '.',
@@ -221,7 +221,18 @@ function main() {
           .option('mode', {
             type: 'string',
             default: 'development',
-          }),
+          })
+
+        // enables developing orbit itself
+        if (process.env.ORBIT_DEVELOPER) {
+          options = options.option('dev', {
+            type: 'boolean',
+            default: false,
+          })
+        }
+
+        return options
+      },
       async argv => {
         setVerbose(argv.logLevel)
         reporter.verbose(`argv ${JSON.stringify(argv)}`)
@@ -230,6 +241,8 @@ function main() {
           workspaceRoot,
           clean: !!argv.clean,
           mode: argv.mode as any,
+          // @ts-ignore
+          dev: !!argv.dev,
         })
       },
     )

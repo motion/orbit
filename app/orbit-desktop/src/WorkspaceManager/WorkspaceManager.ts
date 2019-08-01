@@ -7,6 +7,7 @@ import { decorate, ensure, react } from '@o/use-store'
 import { watch } from 'chokidar'
 import { Handler } from 'express'
 import { debounce, isEqual, remove } from 'lodash'
+import { join } from 'path'
 import { getRepository } from 'typeorm'
 import Observable from 'zen-observable'
 
@@ -19,7 +20,7 @@ import { commandGenTypes } from './commandGenTypes'
 import { commandInstall } from './commandInstall'
 import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
-import { getAppsConfig } from './getAppsConfig'
+import { cleanString, getAppsConfig } from './getAppsConfig'
 import { useWebpackMiddleware } from './useWebpackMiddleware'
 
 const log = new Logger('WorkspaceManager')
@@ -46,7 +47,13 @@ export class WorkspaceManager {
     this.appsManager.onUpdatedApps(this.handleUpdatedApps)
   }
 
-  middleware: Handler = async (req, res, next) => {
+  middleware: Handler = async (req, res) => {
+    const sendIndex = () => res.sendfile(join(this.directory, 'dist', 'index.html'))
+    console.log('req.path', req.path)
+    if (req.path[0] !== '_' && req.path.indexOf('.') === -1) {
+      return sendIndex()
+    }
+
     let fin
     for (const middleware of this.middlewares) {
       fin = null
@@ -57,7 +64,8 @@ export class WorkspaceManager {
         return
       }
     }
-    next(fin)
+    return sendIndex()
+    // next(fin)
   }
 
   async start(opts: { singleUseMode: boolean }) {
@@ -123,6 +131,11 @@ export class WorkspaceManager {
       log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
       await this.updateApps()
       try {
+        Desktop.setState({
+          workspaceState: {
+            appImportNames: this.appsMeta.map(app => cleanString(app.packageId)),
+          },
+        })
         const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
         ensure('config', !!config)
         await sleep()
@@ -140,22 +153,28 @@ export class WorkspaceManager {
   private onWorkspaceChange = debounce(this.updateWorkspace, 50)
 
   async updateApps() {
-    const next = await getWorkspaceApps(this.directory)
-    if (!isEqual(next, this.appsMeta)) {
+    const appsMeta = await getWorkspaceApps(this.directory)
+    if (!isEqual(appsMeta, this.appsMeta)) {
       // remove old
       for (const app of this.appsMeta) {
-        if (next.some(x => x.packageId === app.packageId) === false) {
+        if (appsMeta.some(x => x.packageId === app.packageId) === false) {
           dispose(this.appWatchers, app.packageId)
         }
       }
       // add new
-      for (const app of next) {
+      for (const app of appsMeta) {
         if (this.appsMeta.some(x => x.packageId === app.packageId) === false) {
           // watch app for changes to build buildInfo
           this.addAppWatcher(app)
         }
       }
-      this.appsMeta = next
+      this.appsMeta = appsMeta
+      // easy to debug
+      Desktop.setState({
+        workspaceState: {
+          appsMeta,
+        },
+      })
     }
   }
 

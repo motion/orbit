@@ -1,6 +1,7 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
+import connectTimeout from 'connect-timeout'
 import express, { Handler } from 'express'
 import killPort from 'kill-port'
 import * as Path from 'path'
@@ -29,12 +30,16 @@ export class WebServer {
     this.server = express()
     this.server.set('port', Config.ports.server)
 
-    // this needs be in front of cors for the app middlewares!
-    for (const middleware of config.middlewares) {
-      this.server.use(middleware)
-    }
+    // ensure nothing hangs, useful for debugging if you mess up a middleware
+    this.server.use(connectTimeout('5s'))
 
-    this.server.use(cors())
+    this.server.use((req, _res, next) => {
+      console.log('url', req.url)
+      next()
+    })
+
+    // this.server.use(cors())
+
     // fixes bug with 304 errors sometimes
     // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
     this.server.disable('etag')
@@ -55,6 +60,11 @@ export class WebServer {
       log.verbose(`Send config ${JSON.stringify(config, null, 2)}`)
       res.json(config)
     })
+
+    // this needs be in front of cors for the app middlewares!
+    for (const middleware of config.middlewares) {
+      this.server.use(middleware)
+    }
   }
 
   start() {

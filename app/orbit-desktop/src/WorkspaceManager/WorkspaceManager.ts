@@ -14,7 +14,7 @@ import { GraphServer } from '../GraphServer'
 import { getActiveSpace } from '../helpers/getActiveSpace'
 import { appStatusManager } from '../managers/AppStatusManager'
 import { AppDesc } from './AppMiddleware'
-import { bundleApp, commandBuild, getAppEntry } from './commandBuild'
+import { commandBuild, getAppEntry } from './commandBuild'
 import { commandGenTypes } from './commandGenTypes'
 import { commandInstall } from './commandInstall'
 import { commandWs } from './commandWs'
@@ -46,19 +46,18 @@ export class WorkspaceManager {
     this.appsManager.onUpdatedApps(this.handleUpdatedApps)
   }
 
-  middleware: Handler = (req, res, next) => {
-    let calledNext = false
-    const doNext = (val = true) => {
-      calledNext = val
-    }
+  middleware: Handler = async (req, res, next) => {
+    let fin
     for (const middleware of this.middlewares) {
-      calledNext = false
-      middleware(req, res, doNext)
-      if (calledNext === false) {
+      fin = null
+      await middleware(req, res, err => {
+        fin = err || true
+      })
+      if (fin === null) {
         return
       }
     }
-    next(calledNext)
+    next(fin)
   }
 
   async start(opts: { singleUseMode: boolean }) {
@@ -177,10 +176,11 @@ export class WorkspaceManager {
     })
 
     const buildAppInfo = () => {
-      log.info(`buildAppInfo ${app.packageId}`)
-      bundleApp(entry, {
-        projectRoot: app.directory,
-      })
+      console.log('should build app info')
+      // log.info(`buildAppInfo ${app.packageId}`)
+      // bundleApp(entry, {
+      //   projectRoot: app.directory,
+      // })
     }
 
     watcher.on('change', debounce(buildAppInfo, 100))

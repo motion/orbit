@@ -240,15 +240,6 @@ require('@o/kit').createHotHandler({
   url: '/__webpack_hmr_${name}',
   getHash: __webpack_require__.h,
   module,
-  actions: {
-    // for some reason built is sent before 'sync', which applies update
-    // and i can't hook into sync, so just doing settimeout for now
-    built: () => {
-      setTimeout(() => {
-        window['rerender'](false)
-      }, 40)
-    },
-  },
 })
 `,
             },
@@ -308,7 +299,6 @@ require('@o/kit').createHotHandler({
     plugins: [
       new HardSourceWebpackPlugin({
         cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
-        configHash: config => require('hash-sum')(config),
         environmentHash: {
           root: process.cwd(),
         },

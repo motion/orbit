@@ -1,17 +1,32 @@
-export function createHotHandler({
-  url,
-  getHash,
-  module,
-  actions,
-}: {
+let activeHandlers = []
+
+async function stopSockets() {
+  for (const { source } of activeHandlers) {
+    source.close()
+  }
+  await new Promise(res => setTimeout(res, 100))
+}
+
+async function restartSockets() {
+  activeHandlers = []
+  for (const props of activeHandlers) {
+    createHotHandler(props)
+  }
+}
+
+export function createHotHandler(props: {
   url: string
   getHash: Function
   module: any
-  actions: any
+  actions?: any
 }) {
+  const { url, getHash, module, actions = {} } = props
   const source = createEventSource(url)
   source.addMessageListener(handleMessage)
 
+  activeHandlers.push({ ...props, source })
+
+  window.addEventListener('beforeunload', source.close)
   module.hot.dispose(() => {
     source.close()
   })
@@ -63,7 +78,9 @@ export function createHotHandler({
       addMessageListener: function(fn) {
         listeners.push(fn)
       },
-      close: () => source.close(),
+      close: () => {
+        source.close()
+      },
     }
   }
 
@@ -82,6 +99,7 @@ export function createHotHandler({
             obj.time +
             'ms',
         )
+
       // fall through
       case 'sync':
         var applyUpdate = true
@@ -151,17 +169,19 @@ export function createHotHandler({
     return lastHash == getHash()
   }
 
-  function processUpdate(hash, moduleMap, options) {
-    console.log('got update', hash, moduleMap)
+  async function processUpdate(hash, moduleMap, options) {
     var reload = options.reload
     if (!upToDate(hash) && module.hot.status() == 'idle') {
       if (options.log) console.log('[HMR] Checking for updates on the server...')
+      await stopSockets()
       check()
     }
 
     function check() {
       var cb = function(err, updatedModules) {
         if (err) return handleError(err)
+
+        restartSockets()
 
         if (!updatedModules) {
           if (options.warn) {
@@ -186,6 +206,10 @@ export function createHotHandler({
           // HotModuleReplacement.runtime.js refers to the result as `outdatedModules`
           applyResult.then(function(outdatedModules) {
             applyCallback(null, outdatedModules)
+
+            console.log('render after hmr')
+            window['rerender']()
+
           })
           applyResult.catch(applyCallback)
         }

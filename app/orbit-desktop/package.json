@@ -115,7 +115,9 @@
     "hash-sum": "2.0.0",
     "webpack-inject-plugin": "1.5.2",
     "add-source-loader": "*",
-    "imports-loader": "^0.8.0"
+    "imports-loader": "^0.8.0",
+    "connect-timeout": "1.9.0",
+    "express-dynamic-middleware": "^1.0.0"
   },
   "peerDependencies": {
     "mobx": "*"

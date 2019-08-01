@@ -1,5 +1,6 @@
 import { Logger } from '@o/logger'
 import historyAPIFallback from 'connect-history-api-fallback'
+import { Handler } from 'express'
 import Webpack from 'webpack'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
@@ -50,18 +51,17 @@ const existsInCache = (middleware, path: string) => {
   return false
 }
 
-const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths: string[]) => (
-  req,
-  res,
-  next,
-) => {
-  const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
-  const path = config.output.path + req.url
-  if (isInResolvePaths || existsInCache(middleware, path)) {
-    middleware(req, res, next)
-  } else {
-    next()
+const resolveIfExists = (middleware, config: Webpack.Configuration, resolvePaths: string[]) => {
+  const handler: Handler = (req, res, next) => {
+    const isInResolvePaths = resolvePaths.indexOf(req.url) > -1
+    const path = config.output.path + req.url
+    if (isInResolvePaths || existsInCache(middleware, path)) {
+      middleware(req, res, next)
+    } else {
+      next()
+    }
   }
+  return handler
 }
 
 const getMiddleware = (hmrPath: string, config: any) => {

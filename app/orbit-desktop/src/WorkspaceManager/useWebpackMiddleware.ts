@@ -93,7 +93,7 @@ const pathMatch = function(url, path) {
   }
 }
 
-function WebpackHotMiddleware(compiler, opts) {
+function WebpackHotMiddleware(compilers: webpack.Compiler[], opts) {
   opts = opts || {}
   opts.log = typeof opts.log == 'undefined' ? console.log.bind(console) : opts.log
   opts.path = opts.path || '/__webpack_hmr'
@@ -103,12 +103,14 @@ function WebpackHotMiddleware(compiler, opts) {
   var latestStats = null
   var closed = false
 
-  if (compiler.hooks) {
-    compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
-    compiler.hooks.done.tap('webpack-hot-middleware', onDone)
-  } else {
-    compiler.plugin('invalid', onInvalid)
-    compiler.plugin('done', onDone)
+  for (const compiler of compilers) {
+    if (compiler.hooks) {
+      compiler.hooks.invalid.tap('webpack-hot-middleware', onInvalid)
+      compiler.hooks.done.tap('webpack-hot-middleware', onDone)
+    } else {
+      compiler.plugin('invalid', onInvalid)
+      compiler.plugin('done', onDone)
+    }
   }
 
   function onInvalid() {

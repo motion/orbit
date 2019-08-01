@@ -18,13 +18,11 @@
     "@o/libs-node": "^2.5.2",
     "global": "^4.3.2",
     "lodash": "4.17.11",
-    "readability": "^0.1.0",
     "reconnecting-websocket": "4.1.10",
-    "sqlite": "3.0.2",
-    "turndown": "4.0.2",
+    "sqlite": "3.0.3",
     "typeorm": "^0.3.0-alpha.23"
   },
   "devDependencies": {
-    "source-map-support": "^0.5.12"
+    "source-map-support": "^0.5.13"
   }
 }

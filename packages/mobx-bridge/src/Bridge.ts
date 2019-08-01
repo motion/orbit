@@ -316,7 +316,8 @@ export class BridgeManager {
   // set is only allowed from the source its set as initially
   setState = (newState, ignoreSend?) => {
     if (!this.started) {
-      throw new Error('Not started, can only call setState on the app that starts it.')
+      console.warn('Not started, can only call setState on the app that starts it.')
+      return
     }
     if (process.env.NODE_ENV === 'development') {
       if (!newState || typeof newState !== 'object') {

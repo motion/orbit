@@ -61,9 +61,12 @@ export async function commandWs(options: CommandWsOptions, workspaceManager: Wor
 
   // update workspace
   await workspaceManager.setWorkspace(options)
-
   // make sure we've finished updating new app info before running
   await workspaceManager.appsManager.updateAppDefinitions(space)
+
+  if (options.build) {
+    await workspaceManager.buildWorkspace()
+  }
 
   return true
 }

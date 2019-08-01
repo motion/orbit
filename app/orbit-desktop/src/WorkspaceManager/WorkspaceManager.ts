@@ -22,6 +22,7 @@ import { commandWs } from './commandWs'
 import { findOrCreateWorkspace } from './findOrCreateWorkspace'
 import { cleanString, getAppsConfig } from './getAppsConfig'
 import { useWebpackMiddleware } from './useWebpackMiddleware'
+import { webpackPromise } from './webpackPromise'
 
 const log = new Logger('WorkspaceManager')
 
@@ -36,7 +37,6 @@ export class WorkspaceManager {
   workspaceVersion = 0
   directory = ''
   options: CommandWsOptions
-  buildConfig = null
   appWatchers: Disposable = new Set<{ id: string; dispose: Function }>()
   middlewares = []
 
@@ -130,25 +130,33 @@ export class WorkspaceManager {
       ensure('directory', !!directory)
       log.info(`updateWorkspace ${directory} ${JSON.stringify(this.options)}`)
       await this.updateApps()
-      try {
-        Desktop.setState({
-          workspaceState: {
-            appImportNames: this.appsMeta.map(app => cleanString(app.packageId)),
-          },
-        })
-        const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
-        ensure('config', !!config)
-        await sleep()
-        if (!isEqual(this.buildConfig, config)) {
-          this.buildConfig = config
-          this.middlewares = useWebpackMiddleware(config)
-          await updateWorkspacePackageIds(this.directory)
-        }
-      } catch (err) {
-        console.error('Error running workspace', err.message, err.stack)
-      }
+      await sleep()
+      this.buildWorkspace()
     },
   )
+
+  async buildWorkspace() {
+    try {
+      Desktop.setState({
+        workspaceState: {
+          appImportNames: this.appsMeta.map(app => cleanString(app.packageId)),
+        },
+      })
+      const config = await getAppsConfig(this.directory, this.appsMeta, this.options)
+      if (!config) {
+        console.error('No config')
+        return
+      }
+      if (this.options.build) {
+        await webpackPromise(Object.keys(config).map(key => config[key]), { loud: true })
+      } else {
+        this.middlewares = useWebpackMiddleware(config)
+      }
+      await updateWorkspacePackageIds(this.directory)
+    } catch (err) {
+      console.error('Error running workspace', err.message, err.stack)
+    }
+  }
 
   private onWorkspaceChange = debounce(this.updateWorkspace, 50)
 

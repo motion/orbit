@@ -29,7 +29,10 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     return null
   }
 
-  log.info(`mode ${options.mode} ${directory}, apps ${apps.length}`, options)
+  // watch mode by default (if not building)
+  const watch = !options.build
+
+  log.info(`mode ${options.mode} watch ${watch} ${directory}, apps ${apps.length}`, options)
 
   const isInMonoRepo = await getIsInMonorepo()
 
@@ -71,15 +74,15 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       log.info(`Ensuring config built once: ${params.name}...`)
       const buildOnceConfig = await makeWebpackConfig({
         ...params,
-        hot: true,
+        hot: watch,
         watch: false,
       })
       await webpackPromise([buildOnceConfig], { loud: true })
     }
     return await makeWebpackConfig({
       ...params,
-      hot: true,
-      watch: true,
+      hot: watch,
+      watch,
     })
   }
 
@@ -228,8 +231,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
           context: directory,
           ignore: ['electron-log', 'configstore'],
           target: 'web',
-          hot: true,
-          watch: true,
+          hot: watch,
+          watch,
         },
         extraConfig[name],
       )
@@ -260,8 +263,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
     context: directory,
     entry: [workspaceEntry],
     target: 'web',
-    watch: true,
-    hot: true,
+    watch,
+    hot: watch,
     dllReferences,
     // output: {
     //   library: `window['LoadOrbitApp_${cleanName}']`,
@@ -331,8 +334,8 @@ export async function getAppsConfig(directory: string, apps: AppMeta[], options:
       entry: [entry],
       ignore: ['electron-log', 'configstore', '@o/worker-kit'],
       target: 'web',
-      watch: true,
-      hot: true,
+      watch,
+      hot: watch,
       dllReferences,
     },
     extraMainConfig,

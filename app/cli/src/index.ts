@@ -212,15 +212,22 @@ function main() {
           .positional('workspace', {
             type: 'string',
             default: '.',
-            describe: 'The application to run',
+            describe: 'the workspace to run',
           })
           .option('clean', {
             type: 'boolean',
             default: false,
+            describe: 'clean and re-run the workspace build',
           })
           .option('mode', {
             type: 'string',
             default: 'development',
+            describe: 'default mode to start apps in',
+          })
+          .option('build', {
+            type: 'boolean',
+            default: false,
+            describe: 'Debug use only, helpful to more quickly debug workspace build issues',
           })
 
         // enables developing orbit itself
@@ -240,7 +247,8 @@ function main() {
         await commandWs({
           workspaceRoot,
           clean: !!argv.clean,
-          mode: argv.mode as any,
+          mode: argv.mode as 'development' | 'production',
+          build: !!argv.build,
           // @ts-ignore
           dev: !!argv.dev,
         })

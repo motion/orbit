@@ -156,6 +156,7 @@ export type CommandWsOptions = {
   clean?: boolean
   // develop on orbit itself
   dev?: boolean
+  build?: boolean
 }
 
 export const AppOpenWorkspaceCommand = new Command<

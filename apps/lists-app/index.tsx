@@ -33,7 +33,6 @@ export function ListsAppIndex(props: NavigatorProps) {
   return (
     <>
       <TreeList
-        title="123 123"
         use={treeList}
         sortable
         alwaysSelected
